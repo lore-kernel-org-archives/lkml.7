@@ -2,105 +2,472 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293A0CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D9ACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9972086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:56:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVmqGkA8"
+	by mail.kernel.org (Postfix) with ESMTP id CE5C621929
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571860759;
+	bh=Jf0FZ9koYKPsk8yKRCE9l43q+ohhw2zYv3Wmu8yClek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G3F3nKTfq8pHB8SNjpIERCT6+X4/8yxdxJZaHES8CZ3okYMAYxBCGBTmwSI1BrM1D
+	 pqI8CFOPahYPbjfdi70ROoxNUi9SVkIAPBxrO+nL7K/8GeL1AqiA+urSw7S19czS8G
+	 e87cQm9M848XEtTVKb6C+aE4viHXplLZ66X2f+hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391411AbfJWT42 (ORCPT
+        id S2391448AbfJWT7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:56:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40141 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390336AbfJWT42 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:56:28 -0400
-Received: by mail-wm1-f65.google.com with SMTP id b24so194843wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 12:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=34YSYh+z8fKM6taIRyymQ72AtYlmDws/1nlNkhmJ8EU=;
-        b=mVmqGkA8CkG805lgIQA1eGXuR/icmaYDoKoz4frOeu13p4puWFp6jZ51wco/hOUerw
-         qrFwKPcrawjafP0vGwg9hfq3XiemcgTmLWQDBQfPC8a3jFViwzJb6a7+wVQW68M81oXu
-         En0q2E1TCgHpMQR/gHiIQ5N6og3gnGZTEGNqHyS6DPSSPGDAydKedwcEHyx2hWGW2G+x
-         5a77t2/HIDlOKevINFsdXalw4ip+PN/Mq82zEoqqVJ1hyxTBUQhp1vh1rV5OIqmar9Kq
-         ZBSOELJtL7PNO3/dc/J64KDrmaTpfR1RoemqqbfSvGUgTSaFZXrW2So0jxk27BHtvz0N
-         GF1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=34YSYh+z8fKM6taIRyymQ72AtYlmDws/1nlNkhmJ8EU=;
-        b=B871g5dhU/uofoQJ6LLmpRygG7pd7Znt8xQUpcGWq6uL94iA3vGm5onIivM7iUlJL9
-         MFnTHzSRzSm2kAYR4eNVkCQRGZbKCtFAr7DzLQviA5RbnrrURuJZCserI3fYr6+GN7Lc
-         ThwmKReYgG2YbY9P4mMOV19IfYKglLpDojRbe982w8uhHMTfdqGsgE9i1RWPElaBZnz3
-         S5D/bsK3fMSX5u+Nb6VmSRDLvUuPGFaB3Ian63Whx5icXFlZXNqN4rcHmO0Iwp8g+Byi
-         4RgmOw9HatmcWP+LQ1wlff3DlAdVRRDCBnKaAimip9/hloyYsBMc3LQ/xIsPyDCOnyZw
-         FZnA==
-X-Gm-Message-State: APjAAAUKCOg0F4OOaOr8CTlTY0tezx0fqRW67ydiCyiEGyoJXJGw6ICT
-        hNQImaQQ2agBRJ9xQj4skmez5dLP
-X-Google-Smtp-Source: APXvYqxkwDFwInLMhXBGKWKVSeU7hQMsTjaT92DxBLFTOaNhBftXmWodm7qB04zjXj0uTxbqLvJ9JQ==
-X-Received: by 2002:a1c:2884:: with SMTP id o126mr1550354wmo.153.1571860586165;
-        Wed, 23 Oct 2019 12:56:26 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s9sm292340wme.36.2019.10.23.12.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 12:56:25 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH] irqchip/gic: Check interrupt type validity
-Date:   Wed, 23 Oct 2019 12:56:19 -0700
-Message-Id: <20191023195620.23415-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 23 Oct 2019 15:59:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390892AbfJWT7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 15:59:16 -0400
+Received: from rapoport-lnx (unknown [87.70.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40B4921872;
+        Wed, 23 Oct 2019 19:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571860755;
+        bh=Jf0FZ9koYKPsk8yKRCE9l43q+ohhw2zYv3Wmu8yClek=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qhsko5tlFKT09SJQijphuf3rKlN52ZKF4gE+IDs6GYHNlkcdadcR7sgGp0sVtm8rZ
+         shO12nGS4xds4STRxHbwQt8johDjslCxsIrC01a4gW3przARTbZJ4v9jsOPN267eQx
+         AFk3aBh63zsTIPHO8Srhhh1mUFBTtsd4I6WkexDQ=
+Date:   Wed, 23 Oct 2019 22:59:00 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v2 09/12] sparc32: use pgtable-nopud instead of 4level-fixup
+Message-ID: <20191023195859.GA24394@rapoport-lnx>
+References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+ <1571822941-29776-10-git-send-email-rppt@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571822941-29776-10-git-send-email-rppt@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the interrupt property specifies a type parameter that is not
-GIC_SPI (0) or GIC_PPIC (1), do not attempt to translate the interrupt
-and return -EINVAL instead.
+I've just discovered that I've booted qemu-sparc with the wrong kernel and
+this patch crashes miserably :(
 
-Fixes: f833f57ff254 ("irqchip: Convert all alloc/xlate users from of_node to fwnode")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+The better version that does allow qemu-sparc to boot with folded page
+tables is below:
+
+
+From a90e1d157b7f8786a4276ffc8553f2167c8bc0e7 Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Tue, 1 Oct 2019 17:14:38 +0300
+Subject: [PATCH v2] sparc32: use pgtable-nopud instead of 4level-fixup
+
+32-bit version of sparc has three-level page tables and can use
+pgtable-nopud and folding of the upper layers.
+
+Replace usage of include/asm-generic/4level-fixup.h with
+include/asm-generic/pgtable-nopud.h and adjust page table manipulation
+macros and functions accordingly.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
-Marc,
+ arch/sparc/include/asm/pgalloc_32.h |  6 ++---
+ arch/sparc/include/asm/pgtable_32.h | 28 ++++++++++----------
+ arch/sparc/mm/fault_32.c            | 11 ++++++--
+ arch/sparc/mm/highmem.c             |  6 ++++-
+ arch/sparc/mm/io-unit.c             |  6 ++++-
+ arch/sparc/mm/iommu.c               |  6 ++++-
+ arch/sparc/mm/srmmu.c               | 51 +++++++++++++++++++++++++++++--------
+ 7 files changed, 81 insertions(+), 33 deletions(-)
 
-Regardless of whether my attempt to use SGI moves any further, this
-seems appropriate to do since we should not be trying to translate
-incorrectly specified interrupts. Thanks!
-
- drivers/irqchip/irq-gic.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 30ab623343d3..fc47e655618d 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -1005,6 +1005,9 @@ static int gic_irq_domain_translate(struct irq_domain *d,
- 		if (fwspec->param_count < 3)
- 			return -EINVAL;
+diff --git a/arch/sparc/include/asm/pgalloc_32.h b/arch/sparc/include/asm/pgalloc_32.h
+index 10538a4..eae0c92 100644
+--- a/arch/sparc/include/asm/pgalloc_32.h
++++ b/arch/sparc/include/asm/pgalloc_32.h
+@@ -26,14 +26,14 @@ static inline void free_pgd_fast(pgd_t *pgd)
+ #define pgd_free(mm, pgd)	free_pgd_fast(pgd)
+ #define pgd_alloc(mm)	get_pgd_fast()
  
-+		if (fwspec->param[0] > 1)
-+			return -EINVAL;
+-static inline void pgd_set(pgd_t * pgdp, pmd_t * pmdp)
++static inline void pud_set(pud_t * pudp, pmd_t * pmdp)
+ {
+ 	unsigned long pa = __nocache_pa(pmdp);
+ 
+-	set_pte((pte_t *)pgdp, __pte((SRMMU_ET_PTD | (pa >> 4))));
++	set_pte((pte_t *)pudp, __pte((SRMMU_ET_PTD | (pa >> 4))));
+ }
+ 
+-#define pgd_populate(MM, PGD, PMD)      pgd_set(PGD, PMD)
++#define pud_populate(MM, PGD, PMD)      pud_set(PGD, PMD)
+ 
+ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm,
+ 				   unsigned long address)
+diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
+index 31da448..6d6f44c 100644
+--- a/arch/sparc/include/asm/pgtable_32.h
++++ b/arch/sparc/include/asm/pgtable_32.h
+@@ -12,7 +12,7 @@
+ #include <linux/const.h>
+ 
+ #ifndef __ASSEMBLY__
+-#include <asm-generic/4level-fixup.h>
++#include <asm-generic/pgtable-nopud.h>
+ 
+ #include <linux/spinlock.h>
+ #include <linux/mm_types.h>
+@@ -132,12 +132,12 @@ static inline struct page *pmd_page(pmd_t pmd)
+ 	return pfn_to_page((pmd_val(pmd) & SRMMU_PTD_PMASK) >> (PAGE_SHIFT-4));
+ }
+ 
+-static inline unsigned long pgd_page_vaddr(pgd_t pgd)
++static inline unsigned long pud_page_vaddr(pud_t pud)
+ {
+-	if (srmmu_device_memory(pgd_val(pgd))) {
++	if (srmmu_device_memory(pud_val(pud))) {
+ 		return ~0;
+ 	} else {
+-		unsigned long v = pgd_val(pgd) & SRMMU_PTD_PMASK;
++		unsigned long v = pud_val(pud) & SRMMU_PTD_PMASK;
+ 		return (unsigned long)__nocache_va(v << 4);
+ 	}
+ }
+@@ -184,24 +184,24 @@ static inline void pmd_clear(pmd_t *pmdp)
+ 		set_pte((pte_t *)&pmdp->pmdv[i], __pte(0));
+ }
+ 
+-static inline int pgd_none(pgd_t pgd)          
++static inline int pud_none(pud_t pud)
+ {
+-	return !(pgd_val(pgd) & 0xFFFFFFF);
++	return !(pud_val(pud) & 0xFFFFFFF);
+ }
+ 
+-static inline int pgd_bad(pgd_t pgd)
++static inline int pud_bad(pud_t pud)
+ {
+-	return (pgd_val(pgd) & SRMMU_ET_MASK) != SRMMU_ET_PTD;
++	return (pud_val(pud) & SRMMU_ET_MASK) != SRMMU_ET_PTD;
+ }
+ 
+-static inline int pgd_present(pgd_t pgd)
++static inline int pud_present(pud_t pud)
+ {
+-	return ((pgd_val(pgd) & SRMMU_ET_MASK) == SRMMU_ET_PTD);
++	return ((pud_val(pud) & SRMMU_ET_MASK) == SRMMU_ET_PTD);
+ }
+ 
+-static inline void pgd_clear(pgd_t *pgdp)
++static inline void pud_clear(pud_t *pudp)
+ {
+-	set_pte((pte_t *)pgdp, __pte(0));
++	set_pte((pte_t *)pudp, __pte(0));
+ }
+ 
+ /*
+@@ -319,9 +319,9 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ #define pgd_offset_k(address) pgd_offset(&init_mm, address)
+ 
+ /* Find an entry in the second-level page table.. */
+-static inline pmd_t *pmd_offset(pgd_t * dir, unsigned long address)
++static inline pmd_t *pmd_offset(pud_t * dir, unsigned long address)
+ {
+-	return (pmd_t *) pgd_page_vaddr(*dir) +
++	return (pmd_t *) pud_page_vaddr(*dir) +
+ 		((address >> PMD_SHIFT) & (PTRS_PER_PMD - 1));
+ }
+ 
+diff --git a/arch/sparc/mm/fault_32.c b/arch/sparc/mm/fault_32.c
+index 8d69de1..89976c9 100644
+--- a/arch/sparc/mm/fault_32.c
++++ b/arch/sparc/mm/fault_32.c
+@@ -351,6 +351,8 @@ asmlinkage void do_sparc_fault(struct pt_regs *regs, int text_fault, int write,
+ 		 */
+ 		int offset = pgd_index(address);
+ 		pgd_t *pgd, *pgd_k;
++		p4d_t *p4d, *p4d_k;
++		pud_t *pud, *pud_k;
+ 		pmd_t *pmd, *pmd_k;
+ 
+ 		pgd = tsk->active_mm->pgd + offset;
+@@ -363,8 +365,13 @@ asmlinkage void do_sparc_fault(struct pt_regs *regs, int text_fault, int write,
+ 			return;
+ 		}
+ 
+-		pmd = pmd_offset(pgd, address);
+-		pmd_k = pmd_offset(pgd_k, address);
++		p4d = p4d_offset(pgd, address);
++		pud = pud_offset(p4d, address);
++		pmd = pmd_offset(pud, address);
 +
- 		/* Get the interrupt number and add 16 to skip over SGIs */
- 		*hwirq = fwspec->param[1] + 16;
++		p4d_k = p4d_offset(pgd_k, address);
++		pud_k = pud_offset(p4d_k, address);
++		pmd_k = pmd_offset(pud_k, address);
+ 
+ 		if (pmd_present(*pmd) || !pmd_present(*pmd_k))
+ 			goto bad_area_nosemaphore;
+diff --git a/arch/sparc/mm/highmem.c b/arch/sparc/mm/highmem.c
+index 86bc2a5..d4a80ad 100644
+--- a/arch/sparc/mm/highmem.c
++++ b/arch/sparc/mm/highmem.c
+@@ -39,10 +39,14 @@ static pte_t *kmap_pte;
+ void __init kmap_init(void)
+ {
+ 	unsigned long address;
++	p4d_t *p4d;
++	pud_t *pud;
+ 	pmd_t *dir;
+ 
+ 	address = __fix_to_virt(FIX_KMAP_BEGIN);
+-	dir = pmd_offset(pgd_offset_k(address), address);
++	p4d = p4d_offset(pgd_offset_k(address), address);
++	pud = pud_offset(p4d, address);
++	dir = pmd_offset(pud, address);
+ 
+         /* cache the first kmap pte */
+         kmap_pte = pte_offset_kernel(dir, address);
+diff --git a/arch/sparc/mm/io-unit.c b/arch/sparc/mm/io-unit.c
+index f770ee7..33a0fac 100644
+--- a/arch/sparc/mm/io-unit.c
++++ b/arch/sparc/mm/io-unit.c
+@@ -239,12 +239,16 @@ static void *iounit_alloc(struct device *dev, size_t len,
+ 		page = va;
+ 		{
+ 			pgd_t *pgdp;
++			p4d_t *p4dp;
++			pud_t *pudp;
+ 			pmd_t *pmdp;
+ 			pte_t *ptep;
+ 			long i;
+ 
+ 			pgdp = pgd_offset(&init_mm, addr);
+-			pmdp = pmd_offset(pgdp, addr);
++			p4dp = p4d_offset(pgdp, addr);
++			pudp = pud_offset(p4dp, addr);
++			pmdp = pmd_offset(pudp, addr);
+ 			ptep = pte_offset_map(pmdp, addr);
+ 
+ 			set_pte(ptep, mk_pte(virt_to_page(page), dvma_prot));
+diff --git a/arch/sparc/mm/iommu.c b/arch/sparc/mm/iommu.c
+index 71ac353..4d3c699 100644
+--- a/arch/sparc/mm/iommu.c
++++ b/arch/sparc/mm/iommu.c
+@@ -343,6 +343,8 @@ static void *sbus_iommu_alloc(struct device *dev, size_t len,
+ 		page = va;
+ 		{
+ 			pgd_t *pgdp;
++			p4d_t *p4dp;
++			pud_t *pudp;
+ 			pmd_t *pmdp;
+ 			pte_t *ptep;
+ 
+@@ -354,7 +356,9 @@ static void *sbus_iommu_alloc(struct device *dev, size_t len,
+ 				__flush_page_to_ram(page);
+ 
+ 			pgdp = pgd_offset(&init_mm, addr);
+-			pmdp = pmd_offset(pgdp, addr);
++			p4dp = p4d_offset(pgdp, addr);
++			pudp = pud_offset(p4dp, addr);
++			pmdp = pmd_offset(pudp, addr);
+ 			ptep = pte_offset_map(pmdp, addr);
+ 
+ 			set_pte(ptep, mk_pte(virt_to_page(page), dvma_prot));
+diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
+index cc3ad64..f56c3c9 100644
+--- a/arch/sparc/mm/srmmu.c
++++ b/arch/sparc/mm/srmmu.c
+@@ -296,6 +296,8 @@ static void __init srmmu_nocache_init(void)
+ 	void *srmmu_nocache_bitmap;
+ 	unsigned int bitmap_bits;
+ 	pgd_t *pgd;
++	p4d_t *p4d;
++	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte;
+ 	unsigned long paddr, vaddr;
+@@ -329,6 +331,8 @@ static void __init srmmu_nocache_init(void)
+ 
+ 	while (vaddr < srmmu_nocache_end) {
+ 		pgd = pgd_offset_k(vaddr);
++		p4d = p4d_offset(__nocache_fix(pgd), vaddr);
++		pud = pud_offset(__nocache_fix(p4d), vaddr);
+ 		pmd = pmd_offset(__nocache_fix(pgd), vaddr);
+ 		pte = pte_offset_kernel(__nocache_fix(pmd), vaddr);
+ 
+@@ -516,13 +520,17 @@ static inline void srmmu_mapioaddr(unsigned long physaddr,
+ 				   unsigned long virt_addr, int bus_type)
+ {
+ 	pgd_t *pgdp;
++	p4d_t *p4dp;
++	pud_t *pudp;
+ 	pmd_t *pmdp;
+ 	pte_t *ptep;
+ 	unsigned long tmp;
+ 
+ 	physaddr &= PAGE_MASK;
+ 	pgdp = pgd_offset_k(virt_addr);
+-	pmdp = pmd_offset(pgdp, virt_addr);
++	p4dp = p4d_offset(pgdp, virt_addr);
++	pudp = pud_offset(p4dp, virt_addr);
++	pmdp = pmd_offset(pudp, virt_addr);
+ 	ptep = pte_offset_kernel(pmdp, virt_addr);
+ 	tmp = (physaddr >> 4) | SRMMU_ET_PTE;
+ 
+@@ -551,11 +559,16 @@ void srmmu_mapiorange(unsigned int bus, unsigned long xpa,
+ static inline void srmmu_unmapioaddr(unsigned long virt_addr)
+ {
+ 	pgd_t *pgdp;
++	p4d_t *p4dp;
++	pud_t *pudp;
+ 	pmd_t *pmdp;
+ 	pte_t *ptep;
+ 
++
+ 	pgdp = pgd_offset_k(virt_addr);
+-	pmdp = pmd_offset(pgdp, virt_addr);
++	p4dp = p4d_offset(pgdp, virt_addr);
++	pudp = pud_offset(p4dp, virt_addr);
++	pmdp = pmd_offset(pudp, virt_addr);
+ 	ptep = pte_offset_kernel(pmdp, virt_addr);
+ 
+ 	/* No need to flush uncacheable page. */
+@@ -693,20 +706,24 @@ static void __init srmmu_early_allocate_ptable_skeleton(unsigned long start,
+ 							unsigned long end)
+ {
+ 	pgd_t *pgdp;
++	p4d_t *p4dp;
++	pud_t *pudp;
+ 	pmd_t *pmdp;
+ 	pte_t *ptep;
+ 
+ 	while (start < end) {
+ 		pgdp = pgd_offset_k(start);
+-		if (pgd_none(*(pgd_t *)__nocache_fix(pgdp))) {
++		p4dp = p4d_offset(pgdp, start);
++		pudp = pud_offset(p4dp, start);
++		if (pud_none(*(pud_t *)__nocache_fix(pudp))) {
+ 			pmdp = __srmmu_get_nocache(
+ 			    SRMMU_PMD_TABLE_SIZE, SRMMU_PMD_TABLE_SIZE);
+ 			if (pmdp == NULL)
+ 				early_pgtable_allocfail("pmd");
+ 			memset(__nocache_fix(pmdp), 0, SRMMU_PMD_TABLE_SIZE);
+-			pgd_set(__nocache_fix(pgdp), pmdp);
++			pud_set(__nocache_fix(pudp), pmdp);
+ 		}
+-		pmdp = pmd_offset(__nocache_fix(pgdp), start);
++		pmdp = pmd_offset(__nocache_fix(pudp), start);
+ 		if (srmmu_pmd_none(*(pmd_t *)__nocache_fix(pmdp))) {
+ 			ptep = __srmmu_get_nocache(PTE_SIZE, PTE_SIZE);
+ 			if (ptep == NULL)
+@@ -724,19 +741,23 @@ static void __init srmmu_allocate_ptable_skeleton(unsigned long start,
+ 						  unsigned long end)
+ {
+ 	pgd_t *pgdp;
++	p4d_t *p4dp;
++	pud_t *pudp;
+ 	pmd_t *pmdp;
+ 	pte_t *ptep;
+ 
+ 	while (start < end) {
+ 		pgdp = pgd_offset_k(start);
+-		if (pgd_none(*pgdp)) {
++		p4dp = p4d_offset(pgdp, start);
++		pudp = pud_offset(p4dp, start);
++		if (pud_none(*pudp)) {
+ 			pmdp = __srmmu_get_nocache(SRMMU_PMD_TABLE_SIZE, SRMMU_PMD_TABLE_SIZE);
+ 			if (pmdp == NULL)
+ 				early_pgtable_allocfail("pmd");
+ 			memset(pmdp, 0, SRMMU_PMD_TABLE_SIZE);
+-			pgd_set(pgdp, pmdp);
++			pud_set((pud_t *)pgdp, pmdp);
+ 		}
+-		pmdp = pmd_offset(pgdp, start);
++		pmdp = pmd_offset(pudp, start);
+ 		if (srmmu_pmd_none(*pmdp)) {
+ 			ptep = __srmmu_get_nocache(PTE_SIZE,
+ 							     PTE_SIZE);
+@@ -779,6 +800,8 @@ static void __init srmmu_inherit_prom_mappings(unsigned long start,
+ 	unsigned long probed;
+ 	unsigned long addr;
+ 	pgd_t *pgdp;
++	p4d_t *p4dp;
++	pud_t *pudp;
+ 	pmd_t *pmdp;
+ 	pte_t *ptep;
+ 	int what; /* 0 = normal-pte, 1 = pmd-level pte, 2 = pgd-level pte */
+@@ -810,18 +833,20 @@ static void __init srmmu_inherit_prom_mappings(unsigned long start,
+ 		}
+ 
+ 		pgdp = pgd_offset_k(start);
++		p4dp = p4d_offset(pgdp, start);
++		pudp = pud_offset(p4dp, start);
+ 		if (what == 2) {
+ 			*(pgd_t *)__nocache_fix(pgdp) = __pgd(probed);
+ 			start += SRMMU_PGDIR_SIZE;
+ 			continue;
+ 		}
+-		if (pgd_none(*(pgd_t *)__nocache_fix(pgdp))) {
++		if (pud_none(*(pud_t *)__nocache_fix(pudp))) {
+ 			pmdp = __srmmu_get_nocache(SRMMU_PMD_TABLE_SIZE,
+ 						   SRMMU_PMD_TABLE_SIZE);
+ 			if (pmdp == NULL)
+ 				early_pgtable_allocfail("pmd");
+ 			memset(__nocache_fix(pmdp), 0, SRMMU_PMD_TABLE_SIZE);
+-			pgd_set(__nocache_fix(pgdp), pmdp);
++			pud_set(__nocache_fix(pudp), pmdp);
+ 		}
+ 		pmdp = pmd_offset(__nocache_fix(pgdp), start);
+ 		if (srmmu_pmd_none(*(pmd_t *)__nocache_fix(pmdp))) {
+@@ -906,6 +931,8 @@ void __init srmmu_paging_init(void)
+ 	phandle cpunode;
+ 	char node_str[128];
+ 	pgd_t *pgd;
++	p4d_t *p4d;
++	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte;
+ 	unsigned long pages_avail;
+@@ -967,7 +994,9 @@ void __init srmmu_paging_init(void)
+ 	srmmu_allocate_ptable_skeleton(PKMAP_BASE, PKMAP_END);
+ 
+ 	pgd = pgd_offset_k(PKMAP_BASE);
+-	pmd = pmd_offset(pgd, PKMAP_BASE);
++	p4d = p4d_offset(pgd, PKMAP_BASE);
++	pud = pud_offset(p4d, PKMAP_BASE);
++	pmd = pmd_offset(pud, PKMAP_BASE);
+ 	pte = pte_offset_kernel(pmd, PKMAP_BASE);
+ 	pkmap_page_table = pte;
  
 -- 
-2.17.1
+2.7.4
 
