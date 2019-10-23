@@ -2,119 +2,106 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA10CCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316D6CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEAF21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGplGApx"
+	by mail.kernel.org (Postfix) with ESMTP id 1247D21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfJWRDU (ORCPT
+        id S1727150AbfJWRDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:03:20 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28698 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726812AbfJWRDU (ORCPT
+        Wed, 23 Oct 2019 13:03:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29920 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727093AbfJWRDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:03:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571850198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hL1kplXLC+ueQfopd2mykU/6xLsfKNYy9p+amPVfFVA=;
-        b=UGplGApx3GTROkZ/kqj1pOsV+1zvSdAQCcJhtB+yVWXMoUU0A4Co/te6jJZEJZVsYHOqqF
-        JurrG6QAz3ZROhoxzuOeg11tmaOo1htMr/+myFE9yaMIixvU0kQd41PjlpeDAUfDbU2PA4
-        2k8VOW56phVRjbxbmxW/FcCbeDGdYhg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-JMqWU3XDM3WOQ86NKjFRPQ-1; Wed, 23 Oct 2019 13:03:12 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 939FA800D49;
-        Wed, 23 Oct 2019 17:03:09 +0000 (UTC)
-Received: from redhat.com (ovpn-124-105.rdu2.redhat.com [10.10.124.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 039751001B07;
-        Wed, 23 Oct 2019 17:03:07 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 13:03:06 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     "zhangfei.gao@foxmail.com" <zhangfei.gao@foxmail.com>,
-        francois.ozog@linaro.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Zaibo Xu <xuzaibo@huawei.com>, ilias.apalodimas@linaro.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Wangzhou <wangzhou1@hisilicon.com>, grant.likely@arm.com,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        linux-accelerators@lists.ozlabs.org, kenneth-lee-2012@foxmail.com
-Subject: Re: [PATCH v6 2/3] uacce: add uacce driver
-Message-ID: <20191023170306.GC4163@redhat.com>
-References: <1571214873-27359-1-git-send-email-zhangfei.gao@linaro.org>
- <1571214873-27359-3-git-send-email-zhangfei.gao@linaro.org>
- <20191016172802.GA1533448@lophozonia>
- <5da9a9cd.1c69fb81.9f8e8.60faSMTPIN_ADDED_BROKEN@mx.google.com>
- <20191023074227.GA264888@lophozonia>
-MIME-Version: 1.0
-In-Reply-To: <20191023074227.GA264888@lophozonia>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: JMqWU3XDM3WOQ86NKjFRPQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Wed, 23 Oct 2019 13:03:32 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9NH2XFK026741
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 13:03:31 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vtskfbb9m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 13:03:30 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 23 Oct 2019 18:03:29 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 23 Oct 2019 18:03:25 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9NH3OYv45678840
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Oct 2019 17:03:24 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2ACD5205F;
+        Wed, 23 Oct 2019 17:03:23 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.184.174])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6FCEE52051;
+        Wed, 23 Oct 2019 17:03:22 +0000 (GMT)
+Subject: Re: [PATCH v1 3/6] KEYS: ima hook to measure builtin_trusted_keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Wed, 23 Oct 2019 13:03:21 -0400
+In-Reply-To: <6a3f2efa-fc05-7bfd-368a-910dd4525f4c@linux.microsoft.com>
+References: <20191023001818.3684-1-nramas@linux.microsoft.com>
+         <20191023001818.3684-4-nramas@linux.microsoft.com>
+         <1571836931.5104.95.camel@linux.ibm.com>
+         <6a3f2efa-fc05-7bfd-368a-910dd4525f4c@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102317-0008-0000-0000-0000032637FB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102317-0009-0000-0000-00004A45683A
+Message-Id: <1571850201.5104.149.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910230163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 09:42:27AM +0200, Jean-Philippe Brucker wrote:
-> On Fri, Oct 18, 2019 at 08:01:44PM +0800, zhangfei.gao@foxmail.com wrote:
+On Wed, 2019-10-23 at 07:49 -0700, Lakshmi Ramasubramanian wrote:
+> On 10/23/19 6:22 AM, Mimi Zohar wrote:
+> 
+> Thanks for reviewing the changes Mimi.
+> I'll address your comments and post an updated patch set shortly.
+> 
+> >> Add a new ima hook to measure keys added to builtin_trusted_keys
+> >> keyring.
+> > 
+> > There is no IMA hook in this patch.
+> > 
+> 
+> >> +			else if (strcmp(args[0].from,
+> >> +					"BUILTIN_TRUSTED_KEYS") == 0)
+> >> +				entry->func = BUILTIN_TRUSTED_KEYS;
+> >>   			else
+> >>   				result = -EINVAL;
+> >>   			if (!result)
+> > 
+> > Any new options need to be displayed as well.
+> 
+> Not that I can think of. Please correct me if I am wrong.
 
-[...]
-
-> > > > +static int uacce_fops_mmap(struct file *filep, struct vm_area_stru=
-ct *vma)
-> > > > +{
-> > > > +=09struct uacce_queue *q =3D filep->private_data;
-> > > > +=09struct uacce_device *uacce =3D q->uacce;
-> > > > +=09struct uacce_qfile_region *qfr;
-> > > > +=09enum uacce_qfrt type =3D 0;
-> > > > +=09unsigned int flags =3D 0;
-> > > > +=09int ret;
-> > > > +
-> > > > +=09if (vma->vm_pgoff < UACCE_QFRT_MAX)
-> > > > +=09=09type =3D vma->vm_pgoff;
-> > > > +
-> > > > +=09vma->vm_flags |=3D VM_DONTCOPY | VM_DONTEXPAND;
-> > > > +
-> > > > +=09mutex_lock(&uacce_mutex);
->=20
-> By the way, lockdep detects a possible unsafe locking scenario here,
-> because we're taking the uacce_mutex even though mmap called us with the
-> mmap_sem held for writing. Conversely uacce_fops_release() takes the
-> mmap_sem for writing while holding the uacce_mutex. I think it can be
-> fixed easily, if we simply remove the use of mmap_sem in
-> uacce_fops_release(), since it's only taken to do some accounting which
-> doesn't look right.
-
-I think you need to remove the RLIMIT_DATA accounting altogether. Assume
-it is not an issue for now and revisit latter when it becomes one as i
-am not sure we want to add this queue memory accounting to RLIMIT_DATA
-in the first place. Maybe a memory cgroup. In anycases it is safer to
-delay this discussion to latter.
-
-Cheers,
-J=E9r=F4me
+True, since you're hard coding the policy.
 
