@@ -2,190 +2,176 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F28CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5132CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580EC2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9142D2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="brfVqafB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lt/MOMlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388619AbfJWSLG (ORCPT
+        id S2388798AbfJWSOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:11:06 -0400
-Received: from mail-eopbgr780071.outbound.protection.outlook.com ([40.107.78.71]:41952
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727309AbfJWSLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:11:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e1lBPeXIruzJUoE56hhvTOpP925PV7W1vL6CCGWPbjE9L4YYxbsSITvDw5y4ZxC7dbAEPxOId5WZPaK9E4fUrHgbNP/Cf0JHzBUkqUPQd/s6Icu6iNmypGBRG5eHgWRdHP2fim2rpKhCgkz6vs0+DpV0MegM7MZT5vPqLqtkxfETtQOWP9o5F30IEE4HVt433O5Rmgi2QRnypULeVdbPMYug7MnqwvOG1nQueczw1rmuwzRoN15kaeNcYcZdIq3AWqNCgdtzjmGU68TxzofLv4cq7spTERRbfpL0VyFo5iNIzrymPFkbnk1p064BW4j3k6BRdwG5wupVcFTkx+SRtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7NMsuqIwaAEEKS4y59Hy5Y9lvmPNuJhv+jAdCdVzmEo=;
- b=FFdkXGqRizB/7REoUiUmEH+y4xSoIwcVVXc1aiqeqtbkL2e3/xWtPDmtEzIOWi7s+xhDKYpe0wB8MW2HrobW7+3WAM1D8pFX8S4kVRIA56607V+A3KB9eh1hYUgtxse6NCfh0Z81M5xQ2+hGJwkn2ZIvc4SvaSNKPFrNXmgJP5OjT+UurdoueXqSAAdxlOYOqZlV5xZx6toRlCtl9VJFj1G4pVNys0rPM9j3fvdomsiReArHjPSvoHfsobo0kwEb3FG+VuxRsg5FK0kgsFa8+dU8Cyh9sbQD8/MaHbL0QlkNhYKnkwYu84q2sW7IODutWbiSie1M4POKXpgFZ+4pSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7NMsuqIwaAEEKS4y59Hy5Y9lvmPNuJhv+jAdCdVzmEo=;
- b=brfVqafBwZFyoZvNaBd9GJDbTs5+V6tvUbxfForlNJ5ZZt3z7pvJiu1vlRkdKZp1KGU47LHpYa3KpXQi42Q6Dgj9/AyOFnoheUnDXlzNZTR7dvm9EarY/71HPmNVo0o7gFg2+JmN05y85MATUsQ+tWy9Jl+dsUhlDCRg9euE6ho=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6838.namprd02.prod.outlook.com (20.180.16.206) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.22; Wed, 23 Oct 2019 18:11:01 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::701f:f4b3:5a98:dbf2]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::701f:f4b3:5a98:dbf2%7]) with mapi id 15.20.2347.030; Wed, 23 Oct 2019
- 18:11:01 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Michal Simek <michals@xilinx.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Anirudha Sarangi <anirudh@xilinx.com>,
-        John Linn <linnj@xilinx.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 net-next] net: axienet: In kconfig add ARM64 as
- supported platform
-Thread-Topic: [PATCH v2 net-next] net: axienet: In kconfig add ARM64 as
- supported platform
-Thread-Index: AQHVh/jtYKDvt7dDPUahZ0r1UKsFy6dlJByAgAHIkQCAAZQXkA==
-Date:   Wed, 23 Oct 2019 18:11:01 +0000
-Message-ID: <CH2PR02MB700016B63363FA06AA9AA907C76B0@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <1571653110-20505-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-        <cbdd6608-804a-086c-1892-1903ec4a7d80@xilinx.com>
- <20191022102952.09211971@cakuba.netronome.com>
-In-Reply-To: <20191022102952.09211971@cakuba.netronome.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [183.83.141.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bbd74536-742d-4816-e8a2-08d757e45ccd
-x-ms-traffictypediagnostic: CH2PR02MB6838:|CH2PR02MB6838:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6838CF1A2B42A07B5D8A6A75C76B0@CH2PR02MB6838.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(39860400002)(396003)(376002)(366004)(346002)(136003)(13464003)(189003)(199004)(86362001)(186003)(81166006)(8936002)(6506007)(53546011)(8676002)(5660300002)(81156014)(476003)(11346002)(446003)(26005)(7696005)(76176011)(99286004)(102836004)(3846002)(25786009)(486006)(2906002)(6116002)(256004)(52536014)(110136005)(478600001)(66066001)(66476007)(76116006)(14454004)(66946007)(55016002)(66556008)(66446008)(71200400001)(71190400001)(64756008)(33656002)(6436002)(229853002)(54906003)(316002)(6246003)(6636002)(4326008)(9686003)(7736002)(74316002)(305945005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6838;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KHnDePeTzKUOkg7/E+c0mqS07s03KmEnrHyv2QiF4djc7lL+yalD00ObpQbN0szEP6/Va0cpz+zo4ND7Y3T6qcuCAxsfgja5ddmq+Cy5t0M47J0ZYaT2+i7A4qDBqF7ikJYrnz+7Wr/x3jHB3/SzL7LJx/QmNJAonEVLjBW+b2XIawXYz9pX14sZwnDyItgoAJDFb2OoaHtzQOP8vGL/sw2U6pJCWBn5rq5JM3f/PUQR2MDe9ySQ0KQNP93FBb7jMqC3LHXhPrOod84/yhXMcUTRd14Fmb5iuePzqmpG4fTGei6y5P6aNtjbFSVUS8ZjB83P9wRPtMVgDufSgN1LLNqUSh215flkzCnKVpqJlbf6rcvKQqOalP3AYr/3hLqydUy0Dg2sJg1Im9m0slvh5mLwxoHRkIwusZ85BveLSYvhMc7oTOzGxIAeoAZ/UybY
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 23 Oct 2019 14:14:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55784 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732588AbfJWSOe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 14:14:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571854472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=69szfWdpqzdUFsP2ofY5GztggRg6X4AKGP1hwjej5LU=;
+        b=Lt/MOMlR/66XUvZvgE/S6HwURafpaR8D6zSExMO4ExrsYsqgrBMdXDbAjcLgzitmRWbISe
+        6+8m/ePIWo+zRg11mjewfmNnA625yHCcmcMGRr2/3jQrxuYhgltPoOkcGSzuFBPoyK2bnq
+        8JXgnkkQCsFhVcGJIIYWT1Y9Uue5B+g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-dI89Nn7BMRKXM8sofxgbkQ-1; Wed, 23 Oct 2019 14:14:30 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BC98801E5C;
+        Wed, 23 Oct 2019 18:14:28 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 603B35D9DC;
+        Wed, 23 Oct 2019 18:14:15 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm, vmstat: Release zone lock more frequently when
+ reading /proc/pagetypeinfo
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>
+References: <20191023102737.32274-3-mhocko@kernel.org>
+ <20191023173423.12532-1-longman@redhat.com>
+ <20191023180121.GN17610@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <58a9adaf-9a1c-398b-dce1-cb30997807c1@redhat.com>
+Date:   Wed, 23 Oct 2019 14:14:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbd74536-742d-4816-e8a2-08d757e45ccd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 18:11:01.5759
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JA6d1Z5DEer99xzJc8UpXNzlWV/ko/AQJG3crD7bPJNgAwAkGDC+RcV0HJmlW1s/copUAKGwtDfSFw7XwrBb1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6838
+In-Reply-To: <20191023180121.GN17610@dhcp22.suse.cz>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: dI89Nn7BMRKXM8sofxgbkQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Sent: Tuesday, October 22, 2019 11:00 PM
-> To: Michal Simek <michals@xilinx.com>
-> Cc: Radhey Shyam Pandey <radheys@xilinx.com>; davem@davemloft.net;
-> netdev@vger.kernel.org; Anirudha Sarangi <anirudh@xilinx.com>; John Linn
-> <linnj@xilinx.com>; mchehab+samsung@kernel.org;
-> gregkh@linuxfoundation.org; nicolas.ferre@microchip.com; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 net-next] net: axienet: In kconfig add ARM64 as
-> supported platform
->=20
-> On Mon, 21 Oct 2019 16:15:45 +0200, Michal Simek wrote:
-> > On 21. 10. 19 12:18, Radhey Shyam Pandey wrote:
-> > > xilinx axi_emac driver is supported on ZynqMP UltraScale platform.
-> > > So enable ARCH64 in kconfig. It also removes redundant ARCH_ZYNQ
-> > > dependency. Basic sanity testing is done on zu+ mpsoc zcu102
-> > > evaluation board.
-> > >
-> > > Signed-off-by: Radhey Shyam Pandey
-> <radhey.shyam.pandey@xilinx.com>
-> > > ---
-> > > Changes for v2:
-> > > Remove redundant ARCH_ZYNQ dependency.
-> > > Modified commit description.
-> > > ---
-> > >  drivers/net/ethernet/xilinx/Kconfig | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/xilinx/Kconfig
-> b/drivers/net/ethernet/xilinx/Kconfig
-> > > index 8d994ce..da11876 100644
-> > > --- a/drivers/net/ethernet/xilinx/Kconfig
-> > > +++ b/drivers/net/ethernet/xilinx/Kconfig
-> > > @@ -6,7 +6,7 @@
-> > >  config NET_VENDOR_XILINX
-> > >  	bool "Xilinx devices"
-> > >  	default y
-> > > -	depends on PPC || PPC32 || MICROBLAZE || ARCH_ZYNQ || MIPS ||
-> X86 || ARM || COMPILE_TEST
-> > > +	depends on PPC || PPC32 || MICROBLAZE || MIPS || X86 || ARM ||
-> ARM64 || COMPILE_TEST
-> > >  	---help---
-> > >  	  If you have a network (Ethernet) card belonging to this class, sa=
-y Y.
-> > >
-> > > @@ -26,11 +26,11 @@ config XILINX_EMACLITE
-> > >
-> > >  config XILINX_AXI_EMAC
-> > >  	tristate "Xilinx 10/100/1000 AXI Ethernet support"
-> > > -	depends on MICROBLAZE || X86 || ARM || COMPILE_TEST
-> > > +	depends on MICROBLAZE || X86 || ARM || ARM64 || COMPILE_TEST
-> > >  	select PHYLINK
-> > >  	---help---
-> > >  	  This driver supports the 10/100/1000 Ethernet from Xilinx for the
-> > > -	  AXI bus interface used in Xilinx Virtex FPGAs.
-> > > +	  AXI bus interface used in Xilinx Virtex FPGAs and Soc's.
-> > >
-> > >  config XILINX_LL_TEMAC
-> > >  	tristate "Xilinx LL TEMAC (LocalLink Tri-mode Ethernet MAC) driver"
-> > >
-> >
-> > Acked-by: Michal Simek <michal.simek@xilinx.com>
-> >
-> > But I can image that others could prefer to remove all dependencies.
->=20
-> Yes, we'd much rather see this litany of architectures removed.
+On 10/23/19 2:01 PM, Michal Hocko wrote:
+> On Wed 23-10-19 13:34:22, Waiman Long wrote:
+>> With a threshold of 100000, it is still possible that the zone lock
+>> will be held for a very long time in the worst case scenario where all
+>> the counts are just below the threshold. With up to 6 migration types
+>> and 11 orders, it means up to 6.6 millions.
+>>
+>> Track the total number of list iterations done since the acquisition
+>> of the zone lock and release it whenever 100000 iterations or more have
+>> been completed. This will cap the lock hold time to no more than 200,000
+>> list iterations.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>  mm/vmstat.c | 18 ++++++++++++++----
+>>  1 file changed, 14 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/vmstat.c b/mm/vmstat.c
+>> index 57ba091e5460..c5b82fdf54af 100644
+>> --- a/mm/vmstat.c
+>> +++ b/mm/vmstat.c
+>> @@ -1373,6 +1373,7 @@ static void pagetypeinfo_showfree_print(struct seq=
+_file *m,
+>>  =09=09=09=09=09pg_data_t *pgdat, struct zone *zone)
+>>  {
+>>  =09int order, mtype;
+>> +=09unsigned long iteration_count =3D 0;
+>> =20
+>>  =09for (mtype =3D 0; mtype < MIGRATE_TYPES; mtype++) {
+>>  =09=09seq_printf(m, "Node %4d, zone %8s, type %12s ",
+>> @@ -1397,15 +1398,24 @@ static void pagetypeinfo_showfree_print(struct s=
+eq_file *m,
+>>  =09=09=09=09 * of pages in this order should be more than
+>>  =09=09=09=09 * sufficient
+>>  =09=09=09=09 */
+>> -=09=09=09=09if (++freecount >=3D 100000) {
+>> +=09=09=09=09if (++freecount > 100000) {
+>>  =09=09=09=09=09overflow =3D true;
+>> -=09=09=09=09=09spin_unlock_irq(&zone->lock);
+>> -=09=09=09=09=09cond_resched();
+>> -=09=09=09=09=09spin_lock_irq(&zone->lock);
+>> +=09=09=09=09=09freecount--;
+>>  =09=09=09=09=09break;
+>>  =09=09=09=09}
+>>  =09=09=09}
+>>  =09=09=09seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
+>> +=09=09=09/*
+>> +=09=09=09 * Take a break and release the zone lock when
+>> +=09=09=09 * 100000 or more entries have been iterated.
+>> +=09=09=09 */
+>> +=09=09=09iteration_count +=3D freecount;
+>> +=09=09=09if (iteration_count >=3D 100000) {
+>> +=09=09=09=09iteration_count =3D 0;
+>> +=09=09=09=09spin_unlock_irq(&zone->lock);
+>> +=09=09=09=09cond_resched();
+>> +=09=09=09=09spin_lock_irq(&zone->lock);
+>> +=09=09=09}
+> Aren't you overengineering this a bit? If you are still worried then we
+> can simply cond_resched for each order
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index c156ce24a322..ddb89f4e0486 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1399,13 +1399,13 @@ static void pagetypeinfo_showfree_print(struct se=
+q_file *m,
+>  =09=09=09=09 */
+>  =09=09=09=09if (++freecount >=3D 100000) {
+>  =09=09=09=09=09overflow =3D true;
+> -=09=09=09=09=09spin_unlock_irq(&zone->lock);
+> -=09=09=09=09=09cond_resched();
+> -=09=09=09=09=09spin_lock_irq(&zone->lock);
+>  =09=09=09=09=09break;
+>  =09=09=09=09}
+>  =09=09=09}
+>  =09=09=09seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
+> +=09=09=09spin_unlock_irq(&zone->lock);
+> +=09=09=09cond_resched();
+> +=09=09=09spin_lock_irq(&zone->lock);
+>  =09=09}
+>  =09=09seq_putc(m, '\n');
+>  =09}
+>
+> I do not have a strong opinion here but I can fold this into my patch 2.
 
-Yes, I can build test on all mentioned architectures and see how it goes.
+If the free list is empty or is very short, there is probably no need to
+release and reacquire the lock. How about adding a check for a lower
+bound like:
 
-> Is there any reason it's there in the first place?
-Looking into past few commits, this dependency list was incrementally
-extended for each platform. In case there are no real dependencies
-we can get rid of arch list.
+if (freecount > 1000) {
+=C2=A0=C2=A0=C2=A0 spin_unlock_irq(&zone->lock);
+=C2=A0=C2=A0=C2=A0 cond_resched();
+=C2=A0=C2=A0=C2=A0 spin_lock_irq(&zone->lock);
+}
 
->=20
-> Most drivers are tested on just a few architectures, but as long
-> as correct APIs are used they are assumed to work across the board.
-> Otherwise 75% of our drivers would be x86 only. Don't be shy.
+Cheers,
+Longman
 
