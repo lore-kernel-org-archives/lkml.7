@@ -2,127 +2,191 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEABCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00415CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C423021906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE50121872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MfQV+IGF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ao4VWypj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390081AbfJWIJo (ORCPT
+        id S2390134AbfJWIMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:09:44 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40028 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727574AbfJWIJo (ORCPT
+        Wed, 23 Oct 2019 04:12:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36393 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727574AbfJWIMn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:09:44 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9N89gbD078048;
-        Wed, 23 Oct 2019 03:09:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571818182;
-        bh=ZfP9BharqnfDDOfH8UAQbM0m+BiwuI/R1NAozBclods=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MfQV+IGFnagRc37Yi3oA1t489rrWR+PifzaYeEqhPSInDKnmFFIehc5PYJhtN52Vh
-         l973nGx6TCeNB71RwACtmzpcckT7ONmHWF11KPP8FaurYTPBwamUf67huBOdeRVTvn
-         L2xeiJjQbWE0Z6PNf/WpXp5+qDeA9CVXPArh/Gyw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N89bdd088759;
-        Wed, 23 Oct 2019 03:09:42 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
- Oct 2019 03:08:40 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 23 Oct 2019 03:08:40 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9N88lhF120094;
-        Wed, 23 Oct 2019 03:08:47 -0500
-Subject: Re: [PATCH 1/3] phy: cadence: Sierra: add phy_reset hook
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
-        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191022132249.869-1-rogerq@ti.com>
- <20191022132249.869-2-rogerq@ti.com>
- <3d261add-8fa8-13b8-a42b-8662fcbe4b23@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <1956da9e-ec5f-ce68-25ea-1d570e1f7b54@ti.com>
-Date:   Wed, 23 Oct 2019 11:08:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 04:12:43 -0400
+Received: by mail-io1-f68.google.com with SMTP id c16so3983441ioc.3;
+        Wed, 23 Oct 2019 01:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xeGHhIazHjbmXETf2LAZnyOId7SvzhgwolMgMV8mqgI=;
+        b=ao4VWypjOJKTjbSco/Rm0FE9dAVuyvq1d6PKfUiUCaqYYvJdFIV+fbDUolBd0PRsbY
+         pkkJ+Oebiwc6SkqJJUo/ElWVHbqdEgNaneOk9yP24LfDqzlt+kv/uo2Z76zaKQfeC32J
+         er0fwJOHwdNj7ON2ZzqxTv+uq2UUMTuO1LFMw52psE/wyKzJxxj/vOinljG51ZHACOwv
+         LVQAiLSIWoCMwimKQiE6s+N1jspEyaepbD2taKipH4mR46QZk5dxNkHA7ZrGBKT7Vhq2
+         ktSpXPouo3LVBo41+UjrEnk968zAW3qfzv0PWsBldQ5yMdbR1ZyqMaW+oRANIytf1Bzq
+         hGGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xeGHhIazHjbmXETf2LAZnyOId7SvzhgwolMgMV8mqgI=;
+        b=oOjgESWnAGvPx3XV2rjUDyeXVaodDRFIZ+CDQ+UOe9ApYWk55zJinh8ULSNpF9s5KY
+         Cv7EdASvjL7xvDq2Bavp15o///FytvVX6Jq5XL27TSfQmTXA88OzL8Rxo5OEr9xJxEKV
+         GypG884g/Hb/yCFgGbY72w2LM9nY5nSEU/MY5J3VEFq6kOTmTQdwdAhSh7+LV0TqBW1W
+         fO4aTZhM62ArS0ox9RRNvCsX64Vqs0s71zL5EkvEbFWS0cA7y+cHDpRLAa4UaNI6j6tG
+         gprsYduoYFMDbmXsBYZyjGI5dNOGfRoguSulhZPGT/rI0jnodbYUSTFDghTBdzTaCST5
+         aevA==
+X-Gm-Message-State: APjAAAUSk4brjqCuNRft05/BPamimDuTL/hWQJVRXtkF9xgIZ4kOgV1j
+        JJFOUaiPHn14EpR27Uwf/GaXBYuMYaA3sxmRgoKJCeli
+X-Google-Smtp-Source: APXvYqz08ZAczsyFOKIP/xkqWmG2xjQ+k0gwAgP+fzy6aUhuD+eBMPQ+sh9I1mHHf7vqHMHyR3yZfXU25nKQIaZvspc=
+X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr2022517ioq.172.1571818361783;
+ Wed, 23 Oct 2019 01:12:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3d261add-8fa8-13b8-a42b-8662fcbe4b23@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190403185310.8437-1-matwey@sai.msu.ru> <20190614164554.27679-1-matwey@sai.msu.ru>
+ <CAJs94EZy7HD-ge8vKGSeMMS+WYw-U=Zxw9gXMLoobpYX6rVt4A@mail.gmail.com>
+ <20190702173335.GA2724@uda0271908> <CAJs94Ebq5epN6zhXE9N_NiTdQEZ1wYcGxnGr_vahxaKxdWGW7A@mail.gmail.com>
+In-Reply-To: <CAJs94Ebq5epN6zhXE9N_NiTdQEZ1wYcGxnGr_vahxaKxdWGW7A@mail.gmail.com>
+From:   "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
+Date:   Wed, 23 Oct 2019 11:12:29 +0300
+Message-ID: <CAJs94EYv4TUDm-J+9ToGccGC-hMQ1XU12DZYUmQVdfdjL5PBPg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] musb: Improve performance for hub-attached webcams
+To:     Bin Liu <b-liu@ti.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "open list:MUSB MULTIPOINT HIGH SPEED DUAL-ROLE CONTROLLER" 
+        <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kishon,
+=D0=BF=D0=BD, 9 =D1=81=D0=B5=D0=BD=D1=82. 2019 =D0=B3. =D0=B2 19:33, Matwey=
+ V. Kornilov <matwey.kornilov@gmail.com>:
+>
+> =D0=B2=D1=82, 2 =D0=B8=D1=8E=D0=BB. 2019 =D0=B3. =D0=B2 20:33, Bin Liu <b=
+-liu@ti.com>:
+> >
+> > Matwey,
+> >
+> > On Tue, Jul 02, 2019 at 08:29:03PM +0300, Matwey V. Kornilov wrote:
+> > > Ping?
+> >
+> > I was offline and just got back. I will review it soon. Sorry for the
+> > delay.
+>
+> Ping?
+>
 
-On 23/10/2019 10:36, Kishon Vijay Abraham I wrote:
-> Roger,
-> 
-> On 22/10/19 6:52 PM, Roger Quadros wrote:
->> This is required if type C driver needs to hold
->> global reset on J7ES to perform LN10 swap.
-> 
-> Can you replace "This" with something more specific.
+Ping?
 
-I meant this patch, but I will revise the commit message.
+> >
+> > -Bin.
+> >
+> > >
+> > > =D0=BF=D1=82, 14 =D0=B8=D1=8E=D0=BD. 2019 =D0=B3. =D0=B2 19:47, Matwe=
+y V. Kornilov <matwey@sai.msu.ru>:
+> > > >
+> > > > The series is concerned to issues with isochronous transfer while
+> > > > streaming the USB webcam data. I discovered the issue first time
+> > > > when attached PWC USB webcam to AM335x-based BeagleBone Black SBC.
+> > > > It appeared that the root issue was in numerous missed IN requests
+> > > > during isochronous transfer where each missing leaded to the frame
+> > > > drop. Since every IN request is triggered in MUSB driver
+> > > > individually, it is important to queue the send IN request as
+> > > > earlier as possible when the previous IN completed. At the same
+> > > > time the URB giveback handler of the device driver has also to be
+> > > > called there, that leads to arbitrarily delay depending on the
+> > > > device driver performance. The details with the references are
+> > > > described in [1].
+> > > >
+> > > > The issue has two parts:
+> > > >
+> > > >   1) peripheral driver URB callback performance
+> > > >   2) MUSB host driver performance
+> > > >
+> > > > It appeared that the first part is related to the wrong memory
+> > > > allocation strategy in the most USB webcam drivers. Non-cached
+> > > > memory is used in assumption that coherent DMA memory leads to
+> > > > the better performance than non-coherent memory in conjunction with
+> > > > the proper synchronization. Yet the assumption might be valid for
+> > > > x86 platforms some time ago, the issue was fixed for PWC driver in:
+> > > >
+> > > >     1161db6776bd ("media: usb: pwc: Don't use coherent DMA buffers =
+for ISO transfer")
+> > > >
+> > > > that leads to 3.5x performance gain. The more generic fix for this
+> > > > common issue are coming for the rest drivers [2].
+> > > >
+> > > > The patch allowed successfully running full-speed USB PWC webcams
+> > > > attached directly to BeagleBone Black USB port.
+> > > >
+> > > > However, the second part of the issue is still present for
+> > > > peripheral device attached through the high-speed USB hub due to
+> > > > its 125us frame time. The patch series is intended to reorganize
+> > > > musb_advance_schedule() to allow host to send IN request quicker.
+> > > >
+> > > > The patch series is organized as the following. First three patches
+> > > > improve readability of the existing code in
+> > > > musb_advance_schedule(). Patches 4 and 5 introduce updated
+> > > > signature for musb_start_urb(). The last patch introduce new
+> > > > code-path in musb_advance_schedule() which allows for faster
+> > > > response.
+> > > >
+> > > > References:
+> > > >
+> > > > [1] https://www.spinics.net/lists/linux-usb/msg165735.html
+> > > > [2] https://www.spinics.net/lists/linux-media/msg144279.html
+> > > >
+> > > > Changes since v1:
+> > > >  - Patch 6 was redone to keep URB giveback order and stop transmiss=
+ion at
+> > > >    erroneous URB.
+> > > >
+> > > > Matwey V. Kornilov (6):
+> > > >   usb: musb: Use USB_DIR_IN when calling musb_advance_schedule()
+> > > >   usb: musb: Introduce musb_qh_empty() helper function
+> > > >   usb: musb: Introduce musb_qh_free() helper function
+> > > >   usb: musb: Rename musb_start_urb() to musb_start_next_urb()
+> > > >   usb: musb: Introduce musb_start_urb()
+> > > >   usb: musb: Decrease URB starting latency in musb_advance_schedule=
+()
+> > > >
+> > > >  drivers/usb/musb/musb_host.c | 132 ++++++++++++++++++++++++++++---=
+------------
+> > > >  drivers/usb/musb/musb_host.h |   1 +
+> > > >  2 files changed, 86 insertions(+), 47 deletions(-)
+> > > >
+> > > > --
+> > > > 2.16.4
+> > > >
+> > >
+> > >
+> > > --
+> > > With best regards,
+> > > Matwey V. Kornilov
+>
+>
+>
+> --
+> With best regards,
+> Matwey V. Kornilov
 
-cheers,
--roger
-> 
-> Thanks
-> Kishon
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->> ---
->>   drivers/phy/cadence/phy-cadence-sierra.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
->> index affede8c4368..e6d27bdec22a 100644
->> --- a/drivers/phy/cadence/phy-cadence-sierra.c
->> +++ b/drivers/phy/cadence/phy-cadence-sierra.c
->> @@ -339,10 +339,20 @@ static int cdns_sierra_phy_off(struct phy *gphy)
->>   	return reset_control_assert(ins->lnk_rst);
->>   }
->>   
->> +static int cdns_sierra_phy_reset(struct phy *gphy)
->> +{
->> +	struct cdns_sierra_phy *sp = dev_get_drvdata(gphy->dev.parent);
->> +
->> +	reset_control_assert(sp->phy_rst);
->> +	reset_control_deassert(sp->phy_rst);
->> +	return 0;
->> +};
->> +
->>   static const struct phy_ops ops = {
->>   	.init		= cdns_sierra_phy_init,
->>   	.power_on	= cdns_sierra_phy_on,
->>   	.power_off	= cdns_sierra_phy_off,
->> +	.reset		= cdns_sierra_phy_reset,
->>   	.owner		= THIS_MODULE,
->>   };
->>   
->>
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+--=20
+With best regards,
+Matwey V. Kornilov
