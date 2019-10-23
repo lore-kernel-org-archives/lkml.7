@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFBBCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3E1CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5E82064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763E22084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404858AbfJWLWG (ORCPT
+        id S2404848AbfJWLWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:22:06 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29695 "EHLO mga14.intel.com"
+        Wed, 23 Oct 2019 07:22:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11431 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404734AbfJWLWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:22:03 -0400
+        id S2404669AbfJWLWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:22:00 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:22:03 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:21:59 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="399359456"
+   d="scan'208";a="228090085"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Oct 2019 04:22:00 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 23 Oct 2019 04:21:55 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 781865F6; Wed, 23 Oct 2019 14:21:55 +0300 (EEST)
+        id 2777B4CE; Wed, 23 Oct 2019 14:21:55 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -46,9 +46,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Oliver Neukum <oneukum@suse.com>,
         Christian Kellner <ckellner@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/25] thunderbolt: Expand controller name in tb_switch_is_xy()
-Date:   Wed, 23 Oct 2019 14:21:41 +0300
-Message-Id: <20191023112154.64235-13-mika.westerberg@linux.intel.com>
+Subject: [PATCH 04/25] thunderbolt: Convert basic adapter register names to follow the USB4 spec
+Date:   Wed, 23 Oct 2019 14:21:33 +0300
+Message-Id: <20191023112154.64235-5-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
 References: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
@@ -59,93 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For a casual reader tb_switch_is_cr() does not tell much so instead
-spell out the full controller name in the function name. For example
-tb_switch_is_cr() becomes tb_switch_is_cactus_ridge() which is easier
-to understand.
+Now that USB4 spec has names for these basic registers we can use them
+instead. This makes it easier to match certain register to the spec.
+
+No functional changes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/cap.c | 6 +++---
- drivers/thunderbolt/tb.c  | 4 ++--
- drivers/thunderbolt/tb.h  | 8 ++++----
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/thunderbolt/switch.c  | 18 +++++++++---------
+ drivers/thunderbolt/tb_regs.h | 15 ++++++++-------
+ drivers/thunderbolt/tunnel.c  | 10 +++++-----
+ 3 files changed, 22 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/thunderbolt/cap.c b/drivers/thunderbolt/cap.c
-index 8bf8e031f0bc..fdd77bb4628d 100644
---- a/drivers/thunderbolt/cap.c
-+++ b/drivers/thunderbolt/cap.c
-@@ -33,9 +33,9 @@ static int tb_port_enable_tmu(struct tb_port *port, bool enable)
- 	 * Legacy devices need to have TMU access enabled before port
- 	 * space can be fully accessed.
- 	 */
--	if (tb_switch_is_lr(sw))
-+	if (tb_switch_is_light_ridge(sw))
- 		offset = 0x26;
--	else if (tb_switch_is_er(sw))
-+	else if (tb_switch_is_eagle_ridge(sw))
- 		offset = 0x2a;
- 	else
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index fd7878020f70..afc725cf27c9 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -553,17 +553,17 @@ int tb_port_add_nfc_credits(struct tb_port *port, int credits)
+ 	if (credits == 0 || port->sw->is_unplugged)
  		return 0;
-@@ -60,7 +60,7 @@ static void tb_port_dummy_read(struct tb_port *port)
- 	 * reading stale data on next read perform one dummy read after
- 	 * port capabilities are walked.
- 	 */
--	if (tb_switch_is_lr(port->sw)) {
-+	if (tb_switch_is_light_ridge(port->sw)) {
- 		u32 dummy;
  
- 		tb_port_read(port, &dummy, TB_CFG_PORT, 0, 1);
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index f2ce6adc1f48..e8e2d20cf4c6 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -342,9 +342,9 @@ static struct tb_port *tb_find_pcie_down(struct tb_switch *sw,
- 		 * Hard-coded Thunderbolt port to PCIe down port mapping
- 		 * per controller.
- 		 */
--		if (tb_switch_is_cr(sw))
-+		if (tb_switch_is_cactus_ridge(sw))
- 			index = !phy_port ? 6 : 7;
--		else if (tb_switch_is_fr(sw))
-+		else if (tb_switch_is_falcon_ridge(sw))
- 			index = !phy_port ? 6 : 8;
- 		else
- 			goto out;
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index 16d529983004..a6f1fa0d4771 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -576,17 +576,17 @@ static inline struct tb_switch *tb_switch_parent(struct tb_switch *sw)
- 	return tb_to_switch(sw->dev.parent);
+-	nfc_credits = port->config.nfc_credits & TB_PORT_NFC_CREDITS_MASK;
++	nfc_credits = port->config.nfc_credits & ADP_CS_4_NFC_BUFFERS_MASK;
+ 	nfc_credits += credits;
+ 
+-	tb_port_dbg(port, "adding %d NFC credits to %lu",
+-		    credits, port->config.nfc_credits & TB_PORT_NFC_CREDITS_MASK);
++	tb_port_dbg(port, "adding %d NFC credits to %lu", credits,
++		    port->config.nfc_credits & ADP_CS_4_NFC_BUFFERS_MASK);
+ 
+-	port->config.nfc_credits &= ~TB_PORT_NFC_CREDITS_MASK;
++	port->config.nfc_credits &= ~ADP_CS_4_NFC_BUFFERS_MASK;
+ 	port->config.nfc_credits |= nfc_credits;
+ 
+ 	return tb_port_write(port, &port->config.nfc_credits,
+-			     TB_CFG_PORT, 4, 1);
++			     TB_CFG_PORT, ADP_CS_4, 1);
  }
  
--static inline bool tb_switch_is_lr(const struct tb_switch *sw)
-+static inline bool tb_switch_is_light_ridge(const struct tb_switch *sw)
- {
- 	return sw->config.device_id == PCI_DEVICE_ID_INTEL_LIGHT_RIDGE;
+ /**
+@@ -578,14 +578,14 @@ int tb_port_set_initial_credits(struct tb_port *port, u32 credits)
+ 	u32 data;
+ 	int ret;
+ 
+-	ret = tb_port_read(port, &data, TB_CFG_PORT, 5, 1);
++	ret = tb_port_read(port, &data, TB_CFG_PORT, ADP_CS_5, 1);
+ 	if (ret)
+ 		return ret;
+ 
+-	data &= ~TB_PORT_LCA_MASK;
+-	data |= (credits << TB_PORT_LCA_SHIFT) & TB_PORT_LCA_MASK;
++	data &= ~ADP_CS_5_LCA_MASK;
++	data |= (credits << ADP_CS_5_LCA_SHIFT) & ADP_CS_5_LCA_MASK;
+ 
+-	return tb_port_write(port, &data, TB_CFG_PORT, 5, 1);
++	return tb_port_write(port, &data, TB_CFG_PORT, ADP_CS_5, 1);
  }
  
--static inline bool tb_switch_is_er(const struct tb_switch *sw)
-+static inline bool tb_switch_is_eagle_ridge(const struct tb_switch *sw)
- {
- 	return sw->config.device_id == PCI_DEVICE_ID_INTEL_EAGLE_RIDGE;
- }
+ /**
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index deb9d4a977b9..d0858db9f904 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -211,13 +211,14 @@ struct tb_regs_port_header {
  
--static inline bool tb_switch_is_cr(const struct tb_switch *sw)
-+static inline bool tb_switch_is_cactus_ridge(const struct tb_switch *sw)
- {
- 	switch (sw->config.device_id) {
- 	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_2C:
-@@ -597,7 +597,7 @@ static inline bool tb_switch_is_cr(const struct tb_switch *sw)
+ } __packed;
+ 
+-/* DWORD 4 */
+-#define TB_PORT_NFC_CREDITS_MASK	GENMASK(19, 0)
+-#define TB_PORT_MAX_CREDITS_SHIFT	20
+-#define TB_PORT_MAX_CREDITS_MASK	GENMASK(26, 20)
+-/* DWORD 5 */
+-#define TB_PORT_LCA_SHIFT		22
+-#define TB_PORT_LCA_MASK		GENMASK(28, 22)
++/* Basic adapter configuration registers */
++#define ADP_CS_4				0x04
++#define ADP_CS_4_NFC_BUFFERS_MASK		GENMASK(9, 0)
++#define ADP_CS_4_TOTAL_BUFFERS_MASK		GENMASK(29, 20)
++#define ADP_CS_4_TOTAL_BUFFERS_SHIFT		20
++#define ADP_CS_5				0x05
++#define ADP_CS_5_LCA_MASK			GENMASK(28, 22)
++#define ADP_CS_5_LCA_SHIFT			22
+ 
+ /* Display Port adapter registers */
+ 
+diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+index 5a99234826e7..2f728029c12d 100644
+--- a/drivers/thunderbolt/tunnel.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -324,12 +324,12 @@ static void tb_dp_init_video_path(struct tb_path *path, bool discover)
+ 	path->weight = 1;
+ 
+ 	if (discover) {
+-		path->nfc_credits = nfc_credits & TB_PORT_NFC_CREDITS_MASK;
++		path->nfc_credits = nfc_credits & ADP_CS_4_NFC_BUFFERS_MASK;
+ 	} else {
+ 		u32 max_credits;
+ 
+-		max_credits = (nfc_credits & TB_PORT_MAX_CREDITS_MASK) >>
+-			TB_PORT_MAX_CREDITS_SHIFT;
++		max_credits = (nfc_credits & ADP_CS_4_TOTAL_BUFFERS_MASK) >>
++			ADP_CS_4_TOTAL_BUFFERS_SHIFT;
+ 		/* Leave some credits for AUX path */
+ 		path->nfc_credits = min(max_credits - 2, 12U);
  	}
+@@ -478,8 +478,8 @@ static u32 tb_dma_credits(struct tb_port *nhi)
+ {
+ 	u32 max_credits;
+ 
+-	max_credits = (nhi->config.nfc_credits & TB_PORT_MAX_CREDITS_MASK) >>
+-		TB_PORT_MAX_CREDITS_SHIFT;
++	max_credits = (nhi->config.nfc_credits & ADP_CS_4_TOTAL_BUFFERS_MASK) >>
++		ADP_CS_4_TOTAL_BUFFERS_SHIFT;
+ 	return min(max_credits, 13U);
  }
  
--static inline bool tb_switch_is_fr(const struct tb_switch *sw)
-+static inline bool tb_switch_is_falcon_ridge(const struct tb_switch *sw)
- {
- 	switch (sw->config.device_id) {
- 	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_BRIDGE:
 -- 
 2.23.0
 
