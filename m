@@ -2,219 +2,61 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99524CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCE9CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692BE207FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2067207FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FRjbZ8W1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfJWEDZ (ORCPT
+        id S1726967AbfJWEEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 00:03:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4705 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725780AbfJWEDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 00:03:25 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 96040EF763408D7CB488;
-        Wed, 23 Oct 2019 12:03:20 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 23 Oct
- 2019 12:03:11 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Chao Yu <chao@kernel.org>, <linux-erofs@lists.ozlabs.org>
-CC:     <linux-kernel@vger.kernel.org>, Gao Xiang <xiang@kernel.org>,
-        "Pratik Shinde" <pratikshinde320@gmail.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v4] erofs: support superblock checksum
-Date:   Wed, 23 Oct 2019 12:05:57 +0800
-Message-ID: <20191023040557.230886-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191022180620.19638-1-pratikshinde320@gmail.com>
-References: <20191022180620.19638-1-pratikshinde320@gmail.com>
+        Wed, 23 Oct 2019 00:04:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35348 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfJWEEE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 00:04:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zfBwWqQHq61rOJZ2i70ZrVU4EchbEdFWfvJy9T3vcDE=; b=FRjbZ8W1cCHaQgjDR5o/7tfbP
+        tM1M3sHWUmVyMhvKKlIizITSd3iRs+fCyzcJxvUcYCKiaax71eBOTHZaAM0lIbjn3EixvIlh/6Xot
+        4TFYHMpEIu2Uo+OgMorYYQ+XYs3ON5xha9EXGXAzUW1EnH9W6HFA+h7Ls39wUaYrMf/wg8/+ACjAc
+        fcDqyg+ojtjeV3V7vB48vL/cYWxf9WlVZw0vSzNXulHIVnnW9nO6HM4mVq0glBRQGeshVCnf/nrPD
+        8g9t8tJNcjiWgicl8t7mTRYai8U91/KbjNfUl7+iZF6X/oIvuIlavntEaz3EWlGTS/uWEWmA+PKEe
+        Ua9XLADcA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iN7sP-0006uX-8n; Wed, 23 Oct 2019 04:04:01 +0000
+Date:   Tue, 22 Oct 2019 21:04:01 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: dma coherent memory user-space maps
+Message-ID: <20191023040401.GA26473@infradead.org>
+References: <b811f66d-2353-23c6-c9fa-e279cdb0f832@shipmail.org>
+ <0d59940d-1688-1b22-0524-c257c2401719@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d59940d-1688-1b22-0524-c257c2401719@shipmail.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pratik Shinde <pratikshinde320@gmail.com>
-
-Introduce superblock checksum feature in order to check
-a number of given blocks at mounting time.
-
-Signed-off-by: Pratik Shinde <pratikshinde320@gmail.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
-changes from v3:
- (based on Pratik's v3 patch)
- - add LIBCRC32C dependency;
- - use kmap() in order to avoid sleeping in atomic context;
- - skip the first 1024 byte for x86 boot sector,
-   co-tested with userspace utils,
-   https://lore.kernel.org/r/20191023034957.184711-1-gaoxiang25@huawei.com
-
- fs/erofs/Kconfig    |  1 +
- fs/erofs/erofs_fs.h |  6 +++--
- fs/erofs/internal.h |  2 ++
- fs/erofs/super.c    | 53 +++++++++++++++++++++++++++++++++++++++++++--
- 4 files changed, 58 insertions(+), 4 deletions(-)
-
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 9d634d3a1845..74b0aaa7114c 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -3,6 +3,7 @@
- config EROFS_FS
- 	tristate "EROFS filesystem support"
- 	depends on BLOCK
-+	select LIBCRC32C
- 	help
- 	  EROFS (Enhanced Read-Only File System) is a lightweight
- 	  read-only file system with modern designs (eg. page-sized
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index b1ee5654750d..461913be1d1c 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -11,6 +11,8 @@
- 
- #define EROFS_SUPER_OFFSET      1024
- 
-+#define EROFS_FEATURE_COMPAT_SB_CHKSUM          0x00000001
-+
- /*
-  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
-  * be incompatible with this kernel version.
-@@ -37,8 +39,8 @@ struct erofs_super_block {
- 	__u8 uuid[16];          /* 128-bit uuid for volume */
- 	__u8 volume_name[16];   /* volume name */
- 	__le32 feature_incompat;
--
--	__u8 reserved2[44];
-+	__le32 chksum_blocks;	/* number of blocks used for checksum */
-+	__u8 reserved2[40];
- };
- 
- /*
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 544a453f3076..a3778f597bf6 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -85,6 +85,7 @@ struct erofs_sb_info {
- 
- 	u8 uuid[16];                    /* 128-bit uuid for volume */
- 	u8 volume_name[16];             /* volume name */
-+	u32 feature_compat;
- 	u32 feature_incompat;
- 
- 	unsigned int mount_opt;
-@@ -426,6 +427,7 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
- #endif	/* !CONFIG_EROFS_FS_ZIP */
- 
- #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
-+#define EFSBADCRC       EBADMSG         /* Bad CRC detected */
- 
- #endif	/* __EROFS_INTERNAL_H */
- 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 0e369494f2f2..18d1ec18a671 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -9,6 +9,7 @@
- #include <linux/statfs.h>
- #include <linux/parser.h>
- #include <linux/seq_file.h>
-+#include <linux/crc32c.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -46,6 +47,47 @@ void _erofs_info(struct super_block *sb, const char *function,
- 	va_end(args);
- }
- 
-+static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
-+{
-+	struct erofs_super_block *dsb;
-+	u32 expected_crc, nblocks, crc;
-+	void *kaddr;
-+	struct page *page;
-+	int i;
-+
-+	dsb = kmemdup(sbdata + EROFS_SUPER_OFFSET,
-+		      EROFS_BLKSIZ - EROFS_SUPER_OFFSET, GFP_KERNEL);
-+	if (!dsb)
-+		return -ENOMEM;
-+
-+	expected_crc = le32_to_cpu(dsb->checksum);
-+	nblocks = le32_to_cpu(dsb->chksum_blocks);
-+	dsb->checksum = 0;
-+	/* to allow for x86 boot sectors and other oddities. */
-+	crc = crc32c(~0, dsb, EROFS_BLKSIZ - EROFS_SUPER_OFFSET);
-+	kfree(dsb);
-+
-+	for (i = 1; i < nblocks; i++) {
-+		page = erofs_get_meta_page(sb, i);
-+		if (IS_ERR(page))
-+			return PTR_ERR(page);
-+
-+		kaddr = kmap_atomic(page);
-+		crc = crc32c(crc, kaddr, EROFS_BLKSIZ);
-+		kunmap_atomic(kaddr);
-+
-+		unlock_page(page);
-+		put_page(page);
-+	}
-+
-+	if (crc != expected_crc) {
-+		erofs_err(sb, "invalid checksum 0x%08x, 0x%08x expected",
-+			  crc, expected_crc);
-+		return -EFSBADCRC;
-+	}
-+	return 0;
-+}
-+
- static void erofs_inode_init_once(void *ptr)
- {
- 	struct erofs_inode *vi = ptr;
-@@ -112,7 +154,7 @@ static int erofs_read_superblock(struct super_block *sb)
- 
- 	sbi = EROFS_SB(sb);
- 
--	data = kmap_atomic(page);
-+	data = kmap(page);
- 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
- 
- 	ret = -EINVAL;
-@@ -121,6 +163,13 @@ static int erofs_read_superblock(struct super_block *sb)
- 		goto out;
- 	}
- 
-+	sbi->feature_compat = le32_to_cpu(dsb->feature_compat);
-+	if (sbi->feature_compat & EROFS_FEATURE_COMPAT_SB_CHKSUM) {
-+		ret = erofs_superblock_csum_verify(sb, data);
-+		if (ret)
-+			goto out;
-+	}
-+
- 	blkszbits = dsb->blkszbits;
- 	/* 9(512 bytes) + LOG_SECTORS_PER_BLOCK == LOG_BLOCK_SIZE */
- 	if (blkszbits != LOG_BLOCK_SIZE) {
-@@ -155,7 +204,7 @@ static int erofs_read_superblock(struct super_block *sb)
- 	}
- 	ret = 0;
- out:
--	kunmap_atomic(data);
-+	kunmap(data);
- 	put_page(page);
- 	return ret;
- }
--- 
-2.17.1
-
+Sorry, but travel for meeting.  I'll try to get to it as quick as
+I can.
