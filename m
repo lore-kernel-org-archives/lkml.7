@@ -2,78 +2,77 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3017ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54998CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104552084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25BD02084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390459AbfJWIoX (ORCPT
+        id S2390482AbfJWIoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:44:23 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:58222 "EHLO deadmen.hmeau.com"
+        Wed, 23 Oct 2019 04:44:44 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:9008 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390343AbfJWIoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:44:23 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iNCFc-0004MA-Ja; Wed, 23 Oct 2019 16:44:16 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iNCFY-0003xp-75; Wed, 23 Oct 2019 16:44:12 +0800
-Date:   Wed, 23 Oct 2019 16:44:12 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
-        Joe Perches <joe@perches.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
-        Otto Sabart <ottosabart@seberm.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5.1 RESEND] dt-bindings: hwrng: Add Samsung Exynos 5250+
- True RNG bindings
-Message-ID: <20191023084412.va5gswstckblm5a4@gondor.apana.org.au>
-References: <CGME20190111132222eucas1p1d80caf8ba30422bc5fe1a1fac4cf48e8@eucas1p1.samsung.com>
- <CAL_JsqKt-ujsB-t9A=4dEAjqrvcquUG+qF3tFg1YCqmup_5wcw@mail.gmail.com>
- <20190111132139.12333-1-l.stelmach@samsung.com>
- <CAJKOXPfM+EUzBBBhrtSFw5-e7hiimsFT8okcd8J9gGyFdzd2+w@mail.gmail.com>
- <58f7d127-b798-04b8-1bc6-d37a8af273f7@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <58f7d127-b798-04b8-1bc6-d37a8af273f7@suse.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S2390314AbfJWIon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:44:43 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 84449A8BB3FDE9F2AFCE;
+        Wed, 23 Oct 2019 16:44:41 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x9N8gZPE097006;
+        Wed, 23 Oct 2019 16:42:35 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102316425529-92111 ;
+          Wed, 23 Oct 2019 16:42:55 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     tglx@linutronix.de
+Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        peterz@infradead.org, tony.luck@intel.com,
+        jacob.jun.pan@linux.intel.com, sean.j.christopherson@intel.com,
+        drake@endlessm.com, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
+        wang.liang82@zte.com.cn
+Subject: [PATCH] x86/apic: fix apic_id_is_primary_thread() comment
+Date:   Wed, 23 Oct 2019 16:44:56 +0800
+Message-Id: <1571820296-30422-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-23 16:42:55,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-23 16:42:38,
+        Serialize complete at 2019-10-23 16:42:38
+X-MAIL: mse-fl1.zte.com.cn x9N8gZPE097006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 10:16:48AM +0200, Andreas Färber wrote:
->
-> For some reason this text file in linux-next is lonely in devicetree/...
-> rather than living in Documentation/devicetree/... - please fix that.
-> The patch here looks correct, so not sure what went wrong:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/devicetree/bindings/rng/samsung,exynos5250-trng.txt?h=next-20191023&id=85552c22f03c9066c33f26f34538b67fee6a91a8
+No functional change.
 
-It's because the patch
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	https://patchwork.kernel.org/patch/11181265/
-
-was generated at the wrong level (p0 instead of p1).
-
-I'll fix this up in my tree.  Thanks for the heads up.
-
-Cheers,
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 9e2dd2b..aefd970 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2335,7 +2335,7 @@ void disconnect_bsp_APIC(int virt_wire_setup)
+ #ifdef CONFIG_SMP
+ /**
+  * apic_id_is_primary_thread - Check whether APIC ID belongs to a primary thread
+- * @id:	APIC ID to check
++ * @apicid:	APIC ID to check
+  */
+ bool apic_id_is_primary_thread(unsigned int apicid)
+ {
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.8.3.1
+
