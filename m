@@ -2,335 +2,248 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964A8CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D7CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B812064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571824765;
-	bh=Jl63sn22HUeiTuGAULZ7jlyfp/Le8UL4Oe9rR2wjoAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IpNrxBo9vyYitkGogiJxxdADUsGU+KJqHqINOo8Y6+xkz+AuJaQ36JHJbGb7IE1CZ
-	 KlAL8ZM5EATKK6ok4MRhgcAFiASHd/rNK/U1lHV2CBSlcjWYzAW6YaRCpTVp1adGMR
-	 H0q3+rNUI3vzSiAzgbbuHOC5MmO8Ljvf1d4u27ao=
+	by mail.kernel.org (Postfix) with ESMTP id 7E1AF2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="uyyQcdow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391087AbfJWJ7X (ORCPT
+        id S2404113AbfJWKAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:59:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33180 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391116AbfJWJ7V (ORCPT
+        Wed, 23 Oct 2019 06:00:20 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35189 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390952AbfJWKAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:59:21 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a22so20399544ljd.0;
-        Wed, 23 Oct 2019 02:59:19 -0700 (PDT)
+        Wed, 23 Oct 2019 06:00:19 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k2so4592461edx.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 03:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B28U5Zj7r3ci+PNtQlBksa/ao1V7QZJ9ISM4QcS/zic=;
+        b=uyyQcdowTrr6u4dqYe62AnlaVURxistahNUAb5cWLq5F42hGJDUWzd8jfVZZNxKwjF
+         sIes1Fp0q6EPmNWe3cGFXzAKlNWEKu9XsGn/UxUhOvXm4b2NsqKhEdbfdfMC+nS0tj8p
+         /wGjT4bcsarZyjKYTfP0YLv6uti8eNFBX3wwBOLRW7ZEkzMVaKvUbLZ4PZTH3hZnC++7
+         gJVqmMSqGmXvFWJxPsaOxOO8uuyCxxsOaAtMS0Epf2q45q3wjXKgBM/XRNOis6CgXQI4
+         HCX0Rwt2mq8zgYg6POSjdlXEeuP0Y6i70QtZkkl+15ct6C5C0vxypTC2NCxTETtYNQzp
+         aljQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KQhlf6ODdZV33blzT/hWiwM5f6nS4rOfJWZJ1GMcjyk=;
-        b=KGe1sRCO/V4ejWIsgkTWibuNEJwcpsd2omI3taqrHT2P7pXYHhZYZ0BrsmU56g/4a1
-         //3q+Da5JLFscwhZecW1D+puNd8OAxbWeeIq+mKaZxeFZpOEdRSFbb2WTcd7jigagVio
-         S+RyAAdw8hZOV/HDm7DBhufMQLq9YSZDuY8SzzbUYKAeNuXWg59JNKEBmuHymikC5QFT
-         QWhSdF4ekMrtNHa1ZZin1khiBVWoFZjo+Z78L63cEZ+phGSI4jL6X2ZIWUTjWsIBTqO1
-         AByulkMUBPrzK0F8/CWX6dEOD/3ytkLWFnbeFIGd01Oa2PUq11wmBiZkMglmzdVDlOwS
-         /s4g==
-X-Gm-Message-State: APjAAAU7e0wBBt82KM+hynD0mg02ZqNe3zBPdaC/ekzdYFRd52sy32Ho
-        kDTokIkjFLF1IVLo5XSUlSOEzyjI
-X-Google-Smtp-Source: APXvYqwl19/Nz4NiGIDwB4Z//N9KPRnYcydmhLgJcR1K/v7Rqn9mWfFNNuYpy7x0VxTWdKysQU3Zig==
-X-Received: by 2002:a2e:1214:: with SMTP id t20mr21335348lje.191.1571824759004;
-        Wed, 23 Oct 2019 02:59:19 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id o3sm6288136lji.49.2019.10.23.02.59.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 02:59:17 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iNDQU-0006hV-EY; Wed, 23 Oct 2019 11:59:34 +0200
-Date:   Wed, 23 Oct 2019 11:59:34 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: Re: [PATCH V2 4/7] USB: serial: f81232: Add F81534A support
-Message-ID: <20191023095934.GT24768@localhost>
-References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
- <20190923022449.10952-5-hpeter+linux_kernel@gmail.com>
+        bh=B28U5Zj7r3ci+PNtQlBksa/ao1V7QZJ9ISM4QcS/zic=;
+        b=WYDqJC3PdAD+KlIX5+9wP25NQAKJYybCZNta/1laT9ymPhFEXTskzhe32pc8c+AcXc
+         EI6+NdzdsANfU1vNRSu2iFjSqkj8n07xqetcecYBcceYr+m8OEBOhRkc5NteZkGbieFw
+         dCfwomsypjRyZ+QMhmBHhZYUyqBT9y3Rf2o/4h9ZIb0LG7wrUnmEalIaNagG6gLCq6xo
+         hgvNJ+ND6PlIZDZalknAlwbPycKGSzcVhCAD+5PVxgc3gOMlgidnWbM4asUmUdHA+U9V
+         canqMNCtFl9ndmPLbnKsk4rF8p9tHIfHg/zWxSTUrzQIqgIM9aAmfQ+kLh4/LOwmqvAT
+         Wfww==
+X-Gm-Message-State: APjAAAVN27s9103WjfB2P9VxIGq0GcHqNPF5oGY9RX11XUUPJW45vrKC
+        Xxxt2IL2wtttTg4giIYzrDx41g==
+X-Google-Smtp-Source: APXvYqweeAjCV/EKg+ZoKmNiULCvm3CkiUEsOTwXPBRGvvtnMuXDQwy3LoDJs0WgZ7K52DbUtg+7vg==
+X-Received: by 2002:a17:906:5601:: with SMTP id f1mr4724791ejq.151.1571824816380;
+        Wed, 23 Oct 2019 03:00:16 -0700 (PDT)
+Received: from netronome.com ([62.119.166.9])
+        by smtp.gmail.com with ESMTPSA id a13sm274078eds.10.2019.10.23.03.00.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 03:00:15 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 12:00:11 +0200
+From:   Simon Horman <simon.horman@netronome.com>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     netdev@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller " <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 3/4] flow_dissector: extract more ICMP
+ information
+Message-ID: <20191023100009.GC8732@netronome.com>
+References: <20191021200948.23775-1-mcroce@redhat.com>
+ <20191021200948.23775-4-mcroce@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923022449.10952-5-hpeter+linux_kernel@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191021200948.23775-4-mcroce@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:24:46AM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> The Fintek F81532A/534A/535/536 is USB-to-2/4/8/12 serial ports device
-> and the serial port is default disabled when plugin computer.
+On Mon, Oct 21, 2019 at 10:09:47PM +0200, Matteo Croce wrote:
+> The ICMP flow dissector currently parses only the Type and Code fields.
+> Some ICMP packets (echo, timestamp) have a 16 bit Identifier field which
+> is used to correlate packets.
+> Add such field in flow_dissector_key_icmp and replace skb_flow_get_be16()
+> with a more complex function which populate this field.
 > 
-> The IC is contains devices as following:
-> 	1. HUB (all devices is connected with this hub)
-> 	2. GPIO/Control device. (enable serial port and control GPIOs)
-> 	3. serial port 1 to x (2/4/8/12)
-> 
-> It's most same with F81232, the UART device is difference as follow:
-> 	1. TX/RX bulk size is 128/512bytes
-> 	2. RX bulk layout change:
-> 		F81232: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
-> 		F81534A:[LEN][Data.....][LSR]
-> 
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 > ---
->  drivers/usb/serial/f81232.c | 131 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 127 insertions(+), 4 deletions(-)
+>  include/net/flow_dissector.h | 10 +++++-
+>  net/core/flow_dissector.c    | 64 ++++++++++++++++++++++--------------
+>  2 files changed, 49 insertions(+), 25 deletions(-)
 > 
-> diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-> index e4db0aec9af0..36a17aedc2ae 100644
-> --- a/drivers/usb/serial/f81232.c
-> +++ b/drivers/usb/serial/f81232.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * Fintek F81232 USB to serial adaptor driver
-> + * Fintek F81532A/534A/535/536 USB to 2/4/8/12 serial adaptor driver
->   *
->   * Copyright (C) 2012 Greg Kroah-Hartman (gregkh@linuxfoundation.org)
->   * Copyright (C) 2012 Linux Foundation
-> @@ -21,11 +22,36 @@
->  #include <linux/usb/serial.h>
->  #include <linux/serial_reg.h>
+> diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
+> index 7747af3cc500..86c6bf5eab31 100644
+> --- a/include/net/flow_dissector.h
+> +++ b/include/net/flow_dissector.h
+> @@ -6,6 +6,8 @@
+>  #include <linux/in6.h>
+>  #include <uapi/linux/if_ether.h>
 >  
-> +#define F81232_ID		\
-> +	{ USB_DEVICE(0x1934, 0x0706) }	/* 1 port UART device */
+> +struct sk_buff;
 > +
-> +#define F81534A_SERIES_ID	\
-> +	{ USB_DEVICE(0x2c42, 0x1602) },	/* In-Box 2 port UART device */	\
-> +	{ USB_DEVICE(0x2c42, 0x1604) },	/* In-Box 4 port UART device */	\
-> +	{ USB_DEVICE(0x2c42, 0x1605) },	/* In-Box 8 port UART device */	\
-> +	{ USB_DEVICE(0x2c42, 0x1606) },	/* In-Box 12 port UART device */ \
-> +	{ USB_DEVICE(0x2c42, 0x1608) },	/* Non-Flash type */ \
-> +	{ USB_DEVICE(0x2c42, 0x1632) },	/* 2 port UART device */ \
-> +	{ USB_DEVICE(0x2c42, 0x1634) },	/* 4 port UART device */ \
-> +	{ USB_DEVICE(0x2c42, 0x1635) },	/* 8 port UART device */ \
-> +	{ USB_DEVICE(0x2c42, 0x1636) }	/* 12 port UART device */
-> +
->  static const struct usb_device_id id_table[] = {
-
-Add a prefix here as well?
-
-> -	{ USB_DEVICE(0x1934, 0x0706) },
-> +	F81232_ID,
-> +	{ }					/* Terminating entry */
-> +};
-> +
-> +static const struct usb_device_id f81534a_id_table[] = {
-> +	F81534A_SERIES_ID,
-> +	{ }					/* Terminating entry */
-> +};
-> +
-> +static const struct usb_device_id all_serial_id_table[] = {
-
-combined_id_table would be a name more in line with the rest of the
-drivers, if you end up using this one for the MODULE_DEVICE_TABLE.
-
-> +	F81232_ID,
-> +	F81534A_SERIES_ID,
->  	{ }					/* Terminating entry */
+>  /**
+>   * struct flow_dissector_key_control:
+>   * @thoff: Transport header offset
+> @@ -160,6 +162,7 @@ struct flow_dissector_key_ports {
+>   *		icmp: ICMP type (high) and code (low)
+>   *		type: ICMP type
+>   *		code: ICMP code
+> + *		id:   session identifier
+>   */
+>  struct flow_dissector_key_icmp {
+>  	union {
+> @@ -169,6 +172,7 @@ struct flow_dissector_key_icmp {
+>  			u8 code;
+>  		};
+>  	};
+> +	u16 id;
 >  };
-> -MODULE_DEVICE_TABLE(usb, id_table);
-> +MODULE_DEVICE_TABLE(usb, all_serial_id_table);
 >  
->  /* Maximum baudrate for F81232 */
->  #define F81232_MAX_BAUDRATE		1500000
-> @@ -35,6 +61,10 @@ MODULE_DEVICE_TABLE(usb, id_table);
->  #define F81232_REGISTER_REQUEST		0xa0
->  #define F81232_GET_REGISTER		0xc0
->  #define F81232_SET_REGISTER		0x40
-> +#define F81534A_REGISTER_REQUEST	F81232_REGISTER_REQUEST
-> +#define F81534A_GET_REGISTER		F81232_GET_REGISTER
-> +#define F81534A_SET_REGISTER		F81232_SET_REGISTER
-> +#define F81534A_ACCESS_REG_RETRY	2
-
-This patch doesn't use any of these, and looks like you can just use the
-F81232 defines directly anyway.
-
->  #define SERIAL_BASE_ADDRESS		0x0120
->  #define RECEIVE_BUFFER_REGISTER		(0x00 + SERIAL_BASE_ADDRESS)
-> @@ -61,6 +91,11 @@ MODULE_DEVICE_TABLE(usb, id_table);
->  #define F81232_CLK_14_77_MHZ		(BIT(1) | BIT(0))
->  #define F81232_CLK_MASK			GENMASK(1, 0)
+>  /**
+> @@ -282,6 +286,7 @@ struct flow_keys {
+>  	struct flow_dissector_key_vlan cvlan;
+>  	struct flow_dissector_key_keyid keyid;
+>  	struct flow_dissector_key_ports ports;
+> +	struct flow_dissector_key_icmp icmp;
+>  	/* 'addrs' must be the last member */
+>  	struct flow_dissector_key_addrs addrs;
+>  };
+> @@ -312,10 +317,13 @@ void make_flow_keys_digest(struct flow_keys_digest *digest,
 >  
-> +#define F81534A_MODE_CONF_REG		0x107
-> +#define F81534A_TRIGGER_MASK		GENMASK(3, 2)
-> +#define F81534A_TRIGGER_MULTPILE_4X	BIT(3)
-
-MULTPILE typo?
-
-> +#define F81534A_FIFO_128BYTE		(BIT(1) | BIT(0))
-> +
->  struct f81232_private {
->  	struct mutex lock;
->  	u8 modem_control;
-> @@ -383,6 +418,46 @@ static void f81232_process_read_urb(struct urb *urb)
->  	tty_flip_buffer_push(&port->port);
+>  static inline bool flow_keys_have_l4(const struct flow_keys *keys)
+>  {
+> -	return (keys->ports.ports || keys->tags.flow_label);
+> +	return keys->ports.ports || keys->tags.flow_label || keys->icmp.id;
 >  }
 >  
-> +static void f81534a_process_read_urb(struct urb *urb)
-> +{
-> +	struct usb_serial_port *port = urb->context;
-> +	unsigned char *data = urb->transfer_buffer;
-> +	char tty_flag;
-> +	unsigned int i;
-> +	u8 lsr;
-> +	u8 len;
-> +
-> +	if (urb->actual_length < 3) {
-> +		dev_err(&port->dev, "error actual_length: %d\n",
-
-Rephrase as "short message received" or similar.
-
-> +				urb->actual_length);
-> +		return;
-> +	}
-> +
-> +	len = data[0];
-> +	if (len != urb->actual_length) {
-> +		dev_err(&port->dev, "len(%d) != urb->actual_length(%d)\n", len,
-> +				urb->actual_length);
-
-Avoid c-expressions in error messages, rephrase this in English (e.g.
-unexpected length or similar).
-
-> +		return;
-> +	}
-> +
-> +	/* bulk-in data: [LEN][Data.....][LSR] */
-> +	lsr = data[len - 1];
-> +	tty_flag = f81232_handle_lsr(port, lsr);
-> +
-> +	if (port->port.console && port->sysrq) {
-> +		for (i = 1; i < urb->actual_length - 1; ++i)
-
-Use len here?
-
-And please add brackets here since the body is a multi-line statement.
-
-> +			if (!usb_serial_handle_sysrq_char(port, data[i]))
-
-Maybe also here.
-
-> +				tty_insert_flip_char(&port->port, data[i],
-> +						tty_flag);
-> +	} else {
-> +		tty_insert_flip_string_fixed_flag(&port->port, &data[1],
-> +							tty_flag,
-> +							urb->actual_length - 2);
-
-len
-
-> +	}
-> +
-> +	tty_flip_buffer_push(&port->port);
-> +}
-> +
->  static void f81232_break_ctl(struct tty_struct *tty, int break_state)
->  {
->  	struct usb_serial_port *port = tty->driver_data;
-> @@ -666,6 +741,23 @@ static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
+>  u32 flow_hash_from_keys(struct flow_keys *keys);
+> +void skb_flow_get_icmp_tci(const struct sk_buff *skb,
+> +			   struct flow_dissector_key_icmp *key_icmp,
+> +			   void *data, int thoff, int hlen);
+>  
+>  static inline bool dissector_uses_key(const struct flow_dissector *flow_dissector,
+>  				      enum flow_dissector_key_id key_id)
+> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+> index 6443fac65ce8..90dcf6f2ef19 100644
+> --- a/net/core/flow_dissector.c
+> +++ b/net/core/flow_dissector.c
+> @@ -147,27 +147,6 @@ int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
+>  	mutex_unlock(&flow_dissector_mutex);
 >  	return 0;
 >  }
+> -/**
+> - * skb_flow_get_be16 - extract be16 entity
+> - * @skb: sk_buff to extract from
+> - * @poff: offset to extract at
+> - * @data: raw buffer pointer to the packet
+> - * @hlen: packet header length
+> - *
+> - * The function will try to retrieve a be32 entity at
+> - * offset poff
+> - */
+> -static __be16 skb_flow_get_be16(const struct sk_buff *skb, int poff,
+> -				void *data, int hlen)
+> -{
+> -	__be16 *u, _u;
+> -
+> -	u = __skb_header_pointer(skb, poff, sizeof(_u), data, hlen, &_u);
+> -	if (u)
+> -		return *u;
+> -
+> -	return 0;
+> -}
 >  
-> +static int f81534a_open(struct tty_struct *tty, struct usb_serial_port *port)
+>  /**
+>   * __skb_flow_get_ports - extract the upper layer ports and return them
+> @@ -203,8 +182,44 @@ __be32 __skb_flow_get_ports(const struct sk_buff *skb, int thoff, u8 ip_proto,
+>  }
+>  EXPORT_SYMBOL(__skb_flow_get_ports);
+>  
+> -/* If FLOW_DISSECTOR_KEY_ICMP is set, get the Type and Code from an ICMP packet
+> - * using skb_flow_get_be16().
+> +/**
+> + * skb_flow_get_icmp_tci - extract ICMP(6) Type, Code and Identifier fields
+> + * @skb: sk_buff to extract from
+> + * @key_icmp: struct flow_dissector_key_icmp to fill
+> + * @data: raw buffer pointer to the packet
+> + * @toff: offset to extract at
+> + * @hlen: packet header length
+> + */
+> +void skb_flow_get_icmp_tci(const struct sk_buff *skb,
+> +			   struct flow_dissector_key_icmp *key_icmp,
+> +			   void *data, int thoff, int hlen)
 > +{
-> +	int status;
-> +	u8 val;
+> +	struct icmphdr *ih, _ih;
 > +
-> +	val = F81534A_TRIGGER_MULTPILE_4X | F81534A_FIFO_128BYTE;
-> +	status = f81232_set_mask_register(port, F81534A_MODE_CONF_REG,
-> +			F81534A_TRIGGER_MASK | F81534A_FIFO_128BYTE, val);
+> +	ih = __skb_header_pointer(skb, thoff, sizeof(_ih), data, hlen, &_ih);
+> +	if (!ih)
+> +		return;
+> +
+> +	key_icmp->type = ih->type;
+> +	key_icmp->code = ih->code;
+> +	key_icmp->id = 0;
+> +	switch (ih->type) {
+> +	case ICMP_ECHO:
+> +	case ICMP_ECHOREPLY:
+> +	case ICMP_TIMESTAMP:
+> +	case ICMP_TIMESTAMPREPLY:
+> +	case ICMPV6_ECHO_REQUEST:
+> +	case ICMPV6_ECHO_REPLY:
+> +		/* As we use 0 to signal that the Id field is not present,
+> +		 * avoid confusion with packets without such field
+> +		 */
+> +		key_icmp->id = ih->un.echo.id ? : 1;
 
-Add also a mask temporary if that can avoid the line break?
+Its not obvious to me why the kernel should treat id-zero as a special
+value if it is not special on the wire.
 
-> +	if (status) {
-> +		dev_err(&port->dev, "failed to set MODE_CONF_REG: %d\n",
-> +				status);
-> +		return status;
+Perhaps a caller who needs to know if the id is present can
+check the ICMP type as this code does, say using a helper.
+
 > +	}
-> +
-> +	return f81232_open(tty, port);
 > +}
+> +EXPORT_SYMBOL(skb_flow_get_icmp_tci);
 > +
->  static void f81232_close(struct usb_serial_port *port)
->  {
->  	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-> @@ -772,6 +864,11 @@ static int f81232_port_probe(struct usb_serial_port *port)
->  	return 0;
+> +/* If FLOW_DISSECTOR_KEY_ICMP is set, dissect an ICMP packet
+> + * using skb_flow_get_icmp_tci().
+>   */
+>  static void __skb_flow_dissect_icmp(const struct sk_buff *skb,
+>  				    struct flow_dissector *flow_dissector,
+> @@ -219,7 +234,8 @@ static void __skb_flow_dissect_icmp(const struct sk_buff *skb,
+>  	key_icmp = skb_flow_dissector_target(flow_dissector,
+>  					     FLOW_DISSECTOR_KEY_ICMP,
+>  					     target_container);
+> -	key_icmp->icmp = skb_flow_get_be16(skb, thoff, data, hlen);
+> +
+> +	skb_flow_get_icmp_tci(skb, key_icmp, data, thoff, hlen);
 >  }
 >  
-> +static int f81534a_port_probe(struct usb_serial_port *port)
-> +{
-> +	return f81232_port_probe(port);
-> +}
-
-Maybe wait with adding this one until you need it and use
-f18232_port_probe below instead.
-
-> +
->  static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
->  {
->  	struct usb_serial_port *port = serial->port[0];
-> @@ -835,14 +932,40 @@ static struct usb_serial_driver f81232_device = {
->  	.resume =		f81232_resume,
->  };
->  
-> +static struct usb_serial_driver f81534a_device = {
-> +	.driver = {
-> +		.owner =	THIS_MODULE,
-> +		.name =		"f81534a",
-> +	},
-> +	.id_table =		f81534a_id_table,
-> +	.num_ports =		1,
-> +	.open =			f81534a_open,
-> +	.close =		f81232_close,
-> +	.dtr_rts =		f81232_dtr_rts,
-> +	.carrier_raised =	f81232_carrier_raised,
-> +	.get_serial =		f81232_get_serial_info,
-> +	.break_ctl =		f81232_break_ctl,
-> +	.set_termios =		f81232_set_termios,
-> +	.tiocmget =		f81232_tiocmget,
-> +	.tiocmset =		f81232_tiocmset,
-> +	.tiocmiwait =		usb_serial_generic_tiocmiwait,
-> +	.tx_empty =		f81232_tx_empty,
-> +	.process_read_urb =	f81534a_process_read_urb,
-> +	.read_int_callback =	f81232_read_int_callback,
-> +	.port_probe =		f81534a_port_probe,
-> +	.suspend =		f81232_suspend,
-> +	.resume =		f81232_resume,
-> +};
-> +
->  static struct usb_serial_driver * const serial_drivers[] = {
->  	&f81232_device,
-> +	&f81534a_device,
->  	NULL,
->  };
->  
-> -module_usb_serial_driver(serial_drivers, id_table);
-> +module_usb_serial_driver(serial_drivers, all_serial_id_table);
->  
-> -MODULE_DESCRIPTION("Fintek F81232 USB to serial adaptor driver");
-> +MODULE_DESCRIPTION("Fintek F81232/532A/534A/535/536 USB to serial driver");
->  MODULE_AUTHOR("Greg Kroah-Hartman <gregkh@linuxfoundation.org>");
->  MODULE_AUTHOR("Peter Hong <peter_hong@fintek.com.tw>");
->  MODULE_LICENSE("GPL v2");
-
-Johan
+>  void skb_flow_dissect_meta(const struct sk_buff *skb,
+> -- 
+> 2.21.0
+> 
