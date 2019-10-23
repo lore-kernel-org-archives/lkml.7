@@ -2,120 +2,120 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB026CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078E1CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8382E20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F7F20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571838509;
+	bh=vCfuzu7w9W+oICcIz9THHrwdCbpNpa+8+qzj4ppcLrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tuQsDgBMoVIs1BvQHtRR41dLm2HXo9QAnk6jOtgcnuA79JhRyoJ8NQ7UTKgXKS5ay
+	 LjP4yUkdc14qBD0bf/ZQFv+HqSHeRS8Si9W078vQRw2vaTzg0Gv4giV234J1PbinnP
+	 /oNuxmipyw6i/WC0aBsF45HHAlgCGRCE3jl6nVFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406114AbfJWNsB (ORCPT
+        id S2406126AbfJWNs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:48:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49458 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403782AbfJWNsB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:48:01 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNGzV-0002uQ-RP; Wed, 23 Oct 2019 15:47:57 +0200
-Date:   Wed, 23 Oct 2019 15:47:57 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Cyrill Gorcunov <gorcunov@gmail.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [BUG -tip] kmemleak and stacktrace cause page faul
-In-Reply-To: <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1910231533180.2308@nanos.tec.linutronix.de>
-References: <20191019114421.GK9698@uranus.lan> <20191022142325.GD12121@uranus.lan> <20191022145619.GE12121@uranus.lan> <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 23 Oct 2019 09:48:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57404 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405869AbfJWNs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:48:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 49913B239;
+        Wed, 23 Oct 2019 13:48:26 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 15:48:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 1/8] mm: vmscan: simplify lruvec_lru_size()
+Message-ID: <20191023134824.GB17610@dhcp22.suse.cz>
+References: <20191022144803.302233-1-hannes@cmpxchg.org>
+ <20191022144803.302233-2-hannes@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022144803.302233-2-hannes@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019, Thomas Gleixner wrote:
-> On Tue, 22 Oct 2019, Cyrill Gorcunov wrote:
-> Ergo ep must be a valid pointer pointing to the statically allocated and
-> statically initialized estack_pages array.
+On Tue 22-10-19 10:47:56, Johannes Weiner wrote:
+> This function currently takes the node or lruvec size and subtracts
+> the zones that are excluded by the classzone index of the
+> allocation. It uses four different types of counters to do this.
 > 
->         /* Guard page? */
->         if (!ep->size)
-> 
-> How on earth can dereferencing ep crash the machine?
-> 
->                 return false;
-> 
-> That does not make any sense.
-> 
-> Surely, we should not even try to decode exception stack when
-> cea_exception_stacks is not yet initialized, but that does not explain
-> anything what you are observing.
+> Just add up the eligible zones.
 
-So looking at your actual crash:
-
-[    0.027246] BUG: unable to handle page fault for address: 0000000000001ff0
-
-So this derefences the stack pointer address.
-
-[    0.082275] stk 0x1010 k 1 begin 0x0 end 0xd000 estack_pages 0xffffffff82014880 ep
-0xffffffff82014888
-
-ep is pointing correctly to estack_pages[1] which is bogus because 0x1010
-is not a valid stack value, but dereferencing ep does not make it crash.
-
-The crash farther down:
-
-    	end = begin + (unsigned long)ep->size;
-
-==> end = 0x2000
-
-        regs = (struct pt_regs *)end - 1;
-
-==> regs = 0x2000 - sizeof(struct pt_regs *) = 0x1ff0
-
-        info->type      = ep->type;
-        info->begin     = (unsigned long *)begin;
-        info->end       = (unsigned long *)end;
-
----->	info->next_sp   = (unsigned long *)regs->sp;
-
-	This is the crashing instruction trying to access 0x1ff0
-
-And you are right this happens because cea_exception_stacks is not yet
-initialized which makes begin = 0 and therefore point into nirvana.
-
-So the fix is trivial.
-
-Thanks,
-
-	tglx
-
-8<------------
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -94,6 +94,13 @@ static bool in_exception_stack(unsigned
- 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+The original intention was to optimize this for GFP_KERNEL like
+allocations by reducing the number of zones to reduce. But considering
+this is not called from hot paths I do agree that a simpler code is more
+preferable.
  
- 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
-+	/*
-+	 * Handle the case where stack trace is collected _before_
-+	 * cea_exception_stacks had been initialized.
-+	 */
-+	if (!begin)
-+		return false;
-+
- 	end = begin + sizeof(struct cea_exception_stacks);
- 	/* Bail if @stack is outside the exception stack area. */
- 	if (stk < begin || stk >= end)
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/vmscan.c | 21 +++++----------------
+>  1 file changed, 5 insertions(+), 16 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 1154b3a2b637..57f533b808f2 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -351,32 +351,21 @@ unsigned long zone_reclaimable_pages(struct zone *zone)
+>   */
+>  unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+>  {
+> -	unsigned long lru_size = 0;
+> +	unsigned long size = 0;
+>  	int zid;
+>  
+> -	if (!mem_cgroup_disabled()) {
+> -		for (zid = 0; zid < MAX_NR_ZONES; zid++)
+> -			lru_size += mem_cgroup_get_zone_lru_size(lruvec, lru, zid);
+> -	} else
+> -		lru_size = node_page_state(lruvec_pgdat(lruvec), NR_LRU_BASE + lru);
+> -
+> -	for (zid = zone_idx + 1; zid < MAX_NR_ZONES; zid++) {
+> +	for (zid = 0; zid <= zone_idx; zid++) {
+>  		struct zone *zone = &lruvec_pgdat(lruvec)->node_zones[zid];
+> -		unsigned long size;
+>  
+>  		if (!managed_zone(zone))
+>  			continue;
+>  
+>  		if (!mem_cgroup_disabled())
+> -			size = mem_cgroup_get_zone_lru_size(lruvec, lru, zid);
+> +			size += mem_cgroup_get_zone_lru_size(lruvec, lru, zid);
+>  		else
+> -			size = zone_page_state(&lruvec_pgdat(lruvec)->node_zones[zid],
+> -				       NR_ZONE_LRU_BASE + lru);
+> -		lru_size -= min(size, lru_size);
+> +			size += zone_page_state(zone, NR_ZONE_LRU_BASE + lru);
+>  	}
+> -
+> -	return lru_size;
+> -
+> +	return size;
+>  }
+>  
+>  /*
+> -- 
+> 2.23.0
+
+-- 
+Michal Hocko
+SUSE Labs
