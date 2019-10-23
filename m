@@ -2,157 +2,197 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55840CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA568CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18AB214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:08:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="D/CIKos7"
+	by mail.kernel.org (Postfix) with ESMTP id 7C0CC2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389865AbfJWHId (ORCPT
+        id S2389685AbfJWHK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:08:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36717 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388218AbfJWHId (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:08:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u16so15147677lfq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 00:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=myl9hp8GAdZ10Vh56qyy6JaHhxuDJ9OqLHFd3viE44w=;
-        b=D/CIKos7wpo0yugt6OSXX7bSNd0uG+7P8UyKC6tUPLOGlg3lpLAmJCUCqZRgkpJSmQ
-         /ua9qSJgNrl1LsDsy10IsXdPlR6Fv1rZxxYSOM/ZcCJ0mDG8jrtIdD8yFOK61FPzQ90u
-         hFpSSl11Te5wvXzmj7gDzCd2zmJkM16v/LNQ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=myl9hp8GAdZ10Vh56qyy6JaHhxuDJ9OqLHFd3viE44w=;
-        b=auZ+0nNsUjphELbzrVkaqkNah6ga3hsQC494Qw08His/Voqg9FnDFUce/M8gWSy3xV
-         7NDSvnTVkwteYMH0XnX2v+WtgC6pzZysJ4y9uGS40YH5tNj7xRoozHYn+S0N+YaoUYFo
-         R3fUa4pMD6FnsjRGl4cL6t+t057iJIINs8tM5WQ1sWD+x48ThVasUVK2627oWy21TL75
-         8S0UOWjUV81syVqC8EdxpamYCZA3rLn+yaP4nK5EgK042QbVRWQzeHyQ0gozYjCKUtvT
-         S9CDai7DTW/tSw+Oypho8eF2cFWrfrhjQ8NQJ2nz54ZDScbWbyhBomihiVgNJHcKLYBK
-         KG6g==
-X-Gm-Message-State: APjAAAUxCPPhTCxwqQehlrTXAIMk0giVCW3Vgjzm4H1q8zEQb3GWNGA4
-        oy9CkBlydYR4hMcaLW1p3MNRTQ==
-X-Google-Smtp-Source: APXvYqwRZFXEAB1sX7Quxj/Hpyb451DS8Gl1oBwoo5NLaCgiUg7xN2GoprYTPQVnWp6BHkMtcSr9Mg==
-X-Received: by 2002:a19:c354:: with SMTP id t81mr13587917lff.179.1571814509700;
-        Wed, 23 Oct 2019 00:08:29 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id r6sm9908883ljr.77.2019.10.23.00.08.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 00:08:29 -0700 (PDT)
-Subject: Re: [PATCH 3/7] soc: fsl: qe: avoid ppc-specific io accessors
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191018125234.21825-4-linux@rasmusvillemoes.dk>
- <6ee121cf-0e3d-4aa0-2593-fcb00995e429@c-s.fr>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <47d45f33-d5aa-b4b5-9b5f-2e86e309a206@rasmusvillemoes.dk>
-Date:   Wed, 23 Oct 2019 09:08:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 03:10:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:44208 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727574AbfJWHK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:10:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 00:10:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
+   d="scan'208";a="372790337"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
+  by orsmga005.jf.intel.com with ESMTP; 23 Oct 2019 00:10:54 -0700
+Date:   Wed, 23 Oct 2019 15:07:47 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+Message-ID: <20191023070747.GA30533@___>
+References: <20191022095230.2514-1-tiwei.bie@intel.com>
+ <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
+ <20191023030253.GA15401@___>
+ <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <6ee121cf-0e3d-4aa0-2593-fcb00995e429@c-s.fr>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/10/2019 17.01, Christophe Leroy wrote:
+On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
+> On 2019/10/23 上午11:02, Tiwei Bie wrote:
+> > On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
+> > > On 2019/10/22 下午5:52, Tiwei Bie wrote:
+> > > > This patch introduces a mdev based hardware vhost backend.
+> > > > This backend is built on top of the same abstraction used
+> > > > in virtio-mdev and provides a generic vhost interface for
+> > > > userspace to accelerate the virtio devices in guest.
+> > > > 
+> > > > This backend is implemented as a mdev device driver on top
+> > > > of the same mdev device ops used in virtio-mdev but using
+> > > > a different mdev class id, and it will register the device
+> > > > as a VFIO device for userspace to use. Userspace can setup
+> > > > the IOMMU with the existing VFIO container/group APIs and
+> > > > then get the device fd with the device name. After getting
+> > > > the device fd of this device, userspace can use vhost ioctls
+> > > > to setup the backend.
+> > > > 
+> > > > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+> > > > ---
+> > > > This patch depends on below series:
+> > > > https://lkml.org/lkml/2019/10/17/286
+> > > > 
+> > > > v1 -> v2:
+> > > > - Replace _SET_STATE with _SET_STATUS (MST);
+> > > > - Check status bits at each step (MST);
+> > > > - Report the max ring size and max number of queues (MST);
+> > > > - Add missing MODULE_DEVICE_TABLE (Jason);
+> > > > - Only support the network backend w/o multiqueue for now;
+> > > 
+> > > Any idea on how to extend it to support devices other than net? I think we
+> > > want a generic API or an API that could be made generic in the future.
+> > > 
+> > > Do we want to e.g having a generic vhost mdev for all kinds of devices or
+> > > introducing e.g vhost-net-mdev and vhost-scsi-mdev?
+> > One possible way is to do what vhost-user does. I.e. Apart from
+> > the generic ring, features, ... related ioctls, we also introduce
+> > device specific ioctls when we need them. As vhost-mdev just needs
+> > to forward configs between parent and userspace and even won't
+> > cache any info when possible,
 > 
 > 
-> On 10/18/2019 12:52 PM, Rasmus Villemoes wrote:
->> In preparation for allowing to build QE support for architectures
->> other than PPC, replace the ppc-specific io accessors. Done via
->>
-> 
-> This patch is not transparent in terms of performance, functions get
-> changed significantly.
-> 
-> Before the patch:
-> 
-> 00000330 <ucc_fast_enable>:
->  330:    81 43 00 04     lwz     r10,4(r3)
->  334:    7c 00 04 ac     hwsync
->  338:    81 2a 00 00     lwz     r9,0(r10)
->  33c:    0c 09 00 00     twi     0,r9,0
->  340:    4c 00 01 2c     isync
->  344:    70 88 00 02     andi.   r8,r4,2
->  348:    41 82 00 10     beq     358 <ucc_fast_enable+0x28>
->  34c:    39 00 00 01     li      r8,1
->  350:    91 03 00 10     stw     r8,16(r3)
->  354:    61 29 00 10     ori     r9,r9,16
->  358:    70 88 00 01     andi.   r8,r4,1
->  35c:    41 82 00 10     beq     36c <ucc_fast_enable+0x3c>
->  360:    39 00 00 01     li      r8,1
->  364:    91 03 00 14     stw     r8,20(r3)
->  368:    61 29 00 20     ori     r9,r9,32
->  36c:    7c 00 04 ac     hwsync
->  370:    91 2a 00 00     stw     r9,0(r10)
->  374:    4e 80 00 20     blr
-> 
-> After the patch:
-> 
-> 0000030c <ucc_fast_enable>:
->  30c:    94 21 ff e0     stwu    r1,-32(r1)
->  310:    7c 08 02 a6     mflr    r0
->  314:    bf a1 00 14     stmw    r29,20(r1)
->  318:    7c 9f 23 78     mr      r31,r4
->  31c:    90 01 00 24     stw     r0,36(r1)
->  320:    7c 7e 1b 78     mr      r30,r3
->  324:    83 a3 00 04     lwz     r29,4(r3)
->  328:    7f a3 eb 78     mr      r3,r29
->  32c:    48 00 00 01     bl      32c <ucc_fast_enable+0x20>
->             32c: R_PPC_REL24    ioread32be
->  330:    73 e9 00 02     andi.   r9,r31,2
->  334:    41 82 00 10     beq     344 <ucc_fast_enable+0x38>
->  338:    39 20 00 01     li      r9,1
->  33c:    91 3e 00 10     stw     r9,16(r30)
->  340:    60 63 00 10     ori     r3,r3,16
->  344:    73 e9 00 01     andi.   r9,r31,1
->  348:    41 82 00 10     beq     358 <ucc_fast_enable+0x4c>
->  34c:    39 20 00 01     li      r9,1
->  350:    91 3e 00 14     stw     r9,20(r30)
->  354:    60 63 00 20     ori     r3,r3,32
->  358:    80 01 00 24     lwz     r0,36(r1)
->  35c:    7f a4 eb 78     mr      r4,r29
->  360:    bb a1 00 14     lmw     r29,20(r1)
->  364:    7c 08 03 a6     mtlr    r0
->  368:    38 21 00 20     addi    r1,r1,32
->  36c:    48 00 00 00     b       36c <ucc_fast_enable+0x60>
->             36c: R_PPC_REL24    iowrite32be
+> So it looks to me this is only possible if we expose e.g set_config and
+> get_config to userspace.
 
-True. Do you know why powerpc uses out-of-line versions of these
-accessors when !PPC_INDIRECT_PIO, i.e. at least all of PPC32? It's quite
-a bit beyond the scope of this series, but I'd expect moving most if not
-all of arch/powerpc/kernel/iomap.c into asm/io.h (guarded by
-!defined(CONFIG_PPC_INDIRECT_PIO) of course) as static inlines would
-benefit all ppc32 users of iowrite32 and friends.
+The set_config and get_config interface isn't really everything
+of device specific settings. We also have ctrlq in virtio-net.
 
-Is there some other primitive available that (a) is defined on all
-architectures (or at least both ppc and arm) and (b) expands to good
-code in both/all cases?
+> 
+> 
+> > I think it might be better to do
+> > this in one generic vhost-mdev module.
+> 
+> 
+> Looking at definitions of VhostUserRequest in qemu, it mixed generic API
+> with device specific API. If we want go this ways (a generic vhost-mdev),
+> more questions needs to be answered:
+> 
+> 1) How could userspace know which type of vhost it would use? Do we need to
+> expose virtio subsystem device in for userspace this case?
+> 
+> 2) That generic vhost-mdev module still need to filter out unsupported
+> ioctls for a specific type. E.g if it probes a net device, it should refuse
+> API for other type. This in fact a vhost-mdev-net but just not modularize it
+> on top of vhost-mdev.
+> 
+> 
+> > 
+> > > 
+> > > > - Some minor fixes and improvements;
+> > > > - Rebase on top of virtio-mdev series v4;
+[...]
+> > > > +
+> > > > +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __user *featurep)
+> > > > +{
+> > > > +	if (copy_to_user(featurep, &m->features, sizeof(m->features)))
+> > > > +		return -EFAULT;
+> > > 
+> > > As discussed in previous version do we need to filter out MQ feature here?
+> > I think it's more straightforward to let the parent drivers to
+> > filter out the unsupported features. Otherwise it would be tricky
+> > when we want to add more features in vhost-mdev module,
+> 
+> 
+> It's as simple as remove the feature from blacklist?
 
-Note that a few uses of the the iowrite32be accessors has already
-appeared in the qe code with the introduction of the qe_clrsetbits()
-helpers in bb8b2062af.
+It's not really that easy. It may break the old drivers.
 
-Rasmus
+> 
+> 
+> > i.e. if
+> > the parent drivers may expose unsupported features and relay on
+> > vhost-mdev to filter them out, these features will be exposed
+> > to userspace automatically when they are enabled in vhost-mdev
+> > in the future.
+> 
+> 
+> The issue is, it's only that vhost-mdev knows its own limitation. E.g in
+> this patch, vhost-mdev only implements a subset of transport API, but parent
+> doesn't know about that.
+> 
+> Still MQ as an example, there's no way (or no need) for parent to know that
+> vhost-mdev does not support MQ.
+
+The mdev is a MDEV_CLASS_ID_VHOST mdev device. When the parent
+is being developed, it should know the currently supported features
+of vhost-mdev.
+
+> And this allows old kenrel to work with new
+> parent drivers.
+
+The new drivers should provide things like VIRTIO_MDEV_F_VERSION_1
+to be compatible with the old kernels. When VIRTIO_MDEV_F_VERSION_1
+is provided/negotiated, the behaviours should be consistent.
+
+> 
+> So basically we have three choices here:
+> 
+> 1) Implement what vhost-user did and implement a generic vhost-mdev (but may
+> still have lots of device specific code). To support advanced feature which
+> requires the access to config, still lots of API that needs to be added.
+> 
+> 2) Implement what vhost-kernel did, have a generic vhost-mdev driver and a
+> vhost bus on top for match a device specific API e.g vhost-mdev-net. We
+> still have device specific API but limit them only to device specific
+> module. Still require new ioctls for advanced feature like MQ.
+> 
+> 3) Simply expose all virtio-mdev transport to userspace.
+
+Currently, virtio-mdev transport is a set of function callbacks
+defined in kernel. How to simply expose virtio-mdev transport to
+userspace?
+
+
+> A generic module
+> without any type specific code (like virtio-mdev). No need dedicated API for
+> e.g MQ. But then the API will look much different than current vhost did.
+> 
+> Consider the limitation of 1) I tend to choose 2 or 3. What's you opinion?
+> 
+> 
