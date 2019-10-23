@@ -2,97 +2,148 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52400CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2130ECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F8A21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE14521929
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEm10kwh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TC+G+a72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406416AbfJWPBP (ORCPT
+        id S2406433AbfJWPBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:01:15 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20779 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391753AbfJWPBP (ORCPT
+        Wed, 23 Oct 2019 11:01:31 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36763 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391742AbfJWPBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:01:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571842872;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cdptM1wjryYnQhJm9RmuX5FaBmrJ2EY+9SJ+YV4u0fQ=;
-        b=UEm10kwh/Gl+wyW634T5RyoDn0MZNkGl6QXiPnJTq67e2nRucJWzy7+Vk7bzmz9YfuzvZx
-        osVKyGYUCkAhh+kFfcMclZAbeS9g5KOL1xx1q5cZdt9SrXCr9MkkIDCmze+VW1D9uaUXUy
-        n9A/C396JBXuWa1xXYKHGEE5DsY/6uw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-Y09mMa8JNFO1Wvt2DH_ATQ-1; Wed, 23 Oct 2019 11:01:08 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 281081005500;
-        Wed, 23 Oct 2019 15:01:06 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8AA919C77;
-        Wed, 23 Oct 2019 15:01:04 +0000 (UTC)
-Subject: Re: [PATCH] mm/vmstat: Reduce zone lock hold time when reading
- /proc/pagetypeinfo
-To:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>
-References: <20191022162156.17316-1-longman@redhat.com>
- <20191022145902.d9c4a719c0b32175e06e4eee@linux-foundation.org>
- <2236495a-ead0-e08e-3fb6-f3ab906b75b6@redhat.com>
- <1571842093.5937.84.camel@lca.pw>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <a4398f60-c07e-8fa9-c26d-3b8f688e65a1@redhat.com>
-Date:   Wed, 23 Oct 2019 11:01:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 23 Oct 2019 11:01:31 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 23so12322867pgk.3;
+        Wed, 23 Oct 2019 08:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VGcDW9u8glpHl9NWHGsEcLSGow06v5uvF5GnWslAJA8=;
+        b=TC+G+a72DBXrWYs0MMstftfx3Qr0BKRNdRe24DkeVHt1AIk+muBu5ffO+gugjhax0e
+         cp7hTk+uFKfxSDqlo5jnH4pu5V8IU4KMl7ptHNzRx4H/+XiPz0np8FSEQ0nuGqDfb2M4
+         h8m1drU0GhVVuOjdNnIoK4ZNHOZaFISsHap/V9o3tP51TLfqNyJUQSTqU/gd7KJKAoSP
+         XLSBIlP/zyMCeu6zPBl/LNTWDD2IuC2183Ag9W3wPSOlg17qDhJ6ZgBHlqt3avrsYs6K
+         1TBcbl9aaMewyX8vJ8Mgy73M2Z+NVC7cbd2gAXdUl5hEMAmSERedHoHuU2KHhMk//O60
+         hFlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VGcDW9u8glpHl9NWHGsEcLSGow06v5uvF5GnWslAJA8=;
+        b=LRdmpMNMy31KvvYcGpOxt8s4wDgOZq+JsxAASXxt1zqp+Io+YPVRfggWVK8xebX7Nt
+         nHdBtMYoBT/Vcqd10/mTB5m5oYFI50X3DrZEqFzF8vUU0iJGIbVmoSTj6yUW4wJ9Q+Fm
+         e5qY2aY1E/vw3Obw7jkwGMeOTQShjvbP8AhTESQg4DM9XQiJaU1BiJLS2XseEss7EAGr
+         VpYefZyYzSYJhUlBAuceT5G4E4BN41YRoYua6AtzQhWVeoHSZZukycbOd9PgD/RcnDz/
+         xS3Q5VRBM7QsEtF0vd2YUjz6IF+YN4dngkyiivFhaHjN9LWR30y9EaTvAelQWikDbyz/
+         RxQQ==
+X-Gm-Message-State: APjAAAVRfSmi7TVzNS3moYqILki9Q+tP40hTmHPCiSOAty9Ys1xWntA0
+        dPN7rGRw7nADikPHFq36yCQ=
+X-Google-Smtp-Source: APXvYqzgjaZFWfZd7bF5LRqqP9IX6KdtfB6Z5qmJ4+Fk322t5Henb/vokuna0Zn55kHmvbshyCFCHQ==
+X-Received: by 2002:a63:78f:: with SMTP id 137mr10662728pgh.110.1571842890449;
+        Wed, 23 Oct 2019 08:01:30 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q71sm21951953pjb.26.2019.10.23.08.01.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 08:01:28 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 08:01:26 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Puma Hsu <pumahsu@google.com>, gregkh@linuxfoundation.org,
+        badhri@google.com, kyletso@google.com, albertccwang@google.com,
+        rickyniu@google.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector
+ orientation
+Message-ID: <20191023150126.GA16612@roeck-us.net>
+References: <20191022085924.92783-1-pumahsu@google.com>
+ <20191023083221.GB8828@kuha.fi.intel.com>
+ <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net>
+ <20191023142900.GA15396@kuha.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1571842093.5937.84.camel@lca.pw>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: Y09mMa8JNFO1Wvt2DH_ATQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023142900.GA15396@kuha.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 10:48 AM, Qian Cai wrote:
->>> this still isn't a bulletproof fix.  Maybe just terminate the list
->>> walk if freecount reaches 1024.  Would anyone really care?
->>>
->>> Sigh.  I wonder if anyone really uses this thing for anything
->>> important.  Can we just remove it all?
->>>
->> Removing it will be a breakage of kernel API.
-> Who cares about breaking this part of the API that essentially nobody wil=
-l use
-> this file?
->
-There are certainly tools that use /proc/pagetypeinfo and this is how
-the problem is found. I am not against removing it, but we have to be
-careful and deprecate it in way that minimize user impact.
+On Wed, Oct 23, 2019 at 05:29:00PM +0300, Heikki Krogerus wrote:
+> On Wed, Oct 23, 2019 at 06:44:39AM -0700, Guenter Roeck wrote:
+> > On 10/23/19 1:32 AM, Heikki Krogerus wrote:
+> > > +Guenter
+> > > 
+> > > On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
+> > > > Export the Type-C connector orientation so that user space
+> > > > can get this information.
+> > > > 
+> > > > Signed-off-by: Puma Hsu <pumahsu@google.com>
+> > > > ---
+> > > >   Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
+> > > >   drivers/usb/typec/class.c                   | 18 ++++++++++++++++++
+> > > >   2 files changed, 29 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+> > > > index d7647b258c3c..b22f71801671 100644
+> > > > --- a/Documentation/ABI/testing/sysfs-class-typec
+> > > > +++ b/Documentation/ABI/testing/sysfs-class-typec
+> > > > @@ -108,6 +108,17 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > >   Description:
+> > > >   		Revision number of the supported USB Type-C specification.
+> > > > +What:		/sys/class/typec/<port>/connector_orientation
+> > > > +Date:		October 2019
+> > > > +Contact:	Puma Hsu <pumahsu@google.com>
+> > > > +Description:
+> > > > +		Indicates which typec connector orientation is configured now.
+> > > > +		cc1 is defined as "normal" and cc2 is defined as "reversed".
+> > > > +
+> > > > +		Valid value:
+> > > > +		- unknown (nothing configured)
+> > > 
+> > > "unknown" means we do not know the orientation.
+> > > 
+> > > > +		- normal (configured in cc1 side)
+> > > > +		- reversed (configured in cc2 side)
+> > > 
+> > > Guenter, do you think "connector_orientation" OK. I proposed it, but
+> > > I'm now wondering if something like "polarity" would be better?
+> > > 
+> > 
+> > Yes, or just "orientation". I don't see the value in the "connector_" prefix.
+> > I also wonder if "unknown" is really correct. Is it really unknown, or
+> > does it mean that the port is disconnected ?
+> 
+> Unknown means we don't know the orientation. We don't always have that
+> information available to us. With UCSI we simply do not know it.
+> 
+> I think this file needs to be hidden after all if we don't know the
+> cable plug orientation.
+> 
+Making the attribute appear and disappear may cause difficulties for
+userspace.
 
-Cheers,
-Longman
+> How about empty string instead of "unknown"?
+> 
+An empty string might also be challenging for userspace.
 
+"unknown" is fine if it is really unknown. With that in mind,
+I wonder what value that attribute has for userspace, but presumably
+there must be some use case. I assume it is purely informational.
+
+In summary, I would suggest to name the attribute either "orientation"
+or "polarity".
+
+Thanks,
+Guenter
