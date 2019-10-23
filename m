@@ -2,181 +2,207 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF03CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88DECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A5421872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571836965;
-	bh=v1Cb5VfNUA7xuX1ulG1rboqB8GmLBCsgrbmbao4ZqYo=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=OymS0gJaJQVzJW71X73YQsIO/mk0a0WlexdC7fd1bD7ta4jwa3C6TdvaoJWCpejZk
-	 1n0P6fLSw9AKq1hY+RJZ8Wamw0mnymM/HTbEuD39s73tciLeEA2Mzp5lWJ4hSCJgW/
-	 D0KbJMmMBOccMV1uCT0OJXxOCYEka2QLUhdFq9aE=
+	by mail.kernel.org (Postfix) with ESMTP id AF92221872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405792AbfJWNWo (ORCPT
+        id S2405805AbfJWNXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:22:44 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37145 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405084AbfJWNWo (ORCPT
+        Wed, 23 Oct 2019 09:23:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35040 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405794AbfJWNXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:22:44 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iNGaz-0002vU-Ap; Wed, 23 Oct 2019 15:22:37 +0200
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH RFC 2/2] irqchip/gic: Allow the use of SGI interrupts
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 23 Oct 2019 14:22:34 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thanu Rangarajan <thanu.rangarajan@arm.com>
-In-Reply-To: <20191023000547.7831-3-f.fainelli@gmail.com>
-References: <20191023000547.7831-1-f.fainelli@gmail.com>
- <20191023000547.7831-3-f.fainelli@gmail.com>
-Message-ID: <112a725164b7fe321f27357fd4cd772f@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, souvik.chakravarty@arm.com, james.quinlan@broadcom.com, sudeep.holla@arm.com, thanu.rangarajan@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Wed, 23 Oct 2019 09:23:21 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9NDKJlK098962
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:23:20 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vtp0u4q3s-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:23:19 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 23 Oct 2019 14:23:17 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 23 Oct 2019 14:23:13 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9NDNCu915204484
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Oct 2019 13:23:12 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B962A4065;
+        Wed, 23 Oct 2019 13:23:12 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79CEDA4060;
+        Wed, 23 Oct 2019 13:23:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.184.174])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 23 Oct 2019 13:23:11 +0000 (GMT)
+Subject: Re: [PATCH v1 5/6] KEYS: measure queued keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Wed, 23 Oct 2019 09:23:10 -0400
+In-Reply-To: <20191023001818.3684-6-nramas@linux.microsoft.com>
+References: <20191023001818.3684-1-nramas@linux.microsoft.com>
+         <20191023001818.3684-6-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102313-0016-0000-0000-000002BC2203
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102313-0017-0000-0000-0000331D61EE
+Message-Id: <1571836990.5104.96.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910230136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+On Tue, 2019-10-22 at 17:18 -0700, Lakshmi Ramasubramanian wrote:
+> Call process_buffer_measurement to measure keys that
+> are added and updated in the system.
 
-Needless to say, I mostly have questions...
+This patch description doesn't describe what the patch actually does
+(eg. it not only calls process_buffer_measurement, but defines the IMA
+hook itself.)
 
-On 2019-10-23 01:05, Florian Fainelli wrote:
-> SGI interrupts are a convenient way for trusted firmware to target a
-> specific set of CPUs. Update the ARM GIC code to allow the 
-> translation
-> and mapping of SGI interrupts.
->
-> Since the kernel already uses SGIs for various inter-processor 
-> interrupt
-> activities, we specifically make sure that we do not let users of the
-> IRQ API to even try to map those.
->
-> Internal IPIs remain dispatched through handle_IPI() while public 
-> SGIs
-> get promoted to a normal interrupt flow management.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+The ordering of this patch set is awkward.  It should first introduce
+a generic method for measuring keys based on the keyring.  Then add
+the additional support needed for the specific builtin_trusted_keys
+keyring usecase.
+
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 > ---
->  drivers/irqchip/irq-gic.c | 41 
-> +++++++++++++++++++++++++++------------
->  1 file changed, 29 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 30ab623343d3..dcfdbaacdd64 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -385,7 +385,10 @@ static void __exception_irq_entry
-> gic_handle_irq(struct pt_regs *regs)
->  			 * Pairs with the write barrier in gic_raise_softirq
->  			 */
->  			smp_rmb();
-> -			handle_IPI(irqnr, regs);
-> +			if (irqnr < NR_IPI)
-> +				handle_IPI(irqnr, regs);
-> +			else
-> +				handle_domain_irq(gic->domain, irqnr, regs);
-
-Double EOI, UNPREDICTABLE territory, your state machine is now dead.
-
->  #endif
->  			continue;
->  		}
-> @@ -1005,20 +1008,34 @@ static int gic_irq_domain_translate(struct
-> irq_domain *d,
->  		if (fwspec->param_count < 3)
->  			return -EINVAL;
->
-> -		/* Get the interrupt number and add 16 to skip over SGIs */
-> -		*hwirq = fwspec->param[1] + 16;
-> -
-> -		/*
-> -		 * For SPIs, we need to add 16 more to get the GIC irq
-> -		 * ID number
-> -		 */
-> -		if (!fwspec->param[0])
-> +		*hwirq = fwspec->param[1];
-> +		switch (fwspec->param[0]) {
-> +		case 0:
-> +			/*
-> +			 * For SPIs, we need to add 16 more to get the GIC irq
-> +			 * ID number
-> +			 */
-> +			*hwirq += 16;
-> +			/* fall through */
-> +		case 1:
-> +			/* Add 16 to skip over SGIs */
->  			*hwirq += 16;
-> +			*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
->
-> -		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-> +			/* Make it clear that broken DTs are... broken */
-> +			WARN_ON(*type == IRQ_TYPE_NONE);
-> +			break;
-> +		case 2:
-> +			/* Refuse to map internal IPIs */
-> +			if (*hwirq < NR_IPI)
-
-So depending on how the kernel uses SGIs, you can or cannot use these 
-SGIs.
-That looks like a good way to corner ourselves into not being to change 
-much.
-
-Also, do you expect this to work for both Group-0 and Group-1 
-interrupts
-(since you imply that this works as a communication medium with the 
-secure
-side)? Given that the kernel running in NS has no way to enable/disable
-Group-0 interrupts, this looks terminally flawed. Or is that Group-1 
-only?
-
-How do we describe which SGIs are guaranteed to be available to Linux?
-
-> +				return -EPERM;
+>  security/integrity/ima/ima_main.c  | 23 +++++++++++++++++++++
+>  security/integrity/ima/ima_queue.c | 32 ++++++++++++++++++++++++++++++
+>  2 files changed, 55 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 8e965d18fb21..7c2afb954f19 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -678,6 +678,29 @@ void ima_kexec_cmdline(const void *buf, int size)
+>  	}
+>  }
+>  
+> +/*
+> + * ima_post_key_create_or_update
+> + * @keyring points to the keyring to which the key belongs
+> + * @key points to the key being created or updated
+> + * @cred cred structure
+> + * @flags flags passed to key_create_or_update function
+> + * @create flag to indicate whether the key was created or updated
+> + *
+> + * IMA hook called when a new key is created or updated.
+> + *
+> + * On success return 0.
+> + * Return appropriate error code on error
+> + */
+> +int ima_post_key_create_or_update(struct key *keyring, struct key *key,
+> +				  const struct cred *cred,
+> +				  unsigned long flags, bool create)
+> +{
+> +	if (key->type != &key_type_asymmetric)
+> +		return 0;
 > +
-> +			*type = IRQ_TYPE_NONE;
+> +	return ima_measure_key(keyring, key);
+> +}
+> +
 
-Or not. SGI are edge triggered, by definition.
+Here is the new IMA hook, not "[PATCH v1 3/6] KEYS: ima hook to
+measure builtin_trusted_keys".  The new hook should call
+process_buffer_measurement() directly.  A subsequent patch, based on
+the keyring, would determine if it needs to be queued.
 
-> +			break;
-> +		default:
-> +			break;
+Mimi
+
+
+>  static int __init init_ima(void)
+>  {
+>  	int error;
+> diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+> index a262e289615b..0da11a292f99 100644
+> --- a/security/integrity/ima/ima_queue.c
+> +++ b/security/integrity/ima/ima_queue.c
+> @@ -322,7 +322,12 @@ static struct ima_trusted_key_entry *ima_alloc_trusted_queue_entry(
+>  int ima_measure_key(struct key *keyring, struct key *key)
+>  {
+>  	int rc = 0;
+> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+> +	struct ima_template_desc *template_desc = ima_template_desc_current();
+> +	int action;
+>  	struct ima_trusted_key_entry *entry = NULL;
+> +	const struct public_key *pk;
+> +	u32 secid;
+>  	enum ima_hooks func;
+>  	bool queued = false;
+>  
+> @@ -344,16 +349,43 @@ int ima_measure_key(struct key *keyring, struct key *key)
+>  
+>  	mutex_unlock(&ima_trusted_keys_mutex);
+>  
+> +	if ((rc == 0) && !queued) {
+> +		security_task_getsecid(current, &secid);
+> +		action = ima_get_action(NULL, current_cred(), secid, 0,
+> +					func, &pcr, &template_desc);
+> +		if (action & IMA_MEASURE) {
+> +			pk = key->payload.data[asym_crypto];
+> +			process_buffer_measurement(pk->key, pk->keylen,
+> +						   key->description,
+> +						   pcr, template_desc);
 > +		}
->
-> -		/* Make it clear that broken DTs are... broken */
-> -		WARN_ON(*type == IRQ_TYPE_NONE);
+> +	}
+> +
+>  	return rc;
+>  }
+>  
+>  void ima_measure_queued_trusted_keys(void)
+>  {
+>  	struct ima_trusted_key_entry *entry, *tmp;
+> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+> +	struct ima_template_desc *template_desc = ima_template_desc_current();
+> +	int action;
+> +	u32 secid;
+>  
+>  	mutex_lock(&ima_trusted_keys_mutex);
+>  
+>  	list_for_each_entry_safe(entry, tmp, &ima_trusted_keys, list) {
+> +		security_task_getsecid(current, &secid);
+> +		action = ima_get_action(NULL, current_cred(), secid, 0,
+> +					entry->func, &pcr,
+> +					&template_desc);
+> +		if (action & IMA_MEASURE) {
+> +			process_buffer_measurement(entry->public_key,
+> +						   entry->public_key_len,
+> +						   entry->key_description,
+> +						   pcr,
+> +						   template_desc);
+> +		}
+>  		list_del(&entry->list);
+>  		ima_free_trusted_key_entry(entry);
+>  	}
 
-Really?
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
