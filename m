@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31326CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396CBCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD1A2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138832064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404909AbfJWLWK (ORCPT
+        id S2404932AbfJWLWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:22:10 -0400
+        Wed, 23 Oct 2019 07:22:13 -0400
 Received: from mga09.intel.com ([134.134.136.24]:21010 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404873AbfJWLWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:22:07 -0400
+        id S2404882AbfJWLWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:22:08 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:22:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="349365442"
+   d="scan'208";a="349365445"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2019 04:22:03 -0700
+  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2019 04:22:04 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id BAB22695; Wed, 23 Oct 2019 14:21:55 +0300 (EEST)
+        id 18A978B2; Wed, 23 Oct 2019 14:21:56 +0300 (EEST)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Andreas Noever <andreas.noever@gmail.com>,
@@ -46,9 +46,9 @@ Cc:     Andreas Noever <andreas.noever@gmail.com>,
         Oliver Neukum <oneukum@suse.com>,
         Christian Kellner <ckellner@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 18/25] thunderbolt: Make tb_find_port() available to other files
-Date:   Wed, 23 Oct 2019 14:21:47 +0300
-Message-Id: <20191023112154.64235-19-mika.westerberg@linux.intel.com>
+Subject: [PATCH 25/25] thunderbolt: Update documentation with the USB4 information
+Date:   Wed, 23 Oct 2019 14:21:54 +0300
+Message-Id: <20191023112154.64235-26-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
 References: <20191023112154.64235-1-mika.westerberg@linux.intel.com>
@@ -59,108 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will be needing this when adding initial USB4 support so make it
-available to other files in the driver as well. We also rename it to
-tb_switch_find_port() to follow conventions used in switch.c.
-
-No functional changes.
+Update user's and administrator's guide to mention USB4, how it relates
+to Thunderbolt (it is public spec of Thunderbolt 3) and and how it is
+supported in Linux.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/switch.c | 18 ++++++++++++++++++
- drivers/thunderbolt/tb.c     | 22 ++--------------------
- drivers/thunderbolt/tb.h     |  2 ++
- 3 files changed, 22 insertions(+), 20 deletions(-)
+ Documentation/admin-guide/thunderbolt.rst | 25 ++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
-index 677f383c16ab..b538078fb988 100644
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -2477,6 +2477,24 @@ struct tb_switch *tb_switch_find_by_route(struct tb *tb, u64 route)
- 	return NULL;
- }
- 
-+/**
-+ * tb_switch_find_port() - return the first port of @type on @sw or NULL
-+ * @sw: Switch to find the port from
-+ * @type: Port type to look for
-+ */
-+struct tb_port *tb_switch_find_port(struct tb_switch *sw,
-+				    enum tb_port_type type)
-+{
-+	struct tb_port *port;
+diff --git a/Documentation/admin-guide/thunderbolt.rst b/Documentation/admin-guide/thunderbolt.rst
+index 898ad78f3cc7..f44c77860870 100644
+--- a/Documentation/admin-guide/thunderbolt.rst
++++ b/Documentation/admin-guide/thunderbolt.rst
+@@ -1,6 +1,23 @@
+-=============
+- Thunderbolt
+-=============
++======================
++ Thunderbolt and USB4
++======================
++USB4 is a public spec based on Thunderbolt 3 with some differences at the
++register level among other things. There are two different implementations
++available: firmware connection manager and software connection manager.
++Typically PCs come with a firmware connection manager for Thunderbolt 3 and
++early USB4 capable systems. Apple systems on the other hand use software
++connection manager and the later USB4 compliant devices follow the suit.
 +
-+	tb_switch_for_each_port(sw, port) {
-+		if (port->config.type == type)
-+			return port;
-+	}
++The Linux Thunderbolt driver supports both and can detect at runtime which
++connection manager implementation is to be used. To be on the safe side the
++software connection manager in Linux also advertises security level
++``user`` which means PCIe tunneling is disabled by default. The
++documentation below applies to both implementations with the exception that
++the software connection manager only supports ``user`` security level and
++is expected to be accompanied with an IOMMU based DMA protection.
 +
-+	return NULL;
-+}
-+
- void tb_switch_exit(void)
- {
- 	ida_destroy(&nvm_ida);
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index ea8727f769d6..54085f67810a 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -338,24 +338,6 @@ static void tb_free_unplugged_children(struct tb_switch *sw)
- 	}
- }
++Security levels and how to use them
++-----------------------------------
+ The interface presented here is not meant for end users. Instead there
+ should be a userspace tool that handles all the low-level details, keeps
+ a database of the authorized devices and prompts users for new connections.
+@@ -18,8 +35,6 @@ This will authorize all devices automatically when they appear. However,
+ keep in mind that this bypasses the security levels and makes the system
+ vulnerable to DMA attacks.
  
--/**
-- * tb_find_port() - return the first port of @type on @sw or NULL
-- * @sw: Switch to find the port from
-- * @type: Port type to look for
-- */
--static struct tb_port *tb_find_port(struct tb_switch *sw,
--				    enum tb_port_type type)
--{
--	struct tb_port *port;
--
--	tb_switch_for_each_port(sw, port) {
--		if (port->config.type == type)
--			return port;
--	}
--
--	return NULL;
--}
--
- /**
-  * tb_find_unused_port() - return the first inactive port on @sw
-  * @sw: Switch to find the port on
-@@ -586,7 +568,7 @@ static int tb_tunnel_pci(struct tb *tb, struct tb_switch *sw)
- 	struct tb_switch *parent_sw;
- 	struct tb_tunnel *tunnel;
- 
--	up = tb_find_port(sw, TB_TYPE_PCIE_UP);
-+	up = tb_switch_find_port(sw, TB_TYPE_PCIE_UP);
- 	if (!up)
- 		return 0;
- 
-@@ -624,7 +606,7 @@ static int tb_approve_xdomain_paths(struct tb *tb, struct tb_xdomain *xd)
- 
- 	sw = tb_to_switch(xd->dev.parent);
- 	dst_port = tb_port_at(xd->route, sw);
--	nhi_port = tb_find_port(tb->root_switch, TB_TYPE_NHI);
-+	nhi_port = tb_switch_find_port(tb->root_switch, TB_TYPE_NHI);
- 
- 	mutex_lock(&tb->lock);
- 	tunnel = tb_tunnel_alloc_dma(tb, nhi_port, dst_port, xd->transmit_ring,
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index ec851f20c571..ade1c7c77db1 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -533,6 +533,8 @@ void tb_switch_suspend(struct tb_switch *sw);
- int tb_switch_resume(struct tb_switch *sw);
- int tb_switch_reset(struct tb *tb, u64 route);
- void tb_sw_set_unplugged(struct tb_switch *sw);
-+struct tb_port *tb_switch_find_port(struct tb_switch *sw,
-+				    enum tb_port_type type);
- struct tb_switch *tb_switch_find_by_link_depth(struct tb *tb, u8 link,
- 					       u8 depth);
- struct tb_switch *tb_switch_find_by_uuid(struct tb *tb, const uuid_t *uuid);
+-Security levels and how to use them
+------------------------------------
+ Starting with Intel Falcon Ridge Thunderbolt controller there are 4
+ security levels available. Intel Titan Ridge added one more security level
+ (usbonly). The reason for these is the fact that the connected devices can
 -- 
 2.23.0
 
