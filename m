@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C1CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6417FCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE2E2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4231B21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407542AbfJWV33 (ORCPT
+        id S2392569AbfJWV2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:29:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24158 "EHLO mga09.intel.com"
+        Wed, 23 Oct 2019 17:28:41 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24145 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392587AbfJWV2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:28:45 -0400
+        id S1733169AbfJWV2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:28:38 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:28:45 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:28:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="399541184"
+   d="scan'208";a="399541156"
 Received: from ayamada-mobl1.gar.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.95.208])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Oct 2019 14:28:44 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 23 Oct 2019 14:28:36 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 05/14] soundwire: intel: rename res field as link_res
-Date:   Wed, 23 Oct 2019 16:28:14 -0500
-Message-Id: <20191023212823.608-6-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 01/14] soundwire: renames to prepare support for master drivers/devices
+Date:   Wed, 23 Oct 2019 16:28:10 -0500
+Message-Id: <20191023212823.608-2-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
 References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
@@ -51,166 +51,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are too many fields called 'res' so add prefix to make it easier
-to track what the structures are.
+Add clearer references to sdw_slave_driver for internal macros
 
-Pure rename, no functionality change
+No change for sdw_driver and module_sdw_driver to avoid compatibility
+issues with existing codec devices
+
+No functionality change.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/intel.c | 37 +++++++++++++++++++------------------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+ drivers/soundwire/bus_type.c       | 21 +++++++++++----------
+ include/linux/soundwire/sdw_type.h | 18 ++++++++++--------
+ 2 files changed, 21 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 0371d3d5501a..64f97bb1a135 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -103,7 +103,7 @@ enum intel_pdi_type {
- struct sdw_intel {
- 	struct sdw_cdns cdns;
- 	int instance;
--	struct sdw_intel_link_res *res;
-+	struct sdw_intel_link_res *link_res;
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *debugfs;
- #endif
-@@ -193,8 +193,8 @@ static ssize_t intel_sprintf(void __iomem *mem, bool l,
- static int intel_reg_show(struct seq_file *s_file, void *data)
+diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+index 4a465f55039f..370b94752662 100644
+--- a/drivers/soundwire/bus_type.c
++++ b/drivers/soundwire/bus_type.c
+@@ -34,7 +34,7 @@ sdw_get_device_id(struct sdw_slave *slave, struct sdw_driver *drv)
+ static int sdw_bus_match(struct device *dev, struct device_driver *ddrv)
  {
- 	struct sdw_intel *sdw = s_file->private;
--	void __iomem *s = sdw->res->shim;
--	void __iomem *a = sdw->res->alh;
-+	void __iomem *s = sdw->link_res->shim;
-+	void __iomem *a = sdw->link_res->alh;
- 	char *buf;
- 	ssize_t ret;
- 	int i, j;
-@@ -289,7 +289,7 @@ static void intel_debugfs_exit(struct sdw_intel *sdw) {}
- static int intel_link_power_up(struct sdw_intel *sdw)
+ 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+-	struct sdw_driver *drv = drv_to_sdw_driver(ddrv);
++	struct sdw_driver *drv = drv_to_sdw_slave_driver(ddrv);
+ 
+ 	return !!sdw_get_device_id(slave, drv);
+ }
+@@ -70,7 +70,7 @@ EXPORT_SYMBOL_GPL(sdw_bus_type);
+ static int sdw_drv_probe(struct device *dev)
  {
- 	unsigned int link_id = sdw->instance;
--	void __iomem *shim = sdw->res->shim;
-+	void __iomem *shim = sdw->link_res->shim;
- 	int spa_mask, cpa_mask;
- 	int link_control, ret;
+ 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+-	struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
++	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
+ 	const struct sdw_device_id *id;
+ 	int ret;
  
-@@ -309,7 +309,7 @@ static int intel_link_power_up(struct sdw_intel *sdw)
- 
- static int intel_shim_init(struct sdw_intel *sdw)
+@@ -116,7 +116,7 @@ static int sdw_drv_probe(struct device *dev)
+ static int sdw_drv_remove(struct device *dev)
  {
--	void __iomem *shim = sdw->res->shim;
-+	void __iomem *shim = sdw->link_res->shim;
- 	unsigned int link_id = sdw->instance;
- 	int sync_reg, ret;
- 	u16 ioctl = 0, act = 0;
-@@ -370,7 +370,7 @@ static int intel_shim_init(struct sdw_intel *sdw)
- static void intel_pdi_init(struct sdw_intel *sdw,
- 			   struct sdw_cdns_stream_config *config)
+ 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+-	struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
++	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
+ 	int ret = 0;
+ 
+ 	if (drv->remove)
+@@ -130,20 +130,21 @@ static int sdw_drv_remove(struct device *dev)
+ static void sdw_drv_shutdown(struct device *dev)
  {
--	void __iomem *shim = sdw->res->shim;
-+	void __iomem *shim = sdw->link_res->shim;
- 	unsigned int link_id = sdw->instance;
- 	int pcm_cap, pdm_cap;
+ 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
+-	struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
++	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
  
-@@ -404,7 +404,7 @@ static void intel_pdi_init(struct sdw_intel *sdw,
- static int
- intel_pdi_get_ch_cap(struct sdw_intel *sdw, unsigned int pdi_num, bool pcm)
+ 	if (drv->shutdown)
+ 		drv->shutdown(slave);
+ }
+ 
+ /**
+- * __sdw_register_driver() - register a SoundWire Slave driver
++ * __sdw_register_slave_driver() - register a SoundWire Slave driver
+  * @drv: driver to register
+  * @owner: owning module/driver
+  *
+  * Return: zero on success, else a negative error code.
+  */
+-int __sdw_register_driver(struct sdw_driver *drv, struct module *owner)
++int __sdw_register_slave_driver(struct sdw_driver *drv,
++				struct module *owner)
  {
--	void __iomem *shim = sdw->res->shim;
-+	void __iomem *shim = sdw->link_res->shim;
- 	unsigned int link_id = sdw->instance;
- 	int count;
+ 	drv->driver.bus = &sdw_bus_type;
  
-@@ -476,7 +476,7 @@ static int intel_pdi_ch_update(struct sdw_intel *sdw)
- static void
- intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+@@ -164,17 +165,17 @@ int __sdw_register_driver(struct sdw_driver *drv, struct module *owner)
+ 
+ 	return driver_register(&drv->driver);
+ }
+-EXPORT_SYMBOL_GPL(__sdw_register_driver);
++EXPORT_SYMBOL_GPL(__sdw_register_slave_driver);
+ 
+ /**
+- * sdw_unregister_driver() - unregisters the SoundWire Slave driver
++ * sdw_unregister_slave_driver() - unregisters the SoundWire Slave driver
+  * @drv: driver to unregister
+  */
+-void sdw_unregister_driver(struct sdw_driver *drv)
++void sdw_unregister_slave_driver(struct sdw_driver *drv)
  {
--	void __iomem *shim = sdw->res->shim;
-+	void __iomem *shim = sdw->link_res->shim;
- 	unsigned int link_id = sdw->instance;
- 	int pdi_conf = 0;
+ 	driver_unregister(&drv->driver);
+ }
+-EXPORT_SYMBOL_GPL(sdw_unregister_driver);
++EXPORT_SYMBOL_GPL(sdw_unregister_slave_driver);
  
-@@ -508,7 +508,7 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
- static void
- intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ static int __init sdw_bus_init(void)
  {
--	void __iomem *alh = sdw->res->alh;
-+	void __iomem *alh = sdw->link_res->alh;
- 	unsigned int link_id = sdw->instance;
- 	unsigned int conf;
+diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
+index aaa7f4267c14..abaa21278152 100644
+--- a/include/linux/soundwire/sdw_type.h
++++ b/include/linux/soundwire/sdw_type.h
+@@ -6,13 +6,15 @@
  
-@@ -535,7 +535,7 @@ static int intel_params_stream(struct sdw_intel *sdw,
- 			       struct snd_pcm_hw_params *hw_params,
- 			       int link_id, int alh_stream_id)
- {
--	struct sdw_intel_link_res *res = sdw->res;
-+	struct sdw_intel_link_res *res = sdw->link_res;
- 	struct sdw_intel_stream_params_data params_data;
+ extern struct bus_type sdw_bus_type;
  
- 	params_data.substream = substream;
-@@ -558,7 +558,7 @@ static int intel_pre_bank_switch(struct sdw_bus *bus)
- {
- 	struct sdw_cdns *cdns = bus_to_cdns(bus);
- 	struct sdw_intel *sdw = cdns_to_intel(cdns);
--	void __iomem *shim = sdw->res->shim;
-+	void __iomem *shim = sdw->link_res->shim;
- 	int sync_reg;
+-#define drv_to_sdw_driver(_drv) container_of(_drv, struct sdw_driver, driver)
++#define drv_to_sdw_slave_driver(_drv) \
++	container_of(_drv, struct sdw_driver, driver)
  
- 	/* Write to register only for multi-link */
-@@ -577,7 +577,7 @@ static int intel_post_bank_switch(struct sdw_bus *bus)
- {
- 	struct sdw_cdns *cdns = bus_to_cdns(bus);
- 	struct sdw_intel *sdw = cdns_to_intel(cdns);
--	void __iomem *shim = sdw->res->shim;
-+	void __iomem *shim = sdw->link_res->shim;
- 	int sync_reg, ret;
+-#define sdw_register_driver(drv) \
+-	__sdw_register_driver(drv, THIS_MODULE)
++#define sdw_register_slave_driver(drv) \
++	__sdw_register_slave_driver(drv, THIS_MODULE)
  
- 	/* Write to register only for multi-link */
-@@ -934,9 +934,9 @@ static int intel_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+-int __sdw_register_driver(struct sdw_driver *drv, struct module *owner);
+-void sdw_unregister_driver(struct sdw_driver *drv);
++int __sdw_register_slave_driver(struct sdw_driver *drv,
++				struct module *owner);
++void sdw_unregister_slave_driver(struct sdw_driver *drv);
  
- 	sdw->instance = pdev->id;
--	sdw->res = dev_get_platdata(&pdev->dev);
-+	sdw->link_res = dev_get_platdata(&pdev->dev);
- 	sdw->cdns.dev = &pdev->dev;
--	sdw->cdns.registers = sdw->res->registers;
-+	sdw->cdns.registers = sdw->link_res->registers;
- 	sdw->cdns.instance = sdw->instance;
- 	sdw->cdns.msg_count = 0;
- 	sdw->cdns.bus.dev = &pdev->dev;
-@@ -976,11 +976,12 @@ static int intel_probe(struct platform_device *pdev)
- 	intel_pdi_ch_update(sdw);
+ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
  
- 	/* Acquire IRQ */
--	ret = request_threaded_irq(sdw->res->irq, sdw_cdns_irq, sdw_cdns_thread,
-+	ret = request_threaded_irq(sdw->link_res->irq,
-+				   sdw_cdns_irq, sdw_cdns_thread,
- 				   IRQF_SHARED, KBUILD_MODNAME, &sdw->cdns);
- 	if (ret < 0) {
- 		dev_err(sdw->cdns.dev, "unable to grab IRQ %d, disabling device\n",
--			sdw->res->irq);
-+			sdw->link_res->irq);
- 		goto err_init;
- 	}
- 
-@@ -1010,7 +1011,7 @@ static int intel_probe(struct platform_device *pdev)
- 
- err_interrupt:
- 	sdw_cdns_enable_interrupt(&sdw->cdns, false);
--	free_irq(sdw->res->irq, sdw);
-+	free_irq(sdw->link_res->irq, sdw);
- err_init:
- 	sdw_delete_bus_master(&sdw->cdns.bus);
- 	return ret;
-@@ -1025,7 +1026,7 @@ static int intel_remove(struct platform_device *pdev)
- 	if (!sdw->cdns.bus.prop.hw_disabled) {
- 		intel_debugfs_exit(sdw);
- 		sdw_cdns_enable_interrupt(&sdw->cdns, false);
--		free_irq(sdw->res->irq, sdw);
-+		free_irq(sdw->link_res->irq, sdw);
- 		snd_soc_unregister_component(sdw->cdns.dev);
- 	}
- 	sdw_delete_bus_master(&sdw->cdns.bus);
+@@ -24,7 +26,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
+  * module init/exit. This eliminates a lot of boilerplate. Each module may only
+  * use this macro once, and calling it replaces module_init() and module_exit()
+  */
+-#define module_sdw_driver(__sdw_driver) \
+-	module_driver(__sdw_driver, sdw_register_driver, \
+-			sdw_unregister_driver)
++#define module_sdw_driver(__sdw_slave_driver) \
++	module_driver(__sdw_slave_driver, sdw_register_slave_driver, \
++			sdw_unregister_slave_driver)
+ #endif /* __SOUNDWIRE_TYPES_H */
 -- 
 2.20.1
 
