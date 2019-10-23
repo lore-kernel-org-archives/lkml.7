@@ -2,185 +2,243 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5211ACA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF9ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258542084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744E12084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 05:24:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AzcLO0Mj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WTW+uxNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389182AbfJWFWV (ORCPT
+        id S2388167AbfJWFYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 01:22:21 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:39393 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732286AbfJWFWU (ORCPT
+        Wed, 23 Oct 2019 01:24:00 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60970 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728697AbfJWFYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 01:22:20 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x9N5MD1d007091;
-        Wed, 23 Oct 2019 14:22:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x9N5MD1d007091
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571808134;
-        bh=4uWhQkSgKJyJpi9dgEd8rnoW9JQaybqUylXhhSC0nec=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AzcLO0MjlBC1/BEeJm9qyRkRgcPAkYv4QxMtxeUo3Re7hVadzJzlkr5g7u8mhf8wL
-         I+FMIbGBt8bkCzOTcIPamlUfqvlNGvtpEsBYRyKfjRIYHYFT4wSiqZzNWOFUEnb15o
-         hWUQlgxEJv3mbTl/jyR4fr/ZdqE8uH/8GN+Fhd4ko8xwKe9gfKUG2g20ZZDWqO0P1s
-         /plJux5tDnUCVn4pFMz+DABNLRK0tD114Ty+lCe15mBfEA3Kb8QH9RQ4GjOb4doMG6
-         DAl4aRfvENZzyWk7XJ0sBdiLQHwbQOS3gTV2ItHPoVXIXamYJsftRc+Hk8VhWOJ9zs
-         8PZTF/aGNWHVA==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id c25so359145uap.10;
-        Tue, 22 Oct 2019 22:22:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGp1y1nH591KZ/9/uQ/oi+d2onTR7whgW3HK3buHnMglNPfh6E
-        g20YLU1NngUZnQZCrgqOXk2g8by3vryN9O2KrOo=
-X-Google-Smtp-Source: APXvYqxLqGkSOgIFRyd9PTxHyI25VNUcERzN0x2gYGlStMqZTJ+flp75axCjaZb/WyR7UjkEmRdgV01UzlT91dSwPgk=
-X-Received: by 2002:a9f:3824:: with SMTP id p33mr4091753uad.109.1571808132530;
- Tue, 22 Oct 2019 22:22:12 -0700 (PDT)
+        Wed, 23 Oct 2019 01:24:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571808237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4JTRDEZOr8Z+dEGVRNplOCYtI8SYRnqHdIVrIZ8f01Y=;
+        b=WTW+uxNl5LtEMc3MgitqoFIkk+XJMR/BZniNud7E5FPNoNY7aj/886AJKUg/NvdMzPRWEJ
+        nRm7P9lHpYoiW+Vv/nEb+DzaWSrrmNR+UBp+Izs2VeUHzKwTTjPrIrCNKXIdTrv8YJJcQp
+        IlIkUEEY940oG3MuTnclsvc1ywoYLwk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-ip4noSxtPGGBEgUWUIRgNQ-1; Wed, 23 Oct 2019 01:23:54 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F56B800D57;
+        Wed, 23 Oct 2019 05:23:52 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-33.pek2.redhat.com [10.72.12.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7BF2160BE1;
+        Wed, 23 Oct 2019 05:23:36 +0000 (UTC)
+Subject: Re: [PATCH 1/3 v4] x86/kdump: always reserve the low 1MiB when the
+ crashkernel option is specified
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
+        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
+References: <20191017094347.20327-1-lijiang@redhat.com>
+ <20191017094347.20327-2-lijiang@redhat.com> <20191022083015.GB31700@zn.tnic>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <0e657965-6f97-84ce-e51d-42d4978c4d88@redhat.com>
+Date:   Wed, 23 Oct 2019 13:23:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190129204319.15238-1-jacob.e.keller@intel.com>
- <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org> <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
- <CAK7LNARyUEakeG_N9TWcO2cjFSzbgY__k_QJm6C+oOz+fW0aeg@mail.gmail.com> <02874ECE860811409154E81DA85FBB58968E1402@ORSMSX121.amr.corp.intel.com>
-In-Reply-To: <02874ECE860811409154E81DA85FBB58968E1402@ORSMSX121.amr.corp.intel.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 23 Oct 2019 14:21:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARAhZtzdnS9+mgtamj=pLdV81dudnYVDa8NRxcQPpF0bw@mail.gmail.com>
-Message-ID: <CAK7LNARAhZtzdnS9+mgtamj=pLdV81dudnYVDa8NRxcQPpF0bw@mail.gmail.com>
-Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative paths
-To:     "Keller, Jacob E" <jacob.e.keller@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191022083015.GB31700@zn.tnic>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: ip4noSxtPGGBEgUWUIRgNQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 5:49 AM Keller, Jacob E <jacob.e.keller@intel.com> wrote:
->
-> > -----Original Message-----
-> > From: Masahiro Yamada [mailto:yamada.masahiro@socionext.com]
-> > Sent: Saturday, September 28, 2019 5:21 PM
-> > To: Keller, Jacob E <jacob.e.keller@intel.com>
-> > Cc: Randy Dunlap <rdunlap@infradead.org>; intel-wired-lan@lists.osuosl.org; linux-
-> > kernel@vger.kernel.org; linux-kbuild <linux-kbuild@vger.kernel.org>
-> > Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative paths
-> >
-> > On Sat, Sep 28, 2019 at 8:30 AM Keller, Jacob E
-> > <jacob.e.keller@intel.com> wrote:
-> > >
-> > > > -----Original Message-----
-> > > > From: Randy Dunlap [mailto:rdunlap@infradead.org]
-> > > > Sent: Friday, September 27, 2019 4:12 PM
-> > > > To: Keller, Jacob E <jacob.e.keller@intel.com>
-> > > > Cc: intel-wired-lan@lists.osuosl.org; linux-kernel@vger.kernel.org; linux-kbuild
-> > <linux-
-> > > > kbuild@vger.kernel.org>; Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > > Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative paths
-> > > >
-> > > >
-> > > > re: https://lore.kernel.org/lkml/20190129204319.15238-1-
-> > jacob.e.keller@intel.com/
-> > > >
-> > > > Did anything happen with this patch?
-> > > >
-> > > > Please send it to linux-kbuild@vger.kernel.org and
-> > > > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > >
-> > > > You can also add:
-> > > > Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> > > > Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> > > >
-> > > >
-> > > > I was just about to fix this script but I decided to first see if anyone else
-> > > > had already done so.  Thanks.
-> > > >
-> > > > --
-> > > > ~Randy
-> > >
-> > > Done, thanks.
-> > >
-> > > Regards,
-> > > Jake
-> >
-> >
-> > Applied to linux/kbuild. Thanks.
-> >
->
-> Great, thanks!
+=E5=9C=A8 2019=E5=B9=B410=E6=9C=8822=E6=97=A5 16:30, Borislav Petkov =E5=86=
+=99=E9=81=93:
+> On Thu, Oct 17, 2019 at 05:43:45PM +0800, Lianbo Jiang wrote:
+>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204793
+>=20
+Thanks for your comment.
 
+> Put that as a Link: below.
+>=20
+Looks better. OK.
 
-This scripts has been 5-year broken,
-and I did not see any complaint except from you.
-So, I wonder how many people are using this.
+>> Kdump kernel will reuse the first 640k region because of some reasons,
+>=20
+> s/ of some reasons//
+>=20
+>> for example: the trampline and conventional PC system BIOS region may
+>=20
+> spellcheck: s/trampline/trampoline/
+>=20
+> I see two more typos in here and if you had a spellchecker enabled in
+> your editor where you write the commit message, you'll see them too.
+> Please use one.
+>=20
+Good point. I just tried to enable the spellchecker in the vim and now it
+has worked well. Thanks. :-)=20
 
-Nor, do I understand how to use it.
+>> require to allocate memory in this area. Obviously, kdump kernel will
+>> also overwrite the first 640k region,
+>=20
+> Well, it is not obvious to me. Please be more specific: why would the
+> kdump kernel do that?
+>=20
+Kdump kernel will reuse the first 640k region because the real mode
+trampoline has to work in this area. When the vmcore is dumped, the
+old memory in this area may be accessed, therefore, kernel has to
+copy the contents of the first 640k area to a backup region so that
+kdump kernel can read the old memory from the backup area of the
+first 640k area, which is done in the purgatory().
 
-Could you teach me a bit more about this script?
+>> therefore, kernel has to copy
+>> the contents of the first 640k area to a backup area, which is done in
+>> purgatory(), because vmcore may need the old memory. When vmcore is
+>> dumped, kdump kernel will read the old memory from the backup area of
+>> the first 640k area.
+>>
+>> Basically, the main reason should be clear, kernel does not correctly
+>> handle the first 640k region when SME is active,
+>=20
+> If you mention the actual reason here, that sentence would be clearer:
+>=20
+> "When SME is enabled in the first kernel, the kdump kernel must access
+> the first kernel's memory with the encryption bit set."
+>=20
+> Something like that.=20
+>=20
+Looks good.
 
+>> which causes that
+>> kernel does not properly copy these old memory to the backup area in
+>> purgatory(). Therefore, kdump kernel reads out the incorrect contents
+>=20
+> s/incorrect/encrypted/
+>=20
+Exactly.
 
+>> from the backup area when dumping vmcore. Finally, the phenomenon is
+>=20
+> phenomenon?
+>=20
+Finally, it caused the following errors.
 
-Something might be missing in my mind, but
-I do not know how to use this script in a useful way.
+>> as follow:
+>>
+>> [root linux]$ crash vmlinux /var/crash/127.0.0.1-2019-09-19-08\:31\:27/v=
+mcore
+>> WARNING: kernel relocated [240MB]: patching 97110 gdb minimal_symbol val=
+ues
+>>
+>>       KERNEL: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmlinux
+>>     DUMPFILE: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmcore  [PARTIAL =
+DUMP]
+>>         CPUS: 128
+>>         DATE: Thu Sep 19 08:31:18 2019
+>>       UPTIME: 00:01:21
+>> LOAD AVERAGE: 0.16, 0.07, 0.02
+>>        TASKS: 1343
+>>     NODENAME: amd-ethanol
+>>      RELEASE: 5.3.0-rc7+
+>>      VERSION: #4 SMP Thu Sep 19 08:14:00 EDT 2019
+>>      MACHINE: x86_64  (2195 Mhz)
+>>       MEMORY: 127.9 GB
+>>        PANIC: "Kernel panic - not syncing: sysrq triggered crash"
+>>          PID: 9789
+>>      COMMAND: "bash"
+>>         TASK: "ffff89711894ae80  [THREAD_INFO: ffff89711894ae80]"
+>>          CPU: 83
+>>        STATE: TASK_RUNNING (PANIC)
+>>
+>> crash> kmem -s|grep -i invalid
+>> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac=
+099f0c5a4
+>> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac=
+099f0c5a4
+>> crash>
+>=20
+> I fail to see what that's trying to tell me? You have invalid pointers?
+>=20
+Yes, when parsing the vmcore via crash tool, it occurs the above errors,
+the crash tool gets invalid pointers.=20
 
+>> BTW: I also tried to fix the above problem in purgatory(), but there
+>> are too many restricts in purgatory() context, for example: i can't
+>> allocate new memory to create the identity mapping page table for SME
+>> situation.
+>=20
+> This paragraph belongs under the "---" line below.
+>=20
+OK. Thanks.
 
+>> Currently, there are two places where the first 640k area is needed,
+>> the first one is in the find_trampoline_placement(), another one is
+>> in the reserve_real_mode(), and their content doesn't matter.
+>>
+>> To avoid the above error, when the crashkernel kernel command line
+>> option is specified, lets reserve the remaining low 1MiB memory(
+>> after reserving real mode memroy) so that the allocated memory does
+>> not fall into the low 1MiB area, which makes us not to copy the first
+>> 640k content to a backup region in purgatory(). This indicates that
+>> it does not need to be included in crash dumps or used for anything
+>> execept the processor trampolines that must live in the low 1MiB.
+>>
+>> In addition, also need to clean all the code related to the backup
+>> region later.
+>=20
+> Ditto.
+>=20
+>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>> ---
+>>  arch/x86/realmode/init.c | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>
+>> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+>> index 7dce39c8c034..1f0492830f2c 100644
+>> --- a/arch/x86/realmode/init.c
+>> +++ b/arch/x86/realmode/init.c
+>> @@ -34,6 +34,17 @@ void __init reserve_real_mode(void)
+>> =20
+>>  =09memblock_reserve(mem, size);
+>>  =09set_real_mode_mem(mem);
+>> +
+>> +#ifdef CONFIG_KEXEC_CORE
+>> +=09/*
+>> +=09 * When the crashkernel option is specified, only use the low
+>> +=09 * 1MiB for the real mode trampoline.
+>> +=09 */
+>> +=09if (strstr(boot_command_line, "crashkernel=3D")) {
+>> +=09=09memblock_reserve(0, 1<<20);
+>> +=09=09pr_info("Reserving the low 1MiB of memory for crashkernel\n");
+>> +=09}
+>> +#endif /* CONFIG_KEXEC_CORE */
+>=20
+> This ifdeffery needs to be a function in kernel/kexec_core.c which is
+> called by reserve_real_mode(), instead.
+>=20
+Good understanding. I will try to improve it later.
 
-It provides three checks.
+Thanks.
+Lianbo
+> Thx.
+>=20
 
-[1] list_multiply_defined()
-
-This warns multiple definition of functions.
-
-The compiler would fail if it saw any multiple definition,
-so the reports from this check are all false-positive.
-
-
-[2] resolve_external_references()
-
-This warns unresolved symbols.
-
-The compiler would fail if it saw any unresolved symbol,
-so the reports from this check are all false-positive, too.
-
-
-
-
-[3] list_extra_externals
-
-This warns symbols with no reference.
-
-This potentially contains lots of false-positives.
-For example, the core framework provides APIs, but if all drivers
-are disabled, there is no user of those APIs.
-
-
-
-
-I built the kernel with x86_64_defconfig,
-and namespacecheck provides
-
-1400 line reports for [1].
-200 line reports for [2].
-6800 line reports for [3].
-
-Most of these seem false-positives.
-
-
-
-How can I use it for the code improvement?
-
-[3] might be still useful to find 'static' candidates,
-but it would be difficult given the amount of the report.
-
--- 
-Best Regards
-Masahiro Yamada
