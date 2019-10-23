@@ -2,176 +2,135 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5132CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84FFCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9142D2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43B621872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:20:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lt/MOMlR"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Rgd5N1hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388798AbfJWSOe (ORCPT
+        id S2388695AbfJWSUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:14:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55784 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732588AbfJWSOe (ORCPT
+        Wed, 23 Oct 2019 14:20:47 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42242 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732916AbfJWSUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:14:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571854472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=69szfWdpqzdUFsP2ofY5GztggRg6X4AKGP1hwjej5LU=;
-        b=Lt/MOMlR/66XUvZvgE/S6HwURafpaR8D6zSExMO4ExrsYsqgrBMdXDbAjcLgzitmRWbISe
-        6+8m/ePIWo+zRg11mjewfmNnA625yHCcmcMGRr2/3jQrxuYhgltPoOkcGSzuFBPoyK2bnq
-        8JXgnkkQCsFhVcGJIIYWT1Y9Uue5B+g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-dI89Nn7BMRKXM8sofxgbkQ-1; Wed, 23 Oct 2019 14:14:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BC98801E5C;
-        Wed, 23 Oct 2019 18:14:28 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 603B35D9DC;
-        Wed, 23 Oct 2019 18:14:15 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm, vmstat: Release zone lock more frequently when
- reading /proc/pagetypeinfo
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>
-References: <20191023102737.32274-3-mhocko@kernel.org>
- <20191023173423.12532-1-longman@redhat.com>
- <20191023180121.GN17610@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <58a9adaf-9a1c-398b-dce1-cb30997807c1@redhat.com>
-Date:   Wed, 23 Oct 2019 14:14:14 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 23 Oct 2019 14:20:47 -0400
+Received: by mail-il1-f194.google.com with SMTP id o16so11758438ilq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 11:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=cr0Vtx0reZzkDlmdhcZ3EYluM7nHng2kcraV93Vgyr8=;
+        b=Rgd5N1hvz98N4/5VEEjWMENv0zY4o15fAXfVUmgXOr5kFwb2L1JpLNz74sJlH0XA8x
+         +X/AkcKRO1SXMyEjgnLOVWCTYrKz0HWpMpvCqdceKMS5XsK+3L4gwptudK9AQ60Hdf0S
+         2+o4rzJjttjdcn5wqz8LgV8iCH2TpGlmVT1LVfFDyzgkPdd/Qvq/yaSNzVnhsZYPzful
+         Xx2UoMpzlFlQeJUHzBUpVkOjsqQ7/bDkYRebDZw01F6cXRoR//2X5S2w+KWN9gh7N5C0
+         dcXVc97a2onezO/+e8+f6xibPyK6YKAoANs7QIxhk3hYACxdP3W+FG+O9XYOywPF+vgC
+         VYiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=cr0Vtx0reZzkDlmdhcZ3EYluM7nHng2kcraV93Vgyr8=;
+        b=A6pH/9TeECCBhfu49krLt+0JQOOZUzjm80jyupBCNmx10sO7aoM+WrkTzFq0+7H1zT
+         BVQFUHC4ag7UzRuz3lycj5ikARhLzFMvqeJMfBR/fa7nRo9G61q3urSYLw5H6DWZ1Etk
+         OMUnYEwoo8v+2VF+ypb1DJ5xH70ZpC/sd7nbci5FnmgItgQQkp8uyHAzyJcKZPWJl3CT
+         xn9qHntW1yjeuelJ9rW0ATmDNhlGpIo1tooyEPgwZYDJJUFDq+/RdaBIe7LUlrY/ZLSJ
+         x9GwWhRmAqRHpMRpb7Xg5JmA/vqrAdW7v2GCYnpu2qoBak/zQDWSPoSy3JCx2Dj9ywTJ
+         u6AA==
+X-Gm-Message-State: APjAAAWRv1G2QNTp0Vu1kMFJKxqITC/nEXa1TmCKF6f12Bwzg9iuwXyc
+        JeSn4p5WKE4f/kgCGOUaMBp2ag==
+X-Google-Smtp-Source: APXvYqw3iYvv5VTYTmNduAhmYFVuDjtYBkkgceBDIdE9o6mjkUsbecydETj/isIWbbDpFLIhTEgJeA==
+X-Received: by 2002:a92:9198:: with SMTP id e24mr17314487ill.184.1571854846193;
+        Wed, 23 Oct 2019 11:20:46 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id f8sm6989137ioo.27.2019.10.23.11.20.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 11:20:45 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:20:43 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Alistair Francis <Alistair.Francis@wdc.com>
+cc:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rkir@google.com" <rkir@google.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v2 2/2] RISC-V: defconfig: Enable Goldfish RTC driver
+In-Reply-To: <678b7a7a82adb389e34f023d282a7935f41e356a.camel@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1910231105170.16536@viisi.sifive.com>
+References: <20190925063706.56175-3-anup.patel@wdc.com>  <mhng-edb410db-fdd1-46f6-84c3-ae3b843f7e3a@palmer-si-x1c4>  <MN2PR04MB606160F5306A5F3C5D97FB788D900@MN2PR04MB6061.namprd04.prod.outlook.com>  <alpine.DEB.2.21.9999.1910221213490.28831@viisi.sifive.com>
+  <17db4a6244d09abf867daf2a6c10de6a5cd58c89.camel@wdc.com>  <alpine.DEB.2.21.9999.1910221751500.25457@viisi.sifive.com> <678b7a7a82adb389e34f023d282a7935f41e356a.camel@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <20191023180121.GN17610@dhcp22.suse.cz>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: dI89Nn7BMRKXM8sofxgbkQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 2:01 PM, Michal Hocko wrote:
-> On Wed 23-10-19 13:34:22, Waiman Long wrote:
->> With a threshold of 100000, it is still possible that the zone lock
->> will be held for a very long time in the worst case scenario where all
->> the counts are just below the threshold. With up to 6 migration types
->> and 11 orders, it means up to 6.6 millions.
->>
->> Track the total number of list iterations done since the acquisition
->> of the zone lock and release it whenever 100000 iterations or more have
->> been completed. This will cap the lock hold time to no more than 200,000
->> list iterations.
->>
->> Signed-off-by: Waiman Long <longman@redhat.com>
->> ---
->>  mm/vmstat.c | 18 ++++++++++++++----
->>  1 file changed, 14 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/vmstat.c b/mm/vmstat.c
->> index 57ba091e5460..c5b82fdf54af 100644
->> --- a/mm/vmstat.c
->> +++ b/mm/vmstat.c
->> @@ -1373,6 +1373,7 @@ static void pagetypeinfo_showfree_print(struct seq=
-_file *m,
->>  =09=09=09=09=09pg_data_t *pgdat, struct zone *zone)
->>  {
->>  =09int order, mtype;
->> +=09unsigned long iteration_count =3D 0;
->> =20
->>  =09for (mtype =3D 0; mtype < MIGRATE_TYPES; mtype++) {
->>  =09=09seq_printf(m, "Node %4d, zone %8s, type %12s ",
->> @@ -1397,15 +1398,24 @@ static void pagetypeinfo_showfree_print(struct s=
-eq_file *m,
->>  =09=09=09=09 * of pages in this order should be more than
->>  =09=09=09=09 * sufficient
->>  =09=09=09=09 */
->> -=09=09=09=09if (++freecount >=3D 100000) {
->> +=09=09=09=09if (++freecount > 100000) {
->>  =09=09=09=09=09overflow =3D true;
->> -=09=09=09=09=09spin_unlock_irq(&zone->lock);
->> -=09=09=09=09=09cond_resched();
->> -=09=09=09=09=09spin_lock_irq(&zone->lock);
->> +=09=09=09=09=09freecount--;
->>  =09=09=09=09=09break;
->>  =09=09=09=09}
->>  =09=09=09}
->>  =09=09=09seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
->> +=09=09=09/*
->> +=09=09=09 * Take a break and release the zone lock when
->> +=09=09=09 * 100000 or more entries have been iterated.
->> +=09=09=09 */
->> +=09=09=09iteration_count +=3D freecount;
->> +=09=09=09if (iteration_count >=3D 100000) {
->> +=09=09=09=09iteration_count =3D 0;
->> +=09=09=09=09spin_unlock_irq(&zone->lock);
->> +=09=09=09=09cond_resched();
->> +=09=09=09=09spin_lock_irq(&zone->lock);
->> +=09=09=09}
-> Aren't you overengineering this a bit? If you are still worried then we
-> can simply cond_resched for each order
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index c156ce24a322..ddb89f4e0486 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1399,13 +1399,13 @@ static void pagetypeinfo_showfree_print(struct se=
-q_file *m,
->  =09=09=09=09 */
->  =09=09=09=09if (++freecount >=3D 100000) {
->  =09=09=09=09=09overflow =3D true;
-> -=09=09=09=09=09spin_unlock_irq(&zone->lock);
-> -=09=09=09=09=09cond_resched();
-> -=09=09=09=09=09spin_lock_irq(&zone->lock);
->  =09=09=09=09=09break;
->  =09=09=09=09}
->  =09=09=09}
->  =09=09=09seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
-> +=09=09=09spin_unlock_irq(&zone->lock);
-> +=09=09=09cond_resched();
-> +=09=09=09spin_lock_irq(&zone->lock);
->  =09=09}
->  =09=09seq_putc(m, '\n');
->  =09}
->
-> I do not have a strong opinion here but I can fold this into my patch 2.
+On Wed, 23 Oct 2019, Alistair Francis wrote:
 
-If the free list is empty or is very short, there is probably no need to
-release and reacquire the lock. How about adding a check for a lower
-bound like:
+> On Tue, 2019-10-22 at 18:06 -0700, Paul Walmsley wrote:
+> > On Tue, 22 Oct 2019, Alistair Francis wrote:
+> > 
+> > > I think it makese sense for this to go into Linux first.
+> > > 
+> > > The QEMU patches are going to be accepted, just some nit picking to 
+> > > do first :)
+> > > 
+> > > After that we have to wait for a PR and then a QEMU release until 
+> > > most people will see the change in QEMU. In that time Linux 5.4 will 
+> > > be released, if this can make it into 5.4 then everyone using 5.4 
+> > > will get the new RTC as soon as they upgrade QEMU (QEMU provides the 
+> > > device tree). If this has to wait until QEMU has support then it 
+> > > won't be supported for users until even later.
+> > > 
+> > > Users are generally slow to update kernels (buildroot is still using 
+> > > 5.1 by default for example) so the sooner changes like this go in 
+> > > the better.
+> > 
+> > The defconfigs are really just for kernel developers.  We expect users 
+> > to define their own Kconfigs for their own needs.
+> 
+> From experience most people use the defconfig, at least as a starting
+> point.
 
-if (freecount > 1000) {
-=C2=A0=C2=A0=C2=A0 spin_unlock_irq(&zone->lock);
-=C2=A0=C2=A0=C2=A0 cond_resched();
-=C2=A0=C2=A0=C2=A0 spin_lock_irq(&zone->lock);
-}
+We'll definitely add it to the defconfigs, but I think it makes sense to 
+do that once the patches hit the QEMU master branch.  (No need to wait for 
+a QEMU release.)
 
-Cheers,
-Longman
+That roughly matches what I understand the Linux kernel's approach is to 
+adding hardware support: no point in adding hardware support until it 
+looks likely that it will actually exist.  Otherwise it just adds churn 
+and maintenance burden.
 
+> I was under the impression that everyone was on board with this going
+> in. In QEMU land it doesn't make sense to add it if the kernel isn't
+> going to, so we need to be on the same page here.
+
+Whatever RTC gets added into QEMU, we'll take defconfig patches for.  I 
+don't care which one it is.  Based on the patches that hit the kernel 
+lists, it initially looked like the Goldfish RTC was more complicated than 
+it needed to be; but it turned out I just didn't look deeply enough.
+
+> From the other discussions it looks like you are happy with this change
+> overall right?
+
+Yes
+
+
+- Paul
