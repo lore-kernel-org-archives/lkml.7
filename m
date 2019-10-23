@@ -2,121 +2,294 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B0DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BC2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D47020650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB9C20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OePzI0s0"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fCvq9SD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732213AbfJWARw (ORCPT
+        id S1732513AbfJWAS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:17:52 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:42447 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfJWARw (ORCPT
+        Tue, 22 Oct 2019 20:18:27 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:45286 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732229AbfJWASZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:17:52 -0400
-Received: by mail-lf1-f45.google.com with SMTP id z12so14506982lfj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TZ6PtzJKXyCbE4QgSRCknBL+ktlMMVZMJTZlai7sfRo=;
-        b=OePzI0s07XRspjzP6hpHptPYAZ91ykwFW/MOU3dwmxa7O3VXV8/w4u208iiiZRWJo7
-         BF43iGHf6LVzyZbesaFS3xHd5qc3HWFUOcbJ/HwRDjUC2RoC3eGnfk2OmLfKkUjhDfs7
-         pfeNOEQpIk2/TkZSNHdGXDE3Jpqmc3g4UtRqDHN5XfKtq/jMFSGLdA/DfuQ5uP2F4e70
-         1iLnf+8oLxq6wsQwckvOMn6mkTVypJgxcw/tnv5eLJAB0DrznANAlyO04e3rnzau22oQ
-         VTJl4vTTxCHgrmWHL9HTafweWh/kq0pzAX7RDMA8uY7gTVEQTtFKwuzknOPUI3+G0jv/
-         phIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TZ6PtzJKXyCbE4QgSRCknBL+ktlMMVZMJTZlai7sfRo=;
-        b=Vg8cUeZzjRCvTK4wPGJnZr8MFu1iNS+HHb5qx+BJebcmf9pL87vL2YSp3LOpRgsP3q
-         EqTnFpKKq++bnS1s9yGve4rPqAZRpmEmfo8TGAsh9kNRSKCwE3ihZOqA4R4K9jmyG0Bu
-         AQjmxc6gWmIwvnkEgNLwNt6oyeFZVHpuQOl6o+Y2RzHcaR/sPkWuLxKJKtmblRNF0Da6
-         t/eYfpa0GUeBLvPGOFwKlyV7RZcXtZlGBbrFHZzoWbJjp9aSajNCwIPpAdxpVcIMaIp0
-         VX5fLAjs9hglS6z7irvNfFMznIL939izRcvLq/V0g9xOp8O887vVSZcyHxjJskEBBq5X
-         tuhA==
-X-Gm-Message-State: APjAAAV+ydP8selFf36VNNkncjKlUjxdqvU+4XxS8gfOK89ML35tUPUo
-        dC76ZZK2K4owX1a0NPX25tm4oevUbrmbS44ln5vFUg==
-X-Google-Smtp-Source: APXvYqwhSkU3gwfa43CMQGaP9gD4LGrcVgE0palW4Riaoh2ocwxqd4w/qH5N/y3ru9WcGBG8F34YEwRT55n9prtCGRQ=
-X-Received: by 2002:a19:ed16:: with SMTP id y22mr9369612lfy.166.1571789869408;
- Tue, 22 Oct 2019 17:17:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
- <87h84rbile.fsf@intel.com> <20191002102428.zaid63hp6wpd7w34@holly.lan>
- <8736gbbf2b.fsf@intel.com> <CAL_quvQkFjkBjJC5wH2t5XmyEq9OKWYSbAv39BJWT1hrKO7j8g@mail.gmail.com>
- <87h84q9pcj.fsf@intel.com> <CAL_quvQoWnWqS5OQAqbLcBO-bR9_obr1FBc6f6mA1T00n1DJNQ@mail.gmail.com>
- <CAOw6vbJ7XX8=nrJDENfn2pacf4MqQOkP+x8JV0wbqzoMfLvZWQ@mail.gmail.com>
- <CAL_quvTe_v9Vsbd0u4URitojmD-_VFeaOQ1BBYZ_UGwYWynjVA@mail.gmail.com>
- <87sgo3dasg.fsf@intel.com> <CACK8Z6FF1CBmti797sYWS51j-8ag-pSL9RJ2r9NDibXk2M=tEQ@mail.gmail.com>
-In-Reply-To: <CACK8Z6FF1CBmti797sYWS51j-8ag-pSL9RJ2r9NDibXk2M=tEQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 22 Oct 2019 17:17:12 -0700
-Message-ID: <CACK8Z6HvekrGkFpQ-gmSvZRrS3gq-B2P-T1ihmF3JhK5v4QboQ@mail.gmail.com>
-Subject: Re: New sysfs interface for privacy screens
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Mat King <mathewk@google.com>, Sean Paul <seanpaul@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        David Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Alexander Schremmer <alex@alexanderweb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 22 Oct 2019 20:18:25 -0400
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C1AEE2010AC6;
+        Tue, 22 Oct 2019 17:18:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C1AEE2010AC6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1571789904;
+        bh=3EEDwTWXlit7lCdzWaSZuvopxoV1OJ3w7wj1bKW7mGw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fCvq9SD+Gw3CmY/a9mWTsF8csnkUdjg9+cJSNEbSLuHnfd2f0J+x1CSzcSQtQchdX
+         LvwX4jJDS8W19f6E0yq8crBIim2Jo27zlfzJaGloQGtvBjP3Bm2an1wOHpWfnO5xdB
+         ymFlHTDtuCS56mtCOSoQDpwqGxr7EGonKHTXvPJk=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, dhowells@redhat.com, casey@schaufler-ca.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Cc:     nramas@linux.microsoft.com
+Subject: [PATCH v1 4/6] KEYS: ima functions to queue and dequeue keys to measure
+Date:   Tue, 22 Oct 2019 17:18:16 -0700
+Message-Id: <20191023001818.3684-5-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191023001818.3684-1-nramas@linux.microsoft.com>
+References: <20191023001818.3684-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 5:14 PM Rajat Jain <rajatja@google.com> wrote:
->
-> Hi Folks,
->
-> On Mon, Oct 7, 2019 at 11:13 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->>
->> On Mon, 07 Oct 2019, Mat King <mathewk@google.com> wrote:
->> > That makes sense; just to confirm can a property be added or removed
->> > after the connector is registered?
->>
->> You need to create the property before registering the drm device. You
->> can attach/detach the property later, but I should think you know by the
->> time you're registering the connector whether it supports the privacy
->> screen or not.
->
->
+Implement functions to queue a key for measurement if ima is not yet
+initialized. And, when ima initialization is complete, process
+any queued key measurement requests.
 
-I just posted a patch for this here:
+This change set implements the functions to queue and de-queue requests.
+The change to actually measure the keys is in another patch.
 
-https://lkml.org/lkml/2019/10/22/967
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+---
+ security/integrity/ima/ima.h       |  15 ++++
+ security/integrity/ima/ima_init.c  |  11 ++-
+ security/integrity/ima/ima_queue.c | 128 +++++++++++++++++++++++++++++
+ 3 files changed, 153 insertions(+), 1 deletion(-)
 
-Would appreciate review and comments.
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 0d2908036882..7e4d4169798d 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -21,6 +21,7 @@
+ #include <linux/tpm.h>
+ #include <linux/audit.h>
+ #include <crypto/hash_info.h>
++#include <keys/asymmetric-type.h>
+ 
+ #include "../integrity.h"
+ 
+@@ -52,6 +53,7 @@ extern int ima_policy_flag;
+ extern int ima_hash_algo;
+ extern int ima_appraise;
+ extern struct tpm_chip *ima_tpm_chip;
++extern bool ima_initialized;
+ 
+ /* IMA event related data */
+ struct ima_event_data {
+@@ -158,6 +160,8 @@ void ima_init_template_list(void);
+ int __init ima_init_digests(void);
+ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
+ 			  void *lsm_data);
++int ima_measure_key(struct key *keyring, struct key *key);
++void ima_measure_queued_trusted_keys(void);
+ 
+ /*
+  * used to protect h_table and sha_table
+@@ -197,6 +201,17 @@ enum ima_hooks {
+ 	__ima_hooks(__ima_hook_enumify)
+ };
+ 
++/*
++ * To track trusted keys that need to be measured when IMA is initialized.
++ */
++struct ima_trusted_key_entry {
++	struct list_head list;
++	void *public_key;
++	u32  public_key_len;
++	char *key_description;
++	enum ima_hooks func;
++};
++
+ /* LIM API function definitions */
+ int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
+ 		   int mask, enum ima_hooks func, int *pcr,
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 5d55ade5f3b9..32b9147fe410 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -23,6 +23,7 @@
+ /* name for boot aggregate entry */
+ static const char boot_aggregate_name[] = "boot_aggregate";
+ struct tpm_chip *ima_tpm_chip;
++bool ima_initialized;
+ 
+ /* Add the boot aggregate to the IMA measurement list and extend
+  * the PCR register.
+@@ -131,5 +132,13 @@ int __init ima_init(void)
+ 
+ 	ima_init_policy();
+ 
+-	return ima_fs_init();
++	rc = ima_fs_init();
++	if (rc != 0)
++		return rc;
++
++	ima_initialized = true;
++
++	ima_measure_queued_trusted_keys();
++
++	return 0;
+ }
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index 1ce8b1701566..a262e289615b 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -19,6 +19,8 @@
+ 
+ #include <linux/rculist.h>
+ #include <linux/slab.h>
++#include <crypto/public_key.h>
++#include <keys/system_keyring.h>
+ #include "ima.h"
+ 
+ #define AUDIT_CAUSE_LEN_MAX 32
+@@ -46,6 +48,13 @@ struct ima_h_table ima_htable = {
+  */
+ static DEFINE_MUTEX(ima_extend_list_mutex);
+ 
++/*
++ * Used to synchronize access to the list of trusted keys (ima_trusted_keys)
++ * that need to be measured when IMA is initialized.
++ */
++static DEFINE_MUTEX(ima_trusted_keys_mutex);
++static LIST_HEAD(ima_trusted_keys);
++
+ /* lookup up the digest value in the hash table, and return the entry */
+ static struct ima_queue_entry *ima_lookup_digest_entry(u8 *digest_value,
+ 						       int pcr)
+@@ -232,3 +241,122 @@ int __init ima_init_digests(void)
+ 
+ 	return 0;
+ }
++
++/*
++ * Maps the given keyring to a IMA Hook.
++ * @keyring: A keyring to which a key maybe linked to.
++ *
++ * This function currently handles only builtin_trusted_keys.
++ * To handle more keyrings, this function, ima hook and
++ * ima policy handler need to be updated.
++ */
++static enum ima_hooks keyring_policy_map(struct key *keyring)
++{
++	enum ima_hooks func = NONE;
++
++	if (is_builtin_trusted_keyring(keyring))
++		func = BUILTIN_TRUSTED_KEYS;
++
++	return func;
++}
++
++static void ima_free_trusted_key_entry(struct ima_trusted_key_entry *entry)
++{
++	if (entry != NULL) {
++		if (entry->public_key != NULL)
++			kzfree(entry->public_key);
++		if (entry->key_description != NULL)
++			kzfree(entry->key_description);
++		kzfree(entry);
++	}
++}
++
++static struct ima_trusted_key_entry *ima_alloc_trusted_queue_entry(
++	struct key *key,
++	enum ima_hooks func)
++{
++	int rc = 0;
++	const struct public_key *pk;
++	size_t key_description_len;
++	struct ima_trusted_key_entry *entry = NULL;
++
++	pk = key->payload.data[asym_crypto];
++	key_description_len = strlen(key->description) + 1;
++	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
++	if (entry != NULL) {
++		entry->public_key = kzalloc(pk->keylen, GFP_KERNEL);
++		entry->key_description =
++			kzalloc(key_description_len, GFP_KERNEL);
++	}
++
++	if ((entry == NULL) || (entry->public_key == NULL) ||
++	    (entry->key_description == NULL)) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	strcpy(entry->key_description, key->description);
++	memcpy(entry->public_key, pk->key, pk->keylen);
++	entry->public_key_len = pk->keylen;
++	entry->func = func;
++	rc = 0;
++
++out:
++	if (rc) {
++		ima_free_trusted_key_entry(entry);
++		entry = NULL;
++	}
++
++	return entry;
++}
++
++/*
++ * ima_measure_key
++ *     @keyring the keyring to which the key is linked to.
++ *     @key the key being created or updated
++ * Measure keys created or updated in the system
++ *
++ * On success return 0.
++ * Return appropriate error code on error
++ */
++int ima_measure_key(struct key *keyring, struct key *key)
++{
++	int rc = 0;
++	struct ima_trusted_key_entry *entry = NULL;
++	enum ima_hooks func;
++	bool queued = false;
++
++	func = keyring_policy_map(keyring);
++	if (func == NONE)
++		return 0;
++
++	mutex_lock(&ima_trusted_keys_mutex);
++
++	if (!ima_initialized) {
++		entry = ima_alloc_trusted_queue_entry(key, func);
++		if (entry != NULL) {
++			INIT_LIST_HEAD(&entry->list);
++			list_add_tail(&entry->list, &ima_trusted_keys);
++			queued = true;
++		} else
++			rc = -ENOMEM;
++	}
++
++	mutex_unlock(&ima_trusted_keys_mutex);
++
++	return rc;
++}
++
++void ima_measure_queued_trusted_keys(void)
++{
++	struct ima_trusted_key_entry *entry, *tmp;
++
++	mutex_lock(&ima_trusted_keys_mutex);
++
++	list_for_each_entry_safe(entry, tmp, &ima_trusted_keys, list) {
++		list_del(&entry->list);
++		ima_free_trusted_key_entry(entry);
++	}
++
++	mutex_unlock(&ima_trusted_keys_mutex);
++}
+-- 
+2.17.1
 
-Thanks & Best Regards,
-
-Rajat
->
->>
->>
->> BR,
->> Jani.
->>
->> --
->> Jani Nikula, Intel Open Source Graphics Center
