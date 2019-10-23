@@ -2,116 +2,200 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C390BCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB78FCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC852086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LGUyNa9w"
+	by mail.kernel.org (Postfix) with ESMTP id A853421925
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571850643;
+	bh=6VlhDLDQ6Z3w9QbsBW1qts+NF31RU0o3S2U2reNH0jw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=TSU7ddgl1lAS5UiNYPhPl64nLd0yB9lPoFFu8Orw0u8gchOV60e6nPAGZMYt8nT/V
+	 fPtcTbi+RUmJHoyhgfJoWAAIClgM79T+D5io0pBhjdgXVaLMrG9X+J3uS7OVBDCViy
+	 LfnLt7WvjviGyxH73i+VowekhETI0CtekdhvKLxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbfJWRIc (ORCPT
+        id S1726892AbfJWRKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:08:32 -0400
-Received: from mail-eopbgr140075.outbound.protection.outlook.com ([40.107.14.75]:12977
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727648AbfJWRIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:08:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R5ru9UVd0OjpStA65mM+dk71y4mcxSe0iErOnX8R7moHIuDa3uoL2rSrDgUvjSC8XBkZEBZ3Qg/KmM6uenyXWjOy01jMMSj9eoE9CvpsP0X5PX3gNO96GI6HpUYnQttLbTeiRc+gP+kQyyLVJ0XSuV6S1kuuEaNY14Fxw4j0KPB8VxEYwLEqusubl5yKYam4LmCEL/uRyGr+3E0rWE7+mFTKmypjEuwCt6cj28FdFlP/rIbjuRhJYa8zeI/FV8qnkrU9znGHI3m7+y2QjOm+KRA52JVAt3bUo4l10RKrJgMHAJZxS80dIMh0oU+QgKJWMi8GF1/PREVzq+ekBV3M6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vv0O/S3p81qWHemw78op7nQ98Do+XHA87z3pJoVb9go=;
- b=lAwmCjnnpWugjKYB2y47MdHnQKouCOxAoJR1iE7j8PM9lOIJCNEqcsQ4QIykkmwcVfXnSuR8hm2QqEH8upszdl5zxj9JgzL9WdzFV87gHMffZM5XgRwNDiUv8OkKQO4dXndOPNeKYgCH8bjYQY85fkDNxRhGnrGbLGzv9xp7aR8SQpzrCBITTLCGI3gRA9HU5OFaBqiCjknojNPCnPPXwk49WnO1nknJHFrytinYXWpfwplr1Yg5g8vdj9kREmTY3G4euIiOVQaVrkpMQhXlnP3y7+KoZknEm2ZqIMsjd5kP4SSj5XK8TMvN/R12D7hnZxJIgJRMZSagnmNNcHzTtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vv0O/S3p81qWHemw78op7nQ98Do+XHA87z3pJoVb9go=;
- b=LGUyNa9wXoZWn96qF2pcTYOkQafTGGMHkA+2/oKiURs3dO6V2VkqwvZy6hdW2/1O/RKQ+3EYUSaciqv5CUIkQus8UQaD6fdDv0JJYhos3KOKmW2YYD/y7W44b9LMnMcjq5ePIm2K14yyqjF5D2f7BEhc6lt3o2rBdAfYmEZNB18=
-Received: from AM6PR0402MB3477.eurprd04.prod.outlook.com (52.133.25.15) by
- AM6PR0402MB3431.eurprd04.prod.outlook.com (52.133.23.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.22; Wed, 23 Oct 2019 17:08:27 +0000
-Received: from AM6PR0402MB3477.eurprd04.prod.outlook.com
- ([fe80::a1b5:b818:c136:bf86]) by AM6PR0402MB3477.eurprd04.prod.outlook.com
- ([fe80::a1b5:b818:c136:bf86%6]) with mapi id 15.20.2347.030; Wed, 23 Oct 2019
- 17:08:27 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/6] crypto: caam - populate platform devices last
-Thread-Topic: [PATCH v2 6/6] crypto: caam - populate platform devices last
-Thread-Index: AQHViO2nTXtx2N0RtkCKfqwx+l4MbA==
-Date:   Wed, 23 Oct 2019 17:08:27 +0000
-Message-ID: <AM6PR0402MB3477F7AE0BA69B4DA542F46A986B0@AM6PR0402MB3477.eurprd04.prod.outlook.com>
-References: <20191022153013.3692-1-andrew.smirnov@gmail.com>
- <20191022153013.3692-7-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [84.117.251.185]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cae198d2-0e89-4f22-6f9b-08d757db9f55
-x-ms-traffictypediagnostic: AM6PR0402MB3431:|AM6PR0402MB3431:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0402MB3431EE9DD1CEC2736572234B986B0@AM6PR0402MB3431.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(189003)(199004)(186003)(6116002)(26005)(7696005)(76176011)(99286004)(53546011)(6506007)(3846002)(7736002)(476003)(486006)(86362001)(74316002)(14454004)(305945005)(102836004)(44832011)(76116006)(66446008)(64756008)(91956017)(66556008)(66476007)(229853002)(6246003)(446003)(66946007)(256004)(6436002)(2906002)(54906003)(25786009)(81156014)(55016002)(5660300002)(66066001)(81166006)(9686003)(52536014)(4326008)(71190400001)(71200400001)(2501003)(33656002)(110136005)(8676002)(316002)(8936002)(478600001)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3431;H:AM6PR0402MB3477.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6+8myGPI/TGv8yBnMULzvE1WRB/ft2B49YjKYMgVeE4F0X54ceznhd1/iR0d6S5NCq8xOfFhYY4uxYi2CnDee/G9suSh8LKqRuVDXS+RbOZSxWXjgCjGQvuY4SLi+OF5/D6Ehv6Favw4UXx8RXVDAkCPa7fJVRV5oPfYWLQbiOV3XTEFTcIAzMr98vfqry1udnWurMtoPc29k3JaLigZUFhtgxH3Hk2yJA1S1RRyndtlhPXW7DjD+UZajhpXG/cG5yu4vyZCj0+NFlq3InlmYYl9TSpdaEwYoZ1XvZIVr+QFhtMOFEEueF2Geg9HvsmT6PHRa/4EWVdunN3n6oYzImxW7CRouPMWg/EAUdsvPNjGWFPnb/htWYk92hrXzoW3bCk/EtMCfSdbMUq8MYRjyi0JoPcVP9vWGe+ETproaetdZK6g2jbnF0WAYtcCsfsx
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 23 Oct 2019 13:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbfJWRKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 13:10:42 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A403E2086D;
+        Wed, 23 Oct 2019 17:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571850640;
+        bh=6VlhDLDQ6Z3w9QbsBW1qts+NF31RU0o3S2U2reNH0jw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0apF5PPqM/gOAU+pWEKp3CM+5ENSrgaRJlot9DsNkNE9N6hxdPG1w6+k5zrvyDUH2
+         8164s2Rgbaw9d6FFjq3pzUcwRHba55me0SYX548JFTQvyjlzkEcFvOkBghbH1hF2nx
+         TYYjeUpEw1on1dStHFylaFRqzjouge3u3A6FeaIs=
+Date:   Wed, 23 Oct 2019 12:10:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@kernel.org, peterz@infradead.org, robin.murphy@arm.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        paul.burton@mips.com
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+Message-ID: <20191023171039.GA173290@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cae198d2-0e89-4f22-6f9b-08d757db9f55
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 17:08:27.7656
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +iGGLUlo820HTf8Hwy0lYis0UVC6P1B8qdH25ABI+TgNOgVfSbwF6guER2cThnaIBZ6QLfZ18GC3+6EUeU2XyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3431
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76d37d5b-49bd-e45c-d42c-415235504893@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/22/2019 6:30 PM, Andrey Smirnov wrote:=0A=
-> Move the call to devm_of_platform_populate() at the end of=0A=
-> caam_probe(), so we won't try to add any child devices until all of=0A=
-> the initialization is finished successfully.=0A=
-> =0A=
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
-> Cc: Chris Healy <cphealy@gmail.com>=0A=
-> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
-> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
-> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-> Cc: linux-crypto@vger.kernel.org=0A=
-> Cc: linux-kernel@vger.kernel.org=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
+> On 2019/10/23 5:04, Bjorn Helgaas wrote:
+> > On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
+
+> > I think the underlying problem you're addressing is that:
+> > 
+> >   - NUMA_NO_NODE == -1,
+> >   - dev_to_node(dev) may return NUMA_NO_NODE,
+> >   - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
+> >   - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
+> > 
+> > For example, on arm64, mips loongson, s390, and x86,
+> > cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
+> > an invalid array index.
+> 
+> The invalid array index of -1 is the underlying problem here when
+> cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
+> is not NUMA_NO_NODE aware yet.
+> 
+> In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
+> disscusion, it is requested that it is better to warn about the pcie
+> device without a node assigned by the firmware before making the
+> cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
+> devices of "NUMA_NO_NODE" node can be fixed by their vendor.
+> 
+> See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+
+Right.  We should warn if the NUMA node number would help us but DT or
+the firmware didn't give us one.
+
+But we can do that independently of any cpumask_of_node() changes.
+There's no need to do one patch before the other.  Even if you make
+cpumask_of_node() tolerate NUMA_NO_NODE, we'll still get the warning
+because we're not actually changing any node assignments.
+
+> So maybe change the warning to below:
+> 
+> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
+> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
+
+I think this is perfect and I don't see the need for the refinement
+below:
+
+> And it seems a pci device's parent will always set to the bridge
+> device in pci_setup_device(), and device_add() which will set the
+> node to its parent's when the child device' node is NUMA_NO_NODE,
+> maybe we can add the bridge device' node checking to make sure
+> the pci device really does not have a node assigned, as below:
+> 
+> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE &&
+>     dev_to_node(bus->bridge) == NUMA_NO_NODE)
+> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
+
+Anyway, would the attached patch work for you?  I have it tentatively
+queued up on pci/enumeration for v5.5.
+
+> >> It is possible to
+> >> have a PCI bridge shared between two nodes, such that the PCI
+> >> devices have equidistance. But the moment you scale this out, you
+> >> either get devices that are 'local' to a package while having
+> >> multiple packages, or if you maintain a single bridge in a big
+> >> system, things become so slow it all doesn't matter anyway.
+> >> Assigning a node (one of the shared) is, in the generic ase of
+> >> multiple packages, the better solution over assigning all nodes.
+> >>
+> >> As pci_device_add() will assign the pci device' node according to
+> >> the bus the device is on, which is decided by pcibus_to_node().
+> >> Currently different arch may implement the pcibus_to_node() based
+> >> on bus->sysdata or bus device' node, which has the same node as
+> >> the bridge device.
+> >>
+> >> And for devices behind another bridge case, the child bus device
+> >> is setup with proper parent bus device and inherit its parent'
+> >> sysdata in pci_alloc_child_bus(), so the pcie device under the
+> >> child bus should have the same node as the parent bridge when
+> >> device_add() is called, which will set the node to its parent's
+> >> node when the child device' node is NUMA_NO_NODE.
+> >>
+> >> So this patch only warns about the case when a host bridge device
+> >> is registered with a node of NO_NODE in pci_register_host_bridge().
+> >> And it only warns about that when there are more than one numa
+> >> nodes in the system.
+> > 
+> > 
+> >> [1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
+> >>
+> >> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> >> ---
+> >>  drivers/pci/probe.c | 3 +++
+> >>  1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> >> index 3d5271a..22be96a 100644
+> >> --- a/drivers/pci/probe.c
+> >> +++ b/drivers/pci/probe.c
+> >> @@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+> >>  	list_add_tail(&bus->node, &pci_root_buses);
+> >>  	up_write(&pci_bus_sem);
+> >>  
+> >> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
+> >> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
+> >> +
+> >>  	return 0;
+> >>  
+> >>  unregister:
+
+commit 8f8cf239c4f1
+Author: Yunsheng Lin <linyunsheng@huawei.com>
+Date:   Sat Oct 19 14:45:43 2019 +0800
+
+    PCI: Warn if no host bridge NUMA node info
+    
+    In pci_call_probe(), we try to run driver probe functions on the node where
+    the device is attached.  If we don't know which node the device is attached
+    to, the driver will likely run on the wrong node.  This will still work,
+    but performance will not be as good as it could be.
+    
+    On NUMA systems, warn if we don't know which node a PCI host bridge is
+    attached to.  This is likely an indication that ACPI didn't supply a _PXM
+    method or the DT didn't supply a "numa-node-id" property.
+    
+    [bhelgaas: commit log, check bus node]
+    Link: https://lore.kernel.org/r/1571467543-26125-1-git-send-email-linyunsheng@huawei.com
+    Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 3d5271a7a849..40259c38d66a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -897,6 +897,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+ 	else
+ 		pr_info("PCI host bridge to bus %s\n", name);
+ 
++	if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
++		dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
++
+ 	/* Add initial resources to the bus */
+ 	resource_list_for_each_entry_safe(window, n, &resources) {
+ 		list_move_tail(&window->node, &bridge->windows);
