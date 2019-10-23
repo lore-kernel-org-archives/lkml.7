@@ -2,105 +2,135 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32851CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC71ECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E1B2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JR5JxMha"
+	by mail.kernel.org (Postfix) with ESMTP id BC8442173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388050AbfJWSHi (ORCPT
+        id S2388210AbfJWSIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:07:38 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58406 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727309AbfJWSHi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:07:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571854057;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3dJ7zg/nfTRnTIg9LMwikxyAPQbbTem0V3IKC5Taois=;
-        b=JR5JxMhaIjS7gbjlTgoL3ED9my7UX4lbzQ6h6ljc4l4XFRfVllFR2X4o9ZtU/yt4sQlete
-        ppM0f+xldemWWDDokSQc/swft2oObmvsNVOkXospX7LGKA4wqP1ktq/gY7q+k6ReHG/iAE
-        Fg95v3pz9V+8dmppdnS1qBS8+VBvDok=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-iF2ObA_CNoecP4FMtzToVA-1; Wed, 23 Oct 2019 14:07:27 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A8E91005500;
-        Wed, 23 Oct 2019 18:07:13 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 18DD85C222;
-        Wed, 23 Oct 2019 18:07:08 +0000 (UTC)
-Subject: Re: [PATCH 2/2] mm, vmstat: List total free blocks for each order in
- /proc/pagetypeinfo
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>
-References: <20191023102737.32274-3-mhocko@kernel.org>
- <20191023173423.12532-2-longman@redhat.com>
- <20191023180217.GO17610@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <724cbfa3-2a04-718b-5c98-942a452566f4@redhat.com>
-Date:   Wed, 23 Oct 2019 14:07:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 23 Oct 2019 14:08:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57889 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731908AbfJWSIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 14:08:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 11:08:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="209971644"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Oct 2019 11:08:52 -0700
+Received: from [10.249.230.188] (abudanko-mobl.ccr.corp.intel.com [10.249.230.188])
+        by linux.intel.com (Postfix) with ESMTP id 54F3A580107;
+        Wed, 23 Oct 2019 11:08:49 -0700 (PDT)
+Subject: Re: [PATCH v2 4/9] perf affinity: Add infrastructure to save/restore
+ affinity
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        acme@kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        eranian@google.com, kan.liang@linux.intel.com, peterz@infradead.org
+References: <20191020175202.32456-1-andi@firstfloor.org>
+ <20191020175202.32456-5-andi@firstfloor.org> <20191023095911.GJ22919@krava>
+ <20191023130235.GF4660@tassilo.jf.intel.com> <20191023143049.GS22919@krava>
+ <20191023145206.GH4660@tassilo.jf.intel.com>
+ <6ac1024c-bc73-87cd-31d2-819abee60137@linux.intel.com>
+ <20191023171904.ft735ormkro6tahp@two.firstfloor.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <346239e4-f156-01bb-4e42-85db289c476b@linux.intel.com>
+Date:   Wed, 23 Oct 2019 21:08:47 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191023180217.GO17610@dhcp22.suse.cz>
+In-Reply-To: <20191023171904.ft735ormkro6tahp@two.firstfloor.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: iF2ObA_CNoecP4FMtzToVA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 2:02 PM, Michal Hocko wrote:
-> On Wed 23-10-19 13:34:23, Waiman Long wrote:
-> [...]
->> @@ -1419,6 +1419,17 @@ static void pagetypeinfo_showfree_print(struct se=
-q_file *m,
->>  =09=09}
->>  =09=09seq_putc(m, '\n');
->>  =09}
->> +
->> +=09/*
->> +=09 * List total free blocks per order
->> +=09 */
->> +=09seq_printf(m, "Node %4d, zone %8s, total             ",
->> +=09=09   pgdat->node_id, zone->name);
->> +=09for (order =3D 0; order < MAX_ORDER; ++order) {
->> +=09=09area =3D &(zone->free_area[order]);
->> +=09=09seq_printf(m, "%6lu ", area->nr_free);
->> +=09}
->> +=09seq_putc(m, '\n');
-> This is essentially duplicating /proc/buddyinfo. Do we really need that?
+On 23.10.2019 20:19, Andi Kleen wrote:
+> On Wed, Oct 23, 2019 at 07:16:13PM +0300, Alexey Budankov wrote:
+>>
+>> On 23.10.2019 17:52, Andi Kleen wrote:
+>>> On Wed, Oct 23, 2019 at 04:30:49PM +0200, Jiri Olsa wrote:
+>>>> On Wed, Oct 23, 2019 at 06:02:35AM -0700, Andi Kleen wrote:
+>>>>> On Wed, Oct 23, 2019 at 11:59:11AM +0200, Jiri Olsa wrote:
+>>>>>> On Sun, Oct 20, 2019 at 10:51:57AM -0700, Andi Kleen wrote:
+>>>>>>
+>>>>>> SNIP
+>>>>>>
+>>>>>>> +}
+>>>>>>> diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..e56148607e33
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/tools/perf/util/affinity.h
+>>>>>>> @@ -0,0 +1,15 @@
+>>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>>> +#ifndef AFFINITY_H
+>>>>>>> +#define AFFINITY_H 1
+>>>>>>> +
+>>>>>>> +struct affinity {
+>>>>>>> +	unsigned char *orig_cpus;
+>>>>>>> +	unsigned char *sched_cpus;
+>>>>>>
+>>>>>> why not use cpu_set_t directly?
+>>>>>
+>>>>> Because it's too small in glibc (only 1024 CPUs) and perf already 
+>>>>> supports more.
+>>>>
+>>>> nice, we're using it all over the place.. how about using bitmap_alloc?
+>>>
+>>> Okay.
+>>>
+>>> The other places is mainly perf record from Alexey's recent affinity changes.
+>>> These probably need to be fixed.
+>>>
+>>> +Alexey
+>>
+>> Despite the issue indeed looks generic for stat and record modes,
+>> have you already observed record startup overhead somewhere in your setups?
+>> I would, first, prefer to reproduce the overhead, to have stable use case 
+>> for evaluation and then, possibly, improvement.
+> 
+> What I meant the cpu_set usages you added in 
+> 
+> commit 9d2ed64587c045304efe8872b0258c30803d370c
+> Author: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Date:   Tue Jan 22 20:47:43 2019 +0300
+> 
+>     perf record: Allocate affinity masks
+> 
+> need to be fixed to allocate dynamically, or at least use MAX_NR_CPUs to
+> support systems with >1024CPUs. That's an independent functionality
+> problem.
 
-Yes, you are right. As the information is available elsewhere. I am fine
-with dropping this.
+Oh, it is clear now. Thanks for pointing this out. For that to move from 
+cpu_mask_t to new custom struct affinity type its API requires extension 
+to provide mask operations similar to the ones that cpu_mask_t provides: 
+CPU_ZERO(), CPU_SET(), CPU_EQUAL(), CPU_OR().
 
-Cheers,
-Longman
+For example it could be like: affinity__mask_zero(), affinity__mask_set(), 
+affinity__mask_equal(), affinity__mask_or() and then the collecting part 
+of record could also be moved to struct affinity type and overcome >1024CPUs 
+limitation.
 
+~Alexey
+
+> 
+> I haven't seen any large enough perf record usage to run
+> into the IPI problems for record.
+> 
+> -Andi
+> 
