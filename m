@@ -2,145 +2,119 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE71DCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0881CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA7521906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571865952;
-	bh=YaJ5EMettNl2MRhvjPY7Zn9r4Nj39GyLbVZCpxRItLw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cZJGh9hChjqZ4IkSVf3sLmMgZmw/mqpdaUkN29ciGYmUZ2+noiMnBfHlU2hzuvbhY
-	 U/GwZFE7rJu/Z6b2uCowtI2F77g60YKPos2fVi8fSYK6+g6S98+jRUv0xDrAySo2X0
-	 ysALgKPfKn1a+jgras5MWswd7JL82p+hv7sxYZRw=
+	by mail.kernel.org (Postfix) with ESMTP id A66BB2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:26:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oxa7Yq/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392160AbfJWVZv (ORCPT
+        id S2392343AbfJWV0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407499AbfJWVZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:25:50 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEEDB21D7E
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 21:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571865949;
-        bh=YaJ5EMettNl2MRhvjPY7Zn9r4Nj39GyLbVZCpxRItLw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1V9uM3+PyveNNb8Jwxgm5uovWimS6VRLFaIBFVUjKmtPMB6n0DHkEGMqnkVDoprzm
-         EUbOAXwqhZzveNbA/trpSKy3kiAfi7dRBAJcZVwIxROZnPo/BkcSRO1P9DbsRAgsYz
-         qb9+fM1ZjoJc1yKItbXBngxbx2ms6V72bhlRSZTU=
-Received: by mail-wm1-f48.google.com with SMTP id c22so411113wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 14:25:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAWCukSqG7v1iiTZ4KmcM9y+ETJtIrRwY6WM3INP4BILugbvffHU
-        pkEEvfTfXfo4g0yDv8d2zhLSDsPddXwx7HskhJliRw==
-X-Google-Smtp-Source: APXvYqzDhz05GfKuPVJ0lFj8rX0SmLt2uNDoHXCnXcwvIrQD/5AUdG1f6wN5ePJMnqV5Eko2QiOL3rkFj9652KYjMRs=
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr1591999wmk.173.1571865947075;
- Wed, 23 Oct 2019 14:25:47 -0700 (PDT)
+        Wed, 23 Oct 2019 17:26:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45153 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392252AbfJWV0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:26:02 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x28so241773pfi.12
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 14:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rv4Nqh5d+/cF2RpTBWJWh8crG9DJ9LN8rUEiLCVkDCI=;
+        b=oxa7Yq/pKC6Rtd8OTFkXDgv+sg58exGMNevQgY3cd/UoqcmGNae53c+vJ/Gv3HMIDe
+         1InEbVJhTKBH1sdxN5bLgjnNQnl4tnly+ZsYiPj+aTVPQ/ilgn3tCucka8j02OQpoMOh
+         VBXes1Krr5ikefRmE0ryyaFKvRch5oAe274i6gFt3LgvAo6HN7DvKw9VsP85ADeX83oi
+         rYGxAHbLzViqTLFA9btg/bC/cwBeo3cATsyFEwMvrFgHAhfdJd/u+tZjLqcl7uDWIJ3W
+         ZQbJARrMZozIZVsGBfy40SIYNTP9S7OBcEa7ipxSKyYkngWATCFBqYQg7qcgzNT6/jjH
+         d90A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rv4Nqh5d+/cF2RpTBWJWh8crG9DJ9LN8rUEiLCVkDCI=;
+        b=k/EDMt+q6SYLsMz9+OaaKoKht7v1dZvEyJubw5dMyUxMLfuXWbzvRPNiKvw5mB38yl
+         z5Gc3PWBwfeBPHLRHui7P2P4pYEF1S43VM2mKdDFFFcLejkUk+/e5QJMs0fEPDZbAupl
+         CZOO8qox8G/XtatCDao1W7HqHYzkftlOngMZaH0HJTja6po28Mc8ej5WaH4kx/v3aA3O
+         27VRfVSDmA6xtW6QxJNJ5Bsjqt5BJpad5bUrljYzWIIlGTRvoMCVUJA01Wfed5J+2eYS
+         3icGb9wfk5XPHiBcV1Uri9FVpCfk49QgnnshmEBnhR+f1CwQW3ZdRV+UuB/2mhx/0F6o
+         gNTg==
+X-Gm-Message-State: APjAAAVQtE0VojnEJDI7nMblI5ehEFDYKFIFHbKR7FJ1k9WW6vaUuD9x
+        jzhEyLheeP/+ODpK3Fd6/cul8GXSWzyrjSCekRHtVA==
+X-Google-Smtp-Source: APXvYqxtwcSKP3dxNcBOousSaiPma55QN+uHm54W5IwsX3gK7duaFgAkFXHm+eMI1oaF/mQ8CtDYgxMTVBxaFGpzq8w=
+X-Received: by 2002:a62:61c4:: with SMTP id v187mr13349382pfb.23.1571865960644;
+ Wed, 23 Oct 2019 14:26:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191012191602.45649-1-dancol@google.com> <20191012191602.45649-4-dancol@google.com>
- <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
- <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
- <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
- <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
- <20191023190959.GA9902@redhat.com> <CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com>
- <20191023211645.GC9902@redhat.com>
-In-Reply-To: <20191023211645.GC9902@redhat.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 23 Oct 2019 14:25:35 -0700
-X-Gmail-Original-Message-ID: <CALCETrVS_Ym9wpvTP-ys-OBKCgg7QQjPdhJZe5YXJ6e8JQkNQQ@mail.gmail.com>
-Message-ID: <CALCETrVS_Ym9wpvTP-ys-OBKCgg7QQjPdhJZe5YXJ6e8JQkNQQ@mail.gmail.com>
-Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Jann Horn <jannh@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+References: <20191018215549.65000-1-davidgow@google.com> <20191019082731.GM21344@kadam>
+ <CABVgOSkegmhmeRa=7Qcx3MnX88wLy9qZx97CMhk4NvWb-pgpYQ@mail.gmail.com>
+In-Reply-To: <CABVgOSkegmhmeRa=7Qcx3MnX88wLy9qZx97CMhk4NvWb-pgpYQ@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 23 Oct 2019 14:25:49 -0700
+Message-ID: <CAFd5g46BuY02M_QBD3PVFnbsvO7fuuS+ZOBmfFBmmGy3xSMXbQ@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v4] lib/list-test: add a test for the
+ 'list' doubly linked list
+To:     David Gow <davidgow@google.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 2:16 PM Andrea Arcangeli <aarcange@redhat.com> wrote:
+On Tue, Oct 22, 2019 at 3:13 PM David Gow <davidgow@google.com> wrote:
 >
-> On Wed, Oct 23, 2019 at 12:21:18PM -0700, Andy Lutomirski wrote:
-> > There are two things going on here.
+> On Sat, Oct 19, 2019 at 1:27 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 > >
-> > 1. Daniel wants to add LSM labels to userfaultfd objects.  This seems
-> > reasonable to me.  The question, as I understand it, is: who is the
-> > subject that creates a uffd referring to a forked child?  I'm sure
-> > this is solvable in any number of straightforward ways, but I think
-> > it's less important than:
->
-> The new uffd created during fork would definitely need to be accounted
-> on the criu monitor, nor to the parent nor the child, so it'd need to
-> be accounted to the process/context that has the fd in its file
-> descriptors array. But since this is less important let's ignore this
-> for a second.
->
-> > 2. The existing ABI is busted independently of #1.  Suppose you call
-> > userfaultfd to get a userfaultfd and enable UFFD_FEATURE_EVENT_FORK.
-> > Then you do:
+> > On Fri, Oct 18, 2019 at 02:55:49PM -0700, David Gow wrote:
+> > > +     list4 = kzalloc(sizeof(*list4), GFP_KERNEL);
+> > > +     KUNIT_ASSERT_NOT_ERR_OR_NULL(test, list4);
 > >
-> > $ sudo <&[userfaultfd number]
-> >
-> > Sudo will read it and get a new fd unexpectedly added to its fd table.
-> > It's worse if SCM_RIGHTS is involved.
+> > Why not just use GFP_KERNEL | GFP_NOFAIL and remove the check?
 >
-> So the problem is just that a new fd is created. So for this to turn
-> out to a practical issue, it requires finding a reckless suid that
-> won't even bother checking the return value of the open/socket
-> syscalls or some equivalent fd number related side effect. All right
-> that makes more sense now and of course I agree it needs fixing.
+> I've sent a new version of the patch out (v5) which uses __GFP_NOFAIL instead.
+>
+> The idea had been to exercise KUnit's assertion functionality, in the
+> hope that it'd allow the test to fail (but potentially allow other
+> tests to still run) in the case of allocation failure. Given that
+> we're only allocating enough to store ~4 pointers in total, though,
+> that's probably of little use.
+>
+> > kzalloc() can't return error pointers.  If this were an IS_ERR_OR_NULL()
+> > check then it would generate a static checker warning, but static
+> > checkers don't know about KUNIT_ASSERT_NOT_ERR_OR_NULL() yet so you're
+> > safe.
+>
+> Alas, KUnit doesn't have a KUNIT_ASSERT_NOT_NULL() macro, and I'd
+> assumed it was not dangerous (even if not ideal) to check for error
+> pointers, even if kzalloc() can't return them.
 
-Or it requires a long-lived daemon that receives fds over SCM_RIGHTS
-and reads from them.
+Maybe it would be good for us (not in this case, just generally
+speaking) to add a KUNIT_ASSERT_NOT_NULL() and friends?
 
+> Perhaps it'd make sense to add a convenient way of checking the
+> NULL-ness of pointers to KUnit (it's possible with the
+> KUNIT_ASSERT_PTR_EQ(), but requires a bit of casting to make the type
+> checker happy) in the future. Once KUnit is properly upstream, it may
+> be worth teaching the static analysis tools about these functions to
+> avoid having warnings in these sorts of tests.
 >
-> > So I think we either need to declare that UFFD_FEATURE_EVENT_FORK is
-> > only usable by global root or we need to remove it and maybe re-add it
-> > in some other form.
+> For now, though, (and for this test in particular), I agree with the
+> suggestion of just using __GFP_NOFAIL.
 >
-> If I had a time machine, I'd rather prefer to do the below:
->
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index fe6d804a38dc..574062051678 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -1958,7 +1958,7 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
->                 return -ENOMEM;
->
->         refcount_set(&ctx->refcount, 1);
-> -       ctx->flags = flags;
-> +       ctx->flags = flags | UFFD_CLOEXEC;
-
-That doesn't solve the problem.  With your time machine, you should
-instead use ioctl() or recvmsg().
-
->
-> 4) enforce the global root permission check when creating the uffd only if
->    UFFD_FEATURE_EVENT_FORK is set.
-
-This could work, but we should also add a better way to do
-UFFD_FEATURE_EVENT_FORK and get CRIU to start using it.  If CRIU is
-the only user, we can probably drop the old ABI after a couple of
-releases, since as far as I know, CRIU users need to upgrade their
-CRIU more or less in sync with the kernel so that new kernel features
-get checkpointed and restored.
+> Thanks a lot for the comments,
+> -- David
