@@ -2,175 +2,68 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDD9CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9772CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086EA20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:22:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="y0ZJLr+c"
+	by mail.kernel.org (Postfix) with ESMTP id C16EC21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391358AbfJWTWX (ORCPT
+        id S2403925AbfJWTZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:22:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44351 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733199AbfJWTWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:22:22 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n48so3503516ota.11
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 12:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=AWSzxloZFjqBSYPavsipaCsXnn7FGNC3x2RIp+ASNJ8=;
-        b=y0ZJLr+cgueiZO+fvCl5wIdEf3wPufsEH3or0+C0r5plqTxF1gFC/WLiGlDAkykQhC
-         ag8VtmVwHXOSW8923OLMhCe1w9F4ChfzgZeulr2vEzCCTuUyiV5WOFki57obZ/R95fDz
-         QYHccMqGnIjqC3R4ZHQR/6bW6rpvDnP5r2I3H+bzcou2XpyFOt/Ml+IMaEEZ8vrk+rNt
-         TYeHQZ70HuC30AuFX6ekWQ6nXUcyWoB1TkYV8urrgfx0ouxJzxoUZEU6pMXUYVsfWsIt
-         B0VccJ/4phWLs9Ow9ky4hzFnDr3sJaBu4zGPHBZ7grhiUiYILikWh/fbHSyMxj33k/80
-         gVuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AWSzxloZFjqBSYPavsipaCsXnn7FGNC3x2RIp+ASNJ8=;
-        b=C6Rv3mGK9q2Vqm8cZEHXFMcIuePrTb+o6mB2HyDf3zidAoi1kmCe6gU97Gm7dzzbla
-         wAQF8xg1pOW1JEp69dtVxK8uyHZzQ/5bcMre+T/BFxLSciaOJgNE8XbMdsoXq1uAxjrk
-         LnUj7nr5LnAMEO2DMrieyLFl7Np3hpLQJwA4narz1xxziwCy+ExkJJ0waoNwsFLWKp2K
-         LkNUCoaDwV+4aeHSX7s33mhUP0uzkw/dZIRuBu1CyWpainNL3nGMQ7I6OukgKyIQgPJy
-         7BJRHaATvWCo+TiTIoaB9R5myyXkIScFPa33eYSso44gHnWvWlhpsLNyNag/0e2oqSYO
-         9eYg==
-X-Gm-Message-State: APjAAAVMXbAh7FGBoikX0PH0o1u7yVhwRiKwr/hmFUL+F+C+ZZnDTgur
-        Je8ROTB+38lGlNL/1ijxwwxZXQ==
-X-Google-Smtp-Source: APXvYqykmlBWzvgJXmGine00U7/POyerlUZvysm+7sDg/xeN7uvm3sWMkXfvTaV+4GZ862hIFPTEow==
-X-Received: by 2002:a9d:3476:: with SMTP id v109mr8496480otb.211.1571858541669;
-        Wed, 23 Oct 2019 12:22:21 -0700 (PDT)
-Received: from rip.lixom.net (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id d25sm5783461oic.23.2019.10.23.12.22.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 12:22:20 -0700 (PDT)
-From:   Olof Johansson <olof@lixom.net>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>
-Subject: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring back old behavior
-Date:   Wed, 23 Oct 2019 12:22:05 -0700
-Message-Id: <20191023192205.97024-1-olof@lixom.net>
-X-Mailer: git-send-email 2.11.0
+        Wed, 23 Oct 2019 15:25:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733199AbfJWTZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 15:25:45 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 586A820663;
+        Wed, 23 Oct 2019 19:25:43 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 15:25:41 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Robert Richter <rric@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>
+Subject: Re: [PATCH v2 2/4] module: Fix up module_notifier return values.
+Message-ID: <20191023152541.4b22cb10@gandalf.local.home>
+In-Reply-To: <20191007082700.08643163.5@infradead.org>
+References: <20191007082541.64146933.7@infradead.org>
+        <20191007082700.08643163.5@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
-the behavior was changed such that native (kernel) handling of DPC
-got tied to whether the kernel also handled AER. While this is what
-the standard recommends, there are BIOSes out there that lack the DPC
-handling since it was never required in the past.
+On Mon, 07 Oct 2019 10:25:43 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-To make DPC still work on said platforms the same way they did before,
-add a "pcie_ports=dpc-native" kernel parameter that can be passed in
-if needed, while keeping defaults unchanged.
+>  kernel/trace/trace.c           |    2 +-
+>  kernel/trace/trace_events.c    |    2 +-
+>  kernel/trace/trace_printk.c    |    4 ++--
+>  kernel/tracepoint.c            |    2 +-
 
-Signed-off-by: Olof Johansson <olof@lixom.net>
----
- Documentation/admin-guide/kernel-parameters.txt | 1 +
- drivers/pci/pcie/dpc.c                          | 2 +-
- drivers/pci/pcie/portdrv_core.c                 | 7 ++++++-
- drivers/pci/pcie/portdrv_pci.c                  | 8 ++++++++
- include/linux/pci.h                             | 2 ++
- 5 files changed, 18 insertions(+), 2 deletions(-)
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 5e27d74e2b74b..e0325421980aa 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3548,6 +3548,7 @@
- 			even if the platform doesn't give the OS permission to
- 			use them.  This may cause conflicts if the platform
- 			also tries to use these services.
-+		dpc-native	Use native PCIe service for DPC, but none other.
- 		compat	Disable native PCIe services (PME, AER, DPC, PCIe
- 			hotplug).
- 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index a32ec3487a8d0..e06f42f58d3d4 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -291,7 +291,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	int status;
- 	u16 ctl, cap;
- 
--	if (pcie_aer_get_firmware_first(pdev))
-+	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
- 
- 	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 1b330129089fe..c24bf6cac4186 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -250,8 +250,13 @@ static int get_port_device_capability(struct pci_dev *dev)
- 		pcie_pme_interrupt_enable(dev, false);
- 	}
- 
-+	/*
-+	 * With dpc-native, we set it if AER is available, even if AER is
-+	 * handled by firmware.
-+	 */
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
--	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
-+	    pci_aer_available() &&
-+	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
- 		services |= PCIE_PORT_SERVICE_DPC;
- 
- 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 0a87091a0800e..b415656519a73 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -29,12 +29,20 @@ bool pcie_ports_disabled;
-  */
- bool pcie_ports_native;
- 
-+/*
-+ * If the user specified "pcie_ports=dpc-native", use the PCIe services
-+ * for DPC, but cuse platform defaults for the others.
-+ */
-+bool pcie_ports_dpc_native;
-+
- static int __init pcie_port_setup(char *str)
- {
- 	if (!strncmp(str, "compat", 6))
- 		pcie_ports_disabled = true;
- 	else if (!strncmp(str, "native", 6))
- 		pcie_ports_native = true;
-+	else if (!strncmp(str, "dpc-native", 10))
-+		pcie_ports_dpc_native = true;
- 
- 	return 1;
- }
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index fc1844061e88f..603d4822757b6 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1534,9 +1534,11 @@ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
- #ifdef CONFIG_PCIEPORTBUS
- extern bool pcie_ports_disabled;
- extern bool pcie_ports_native;
-+extern bool pcie_ports_dpc_native;
- #else
- #define pcie_ports_disabled	true
- #define pcie_ports_native	false
-+#define pcie_ports_dpc_native	false
- #endif
- 
- #define PCIE_LINK_STATE_L0S		BIT(0)
--- 
-2.11.0
-
+-- Steve
