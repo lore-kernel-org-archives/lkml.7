@@ -2,91 +2,120 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D39FCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB026CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBD320663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8382E20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406095AbfJWNrL (ORCPT
+        id S2406114AbfJWNsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:47:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:43823 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403782AbfJWNrK (ORCPT
+        Wed, 23 Oct 2019 09:48:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49458 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403782AbfJWNsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:47:10 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MvryJ-1i7fje0dbr-00syHi; Wed, 23 Oct 2019 15:47:09 +0200
-Received: by mail-qt1-f182.google.com with SMTP id u22so32282921qtq.13;
-        Wed, 23 Oct 2019 06:47:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAXQMkDTl5SzJEHRA5lvIiBqcow04DQFAp/XrQqc7G9JAJBz1QzK
-        1n/8rsJHTxIc2QUXJp1jhrEdTRrFhnpISuuaFoA=
-X-Google-Smtp-Source: APXvYqz7PbcGsXeFYyvGyowaDFHTfI5KDbWhAt9grIvHRgmEgVC0Li/OGC7C/Oouqywkf4gr90cygIgYwHI1sOkpne0=
-X-Received: by 2002:ac8:33d4:: with SMTP id d20mr9129615qtb.204.1571838427927;
- Wed, 23 Oct 2019 06:47:07 -0700 (PDT)
+        Wed, 23 Oct 2019 09:48:01 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iNGzV-0002uQ-RP; Wed, 23 Oct 2019 15:47:57 +0200
+Date:   Wed, 23 Oct 2019 15:47:57 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Cyrill Gorcunov <gorcunov@gmail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [BUG -tip] kmemleak and stacktrace cause page faul
+In-Reply-To: <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1910231533180.2308@nanos.tec.linutronix.de>
+References: <20191019114421.GK9698@uranus.lan> <20191022142325.GD12121@uranus.lan> <20191022145619.GE12121@uranus.lan> <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-30-arnd@arndb.de> <20191023133800.GI11048@pi3>
-In-Reply-To: <20191023133800.GI11048@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 15:46:51 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a10MkTdStasKjGF9OBOoW3ZJ8RVD4-SxML2qhKXXciH+Q@mail.gmail.com>
-Message-ID: <CAK8P3a10MkTdStasKjGF9OBOoW3ZJ8RVD4-SxML2qhKXXciH+Q@mail.gmail.com>
-Subject: Re: [PATCH 30/36] ARM: s3c: remove cpufreq header dependencies
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:nU8GhVag8mG546m44yMwzxz+Fai6rwpvNgJIJnooaWq/qk2Kp4m
- cYlVRv/Qa4A0ZefusI/j+8naTS9nf45I4IkphOXAXNbY7JauQXMBNSPiTa+cT3k358CzmJS
- xPDI4yADbs/NtN4WFo8wTTqA5U2s2A+nOlm6cJWfaszDeg5GNa265lvXpTge4U8PCyVal/+
- b5Kk9xR4joDVxm0/Rbyuw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:G5/qfliTrb4=:k2bkVflhpLLuILcjMFYz+m
- 9mdNPgOGtQ44XLqjHpL7SmznTu+7/QP1F3bH9Z8brIdcW1bb7vn043Co8rrK0wEt+Vl6Gn4pw
- JDw9HpaUYaZaXz3HYntahMEwB39HfyWXr2jON5dbkyUaBi2ESKX+GZ2Q5Sai9FbFEL4+zOtVf
- wujOK/SpxiUAwUxXJ6INj5AzOb1Sv9xh22uf3mLgJPYYN6/AKrMbqJd2SM8d5cRWw/AkTrm62
- oBzWy1Ts4koa53mz4tlsJguiNQOAxZNJoQn+d5MHnYxzngd6Zur1eA5fwhrGVkYGIFRJX9TG8
- as5s8xUukb7VwU5eirR7m5r7cBn1w/t97za9x7/CKpnySgG6kL+nL+Z9VEsCW3hWDIL2icM+y
- a1Pl9Yt+L8Ne9NM+d1cmEBJCsedFAtaubdsRh8OprKSFmk0pjs31jxN/5HiZCgNA3w/iSwi4G
- g+lmxUqrHvacv9ipKLCnkvNgfhSoixgmzHY4uG2gkMEyaRdNv3Pcep9K/uI1XOx3tzs786EIx
- fjvmviXCBXvKo2clufuPwmGr6WYJYKMHmmmKXEu5jGVT0CA5mcTh8dWez6LRKB5Yee1gGAt8i
- e05Qh2DFanCxF+GpOnkRVbDyF+TyquHd56gJFmI/m++nL/J9++n6sD2pS5uxrkcGXP6GnbKSW
- C/lpO2BjT7Hx1js8a7R7McLGy23VEF0qpw7o27y78zr27P7gXRSlmeyEOsS/Ntx9AmJngUuzh
- kgNgviwfExrP5pKXGcpEHY8Fx7SlVyizLbgrLCnTgaVq342qjUC4V+r78TdJ06ilPIgU2sPUF
- 1ty23GMfuUbbFB4Nvep20D3GBbH0J4UdQ8mDhr2N5m5kUXB03oCVuoTFeyCg7yQ77rbyiYCgi
- 4PJMfwgsTS1LXasvmA4A==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 3:38 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Thu, Oct 10, 2019 at 10:30:14PM +0200, Arnd Bergmann wrote:
-> > diff --git a/arch/arm/plat-samsung/include/plat/cpu-freq.h b/include/linux/soc/samsung/s3c-cpu-freq.h
-> > similarity index 100%
-> > rename from arch/arm/plat-samsung/include/plat/cpu-freq.h
-> > rename to include/linux/soc/samsung/s3c-cpu-freq.h
-> > diff --git a/arch/arm/plat-samsung/include/plat/cpu-freq-core.h b/include/linux/soc/samsung/s3c-cpufreq-core.h
-> > similarity index 99%
-> > rename from arch/arm/plat-samsung/include/plat/cpu-freq-core.h
-> > rename to include/linux/soc/samsung/s3c-cpufreq-core.h
-> > index 2c7cf2665634..4d22be1031b9 100644
->
-> Can you also update the header guard names to match new location?
+On Wed, 23 Oct 2019, Thomas Gleixner wrote:
+> On Tue, 22 Oct 2019, Cyrill Gorcunov wrote:
+> Ergo ep must be a valid pointer pointing to the statically allocated and
+> statically initialized estack_pages array.
+> 
+>         /* Guard page? */
+>         if (!ep->size)
+> 
+> How on earth can dereferencing ep crash the machine?
+> 
+>                 return false;
+> 
+> That does not make any sense.
+> 
+> Surely, we should not even try to decode exception stack when
+> cea_exception_stacks is not yet initialized, but that does not explain
+> anything what you are observing.
 
-Neither of those files had header guards, added them now.
+So looking at your actual crash:
 
-        Arnd
+[    0.027246] BUG: unable to handle page fault for address: 0000000000001ff0
+
+So this derefences the stack pointer address.
+
+[    0.082275] stk 0x1010 k 1 begin 0x0 end 0xd000 estack_pages 0xffffffff82014880 ep
+0xffffffff82014888
+
+ep is pointing correctly to estack_pages[1] which is bogus because 0x1010
+is not a valid stack value, but dereferencing ep does not make it crash.
+
+The crash farther down:
+
+    	end = begin + (unsigned long)ep->size;
+
+==> end = 0x2000
+
+        regs = (struct pt_regs *)end - 1;
+
+==> regs = 0x2000 - sizeof(struct pt_regs *) = 0x1ff0
+
+        info->type      = ep->type;
+        info->begin     = (unsigned long *)begin;
+        info->end       = (unsigned long *)end;
+
+---->	info->next_sp   = (unsigned long *)regs->sp;
+
+	This is the crashing instruction trying to access 0x1ff0
+
+And you are right this happens because cea_exception_stacks is not yet
+initialized which makes begin = 0 and therefore point into nirvana.
+
+So the fix is trivial.
+
+Thanks,
+
+	tglx
+
+8<------------
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -94,6 +94,13 @@ static bool in_exception_stack(unsigned
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+ 
+ 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
++	/*
++	 * Handle the case where stack trace is collected _before_
++	 * cea_exception_stacks had been initialized.
++	 */
++	if (!begin)
++		return false;
++
+ 	end = begin + sizeof(struct cea_exception_stacks);
+ 	/* Bail if @stack is outside the exception stack area. */
+ 	if (stk < begin || stk >= end)
+
