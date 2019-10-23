@@ -2,137 +2,95 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FCCCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE8ECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0642173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E9B21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="EYQtMpA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405315AbfJWNVK (ORCPT
+        id S1727923AbfJWNV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:21:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49283 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbfJWNVJ (ORCPT
+        Wed, 23 Oct 2019 09:21:27 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34214 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732484AbfJWNV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:21:09 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNGZV-0002MI-Uz; Wed, 23 Oct 2019 15:21:06 +0200
-Date:   Wed, 23 Oct 2019 15:21:05 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Cyrill Gorcunov <gorcunov@gmail.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [BUG -tip] kmemleak and stacktrace cause page faul
-In-Reply-To: <20191022145619.GE12121@uranus.lan>
-Message-ID: <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
-References: <20191019114421.GK9698@uranus.lan> <20191022142325.GD12121@uranus.lan> <20191022145619.GE12121@uranus.lan>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 23 Oct 2019 09:21:26 -0400
+Received: by mail-lj1-f193.google.com with SMTP id j19so21105011lja.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Tmx5gEhg/rV15X62Y7TZ1CogrmbBsOoHsWDyD7ZEELM=;
+        b=EYQtMpA57tbRW2i4nVgg8fEUUiSniwZ4tVsaPAjqV3Cq1fcyb92kXhh+xAYwJsowf0
+         QBVHcFpoiyAblEAT+06FrDcnHhyHx7XzYYmuASb68k3puobXIn/6YhJQl1PdnsnmXuwX
+         VfghGmoxyB2tWhyTrb8v9iyBfb72ZPN7v5keo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Tmx5gEhg/rV15X62Y7TZ1CogrmbBsOoHsWDyD7ZEELM=;
+        b=VqKRw8Js3JIsnBNwgzhMZ19hi491MH38GbkNXWcFHg68Cm/FWiT+lFh8YwFMK53ruH
+         4GglUH0UjyU+PmPLv91Cg+l1zPRYf4klZ5Ezx+Mjo4j4Ooa3waas3x+ghdNM7LQ6OPPQ
+         htLS1picihOAWqjpqOyPU+3Km9aZakqlCDC/lhLLVBZ9WPWZwM4xM773Wz0/GiqQ3bsj
+         pEw72tUx5olbt7x4ff3D81uDfk29Okd+0AcOiMEL0cjKPE/QEGzlXByet1sAlUIy6Lm4
+         r0cD3kb10goJgNZtAkEmOlz4iQEf/kItH0LbCjr6ZceFWx1tAXk/YgKnE+PuluantTiR
+         CJuw==
+X-Gm-Message-State: APjAAAUoLv6xV1mwe0QsERQ1gqeGq5/RVe21JdhqOHzNeQZIt3trKB8C
+        rXbdnHrD7BDkIn85yr0W+ZYWvg==
+X-Google-Smtp-Source: APXvYqxovozIKcFB/iwVUR0Jq4TIkN06naNvK43Tktje8kUYfpkVfLxHu1Iax9zW7MeG3W34+OAn7A==
+X-Received: by 2002:a2e:9e1a:: with SMTP id e26mr22257044ljk.17.1571836884568;
+        Wed, 23 Oct 2019 06:21:24 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id t8sm9289994lfc.80.2019.10.23.06.21.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 06:21:24 -0700 (PDT)
+Subject: Re: [PATCH v4] string-choice: add yesno(), onoff(),
+ enableddisabled(), plural() helpers
+To:     Jani Nikula <jani.nikula@intel.com>, linux-kernel@vger.kernel.org
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>
+References: <20191023131308.9420-1-jani.nikula@intel.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <ab199f9a-844b-47e5-b643-2bf35316d5ef@rasmusvillemoes.dk>
+Date:   Wed, 23 Oct 2019 15:21:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191023131308.9420-1-jani.nikula@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019, Cyrill Gorcunov wrote:
-> On Tue, Oct 22, 2019 at 05:23:25PM +0300, Cyrill Gorcunov wrote:
-> > 
-> > I presume the kmemleak tries to save stack trace too early when estack_pages are not
-> > yet filled.
+On 23/10/2019 15.13, Jani Nikula wrote:
+> The kernel has plenty of ternary operators to choose between constant
+> strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
+> "s":
 > 
-> Indeed, at this stage of boot the percpu_setup_exception_stacks has not been called
-> yet and estack_pages full of crap
 > 
-> [    0.157502] stk 0x1008 k 1 begin 0x0 end 0xd000 estack_pages 0xffffffff82014880 ep 0xffffffff82014888
-> [    0.159395] estack_pages[0] = 0x0
-> [    0.160046] estack_pages[1] = 0x5100000001000
-> [    0.160881] estack_pages[2] = 0x0
-> [    0.161530] estack_pages[3] = 0x6100000003000
-> [    0.162343] estack_pages[4] = 0x0
-> [    0.162962] estack_pages[5] = 0x0
-> [    0.163523] estack_pages[6] = 0x0
-> [    0.164065] estack_pages[7] = 0x8100000007000
-> [    0.164978] estack_pages[8] = 0x0
-> [    0.165624] estack_pages[9] = 0x9100000009000
-> [    0.166448] estack_pages[10] = 0x0
-> [    0.167064] estack_pages[11] = 0xa10000000b000
-> [    0.168055] estack_pages[12] = 0x0
+> v4: Massaged commit message about space savings to make it less fluffy
+> based on Rasmus' feedback.
 
-Errm. estack_pages is statically initialized and it's an array of:.
+Thanks, it looks good to me. FWIW,
 
-struct estack_pages {
-        u32     offs;
-        u16     size;
-        u16     type;
-};
+Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[0,2,4,5,6,8,10,12] are guard pages so 0 is not that crappy at all
-
-The rest looks completely valid if you actually decode it proper.
-
-e.g. 0x51000 00001000
-
-     bit  0-31: 00001000		Offset 0x1000: 1 Page
-     bit 32-47: 1000			Size 0x1000:   1 Page
-     bit 48-63: 5			Type 5: STACK_TYPE_EXCEPTION + ESTACK_DF
-
-So, no. This is NOT the problem.
-
-But yes, you are right that percpu_setup_exception_stacks() has not yet
-been called simply because the percpu entry area has not been mapped yet.
-
-So lets look at the full context:
-
-        begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
-
-When percpu_setup_exception_stacks() has not been called yet, then begin
-should be 0.
-
-        end = begin + sizeof(struct cea_exception_stacks);
-
-end should be 0 + sizeof(struct cea_exception_stacks);
-
-        /* Bail if @stack is outside the exception stack area. */
-        if (stk < begin || stk >= end)
-                return false;
-
-So 'begin <= stk < end' must be true to get to the below:
-
-        /* Calc page offset from start of exception stacks */
-        k = (stk - begin) >> PAGE_SHIFT;
-
-which gives a valid 'k' no matter what 'begin' is. And obviously 'k' cannot
-be outside of the array size of estack_pages.
-
-        /* Lookup the page descriptor */
-        ep = &estack_pages[k];
-
-Ergo ep must be a valid pointer pointing to the statically allocated and
-statically initialized estack_pages array.
-
-        /* Guard page? */
-        if (!ep->size)
-
-How on earth can dereferencing ep crash the machine?
-
-                return false;
-
-That does not make any sense.
-
-Surely, we should not even try to decode exception stack when
-cea_exception_stacks is not yet initialized, but that does not explain
-anything what you are observing.
-
-Thanks,
-
-	tglx
