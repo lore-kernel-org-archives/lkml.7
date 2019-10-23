@@ -2,226 +2,92 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E66CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98013C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C38A2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB852084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="aAe58B4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389657AbfJWHFt (ORCPT
+        id S2389681AbfJWHFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:05:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:27527 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731524AbfJWHFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:05:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 00:05:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
-   d="scan'208";a="203879421"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Oct 2019 00:05:46 -0700
-Received: from [10.249.230.188] (abudanko-mobl.ccr.corp.intel.com [10.249.230.188])
-        by linux.intel.com (Postfix) with ESMTP id 01C1658029F;
-        Wed, 23 Oct 2019 00:05:41 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v5 0/4] perf/core: fix restoring of Intel LBR call stack on a
- context switch
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Organization: Intel Corp.
-Message-ID: <f8d5a880-38e5-29f4-9e6a-848f70a67988@linux.intel.com>
-Date:   Wed, 23 Oct 2019 10:05:40 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 03:05:54 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25484 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731524AbfJWHFx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:05:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571814345; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=jr7mWKEKLyiwfuKNe153uS0njAj9MTrbFHzTeWpXZUEUJRAknqW3EPEJlx/h8bIiSCdnd015aji3qZH9/YxvhTsK3kUkTPcQ9RWK+aWuscnX4Lm0Q7t+Ar9J4by6QI1K8kuxSeFnFF65x1n6XbOPwXMIaUdL2QDhxdm3CngQzPk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1571814345; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=WPsbhAfF3C26wxU12FTMldjsNOHj3+246cITfOLeTA8=; 
+        b=RGkZKe3UfI3ihSwxcKLHbyGH4UFd88zzFl0YiWVrhLvi+HYnqxZAgKNK6u2nRxuefNjLyri9yxe95TRfx8pJ5Vr6vs1ur2wTK2/M/24V+34oGOu1IQc1SygRmIKtmgKSArQ7bGdjTP6+TLo0bjwdZX/s49+0CTqcVTBXpUUeA3s=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
+  b=HNvJON1v3X9nvG9gzrH5476wN1ykojZz1m1MEb9vzMNlkrj+5l2U0cCuvwyrd0+NWMVSVDFluU7v
+    Bs6QbhgHG9w8ODsFws9eUd+aGfnDC0l/Q8XTte76QRE4h9PeeunD  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571814345;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        l=411; bh=WPsbhAfF3C26wxU12FTMldjsNOHj3+246cITfOLeTA8=;
+        b=aAe58B4m49uzhA+cNEx66K1JkI4BJpmSB2UWUQUdqBe3L5nRgA0NZHca9awulPKz
+        i3Og2l3cNDDGjQaJBoSsW8KKAT1ZPLYp8gPggjCTKuQnA6rVkIp6RJuXmymzpFKCKeA
+        kEjOTMdFaGH9dgFg1CNTdHTiuPizcM8p//6bAt+k=
+Received: from [192.168.88.140] (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
+        with SMTPS id 1571814345090395.0371569746694; Wed, 23 Oct 2019 00:05:45 -0700 (PDT)
+Subject: Re: DMA: JZ4780: Add DMA driver for X1000.
+To:     Vinod Koul <vkoul@kernel.org>
+References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
+ <20191023051501.GQ2654@vkoul-mobl>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paul@crapouillou.net,
+        mark.rutland@arm.com, Zubair.Kakakhel@imgtec.com,
+        dan.j.williams@intel.com
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+Message-ID: <5DAFFBBC.2080207@zoho.com>
+Date:   Wed, 23 Oct 2019 15:05:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191023051501.GQ2654@vkoul-mobl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vinod,
 
-Restore Intel LBR call stack from cloned inactive task perf context on
-a context switch. This change inherently addresses inconsistency in LBR 
-call stack data provided on a sample in record profiling mode:
+On 2019=E5=B9=B410=E6=9C=8823=E6=97=A5 13:15, Vinod Koul wrote:
+> On 23-10-19, 11:05, Zhou Yanjie wrote:
+>> 1.Add the DMA bindings for the X1000 SoC from Ingenic.
+>> 2.Add support for probing the dma-jz4780 driver on the
+>>    X1000 SoC from Ingenic.
+> The subsystem in dmaengine and not dma
+>
+> Please resend with correct tags!
+>
+> Thanks
 
-  $ perf record -N -B -T -R --call-graph lbr \
-         -e cpu/period=0xcdfe60,event=0x3c,name=\'CPU_CLK_UNHALTED.THREAD\'/Duk \
-         --clockid=monotonic_raw -- ./miniFE.x nx 25 ny 25 nz 25
+I already resend this patches.
 
-Let's assume threads A, B, C belonging to the same process. 
-B and C are siblings of A and their perf contexts are treated as equivalent.
-At some point B blocks on a futex (non preempt context switch).
-B's LBRs are preserved at B's perf context task_ctx_data and B's events 
-are removed from PMU and disabled. B's perf context becomes inactive.
+Best regards!
 
-Later C gets on a cpu, runs, gets profiled and eventually switches to 
-the awaken but not yet running B. The optimized context switch path is 
-executed swapping B's and C's task_ctx_data pointers at perf event contexts.
-So C's task_ctx_data will refer preserved B's LBRs on the following 
-switch-in event.
 
-However, as far B's perf context is inactive there is no enabled events
-in there and B's task_ctx_data->lbr_callstack_users is equal to 0.
-When B gets on the cpu B's events reviving is skipped following
-the optimized context switch path and B's task_ctx_data->lbr_callstack_users
-remains 0. Thus B's LBR's are not restored by pmu sched_task() code called 
-in the end of perf context switch-in callback for B.
-
-In the report that manifests as having short fragments of B's
-call stack, still tracked by LBR's HW between adjacent samples,
-but the whole thread call tree doesn't aggregate.
-
-The fix has been evaluated when profiling miniFE [1] (C++, OpenMP)
-workload running 64 threads on Intel Skylake EP(64 core, 2 sockets):
-
-  $ perf report --call-graph callee,flat
-
-5.3.0-rc6+ (tip perf/core) - fixed
-
--   92.66%    82.64%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 69.14% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 21.89% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 1.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-
-5.0.13-300.fc30.x86_64 - no fix
-
--   90.29%    81.01%  miniFE.x  libiomp5.so         [.] _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 33.45% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     87.63% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-   - 54.79% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-   - 9.18% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-   - 41.28% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_fork_barrier
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 15.77% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-   - 11.56% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        miniFE::cg_solve<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, int>, miniFE::matvec_std<miniFE::CSRMatrix<double, int, int>, miniFE::Vector<double, int, in
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-   - 2.33% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_release
-        __kmp_barrier
-        __kmpc_reduce_nowait
-        main
-        __kmp_invoke_microtask
-        __kmp_invoke_task_func
-        __kmp_launch_thread
-        _INTERNAL_24_______src_z_Linux_util_c_3e0095e6::__kmp_launch_worker
-        start_thread
-        __clone
-     0.67% _INTERNAL_25_______src_kmp_barrier_cpp_1d20fae8::__kmp_hyper_barrier_gather
-     0.57% __kmp_hardware_timestamp
-
-[1] https://www.hpcadvisorycouncil.com/pdf/miniFE_Analysis_and_Profiling.pdf
-
----
-Alexey Budankov (4):
-  perf/core,x86: introduce swap_task_ctx() method at struct pmu
-  perf/x86: install platform specific swap_task_ctx adapter
-  perf/x86/intel: implement LBR callstacks context synchronization
-  perf/core,x86: synchronize PMU task contexts on optimized context switches
-
- arch/x86/events/core.c       |  8 ++++++++
- arch/x86/events/intel/core.c |  7 +++++++
- arch/x86/events/intel/lbr.c  | 23 +++++++++++++++++++++++
- arch/x86/events/perf_event.h | 11 +++++++++++
- include/linux/perf_event.h   |  9 +++++++++
- kernel/events/core.c         | 13 ++++++++++++-
- 6 files changed, 70 insertions(+), 1 deletion(-)
-
----
-Changes in v5:
-- renamed sync_task_ctx to swap_task_ctx;
-- converted type of prev and next swap_task_ctx() params to struct perf_event_context;
-- implemented check on availability of swap_task_ctx() pointer in pmu type
-  at perf core implementation;
-- moved swap of ctx->task_ctx_data pointers to architecture specific
-  intel_pmu_lbr_swap_task_ctx() implementation;
-
-Changes in v4:
-- moved check on simultaneous task_ctx_data objects availability 
-  to the perf/core layer;
-- marked sync_task_ctx() as the optional in code comments;
-- renamed params of sync_task_ctx() to prev and next;
-
-Changes in v3:
-- replaced assignment with swap at intel_pmu_lbr_sync_task_ctx()
-
-Changes in v2:
-- implemented sync_task_ctx() method at perf,x86,intel pmu types;
-- employed the method on the optimized context switch path between 
-  equivalent perf event contexts;
-
--- 
-2.20.1
 
