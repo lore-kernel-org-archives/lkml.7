@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3151CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F26CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7B720640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B321A20640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391798AbfJWMvA (ORCPT
+        id S2391811AbfJWMvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:51:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49243 "EHLO
+        Wed, 23 Oct 2019 08:51:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49246 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391769AbfJWMu7 (ORCPT
+        with ESMTP id S2391775AbfJWMvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:50:59 -0400
+        Wed, 23 Oct 2019 08:51:00 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iNG6H-0001hZ-Dx; Wed, 23 Oct 2019 14:50:53 +0200
+        id 1iNG6I-0001hf-3r; Wed, 23 Oct 2019 14:50:54 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 058671C0089;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AF66D1C0089;
         Wed, 23 Oct 2019 14:50:53 +0200 (CEST)
-Date:   Wed, 23 Oct 2019 12:50:52 -0000
-From:   "tip-bot2 for Yi Wang" <tip-bot2@linutronix.de>
+Date:   Wed, 23 Oct 2019 12:50:53 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] posix-cpu-timers: Fix two trivial comments
-Cc:     Yi Wang <wang.yi59@zte.com.cn>,
+Subject: [tip: timers/urgent] lib/vdso: Make clock_getres() POSIX compliant again
+Cc:     Andreas Schwab <schwab@linux-m68k.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <1571643852-21848-1-git-send-email-wang.yi59@zte.com.cn>
-References: <1571643852-21848-1-git-send-email-wang.yi59@zte.com.cn>
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.21.1910211202260.1904@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1910211202260.1904@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Message-ID: <157183505271.29376.8207818611946366297.tip-bot2@tip-bot2>
+Message-ID: <157183505345.29376.7588508845309452690.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,57 +58,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/urgent branch of tip:
 
-Commit-ID:     7f2cbcbcafbca5360efbd175b3320852b8f7c637
-Gitweb:        https://git.kernel.org/tip/7f2cbcbcafbca5360efbd175b3320852b8f7c637
-Author:        Yi Wang <wang.yi59@zte.com.cn>
-AuthorDate:    Mon, 21 Oct 2019 15:44:12 +08:00
+Commit-ID:     1638b8f096ca165965189b9626564c933c79fe63
+Gitweb:        https://git.kernel.org/tip/1638b8f096ca165965189b9626564c933c79fe63
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 21 Oct 2019 12:07:15 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 23 Oct 2019 14:48:24 +02:00
+CommitterDate: Wed, 23 Oct 2019 14:48:23 +02:00
 
-posix-cpu-timers: Fix two trivial comments
+lib/vdso: Make clock_getres() POSIX compliant again
 
-Recent changes modified the function arguments of
-thread_group_sample_cputime() and task_cputimers_expired(), but forgot to
-update the comments. Fix it up.
+A recent commit removed the NULL pointer check from the clock_getres()
+implementation causing a test case to fault.
 
-[ tglx: Changed the argument name of task_cputimers_expired() as the pointer
-  	points to an array of samples. ]
+POSIX requires an explicit NULL pointer check for clock_getres() aside of
+the validity check of the clock_id argument for obscure reasons.
 
-Fixes: b7be4ef1365d ("posix-cpu-timers: Switch thread group sampling to array")
-Fixes: 001f7971433a ("posix-cpu-timers: Make expiry checks array based")
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Add it back for both 32bit and 64bit.
+
+Note, this is only a partial revert of the offending commit which does not
+bring back the broken fallback invocation in the the 32bit compat
+implementations of clock_getres() and clock_gettime().
+
+Fixes: a9446a906f52 ("lib/vdso/32: Remove inconsistent NULL pointer checks")
+Reported-by: Andreas Schwab <schwab@linux-m68k.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1571643852-21848-1-git-send-email-wang.yi59@zte.com.cn
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1910211202260.1904@nanos.tec.linutronix.de
 
 ---
- kernel/time/posix-cpu-timers.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/vdso/gettimeofday.c |  9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index 92a4319..42d512f 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -266,7 +266,7 @@ static void update_gt_cputime(struct task_cputime_atomic *cputime_atomic,
- /**
-  * thread_group_sample_cputime - Sample cputime for a given task
-  * @tsk:	Task for which cputime needs to be started
-- * @iimes:	Storage for time samples
-+ * @samples:	Storage for time samples
-  *
-  * Called from sys_getitimer() to calculate the expiry time of an active
-  * timer. That means group cputime accounting is already active. Called
-@@ -1038,12 +1038,12 @@ unlock:
-  * member of @pct->bases[CLK].nextevt. False otherwise
-  */
- static inline bool
--task_cputimers_expired(const u64 *sample, struct posix_cputimers *pct)
-+task_cputimers_expired(const u64 *samples, struct posix_cputimers *pct)
- {
- 	int i;
- 
- 	for (i = 0; i < CPUCLOCK_MAX; i++) {
--		if (sample[i] >= pct->bases[i].nextevt)
-+		if (samples[i] >= pct->bases[i].nextevt)
- 			return true;
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index e630e7f..45f57fd 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -214,9 +214,10 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
+ 		return -1;
  	}
- 	return false;
+ 
+-	res->tv_sec = 0;
+-	res->tv_nsec = ns;
+-
++	if (likely(res)) {
++		res->tv_sec = 0;
++		res->tv_nsec = ns;
++	}
+ 	return 0;
+ }
+ 
+@@ -245,7 +246,7 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
+ 		ret = clock_getres_fallback(clock, &ts);
+ #endif
+ 
+-	if (likely(!ret)) {
++	if (likely(!ret && res)) {
+ 		res->tv_sec = ts.tv_sec;
+ 		res->tv_nsec = ts.tv_nsec;
+ 	}
