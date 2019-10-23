@@ -2,142 +2,129 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FF3CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47ACC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A09205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84818205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390512AbfJWIqB convert rfc822-to-8bit (ORCPT
+        id S2390522AbfJWIqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:46:01 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:56174 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390034AbfJWIqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:46:00 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9N8idV2013066, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9N8idV2013066
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 23 Oct 2019 16:44:39 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTITCASV02.realtek.com.tw (172.21.6.19) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Wed, 23 Oct 2019 16:44:38 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 23 Oct 2019 16:44:37 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::6d88:58e2:6d4b:ff7c]) by
- RTEXMB01.realtek.com.tw ([fe80::6d88:58e2:6d4b:ff7c%13]) with mapi id
- 15.01.1779.005; Wed, 23 Oct 2019 16:44:37 +0800
-From:   Kailang <kailang@realtek.com>
-To:     Takashi Iwai <tiwai@suse.de>, Aaron Ma <aaron.ma@canonical.com>
-CC:     "perex@perex.cz" <perex@perex.cz>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
-Thread-Topic: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
-Thread-Index: AQHViO7vxXHEn3Xl7Ee6N1/g4hdxKqdmTdyAgAGbrzA=
-Date:   Wed, 23 Oct 2019 08:44:37 +0000
-Message-ID: <848ebd7fd86e4c05936e70f500f718e9@realtek.com>
-References: <20191022153855.14368-1-aaron.ma@canonical.com>
- <s5hpniodaq4.wl-tiwai@suse.de>
-In-Reply-To: <s5hpniodaq4.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.105.211]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 23 Oct 2019 04:46:17 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:44834 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2390034AbfJWIqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:46:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A4AB332;
+        Wed, 23 Oct 2019 01:45:58 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB1E53F71A;
+        Wed, 23 Oct 2019 01:45:55 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] sched/topology: Allow sched_asym_cpucapacity to be
+ disabled
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        stable@vger.kernel.org
+References: <20191015154250.12951-1-valentin.schneider@arm.com>
+ <20191015154250.12951-3-valentin.schneider@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <fb378e1c-4b13-5ac4-8c86-8422b5362c7b@arm.com>
+Date:   Wed, 23 Oct 2019 10:45:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191015154250.12951-3-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 15/10/2019 17:42, Valentin Schneider wrote:
+> While the static key is correctly initialized as being disabled, it will
+> remain forever enabled once turned on. This means that if we start with an
+> asymmetric system and hotplug out enough CPUs to end up with an SMP system,
+> the static key will remain set - which is obviously wrong. We should detect
+> this and turn off things like misfit migration and capacity aware wakeups.
+> 
+> As Quentin pointed out, having separate root domains makes this slightly
+> trickier. We could have exclusive cpusets that create an SMP island - IOW,
+> the domains within this root domain will not see any asymmetry. This means
+> we need to count how many asymmetric root domains we have.
 
+Could you make the example a little bit more obvious so we'll remember
+later the exact testcase?
 
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Wednesday, October 23, 2019 12:08 AM
-> To: Aaron Ma <aaron.ma@canonical.com>
-> Cc: perex@perex.cz; Kailang <kailang@realtek.com>;
-> hui.wang@canonical.com; alsa-devel@alsa-project.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
-> 
-> On Tue, 22 Oct 2019 17:38:55 +0200,
-> Aaron Ma wrote:
-> >
-> > These 2 ThinkCentres installed a new realtek codec ID 0x623, it has 2
-> > front mics with the same location on pin 0x18 and 0x19.
-> >
-> > Apply fixup ALC283_FIXUP_HEADSET_MIC to change 1 front mic location to
-> > right, then pulseaudio can handle them.
-> > One "Front Mic" and one "Mic" will be shown, and audio output works
-> > fine.
-> >
-> > Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> 
-> I'd like to have Kailang's review about the new codec before applying.
-> 
-> Kailang, could you take a look?
-OK.
-I will post you the patch for ALC623 codec tomorrow.
-Thanks.
+We start with 2 asym (hmp) (CPU capacity) exclusive cpusets and we turn
+one into a sym (smp) exclusive cpuset via CPU hp.
 
+This patch w/ extra debug on Juno [CPU0 - CPU5] = [L b b L L L]:
+
+root@juno:~# ./scripts/create_excl_cpusets3
+[   32.898483] detach_destroy_domains(): sched_asym_cpucapacity is
+disabled cpu_map=0-5
+[   32.906255] build_sched_domains(): sched_asym_cpucapacity is enabled
+cpu_map=0-1,3
+[   32.913813] build_sched_domains(): sched_asym_cpucapacity is enabled
+cpu_map=2,4-5
+root@juno:~# echo 0 > /sys/devices/system/cpu/cpu1/online
+[   62.709591] IRQ 2: no longer affine to CPU1
+[   62.713840] CPU1: shutdown
+[   62.716525] psci: CPU1 killed.
+root@juno:~# [   62.728779] detach_destroy_domains():
+sched_asym_cpucapacity still enabled cpu_map=0-1,3 <-- Your v1 would
+just have disabled sched_asym_cpucapacity here.
+
+A hint that systems with a mix of asym and sym CPU capacity rd's have to
+live with the fact that specific asym code is also enabled for the CPUs
+of the smp rd's wouldn't harm here.
+
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+
+> Change the simple key enablement to an increment, and decrement the key
+> counter when destroying domains that cover asymmetric CPUs.
 > 
+> Cc: <stable@vger.kernel.org>
+> Fixes: df054e8445a4 ("sched/topology: Add static_key for asymmetric CPU capacity optimizations")
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  kernel/sched/topology.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> thanks,
-> 
-> Takashi
-> 
-> > ---
-> >  sound/pci/hda/patch_realtek.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/sound/pci/hda/patch_realtek.c
-> > b/sound/pci/hda/patch_realtek.c index b000b36ac3c6..c34d8b435f58
-> > 100644
-> > --- a/sound/pci/hda/patch_realtek.c
-> > +++ b/sound/pci/hda/patch_realtek.c
-> > @@ -7186,6 +7186,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[]
-> = {
-> >  	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station",
-> ALC294_FIXUP_LENOVO_MIC_LOCATION),
-> >  	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station",
-> ALC294_FIXUP_LENOVO_MIC_LOCATION),
-> >  	SND_PCI_QUIRK(0x17aa, 0x3151, "ThinkCentre Station",
-> > ALC283_FIXUP_HEADSET_MIC),
-> > +	SND_PCI_QUIRK(0x17aa, 0x3178, "ThinkCentre Station",
-> ALC283_FIXUP_HEADSET_MIC),
-> > +	SND_PCI_QUIRK(0x17aa, 0x3176, "ThinkCentre Station",
-> > +ALC283_FIXUP_HEADSET_MIC),
-> >  	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80",
-> ALC269_FIXUP_DMIC_THINKPAD_ACPI),
-> >  	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210",
-> ALC283_FIXUP_INT_MIC),
-> >  	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70",
-> > ALC269_FIXUP_DMIC_THINKPAD_ACPI), @@ -9187,6 +9189,7 @@ static
-> const struct hda_device_id snd_hda_id_realtek[] = {
-> >  	HDA_CODEC_ENTRY(0x10ec0298, "ALC298", patch_alc269),
-> >  	HDA_CODEC_ENTRY(0x10ec0299, "ALC299", patch_alc269),
-> >  	HDA_CODEC_ENTRY(0x10ec0300, "ALC300", patch_alc269),
-> > +	HDA_CODEC_ENTRY(0x10ec0623, "ALC623", patch_alc269),
-> >  	HDA_CODEC_REV_ENTRY(0x10ec0861, 0x100340, "ALC660",
-> patch_alc861),
-> >  	HDA_CODEC_ENTRY(0x10ec0660, "ALC660-VD", patch_alc861vd),
-> >  	HDA_CODEC_ENTRY(0x10ec0861, "ALC861", patch_alc861),
-> > --
-> > 2.17.1
-> >
-> 
-> ------Please consider the environment before printing this e-mail.
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 9318acf1d1fe..f0e730143380 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -2029,7 +2029,7 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>  	rcu_read_unlock();
+>  
+>  	if (has_asym)
+> -		static_branch_enable_cpuslocked(&sched_asym_cpucapacity);
+> +		static_branch_inc_cpuslocked(&sched_asym_cpucapacity);
+>  
+>  	if (rq && sched_debug_enabled) {
+>  		pr_info("root domain span: %*pbl (max cpu_capacity = %lu)\n",
+> @@ -2125,7 +2125,10 @@ int sched_init_domains(const struct cpumask *cpu_map)
+>  static void detach_destroy_domains(const struct cpumask *cpu_map)
+>  {
+>  	int i;
+> +	unsigned int cpu = cpumask_any(cpu_map);
+> +
+> +	if (rcu_access_pointer(per_cpu(sd_asym_cpucapacity, cpu)))
+> +		static_branch_dec_cpuslocked(&sched_asym_cpucapacity);
+>  
+>  	rcu_read_lock();
+>  	for_each_cpu(i, cpu_map)
+> --
+> 2.22.0
