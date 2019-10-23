@@ -2,111 +2,90 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CE7CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80C8CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA2620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BFA20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4gEl0Vs"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="b+PMNTWd";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BdJTj+l9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404479AbfJWKa5 (ORCPT
+        id S2404497AbfJWKbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:30:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60593 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2404424AbfJWKa5 (ORCPT
+        Wed, 23 Oct 2019 06:31:12 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36998 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404361AbfJWKbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:30:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571826656;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RVZt7S+cO4Xzjye2W2B0LgB7MmmghyWfzCHIR01Nk8k=;
-        b=R4gEl0Vs6lQILFhRt1RzLSYrCiGEbIoT5mhLEQ+8b8gDLTYzNYkg8sP9itBwSXFFDbqzcp
-        bti7DZ5zg7hBtPbusYhMQrUDWdu7MbY4fZcpwfzgpQJDsYZe2YA9WL5l6tW4Lx6S+lXnKH
-        EauXf/JHrGzo/fBa8llo5o9qIBuvAvI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-9ZOPozPOM-a4-5hDN9Oc_Q-1; Wed, 23 Oct 2019 06:30:52 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 23 Oct 2019 06:31:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0BFBD60930; Wed, 23 Oct 2019 10:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571826671;
+        bh=A7PH/myWbf3inKtiwdNO1H56o0VQY99LFEVNO9VJcYI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=b+PMNTWdS5DOqqkGKvYp2t6oxZ/dXXyLkHo+IRWyH6WilDLax4HfBK98xeHRMFgtg
+         cYk6tvk/ySvQaVsGZytvVz0+gqXcb3k8cbQjTSZ4sncD+2/4EvfpBZHgsZeDW838JR
+         /vz1oSxkWXLwxAR4eNoBv5hyMlGCfmmTu4hNA9kE=
+Received: from potku.adurom.net (unknown [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 878A51800D6B;
-        Wed, 23 Oct 2019 10:30:51 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E3519600CC;
-        Wed, 23 Oct 2019 10:30:49 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 12:30:48 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-        eranian@google.com, kan.liang@linux.intel.com,
-        peterz@infradead.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v2 9/9] perf stat: Use affinity for enabling/disabling
- events
-Message-ID: <20191023103048.GK22919@krava>
-References: <20191020175202.32456-1-andi@firstfloor.org>
- <20191020175202.32456-10-andi@firstfloor.org>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7EFF460159;
+        Wed, 23 Oct 2019 10:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571826670;
+        bh=A7PH/myWbf3inKtiwdNO1H56o0VQY99LFEVNO9VJcYI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=BdJTj+l9l+3+2vg6/W+RoAoS/4bkEnbl6+SPdTIPVduhbF/kVckJ5z3dpvZufKzZ/
+         hjA9FNNQu2BA/aDtUDILqOJlfjrjyf2rjh8lYdvkeQhRcl8DwuHO0blNuT1I6CTF3M
+         ygIHGL8X0YhJ6oUgfiPr5StwpPtoOJv/VA+DLaPE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7EFF460159
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191020175202.32456-10-andi@firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: 9ZOPozPOM-a4-5hDN9Oc_Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] rtlwifi: Fix potential overflow on P2P code
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191018114321.13131-1-labbott@redhat.com>
+References: <20191018114321.13131-1-labbott@redhat.com>
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Laura Abbott <labbott@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas Waisman <nico@semmle.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191023103111.0BFBD60930@smtp.codeaurora.org>
+Date:   Wed, 23 Oct 2019 10:31:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Oct 20, 2019 at 10:52:02AM -0700, Andi Kleen wrote:
+Laura Abbott <labbott@redhat.com> wrote:
 
-SNIP
+> Nicolas Waisman noticed that even though noa_len is checked for
+> a compatible length it's still possible to overrun the buffers
+> of p2pinfo since there's no check on the upper bound of noa_num.
+> Bound noa_num against P2P_MAX_NOA_NUM.
+> 
+> Reported-by: Nicolas Waisman <nico@semmle.com>
+> Signed-off-by: Laura Abbott <labbott@redhat.com>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-> =20
->  void evlist__enable(struct evlist *evlist)
->  {
->  =09struct evsel *pos;
-> +=09struct affinity affinity;
-> +=09struct perf_cpu_map *cpus;
-> +=09int i;
-> +
-> +=09if (affinity__setup(&affinity) < 0)
-> +=09=09return;
-> +
-> +=09cpus =3D evlist__cpu_iter_start(evlist);
-> +=09for (i =3D 0; i < cpus->nr; i++) {
-> +=09=09int cpu =3D cpus->map[i];
-> +=09=09affinity__set(&affinity, cpu);
-> =20
-> +=09=09evlist__for_each_entry(evlist, pos) {
-> +=09=09=09if (evlist__cpu_iter_skip(pos, cpu))
-> +=09=09=09=09continue;
-> +=09=09=09if (!perf_evsel__is_group_leader(pos) || !pos->core.fd)
-> +=09=09=09=09continue;
+Patch applied to wireless-drivers.git, thanks.
 
-all the previous patches and this one have this code in common,
-could we make this a single function, that would call a callback
-that would have affinity set.. sort of like what we do in=20
-cpu_function_call in the kernel
+8c55dedb795b rtlwifi: Fix potential overflow on P2P code
 
-thanks,
-jirka
+-- 
+https://patchwork.kernel.org/patch/11198315/
 
-> +=09=09=09evsel__enable_cpu(pos, pos->cpu_index);
-> +=09=09=09evlist__cpu_iter_next(pos);
-> +=09=09}
-> +=09}
-> +=09affinity__cleanup(&affinity);
-
-SNIP
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
