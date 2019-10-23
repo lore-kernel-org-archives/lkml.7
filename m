@@ -2,183 +2,91 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A473CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAA9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660FE2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:39:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BuVelkAP"
+	by mail.kernel.org (Postfix) with ESMTP id A99862086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 01:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733290AbfJWBjU (ORCPT
+        id S2387452AbfJWBlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 21:39:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47504 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730047AbfJWBjT (ORCPT
+        Tue, 22 Oct 2019 21:41:10 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:17757 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731487AbfJWBlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 21:39:19 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N1YOd8190852;
-        Wed, 23 Oct 2019 01:36:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=mgnTopzGZ8f1FGKvPSTHhrMy24Rq85HzQQkpuJIKlp0=;
- b=BuVelkAPmWzz/ViA5GxMxUd6Ilv/ZHMliID3HYO+ysbz6xcFLl0G7qwrW9ZnhZ5+fw5K
- ZZwhM1WQ1gpb5f91a2e/3a5K45dUKqz8th5DCDbvJQLQfhXq8imBPNdnNJzDlaNpoHbk
- MtpwAQQ9uayFJCsgXIPxV4TOl4+N6WL5OrEp1fWLAPHtJEr3Ae5bbcqtmT5o/9Nh6ytW
- BCV30iby7KyJaxOZfvfwdPZ6v+bRwsi0ufN6DxKVo9xw4OiXTuuAcdsjuY8Jq3hxlM9O
- YCK0rVUp3NoDs/PhwZcs9Sw9XoQZjTDwsW4wqZi80KUm3adpOAZZ4Jpw0VMvsphz52N8 lA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2vqu4qt1qa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 01:36:11 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N1YE5W158224;
-        Wed, 23 Oct 2019 01:36:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2vsx23yaku-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 01:36:10 +0000
-Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9N1a7iT001979;
-        Wed, 23 Oct 2019 01:36:08 GMT
-Received: from [10.191.28.118] (/10.191.28.118)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 23 Oct 2019 01:36:07 +0000
-Subject: Re: [PATCH v7 3/5] x86/kvm: Add "nopvspin" parameter to disable PV
- spinlocks
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, boris.ostrovsky@oracle.com, jgross@suse.com,
-        peterz@infradead.org, will@kernel.org,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <1571649076-2421-1-git-send-email-zhenzhong.duan@oracle.com>
- <1571649076-2421-4-git-send-email-zhenzhong.duan@oracle.com>
- <8736fl1071.fsf@vitty.brq.redhat.com>
- <dbc50272-a4f5-ce7c-ba71-75031521f420@oracle.com>
- <20191022210355.GR2343@linux.intel.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <f0065d49-36ae-8b1d-81b9-6e899042169f@oracle.com>
-Date:   Wed, 23 Oct 2019 09:36:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191022210355.GR2343@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910230013
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910230013
+        Tue, 22 Oct 2019 21:41:10 -0400
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 22 Oct 2019 18:41:09 -0700
+IronPort-SDR: wlwIfXHPAacdGDOF3hGpHijcqij454cX71iUv6Tkf1Z5hn1MlQWhoqNTy9uxAYUxM2iBpSC/uZ
+ idrXQby/OtFb+ESfWYS3EuC0qipBPLxeeYxGRUtCII0Q7q38Oxpn+kEONtv/aigwpVJxCEwJxt
+ wCqpO4YtubTqcdJds9vruD5v9JnAy8gImErn/YFeHt2yGinOGpNr9/J/gNfyKJVg4cs4TsS1hB
+ C1unBIVwZvJul5Qo24oeI4F3402sdzQxocG/5glxN1KlFCN2821+IVgWx0YCcZiFEg7PGLI/Hq
+ OzgmNCv5YdcAled+VhMCzp8w
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg01-sd.qualcomm.com with ESMTP; 22 Oct 2019 18:41:08 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id 9FE2721328; Tue, 22 Oct 2019 18:41:08 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     cang@codeaurora.org, vivek.gautam@codeaurora.org,
+        rnayak@codeaurora.org, vinholikatti@gmail.com,
+        jejb@linux.vnet.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 2/2] scsi: ufs-qcom: enter and exit hibern8 during clock scaling
+Date:   Tue, 22 Oct 2019 18:40:44 -0700
+Message-Id: <1571794847-17529-2-git-send-email-asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571794847-17529-1-git-send-email-asutoshd@codeaurora.org>
+References: <1571794847-17529-1-git-send-email-asutoshd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Qualcomm controller needs to be in hibern8 before scaling clocks.
+This change puts the controller in hibern8 state before scaling
+and brings it out after scaling of clocks.
 
-On 2019/10/23 5:03, Sean Christopherson wrote:
-> On Tue, Oct 22, 2019 at 08:46:46PM +0800, Zhenzhong Duan wrote:
->> Hi Vitaly,
->>
->> On 2019/10/22 19:36, Vitaly Kuznetsov wrote:
->>
->>> Zhenzhong Duan<zhenzhong.duan@oracle.com>  writes:
->>>
->> ...snip
->>
->>>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->>>> index 249f14a..3945aa5 100644
->>>> --- a/arch/x86/kernel/kvm.c
->>>> +++ b/arch/x86/kernel/kvm.c
->>>> @@ -825,18 +825,36 @@ __visible bool __kvm_vcpu_is_preempted(long cpu)
->>>>    */
->>>>   void __init kvm_spinlock_init(void)
->>>>   {
->>>> -	/* Does host kernel support KVM_FEATURE_PV_UNHALT? */
->>>> -	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT))
->>>> +	/*
->>>> +	 * In case host doesn't support KVM_FEATURE_PV_UNHALT there is still an
->>>> +	 * advantage of keeping virt_spin_lock_key enabled: virt_spin_lock() is
->>>> +	 * preferred over native qspinlock when vCPU is preempted.
->>>> +	 */
->>>> +	if (!kvm_para_has_feature(KVM_FEATURE_PV_UNHALT)) {
->>>> +		pr_info("PV spinlocks disabled, no host support.\n");
->>>>   		return;
->>>> +	}
->>>> +	/*
->>>> +	 * Disable PV qspinlock and use native qspinlock when dedicated pCPUs
->>>> +	 * are available.
->>>> +	 */
->>>>   	if (kvm_para_has_hint(KVM_HINTS_REALTIME)) {
->>>> -		static_branch_disable(&virt_spin_lock_key);
->>>> -		return;
->>>> +		pr_info("PV spinlocks disabled with KVM_HINTS_REALTIME hints.\n");
->>>> +		goto out;
->>>>   	}
->>>> -	/* Don't use the pvqspinlock code if there is only 1 vCPU. */
->>>> -	if (num_possible_cpus() == 1)
->>>> -		return;
->>>> +	if (num_possible_cpus() == 1) {
->>>> +		pr_info("PV spinlocks disabled, single CPU.\n");
->>>> +		goto out;
->>>> +	}
->>>> +
->>>> +	if (nopvspin) {
->>>> +		pr_info("PV spinlocks disabled, forced by \"nopvspin\" parameter.\n");
->>>> +		goto out;
->>>> +	}
->>>> +
->>>> +	pr_info("PV spinlocks enabled\n");
->>>>   	__pv_init_lock_hash();
->>>>   	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
->>>> @@ -849,6 +867,8 @@ void __init kvm_spinlock_init(void)
->>>>   		pv_ops.lock.vcpu_is_preempted =
->>>>   			PV_CALLEE_SAVE(__kvm_vcpu_is_preempted);
->>>>   	}
->>>> +out:
->>>> +	static_branch_disable(&virt_spin_lock_key);
->>> You probably need to add 'return' before 'out:' as it seems you're
->>> disabling virt_spin_lock_key in all cases now).
->> virt_spin_lock_key is kept enabled in !kvm_para_has_feature(KVM_FEATURE_PV_UNHALT)
->> case which is the only case virt_spin_lock() optimization is used.
->>
->> When PV qspinlock is enabled, virt_spin_lock() isn't called in
->> __pv_queued_spin_lock_slowpath() in which case we don't care
->> virt_spin_lock_key's value.
->>
->> So adding 'return' or not are both ok, I chosed to save a line,
->> let me know if you prefer to add a 'return' and I'll change it.
-> It'd be worth adding a comment here if you end up spinning another version
-> to change the logging prefix.  The logic is sound and I like the end
-> result, but I had the same knee jerk "this can't be right!?!?" reaction as
-> Vitaly.
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+---
+ drivers/scsi/ufs/ufs-qcom.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Sure, will do in next version.
-
-Thanks
-
-Zhenzhong
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index a5b7148..d117088 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1305,6 +1305,9 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
+ 	int err = 0;
+ 
+ 	if (status == PRE_CHANGE) {
++		err = ufshcd_uic_hibern8_enter(hba);
++		if (err)
++			return err;
+ 		if (scale_up)
+ 			err = ufs_qcom_clk_scale_up_pre_change(hba);
+ 		else
+@@ -1324,6 +1327,7 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
+ 				    dev_req_params->hs_rate,
+ 				    false);
+ 		ufs_qcom_update_bus_bw_vote(host);
++		ufshcd_uic_hibern8_exit(hba);
+ 	}
+ 
+ out:
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
