@@ -2,134 +2,122 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE201CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7DCCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA2F2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:57:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="M+iC1Qnn"
+	by mail.kernel.org (Postfix) with ESMTP id 3BAE02064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391030AbfJWJ5W (ORCPT
+        id S2391049AbfJWJ50 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:57:22 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44822 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390880AbfJWJ5W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:57:22 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r16so15251832edq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 02:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/NsmOCl0y6Xsu2o/7hjfK3x4RxKT1/LHqLenfxqsBu4=;
-        b=M+iC1Qnn0TshdtMKZlRUc9MwyHpOanqAsn4vIwnb0kzaLjvPhHuuUhiLQrCRWK9P4l
-         hqDMurj8khv4+wIgJCCykcJIKG1+3vlczvZ2fOKKLV+GIHdTgiSKjJuLYkf28WsnvV4H
-         Pw01NYEroGCPQYXskYPLxVxY+hQgYI17PkbmPD0aU3DRunvINBQMAJPMMCTTNrw6Zsj8
-         BIaxRkuNbhA9CZKe6KLs5nA5dhUW1JevILfFZmu6crtPAFEV+GKL4D03im42FJbGY/+m
-         RckSW7rYczSX5kAfMfvC1mIqioPokfEcvFqBWC3R1FTn9xvzotr1F9sWPYEWAuKHfwyY
-         rPpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/NsmOCl0y6Xsu2o/7hjfK3x4RxKT1/LHqLenfxqsBu4=;
-        b=ZMV5tUplE/S9mgSW4Bb7ZBBjILIvyBWQ5BW9VzolQVu0ZxFYCkDdm6Vbbqwl759yCO
-         IcrPLd1jLQjTm/d+poYnIJxpGDupZwMP73VABai1OHyaK8ZWD2i+FEuYCmXsw6PP8PbJ
-         vuLYffzkUvv8TLmkP8YWwNd4XROpIN4ZH5gmPOORtmX4Gq827PDHHdngf0MOvJZzTf5U
-         3l+p+gWTDqsoC13dck88gc2mtBg0cbnR4pCSUuAWs429u5JCfDcsoSjYrO81w8N5FHDs
-         QannTQIlqhbxEs3B3+/+zS2L5uY/b+c7VLcSD38+mKuz0S5iz9lwES/tdGkVOd5PT5+q
-         CVSg==
-X-Gm-Message-State: APjAAAVk34J/D2fcE51wQGDfn8JBj86rXac4kUgefbZ1rAWBEA9losVE
-        20GUVQ0160N6SDPaDk8TOoE04A==
-X-Google-Smtp-Source: APXvYqxOeXB5dcGaik2DpU7A8VO5NugXaB6+Iv+ZKZhAoP9s7OBGYf2kw0dFdZ407h4y+Sap+6cS0Q==
-X-Received: by 2002:a17:906:254e:: with SMTP id j14mr6727439ejb.150.1571824640463;
-        Wed, 23 Oct 2019 02:57:20 -0700 (PDT)
-Received: from netronome.com ([62.119.166.9])
-        by smtp.gmail.com with ESMTPSA id b53sm783428ede.96.2019.10.23.02.57.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 02:57:19 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 11:57:15 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     netdev@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller " <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/4] flow_dissector: add meaningful comments
-Message-ID: <20191023095712.GA8732@netronome.com>
-References: <20191021200948.23775-1-mcroce@redhat.com>
- <20191021200948.23775-2-mcroce@redhat.com>
+        Wed, 23 Oct 2019 05:57:26 -0400
+Received: from mail-oln040092253097.outbound.protection.outlook.com ([40.92.253.97]:18528
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390971AbfJWJ5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:57:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YBEpUDMgoF+jHpuewsnEIeGOu7JOjQyLPDyhBMys6FziCQTocxXqLz9TuBlQTDJ8TU49/z7Qkk0lW9OrxctAjfHEKZxw7nPeehjPnYE0BBl4JilafXTlp1lSG7j9Vjf3QFTcQ7YLSo+aihY7coJ98o/1J87aiUH4/FKpoc5jNEtBv+UdTQ3sGGVIOaDjh94MeFUBNhZTuaUuVj4c4xtcZ3J1Zm9TU8+538oE3LSiLV6U5LRfinYfHlJEhQZLRrPOBZpsDxHbvUYT5pTVq1/tswDmGRhpGFv6JgS90lJkZ0QdCmyenulXU7cKz1zp2s9QdEycpFLso8sf1InZxgw3Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=syfUwvI/D4Epfi/TgZkatcDK5Oufx/BMI1XGzElOzsA=;
+ b=fcvrFuf4smSN5y4b3Y8zXEQfY/4yH3Pgnt5h1KviPWZ5DlFcOTRQ4Oyv1Tul+rXKDN3cJ8Pt6buvP/1ZYwR8VMbFC8FTGMi1dcU13psdI43N9DSQfI0YtxLDaxBsZxhgPa9/FcuplO6fsycl/m5+imQK+Sl+cl2lIC4bHWNgxx51Yn/mN4GIBRsp/p0R1iAgaZbJG159R0hrcJlCl3C8+qc+1QuL+3qetVtzevgpi7o6iJupfVDTA/+XXLiK3djiHKsVkt0u2SIWEPNaohp2SW484yB2+9M0k9ORHOxjn9Do6u+C6YRLwjJcijghNH0cGwPVrEpd79mRsURNEe0M1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT013.eop-APC01.prod.protection.outlook.com
+ (10.152.252.60) by PU1APC01HT221.eop-APC01.prod.protection.outlook.com
+ (10.152.253.159) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2367.14; Wed, 23 Oct
+ 2019 09:57:18 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.56) by
+ PU1APC01FT013.mail.protection.outlook.com (10.152.252.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2387.20 via Frontend Transport; Wed, 23 Oct 2019 09:57:18 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
+ 09:57:17 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
+ parameters
+Thread-Topic: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
+ parameters
+Thread-Index: AQHViX0m6toKrk1OzESm1M80C1WD26dn+tqAgAACogA=
+Date:   Wed, 23 Oct 2019 09:57:17 +0000
+Message-ID: <SL2P216MB0187D47276DED3EA634123BE806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+ <20191023094743.GU2819@lahna.fi.intel.com>
+In-Reply-To: <20191023094743.GU2819@lahna.fi.intel.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0218.ausprd01.prod.outlook.com
+ (2603:10c6:220:19::14) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:379183CF568804A8CF9553F3B06305BE33C8ED8CF75319F8170CDD0C263B3837;UpperCasedChecksum:A8A118439133A174A247B9000ABB1EB3FCE0DC1F83782102F71A1C6DD82AB697;SizeAsReceived:7667;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [XhAnspKP3MvUZ83Bqo/QF8Xu8KY4QxXLlbGnFO+QjvI=]
+x-microsoft-original-message-id: <20191023095708.GB4742@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: PU1APC01HT221:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SLJ6ZGMdPab9ubzLn/R0wzxYwEIsJnWneQNnwAl+YFvGHUxCHvPl0BgBr/TAxcN6gCl1jPEbiq06Cc0SdBJjWeLc42Gk2eJGQ06mTSTr0/k9v4oXAvv4nWwCiTaJxW+Kd1unJQaieTAfEOuoSmSBaekpQH7xInLuIxuUNlcCCicKwi0D1S0XIEv7ailww02o
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DE93B908AF4A4343A1C01CAF96DEA464@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021200948.23775-2-mcroce@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 381825c1-5a3d-48ed-d709-08d7579f636b
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 09:57:17.8951
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 10:09:45PM +0200, Matteo Croce wrote:
-> Documents two piece of code which can't be understood at a glance.
+On Wed, Oct 23, 2019 at 12:47:43PM +0300, mika.westerberg@linux.intel.com wrote:
+> On Wed, Oct 23, 2019 at 08:37:48AM +0000, Nicholas Johnson wrote:
+> >  			} else if (!strncmp(str, "hpmemsize=", 10)) {
+> > -				pci_hotplug_mem_size = memparse(str + 10, &str);
+> > +				pci_hotplug_mmio_size =
+> > +					memparse(str + 10, &str);
+> > +				pci_hotplug_mmio_pref_size =
+> > +					memparse(str + 10, &str);
 > 
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> Does this actually work correctly? The first memparse(str + 10, &str)
+> modifies str so the next call will not start from the correct position
+> anymore.
+I have been using this for a long time now and have not had any issues.
+Does it modify str? I thought that was done by the loop.
 
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Can somebody else please weigh in here? I am worried now, and I want to 
+be sure. If it is a problem, then I will have to read it into 
+pci_hotplug_mmio_size and then set:
 
-> ---
->  include/net/flow_dissector.h | 1 +
->  net/core/flow_dissector.c    | 6 ++++++
->  2 files changed, 7 insertions(+)
+pci_hotplug_mmio_pref_size = pci_hotplug_mmio_size
+
 > 
-> diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
-> index 90bd210be060..7747af3cc500 100644
-> --- a/include/net/flow_dissector.h
-> +++ b/include/net/flow_dissector.h
-> @@ -282,6 +282,7 @@ struct flow_keys {
->  	struct flow_dissector_key_vlan cvlan;
->  	struct flow_dissector_key_keyid keyid;
->  	struct flow_dissector_key_ports ports;
-> +	/* 'addrs' must be the last member */
->  	struct flow_dissector_key_addrs addrs;
->  };
->  
-> diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
-> index 7c09d87d3269..affde70dad47 100644
-> --- a/net/core/flow_dissector.c
-> +++ b/net/core/flow_dissector.c
-> @@ -1374,6 +1374,9 @@ static inline size_t flow_keys_hash_length(const struct flow_keys *flow)
->  {
->  	size_t diff = FLOW_KEYS_HASH_OFFSET + sizeof(flow->addrs);
->  	BUILD_BUG_ON((sizeof(*flow) - FLOW_KEYS_HASH_OFFSET) % sizeof(u32));
-> +	/* flow.addrs MUST be the last member in struct flow_keys because
-> +	 * different L3 protocols have different address length
-> +	 */
->  	BUILD_BUG_ON(offsetof(typeof(*flow), addrs) !=
->  		     sizeof(*flow) - sizeof(flow->addrs));
->  
-> @@ -1421,6 +1424,9 @@ __be32 flow_get_u32_dst(const struct flow_keys *flow)
->  }
->  EXPORT_SYMBOL(flow_get_u32_dst);
->  
-> +/* Sort the source and destination IP (and the ports if the IP are the same),
-> + * to have consistent hash within the two directions
-> + */
->  static inline void __flow_hash_consistentify(struct flow_keys *keys)
->  {
->  	int addr_diff, i;
-> -- 
-> 2.21.0
-> 
+> Otherwise the patch looks good to me.
+Thanks, I will re-post with your last suggestions of going over 80 
+characters shortly.
