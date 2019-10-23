@@ -2,162 +2,145 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B9CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBF2CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD41E2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fgcbUMOF"
+	by mail.kernel.org (Postfix) with ESMTP id 7F0552084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390820AbfJWJQG (ORCPT
+        id S2390833AbfJWJQU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:16:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37392 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390436AbfJWJQG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:16:06 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e11so12491985wrv.4
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 02:16:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eywcCaEl0jz6RGI5YWFAlnC1Cla8qjgA+dIAqYIUG7Y=;
-        b=fgcbUMOFI8gUtVdMcTlFTKeyAVQfLshXZQANnWPhoGkW80jfOfruzvvp7zk+Vn1KOI
-         8Q9j4ZI7cYxWWDdgqmbpPLx8jydPFisGCcnEayTl95BJUqOhn2KZgruUhepU0CJ6ks4c
-         hBIPkxAnWKGsgtZ4NuRj6lgzwNAS7w6rR84jU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=eywcCaEl0jz6RGI5YWFAlnC1Cla8qjgA+dIAqYIUG7Y=;
-        b=ZX0e2zd3O7s9Xuy16fKtPljTZB6wXAQ7vxNsvFgi/17Lka3jBN4JUqd83pyTe7oZ/2
-         jGL1NWLwbHwc8S5SqiTIyYYcaV+NDCiRiq6YAg9UKr2yY2LPB93Ut27kyN9Q6yWtE3hR
-         fslrKz0ZhDyN7vfqdblOlHxL7uPiAk4iiDs5Ws7681W6iOU1Naz5vgAGfWVPvqu2ylYX
-         xoQhEfytD0rv4OTaBBifZRGcpfs4u/Dtk9aLzpalA9Fl4xmbT2nB0WtA6D82hYcIzc/q
-         6E7QX+TEM+G4tXKqjjsdLIdaBY1fYLVyfTyyyul3A3pJQaY5ASCY4h9tN8JVu1TCmnxR
-         ZCaA==
-X-Gm-Message-State: APjAAAVJ1VlBqKHpRpkZ29mFWgbxWB6wIx8YPRwMe9Hbvijg2XKfgAY7
-        oGBjdZw7DP6y7dMDRHASVFKp8Q==
-X-Google-Smtp-Source: APXvYqyaF98maFdt+uzC2JWe68HL1C0ih9eBMEV/s9zDffMzTcLVvCxAL3+nYdCjPic9cQVAZAjlQQ==
-X-Received: by 2002:a5d:424a:: with SMTP id s10mr7122969wrr.108.1571822164224;
-        Wed, 23 Oct 2019 02:16:04 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id c16sm7802240wrw.32.2019.10.23.02.16.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 02:16:03 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 11:16:01 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
-Message-ID: <20191023091601.GX11828@phenom.ffwll.local>
-Mail-Followup-To: Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Eric Anholt <eric@anholt.net>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191021185250.26130-1-navid.emamdoost@gmail.com>
- <20191022093654.GF11828@phenom.ffwll.local>
- <CAEkB2ETFM7u6YiUOT3fz4UQ3U_za9iM1arTnYNg-rjs5+wxOfw@mail.gmail.com>
+        Wed, 23 Oct 2019 05:16:20 -0400
+Received: from mail-oln040092253093.outbound.protection.outlook.com ([40.92.253.93]:44266
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390367AbfJWJQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:16:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JaI9ad5oPMv2Poocc1YFlerD6LOe/om3bbMrtqdIhI6TCoBxt0BDAkYAR4k6HkHOQTNxmy471zVHnZGBDAsJW//rxcSY3XGcX06U/hf+wdpunapP1bCimtIrGERDCpVOObGywibhMutMxnvmNtoxj+6VnmY0mKkNHDtWXERpc5EUm0LdLmd11qJTxODllBzAWC2rtLrYyuhHWEItgD1jeRJOhpbbEvYThCMZ8+prq9+k3e9x/w2U5lYdxnFO9mV6gG/Lj7466Hq7l7v/u83RQcILam+52tfwYQo3co0h5MZBFjpUDSAjd4AGkhupCdJs5bicarR/xZQwE98WohAtrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NycifVh9sBjbR1wBmFPfH5YDYmsgbdEcT04g1mCDiQc=;
+ b=EW42c9dIAxykkE+TaCX9e7AZyX+BRnzQ4Qfzr4W5fR4fsiT4gLc4FXDf/frs0UpfVzrNZST2nfB+NP6deW0gex2LoV48U2zo7FFhsIOyWVWoIs/CnVumXOKG12Thh2MHqLc4gqwKSQgnTz63UnHYJQgvuzOb6Ba6d+NFBKxfM2C+7bg3d6TU1CIZQP4Mr77/iJmMexUxrnKnSrHWmusBtfsrxDG4spbnmc3UlXfIqHXbMrviti8EMIip3PZfp9fplsIxBpljf7CB3aFJYbEEpPvccGOj78FRck9dsNWA3VoJIdJ+U34qZQT/vvfsqOxP7NYGoEBblbpJGlJ3cMranA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT024.eop-APC01.prod.protection.outlook.com
+ (10.152.252.59) by PU1APC01HT017.eop-APC01.prod.protection.outlook.com
+ (10.152.253.122) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.14; Wed, 23 Oct
+ 2019 09:16:15 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.252.52) by
+ PU1APC01FT024.mail.protection.outlook.com (10.152.252.233) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.14 via Frontend Transport; Wed, 23 Oct 2019 09:16:14 +0000
+Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ ([fe80::ec26:6771:625e:71d%8]) with mapi id 15.20.2387.019; Wed, 23 Oct 2019
+ 09:16:11 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v8 4/6] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Thread-Topic: [PATCH v8 4/6] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Thread-Index: AQHVQ7E/8A75PE+Y1kKWz/bvvpr386dRGvuAgBdihQA=
+Date:   Wed, 23 Oct 2019 09:16:10 +0000
+Message-ID: <SL2P216MB018711E3699EE682FD4437E8806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+References: <SL2P216MB01879766498AA7746C2E5FB780C00@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <20191008120907.GI2819@lahna.fi.intel.com>
+In-Reply-To: <20191008120907.GI2819@lahna.fi.intel.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MEXPR01CA0080.ausprd01.prod.outlook.com
+ (2603:10c6:200:2d::13) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:22::19)
+x-incomingtopheadermarker: OriginalChecksum:F0922DFD55E2E5894AA624035E241984F1ECC0767E455AEA73B9084FADC6C7AA;UpperCasedChecksum:87A304CF412731D138425FAB808850D94F00337C675817C125251CBDB497AE17;SizeAsReceived:7811;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [8XzEoR9cmrxuUfV2+Whe56c4tIGmArMXFvJlRX3llKQ=]
+x-microsoft-original-message-id: <20191023091542.GB4080@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: PU1APC01HT017:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fUl/7MuDs9YrneVQA0ZMTmOkMTUFbtfLHWNCRboP43u3n/+B7v7OnYRjlRzLn0a8rcIF8J5qj8fDv8drg7MuHmETAlBrz+voGxDBy9JUWD3hN+9bEFfySqK9/c2HOfREJnY1QYgdG+qYmKyPMeX0SiGN8TePpb9urOoSwCiiHD4e5Vtj65mBevToZvKNqlPu
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D0D3826CBE8E774BA2EA4C97A391E785@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEkB2ETFM7u6YiUOT3fz4UQ3U_za9iM1arTnYNg-rjs5+wxOfw@mail.gmail.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d42ae68f-23ac-418b-8af1-08d757999c75
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 09:16:11.2150
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 10:53:57PM -0500, Navid Emamdoost wrote:
-> On Tue, Oct 22, 2019 at 4:36 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Mon, Oct 21, 2019 at 01:52:49PM -0500, Navid Emamdoost wrote:
-> > > In the impelementation of v3d_submit_cl_ioctl() there are two memory
-> > > leaks. One is when allocation for bin fails, and the other is when bin
-> > > initialization fails. If kcalloc fails to allocate memory for bin then
-> > > render->base should be put. Also, if v3d_job_init() fails to initialize
-> > > bin->base then allocated memory for bin should be released.
-> > >
-> > > Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
-> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > > ---
-> > >  drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
-> > > index 5d80507b539b..19c092d75266 100644
-> > > --- a/drivers/gpu/drm/v3d/v3d_gem.c
-> > > +++ b/drivers/gpu/drm/v3d/v3d_gem.c
-> > > @@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
-> > >
-> > >       if (args->bcl_start != args->bcl_end) {
-> > >               bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
-> > > -             if (!bin)
-> > > +             if (!bin) {
-> > > +                     v3d_job_put(&render->base);
-> >
-> > The job isn't initialized yet, this doesn't work.
-> Do you mean we have to release render via kfree() here?
+On Tue, Oct 08, 2019 at 03:09:07PM +0300, mika.westerberg@linux.intel.com wrote:
+> On Fri, Jul 26, 2019 at 12:54:22PM +0000, Nicholas Johnson wrote:
+> > Remove checks for resource size in extend_bridge_window(). This is
+> > necessary to allow the pci_bus_distribute_available_resources() to
+> > function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
+> > allocate resources. Because the kernel parameter sets the size of all
+> > hotplug bridges to be the same, there are problems when nested hotplug
+> > bridges are encountered. Fitting a downstream hotplug bridge with size X
+> > and normal bridges with size Y into parent hotplug bridge with size X is
+> > impossible, and hence the downstream hotplug bridge needs to shrink to
+> > fit into its parent.
 > 
-> >
-> > >                       return -ENOMEM;
-> > > +             }
-> > >
-> > >               ret = v3d_job_init(v3d, file_priv, &bin->base,
-> > >                                  v3d_job_free, args->in_sync_bcl);
-> > >               if (ret) {
-> > >                       v3d_job_put(&render->base);
-> >
-> > v3d_job_put will call kfree, if you chase the callchain long enough (in
-> > v3d_job_free). So no bug here, this would lead to a double kfree and
-> > crash.
-> Yes, v3d_job_put() takes care of render,
+> Maybe you could show the topology here which needs shrinking.
 > 
-> > -Daniel
-> >
-> > > +                     kfree(bin);
-> but how about leaking bin?
+> > Add check for if bridge is extended or shrunken and adjust pci_dbg to
+> > reflect this.
+> > 
+> > Reset the resource if its new size is zero (if we have run out of a
+> > bridge window resource). If it is set to zero size and left, it can
+> > cause significant problems when it comes to enabling devices.
+> 
+> Same comment here about explaining the "significant problems".
+I have in the past, but because the problems are very hard to describe succinctly, it just turns into a 
+nightmare. I can try to do it again.
 
-Sorry, I totally missed that this is bin, no render. Patch looks correct
-to me.
+> > 
+> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > ---
+> >  drivers/pci/setup-bus.c | 16 +++++++++++-----
+> >  1 file changed, 11 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> > index a072781ab..7e1dc892a 100644
+> > --- a/drivers/pci/setup-bus.c
+> > +++ b/drivers/pci/setup-bus.c
+> > @@ -1823,13 +1823,19 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
+> 
+> Since it is also shrinking now maybe name it adjust_bridge_window() instead?
+I am happy to do this.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+If we can drop the pci_dbg() calls, then I might be able to drop this 
+function entirely. During the development of this patch, that is exactly 
+what I did. How important are the pci_dbg calls to you?
 
-> 
-> > >                       return ret;
-> > >               }
-> > >
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> 
-> 
-> 
-> -- 
-> Navid.
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Another option is to simply print something with pci_dbg that simply 
+says the bridge size has been set to maximum possible while still 
+fitting in parent. That will remove the need for logic to detect if it 
+shrunk or extended.
