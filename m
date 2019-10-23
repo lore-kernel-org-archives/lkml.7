@@ -2,109 +2,238 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA58CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB9FCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6C520640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50C021872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571832906;
+	bh=RxeOCBhuQMFjPX/vJ5iianWpQA1L/U9Nua00cNLciaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zOjlsdX18FvWmbGmpx+0DVGbuijbJTvHE5+FTdi7ur0ajao81DXkR9oRMYaSM5MtI
+	 X9v99j1tdOJ0bST9wrU0QPwOnVU3mG7+YidmsTMebifRVVEj45ilBH9az9q8mSpcQ7
+	 57tfbuU5y4ZNOhZWfxqeH69nkwUMloOAX7xQNwsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391230AbfJWMON (ORCPT
+        id S2391249AbfJWMPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:14:13 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:42259 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbfJWMOM (ORCPT
+        Wed, 23 Oct 2019 08:15:05 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37190 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfJWMPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:14:12 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MowOm-1hetlU2NIM-00qOq5; Wed, 23 Oct 2019 14:14:10 +0200
-Received: by mail-qk1-f177.google.com with SMTP id p4so19503992qkf.5;
-        Wed, 23 Oct 2019 05:14:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAVgFidVU8O7xHC8sllB8qi9XpNBjes+CBPHMJHN17BYr1N/UyRL
-        IHSkK1l97zOafM5EnkQF68qbgseU5D6NyAHqKo0=
-X-Google-Smtp-Source: APXvYqx9FmGVkwD8EbgMmlWydk5PgzJ33OYlaEnM7tpXys5e+jS3v3e/vy3XLGsCvMOw7vkw88sF/Z9WI6L06moKLMI=
-X-Received: by 2002:a37:9442:: with SMTP id w63mr7673807qkd.138.1571832849353;
- Wed, 23 Oct 2019 05:14:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
- <20191010203043.1241612-5-arnd@arndb.de> <20191023102750.GD10630@pi3>
-In-Reply-To: <20191023102750.GD10630@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 14:13:52 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0SwvSHRddMZEiRy3hHQB5OpyP1H05c0oZt3JUeKOf+=g@mail.gmail.com>
-Message-ID: <CAK8P3a0SwvSHRddMZEiRy3hHQB5OpyP1H05c0oZt3JUeKOf+=g@mail.gmail.com>
-Subject: Re: [PATCH 05/36] ARM: samsung: make pm-debug platform independent
-To:     Krzysztof Kozlowski <krzk@kernel.org>
+        Wed, 23 Oct 2019 08:15:05 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r4so15580375edy.4;
+        Wed, 23 Oct 2019 05:15:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EM2bqpofr7QfnOYg3+B2AOXvOUUZQ5S8Y8TJAmAFfq0=;
+        b=aHLwrBSYHYBX8ny5Ytg9RTFyowYRjSeR65rt8zybXVNkcDEKyozlfQxUzsb66+moAq
+         aaGy/Re7vaSZUhCz6VL1nSSbqNoTiVaLtLSKY66jbPs/qb61XP4aVk+uFPAxU3ETQZJa
+         beZdRvbsylAMgadk6CJ/TOUSZ34UeedrIFrHRzn9RqIoi9mHPOY5PWC0qrCDzTj0Vghd
+         sZSs23Fq+oqBWlxTaqf2tGSV87I8jhE4s+hrrXCdZ0DRxMvz5BeLG4v/UHM++sN+znbg
+         rDDbKTDne8oFIq+YJgay5vNzUpaSPsWxlA0GmWziVIdULIsxKioXu11mL/m5qfKTFfM/
+         +/Eg==
+X-Gm-Message-State: APjAAAXd7/qWlzK/zFIGfaOBTOFGiggIwiyKOzcSEtZ7l/EBEerENDAX
+        P8bruKoY1lcO4QVIyUannDQ=
+X-Google-Smtp-Source: APXvYqzMHg39Wi2a6r4kf+i1HiG2eaoZDJ9aezTMqReWB2uYi5hp2/274lnrfoQNk4EHNQ+xelbuwA==
+X-Received: by 2002:a17:906:a0f:: with SMTP id w15mr12009761ejf.321.1571832902425;
+        Wed, 23 Oct 2019 05:15:02 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id r16sm760759eds.72.2019.10.23.05.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 05:15:01 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 14:14:58 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Kukjin Kim <kgene@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:a43ik33BKP22rbmRQGbj9BzOnOijdOzJH6/EMxbiAQS0BlFPVUi
- sv5fjSrhrftA5lEhZ2zRyCAz4ReA0rUbaBpnR1vZF7ASNqCfdnA88xcLrPX7kG/dpUhwK19
- arl6t0NVDw+MGcuyZX+9xavpDdG2hq1tS3Sgpnlfm2cjbPuMMsbqqKVEkMqoIuCBVxwLRT/
- m3qjEXTctE+hAMRVwGF/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IFNGo97kzRE=:vHjLrX1J+UWjDoRAJ2NxxE
- A1ONjWNttP62cWJX18DBkYCPK2HNTebke7HEno7klZENLGXOdy0gbF8CTVG07CoUJ9qB3VVDL
- T15BpDYxE1qzWPvGVwEdK6uWSybEIup+PDg6W3nRanLJG+tQY67q0LDkbebKmE5htfJMk/DZ3
- P1RDdxkdaHj1k0O3F/HVxClk8VrlDRSPU/7ZQLqNa6ob54Mb2oCYl5mM6Cd3sshKKZ11cwvBl
- 3zC74MPED8P5VNqMiYuyGJsplgmN0rU5E+GltWsSNtmdOpGC/02jsxUdjGopAfJ7A29Wg3Ae3
- Q6WUPaRcqPGzNF3oNXCc+1+Cep9Cv5exMezLjmpgz700N5daVlLEey6t37WJfaMJZ6tkjNpIz
- J5P52xD81KKRE0uq6zO2NyWZ2HqId5JI1Wg/ChS4U/QRR6RaogjRq/G9+AYLbKtFuncQl/spg
- 3X7G48/oVPn6QNeeRbJTTbk4gEW8jCnpVIIDjuS0jkfr531CqfNVQLbMPVU4KTaEeafruJHOs
- PxE1S+LPoQs7Af39qvNT6RI7K5PB6YJyWjfcJPVXgocUsrfbK7dFi5aOMDb8wkPkCghgEJkZy
- DqhS7aTx5BVUaCuK0SH+rUplHYp9QBsFWc+DYWYy46Pbo9y1wDwimwiCspqiP55ZiRGd7gIza
- Cur+KSjCSbvlnvRr3oyyh/u0b2NHoPY+7vWZ1u6ujgL+jTJTPaVuRubXbiNOMBS9K5v5tM1rA
- mRakYKF0wdP014emxSTzY+J5Vq8edyCxFGklQg15lJ/aS1TX4t2Na33SLpfRo4ikAJggOLWI6
- iqElYZljLSfscFtw6NTqHT4M1XzMG1X9gg/s6mTQjvuhDzyOdqg1xPJatGjKp7aFdhgn6kZcT
- sg23VWvUxaE5IOBjnN6g==
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
+Message-ID: <20191023121458.GB11048@pi3>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-11-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191010203043.1241612-11-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Thu, Oct 10, 2019 at 10:29:49PM +0200, Arnd Bergmann wrote:
-> > diff --git a/arch/arm/mach-s5pv210/pm.c b/arch/arm/mach-s5pv210/pm.c
-> > index b336df0c57f3..efdb5a27c060 100644
-> > --- a/arch/arm/mach-s5pv210/pm.c
-> > +++ b/arch/arm/mach-s5pv210/pm.c
-> > @@ -99,8 +99,6 @@ static int s5pv210_suspend_enter(suspend_state_t state)
-> >       u32 eint_wakeup_mask = s5pv210_read_eint_wakeup_mask();
-> >       int ret;
-> >
-> > -     s3c_pm_debug_init();
->
-> Your patch is not equivalent here. If there is a reason behind removal
-> of UART init (e.g. not needed), I prefer to make it in separate patch.
+On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
+> These can be build completely independently, so split
+> the two Kconfig symbols.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm/Kconfig.debug        | 6 +++---
+>  arch/arm/Makefile             | 1 -
+>  arch/arm/plat-samsung/Kconfig | 2 +-
+>  drivers/mmc/host/Kconfig      | 2 +-
+>  drivers/pwm/Kconfig           | 2 +-
+>  drivers/spi/Kconfig           | 2 +-
+>  drivers/tty/serial/Kconfig    | 2 +-
+>  sound/soc/samsung/Kconfig     | 2 +-
+>  8 files changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index 9c4f2d6deb06..4c4e97ae4fcb 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -998,7 +998,7 @@ choice
+>  		  via SCIFA4 on Renesas SH-Mobile AG5 (SH73A0).
+>  
+>  	config DEBUG_S3C_UART0
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
 
-It is equivalent, but the reason is a bit subtle:
+How are you going to select DEBUG_S5PV210_UART now?
 
-The definition looks like
+Best regards,
+Krzysztof
 
-#ifdef CONFIG_SAMSUNG_ATAGS
-#include <plat/pm.h>
-#include <mach/pm-core.h>
-#else
-static inline void s3c_pm_debug_init_uart(void) {}
-#endif
-void s3c_pm_debug_init(void)
-{
-        /* restart uart clocks so we can use them to output */
-        s3c_pm_debug_init_uart();
-}
 
-On s5pv210, CONFIG_SAMSUNG_ATAGS is never set, so this
-function does not do anything. Splitting the change out into a
-separate patch to explain that is a good idea, I'll do this.
-
-        Arnd
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> @@ -1010,7 +1010,7 @@ choice
+>  		  by the boot-loader before use.
+>  
+>  	config DEBUG_S3C_UART1
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> @@ -1022,7 +1022,7 @@ choice
+>  		  by the boot-loader before use.
+>  
+>  	config DEBUG_S3C_UART2
+> -		depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +		depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+>  		select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+>  		select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index f492d7c338fe..a1bc15cda751 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -235,7 +235,6 @@ machine-$(CONFIG_PLAT_SPEAR)		+= spear
+>  # by CONFIG_* macro name.
+>  plat-$(CONFIG_ARCH_OMAP)	+= omap
+>  plat-$(CONFIG_ARCH_S3C64XX)	+= samsung
+> -plat-$(CONFIG_ARCH_S5PV210)	+= samsung
+>  plat-$(CONFIG_PLAT_ORION)	+= orion
+>  plat-$(CONFIG_PLAT_PXA)		+= pxa
+>  plat-$(CONFIG_PLAT_S3C24XX)	+= samsung
+> diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
+> index 740bdb23f38a..1530946cc672 100644
+> --- a/arch/arm/plat-samsung/Kconfig
+> +++ b/arch/arm/plat-samsung/Kconfig
+> @@ -4,7 +4,7 @@
+>  
+>  config PLAT_SAMSUNG
+>  	bool
+> -	depends on PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210
+> +	depends on PLAT_S3C24XX || ARCH_S3C64XX
+>  	default y
+>  	select GENERIC_IRQ_CHIP
+>  	select NO_IOPORT_MAP
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 400a581c918c..16a0e5430b44 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -275,7 +275,7 @@ config MMC_SDHCI_TEGRA
+>  
+>  config MMC_SDHCI_S3C
+>  	tristate "SDHCI support on Samsung S3C SoC"
+> -	depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_EXYNOS)
+> +	depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS)
+>  	help
+>  	  This selects the Secure Digital Host Controller Interface (SDHCI)
+>  	  often referrered to as the HSMMC block in some of the Samsung S3C
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index e3a2518503ed..8eb738cac0c7 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -394,7 +394,7 @@ config PWM_ROCKCHIP
+>  
+>  config PWM_SAMSUNG
+>  	tristate "Samsung PWM support"
+> -	depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  	help
+>  	  Generic PWM framework driver for Samsung.
+>  
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 6f7fdcbb9151..355391ee643d 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -625,7 +625,7 @@ config SPI_S3C24XX_FIQ
+>  
+>  config SPI_S3C64XX
+>  	tristate "Samsung S3C64XX series type SPI"
+> -	depends on (PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST)
+> +	depends on (PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST)
+>  	help
+>  	  SPI driver for Samsung S3C64XX and newer SoCs.
+>  
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 4789b5d62f63..17f01cf3009c 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -237,7 +237,7 @@ config SERIAL_CLPS711X_CONSOLE
+>  
+>  config SERIAL_SAMSUNG
+>  	tristate "Samsung SoC serial support"
+> -	depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> +	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>  	select SERIAL_CORE
+>  	help
+>  	  Support for the on-chip UARTs on the Samsung S3C24XX series CPUs,
+> diff --git a/sound/soc/samsung/Kconfig b/sound/soc/samsung/Kconfig
+> index 638983123d8f..7a0035dd9995 100644
+> --- a/sound/soc/samsung/Kconfig
+> +++ b/sound/soc/samsung/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  menuconfig SND_SOC_SAMSUNG
+>  	tristate "ASoC support for Samsung"
+> -	depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
+> +	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
+>  	depends on COMMON_CLK
+>  	select SND_SOC_GENERIC_DMAENGINE_PCM
+>  	---help---
+> -- 
+> 2.20.0
+> 
