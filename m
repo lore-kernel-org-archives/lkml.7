@@ -2,174 +2,117 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931B8CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE086CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B6521906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:36:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GVNr3B/P"
+	by mail.kernel.org (Postfix) with ESMTP id A9DD02084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbfJWIge (ORCPT
+        id S2390413AbfJWIhF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:36:34 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46907 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390278AbfJWIgd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:36:33 -0400
-Received: by mail-qk1-f194.google.com with SMTP id e66so19001850qkf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 01:36:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9v9iQV19DgUi7HpW2WaXbL0gSupsIrn2jbWl4B5cbgA=;
-        b=GVNr3B/Pu7MhpLCF/dDljxT+FdoGWUX3wKn2/1eUXY7mn6PbLjPdBp3YQsOZ3yPYLQ
-         WSWxUBvh9cHNDXTl/XYd6WcF58ndf5Enb6Zf8GLJrDjg5QY6kDKBcRU+VbEj3gahLRg7
-         vJ9UFiG27wNkTs/40C073ctPhILdFtxNxS+6tI4RSo7/BtCENKdU3NUEzHRPNk2pkyGp
-         cKRNlEWDrcCZQOXVaRFjIaVuR+ng9CxjSsJOAjcXp+VlZYyTIbSM7X1Oxmk8LwouDTkq
-         JOfQ4gCi61/2ZVRZbGRn4D2gGe28nDUzHjiqJm8y4UqCUqMgTGv1E98tZF4saJknGme8
-         2zeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9v9iQV19DgUi7HpW2WaXbL0gSupsIrn2jbWl4B5cbgA=;
-        b=GwVP1DmCALNYiI9+bxDdrIH7G7aWo0D+qu5d6stgjSLRhVeN67bTSnGStHYkKjRTSF
-         jJaLZkrqXShEoWoupL4Zwq2J0B3iaQvfV4Ywqxm/ArSq91i3Wn8Gy9hxwFOojMSwoHil
-         3oCqoigypDICalEBsCxsY4mKoKTqYqSmTxj+E7vh8UBiMKsoasDF3oYTJ+bgAh8WQW/W
-         0m8nROVuuyOlbuvSaqZ+KjawPDx3uU+jIgv6J9Q3aOR6oz5j07LZE13MnXF8gY4SCadf
-         lfVkeHN3PZxYzPWr4gVTbbzbZdInZC2CixELSDR/qq1L1Fp9LrKKNMfjRSgExIwunJ1e
-         CmLw==
-X-Gm-Message-State: APjAAAV/QjNb0z20cuHFlpX7e0uB2bKIRTWp/shjCwXS0rB4RkQzLHmV
-        uC9boH5INC1fnwM1z2rn8MHHKh0ZKMRjHRQ/Iywqhw==
-X-Google-Smtp-Source: APXvYqz5/xtUvZp/vVxcL3Gonlq1fmzZz6efHYtE62iXY8lYaTgZeEKiWaOv+Rs97z8NDXNy+5/kH6MjE+IQOOktJZw=
-X-Received: by 2002:a05:620a:16a6:: with SMTP id s6mr6613669qkj.407.1571819792095;
- Wed, 23 Oct 2019 01:36:32 -0700 (PDT)
+        Wed, 23 Oct 2019 04:37:05 -0400
+Received: from mail-oln040092253103.outbound.protection.outlook.com ([40.92.253.103]:22016
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390231AbfJWIhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:37:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tozzed29u41jNQbPWpgr+FEj7l6hdW5eNrcufXTmiRI9svfs4cpvtVRjNrLcYYoyNUIa+3tuGIcuhmc6JU4gmVcut3QkbDNLCRsspydxpyd7BES6QwdKwvUcUI54UNOrZIT+66aSIOXtG5HJavc31d/Qh/MXsXwLmzwZFrIbIoVqTj0lOhPb+/+VqMx2Z5ljR3Y13H4KB6Stm6WyBJoZ3W9rBGFUa7Z3ndqPwIz9QuDxOX5Z4HWnaPkBxTbNZqRhsjBhwr9NQ9MRnx9sE6g381z23E77WXf+ftCNMlNGNf9TSVCRMuZg7/82CdUZFxverIe0/+y7svlKf3a3KeEGSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ijCFpU/c0wAaTc+jGxyCj1GTWL1HE0mVaDXliaO3W0k=;
+ b=YSO1/UDG8V36hBcUc7qGiY0ySwy94lCljYrDsFlo+Hll1eLbXuwJO4rU+MQB4ZVJethDoQvn18wReqXW8FDDdSlUCgD31ex3t7c6m3TZKR/IiCPlsASBTIAP8lfADgsoFDajQZAOHYeM2jXn+rtzqcFX4W0sh7CxnTEqS3NJoGNL37t6E3kbiohwEH5q4Lbo9NspmMQxAkmpedz/TvoneJwvv6P6jLOKqxqDwh0RQTiQ3y2GpMQp5jQKdNjuv2mFkd4ZTbIqDz4MPRb5m7fz0br5uCOzHGpBFmCUNR3RdtJTdVxBNJT7tvyJJ3uHsAwj5PezmAcC+aTPglaNwLIe1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT009.eop-APC01.prod.protection.outlook.com
+ (10.152.252.56) by PU1APC01HT124.eop-APC01.prod.protection.outlook.com
+ (10.152.253.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.14; Wed, 23 Oct
+ 2019 08:36:59 +0000
+Received: from PSXP216MB0183.KORP216.PROD.OUTLOOK.COM (10.152.252.54) by
+ PU1APC01FT009.mail.protection.outlook.com (10.152.252.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.14 via Frontend Transport; Wed, 23 Oct 2019 08:36:59 +0000
+Received: from PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
+ ([fe80::707c:4884:c137:2266]) by PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
+ ([fe80::707c:4884:c137:2266%5]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
+ 08:36:59 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: [PATCH 0/1] Add support for setting MMIO PREF hotplug bridge size
+Thread-Topic: [PATCH 0/1] Add support for setting MMIO PREF hotplug bridge
+ size
+Thread-Index: AQHViX0IscNJYyHchk6j0ubA//SaQA==
+Date:   Wed, 23 Oct 2019 08:36:59 +0000
+Message-ID: <PSXP216MB01832E0DD8892B52A3FA2589806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0110.ausprd01.prod.outlook.com
+ (2603:10c6:201:2c::26) To PSXP216MB0183.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:b::17)
+x-incomingtopheadermarker: OriginalChecksum:A56C3385AC70E360929D0003897C35202BA7E0CBFB80A5900E24EEDDB78B5516;UpperCasedChecksum:D6F2A8E27BDBCEC2C1341999D481193C6C96DA42CA3C4909A8F52CE3231879CB;SizeAsReceived:7765;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [ISr/nj35f9JQUpCE+STkcUX9EzAiB5YwVpct4TQ9VaI=]
+x-microsoft-original-message-id: <20191023083650.GA3836@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-traffictypediagnostic: PU1APC01HT124:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /xBkDUPpkVUwuCz0XctBcPZKZxWCZHTULzK1JAklo5NAC+ehOQa17LMVl02GKXlx3XglwOLGlclrLlOx5hL4EmxOm6v7+qgDZcUVrSEf5fo1LW5FOTHRsreYQKXx62ASD/uyeCIAZGHJBvh+nHmI5EluXE2lU3+0Vlj+YS6rbt793XTO3Er+SlA+enZhym2t
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F17C8EFC3714BF45B732D1B50D45C45D@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <cover.1571762488.git.andreyknvl@google.com> <26e088ae3ebcaa30afe957aeabaa9f0c653df7d0.1571762488.git.andreyknvl@google.com>
-In-Reply-To: <26e088ae3ebcaa30afe957aeabaa9f0c653df7d0.1571762488.git.andreyknvl@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 23 Oct 2019 10:36:20 +0200
-Message-ID: <CACT4Y+YntxT+cpESOBvbg+h=g-84ECJwQrFg7LM5tbq_zaMd3A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] vhost, kcov: collect coverage from vhost_worker
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9231436-7176-4eeb-9af8-08d757942b26
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 08:36:59.2328
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 6:46 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> This patch adds kcov_remote_start()/kcov_remote_stop() annotations to the
-> vhost_worker() function, which is responsible for processing vhost works.
-> Since vhost_worker() threads are spawned per vhost device instance
-> the common kcov handle is used for kcov_remote_start()/stop() annotations
-> (see Documentation/dev-tools/kcov.rst for details). As the result kcov can
-> now be used to collect coverage from vhost worker threads.
->
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  drivers/vhost/vhost.c | 6 ++++++
->  drivers/vhost/vhost.h | 1 +
->  2 files changed, 7 insertions(+)
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 36ca2cf419bf..a5a557c4b67f 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -30,6 +30,7 @@
->  #include <linux/sched/signal.h>
->  #include <linux/interval_tree_generic.h>
->  #include <linux/nospec.h>
-> +#include <linux/kcov.h>
->
->  #include "vhost.h"
->
-> @@ -357,7 +358,9 @@ static int vhost_worker(void *data)
->                 llist_for_each_entry_safe(work, work_next, node, node) {
->                         clear_bit(VHOST_WORK_QUEUED, &work->flags);
->                         __set_current_state(TASK_RUNNING);
-> +                       kcov_remote_start(dev->kcov_handle);
->                         work->fn(work);
-> +                       kcov_remote_stop();
->                         if (need_resched())
->                                 schedule();
->                 }
-> @@ -546,6 +549,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
->
->         /* No owner, become one */
->         dev->mm = get_task_mm(current);
-> +       dev->kcov_handle = current->kcov_handle;
+This patch adds support for two new kernel parameters. This patch has
+been in the making for quite some time, and has changed several times
+based on feedback.
 
-kcov_handle is not present in task_struct if !CONFIG_KCOV
+I realised I was making the mistake of putting it as part of my
+Thunderbolt patch series. Although the other patches in the series are
+very important for my goal, I realised that they are just a heap of
+patches that are not Thunderbolt-specific. The only thing that is
+Thunderbolt-related is the intended use case.
 
-Also this does not use KCOV_SUBSYSTEM_COMMON.
-We discussed something along the following lines:
+I hope that posting this alone can ease the difficulty of reviewing it.
 
-u64 kcov_remote_handle(u64 subsys, u64 id)
-{
-  WARN_ON(subsys or id has wrong bits set).
-  return ...;
-}
+Nicholas Johnson (1):
+  PCI: Add hp_mmio_size and hp_mmio_pref_size parameters
 
-kcov_remote_handle(KCOV_SUBSYSTEM_USB, bus);
-kcov_remote_handle(KCOV_SUBSYSTEM_COMMON, current->kcov_handle);
+ .../admin-guide/kernel-parameters.txt         |  9 ++++++-
+ drivers/pci/pci.c                             | 17 ++++++++++---
+ drivers/pci/pci.h                             |  3 ++-
+ drivers/pci/setup-bus.c                       | 25 +++++++++++--------
+ 4 files changed, 38 insertions(+), 16 deletions(-)
 
+-- 
+2.23.0
 
->         worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
->         if (IS_ERR(worker)) {
->                 err = PTR_ERR(worker);
-> @@ -571,6 +575,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
->         if (dev->mm)
->                 mmput(dev->mm);
->         dev->mm = NULL;
-> +       dev->kcov_handle = 0;
->  err_mm:
->         return err;
->  }
-> @@ -682,6 +687,7 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
->         if (dev->worker) {
->                 kthread_stop(dev->worker);
->                 dev->worker = NULL;
-> +               dev->kcov_handle = 0;
->         }
->         if (dev->mm)
->                 mmput(dev->mm);
-> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> index e9ed2722b633..a123fd70847e 100644
-> --- a/drivers/vhost/vhost.h
-> +++ b/drivers/vhost/vhost.h
-> @@ -173,6 +173,7 @@ struct vhost_dev {
->         int iov_limit;
->         int weight;
->         int byte_weight;
-> +       u64 kcov_handle;
->  };
->
->  bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
-> --
-> 2.23.0.866.gb869b98d4c-goog
->
