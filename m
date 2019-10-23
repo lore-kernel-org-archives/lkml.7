@@ -2,148 +2,123 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A1ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB85CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF9C20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634C320650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BlBqLSaB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME8AeDt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732717AbfJWASp (ORCPT
+        id S1732530AbfJWAVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:18:45 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:45260 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732221AbfJWASZ (ORCPT
+        Tue, 22 Oct 2019 20:21:52 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38742 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfJWAVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:18:25 -0400
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 746FA2010AC4;
-        Tue, 22 Oct 2019 17:18:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 746FA2010AC4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1571789904;
-        bh=XMnesZyw0QRVpbTGsE9Hc/rqUu5GYJWuVQuZdKM+XUs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BlBqLSaBU2u6bMM8N2CJLmtSSyrj8x+DxdgP4YQcrsfxPrZOnClZCgPZOYF2YcAHc
-         3ppV4GSQ+xO1NVy1kN7rB4MTn03tNVepQIOL/FALEZqDoaOoHL3eoArCEClDX+gfEL
-         zRe+Ml5aK0gq0sJyT3c3XZGCdwsAMuJmUBdQ2lRY=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, dhowells@redhat.com, casey@schaufler-ca.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Cc:     nramas@linux.microsoft.com
-Subject: [PATCH v1 2/6] KEYS: ima: Refactored process_buffer_measurement function so that it can measure any buffer (and not just KEXEC_CMDLINE one)
-Date:   Tue, 22 Oct 2019 17:18:14 -0700
-Message-Id: <20191023001818.3684-3-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023001818.3684-1-nramas@linux.microsoft.com>
-References: <20191023001818.3684-1-nramas@linux.microsoft.com>
+        Tue, 22 Oct 2019 20:21:51 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v186so3034332oie.5;
+        Tue, 22 Oct 2019 17:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qkST9yhwhwu10AHBsdYDPDVaDucJkRuGL9XsMxO/Jus=;
+        b=ME8AeDt8lrDNr6sdt0nQbp3m0YrKt09TY+Q9IcIyd0LERSAE4nud3tI2pB/Rv3BX8C
+         h7BQ50s2Z/hiLZ1nXPToZ49oSle/vfbVspSaHod0K4eX78YalSsxKzV8ozki+HttScgd
+         C0yrhsUm1BwEGc94A5r9eD3JHpsFrzBAD2hdYNxq7mzgbSmcfg3GPeXoR0GFEVJWhPvd
+         586/veeV52ejEmBLHASChNDK70dMGPPwWPX5GBAVn5jP/hu17mwYASU3pNa07IaXOouo
+         ewrkz/0J2eCGzyKsQP40c+CxXZypTpl8aRYv97fCr8Oe7AyFtd61mBlgpZNhXlNJTNL/
+         CygQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qkST9yhwhwu10AHBsdYDPDVaDucJkRuGL9XsMxO/Jus=;
+        b=QPloE48mrqzkl+uTzrOS24BJXYLINfW3sI9MeyYWjqu6sUCCbNjQP2A4YXq6wnMmwL
+         zeAo9AcMHg7XjtnAS09+8HDtU2600vyoXFbp7epMHf0O4J3xxz9OZbxyhy38RDsR20HW
+         t5mxerq5R36lRAbc20CNwF9nUCzKXtZYzeHlQrgMrf2LHXmp6mZ+E6TflCyqzYw40IpK
+         w11DpmX8iab/AwE+VCc8KoL1Mj6/40QPAHmw85/zDSrVf5y3SNzg7uv41Gg4bMxph0l+
+         N4IBUGI2IUVYkrfOdxGZhFwvc9Eit6KbFbiLtJ6zg/qyvklsbtTfRH66sod0v+LOoDTA
+         7nYg==
+X-Gm-Message-State: APjAAAUmZRV41P8xHFlycc7baTydmHNBJvhwkLQRpAWC4tm+G4+4Nmt0
+        Ek1qCKGIpxfBdaWEevdcFCChuy0+Guk=
+X-Google-Smtp-Source: APXvYqxr/KAWWKDTvz/rOExJ/s20dCk+w4jw1dGVEhtXOsldTSeDqYqV0IT7fReqQBgvwT5Pbi2b3g==
+X-Received: by 2002:aca:3b84:: with SMTP id i126mr3720122oia.28.1571790110917;
+        Tue, 22 Oct 2019 17:21:50 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n4sm901229oic.2.2019.10.22.17.21.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 17:21:50 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Ashwini Pahuja <ashwini.linux@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
+Date:   Tue, 22 Oct 2019 17:20:15 -0700
+Message-Id: <20191023002014.22571-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-process_buffer_measurement currently supports measuring kexec command line
-only. This function has been refactored to support more than kexec_cmdline.
-With this change this function can be used for measuring any buffer.
-This function is now also used by ima to measure keys besides used for
-measuring kexec command line.
+When building with Clang + -Wtautological-pointer-compare:
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
+address of 'req->queue' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+                             ~~~~~^~~~~    ~~~~
+drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
+address of 'req->usb_req' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+                                                    ~~~~~^~~~~~~    ~~~~
+2 warnings generated.
+
+As it notes, these statements will always evaluate to false so remove
+them.
+
+Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
+Link: https://github.com/ClangBuiltLinux/linux/issues/749
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- security/integrity/ima/ima.h      |  3 +++
- security/integrity/ima/ima_main.c | 29 ++++++++++++++---------------
- 2 files changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 011b91c79351..b6847ee1f47a 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -209,6 +209,9 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
- 			   struct evm_ima_xattr_data *xattr_value,
- 			   int xattr_len, int pcr,
- 			   struct ima_template_desc *template_desc);
-+void process_buffer_measurement(const void *buf, int size,
-+				const char *eventname, int pcr,
-+				struct ima_template_desc *template_desc);
- void ima_audit_measurement(struct integrity_iint_cache *iint,
- 			   const unsigned char *filename);
- int ima_alloc_init_template(struct ima_event_data *event_data,
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 584019728660..8e965d18fb21 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -610,14 +610,14 @@ int ima_load_data(enum kernel_load_data_id id)
-  * @buf: pointer to the buffer that needs to be added to the log.
-  * @size: size of buffer(in bytes).
-  * @eventname: event name to be used for the buffer entry.
-- * @cred: a pointer to a credentials structure for user validation.
-- * @secid: the secid of the task to be validated.
-+ * @pcr: pcr to extend the measurement
-+ * @template_desc: template description
-  *
-  * Based on policy, the buffer is measured into the ima log.
-  */
--static void process_buffer_measurement(const void *buf, int size,
--				       const char *eventname,
--				       const struct cred *cred, u32 secid)
-+void process_buffer_measurement(const void *buf, int size,
-+				const char *eventname, int pcr,
-+				struct ima_template_desc *template_desc)
+Note: I am not sure if these checks were intended to check if the
+contents of these arrays were NULL or if there should be some other
+checks in lieu of these; I am not familiar with the USB subsystem to
+answer this but I will happily respin the patch if this is not correct.
+
+ drivers/usb/gadget/udc/bdc/bdc_ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+index a4d9b5e1e50e..d49c6dc1082d 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+@@ -540,7 +540,7 @@ static void bdc_req_complete(struct bdc_ep *ep, struct bdc_req *req,
  {
- 	int ret = 0;
- 	struct ima_template_entry *entry = NULL;
-@@ -626,19 +626,11 @@ static void process_buffer_measurement(const void *buf, int size,
- 					    .filename = eventname,
- 					    .buf = buf,
- 					    .buf_len = size};
--	struct ima_template_desc *template_desc = NULL;
- 	struct {
- 		struct ima_digest_data hdr;
- 		char digest[IMA_MAX_DIGEST_SIZE];
- 	} hash = {};
- 	int violation = 0;
--	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
--	int action = 0;
--
--	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr,
--				&template_desc);
--	if (!(action & IMA_MEASURE))
--		return;
+ 	struct bdc *bdc = ep->bdc;
  
- 	iint.ima_hash = &hash.hdr;
- 	iint.ima_hash->algo = ima_hash_algo;
-@@ -670,12 +662,19 @@ static void process_buffer_measurement(const void *buf, int size,
-  */
- void ima_kexec_cmdline(const void *buf, int size)
- {
-+	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-+	struct ima_template_desc *template_desc = ima_template_desc_current();
-+	int action;
- 	u32 secid;
+-	if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
++	if (req == NULL)
+ 		return;
  
- 	if (buf && size != 0) {
- 		security_task_getsecid(current, &secid);
--		process_buffer_measurement(buf, size, "kexec-cmdline",
--					   current_cred(), secid);
-+		action = ima_get_action(NULL, current_cred(), secid, 0,
-+					KEXEC_CMDLINE, &pcr, &template_desc);
-+		if (!(action & IMA_MEASURE))
-+			return;
-+		process_buffer_measurement(buf, size, "kexec-cmdline", pcr,
-+					   template_desc);
- 	}
- }
- 
+ 	dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
 -- 
-2.17.1
+2.23.0
 
