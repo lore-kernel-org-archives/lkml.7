@@ -2,154 +2,173 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DC7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A635ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECECA20650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D12320650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FetI7HPE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PWMr/nMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733081AbfJWAWS (ORCPT
+        id S1733121AbfJWAXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:22:18 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46569 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732704AbfJWAWS (ORCPT
+        Tue, 22 Oct 2019 20:23:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33534 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732822AbfJWAXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:22:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571790137;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=BRtNNhXUxGj/iKOpVn/NIU4B21BikmHUzRYNqGSNsWA=;
-        b=FetI7HPExsWO2dNfy3mGlUddt/L+vGzUdnFZJOBb4LiUqqxvhHV/zFJtBspYKWODKHcL7+
-        SfHDNu/ETgCJZiwYJm+e/HkRFD/JcTiw/Q5MrDuOt1qOtVymBCwl2ryXM/3gD7qfsgbUzP
-        PG47OjGiclfEaqycaXO9ZKIBLC6ROlY=
-Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com
- [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-1-ab-zEnPuifrwmwRQWsAg-1; Tue, 22 Oct 2019 20:22:15 -0400
-Received: by mail-yw1-f70.google.com with SMTP id y131so2105883ywc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:22:15 -0700 (PDT)
+        Tue, 22 Oct 2019 20:23:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u23so312634pgo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 17:23:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=/rPZ4HhwO2Y5OxYPZvTpAmk/8khmnCdcuj1jKDBcIYI=;
+        b=PWMr/nMYg+m7WtNCPLVizhxiu8gyfLZI0qwKU6Yqp4oFhAsoLzwWin4tCq7I2oHIei
+         iAuxmHtpkNw44YwnJVo1QUoaReR9DmkDLXMTJedbn0+8dhb6RU6C+u9Ltmj4XbZ8fqWM
+         xP2Jj51dT1JuQLgl25G3zBtz6CXYBhEBscM0PODXuxtEddF9t/J3rU0w7Jp0y5yquS7/
+         5dX4qJZp8G15mW7nLthkGTyUcF3X+UYcgilTiWO9BvErNmqsj6sVk8JMFJL1eIPDd/f6
+         bIhlrg0o23AUNMSfTePJemTx+FFcPxq7SWdJIDlsC17QN2bhA1rtFuwcGr9ig5LnNbOf
+         o4dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=+IXJWBytrC/xK/Bmd9e8MMpXuNGH/WR5SvJe1bLIZuI=;
-        b=fOTERJhWT3H7ncHiGOwO0iZotk/daeD/+sXXhE5gGZ5vhfOwj76ZhWKmtSYMrYEpNf
-         W3UFmcMan8cddSDijYiH4zgQB4f5/quRb1qhNc74mNBfcqB8bgo5gv8nlWVQnS2uNIFh
-         4tW4cFAw/ut0xliW+Gnbtt3kHD+oEIvsYITAlwsUkpydIp9zzqUHN0hBd8W2SvrtIoBr
-         lpaXyiyXkQu09eH13JmK6Z7OVlpp54FApX5WVlBW7bG51nBkrY+F2FPRnZ0UX6SrZhMR
-         wQpSoumOFGe6WzagDd5RnugZRe4VAbrT0uxpEGsJaMXhCMIBqQVKaUxxtMywINTOdNP7
-         ZP5w==
-X-Gm-Message-State: APjAAAWzsM+J0n2ZV+FWD6PEqKJaXaNkWpKqAbujTqFSIBixiW4rTpY0
-        HTVzy0k/JwBG+BBICvuBjnagOgS27swxOtf3f9QHXo2RJ9MuHKZDWoQDzfIq+Oc/U55onkBhtdY
-        fzAMIpcRPmq7+n98smTTA+jf0Q5CD4Q7htbjhygYB
-X-Received: by 2002:a25:b6ca:: with SMTP id f10mr4835419ybm.376.1571790135333;
-        Tue, 22 Oct 2019 17:22:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxI7865C7FbMjHafWESnBA/nOolnjjYIAPJZxe09kuTpOgpGHlm0WoGto+SV1G5gY7LUkg625qYOyF/uv18VNA=
-X-Received: by 2002:a25:b6ca:: with SMTP id f10mr4835396ybm.376.1571790134960;
- Tue, 22 Oct 2019 17:22:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=/rPZ4HhwO2Y5OxYPZvTpAmk/8khmnCdcuj1jKDBcIYI=;
+        b=uQCaEG0qV5zloDFP4/Y8qJagnlHFmK4H3Y1dhWJoQUakvrPYdQjId3WADNeWvwOqK6
+         R8ziHmDCIx0Qdv1vHdQOw2PFGJqRoQ1uWGsp3wWTVBC1uo9XKlPaCBHmrpJ0/apM2jE0
+         MzjpaN13Lgws9Pgz0mu1ykj6QcGfU/G2yIyjd5JjZBgLsUEEXVmr1T0itDzZp2WVFDnD
+         0Pgh8wFe2MxMGcyfODutkfh0G+g3VFSOc6crYQzHv8n+tB0jSgB44mOz+IN6DeEn1231
+         QLppw1IQG5BUpPJdyFHDt0UpK9oHgpdXHAvWArfsMGC3v6PSydocRdRg6TchZwUVjPSl
+         5B6w==
+X-Gm-Message-State: APjAAAXI502MLMymbsIOtAxllsdfiShd+1BRLKkBnqLg3bEw2R555DYs
+        +Dz4xFUW/nUArn06smeZ/oHNj27pUxw=
+X-Google-Smtp-Source: APXvYqz+Z9nLdGje/5/GaGDSa9/q6bNKjeojhvbDbY03xj4oOhikScXlxlbbMaHu4V4ZTUwDYQLl8Q==
+X-Received: by 2002:a17:90a:eace:: with SMTP id ev14mr8128545pjb.57.1571790228097;
+        Tue, 22 Oct 2019 17:23:48 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id d7sm8201906pgv.6.2019.10.22.17.23.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 17:23:47 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 17:23:46 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     "Singh, Brijesh" <brijesh.singh@amd.com>
+cc:     "Kalra, Ashish" <Ashish.Kalra@amd.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "Hook, Gary" <Gary.Hook@amd.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "info@metux.net" <info@metux.net>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] crypto: ccp - Retry SEV INIT command in case of integrity
+ check failure.
+In-Reply-To: <cfc975bb-d520-82a4-6fbe-40d78ce2e822@amd.com>
+Message-ID: <alpine.DEB.2.21.1910221723220.126424@chino.kir.corp.google.com>
+References: <20191017223459.64281-1-Ashish.Kalra@amd.com> <alpine.DEB.2.21.1910190156210.140416@chino.kir.corp.google.com> <29887804-ecab-ae83-8d3f-52ea83e44b4e@amd.com> <alpine.DEB.2.21.1910211754550.152056@chino.kir.corp.google.com>
+ <cfc975bb-d520-82a4-6fbe-40d78ce2e822@amd.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-From:   Tom Rix <trix@redhat.com>
-Date:   Tue, 22 Oct 2019 17:22:04 -0700
-Message-ID: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
-Subject: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
-To:     Steffen Klassert <steffen.klassert@secunet.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joerg Vehlow <lkml@jv-coder.de>
-X-MC-Unique: 1-ab-zEnPuifrwmwRQWsAg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On PREEMPT_RT_FULL while running netperf, a corruption
-of the skb queue causes an oops.
+On Tue, 22 Oct 2019, Singh, Brijesh wrote:
 
-This appears to be caused by a race condition here
-        __skb_queue_tail(&trans->queue, skb);
-        tasklet_schedule(&trans->tasklet);
-Where the queue is changed before the tasklet is locked by
-tasklet_schedule.
+> >>>> From: Ashish Kalra <ashish.kalra@amd.com>
+> >>>>
+> >>>> SEV INIT command loads the SEV related persistent data from NVS
+> >>>> and initializes the platform context. The firmware validates the
+> >>>> persistent state. If validation fails, the firmware will reset
+> >>>> the persisent state and return an integrity check failure status.
+> >>>>
+> >>>> At this point, a subsequent INIT command should succeed, so retry
+> >>>> the command. The INIT command retry is only done during driver
+> >>>> initialization.
+> >>>>
+> >>>> Additional enums along with SEV_RET_SECURE_DATA_INVALID are added
+> >>>> to sev_ret_code to maintain continuity and relevance of enum values.
+> >>>>
+> >>>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> >>>> ---
+> >>>>    drivers/crypto/ccp/psp-dev.c | 12 ++++++++++++
+> >>>>    include/uapi/linux/psp-sev.h |  3 +++
+> >>>>    2 files changed, 15 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/crypto/ccp/psp-dev.c b/drivers/crypto/ccp/psp-dev.c
+> >>>> index 6b17d179ef8a..f9318d4482f2 100644
+> >>>> --- a/drivers/crypto/ccp/psp-dev.c
+> >>>> +++ b/drivers/crypto/ccp/psp-dev.c
+> >>>> @@ -1064,6 +1064,18 @@ void psp_pci_init(void)
+> >>>>    
+> >>>>    	/* Initialize the platform */
+> >>>>    	rc = sev_platform_init(&error);
+> >>>> +	if (rc && (error == SEV_RET_SECURE_DATA_INVALID)) {
+> >>>> +		/*
+> >>>> +		 * INIT command returned an integrity check failure
+> >>>> +		 * status code, meaning that firmware load and
+> >>>> +		 * validation of SEV related persistent data has
+> >>>> +		 * failed and persistent state has been erased.
+> >>>> +		 * Retrying INIT command here should succeed.
+> >>>> +		 */
+> >>>> +		dev_dbg(sp->dev, "SEV: retrying INIT command");
+> >>>> +		rc = sev_platform_init(&error);
+> >>>> +	}
+> >>>> +
+> >>>>    	if (rc) {
+> >>>>    		dev_err(sp->dev, "SEV: failed to INIT error %#x\n", error);
+> >>>>    		return;
+> >>>
+> >>> Curious why this isn't done in __sev_platform_init_locked() since
+> >>> sev_platform_init() can be called when loading the kvm module and the same
+> >>> init failure can happen that way.
+> >>>
+> >>
+> >> The FW initialization (aka PLATFORM_INIT) is called in the following
+> >> code paths:
+> >>
+> >> 1. During system boot up
+> >>
+> >> and
+> >>
+> >> 2. After the platform reset command is issued
+> >>
+> >> The patch takes care of #1. Based on the spec, platform reset command
+> >> should erase the persistent data and the PLATFORM_INIT should *not* fail
+> >> with SEV_RET_SECURE_DATA_INVALID error code. So, I am not able to see
+> >> any  strong reason to move the retry code in
+> >> __sev_platform_init_locked().
+> >>
+> > 
+> > Hmm, is the sev_platform_init() call in sev_guest_init() intended to do
+> > SEV_CMD_INIT only after platform reset?  I was under the impression it was
+> > done in case any previous init failed.
+> > 
+> 
+> 
+> The PLATFORM_INIT command is allowed only when FW is in UINIT state. On
+> boot, the FW will be in UNINIT state and similarly after the platform 
+> reset command the FW goes back to UNINIT state.
+> 
+> The __sev_platform_init_locked() checks the FW state before issuing the
+> command, if FW is already in INIT state then it returns immediately.
+> 
 
-The fix is to use the skb queue lock.
+Ah, got it, thanks.
 
-This is the original work of Joerg Vehlow <joerg.vehlow@aox-tech.de>
-https://lkml.org/lkml/2019/9/9/111
-  xfrm_input: Protect queue with lock
-
-  During the skb_queue_splice_init the tasklet could have been preempted
-  and __skb_queue_tail called, which led to an inconsistent queue.
-
-ifdefs for CONFIG_PREEMPT_RT_FULL added to reduce runtime effects
-on the normal kernel.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- net/xfrm/xfrm_input.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
-index 9b599ed66d97..decd515f84cf 100644
---- a/net/xfrm/xfrm_input.c
-+++ b/net/xfrm/xfrm_input.c
-@@ -755,13 +755,21 @@ EXPORT_SYMBOL(xfrm_input_resume);
-
- static void xfrm_trans_reinject(unsigned long data)
- {
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+    unsigned long flags;
-+#endif
-     struct xfrm_trans_tasklet *trans =3D (void *)data;
-     struct sk_buff_head queue;
-     struct sk_buff *skb;
-
-     __skb_queue_head_init(&queue);
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+    spin_lock_irqsave(&trans->queue.lock, flags);
-+#endif
-     skb_queue_splice_init(&trans->queue, &queue);
--
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+    spin_unlock_irqrestore(&trans->queue.lock, flags);
-+#endif
-     while ((skb =3D __skb_dequeue(&queue)))
-         XFRM_TRANS_SKB_CB(skb)->finish(dev_net(skb->dev), NULL, skb);
- }
-@@ -778,7 +786,11 @@ int xfrm_trans_queue(struct sk_buff *skb,
-         return -ENOBUFS;
-
-     XFRM_TRANS_SKB_CB(skb)->finish =3D finish;
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+    skb_queue_tail(&trans->queue, skb);
-+#else
-     __skb_queue_tail(&trans->queue, skb);
-+#endif
-     tasklet_schedule(&trans->tasklet);
-     return 0;
- }
-@@ -798,7 +810,11 @@ void __init xfrm_input_init(void)
-         struct xfrm_trans_tasklet *trans;
-
-         trans =3D &per_cpu(xfrm_trans_tasklet, i);
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+        skb_queue_head_init(&trans->queue);
-+#else
-         __skb_queue_head_init(&trans->queue);
-+#endif
-         tasklet_init(&trans->tasklet, xfrm_trans_reinject,
-                  (unsigned long)trans);
-     }
---=20
-2.23.0
-
+Acked-by: David Rientjes <rientjes@google.com>
