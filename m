@@ -2,118 +2,147 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D157C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29B8CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DB62086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8714E2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="B4JsPq0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732261AbfJWRw3 (ORCPT
+        id S1732334AbfJWRxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:52:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20620 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730584AbfJWRw3 (ORCPT
+        Wed, 23 Oct 2019 13:53:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46556 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731918AbfJWRxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:52:29 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9NHX1rx048517
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 13:52:27 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vtt20bm7b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 13:52:27 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 23 Oct 2019 18:52:25 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 23 Oct 2019 18:52:22 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9NHqLjt58523784
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 17:52:21 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 916004C052;
-        Wed, 23 Oct 2019 17:52:21 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 187A44C044;
-        Wed, 23 Oct 2019 17:52:20 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.174])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Oct 2019 17:52:19 +0000 (GMT)
-Subject: Re: [PATCH v1 5/6] KEYS: measure queued keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Wed, 23 Oct 2019 13:52:19 -0400
-In-Reply-To: <89d778d1-1ac9-4a58-b159-7db68b7fa4ad@linux.microsoft.com>
-References: <20191023001818.3684-1-nramas@linux.microsoft.com>
-         <20191023001818.3684-6-nramas@linux.microsoft.com>
-         <1571836990.5104.96.camel@linux.ibm.com>
-         <89d778d1-1ac9-4a58-b159-7db68b7fa4ad@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102317-4275-0000-0000-000003764C0B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102317-4276-0000-0000-00003889740D
-Message-Id: <1571853139.5104.154.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910230168
+        Wed, 23 Oct 2019 13:53:37 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n15so12282964wrw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Pd1hXIbyhKvoq4Ce5+sJpjUPNTW4sF25HitKZRQWVXw=;
+        b=B4JsPq0LniaQyv7ddF8xlzipH8jpJjEDYGD/tK+Xo/3m1MT59+5PrNAWgDYT1tn0aG
+         U0Rg0fgVroScAIzNCEbfrCAA3lMCE+u9rK1IhABFJX29n1lWNsw9JhLZygsvDShiTak+
+         DiwcUt3XsAcTGcNS2i1QqozEN/v/MI791M7AiIOvHsZPoPNPEPYqYPpMYE35iGZ24N9l
+         lSLOcdXUxBq+aptYNUfjawsJcSBo6V9FP8NTEApy0szgfq1XL+GbgcnDwvkBre76ecsC
+         S4LKqNNqFKjl/7ieLyQpMcCZN7EtGwBgIw1E/JrVq4QxMMEyTM1MRiWf+3mTeBgnYD5Q
+         P1yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Pd1hXIbyhKvoq4Ce5+sJpjUPNTW4sF25HitKZRQWVXw=;
+        b=hNzzfCwZCexouncON9kVRQCwsrboe9QEIlSrgBkIzbX4h1WMUYDMOjfyjXVHL9pQCj
+         ahGjaYFF1CizmGOPZ/raKSydsy7bA+WClaME9Ugto6wMHoq3oZSWtQUuSg7jbCU6Hazq
+         BmEapFhvg/cOZXr/0RSEbr2h/e3qWE9uZjob/gUpMqrxH53mEjtnBXgykItDIYSbOn3+
+         vrYjpg5RZmaz0yfQ6VTp/5Pqjh5HbNOk6d6CJTRykxfNytGfcq6QDyBUl+V9CB9yWY9v
+         uWdj+dKSfkk32Tf90kUpNMpMWlsLGQcc9B/tu2DZ+utyF1YAErZkjUNyDF6RqvgZ/s0W
+         TNGA==
+X-Gm-Message-State: APjAAAVRWg2NIDk0aP9bHh/Ki30bhbwEeN2qouPWqoFhr/CfAHTYYmzV
+        UUlysbT0vX/y146qzoRmdFdRYg==
+X-Google-Smtp-Source: APXvYqyV3FVHmPnXhN7309BG4pPr+cmN8g3UWW39XvABLAOl0v0PrEKVunEVe6dkZuTaCi3CQve2fQ==
+X-Received: by 2002:adf:ee10:: with SMTP id y16mr9507135wrn.67.1571853213196;
+        Wed, 23 Oct 2019 10:53:33 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id f143sm39085313wme.40.2019.10.23.10.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 10:53:32 -0700 (PDT)
+References: <20191023161203.28955-1-jbrunet@baylibre.com> <s5ha79rph1j.wl-tiwai@suse.de>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [alsa-devel] [PATCH 0/2] ASoC: hdmi-codec: fix locking issue
+In-reply-to: <s5ha79rph1j.wl-tiwai@suse.de>
+Date:   Wed, 23 Oct 2019 19:53:31 +0200
+Message-ID: <1jv9sfcpr8.fsf@starbuckisacylon.baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-23 at 10:34 -0700, Lakshmi Ramasubramanian wrote:
-> On 10/23/19 6:23 AM, Mimi Zohar wrote:
-> 
-> > The ordering of this patch set is awkward.  It should first introduce
-> > a generic method for measuring keys based on the keyring.  Then add
-> > the additional support needed for the specific builtin_trusted_keys
-> > keyring usecase.
-> 
-> Would the following ordering of the patch set be acceptable:
-> 
->   => PATCH 0/5: Cover letter
-> 
->   => PATCH 1/5: Define the enum "hook(BUILTIN_TRUSTED_KEYS)" in ima.h
-> 
->   => PATCH 2/5: Define ima hook
->                 This will initially do nothing if ima is not yet
->                 initialized.
->                 Call process_buffer_measurement() if ima is initialized.
-> 
->   => PATCH 3/5: key_create_or_update change and the call to ima hook
-> 
->   => PATCH 4/5: Queue\De-Queue of key measurement requests.
->                 Enable queuing of key in the ima hook if ima is not
->                 initialized.
-> 
->   => PATCH 5/5: ima policy to enable measurement of keys which will
->                 enable end-to-end working of this feature.
 
-The first patches need to introduce the generic concept of measuring
-keys based on policy.  Only afterwards would you add any builtin
-trusted keyring specific code.
+On Wed 23 Oct 2019 at 18:23, Takashi Iwai <tiwai@suse.de> wrote:
 
-Mimi
+> On Wed, 23 Oct 2019 18:12:01 +0200,
+> Jerome Brunet wrote:
+>> 
+>> This patchset fixes the locking issue reported by Russell.
+>> 
+>> As explained a mutex was used as flag and held while returning to
+>> userspace.
+>> 
+>> Patch 2 is entirely optional and switches from bit atomic operation
+>> to mutex again. I tend to prefer bit atomic operation in this
+>> particular case but either way should be fine.
+>
+> I fail to see why the mutex is needed there.  Could you elaborate
+> about the background?
+
+You are right, It is not required.
+
+Just a bit of history:
+
+A while ago the hdmi-codec was keeping track of the substream pointer.
+It was not used for anything useful, other than knowing if device was
+busy or not, and it was causing problem with codec-to-codec links
+
+I removed the saved substream pointer and replaced with a simple bit to
+track the busy state. Protecting a single bit with a mutex seemed a bit
+overkill to me, so I thought it was a good idea to replace the whole
+thing with atomic bit ops. [0]
+
+Mark told me he preferred the mutex method as it simpler to understand.
+As long as as it works it's fine for me :)
+
+I proposed something that uses the mutex as a busy flag but it turned
+out to be a bad idea.
+
+With the revert, we are back to the bit ops. Even if it works, Mark's
+original comment on the bit ops still stands I think. This is why I'm
+proposing patch 2 but I don't really mind if it is applied or not.
+
+[0] https://lkml.kernel.org/r/20190506095815.24578-3-jbrunet@baylibre.com
+
+>
+> IIUC, the protection with the atomic bitmap should guarantee the
+> exclusive access.  The mutex would allow the possible concurrent calls
+> of multiple startup of a single instance, but is this the thing to be
+> solved?
+>
+>
+> thanks,
+>
+> Takashi
+>
+>> 
+>> Jerome Brunet (2):
+>>   Revert "ASoC: hdmi-codec: re-introduce mutex locking"
+>>   ASoC: hdmi-codec: re-introduce mutex locking again
+>> 
+>>  sound/soc/codecs/hdmi-codec.c | 15 +++++++++++----
+>>  1 file changed, 11 insertions(+), 4 deletions(-)
+>> 
+>> -- 
+>> 2.21.0
+>> 
+>> _______________________________________________
+>> Alsa-devel mailing list
+>> Alsa-devel@alsa-project.org
+>> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>> 
 
