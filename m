@@ -2,206 +2,118 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313BFCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9821CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14DD2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571843745;
-	bh=hkV/SNv45L+cHM2UXEfGFfbvPHPawpJJYISubbh+uS4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=BSzqFa4P6O+3RL0FI+k83ObuRoi9gGloyJUAwHxnjcwedngl5NktAVZ/4nTmgNUaX
-	 sr1pyQqebR5Ja8aq6hOBIcWWCAPPeyHhU7dRTZvVv57EZYTk5sNhFsvhWo0t0615F/
-	 Ykh/gpUa/+gsx/K1YIyGFYL6v39U58DnAVaPK26g=
+	by mail.kernel.org (Postfix) with ESMTP id 9542421872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406477AbfJWPPn (ORCPT
+        id S2406572AbfJWPQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57016 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 11:16:13 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48105 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390140AbfJWPPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:15:43 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08C1D21872;
-        Wed, 23 Oct 2019 15:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571843742;
-        bh=hkV/SNv45L+cHM2UXEfGFfbvPHPawpJJYISubbh+uS4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cE1U6zd3vyBPKLW0JCBXWfUzZ2Cmk5M2IwQcbdIh6Y0/oJhBN3zHH77ArMcnJNc0T
-         GgCWWl16mI8kTOaxGMBmZxVv0CZw8OBLAH2V6xqWxIPcSnF2UTIxR/4rB1L1S9Goyd
-         p/5Edyg9SPT0fot45dJARWD7Xpqj7XftrBtf/vW8=
-Date:   Wed, 23 Oct 2019 10:15:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiang Zheng <zhengxiang9@huawei.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, alex.williamson@redhat.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <20191023151540.GA168080@google.com>
+        id S2406499AbfJWPQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:16:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:16:10 -0700
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="372905884"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:16:07 -0700
+Message-ID: <860dda361b6e0b94908d94beb0ad9f5519c8f2cf.camel@linux.intel.com>
+Subject: Re: [PATCH v12 2/6] mm: Use zone and order instead of free area in
+ free_list manipulators
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
+Date:   Wed, 23 Oct 2019 08:16:07 -0700
+In-Reply-To: <c3544859-606d-4e8f-2e48-2d7868e0fa13@redhat.com>
+References: <20191022221223.17338.5860.stgit@localhost.localdomain>
+         <20191022222805.17338.3243.stgit@localhost.localdomain>
+         <c3544859-606d-4e8f-2e48-2d7868e0fa13@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e7293dc-eb27-bce3-c209-e0ba15409f16@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 05:40:20PM +0800, Xiang Zheng wrote:
-> Hi Bjorn,
-> 
-> Thanks for your reply!
-> 
-> On 2019/10/18 21:58, Bjorn Helgaas wrote:
-> > [+cc Matthew]
+On Wed, 2019-10-23 at 10:26 +0200, David Hildenbrand wrote:
+> On 23.10.19 00:28, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > > 
-> > On Wed, Oct 16, 2019 at 09:36:23PM +0800, Xiang Zheng wrote:
-> >> Hi all,
-> >>
-> >> Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
-> >> See the call stack below:
-> >>
-> >> [66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
-> >> [66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
-> >> [66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
-> >> [66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
-> >> [66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
-> >> [66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
-> >> [66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
-> >> [66630.246266] Mem abort info:
-> >> [66630.249047]   ESR = 0x8600000d
-> >> [66630.252088]   Exception class = IABT (current EL), IL = 32 bits
-> >> [66630.257981]   SET = 0, FnV = 0
-> >> [66630.261022]   EA = 0, S1PTW = 0
-> >> [66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
-> >> [66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
-> >> [66630.277751] Internal error: Oops: 8600000d [#1] SMP
-> >> [66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
-> >> [66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
-> >> [66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
-> >> [66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
-> >> [66630.314042] pc : 0xffff802dac469000
-> >> [66630.317519] lr : __wake_up_common+0x90/0x1a8
-> >> [66630.321768] sp : ffff00027746bb00
-> >> [66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
-> >> [66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
-> >> [66630.335643] x25: 0000000000000000 x24: 0000000000000000
-> >> [66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
-> >> [66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
-> >> [66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
-> >> [66630.356793] x17: 0000000000000000 x16: 0000000000000000
-> >> [66630.362081] x15: 0000000000000000 x14: 0000000000000000
-> >> [66630.367368] x13: 0000000000000000 x12: 0000000000000000
-> >> [66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
-> >> [66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
-> >> [66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
-> >> [66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
-> >> [66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
-> >> [66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
-> >> [66630.404381] Call trace:
-> >> [66630.406818]  0xffff802dac469000
-> >> [66630.409945]  __wake_up_common_lock+0xa8/0x1a0
-> >> [66630.414283]  __wake_up+0x40/0x50
-> >> [66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
-> >> [66630.421752]  pci_try_reset_function+0x58/0x78
-> >> [66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
-> >> [66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
-> >> [66630.436158]  do_vfs_ioctl+0xc4/0x8c0
-> >> [66630.439718]  ksys_ioctl+0x8c/0xa0
-> >> [66630.443018]  __arm64_sys_ioctl+0x28/0x38
-> >> [66630.446925]  el0_svc_common+0x78/0x130
-> >> [66630.450657]  el0_svc_handler+0x38/0x78
-> >> [66630.454389]  el0_svc+0x8/0xc
-> >> [66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
-> >> [66630.463325] kernel fault(0x1) notification starting on CPU 41
-> >> [66630.469044] kernel fault(0x1) notification finished on CPU 41
-> >>
-> >> The chance to reproduce this problem is very small. We had an initial analysis of this problem,
-> >> and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
-> >>
-> >> I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
-> >> concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
+> > In order to enable the use of the zone from the list manipulator functions
+> > I will need access to the zone pointer. As it turns out most of the
+> > accessors were always just being directly passed &zone->free_area[order]
+> > anyway so it would make sense to just fold that into the function itself
+> > and pass the zone and order as arguments instead of the free area.
 > > 
-> > I haven't heard of a problem there, but that doesn't mean there isn't
-> > one.
+> > In order to be able to reference the zone we need to move the declaration
+> > of the functions down so that we have the zone defined before we define the
+> > list manipulation functions. Since the functions are only used in the file
+> > mm/page_alloc.c we can just move them there to reduce noise in the header.
 > > 
-> > The fact that pci_wait_cfg() uses __add_wait_queue() (not
-> > add_wait_queue(), which does more locking) makes me a little
-> > suspicious.  Most of the other callers of __add_wait_queue() acquire
-> > the wait_queue lock themselves, but pci_wait_cfg() doesn't.
-> > 
-> > This was added by 7ea7e98fd8d0 ("PCI: Block on access to temporarily
-> > unavailable pci device"), and the commit log suggests that the
-> > pci_lock is sufficient.  All callers of pci_wait_cfg() do hold
-> > pci_lock, and the "pci_cfg_wait" queue is private, but ...
-> > pci_cfg_access_unlock() calls wake_up_all(&pci_cfg_wait) *without*
-> > holding pci_lock.  That path leads to __wake_up_common_lock(), which
-> > depends on wq_head->lock, which pci_wait_cfg() doesn't use.
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+> > Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > ---
+> >   include/linux/mmzone.h |   32 -----------------------
+> >   mm/page_alloc.c        |   67 +++++++++++++++++++++++++++++++++++-------------
+> >   2 files changed, 49 insertions(+), 50 deletions(-)
 > 
-> Yes, we was also suspicious about this point and had a further
-> analysis of this problem.  We found that the "pci_cfg_wait" queue
-> was empty when the "curr->func" callback function was called:
+> Did you see
 > 
-> crash> p pci_cfg_wait.head
-> $2 = {
->   next = 0xffff0000092755b8 <pci_cfg_wait+8>,
->   prev = 0xffff0000092755b8 <pci_cfg_wait+8>
-> }
-> crash> p &(pci_cfg_wait.head)
-> $3 = (struct list_head *) 0xffff0000092755b8 <pci_cfg_wait+8>
-> crash>
+> https://lore.kernel.org/lkml/20191001152928.27008.8178.stgit@localhost.localdomain/T/#m4d2bc2f37bd7bdc3ae35c4f197905c275d0ad2f9
 > 
-> The "ps" command also shows that there was no processes on "UN"
-> state at that time.
+> this time?
 > 
-> According to the above two clues, we finally reached a conclusion:
-> there must be two processes, 'A' was calling pci_wait_cfg() and 'B'
-> was calling __wake_up_common(). And there is a very small chance
-> that 'A' called __remove_wait_queue() before 'B' called the
-> "curr->func", after 'B' got the queue entry "curr". Since the queue
-> entry was a local variable, it would be invalid after pci_wait_cfg()
-> returned and eventually we got an invalid value of "curr->func".
+> And the difference to the old patch is only an empty line.
 > 
-> In order to verify this conclusion, we add a delay(e.g. 300ms)
-> before calling "curr->func" in the __wake_up_common() function. Then
-> this problem can be easily reproduced.
-> 
-> > pci_cfg_access_unlock() originally *did* hold pci_lock while
-> > calling wake_up_all(), but I changed that with cdcb33f98244 ("PCI:
-> > Avoid possible deadlock on pci_lock and p->pi_lock") without
-> > understanding both sides of the wait_queue locking issue.
-> 
-> Before your change was merged, any operations to the "pci_cfg_wait"
-> was safe because they all did hold pci_lock. So the pci_lock was
-> sufficient.
-> 
-> > But I still don't understand enough to know whether this is
-> > actually the problem or to propose a fix.
-> 
-> I think we need to fix it. A simple solution is to use
-> add_wait_queue()/remove_wait_queue() instead of
-> __add_wait_queue()/__remove_wait_queue() and this works for me. What
-> do you think?
 
-I don't like being one of a handful of callers of __add_wait_queue(),
-so I like that solution from that point of view.
+I saw the report. However I have not had much luck reproducing it in order
+to get root cause. Here are my results for linux-next 20191021 with that
+patch running page_fault2 over an average of 3 runs:
 
-The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-device") commit log suggests that using __add_wait_queue() is a
-significant optimization, but I don't know how important that is in
-practical terms.  Config accesses are never a performance path anyway,
-so I'd be inclined to use add_wait_queue() unless somebody complains.
+Baseline:   3734692.00
+This patch: 3739878.67
 
-Bjorn
+Also I am not so sure about these results as the same patch had passed
+previously before and instead it was patch 3 that was reported as having a
+-1.2% regression[1]. All I changed in response to that report was to add
+page_is_reported() which just wrapped the bit test for the reported flag
+in a #ifdef to avoid testing it for the blocks that were already #ifdef
+wrapped anyway.
+
+I am still trying to see if I can get access to a system that would be a
+better match for the one that reported the issue. My working theory is
+that maybe it requires a high core count per node to reproduce. Either
+that or it is some combination of the kernel being tested on and the patch
+is causing some loop to go out of alignment and become more expensive.
+
+I also included the page_fault2 results in my cover page as that seems to
+show a slight improvement with all of the patches applied.
+
+Thanks.
+
+- Alex
+
+[1]: https://lore.kernel.org/lkml/20190921152522.GU15734@shao2-debian/
+
