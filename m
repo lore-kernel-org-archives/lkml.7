@@ -2,182 +2,88 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6417FCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798A9CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4231B21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EC621906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392569AbfJWV2l (ORCPT
+        id S2392653AbfJWVac convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:28:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24145 "EHLO mga09.intel.com"
+        Wed, 23 Oct 2019 17:30:32 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38575 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733169AbfJWV2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:28:38 -0400
+        id S1732284AbfJWVab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:30:31 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:28:38 -0700
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:30:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="399541156"
-Received: from ayamada-mobl1.gar.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.95.208])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Oct 2019 14:28:36 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 01/14] soundwire: renames to prepare support for master drivers/devices
-Date:   Wed, 23 Oct 2019 16:28:10 -0500
-Message-Id: <20191023212823.608-2-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
-References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
+   d="scan'208";a="398194410"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Oct 2019 14:30:31 -0700
+Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 23 Oct 2019 14:30:30 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.146]) by
+ ORSMSX151.amr.corp.intel.com ([169.254.7.36]) with mapi id 14.03.0439.000;
+ Wed, 23 Oct 2019 14:30:30 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] rtc/ia64: remove legacy efirtc driver
+Thread-Topic: [PATCH 1/2] rtc/ia64: remove legacy efirtc driver
+Thread-Index: AQHVibMQWvZIw22fo0GB+QhOFS8CkqdokOYAgACKZID//6LhUA==
+Date:   Wed, 23 Oct 2019 21:30:29 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4AD7F7@ORSMSX115.amr.corp.intel.com>
+References: <20191023150311.844123-1-arnd@arndb.de>
+ <20191023184616.GA17078@agluck-desk2.amr.corp.intel.com>
+ <20191023200135.GT3125@piout.net>
+In-Reply-To: <20191023200135.GT3125@piout.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjA3N2Y2M2EtNzg5Yi00NjIwLTg2N2EtZDE0YjM1ZDYyMDRiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTnhPZ2Y3ZUV0MGdpMVZtMk5rcm92U01IaW8rYVpBSGYya0RydDNhb3ptaWhuZEJDQUx4MDdCbTF4Mk9nbUZKZSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clearer references to sdw_slave_driver for internal macros
+>> rtc-efi rtc-efi: setting system clock to 2019-10-23T18:30:23 UTC (1571855423)
 
-No change for sdw_driver and module_sdw_driver to avoid compatibility
-issues with existing codec devices
+> You can remove CONFIG_RTC_HCTOSYS, this line will disappear, systemd
+> will not like that but efirtc was not setting the system time anyway so
+> this shouldn't change the behaviour.
 
-No functionality change.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/bus_type.c       | 21 +++++++++++----------
- include/linux/soundwire/sdw_type.h | 18 ++++++++++--------
- 2 files changed, 21 insertions(+), 18 deletions(-)
+Wait ... that message says "setting system clock"
 
-diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-index 4a465f55039f..370b94752662 100644
---- a/drivers/soundwire/bus_type.c
-+++ b/drivers/soundwire/bus_type.c
-@@ -34,7 +34,7 @@ sdw_get_device_id(struct sdw_slave *slave, struct sdw_driver *drv)
- static int sdw_bus_match(struct device *dev, struct device_driver *ddrv)
- {
- 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
--	struct sdw_driver *drv = drv_to_sdw_driver(ddrv);
-+	struct sdw_driver *drv = drv_to_sdw_slave_driver(ddrv);
- 
- 	return !!sdw_get_device_id(slave, drv);
- }
-@@ -70,7 +70,7 @@ EXPORT_SYMBOL_GPL(sdw_bus_type);
- static int sdw_drv_probe(struct device *dev)
- {
- 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
--	struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
-+	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
- 	const struct sdw_device_id *id;
- 	int ret;
- 
-@@ -116,7 +116,7 @@ static int sdw_drv_probe(struct device *dev)
- static int sdw_drv_remove(struct device *dev)
- {
- 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
--	struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
-+	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
- 	int ret = 0;
- 
- 	if (drv->remove)
-@@ -130,20 +130,21 @@ static int sdw_drv_remove(struct device *dev)
- static void sdw_drv_shutdown(struct device *dev)
- {
- 	struct sdw_slave *slave = dev_to_sdw_dev(dev);
--	struct sdw_driver *drv = drv_to_sdw_driver(dev->driver);
-+	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
- 
- 	if (drv->shutdown)
- 		drv->shutdown(slave);
- }
- 
- /**
-- * __sdw_register_driver() - register a SoundWire Slave driver
-+ * __sdw_register_slave_driver() - register a SoundWire Slave driver
-  * @drv: driver to register
-  * @owner: owning module/driver
-  *
-  * Return: zero on success, else a negative error code.
-  */
--int __sdw_register_driver(struct sdw_driver *drv, struct module *owner)
-+int __sdw_register_slave_driver(struct sdw_driver *drv,
-+				struct module *owner)
- {
- 	drv->driver.bus = &sdw_bus_type;
- 
-@@ -164,17 +165,17 @@ int __sdw_register_driver(struct sdw_driver *drv, struct module *owner)
- 
- 	return driver_register(&drv->driver);
- }
--EXPORT_SYMBOL_GPL(__sdw_register_driver);
-+EXPORT_SYMBOL_GPL(__sdw_register_slave_driver);
- 
- /**
-- * sdw_unregister_driver() - unregisters the SoundWire Slave driver
-+ * sdw_unregister_slave_driver() - unregisters the SoundWire Slave driver
-  * @drv: driver to unregister
-  */
--void sdw_unregister_driver(struct sdw_driver *drv)
-+void sdw_unregister_slave_driver(struct sdw_driver *drv)
- {
- 	driver_unregister(&drv->driver);
- }
--EXPORT_SYMBOL_GPL(sdw_unregister_driver);
-+EXPORT_SYMBOL_GPL(sdw_unregister_slave_driver);
- 
- static int __init sdw_bus_init(void)
- {
-diff --git a/include/linux/soundwire/sdw_type.h b/include/linux/soundwire/sdw_type.h
-index aaa7f4267c14..abaa21278152 100644
---- a/include/linux/soundwire/sdw_type.h
-+++ b/include/linux/soundwire/sdw_type.h
-@@ -6,13 +6,15 @@
- 
- extern struct bus_type sdw_bus_type;
- 
--#define drv_to_sdw_driver(_drv) container_of(_drv, struct sdw_driver, driver)
-+#define drv_to_sdw_slave_driver(_drv) \
-+	container_of(_drv, struct sdw_driver, driver)
- 
--#define sdw_register_driver(drv) \
--	__sdw_register_driver(drv, THIS_MODULE)
-+#define sdw_register_slave_driver(drv) \
-+	__sdw_register_slave_driver(drv, THIS_MODULE)
- 
--int __sdw_register_driver(struct sdw_driver *drv, struct module *owner);
--void sdw_unregister_driver(struct sdw_driver *drv);
-+int __sdw_register_slave_driver(struct sdw_driver *drv,
-+				struct module *owner);
-+void sdw_unregister_slave_driver(struct sdw_driver *drv);
- 
- int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
- 
-@@ -24,7 +26,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size);
-  * module init/exit. This eliminates a lot of boilerplate. Each module may only
-  * use this macro once, and calling it replaces module_init() and module_exit()
-  */
--#define module_sdw_driver(__sdw_driver) \
--	module_driver(__sdw_driver, sdw_register_driver, \
--			sdw_unregister_driver)
-+#define module_sdw_driver(__sdw_slave_driver) \
-+	module_driver(__sdw_slave_driver, sdw_register_slave_driver, \
-+			sdw_unregister_slave_driver)
- #endif /* __SOUNDWIRE_TYPES_H */
--- 
-2.20.1
+but then you say " efirtc was not setting the system time anyway".
 
+So did the time get set, or not?
+
+If it wasn't set, why does the message say that it was set?
+
+-Tony
