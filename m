@@ -2,266 +2,141 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24AFCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC2CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0DFB21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75BC721906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C5bfrMkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391549AbfJWMcR (ORCPT
+        id S2405333AbfJWMcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:32:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49123 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391402AbfJWMbo (ORCPT
+        Wed, 23 Oct 2019 08:32:36 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46629 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391588AbfJWMce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:31:44 -0400
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNFnf-000187-8s; Wed, 23 Oct 2019 14:31:39 +0200
-Message-Id: <20191023123118.596517860@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Wed, 23 Oct 2019 14:27:15 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: [patch V2 10/17] entry: Provide generic syscall entry functionality
-References: <20191023122705.198339581@linutronix.de>
+        Wed, 23 Oct 2019 08:32:34 -0400
+Received: by mail-qk1-f194.google.com with SMTP id e66so19532968qkf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B49NIMe9Qp45m4n7j4yBsM/w0U/Y5dSRw5y61/jmg/U=;
+        b=C5bfrMkMZwSNBuaqGvLHQGLvu+WkV3TTh3kdpyy/ob6oFoN9VqPr039NiJ7r8PbBbp
+         i0Ndg1H1PKsVMYNLuBizaGICaR2zwIKJFqesGKj+GHlL+Yo7/uZxSHFBqJi57C5+6WAI
+         yLSx35vCO8IkEpJmYZU0KyQ+UhKSimD8bpgLouFa3SPiviAOlFtIK3olMU0e4mYzxTR6
+         ri4W3JAkTNY7BOh/AjMrLXlT8nx0TKh2nckATUVkPDUkUMcBXJfpfUlMUYgruercaW4W
+         n/Sm5BbGsBp0U3XPBitQSLz/RMcCyWyqI4R/8ctXEjE0kHygx5YEq/GvmIVT0pEhi0Wm
+         Wq5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B49NIMe9Qp45m4n7j4yBsM/w0U/Y5dSRw5y61/jmg/U=;
+        b=rD9V6g4A8FB8W7mXOspmlTBBxfOGiEEOA2f9iBj/zG0H7yXt1rU80CIi3lM6DPoulC
+         paUPkr9rRvDagdkNs0owcRINHJKxvcblVqeoD8hKwGPCpd7wLPf74CXsCgdg4QkrG0K+
+         QeauBIeOjxVvtOm2fFgVW/uFe1o7BxX8IzxibVZJOtIhns8UlbzbRJay9NgxNLe/Aagu
+         Gi2C+5qbgtLUkLtqbMRX4uoP7eu7Tei3ovgYPjvLSL98hHSl1H33EJTsEdeoHzX9jCjs
+         YCby09AhuFz+WkAFwR8bssvhmIKcG9NyR7iArt6jGqCsqF56XkSz2MnSNgmC/udQMCrB
+         v+Gg==
+X-Gm-Message-State: APjAAAXJ9p1P1S0NQ3Ffsoky/WWE0LWCo2UN1QdI0F05ZutBwK4Eg01D
+        mqEYjJVzkX4VOpuuufZ64p1AMM5oZMBQqIFDEw18sg==
+X-Google-Smtp-Source: APXvYqyFsU3H6xRYNHrGvBpnk/VOnsx+BN6kQrGuH12Dr1Igjr36aWMR0sDz8pvAXcYyvaIX66eDRdizKnR8UEqoIeQ=
+X-Received: by 2002:a37:4a87:: with SMTP id x129mr7970246qka.43.1571833952687;
+ Wed, 23 Oct 2019 05:32:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20191017141305.146193-1-elver@google.com> <20191017141305.146193-2-elver@google.com>
+In-Reply-To: <20191017141305.146193-2-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 23 Oct 2019 14:32:20 +0200
+Message-ID: <CACT4Y+bfVpu4017p64rc-BBAevs2Ok2otxUYpbwJGYkCbUNYVA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/8] kcsan: Add Kernel Concurrency Sanitizer infrastructure
+To:     Marco Elver <elver@google.com>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Thu, Oct 17, 2019 at 4:13 PM Marco Elver <elver@google.com> wrote:
+>
+> Kernel Concurrency Sanitizer (KCSAN) is a dynamic data-race detector for
+> kernel space. KCSAN is a sampling watchpoint-based data-race detector.
+> See the included Documentation/dev-tools/kcsan.rst for more details.
 
-On syscall entry certain work needs to be done conditionally like tracing,
-seccomp etc. This code is duplicated in all architectures.
+I think there is some significant potential for improving performance.
+Currently we have __tsan_read8 do 2 function calls, push/pop, the
+second call is on unpredicted slow path.
+Then __kcsan_check_watchpoint and __kcsan_setup_watchpoint do full
+load of spills and lots of loads and checks that are not strictly
+necessary or can be avoided. Additionally __kcsan_setup_watchpoint
+calls non-inlined kcsan_is_atomic.
+I think we need to try to structure it around the fast path as follows:
+__tsan_read8 does no function calls and no spills on fast path for
+both checking existing watchpoints and checking if a new watchpoint
+need to be setup. If it discovers a race with existing watchpoint or
+needs to setup a new one, that should be non-inlined tail calls to the
+corresponding slow paths.
+In particular, global enable/disable can be replaced with
+occupying/freeing all watchpoints.
+Per cpu disabled check should be removed from fast path somehow, it's
+only used around debugging checks or during reporting. There should be
+a way to check it on a slower path.
+user_access_save should be removed from fast path, we needed it only
+if we setup a watchpoint. But I am not sure why we need it at all, we
+should not be reading any user addresses.
+should_watch should be restructured to decrement kcsan_skip first, if
+it hits zero (with unlikely hint), we go to slow path. The slow path
+resets kcsan_skip to something random. The comment mentions
+prandom_u32 is too expensive, do I understand it correctly that you
+tried to call it on the fast path? I would expect it is fine for slow
+path and will give us better randomness.
+At this point we should return from __tsan_read8.
 
-Provide a generic version.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V2: Fix function documentation (Mike)
-    Add comment about return value (Andy)
----
- arch/Kconfig                 |    3 
- include/linux/entry-common.h |  132 +++++++++++++++++++++++++++++++++++++++++++
- kernel/Makefile              |    1 
- kernel/entry/Makefile        |    3 
- kernel/entry/common.c        |   33 ++++++++++
- 5 files changed, 172 insertions(+)
-
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -27,6 +27,9 @@ config HAVE_IMA_KEXEC
- config HOTPLUG_SMT
- 	bool
- 
-+config GENERIC_ENTRY
-+       bool
-+
- config OPROFILE
- 	tristate "OProfile system profiling"
- 	depends on PROFILING
---- /dev/null
-+++ b/include/linux/entry-common.h
-@@ -0,0 +1,132 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_ENTRYCOMMON_H
-+#define __LINUX_ENTRYCOMMON_H
-+
-+#include <linux/tracehook.h>
-+#include <linux/syscalls.h>
-+#include <linux/seccomp.h>
-+#include <linux/sched.h>
-+#include <linux/audit.h>
-+
-+#include <asm/entry-common.h>
-+
-+/*
-+ * Define dummy _TIF work flags if not defined by the architecture or for
-+ * disabled functionality.
-+ */
-+#ifndef _TIF_SYSCALL_TRACE
-+# define _TIF_SYSCALL_TRACE		(0)
-+#endif
-+
-+#ifndef _TIF_SYSCALL_EMU
-+# define _TIF_SYSCALL_EMU		(0)
-+#endif
-+
-+#ifndef _TIF_SYSCALL_TRACEPOINT
-+# define _TIF_SYSCALL_TRACEPOINT	(0)
-+#endif
-+
-+#ifndef _TIF_SECCOMP
-+# define _TIF_SECCOMP			(0)
-+#endif
-+
-+#ifndef _TIF_AUDIT
-+# define _TIF_AUDIT			(0)
-+#endif
-+
-+/*
-+ * TIF flags handled in syscall_enter_from_usermode()
-+ */
-+#ifndef ARCH_SYSCALL_ENTER_WORK
-+# define ARCH_SYSCALL_ENTER_WORK	(0)
-+#endif
-+
-+#define SYSCALL_ENTER_WORK						\
-+	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | TIF_SECCOMP |	\
-+	 _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_EMU |			\
-+	 ARCH_SYSCALL_ENTER_WORK)
-+
-+/**
-+ * arch_syscall_enter_tracehook - Wrapper around tracehook_report_syscall_entry()
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Returns: 0 on success or an error code to skip the syscall.
-+ *
-+ * Defaults to tracehook_report_syscall_entry(). Can be replaced by
-+ * architecture specific code.
-+ *
-+ * Invoked from syscall_enter_from_usermode()
-+ */
-+static inline __must_check int arch_syscall_enter_tracehook(struct pt_regs *regs);
-+
-+#ifndef arch_syscall_enter_tracehook
-+static inline __must_check int arch_syscall_enter_tracehook(struct pt_regs *regs)
-+{
-+	return tracehook_report_syscall_entry(regs);
-+}
-+#endif
-+
-+/**
-+ * arch_syscall_enter_seccomp - Architecture specific seccomp invocation
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Returns: The original or a modified syscall number
-+ *
-+ * Invoked from syscall_enter_from_usermode(). Can be replaced by
-+ * architecture specific code.
-+ */
-+static inline long arch_syscall_enter_seccomp(struct pt_regs *regs);
-+
-+#ifndef arch_syscall_enter_seccomp
-+static inline long arch_syscall_enter_seccomp(struct pt_regs *regs)
-+{
-+	return secure_computing(NULL);
-+}
-+#endif
-+
-+/**
-+ * arch_syscall_enter_audit - Architecture specific audit invocation
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Invoked from syscall_enter_from_usermode(). Must be replaced by
-+ * architecture specific code if the architecture supports audit.
-+ */
-+static inline void arch_syscall_enter_audit(struct pt_regs *regs);
-+
-+#ifndef arch_syscall_enter_audit
-+static inline void arch_syscall_enter_audit(struct pt_regs *regs) { }
-+#endif
-+
-+/* Common syscall enter function */
-+long core_syscall_enter_from_usermode(struct pt_regs *regs, long syscall);
-+
-+/**
-+ * syscall_enter_from_usermode - Check and handle work before invoking
-+ *				 a syscall
-+ * @regs:	Pointer to currents pt_regs
-+ * @syscall:	The syscall number
-+ *
-+ * Invoked from architecture specific syscall entry code with interrupts
-+ * enabled.
-+ *
-+ * Returns: The original or a modified syscall number
-+ *
-+ * If the returned syscall number is -1 then the syscall should be
-+ * skipped. In this case the caller may invoke syscall_set_error() or
-+ * syscall_set_return_value() first.  If neither of those is called and -1
-+ * is returned, then the syscall will fail with ENOSYS.
-+ */
-+static inline long syscall_enter_from_usermode(struct pt_regs *regs,
-+					       long syscall)
-+{
-+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-+
-+	if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
-+		BUG_ON(regs != task_pt_regs(current));
-+
-+	if (ti_work & SYSCALL_ENTER_WORK)
-+		syscall = core_syscall_enter_from_usermode(regs, syscall);
-+	return syscall;
-+}
-+
-+#endif
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -43,6 +43,7 @@ obj-y += irq/
- obj-y += rcu/
- obj-y += livepatch/
- obj-y += dma/
-+obj-y += entry/
- 
- obj-$(CONFIG_CHECKPOINT_RESTORE) += kcmp.o
- obj-$(CONFIG_FREEZER) += freezer.o
---- /dev/null
-+++ b/kernel/entry/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+obj-$(CONFIG_GENERIC_ENTRY) += common.o
---- /dev/null
-+++ b/kernel/entry/common.c
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/context_tracking.h>
-+#include <linux/entry-common.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/syscalls.h>
-+
-+long core_syscall_enter_from_usermode(struct pt_regs *regs, long syscall)
-+{
-+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-+	unsigned long ret = 0;
-+
-+	if (ti_work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
-+		ret = arch_syscall_enter_tracehook(regs);
-+		if (ret || (ti_work & _TIF_SYSCALL_EMU))
-+			return -1L;
-+	}
-+
-+	/* Do seccomp after ptrace, to catch any tracer changes. */
-+	if (ti_work & _TIF_SECCOMP) {
-+		ret = arch_syscall_enter_seccomp(regs);
-+		if (ret == -1L)
-+			return ret;
-+	}
-+
-+	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
-+		trace_sys_enter(regs, syscall);
-+
-+	arch_syscall_enter_audit(regs);
-+
-+	return ret ? : syscall;
-+}
-
-
+To measure performance we could either do some synthetic in-kernel
+benchmarks (e.g. writing something to the debugfs file, which will do
+a number of memory accesses in a loop). Or you may try these
+user-space benchmarks:
+https://github.com/google/sanitizers/blob/master/address-sanitizer/kernel_buildbot/slave/bench_readv.c
+https://github.com/google/sanitizers/blob/master/address-sanitizer/kernel_buildbot/slave/bench_pipes.c
