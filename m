@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68844CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E0CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3350F21BE5
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9884D21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407727AbfJWVqc (ORCPT
+        id S2407739AbfJWVqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:46:32 -0400
+        Wed, 23 Oct 2019 17:46:35 -0400
 Received: from mga06.intel.com ([134.134.136.31]:39636 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407697AbfJWVq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:46:27 -0400
+        id S2407697AbfJWVqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:46:33 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:46:26 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:46:33 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="196908180"
+   d="scan'208";a="196908214"
 Received: from ayamada-mobl1.gar.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.95.208])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Oct 2019 14:46:24 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 23 Oct 2019 14:46:31 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 07/18] soundwire: intel: add pm_runtime support
-Date:   Wed, 23 Oct 2019 16:45:50 -0500
-Message-Id: <20191023214601.883-8-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 10/18] soundwire: intel: call helper to reset Slave states on resume
+Date:   Wed, 23 Oct 2019 16:45:53 -0500
+Message-Id: <20191023214601.883-11-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191023214601.883-1-pierre-louis.bossart@linux.intel.com>
 References: <20191023214601.883-1-pierre-louis.bossart@linux.intel.com>
@@ -51,207 +51,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic hooks in DAI .startup and .shutdown callbacks.
-
-The SoundWire IP should be powered between those two calls. The power
-dependencies between SoundWire and DSP are handled with the
-parent/child relationship, before the SoundWire master device becomes
-active the parent device will become active and power-up the shared
-rails.
-
-For now the strategy is to rely on complete enumeration when the
-device becomes active, so the code is a copy/paste of the sequence for
-system suspend/resume. In future patches, the strategy will optionally
-be to rely on clock stop if the enumeration time is prohibitive or
-when the devices connected to a link can signal a wake.
-
-A module parameter is added to make integration of new Slave devices
-easier, to e.g. keep the device active or prevent clock-stop.
+This helps make sure they are all UNATTACHED.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/intel.c | 108 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 104 insertions(+), 4 deletions(-)
+ drivers/soundwire/intel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index aeef0c0fc443..650581348732 100644
+index c3cd7d2d5a34..36e09e273eda 100644
 --- a/drivers/soundwire/intel.c
 +++ b/drivers/soundwire/intel.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/pm_runtime.h>
- #include <linux/platform_device.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -21,6 +22,20 @@
- #include "bus.h"
- #include "intel.h"
+@@ -1435,6 +1435,9 @@ static int intel_resume_runtime(struct device *dev)
+ 		return ret;
+ 	}
  
-+/*
-+ * debug/config flags for the Intel SoundWire Master.
-+ *
-+ * Since we may have multiple masters active, we can have up to 8
-+ * flags reused in each byte, with master0 using the ls-byte, etc.
-+ */
++	/* make sure all Slaves are tagged as UNATTACHED */
++	sdw_clear_slave_status(&sdw->cdns.bus);
 +
-+#define SDW_INTEL_MASTER_DISABLE_PM_RUNTIME BIT(0)
-+#define SDW_INTEL_MASTER_DISABLE_CLOCK_STOP BIT(1)
-+
-+static int md_flags;
-+module_param_named(sdw_md_flags, md_flags, int, 0444);
-+MODULE_PARM_DESC(sdw_md_flags, "SoundWire Intel Master device flags (0x0 all off)");
-+
- /* Intel SHIM Registers Definition */
- #define SDW_SHIM_LCAP			0x0
- #define SDW_SHIM_LCTL			0x4
-@@ -742,10 +757,16 @@ static int sdw_stream_setup(struct snd_pcm_substream *substream,
- static int intel_startup(struct snd_pcm_substream *substream,
- 			 struct snd_soc_dai *dai)
- {
--	/*
--	 * TODO: add pm_runtime support here, the startup callback
--	 * will make sure the IP is 'active'
--	 */
-+	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(cdns->dev);
-+	if (ret < 0 && ret != -EACCES) {
-+		dev_err_ratelimited(cdns->dev,
-+				    "pm_runtime_get_sync failed in %s, ret %d\n",
-+				    __func__, ret);
-+		pm_runtime_put_noidle(cdns->dev);
-+	}
- 
- 	return sdw_stream_setup(substream, dai);
- }
-@@ -924,6 +945,7 @@ static void intel_shutdown(struct snd_pcm_substream *substream,
- 			   struct snd_soc_dai *dai)
- {
- 	struct sdw_cdns_dma_data *dma;
-+	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
- 
- 	dma = snd_soc_dai_get_dma_data(dai, substream);
- 	if (!dma)
-@@ -931,6 +953,9 @@ static void intel_shutdown(struct snd_pcm_substream *substream,
- 
- 	snd_soc_dai_set_dma_data(dai, substream, NULL);
- 	kfree(dma);
-+
-+	pm_runtime_mark_last_busy(cdns->dev);
-+	pm_runtime_put_autosuspend(cdns->dev);
- }
- 
- static int intel_pcm_set_sdw_stream(struct snd_soc_dai *dai,
-@@ -1180,6 +1205,7 @@ static int intel_master_startup(struct sdw_master_device *md)
- {
- 	struct sdw_cdns_stream_config config;
- 	struct sdw_intel *sdw;
-+	int link_flags;
- 	int ret;
- 
- 	sdw = md->pdata;
-@@ -1225,6 +1251,17 @@ static int intel_master_startup(struct sdw_master_device *md)
- 
- 	intel_debugfs_init(sdw);
- 
-+	/* Enable runtime PM */
-+	link_flags = md_flags >> (sdw->cdns.bus.link_id * 8);
-+	if (!(link_flags & SDW_INTEL_MASTER_DISABLE_PM_RUNTIME)) {
-+		pm_runtime_set_autosuspend_delay(&md->dev, 3000);
-+		pm_runtime_use_autosuspend(&md->dev);
-+		pm_runtime_mark_last_busy(&md->dev);
-+
-+		pm_runtime_set_active(&md->dev);
-+		pm_runtime_enable(&md->dev);
-+	}
-+
- 	return 0;
- 
- err_interrupt:
-@@ -1288,6 +1325,35 @@ static int intel_suspend(struct device *dev)
- 	return 0;
- }
- 
-+static int intel_suspend_runtime(struct device *dev)
-+{
-+	struct sdw_cdns *cdns = dev_get_drvdata(dev);
-+	struct sdw_intel *sdw = cdns_to_intel(cdns);
-+	int ret;
-+
-+	if (cdns->bus.prop.hw_disabled) {
-+		dev_dbg(dev, "SoundWire master %d is disabled, ignoring\n",
-+			cdns->bus.link_id);
-+		return 0;
-+	}
-+
-+	ret = sdw_cdns_enable_interrupt(cdns, false);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot disable interrupts on suspend\n");
-+		return ret;
-+	}
-+
-+	ret = intel_link_power_down(sdw);
-+	if (ret) {
-+		dev_err(dev, "Link power down failed: %d", ret);
-+		return ret;
-+	}
-+
-+	intel_shim_wake(sdw, false);
-+
-+	return 0;
-+}
-+
- static int intel_resume(struct device *dev)
- {
- 	struct sdw_cdns *cdns = dev_get_drvdata(dev);
-@@ -1321,10 +1387,44 @@ static int intel_resume(struct device *dev)
- 	return ret;
- }
- 
-+static int intel_resume_runtime(struct device *dev)
-+{
-+	struct sdw_cdns *cdns = dev_get_drvdata(dev);
-+	struct sdw_intel *sdw = cdns_to_intel(cdns);
-+	int ret;
-+
-+	if (cdns->bus.prop.hw_disabled) {
-+		dev_dbg(dev, "SoundWire master %d is disabled, ignoring\n",
-+			cdns->bus.link_id);
-+		return 0;
-+	}
-+
-+	ret = intel_init(sdw);
-+	if (ret) {
-+		dev_err(dev, "%s failed: %d", __func__, ret);
-+		return ret;
-+	}
-+
-+	ret = sdw_cdns_enable_interrupt(cdns, true);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot enable interrupts during resume\n");
-+		return ret;
-+	}
-+
-+	ret = sdw_cdns_exit_reset(cdns);
-+	if (ret < 0) {
-+		dev_err(dev, "unable to exit bus reset sequence during resume\n");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
- #endif
- 
- static const struct dev_pm_ops intel_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(intel_suspend, intel_resume)
-+	SET_RUNTIME_PM_OPS(intel_suspend_runtime, intel_resume_runtime, NULL)
- };
- 
- struct sdw_md_driver intel_sdw_driver = {
+ 	ret = sdw_cdns_enable_interrupt(cdns, true);
+ 	if (ret < 0) {
+ 		dev_err(dev, "cannot enable interrupts during resume\n");
 -- 
 2.20.1
 
