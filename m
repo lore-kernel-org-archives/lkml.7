@@ -2,177 +2,101 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E70CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E3ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF0621848
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5575A207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:23:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="QpfT5/G+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbfJWCDl convert rfc822-to-8bit (ORCPT
+        id S2388711AbfJWCXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 22:03:41 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:49310 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfJWCDl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 22:03:41 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x9N23MKB021293
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 23 Oct 2019 11:03:22 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9N23Mqq023495;
-        Wed, 23 Oct 2019 11:03:22 +0900
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x9N1xBGi000839;
-        Wed, 23 Oct 2019 11:03:22 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.150] [10.38.151.150]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-109427; Wed, 23 Oct 2019 11:01:35 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC22GP.gisp.nec.co.jp ([10.38.151.150]) with mapi id 14.03.0439.000; Wed,
- 23 Oct 2019 11:01:34 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Oscar Salvador <osalvador@suse.de>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
- pages
-Thread-Topic: [RFC PATCH v2 10/16] mm,hwpoison: Rework soft offline for free
- pages
-Thread-Index: AQHVhPYxuKrdanK4Pk2pyFsBlimO86dfuBWAgATFroCAAC2WAIABDXAAgAALI4CAAAKLgIAADVAAgAAKCgCAAQz4gA==
-Date:   Wed, 23 Oct 2019 02:01:33 +0000
-Message-ID: <20191023020133.GA24383@hori.linux.bs1.fc.nec.co.jp>
-References: <20191017142123.24245-1-osalvador@suse.de>
- <20191017142123.24245-11-osalvador@suse.de>
- <20191018120615.GM5017@dhcp22.suse.cz> <20191021125842.GA11330@linux>
- <20191021154158.GV9379@dhcp22.suse.cz> <20191022074615.GA19060@linux>
- <20191022082611.GD9379@dhcp22.suse.cz> <20191022083505.GA19708@linux>
- <20191022092256.GH9379@dhcp22.suse.cz> <20191022095852.GB20429@linux>
-In-Reply-To: <20191022095852.GB20429@linux>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.96]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <BF3613A18D765B4890293C557CE91D47@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Tue, 22 Oct 2019 22:23:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:38491 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388674AbfJWCXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 22:23:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46yZ1G4hQlz9sNx;
+        Wed, 23 Oct 2019 13:23:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1571797413;
+        bh=gyxcFcSQMQaH20uIesQOzlFQbDgaiG1arpkyJmpTzq0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=QpfT5/G+zSS+DmKo+il/qX7DI/HPmSjgMhVJ+8Qdx/VNue4nCior2DrKCqZ4NFBEm
+         S/9QDnQLs9JxpawQ2Xl/j2f3IcQEtk7W3Zp3XtRUAX5b1qCNP8T+DfoYMFeBu4pLJO
+         wLN0gSDbVyzDPLKxo//rdoNL87IbWbFSp5F8wPh3AoD0nJrGgWhOL/8PLe9io9O23E
+         1t+YjJQ1aXmuLGnz3QfQ7k5nZH63L0r2wRmtVT4Q2yg5VkzWg/7tTah2KMwoZ9yGUK
+         BMBmY7yt6AJABIsP65YPef4QZ66+9Ig8VN7UMliVhltsql8yfzmwPmn5unrmQuiYG2
+         m9aANTrIpIIdg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     cyphar@cyphar.com, mingo@redhat.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, christian@brauner.io, keescook@chromium.org,
+        linux@rasmusvillemoes.dk, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usercopy: Avoid soft lockups in test_check_nonzero_user()
+In-Reply-To: <20191017060938.p4tmr5ruv6frgse4@wittgenstein>
+References: <20191011022447.24249-1-mpe@ellerman.id.au> <20191016122732.13467-1-mpe@ellerman.id.au> <20191016130319.vcc2mqac3ta5jjat@wittgenstein> <871rvctkof.fsf@mpe.ellerman.id.au> <20191017060938.p4tmr5ruv6frgse4@wittgenstein>
+Date:   Wed, 23 Oct 2019 13:23:27 +1100
+Message-ID: <87sgnk5heo.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 11:58:52AM +0200, Oscar Salvador wrote:
-> On Tue, Oct 22, 2019 at 11:22:56AM +0200, Michal Hocko wrote:
-> > Hmm, that might be a misunderstanding on my end. I thought that it is
-> > the MCE handler to say whether the failure is recoverable or not. If yes
-> > then we can touch the content of the memory (that would imply the
-> > migration). Other than that both paths should be essentially the same,
-> > no? Well unrecoverable case would be essentially force migration failure
-> > path.
-> > 
-> > MADV_HWPOISON is explicitly documented to test MCE handling IIUC:
-> > : This feature is intended for testing of memory error-handling
-> > : code; it is available only if the kernel was configured with
-> > : CONFIG_MEMORY_FAILURE.
-> > 
-> > There is no explicit note about the type of the error that is injected
-> > but I think it is reasonably safe to assume this is a recoverable one.
-> 
-> MADV_HWPOISON stands for hard-offline.
-> MADV_SOFT_OFFLINE stands for soft-offline.
+Christian Brauner <christian.brauner@ubuntu.com> writes:
+> On Thu, Oct 17, 2019 at 09:00:48AM +1100, Michael Ellerman wrote:
+>> Christian Brauner <christian.brauner@ubuntu.com> writes:
+>> > On Wed, Oct 16, 2019 at 11:27:32PM +1100, Michael Ellerman wrote:
+>> >> On a machine with a 64K PAGE_SIZE, the nested for loops in
+>> >> test_check_nonzero_user() can lead to soft lockups, eg:
+>> >> 
+>> >>   watchdog: BUG: soft lockup - CPU#4 stuck for 22s! [modprobe:611]
+>> >>   Modules linked in: test_user_copy(+) vmx_crypto gf128mul crc32c_vpmsum virtio_balloon ip_tables x_tables autofs4
+>> >>   CPU: 4 PID: 611 Comm: modprobe Tainted: G             L    5.4.0-rc1-gcc-8.2.0-00001-gf5a1a536fa14-dirty #1151
+>> >>   ...
+>> >>   NIP __might_sleep+0x20/0xc0
+>> >>   LR  __might_fault+0x40/0x60
+>> >>   Call Trace:
+>> >>     check_zeroed_user+0x12c/0x200
+>> >>     test_user_copy_init+0x67c/0x1210 [test_user_copy]
+>> >>     do_one_initcall+0x60/0x340
+>> >>     do_init_module+0x7c/0x2f0
+>> >>     load_module+0x2d94/0x30e0
+>> >>     __do_sys_finit_module+0xc8/0x150
+>> >>     system_call+0x5c/0x68
+>> >> 
+>> >> Even with a 4K PAGE_SIZE the test takes multiple seconds. Instead
+>> >> tweak it to only scan a 1024 byte region, but make it cross the
+>> >> page boundary.
+>> >> 
+>> >> Fixes: f5a1a536fa14 ("lib: introduce copy_struct_from_user() helper")
+>> >> Suggested-by: Aleksa Sarai <cyphar@cyphar.com>
+>> >> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>> >
+>> > With Aleksa's Reviewed-by I've picked this up:
+>> > https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=copy_struct_from_user
+>> 
+>> Thanks. Are you planning to send that to Linus for v5.4 or v5.5 ?
+>
+> This looks like a pretty straight bugfix to me since it's clearly
+> causing an issue for you on power so v5.4-rc4 is what I'd aim for. I
+> just want it to be in linux-next until tomorrow.
 
-Maybe MADV_HWPOISON should've be named like MADV_HARD_OFFLINE, although
-it's API and hard to change once implemented.
+I see it in mainine now, thanks!
 
-> 
-> MADV_SOFT_OFFLINE (since Linux 2.6.33)
->               Soft offline the pages in the range specified by addr and
->               length.  The memory of each page in the specified range is
->               preserved (i.e., when next accessed, the same content will be
->               visible, but in a new physical page frame), and the original
->               page is offlined (i.e., no longer used, and taken out of
->               normal memory management).  The effect of the
->               MADV_SOFT_OFFLINE operation is invisible to (i.e., does not
->               change the semantics of) the calling process.
-> 
->               This feature is intended for testing of memory error-handling
->               code;
-
-Although this expression might not clear enough, madvise(MADV_HWPOISON or
-MADV_SOFT_OFFLINE) only covers memory error handling part, not MCE handling
-part.  We have some other injection methods in the lower layers like
-mce-inject and APEI.
-
-> it is available only if the kernel was configured with
->               CONFIG_MEMORY_FAILURE.
-> 
-> 
-> But both follow different approaches.
-> 
-> I think it is up to some controlers to trigger soft-offline or hard-offline:
-
-Yes, I think so.  One usecase of soft offline is triggered by CMCI interrupt
-in Intel CPU.  CMCI handler stores corrected error events in /dev/mcelog.
-mcelogd polls on this device file and if corrected errors occur often enough
-(IIRC the default threshold is "10 events in 24 hours",) mcelogd triggers
-soft-offline via soft_offline_page under /sys.
-
-OTOH, hard-offline is triggered directly (accurately over ring buffer to separate
-context) from MCE handler.  mcelogd logs MCE events but does not involve in
-page offline logic.
-
-> 
-> static void ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata, int sev)
-> {
-> #ifdef CONFIG_ACPI_APEI_MEMORY_FAILURE
-> 	...
->         /* iff following two events can be handled properly by now */
->         if (sec_sev == GHES_SEV_CORRECTED &&
->             (gdata->flags & CPER_SEC_ERROR_THRESHOLD_EXCEEDED))
->                 flags = MF_SOFT_OFFLINE;
->         if (sev == GHES_SEV_RECOVERABLE && sec_sev == GHES_SEV_RECOVERABLE)
->                 flags = 0;
-> 
->         if (flags != -1)
->                 memory_failure_queue(pfn, flags);
-> 	...
-> #endif
->  }
-> 
-> 
-> static void memory_failure_work_func(struct work_struct *work)
-> {
-> 	...
-> 	for (;;) {
-> 		spin_lock_irqsave(&mf_cpu->lock, proc_flags);
-> 		gotten = kfifo_get(&mf_cpu->fifo, &entry);
-> 		spin_unlock_irqrestore(&mf_cpu->lock, proc_flags);
-> 		if (!gotten)
-> 			break;
-> 		if (entry.flags & MF_SOFT_OFFLINE)
-> 			soft_offline_page(pfn_to_page(entry.pfn), entry.flags);
-> 		else
-> 			memory_failure(entry.pfn, entry.flags);
-> 	}
->  }
-> 
-> AFAICS, for hard-offline case, a recovered event would be if:
-> 
-> - the page to shut down is already free
-> - the page was unmapped
-> 
-> In some cases we need to kill the process if it holds dirty pages.
-
-One caveat is that even if the process maps dirty error pages, we
-don't have to kill it unless the error data is consumed.
-
-Thanks,
-Naoya Horiguchi
+cheers
