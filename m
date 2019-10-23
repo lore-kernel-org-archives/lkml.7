@@ -2,91 +2,119 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC20CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD0DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2CD21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEF721906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405662AbfJWNLo (ORCPT
+        id S2405677AbfJWNL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:11:44 -0400
-Received: from mga12.intel.com ([192.55.52.136]:31767 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732092AbfJWNLo (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:11:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:11:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="196772810"
-Received: from shilongz-mobl.ccr.corp.intel.com (HELO [10.254.210.50]) ([10.254.210.50])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Oct 2019 06:11:42 -0700
-Subject: Re: [PATCH v3 3/5] perf report: Sort by sampled cycles percent per
- block for stdio
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191022080710.6491-1-yao.jin@linux.intel.com>
- <20191022080710.6491-4-yao.jin@linux.intel.com>
- <20191023113642.GN22919@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <ffdcc12e-96ee-02f3-b327-93541af35f1a@linux.intel.com>
-Date:   Wed, 23 Oct 2019 21:11:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 09:11:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:32898 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405664AbfJWNL5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:11:57 -0400
+Received: from [79.140.115.187] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iNGQa-0001WN-Gw; Wed, 23 Oct 2019 13:11:52 +0000
+Date:   Wed, 23 Oct 2019 15:11:51 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Dmitry Vyukov <dvyukov@google.com>, Will Deacon <will@kernel.org>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        stable <stable@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191023131151.ajgnbcvnec3ouc6y@wittgenstein>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
+ <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191023113642.GN22919@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/23/2019 7:36 PM, Jiri Olsa wrote:
-> On Tue, Oct 22, 2019 at 04:07:08PM +0800, Jin Yao wrote:
+On Wed, Oct 23, 2019 at 02:39:55PM +0200, Dmitry Vyukov wrote:
+> On Wed, Oct 23, 2019 at 2:16 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+> >
+> > On Mon, Oct 21, 2019 at 01:33:27PM +0200, Christian Brauner wrote:
+> > > When assiging and testing taskstats in taskstats_exit() there's a race
+> > > when writing and reading sig->stats when a thread-group with more than
+> > > one thread exits:
+> > >
+> > > cpu0:
+> > > thread catches fatal signal and whole thread-group gets taken down
+> > >  do_exit()
+> > >  do_group_exit()
+> > >  taskstats_exit()
+> > >  taskstats_tgid_alloc()
+> > > The tasks reads sig->stats without holding sighand lock.
+> > >
+> > > cpu1:
+> > > task calls exit_group()
+> > >  do_exit()
+> > >  do_group_exit()
+> > >  taskstats_exit()
+> > >  taskstats_tgid_alloc()
+> > > The task takes sighand lock and assigns new stats to sig->stats.
+> > >
+> > > The first approach used smp_load_acquire() and smp_store_release().
+> > > However, after having discussed this it seems that the data dependency
+> > > for kmem_cache_alloc() would be fixed by WRITE_ONCE().
+> > > Furthermore, the smp_load_acquire() would only manage to order the stats
+> > > check before the thread_group_empty() check. So it seems just using
+> > > READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
+> > > up for discussion at least.
+> >
+> > Mmh, the RELEASE was intended to order the memory initialization in
+> > kmem_cache_zalloc() with the later ->stats pointer assignment; AFAICT,
+> > there is no data dependency between such memory accesses.
 > 
-> SNIP
-> 
->> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
->> index 43d1d410854a..eb286700a8a9 100644
->> --- a/tools/perf/util/sort.c
->> +++ b/tools/perf/util/sort.c
->> @@ -492,6 +492,10 @@ struct sort_entry sort_sym_ipc_null = {
->>   	.se_width_idx	= HISTC_SYMBOL_IPC,
->>   };
->>   
->> +struct sort_entry sort_block_cycles = {
->> +	.se_cmp		= sort__sym_cmp,
->> +};
-> 
-> so this is here only for you to be able to write '-s total_cycles'
-> and has no other functonality right?
-> 
+> I agree. This needs smp_store_release. The latest version that I
+> looked at contained:
+> smp_store_release(&sig->stats, stats_new);
 
-Yes, that's right.
+This is what really makes me wonder. Can the compiler really re-order
+the kmem_cache_zalloc() call with the assignment. If that's really the
+case then shouldn't all allocation functions have compiler barriers in
+them? This then seems like a very generic problem.
 
-> I think we'd be better with report boolean option instad, like
-> 'perf report --total-cycles', because your code does the column
-> display by itself.. and we could get rid of this -s confusion
 > 
-
-Yes, I agree. Thanks for this suggestion!
-
-Thanks
-Jin Yao
-
-> jirka
+> > Correspondingly, the ACQUIRE was intended to order the ->stats pointer
+> > load with later, _independent dereferences of the same pointer; the
+> > latter are, e.g., in taskstats_exit() (but not thread_group_empty()).
 > 
+> How these later loads can be completely independent of the pointer
+> value? They need to obtain the pointer value from somewhere. And this
+> can only be done by loaded it. And if a thread loads a pointer and
+> then dereferences that pointer, that's a data/address dependency and
+> we assume this is now covered by READ_ONCE.
+> Or these later loads of the pointer can also race with the store? If
+
+To clarify, later loads as in taskstats_exit() and thread_group_empty(),
+not the later load in the double-checked locking case.
+
+> so, I think they also need to use READ_ONCE (rather than turn this earlier
+> pointer load into acquire).
+
+Using READ_ONCE() in the alloc, taskstat_exit(), and
+thread_group_empty() case.
+
+Christian
