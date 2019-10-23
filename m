@@ -2,100 +2,103 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB96CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FF4CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46FE21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DQf113s2"
+	by mail.kernel.org (Postfix) with ESMTP id 24ABB2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391619AbfJWMmo (ORCPT
+        id S2391635AbfJWMmr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:42:44 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39939 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732361AbfJWMmo (ORCPT
+        Wed, 23 Oct 2019 08:42:47 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:47812 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732361AbfJWMmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:42:44 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y81so15684090qkb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=mKyOrNdcShBVuby78giN6WHF0/2rdo1R9G5aayTHBy4=;
-        b=DQf113s2Ove9W20kNFDkOTSoIFdDb3YWXnkZWNQ87u6IGupJcMQbUlbei0LZXxZQs/
-         TqpXedoG0Czy54pJzsg6c0oIBRDYsRS5dWGPDslcttanQD3uNlsKuiBl6G92fUXi+jXA
-         NY8AYQdI6IeuI0f8EKfDfvytMOLr8a2f/JHG5wYJhXEAptTMOLr+mpljwKjUj/Napzq1
-         96agON74xwbA/UQWQUx7ktbirN503MLZuUDG19lI1UZyOrsLXJ8qb9ogaJJ8wxlOLXt5
-         Qqql8yuW4FkEMeIJwKoBx9JwiJI6UCKohvK4E3WZGkchw1m4oy2DtwDVa3MCF2y+Ya4Q
-         vEnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=mKyOrNdcShBVuby78giN6WHF0/2rdo1R9G5aayTHBy4=;
-        b=A+qYF+K8FjvivvH9xV+hFL4RTR2qhVtMpMVupLA/Ns3UmF5h/hUZJMmWgCOjYMaRWO
-         1pjUjkBqwTRVO2TXlacWaexwsu1bBsx7t0gWiUyZR6QRFRXr1SlUqFpn6P46V0Nc+lzU
-         2m3mMSChyjNo+hl1XGNO8DpqujCuJiYTbzCTrpRTdkzVxu3KfgqWE13ULbTChq6FBAvz
-         HSs+tAGmjKe6sTMiDtesJW7dk0Sl77ryrQ/Ngy5/RNeeM56rUoYylzhaIuzEtmg0DdoC
-         zCk4OxWLcZC1yA4ywBTOQPFqEiCbx8Eke8jMe6XTCtetB0hoL3DonNzq8gReH5rwGdaQ
-         B5Ng==
-X-Gm-Message-State: APjAAAVZSRMfvuxoSatWVX/oTYKqQYRbf0GIr6WHtZ6LYTfw9gUgpbLk
-        HFS+4iEFZpuk+6nK0Xgb41tAjg==
-X-Google-Smtp-Source: APXvYqzAxLS8JhAkJl2sEI6TpG9FWohKN2MaJ4mlvx91OUAfECuSmhyAf03NCVSZfUDDKb6ogR7tRw==
-X-Received: by 2002:a37:a8d3:: with SMTP id r202mr7705859qke.405.1571834561570;
-        Wed, 23 Oct 2019 05:42:41 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j7sm17172579qtc.73.2019.10.23.05.42.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Oct 2019 05:42:40 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/vmstat: Reduce zone lock hold time when reading /proc/pagetypeinfo
-Date:   Wed, 23 Oct 2019 08:42:40 -0400
-Message-Id: <C448FBC6-60AE-46FA-9548-FF31A22378BC@lca.pw>
-References: <20191023095607.GE3016@techsingularity.net>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>
-In-Reply-To: <20191023095607.GE3016@techsingularity.net>
-To:     Mel Gorman <mgorman@suse.de>
-X-Mailer: iPhone Mail (17A878)
+        Wed, 23 Oct 2019 08:42:45 -0400
+Received: from marcel-macpro.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id E0B6ACECDE;
+        Wed, 23 Oct 2019 14:51:43 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
+Subject: Re: [PATCHv2 4/4] Bluetooth: btwilink: drop superseded driver
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191023122745.ldh2ghnzazdhaf2x@earth.universe>
+Date:   Wed, 23 Oct 2019 14:42:43 +0200
+Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <299B10E1-E7A8-4346-BED9-A48446C4D866@holtmann.org>
+References: <20191003134147.9458-1-sre@kernel.org>
+ <20191003134147.9458-5-sre@kernel.org>
+ <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
+ <20191020205901.56bafijk7cu3rpaj@earth.universe>
+ <AC376F8D-77F3-4497-94D1-FE25A5ED9337@holtmann.org>
+ <20191023122745.ldh2ghnzazdhaf2x@earth.universe>
+To:     Sebastian Reichel <sre@kernel.org>
+X-Mailer: Apple Mail (2.3594.4.19)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sebastian,
 
+>>>>> All users of this driver have been converted to the serdev based
+>>>>> hci_ll driver. The unused driver can be safely dropped now.
+>>>>> 
+>>>>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+>>>>> ---
+>>>>> drivers/bluetooth/Kconfig    |  11 --
+>>>>> drivers/bluetooth/Makefile   |   1 -
+>>>>> drivers/bluetooth/btwilink.c | 337 -----------------------------------
+>>>>> 3 files changed, 349 deletions(-)
+>>>>> delete mode 100644 drivers/bluetooth/btwilink.c
+>>>> 
+>>>> patch has been applied to bluetooth-next tree.
+>>>> 
+>>>> However what I really like to see is that you re-introduce a
+>>>> btwilink driver that is purely serdev based and doesn’t rely on
+>>>> any hci_uart/hci_ldisc code. A clean serdev only driver is that
+>>>> best and easier to maintain long term.
+>>> 
+>>> So basically move the serdev implementation from hci_ll.c into its
+>>> own driver and make hci_ll hci_uart based only? That effectively
+>>> means, that we have two implementations of the protocol. I don't
+>>> think this will improve maintainability, since then bugs needs to
+>>> be fixed in two places? Note, that we have a couple of drivers
+>>> with serdev+hci_uart by now:
+>>> 
+>>> for file in $(grep -l serdev drivers/bluetooth/hci_*c) ; grep -l hci_uart_register_proto "${file}"
+>>> hci_bcm.c
+>>> hci_h5.c
+>>> hci_ldisc.c
+>>> hci_ll.c
+>>> hci_mrvl.c
+>>> hci_qca.c
+>> 
+>> I would like to have something similar to btmtkuart.c which is a
+>> pure serdev driver that doesn’t depend on any hci_ldisc.c
+>> framework. If we have this, then we would just drop hci_ll.c from
+>> the kernel and focus on the serdev only version. As noted, there
+>> is no need for any other driver at that point since everything is
+>> probed anyway. Users will not even notice the difference.
+> 
+> This can be achieved by just removing the hci_uart part from
+> hci_ll. But AFAIK there are some non-wilink based TI HCILL
+> devices, which do not require any extra platform data and might
+> still use the hci_uart part.
 
-> On Oct 23, 2019, at 5:56 AM, Mel Gorman <mgorman@suse.de> wrote:
->=20
-> Again, the cost is when reading a proc file. =46rom what Andrew said,
-> the lock is necessary to safely walk the list but if anything. I would
-> be ok with limiting the length of the walk but honestly, I would also
-> be ok with simply deleting the proc file. The utility for debugging a
-> problem with it is limited now (it was more important when fragmentation
-> avoidance was first introduced) and there is little an admin can do with
-> the information. I can't remember the last time I asked for the contents
-> of the file when trying to debug a problem. There is a possibility that
-> someone will complain but I'm not aware of any utility that reads the
-> information and does something useful with it. In the unlikely event
-> something breaks, the file can be re-added with a limited walk.
+the hci_ldisc and hci_uart driver abstraction provides enqueue and dequeue handling that just needs to be removed and done natively in the serdev driver. This should be all straight forward and we can keep the current hci_ll.c around for a bit to see what users we have. However I really want to migrate everything over to native serdev drivers that are standalone. The TI HCILL is complex enough to warrant a separate driver.
 
-Agree. It is better to remove this file all together in linux-next first for=
- a while to see if anyone complains loudly.=
+Regards
+
+Marcel
+
