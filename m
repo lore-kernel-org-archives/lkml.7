@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA501CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14171CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F3321925
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA79820679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QOu9Z0Z5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T/7cjrZl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jrBdFji+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lag+2ZpO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390805AbfJWJDW (ORCPT
+        id S2390832AbfJWJDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:03:22 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42742 "EHLO
+        Wed, 23 Oct 2019 05:03:31 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42920 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390773AbfJWJDU (ORCPT
+        with ESMTP id S2390807AbfJWJD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:03:20 -0400
+        Wed, 23 Oct 2019 05:03:26 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A67CD60DA5; Wed, 23 Oct 2019 09:03:17 +0000 (UTC)
+        id 1A93A60DCD; Wed, 23 Oct 2019 09:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821398;
-        bh=L/bqRs6IeB0+YKKRQRcrzGWRDgk5tz70lx3KMde4Z+E=;
+        s=default; t=1571821405;
+        bh=bSOkFQeqO8LEVBJ2HnZt1qFBxSpvVtIOF1peJoYkpYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QOu9Z0Z53tpKa06xDZnrfjiQFvYWpeI+DZCnfsfEKVrfrNVr59adspmC04yjYOINS
-         bPySG2G6rYQMh0CsV6U7p/afEYQ9iIrMd4LDMF5vLRLwmfBvIQOYg8ftv4C247/LBa
-         PoR6m5kQ97vjQx4ZfuvsqTUynwtGKL1d9PzEztn4=
+        b=jrBdFji+bPxo95zpOdRT4dV0NDboJdYVu9goD6YeWPles+fkWpgygBL/FU8J60afI
+         6bwhelTWX7hlrhfjsYe+fdyZTuLY0WBS2MqIQ5iwiwMLO21gBQyqn6PG3siRPPkO6k
+         wTAZLTQKpi5l6zgtuug/fnKDPDZLUQuDqaQW7mfE=
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5BC4960A64;
-        Wed, 23 Oct 2019 09:03:11 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E3CB60DD1;
+        Wed, 23 Oct 2019 09:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571821394;
-        bh=L/bqRs6IeB0+YKKRQRcrzGWRDgk5tz70lx3KMde4Z+E=;
+        s=default; t=1571821402;
+        bh=bSOkFQeqO8LEVBJ2HnZt1qFBxSpvVtIOF1peJoYkpYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/7cjrZl9DL6c4KQ5EssBc1p4qx0jq0XDxn2/Jo6PXrm9oQapIqkMO4bR7TeRTjwE
-         wBILHO3+TubifxGgoVMhU0BzGPQ4LvQQZutluLVUdL3wlIfLHHKPSo2MqHkisovAmW
-         bOcwCAgG1mm1K3zQfupFhkAW8H/2wwN9iKFnPwi8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5BC4960A64
+        b=lag+2ZpOrOdWTNdOgNlhR5uqv+ASWkJdriOxa8E19P4K92+MJ1b7MihYq/cCErnt6
+         I00X/mKMufLL/nvnEskcda1R9zEJ9t8AGgroRQPCrfKbWC6d/c4r4v94cdFf0o7laQ
+         bAqk1ZC4tvKtA0mzXlHWZ5EfCpN+/oPfm58PodR4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E3CB60DD1
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
 To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mka@chromium.org,
-        Kiran Gunda <kgunda@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 09/11] arm64: dts: qcom: sc7180-idp: Add RPMh regulators
-Date:   Wed, 23 Oct 2019 14:32:17 +0530
-Message-Id: <20191023090219.15603-10-rnayak@codeaurora.org>
+Subject: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt controller
+Date:   Wed, 23 Oct 2019 14:32:19 +0530
+Message-Id: <20191023090219.15603-12-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191023090219.15603-1-rnayak@codeaurora.org>
 References: <20191023090219.15603-1-rnayak@codeaurora.org>
@@ -68,242 +68,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kiran Gunda <kgunda@codeaurora.org>
+From: Maulik Shah <mkshah@codeaurora.org>
 
-Add the rpmh regulators for the sc7180 idp platform. This platform
-consists of PMIC PM6150 and PM6150l
+Add pdc interrupt controller for sc7180
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 207 ++++++++++++++++++++++++
- 1 file changed, 207 insertions(+)
+v3:
+Used the qcom,sdm845-pdc compatible for pdc node
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index be42ae9d2d9d..e0724ef3317d 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -7,6 +7,7 @@
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index f2981ada578f..07ea393c2b5f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -184,6 +184,16 @@
+ 			#power-domain-cells = <1>;
+ 		};
  
- /dts-v1/;
- 
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7180.dtsi"
- #include "pm6150.dtsi"
- #include "pm6150l.dtsi"
-@@ -24,6 +25,212 @@
- 	};
- };
- 
-+&apps_rsc {
-+	pm6150-rpmh-regulators {
-+		compatible = "qcom,pm6150-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_s1a_1p1: smps1 {
-+			regulator-min-microvolt = <1128000>;
-+			regulator-max-microvolt = <1128000>;
++		pdc: interrupt-controller@b220000 {
++			compatible = "qcom,sdm845-pdc";
++			reg = <0 0xb220000 0 0x30000>;
++			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
++					  <119 634 4>, <124 639 1>;
++			#interrupt-cells = <2>;
++			interrupt-parent = <&intc>;
++			interrupt-controller;
 +		};
 +
-+		vreg_s4a_1p0: smps4 {
-+			regulator-min-microvolt = <824000>;
-+			regulator-max-microvolt = <1120000>;
-+		};
-+
-+		vreg_s5a_2p0: smps5 {
-+			regulator-min-microvolt = <1744000>;
-+			regulator-max-microvolt = <2040000>;
-+		};
-+
-+		vreg_l1a_1p2: ldo1 {
-+			regulator-min-microvolt = <1178000>;
-+			regulator-max-microvolt = <1256000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l2a_1p0: ldo2 {
-+			regulator-min-microvolt = <944000>;
-+			regulator-max-microvolt = <1056000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l3a_1p0: ldo3 {
-+			regulator-min-microvolt = <968000>;
-+			regulator-max-microvolt = <1064000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l4a_0p8: ldo4 {
-+			regulator-min-microvolt = <824000>;
-+			regulator-max-microvolt = <928000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l5a_2p7: ldo5 {
-+			regulator-min-microvolt = <2496000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l6a_0p6: ldo6 {
-+			regulator-min-microvolt = <568000>;
-+			regulator-max-microvolt = <648000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l9a_0p6: ldo9 {
-+			regulator-min-microvolt = <488000>;
-+			regulator-max-microvolt = <800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l10a_1p8: ldo10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1832000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l11a_1p8: ldo11 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1952000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l13a_1p8: ldo13 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l14a_1p8: ldo14 {
-+			regulator-min-microvolt = <1728000>;
-+			regulator-max-microvolt = <1832000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l15a_1p8: ldo15 {
-+			regulator-min-microvolt = <1696000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l16a_2p7: ldo16 {
-+			regulator-min-microvolt = <2496000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l17a_3p0: ldo17 {
-+			regulator-min-microvolt = <2920000>;
-+			regulator-max-microvolt = <3232000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l18a_2p8: ldo18 {
-+			regulator-min-microvolt = <2496000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l19a_2p9: ldo19 {
-+			regulator-min-microvolt = <2696000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+	};
-+
-+	pm6150l-rpmh-regulators {
-+		compatible = "qcom,pm6150l-rpmh-regulators";
-+		qcom,pmic-id = "c";
-+
-+		vreg_s8c_1p3: smps8 {
-+			regulator-min-microvolt = <1120000>;
-+			regulator-max-microvolt = <1408000>;
-+		};
-+
-+		vreg_l1c_1p8: ldo1 {
-+			regulator-min-microvolt = <1616000>;
-+			regulator-max-microvolt = <1984000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l2c_1p3: ldo2 {
-+			regulator-min-microvolt = <1168000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l3c_1p2: ldo3 {
-+			regulator-min-microvolt = <1144000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l4c_1p8: ldo4 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l5c_1p8: ldo5 {
-+			regulator-min-microvolt = <1648000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l6c_2p9: ldo6 {
-+			regulator-min-microvolt = <2696000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l7c_3p0: ldo7 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3312000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l8c_1p8: ldo8 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1904000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l9c_2p9: ldo9 {
-+			regulator-min-microvolt = <2952000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l10c_3p3: ldo10 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3400000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_l11c_3p3: ldo11 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3400000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
-+		};
-+
-+		vreg_bob: bob {
-+			regulator-min-microvolt = <3008000>;
-+			regulator-max-microvolt = <3960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
-+		};
-+	};
-+};
-+
- &qupv3_id_1 {
- 	status = "okay";
- };
+ 		qupv3_id_1: geniqup@ac0000 {
+ 			compatible = "qcom,geni-se-qup";
+ 			reg = <0 0x00ac0000 0 0x6000>;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
