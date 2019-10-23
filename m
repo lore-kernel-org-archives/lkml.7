@@ -7,54 +7,61 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A962CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70504CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6223821906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468A721928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571856977;
-	bh=qku/IeDiKmYSe8V7I/U9iuWDuHuGMlCSTQSWtE1Lu6Y=;
+	s=default; t=1571856983;
+	bh=wAVSWl/br8oc3bQNKBub74AA8e2RLqOR6HSR4OljkZE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=u2iCvg/JgoiLvPZmtecs7SSCKT2HIT4Iph7j4PTm4nq7tqPwTbingZ7i44iKO4G0w
-	 8sIVU6Ulya5CzIp33GScDAQPHWVEEiFFoipZim6j4sNXGqC99d8qBZpfdSvb4XU+5d
-	 n3+EhVUYzqlkfSNjdYobQ8IPK0zN5sSTPWOfJWEM=
+	b=0jhBtpw5XnXTn+6C7cSZLC1y77ZFHg93zhx0qW4aZlm+LkbEOcXuoxcqbq9cH3I4P
+	 S7OGfY9azWnyDPUZrjZeGdVbBPR2pIeuqfuVgpI1D+DPFTQr5GnXju0h5ORsEjmrB8
+	 Ls6jo93GD9tCKcRt/i4jhkAFNU6yZ3w4HOVuYn20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404461AbfJWS4Q (ORCPT
+        id S2404540AbfJWS4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:56:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59378 "EHLO
+        Wed, 23 Oct 2019 14:56:22 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59580 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfJWS4P (ORCPT
+        with ESMTP id S2404472AbfJWS4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:56:15 -0400
+        Wed, 23 Oct 2019 14:56:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=TnhcvqGIFKnz9lf8OV8nCnZizb4cr6gyBDUnaKlbK5Q=; b=ESz8SQfkF8mz
-        KtoZjP4wE9f5fRgQzfqfwvP24AykigX9cveHf/ii+UqsSfFoKc492pmwwO2XmvNldmKRnyTgNYeYx
-        O5Yz3X+W87Er3qp4vd3UArwD7xW6PT32o43NgFSNQHASxlbcNgrmBUR6ErvsPp5c4Z/wVZLYLckox
-        0Eky4=;
+        List-Archive; bh=j/8yayfqMY0ZyCUC8zjVt9apU8LafgXQ0fDRwU+6/iQ=; b=L4TmW74BoYDt
+        J9IEPYU9uFs7yHt4LFK7+xRfFBHFlm30/Dqz3JDPHWDoFirnv5GUmrMP8cnCqU3fwSQliUlAkblVe
+        vjwQWzrLXRB4mpsqp7cTWweAYNZGRwalCZ7X11Ni7TT5+AXPjxSqpvCv6opPFOfYI8byw5k1/bQta
+        A6A9I=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iNLno-0001CK-Pa; Wed, 23 Oct 2019 18:56:12 +0000
+        id 1iNLnj-0001B9-4v; Wed, 23 Oct 2019 18:56:07 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 377F72743021; Wed, 23 Oct 2019 19:56:12 +0100 (BST)
+        id 98437274326D; Wed, 23 Oct 2019 19:56:06 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Subject: Applied "regulator: bd70528: Add MODULE_ALIAS to allow module auto loading" to the regulator tree
-In-Reply-To: <20191023121452.GA1812@localhost.localdomain>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     alsa-devel@alsa-project.org,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: Applied "ASoC: rsnd: dma: set bus width to data width for monaural data" to the asoc tree
+In-Reply-To: <20191022185518.12838-1-erosca@de.adit-jv.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191023185612.377F72743021@ypsilon.sirena.org.uk>
-Date:   Wed, 23 Oct 2019 19:56:12 +0100 (BST)
+Message-Id: <20191023185606.98437274326D@ypsilon.sirena.org.uk>
+Date:   Wed, 23 Oct 2019 19:56:06 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +69,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: bd70528: Add MODULE_ALIAS to allow module auto loading
+   ASoC: rsnd: dma: set bus width to data width for monaural data
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,33 +94,78 @@ to this mail.
 Thanks,
 Mark
 
-From 55d5f62c3fa005a6a8010363d7d1855909ceefbc Mon Sep 17 00:00:00 2001
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Date: Wed, 23 Oct 2019 15:14:52 +0300
-Subject: [PATCH] regulator: bd70528: Add MODULE_ALIAS to allow module auto
- loading
+From d4d9360bf702890b5d3b1b62d8619a2690dd3278 Mon Sep 17 00:00:00 2001
+From: Jiada Wang <jiada_wang@mentor.com>
+Date: Tue, 22 Oct 2019 20:55:18 +0200
+Subject: [PATCH] ASoC: rsnd: dma: set bus width to data width for monaural
+ data
 
-The bd70528 regulator driver is probed by MFD driver. Add MODULE_ALIAS
-in order to allow udev to load the module when MFD sub-device cell for
-regulators is added.
+According to R-Car3 HW manual 40.3.3 (Data Format on Audio Local Bus),
+in case of monaural data writing or reading through Audio-DMAC,
+it's always in Left Justified format, so both src and dst
+DMA Bus width should be equal to physical data width.
 
-Fixes: 99ea37bd1e7d7 ("regulator: bd70528: Support ROHM BD70528 regulator block")
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Link: https://lore.kernel.org/r/20191023121452.GA1812@localhost.localdomain
+Therefore set src and dst's DMA bus width to:
+ - [monaural case] data width
+ - [non-monaural case] 32bits (as prior applying the patch)
+
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc: Timo Wischer <twischer@de.adit-jv.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Link: https://lore.kernel.org/r/20191022185518.12838-1-erosca@de.adit-jv.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/bd70528-regulator.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/sh/rcar/dma.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/bd70528-regulator.c b/drivers/regulator/bd70528-regulator.c
-index 0248a61f1006..ec764022621f 100644
---- a/drivers/regulator/bd70528-regulator.c
-+++ b/drivers/regulator/bd70528-regulator.c
-@@ -286,3 +286,4 @@ module_platform_driver(bd70528_regulator);
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
- MODULE_DESCRIPTION("BD70528 voltage regulator driver");
- MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:bd70528-pmic");
+diff --git a/sound/soc/sh/rcar/dma.c b/sound/soc/sh/rcar/dma.c
+index 0324a5c39619..bcb6d5960661 100644
+--- a/sound/soc/sh/rcar/dma.c
++++ b/sound/soc/sh/rcar/dma.c
+@@ -165,14 +165,40 @@ static int rsnd_dmaen_start(struct rsnd_mod *mod,
+ 	struct device *dev = rsnd_priv_to_dev(priv);
+ 	struct dma_async_tx_descriptor *desc;
+ 	struct dma_slave_config cfg = {};
++	enum dma_slave_buswidth buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	int is_play = rsnd_io_is_play(io);
+ 	int ret;
+ 
++	/*
++	 * in case of monaural data writing or reading through Audio-DMAC
++	 * data is always in Left Justified format, so both src and dst
++	 * DMA Bus width need to be set equal to physical data width.
++	 */
++	if (rsnd_runtime_channel_original(io) == 1) {
++		struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
++		int bits = snd_pcm_format_physical_width(runtime->format);
++
++		switch (bits) {
++		case 8:
++			buswidth = DMA_SLAVE_BUSWIDTH_1_BYTE;
++			break;
++		case 16:
++			buswidth = DMA_SLAVE_BUSWIDTH_2_BYTES;
++			break;
++		case 32:
++			buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
++			break;
++		default:
++			dev_err(dev, "invalid format width %d\n", bits);
++			return -EINVAL;
++		}
++	}
++
+ 	cfg.direction	= is_play ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM;
+ 	cfg.src_addr	= dma->src_addr;
+ 	cfg.dst_addr	= dma->dst_addr;
+-	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	cfg.src_addr_width = buswidth;
++	cfg.dst_addr_width = buswidth;
+ 
+ 	dev_dbg(dev, "%s %pad -> %pad\n",
+ 		rsnd_mod_name(mod),
 -- 
 2.20.1
 
