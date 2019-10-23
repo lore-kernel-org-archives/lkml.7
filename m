@@ -2,157 +2,292 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4FECA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CB3CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91C621906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD9421906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ly3KR86k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIjn6zOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfJWRcU (ORCPT
+        id S1730230AbfJWRcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:32:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44134 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728832AbfJWRcI (ORCPT
+        Wed, 23 Oct 2019 13:32:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38308 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730140AbfJWRcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:32:08 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z9so22988740wrl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:32:08 -0700 (PDT)
+        Wed, 23 Oct 2019 13:32:35 -0400
+Received: by mail-io1-f67.google.com with SMTP id u8so25923478iom.5
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hsspblqELrHacRAKlAsCml5p6cq229Pl951HlC0nXnY=;
-        b=Ly3KR86kv1OaearP5GU4+t2oco1osmydkYQVlyufCS/z/qfdUhZXs8NFBT0ivxs9P9
-         6xv+pKaCrNBchEAfTT+SegnLSq25ep7C+MMN35GR/Wn4ky+5mEuaFrDybLL3HbjV1cQP
-         99JJHDvwFD0jMqtFjLskdUSMA3XvDn0HCyOiesRMDrj52xQ3+iyNR+CiT/cReIpJBdR3
-         sqas2HjHhKcMrJC61ycS6oxNwo/gi0v9UhAzwtxAzEuuq5dvK9U1RAOQtQnDFv+D2BFn
-         6r92xzHUQzdwDBQIoxa/eLT/1dBVyp1IyOtbP01BzjlyMTyi3iqMfYRfzRkyb8D/zY/Y
-         /baw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FHddi31URb1ZVMU1f/OlQcKL3JwlroIUzHSEfU1rm9E=;
+        b=iIjn6zOkon2+vy3u6ieqyT3hIL8hquUtW4WVxARJ6GHQwHgVlZingSEfEw9ylY7oSA
+         1F16bAeKpgTLYL8UJtX2Etu3picTNixpMhzj/ekoOwp/cmGSBH7kGopfJcid2JgAy8Zk
+         1ekeWPNa7uy0YtmbrdEsazn/sa0lGt/eFUJMFsJwBgjiSuI4qlqblHgEO7XKfG3qksLr
+         IDlP36H3VVyB02zXq77wDIDehyaKyQ3jmqrMyVY2/qASiIgVPru4z632XnyVSIxYBQHb
+         w03wb0KJl4xmm3rZ2KTkP2qYtu2ybDHY5MESrnzdRpr3BOw+46Vdgg7SldIhK+UA0OV0
+         GUcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=hsspblqELrHacRAKlAsCml5p6cq229Pl951HlC0nXnY=;
-        b=U09hr10bmwz2z1g6Uz0kvGRno6A2UdpTIH7HXp6vo0zMBUh4i6K2cV9DKSE0MzkA9A
-         6nK6pO1Ka1R/gOeeC3U6epjPNMLcGL+WbxmA6bj4Og2gmGL+YjPOAga3sqgEuonJVn9i
-         Wg2XdPkZBihGsLRoR4cnROEbPXVsZ3dp0qjuS5VX8URaRTkZRwk1D9RpBsQHJWabd/WZ
-         h/aI/RTq6+9yigkKSlwD1uLegb+rkJlxcNJ7Bq5XO3hueaNHUc1ch3AYyLG+sYThUJSa
-         nDt8acB9pwyMoQdJ1xu/Jz6WKtlPaEGFGRrNQWvMe0ljenH4b7VN7Xq+Ec4QLC+dy2uM
-         Qp7A==
-X-Gm-Message-State: APjAAAXVVBtyUdNCdUk35HQurqalhShnYcguFm5E0nCFBpZjcpUG6mr7
-        IYO2tfexJ2amyPEh5BQK3QEBNLGvUsIMK9Gi
-X-Google-Smtp-Source: APXvYqzBva38eXIkziX3rGTFctUPyfyoGbAyVq1vcmBTKX8zojO7RnDpjPCX8MEBVYzo65FQyKl28Q==
-X-Received: by 2002:a5d:6250:: with SMTP id m16mr9468896wrv.322.1571851926789;
-        Wed, 23 Oct 2019 10:32:06 -0700 (PDT)
-Received: from e123331-lin.home (lfbn-mar-1-643-104.w90-118.abo.wanadoo.fr. [90.118.215.104])
-        by smtp.gmail.com with ESMTPSA id f7sm14900374wre.68.2019.10.23.10.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 10:32:06 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] efi: libstub/arm: account for firmware reserved memory at the base of RAM
-Date:   Wed, 23 Oct 2019 19:32:00 +0200
-Message-Id: <20191023173201.6607-5-ard.biesheuvel@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023173201.6607-1-ard.biesheuvel@linaro.org>
-References: <20191023173201.6607-1-ard.biesheuvel@linaro.org>
-X-ARM-No-Footer: FoSSMail
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FHddi31URb1ZVMU1f/OlQcKL3JwlroIUzHSEfU1rm9E=;
+        b=LxfVudPcwKtBhaZkCKVrVuTn5A8IVBCtY3duYLEtOuAszNcvlvybvNNZPinLPbej3k
+         3VnkqodZPw1fvLnlaPl99oiYYJG7pHT4k7jL1tjfF33g7Q8geJOo+QV0oC9z1f6uCqZ/
+         4X5SaLR0JXwaBTD0ytr9l0XxIfbXCaTYSvs1QNs+302jRbXK+3O/U6hQ9h42rCuROOiW
+         h1lHbbi72bw9qC9JIC5iXAip4RiqCvEQTq9GLwGjL58A4DfR7Cbc65qGdWUljrBln5V3
+         XP4kQbk97yZ2DUQRLqeNUr3gqBj1J5zz+ilJxQ/N20O4WcPWrtxiNflkGsCeP4qEyytD
+         yYbA==
+X-Gm-Message-State: APjAAAWxgVrAJ/kV17Rro3+Bj+HQhrQuyaKWJTl/fXI5RmqJnl71v4K8
+        m2tLZZ2cn0eZE1gJrllJrp+JpJg541apOxYr0m3qHg==
+X-Google-Smtp-Source: APXvYqxyBYMtAL3D/OX0ZAdgMK8IVMiPoByH/BDSVN52PLwP4Oc1eswZzBzK266InVy9jGWBwrafm+J4exhXkFSElJs=
+X-Received: by 2002:a6b:d104:: with SMTP id l4mr4641180iob.50.1571851952354;
+ Wed, 23 Oct 2019 10:32:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
+In-Reply-To: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 23 Oct 2019 11:32:21 -0600
+Message-ID: <CANLsYkzkk9yPezSyU50TmWjDAZ-5D2Hmo0YztQzm+mnyZf1Www@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: zynq: enablement of coresight topology
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Zumeng Chen <zumeng.chen@windriver.com>,
+        Quanyang Wang <quanyang.wang@windriver.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Crosthwaite <peter.crosthwaite@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robherring2@gmail.com>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        devicetree@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        u-boot@lists.denx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EFI stubloader for ARM starts out by allocating a 32 MB window
-at the base of RAM, in order to ensure that the decompressor (which
-blindly copies the uncompressed kernel into that window) does not
-overwrite other allocations that are made while running in the context
-of the EFI firmware.
+Hi Michal,
 
-In some cases, (e.g., U-Boot running on the Raspberry Pi 2), this is
-causing boot failures because this initial allocation conflicts with
-a page of reserved memory at the base of RAM that contains the SMP spin
-tables and other pieces of firmware data and which was put there by
-the bootloader under the assumption that the TEXT_OFFSET window right
-below the kernel is only used partially during early boot, and will be
-left alone once the memory reservations are processed and taken into
-account.
+I was not CC'ed on the original post so I just noticed this today,
+hence the late reply.  I don't know if you were looking for feedback
+or already picked up the patch but here it is anyway.
 
-So let's permit reserved memory regions to exist in the region starting
-at the base of RAM, and ending at TEXT_OFFSET - 5 * PAGE_SIZE, which is
-the window below the kernel that is not touched by the early boot code.
+On Wed, 9 Oct 2019 at 08:07, Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> From: Zumeng Chen <zumeng.chen@windriver.com>
+>
+> This patch is to build the coresight topology structure of zynq-7000
+> series according to the docs of coresight and userguide of zynq-7000.
+>
+> Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
+> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+>  arch/arm/boot/dts/zynq-7000.dtsi | 158 +++++++++++++++++++++++++++++++
+>  1 file changed, 158 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index ca6425ad794c..86430ad76fee 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -59,6 +59,40 @@
+>                 regulator-always-on;
+>         };
+>
+> +       replicator {
+> +               compatible = "arm,coresight-static-replicator";
+> +               clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +               clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +               out-ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       /* replicator output ports */
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               replicator_out_port0: endpoint {
+> +                                       remote-endpoint = <&tpiu_in_port>;
+> +                               };
+> +                       };
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               replicator_out_port1: endpoint {
+> +                                       remote-endpoint = <&etb_in_port>;
+> +                               };
+> +                       };
+> +               };
+> +               in-ports {
+> +                       /* replicator input port */
+> +                       port {
+> +                               replicator_in_port0: endpoint {
+> +                                       slave-mode;
 
-Acked-by: Chester Lin <clin@suse.com>
-Tested-by: Guillaume Gardet <Guillaume.Gardet@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- drivers/firmware/efi/libstub/Makefile     |  1 +
- drivers/firmware/efi/libstub/arm32-stub.c | 16 +++++++++++++---
- 2 files changed, 14 insertions(+), 3 deletions(-)
+The slave-mode property is no longer required and probably an
+oversight since it doesn't appear elsewhere in this patch.
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index 0460c7581220..ee0661ddb25b 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -52,6 +52,7 @@ lib-$(CONFIG_EFI_ARMSTUB)	+= arm-stub.o fdt.o string.o random.o \
- 
- lib-$(CONFIG_ARM)		+= arm32-stub.o
- lib-$(CONFIG_ARM64)		+= arm64-stub.o
-+CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- 
- #
-diff --git a/drivers/firmware/efi/libstub/arm32-stub.c b/drivers/firmware/efi/libstub/arm32-stub.c
-index e8f7aefb6813..ffa242ad0a82 100644
---- a/drivers/firmware/efi/libstub/arm32-stub.c
-+++ b/drivers/firmware/efi/libstub/arm32-stub.c
-@@ -195,6 +195,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 				 unsigned long dram_base,
- 				 efi_loaded_image_t *image)
- {
-+	unsigned long kernel_base;
- 	efi_status_t status;
- 
- 	/*
-@@ -204,9 +205,18 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 	 * loaded. These assumptions are made by the decompressor,
- 	 * before any memory map is available.
- 	 */
--	dram_base = round_up(dram_base, SZ_128M);
-+	kernel_base = round_up(dram_base, SZ_128M);
- 
--	status = reserve_kernel_base(sys_table, dram_base, reserve_addr,
-+	/*
-+	 * Note that some platforms (notably, the Raspberry Pi 2) put
-+	 * spin-tables and other pieces of firmware at the base of RAM,
-+	 * abusing the fact that the window of TEXT_OFFSET bytes at the
-+	 * base of the kernel image is only partially used at the moment.
-+	 * (Up to 5 pages are used for the swapper page tables)
-+	 */
-+	kernel_base += TEXT_OFFSET - 5 * PAGE_SIZE;
-+
-+	status = reserve_kernel_base(sys_table, kernel_base, reserve_addr,
- 				     reserve_size);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table, "Unable to allocate memory for uncompressed kernel.\n");
-@@ -220,7 +230,7 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table,
- 	*image_size = image->image_size;
- 	status = efi_relocate_kernel(sys_table, image_addr, *image_size,
- 				     *image_size,
--				     dram_base + MAX_UNCOMP_KERNEL_SIZE, 0);
-+				     kernel_base + MAX_UNCOMP_KERNEL_SIZE, 0);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err(sys_table, "Failed to relocate kernel.\n");
- 		efi_free(sys_table, *reserve_size, *reserve_addr);
--- 
-2.17.1
+> +                                       remote-endpoint = <&funnel_out_port>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+>         amba: amba {
+>                 compatible = "simple-bus";
+>                 #address-cells = <1>;
+> @@ -365,5 +399,129 @@
+>                         reg = <0xf8005000 0x1000>;
+>                         timeout-sec = <10>;
+>                 };
+> +
+> +               etb@f8801000 {
+> +                       compatible = "arm,coresight-etb10", "arm,primecell";
+> +                       reg = <0xf8801000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       in-ports {
+> +                               port {
+> +                                       etb_in_port: endpoint {
+> +                                               remote-endpoint = <&replicator_out_port1>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               tpiu@f8803000 {
+> +                       compatible = "arm,coresight-tpiu", "arm,primecell";
+> +                       reg = <0xf8803000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       in-ports {
+> +                               port {
+> +                                       tpiu_in_port: endpoint {
+> +                                               remote-endpoint = <&replicator_out_port0>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               funnel@f8804000 {
+> +                       compatible = "arm,coresight-static-funnel", "arm,primecell";
+> +                       reg = <0xf8804000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +
+> +                       /* funnel output ports */
+> +                       out-ports {
+> +                               port {
+> +                                       funnel_out_port: endpoint {
+> +                                               remote-endpoint =
+> +                                                       <&replicator_in_port0>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       in-ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               /* funnel input ports */
+> +                               port@0 {
+> +                                       reg = <0>;
+> +                                       funnel0_in_port0: endpoint {
+> +                                               remote-endpoint = <&ptm0_out_port>;
+> +                                       };
+> +                               };
+> +
+> +                               port@1 {
+> +                                       reg = <1>;
+> +                                       funnel0_in_port1: endpoint {
+> +                                               remote-endpoint = <&ptm1_out_port>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg = <2>;
+> +                                       funnel0_in_port2: endpoint {
+> +                                       };
+> +                               };
+> +
+> +                               port@3 {
+> +                                       reg = <3>;
+> +                                       funnel0_in_port3: endpoint {
+> +                                               remote-endpoint = <&itm_out_port>;
+> +                                       };
+> +                               };
+> +                               /* The other input ports are not connect to anything */
+> +                       };
+> +               };
+> +
+> +               /* ITM is not supported by kernel, only leave device node here */
+> +               itm@f8805000 {
+> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
 
+If I remember correctly ITM and ETMv3 are quite different - please
+remove entirely.
+
+> +                       reg = <0xf8805000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       out-ports {
+> +                               port {
+> +                                       itm_out_port: endpoint {
+> +                                               remote-endpoint = <&funnel0_in_port3>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               ptm@f889c000 {
+> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
+> +                       reg = <0xf889c000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       cpu = <&cpu0>;
+> +                       out-ports {
+> +                               port {
+> +                                       ptm0_out_port: endpoint {
+> +                                               remote-endpoint = <&funnel0_in_port0>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               ptm@f889d000 {
+> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
+> +                       reg = <0xf889d000 0x1000>;
+> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
+> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
+> +                       cpu = <&cpu1>;
+> +                       out-ports {
+> +                               port {
+> +                                       ptm1_out_port: endpoint {
+> +                                               remote-endpoint = <&funnel0_in_port1>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+
+With the above:
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+>         };
+>  };
+> --
+> 2.17.1
+>
