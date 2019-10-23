@@ -2,191 +2,78 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21158CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2C6CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA08721928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571865160;
-	bh=a8K/AtX863XlsnPxoFbWARUemt7/EGJWxYsS057naeA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=vg/MvjlWy9Y7wWgAWDjsAy024ZsvawkR6ELKvCGt8jEmadCq3NME3h+JKMQLqpu3/
-	 Ku8NCdVvAIkNSbR5kjjZmuOyt9/zXGL7vfF/rZ1rLNscC2XjsXSVa9kBnYN/UoBrWX
-	 Uc/wfaVFL2WLfChEpp+/sfCIMypIbpq2zvbQv3qo=
+	by mail.kernel.org (Postfix) with ESMTP id 8EFA721928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405466AbfJWVMi (ORCPT
+        id S2405962AbfJWVPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 17:15:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:7549 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404204AbfJWVMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:12:38 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B34BB2064A;
-        Wed, 23 Oct 2019 21:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571865157;
-        bh=a8K/AtX863XlsnPxoFbWARUemt7/EGJWxYsS057naeA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nPF141IPJGM2Zu0id5fY28Igdyj5BMtWIuis9+eK1336dlKyVZnT9TcqWhFwxORuX
-         1Cuzn84vESHeLHKnRIzm9v3Ykw9oX5kQb3kaAVAHHLIQpi/rWedra3qrIx/yU8rR3W
-         S6s6iIFJY5E6ezcdZ629hB+Af95KXd4FWDb8flsc=
-Date:   Wed, 23 Oct 2019 16:12:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     Matthew Wilcox <willy@linux.intel.com>, linux@endlesssm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Subject: Re: [PATCH] PCI/MSI: Fix restoring of MSI-X vector control's mask bit
-Message-ID: <20191023211235.GA236419@google.com>
+        id S1732586AbfJWVPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:15:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:15:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
+   d="scan'208";a="373003313"
+Received: from ayamada-mobl1.gar.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.95.208])
+  by orsmga005.jf.intel.com with ESMTP; 23 Oct 2019 14:15:06 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 0/5] ASoC: SOF: Intel: Soundwire integration
+Date:   Wed, 23 Oct 2019 16:14:59 -0500
+Message-Id: <20191023211504.32675-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008034238.2503-1-jian-hong@endlessm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 08, 2019 at 11:42:39AM +0800, Jian-Hong Pan wrote:
-> MSI-X vector control's bit 0 is the mask bit, which masks the
-> corresponding interrupt request, or not. Other reserved bits might be
-> used for other purpose by device vendors. For example, the values of
-> Kingston NVMe SSD's MSI-X vector control are neither 0, nor 1, but other
-> values [1].
-> 
-> The original restoring logic in system resuming uses the whole MSI-X
-> vector control value as the flag to set/clear the mask bit. However,
-> this logic conflicts the idea mentioned above. It may mislead system to
-> disable the MSI-X vector entries. That makes system get no interrupt
-> from Kingston NVMe SSD after resume and usually get NVMe I/O timeout
-> error.
-> 
-> [  174.715534] nvme nvme0: I/O 978 QID 3 timeout, completion polled
-> 
-> This patch takes only the mask bit of original MSI-X vector control
-> value as the flag to fix this issue.
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=204887#c8
-> 
-> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-> Fixed: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> ---
->  drivers/pci/msi.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 0884bedcfc7a..deae3d5acaf6 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -433,6 +433,7 @@ static void __pci_restore_msi_state(struct pci_dev *dev)
->  static void __pci_restore_msix_state(struct pci_dev *dev)
->  {
->  	struct msi_desc *entry;
-> +	u32 flag;
->  
->  	if (!dev->msix_enabled)
->  		return;
-> @@ -444,8 +445,10 @@ static void __pci_restore_msix_state(struct pci_dev *dev)
->  				PCI_MSIX_FLAGS_ENABLE | PCI_MSIX_FLAGS_MASKALL);
->  
->  	arch_restore_msi_irqs(dev);
-> -	for_each_pci_msi_entry(entry, dev)
-> -		msix_mask_irq(entry, entry->masked);
-> +	for_each_pci_msi_entry(entry, dev) {
-> +		flag = entry->masked & PCI_MSIX_ENTRY_CTRL_MASKBIT;
-> +		msix_mask_irq(entry, flag);
+This patchset applies on top of the series "[PATCH 0/4] soundwire:
+update ASoC interfaces". The SOF/Intel code makes use of the
+interfaces defined for initialization.
 
-This makes good sense: before your patch, when we restore, we set the
-mask bit if *any* bits in the Vector Control register are set.
+Build support for SoundWire is not provided for now, all
+Soundwire-related code will be handled with a dummy fallback. We will
+enable SoundWire interfaces in the Kconfigs when the functionality is
+enabled in the soundwire tree.
 
-There are other paths leading to __pci_msix_desc_mask_irq(), so I
-think it would be better to do the masking there, e.g.,
+In short, if the interfaces are agreed on, there is no risk with the
+integration of these patches on the ASoC side.
 
-  if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
-    mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
+Pierre-Louis Bossart (5):
+  ASoC: SOF: Intel: add SoundWire configuration interface
+  ASoC: SOF: IPC: dai-intel: move ALH declarations in header file
+  ASoC: SOF: Intel: hda: add SoundWire stream config/free callbacks
+  ASoC: SOF: Intel: hda: initial SoundWire machine driver autodetect
+  ASoC: SOF: Intel: hda: disable SoundWire interrupts on suspend
 
-I think the other paths all pass either 0 or 1, so they're all safe
-today.  But doing the masking in __pci_msix_desc_mask_irq() removes
-that assumption from the callers.
+ include/sound/sof/dai-intel.h    |  18 +--
+ sound/soc/sof/intel/hda-dsp.c    |   2 +
+ sound/soc/sof/intel/hda-loader.c |  13 ++
+ sound/soc/sof/intel/hda.c        | 230 ++++++++++++++++++++++++++++++-
+ sound/soc/sof/intel/hda.h        |  44 ++++++
+ 5 files changed, 295 insertions(+), 12 deletions(-)
 
-I applied the patch below to pci/msi, let me know if it doesn't work
-for you.
+-- 
+2.20.1
 
-> +	}
->  
->  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
->  }
-
-commit 1a828a554650
-Author: Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Tue Oct 8 11:42:39 2019 +0800
-
-    PCI/MSI: Fix incorrect MSI-X masking on resume
-    
-    When a driver enables MSI-X, msix_program_entries() reads the MSI-X Vector
-    Control register for each vector and saves it in desc->masked.  Each
-    register is 32 bits and bit 0 is the actual Mask bit.
-    
-    When we restored these registers during resume, we previously set the Mask
-    bit if *any* bit in desc->masked was set instead of when the Mask bit
-    itself was set:
-    
-      pci_restore_state
-        pci_restore_msi_state
-          __pci_restore_msix_state
-            for_each_pci_msi_entry
-              msix_mask_irq(entry, entry->masked)   <-- entire u32 word
-                __pci_msix_desc_mask_irq(desc, flag)
-                  mask_bits = desc->masked & ~PCI_MSIX_ENTRY_CTRL_MASKBIT
-                  if (flag)       <-- testing entire u32, not just bit 0
-                    mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT
-                  writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL)
-    
-    This means that after resume, MSI-X vectors were masked when they shouldn't
-    be, which leads to timeouts like this:
-    
-      nvme nvme0: I/O 978 QID 3 timeout, completion polled
-    
-    On resume, set the Mask bit only when the saved Mask bit from suspend was
-    set.
-    
-    This should remove the need for 19ea025e1d28 ("nvme: Add quirk for Kingston
-    NVME SSD running FW E8FK11.T").
-    
-    [bhelgaas: commit log, move fix to __pci_msix_desc_mask_irq()]
-    Fixes: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
-    Link: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-    Link: https://lore.kernel.org/r/20191008034238.2503-1-jian-hong@endlessm.com
-    Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 0884bedcfc7a..771041784e64 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -213,12 +213,13 @@ u32 __pci_msix_desc_mask_irq(struct msi_desc *desc, u32 flag)
- 
- 	if (pci_msi_ignore_mask)
- 		return 0;
-+
- 	desc_addr = pci_msix_desc_addr(desc);
- 	if (!desc_addr)
- 		return 0;
- 
- 	mask_bits &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
--	if (flag)
-+	if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
- 		mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
- 
- 	writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
