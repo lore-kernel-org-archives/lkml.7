@@ -2,158 +2,154 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F91CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B026ECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487382064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:12:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YlDpVbEY"
+	by mail.kernel.org (Postfix) with ESMTP id 8DC472084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 16:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407090AbfJWQMS (ORCPT
+        id S2407110AbfJWQPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 12:12:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39766 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404582AbfJWQMO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 12:12:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a11so6666743wra.6
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jku1smTEPHhN+cvKCtL6fmKpwQiYDnStnysLN3jZh3k=;
-        b=YlDpVbEY99OVN3O7AhHeZrOjLm2qsRLfbFJi27v0f4JnEnOTvZAQulErlq8Nlj1kNe
-         cDoLIFstWwUieFXb4Lu+DTBmbpQCN+6fXRk3jXwLqKCaSvPHaRxPoydTedDsseb7lYEJ
-         Kjd3h8A5C/2L3DqQe6S1b9jFVFMX9w+VyobSD9zi0sa03QZGpFbKpLceATsPeo26SSS/
-         W5lAFCgVvP2GFX+J1mWRu7MskCqrFS9n8ppb7q8VBsMkijs9GJKKecGtyJWApYNLPFK9
-         xennvVzeF3L5sWOFNgqMdtc8L0RiLeq9ictajHb+4QiKFt9SftOsfUi1isgT+6j8ye49
-         S2YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jku1smTEPHhN+cvKCtL6fmKpwQiYDnStnysLN3jZh3k=;
-        b=UOMM6hbV/vDWTAIMfaE2MPlbKr0yuh92m2U/YgLLyH0Hu5+atz6tX3t3NPFWlI7FFC
-         6sE58DxuqDiy30fH5ASR326MiWrkpSy8WFzxdTgxSjG/WbWuON2tSbGd+X+AkRItxznc
-         d0FpTAC5ya5eshHuzDfdcNCUiMpWloRcTBGuZ7lWYBF9+QqL4HJVoK0V0QFxklXxb+pg
-         ZXlqyaYSAFqCoqqZgSINH7KokzMARfbXUucfYcNd2aFWfj/5s6V2tAnONmgoIFBKPbI+
-         w+Z4ja7RYWIJ+ARFAGaDs30eNiDuCkda4K4kU+mfD0khLUi3Bl723LWPriPbADsXwaYW
-         2NOw==
-X-Gm-Message-State: APjAAAVafIL8/Be9KzF3HGEAGDiyJNTCdGT7iPooLHj9lN3UdJ0Z3GPK
-        kUwUouILKl2MuMHTMEH2SOMyAItpUtI=
-X-Google-Smtp-Source: APXvYqwJZmJTgYaqzR7EpYV47FoagkgViQqCyt9VJfAZEwIu5Pi0cWnYVEpA+myXiZVbuNZ9XnrLPw==
-X-Received: by 2002:a5d:4f91:: with SMTP id d17mr9372180wru.184.1571847133523;
-        Wed, 23 Oct 2019 09:12:13 -0700 (PDT)
-Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id x7sm30240578wrg.63.2019.10.23.09.12.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 09:12:12 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 2/2] ASoC: hdmi-codec: re-introduce mutex locking again
-Date:   Wed, 23 Oct 2019 18:12:03 +0200
-Message-Id: <20191023161203.28955-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191023161203.28955-1-jbrunet@baylibre.com>
-References: <20191023161203.28955-1-jbrunet@baylibre.com>
+        Wed, 23 Oct 2019 12:15:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404354AbfJWQPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 12:15:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D7692ACB7;
+        Wed, 23 Oct 2019 16:15:44 +0000 (UTC)
+Subject: Re: [RFC PATCH 1/2] mm, vmstat: hide /proc/pagetypeinfo from normal
+ users
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Linux API <linux-api@vger.kernel.org>
+References: <20191023095607.GE3016@techsingularity.net>
+ <20191023102737.32274-1-mhocko@kernel.org>
+ <20191023102737.32274-2-mhocko@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ed60303a-0775-c6ce-2923-df3ffe6a887f@suse.cz>
+Date:   Wed, 23 Oct 2019 18:15:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191023102737.32274-2-mhocko@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dai codec needs to ensure that on one dai is used at any time.
-This is currently protected by bit atomic operation. With this change,
-it done with a mutex instead.
++ linux-api
 
-Suggested-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/codecs/hdmi-codec.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index f8b5b960e597..56f6373d7927 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -274,7 +274,8 @@ struct hdmi_codec_priv {
- 	uint8_t eld[MAX_ELD_BYTES];
- 	struct snd_pcm_chmap *chmap_info;
- 	unsigned int chmap_idx;
--	unsigned long busy;
-+	struct mutex lock;
-+	bool busy;
- 	struct snd_soc_jack *jack;
- 	unsigned int jack_status;
- };
-@@ -390,12 +391,15 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
- 	int ret = 0;
- 
--	ret = test_and_set_bit(0, &hcp->busy);
--	if (ret) {
-+	mutex_lock(&hcp->lock);
-+	if (hcp->busy) {
- 		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
-+		mutex_unlock(&hcp->lock);
- 		return -EINVAL;
- 	}
- 
-+	hcp->busy = true;
-+
- 	if (hcp->hcd.ops->audio_startup) {
- 		ret = hcp->hcd.ops->audio_startup(dai->dev->parent, hcp->hcd.data);
- 		if (ret)
-@@ -415,11 +419,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
- 	}
--	return 0;
- 
- err:
--	/* Release the exclusive lock on error */
--	clear_bit(0, &hcp->busy);
-+	if (ret)
-+		hcp->busy = false;
-+
-+	mutex_unlock(&hcp->lock);
- 	return ret;
- }
- 
-@@ -431,7 +436,9 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
- 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
- 	hcp->hcd.ops->audio_shutdown(dai->dev->parent, hcp->hcd.data);
- 
--	clear_bit(0, &hcp->busy);
-+	mutex_lock(&hcp->lock);
-+	hcp->busy = false;
-+	mutex_unlock(&hcp->lock);
- }
- 
- static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
-@@ -811,6 +818,8 @@ static int hdmi_codec_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	hcp->hcd = *hcd;
-+	mutex_init(&hcp->lock);
-+
- 	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv), GFP_KERNEL);
- 	if (!daidrv)
- 		return -ENOMEM;
--- 
-2.21.0
+On 10/23/19 12:27 PM, Michal Hocko wrote:
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> /proc/pagetypeinfo is a debugging tool to examine internal page
+> allocator state wrt to fragmentation. It is not very useful for
+> any other use so normal users really do not need to read this file.
+> 
+> Waiman Long has noticed that reading this file can have negative side
+> effects because zone->lock is necessary for gathering data and that
+> a) interferes with the page allocator and its users and b) can lead to
+> hard lockups on large machines which have very long free_list.
+> 
+> Reduce both issues by simply not exporting the file to regular users.
+> 
+> Reported-by: Waiman Long <longman@redhat.com>
+> Cc: stable
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> ---
+>  mm/vmstat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 6afc892a148a..4e885ecd44d1 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1972,7 +1972,7 @@ void __init init_mm_internals(void)
+>  #endif
+>  #ifdef CONFIG_PROC_FS
+>  	proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
+> -	proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
+> +	proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
+>  	proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
+>  	proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
+>  #endif
+> 
 
