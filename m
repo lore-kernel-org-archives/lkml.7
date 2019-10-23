@@ -2,200 +2,140 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7A6CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A3CCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE5D21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21A9205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HxDBxkpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392102AbfJWNum (ORCPT
+        id S2406172AbfJWNvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:50:42 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:52720 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2392090AbfJWNul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:50:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FA494A7;
-        Wed, 23 Oct 2019 06:50:17 -0700 (PDT)
-Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3E743F71F;
-        Wed, 23 Oct 2019 06:50:15 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH v7 00/10] arm64: Stolen time support
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        Wed, 23 Oct 2019 09:51:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43536 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391874AbfJWNvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:51:12 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so16961774wrr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:51:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:openpgp:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=2OzqeB6lct/4fO2u5biFD/hH4qN2HDn6dJHGOqFVmZI=;
+        b=HxDBxkpt/TeXHVriMyGDqLhs0MthlNjNAeNVQezlsLSQGK5tb6zxiwSXKeqdzWC7M2
+         SDbjsOENSXQOZ6vlfQ6Sd7bWNWdXml01yl4gGJkjjgS9rSzuaNUQEgYmERynar2gG9MB
+         nCMyKy33R80dzElC4mKKGnIHMQoj94S59WbUtrnog2S1J09cumyqSoYNFnyw/KSIQgKF
+         dzuESK/bbrY6UCLc9qFhJqAcyiBqrdWaioVM+iGIrGk7WZpNO7KXNa3LeB5BkBWPhyie
+         yPZs/GpUej/2Y+Eg1NvBgrxbubRoDOYCS8IKitb+M1QGkwm1f1+gs568w4pasyj3XqEe
+         Zwag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:message-id
+         :date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2OzqeB6lct/4fO2u5biFD/hH4qN2HDn6dJHGOqFVmZI=;
+        b=lxXLTxAIor9qnAgSdOdvFzoGp8uGD9owbsAaLCjizjQwB+JtNi1V6wOAN0Jv7aymBs
+         8a1a3srs3sqH7wSx/jQjhph3ODGXQeFvv9pRHYZQNK51T/JKLhDgneb4x9As6QJkzbpr
+         isVm5qDj6YYHfDfm1w5/ev6GmzfvD+NQLWmYvlCzWJt93iFnxt/bRR0R/+rfUwTGGrEs
+         DATyoRJoVLXZfVDlVjgPzzCFKtWlvlBWLPbJqQxPMnDrsoTwi9d0lIbEkYZCtFRRbCkp
+         W1tifs+SkemkQn823ecqvSN2KxAhR8ynt3QYETA6CJN7ELHUkD72c6ojkTVy2pfpPqhz
+         +lXA==
+X-Gm-Message-State: APjAAAVVyp5I8Vre+kb10z44jMiazqPJfFXALkr25X2PDrMbI6bsi7bd
+        X15nkeUo/Qf/+6jW5Y2Uol67HQ==
+X-Google-Smtp-Source: APXvYqz38URZiwF3jYVFDirDMkOyKsDUee5Q74pCUjTu27Axp8SUi5Xd93x6B2Mphtf8iU4RtObptw==
+X-Received: by 2002:a5d:6b0e:: with SMTP id v14mr8459368wrw.280.1571838670680;
+        Wed, 23 Oct 2019 06:51:10 -0700 (PDT)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id u68sm26145822wmu.12.2019.10.23.06.51.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 06:51:10 -0700 (PDT)
+Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-References: <20191021152823.14882-1-steven.price@arm.com>
- <f0d79362ab994e269680fba75f913044@www.loen.fr>
-Message-ID: <5b3968d8-9a5a-ee9d-70b3-436dc052dd0a@arm.com>
-Date:   Wed, 23 Oct 2019 14:50:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+References: <20191013080804.10231-1-masneyb@onstation.org>
+ <20191013080804.10231-6-masneyb@onstation.org>
+ <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
+ <20191023124753.GA14218@onstation.org>
+ <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
+Openpgp: preference=signencrypt
+Message-ID: <94f957c6-c26b-b1f5-4d0f-6c9aff0a03cd@linaro.org>
+Date:   Wed, 23 Oct 2019 16:51:09 +0300
 MIME-Version: 1.0
-In-Reply-To: <f0d79362ab994e269680fba75f913044@www.loen.fr>
+In-Reply-To: <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/10/2019 13:39, Marc Zyngier wrote:
-> Hi Steven,
+On 23.10.19 г. 16:39 ч., Georgi Djakov wrote:
+> On 23.10.19 г. 15:47 ч., Brian Masney wrote:
+>> On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
+>>> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
+>>>> Add interconnect nodes that's needed to support bus scaling.
+>>>>
+>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
+>>>>  1 file changed, 60 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>>>> @@ -1152,6 +1207,11 @@
+>>>>  				              "core",
+>>>>  				              "vsync";
+>>>>  
+>>>> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
+>>>> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
+>>>
+>>> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
+>>> or both? The above seem like GPU-related interconnects, so maybe these
+>>> properties should be in the GPU DT node.
+>>
+>> The display is what currently requests the interconnect path,
+>> specifically mdp5_setup_interconnect() in
+>> drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
+>> currently don't have interconnect support. Maybe this is something that
+>> I should add to that driver as well?
 > 
-> On 2019-10-21 16:28, Steven Price wrote:
->> This series add support for paravirtualized time for arm64 guests and
->> KVM hosts following the specification in Arm's document DEN 0057A:
+> The "mdp0-mem" and "mdp1-mem" paths mentioned in the mdp5_kms.c are the two
+> interconnects between the display and DDR memory. There is actually a patch [1]
+> to add to GPU bindings, but it seems that we missed to pick it up.
+
+It was actually merged in v5.2.
+
+BR,
+Georgi
+
+>>>> +				interconnect-names = "mdp0-mem",
+>>>> +				                     "mdp1-mem";
+>>>
+>>> As the second path is not to DDR, but to ocmem, it might be better to call it
+>>> something like "gpu-ocmem".
 >>
->> https://developer.arm.com/docs/den0057/a
->>
->> It implements support for stolen time, allowing the guest to
->> identify time when it is forcibly not executing.
->>
->> Note that Live Physical Time (LPT) which was previously part of the
->> above specification has now been removed.
->>
->> Also available as a git tree:
->> git://linux-arm.org/linux-sp.git stolen_time/v7
+>> I used what mdp5_kms.c expected.
 > 
-> Can you please point me to userspace patches that I could apply to
-> kvmtool? I'd like to give this series a go as part of my normal testing.
-
-I don't have a proper patch yet, but the below is what I've been testing
-with (this breaks with kernels without PV-time).
-
-Steve
-
-----8<----
-From 8f6540cfbe2842f3ee422c07fbd1f590534cc90a Mon Sep 17 00:00:00 2001
-From: Steven Price <steven.price@arm.com>
-Date: Thu, 8 Nov 2018 13:43:56 +0000
-Subject: [PATCH kvmtool] ARM PV time support
-
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- Makefile                 |  2 +-
- arm/kvm-cpu.c            |  4 ++++
- arm/pvtime.c             | 47 ++++++++++++++++++++++++++++++++++++++++
- include/kvm/arm-pvtime.h |  6 +++++
- 4 files changed, 58 insertions(+), 1 deletion(-)
- create mode 100644 arm/pvtime.c
- create mode 100644 include/kvm/arm-pvtime.h
-
-diff --git a/Makefile b/Makefile
-index 3862112..a79956b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -158,7 +158,7 @@ endif
- # ARM
- OBJS_ARM_COMMON		:= arm/fdt.o arm/gic.o arm/gicv2m.o arm/ioport.o \
- 			   arm/kvm.o arm/kvm-cpu.o arm/pci.o arm/timer.o \
--			   arm/pmu.o
-+			   arm/pmu.o arm/pvtime.o
- HDRS_ARM_COMMON		:= arm/include
- ifeq ($(ARCH), arm)
- 	DEFINES		+= -DCONFIG_ARM
-diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
-index 7780251..c903b05 100644
---- a/arm/kvm-cpu.c
-+++ b/arm/kvm-cpu.c
-@@ -1,5 +1,6 @@
- #include "kvm/kvm.h"
- #include "kvm/kvm-cpu.h"
-+#include "kvm/arm-pvtime.h"
- 
- static int debug_fd;
- 
-@@ -122,6 +123,9 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
- 	vcpu->cpu_compatible	= target->compatible;
- 	vcpu->is_running	= true;
- 
-+	if (pvtime_vcpu_init(vcpu))
-+		die("Unable to initialise pvtime");
-+
- 	return vcpu;
- }
- 
-diff --git a/arm/pvtime.c b/arm/pvtime.c
-new file mode 100644
-index 0000000..fc152d3
---- /dev/null
-+++ b/arm/pvtime.c
-@@ -0,0 +1,47 @@
-+#include "kvm/kvm.h"
-+#include "kvm/kvm-cpu.h"
-+#include "kvm/arm-pvtime.h"
-+
-+#define PVTIME_BASE 0x10000000
-+
-+#define KVM_ARM_VCPU_PVTIME_CTRL	2
-+#define   KVM_ARM_VCPU_PVTIME_IPA	0
-+
-+static int pvtime_init(struct kvm *kvm)
-+{
-+	char *mem;
-+	int size = ALIGN(64 * kvm->cfg.nrcpus, PAGE_SIZE);
-+
-+	mem = mmap(NULL, size, PROT_RW, MAP_ANON_NORESERVE, -1, 0);
-+	if (mem == MAP_FAILED)
-+		return -ENOMEM;
-+
-+	if (kvm__register_dev_mem(kvm, PVTIME_BASE, size, mem))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+base_init(pvtime_init);
-+
-+int pvtime_vcpu_init(struct kvm_cpu *vcpu)
-+{
-+	int err;
-+	u64 st_paddr = PVTIME_BASE;
-+
-+	st_paddr += vcpu->cpu_id * 64;
-+
-+	struct kvm_device_attr st_base = {
-+		.group = KVM_ARM_VCPU_PVTIME_CTRL,
-+		.attr = KVM_ARM_VCPU_PVTIME_IPA,
-+		.addr = (u64)&st_paddr
-+	};
-+
-+	err = ioctl(vcpu->vcpu_fd, KVM_SET_DEVICE_ATTR, &st_base);
-+	if (err) {
-+		perror("ioctl st_base failed");
-+		return err;
-+	}
-+
-+	return 0;
-+}
-diff --git a/include/kvm/arm-pvtime.h b/include/kvm/arm-pvtime.h
-new file mode 100644
-index 0000000..f5db286
---- /dev/null
-+++ b/include/kvm/arm-pvtime.h
-@@ -0,0 +1,6 @@
-+#ifndef ARM_PVTIME_H
-+#define ARM_PVTIME_H
-+
-+int pvtime_vcpu_init(struct kvm_cpu *vcpu);
-+
-+#endif
--- 
-2.20.1
-
+> This is for the display and here [2] are some patches for the GPU. Not sure how
+> the NoCs are configured on 8974 by default, but if you notice any blue/black
+> screens, you may need to request bandwidth for display too.
+> 
+> Thanks,
+> Georgi
+> 
+> [1]
+> https://lore.kernel.org/r/1555703787-10897-1-git-send-email-jcrouse@codeaurora.org
+> [2] https://lore.kernel.org/r/20181220173026.3857-1-jcrouse@codeaurora.org
+> 
