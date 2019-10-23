@@ -2,151 +2,120 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78801CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAEBCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC922173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:16:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NWFhLywu"
+	by mail.kernel.org (Postfix) with ESMTP id ACF7C2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405167AbfJWNQt (ORCPT
+        id S2391236AbfJWNRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:16:49 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34229 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387479AbfJWNQr (ORCPT
+        Wed, 23 Oct 2019 09:17:55 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:54383 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730450AbfJWNRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:16:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571836605;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MxbE8MLVaAhRio1mtblUongS1uhU/Uw7VV6nAO/hf6k=;
-        b=NWFhLywum5ifGt1mQNHm8Syc1MFKRnlmjwnhdOlt66dlbrv8CmblZU3Vk4+0yRTmS1tiKb
-        C3QzhCWdwxLb1tmEH3x3I7+IjTZ1mex3ukAEkGGUbjH6gzs4igdCD1ERJpYHStDQo21Kum
-        4tafyr3KU5c48ml11Jt2kYW/rWI6XBM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-n84wmhJgPQC0N_OluIU2Vg-1; Wed, 23 Oct 2019 09:16:40 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C10C1800D79;
-        Wed, 23 Oct 2019 13:16:36 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-126.pek2.redhat.com [10.72.12.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9997D60126;
-        Wed, 23 Oct 2019 13:14:25 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V5 2/6] modpost: add support for mdev class id
-Date:   Wed, 23 Oct 2019 21:07:48 +0800
-Message-Id: <20191023130752.18980-3-jasowang@redhat.com>
-In-Reply-To: <20191023130752.18980-1-jasowang@redhat.com>
-References: <20191023130752.18980-1-jasowang@redhat.com>
+        Wed, 23 Oct 2019 09:17:55 -0400
+Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MXYEr-1iVkTO0q2p-00YwUO; Wed, 23 Oct 2019 15:17:53 +0200
+Received: by mail-qk1-f176.google.com with SMTP id w2so19692817qkf.2;
+        Wed, 23 Oct 2019 06:17:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAVRP7+XXLOGJ2qzxRPim87cYAH/HCvEjuapVyW383qOmJ2p6k/j
+        r44ZulpoeG/MKquLWO2W2DrKHIC7YfqReeZDQ98=
+X-Google-Smtp-Source: APXvYqwuwF999+RxRIbSV5NNX+xHenNtGFCAqCA+7Cahtx0tw1C0BafJPH8NNbUYS7dpsAsfv3lWqVq7b2MktsSH9qA=
+X-Received: by 2002:a37:9442:: with SMTP id w63mr7981201qkd.138.1571836671589;
+ Wed, 23 Oct 2019 06:17:51 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: n84wmhJgPQC0N_OluIU2Vg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-11-arnd@arndb.de> <20191023121458.GB11048@pi3>
+In-Reply-To: <20191023121458.GB11048@pi3>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 15:17:35 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3ktdA12vpi6zrTXs7-03efk2Ke_0_mQ9X40MLNcZnEqA@mail.gmail.com>
+Message-ID: <CAK8P3a3ktdA12vpi6zrTXs7-03efk2Ke_0_mQ9X40MLNcZnEqA@mail.gmail.com>
+Subject: Re: [PATCH 11/36] ARM: s5pv210: split from plat-samsung
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Olof Johansson <olof@lixom.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-serial@vger.kernel.org,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:U1spPertaXPTso5CJBqN3itC6kIsQkitKvFOpXuZUkF7n9Dgmy6
+ +jlyWhU42oj4t6ZztdvUm8YHBEQ7Y6VhrDKem6yvAiCDF3IcZwCSl4uQg6aib0HeUltEYoh
+ 8n84Je1GgeCfquk69wqeYJ166CJs8AgHBUxbI9HGlFaS5uLwzXjd+4sgsQHrdIx5VV5XEYb
+ lW3KwwZ0Clc9+qFYFaSFA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IQQX/1aQd6U=:2/HZS3UQ1BXkUgYtvzQNbJ
+ 4FzJPajCM9id9EM7B5VCR4XvBcm+uMGZUG63BGI4IHVW5SI0NYadiSkOEfoqOWrizzLK/K8wN
+ b81STCOV4oV0ZwRdj4+VPx50TKjth8D8uz1YD/AH/i5HsYiPW0Q2PAJ3TgUQvX3pzTCAHx43/
+ fUKUM++xVm29jA94vAj9ufb6o2gLanexMb+mLmFV0RkvsH59WiuuLYygG4dh/exJacpv3tnr/
+ 0G6i4XfvCBozYHzY+WvDeliu2Wt2o7+mCm9HBWyZMgfoMiaUOZFEvwOrtWH5FNuuOcpLyu/R+
+ c89JyNOJfoRZMKxNiz7vQ7TjcQo1jN6kxz7+VZu3KSDhuqLpIfVwp+h/BSaVjVny5pXrA9yyH
+ PzHjqCYdQnZkLdT7484NrXuTrW6TAGNhB9/7I8MIJzH7u4J1crc/8o1f4F8B3kDSNZ7gHgs0V
+ TgHWwyEtOCO4poorlBpoBG93/yJeJNE8Lxfe0yFK4BiPC0wBzEjgeRfcg9UvBVJHtgGkqmZUX
+ J+O7d6bThy0GIqG5fw4eboTWoISB62yRCg50sf2/CyOzhVfxuKcmSbMIhkLKDfBxIZjm3pej3
+ 4RSsbprGtHaRfrbOicCrT+9tcAq74Ar+3FYU1gRTm2p1CwPqGfDDssJtNnr7SM+W+75S2Hsml
+ xP7/fYdQRym6pcChRqrw5hyigRv+8KCgsU2k+WM2Za6MEzhPiCUMjqZ6zP6Ab42eeVgbkKQff
+ Z+UrgdgBcmejwdC4RNw/NERiOohLNV1HJoKx4UMEPDFZplvGBwfRbHRoxazS6buZJQyaV36hc
+ 0tisvUg/omTaQeBNTNh7K67oL+vcp8+lmzHCgMSCIIwowwxDqIXl2xu/fJ7gdoMG19juFH372
+ py8sY0FmOY2495P77yVg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to parse mdev class id table.
+On Wed, Oct 23, 2019 at 2:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Thu, Oct 10, 2019 at 10:29:55PM +0200, Arnd Bergmann wrote:
+> > These can be build completely independently, so split
+> > the two Kconfig symbols.
+> >       config DEBUG_S3C_UART0
+> > -             depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> > +             depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+>
+> How are you going to select DEBUG_S5PV210_UART now?
 
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vfio/mdev/vfio_mdev.c     |  2 ++
- scripts/mod/devicetable-offsets.c |  3 +++
- scripts/mod/file2alias.c          | 10 ++++++++++
- 3 files changed, 15 insertions(+)
+I don't see a problem here, the patch should not change the behavior at all.
 
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index 7b24ee9cb8dd..cb701cd646f0 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -125,6 +125,8 @@ static const struct mdev_class_id id_table[] =3D {
- =09{ 0 },
- };
-=20
-+MODULE_DEVICE_TABLE(mdev, id_table);
-+
- static struct mdev_driver vfio_mdev_driver =3D {
- =09.name=09=3D "vfio_mdev",
- =09.probe=09=3D vfio_mdev_probe,
-diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-of=
-fsets.c
-index 054405b90ba4..6cbb1062488a 100644
---- a/scripts/mod/devicetable-offsets.c
-+++ b/scripts/mod/devicetable-offsets.c
-@@ -231,5 +231,8 @@ int main(void)
- =09DEVID(wmi_device_id);
- =09DEVID_FIELD(wmi_device_id, guid_string);
-=20
-+=09DEVID(mdev_class_id);
-+=09DEVID_FIELD(mdev_class_id, id);
-+
- =09return 0;
- }
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index c91eba751804..d365dfe7c718 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1335,6 +1335,15 @@ static int do_wmi_entry(const char *filename, void *=
-symval, char *alias)
- =09return 1;
- }
-=20
-+/* looks like: "mdev:cN" */
-+static int do_mdev_entry(const char *filename, void *symval, char *alias)
-+{
-+=09DEF_FIELD(symval, mdev_class_id, id);
-+
-+=09sprintf(alias, "mdev:c%02X", id);
-+=09return 1;
-+}
-+
- /* Does namelen bytes of name exactly match the symbol? */
- static bool sym_is(const char *name, unsigned namelen, const char *symbol)
- {
-@@ -1407,6 +1416,7 @@ static const struct devtable devtable[] =3D {
- =09{"typec", SIZE_typec_device_id, do_typec_entry},
- =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
- =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
-+=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
- };
-=20
- /* Create MODULE_ALIAS() statements.
---=20
-2.19.1
+The whole entry now looks like:
 
+        config DEBUG_S3C_UART0
+                depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS
+                select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+                select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+                select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+                select DEBUG_S5PV210_UART if ARCH_S5PV210
+                bool "Use Samsung S3C UART 0 for low-level debug"
+
+so this will work as before with any of ARCH_EXYNOS, ARCH_S3C24XX,
+ARCH_S3C64XX and ARCH_S5PV210.
+
+What am I missing?
+
+     Arnd
