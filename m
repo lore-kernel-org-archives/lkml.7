@@ -2,115 +2,86 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDF8CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD787CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6C02173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A752084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389970AbfJWHr1 (ORCPT
+        id S2389993AbfJWHtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:47:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39440 "EHLO mx1.suse.de"
+        Wed, 23 Oct 2019 03:49:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4751 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388235AbfJWHr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:47:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9F558B3FE;
-        Wed, 23 Oct 2019 07:47:23 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 09:47:19 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for interrupt
- handling
-Message-ID: <20191023074719.gcov5xfrcvns5tlg@beryllium.lan>
-References: <20191018082817.111480-1-dwagner@suse.de>
- <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
- <20191022101747.001b6d06@cakuba.netronome.com>
+        id S1732328AbfJWHtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:49:16 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6D6F1A282FB7E3A318CC;
+        Wed, 23 Oct 2019 15:49:14 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
+ 15:49:07 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <abbotti@mev.co.uk>, <hsweeten@visionengravers.com>,
+        <gregkh@linuxfoundation.org>, <yuehaibing@huawei.com>
+CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] staging: comedi: dt2814: remove set but not used variables 'data'
+Date:   Wed, 23 Oct 2019 15:48:27 +0800
+Message-ID: <20191023074827.33264-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022101747.001b6d06@cakuba.netronome.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Wouldn't handle_nested_irq() work here instead of the simple thingy?
-> 
-> Daniel could you try this suggestion? Would it work?
+drivers/staging/comedi/drivers/dt2814.c:193:6:
+ warning: variable data set but not used [-Wunused-but-set-variable]
+
+It is never used, so can be removed.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/comedi/drivers/dt2814.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/comedi/drivers/dt2814.c b/drivers/staging/comedi/drivers/dt2814.c
+index d2c7157..e7c6787 100644
+--- a/drivers/staging/comedi/drivers/dt2814.c
++++ b/drivers/staging/comedi/drivers/dt2814.c
+@@ -186,21 +186,17 @@ static int dt2814_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
+ 
+ static irqreturn_t dt2814_interrupt(int irq, void *d)
+ {
+-	int lo, hi;
+ 	struct comedi_device *dev = d;
+ 	struct dt2814_private *devpriv = dev->private;
+ 	struct comedi_subdevice *s = dev->read_subdev;
+-	int data;
+ 
+ 	if (!dev->attached) {
+ 		dev_err(dev->class_dev, "spurious interrupt\n");
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	hi = inb(dev->iobase + DT2814_DATA);
+-	lo = inb(dev->iobase + DT2814_DATA);
+-
+-	data = (hi << 4) | (lo >> 4);
++	inb(dev->iobase + DT2814_DATA);
++	inb(dev->iobase + DT2814_DATA);
+ 
+ 	if (!(--devpriv->ntrig)) {
+ 		int i;
+-- 
+2.7.4
 
 
-[    6.427289] ------------[ cut here ]------------
-[    6.431977] kernel BUG at drivers/net/phy/mdio_bus.c:626!
-[    6.437453] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[    6.443013] Modules linked in:
-[    6.446116] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc3-00100-g70cc5ab156c3-dirty #50
-[    6.454763] Hardware name: Raspberry Pi 3 Model B+ (DT)
-[    6.460062] pstate: 00000005 (nzcv daif -PAN -UAO)
-[    6.464928] pc : mdiobus_read+0x68/0x70
-[    6.468821] lr : lan88xx_phy_ack_interrupt+0x1c/0x30
-[    6.473852] sp : ffff800010003d70
-[    6.477208] x29: ffff800010003d70 x28: 0000000000000000 
-[    6.482597] x27: 0000000000000001 x26: 0000000000000060 
-[    6.487985] x25: 00000000000000e0 x24: ffff8000113ca680 
-[    6.493373] x23: ffff0000372ac174 x22: ffff00003768f6d4 
-[    6.498762] x21: ffff00003768f600 x20: 0000000000000000 
-[    6.504149] x19: ffff0000372c1000 x18: 000000000000000e 
-[    6.509537] x17: 0000000000000001 x16: 0000000000000007 
-[    6.514923] x15: 000000000000000e x14: 0000000000000013 
-[    6.520311] x13: 0000000000000000 x12: 0000000000000000 
-[    6.525699] x11: 000000000000057b x10: 0000000000000003 
-[    6.531087] x9 : ffff0000383f4750 x8 : ffff0000383f3dc0 
-[    6.536474] x7 : ffff0000374be100 x6 : ffff0000383f4750 
-[    6.541862] x5 : ffff000037cab700 x4 : 0000000000000008 
-[    6.547249] x3 : 0000000000000101 x2 : 000000000000001a 
-[    6.552636] x1 : 0000000000000001 x0 : ffff0000372c0800 
-[    6.558023] Call trace:
-[    6.560506]  mdiobus_read+0x68/0x70
-[    6.564045]  phy_interrupt+0x5c/0xb0
-[    6.567672]  handle_nested_irq+0xb8/0x130
-[    6.571740]  intr_complete+0xb0/0xe0
-[    6.575368]  __usb_hcd_giveback_urb+0x58/0xf8
-[    6.579787]  usb_giveback_urb_bh+0xac/0x108
-[    6.584032]  tasklet_action_common.isra.0+0x154/0x1a0
-[    6.589155]  tasklet_hi_action+0x24/0x30
-[    6.593134]  __do_softirq+0x120/0x23c
-[    6.596847]  irq_exit+0xb8/0xd8
-[    6.600031]  __handle_domain_irq+0x64/0xb8
-[    6.604183]  bcm2836_arm_irqchip_handle_irq+0x60/0xc0
-[    6.609305]  el1_irq+0xb8/0x180
-[    6.612490]  arch_cpu_idle+0x10/0x18
-[    6.616115]  do_idle+0x200/0x280
-[    6.619387]  cpu_startup_entry+0x20/0x40
-[    6.623366]  rest_init+0xd4/0xe0
-[    6.626642]  arch_call_rest_init+0xc/0x14
-[    6.630706]  start_kernel+0x420/0x44c
-[    6.634425] Code: a94153f3 a9425bf5 a8c37bfd d65f03c0 (d4210000) 
-[    6.640614] ---[ end trace 97efd7bf12ed0c65 ]---
-[    6.645295] Kernel panic - not syncing: Fatal exception in interrupt
-[    6.651740] SMP: stopping secondary CPUs
-[    6.655719] Kernel Offset: disabled
-[    6.659254] CPU features: 0x0002,24002004
-[    6.663315] Memory Limit: none
-[    6.666416] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-
-
-Not really. It turns out phy_interrupt() wants to be run in a threaded
-context. As Sebastian says on IRC "but this means, that it was broken from
-the beginning"
