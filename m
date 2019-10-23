@@ -2,116 +2,79 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1615ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 23:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77137C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 23:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28D120679
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 23:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E8320684
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 23:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436964AbfJWXTD (ORCPT
+        id S2436973AbfJWXUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 19:19:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51308 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406271AbfJWXTD (ORCPT
+        Wed, 23 Oct 2019 19:20:08 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58441 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404151AbfJWXUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 19:19:03 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNPu4-0002eQ-Mp; Thu, 24 Oct 2019 01:18:56 +0200
-Date:   Thu, 24 Oct 2019 01:18:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 03/17] x86/traps: Remove pointless irq enable from
- do_spurious_interrupt_bug()
-In-Reply-To: <20191023224952.d73mataiisu3u4tg@treble>
-Message-ID: <alpine.DEB.2.21.1910240117030.1852@nanos.tec.linutronix.de>
-References: <20191023122705.198339581@linutronix.de> <20191023123117.871608831@linutronix.de> <20191023213107.m7ishskghswktspp@treble> <alpine.DEB.2.21.1910240018230.1852@nanos.tec.linutronix.de> <20191023224952.d73mataiisu3u4tg@treble>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 23 Oct 2019 19:20:07 -0400
+X-Originating-IP: 86.202.229.42
+Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9E9D81C0002;
+        Wed, 23 Oct 2019 23:20:04 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 01:20:04 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] rtc/ia64: remove legacy efirtc driver
+Message-ID: <20191023232004.GV3125@piout.net>
+References: <20191023150311.844123-1-arnd@arndb.de>
+ <20191023184616.GA17078@agluck-desk2.amr.corp.intel.com>
+ <20191023200135.GT3125@piout.net>
+ <3908561D78D1C84285E8C5FCA982C28F7F4AD7F7@ORSMSX115.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-441767539-1571872736=:1852"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F4AD7F7@ORSMSX115.amr.corp.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-441767539-1571872736=:1852
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
-> On Thu, Oct 24, 2019 at 12:35:27AM +0200, Thomas Gleixner wrote:
-> > On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
-> > 
-> > > On Wed, Oct 23, 2019 at 02:27:08PM +0200, Thomas Gleixner wrote:
-> > > > That function returns immediately after conditionally reenabling interrupts which
-> > > > is more than pointless and requires the ASM code to disable interrupts again.
-> > > > 
-> > > > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > > > ---
-> > > >  arch/x86/kernel/traps.c |    1 -
-> > > >  1 file changed, 1 deletion(-)
-> > > > 
-> > > > --- a/arch/x86/kernel/traps.c
-> > > > +++ b/arch/x86/kernel/traps.c
-> > > > @@ -871,7 +871,6 @@ do_simd_coprocessor_error(struct pt_regs
-> > > >  dotraplinkage void
-> > > >  do_spurious_interrupt_bug(struct pt_regs *regs, long error_code)
-> > > >  {
-> > > > -	cond_local_irq_enable(regs);
-> > > >  }
-> > > 
-> > > I think we can just remove this handler altogether.  The Intel and AMD
-> > > manuals say vector 15 (X86_TRAP_SPURIOUS) is reserved.
-> > 
-> > Right, but this has history. Pentium Pro Erratum:
-> > 
-> >   PROBLEM: If the APIC subsystem is configured in mixed mode with Virtual
-> >   Wire mode implemented through the local APIC, an interrupt vector of 0Fh
-> >   (Intel reserved encoding) may be generated by the local APIC (Int 15).
-> >   This vector may be generated upon receipt of a spurious interrupt (an
-> >   interrupt which is removed before the system receives the INTA sequence)
-> >   instead of the programmed 8259 spurious interrupt vector.
-> > 
-> >   IMPLICATION: The spurious interrupt vector programmed in the 8259 is
-> >   normally handled by an operating system’s spurious interrupt
-> >   handler. However, a vector of 0Fh is unknown to some operating systems,
-> >   which would crash if this erratum occurred.
-> > 
-> > Initially (2.1.) there was a printk() in that handler, which later got
-> > ifdeffed out (2.1.54).
-> > 
-> > So I rather keep that thing at least as long as we support PPro :) Even if
-> > we ditch that the handler is not really hurting anyone.
+On 23/10/2019 21:30:29+0000, Luck, Tony wrote:
+> >> rtc-efi rtc-efi: setting system clock to 2019-10-23T18:30:23 UTC (1571855423)
 > 
-> Ah.  I guess we could remove the idtentry for 64-bit then?  Anyway the
-> above would be a good comment for the function.
+> > You can remove CONFIG_RTC_HCTOSYS, this line will disappear, systemd
+> > will not like that but efirtc was not setting the system time anyway so
+> > this shouldn't change the behaviour.
+> 
+> 
+> Wait ... that message says "setting system clock"
+> 
+> but then you say " efirtc was not setting the system time anyway".
+> 
+> So did the time get set, or not?
+> 
+> If it wasn't set, why does the message say that it was set?
+> 
 
-That doesn't buy much. Who knows how many other CPUs issue vector 15
-occasionally and will then crash and burn. Better safe than sorry :)
-
-Thanks,
-
-	tglx
+What I meant was that drivers/char/efirtc.c was not setting the system
+time but when using drivers/rtc/rtc-efi.c with CONFIG_RTC_HCTOSYS, the
+kernel will use the rtc to set the system time.
 
 
---8323329-441767539-1571872736=:1852--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
