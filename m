@@ -2,110 +2,147 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF42CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6C4CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5342086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFBA21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571856410;
-	bh=VBBJnbXsxrWKlfwaLYXzeFg+QgmD7eayoUqAyOZyLDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OgWojU4Jp4QIPjVKmMfEN5P3zJx1NJV1nuzd1SC9bY+1gwmXohF1Y3QfHEUcb6TnN
-	 SrPe+8+r5c4E3zPlVQeYP+CrE/D64lGnXYOQqYq9lfwNkLqNLH/fzw65j77WrD3EGD
-	 ujNSRTjlpsSs4YvRsXQIMQI4F2EsSztDukFguLh0=
+	s=default; t=1571856438;
+	bh=oG4wx933ZLpl4aM2m4EEpiKhO9JSGK0tIJ4p2alzJQ8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=BdPa2IKwt9iOv/Yz03RHc57fyBwBSsSPvVF5GO4SXixJNRUuf3UpXj5xhdeu0s+bw
+	 Cf8FN+sxtZ19Ki7YgVDL12CdeBp7KTnJctw34tSBZc9pIV4IzwGF9M+DENqRoqKQU1
+	 zR+ZI7JBYsJid9a7bN/ATZ1TW15H9erFkbU9N7Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390191AbfJWSqs (ORCPT
+        id S2390326AbfJWSrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:46:48 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43358 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJWSqs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:46:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fLdwq/VvKULq7jt6cG/bIySr1awEyiRVYbUab2xrSZA=; b=HiIyxVYFokpeiHOOH6sZm2QbO
-        ltYwsGyJZl8lZVshacALlzLpNLS4to3qynfBXm9qCDyOM0Y0q4aIXnKaTF5oSnZ9WuErzXW/dXXso
-        lSomU+hxDaiU4Vx1rprMVvd3E1NmaltvPuY0WZHdoEuNj9vXr8NIFH33QnD6PvFs9NINA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNLeb-00019i-EE; Wed, 23 Oct 2019 18:46:41 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 883192743021; Wed, 23 Oct 2019 19:46:40 +0100 (BST)
-Date:   Wed, 23 Oct 2019 19:46:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] Revert "ASoC: hdmi-codec: re-introduce mutex locking"
-Message-ID: <20191023184640.GN5723@sirena.co.uk>
-References: <20191023161203.28955-1-jbrunet@baylibre.com>
- <20191023161203.28955-2-jbrunet@baylibre.com>
- <20191023163716.GI5723@sirena.co.uk>
- <20191023182618.GC25745@shell.armlinux.org.uk>
+        Wed, 23 Oct 2019 14:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbfJWSrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 14:47:17 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B86C22086D;
+        Wed, 23 Oct 2019 18:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571856436;
+        bh=oG4wx933ZLpl4aM2m4EEpiKhO9JSGK0tIJ4p2alzJQ8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=sPuDOhERPL6r9ngrwdBvAkLLD22YcWt4HjAYnPllvVPlrQkw3C2Vk4Sutbyc8JEuw
+         whPKyKqpT+D6TSifNe8464Ow6lJ3c/q8ZG0uqwbCpl08Rxr2PVGsVVQd1uvVBHyIwe
+         9YVqkylkNqIoc3mG2MwGcs8p4Ht2fuqzMqQdTqf8=
+Message-ID: <9c1fe73500ca7dece15c73d7534b9e0ec417c83a.camel@kernel.org>
+Subject: Re: [PATCH] ceph: Fix use-after-free in __ceph_remove_cap
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 23 Oct 2019 14:47:14 -0400
+In-Reply-To: <87a79unocw.fsf@suse.com>
+References: <20191017144636.28617-1-lhenriques@suse.com>
+         <a68eeb81a5b193be2da49b83dfedce7d2782fb40.camel@kernel.org>
+         <87a79unocw.fsf@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nb8zVy0QMK3AA1xu"
-Content-Disposition: inline
-In-Reply-To: <20191023182618.GC25745@shell.armlinux.org.uk>
-X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-10-21 at 15:51 +0100, Luis Henriques wrote:
+> Jeff Layton <jlayton@kernel.org> writes:
+> 
+> > On Thu, 2019-10-17 at 15:46 +0100, Luis Henriques wrote:
+> > > KASAN reports a use-after-free when running xfstest generic/531, with the
+> > > following trace:
+> > > 
+> > > [  293.903362]  kasan_report+0xe/0x20
+> > > [  293.903365]  rb_erase+0x1f/0x790
+> > > [  293.903370]  __ceph_remove_cap+0x201/0x370
+> > > [  293.903375]  __ceph_remove_caps+0x4b/0x70
+> > > [  293.903380]  ceph_evict_inode+0x4e/0x360
+> > > [  293.903386]  evict+0x169/0x290
+> > > [  293.903390]  __dentry_kill+0x16f/0x250
+> > > [  293.903394]  dput+0x1c6/0x440
+> > > [  293.903398]  __fput+0x184/0x330
+> > > [  293.903404]  task_work_run+0xb9/0xe0
+> > > [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+> > > [  293.903413]  do_syscall_64+0x1a0/0x1c0
+> > > [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > 
+> > > This happens because __ceph_remove_cap() may queue a cap release
+> > > (__ceph_queue_cap_release) which can be scheduled before that cap is
+> > > removed from the inode list with
+> > > 
+> > > 	rb_erase(&cap->ci_node, &ci->i_caps);
+> > > 
+> > > And, when this finally happens, the use-after-free will occur.
+> > > 
+> > > This can be fixed by protecting the rb_erase with the s_cap_lock spinlock,
+> > > which is used by ceph_send_cap_releases(), before the cap is freed.
+> > > 
+> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > ---
+> > >  fs/ceph/caps.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> > > index d3b9c9d5c1bd..21ee38cabe98 100644
+> > > --- a/fs/ceph/caps.c
+> > > +++ b/fs/ceph/caps.c
+> > > @@ -1089,13 +1089,13 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+> > >  	}
+> > >  	cap->cap_ino = ci->i_vino.ino;
+> > > 
+> > > -	spin_unlock(&session->s_cap_lock);
+> > > -
+> > >  	/* remove from inode list */
+> > >  	rb_erase(&cap->ci_node, &ci->i_caps);
+> > >  	if (ci->i_auth_cap == cap)
+> > >  		ci->i_auth_cap = NULL;
+> > > 
+> > > +	spin_unlock(&session->s_cap_lock);
+> > > +
+> > >  	if (removed)
+> > >  		ceph_put_cap(mdsc, cap);
+> > > 
+> > 
+> > Is there any reason we need to wait until this point to remove it from
+> > the rbtree? ISTM that we ought to just do that at the beginning of the
+> > function, before we take the s_cap_lock.
+> 
+> That sounds good to me, at least at a first glace.  I spent some time
+> looking for any possible issues in the code, and even run a few tests.
+> 
+> However, looking at git log I found commit f818a73674c5 ("ceph: fix cap
+> removal races"), which moved that rb_erase from the beginning of the
+> function to it's current position.  So, unless the race mentioned in
+> this commit has disappeared in the meantime (which is possible, this
+> commit is from 2010!), this rbtree operation shouldn't be changed.
+> 
+> And I now wonder if my patch isn't introducing a race too...
+> __ceph_remove_cap() is supposed to always be called with the session
+> mutex held, except for the ceph_evict_inode() path.  Which is where I'm
+> seeing the UAF.  So, maybe what's missing here is the s_mutex.  Hmm...
+> 
 
---nb8zVy0QMK3AA1xu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't get it. That commit log talks about needing to ensure that the
+backpointer is cleared under the lock which is fine, but I don't see why
+we need to keep it in the inode's rbtree until that point.
 
-On Wed, Oct 23, 2019 at 07:26:18PM +0100, Russell King - ARM Linux admin wrote:
+Unhashing an object before you potentially free it is just good
+practice, IMO. If we need to do something different here, then I think
+it'd be good to add a comment explaining why.
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-> If you look at the git log for reverted commits, the vast majority
-> of them follow _this_ style.  From 5.3 back to the start of current
-> git history, there are 3665 commits with "Revert" in their subject
-> line, 3050 of those start with "Revert" with no subsystem prefix.
-
-That's assuming that all reverts have Revert in their subject line of
-course!
-
-> It seems that there are a small number of subsystems that want
-> something different, ASoC included.  That will be an ongoing problem,
-> people won't remember which want it when the majority don't.
-
-> Maybe the revert format should be standardised in some manner?
-
-My general thought on this is that reverts are commits like any other
-and that the documentation for how you're supposed to do commit messages
-also applies to them, might be worth a note though as I do see people
-not writing a commit log at all for them sometimes.
-
---nb8zVy0QMK3AA1xu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2woA8ACgkQJNaLcl1U
-h9CMiwf9EJdc+RNiYB+xMKLeYHQ2oOUm2OgQDbGEq9GrRjgTFwUdSDrtRMJtqttS
-QwsvXxANfiQCYD0g+5A51/WY16SkLF2Vq2+WWAkR44nQpPwqpVFY6Y2/hN8N1Ne9
-P2fC+oXsbAe2TFxEtvkojdzp5Vmz7HevYKnTv1cGoi6nx/QKwJ6oFKHFYcae3vD6
-Fg4RuSz9txILSbR8v18+YvYf48Y/3+INJYVBnLJbeI+ispLKcVJz2nHjznIqQw19
-SsaOw9bIOtxpK4Ah5g5UxIFL0/QiS7pKV2dS/aIb0WkeCTr+deu8WMHiOdXVG6vK
-lPwi9F0aVSs73wwXh18mTPvhGdP05w==
-=/6rf
------END PGP SIGNATURE-----
-
---nb8zVy0QMK3AA1xu--
