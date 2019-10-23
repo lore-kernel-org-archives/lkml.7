@@ -2,67 +2,127 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FC5CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C41ECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10CE1205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FD1205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:41:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MWOz322u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407976AbfJWWj7 (ORCPT
+        id S2436831AbfJWWlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:39:59 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:57396 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389112AbfJWWj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:39:59 -0400
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iNPIL-0004HP-PO; Thu, 24 Oct 2019 00:39:57 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH] arm64: dts: rockchip: enable gpu on rk3399-puma
-Date:   Thu, 24 Oct 2019 00:39:54 +0200
-Message-Id: <20191023223954.3139-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.23.0
+        Wed, 23 Oct 2019 18:41:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49834 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2407981AbfJWWlU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 18:41:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571870478;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=R50buRVrn/+GqCN9rIMZeiktwzXqouQE71vrZXkoKqg=;
+        b=MWOz322uo5ucXMG/8/owgPzHCCDVtj+eJfU2DenAqHDe0YKmI5leY1OU4/QQ5oxEUfto0D
+        bBxa/PDBqbcUrAMqdB6551ZRLKC7ptJC3U35SLHL5dWRz0Glkj3HJRquLjuqlcHrsNq9zu
+        rAKzZo3HwkSU5tmr6N5PE0gvsrhk4KM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-yudhefuFML6XgqdUrkpLsA-1; Wed, 23 Oct 2019 18:41:13 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EDF31800D6B;
+        Wed, 23 Oct 2019 22:41:12 +0000 (UTC)
+Received: from mail (ovpn-123-192.rdu2.redhat.com [10.10.123.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E53819C77;
+        Wed, 23 Oct 2019 22:41:11 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 18:41:10 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jann Horn <jannh@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
+Message-ID: <20191023224110.GE9902@redhat.com>
+References: <20191012191602.45649-1-dancol@google.com>
+ <20191012191602.45649-4-dancol@google.com>
+ <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
+ <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
+ <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+ <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
+ <20191023190959.GA9902@redhat.com>
+ <CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com>
+ <20191023211645.GC9902@redhat.com>
+ <CALCETrVS_Ym9wpvTP-ys-OBKCgg7QQjPdhJZe5YXJ6e8JQkNQQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrVS_Ym9wpvTP-ys-OBKCgg7QQjPdhJZe5YXJ6e8JQkNQQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: yudhefuFML6XgqdUrkpLsA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the supplying regulator and enable the gpu node on the rk3399-puma som.
+On Wed, Oct 23, 2019 at 02:25:35PM -0700, Andy Lutomirski wrote:
+> That doesn't solve the problem.  With your time machine, you should
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Would you elaborate what problem remains if execve closes all uffd
+so that read() cannot run post execve?
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 62ea288a1a70..c1edca3872c7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -165,6 +165,11 @@
- 	status = "okay";
- };
- 
-+&gpu {
-+	mali-supply = <&vdd_gpu>;
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 	i2c-scl-rising-time-ns = <168>;
--- 
-2.23.0
+> instead use ioctl() or recvmsg().
+
+The event delivery is modeled after eventfd.c per userfaultfd.c header
+file, so would then eventfd also need to be converted to ioctl or
+recvmsg to deliver its event any better? Initially I evaluated to use
+eventfd for it in fact, but it wasn't possible. I didn't look like it
+could get any better than eventfd in terms of event delivery.
+
+Or do you refer to single out only the delivery of the UFFD_EVENT_FORK
+event not through read()?
+
+> > 4) enforce the global root permission check when creating the uffd only=
+ if
+> >    UFFD_FEATURE_EVENT_FORK is set.
+>=20
+> This could work, but we should also add a better way to do
+> UFFD_FEATURE_EVENT_FORK and get CRIU to start using it.  If CRIU is
+> the only user, we can probably drop the old ABI after a couple of
+> releases, since as far as I know, CRIU users need to upgrade their
+> CRIU more or less in sync with the kernel so that new kernel features
+> get checkpointed and restored.
+
+Getting CRIU stat using it shouldn't be a problem at all, but we'll be
+back to square one if you just stop there.
+
+I don't see how to lift those limitations in the wiki to make it
+usable in production by just providing a better way to do
+UFFD_FEATURE_EVENT_FORK.
+
+If you're volunteering to fix the limitations and make CRIU usable in
+production that would be awesome, then of course we should do whatever
+possible to improve UFFD_FEATURE_EVENT_FORK.
+
+Thanks,
+Andrea
 
