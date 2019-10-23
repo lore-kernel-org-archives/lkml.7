@@ -2,123 +2,142 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B94C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E15CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A9B20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889B92173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="i0jlpYaB"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="d0ce1aJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405868AbfJWNel (ORCPT
+        id S2392041AbfJWNfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:34:41 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37181 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391453AbfJWNel (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:34:41 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i16so17367430oie.4
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:34:40 -0700 (PDT)
+        Wed, 23 Oct 2019 09:35:18 -0400
+Received: from mail-eopbgr730064.outbound.protection.outlook.com ([40.107.73.64]:26957
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390248AbfJWNfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:35:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NI7w62c0FuHh7gWJovXPHS6YiKYBnMbCF0bMbuuBPicx3pSy+LU0SqjDktEkjP+G6Es8EMXEOgsYiVRR/rAfhmc8STQiWehRweva2VPs6BdPRCKShK4GHX9Gun05kcCwUXCA3uYB+omKHqQQMKhZ5R1+TRQfP0j1jIJl95nNxHFH3QTNfvd9wMbrH21OBth8xfK9jUSLtZ56djChiBlAS71ENgZYi4p6mchVjmvCV3Ch2eCo+jP6oO6Zwx7i2pEj15FKEDqVzuSR8yYhQuXPfw5LKTlrz3pk5nu0bNXPaSCbjxpbOA2qwQ8bedKDRVr3reSogRdHkxReV8GM2ZUFxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QcALwbRggHuEL+ngRJBDqegkYJatfNONegGp/7qjzhs=;
+ b=fOAfigJbSFrLeqdmsTPrpJ53jL/eMQ62+nb9HXjgbX3SetsDkhSLZDHyhIu/7snGqhEL/ImGTHvln+P2MQ2lc1Dhq1EG+t+BJ/arhTx/iqi/BOO1c+7/BVBiqeLiysI6oVhYq4WeIvw2dxLv3jcSNcozWl3I735k5P0Z/5wY6YbwCBpX2J5kxN7UCh/EWsf7dLcNuKJJ3ZiPZZWAiKAtS3O8ZbOQG3eZ/35pmS4qtmaE17V34gIthk0SyoVZ4IIbSfbuCi1j08n/PHFMxCmqXsfxazgUr6o2SD72QcNaKkcGnjQN61blzH/ui3r/w+BrqjVuhbt5CojKl6/NoqsJEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rlgAUb4WY4bYebtDST8C0ocqKTOSomIXSLYZGI3cJAU=;
-        b=i0jlpYaBX/vOYcjTU0UXPJ7iDxNoV+6RP+NKrDfSO8B7MpNwF0xXYjeLKlOhInFTTq
-         CeWj1wBO4K3Z8iR2m9Itkbz1pbmSzuKwcj8h21fX5f8O1g4QkS2Vxfshh4JIPC9TVj25
-         7nhx916QgsQRibCng0aNrDPEFl3hVJtEoztmU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rlgAUb4WY4bYebtDST8C0ocqKTOSomIXSLYZGI3cJAU=;
-        b=jp3M18cdvG2xXpqmV0cSLQ3e7sWkHcoTCFNqDGUCR8idLsH5ldHbDhuy7N1H7zki1S
-         aw9oKImTc47sN1yPnwTtCrzACm5tFj+sxlMUXFh0ZeFuZ/8i9mwRWgaY+NQNzIjPCF8H
-         eC555eO2hmyTewavVgZ5reTgZcu27k9by3o1aD8/lIXFgEyLYink5cyGIz4UR3tGdUWX
-         vvM+AlAQg1r6ZkTDuoFMUQguye44Ui94l3Eq2HDYsPVXeG640wkBj8qpaNfKTl/ZqnsV
-         Z0kAkCuLUd07pot/KR1+VAzWF7cZDZRhJCSYWBLYs83aJNdxjZL8AgvfGKnnLCVbL6/c
-         2hVQ==
-X-Gm-Message-State: APjAAAUeUCYQU7RsCGYJEPJjZBhFQuUSEcF8F6S1NfH554YJr5ZPBS7h
-        M42uOSGgjTHh40JWz8mfGluSfNU8OnmJera3AyPEKK6U
-X-Google-Smtp-Source: APXvYqy6RDvKXlzgV6NahYfYxTpMsFQqfwHGTFFoshW8+fYVQTSO5pSR4bQUi60/9B5kzbnKoIVIfHs8KxTFUlcyEc4=
-X-Received: by 2002:aca:1b10:: with SMTP id b16mr7955262oib.110.1571837680242;
- Wed, 23 Oct 2019 06:34:40 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QcALwbRggHuEL+ngRJBDqegkYJatfNONegGp/7qjzhs=;
+ b=d0ce1aJu++WcHeJsZJ1j8SXIn8HB46YeFftu7tt3xPj/TiNn1LN1rguk2EQ7DiAqMYS16f+o+4Zt7C8WSNOfdc7XQUiUiqcbb0fxogg6QAVGRVrQ8JGmTdxSzyZCeZw2cRWKHOwEZd164qxY1rI3Fk3uMgCGqbM015SOnftI6lI=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0070.namprd12.prod.outlook.com (10.172.76.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Wed, 23 Oct 2019 13:35:10 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::5471:f58b:733e:1a61]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::5471:f58b:733e:1a61%7]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
+ 13:35:09 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     zhongshiqi <zhong.shiqi@zte.com.cn>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>
+CC:     "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Lei, Jun" <Jun.Lei@amd.com>,
+        "David.Francis@amd.com" <David.Francis@amd.com>,
+        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
+        "Koo, Anthony" <Anthony.Koo@amd.com>,
+        "Liu, Wenjing" <Wenjing.Liu@amd.com>,
+        "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>,
+        "Aidan.Wood@amd.com" <Aidan.Wood@amd.com>,
+        "Park, Chris" <Chris.Park@amd.com>,
+        "Yang, Eric" <Eric.Yang2@amd.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xue.zhihong@zte.com.cn" <xue.zhihong@zte.com.cn>,
+        "wang.yi59@zte.com.cn" <wang.yi59@zte.com.cn>,
+        "cheng.shengyu@zte.com.cn" <cheng.shengyu@zte.com.cn>
+Subject: Re: [PATCH] dc.c:use kzalloc without test
+Thread-Topic: [PATCH] dc.c:use kzalloc without test
+Thread-Index: AQHViXxGNdmdXeQn1kuTzFek/LoFxqdoOmQA
+Date:   Wed, 23 Oct 2019 13:35:09 +0000
+Message-ID: <fa46cad1-8845-78b7-eb6a-45942813020b@amd.com>
+References: <1571819543-15676-1-git-send-email-zhong.shiqi@zte.com.cn>
+In-Reply-To: <1571819543-15676-1-git-send-email-zhong.shiqi@zte.com.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.250]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+x-clientproxiedby: YTBPR01CA0008.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::21) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 02407ec4-7f5c-4c46-2a47-08d757bdd2bd
+x-ms-traffictypediagnostic: CY4PR1201MB0070:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB00701337BF08CD3516D091508C6B0@CY4PR1201MB0070.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(366004)(189003)(199004)(76176011)(386003)(6506007)(65956001)(6486002)(476003)(66066001)(26005)(2616005)(229853002)(186003)(99286004)(11346002)(316002)(256004)(6436002)(478600001)(25786009)(102836004)(52116002)(53546011)(31686004)(4326008)(4744005)(6512007)(65806001)(486006)(446003)(36756003)(58126008)(6636002)(14454004)(81156014)(305945005)(6246003)(4001150100001)(71200400001)(54906003)(81166006)(71190400001)(8676002)(2906002)(6116002)(66476007)(110136005)(31696002)(64756008)(8936002)(5660300002)(3846002)(66556008)(66946007)(7736002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0070;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FpUgVSBySIBKmcJfAWliADljm4dOAwkRg/ZjkYJ5vvwt+o7sC6lhGtrOo5SO4ZhwwpYZD16phOWu5KwVZTpK2AfOnpZuOMQCU2963NkfEs5rraR/3ijZqIHn7y36Nv+ZpjmaTD7vwbC/q0LVcvOIb781y9bFJft9zYUwXBIgOy4vsZKgdM5V9+u/a6PJqy9v3cqlJWMBHNT2p4B0TxHlrknReeAf3HBV0FOQvP9R4YoWIX+k2Nb7QeEx7DPVYA78wBC2ZSLdKe5jHgZzffyo9nJo2Cjq3GQ3CDngIGIehPxbheJej03FkTdIUPLq5Vo2LUuvyNzGzHX7lL6lrmA/cYD/xHibC5VmhQHyRty0ylcziRJAtvM4SMQwWpWBY/Wn2flQJF2lmKHsN9rfom/NZX0x1oE98phF5hYxh6BEizM8eKYmh/VH0h/jwfL/Fl11
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F3FA943D0EB68E45B22BDE28854746E9@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191018113832.5460-1-kraxel@redhat.com> <20191022090533.GB11828@phenom.ffwll.local>
- <87mudreh2p.fsf@intel.com>
-In-Reply-To: <87mudreh2p.fsf@intel.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 23 Oct 2019 15:34:27 +0200
-Message-ID: <CAKMK7uGm7gYQoEyoZDYYzGO6OBw6AdEwHRDOPDtvNOm-ijWJMQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/virtio: print a single line with device features
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02407ec4-7f5c-4c46-2a47-08d757bdd2bd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 13:35:09.6430
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z5+V7nki8KWlnt+mUbW2KYLjrce2KPy+ScmWIRZovjW36i9pJwMforEsBKHa4RnkEO0QJv40CF5ZaeI6cEDQsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 3:18 PM Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
-> On Tue, 22 Oct 2019, Daniel Vetter <daniel@ffwll.ch> wrote:
-> > On Fri, Oct 18, 2019 at 01:38:32PM +0200, Gerd Hoffmann wrote:
-> >> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> >> ---
-> >>  drivers/gpu/drm/virtio/virtgpu_kms.c | 9 ++++-----
-> >>  1 file changed, 4 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> >> index 0b3cdb0d83b0..2f5773e43557 100644
-> >> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-> >> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> >> @@ -155,16 +155,15 @@ int virtio_gpu_init(struct drm_device *dev)
-> >>  #ifdef __LITTLE_ENDIAN
-> >>      if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_VIRGL))
-> >>              vgdev->has_virgl_3d = true;
-> >> -    DRM_INFO("virgl 3d acceleration %s\n",
-> >> -             vgdev->has_virgl_3d ? "enabled" : "not supported by host");
-> >> -#else
-> >> -    DRM_INFO("virgl 3d acceleration not supported by guest\n");
-> >>  #endif
-> >>      if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_EDID)) {
-> >>              vgdev->has_edid = true;
-> >> -            DRM_INFO("EDID support available.\n");
-> >>      }
-> >>
-> >> +    DRM_INFO("features: %cvirgl %cedid\n",
-> >> +             vgdev->has_virgl_3d ? '+' : '-',
-> >> +             vgdev->has_edid     ? '+' : '-');
-> >
-> > Maybe we should move the various yesno/onoff/enableddisabled helpers from
-> > i915_utils.h to drm_utils.h and use them more widely?
->
-> I'm trying to take it one step further by adding them to
-> include/linux/string-choice.h [1]. Maybe, uh, fourth time's the charm?
->
-> BR,
-> Jani.
->
-> [1] http://lore.kernel.org/r/20191023131308.9420-1-jani.nikula@intel.com
-
-Oh nice, r-b: me on that.
-
-I think the rule for new headers like this is "just do it" once you
-have enough senior kernel maintainers' approval. Maybe ask Dave Airlie
-for ack and with Greg's r-b then just stuff it into drm-misc-next or
-so?
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+T24gMjAxOS0xMC0yMyA0OjMyIGEubS4sIHpob25nc2hpcWkgd3JvdGU6DQo+IGRjLmM6NTgzOm51
+bGwgY2hlY2sgaXMgbmVlZGVkIGFmdGVyIHVzaW5nIGt6YWxsb2MgZnVuY3Rpb24NCj4gDQo+IFNp
+Z25lZC1vZmYtYnk6IHpob25nc2hpcWkgPHpob25nLnNoaXFpQHp0ZS5jb20uY24+DQoNClJldmll
+d2VkLWJ5OiBIYXJyeSBXZW50bGFuZCA8aGFycnkud2VudGxhbmRAYW1kLmNvbT4NCg0KSGFycnkN
+Cg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjLmMgfCA0
+ICsrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29yZS9kYy5jIGIvZHJpdmVycy9n
+cHUvZHJtL2FtZC9kaXNwbGF5L2RjL2NvcmUvZGMuYw0KPiBpbmRleCA1ZDFhZGVkLi40Yjg4MTlj
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29yZS9kYy5j
+DQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjLmMNCj4gQEAg
+LTU4MCw2ICs1ODAsMTAgQEAgc3RhdGljIGJvb2wgY29uc3RydWN0KHN0cnVjdCBkYyAqZGMsDQo+
+ICAjaWZkZWYgQ09ORklHX0RSTV9BTURfRENfRENOMl8wDQo+ICAJLy8gQWxsb2NhdGUgbWVtb3J5
+IGZvciB0aGUgdm1faGVscGVyDQo+ICAJZGMtPnZtX2hlbHBlciA9IGt6YWxsb2Moc2l6ZW9mKHN0
+cnVjdCB2bV9oZWxwZXIpLCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIWRjLT52bV9oZWxwZXIpIHsN
+Cj4gKwkJZG1fZXJyb3IoIiVzOiBmYWlsZWQgdG8gY3JlYXRlIGRjLT52bV9oZWxwZXJcbiIsIF9f
+ZnVuY19fKTsNCj4gKwkJZ290byBmYWlsOw0KPiArCX0NCj4gIA0KPiAgI2VuZGlmDQo+ICAJbWVt
+Y3B5KCZkYy0+YmJfb3ZlcnJpZGVzLCAmaW5pdF9wYXJhbXMtPmJiX292ZXJyaWRlcywgc2l6ZW9m
+KGRjLT5iYl9vdmVycmlkZXMpKTsNCj4gDQo=
