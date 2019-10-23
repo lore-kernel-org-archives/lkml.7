@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA360CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BFDCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDCC21A4A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B4F2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWZAI6oU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWzChNfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407316AbfJWUDe (ORCPT
+        id S2407336AbfJWUDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:03:34 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40107 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405556AbfJWUCy (ORCPT
+        Wed, 23 Oct 2019 16:03:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38565 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733176AbfJWUCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:02:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x127so13590165pfb.7;
-        Wed, 23 Oct 2019 13:02:54 -0700 (PDT)
+        Wed, 23 Oct 2019 16:02:48 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w3so12759935pgt.5;
+        Wed, 23 Oct 2019 13:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U7yrLgCm1sWsKsLg4PFcTaFGPRuqfSdp4yJRNe14wag=;
-        b=HWZAI6oUd4zj5C+itjIgtiekMAiuAHD1aH14ZRblUi0kgK8bfcauhA0kZFvigeINED
-         o+DET2XYKe39buC3Cm8XwojwxPZUtrWMJlnoiutYxE1FHFfGcgJrw73fLW3iCpf1KHnc
-         Kk5Vpkp5NSowVcuJ+wKorVBX7tSU3vf0UgnbVgX0Blc5wlmprlBEhmgVU8dbuIVhB/bN
-         oXel/TsuRPrnjrHOeQblhSvrGqELeZ9IqsKSjCWLbScuAGJs1KKu67/LgKQRAqDGYyJF
-         yrxafOTOPvCiylFwBfgRibm6ylv7qCOCSnEDlPjcAt4xEREPDCC6xW790hFn/bshZ8Il
-         WSUw==
+        bh=v3H54pMajw9vQAImO1zQUK9pcXc+MkHfH1n0XYG6X74=;
+        b=HWzChNfmQ2anc5V0nyw5UhLaS86AenhkOOnkjnHMCUOQ8ZgjQdz2KeoZC1SeuliTgc
+         9z3PO9ilE1TIlWVjviGlnCy/RywbMmphIDVwG4+sNS9lYCs4khxqD6ZnxN8xLzEVSgaJ
+         CdbEaqCyhUFsyzDY/TnN9Hsih/DLPh06gm2qHb1Wmx/yjPoqZaX5PILpkbMAyDLVWKlA
+         vdQEQKjlBju2ri2apFO36moIywuaxLp05/ny78ZU1cmGud0F1tDw1VeJ9Y7HKRjCEI6L
+         JM+As0f9rhEqcpNWaW30LyYn5X3t9mwYizRAhz3bSewfIVrWImAujlTth0I5IXj7pDJa
+         7meg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U7yrLgCm1sWsKsLg4PFcTaFGPRuqfSdp4yJRNe14wag=;
-        b=TKoyidKF/bCwwZGsd2cCTSIyFY0vNBR2nurea9qZ6n7HavUBheMNs5GdRlsez2l0VX
-         sA3okagmEHxKJWK2SXSp7gSIF4vZBv59xrP5p6Gnfuo8b7sZBJUM/n+PIS1Vq0IoMFvz
-         k1E44dtZH5xQW+7CmeMmgmFkiaRCctg1zuM2UppMVxvAuQ4uleaAJgIk7qTRYGee8agB
-         Fn62NgEcnFRnARmWF0fv6S8RHUNhB3ysGO6UWri3Mg0mi/DvzCxZRkOOw7RaySY6CaFL
-         mf2z/yF/u737YbHA+nOs4ThpNzrjuweeCR/l4Co+jRHjdFxdrMG6cd7DXW7KXQtc94+J
-         yKkA==
-X-Gm-Message-State: APjAAAVmsOc9K1iBYaKzBdjT0jOAhd3yzxfuLBKchjs8L7oXLxyfnQ28
-        CpfcTqaG+M2xm1TbjJXjKtM=
-X-Google-Smtp-Source: APXvYqxl0S3jmfDiv5LaLLsAIuswlGWVayQhvZbkI3bhz/FCaod8i35vRC9p0hMMKqFMk2b91qtXyg==
-X-Received: by 2002:aa7:87ce:: with SMTP id i14mr12485376pfo.78.1571860973889;
-        Wed, 23 Oct 2019 13:02:53 -0700 (PDT)
+        bh=v3H54pMajw9vQAImO1zQUK9pcXc+MkHfH1n0XYG6X74=;
+        b=gQt6yMqg/9Xc4QhA1Vb4pqYS4/C6PjLaLy8XvGw+VkeRRQAMR7ZpMe0qnOjYNTF3YB
+         3C2ddfFquKFvIsat/EWxhyLNvutO7YrK2xauTH95KRL5t5M48Zh1nycoedmVoL+vWVk2
+         gqJdZu7O7Zu2DGPzKIZ8D0w5Udw5frq8XSuE7IrV0YfwfK059xiL+Y1hnrGPixjLDMCH
+         a9XLpEYO7LXVaiCfuXkS5J5+xEIBQo6bkWJsGvOg+n5txUM2N/Vj59j4hwP2oJPzRqed
+         P9b02uYPn3zEY1a1frUZNINxsjyUGXSc4wWl2oMa7Zn5vDmFapy5XeM3pfBRi9puqQqS
+         rKzw==
+X-Gm-Message-State: APjAAAXqYfnQCyO52a5LlRce8OJAAmHi9lU4oFyhdgOgQs1yQ1BSc/Kd
+        ld3iigtcxjO3X1qWkYTJl6k=
+X-Google-Smtp-Source: APXvYqx2dQjzCEQV0a9JbYtyY0kDCslgGRmIpudMlu+R4NLpxGsBIq5EXVcukjcdBFhjDxCwVbX+Qg==
+X-Received: by 2002:a63:ce0d:: with SMTP id y13mr6007108pgf.430.1571860966900;
+        Wed, 23 Oct 2019 13:02:46 -0700 (PDT)
 Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 6sm10593598pfy.43.2019.10.23.13.02.52
+        by smtp.gmail.com with ESMTPSA id 6sm10593598pfy.43.2019.10.23.13.02.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 13:02:53 -0700 (PDT)
+        Wed, 23 Oct 2019 13:02:45 -0700 (PDT)
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
@@ -66,9 +66,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v6 09/15] software node: simplify property_entry_read_string_array()
-Date:   Wed, 23 Oct 2019 13:02:27 -0700
-Message-Id: <20191023200233.86616-10-dmitry.torokhov@gmail.com>
+Subject: [PATCH v6 05/15] software node: clean up property_copy_string_array()
+Date:   Wed, 23 Oct 2019 13:02:23 -0700
+Message-Id: <20191023200233.86616-6-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 In-Reply-To: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
 References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
@@ -79,54 +79,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to treat string arrays and single strings separately, we can go
-exclusively by the element length in relation to data type size.
+Because property_copy_string_array() stores the newly allocated pointer in the
+destination property, we have an awkward code in property_entry_copy_data()
+where we fetch the new pointer from dst.
+
+Let's change property_copy_string_array() to return pointer and rely on the
+common path in property_entry_copy_data() to store it in destination structure.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ drivers/base/swnode.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index f59dfd01725f..d8d0dc0ca5ac 100644
+index 12ca439bab30..f41692e0f63b 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -173,28 +173,21 @@ static int property_entry_read_string_array(const struct property_entry *props,
- 					    const char *propname,
- 					    const char **strings, size_t nval)
+@@ -337,8 +337,8 @@ static void property_entry_free_data(const struct property_entry *p)
+ 	kfree(p->name);
+ }
+ 
+-static int property_copy_string_array(struct property_entry *dst,
+-				      const struct property_entry *src)
++static const char * const *
++property_copy_string_array(const struct property_entry *src)
  {
--	const struct property_entry *prop;
- 	const void *pointer;
--	size_t array_len, length;
-+	size_t length;
-+	int array_len;
+ 	const char **d;
+ 	size_t nval = src->length / sizeof(*d);
+@@ -346,7 +346,7 @@ static int property_copy_string_array(struct property_entry *dst,
  
- 	/* Find out the array length. */
--	prop = property_entry_get(props, propname);
--	if (!prop)
--		return -EINVAL;
--
--	if (prop->is_array)
--		/* Find the length of an array. */
--		array_len = property_entry_count_elems_of_size(props, propname,
--							  sizeof(const char *));
--	else
--		/* The array length for a non-array string property is 1. */
--		array_len = 1;
-+	array_len = property_entry_count_elems_of_size(props, propname,
-+						       sizeof(const char *));
-+	if (array_len < 0)
-+		return array_len;
+ 	d = kcalloc(nval, sizeof(*d), GFP_KERNEL);
+ 	if (!d)
+-		return -ENOMEM;
++		return NULL;
  
- 	/* Return how many there are if strings is NULL. */
- 	if (!strings)
- 		return array_len;
+ 	for (i = 0; i < nval; i++) {
+ 		d[i] = kstrdup(src->pointer.str[i], GFP_KERNEL);
+@@ -354,12 +354,11 @@ static int property_copy_string_array(struct property_entry *dst,
+ 			while (--i >= 0)
+ 				kfree(d[i]);
+ 			kfree(d);
+-			return -ENOMEM;
++			return NULL;
+ 		}
+ 	}
  
--	array_len = min(nval, array_len);
-+	array_len = min_t(size_t, nval, array_len);
- 	length = array_len * sizeof(*strings);
+-	dst->pointer.str = d;
+-	return 0;
++	return d;
+ }
  
- 	pointer = property_entry_find(props, propname, length);
+ static int property_entry_copy_data(struct property_entry *dst,
+@@ -367,17 +366,15 @@ static int property_entry_copy_data(struct property_entry *dst,
+ {
+ 	const void *pointer = property_get_pointer(src);
+ 	const void *new;
+-	int error;
+ 
+ 	if (src->is_array) {
+ 		if (!src->length)
+ 			return -ENODATA;
+ 
+ 		if (src->type == DEV_PROP_STRING) {
+-			error = property_copy_string_array(dst, src);
+-			if (error)
+-				return error;
+-			new = dst->pointer.str;
++			new = property_copy_string_array(src);
++			if (!new)
++				return -ENOMEM;
+ 		} else {
+ 			new = kmemdup(pointer, src->length, GFP_KERNEL);
+ 			if (!new)
 -- 
 2.23.0.866.gb869b98d4c-goog
 
