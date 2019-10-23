@@ -2,75 +2,81 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C23CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEFECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9414321872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B437020650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:56:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSGRlTlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391800AbfJWUuX (ORCPT
+        id S2405493AbfJWU4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:50:23 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:40569 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390611AbfJWUuW (ORCPT
+        Wed, 23 Oct 2019 16:56:06 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36736 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405172AbfJWU4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 16:50:22 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tg.Zevt_1571863816;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg.Zevt_1571863816)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Oct 2019 04:50:19 +0800
-Subject: Re: [v2 PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-To:     Hugh Dickins <hughd@google.com>
-Cc:     aarcange@redhat.com, kirill.shutemov@linux.intel.com,
-        gavin.dg@linux.alibaba.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
- <alpine.LSU.2.11.1910231157570.1088@eggly.anvils>
- <4d3c14ef-ee86-2719-70d6-68f1a8b42c28@linux.alibaba.com>
- <alpine.LSU.2.11.1910231250260.1794@eggly.anvils>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <d500d98e-3577-ced1-9614-7aa5e09e6dbe@linux.alibaba.com>
-Date:   Wed, 23 Oct 2019 13:50:14 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1910231250260.1794@eggly.anvils>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 23 Oct 2019 16:56:06 -0400
+Received: by mail-pl1-f194.google.com with SMTP id j11so10684464plk.3;
+        Wed, 23 Oct 2019 13:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=07Atb/6gQrkEJ26f3FmK/lTnstI+R5Npacag/JwqRmk=;
+        b=NSGRlTlNMvNDTQo1Xgl6h/5SFLy3iEek92UpZddKGZwMLi9rm6RGvCk34EEpwcvnXY
+         2+iMcWENqwCSRCNothH74ArZl214/hY0l0D9qRpmD9sb5aagimUCcGhyKMcHY927Ztwg
+         c88Zb6dfsK9zLrmOUlKGkQ2OaAFRbcpk5PdWx48PbkJ7hAVXVVvxvFBHzLsKrx3KZh+k
+         oloiMzC1jMAVMs/Liz/LR49VcZKDdLsreuOQ6U3adWpOj4qEzFBih0FqRCrcz6T5PiG6
+         HZ4oILYz0NCSUjw/wa9Tp5fwowIlK2sD0Z0BNE00hFKfbXJ63XlUvWc52Ww4rmQsBja3
+         RQiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=07Atb/6gQrkEJ26f3FmK/lTnstI+R5Npacag/JwqRmk=;
+        b=KSZ++CNyggKwxHz176xD2xhKjW/B98z3sQga8cITRNGkFrro6mktT4BgV20JqZF7At
+         e78ZFxjE6BpxvCtYUyDTzAijhwik0L3VyojAp/Y6Wa0kXaUFsMdJ7L21aHIoaZO9awmc
+         4V6s+Esrj/7/aeyGreJ4CWJ9vi8oOaAxFe8+dH8vZ3TKNSpZtCHgmlU1dqWgE/Da9cRd
+         x4LCqzB8K4IK/nFE016Q5G/MGyEQ7WtK95DKbZNVhEceJ/ORq065+c9Ohgy5T6ZlnwFX
+         CCBMee/GlQTYzxDdY4/3XPt1r84zRFX7Ngy3hos5wCcqgry4UIWwPbLr9sJM04kZK8si
+         IE/A==
+X-Gm-Message-State: APjAAAW0KI/0psAoedB8f1Y9HxCT07qtIG/G5IlpSklHc1Qd4UNzeU+f
+        /a3I7Y0ZVFa2R94hpD7P/A==
+X-Google-Smtp-Source: APXvYqycKSXQGXAynFiufHVxYiQKe72QcM+36tuPsviNgI9wA+eb7Uq7f9nUd8r5SmkPlCDem3pktw==
+X-Received: by 2002:a17:902:d70a:: with SMTP id w10mr11144217ply.342.1571864165109;
+        Wed, 23 Oct 2019 13:56:05 -0700 (PDT)
+Received: from localhost.localdomain ([216.52.21.4])
+        by smtp.gmail.com with ESMTPSA id s11sm131885pjp.26.2019.10.23.13.56.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 23 Oct 2019 13:56:04 -0700 (PDT)
+From:   Praveen Chaudhary <praveen5582@gmail.com>
+X-Google-Original-From: Praveen Chaudhary <pchaudhary@linkedin.com>
+To:     fw@strlen.de
+Cc:     astracner@linkedin.com, davem@davemloft.net, kadlec@netfilter.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pablo@netfilter.org, praveen5582@gmail.com, zxu@linkedin.com
+Subject: RE: [PATCH] [netfilter]: Fix skb->csum calculation when netfilter
+Date:   Wed, 23 Oct 2019 13:56:02 -0700
+Message-Id: <1571864162-9097-1-git-send-email-pchaudhary@linkedin.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20191023193337.GP25052@breakpoint.cc>
+References: <20191023193337.GP25052@breakpoint.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Florian 
 
+Thanks for the review,
 
-On 10/23/19 1:00 PM, Hugh Dickins wrote:
-> On Wed, 23 Oct 2019, Yang Shi wrote:
->> On 10/23/19 12:28 PM, Hugh Dickins wrote:
->>>> +	return map_count >= 0 &&
->>> You have added a map_count >= 0 test there. Okay, not wrong, but not
->>> necessary, and not consistent with what's returned in the PageAnon
->>> case (if this were called for an unmapped page).
->> I was thinking about this too. I'm wondering there might be a case that the
->> PMD is split and it was the last PMD map, in this case subpage's _mapcount is
->> also equal to compound_mapcount (both is -1). So, it would return true, then
->> KVM may setup PMD map in EPT, but it might be PTE mapped later on the host.
->> But, I'm not quite sure if this is really possible or if this is really a
->> integrity problem. So, I thought it might be safer to add this check.
-> The mmu_notifier_invalidate_range_start.._end() in __split_huge_pmd(),
-> with KVM's locking and sequence counting, is required to protect
-> against such races.
+inet_proto_csum_replace16 is called from many places, whereas this fix is applicable only for nf_nat_ipv6_csum_update, where we need to update skb->csum for ipv6 src/dst address change. 
+Also my point is, inet_proto_csum_replace16 is updating skb->csum for change in udp header checksum field, but that is not complete. So, I added a new function. Basically, I used a safe apprioach to fix it, without impacting other cases. Let me know other options,  I am open to suggestions.
 
-OK, it sounds safe. Thanks for confirming. Will post v4 soon.
-
->
-> Hugh
-
+More importantly, I hope this is clear that the current code does not update skb->csum completely. Which is a bug. Thanks again.
