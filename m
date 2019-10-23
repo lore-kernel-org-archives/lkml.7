@@ -2,267 +2,143 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EE5CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18B5CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138C121872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666DD21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:09:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0omwQSQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406483AbfJWPIH (ORCPT
+        id S2406498AbfJWPJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:08:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33870 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390629AbfJWPIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:08:07 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3222781F07
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 15:08:06 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id k10so2105552wrl.22
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:08:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1L6W+k0nNg/tQAHowWr/1ED2GuKCPT//Gnu5zgyCNAI=;
-        b=BGRGqq+iRbHEyuY4Jh7aLZLosuApEWOI+et1+USQDjqf0gBHpOyvKZ9E40sOr0UqDq
-         3gHsOJtxjmI/Sw4mC1ucsibugl9qUmqoyXOl9yMWxu2If7WqHZy3rvRkgDl/qw/FVKFh
-         qgG5dHg9/Sni8Bo5wv72sTKxXV8QgAthrrr2ucmTDqEJttLUU7e3mReJBq1pbRv5hWGI
-         P+k2erQE4B6Vapl+N1+kOhCuA7CJGVZZbbTmbD2joEY6qUZlAQErBjNEYrLO4RND95GS
-         j2GO1BSO5A4yRPQMarSTXqZLz94K5+f+bcEDz8UXhfxand7hxvQlq0kwvrG8QYGJOjdv
-         GFWg==
-X-Gm-Message-State: APjAAAUqvWtGheX+mhtR3tVVrFs9M0pvNTYB/mDBL0xHtqYwJyK4wjCl
-        wltqfIoMr8He0Lw653T00uD5s4dKAj1KRA2hxyCBrhJ0QCrz6DpEhnbVleBg9ZVgif9ej1iUpwv
-        b3oLWYY+EHA/iw1vkUzFcXkXg
-X-Received: by 2002:a5d:55c2:: with SMTP id i2mr1459750wrw.176.1571843284748;
-        Wed, 23 Oct 2019 08:08:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx1BkWFgjFt13kSOZhC5tHhC1h/h69jYbIAHFEuvb5Y1HTNMeyVSdSK6hLWHxU9/yDmdywCwA==
-X-Received: by 2002:a5d:55c2:: with SMTP id i2mr1459721wrw.176.1571843284393;
-        Wed, 23 Oct 2019 08:08:04 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id x2sm20845980wrn.81.2019.10.23.08.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 08:08:03 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 17:08:01 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, kvm <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 11/14] vsock: add multi-transports support
-Message-ID: <CAGxU2F7n48kBy_y2GB=mcvraK=mw_2Jn8=2hvQnEOWqWuT9OjA@mail.gmail.com>
-References: <20191023095554.11340-1-sgarzare@redhat.com>
- <20191023095554.11340-12-sgarzare@redhat.com>
+        Wed, 23 Oct 2019 11:09:38 -0400
+Received: from mail-eopbgr780082.outbound.protection.outlook.com ([40.107.78.82]:49894
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406322AbfJWPJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:09:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M0csRe8nO+Xlq5DSgD7KX+l//NvXgVBlFIVlejXad3yUwS8gK888eSGX6Ou21uFVD6C8hfZrHuVU14xjD+LZRmEeqsRowgnWcEPhz6xDYvE6RIKnj+WjJ+mZuQGTGrXc2NTn+YA7soHG8Qb4b3ihyvMeC/szS5JthogG06Ws3eSwzwnsFDV/gD4R+P1UuqhLknWB6GLiz5eMKXfQW4F2vSVYp22vQX6Y6A9RmZzNEusKi9BWyeSdcH4drFzAeyB0fSkLs//Zl7uTlLcB5e0N+UKlVmAyi8Fm8YZ4N35WQmUD+cihc1WGV3BnWs7AbFI+F0azRxjhp1siaBPvArKrIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sLsUTAwVWOhjK1KcoN0kjBv6aZkTAONVb9OoBmeizkU=;
+ b=HwoQqKf7JJWGS1/35uVGRsgyMpA5EiRxYDQkDDrVL0u1jzd5rWEyHpatPeN8/0NyO+23oyCnHVHtzqqBqBPpoKVPpbN25N9HCgDaqhGJSjhB/AZgmHnwAgM5IZ44ied5FghWTPEEZaVIs1S6uLmzIPaRokWPmtkUdFosKP55nsJuDBOc91hQqb0S8TeakTsCNUHU70aDCGBKPMR/a7ZkhTD+HO1pjXjzSVCyDgPQ3zrwX45NYG6ZQoyhccP7qYMaMgqUu2wgrGK15AuOquwzJUweF+H/eJ5JoXP1aNzvbfAICSSWgfPbcjwrRgB68O+8O7s5B1dkitSLXYaMSLipxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sLsUTAwVWOhjK1KcoN0kjBv6aZkTAONVb9OoBmeizkU=;
+ b=0omwQSQzBEEaCtAl+xI/Pl8oGIBs/HnnBG4KaKhl+/O9wn8xO2skqJT6Ed9He5BJCnu+4j0KNhcD5rYI/6D6C5Tv7iCEROiQwdhMshTr41QYNBG9Ffue4bYMrqhYlaqWlq6AVj3Ir/AV1B6/o1y+XMMUFxKI0nedAQCHpdv0mww=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB2503.namprd12.prod.outlook.com (10.172.116.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Wed, 23 Oct 2019 15:09:34 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::5471:f58b:733e:1a61]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::5471:f58b:733e:1a61%7]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
+ 15:09:34 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     Wambui Karuga <wambui@karuga.xyz>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "outreachy-kernel@googlegroups.com" 
+        <outreachy-kernel@googlegroups.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH] drm/amd/amdgpu: make undeclared variables static
+Thread-Topic: [PATCH] drm/amd/amdgpu: make undeclared variables static
+Thread-Index: AQHVhtpcup3yDyLbLkW9oq/0oA1P3KdoWgmA
+Date:   Wed, 23 Oct 2019 15:09:34 +0000
+Message-ID: <0f3fa30e-0392-054b-a81e-b9cb4475fe07@amd.com>
+References: <20191019072426.20535-1-wambui@karuga.xyz>
+In-Reply-To: <20191019072426.20535-1-wambui@karuga.xyz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.250]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+x-clientproxiedby: YT1PR01CA0003.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::16)
+ To CY4PR1201MB0230.namprd12.prod.outlook.com (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 184adec6-bf1f-4861-6853-08d757cb031f
+x-ms-traffictypediagnostic: CY4PR1201MB2503:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB2503AA87890F9C6810D0BDC18C6B0@CY4PR1201MB2503.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(199004)(189003)(305945005)(110136005)(3846002)(2906002)(7736002)(4326008)(6246003)(6116002)(52116002)(6486002)(71190400001)(76176011)(54906003)(4001150100001)(71200400001)(316002)(36756003)(229853002)(99286004)(6436002)(58126008)(6512007)(6306002)(966005)(31696002)(478600001)(81156014)(8936002)(81166006)(446003)(14454004)(8676002)(186003)(11346002)(476003)(31686004)(386003)(5660300002)(53546011)(256004)(102836004)(6506007)(26005)(2616005)(14444005)(25786009)(66446008)(66946007)(486006)(66476007)(65806001)(66556008)(2501003)(66066001)(65956001)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2503;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jdR0CWfZxOV/Go+d/G0FIPBpzC2xLTYWvsZwgCieUTihtJhNWKeRwnbXGlc12pfm1V0RxLSDnen63I5Hu1MJJLvteXimsODaVIjH/zMdO1fS06WlphBRdq9ozVu8XN3cU3UH7fSV6vEEiJ7UEalFCdKUyuK0HIDe3KtfXi/SbCB/zv9lK7h1MANKvNrWUqAgclMYGlmJGNt+0bkWlLfY70VpnqP+EwNcgqYgyJAhMap1RqE51wYFoSWTpa9fss8VlRMkvbg237F6ME5TlcnU9B8aL7UsGJ8vl2/zAbAEENTU513723kI+45dwB1LmjhhEhE0DvgaV0JaBiE2OdH84L3sbasynAbY6S6YKoDf7qyBKV8RZEer1CKk7Z/yKokpp8Az9D6gi1bhQ3qbDAiKFDPRB0uETDjdeK1qa2mb+aEoTTBfeqaMags/qxcaZXnJzIXzkS0wTbq0rRE/THqsw5R7ruTrKs1gwA2zuacT32g=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73D636242A42C84890D7BF400312A648@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023095554.11340-12-sgarzare@redhat.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 184adec6-bf1f-4861-6853-08d757cb031f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 15:09:34.1190
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GgXB0oOxQ2lUNDbFRW5Soopm4YO4ePf1W5pKn90Dmjfx0MsHAaGF79Dzyin0djFERPjO+dPB+U4eKIy2EsYgXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2503
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 11:59 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
->
-> This patch adds the support of multiple transports in the
-> VSOCK core.
->
-> With the multi-transports support, we can use vsock with nested VMs
-> (using also different hypervisors) loading both guest->host and
-> host->guest transports at the same time.
->
-> Major changes:
-> - vsock core module can be loaded regardless of the transports
-> - vsock_core_init() and vsock_core_exit() are renamed to
->   vsock_core_register() and vsock_core_unregister()
-> - vsock_core_register() has a feature parameter (H2G, G2H, DGRAM)
->   to identify which directions the transport can handle and if it's
->   support DGRAM (only vmci)
-> - each stream socket is assigned to a transport when the remote CID
->   is set (during the connect() or when we receive a connection request
->   on a listener socket).
->   The remote CID is used to decide which transport to use:
->   - remote CID > VMADDR_CID_HOST will use host->guest transport
->   - remote CID <= VMADDR_CID_HOST will use guest->host transport
-> - listener sockets are not bound to any transports since no transport
->   operations are done on it. In this way we can create a listener
->   socket, also if the transports are not loaded or with VMADDR_CID_ANY
->   to listen on all transports.
-> - DGRAM sockets are handled as before, since only the vmci_transport
->   provides this feature.
->
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> RFC -> v1:
-> - documented VSOCK_TRANSPORT_F_* flags
-> - fixed vsock_assign_transport() when the socket is already assigned
->   (e.g connection failed)
-> - moved features outside of struct vsock_transport, and used as
->   parameter of vsock_core_register()
-> ---
->  drivers/vhost/vsock.c                   |   5 +-
->  include/net/af_vsock.h                  |  17 +-
->  net/vmw_vsock/af_vsock.c                | 237 ++++++++++++++++++------
->  net/vmw_vsock/hyperv_transport.c        |  26 ++-
->  net/vmw_vsock/virtio_transport.c        |   7 +-
->  net/vmw_vsock/virtio_transport_common.c |  28 ++-
->  net/vmw_vsock/vmci_transport.c          |  31 +++-
->  7 files changed, 270 insertions(+), 81 deletions(-)
->
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index 6d7e4f022748..b235f4bbe8ea 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -831,7 +831,8 @@ static int __init vhost_vsock_init(void)
->  {
->         int ret;
->
-> -       ret = vsock_core_init(&vhost_transport.transport);
-> +       ret = vsock_core_register(&vhost_transport.transport,
-> +                                 VSOCK_TRANSPORT_F_H2G);
->         if (ret < 0)
->                 return ret;
->         return misc_register(&vhost_vsock_misc);
-> @@ -840,7 +841,7 @@ static int __init vhost_vsock_init(void)
->  static void __exit vhost_vsock_exit(void)
->  {
->         misc_deregister(&vhost_vsock_misc);
-> -       vsock_core_exit();
-> +       vsock_core_unregister(&vhost_transport.transport);
->  };
->
->  module_init(vhost_vsock_init);
-> diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-> index fa1570dc9f5c..27a3463e4892 100644
-> --- a/include/net/af_vsock.h
-> +++ b/include/net/af_vsock.h
-> @@ -91,6 +91,14 @@ struct vsock_transport_send_notify_data {
->         u64 data2; /* Transport-defined. */
->  };
->
-> +/* Transport features flags */
-> +/* Transport provides host->guest communication */
-> +#define VSOCK_TRANSPORT_F_H2G          0x00000001
-> +/* Transport provides guest->host communication */
-> +#define VSOCK_TRANSPORT_F_G2H          0x00000002
-> +/* Transport provides DGRAM communication */
-> +#define VSOCK_TRANSPORT_F_DGRAM                0x00000004
-> +
->  struct vsock_transport {
->         /* Initialize/tear-down socket. */
->         int (*init)(struct vsock_sock *, struct vsock_sock *);
-> @@ -154,12 +162,8 @@ struct vsock_transport {
->
->  /**** CORE ****/
->
-> -int __vsock_core_init(const struct vsock_transport *t, struct module *owner);
-> -static inline int vsock_core_init(const struct vsock_transport *t)
-> -{
-> -       return __vsock_core_init(t, THIS_MODULE);
-> -}
-> -void vsock_core_exit(void);
-> +int vsock_core_register(const struct vsock_transport *t, int features);
-> +void vsock_core_unregister(const struct vsock_transport *t);
->
->  /* The transport may downcast this to access transport-specific functions */
->  const struct vsock_transport *vsock_core_get_transport(struct vsock_sock *vsk);
-> @@ -190,6 +194,7 @@ struct sock *vsock_find_connected_socket(struct sockaddr_vm *src,
->                                          struct sockaddr_vm *dst);
->  void vsock_remove_sock(struct vsock_sock *vsk);
->  void vsock_for_each_connected_socket(void (*fn)(struct sock *sk));
-> +int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk);
->
->  /**** TAP ****/
->
-> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> index d89381166028..dddd85d9a147 100644
-> --- a/net/vmw_vsock/af_vsock.c
-> +++ b/net/vmw_vsock/af_vsock.c
-> @@ -130,7 +130,12 @@ static struct proto vsock_proto = {
->  #define VSOCK_DEFAULT_BUFFER_MAX_SIZE (1024 * 256)
->  #define VSOCK_DEFAULT_BUFFER_MIN_SIZE 128
->
-> -static const struct vsock_transport *transport_single;
-> +/* Transport used for host->guest communication */
-> +static const struct vsock_transport *transport_h2g;
-> +/* Transport used for guest->host communication */
-> +static const struct vsock_transport *transport_g2h;
-> +/* Transport used for DGRAM communication */
-> +static const struct vsock_transport *transport_dgram;
->  static DEFINE_MUTEX(vsock_register_mutex);
->
->  /**** UTILS ****/
-> @@ -182,7 +187,7 @@ static int vsock_auto_bind(struct vsock_sock *vsk)
->         return __vsock_bind(sk, &local_addr);
->  }
->
-> -static int __init vsock_init_tables(void)
-> +static void vsock_init_tables(void)
->  {
->         int i;
->
-> @@ -191,7 +196,6 @@ static int __init vsock_init_tables(void)
->
->         for (i = 0; i < ARRAY_SIZE(vsock_connected_table); i++)
->                 INIT_LIST_HEAD(&vsock_connected_table[i]);
-> -       return 0;
->  }
->
->  static void __vsock_insert_bound(struct list_head *list,
-> @@ -376,6 +380,62 @@ void vsock_enqueue_accept(struct sock *listener, struct sock *connected)
->  }
->  EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
->
-> +/* Assign a transport to a socket and call the .init transport callback.
-> + *
-> + * Note: for stream socket this must be called when vsk->remote_addr is set
-> + * (e.g. during the connect() or when a connection request on a listener
-> + * socket is received).
-> + * The vsk->remote_addr is used to decide which transport to use:
-> + *  - remote CID > VMADDR_CID_HOST will use host->guest transport
-> + *  - remote CID <= VMADDR_CID_HOST will use guest->host transport
-> + */
-> +int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
-> +{
-> +       const struct vsock_transport *new_transport;
-> +       struct sock *sk = sk_vsock(vsk);
-> +
-> +       switch (sk->sk_type) {
-> +       case SOCK_DGRAM:
-> +               new_transport = transport_dgram;
-> +               break;
-> +       case SOCK_STREAM:
-> +               if (vsk->remote_addr.svm_cid > VMADDR_CID_HOST)
-> +                       new_transport = transport_h2g;
-> +               else
-> +                       new_transport = transport_g2h;
-
-I just noticed that this break the loopback in the guest.
-As a fix, we should use 'transport_g2h' when remote_cid <= VMADDR_CID_HOST
-or remote_cid is the id of 'transport_g2h'.
-
-To do that we also need to avoid that L2 guests can have the same CID of L1.
-For vhost_vsock I can call vsock_find_cid() in vhost_vsock_set_cid()
-
-@Jorgen: for vmci we need to do the same? or it is guaranteed, since
-it's already support nested VMs, that a L2 guests cannot have the
-same CID as the L1.
-
-I'll send a v2 with this fix, but I'll wait a bit for other comments.
-
-Thanks,
-Stefano
+T24gMjAxOS0xMC0xOSAzOjI0IGEubS4sIFdhbWJ1aSBLYXJ1Z2Egd3JvdGU6DQo+IE1ha2UgdGhl
+IGBhbWRncHVfbG9ja3VwX3RpbWVvdXRgIGFuZCBgYW1kZ3B1X2V4cF9od19zdXBwb3J0YCB2YXJp
+YWJsZXMNCj4gc3RhdGljIHRvIHJlbW92ZSB0aGUgZm9sbG93aW5nIHNwYXJzZSB3YXJuaW5nczoN
+Cj4gZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2Rydi5jOjEwMzoxOTogd2Fybmlu
+Zzogc3ltYm9sICdhbWRncHVfbG9ja3VwX3RpbWVvdXQnIHdhcyBub3QgZGVjbGFyZWQuIFNob3Vs
+ZCBpdCBiZSBzdGF0aWM/DQoNClRoaXMgc2hvdWxkIGJlIGRlY2xhcmVkIGluIGFtZGdwdS5oLiBh
+bWRncHUgaXMgbWFpbnRhaW5lZCBvbiB0aGUNCmFtZC1zdGFnaW5nLWRybS1uZXh0IGJyYW5jaCBm
+cm9tDQpodHRwczovL2NnaXQuZnJlZWRlc2t0b3Aub3JnL35hZ2Q1Zi9saW51eC8/aD1hbWQtc3Rh
+Z2luZy1kcm0tbmV4dC4gQ2FuDQp5b3UgY2hlY2sgdGhlcmU/DQoNCj4gZHJpdmVycy9ncHUvZHJt
+L2FtZC9hbWRncHUvYW1kZ3B1X2Rydi5jOjExNzoxODogd2FybmluZzogc3ltYm9sICdhbWRncHVf
+ZXhwX2h3X3N1cHBvcnQnIHdhcyBub3QgZGVjbGFyZWQuIFNob3VsZCBpdCBiZSBzdGF0aWM/DQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBXYW1idWkgS2FydWdhIDx3YW1idWlAa2FydWdhLnh5ej4NCj4g
+LS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZHJ2LmMgfCA0ICsrLS0N
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2Rydi5jIGIv
+ZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2Rydi5jDQo+IGluZGV4IDNmYWUxMDA3
+MTQzZS4uYzViM2MwYzkxOTNiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Ft
+ZGdwdS9hbWRncHVfZHJ2LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1k
+Z3B1X2Rydi5jDQo+IEBAIC0xMDAsNyArMTAwLDcgQEAgaW50IGFtZGdwdV9kaXNwX3ByaW9yaXR5
+ID0gMDsNCj4gIGludCBhbWRncHVfaHdfaTJjID0gMDsNCj4gIGludCBhbWRncHVfcGNpZV9nZW4y
+ID0gLTE7DQo+ICBpbnQgYW1kZ3B1X21zaSA9IC0xOw0KPiAtY2hhciBhbWRncHVfbG9ja3VwX3Rp
+bWVvdXRbQU1ER1BVX01BWF9USU1FT1VUX1BBUkFNX0xFTlRIXTsNCj4gK3N0YXRpYyBjaGFyIGFt
+ZGdwdV9sb2NrdXBfdGltZW91dFtBTURHUFVfTUFYX1RJTUVPVVRfUEFSQU1fTEVOVEhdOw0KPiAg
+aW50IGFtZGdwdV9kcG0gPSAtMTsNCj4gIGludCBhbWRncHVfZndfbG9hZF90eXBlID0gLTE7DQo+
+ICBpbnQgYW1kZ3B1X2FzcG0gPSAtMTsNCj4gQEAgLTExNCw3ICsxMTQsNyBAQCBpbnQgYW1kZ3B1
+X3ZtX2Jsb2NrX3NpemUgPSAtMTsNCj4gIGludCBhbWRncHVfdm1fZmF1bHRfc3RvcCA9IDA7DQo+
+ICBpbnQgYW1kZ3B1X3ZtX2RlYnVnID0gMDsNCj4gIGludCBhbWRncHVfdm1fdXBkYXRlX21vZGUg
+PSAtMTsNCj4gLWludCBhbWRncHVfZXhwX2h3X3N1cHBvcnQgPSAwOw0KPiArc3RhdGljIGludCBh
+bWRncHVfZXhwX2h3X3N1cHBvcnQ7DQoNClRoaXMgaXMgaW5kZWVkIG9ubHkgdXNlZCBpbiB0aGlz
+IGZpbGUgYnV0IGZvciBjb25zaXN0ZW5jeSdzIHNha2UgaXQncw0KcHJvYmFibHkgYmV0dGVyIHRv
+IGFsc28gZGVjbGFyZSBpdCBpbiBhbWRncHUuaCByYXRoZXIgdGhhbiBtYWtlIGl0DQpzdGF0aWMg
+aGVyZS4NCg0KSGFycnkNCg0KPiAgaW50IGFtZGdwdV9kYyA9IC0xOw0KPiAgaW50IGFtZGdwdV9z
+Y2hlZF9qb2JzID0gMzI7DQo+ICBpbnQgYW1kZ3B1X3NjaGVkX2h3X3N1Ym1pc3Npb24gPSAyOw0K
+PiANCg==
