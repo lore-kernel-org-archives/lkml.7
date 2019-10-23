@@ -2,152 +2,204 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4998CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F036CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B691A20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571860992;
-	bh=O7roNURPHhUVLhXiKkRzUUevQrf5LTSgEe55teexAGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TUy1eKUHO3gvGKah64msbrzt84EFOgcjdLpRoK6CedbqWvgncXJ1wCJ5oHRc6jE9I
-	 8Q3iLS0CbZou7B3lxBZhmuqZOG1V9kAQzSkBHZXe0/hatQ+By8zeH/nt/KCokSP7pU
-	 bQPsOmSepLF0NRgIFIS0/vdjvW0t7JXC82vX42Fk=
+	by mail.kernel.org (Postfix) with ESMTP id 7481A20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 20:03:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/cI76IA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406706AbfJWUDK (ORCPT
+        id S2406903AbfJWUDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 16:03:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43436 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405410AbfJWUDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 16:03:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45931 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405963AbfJWUDC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 23 Oct 2019 16:03:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 53304B545;
-        Wed, 23 Oct 2019 20:02:59 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 22:02:56 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>
-Subject: Re: [PATCH 1/2] mm, vmstat: Release zone lock more frequently when
- reading /proc/pagetypeinfo
-Message-ID: <20191023200256.GP17610@dhcp22.suse.cz>
-References: <20191023102737.32274-3-mhocko@kernel.org>
- <20191023173423.12532-1-longman@redhat.com>
- <20191023180121.GN17610@dhcp22.suse.cz>
- <58a9adaf-9a1c-398b-dce1-cb30997807c1@redhat.com>
+Received: by mail-pl1-f194.google.com with SMTP id y24so6673445plr.12;
+        Wed, 23 Oct 2019 13:03:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RhGMxD9ZBui9SyjLsOvl3oJZU+AUjLFpiylNO9yBlvg=;
+        b=u/cI76IAPXZqzuflqxh4ezni8rgLEaXy2SfJXyCqUD/CU8y8ALp9fFSejVe0qx0tSC
+         ZgggEDeL4rITVhP3qtbpfKztrhD6FXzBw8eeX68ZHGV+sbEMq6kZC8SzHvm50xU0ckWC
+         TIqINoXiDZMQcyWASucla7uuZ5nuZtBeU6Ce47Dfyko08X5pllemXipb7nuGYbLcrSUq
+         dzm/JVoNqXkzzzAPurQ9jgq5RnmRysuWyR33TIbR51DhzHPawIDAESAtMtbx7o2Ko5Nz
+         sdulCPIQWaIV1+ZfXr1fv/O3RMOxUhjne6slKm0SrUwBxbnfO1FtCToZh1t0xzEoAzMt
+         jQ5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RhGMxD9ZBui9SyjLsOvl3oJZU+AUjLFpiylNO9yBlvg=;
+        b=XRgaZw6H4du6FT65PrMNMs9AzkFZQ2id+pdh7fViTk0DIZuRGQe6mAHIJiXugDShbC
+         2Ht5ns9oFu77LNl7TSfOJjnaRtHMBwAAagfIAzHr7i+8yjoLAW0NdLAqkdbwL8PNjZ08
+         cX7HItNM8voB08IxL2ajL/DhnmVMZfNKZ92Fmq+h5A6JgYTRef4g9fygMgehltzeD39q
+         B3g7qZFnIL/LAXVSNgyZUnWpYoHuSbVIU7THZElWDzIU1mQeHWkJm6WYkpR0phmLXXBB
+         RYonMiw2ePelcZ+P4IKquz2bjJ0VX9d0toNMkAK2Mseq8SvvOd63omZtBgIRnEc0s+6d
+         YHrQ==
+X-Gm-Message-State: APjAAAVIdgtvd3wIOX0OwAnCSpwKqijmG1RW/1hgeBs9N4aaR3zoF67i
+        LuEHjb/D6QuI1M3c6ahpAmvDRuWk
+X-Google-Smtp-Source: APXvYqxw4rcPhUQYF+Z2qcbeF69ICHrw1KkopL29Ae/m4A+amiYDp7quyR+wH+qWvjz33ITblfgEsA==
+X-Received: by 2002:a17:902:b687:: with SMTP id c7mr11285749pls.116.1571860981357;
+        Wed, 23 Oct 2019 13:03:01 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 6sm10593598pfy.43.2019.10.23.13.03.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 13:03:00 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v6 14/15] software node: remove separate handling of references
+Date:   Wed, 23 Oct 2019 13:02:32 -0700
+Message-Id: <20191023200233.86616-15-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+In-Reply-To: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
+References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58a9adaf-9a1c-398b-dce1-cb30997807c1@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 23-10-19 14:14:14, Waiman Long wrote:
-> On 10/23/19 2:01 PM, Michal Hocko wrote:
-> > On Wed 23-10-19 13:34:22, Waiman Long wrote:
-> >> With a threshold of 100000, it is still possible that the zone lock
-> >> will be held for a very long time in the worst case scenario where all
-> >> the counts are just below the threshold. With up to 6 migration types
-> >> and 11 orders, it means up to 6.6 millions.
-> >>
-> >> Track the total number of list iterations done since the acquisition
-> >> of the zone lock and release it whenever 100000 iterations or more have
-> >> been completed. This will cap the lock hold time to no more than 200,000
-> >> list iterations.
-> >>
-> >> Signed-off-by: Waiman Long <longman@redhat.com>
-> >> ---
-> >>  mm/vmstat.c | 18 ++++++++++++++----
-> >>  1 file changed, 14 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> >> index 57ba091e5460..c5b82fdf54af 100644
-> >> --- a/mm/vmstat.c
-> >> +++ b/mm/vmstat.c
-> >> @@ -1373,6 +1373,7 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
-> >>  					pg_data_t *pgdat, struct zone *zone)
-> >>  {
-> >>  	int order, mtype;
-> >> +	unsigned long iteration_count = 0;
-> >>  
-> >>  	for (mtype = 0; mtype < MIGRATE_TYPES; mtype++) {
-> >>  		seq_printf(m, "Node %4d, zone %8s, type %12s ",
-> >> @@ -1397,15 +1398,24 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
-> >>  				 * of pages in this order should be more than
-> >>  				 * sufficient
-> >>  				 */
-> >> -				if (++freecount >= 100000) {
-> >> +				if (++freecount > 100000) {
-> >>  					overflow = true;
-> >> -					spin_unlock_irq(&zone->lock);
-> >> -					cond_resched();
-> >> -					spin_lock_irq(&zone->lock);
-> >> +					freecount--;
-> >>  					break;
-> >>  				}
-> >>  			}
-> >>  			seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
-> >> +			/*
-> >> +			 * Take a break and release the zone lock when
-> >> +			 * 100000 or more entries have been iterated.
-> >> +			 */
-> >> +			iteration_count += freecount;
-> >> +			if (iteration_count >= 100000) {
-> >> +				iteration_count = 0;
-> >> +				spin_unlock_irq(&zone->lock);
-> >> +				cond_resched();
-> >> +				spin_lock_irq(&zone->lock);
-> >> +			}
-> > Aren't you overengineering this a bit? If you are still worried then we
-> > can simply cond_resched for each order
-> > diff --git a/mm/vmstat.c b/mm/vmstat.c
-> > index c156ce24a322..ddb89f4e0486 100644
-> > --- a/mm/vmstat.c
-> > +++ b/mm/vmstat.c
-> > @@ -1399,13 +1399,13 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
-> >  				 */
-> >  				if (++freecount >= 100000) {
-> >  					overflow = true;
-> > -					spin_unlock_irq(&zone->lock);
-> > -					cond_resched();
-> > -					spin_lock_irq(&zone->lock);
-> >  					break;
-> >  				}
-> >  			}
-> >  			seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
-> > +			spin_unlock_irq(&zone->lock);
-> > +			cond_resched();
-> > +			spin_lock_irq(&zone->lock);
-> >  		}
-> >  		seq_putc(m, '\n');
-> >  	}
-> >
-> > I do not have a strong opinion here but I can fold this into my patch 2.
-> 
-> If the free list is empty or is very short, there is probably no need to
-> release and reacquire the lock. How about adding a check for a lower
-> bound like:
+Now that all users of references have moved to reference properties,
+we can remove separate handling of references.
 
-Again, does it really make any sense to micro optimize something like
-this. It is a debugging tool. I would rather go simple.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/base/swnode.c    | 46 +++++++++++++++-------------------------
+ include/linux/property.h | 14 ------------
+ 2 files changed, 17 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 8fb4dd532433..87c715648eb6 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -497,9 +497,8 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 				 struct fwnode_reference_args *args)
+ {
+ 	struct swnode *swnode = to_swnode(fwnode);
+-	const struct software_node_reference *ref;
+ 	const struct software_node_ref_args *ref_array;
+-	const struct software_node_ref_args *ref_args;
++	const struct software_node_ref_args *ref;
+ 	const struct property_entry *prop;
+ 	struct fwnode_handle *refnode;
+ 	int i;
+@@ -508,37 +507,26 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 		return -ENOENT;
+ 
+ 	prop = property_entry_get(swnode->node->properties, propname);
+-	if (prop) {
+-		if (prop->type != DEV_PROP_REF)
+-			return -EINVAL;
+-
+-		/*
+-		 * We expect that references are never stored inline, even
+-		 * single ones, as they are too big.
+-		 */
+-		if (prop->is_inline)
+-			return -EINVAL;
+-
+-		if (index * sizeof(*ref_args) >= prop->length)
+-			return -ENOENT;
++	if (!prop)
++		return -ENOENT;
+ 
+-		ref_array = prop->pointer;
+-		ref_args = &ref_array[index];
+-	} else {
+-		if (!swnode->node->references)
+-			return -ENOENT;
++	if (prop->type != DEV_PROP_REF)
++		return -EINVAL;
+ 
+-		for (ref = swnode->node->references; ref->name; ref++)
+-			if (!strcmp(ref->name, propname))
+-				break;
++	/*
++	 * We expect that references are never stored inline, even
++	 * single ones, as they are too big.
++	 */
++	if (prop->is_inline)
++		return -EINVAL;
+ 
+-		if (!ref->name || index > (ref->nrefs - 1))
+-			return -ENOENT;
++	if (index * sizeof(*ref) >= prop->length)
++		return -ENOENT;
+ 
+-		ref_args = &ref->refs[index];
+-	}
++	ref_array = prop->pointer;
++	ref = &ref_array[index];
+ 
+-	refnode = software_node_fwnode(ref_args->node);
++	refnode = software_node_fwnode(ref->node);
+ 	if (!refnode)
+ 		return -ENOENT;
+ 
+@@ -557,7 +545,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 	args->nargs = nargs;
+ 
+ 	for (i = 0; i < nargs; i++)
+-		args->args[i] = ref_args->args[i];
++		args->args[i] = ref->args[i];
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 68655c094b39..b315fdc0ec28 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -418,30 +418,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ /* -------------------------------------------------------------------------- */
+ /* Software fwnode support - when HW description is incomplete or missing */
+ 
+-/**
+- * struct software_node_reference - Named software node reference property
+- * @name: Name of the property
+- * @nrefs: Number of elements in @refs array
+- * @refs: Array of references with optional arguments
+- */
+-struct software_node_reference {
+-	const char *name;
+-	unsigned int nrefs;
+-	const struct software_node_ref_args *refs;
+-};
+-
+ /**
+  * struct software_node - Software node description
+  * @name: Name of the software node
+  * @parent: Parent of the software node
+  * @properties: Array of device properties
+- * @references: Array of software node reference properties
+  */
+ struct software_node {
+ 	const char *name;
+ 	const struct software_node *parent;
+ 	const struct property_entry *properties;
+-	const struct software_node_reference *references;
+ };
+ 
+ bool is_software_node(const struct fwnode_handle *fwnode);
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0.866.gb869b98d4c-goog
+
