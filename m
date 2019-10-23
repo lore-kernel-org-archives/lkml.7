@@ -2,72 +2,88 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50644CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958ADCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C4D21929
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641CF21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fmzdiIxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbfJWRdX (ORCPT
+        id S1730388AbfJWReJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:33:23 -0400
-Received: from emh04.mail.saunalahti.fi ([62.142.5.110]:37112 "EHLO
-        emh04.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfJWRdW (ORCPT
+        Wed, 23 Oct 2019 13:34:09 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59576 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730298AbfJWReJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:33:22 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Oct 2019 13:33:21 EDT
-Received: from darkstar.musicnaut.iki.fi (85-76-128-127-nat.elisa-mobile.fi [85.76.128.127])
-        by emh04.mail.saunalahti.fi (Postfix) with ESMTP id 09E8E30184;
-        Wed, 23 Oct 2019 20:26:10 +0300 (EEST)
-Date:   Wed, 23 Oct 2019 20:26:10 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: octeon: Remove typedef declaration
-Message-ID: <20191023172610.GB18977@darkstar.musicnaut.iki.fi>
-References: <20191008040943.9283-1-wambui.karugax@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191008040943.9283-1-wambui.karugax@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 23 Oct 2019 13:34:09 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9NHT0dL190401;
+        Wed, 23 Oct 2019 17:33:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=v5WNcs4g10siyBcOLnqcoMIG80ASzIyEaX700f+qp9E=;
+ b=fmzdiIxNo1VSSS49/ElgzGX8s5/x6Lf32ZNuz3N23Er4+bMMhknkRDF2F+PYq4L2+D9l
+ Rs21jm7TN3Hg8xko1cGyWOfo0EwpBsH2Yx4YZfHQEsHQIoSwJZbG3B824ezKGrcJ7w9y
+ ZVAq3gANxaJhYSK3KjPjlZUsjGgZLUAxEtvQuNsryIqVkK21XeBauzqnMLj26BWgwNr/
+ oDZKjztIXJsu37r9aPIo7e3ADyNnF0F15dJqx5JtZOq1u2G/nlupi4Gyvey05GTcPwBb
+ aI5f4MjtPp5cJwmYPzOf/8XLL1kxFqeh4026HexjDGW70+PmIrVVTTTgD31HX44g6hS/ EA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vqtepxv5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Oct 2019 17:33:57 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9NHXjjs069906;
+        Wed, 23 Oct 2019 17:33:57 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2vtm22kx67-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 17:33:56 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9NHXnFM070572;
+        Wed, 23 Oct 2019 17:33:49 GMT
+Received: from ca-dev107.us.oracle.com (ca-dev107.us.oracle.com [10.129.135.36])
+        by aserp3030.oracle.com with ESMTP id 2vtm22kwep-1;
+        Wed, 23 Oct 2019 17:33:49 +0000
+From:   rao Shoaib <rao.shoaib@oracle.com>
+To:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Rao Shoaib <rao.shoaib@oracle.com>
+Subject: [PATCH v1 0/1] rxe driver should dynamically caclculate inline data size
+Date:   Wed, 23 Oct 2019 10:32:36 -0700
+Message-Id: <1571851957-3524-1-git-send-email-rao.shoaib@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9419 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=902 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910230167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Rao Shoaib <rao.shoaib@oracle.com>
 
-On Tue, Oct 08, 2019 at 07:09:43AM +0300, Wambui Karuga wrote:
-> Fixes checkpatch.pl warning: do not add new typedefs in
-> drivers/staging/octeon/octeon-stubs.h:41
-> 
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  drivers/staging/octeon/octeon-stubs.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-> index a4ac3bfb62a8..773591348ef4 100644
-> --- a/drivers/staging/octeon/octeon-stubs.h
-> +++ b/drivers/staging/octeon/octeon-stubs.h
-> @@ -38,7 +38,7 @@
->  #define CVMX_NPI_RSL_INT_BLOCKS		0
->  #define CVMX_POW_WQ_INT_PC		0
->  
-> -typedef union {
-> +union cvmx_pip_wqe_word2 {
+Resending because of typo in the email addresses.
 
-The "real" definition is in arch/mips/include/asm/octeon/cvmx-wqe.h.
+Currently rxe driver has a hard coded value for inline data size, where as mlx5 driver calculates the size of inline data and number of SGE's to use based on the values in the qp request. Some applications depend on this behavior. This patch changes rxe to dynamically calculate the values.
 
-octeon-stubs.h is just a temporary hack to allow compile testing without
-MIPS cross-compiler. Changing only the stubs file is not really an
-improvement.
+Rao Shoaib (1):
+  rxe: calculate inline data size based on requested values
 
-A.
+ drivers/infiniband/sw/rxe/rxe_param.h | 2 +-
+ drivers/infiniband/sw/rxe/rxe_qp.c    | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+-- 
+1.8.3.1
+
