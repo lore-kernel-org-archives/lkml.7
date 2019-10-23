@@ -2,192 +2,114 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DE3CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DE9CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650FD20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA4420640
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Km6cCa5D"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jQYWfkSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391977AbfJWMzC (ORCPT
+        id S2404405AbfJWM6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:55:02 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40655 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390962AbfJWMzB (ORCPT
+        Wed, 23 Oct 2019 08:58:12 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59204 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390108AbfJWM6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:55:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id i15so8545738lfo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pr5jyZMsP+3kod9VvT5jLLC58+kfpVegavN735X7V0c=;
-        b=Km6cCa5DXSvlLJBbXZDQa2bQulIRzp+UWkLxrd1m2RqeRyw746rzQbdFLelv4UHwbI
-         gR6YNEWJZoIOx46arMROI3WjGp2QxFBi5Ff2YobXl5QRNETwkvhPGM5Iuon7yjKQL/HI
-         3uqIAvQLbLhA0TVRt7iuB/FgNfRhUrpPeVjAo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pr5jyZMsP+3kod9VvT5jLLC58+kfpVegavN735X7V0c=;
-        b=AUazwqAMosXOobI3OAvMg7dthB5evn/XKG9W6NAzBCRy9XlqSsTTwwhXBmZeB0415s
-         +Fwb/ebbiZB+gtwykh3D7vRroBM5FumbeXY49HOgyyJ+A6uo5zDzeBb1bDsp7JuNxdPu
-         vXteJPLmw/XjGPTYdopH55/J1nad4VXOC9K6abrEJiRE78BhR11Kxt4MqJLF3QTXoJyz
-         qTU7i/bC+HBhYE0dxCSHfcvz7cH0f0jNWppqYbgaqGllhsGJrYp1izYSnajEu6UzF5cL
-         kKYLkWreLsg89qxT9syHKLfNq7xJ2wvHn314wG0uhJzPtOcGQ/N7frmj/3siUuFOSd2D
-         Fqaw==
-X-Gm-Message-State: APjAAAXQtuC6E+rvh0aw4kw2VM3TtklqM+CMqvevPFguQDNY8s+Izwu2
-        7a9+KOTh+qwkuu41LVuhyYOvWQ==
-X-Google-Smtp-Source: APXvYqxOE1Ycn6M7T18O3XerWNHcmUvLPbQzFSVn50aactdzR8X43nE3FfGKkdKxXX9ODULzKKE+4g==
-X-Received: by 2002:a19:5201:: with SMTP id m1mr15152059lfb.56.1571835298454;
-        Wed, 23 Oct 2019 05:54:58 -0700 (PDT)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id x17sm8672267lji.62.2019.10.23.05.54.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 05:54:57 -0700 (PDT)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Scott Wood <oss@buserror.net>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/85xx: remove mostly pointless mpc85xx_qe_init()
-Date:   Wed, 23 Oct 2019 14:54:48 +0200
-Message-Id: <20191023125448.383-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.23.0
+        Wed, 23 Oct 2019 08:58:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCw8xU047913;
+        Wed, 23 Oct 2019 07:58:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571835488;
+        bh=sECd/uFdwzMoCMf0uldBu7VsoVmQR5rzVIKvyhIOXls=;
+        h=From:To:CC:Subject:Date;
+        b=jQYWfkSPNPOaiOhxsFdoKA5J+Vnn+jOf04vOoplZAKXCBWFZKx9zRB1mWAs0mYuAg
+         vrp8QZyUISMIL22brq9wzHosiTowA6Ma8pMkYyUBzAPbaXYPfJoLxhWzqVgg590qb7
+         W6BJsbRbrdK54BGNOtW9ArYvNeFqH1c+49GWBluw=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCw8tn064267;
+        Wed, 23 Oct 2019 07:58:08 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 07:57:58 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 07:57:58 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCw5o4061147;
+        Wed, 23 Oct 2019 07:58:05 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>
+CC:     Anil Varughese <aniljoy@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 00/14] PHY: Add support for SERDES in TI's J721E SoC
+Date:   Wed, 23 Oct 2019 18:27:21 +0530
+Message-ID: <20191023125735.4713-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 302c059f2e7b (QE: use subsys_initcall to init qe),
-mpc85xx_qe_init() has done nothing apart from possibly emitting a
-pr_err(). As part of reducing the amount of QE-related code in
-arch/powerpc/ (and eventually support QE on other architectures),
-remove this low-hanging fruit.
+TI's J721E SoC uses Cadence Sierra SERDES for USB, PCIe and SGMII.
+TI has a wrapper named WIZ to control input signals to Sierra and
+Torrent SERDES.
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- arch/powerpc/platforms/85xx/common.c          | 23 -------------------
- arch/powerpc/platforms/85xx/corenet_generic.c |  2 --
- arch/powerpc/platforms/85xx/mpc85xx.h         |  2 --
- arch/powerpc/platforms/85xx/mpc85xx_mds.c     |  1 -
- arch/powerpc/platforms/85xx/mpc85xx_rdb.c     |  1 -
- arch/powerpc/platforms/85xx/twr_p102x.c       |  1 -
- 6 files changed, 30 deletions(-)
+This patch series:
+ 1) Add support to WIZ module present in TI's J721E SoC
+ 2) Adapt Cadence Sierra PHY driver to be used for J721E SoC
 
-diff --git a/arch/powerpc/platforms/85xx/common.c b/arch/powerpc/platforms/85xx/common.c
-index fe0606439b5a..a554b6d87cf7 100644
---- a/arch/powerpc/platforms/85xx/common.c
-+++ b/arch/powerpc/platforms/85xx/common.c
-@@ -86,29 +86,6 @@ void __init mpc85xx_cpm2_pic_init(void)
- #endif
- 
- #ifdef CONFIG_QUICC_ENGINE
--void __init mpc85xx_qe_init(void)
--{
--	struct device_node *np;
--
--	np = of_find_compatible_node(NULL, NULL, "fsl,qe");
--	if (!np) {
--		np = of_find_node_by_name(NULL, "qe");
--		if (!np) {
--			pr_err("%s: Could not find Quicc Engine node\n",
--					__func__);
--			return;
--		}
--	}
--
--	if (!of_device_is_available(np)) {
--		of_node_put(np);
--		return;
--	}
--
--	of_node_put(np);
--
--}
--
- void __init mpc85xx_qe_par_io_init(void)
- {
- 	struct device_node *np;
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/powerpc/platforms/85xx/corenet_generic.c
-index 7ee2c6628f64..a328a741b457 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -66,8 +66,6 @@ void __init corenet_gen_setup_arch(void)
- 	swiotlb_detect_4g();
- 
- 	pr_info("%s board\n", ppc_md.name);
--
--	mpc85xx_qe_init();
- }
- 
- static const struct of_device_id of_device_ids[] = {
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx.h b/arch/powerpc/platforms/85xx/mpc85xx.h
-index fa23f9b0592c..cb84c5c56c36 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx.h
-+++ b/arch/powerpc/platforms/85xx/mpc85xx.h
-@@ -10,10 +10,8 @@ static inline void __init mpc85xx_cpm2_pic_init(void) {}
- #endif /* CONFIG_CPM2 */
- 
- #ifdef CONFIG_QUICC_ENGINE
--extern void mpc85xx_qe_init(void);
- extern void mpc85xx_qe_par_io_init(void);
- #else
--static inline void __init mpc85xx_qe_init(void) {}
- static inline void __init mpc85xx_qe_par_io_init(void) {}
- #endif
- 
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_mds.c b/arch/powerpc/platforms/85xx/mpc85xx_mds.c
-index 5ca254256c47..120633f99ea6 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_mds.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_mds.c
-@@ -238,7 +238,6 @@ static void __init mpc85xx_mds_qe_init(void)
- {
- 	struct device_node *np;
- 
--	mpc85xx_qe_init();
- 	mpc85xx_qe_par_io_init();
- 	mpc85xx_mds_reset_ucc_phys();
- 
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-index d3c540ee558f..7f9a84f85766 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-@@ -89,7 +89,6 @@ static void __init mpc85xx_rdb_setup_arch(void)
- 	fsl_pci_assign_primary();
- 
- #ifdef CONFIG_QUICC_ENGINE
--	mpc85xx_qe_init();
- 	mpc85xx_qe_par_io_init();
- #if defined(CONFIG_UCC_GETH) || defined(CONFIG_SERIAL_QE)
- 	if (machine_is(p1025_rdb)) {
-diff --git a/arch/powerpc/platforms/85xx/twr_p102x.c b/arch/powerpc/platforms/85xx/twr_p102x.c
-index 720b0c0f03ba..6c3c0cdaee9a 100644
---- a/arch/powerpc/platforms/85xx/twr_p102x.c
-+++ b/arch/powerpc/platforms/85xx/twr_p102x.c
-@@ -72,7 +72,6 @@ static void __init twr_p1025_setup_arch(void)
- 	fsl_pci_assign_primary();
- 
- #ifdef CONFIG_QUICC_ENGINE
--	mpc85xx_qe_init();
- 	mpc85xx_qe_par_io_init();
- 
- #if IS_ENABLED(CONFIG_UCC_GETH) || IS_ENABLED(CONFIG_SERIAL_QE)
+Changes from v1:
+ *) Change the dt binding Documentation of WIZ wrapper to YAML format
+ *) Fix an issue in Sierra while doimg rmmod
+
+Anil Varughese (1):
+  phy: cadence: Sierra: Configure both lane cdb and common cdb registers
+    for external SSC
+
+Kishon Vijay Abraham I (13):
+  dt-bindings: phy: Sierra: Add bindings for Sierra in TI's J721E
+  phy: cadence: Sierra: Make "phy_clk" and "sierra_apb" optional
+    resources
+  phy: cadence: Sierra: Use "regmap" for read and write to Sierra
+    registers
+  phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
+  phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
+  phy: cadence: Sierra: Modify register macro names to be in sync with
+    Sierra user guide
+  phy: cadence: Sierra: Get reset control "array" for each link
+  phy: cadence: Sierra: Check for PLL lock during PHY power on
+  phy: cadence: Sierra: Change MAX_LANES of Sierra to 16
+  phy: cadence: Sierra: Set cmn_refclk/cmn_refclk1 frequency to 25MHz
+  phy: cadence: Sierra: Use correct dev pointer in
+    cdns_sierra_phy_remove()
+  dt-bindings: phy: Document WIZ (SERDES wrapper) bindings
+  phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC
+
+ .../bindings/phy/phy-cadence-sierra.txt       |  13 +-
+ .../bindings/phy/ti,phy-j721e-wiz.yaml        | 159 +++
+ drivers/phy/cadence/phy-cadence-sierra.c      | 697 +++++++++++---
+ drivers/phy/ti/Kconfig                        |  15 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-j721e-wiz.c                | 904 ++++++++++++++++++
+ 6 files changed, 1650 insertions(+), 139 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+ create mode 100644 drivers/phy/ti/phy-j721e-wiz.c
+
 -- 
-2.23.0
+2.17.1
 
