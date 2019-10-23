@@ -2,93 +2,110 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE25CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABBCCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09FCA21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE7121872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392220AbfJWO27 (ORCPT
+        id S2406066AbfJWO3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:28:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:38191 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389521AbfJWO27 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:28:59 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MxmBi-1i5ENr47vK-00zICK; Wed, 23 Oct 2019 16:28:58 +0200
-Received: by mail-qk1-f176.google.com with SMTP id u22so19897705qkk.11;
-        Wed, 23 Oct 2019 07:28:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAUpebkaTULw/A7WTcaFgoAZ369yJFKgyFCJMXiAR8nznL2z2oj3
-        AkWoDtS1hSVU4qoBZnw+PQaVaSPL4diTKGaETb8=
-X-Google-Smtp-Source: APXvYqzP2LPP0EVOvQLFv73W1u8YOBkdDSztlR+gJoeDvIZmUcdwNseA92hgtQnhiy+B/pAU/u5EvOBy39PrXQdnbVo=
-X-Received: by 2002:a37:a50f:: with SMTP id o15mr7389101qke.3.1571840936788;
- Wed, 23 Oct 2019 07:28:56 -0700 (PDT)
+        Wed, 23 Oct 2019 10:29:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:7610 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403845AbfJWO3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:29:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 07:29:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="209932154"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 07:29:01 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 23 Oct 2019 17:29:00 +0300
+Date:   Wed, 23 Oct 2019 17:29:00 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Puma Hsu <pumahsu@google.com>, gregkh@linuxfoundation.org,
+        badhri@google.com, kyletso@google.com, albertccwang@google.com,
+        rickyniu@google.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector
+ orientation
+Message-ID: <20191023142900.GA15396@kuha.fi.intel.com>
+References: <20191022085924.92783-1-pumahsu@google.com>
+ <20191023083221.GB8828@kuha.fi.intel.com>
+ <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net>
 MIME-Version: 1.0
-References: <20191009190853.245077-1-arnd@arndb.de> <20191009191044.308087-10-arnd@arndb.de>
- <d1022cda6bd6ce73e9875644a5a2c65e4d554f37.camel@codethink.co.uk>
- <CAK8P3a0BYkPTSnQUmde2k+HVcg7XNihzWTEzrCD4d8G8ecO9-w@mail.gmail.com>
- <20191022043051.GA20354@ZenIV.linux.org.uk> <CAK8P3a3yutJU83AfxKXTFuCVQwsX50KYsDgbGbHeJJ0JoLbejg@mail.gmail.com>
- <20191023102937.GK3125@piout.net>
-In-Reply-To: <20191023102937.GK3125@piout.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 16:28:40 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2+wEH5mtq_vF6fTSkmCfBeKHOvNmjbvViiHFWxUAjV_g@mail.gmail.com>
-Message-ID: <CAK8P3a2+wEH5mtq_vF6fTSkmCfBeKHOvNmjbvViiHFWxUAjV_g@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH v6 10/43] compat_ioctl: move rtc handling into rtc-dev.c
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:j3q3khfz/zd9/Zc1ZRm1iLAWqMfYAPWxVT1x0kkvwFdE5ei6Jfw
- aJaarYdEiqkKpe1TTRe3WHqtllQb2u/IXAeiqBEwzO+XBA5eEL3jOxpmfeH0Kws0yNCb/nj
- RMkCrNectmQR7z1T/y06NmYB4kVLFTZ7VcZlX3kZOI/zzieqlwv4K56qnW0VIxqllaNtChp
- pBdpaKA4mxA5S7la7CzIw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PiV8fkotnMs=:Wfp8ZqLnz6P85zFhCBlG+x
- qHpx6LvC4+hC+v3wqoQg+oz1+iqg2+dQlEB/xh+gPv1kVd21UbwPxCiTc/PxG2K0lcCfJJp52
- 2xIGeZW/7PAnfj24Sf1WJ9zIuSMVckpWfiVvELHPi0NVkvRTU1LBVxhxmyU+azoJv85Xdzt29
- Tq6THYNdrmpkY9V9Bwsr6AOD7SblYjfR+BjLqNVNIieNMb0VowQcNKhfsGPkyjnMvl1gkOV08
- bacWjmCXH7KkzCSRea/Z/ANG7PRqup8oCipTC8A04YKOzpxVYxWYs0dHMxGTfh3KwgxQ7ZXlh
- Rv7lTvcrm5LPGOen8olDOLxUviSHMUt/wfecVy+0MFi7xvv0P0na3dpzt0+E1YmzKonL+hTRd
- oUUJIG3g2bRHKN34Lm2ggWYoeBUXpjuq4xvO6gqW81g02vMpY2l1TptxszXnasUKKE0VQORvK
- B99m0+iEZb9gCXwtWhQKAnuGSxAVJ0Y53SpNN9a9tOR50lEsYeMoy5ONDcpE+cCmF8KEg9qc7
- IrLYGY2GloyYgpR7u7ilwmTomAQpCxFd4GsvHcENdwgGNGdxJg/ZUUTMNhl+cHDiWEtPPRhz/
- PzdyIV/n3GCpurysTvwE1GCRENF1h6wJoLyb9oil5WjCQChurfyDE/5lNMzzcrNYzZz5l6zsM
- 9jQOHVI0udONF8/rDyz8vgmr89pdVd/LSdIQf0eyc39HVjbIOYnX5AuLSQo1lu82YNdckDM+6
- Gs1EhWwKiJBtgXL/+89+Yis5J/sEZcrgkFtOSR7nDT9+13zcGuD9+yawnyOLr3M/8M7EjdaOu
- 5wypEExuQJR9wQ/ymNmk0ehMIRb8T4KD9gtafFkoa6f1OW9xDUq+RvJJGPfKcObnp+nZb8T7+
- 0i04fbpzDneLGNvBheuw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:29 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
-> On 22/10/2019 14:14:21+0200, Arnd Bergmann wrote:
-> > On Tue, Oct 22, 2019 at 6:30 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > I don't see any chance that this code is revived. If anyone wanted to
-> > make it work, the right approach would be to use the rtc framework
-> > and rewrite the code first.
-> >
-> > I could send a patch to remove the dead code though if that helps.
-> >
->
-> Please do.
+On Wed, Oct 23, 2019 at 06:44:39AM -0700, Guenter Roeck wrote:
+> On 10/23/19 1:32 AM, Heikki Krogerus wrote:
+> > +Guenter
+> > 
+> > On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
+> > > Export the Type-C connector orientation so that user space
+> > > can get this information.
+> > > 
+> > > Signed-off-by: Puma Hsu <pumahsu@google.com>
+> > > ---
+> > >   Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
+> > >   drivers/usb/typec/class.c                   | 18 ++++++++++++++++++
+> > >   2 files changed, 29 insertions(+)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
+> > > index d7647b258c3c..b22f71801671 100644
+> > > --- a/Documentation/ABI/testing/sysfs-class-typec
+> > > +++ b/Documentation/ABI/testing/sysfs-class-typec
+> > > @@ -108,6 +108,17 @@ Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > >   Description:
+> > >   		Revision number of the supported USB Type-C specification.
+> > > +What:		/sys/class/typec/<port>/connector_orientation
+> > > +Date:		October 2019
+> > > +Contact:	Puma Hsu <pumahsu@google.com>
+> > > +Description:
+> > > +		Indicates which typec connector orientation is configured now.
+> > > +		cc1 is defined as "normal" and cc2 is defined as "reversed".
+> > > +
+> > > +		Valid value:
+> > > +		- unknown (nothing configured)
+> > 
+> > "unknown" means we do not know the orientation.
+> > 
+> > > +		- normal (configured in cc1 side)
+> > > +		- reversed (configured in cc2 side)
+> > 
+> > Guenter, do you think "connector_orientation" OK. I proposed it, but
+> > I'm now wondering if something like "polarity" would be better?
+> > 
+> 
+> Yes, or just "orientation". I don't see the value in the "connector_" prefix.
+> I also wonder if "unknown" is really correct. Is it really unknown, or
+> does it mean that the port is disconnected ?
 
-Ok, done. Speaking of removing rtc drivers, should we just kill off
-drivers/char/rtc.c and drivers/char/efirtc.c as well? I don't remember
-why we left them in the tree, but I'm fairly sure they are not actually
-needed.
+Unknown means we don't know the orientation. We don't always have that
+information available to us. With UCSI we simply do not know it.
 
-      Arnd
+I think this file needs to be hidden after all if we don't know the
+cable plug orientation.
+
+How about empty string instead of "unknown"?
+
+thanks,
+
+-- 
+heikki
