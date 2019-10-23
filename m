@@ -2,100 +2,101 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35663CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE815CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00CFA2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SqRgbd3W"
+	by mail.kernel.org (Postfix) with ESMTP id 8314B2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405740AbfJWVbT (ORCPT
+        id S2406189AbfJWVeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:31:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50976 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2392669AbfJWVbT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:31:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571866278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mKJAxNSEFHg5g84xz0cpNjTeNjjB7lw6asiNQyLDQPQ=;
-        b=SqRgbd3WkfE5JLLfs+dl7YX6BLz/gib8/XBtzdpx3779ptUpSLcOEJAQiWx9bYKYwNGl4U
-        vLiHWxX4AauD3Yeczf8v4RPdeDWoD6+r41OVtVf7ZMsWzw37NfgETOAsghfJSpq8/q93xf
-        BekT0lpBaX2h6A0eRi1tNSa/SSmRnPE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186-HutMCuPvOW-CVyb0LqMZww-1; Wed, 23 Oct 2019 17:31:14 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 136CA1800D6B;
-        Wed, 23 Oct 2019 21:31:12 +0000 (UTC)
-Received: from treble (ovpn-121-225.rdu2.redhat.com [10.10.121.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C19681001E75;
-        Wed, 23 Oct 2019 21:31:09 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 16:31:07 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 03/17] x86/traps: Remove pointless irq enable from
- do_spurious_interrupt_bug()
-Message-ID: <20191023213107.m7ishskghswktspp@treble>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123117.871608831@linutronix.de>
+        Wed, 23 Oct 2019 17:34:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:8888 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405467AbfJWVeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:34:07 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:34:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
+   d="scan'208";a="281741938"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga001.jf.intel.com with ESMTP; 23 Oct 2019 14:34:07 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.88]) by
+ ORSMSX106.amr.corp.intel.com ([169.254.1.210]) with mapi id 14.03.0439.000;
+ Wed, 23 Oct 2019 14:34:07 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+Subject: RE: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Topic: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Index: AQHVdYkISHS3XNGT0kCKyhZHN6EY9KdALBNAgAIVm4CAAmLQsIAjqUEAgACZz9A=
+Date:   Wed, 23 Oct 2019 21:34:06 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB589693A38A@ORSMSX121.amr.corp.intel.com>
+References: <20190129204319.15238-1-jacob.e.keller@intel.com>
+ <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
+ <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
+ <CAK7LNARyUEakeG_N9TWcO2cjFSzbgY__k_QJm6C+oOz+fW0aeg@mail.gmail.com>
+ <02874ECE860811409154E81DA85FBB58968E1402@ORSMSX121.amr.corp.intel.com>
+ <CAK7LNARAhZtzdnS9+mgtamj=pLdV81dudnYVDa8NRxcQPpF0bw@mail.gmail.com>
+In-Reply-To: <CAK7LNARAhZtzdnS9+mgtamj=pLdV81dudnYVDa8NRxcQPpF0bw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDM0NzM2NjAtY2FkYi00M2RlLWJkMjAtMDRlNjYzZWEwNjVmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSml3YTNpVGVEakpDSEJyakU2ZFhyaTBMc1F5ZHBmdWYyamJyKzZEWUYxYnRRXC9GOHlINVlWS0poeHQ5TE41aUEifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191023123117.871608831@linutronix.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: HutMCuPvOW-CVyb0LqMZww-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 02:27:08PM +0200, Thomas Gleixner wrote:
-> That function returns immediately after conditionally reenabling interrup=
-ts which
-> is more than pointless and requires the ASM code to disable interrupts ag=
-ain.
->=20
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/x86/kernel/traps.c |    1 -
->  1 file changed, 1 deletion(-)
->=20
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -871,7 +871,6 @@ do_simd_coprocessor_error(struct pt_regs
->  dotraplinkage void
->  do_spurious_interrupt_bug(struct pt_regs *regs, long error_code)
->  {
-> -=09cond_local_irq_enable(regs);
->  }
-
-I think we can just remove this handler altogether.  The Intel and AMD
-manuals say vector 15 (X86_TRAP_SPURIOUS) is reserved.
-
---=20
-Josh
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXNhaGlybyBZYW1hZGEgPHlh
+bWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDIy
+LCAyMDE5IDEwOjIyIFBNDQo+IFRvOiBLZWxsZXIsIEphY29iIEUgPGphY29iLmUua2VsbGVyQGlu
+dGVsLmNvbT47IFJhbmR5IER1bmxhcA0KPiA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPg0KPiBDYzog
+aW50ZWwtd2lyZWQtbGFuQGxpc3RzLm9zdW9zbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtidWlsZA0KPiA8bGludXgta2J1aWxkQHZnZXIua2VybmVsLm9yZz4NCj4g
+U3ViamVjdDogUmU6IFtQQVRDSF0gbmFtZXNwYWNlOiBmaXggbmFtZXNwYWNlLnBsIHNjcmlwdCB0
+byBzdXBwb3J0IHJlbGF0aXZlDQo+IHBhdGhzDQo+IA0KPiBUaGlzIHNjcmlwdHMgaGFzIGJlZW4g
+NS15ZWFyIGJyb2tlbiwNCj4gYW5kIEkgZGlkIG5vdCBzZWUgYW55IGNvbXBsYWludCBleGNlcHQg
+ZnJvbSB5b3UuDQo+IFNvLCBJIHdvbmRlciBob3cgbWFueSBwZW9wbGUgYXJlIHVzaW5nIHRoaXMu
+DQo+IA0KPiBOb3IsIGRvIEkgdW5kZXJzdGFuZCBob3cgdG8gdXNlIGl0Lg0KPiANCj4gQ291bGQg
+eW91IHRlYWNoIG1lIGEgYml0IG1vcmUgYWJvdXQgdGhpcyBzY3JpcHQ/DQo+IA0KPiANCj4gDQo+
+IFNvbWV0aGluZyBtaWdodCBiZSBtaXNzaW5nIGluIG15IG1pbmQsIGJ1dA0KPiBJIGRvIG5vdCBr
+bm93IGhvdyB0byB1c2UgdGhpcyBzY3JpcHQgaW4gYSB1c2VmdWwgd2F5Lg0KPiANCj4gDQo+IA0K
+PiBJdCBwcm92aWRlcyB0aHJlZSBjaGVja3MuDQo+IA0KPiBbMV0gbGlzdF9tdWx0aXBseV9kZWZp
+bmVkKCkNCj4gDQo+IFRoaXMgd2FybnMgbXVsdGlwbGUgZGVmaW5pdGlvbiBvZiBmdW5jdGlvbnMu
+DQo+IA0KPiBUaGUgY29tcGlsZXIgd291bGQgZmFpbCBpZiBpdCBzYXcgYW55IG11bHRpcGxlIGRl
+ZmluaXRpb24sDQo+IHNvIHRoZSByZXBvcnRzIGZyb20gdGhpcyBjaGVjayBhcmUgYWxsIGZhbHNl
+LXBvc2l0aXZlLg0KPiANCj4gDQo+IFsyXSByZXNvbHZlX2V4dGVybmFsX3JlZmVyZW5jZXMoKQ0K
+PiANCj4gVGhpcyB3YXJucyB1bnJlc29sdmVkIHN5bWJvbHMuDQo+IA0KPiBUaGUgY29tcGlsZXIg
+d291bGQgZmFpbCBpZiBpdCBzYXcgYW55IHVucmVzb2x2ZWQgc3ltYm9sLA0KPiBzbyB0aGUgcmVw
+b3J0cyBmcm9tIHRoaXMgY2hlY2sgYXJlIGFsbCBmYWxzZS1wb3NpdGl2ZSwgdG9vLg0KPiANCj4g
+DQoNClRoZSBjb21waWxlciB3b24ndCBuZWNlc3NhcmlseSBmYWlsIHdoZW4gYnVpbGRpbmcgbW9k
+dWxlcywgYmVjYXVzZSB0aGUgc3ltYm9sIG1pZ2h0IGJlIGluIGFub3RoZXIgbG9hZGFibGUgbW9k
+dWxlLg0KDQo+IA0KPiANCj4gWzNdIGxpc3RfZXh0cmFfZXh0ZXJuYWxzDQo+IA0KPiBUaGlzIHdh
+cm5zIHN5bWJvbHMgd2l0aCBubyByZWZlcmVuY2UuDQo+IA0KPiBUaGlzIHBvdGVudGlhbGx5IGNv
+bnRhaW5zIGxvdHMgb2YgZmFsc2UtcG9zaXRpdmVzLg0KPiBGb3IgZXhhbXBsZSwgdGhlIGNvcmUg
+ZnJhbWV3b3JrIHByb3ZpZGVzIEFQSXMsIGJ1dCBpZiBhbGwgZHJpdmVycw0KPiBhcmUgZGlzYWJs
+ZWQsIHRoZXJlIGlzIG5vIHVzZXIgb2YgdGhvc2UgQVBJcy4NCj4gDQoNCldlIHVzZSB0aGlzIHRv
+IGhlbHAgdmVyaWZ5IHRoYXQgZHJpdmVyIG1vZHVsZXMgZG8gbm90IGV4cG9zZSBzeW1ib2xzLg0K
+DQpUaGFua3MsDQpKYWtlDQo=
