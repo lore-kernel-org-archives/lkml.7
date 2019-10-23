@@ -2,119 +2,253 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA150CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0180CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 771462086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:57:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gIfO1rYa"
+	by mail.kernel.org (Postfix) with ESMTP id C6EA421872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387487AbfJWD5I (ORCPT
+        id S2387978AbfJWD7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 23:57:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35266 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729994AbfJWD5H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 23:57:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pOPhMl13JOcU34vSF+PGWK0TLfdWSZkNf3ZBTG2OMRU=; b=gIfO1rYa8ZZfsCcZ6ldbDmvoU
-        AwQ3f9kl8l+wxNQSXq3t11pxzaZLEVKr2UfkHcktTDCZSzz9LbtU5Xvgk0MZgcyx07RXpmI7EEbBY
-        ttD1D3Eosw2hZwG0Mhc/LQ0u1CijKDeT/FBklOMpyLg5c7rFmd51vXvFxNsMIrfsN+Zw02P+D3i2D
-        2vycJgDoB1p2ABSmp39g045VspQkNOsX/AIyD9Q/0ofSXp8wUxGRImHFFGG0GpTVDxTPWNjelmV1o
-        xd1XKmsLW6eX+Q05rn0tNngScmGCNNa0UF/JVxinn/eDxpPqA9nG+BOKTj6aGrsKjUo6frSR6nQk0
-        hRsAqq/Eg==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iN7lj-000523-3f; Wed, 23 Oct 2019 03:57:07 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] reset: fix kernel-doc warnings
-Message-ID: <6e166445-2a3d-dd4d-22ea-3ab77d3d3b11@infradead.org>
-Date:   Tue, 22 Oct 2019 20:57:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 22 Oct 2019 23:59:42 -0400
+Received: from mga06.intel.com ([134.134.136.31]:14139 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729994AbfJWD7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 23:59:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 20:59:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
+   d="scan'208";a="209908838"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 22 Oct 2019 20:59:39 -0700
+Date:   Tue, 22 Oct 2019 21:04:00 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 02/10] iommu/vt-d: Add custom allocator for IOASID
+Message-ID: <20191022210400.357e69a9@jacob-builder>
+In-Reply-To: <20191023005129.GC100970@otc-nc-03>
+References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1571788403-42095-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20191023005129.GC100970@otc-nc-03>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Tue, 22 Oct 2019 17:51:29 -0700
+"Raj, Ashok" <ashok.raj@intel.com> wrote:
 
-Fix kernel-doc warnings discovered in the reset controller API chapter.
-Fixes these warnings:
+> On Tue, Oct 22, 2019 at 04:53:15PM -0700, Jacob Pan wrote:
+> > When VT-d driver runs in the guest, PASID allocation must be
+> > performed via virtual command interface. This patch registers a
+> > custom IOASID allocator which takes precedence over the default
+> > XArray based allocator. The resulting IOASID allocation will always
+> > come from the host. This ensures that PASID namespace is system-
+> > wide.
+> > 
+> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/Kconfig       |  1 +
+> >  drivers/iommu/intel-iommu.c | 67
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> > include/linux/intel-iommu.h |  2 ++ 3 files changed, 70
+> > insertions(+)
+> > 
+> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > index fd50ddffffbf..961fe5795a90 100644
+> > --- a/drivers/iommu/Kconfig
+> > +++ b/drivers/iommu/Kconfig
+> > @@ -211,6 +211,7 @@ config INTEL_IOMMU_SVM
+> >  	bool "Support for Shared Virtual Memory with Intel IOMMU"
+> >  	depends on INTEL_IOMMU && X86
+> >  	select PCI_PASID
+> > +	select IOASID
+> >  	select MMU_NOTIFIER
+> >  	help
+> >  	  Shared Virtual Memory (SVM) provides a facility for
+> > devices diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index 3f974919d3bd..3aff0141c522
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -1706,6 +1706,8 @@ static void free_dmar_iommu(struct
+> > intel_iommu *iommu) if (ecap_prs(iommu->ecap))
+> >  			intel_svm_finish_prq(iommu);
+> >  	}
+> > +	ioasid_unregister_allocator(&iommu->pasid_allocator);
+> > +
+> >  #endif
+> >  }
+> >  
+> > @@ -4910,6 +4912,46 @@ static int __init
+> > probe_acpi_namespace_devices(void) return 0;
+> >  }
+> >  
+> > +#ifdef CONFIG_INTEL_IOMMU_SVM  
+> 
+> Maybe move them to intel-svm.c instead? that's where the bulk
+> of the svm support is?
+> 
+The reason I put them in intel-iommu.c is that pasid allocators need to
+be registered during initialization of Intel iommu. No strong
+preference.
 
-./drivers/reset/core.c:86: warning: Excess function parameter 'flags' description in 'of_reset_simple_xlate'
-./drivers/reset/core.c:830: warning: Incorrect use of kernel-doc format:  * of_reset_control_get_count - Count number of resets available with a device
-./drivers/reset/core.c:838: warning: Function parameter or member 'node' not described in 'of_reset_control_get_count'
-./include/linux/reset-controller.h:45: warning: Function parameter or member 'con_id' not described in 'reset_control_lookup'
-./drivers/reset/core.c:86: warning: Excess function parameter 'flags' description in 'of_reset_simple_xlate'
-./drivers/reset/core.c:830: warning: Incorrect use of kernel-doc format:  * of_reset_control_get_count - Count number of resets available with a device
+> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
+> > void *data) +{
+> > +	struct intel_iommu *iommu = data;
+> > +	ioasid_t ioasid;
+> > +
+> > +	/*
+> > +	 * VT-d virtual command interface always uses the full 20
+> > bit
+> > +	 * PASID range. Host can partition guest PASID range based
+> > on
+> > +	 * policies but it is out of guest's control.
+> > +	 */
+> > +	if (min < PASID_MIN || max > PASID_MAX)
+> > +		return INVALID_IOASID;  
+> 
+> What are these PASID_MIN/MAX? Do you check if these are within the 
+> limits supported by the iommu/vIOMMU as its enumerated?
+> 
+PASID_MIN/MAX is the full range, 1-2M.
+I do not check range because VCMD interface will always use the
+full range. vIOMMU will always support full 20 bit guest PASID.
+The host VFIO code calls IOASID allocator which should respect IOMMU
+enumerated range.
+> 
+> > +
+> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
+> > +		return INVALID_IOASID;
+> > +
+> > +	return ioasid;
+> > +}
+> > +
+> > +static void intel_ioasid_free(ioasid_t ioasid, void *data)
+> > +{
+> > +	struct iommu_pasid_alloc_info *svm;
+> > +	struct intel_iommu *iommu = data;
+> > +
+> > +	if (!iommu)
+> > +		return;
+> > +	/*
+> > +	 * Sanity check the ioasid owner is done at upper layer,
+> > e.g. VFIO
+> > +	 * We can only free the PASID when all the devices are
+> > unbond.
+> > +	 */
+> > +	svm = ioasid_find(NULL, ioasid, NULL);
+> > +	if (!svm) {
+> > +		pr_warn("Freeing unbond IOASID %d\n", ioasid);
+> > +		return;
+> > +	}
+> > +	vcmd_free_pasid(iommu, ioasid);
+> > +}
+> > +#endif
+> > +
+> >  int __init intel_iommu_init(void)
+> >  {
+> >  	int ret = -ENODEV;
+> > @@ -5020,6 +5062,31 @@ int __init intel_iommu_init(void)
+> >  				       "%s", iommu->name);
+> >  		iommu_device_set_ops(&iommu->iommu,
+> > &intel_iommu_ops); iommu_device_register(&iommu->iommu);
+> > +#ifdef CONFIG_INTEL_IOMMU_SVM
+> > +		if (cap_caching_mode(iommu->cap) &&
+> > sm_supported(iommu)) {  
+> 
+> do you need to check against cap_caching_mode() or ecap_vcmd?
+> 
+I guess ecap_vcmd() will suffice. Kind of redundant.
+> 
+> > +			/*
+> > +			 * Register a custom ASID allocator if we
+> > are running
+> > +			 * in a guest, the purpose is to have a
+> > system wide PASID
+> > +			 * namespace among all PASID users.
+> > +			 * There can be multiple vIOMMUs in each
+> > guest but only
+> > +			 * one allocator is active. All vIOMMU
+> > allocators will
+> > +			 * eventually be calling the same host
+> > allocator.
+> > +			 */
+> > +			iommu->pasid_allocator.alloc =
+> > intel_ioasid_alloc;
+> > +			iommu->pasid_allocator.free =
+> > intel_ioasid_free;
+> > +			iommu->pasid_allocator.pdata = (void
+> > *)iommu;
+> > +			ret =
+> > ioasid_register_allocator(&iommu->pasid_allocator);
+> > +			if (ret) {
+> > +				pr_warn("Custom PASID allocator
+> > registeration failed\n");
+> > +				/*
+> > +				 * Disable scalable mode on this
+> > IOMMU if there
+> > +				 * is no custom allocator. Mixing
+> > SM capable vIOMMU
+> > +				 * and non-SM vIOMMU are not
+> > supported.
+> > +				 */
+> > +				intel_iommu_sm = 0;
+> > +			}
+> > +		}
+> > +#endif
+> >  	}
+> >  
+> >  	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index eea7468694a7..fb1973a761c1
+> > 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/iommu.h>
+> >  #include <linux/io-64-nonatomic-lo-hi.h>
+> >  #include <linux/dmar.h>
+> > +#include <linux/ioasid.h>
+> >  
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/iommu.h>
+> > @@ -542,6 +543,7 @@ struct intel_iommu {
+> >  #ifdef CONFIG_INTEL_IOMMU_SVM
+> >  	struct page_req_dsc *prq;
+> >  	unsigned char prq_name[16];    /* Name for PRQ interrupt */
+> > +	struct ioasid_allocator_ops pasid_allocator; /* Custom
+> > allocator for PASIDs */ #endif
+> >  	struct q_inval  *qi;            /* Queued invalidation
+> > info */ u32 *iommu_state; /* Store iommu states between suspend and
+> > resume.*/ -- 
+> > 2.7.4
+> >   
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/reset/core.c             |    4 ++--
- include/linux/reset-controller.h |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
---- linux-next-20191022.orig/drivers/reset/core.c
-+++ linux-next-20191022/drivers/reset/core.c
-@@ -76,7 +76,6 @@ static const char *rcdev_name(struct res
-  * of_reset_simple_xlate - translate reset_spec to the reset line number
-  * @rcdev: a pointer to the reset controller device
-  * @reset_spec: reset line specifier as found in the device tree
-- * @flags: a flags pointer to fill in (optional)
-  *
-  * This simple translation function should be used for reset controllers
-  * with 1:1 mapping, where reset lines can be indexed by number without gaps.
-@@ -823,9 +822,10 @@ int __device_reset(struct device *dev, b
- }
- EXPORT_SYMBOL_GPL(__device_reset);
- 
--/**
-+/*
-  * APIs to manage an array of reset controls.
-  */
-+
- /**
-  * of_reset_control_get_count - Count number of resets available with a device
-  *
---- linux-next-20191022.orig/include/linux/reset-controller.h
-+++ linux-next-20191022/include/linux/reset-controller.h
-@@ -7,7 +7,7 @@
- struct reset_controller_dev;
- 
- /**
-- * struct reset_control_ops
-+ * struct reset_control_ops - reset controller driver callbacks
-  *
-  * @reset: for self-deasserting resets, does all necessary
-  *         things to reset the device
-@@ -33,7 +33,7 @@ struct of_phandle_args;
-  * @provider: name of the reset controller device controlling this reset line
-  * @index: ID of the reset controller in the reset controller device
-  * @dev_id: name of the device associated with this reset line
-- * @con_id name of the reset line (can be NULL)
-+ * @con_id: name of the reset line (can be NULL)
-  */
- struct reset_control_lookup {
- 	struct list_head list;
-
+[Jacob Pan]
