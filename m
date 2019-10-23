@@ -2,164 +2,93 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3482CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ABCCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A27921925
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893782173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405698AbfJWNVg (ORCPT
+        id S2405749AbfJWNVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:21:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54558 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405626AbfJWNVf (ORCPT
+        Wed, 23 Oct 2019 09:21:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:41639 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405607AbfJWNVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:21:35 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9NDL2vc054501
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:21:34 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vtqhygbvb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 09:21:33 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 23 Oct 2019 14:21:30 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 23 Oct 2019 14:21:27 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9NDKrEH20054288
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 13:20:53 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29B6911C05B;
-        Wed, 23 Oct 2019 13:21:26 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EE5F111C050;
-        Wed, 23 Oct 2019 13:21:24 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.174])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Oct 2019 13:21:24 +0000 (GMT)
-Subject: Re: [PATCH v1 2/6] KEYS: ima: Refactored process_buffer_measurement
- function so that it can measure any buffer (and not just KEXEC_CMDLINE one)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Date:   Wed, 23 Oct 2019 09:21:24 -0400
-In-Reply-To: <20191023001818.3684-3-nramas@linux.microsoft.com>
-References: <20191023001818.3684-1-nramas@linux.microsoft.com>
-         <20191023001818.3684-3-nramas@linux.microsoft.com>
+        Wed, 23 Oct 2019 09:21:47 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N3Kc6-1hxWBf1L2Q-010NK1; Wed, 23 Oct 2019 15:21:45 +0200
+Received: by mail-qt1-f182.google.com with SMTP id w14so32187382qto.9;
+        Wed, 23 Oct 2019 06:21:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAV4evTZkc8QvVs46EuK469NNe0FS1T629zeVTpLUL9czu/hcklm
+        d/ciWCbECtxeVlWsxqAfEC3n8f1z5sfcMG6koNI=
+X-Google-Smtp-Source: APXvYqwM2qEEMnGfHv8Zjb1lutdzumiJLhReXUDt54qECGm5JtGOI75fA1JAhUI8HrWZ9XEpyPDWgXHf+8DP7KS9kXc=
+X-Received: by 2002:a0c:d0e1:: with SMTP id b30mr8768414qvh.197.1571836904019;
+ Wed, 23 Oct 2019 06:21:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-13-arnd@arndb.de> <20191023123200.GC11048@pi3>
+In-Reply-To: <20191023123200.GC11048@pi3>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 15:21:27 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2LnsqfFf4X2XrBMHBuBKZOHYQtwv4_Hj7RFC1wkPAwqQ@mail.gmail.com>
+Message-ID: <CAK8P3a2LnsqfFf4X2XrBMHBuBKZOHYQtwv4_Hj7RFC1wkPAwqQ@mail.gmail.com>
+Subject: Re: [PATCH 13/36] ARM: s3c: move regs-spi.h into spi driver
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Andi Shyti <andi@etezian.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102313-4275-0000-0000-000003762A74
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102313-4276-0000-0000-0000388951C0
-Message-Id: <1571836884.5104.94.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910230136
+X-Provags-ID: V03:K1:Kc2/umFPU3EEwzXXPT72ODcqpU+joczmHFtSKx9N5mJF5DFQ12p
+ vPv8kEtNG0xYf9QUQfRsVKvlRhX8lOtb2CTGBPzT8SNmbk87y8O9qqhi9v5Zbg4q+8ZzfOu
+ h28JSiQqFR9Fd6pfWlIRYYJ1+ktLjB56UwKDNJaG6oKAFCIShXnnBfBKtTea196rs5ikmu7
+ A+ePvMU9lAE2oPOJVP+kA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pW7bVROir+Q=:TOf6c1fpXBhnVHIBkHUqo9
+ i0st8ZnEh/m3972sds/I6F1jGt2uPv7GuiYY9aOWim1Uc8Kl9HXafWjDRFmvsVVnj0Su/k8pt
+ MqfJwqYo1xEz7OYH0j18csrGnPVrJWuQAgDb/0KcSNFP1lVzKMvuCsDozcCI5gC6YvXXvaLUK
+ GrSx4IY3Fhh0y7PQM+uDf+R7Ek0h1vTCoHWk0zpVW9rLPjm7jTQybsvlk2E6dvI08xX5+WUJ6
+ MGrx72k34cdkj71trJX+Fbi6EM/2jxiFb6LVPZNM8nmXsfEbdknpABRsmdx+2DoP+x/Bvi65W
+ rzUr4rGhqfBgWpvBN/Bs4MJFJVARzk927TKjGPRz1LDNM67HpN/o0cFjo4AD+5nY+6J/mWk2a
+ 2HKgRWXTg10g5GwdDW8Eub8OFknhDR/LBm9lD8+CuYJBvwluf4Rl61DbylJAS2HvjqOUCSRdV
+ WEZu8ROIMnhhH0X/O5hIr9ycU3MgKSC8L1H1DrhEnCWsSOVwUMHut/qoaM4x0BlswVn+KzjcG
+ TkmZ9w+QmpPqycveV+vL139k/dG8DI9mFBsEwO44SRCFpypKmXJrkzvDokPp7k9UzmEQ3tNua
+ XtYAAT7H3x3k/l2jSzVdIlYNS0JlAXaVgKJ5PlGUh0AyClFppTZmSn8gadtPk6N2iW4jhJcjS
+ BUOz822VODCjeTUXHYc+ErdIeTlOHcPTBvjPf6CBMGWk92AGRjma6VwNPgBiPXAlj/ieFz/Ij
+ x7id9jNf5GJme7GZNBQX6Yt7Vg3222RtIrR5DTTw97p9VJDcbYfM3Oyw/t+dIdAI2jKWnERug
+ 9xgJd2HTLFBUGebysFj33bja3OqSgc2X7WzVUZALoT3enSizPaWKs3/usfYNAY/ceO89AStgR
+ p9pqdAp3ak2r4qrUoFLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-10-22 at 17:18 -0700, Lakshmi Ramasubramanian wrote:
+On Wed, Oct 23, 2019 at 2:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Thu, Oct 10, 2019 at 10:29:57PM +0200, Arnd Bergmann wrote:
 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 584019728660..8e965d18fb21 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -610,14 +610,14 @@ int ima_load_data(enum kernel_load_data_id id)
->   * @buf: pointer to the buffer that needs to be added to the log.
->   * @size: size of buffer(in bytes).
->   * @eventname: event name to be used for the buffer entry.
-> - * @cred: a pointer to a credentials structure for user validation.
-> - * @secid: the secid of the task to be validated.
-> + * @pcr: pcr to extend the measurement
-> + * @template_desc: template description
->   *
->   * Based on policy, the buffer is measured into the ima log.
->   */
-> -static void process_buffer_measurement(const void *buf, int size,
-> -				       const char *eventname,
-> -				       const struct cred *cred, u32 secid)
-> +void process_buffer_measurement(const void *buf, int size,
-> +				const char *eventname, int pcr,
-> +				struct ima_template_desc *template_desc)
->  {
->  	int ret = 0;
->  	struct ima_template_entry *entry = NULL;
-> @@ -626,19 +626,11 @@ static void process_buffer_measurement(const void *buf, int size,
->  					    .filename = eventname,
->  					    .buf = buf,
->  					    .buf_len = size};
-> -	struct ima_template_desc *template_desc = NULL;
->  	struct {
->  		struct ima_digest_data hdr;
->  		char digest[IMA_MAX_DIGEST_SIZE];
->  	} hash = {};
->  	int violation = 0;
-> -	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> -	int action = 0;
-> -
-> -	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr,
-> -				&template_desc);
-> -	if (!(action & IMA_MEASURE))
-> -		return;
->  
->  	iint.ima_hash = &hash.hdr;
->  	iint.ima_hash->algo = ima_hash_algo;
+> > diff --git a/arch/arm/plat-samsung/include/plat/regs-spi.h b/drivers/spi/spi-s3c24xx-regs.h
+> > similarity index 95%
+> > rename from arch/arm/plat-samsung/include/plat/regs-spi.h
+> > rename to drivers/spi/spi-s3c24xx-regs.h
+> > index 607844311566..37b93ff7c7fe 100644
+> > --- a/arch/arm/plat-samsung/include/plat/regs-spi.h
+> > +++ b/drivers/spi/spi-s3c24xx-regs.h
+> > @@ -8,9 +8,6 @@
+> >  #ifndef __ASM_ARCH_REGS_SPI_H
+> >  #define __ASM_ARCH_REGS_SPI_H
+>
+> Can you also update the guard name?
 
+Ok, changed to __SPI_S3C2410_H, this seems to be the most common format
+in spi drivers.
 
-This patch is based on Nayna's version of this change, without any
-acknowledgment.  Moving this code out of process_buffer_measurement is
-going to result in code duplication.  Nayna has posted a newer version
-of this patch without the code duplication.  As soon as she posts the
-patch with an updated patch description, I plan on picking up that
-version.
-
-Mimi
-
-
-> @@ -670,12 +662,19 @@ static void process_buffer_measurement(const void *buf, int size,
->   */
->  void ima_kexec_cmdline(const void *buf, int size)
->  {
-> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> +	struct ima_template_desc *template_desc = ima_template_desc_current();
-> +	int action;
->  	u32 secid;
->  
->  	if (buf && size != 0) {
->  		security_task_getsecid(current, &secid);
-> -		process_buffer_measurement(buf, size, "kexec-cmdline",
-> -					   current_cred(), secid);
-> +		action = ima_get_action(NULL, current_cred(), secid, 0,
-> +					KEXEC_CMDLINE, &pcr, &template_desc);
-> +		if (!(action & IMA_MEASURE))
-> +			return;
-> +		process_buffer_measurement(buf, size, "kexec-cmdline", pcr,
-> +					   template_desc);
->  	}
->  }
->  
-
+       Arnd
