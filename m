@@ -2,115 +2,227 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9750ACA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3C3C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774A521A4A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D3921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405957AbfJWNjz convert rfc822-to-8bit (ORCPT
+        id S2405973AbfJWNlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:39:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:43825 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392089AbfJWNjy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:39:54 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mf0Nm-1hmXPR1EIE-00gboz; Wed, 23 Oct 2019 15:39:51 +0200
-Received: by mail-qt1-f177.google.com with SMTP id o49so24470171qta.7;
-        Wed, 23 Oct 2019 06:39:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAU6rjuILI+dBSQWkepJeZcFXjrhStzYWyvwa71wsCNVgYufVnZt
-        iHt9MtJEPLOwsEVZaopkvY4n9SDmIlf2VoWvAbc=
-X-Google-Smtp-Source: APXvYqyt7m8OnGbGOfKvN6UapNf8Y0PixnD+b/5MFVO15QeK4AzpoE5xCHBxjuJT4OWklHgs4L5FWsrmt4sucJ53v+g=
-X-Received: by 2002:ac8:18eb:: with SMTP id o40mr9289234qtk.304.1571837989082;
- Wed, 23 Oct 2019 06:39:49 -0700 (PDT)
+        Wed, 23 Oct 2019 09:41:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7394 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732361AbfJWNlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:41:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:41:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="281621924"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 23 Oct 2019 06:41:39 -0700
+Date:   Wed, 23 Oct 2019 06:46:00 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 00/10] Nested Shared Virtual Address (SVA) VT-d
+ support
+Message-ID: <20191023064600.5e24234b@jacob-builder>
+In-Reply-To: <20191023002751.GA100970@otc-nc-03>
+References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20191023002751.GA100970@otc-nc-03>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191010202802.1132272-1-arnd@arndb.de> <20191023131049.GG11048@pi3>
-In-Reply-To: <20191023131049.GG11048@pi3>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Oct 2019 15:39:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1v2-+geD+JbNP-t418ZjntQNSte4rt8c7N6sJdpb3+DQ@mail.gmail.com>
-Message-ID: <CAK8P3a1v2-+geD+JbNP-t418ZjntQNSte4rt8c7N6sJdpb3+DQ@mail.gmail.com>
-Subject: Re: [PATCH 00/36] ARM: samsung platform cleanup
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Lihua Yao <ylhuajnu@outlook.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-serial@vger.kernel.org,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Lihua Yao <ylhuajnu@163.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, patches@opensource.cirrus.com,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:NLof35stNYTGVLCCiBOj5shE8fEwjZaac7cdAu2nrrmym/kOcjv
- Qnfa/3i0a5qyJkyMXctYodBV7VP0bHQaFrXIBjwV/gpmENyzPTQE7+sVihuV4liYROCT33b
- 9WO8+gy5V2fG2DuQgIo6thaPwkDMewwBExepC4yasYMIPkDiS0zr+8kJODaOpU4HPFc7gMV
- MPShUYeuOvxdtdljHgfJg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DaQc5ZGaJsY=:F603/POvpKLPXWa0X1lFEH
- aQjxfOCxGD/pIMHmKlHcbcFD80Nc+ewErQWmvj+Qgp6xaAE5MxfbNNNrin9LMgRKve0v8GrHu
- BPPYcLBIJd/tRGzy7EoHKzi1xCTWBRKPuZW+NRo5Q3c4o6tNWGjXzPGUI9xyOYPIzGuB4sxow
- ECbUMNeq+vtLAQSVxvpHOttzchCbbhPJcjfvA+bQAYJp52FgAuxb7i+4FvHbE4PKIBUfZrfn7
- RTWpJntJNT2FyPouWE44kX34NjZBTj4rpIcCKzq/vJGEBiexW1JIi5IKVdXZvOH5f6ayOyfG4
- N5aMRdit65bReN0guN1SsKJ7uFbD0kzxYt0bE1Mf25djeRlbjBl6eNdESrSyRRUYp5EHOfQ/A
- Sa10vMW4Ena5av/pF9Ivtanmnx43oe8gg/n1e283kgsPXqMvxru3WC5Nzl6w8FtOo8cSrKeIA
- 4cwYy4vh4ukZW7IvGkXi8VTyHR5QO0uX/EIi41POGGpNZfuz2RZFE3OQuaZ2ZAWDyKIDIkMiS
- w6MOzO71LwFlzMud8Juwt083ioitXDvT/9TIYbAIAmfnUtb8NIa87LZjq9LnymQfMT/771jDX
- Pv0pU2J8yDYscI2Ar/9iY65bLYD1odSzwo1yupcBRkEYBk2LtDP2ofqM/FtIHQxHEgUCSL8BF
- +DQWO4nbj5c/D8V8Rcbk6xIsj3dpX/eZmDwcjBHzixCuvxTtC6bkTqxwxXemSc09w9sXO96BH
- 8wrLVBqppvA4u9/3mwzDk1TPdUl264mBZECZMuP2bwYmiOyo6CZ+bMP0dYsot7zDsLQZk6JM2
- zgDILD/0tZiVRCT1r1eA1ueLWwCTN+MFNjGnfX1TAxma6wIGEoHuP9Uzto3sTth328X/tkiaT
- tiL3D4xHp9lUaPHnTz2w==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 3:11 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Thu, Oct 10, 2019 at 10:28:02PM +0200, Arnd Bergmann wrote:
-> > The contents are available for testing in
-> >
-> > git://kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git s3c-multiplatform
->
-> When sending v2, can you Cc:
->
-> Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> Lihua Yao <ylhuajnu@outlook.com>
-> (or Lihua Yao <ylhuajnu@163.com> if outlook.com bounces)
-> Sergio Prado <sergio.prado@e-labworks.com>
-> Sylwester Nawrocki <s.nawrocki@samsung.com>
->
-> These are folks which to my knowledge had working S3C and S5P boards
-> so maybe they could provide testing.
+On Tue, 22 Oct 2019 17:27:51 -0700
+"Raj, Ashok" <ashok.raj@intel.com> wrote:
 
-Ok, will do. I've uploaded the modified version based on your comments to
-the above URL for now.
+> Hi Jacob
+> 
+> On Tue, Oct 22, 2019 at 04:53:13PM -0700, Jacob Pan wrote:
+> > Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on
+> > Intel platforms allow address space sharing between device DMA and
+> > applications. SVA can reduce programming complexity and enhance
+> > security. This series is intended to enable SVA virtualization,
+> > i.e. shared guest application address space and physical device DMA
+> > address. Only IOMMU portion  
+> 
+> Last line "i.e shared guest application address space and physical
+> device DMA address" doesn't read well. 
+> 
+> Simply rephrase as "enable use of SVA within a guest user application"
+> 
+Much better, thanks!
+> > of the changes are included in this series. Additional support is
+> > needed in VFIO and QEMU (will be submitted separately) to complete
+> > this functionality.
+> > 
+> > To make incremental changes and reduce the size of each patchset.
+> > This series does not inlcude support for page request services.
+> > 
+> > In VT-d implementation, PASID table is per device and maintained in
+> > the host. Guest PASID table is shadowed in VMM where virtual IOMMU
+> > is emulated.
+> > 
+> >     .-------------.  .---------------------------.
+> >     |   vIOMMU    |  | Guest process CR3, FL only|
+> >     |             |  '---------------------------'
+> >     .----------------/
+> >     | PASID Entry |--- PASID cache flush -
+> >     '-------------'                       |
+> >     |             |                       V
+> >     |             |                CR3 in GPA
+> >     '-------------'
+> > Guest
+> > ------| Shadow |--------------------------|--------
+> >       v        v                          v
+> > Host
+> >     .-------------.  .----------------------.
+> >     |   pIOMMU    |  | Bind FL for GVA-GPA  |
+> >     |             |  '----------------------'
+> >     .----------------/  |
+> >     | PASID Entry |     V (Nested xlate)
+> >     '----------------\.------------------------------.
+> >     |             |   |SL for GPA-HPA, default domain|
+> >     |             |   '------------------------------'
+> >     '-------------'  
+> 
+> is the SL for GPA-HPA default domain? When you assign a device to 
+> Guest, this isn't default domain right?
+> 
+SL is harvested from default domain for PCI device assignment. Once we
+add mdev support, you are right that SL is not default domain, but this
+patchset is not dealing with mdev yet. Jumping ahead :)
 
-I'll probably give it a little more time before resending, but they
-could already
-start testing that version.
+> > Where:
+> >  - FL = First level/stage one page tables
+> >  - SL = Second level/stage two page tables
+> > 
+> > This is the remaining VT-d only portion of V5 since the uAPIs and
+> > IOASID common code have been applied to Joerg's IOMMU core branch.
+> > (https://lkml.org/lkml/2019/10/2/833)
+> > 
+> > The complete set with VFIO patches are here:
+> > https://github.com/jacobpan/linux.git:siov_sva
+> > 
+> > The complete nested SVA upstream patches are divided into three
+> > phases: 1. Common APIs and PCI device direct assignment
+> >     2. Page Request Services (PRS) support
+> >     3. Mediated device assignment
+> > 
+> > With this set and the accompanied VFIO code, we will achieve phase
+> > #1.
+> > 
+> > Thanks,
+> > 
+> > Jacob
+> > 
+> > ChangeLog:
+> > 	- V6
+> > 	  - Rebased on top of Joerg's core branch
+> > 	  (git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+> > core)
+> > 	  - Adapt to new uAPIs and IOASID allocators
+> > 
+> > 	- V5
+> > 	  Rebased on v5.3-rc4 which has some of the IOMMU fault
+> > APIs merged. Addressed v4 review comments from Eric Auger, Baolu
+> > Lu, and Jonathan Cameron. Specific changes are as follows:
+> > 	  - Refined custom IOASID allocator to support multiple
+> > vIOMMU, hotplug cases.
+> > 	  - Extracted vendor data from IOMMU guest PASID bind data,
+> > for VT-d will support all necessary guest PASID entry fields for
+> > PASID bind.
+> > 	  - Support non-identity host-guest PASID mapping
+> > 	  - Exception handling in various cases
+> > 
+> > 	- V4
+> > 	  - Redesigned IOASID allocator such that it can support
+> > custom allocators with shared helper functions. Use separate XArray
+> > 	  to store IOASIDs per allocator. Took advice from Eric
+> > Auger to have default allocator use the generic allocator structure.
+> > 	  Combined into one patch in that the default allocator is
+> > just "another" allocator now. Can be built as a module in case of
+> > 	  driver use without IOMMU.
+> > 	  - Extended bind guest PASID data to support SMMU and
+> > non-identity guest to host PASID mapping
+> > https://lkml.org/lkml/2019/5/21/802
+> > 	  - Rebased on Jean's sva/api common tree, new patches
+> > starts with [PATCH v4 10/22]
+> > 
+> > 	- V3
+> > 	  - Addressed thorough review comments from Eric Auger
+> > (Thank you!)
+> > 	  - Moved IOASID allocator from driver core to IOMMU code
+> > per suggestion by Christoph Hellwig
+> > 	    (https://lkml.org/lkml/2019/4/26/462)
+> > 	  - Rebased on top of Jean's SVA API branch and Eric's v7[1]
+> > 	    (git://linux-arm.org/linux-jpb.git sva/api)
+> > 	  - All IOMMU APIs are unmodified (except the new bind
+> > guest PASID call in patch 9/16)
+> > 
+> > 	- V2
+> > 	  - Rebased on Joerg's IOMMU x86/vt-d branch v5.1-rc4
+> > 	  - Integrated with Eric Auger's new v7 series for common
+> > APIs (https://github.com/eauger/linux/tree/v5.1-rc3-2stage-v7)
+> > 	  - Addressed review comments from Andy Shevchenko and Alex
+> > Williamson on IOASID custom allocator.
+> > 	  - Support multiple custom IOASID allocators (vIOMMUs) and
+> > dynamic registration.
+> > 
+> > 
+> > Jacob Pan (9):
+> >   iommu/vt-d: Add custom allocator for IOASID
+> >   iommu/vt-d: Replace Intel specific PASID allocator with IOASID
+> >   iommu/vt-d: Move domain helper to header
+> >   iommu/vt-d: Avoid duplicated code for PASID setup
+> >   iommu/vt-d: Add nested translation helper function
+> >   iommu/vt-d: Misc macro clean up for SVM
+> >   iommu/vt-d: Add bind guest PASID support
+> >   iommu/vt-d: Support flushing more translation cache types
+> >   iommu/vt-d: Add svm/sva invalidate function
+> > 
+> > Lu Baolu (1):
+> >   iommu/vt-d: Enlightened PASID allocation
+> > 
+> >  drivers/iommu/Kconfig       |   1 +
+> >  drivers/iommu/dmar.c        |  46 ++++++
+> >  drivers/iommu/intel-iommu.c | 259 +++++++++++++++++++++++++++++++--
+> >  drivers/iommu/intel-pasid.c | 343
+> > +++++++++++++++++++++++++++++++++++++-------
+> > drivers/iommu/intel-pasid.h |  25 +++- drivers/iommu/intel-svm.c
+> > | 298 ++++++++++++++++++++++++++++++--------
+> > include/linux/intel-iommu.h |  39 ++++- include/linux/intel-svm.h
+> > |  17 +++ 8 files changed, 904 insertions(+), 124 deletions(-)
+> > 
+> > -- 
+> > 2.7.4
+> >   
 
-Thanks a lot for the review!
-
-      Arnd
+[Jacob Pan]
