@@ -2,107 +2,92 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A209ACA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2112CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BAD21929
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BFA21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:07:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NchdNT9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390147AbfJWIGn (ORCPT
+        id S2390157AbfJWIHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:06:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48138 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727574AbfJWIGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:06:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9EFE6BB24;
-        Wed, 23 Oct 2019 08:06:40 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 10:06:40 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for interrupt
- handling
-Message-ID: <20191023080640.zcw2f2v7fpanoewm@beryllium.lan>
-References: <20191018082817.111480-1-dwagner@suse.de>
- <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
- <20191022101747.001b6d06@cakuba.netronome.com>
- <20191023074719.gcov5xfrcvns5tlg@beryllium.lan>
+        Wed, 23 Oct 2019 04:07:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58698 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727574AbfJWIHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:07:20 -0400
+Received: from zn.tnic (p200300EC2F11E8005961F1FA34C94581.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:e800:5961:f1fa:34c9:4581])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8762E1EC0CA4;
+        Wed, 23 Oct 2019 10:07:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1571818034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6re90X+K2Ba3Le4UC0nY3M3OCT0CmUV6pKn4yBGcnFE=;
+        b=NchdNT9SJ/OUDAsztb3nXKP6IK9CYG3dJ6LG7Jd0S3aYJx/OZScUjw8sCyjfwcXzFRebHW
+        tDoHQLNq2eZw/Wn44CiyRG2zBHiIoXd862DF+Z+0st9qyilVL4Pn64q9UM4icW9L20aTXs
+        wOz0w/9+4TuLU7oXj8jbO75NtfpHeF8=
+Date:   Wed, 23 Oct 2019 10:07:09 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        up2wing@gmail.com, wang.liang82@zte.com.cn
+Subject: Re: [PATCH] x86/mce/amd: fix -Wmissing-prototypes warnings
+Message-ID: <20191023080709.GC16060@zn.tnic>
+References: <1571817437-7570-1-git-send-email-wang.yi59@zte.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191023074719.gcov5xfrcvns5tlg@beryllium.lan>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1571817437-7570-1-git-send-email-wang.yi59@zte.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian suggested to try this here:
+On Wed, Oct 23, 2019 at 03:57:17PM +0800, Yi Wang wrote:
+> We get two warnings when build kernel W=1:
+> arch/x86/kernel/cpu/mce/amd.c:586:6: warning: no previous prototype for ‘disable_err_thresholding’ [-Wmissing-prototypes]
+> 
+> Make the function static to fix this.
+> 
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+> ---
+>  arch/x86/kernel/cpu/mce/amd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+> index 6ea7fdc..5167bd2 100644
+> --- a/arch/x86/kernel/cpu/mce/amd.c
+> +++ b/arch/x86/kernel/cpu/mce/amd.c
+> @@ -583,7 +583,7 @@ bool amd_filter_mce(struct mce *m)
+>   * - Prevent possible spurious interrupts from the IF bank on Family 0x17
+>   *   Models 0x10-0x2F due to Erratum #1114.
+>   */
+> -void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
+> +static void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
+>  {
+>  	int i, num_msrs;
+>  	u64 hwcr;
+> --
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1264,8 +1264,11 @@ static void lan78xx_status(struct lan78xx_net *dev, struct urb *urb)
-                netif_dbg(dev, link, dev->net, "PHY INTR: 0x%08x\n", intdata);
-                lan78xx_defer_kevent(dev, EVENT_LINK_RESET);
- 
--               if (dev->domain_data.phyirq > 0)
-+               if (dev->domain_data.phyirq > 0) {
-+                       local_irq_disable();
-                        generic_handle_irq(dev->domain_data.phyirq);
-+                       local_irq_enable();
-+               }
-        } else
-                netdev_warn(dev->net,
-                            "unexpected interrupt: 0x%08x\n", intdata);
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=ras/core&id=47cd84e98f512eac5aad988f08baff432aea35ba
 
-While this gets rid of the warning, the networking interface is not
-really stable:
+-- 
+Regards/Gruss,
+    Boris.
 
-[   43.999628] nfs: server 192.168.19.2 not responding, still trying
-[   43.999633] nfs: server 192.168.19.2 not responding, still trying
-[   43.999649] nfs: server 192.168.19.2 not responding, still trying
-[   43.999674] nfs: server 192.168.19.2 not responding, still trying
-[   43.999678] nfs: server 192.168.19.2 not responding, still trying
-[   44.006712] nfs: server 192.168.19.2 OK
-[   44.018443] nfs: server 192.168.19.2 OK
-[   44.024765] nfs: server 192.168.19.2 OK
-[   44.025361] nfs: server 192.168.19.2 OK
-[   44.025420] nfs: server 192.168.19.2 OK
-[  256.991659] nfs: server 192.168.19.2 not responding, still trying
-[  256.991664] nfs: server 192.168.19.2 not responding, still trying
-[  256.991669] nfs: server 192.168.19.2 not responding, still trying
-[  256.991685] nfs: server 192.168.19.2 not responding, still trying
-[  256.991713] nfs: server 192.168.19.2 not responding, still trying
-[  256.998797] nfs: server 192.168.19.2 OK
-[  256.999745] nfs: server 192.168.19.2 OK
-[  256.999828] nfs: server 192.168.19.2 OK
-[  257.000438] nfs: server 192.168.19.2 OK
-[  257.004784] nfs: server 192.168.19.2 OK
-
-
-Eventually, the rootfs can be loaded and the system boots. Though the
-system is not really usable because it often stalls:
-
-
-root@debian:~# apt update
-Ign:1 http://deb.debian.org/debian stretch InRelease
-Hit:2 http://deb.debian.org/debian stretch Release
-Reading package lists... 0% 
-
-
-I don't see this with the irqdomain code reverted.
+https://people.kernel.org/tglx/notes-about-netiquette
