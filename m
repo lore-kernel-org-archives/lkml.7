@@ -2,323 +2,254 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82E0CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1EBCA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A5220684
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481DB20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:25:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gimglyuu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389815AbfJWHZK (ORCPT
+        id S2389749AbfJWHZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:25:10 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:43413 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389224AbfJWHZI (ORCPT
+        Wed, 23 Oct 2019 03:25:23 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31279 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389831AbfJWHZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:25:08 -0400
-Received: by mail-io1-f69.google.com with SMTP id i2so22213123ioo.10
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 00:25:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=+ke/5pvEZ1OCG2Pj/p3NXXUgpoPPR+2t9C0yTNu8RM8=;
-        b=ME2kMNy23lRSTFP96lLboWajjR42GWNA9mb3en++I162UTPGo39UsmWlBr/yOa+Hkz
-         NJVljzE8R0mq9LGA7r/UXgI4O4a7YaCVVUJ6/Gln42xiYDyz/I3LGAuzbzuXxmJdEsj5
-         4dLbFZp4ii97h+e88/mdnrAbH0r58db+WtfOfq4yNfHyQ4W1s9ljsl6/zVY1O7SaFPhc
-         t/WNHTon3wsB1BcDM6iKHOobPrxKD4gbpRPfjzupGuVrYRfZjbaR11w5fNfTRid6JMML
-         JYrEIyq9UY67xiZe1LpxlZ2DYt9AY/QOHJjOWlTX8sc+hizsHTfjvD9GQwhtDJMPY3Xk
-         AWQQ==
-X-Gm-Message-State: APjAAAUE68/RGhiPHSe+vkvgkmvuCbpCggb7kZZFUdHqzRIoTcSo3ULT
-        0Ntywfzgo6MjwLWqUsQXGkhZ6UGC5lju/oYcpz4dwSv1NeAG
-X-Google-Smtp-Source: APXvYqzpIp4kGf1aRpUorR51KAQ2Zs+q2Tupp7uReCAp1RJlOApjo41O4e/A008ukgL8gSs4cuEGuQxdqgATEumHqKpOKqG/rofw
+        Wed, 23 Oct 2019 03:25:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571815520;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t5zjHQpTeAkClNQhQEPJ3+MpaSkNKcTWow8Ri9dKxRU=;
+        b=gimglyuuhmLc5QxbcNDyyxMshLtV95QxW2cUHNa7/qMj8hKGIKxhTX0onyB15qIp664hBo
+        b1B1wH0i8y7UpfQuSibqFkcxgiz49J/l36aoqqBrc5IL1AQD73V7ivgaIIW1nbmzh+vbbe
+        kGl2khCiFF0glgxnpHNCQl1x/uYcFf0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-E_1lPYQvMbq6Oa_69H82bw-1; Wed, 23 Oct 2019 03:25:16 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94EB01800DD0;
+        Wed, 23 Oct 2019 07:25:14 +0000 (UTC)
+Received: from [10.72.12.161] (ovpn-12-161.pek2.redhat.com [10.72.12.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BCF725C1D4;
+        Wed, 23 Oct 2019 07:25:01 +0000 (UTC)
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <20191022095230.2514-1-tiwei.bie@intel.com>
+ <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
+ <20191023030253.GA15401@___>
+ <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
+ <20191023070747.GA30533@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <106834b5-dae5-82b2-0f97-16951709d075@redhat.com>
+Date:   Wed, 23 Oct 2019 15:25:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:c8e:: with SMTP id b14mr37551168ile.16.1571815507310;
- Wed, 23 Oct 2019 00:25:07 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 00:25:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f74fa005958ed0fa@google.com>
-Subject: INFO: task hung in vfs_unlink
-From:   syzbot <syzbot+36feff43582f1f97716a@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191023070747.GA30533@___>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: E_1lPYQvMbq6Oa_69H82bw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
-
-HEAD commit:    d72e90f3 Linux 4.18-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=104dc658400000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=68af3495408deac5
-dashboard link: https://syzkaller.appspot.com/bug?extid=36feff43582f1f97716a
-compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+36feff43582f1f97716a@syzkaller.appspotmail.com
-
-binder: 12679:12746 ioctl 40046207 0 returned -16
-binder: 12679:12746 unknown command -565157109
-binder: 12679:12746 ioctl c0306201 204edfd0 returned -22
-binder: 12679:12743 unknown command 0
-binder: 12679:12743 ioctl c0306201 20007000 returned -22
-INFO: task syz-executor7:12738 blocked for more than 140 seconds.
-       Not tainted 4.18.0-rc6+ #160
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D25832 12738   4599 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2853 [inline]
-  __schedule+0x87c/0x1ed0 kernel/sched/core.c:3501
-  schedule+0xfb/0x450 kernel/sched/core.c:3545
-  __rwsem_down_write_failed_common+0x95d/0x1630  
-kernel/locking/rwsem-xadd.c:566
-  rwsem_down_write_failed+0xe/0x10 kernel/locking/rwsem-xadd.c:595
-  call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
-  __down_write arch/x86/include/asm/rwsem.h:142 [inline]
-  down_write+0xaa/0x130 kernel/locking/rwsem.c:72
-  inode_lock include/linux/fs.h:715 [inline]
-  vfs_unlink+0xd1/0x510 fs/namei.c:4001
-  do_unlinkat+0x6cc/0xa30 fs/namei.c:4073
-  __do_sys_unlink fs/namei.c:4120 [inline]
-  __se_sys_unlink fs/namei.c:4118 [inline]
-  __x64_sys_unlink+0x42/0x50 fs/namei.c:4118
-  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x455ab9
-Code: e0 1f 48 89 04 24 e8 b6 6f fd ff e8 81 6a fd ff e8 5c 68 fd ff 48 8d  
-05 23 cd 48 00 48 89 04 24 48 c7 44 24 08 1d 00 00 00 e8 <13> 5e fd ff 0f  
-0b e8 8c 44 00 00 e9 07 f0 ff ff cc cc cc cc cc cc
-RSP: 002b:00007f2301e2cc68 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
-RAX: ffffffffffffffda RBX: 00007f2301e2d6d4 RCX: 0000000000455ab9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000300
-RBP: 000000000072bf48 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000004c0088 R14: 00000000004d4350 R15: 0000000000000001
-INFO: task syz-executor7:12740 blocked for more than 140 seconds.
-       Not tainted 4.18.0-rc6+ #160
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D24216 12740   4599 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2853 [inline]
-  __schedule+0x87c/0x1ed0 kernel/sched/core.c:3501
-  schedule+0xfb/0x450 kernel/sched/core.c:3545
-  __rwsem_down_write_failed_common+0x95d/0x1630  
-kernel/locking/rwsem-xadd.c:566
-  rwsem_down_write_failed+0xe/0x10 kernel/locking/rwsem-xadd.c:595
-  call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
-  __down_write arch/x86/include/asm/rwsem.h:142 [inline]
-  down_write+0xaa/0x130 kernel/locking/rwsem.c:72
-  inode_lock include/linux/fs.h:715 [inline]
-  lock_mount+0x8c/0x2e0 fs/namespace.c:2088
-  do_add_mount+0x27/0x370 fs/namespace.c:2465
-  do_new_mount fs/namespace.c:2532 [inline]
-  do_mount+0x193f/0x30e0 fs/namespace.c:2848
-  ksys_mount+0x12d/0x140 fs/namespace.c:3064
-  __do_sys_mount fs/namespace.c:3078 [inline]
-  __se_sys_mount fs/namespace.c:3075 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3075
-  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x455ab9
-Code: e0 1f 48 89 04 24 e8 b6 6f fd ff e8 81 6a fd ff e8 5c 68 fd ff 48 8d  
-05 23 cd 48 00 48 89 04 24 48 c7 44 24 08 1d 00 00 00 e8 <13> 5e fd ff 0f  
-0b e8 8c 44 00 00 e9 07 f0 ff ff cc cc cc cc cc cc
-RSP: 002b:00007f2301e0bc68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f2301e0c6d4 RCX: 0000000000455ab9
-RDX: 0000000020000900 RSI: 0000000020000000 RDI: 0000000000000000
-RBP: 000000000072bff0 R08: 0000000020000380 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000004c0201 R14: 00000000004cfe50 R15: 0000000000000002
-INFO: task syz-executor7:12742 blocked for more than 140 seconds.
-       Not tainted 4.18.0-rc6+ #160
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D25408 12742   4599 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2853 [inline]
-  __schedule+0x87c/0x1ed0 kernel/sched/core.c:3501
-  schedule+0xfb/0x450 kernel/sched/core.c:3545
-  __rwsem_down_write_failed_common+0x95d/0x1630  
-kernel/locking/rwsem-xadd.c:566
-  rwsem_down_write_failed+0xe/0x10 kernel/locking/rwsem-xadd.c:595
-  call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
-  __down_write arch/x86/include/asm/rwsem.h:142 [inline]
-  down_write+0xaa/0x130 kernel/locking/rwsem.c:72
-  inode_lock include/linux/fs.h:715 [inline]
-  utimes_common.isra.1+0x45c/0x8e0 fs/utimes.c:90
-  do_utimes+0x1f7/0x380 fs/utimes.c:156
-  do_futimesat+0x249/0x350 fs/utimes.c:212
-  __do_sys_utimes fs/utimes.c:225 [inline]
-  __se_sys_utimes fs/utimes.c:222 [inline]
-  __x64_sys_utimes+0x59/0x80 fs/utimes.c:222
-  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x455ab9
-Code: e0 1f 48 89 04 24 e8 b6 6f fd ff e8 81 6a fd ff e8 5c 68 fd ff 48 8d  
-05 23 cd 48 00 48 89 04 24 48 c7 44 24 08 1d 00 00 00 e8 <13> 5e fd ff 0f  
-0b e8 8c 44 00 00 e9 07 f0 ff ff cc cc cc cc cc cc
-RSP: 002b:00007f2301deac68 EFLAGS: 00000246 ORIG_RAX: 00000000000000eb
-RAX: ffffffffffffffda RBX: 00007f2301deb6d4 RCX: 0000000000455ab9
-RDX: 0000000000000000 RSI: 00000000200002c0 RDI: 00000000200000c0
-RBP: 000000000072c098 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000004c2735 R14: 00000000004d4410 R15: 0000000000000003
-INFO: task syz-executor7:12744 blocked for more than 140 seconds.
-       Not tainted 4.18.0-rc6+ #160
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D26504 12744   4599 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2853 [inline]
-  __schedule+0x87c/0x1ed0 kernel/sched/core.c:3501
-  schedule+0xfb/0x450 kernel/sched/core.c:3545
-  __rwsem_down_write_failed_common+0x95d/0x1630  
-kernel/locking/rwsem-xadd.c:566
-  rwsem_down_write_failed+0xe/0x10 kernel/locking/rwsem-xadd.c:595
-  call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
-  __down_write arch/x86/include/asm/rwsem.h:142 [inline]
-  down_write_nested+0xae/0x130 kernel/locking/rwsem.c:194
-  inode_lock_nested include/linux/fs.h:750 [inline]
-  do_unlinkat+0x3d8/0xa30 fs/namei.c:4059
-  __do_sys_unlink fs/namei.c:4120 [inline]
-  __se_sys_unlink fs/namei.c:4118 [inline]
-  __x64_sys_unlink+0x42/0x50 fs/namei.c:4118
-  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x455ab9
-Code: e0 1f 48 89 04 24 e8 b6 6f fd ff e8 81 6a fd ff e8 5c 68 fd ff 48 8d  
-05 23 cd 48 00 48 89 04 24 48 c7 44 24 08 1d 00 00 00 e8 <13> 5e fd ff 0f  
-0b e8 8c 44 00 00 e9 07 f0 ff ff cc cc cc cc cc cc
-RSP: 002b:00007f2301dc9c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
-RAX: ffffffffffffffda RBX: 00007f2301dca6d4 RCX: 0000000000455ab9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000300
-RBP: 000000000072c140 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000004c0088 R14: 00000000004d4350 R15: 0000000000000004
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/902:
-  #0: 00000000b4fedee0 (rcu_read_lock){....}, at:  
-debug_show_all_locks+0xd0/0x428 kernel/locking/lockdep.c:4461
-1 lock held by rsyslogd/4458:
-  #0: 00000000cd393d5f (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x1bb/0x200  
-fs/file.c:766
-2 locks held by getty/4548:
-  #0: 00000000900c6e8e (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x37/0x40 drivers/tty/tty_ldsem.c:365
-  #1: 000000004ed6f2b2 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x335/0x1ce0 drivers/tty/n_tty.c:2140
-2 locks held by getty/4549:
-  #0: 000000004a7c6f30 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x37/0x40 drivers/tty/tty_ldsem.c:365
-  #1: 00000000950f14ac (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x335/0x1ce0 drivers/tty/n_tty.c:2140
-2 locks held by getty/4550:
-  #0: 00000000cd10982b (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x37/0x40 drivers/tty/tty_ldsem.c:365
-  #1: 00000000e9751603 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x335/0x1ce0 drivers/tty/n_tty.c:2140
-2 locks held by getty/4551:
-  #0: 000000000fcf93b3 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x37/0x40 drivers/tty/tty_ldsem.c:365
-  #1: 00000000fbe330db (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x335/0x1ce0 drivers/tty/n_tty.c:2140
-2 locks held by getty/4552:
-  #0: 00000000604559fd (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x37/0x40 drivers/tty/tty_ldsem.c:365
-  #1: 00000000736bec6e (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x335/0x1ce0 drivers/tty/n_tty.c:2140
-2 locks held by getty/4553:
-  #0: 00000000bbb8dd50 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x37/0x40 drivers/tty/tty_ldsem.c:365
-  #1: 0000000051ed7442 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x335/0x1ce0 drivers/tty/n_tty.c:2140
-2 locks held by getty/4554:
-  #0: 00000000f0092d1e (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x37/0x40 drivers/tty/tty_ldsem.c:365
-  #1: 00000000e841c59b (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x335/0x1ce0 drivers/tty/n_tty.c:2140
-2 locks held by syz-executor7/12668:
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: sb_start_write  
-include/linux/fs.h:1554 [inline]
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: mnt_want_write+0x3f/0xc0  
-fs/namespace.c:386
-  #1: 000000000ea5b75f (&sb->s_type->i_mutex_key#25){++++}, at: inode_lock  
-include/linux/fs.h:715 [inline]
-  #1: 000000000ea5b75f (&sb->s_type->i_mutex_key#25){++++}, at:  
-utimes_common.isra.1+0x45c/0x8e0 fs/utimes.c:90
-3 locks held by syz-executor7/12738:
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: sb_start_write  
-include/linux/fs.h:1554 [inline]
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: mnt_want_write+0x3f/0xc0  
-fs/namespace.c:386
-  #1: 000000005a55d485 (&sb->s_type->i_mutex_key#25/1){+.+.}, at:  
-inode_lock_nested include/linux/fs.h:750 [inline]
-  #1: 000000005a55d485 (&sb->s_type->i_mutex_key#25/1){+.+.}, at:  
-do_unlinkat+0x3d8/0xa30 fs/namei.c:4059
-  #2: 000000000ea5b75f (&sb->s_type->i_mutex_key#25){++++}, at: inode_lock  
-include/linux/fs.h:715 [inline]
-  #2: 000000000ea5b75f (&sb->s_type->i_mutex_key#25){++++}, at:  
-vfs_unlink+0xd1/0x510 fs/namei.c:4001
-1 lock held by syz-executor7/12740:
-  #0: 000000005a55d485 (&sb->s_type->i_mutex_key#25){++++}, at: inode_lock  
-include/linux/fs.h:715 [inline]
-  #0: 000000005a55d485 (&sb->s_type->i_mutex_key#25){++++}, at:  
-lock_mount+0x8c/0x2e0 fs/namespace.c:2088
-2 locks held by syz-executor7/12742:
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: sb_start_write  
-include/linux/fs.h:1554 [inline]
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: mnt_want_write+0x3f/0xc0  
-fs/namespace.c:386
-  #1: 000000000ea5b75f (&sb->s_type->i_mutex_key#25){++++}, at: inode_lock  
-include/linux/fs.h:715 [inline]
-  #1: 000000000ea5b75f (&sb->s_type->i_mutex_key#25){++++}, at:  
-utimes_common.isra.1+0x45c/0x8e0 fs/utimes.c:90
-2 locks held by syz-executor7/12744:
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: sb_start_write  
-include/linux/fs.h:1554 [inline]
-  #0: 00000000b9e8b92c (sb_writers#23){.+.+}, at: mnt_want_write+0x3f/0xc0  
-fs/namespace.c:386
-  #1: 000000005a55d485 (&sb->s_type->i_mutex_key#25/1){+.+.}, at:  
-inode_lock_nested include/linux/fs.h:750 [inline]
-  #1: 000000005a55d485 (&sb->s_type->i_mutex_key#25/1){+.+.}, at:  
-do_unlinkat+0x3d8/0xa30 fs/namei.c:4059
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 902 Comm: khungtaskd Not tainted 4.18.0-rc6+ #160
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1c9/0x2b4 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold.4+0x19/0xce lib/nmi_backtrace.c:103
-  nmi_trigger_cpumask_backtrace+0x151/0x192 lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:138 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:196 [inline]
-  watchdog+0x9c4/0xf80 kernel/hung_task.c:252
-  kthread+0x345/0x410 kernel/kthread.c:246
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:412
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0x6/0x10  
-arch/x86/include/asm/irqflags.h:54
+On 2019/10/23 =E4=B8=8B=E5=8D=883:07, Tiwei Bie wrote:
+> On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
+>> On 2019/10/23 =E4=B8=8A=E5=8D=8811:02, Tiwei Bie wrote:
+>>> On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
+>>>> On 2019/10/22 =E4=B8=8B=E5=8D=885:52, Tiwei Bie wrote:
+>>>>> This patch introduces a mdev based hardware vhost backend.
+>>>>> This backend is built on top of the same abstraction used
+>>>>> in virtio-mdev and provides a generic vhost interface for
+>>>>> userspace to accelerate the virtio devices in guest.
+>>>>>
+>>>>> This backend is implemented as a mdev device driver on top
+>>>>> of the same mdev device ops used in virtio-mdev but using
+>>>>> a different mdev class id, and it will register the device
+>>>>> as a VFIO device for userspace to use. Userspace can setup
+>>>>> the IOMMU with the existing VFIO container/group APIs and
+>>>>> then get the device fd with the device name. After getting
+>>>>> the device fd of this device, userspace can use vhost ioctls
+>>>>> to setup the backend.
+>>>>>
+>>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+>>>>> ---
+>>>>> This patch depends on below series:
+>>>>> https://lkml.org/lkml/2019/10/17/286
+>>>>>
+>>>>> v1 -> v2:
+>>>>> - Replace _SET_STATE with _SET_STATUS (MST);
+>>>>> - Check status bits at each step (MST);
+>>>>> - Report the max ring size and max number of queues (MST);
+>>>>> - Add missing MODULE_DEVICE_TABLE (Jason);
+>>>>> - Only support the network backend w/o multiqueue for now;
+>>>> Any idea on how to extend it to support devices other than net? I thin=
+k we
+>>>> want a generic API or an API that could be made generic in the future.
+>>>>
+>>>> Do we want to e.g having a generic vhost mdev for all kinds of devices=
+ or
+>>>> introducing e.g vhost-net-mdev and vhost-scsi-mdev?
+>>> One possible way is to do what vhost-user does. I.e. Apart from
+>>> the generic ring, features, ... related ioctls, we also introduce
+>>> device specific ioctls when we need them. As vhost-mdev just needs
+>>> to forward configs between parent and userspace and even won't
+>>> cache any info when possible,
+>>
+>> So it looks to me this is only possible if we expose e.g set_config and
+>> get_config to userspace.
+> The set_config and get_config interface isn't really everything
+> of device specific settings. We also have ctrlq in virtio-net.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Yes, but it could be processed by the exist API. Isn't it? Just set ctrl=20
+vq address and let parent to deal with that.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+>
+>>
+>>> I think it might be better to do
+>>> this in one generic vhost-mdev module.
+>>
+>> Looking at definitions of VhostUserRequest in qemu, it mixed generic API
+>> with device specific API. If we want go this ways (a generic vhost-mdev)=
+,
+>> more questions needs to be answered:
+>>
+>> 1) How could userspace know which type of vhost it would use? Do we need=
+ to
+>> expose virtio subsystem device in for userspace this case?
+>>
+>> 2) That generic vhost-mdev module still need to filter out unsupported
+>> ioctls for a specific type. E.g if it probes a net device, it should ref=
+use
+>> API for other type. This in fact a vhost-mdev-net but just not modulariz=
+e it
+>> on top of vhost-mdev.
+>>
+>>
+>>>>> - Some minor fixes and improvements;
+>>>>> - Rebase on top of virtio-mdev series v4;
+> [...]
+>>>>> +
+>>>>> +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __user=
+ *featurep)
+>>>>> +{
+>>>>> +=09if (copy_to_user(featurep, &m->features, sizeof(m->features)))
+>>>>> +=09=09return -EFAULT;
+>>>> As discussed in previous version do we need to filter out MQ feature h=
+ere?
+>>> I think it's more straightforward to let the parent drivers to
+>>> filter out the unsupported features. Otherwise it would be tricky
+>>> when we want to add more features in vhost-mdev module,
+>>
+>> It's as simple as remove the feature from blacklist?
+> It's not really that easy. It may break the old drivers.
+
+
+I'm not sure I understand here, we do feature negotiation anyhow. For=20
+old drivers do you mean the guest drivers without MQ?
+
+
+>
+>>
+>>> i.e. if
+>>> the parent drivers may expose unsupported features and relay on
+>>> vhost-mdev to filter them out, these features will be exposed
+>>> to userspace automatically when they are enabled in vhost-mdev
+>>> in the future.
+>>
+>> The issue is, it's only that vhost-mdev knows its own limitation. E.g in
+>> this patch, vhost-mdev only implements a subset of transport API, but pa=
+rent
+>> doesn't know about that.
+>>
+>> Still MQ as an example, there's no way (or no need) for parent to know t=
+hat
+>> vhost-mdev does not support MQ.
+> The mdev is a MDEV_CLASS_ID_VHOST mdev device. When the parent
+> is being developed, it should know the currently supported features
+> of vhost-mdev.
+
+
+How can parent know MQ is not supported by vhost-mdev?
+
+
+>
+>> And this allows old kenrel to work with new
+>> parent drivers.
+> The new drivers should provide things like VIRTIO_MDEV_F_VERSION_1
+> to be compatible with the old kernels. When VIRTIO_MDEV_F_VERSION_1
+> is provided/negotiated, the behaviours should be consistent.
+
+
+To be clear, I didn't mean a change in virtio-mdev API, I meant:
+
+1) old vhost-mdev kernel driver that filters out MQ
+
+2) new parent driver that support MQ
+
+
+>
+>> So basically we have three choices here:
+>>
+>> 1) Implement what vhost-user did and implement a generic vhost-mdev (but=
+ may
+>> still have lots of device specific code). To support advanced feature wh=
+ich
+>> requires the access to config, still lots of API that needs to be added.
+>>
+>> 2) Implement what vhost-kernel did, have a generic vhost-mdev driver and=
+ a
+>> vhost bus on top for match a device specific API e.g vhost-mdev-net. We
+>> still have device specific API but limit them only to device specific
+>> module. Still require new ioctls for advanced feature like MQ.
+>>
+>> 3) Simply expose all virtio-mdev transport to userspace.
+> Currently, virtio-mdev transport is a set of function callbacks
+> defined in kernel. How to simply expose virtio-mdev transport to
+> userspace?
+
+
+The most straightforward way is to have an 1:1 mapping between ioctl and=20
+virito_mdev_device_ops.
+
+Thanks
+
+
+>
+>
+>> A generic module
+>> without any type specific code (like virtio-mdev). No need dedicated API=
+ for
+>> e.g MQ. But then the API will look much different than current vhost did=
+.
+>>
+>> Consider the limitation of 1) I tend to choose 2 or 3. What's you opinio=
+n?
+>>
+>>
+
