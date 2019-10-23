@@ -2,122 +2,80 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B94CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD39CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 004202086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B95D214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389420AbfJWCw4 (ORCPT
+        id S2389455AbfJWC4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 22:52:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389377AbfJWCw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 22:52:56 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E0BF2086D;
-        Wed, 23 Oct 2019 02:52:55 +0000 (UTC)
-Date:   Tue, 22 Oct 2019 22:52:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Divya Indi <divya.indi@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Subject: Re: [PATCH 4/5] tracing: Handle the trace array ref counter in new
- functions
-Message-ID: <20191022225253.4086195c@oasis.local.home>
-In-Reply-To: <4cad186e-ba8b-8e1a-731b-4350a095ba5a@oracle.com>
-References: <1565805327-579-1-git-send-email-divya.indi@oracle.com>
-        <1565805327-579-5-git-send-email-divya.indi@oracle.com>
-        <20191015190436.65c8c7a3@gandalf.local.home>
-        <4cad186e-ba8b-8e1a-731b-4350a095ba5a@oracle.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 22 Oct 2019 22:56:13 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2061 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732748AbfJWC4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 22:56:13 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 960EAB3C485D39489CD2;
+        Wed, 23 Oct 2019 10:56:05 +0800 (CST)
+Received: from dggeme711-chm.china.huawei.com (10.1.199.107) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 23 Oct 2019 10:56:05 +0800
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ dggeme711-chm.china.huawei.com (10.1.199.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 23 Oct 2019 10:56:05 +0800
+Received: from dggeme762-chm.china.huawei.com ([10.8.68.53]) by
+ dggeme762-chm.china.huawei.com ([10.8.68.53]) with mapi id 15.01.1713.004;
+ Wed, 23 Oct 2019 10:56:05 +0800
+From:   linfeilong <linfeilong@huawei.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBzY3JpcHRzOiBmaXggbWVtbGVhayBlcnJvciBpbiBy?=
+ =?gb2312?Q?ead=5Ffile?=
+Thread-Topic: [PATCH] scripts: fix memleak error in read_file
+Thread-Index: AdWIy2TaZdJlKP2sR+evaSWkQsNSfgAF216AABo27cA=
+Date:   Wed, 23 Oct 2019 02:56:04 +0000
+Message-ID: <9e0807659574488490391feff79870e6@huawei.com>
+References: <bf5c73b4b8534189be0f0df81fe863f0@huawei.com>
+ <20191022151305.c4af5c45ee7c605b4b12ae32@linux-foundation.org>
+In-Reply-To: <20191022151305.c4af5c45ee7c605b4b12ae32@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.220.147]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 16 Oct 2019 16:42:02 -0700
-Divya Indi <divya.indi@oracle.com> wrote:
-
-> Hi Steve,
-> 
-> Thanks again for taking the time to review and providing feedback. Please find my comments inline.
-> 
-> On 10/15/19 4:04 PM, Steven Rostedt wrote:
-> > Sorry for taking so long to getting to these patches.
-> >
-> > On Wed, 14 Aug 2019 10:55:26 -0700
-> > Divya Indi <divya.indi@oracle.com> wrote:
-> >  
-> >> For functions returning a trace array Eg: trace_array_create(), we need to
-> >> increment the reference counter associated with the trace array to ensure it
-> >> does not get freed when in use.
-> >>
-> >> Once we are done using the trace array, we need to call
-> >> trace_array_put() to make sure we are not holding a reference to it
-> >> anymore and the instance/trace array can be removed when required.  
-> > I think it would be more in line with other parts of the kernel if we
-> > don't need to do the trace_array_put() before calling
-> > trace_array_destroy().  
-> 
-> The reason we went with this approach is
-> 
-> instance_mkdir -          ref_ctr = 0  // Does not return a trace array ptr.
-> trace_array_create -      ref_ctr = 1  // Since this returns a trace array ptr.
-> trace_array_lookup -      ref_ctr = 1  // Since this returns a trace array ptr.
-> 
-> if we make trace_array_destroy to expect ref_ctr to be 1, we risk destroying the trace array while in use.
-> 
-> We could make it -
-> 
-> instance_mkdir - 	ref_ctr = 1
-> trace_array_create -    ref_ctr = 2
-> trace_array_lookup -    ref_ctr = 2+  // depending on no of lookups
-> 
-> but, we'd still need the trace_array_put() (?)
-> 
-> We can also have one function doing create (if does not exist) or lookup (if exists), but that would require
-> some redundant code since instance_mkdir needs to return -EXIST when a trace array already exists.
-> 
-> Let me know your thoughts on this.
-> 
-
-Can't we just move the trace_array_put() in the instance_rmdir()?
-
-static int instance_rmdir(const char *name)
-{
-	struct trace_array *tr;
-	int ret;
-
-	mutex_lock(&event_mutex);
-	mutex_lock(&trace_types_lock);
-
-	ret = -ENODEV;
-	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-		if (tr->name && strcmp(tr->name, name) == 0) {
-			__trace_array_put(tr);
-			ret = __remove_instance(tr);
-			if (ret)
-				tr->ref++;
-			break;
-		}
-	}
-
-	mutex_unlock(&trace_types_lock);
-	mutex_unlock(&event_mutex);
-
-	return ret;
-}
-
--- Steve
+T24gVHVlLCAyMiBPY3QgMjAxOSAxMTo0Nzo1OSArMDAwMCBsaW5mZWlsb25nIDxsaW5mZWlsb25n
+QGh1YXdlaS5jb20+IHdyb3RlOg0KPg0KPj4gQW4gZXJyb3IgaXMgZm91bmQgYnkgdGhlIHN0YXRp
+YyBjb2RlIGFuYWx5c2lzIHRvb2w6ICJtZW1sZWFrIg0KPj4gRml4IHRoaXMgYnkgYWRkIGZyZWUg
+YmVmb3JlIHJldHVybi4NCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogRmVpbG9uZyBMaW4gPGxpbmZl
+aWxvbmdAaHVhd2VpLmNvbT4NCj4+IC0tLQ0KPj4gIHNjcmlwdHMvaW5zZXJ0LXN5cy1jZXJ0LmMg
+fCAxICsNCj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4+IA0KPj4gZGlmZiAt
+LWdpdCBhL3NjcmlwdHMvaW5zZXJ0LXN5cy1jZXJ0LmMgYi9zY3JpcHRzL2luc2VydC1zeXMtY2Vy
+dC5jIA0KPj4gaW5kZXggODkwMjgzNi4uMjJkOTlhOCAxMDA2NDQNCj4+IC0tLSBhL3NjcmlwdHMv
+aW5zZXJ0LXN5cy1jZXJ0LmMNCj4+ICsrKyBiL3NjcmlwdHMvaW5zZXJ0LXN5cy1jZXJ0LmMNCj4+
+IEBAIC0yNTAsNiArMjUwLDcgQEAgc3RhdGljIGNoYXIgKnJlYWRfZmlsZShjaGFyICpmaWxlX25h
+bWUsIGludCAqc2l6ZSkNCj4+ICAJfQ0KPj4gIAlpZiAocmVhZChmZCwgYnVmLCAqc2l6ZSkgIT0g
+KnNpemUpIHsNCj4+ICAJCXBlcnJvcigiRmlsZSByZWFkIGZhaWxlZCIpOw0KPj4gKwkJCWZyZWUo
+YnVmKTsNCj4+ICAJCWNsb3NlKGZkKTsNCj4+ICAJCXJldHVybiBOVUxMOw0KPj4gIAl9DQo+DQo+
+QSBmZXcgbGluZXMgbGF0ZXIgd2UgZG8NCj4NCj4JcmV0dXJuIGJ1ZjsNCj4NCj5zbyB0aGUgcGF0
+Y2ggYWRkcyBhIHVzZS1hZnRlci1mcmVlIGVycm9yLiANCj4NCj5XZSBjb3VsZCBkbyBhIGZyZWUo
+Y2VydCkgZG93biBpbiBtYWluKCkgb3Igd2UgY291bGQganVzdCBkbyBub3RoaW5nIC0NCj5yZWFk
+X2ZpbGUoKSBpcyBvbmx5IGNhbGxlZCBhIHNpbmdsZSB0aW1lLg0KDQpUaGFua3MsIGJ1dCB0aGVy
+ZSBpcyBubyB1c2UtYWZ0ZXItZnJlZSBhcyB3ZSBkbyBmcmVlIGp1c3QgYmVmb3JlIHJldHVybiBO
+VUxMLg0KQW5kIEkgdGhpbmsgZG8gZnJlZSBpbiBlcnJvciBzY2VuZXMgbWFrZXMgdGhlIGNvZGUg
+bG9vayBiZXR0ZXIuDQo=
