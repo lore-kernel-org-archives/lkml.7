@@ -6,74 +6,72 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877B8CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E225DCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3D82064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5FB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389969AbfJWHjo (ORCPT
+        id S2389985AbfJWHkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:39:44 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:15540 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389224AbfJWHjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:39:44 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 2F62BE0EA367EDBE8AE2;
-        Wed, 23 Oct 2019 15:39:41 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x9N7cN6U084613;
-        Wed, 23 Oct 2019 15:38:23 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019102315384248-90494 ;
-          Wed, 23 Oct 2019 15:38:42 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     tglx@linutronix.de
-Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        ebiederm@xmission.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, me@sam.st, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn, up2wing@gmail.com,
-        wang.liang82@zte.com.cn
-Subject: [PATCH] uprobes/x86: fix arch_uprobe_analyze_insn() comment
-Date:   Wed, 23 Oct 2019 15:40:42 +0800
-Message-Id: <1571816442-22494-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-10-23 15:38:42,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-10-23 15:38:26,
-        Serialize complete at 2019-10-23 15:38:26
-X-MAIL: mse-fl2.zte.com.cn x9N7cN6U084613
+        Wed, 23 Oct 2019 03:40:35 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48066 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732328AbfJWHkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:40:35 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 94EA234E5549B1E25C9E;
+        Wed, 23 Oct 2019 15:40:32 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
+ 15:40:23 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <simon@thekelleys.org.uk>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>
+CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] atmel: remove set but not used variable 'dev'
+Date:   Wed, 23 Oct 2019 15:40:19 +0800
+Message-ID: <20191023074019.29708-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix parameter name in comment and adjust the order.
-No functional change.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+drivers/net/wireless/atmel/atmel_cs.c:120:21:
+ warning: variable dev set but not used [-Wunused-but-set-variable]
+
+It is never used, so can remove it.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/x86/kernel/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/atmel/atmel_cs.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 8cd745e..15e5aad 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -842,8 +842,8 @@ static int push_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+diff --git a/drivers/net/wireless/atmel/atmel_cs.c b/drivers/net/wireless/atmel/atmel_cs.c
+index 7afc9c5..368eebe 100644
+--- a/drivers/net/wireless/atmel/atmel_cs.c
++++ b/drivers/net/wireless/atmel/atmel_cs.c
+@@ -117,11 +117,9 @@ static int atmel_config_check(struct pcmcia_device *p_dev, void *priv_data)
  
- /**
-  * arch_uprobe_analyze_insn - instruction analysis including validity and fixups.
-+ * @auprobe: the probepoint information.
-  * @mm: the probed address space.
-- * @arch_uprobe: the probepoint information.
-  * @addr: virtual address at which to install the probepoint
-  * Return 0 on success or a -ve number on error.
-  */
+ static int atmel_config(struct pcmcia_device *link)
+ {
+-	struct local_info *dev;
+ 	int ret;
+ 	const struct pcmcia_device_id *did;
+ 
+-	dev = link->priv;
+ 	did = dev_get_drvdata(&link->dev);
+ 
+ 	dev_dbg(&link->dev, "atmel_config\n");
 -- 
-1.8.3.1
+2.7.4
+
 
