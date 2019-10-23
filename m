@@ -2,80 +2,119 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874AACA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C679CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6645221872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0473A21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:05:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="gKsN9ChS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405547AbfJWNCg (ORCPT
+        id S2405562AbfJWNFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:02:36 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61271 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403983AbfJWNCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:02:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 06:02:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="223176393"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Oct 2019 06:02:35 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 35B2830034D; Wed, 23 Oct 2019 06:02:35 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 06:02:35 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        linux-kernel@vger.kernel.org, jolsa@kernel.org, eranian@google.com,
-        kan.liang@linux.intel.com, peterz@infradead.org
-Subject: Re: [PATCH v2 4/9] perf affinity: Add infrastructure to save/restore
- affinity
-Message-ID: <20191023130235.GF4660@tassilo.jf.intel.com>
-References: <20191020175202.32456-1-andi@firstfloor.org>
- <20191020175202.32456-5-andi@firstfloor.org>
- <20191023095911.GJ22919@krava>
+        Wed, 23 Oct 2019 09:05:52 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:50458 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390642AbfJWNFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:05:51 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 0897E2E15C8;
+        Wed, 23 Oct 2019 16:05:48 +0300 (MSK)
+Received: from iva8-b53eb3f76dc7.qloud-c.yandex.net (iva8-b53eb3f76dc7.qloud-c.yandex.net [2a02:6b8:c0c:2ca1:0:640:b53e:b3f7])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id CMEAkgWXLY-5ll4G81u;
+        Wed, 23 Oct 2019 16:05:47 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1571835947; bh=kJuDEoi2DnAZHHcr2TKjwcZ45kR0BazMsfLIWVC/fKw=;
+        h=In-Reply-To:Message-ID:Date:References:To:From:Subject:Cc;
+        b=gKsN9ChSZUXTNXJVimiIvzGt1vtfImTBEHX2tgVfaG/SbXwzTAXcSs0vjXAqCy6bX
+         KQePOZ6K/6SvFKakG+KOTu84oRsR0WuH1v6wJwx2XtccdE0BipE2P8SSOy9MkHkH2T
+         C+/MVh3Y1vaawFNdUrmT5IqKUF0t4PiPp+pc+JSo=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:3d43:d63f:7907:141a])
+        by iva8-b53eb3f76dc7.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id PM1IhkX4dm-5lW0x5l0;
+        Wed, 23 Oct 2019 16:05:47 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 4.4 1/2] x86/vdso: Remove direct HPET mapping into
+ userspace
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>
+References: <157183247628.2324.16440279839073827980.stgit@buzz>
+Message-ID: <00665546-4ad7-758c-d205-02f2fdca7e6e@yandex-team.ru>
+Date:   Wed, 23 Oct 2019 16:05:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023095911.GJ22919@krava>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <157183247628.2324.16440279839073827980.stgit@buzz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 11:59:11AM +0200, Jiri Olsa wrote:
-> On Sun, Oct 20, 2019 at 10:51:57AM -0700, Andi Kleen wrote:
+On 23/10/2019 15.07, Konstantin Khlebnikov wrote:
+> commit 1ed95e52d902035e39a715ff3a314a893a96e5b7 upstream.
 > 
-> SNIP
+> Commit d96d87834d5b870402a4a5b565706a4869ebc020 in v4.4.190 which is
+> backport of upstream commit 1ed95e52d902035e39a715ff3a314a893a96e5b7
+> removed only HPET access from vdso but leaved HPET mapped in "vvar".
+> So userspace still could read HPET directly and confuse hardware.
 > 
-> > +}
-> > diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
-> > new file mode 100644
-> > index 000000000000..e56148607e33
-> > --- /dev/null
-> > +++ b/tools/perf/util/affinity.h
-> > @@ -0,0 +1,15 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#ifndef AFFINITY_H
-> > +#define AFFINITY_H 1
-> > +
-> > +struct affinity {
-> > +	unsigned char *orig_cpus;
-> > +	unsigned char *sched_cpus;
+> This patch removes mapping HPET page into userspace.
 > 
-> why not use cpu_set_t directly?
+> Fixes: d96d87834d5b ("x86/vdso: Remove direct HPET access through the vDSO") # v4.4.190
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Link: https://lore.kernel.org/lkml/6fd42b2b-e29a-1fd6-03d1-e9da9192e6c5@yandex-team.ru/
+> ---
+>   arch/x86/entry/vdso/vma.c |   14 --------------
+>   1 file changed, 14 deletions(-)
+> 
+> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+> index 6b46648588d8..cc0a3c16a95d 100644
+> --- a/arch/x86/entry/vdso/vma.c
+> +++ b/arch/x86/entry/vdso/vma.c
+> @@ -18,7 +18,6 @@
+>   #include <asm/vdso.h>
+>   #include <asm/vvar.h>
+>   #include <asm/page.h>
+> -#include <asm/hpet.h>
+>   #include <asm/desc.h>
+>   #include <asm/cpufeature.h>
+>   
+> @@ -159,19 +158,6 @@ static int map_vdso(const struct vdso_image *image, bool calculate_addr)
+>   	if (ret)
+>   		goto up_fail;
+>   
+> -#ifdef CONFIG_HPET_TIMER
+> -	if (hpet_address && image->sym_hpet_page) {
 
-Because it's too small in glibc (only 1024 CPUs) and perf already 
-supports more.
+Probably this patch is not required.
+It seems after removing symbol "hpet_page" from vdso code
+image->sym_hpet_page always is NULL and this branch never executed.
 
--andi
+> -		ret = io_remap_pfn_range(vma,
+> -			text_start + image->sym_hpet_page,
+> -			hpet_address >> PAGE_SHIFT,
+> -			PAGE_SIZE,
+> -			pgprot_noncached(PAGE_READONLY));
+> -
+> -		if (ret)
+> -			goto up_fail;
+> -	}
+> -#endif
+> -
+>   	pvti = pvclock_pvti_cpu0_va();
+>   	if (pvti && image->sym_pvclock_page) {
+>   		ret = remap_pfn_range(vma,
+> 
