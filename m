@@ -2,140 +2,144 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571E2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E44ACA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E3F2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571813491;
-	bh=hBmd5KPV6GhZmi3teZ7pgUcmVyOexynGR7kSJghi+Ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mI7oMcB3TJDkz4Wu+F77HR8yy3zf3pCFEuRJ839xcmARsZbGkwD9pIBqhzkf5k9uY
-	 LuYAIiEkSvuh0fmEy3nYoKIYMqboU7o3YuBZT60pHSqk2shDMttnW5cGZ5zIQzA6qs
-	 HLjFT9y3kvAKW7dF8fIptcu5NsGjx7ObhHI8jCsc=
+	by mail.kernel.org (Postfix) with ESMTP id EDC0920684
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZItP+0oo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389571AbfJWGva (ORCPT
+        id S2388923AbfJWGzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfJWGva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:51:30 -0400
-Received: from localhost (unknown [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884232064A;
-        Wed, 23 Oct 2019 06:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571813489;
-        bh=hBmd5KPV6GhZmi3teZ7pgUcmVyOexynGR7kSJghi+Ig=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zg/KpCnvvZCquZPkNV/bKcz4j8uihmbrrjeSjyqVX03QfN/9c4lefnzZgpNmiVCys
-         j9LRFc4+UxKCVkjHtE8FQBcP+//WlTQTgezIXfawEDfRUvCqRwFo9Mg/ctX9a4l1EO
-         l0sVppcq7djBD2yKfJ09z9t6wATXSxZFZtShIXZ4=
-Date:   Wed, 23 Oct 2019 08:51:26 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
- binding
-Message-ID: <20191023065126.ckqgvqkzeqtt3j3m@gilmour>
-References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
- <20191003115154.6f2jgj3dnqsved2y@gilmour>
- <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
- <20191007100535.6gp6b3h6ueyeln3b@gilmour>
- <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
- <20191007104835.v6iqpoolqtajryik@gilmour>
- <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
+        Wed, 23 Oct 2019 02:55:09 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:38326 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfJWGzJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:55:09 -0400
+Received: by mail-yw1-f67.google.com with SMTP id s6so7113817ywe.5;
+        Tue, 22 Oct 2019 23:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tWMfIewyW2yZnqk9iPz3LngqD0QBboavwiUrFcIU6Tk=;
+        b=ZItP+0oobmwxRWpFscmdU9mtpw5Ngc7+Ab8AeULxE3u2I5by5dse+l/thhFQYJOI5o
+         KNTsWo9qU/mp7tYu8GXzSY/+Cc1E7rl4FQT2awWeV5y8TsFR6YOll5izd7L2Hxj17dli
+         x+LQV/nU6tJmX9KKR4UoJIXkFZd2Pp0BW9HQkuNJuJEtuNJsGPDz4YrRctEuW7Wo4NQ4
+         mlYsZ2feJsgiMR697WQzGmsyWaa9SwhBoTRJkIhV3/lHwOmhiM0eKNaBTxKS7krOKklW
+         IqUtxPA0HFb/pASs89Wb847XvRKiwfO/6dTwqtGeMuzQGibs89yMYZmmT+75ctCNzJWi
+         Ha/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tWMfIewyW2yZnqk9iPz3LngqD0QBboavwiUrFcIU6Tk=;
+        b=DegaDjv2ReQ3rXR3DvCCDa6pY9FWBLaA9FZIQd6dpgyBNaMKJRK1DLmhaa8AFXJZTB
+         gEZXMqJ3oTWm6aFPILj5DCAUvlDAP8SiD0PudBzbl15JXewbaJQ6GcRDAw+nxKuTxNli
+         UvDSN8dXrelq53tHujunYvn7u4xrvFSuW71kgiWHP8djxGAjiNoZTAf+jg32Q3LpeqD4
+         IV1hX7GewzQGMi45bMdY9XvOOU1TCzjRh3AojU9paMxyS45lrpNG5eY0vw27QaIKozcO
+         ti7R9FTBzLZKdyobNzUPS5bGlxhQH15JjrDbjpu36EJWlDXJjqIgeNSYdHUJ30mFi85S
+         KmkQ==
+X-Gm-Message-State: APjAAAUIBAMUW102UX6qeah1nbZj5IXKZjGH29KDVU9zQnbiMP3BLiwC
+        L2Y/25WvoRiaNS5TnGYTbeD8ayBsxh24pYkCa9g=
+X-Google-Smtp-Source: APXvYqyK0RBRSgeWbGn7/LkyjHCNbkCod4NzmBkwYNzSbYnoQBKsqwCBuMw2+GUec7foLcGq8YHoQC9v4cNSmSY2L94=
+X-Received: by 2002:a81:6c58:: with SMTP id h85mr1527436ywc.88.1571813708118;
+ Tue, 22 Oct 2019 23:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="meupzleynumtgrf3"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLVkikYVpjs1m+QqsOK2CfSm9+LfZWXbWEoszeSt3RGaA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20191022204453.97058-1-salyzyn@android.com>
+In-Reply-To: <20191022204453.97058-1-salyzyn@android.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 23 Oct 2019 09:54:57 +0300
+Message-ID: <CAOQ4uxjFqq0zA7V3A9s0h2om7AWY5AT-2sQ4z2G0Vk2gtf1M=w@mail.gmail.com>
+Subject: Re: [PATCH v14 0/5] overlayfs override_creds=off & nested get xattr fix
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-doc@vger.kernel.org, Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---meupzleynumtgrf3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Rob,
-
-On Tue, Oct 22, 2019 at 11:17:35AM -0500, Rob Herring wrote:
-> On Mon, Oct 7, 2019 at 5:48 AM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Mon, Oct 07, 2019 at 03:45:29PM +0530, Amit Kucheria wrote:
-> > > On Mon, Oct 7, 2019 at 3:35 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > >
-> > > > On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
-> > > > > On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
-> > > > > > > This new binding fails dt_binding_check due to a typo. Fix it up.
-> > > > > > >
-> > > > > > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-> > > > > > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-> > > > > > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-> > > > > > > make[2]: *** Waiting for unfinished jobs....
-> > > > > > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-> > > > > > > make[1]: *** [dt_binding_check] Error 2
-> > > > > > >
-> > > > > > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > > > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > > >
-> > > > > > Thanks for your patch.
-> > > > > >
-> > > > > > It has already been submitted though:
-> > > > > > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
-> > > > > >
-> > > > > > I'm not sure why it hasn't been applied yet though :/
-> > > > >
-> > > > > Perhaps a Fixes tag will allow more attention to it?
-> > > >
-> > > > I've added a fixes tag and merged it through the sunxi tree.
-> > > >
-> > > > Sorry for the time it took, and thanks for sending that fix!
-> > >
-> > > Will it get merged for -rc2?
-> >
-> > -rc2 was released yesterday, so we're a bit late for that, but it's
-> >  going to be in next tomorrow.
+On Tue, Oct 22, 2019 at 11:45 PM Mark Salyzyn <salyzyn@android.com> wrote:
 >
-> Is this going to Linus anytime soon? It is affecting anyone submitting
-> bindings against current -rc's.
+> Patch series:
+>
+> Mark Salyzyn (5):
+>   Add flags option to get xattr method paired to __vfs_getxattr
+>   overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh
+>   overlayfs: handle XATTR_NOSECURITY flag for get xattr method
+>   overlayfs: internal getxattr operations without sepolicy checking
+>   overlayfs: override_creds=off option bypass creator_cred
+>
+> The first four patches address fundamental security issues that should
+> be solved regardless of the override_creds=off feature.
+>
+> The fifth adds the feature depends on these other fixes.
+>
+> By default, all access to the upper, lower and work directories is the
+> recorded mounter's MAC and DAC credentials.  The incoming accesses are
+> checked against the caller's credentials.
+>
+> If the principles of least privilege are applied for sepolicy, the
+> mounter's credentials might not overlap the credentials of the caller's
+> when accessing the overlayfs filesystem.  For example, a file that a
+> lower DAC privileged caller can execute, is MAC denied to the
+> generally higher DAC privileged mounter, to prevent an attack vector.
+>
+> We add the option to turn off override_creds in the mount options; all
+> subsequent operations after mount on the filesystem will be only the
+> caller's credentials.  The module boolean parameter and mount option
+> override_creds is also added as a presence check for this "feature",
+> existence of /sys/module/overlay/parameters/overlay_creds
+>
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> Cc: Miklos Szeredi <miklos@szeredi.hu>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Eric W. Biederman <ebiederm@xmission.com>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Stephen Smalley <sds@tycho.nsa.gov>
+> Cc: linux-unionfs@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+>
+> ---
+> v14:
+> - Rejoin, rebase and a few adjustments.
+>
+> v13:
+> - Pull out first patch and try to get it in alone feedback, some
+>   Acks, and then <crickets> because people forgot why we were doing i.
 
-Sorry for the delay, I just sent a PR
+Mark,
 
-Maxime
+I do not see the first patch on fsdevel
+and I am confused from all the suggested APIs
+I recall Christoph's comment on v8 for not using xattr_gs_args
+and just adding flags to existing get() method.
+I agree to that comment.
 
---meupzleynumtgrf3
-Content-Type: application/pgp-signature; name="signature.asc"
+I remember asking - don't remember the answer -
+do you have any testing for this feature?
+I have a WIP branch to run unionmount-testsuite not as root,
+which is a start, but I didn't get to finish the work.
+Let me know if you want to take up this work.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXa/4bgAKCRDj7w1vZxhR
-xUD5AQDHOQrg1fK8A/nnxv6B5Ya2z3WganmGJXv2EF+TFJppWwEA2zroQ3o10xRD
-FT086EzZEJZgS5tYvtRNiHiZJZpaRQM=
-=enB/
------END PGP SIGNATURE-----
-
---meupzleynumtgrf3--
+Thanks,
+Amir.
