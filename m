@@ -2,108 +2,345 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A82CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A3ACA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E072821872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976D521872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571840342;
+	bh=dT5vckUujNcvhm/VYaU6dns3elhMjHfY1GUvw/fJDaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c5tT9QDfgFpbMlvxmbDWEFcf9IVIXQWU4V3A0cK2qY4ZbSLD2/MxUHbBF+q25GjAq
+	 5D0zrIi1mCINw1JlnMoobRdjHAllNidrE6KFCxi3JB05NJmWfJOcCXOvBOVecqqv9r
+	 jg71SDVkR80yWT8VOjxprzYhBAMH5TgurPmftbhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392157AbfJWOSA (ORCPT
+        id S2406346AbfJWOTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:18:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:2746 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389069AbfJWOSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:18:00 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 07:18:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
-   d="scan'208";a="398054832"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Oct 2019 07:17:59 -0700
-Date:   Wed, 23 Oct 2019 07:17:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 06/17] x86/entry/32: Remove redundant interrupt disable
-Message-ID: <20191023141759.GF329@linux.intel.com>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123118.191230255@linutronix.de>
+        Wed, 23 Oct 2019 10:19:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37182 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404423AbfJWOTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:19:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 03332ACA8;
+        Wed, 23 Oct 2019 14:18:58 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 16:18:57 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 5/8] mm: vmscan: replace shrink_node() loop with a retry
+ jump
+Message-ID: <20191023141857.GF17610@dhcp22.suse.cz>
+References: <20191022144803.302233-1-hannes@cmpxchg.org>
+ <20191022144803.302233-6-hannes@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023123118.191230255@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191022144803.302233-6-hannes@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 02:27:11PM +0200, Thomas Gleixner wrote:
-> Now that the trap handlers return with interrupts disabled, the
-> unconditional disabling of interrupts in the low level entry code can be
-> removed along with the trace calls and the misnomed preempt_stop macro.
-> As a consequence ret_from_exception and ret_from_intr collapse.
-> 
-> Add a debug check to verify that interrupts are disabled depending on
-> CONFIG_DEBUG_ENTRY.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Tue 22-10-19 10:48:00, Johannes Weiner wrote:
+> Most of the function body is inside a loop, which imposes an
+> additional indentation and scoping level that makes the code a bit
+> hard to follow and modify.
+
+I do agree!
+
+> The looping only happens in case of reclaim-compaction, which isn't
+> the common case. So rather than adding yet another function level to
+> the reclaim path and have every reclaim invocation go through a level
+> that only exists for one specific cornercase, use a retry goto.
+
+I would just keep the core logic in its own function and do the loop
+around it rather than a goto retry. This is certainly a matter of taste
+but I like a loop with an explicit condition much more than a if with
+goto.
+
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 > ---
-
-One nit below.
-
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
->  arch/x86/entry/entry_32.S |   21 ++++++---------------
->  1 file changed, 6 insertions(+), 15 deletions(-)
+>  mm/vmscan.c | 231 ++++++++++++++++++++++++++--------------------------
+>  1 file changed, 115 insertions(+), 116 deletions(-)
 > 
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -1207,7 +1198,7 @@ ENDPROC(common_spurious)
->  	TRACE_IRQS_OFF
->  	movl	%esp, %eax
->  	call	do_IRQ
-> -	jmp	ret_from_intr
-> +	jmp	ret_from_exception
->  ENDPROC(common_interrupt)
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 302dad112f75..235d1fc72311 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2729,144 +2729,143 @@ static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
+>  static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>  {
+>  	struct reclaim_state *reclaim_state = current->reclaim_state;
+> +	struct mem_cgroup *root = sc->target_mem_cgroup;
+>  	unsigned long nr_reclaimed, nr_scanned;
+>  	bool reclaimable = false;
+> +	struct mem_cgroup *memcg;
+> +again:
+> +	memset(&sc->nr, 0, sizeof(sc->nr));
 >  
->  #define BUILD_INTERRUPT3(name, nr, fn)			\
-> @@ -1219,7 +1210,7 @@ ENTRY(name)						\
->  	TRACE_IRQS_OFF					\
->  	movl	%esp, %eax;				\
->  	call	fn;					\
-> -	jmp	ret_from_intr;				\
-> +	jmp	ret_from_exception;				\
+> -	do {
+> -		struct mem_cgroup *root = sc->target_mem_cgroup;
+> -		struct mem_cgroup *memcg;
+> -
+> -		memset(&sc->nr, 0, sizeof(sc->nr));
+> -
+> -		nr_reclaimed = sc->nr_reclaimed;
+> -		nr_scanned = sc->nr_scanned;
+> +	nr_reclaimed = sc->nr_reclaimed;
+> +	nr_scanned = sc->nr_scanned;
+>  
+> -		memcg = mem_cgroup_iter(root, NULL, NULL);
+> -		do {
+> -			unsigned long reclaimed;
+> -			unsigned long scanned;
+> +	memcg = mem_cgroup_iter(root, NULL, NULL);
+> +	do {
+> +		unsigned long reclaimed;
+> +		unsigned long scanned;
+>  
+> -			switch (mem_cgroup_protected(root, memcg)) {
+> -			case MEMCG_PROT_MIN:
+> -				/*
+> -				 * Hard protection.
+> -				 * If there is no reclaimable memory, OOM.
+> -				 */
+> +		switch (mem_cgroup_protected(root, memcg)) {
+> +		case MEMCG_PROT_MIN:
+> +			/*
+> +			 * Hard protection.
+> +			 * If there is no reclaimable memory, OOM.
+> +			 */
+> +			continue;
+> +		case MEMCG_PROT_LOW:
+> +			/*
+> +			 * Soft protection.
+> +			 * Respect the protection only as long as
+> +			 * there is an unprotected supply
+> +			 * of reclaimable memory from other cgroups.
+> +			 */
+> +			if (!sc->memcg_low_reclaim) {
+> +				sc->memcg_low_skipped = 1;
+>  				continue;
+> -			case MEMCG_PROT_LOW:
+> -				/*
+> -				 * Soft protection.
+> -				 * Respect the protection only as long as
+> -				 * there is an unprotected supply
+> -				 * of reclaimable memory from other cgroups.
+> -				 */
+> -				if (!sc->memcg_low_reclaim) {
+> -					sc->memcg_low_skipped = 1;
+> -					continue;
+> -				}
+> -				memcg_memory_event(memcg, MEMCG_LOW);
+> -				break;
+> -			case MEMCG_PROT_NONE:
+> -				/*
+> -				 * All protection thresholds breached. We may
+> -				 * still choose to vary the scan pressure
+> -				 * applied based on by how much the cgroup in
+> -				 * question has exceeded its protection
+> -				 * thresholds (see get_scan_count).
+> -				 */
+> -				break;
+>  			}
+> +			memcg_memory_event(memcg, MEMCG_LOW);
+> +			break;
+> +		case MEMCG_PROT_NONE:
+> +			/*
+> +			 * All protection thresholds breached. We may
+> +			 * still choose to vary the scan pressure
+> +			 * applied based on by how much the cgroup in
+> +			 * question has exceeded its protection
+> +			 * thresholds (see get_scan_count).
+> +			 */
+> +			break;
+> +		}
+>  
+> -			reclaimed = sc->nr_reclaimed;
+> -			scanned = sc->nr_scanned;
+> -			shrink_node_memcg(pgdat, memcg, sc);
+> -
+> -			shrink_slab(sc->gfp_mask, pgdat->node_id, memcg,
+> -					sc->priority);
+> -
+> -			/* Record the group's reclaim efficiency */
+> -			vmpressure(sc->gfp_mask, memcg, false,
+> -				   sc->nr_scanned - scanned,
+> -				   sc->nr_reclaimed - reclaimed);
+> -
+> -		} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
+> +		reclaimed = sc->nr_reclaimed;
+> +		scanned = sc->nr_scanned;
+> +		shrink_node_memcg(pgdat, memcg, sc);
+>  
+> -		if (reclaim_state) {
+> -			sc->nr_reclaimed += reclaim_state->reclaimed_slab;
+> -			reclaim_state->reclaimed_slab = 0;
+> -		}
+> +		shrink_slab(sc->gfp_mask, pgdat->node_id, memcg,
+> +			    sc->priority);
+>  
+> -		/* Record the subtree's reclaim efficiency */
+> -		vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
+> -			   sc->nr_scanned - nr_scanned,
+> -			   sc->nr_reclaimed - nr_reclaimed);
+> +		/* Record the group's reclaim efficiency */
+> +		vmpressure(sc->gfp_mask, memcg, false,
+> +			   sc->nr_scanned - scanned,
+> +			   sc->nr_reclaimed - reclaimed);
+>  
+> -		if (sc->nr_reclaimed - nr_reclaimed)
+> -			reclaimable = true;
+> +	} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
+>  
+> -		if (current_is_kswapd()) {
+> -			/*
+> -			 * If reclaim is isolating dirty pages under writeback,
+> -			 * it implies that the long-lived page allocation rate
+> -			 * is exceeding the page laundering rate. Either the
+> -			 * global limits are not being effective at throttling
+> -			 * processes due to the page distribution throughout
+> -			 * zones or there is heavy usage of a slow backing
+> -			 * device. The only option is to throttle from reclaim
+> -			 * context which is not ideal as there is no guarantee
+> -			 * the dirtying process is throttled in the same way
+> -			 * balance_dirty_pages() manages.
+> -			 *
+> -			 * Once a node is flagged PGDAT_WRITEBACK, kswapd will
+> -			 * count the number of pages under pages flagged for
+> -			 * immediate reclaim and stall if any are encountered
+> -			 * in the nr_immediate check below.
+> -			 */
+> -			if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
+> -				set_bit(PGDAT_WRITEBACK, &pgdat->flags);
+> +	if (reclaim_state) {
+> +		sc->nr_reclaimed += reclaim_state->reclaimed_slab;
+> +		reclaim_state->reclaimed_slab = 0;
+> +	}
+>  
+> -			/*
+> -			 * Tag a node as congested if all the dirty pages
+> -			 * scanned were backed by a congested BDI and
+> -			 * wait_iff_congested will stall.
+> -			 */
+> -			if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
+> -				set_bit(PGDAT_CONGESTED, &pgdat->flags);
+> +	/* Record the subtree's reclaim efficiency */
+> +	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
+> +		   sc->nr_scanned - nr_scanned,
+> +		   sc->nr_reclaimed - nr_reclaimed);
+>  
+> -			/* Allow kswapd to start writing pages during reclaim.*/
+> -			if (sc->nr.unqueued_dirty == sc->nr.file_taken)
+> -				set_bit(PGDAT_DIRTY, &pgdat->flags);
+> +	if (sc->nr_reclaimed - nr_reclaimed)
+> +		reclaimable = true;
+>  
+> -			/*
+> -			 * If kswapd scans pages marked marked for immediate
+> -			 * reclaim and under writeback (nr_immediate), it
+> -			 * implies that pages are cycling through the LRU
+> -			 * faster than they are written so also forcibly stall.
+> -			 */
+> -			if (sc->nr.immediate)
+> -				congestion_wait(BLK_RW_ASYNC, HZ/10);
+> -		}
+> +	if (current_is_kswapd()) {
+> +		/*
+> +		 * If reclaim is isolating dirty pages under writeback,
+> +		 * it implies that the long-lived page allocation rate
+> +		 * is exceeding the page laundering rate. Either the
+> +		 * global limits are not being effective at throttling
+> +		 * processes due to the page distribution throughout
+> +		 * zones or there is heavy usage of a slow backing
+> +		 * device. The only option is to throttle from reclaim
+> +		 * context which is not ideal as there is no guarantee
+> +		 * the dirtying process is throttled in the same way
+> +		 * balance_dirty_pages() manages.
+> +		 *
+> +		 * Once a node is flagged PGDAT_WRITEBACK, kswapd will
+> +		 * count the number of pages under pages flagged for
+> +		 * immediate reclaim and stall if any are encountered
+> +		 * in the nr_immediate check below.
+> +		 */
+> +		if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
+> +			set_bit(PGDAT_WRITEBACK, &pgdat->flags);
+>  
+>  		/*
+> -		 * Legacy memcg will stall in page writeback so avoid forcibly
+> -		 * stalling in wait_iff_congested().
+> +		 * Tag a node as congested if all the dirty pages
+> +		 * scanned were backed by a congested BDI and
+> +		 * wait_iff_congested will stall.
+>  		 */
+> -		if (cgroup_reclaim(sc) && writeback_throttling_sane(sc) &&
+> -		    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
+> -			set_memcg_congestion(pgdat, root, true);
+> +		if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
+> +			set_bit(PGDAT_CONGESTED, &pgdat->flags);
+> +
+> +		/* Allow kswapd to start writing pages during reclaim.*/
+> +		if (sc->nr.unqueued_dirty == sc->nr.file_taken)
+> +			set_bit(PGDAT_DIRTY, &pgdat->flags);
+>  
+>  		/*
+> -		 * Stall direct reclaim for IO completions if underlying BDIs
+> -		 * and node is congested. Allow kswapd to continue until it
+> -		 * starts encountering unqueued dirty pages or cycling through
+> -		 * the LRU too quickly.
+> +		 * If kswapd scans pages marked marked for immediate
+> +		 * reclaim and under writeback (nr_immediate), it
+> +		 * implies that pages are cycling through the LRU
+> +		 * faster than they are written so also forcibly stall.
+>  		 */
+> -		if (!sc->hibernation_mode && !current_is_kswapd() &&
+> -		   current_may_throttle() && pgdat_memcg_congested(pgdat, root))
+> -			wait_iff_congested(BLK_RW_ASYNC, HZ/10);
+> +		if (sc->nr.immediate)
+> +			congestion_wait(BLK_RW_ASYNC, HZ/10);
+> +	}
+> +
+> +	/*
+> +	 * Legacy memcg will stall in page writeback so avoid forcibly
+> +	 * stalling in wait_iff_congested().
+> +	 */
+> +	if (cgroup_reclaim(sc) && writeback_throttling_sane(sc) &&
+> +	    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
+> +		set_memcg_congestion(pgdat, root, true);
+> +
+> +	/*
+> +	 * Stall direct reclaim for IO completions if underlying BDIs
+> +	 * and node is congested. Allow kswapd to continue until it
+> +	 * starts encountering unqueued dirty pages or cycling through
+> +	 * the LRU too quickly.
+> +	 */
+> +	if (!sc->hibernation_mode && !current_is_kswapd() &&
+> +	    current_may_throttle() && pgdat_memcg_congested(pgdat, root))
+> +		wait_iff_congested(BLK_RW_ASYNC, HZ/10);
+>  
+> -	} while (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
+> -					 sc));
+> +	if (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
+> +				    sc))
+> +		goto again;
+>  
+>  	/*
+>  	 * Kswapd gives up on balancing particular nodes after too
+> -- 
+> 2.23.0
 
-This backslash is now unaligned.
-
->  ENDPROC(name)
->  
->  #define BUILD_INTERRUPT(name, nr)		\
-> @@ -1366,7 +1357,7 @@ ENTRY(xen_do_upcall)
->  #ifndef CONFIG_PREEMPTION
->  	call	xen_maybe_preempt_hcall
->  #endif
-> -	jmp	ret_from_intr
-> +	jmp	ret_from_exception
->  ENDPROC(xen_hypervisor_callback)
->  
->  /*
-> 
-> 
+-- 
+Michal Hocko
+SUSE Labs
