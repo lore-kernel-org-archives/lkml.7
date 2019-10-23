@@ -2,152 +2,290 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B63CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC3ECA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4833F2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94C320679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:06:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9kbrGD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfJWRFS (ORCPT
+        id S1727599AbfJWRG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:05:18 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:38061 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726812AbfJWRFR (ORCPT
+        Wed, 23 Oct 2019 13:06:56 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32927 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbfJWRG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:05:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tg.1n3m_1571850304;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg.1n3m_1571850304)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Oct 2019 01:05:15 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     hughd@google.com, aarcange@redhat.com,
-        kirill.shutemov@linux.intel.com, gavin.dg@linux.alibaba.com,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [v2 PATCH] mm: thp: handle page cache THP correctly in PageTransCompoundMap
-Date:   Thu, 24 Oct 2019 01:05:04 +0800
-Message-Id: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 23 Oct 2019 13:06:56 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 71so16579013qkl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 10:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BmJlh4WyBNl5ujqJykwBJPqFEruvIfpYSLEoPjqEaF0=;
+        b=a9kbrGD0VSKrvdNU25RKScBnDnByLA4+uj/kwwXdk+N2049BF3bn/9X8wxg/ptPAMI
+         QrwmPUCoCr2vlIwbMjD0s94a5ZRtq3UnE85Ty+T7aavcI8LsBUT41tSH+WWsIq3UgEd9
+         3stFaNvJhzE3ykEPC/vWgsyEBZ2BKeKLnlI9tFn/8TyLFcC6n3qMFwmu/pPEtuOzY4ft
+         9PkZkf7Lfy0jsAx2AvV9MKrTU6R2S8hbY86LznBATQx6OVkQO6r5czyyjHCFiL/pKDeL
+         SicEgj+Bq+Kcf5GVp4U+jUi/zO5wIaG7p9Tr5ZJyKdxmp7HFKjaftYR7S0h767gjdxry
+         0z3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BmJlh4WyBNl5ujqJykwBJPqFEruvIfpYSLEoPjqEaF0=;
+        b=P42CHrfVfpuFBf56MVblhNdDU/r02NtYIDJuHnSJ8C53NI6NV0esKl1eWbSZXX5rfb
+         JTtIlD6z6UF74HyjEnMlkrGQUlMaxhsDg74YWgPz8JPmGex5YV3ElTcO03BgJjVU/vSK
+         s070/MkbRi4IQhTAPonoyhCMIr8ajuu+JZENeMfEWaNiFWZnDcxxKQ+zgpOioFRtwJD5
+         qsZe2rfwLj6H1Xto8U21YSHLbUMg2EoztjVnpsfzGtlCMtiAlcFAWo4iDiOlFl02eSav
+         99TCOj6uUc0AvBS+y5tbZAVm68BttTw2hhMms+iIpA76613q9iASUuqr40zwjniTQcEP
+         pJbA==
+X-Gm-Message-State: APjAAAWerD4A/OtI1pMZHjx5umrAVH2NDZMBfefPzwfC2cFEy9txbW0w
+        fDhhYVyX72RehEak7FLRbd0a4tvXwceJidHiAig7Qg==
+X-Google-Smtp-Source: APXvYqwsGOSD5flrnTSltEbjBX/WuFFbqInKkFlUr30Uh1BYrK/uT2f+/aOtrvvxfmcptN3z6ecpULr0sPMFQuf+GTE=
+X-Received: by 2002:a05:620a:16a6:: with SMTP id s6mr8708369qkj.407.1571850414641;
+ Wed, 23 Oct 2019 10:06:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <000000000000328b2905951a7667@google.com> <CANpmjNPoBBJgMKLEAXs+bPhitF+WygseHgTkSJsuiK8WcsB==g@mail.gmail.com>
+ <20191017181709.GA5312@avx2> <CANpmjNOkpOQsmQKYLAJ1iuj6UYJqyY6PRaYXSyWbF=omfnj6Uw@mail.gmail.com>
+In-Reply-To: <CANpmjNOkpOQsmQKYLAJ1iuj6UYJqyY6PRaYXSyWbF=omfnj6Uw@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 23 Oct 2019 19:06:43 +0200
+Message-ID: <CACT4Y+YE8BtDJvbPfgDQq-HVwiPkg-7CTD1x8xCzeQTPuNG65Q@mail.gmail.com>
+Subject: Re: KCSAN: data-race in task_dump_owner / task_dump_owner
+To:     Marco Elver <elver@google.com>
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        syzbot <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christian Brauner <christian@brauner.io>,
+        Kees Cook <keescook@chromium.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Dumazet <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have usecase to use tmpfs as QEMU memory backend and we would like to
-take the advantage of THP as well.  But, our test shows the EPT is not
-PMD mapped even though the underlying THP are PMD mapped on host.
-The number showed by /sys/kernel/debug/kvm/largepage is much less than
-the number of PMD mapped shmem pages as the below:
+On Thu, Oct 17, 2019 at 8:33 PM 'Marco Elver' via syzkaller-bugs
+<syzkaller-bugs@googlegroups.com> wrote:
+>
+> On Thu, 17 Oct 2019 at 20:17, Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> >
+> > On Thu, Oct 17, 2019 at 02:56:47PM +0200, Marco Elver wrote:
+> > > Hi,
+> > >
+> > > On Thu, 17 Oct 2019 at 14:36, syzbot
+> > > <syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    d724f94f x86, kcsan: Enable KCSAN for x86
+> > > > git tree:       https://github.com/google/ktsan.git kcsan
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=17884db3600000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=c0906aa620713d80
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=e392f8008a294fdf8891
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > >
+> > > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+e392f8008a294fdf8891@syzkaller.appspotmail.com
+> > > >
+> > > > ==================================================================
+> > > > BUG: KCSAN: data-race in task_dump_owner / task_dump_owner
+> > > >
+> > > > write to 0xffff8881255bb7fc of 4 bytes by task 7804 on cpu 0:
+> > > >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+> > > >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+> > > >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+> > > >   d_revalidate fs/namei.c:765 [inline]
+> > > >   d_revalidate fs/namei.c:762 [inline]
+> > > >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+> > > >   walk_component+0x6d/0xe80 fs/namei.c:1804
+> > > >   link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2139
+> > > >   link_path_walk fs/namei.c:2070 [inline]
+> > > >   path_openat+0x14f/0x3530 fs/namei.c:3532
+> > > >   do_filp_open+0x11e/0x1b0 fs/namei.c:3563
+> > > >   do_sys_open+0x3b3/0x4f0 fs/open.c:1089
+> > > >   __do_sys_open fs/open.c:1107 [inline]
+> > > >   __se_sys_open fs/open.c:1102 [inline]
+> > > >   __x64_sys_open+0x55/0x70 fs/open.c:1102
+> > > >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+> > > >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > >
+> > > > write to 0xffff8881255bb7fc of 4 bytes by task 7813 on cpu 1:
+> > > >   task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
+> > > >   pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
+> > > >   pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
+> > > >   d_revalidate fs/namei.c:765 [inline]
+> > > >   d_revalidate fs/namei.c:762 [inline]
+> > > >   lookup_fast+0x7cb/0x7e0 fs/namei.c:1613
+> > > >   walk_component+0x6d/0xe80 fs/namei.c:1804
+> > > >   lookup_last fs/namei.c:2271 [inline]
+> > > >   path_lookupat.isra.0+0x13a/0x5a0 fs/namei.c:2316
+> > > >   filename_lookup+0x145/0x2d0 fs/namei.c:2346
+> > > >   user_path_at_empty+0x4c/0x70 fs/namei.c:2606
+> > > >   user_path_at include/linux/namei.h:60 [inline]
+> > > >   vfs_statx+0xd9/0x190 fs/stat.c:187
+> > > >   vfs_stat include/linux/fs.h:3188 [inline]
+> > > >   __do_sys_newstat+0x51/0xb0 fs/stat.c:341
+> > > >   __se_sys_newstat fs/stat.c:337 [inline]
+> > > >   __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
+> > > >   do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+> > > >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > >
+> > > > Reported by Kernel Concurrency Sanitizer on:
+> > > > CPU: 1 PID: 7813 Comm: ps Not tainted 5.3.0+ #0
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > Google 01/01/2011
+> > > > ==================================================================
+> > >
+> > > My understanding is, that for every access to /proc/<pid>,
+> > > d_revalidate is called, and /proc-fs implementation simply says that
+> > > pid_revalidate always revalidates by rewriting uid/gid because "owning
+> > > task may have performed a setuid(), etc." presumably so every access
+> > > to a /proc/<pid> entry always has the right uid/gid (in effect
+> > > updating /proc/<pid> lazily via d_revalidate).
+> > >
+> > > Is it possible that one of the tasks above could be preempted after
+> > > doing its writes to *ruid/*rgid, another thread writing some other
+> > > values (after setuid / seteuid), and then the preempted thread seeing
+> > > the other values? Assertion here should never fail:
+> > > === TASK 1 ===
+> > > | seteuid(1000);
+> > > | seteuid(0);
+> > > | stat("/proc/<pid-of-task-1>", &fstat);
+> > > | assert(fstat.st_uid == 0);
+> > > === TASK 2 ===
+> > > | stat("/proc/<pid-of-task-1>", ...);
+> >
+> > Is it the same as
+> > pid_revalidate() snapshots (uid,gid) correctly
+> > but writeback is done in any order?
+>
+> Yes, I think so. Snapshot is done in RCU reader critical section, but
+> the writes can race with another thread. Is there logic that ensures
+> this doesn't lead to the observable outcome above?
 
-7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
-Size:            4194304 kB
-[snip]
-AnonHugePages:         0 kB
-ShmemPmdMapped:   579584 kB
-[snip]
-Locked:                0 kB
 
-cat /sys/kernel/debug/kvm/largepages
-12
+I found the case where this leads to an observable bug.
+common_perm_cond() in security/apparmor/lsm.c reads the inode uid and
+uses it for the security check:
 
-And some benchmarks do worse than with anonymous THPs.
+static int common_perm_cond(const char *op, const struct path *path, u32 mask)
+{
+      struct path_cond cond = { d_backing_inode(path->dentry)->i_uid,
 
-By digging into the code we figured out that commit 127393fbe597 ("mm:
-thp: kvm: fix memory corruption in KVM with THP enabled") checks if
-there is a single PTE mapping on the page for anonymous THP when
-setting up EPT map.  But, the _mapcount < 0 check doesn't fit to page
-cache THP since every subpage of page cache THP would get _mapcount
-inc'ed once it is PMD mapped, so PageTransCompoundMap() always returns
-false for page cache THP.  This would prevent KVM from setting up PMD
-mapped EPT entry.
+d_backing_inode(path->dentry)->i_mode
+      };
 
-So we need handle page cache THP correctly.  However, when page cache
-THP's PMD gets split, kernel just remove the map instead of setting up
-PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
-the subpages may get PTE mapped even though it is still a THP since the
-page cache THP may be mapped by other processes at the mean time.
+Now consider the following test program:
 
-Checking its _mapcount and whether the THP has PTE mapped or not.
-Although this may report some false negative cases (PTE mapped by other
-processes), it looks not trivial to make this accurate.
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <pthread.h>
 
-With this fix /sys/kernel/debug/kvm/largepage would show reasonable
-pages are PMD mapped by EPT as the below:
+void *thr(void *arg)
+{
+        for (;;) {
+                struct stat file_stat;
+                stat((char*)arg, &file_stat);
+        }
+        return 0;
+}
 
-7fbeaee00000-7fbfaee00000 rw-s 00000000 00:14 275464 /dev/shm/qemu_back_mem.mem.SKUvat (deleted)
-Size:            4194304 kB
-[snip]
-AnonHugePages:         0 kB
-ShmemPmdMapped:   557056 kB
-[snip]
-Locked:                0 kB
+int main(int argc, char *argv[])
+{
+        char proc[32];
+        sprintf(proc, "/proc/%d", getpid());
+        printf("%s\n", proc);
+        pthread_t th;
+        pthread_create(&th, 0, thr, proc);
+        for (;;) {
+                seteuid(1000);
+                usleep(1);
+                seteuid(0);
+                struct stat file_stat;
+                stat(proc, &file_stat);
+        }
+        return 0;
+}
 
-cat /sys/kernel/debug/kvm/largepages
-271
+Whenever the main thread does stat, it must observe inode.uid == 0 in
+common_perm_cond().
 
-And the benchmarks are as same as anonymous THPs.
+But since task_dump_owner() does writeback out of order, it can lead
+to non-linearizable executions and main thread observing inode.uid ==
+1000.
+This in turn can lead to both false negatives and false positives from
+AppArmour (false denying access and falsely permitting access).
 
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Reported-by: Gang Deng <gavin.dg@linux.alibaba.com>
-Tested-by: Gang Deng <gavin.dg@linux.alibaba.com>
-Suggested-by: Hugh Dickins <hughd@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org> 4.8+
----
-v2: Adopted the suggestion from Hugh to use _mapcount and compound_mapcount.
-    But I just open coding compound_mapcount to avoid duplicating the
-    definition of compound_mapcount_ptr in two different files.  Since
-    "compound_mapcount" looks self-explained so I'm supposed the open
-    coding would not affect the readability.
+I don't know how to setup actual AppArmour profile to do this, but I
+see this guide mentions "owner @{PROC}/[0-9]*" in a policy, so I
+assume it's possible:
+https://gitlab.com/apparmor/apparmor/wikis/Profiling_by_hand
 
- include/linux/page-flags.h | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+Instead, I added the following check to common_perm_cond() (it's
+dirty, but you get the idea):
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index f91cb88..954a877 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -622,12 +622,30 @@ static inline int PageTransCompound(struct page *page)
-  *
-  * Unlike PageTransCompound, this is safe to be called only while
-  * split_huge_pmd() cannot run from under us, like if protected by the
-- * MMU notifier, otherwise it may result in page->_mapcount < 0 false
-+ * MMU notifier, otherwise it may result in page->_mapcount check false
-  * positives.
-+ *
-+ * We have to treat page cache THP differently since every subpage of it
-+ * would get _mapcount inc'ed once it is PMD mapped.  But, it may be PTE
-+ * mapped in the current process so comparing subpage's _mapcount to
-+ * compound_mapcount ot filter out PTE mapped case.
-  */
- static inline int PageTransCompoundMap(struct page *page)
- {
--	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
-+	struct page *head;
-+	int map_count;
-+
-+	if (!PageTransCompound(page))
-+		return 0;
-+
-+	if (PageAnon(page))
-+		return atomic_read(&page->_mapcount) < 0;
-+
-+	head = compound_head(page);
-+	map_count = atomic_read(&page->_mapcount);
-+	/* File THP is PMD mapped and not double mapped */
-+	return map_count >= 0 &&
-+	       map_count == atomic_read(&head[1].compound_mapcount);
- }
- 
- /*
--- 
-1.8.3.1
+@@ -218,6 +218,15 @@ static int common_perm_cond(const char *op, const
+struct path *path, u32 mask)
+                                  d_backing_inode(path->dentry)->i_mode
+        };
++       if (op == OP_GETATTR && mask == AA_MAY_GETATTR && cond.uid.val != 0) {
++               char buf1[64], buf2[64];
++               char *str = d_path(path, buf1, sizeof(buf1));
++               sprintf(buf2, "/proc/%d", current->pid);
++               if (!strcmp(str, buf2))
++                       pr_err("common_perm_cond: path=%s pid=%d uid=%d\n",
++                               str, current->pid, cond.uid.val);
++       }
 
+Now when I run the program, I see how it fires every few seconds:
+
+# ./a.out
+/proc/1548
+[  123.233107] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
+[  126.142869] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
+[  127.048353] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
+[  128.181873] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
+[  128.557104] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
+[  144.690774] common_perm_cond: path=/proc/1548 pid=1548 uid=1000
+
+Which means AppArmour acts based on the wrong UID. Obviously can lead
+to falsely denying access, but also falsely permitting access.
+Consider the following scenario.
+A process sets owner UID on a file so that a child process won't be
+able to access it, after that it starts the child process.
+common_perm_cond() in the child process should observe the new owner
+UID. However, if there a random other process simply doing stat() or
+something similar on the file, now the common_perm_cond() in the child
+can suddenly observe the old UID, which will be permitted by
+AppArmour. Boom!
+
+I've tried to apply "proc: fix inode uid/gid writeback race":
+https://lore.kernel.org/lkml/20191020173010.GA14744@avx2/
+but it does _not_ help because it does not really resolve the
+non-atomic snapshot and writeback of UID.
