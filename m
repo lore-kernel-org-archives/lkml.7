@@ -2,120 +2,106 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4759BC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D28BCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E53F21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="atLm8UqZ"
+	by mail.kernel.org (Postfix) with ESMTP id E19AA20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571819251;
+	bh=Ut9L4UkaGDrweHgGUD+RCxzhgckb1WKiMTHtLuIc6Zs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cAjPjJYItg+OU5sEExOxyCLw+no5eGRFU4KLTTx1d5cEG7j7u73N3koCo3uzqdSsG
+	 peOE15LN+oJJWdH0n+3MB+pt0qifYmCd61LEi6gX4MYKOJ0FCTVAwaV9OGf2t11O2V
+	 OVZJDmbEu+9z/NlAjn820UKkcz1Rb+PQYh+hUyVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390312AbfJWI04 (ORCPT
+        id S2390332AbfJWI13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:26:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32680 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390301AbfJWI0y (ORCPT
+        Wed, 23 Oct 2019 04:27:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45076 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390260AbfJWI13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:26:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571819213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HaclBkUySXchpujJDOKDQ24Kar8EqBHEiLvQYvykVcM=;
-        b=atLm8UqZ2P1diJTrhVLykLL10B3a+Wwfh7AxxPcMci8CPn7s7taOqQuVP/JBQWgPj4aTlr
-        QCqqjJqIQ8JtcVmdNutLl03qPQJMQvfc1C3DEJuxcv7D3eXxnsucNiRozuagRaxpB19vgr
-        NwBOmtV0cR3RWq8ZPxNzRLaWGKjQruQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-LuY7b88DMPqLlrFS4Rg2Ag-1; Wed, 23 Oct 2019 04:26:50 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE743100550E;
-        Wed, 23 Oct 2019 08:26:47 +0000 (UTC)
-Received: from [10.36.117.79] (ovpn-117-79.ams2.redhat.com [10.36.117.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B8CE19C78;
-        Wed, 23 Oct 2019 08:26:33 +0000 (UTC)
-Subject: Re: [PATCH v12 2/6] mm: Use zone and order instead of free area in
- free_list manipulators
-To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
- <20191022222805.17338.3243.stgit@localhost.localdomain>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <c3544859-606d-4e8f-2e48-2d7868e0fa13@redhat.com>
-Date:   Wed, 23 Oct 2019 10:26:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 23 Oct 2019 04:27:29 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v8so14738739lfa.12;
+        Wed, 23 Oct 2019 01:27:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+BrgSnZCer5UhRsZl4X7zqgqCerRzQvBH6cwLmm1CnM=;
+        b=HI/6Ls542Gr4OKd2Ngr8Ak3SU1zpNWkkmq+6GBvXR8AHzw+qZOmWsyGKHHxpnEOnpz
+         YLSzpQGx67Xkx/cXesSM20PlRkyOrX9/RUsnb6PV63EEq8hY6YFHYMgCFl+iaW28J6qB
+         5ZPNIh0Reh509Rddtku+ngn+DbbVK/k8PXxIIOTek1XmebPVTCL4D/inITSNk0PoQ98o
+         1P4IGRJ4AOL5D/08h9OJKNG148BhQDovoUDgjeU5t19FPRuovYRjBhHNI1YneNu7VUvA
+         O9DzPPieGsRlCxQLD/O42wqtFakq+kfpP6TE8m0PhigGhmRELZYU3KzY347tHU0dX3gH
+         bFbg==
+X-Gm-Message-State: APjAAAXlui92r8iAVPdlkt5Vr9e9sF3n+np3ABK/yGuIToOuIFyjeG6X
+        ViAWiZ1HcUKsWJrvy9Asgh6esPiW
+X-Google-Smtp-Source: APXvYqw+9/yUnQGsArwINEUVGFu4MzLP/NJVoAT3Vw0w3glyFhkEnq2gFz1VWCtf6lPdUnJevJNOzg==
+X-Received: by 2002:ac2:5507:: with SMTP id j7mr22043724lfk.75.1571819247001;
+        Wed, 23 Oct 2019 01:27:27 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id n3sm9001439lfl.62.2019.10.23.01.27.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 01:27:26 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@xi.terra>)
+        id 1iNBza-00064N-Md; Wed, 23 Oct 2019 10:27:42 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        syzbot+863724e7128e14b26732@syzkaller.appspotmail.com
+Subject: [PATCH] can: peak_usb: fix slab info leak
+Date:   Wed, 23 Oct 2019 10:27:05 +0200
+Message-Id: <20191023082705.23283-1-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <0000000000007a638805951153c5@google.com>
+References: <0000000000007a638805951153c5@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191022222805.17338.3243.stgit@localhost.localdomain>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: LuY7b88DMPqLlrFS4Rg2Ag-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.10.19 00:28, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->=20
-> In order to enable the use of the zone from the list manipulator function=
-s
-> I will need access to the zone pointer. As it turns out most of the
-> accessors were always just being directly passed &zone->free_area[order]
-> anyway so it would make sense to just fold that into the function itself
-> and pass the zone and order as arguments instead of the free area.
->=20
-> In order to be able to reference the zone we need to move the declaration
-> of the functions down so that we have the zone defined before we define t=
-he
-> list manipulation functions. Since the functions are only used in the fil=
-e
-> mm/page_alloc.c we can just move them there to reduce noise in the header=
-.
->=20
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> ---
->   include/linux/mmzone.h |   32 -----------------------
->   mm/page_alloc.c        |   67 +++++++++++++++++++++++++++++++++++------=
--------
->   2 files changed, 49 insertions(+), 50 deletions(-)
+Fix a small slab info leak due to a failure to clear the command buffer
+at allocation.
 
-Did you see
+The first 16 bytes of the command buffer are always sent to the device
+in pcan_usb_send_cmd() even though only the first two may have been
+initialised in case no argument payload is provided (e.g. when waiting
+for a response).
 
-https://lore.kernel.org/lkml/20191001152928.27008.8178.stgit@localhost.loca=
-ldomain/T/#m4d2bc2f37bd7bdc3ae35c4f197905c275d0ad2f9
+Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
+Cc: stable <stable@vger.kernel.org>     # 3.4
+Reported-by: syzbot+863724e7128e14b26732@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/net/can/usb/peak_usb/pcan_usb_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-this time?
-
-And the difference to the old patch is only an empty line.
-
---=20
-
-Thanks,
-
-David / dhildenb
+diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+index 65dce642b86b..0b7766b715fd 100644
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
+@@ -750,7 +750,7 @@ static int peak_usb_create_dev(const struct peak_usb_adapter *peak_usb_adapter,
+ 	dev = netdev_priv(netdev);
+ 
+ 	/* allocate a buffer large enough to send commands */
+-	dev->cmd_buf = kmalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
++	dev->cmd_buf = kzalloc(PCAN_USB_MAX_CMD_LEN, GFP_KERNEL);
+ 	if (!dev->cmd_buf) {
+ 		err = -ENOMEM;
+ 		goto lbl_free_candev;
+-- 
+2.23.0
 
