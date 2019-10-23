@@ -2,56 +2,96 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A96CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26C2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7C42086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48782086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CqqgzGyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392326AbfJWOro (ORCPT
+        id S2392342AbfJWOrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:47:44 -0400
-Received: from muru.com ([72.249.23.125]:39300 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389782AbfJWOro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:47:44 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E6670816C;
-        Wed, 23 Oct 2019 14:48:18 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 07:47:41 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the omap tree
-Message-ID: <20191023144741.GI5610@atomide.com>
-References: <20191023071046.3e6109d5@canb.auug.org.au>
+        Wed, 23 Oct 2019 10:47:55 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48064 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389782AbfJWOrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:47:55 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NEls6M089549;
+        Wed, 23 Oct 2019 09:47:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571842074;
+        bh=cT6QVOINN17/Kt4DPXJNTtp2HuxVPeCSQkCxCBXAgWk=;
+        h=From:To:CC:Subject:Date;
+        b=CqqgzGyy+umx0BPLGKlIvxOL4k9bJAVHrDegXN1ncJCbHFzP6Q/f3vvjdtLOo2rGi
+         eiDVV7bal25L+H+kThMz+qgA+RC+cgqx3DqViTsjtXxlVJJ+NWzpiYldJaBV7/ShAK
+         DKBQkADwVOIpI813tYqB5WFFhteSWS9cZB6V6dW0=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NElsKE100452
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 09:47:54 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 09:47:44 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 09:47:44 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NElrBd059434;
+        Wed, 23 Oct 2019 09:47:53 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] phy: ti: gmii-sel: fix mac tx internal delay for rgmii-rxid
+Date:   Wed, 23 Oct 2019 17:47:44 +0300
+Message-ID: <20191023144744.1246-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023071046.3e6109d5@canb.auug.org.au>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Stephen Rothwell <sfr@canb.auug.org.au> [191022 20:11]:
-> Hi all,
-> 
-> Commit
-> 
->   40f3ee0ea7f1 ("ARM: OMAP2+: Drop legacy platform data for dra7 rng")
-> 
-> is missing a Signed-off-by from its author and committer.
+Now phy-gmii-sel will disable MAC TX internal delay for PHY interface mode
+"rgmii-rxid" which is incorrect.
+Hence, fix it by enabling MAC TX internal delay in the case of "rgmii-rxid"
+mode.
 
-Oops sorry about that, will fix it.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/phy/ti/phy-gmii-sel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-
-Tony
+diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
+index a52c5bb35033..a28bd15297f5 100644
+--- a/drivers/phy/ti/phy-gmii-sel.c
++++ b/drivers/phy/ti/phy-gmii-sel.c
+@@ -69,11 +69,11 @@ static int phy_gmii_sel_mode(struct phy *phy, enum phy_mode mode, int submode)
+ 		break;
+ 
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
+ 		gmii_sel_mode = AM33XX_GMII_SEL_MODE_RGMII;
+ 		break;
+ 
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+-	case PHY_INTERFACE_MODE_RGMII_RXID:
+ 	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		gmii_sel_mode = AM33XX_GMII_SEL_MODE_RGMII;
+ 		rgmii_id = 1;
+-- 
+2.17.1
 
