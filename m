@@ -2,131 +2,76 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B57CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E708CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291A421929
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bqHj+xvP"
+	by mail.kernel.org (Postfix) with ESMTP id 4AE7821906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 17:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730956AbfJWRfc (ORCPT
+        id S1730649AbfJWRha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 13:35:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27963 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730701AbfJWRfb (ORCPT
+        Wed, 23 Oct 2019 13:37:30 -0400
+Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:57640 "EHLO
+        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729283AbfJWRh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 13:35:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571852130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pYPluV593635tS2En896gI8nsdrbZHAmMeMjWWNFoNQ=;
-        b=bqHj+xvPlJ3pHHEVJTKupVCycdfvW4gSoedVTdQDpkhgN2vHhQhTEpYNWDgUvfsOp+QWEX
-        +LRE7yuMThSaxmo9c8M1tvS9eW3QKus1z73bxqxUKQd/8lmiy4Iau0v5GSP9RVEI5xCHWA
-        awHGrR2CCqZW1YLN5IjVgtig4BI0HtQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-236-86yMyZUaPui-i3hDilpdVA-1; Wed, 23 Oct 2019 13:35:26 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 645CA107AD34;
-        Wed, 23 Oct 2019 17:35:24 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CABF5D6D0;
-        Wed, 23 Oct 2019 17:35:22 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, Mel Gorman <mgorman@suse.de>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH 2/2] mm, vmstat: List total free blocks for each order in /proc/pagetypeinfo
-Date:   Wed, 23 Oct 2019 13:34:23 -0400
-Message-Id: <20191023173423.12532-2-longman@redhat.com>
-In-Reply-To: <20191023102737.32274-3-mhocko@kernel.org>
-References: <20191023102737.32274-3-mhocko@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 86yMyZUaPui-i3hDilpdVA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Wed, 23 Oct 2019 13:37:29 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-128-127-nat.elisa-mobile.fi [85.76.128.127])
+        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 9873F200AD;
+        Wed, 23 Oct 2019 20:30:14 +0300 (EEST)
+Date:   Wed, 23 Oct 2019 20:30:14 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: octeon: Fix incorrect type in assignment
+Message-ID: <20191023173014.GC18977@darkstar.musicnaut.iki.fi>
+References: <20191010043815.14027-1-wambui.karugax@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010043815.14027-1-wambui.karugax@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the free block count for each migration types in
-/proc/pagetypeinfo may not show the exact count if it excceeds
-100,000. Users may not know how much more the counts will be. As the
-free_area structure has already tracked the total free block count in
-nr_free, we may as well print it out with no additional cost. That will
-give users a rough idea of where the upper bounds will be.
+Hi,
 
-If there is no overflow, the presence of the total counts will also
-enable us to check if the nr_free counts match the total number of
-entries in the free lists.
+On Thu, Oct 10, 2019 at 07:38:15AM +0300, Wambui Karuga wrote:
+> Fix the following warning generated by sparse in
+> drivers/staging/octeon/ethernet-tx.c:
+> 
+> drivers/staging/octeon/ethernet-tx.c:563:50: warning: incorrect type in assignment (different base types)
+> drivers/staging/octeon/ethernet-tx.c:563:50:    expected unsigned short [usertype] hw_chksum
+> drivers/staging/octeon/ethernet-tx.c:563:50:    got restricted __wsum [usertype] csum
+> 
+> Warning generated by running:
+> make C=2 CF="-D__CHECK_ENDIAN__" drivers/staging/octeon/
+> 
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> ---
+>  drivers/staging/octeon/octeon-stubs.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+> index 38954b6c89e1..b2e3c72205dd 100644
+> --- a/drivers/staging/octeon/octeon-stubs.h
+> +++ b/drivers/staging/octeon/octeon-stubs.h
+> @@ -123,7 +123,7 @@ union cvmx_pip_wqe_word0 {
+>  	struct {
+>  		uint64_t next_ptr:40;
+>  		uint8_t unused;
+> -		uint16_t hw_chksum;
+> +		__wsum hw_chksum;
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- mm/vmstat.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+I don't think this is correct. This struct defines HW register layout,
+and the field needs to be 16 bits.
 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index c5b82fdf54af..172946d8f358 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1373,6 +1373,7 @@ static void pagetypeinfo_showfree_print(struct seq_fi=
-le *m,
- =09=09=09=09=09pg_data_t *pgdat, struct zone *zone)
- {
- =09int order, mtype;
-+=09struct free_area *area;
- =09unsigned long iteration_count =3D 0;
-=20
- =09for (mtype =3D 0; mtype < MIGRATE_TYPES; mtype++) {
-@@ -1382,7 +1383,6 @@ static void pagetypeinfo_showfree_print(struct seq_fi=
-le *m,
- =09=09=09=09=09migratetype_names[mtype]);
- =09=09for (order =3D 0; order < MAX_ORDER; ++order) {
- =09=09=09unsigned long freecount =3D 0;
--=09=09=09struct free_area *area;
- =09=09=09struct list_head *curr;
- =09=09=09bool overflow =3D false;
-=20
-@@ -1419,6 +1419,17 @@ static void pagetypeinfo_showfree_print(struct seq_f=
-ile *m,
- =09=09}
- =09=09seq_putc(m, '\n');
- =09}
-+
-+=09/*
-+=09 * List total free blocks per order
-+=09 */
-+=09seq_printf(m, "Node %4d, zone %8s, total             ",
-+=09=09   pgdat->node_id, zone->name);
-+=09for (order =3D 0; order < MAX_ORDER; ++order) {
-+=09=09area =3D &(zone->free_area[order]);
-+=09=09seq_printf(m, "%6lu ", area->nr_free);
-+=09}
-+=09seq_putc(m, '\n');
- }
-=20
- /* Print out the free pages at each order for each migatetype */
---=20
-2.18.1
-
+A.
