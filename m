@@ -2,138 +2,215 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14A4CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487B5CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B758D214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08983214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V0U8f57h"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="GEFDqWLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390634AbfJWMkI (ORCPT
+        id S2390700AbfJWMkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:40:08 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40849 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732361AbfJWMkI (ORCPT
+        Wed, 23 Oct 2019 08:40:19 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:45986 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732361AbfJWMkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:40:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id o49so24173160qta.7
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:40:07 -0700 (PDT)
+        Wed, 23 Oct 2019 08:40:18 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: SzpqzQEN5+FUaVsDQt9S24yfGZaDHg1Oj5OikdNNoV4NSYMb7bfFwCUBvurfTq71IxoByvn6gA
+ BQz+EuGSLU1yl8UP3GVLoWgcFH9it0tgEmsSu+xzbFj1AHZQ+jmSyNU4rokai6UZiKXbBSQnzE
+ Ff1XlzI0ecSEZpp7ZkKemdvP/N5HTpDWyHH8Ap/Wg7bC1pT7fRKlRX5dAHwiYb+G8brkJ4eBqH
+ OJmnZUTvpjTM8uc5oKl/dCr4Rw0BPg54ODmVBR/cLCS/tjH6tXHv8rHsZ1wwGAHcNzMCWA/1hE
+ rms=
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="55338755"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Oct 2019 05:40:16 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 23 Oct 2019 05:40:15 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 23 Oct 2019 05:40:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CmKczHQMvz2GBZP6tK7s4UbB6xXQe7duMxhLqL6ZBEFAqQkKW/lEqCiyGd41w+NHKUNipngEVzr1PnKOTJECA+RjWTYs6IQ/K4TnIvj9GCMgnfG6zuC3WaHOXYn6O3KEngmw8amiWiJnFRQrqmHnhWPZHaximOf5RBFhOLZrP/IGrePgum86FvKT3OZsqJGN/OJlYlIib+x2JEPvm0cZi/N/4WetvacLbjvvbmrvS3baY8e2i/Fm3SkbCc2p/uTKVnLVnbqqCdntQJN8UuGZJFSxTTRlpUnY46jbfCCAUIZ8ZZTGVriyguuWZv9URTngPu5s58pBsIeB9rdPJsJvcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6OAziD565bi+FCwA8JoD/DHQfByjBDR/u2LXTDTxz18=;
+ b=LPmaduzgBtptpN/4UTuDbiUI9aOmVauPxE9/imsqoSp3+CGrScZtduG0oBPLBCq/2vHZCTGPwjWw/bIAaKX4JleFzi8PEHF1zmyqg28aEhyQv+XBad97OP1MoOG6NCfLfNvTfXJ5lAkmfkRvks3JSr2QKjajvV5OTLzEi5Ar6DVLYN7ayPGiR2aliewj5pMdGJrDUn7gxxmR5DpMKRFiZjTsc5yQNNFUVieXPL9E4vgHedcQuMX/AZ9wUmmMlBt0IQtsK5O+zxFKzTNf8NxVDN0E9mnyQ8ewsW3p9jGoDK46+p6vQ1+SjLV3Kbrx22nmOP4X/yb3xWLdeqFEO6IfMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sHrU87Sp2KOFYTsvWXjU9c1Yq8vcTmrg/74YWaKD3a8=;
-        b=V0U8f57hbh/kqVmvb4NEPwMp/oVE2TvJJWWuT8r2xtWeb2kjEKRohU30BBj1D4O2un
-         4Asp50Vk4TlgIM4WOGwFVlt/TKVbThDn4wyzVG59Zg9+ehmrTo5NkWDVECEvYB/p05ij
-         89oRzrjxzraFKPjN92uVcsNx6zorvZm3IXBPH0CJnFkAR5xewOtEd+zm7O/1awHRUvka
-         gzQC9ZXN4h8zvTHMuZSl/BqXLn6DFqWjwp8DRxUAQoKbeC/souX0wtOIWdofNAByg3P0
-         Va5RZDDIzcEaNgGF1aVCdJs+hTI8BcvIB0LhK1Gn37xmbwkx14+Hsx2pRSHXAnmh6ST1
-         LA9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sHrU87Sp2KOFYTsvWXjU9c1Yq8vcTmrg/74YWaKD3a8=;
-        b=q2ITnv75okc/DSuUyuREC6RuYtkrR1p6IqOri+QArpp7EovilEx7ZPLLmDReGcEBSV
-         QHQMfaFVxt9/l+ydkzxWcuZhZvvPBiGGsk/pLr5BC60uQXbEZgv2VCYRTbM0fYiGzTTY
-         WTgt79JwSCU5vsdmKmGpv4pg6BzAxFcuFSgiQoXrSWlx1muINJRy6v6Yzl9/CLZezxEl
-         FZv3k+aZBLNd46M1Hs7FjoCrJK/wj5tUvTwrapvyVw581xyjQ+bODx1m38qkCEjyIESL
-         0aZ/cNKziL+XLi9vq5P4mjoyE2G5K2qBq0SgGfYqq6yY51WPNZ//wLmVqlR2vIvBhHYB
-         1cIA==
-X-Gm-Message-State: APjAAAW2susggNs+JzbPvrExx+ahjhU6gZlYe+C7KOyNQROEdT/2VgCf
-        ivJrAZ/M5TyigJrZ4WWB1yn4VDRC7ye9fMwP/scyyNtU
-X-Google-Smtp-Source: APXvYqxmYjzw+S8GEZ4LSXFaGlWKYoIc87ESkRfbQVUthnxlSIcx3JRuSQnJS6UdQAlWpKex6x4TgBf0F79RTchEsJo=
-X-Received: by 2002:a0c:fec3:: with SMTP id z3mr8670778qvs.122.1571834406888;
- Wed, 23 Oct 2019 05:40:06 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6OAziD565bi+FCwA8JoD/DHQfByjBDR/u2LXTDTxz18=;
+ b=GEFDqWLM7LixQQ++UryGUYJYRbCvffYqAXpcw0iBEAj2DxeiFJTe6PKzSpQA4BzIR82qr3JXzS3dK3KGirmVfvKzr/3Zjghz4nTp3eKrNav3IKn0uhwrIVFP458LsOr6Qcg95a8UcNnlEFLfg40YFTiiEr7Qmr14rqNWllt8b1o=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1276.namprd11.prod.outlook.com (10.168.108.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Wed, 23 Oct 2019 12:40:14 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::b125:76c1:c9b1:34f4]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::b125:76c1:c9b1:34f4%10]) with mapi id 15.20.2367.025; Wed, 23 Oct
+ 2019 12:40:14 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <robh+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>,
+        <peda@axentia.se>, <Ludovic.Desroches@microchip.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Eugen.Hristev@microchip.com>
+Subject: [PATCH v6 3/9] i2c: add support for filters optional properties
+Thread-Topic: [PATCH v6 3/9] i2c: add support for filters optional properties
+Thread-Index: AQHViZ8EmqljGdrD10aSBxnDJd1ZDQ==
+Date:   Wed, 23 Oct 2019 12:40:14 +0000
+Message-ID: <1571834060-31580-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0096.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:18::36) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-mailer: git-send-email 2.7.4
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 527f708c-15ab-4338-adb9-08d757b62699
+x-ms-traffictypediagnostic: DM5PR11MB1276:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB1276EB92610121842431745DE86B0@DM5PR11MB1276.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(39860400002)(346002)(396003)(189003)(199004)(14454004)(6486002)(50226002)(8676002)(81156014)(107886003)(5660300002)(256004)(14444005)(36756003)(4326008)(6512007)(6436002)(81166006)(478600001)(476003)(66066001)(110136005)(71190400001)(8936002)(25786009)(2616005)(71200400001)(64756008)(66446008)(6116002)(66556008)(186003)(305945005)(66476007)(386003)(7736002)(66946007)(6506007)(2201001)(99286004)(86362001)(316002)(102836004)(26005)(52116002)(2906002)(3846002)(486006)(2501003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1276;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9jCsnqYapvXDxFSVwohndTWCwnbUyso+JyLYmOeBQg1Z0g2JMTnMzhaqoxHz4+oc3/pmDOTaz1rexk6SOsEBSq3aHF3gHhngp8CAxCqt0brJg3SELxLZPI5vmrKEmL4uGbVoqMEpsk2jRiQpgqchH2w8kA2DU6aGqmcCZl5/csaziU7v3lK9JnDwjx41S2qc/Mk04b36/e+VTiF1jb61BcVM5LTOBFa1kbSPwq9Nxd4o1/I/IgeCfnYqogceaJyN197jI/jTu4czMM91QY43yV5Da+oASgorjrI8hCCBA787XYEqBSQ7BJpDiFsBhzZC9eQEHN2xqQgOyk8seGE24N1GeSfbpmqpXtm9vr85q+4sZr5sisEgR28VR/9UznM4i/SH0qAKGYYQrcLLY/NUidnlx0qIJ/r1fwXuAqXjD0vaYvs4lspi0G3PYh9qTN7H
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com> <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
-In-Reply-To: <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 23 Oct 2019 14:39:55 +0200
-Message-ID: <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
-Subject: Re: [PATCH v6] taskstats: fix data-race
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        stable <stable@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 527f708c-15ab-4338-adb9-08d757b62699
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 12:40:14.3192
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AcMEzcFZFGKSl4Sg+LkKQfMYfuWPzyCUwIKJVUM6H2VjKZT6K7kNKG9O6FB8MZzB/qXC8rq6MUSCYQh/N9HyV2Rt24H8XdTGNN1AjcXnY7w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1276
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 2:16 PM Andrea Parri <parri.andrea@gmail.com> wrote:
->
-> On Mon, Oct 21, 2019 at 01:33:27PM +0200, Christian Brauner wrote:
-> > When assiging and testing taskstats in taskstats_exit() there's a race
-> > when writing and reading sig->stats when a thread-group with more than
-> > one thread exits:
-> >
-> > cpu0:
-> > thread catches fatal signal and whole thread-group gets taken down
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The tasks reads sig->stats without holding sighand lock.
-> >
-> > cpu1:
-> > task calls exit_group()
-> >  do_exit()
-> >  do_group_exit()
-> >  taskstats_exit()
-> >  taskstats_tgid_alloc()
-> > The task takes sighand lock and assigns new stats to sig->stats.
-> >
-> > The first approach used smp_load_acquire() and smp_store_release().
-> > However, after having discussed this it seems that the data dependency
-> > for kmem_cache_alloc() would be fixed by WRITE_ONCE().
-> > Furthermore, the smp_load_acquire() would only manage to order the stats
-> > check before the thread_group_empty() check. So it seems just using
-> > READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
-> > up for discussion at least.
->
-> Mmh, the RELEASE was intended to order the memory initialization in
-> kmem_cache_zalloc() with the later ->stats pointer assignment; AFAICT,
-> there is no data dependency between such memory accesses.
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-I agree. This needs smp_store_release. The latest version that I
-looked at contained:
-smp_store_release(&sig->stats, stats_new);
+i2c-digital-filter-width-ns:
+This optional timing property specifies the width of the spikes on the i2c
+lines (in ns) that can be filtered out by built-in digital filters which ar=
+e
+embedded in some i2c controllers.
+i2c-analog-filter-cutoff-frequency:
+This optional timing property specifies the cutoff frequency of a low-pass
+analog filter built-in i2c controllers. This low pass filter is used to fil=
+ter
+out high frequency noise on the i2c lines. Specified in Hz.
+Include these properties in the timings structure and read them as integers=
+.
 
-> Correspondingly, the ACQUIRE was intended to order the ->stats pointer
-> load with later, _independent dereferences of the same pointer; the
-> latter are, e.g., in taskstats_exit() (but not thread_group_empty()).
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
 
-How these later loads can be completely independent of the pointer
-value? They need to obtain the pointer value from somewhere. And this
-can only be done by loaded it. And if a thread loads a pointer and
-then dereferences that pointer, that's a data/address dependency and
-we assume this is now covered by READ_ONCE.
-Or these later loads of the pointer can also race with the store? If
-so, I think they also need to use READ_ONCE (rather than turn this earlier
-pointer load into acquire).
+Hello Wolfram,
+
+I modified the comment as requested.
+I only resent this patch.
+
+Thanks !
+Eugen
 
 
-> Looking again, I see that fill_tgid_exit()'s dereferences of ->stats
-> are protected by ->siglock: maybe you meant to rely on such a critical
-> section pairing with the critical section in taskstats_tgid_alloc()?
->
-> That memcpy(-, tsk->signal->stats, -) at the end of taskstats_exit()
-> also bugs me: could these dereferences of ->stats happen concurrently
-> with other stores to the same memory locations?
->
-> Thanks,
->   Andrea
+ drivers/i2c/i2c-core-base.c | 6 ++++++
+ include/linux/i2c.h         | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 5f6a498..6a5183c 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -1656,6 +1656,12 @@ void i2c_parse_fw_timings(struct device *dev, struct=
+ i2c_timings *t, bool use_de
+ 		t->sda_fall_ns =3D t->scl_fall_ns;
+=20
+ 	device_property_read_u32(dev, "i2c-sda-hold-time-ns", &t->sda_hold_ns);
++
++	device_property_read_u32(dev, "i2c-digital-filter-width-ns",
++				 &t->digital_filter_width_ns);
++
++	device_property_read_u32(dev, "i2c-analog-filter-cutoff-frequency",
++				 &t->analog_filter_cutoff_freq_hz);
+ }
+ EXPORT_SYMBOL_GPL(i2c_parse_fw_timings);
+=20
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 1361637..aaf57d9 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -575,6 +575,10 @@ struct i2c_lock_operations {
+  * @scl_int_delay_ns: time IP core additionally needs to setup SCL in ns
+  * @sda_fall_ns: time SDA signal takes to fall in ns; t(f) in the I2C spec=
+ification
+  * @sda_hold_ns: time IP core additionally needs to hold SDA in ns
++ * @digital_filter_width_ns: width in ns of spikes on i2c lines that the I=
+P core
++ *	digital filter can filter out
++ * @analog_filter_cutoff_freq_hz: threshold frequency for the low pass IP =
+core
++ *	analog filter
+  */
+ struct i2c_timings {
+ 	u32 bus_freq_hz;
+@@ -583,6 +587,8 @@ struct i2c_timings {
+ 	u32 scl_int_delay_ns;
+ 	u32 sda_fall_ns;
+ 	u32 sda_hold_ns;
++	u32 digital_filter_width_ns;
++	u32 analog_filter_cutoff_freq_hz;
+ };
+=20
+ /**
+--=20
+2.7.4
+
