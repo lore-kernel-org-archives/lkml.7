@@ -3,97 +3,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DC0CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313BFCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0F021928
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14DD2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571843500;
-	bh=1ZP90ti0x3dm+Uy96TSVV50qeSbKopQYXjq5yFVZOW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UFhIMyjg1++b4g3V32pzRPbI0sYak4LfkNRGwU7Sf5kqkj2lE+r43bbSpwfuXs6cA
-	 Gm3acxP5oo/+X+lFwagdN1xlgTJbTyLXbIa2ONvyDttcbSkaLVLRJbbSAIM155SdjA
-	 SFGvyVxG5kGXaxc7Evg7La3QQupcqYURlSEZ+U1w=
+	s=default; t=1571843745;
+	bh=hkV/SNv45L+cHM2UXEfGFfbvPHPawpJJYISubbh+uS4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=BSzqFa4P6O+3RL0FI+k83ObuRoi9gGloyJUAwHxnjcwedngl5NktAVZ/4nTmgNUaX
+	 sr1pyQqebR5Ja8aq6hOBIcWWCAPPeyHhU7dRTZvVv57EZYTk5sNhFsvhWo0t0615F/
+	 Ykh/gpUa/+gsx/K1YIyGFYL6v39U58DnAVaPK26g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406561AbfJWPLj (ORCPT
+        id S2406477AbfJWPPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:11:39 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48642 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390140AbfJWPLj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:11:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CFlPf+0Bqqc/DNWZaN1DVp0k7e+Yp/Tsp5TFWxhBZs8=; b=U9m0ZiHax9S1avQBBTw9dmxLA
-        +2uG08eOR+JihrKXYnJtB7UMDACgBMRXUYOfFzhYtbT7NR3xhkr2+fPhiybolm/lZK+LmfCGbXj5Z
-        SGcdauL4wYj87bsJV/1DTM5W9YQA5QGdnx4vcD14c7TmmVIUnu+/2vAKhDimwNAWlIHYQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNIIQ-0000pH-7I; Wed, 23 Oct 2019 15:11:34 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id B561A274301E; Wed, 23 Oct 2019 16:11:33 +0100 (BST)
-Date:   Wed, 23 Oct 2019 16:11:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Luhua Xu <luhua.xu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH 0/1] Add spi power control when set cs
-Message-ID: <20191023151133.GD5723@sirena.co.uk>
-References: <1571834322-1121-1-git-send-email-luhua.xu@mediatek.com>
+        Wed, 23 Oct 2019 11:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390140AbfJWPPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:15:43 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C1D21872;
+        Wed, 23 Oct 2019 15:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571843742;
+        bh=hkV/SNv45L+cHM2UXEfGFfbvPHPawpJJYISubbh+uS4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=cE1U6zd3vyBPKLW0JCBXWfUzZ2Cmk5M2IwQcbdIh6Y0/oJhBN3zHH77ArMcnJNc0T
+         GgCWWl16mI8kTOaxGMBmZxVv0CZw8OBLAH2V6xqWxIPcSnF2UTIxR/4rB1L1S9Goyd
+         p/5Edyg9SPT0fot45dJARWD7Xpqj7XftrBtf/vW8=
+Date:   Wed, 23 Oct 2019 10:15:40 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiang Zheng <zhengxiang9@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, alex.williamson@redhat.com,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
+Message-ID: <20191023151540.GA168080@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KdquIMZPjGJQvRdI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571834322-1121-1-git-send-email-luhua.xu@mediatek.com>
-X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
+In-Reply-To: <2e7293dc-eb27-bce3-c209-e0ba15409f16@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 05:40:20PM +0800, Xiang Zheng wrote:
+> Hi Bjorn,
+> 
+> Thanks for your reply!
+> 
+> On 2019/10/18 21:58, Bjorn Helgaas wrote:
+> > [+cc Matthew]
+> > 
+> > On Wed, Oct 16, 2019 at 09:36:23PM +0800, Xiang Zheng wrote:
+> >> Hi all,
+> >>
+> >> Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
+> >> See the call stack below:
+> >>
+> >> [66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
+> >> [66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
+> >> [66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
+> >> [66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
+> >> [66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
+> >> [66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
+> >> [66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
+> >> [66630.246266] Mem abort info:
+> >> [66630.249047]   ESR = 0x8600000d
+> >> [66630.252088]   Exception class = IABT (current EL), IL = 32 bits
+> >> [66630.257981]   SET = 0, FnV = 0
+> >> [66630.261022]   EA = 0, S1PTW = 0
+> >> [66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
+> >> [66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
+> >> [66630.277751] Internal error: Oops: 8600000d [#1] SMP
+> >> [66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
+> >> [66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
+> >> [66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
+> >> [66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
+> >> [66630.314042] pc : 0xffff802dac469000
+> >> [66630.317519] lr : __wake_up_common+0x90/0x1a8
+> >> [66630.321768] sp : ffff00027746bb00
+> >> [66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
+> >> [66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
+> >> [66630.335643] x25: 0000000000000000 x24: 0000000000000000
+> >> [66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
+> >> [66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
+> >> [66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
+> >> [66630.356793] x17: 0000000000000000 x16: 0000000000000000
+> >> [66630.362081] x15: 0000000000000000 x14: 0000000000000000
+> >> [66630.367368] x13: 0000000000000000 x12: 0000000000000000
+> >> [66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
+> >> [66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
+> >> [66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
+> >> [66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
+> >> [66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
+> >> [66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
+> >> [66630.404381] Call trace:
+> >> [66630.406818]  0xffff802dac469000
+> >> [66630.409945]  __wake_up_common_lock+0xa8/0x1a0
+> >> [66630.414283]  __wake_up+0x40/0x50
+> >> [66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
+> >> [66630.421752]  pci_try_reset_function+0x58/0x78
+> >> [66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
+> >> [66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
+> >> [66630.436158]  do_vfs_ioctl+0xc4/0x8c0
+> >> [66630.439718]  ksys_ioctl+0x8c/0xa0
+> >> [66630.443018]  __arm64_sys_ioctl+0x28/0x38
+> >> [66630.446925]  el0_svc_common+0x78/0x130
+> >> [66630.450657]  el0_svc_handler+0x38/0x78
+> >> [66630.454389]  el0_svc+0x8/0xc
+> >> [66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
+> >> [66630.463325] kernel fault(0x1) notification starting on CPU 41
+> >> [66630.469044] kernel fault(0x1) notification finished on CPU 41
+> >>
+> >> The chance to reproduce this problem is very small. We had an initial analysis of this problem,
+> >> and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
+> >>
+> >> I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
+> >> concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
+> > 
+> > I haven't heard of a problem there, but that doesn't mean there isn't
+> > one.
+> > 
+> > The fact that pci_wait_cfg() uses __add_wait_queue() (not
+> > add_wait_queue(), which does more locking) makes me a little
+> > suspicious.  Most of the other callers of __add_wait_queue() acquire
+> > the wait_queue lock themselves, but pci_wait_cfg() doesn't.
+> > 
+> > This was added by 7ea7e98fd8d0 ("PCI: Block on access to temporarily
+> > unavailable pci device"), and the commit log suggests that the
+> > pci_lock is sufficient.  All callers of pci_wait_cfg() do hold
+> > pci_lock, and the "pci_cfg_wait" queue is private, but ...
+> > pci_cfg_access_unlock() calls wake_up_all(&pci_cfg_wait) *without*
+> > holding pci_lock.  That path leads to __wake_up_common_lock(), which
+> > depends on wq_head->lock, which pci_wait_cfg() doesn't use.
+> 
+> Yes, we was also suspicious about this point and had a further
+> analysis of this problem.  We found that the "pci_cfg_wait" queue
+> was empty when the "curr->func" callback function was called:
+> 
+> crash> p pci_cfg_wait.head
+> $2 = {
+>   next = 0xffff0000092755b8 <pci_cfg_wait+8>,
+>   prev = 0xffff0000092755b8 <pci_cfg_wait+8>
+> }
+> crash> p &(pci_cfg_wait.head)
+> $3 = (struct list_head *) 0xffff0000092755b8 <pci_cfg_wait+8>
+> crash>
+> 
+> The "ps" command also shows that there was no processes on "UN"
+> state at that time.
+> 
+> According to the above two clues, we finally reached a conclusion:
+> there must be two processes, 'A' was calling pci_wait_cfg() and 'B'
+> was calling __wake_up_common(). And there is a very small chance
+> that 'A' called __remove_wait_queue() before 'B' called the
+> "curr->func", after 'B' got the queue entry "curr". Since the queue
+> entry was a local variable, it would be invalid after pci_wait_cfg()
+> returned and eventually we got an invalid value of "curr->func".
+> 
+> In order to verify this conclusion, we add a delay(e.g. 300ms)
+> before calling "curr->func" in the __wake_up_common() function. Then
+> this problem can be easily reproduced.
+> 
+> > pci_cfg_access_unlock() originally *did* hold pci_lock while
+> > calling wake_up_all(), but I changed that with cdcb33f98244 ("PCI:
+> > Avoid possible deadlock on pci_lock and p->pi_lock") without
+> > understanding both sides of the wait_queue locking issue.
+> 
+> Before your change was merged, any operations to the "pci_cfg_wait"
+> was safe because they all did hold pci_lock. So the pci_lock was
+> sufficient.
+> 
+> > But I still don't understand enough to know whether this is
+> > actually the problem or to propose a fix.
+> 
+> I think we need to fix it. A simple solution is to use
+> add_wait_queue()/remove_wait_queue() instead of
+> __add_wait_queue()/__remove_wait_queue() and this works for me. What
+> do you think?
 
---KdquIMZPjGJQvRdI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't like being one of a handful of callers of __add_wait_queue(),
+so I like that solution from that point of view.
 
-On Wed, Oct 23, 2019 at 08:38:41AM -0400, Luhua Xu wrote:
-> This patch add power control when set spi cs to fix register
-> access violation.
+The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
+device") commit log suggests that using __add_wait_queue() is a
+significant optimization, but I don't know how important that is in
+practical terms.  Config accesses are never a performance path anyway,
+so I'd be inclined to use add_wait_queue() unless somebody complains.
 
-Please don't send cover letters for single patches, if there is anything
-that needs saying put it in the changelog of the patch or after the ---
-if it's administrative stuff.  This reduces mail volume and ensures that=20
-any important information is recorded in the changelog rather than being
-lost.=20
-
---KdquIMZPjGJQvRdI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2wbaQACgkQJNaLcl1U
-h9AZ8wf/YsPE4g2DB7vKBwqbkxq/ALWspomqahnmYRS1ybVmFae84b4Y3Xzplke5
-VU7AJlcmslaIf2Js7txBb4HlATcKiqZlF0TsqOiIsw2Q4/rS0hJBFZ6DLVuLrwwz
-dtvRrTurDuYVBo5Empbka7kYAgowqqZxwcqWVAPXHcx6C2wbdOO7VmQmxsMD/VvX
-qWJ2DgEFIps2ZKsofdbLOK+iVaQFVcsT3mo/X/TfFz7zWB0GEglAXVUixrD8iqRZ
-LRok6FnVsK+vVRasKGCp9c9Thjb3+DPfx64ONurPnRphX6RkYHSb4EgTlecjgOVj
-+g+CiFeIDbyPWJaII6qEnmOs/OwejA==
-=MGjC
------END PGP SIGNATURE-----
-
---KdquIMZPjGJQvRdI--
+Bjorn
