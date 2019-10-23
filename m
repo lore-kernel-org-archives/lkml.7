@@ -2,92 +2,172 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9430BCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1B2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF172084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8467A2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WiW6N27n"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="M95LDREg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404857AbfJWS5u (ORCPT
+        id S2391036AbfJWTAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:57:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42897 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404756AbfJWS5t (ORCPT
+        Wed, 23 Oct 2019 15:00:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34084 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387929AbfJWTAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:57:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f14so12654596pgi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 11:57:49 -0700 (PDT)
+        Wed, 23 Oct 2019 15:00:01 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t16so18130672wrr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 11:59:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=0A/h7iLy4iHQtSsekrwsy2+ZOdTrZGwWLZDqgK94iTI=;
-        b=WiW6N27nIGzcNodI0rwBgBHNHkWhgXetcPMk3sdC5v3k+2c7+jvFI5wUsKX4vYKVPH
-         b57QDME3T4453VBQh06dbHYs6/6qkpCpi0D7ju8F43it9oOGgqfNMtOdrAL5brWnRLSS
-         rwgowlv51ncyLoxqhU3EOUYYJkA5tDHaqYs2XN40yA8QKDGDGLYTyLNtHeto5ImmKaE8
-         QWU8n15oNlqodMsKE8FfF0uxDy7Zowk8Pxn8i6HJ5dOgEtI6yyFxxjLuFOeV25s/Chw3
-         re2XRlgnj4fuCwCWA4goBXL0qgQhWTezgUeEhuALaZtaGGUmvvAn/HRef6Irqh0Ony+u
-         dT5g==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+OWjpvr+IZedd7nljlYA8XWBRBItw4xtW0mvQ/KD8Fk=;
+        b=M95LDREgblcKjvAHssdy4GOnOy+idPXh9WTEOZZdiOlwBVlvkmYF8XPlBP0lSR3FUJ
+         PhSUgbLA9MuLMfPxCT7kyPf4tDIinnMjcd6POSe8NgDzz7Tux6+w57eymqpz9vtYVSB3
+         30QGpwWmCbAdm1D3IBvAg+C2kg9CjJSyUfU9I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=0A/h7iLy4iHQtSsekrwsy2+ZOdTrZGwWLZDqgK94iTI=;
-        b=D58MJ1e/JtjzYy5hgkWoZEF2nwr55KXAaAcuSwnGI6bKGaUgbl2mbcwmgAxc7v+fkT
-         qbxAbwM0B77wT4DzF67AOlDWziqjEAlQfr9iY6VeviKoX3duzMhQz/4Qq5qcqJb1K7hH
-         NGkH0WHxMcoudxIuD68CdKvfBH1P6jm1AiEEOmFA/6JQYKQ0oEWNR5TNt7unELnWE/Kl
-         0OufQrqA08qVnIMYlL02Hj88QuesdRx0P/tod6zHArF1gPjiRDxUeu1vj9hJZrLfUfqV
-         b4XngSQalL5H47PHORLBSEcwBk+RqxHgDtpF0b3BcbWQp3LSSwNJODT2b5yU0WdR3Dqf
-         7krQ==
-X-Gm-Message-State: APjAAAWZy3POPZ6fUHnvQi8+4onnwPBOzPVik3cmNU9K0jxtM9FtmOXY
-        jCjENQmkwP1HIo9nWeiycHlVgw==
-X-Google-Smtp-Source: APXvYqx13mXWJwGmMU4WM10j2g/LqTaCcPjmA9goHOXK5t7jCgjGf6iFQ4JS3U1on9Dm5nlm2nm2MA==
-X-Received: by 2002:a63:fe15:: with SMTP id p21mr11544514pgh.26.1571857068258;
-        Wed, 23 Oct 2019 11:57:48 -0700 (PDT)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id w11sm30045956pfd.116.2019.10.23.11.57.46
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 23 Oct 2019 11:57:47 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 11:57:17 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-cc:     Matthew Wilcox <willy@infradead.org>, hughd@google.com,
-        aarcange@redhat.com, kirill.shutemov@linux.intel.com,
-        gavin.dg@linux.alibaba.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-In-Reply-To: <792ea136-4fa0-c87b-9399-5ca47c501c9c@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.1910231144490.1088@eggly.anvils>
-References: <1571850304-82802-1-git-send-email-yang.shi@linux.alibaba.com> <20191023172420.GB2963@bombadil.infradead.org> <792ea136-4fa0-c87b-9399-5ca47c501c9c@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=+OWjpvr+IZedd7nljlYA8XWBRBItw4xtW0mvQ/KD8Fk=;
+        b=L4q8uxEQ4UaAfn4bnlhaqE29mIZnb97nrX/PY0LUCm/8tr2YnGKa8WFZ7FWXlchjbZ
+         wYIiW+0NMnN6y2jXWRFwEhjYk46f7g7LmLqmeKBkjSaUc/47G2aeQ19iYqgVsp2EhAGt
+         FADOV1eHSbMCREEzcy/BzmYjRG+n6Bygb/3Se78COpslpn1/jLL7tCJMmHhoJDkX/H5v
+         o7xEO4c/rNy1C3U/q1KrePuJtwFRPOZv71x050Uy/0YTlCmEPnI/l7t00C55iMII1lNv
+         tL1+y7k4pNcGI7bFAIg7/X88kZwUJ3qQ1ntkTDtJB1aPrpNTQ+QUgZgHeT+X8ytvaltc
+         XvVg==
+X-Gm-Message-State: APjAAAUuyqaJ06H39a5KUebzEUM/1ylWX9ulHMqt4Vu+0Jg0V9gDVF08
+        SbUfiRJ7UNFPyo8JAlSbY2RG4Q==
+X-Google-Smtp-Source: APXvYqwQW7fShJRSiaDGCH+qmp4vWbgbdvriTea73n3kmGp5rVj6c+beXl6Ds2NKz1NgdfjTGKBsmA==
+X-Received: by 2002:a5d:4a8a:: with SMTP id o10mr205718wrq.101.1571857198467;
+        Wed, 23 Oct 2019 11:59:58 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id r3sm38184702wre.29.2019.10.23.11.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 11:59:55 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 20:59:52 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
+Message-ID: <20191023185952.GZ11828@phenom.ffwll.local>
+Mail-Followup-To: Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Eric Anholt <eric@anholt.net>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191021185250.26130-1-navid.emamdoost@gmail.com>
+ <20191022093654.GF11828@phenom.ffwll.local>
+ <CAEkB2ETFM7u6YiUOT3fz4UQ3U_za9iM1arTnYNg-rjs5+wxOfw@mail.gmail.com>
+ <20191023091601.GX11828@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023091601.GX11828@phenom.ffwll.local>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019, Yang Shi wrote:
-> On 10/23/19 10:24 AM, Matthew Wilcox wrote:
-> > On Thu, Oct 24, 2019 at 01:05:04AM +0800, Yang Shi wrote:
-> > > +	return map_count >= 0 &&
-> > > +	       map_count == atomic_read(&head[1].compound_mapcount);
-> > >   }
-> > I didn't like Hugh's duplicate definition either.  May I suggest:
+On Wed, Oct 23, 2019 at 11:16:01AM +0200, Daniel Vetter wrote:
+> On Tue, Oct 22, 2019 at 10:53:57PM -0500, Navid Emamdoost wrote:
+> > On Tue, Oct 22, 2019 at 4:36 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > >
+> > > On Mon, Oct 21, 2019 at 01:52:49PM -0500, Navid Emamdoost wrote:
+> > > > In the impelementation of v3d_submit_cl_ioctl() there are two memory
+> > > > leaks. One is when allocation for bin fails, and the other is when bin
+> > > > initialization fails. If kcalloc fails to allocate memory for bin then
+> > > > render->base should be put. Also, if v3d_job_init() fails to initialize
+> > > > bin->base then allocated memory for bin should be released.
+> > > >
+> > > > Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
+> > > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
+> > > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
+> > > > index 5d80507b539b..19c092d75266 100644
+> > > > --- a/drivers/gpu/drm/v3d/v3d_gem.c
+> > > > +++ b/drivers/gpu/drm/v3d/v3d_gem.c
+> > > > @@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
+> > > >
+> > > >       if (args->bcl_start != args->bcl_end) {
+> > > >               bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
+> > > > -             if (!bin)
+> > > > +             if (!bin) {
+> > > > +                     v3d_job_put(&render->base);
+> > >
+> > > The job isn't initialized yet, this doesn't work.
+> > Do you mean we have to release render via kfree() here?
+> > 
+> > >
+> > > >                       return -ENOMEM;
+> > > > +             }
+> > > >
+> > > >               ret = v3d_job_init(v3d, file_priv, &bin->base,
+> > > >                                  v3d_job_free, args->in_sync_bcl);
+> > > >               if (ret) {
+> > > >                       v3d_job_put(&render->base);
+> > >
+> > > v3d_job_put will call kfree, if you chase the callchain long enough (in
+> > > v3d_job_free). So no bug here, this would lead to a double kfree and
+> > > crash.
+> > Yes, v3d_job_put() takes care of render,
+> > 
+> > > -Daniel
+> > >
+> > > > +                     kfree(bin);
+> > but how about leaking bin?
 > 
-> Thanks, Willy. It is fine to me. Will take it in v3.
+> Sorry, I totally missed that this is bin, no render. Patch looks correct
+> to me.
+> 
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Agreed, that will be better.
+Double-checked with Eric and applied to drm-misc-fixes.
+-Daniel
 
-Hugh
+> 
+> > 
+> > > >                       return ret;
+> > > >               }
+> > > >
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> > > --
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+> > 
+> > 
+> > 
+> > -- 
+> > Navid.
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
