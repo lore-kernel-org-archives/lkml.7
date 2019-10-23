@@ -2,123 +2,175 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EEFCA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74649CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC0121872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A002173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="PjQQPBto"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0V7U6xd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389642AbfJWS26 (ORCPT
+        id S2389549AbfJWSbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:28:58 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42107 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732810AbfJWS26 (ORCPT
+        Wed, 23 Oct 2019 14:31:31 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36747 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727786AbfJWSba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:28:58 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r1so13389122wrs.9
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 11:28:55 -0700 (PDT)
+        Wed, 23 Oct 2019 14:31:30 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 23so12644632pgk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 11:31:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=FO1icP7++q1qCn8suzxihC3IELICMjjLnmnWE+fJqmU=;
-        b=PjQQPBtoQxQl3GPqZTshvbiyW+woEGHqnpsjbQSUWAblEvf29P89Bxmv/GSr1kvoDV
-         EiW+Z/zlBJdIKMgLHU5NBSTRv47eJCD7Usr+/jeSECvNmSCGvsg/wN3XWY6rbgw8POQ8
-         HeWA09el0iZ8oBuDcwlA+c0hDypKGn3En2Nd6lVMEkGtidiW3iSKWwr0+7vHwakibLzW
-         iM80EEeY7JrznpMdkIa7HZ6/4wP/PXOAP0Q/YJZyTXm+Y3rC2UZ7fshmBB4FQSFrcS8P
-         vt80J80X2Mpw8g8w8XiYO8EkvJL8KBKqInhlucaeA941kzobper8AfmkAfAd3S6bl1p9
-         Murw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QhucI9QNtNBjoT1eOT78ESBAn4mEJQ0ycZgAHsd53Fc=;
+        b=O0V7U6xdxg3UJAoCsFL181e1vuQig/OWqm5AcucL89tYd3b9qkjvMM9lP+EMxIsd/D
+         nULS8++93595dJ/MuPxdOiWNwPro4vx1uibpDaTFOBc/mbbfnZWArkgAkdi/1Sj4/3pn
+         CnpHhKkutuirpbGJ15oFkWcPeKybaQuwdY/Oazfd9/NO6HOUG/4hvUOU/gPflhn79F4c
+         jtn03qKJHmp9p9aXWAi6MaSW2jHtLl2JfuzxfmqRrM5JSt3BefvV2/wNb5KsF+eiNmTo
+         9HFMS5Pxk97txKDYDYBY6kMTP4UH0oyklI+Gu8j1EQSiUodwRt97MzOGork+gaeFtCPn
+         6VZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=FO1icP7++q1qCn8suzxihC3IELICMjjLnmnWE+fJqmU=;
-        b=aae86ZKHnSICD/EeWw8SaxJ8XYLyQ3LNc2FaFsX5ua+j0PhTqUR6uRxYwYrWPNLckp
-         fjD+hcUXFxFhT4mdXXuL5g9L4ko5LQmidD1yEoyQM0gNjgxh3xQgj2bNw6BRW4vgDu7Q
-         TFINTFA4hQ/HeAAMt2dvkywf2NVkYNvqtgDbJm56VRmeeKeQmf4xVqPWRi+IT/Gz2zOq
-         Gmj4z9B5nIZjpTJONgtZMYUgUv2jaDCU+pkZQZPSRspzVu5xijJ7GFI5ocDhltOJn/k+
-         5k6cvzLjC0ODIqm/IwqB1A3LZozIeWqUuHNYx9raadvig/mAmGHmG0pRsnhNgDjuNdtw
-         HnGQ==
-X-Gm-Message-State: APjAAAURyzOsz+WyqE20wwF8rTgqOzqJvKUjYnkD6upi7OnJrdAmdguQ
-        YQLmVAg1aKXnhaji5aKOpxvUWg==
-X-Google-Smtp-Source: APXvYqwM/fNEQgVnYS6gVjEpLMpLYRZ1Tij0RXOubxkQe0HyV3h6C/7J9q7RIQ4qUoG9wD9Rn0Pl5w==
-X-Received: by 2002:adf:c448:: with SMTP id a8mr92192wrg.233.1571855334570;
-        Wed, 23 Oct 2019 11:28:54 -0700 (PDT)
-Received: from linux.fritz.box (p200300D9970483001CF3BB0BE954CA02.dip0.t-ipconnect.de. [2003:d9:9704:8300:1cf3:bb0b:e954:ca02])
-        by smtp.googlemail.com with ESMTPSA id r3sm38070268wre.29.2019.10.23.11.28.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Oct 2019 11:28:53 -0700 (PDT)
-Subject: Re: [ipc/sem.c] 6394de3b86:
- BUG:kernel_NULL_pointer_dereference,address
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Waiman Long <longman@redhat.com>, 1vier1@web.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>, lkp@lists.01.org,
-        ltp@lists.linux.it
-References: <20191021083514.GE9296@shao2-debian>
-From:   Manfred Spraul <manfred@colorfullife.com>
-Message-ID: <d49d1940-a704-d79e-b44f-79db9f096d5c@colorfullife.com>
-Date:   Wed, 23 Oct 2019 20:28:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QhucI9QNtNBjoT1eOT78ESBAn4mEJQ0ycZgAHsd53Fc=;
+        b=saFDKDDrnGNpqu/wDkL7sWsQSgEkjv6JIopHAkwwbsXZW4ydphMntST2C0yk9pGjjt
+         JSf/UpJNQHq6BpZaBd/RKnIyOcN57KcoGxID4gmpHuG84NOUv3FZDuKPArE1P2VZ8woC
+         Gu+t52LrJpI3JjcD82IZibKh8NJlHxMgOBZkPTlEqLKMgKoRY8ILJWJdtBjfglRKckrZ
+         bY79EHK4kRMq/LcYqqj8ipOnwngF5+45ZP9i0KJlBTyIAGF/nuJZu7bWzzGdrbQOPEY9
+         5BHWT/jTffmGYRjeFXT4oblUM5Hnu/x7Llmm8/DObVlOhMAU0JUoGs/kdYU813Wtmkw5
+         omGQ==
+X-Gm-Message-State: APjAAAV/+Qgzi6vrpovfbppd54XLGTQSu/TCL2uz6+Bjn5tYS0eoId08
+        3UOKPl1pv/DMdN736bmH2xo=
+X-Google-Smtp-Source: APXvYqxzu1oD36VJIGp854tNQIRLLmtcz4McKHR96Hyw1WByLg+NWOb5VOZ+kJaLQ35nHQjMgw5vEw==
+X-Received: by 2002:aa7:8ac5:: with SMTP id b5mr12396158pfd.66.1571855488547;
+        Wed, 23 Oct 2019 11:31:28 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id z4sm30137417pfn.45.2019.10.23.11.31.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 11:31:28 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 11:31:03 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: fsl_esai: Add spin lock to protect reset and stop
+Message-ID: <20191023183102.GA16043@Asurada-Nvidia.nvidia.com>
+References: <1571815789-15656-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191021083514.GE9296@shao2-debian>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571815789-15656-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Oct 23, 2019 at 03:29:49PM +0800, Shengjiu Wang wrote:
+> xrun may happen at the end of stream, the
+> trigger->fsl_esai_trigger_stop maybe called in the middle of
+> fsl_esai_hw_reset, this may cause esai in wrong state
+> after stop, and there may be endless xrun interrupt.
 
-On 10/21/19 10:35 AM, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-7):
->
-> commit: 6394de3b868537a90dd9128607192b0e97109f6b ("[PATCH 4/5] ipc/sem.c: Document and update memory barriers")
-> url: https://github.com/0day-ci/linux/commits/Manfred-Spraul/wake_q-Cleanup-Documentation-update/20191014-055627
+What about fsl_esai_trigger_start? It touches ESAI_xFCR_xFEN bit
+that is being checked in the beginning of fsl_esai_hw_reset.
 
-Yes, known issue:
+Could the scenario below be possible also?
 
-> @@ -2148,9 +2176,11 @@ static long do_semtimedop(int semid, struct 
-> sembuf __user *tsops,
->         }
->
->         do {
-> -               WRITE_ONCE(queue.status, -EINTR);
-> +               /* memory ordering ensured by the lock in sem_lock() */
-> +               queue.status = EINTR;
->                 queue.sleeper = current;
->
-> +               /* memory ordering is ensured by the lock in sem_lock() */
->                 __set_current_state(TASK_INTERRUPTIBLE);
->                 sem_unlock(sma, locknum);
->                 rcu_read_unlock();
-It must be "-EINTR", not "EINTR".
+1) ESAI TX starts
+2) Xrun happens to TX
+3) Starting fsl_esai_hw_reset (enabled[TX] = true; enabled[RX] = false)
+4) ESAI RX starts
+5) Finishing fsl_esai_hw_reset (enabled[RX] is still false)
 
-If there is a timeout or a spurious wakeup, then the do_semtimedop() 
-returns to user space without unlinking everything properly.
+Thanks
+Nicolin
 
-I was able to reproduce the issue: V1 of the series ends up with the 
-shown error.
-
-V3 as now merged doesn't fail.
-
---
-
-     Manfred
-
-
+> So Add spin lock to lock these two function.
+> 
+> Fixes: 7ccafa2b3879 ("ASoC: fsl_esai: recover the channel swap after xrun")
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  sound/soc/fsl/fsl_esai.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+> index 37b14c48b537..6a797648b66d 100644
+> --- a/sound/soc/fsl/fsl_esai.c
+> +++ b/sound/soc/fsl/fsl_esai.c
+> @@ -33,6 +33,7 @@
+>   * @fsysclk: system clock source to derive HCK, SCK and FS
+>   * @spbaclk: SPBA clock (optional, depending on SoC design)
+>   * @task: tasklet to handle the reset operation
+> + * @lock: spin lock to handle reset and stop behavior
+>   * @fifo_depth: depth of tx/rx FIFO
+>   * @slot_width: width of each DAI slot
+>   * @slots: number of slots
+> @@ -56,6 +57,7 @@ struct fsl_esai {
+>  	struct clk *fsysclk;
+>  	struct clk *spbaclk;
+>  	struct tasklet_struct task;
+> +	spinlock_t lock; /* Protect reset and stop */
+>  	u32 fifo_depth;
+>  	u32 slot_width;
+>  	u32 slots;
+> @@ -676,8 +678,10 @@ static void fsl_esai_hw_reset(unsigned long arg)
+>  {
+>  	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
+>  	bool tx = true, rx = false, enabled[2];
+> +	unsigned long lock_flags;
+>  	u32 tfcr, rfcr;
+>  
+> +	spin_lock_irqsave(&esai_priv->lock, lock_flags);
+>  	/* Save the registers */
+>  	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
+>  	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
+> @@ -715,6 +719,8 @@ static void fsl_esai_hw_reset(unsigned long arg)
+>  		fsl_esai_trigger_start(esai_priv, tx);
+>  	if (enabled[rx])
+>  		fsl_esai_trigger_start(esai_priv, rx);
+> +
+> +	spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
+>  }
+>  
+>  static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+> @@ -722,6 +728,7 @@ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+>  {
+>  	struct fsl_esai *esai_priv = snd_soc_dai_get_drvdata(dai);
+>  	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+> +	unsigned long lock_flags;
+>  
+>  	esai_priv->channels[tx] = substream->runtime->channels;
+>  
+> @@ -734,7 +741,9 @@ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+>  	case SNDRV_PCM_TRIGGER_SUSPEND:
+>  	case SNDRV_PCM_TRIGGER_STOP:
+>  	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+> +		spin_lock_irqsave(&esai_priv->lock, lock_flags);
+>  		fsl_esai_trigger_stop(esai_priv, tx);
+> +		spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> @@ -1002,6 +1011,7 @@ static int fsl_esai_probe(struct platform_device *pdev)
+>  
+>  	dev_set_drvdata(&pdev->dev, esai_priv);
+>  
+> +	spin_lock_init(&esai_priv->lock);
+>  	ret = fsl_esai_hw_init(esai_priv);
+>  	if (ret)
+>  		return ret;
+> -- 
+> 2.21.0
+> 
