@@ -2,204 +2,97 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFBCCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52400CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC4A2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F8A21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LkFiQMFl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEm10kwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392406AbfJWPAT (ORCPT
+        id S2406416AbfJWPBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:00:19 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43796 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390185AbfJWPAT (ORCPT
+        Wed, 23 Oct 2019 11:01:15 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20779 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391753AbfJWPBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:00:19 -0400
-Received: by mail-pl1-f195.google.com with SMTP id v5so5486405ply.10
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 08:00:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N+w72TNzpRjbI10b0jitVHs/ZztNdVqny0Vx93sBfHk=;
-        b=LkFiQMFlNCbmBcSny+BOcbJp4l+Y7hxmhJpwbh+oZKj4dclcUmkgKvgYT/+UYb+gC2
-         gyHdiiQA0zgCVq5edOVaCswUbLLDVp5XxK7S64xHl5B14kzfNFd1rQGeDZSDltZr/3Wu
-         JUlYM9V7bShYYsBBni9hVzN4el8+a0sJvdIGSmvxXXC+hQroujJZ3Ku4IzspLg14V4pP
-         rO5w9PLppQQ6gwzqvOxY2udruUJiYhNLNVz1w2QSMCchaEg4Q1G6HlbIZru6HKxG+aS9
-         CXqkZ33YbTEGVGVz3EaMmpMU7IxVFS79ScHmIC/CAFsX2auB9k4I7uGZczMJuJ1biDdh
-         KMQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N+w72TNzpRjbI10b0jitVHs/ZztNdVqny0Vx93sBfHk=;
-        b=I6m3H1nviA1on3o8Hi0I/iltj+UZ0z+rtmChRl4DGLaCAphKd/AfxRrDIBnfLe1N3K
-         yN0mFdxvGjwlT9pOb8HmVJmjViS/y1JxbjNDk+3kBYycBstfI2wBkKnPm8JBAt3a7VxQ
-         XcROUhbKRYwnVKEZyoc2bq6MT5XdzkSFRB4TTHZLiolPmeB4KTD1LSkOU3vo37/mCZgV
-         /M9JA7jwyLetHbyAfZGtcZvVZKWCVy0shdYb84S5KMehulo3zi3xddupKvMrv+7ertUB
-         RbftjxXzwuiF1+JVzPcTYmpiD7DLZ4DRbC4NoPwfsNUB7eOZgmE0ZBiQOernch+CLKVU
-         UbDg==
-X-Gm-Message-State: APjAAAWFuasUZwDEtAJlp+n5VKa9VP8j1mmMuvIe2FYTymDR8f0I2aB4
-        UUq6hUfV2PUYAJbVYyHMjiVrmNcwUBFJXGvCVSXHcg==
-X-Google-Smtp-Source: APXvYqzT4S2F+jsQrBIZuP+l7T+33RUZhHDDMRCf+924fdyQ7ByNNyi84Cz1xTdKu0cUzV3k5+G7LjvdIr/BATafnwk=
-X-Received: by 2002:a17:902:9002:: with SMTP id a2mr10495952plp.147.1571842817724;
- Wed, 23 Oct 2019 08:00:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1571762488.git.andreyknvl@google.com> <26e088ae3ebcaa30afe957aeabaa9f0c653df7d0.1571762488.git.andreyknvl@google.com>
- <CACT4Y+YntxT+cpESOBvbg+h=g-84ECJwQrFg7LM5tbq_zaMd3A@mail.gmail.com>
- <CAAeHK+yUTZc+BrGDvvTQD4O0hsDzhp0V6GGFdtnmE6U4yWabKw@mail.gmail.com> <CACT4Y+b+RTYjUyB1h0SYjEq8vmOZas3ByjeJqVU1LrjxpRKy2Q@mail.gmail.com>
-In-Reply-To: <CACT4Y+b+RTYjUyB1h0SYjEq8vmOZas3ByjeJqVU1LrjxpRKy2Q@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 23 Oct 2019 17:00:06 +0200
-Message-ID: <CAAeHK+x-dihJ5+Zb1JBNaL5VK1zB87BR5kPX2B=q+FyVW+WHnw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] vhost, kcov: collect coverage from vhost_worker
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Wed, 23 Oct 2019 11:01:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571842872;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cdptM1wjryYnQhJm9RmuX5FaBmrJ2EY+9SJ+YV4u0fQ=;
+        b=UEm10kwh/Gl+wyW634T5RyoDn0MZNkGl6QXiPnJTq67e2nRucJWzy7+Vk7bzmz9YfuzvZx
+        osVKyGYUCkAhh+kFfcMclZAbeS9g5KOL1xx1q5cZdt9SrXCr9MkkIDCmze+VW1D9uaUXUy
+        n9A/C396JBXuWa1xXYKHGEE5DsY/6uw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-Y09mMa8JNFO1Wvt2DH_ATQ-1; Wed, 23 Oct 2019 11:01:08 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 281081005500;
+        Wed, 23 Oct 2019 15:01:06 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8AA919C77;
+        Wed, 23 Oct 2019 15:01:04 +0000 (UTC)
+Subject: Re: [PATCH] mm/vmstat: Reduce zone lock hold time when reading
+ /proc/pagetypeinfo
+To:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rafael Aquini <aquini@redhat.com>
+References: <20191022162156.17316-1-longman@redhat.com>
+ <20191022145902.d9c4a719c0b32175e06e4eee@linux-foundation.org>
+ <2236495a-ead0-e08e-3fb6-f3ab906b75b6@redhat.com>
+ <1571842093.5937.84.camel@lca.pw>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <a4398f60-c07e-8fa9-c26d-3b8f688e65a1@redhat.com>
+Date:   Wed, 23 Oct 2019 11:01:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <1571842093.5937.84.camel@lca.pw>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: Y09mMa8JNFO1Wvt2DH_ATQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 3:50 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+On 10/23/19 10:48 AM, Qian Cai wrote:
+>>> this still isn't a bulletproof fix.  Maybe just terminate the list
+>>> walk if freecount reaches 1024.  Would anyone really care?
+>>>
+>>> Sigh.  I wonder if anyone really uses this thing for anything
+>>> important.  Can we just remove it all?
+>>>
+>> Removing it will be a breakage of kernel API.
+> Who cares about breaking this part of the API that essentially nobody wil=
+l use
+> this file?
 >
-> On Wed, Oct 23, 2019 at 3:35 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
-> > On Wed, Oct 23, 2019 at 10:36 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > On Tue, Oct 22, 2019 at 6:46 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> > > >
-> > > > This patch adds kcov_remote_start()/kcov_remote_stop() annotations to the
-> > > > vhost_worker() function, which is responsible for processing vhost works.
-> > > > Since vhost_worker() threads are spawned per vhost device instance
-> > > > the common kcov handle is used for kcov_remote_start()/stop() annotations
-> > > > (see Documentation/dev-tools/kcov.rst for details). As the result kcov can
-> > > > now be used to collect coverage from vhost worker threads.
-> > > >
-> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > > ---
-> > > >  drivers/vhost/vhost.c | 6 ++++++
-> > > >  drivers/vhost/vhost.h | 1 +
-> > > >  2 files changed, 7 insertions(+)
-> > > >
-> > > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > > > index 36ca2cf419bf..a5a557c4b67f 100644
-> > > > --- a/drivers/vhost/vhost.c
-> > > > +++ b/drivers/vhost/vhost.c
-> > > > @@ -30,6 +30,7 @@
-> > > >  #include <linux/sched/signal.h>
-> > > >  #include <linux/interval_tree_generic.h>
-> > > >  #include <linux/nospec.h>
-> > > > +#include <linux/kcov.h>
-> > > >
-> > > >  #include "vhost.h"
-> > > >
-> > > > @@ -357,7 +358,9 @@ static int vhost_worker(void *data)
-> > > >                 llist_for_each_entry_safe(work, work_next, node, node) {
-> > > >                         clear_bit(VHOST_WORK_QUEUED, &work->flags);
-> > > >                         __set_current_state(TASK_RUNNING);
-> > > > +                       kcov_remote_start(dev->kcov_handle);
-> > > >                         work->fn(work);
-> > > > +                       kcov_remote_stop();
-> > > >                         if (need_resched())
-> > > >                                 schedule();
-> > > >                 }
-> > > > @@ -546,6 +549,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
-> > > >
-> > > >         /* No owner, become one */
-> > > >         dev->mm = get_task_mm(current);
-> > > > +       dev->kcov_handle = current->kcov_handle;
-> > >
-> > > kcov_handle is not present in task_struct if !CONFIG_KCOV
-> > >
-> > > Also this does not use KCOV_SUBSYSTEM_COMMON.
-> > > We discussed something along the following lines:
-> > >
-> > > u64 kcov_remote_handle(u64 subsys, u64 id)
-> > > {
-> > >   WARN_ON(subsys or id has wrong bits set).
-> >
-> > Hm, we can't have warnings in kcov_remote_handle() that is exposed in
-> > uapi headers. What we can do is return 0 (invalid handle) if subsys/id
-> > have incorrect bits set. And then we can either have another
-> > kcov_remote_handle() internally (with a different name though) that
-> > has a warning, or have warning in kcov_remote_start(). WDYT?
->
-> I would probably add the warning to kcov_remote_start(). This avoids
-> the need for another function and will catch a wrong ID if caller
-> generated it by some other means.
-> And then ioctls should also detect bad handles passed in and return
-> EINVAL. Then we will cover errors for both kernel and user programs.
+There are certainly tools that use /proc/pagetypeinfo and this is how
+the problem is found. I am not against removing it, but we have to be
+careful and deprecate it in way that minimize user impact.
 
-OK, will do in v2.
+Cheers,
+Longman
 
->
-> >
-> > >   return ...;
-> > > }
-> > >
-> > > kcov_remote_handle(KCOV_SUBSYSTEM_USB, bus);
-> > > kcov_remote_handle(KCOV_SUBSYSTEM_COMMON, current->kcov_handle);
-
-I'll add internal kcov_remote_handle_common() and
-kcov_remote_handle_usb() helpers to simplify kcov hooks in usb/vhost
-code though.
-
-> > >
-> > >
-> > > >         worker = kthread_create(vhost_worker, dev, "vhost-%d", current->pid);
-> > > >         if (IS_ERR(worker)) {
-> > > >                 err = PTR_ERR(worker);
-> > > > @@ -571,6 +575,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
-> > > >         if (dev->mm)
-> > > >                 mmput(dev->mm);
-> > > >         dev->mm = NULL;
-> > > > +       dev->kcov_handle = 0;
-> > > >  err_mm:
-> > > >         return err;
-> > > >  }
-> > > > @@ -682,6 +687,7 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
-> > > >         if (dev->worker) {
-> > > >                 kthread_stop(dev->worker);
-> > > >                 dev->worker = NULL;
-> > > > +               dev->kcov_handle = 0;
-> > > >         }
-> > > >         if (dev->mm)
-> > > >                 mmput(dev->mm);
-> > > > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> > > > index e9ed2722b633..a123fd70847e 100644
-> > > > --- a/drivers/vhost/vhost.h
-> > > > +++ b/drivers/vhost/vhost.h
-> > > > @@ -173,6 +173,7 @@ struct vhost_dev {
-> > > >         int iov_limit;
-> > > >         int weight;
-> > > >         int byte_weight;
-> > > > +       u64 kcov_handle;
-> > > >  };
-> > > >
-> > > >  bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
-> > > > --
-> > > > 2.23.0.866.gb869b98d4c-goog
-> > > >
