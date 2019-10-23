@@ -2,79 +2,76 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B39CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F315CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEBB2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:31:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rsvCoTqT"
+	by mail.kernel.org (Postfix) with ESMTP id 056CF20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 18:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571855835;
+	bh=bLvACf70EtGKQcH7NN0GRa0o2aKKreLYHYMeYrKMqqs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=fi7RU9OyJXvwsDcATn6n+vuGyZ3QceDmD2QPQRvB8t8sfqsL6mIzPswB9dejn3Yr+
+	 OilFeWyVVmu8JPCCHuCwdXM/x0cv9q4mYnZeDUVoyBsDpKh+ThdF1RUAStWhVBBNkG
+	 0Ze9ZxNiZFznNzfpUIX/0lnvUasBBG+W68M3npk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389742AbfJWSbp (ORCPT
+        id S2387834AbfJWSgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 14:31:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53762 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfJWSbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 14:31:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t1mBW2Y77bGoe4WyUZsFuThZaILNwh36eHCTT5RAVak=; b=rsvCoTqTHI+J3MI9MkOQOuOnF
-        9s0u54rool374MNQEGYKvm4GADQMerw1aowjTT9z4cJVLlP9M+7ubDgkjOKG3A4f4miNHqEnZR+b5
-        w+pQEWhVSDKbGJGys2SQr43YskveRg0rKJ502puTLy6198xk52XF7mGsso6ce6A0pX9zfsScIIjPr
-        LZwJdLVabsvUIaFstToI3hMaNptxoNtmGoNwMhhgc7UngsgbGfXYQxTQItoKDFZmcnnlt1tQVuIn+
-        VVpbzWMmnt/u9zjiy5p6fGye2pjOr90jN18a90Z7dGRpA9zwO+Xk+ekinkSxUcuGQIWWbqLahGxTr
-        nXKNYoLjg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNLQ4-0000bL-Bt; Wed, 23 Oct 2019 18:31:40 +0000
-Date:   Wed, 23 Oct 2019 11:31:40 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] x86/dumpstack/64: Don't evaluate exception stacks before
- setup
-Message-ID: <20191023183140.GC2963@bombadil.infradead.org>
-References: <20191019114421.GK9698@uranus.lan>
- <20191022142325.GD12121@uranus.lan>
- <20191022145619.GE12121@uranus.lan>
- <alpine.DEB.2.21.1910231457400.2308@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1910231533180.2308@nanos.tec.linutronix.de>
- <20191023135943.GK12121@uranus.lan>
- <alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de>
+        Wed, 23 Oct 2019 14:36:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729043AbfJWSgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 14:36:48 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7D4820663;
+        Wed, 23 Oct 2019 18:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571855808;
+        bh=bLvACf70EtGKQcH7NN0GRa0o2aKKreLYHYMeYrKMqqs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JLXWZJ+wJRNqRMcLhgB/ruPlzo1mRE2x91K+2HnY4uW6EGGYE+NNTfBtOzvjoXovY
+         qjGDFTV0Bx84IceYhKpmf+5gAHTx5KayDYztn+pZBqTqp/0vAkN9BR7Ckzcm/gUryh
+         rQ/75mdGsKj/xjkWEnjtXIaXLXExoGCpvpkFUgpg=
+Date:   Wed, 23 Oct 2019 13:36:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v2 0/1] Add support for setting MMIO PREF hotplug bridge
+ size
+Message-ID: <20191023183646.GA4895@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <SL2P216MB018771B6A7F60532F99701A5806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 08:05:49PM +0200, Thomas Gleixner wrote:
-> Prevent this by checking the validity of the cea_exception_stack base
-> address and bailing out if it is zero.
+On Wed, Oct 23, 2019 at 12:12:08PM +0000, Nicholas Johnson wrote:
+> ...
+> It turns out Outlook is causing my encoding issues with git send-email.
+> 
+> If I get a new email for kernel development, what should it be? Gmail
+> works, but looks tackier.
 
-Could also initialise cea_exception_stack to -1?  That would lead to it
-being caught by ...
+I wish Documentation/process/email-clients.rst said something about
+Outlook, but it doesn't and I don't know enough to add anything.
 
->  	end = begin + sizeof(struct cea_exception_stacks);
->  	/* Bail if @stack is outside the exception stack area. */
->  	if (stk < begin || stk >= end)
+It does say gmail doesn't work for sending patches.  That's certainly
+true for the web GUI, but I think it might be possible to use msmtp to
+send via the gmail SMTP server, e.g., https://wiki.debian.org/msmtp
 
-this existing check.
-
+Bjorn
