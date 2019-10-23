@@ -2,139 +2,87 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E62CA9EAE
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E309CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78802173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F8521872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:24:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="AuCfw9OI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388011AbfJWGTR (ORCPT
+        id S1732114AbfJWGYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:19:17 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54220 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfJWGTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:19:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 23:19:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
-   d="scan'208";a="191731422"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.48]) ([10.238.129.48])
-  by orsmga008.jf.intel.com with ESMTP; 22 Oct 2019 23:19:13 -0700
-Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
-To:     Jason Wang <jasowang@redhat.com>,
-        Zhu Lingshan <lingshan.zhu@linux.intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        zhiyuan.lv@intel.com
-References: <20191016013050.3918-1-lingshan.zhu@intel.com>
- <20191016013050.3918-3-lingshan.zhu@intel.com>
- <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
- <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
- <1cae60b6-938d-e2df-2dca-fbf545f06853@redhat.com>
- <ddf412c6-69e2-b3ca-d0c8-75de1db78ed9@linux.intel.com>
- <b2adaab0-bbc3-b7f0-77da-e1e3cab93b76@redhat.com>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <6588d9f4-f357-ec78-16a4-ccaf0e3768e7@intel.com>
-Date:   Wed, 23 Oct 2019 14:19:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 23 Oct 2019 02:24:07 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36345 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfJWGYG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:24:06 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y189so18789286qkc.3;
+        Tue, 22 Oct 2019 23:24:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yi1p/5AgQUValFkbegnxonQlGe9ds008uEI8GJ+OXbo=;
+        b=AuCfw9OIu+7nH6ya75fRfE9wSSXOEJme4h+b4Jl8lqE3QhpBP0wyip4SbHdD89k+dU
+         YXkDowI6+oNJdoRgFSF8ON+KH+nGnv9PS7lTmPjLzsl0n3+c81FqncBaSpb91bkTBQeu
+         W7CouiNjm3HxMmcdVYt1E1lY3fcVggMLerrJk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yi1p/5AgQUValFkbegnxonQlGe9ds008uEI8GJ+OXbo=;
+        b=jQMCkLOGGe61IK461adncOqwHnapsqH5QxTUenhAZ0csTIpUfM8cCqgVri+K9lpzKY
+         t8X9aQEroYVOuXUNZnAJ7vYUspbAo8XMRnM2ojF9AUadiljHCGb6S/OK5kDTtJNVn30E
+         C5SHhHfO1hJpbfQSn18PbP5qpHkzdOmlfGL0jrvPOYGClT+zs6Qe0KV75yZIJM98C1HK
+         2M0DrlDC6RYyS5P3k0gZbnLOG1THXD7A9lDC0/564Vs49+3nVWKdC62VH6vIkKBsTGsr
+         WTlY1xoQRO8MI3M9pWD+yXDwBKmLlbf+BxawTXJYesuYbJ+4Dvbb4T8rboINMpqF2Ehi
+         hPOw==
+X-Gm-Message-State: APjAAAUBoeCu/ae06lfLcWoDv3/Ee096sc8NM7lEUBKK9mbU6GQYqlbH
+        +iUXQdNXn+yPlFxxcvucxlugCyHk8HQo+OuGP8o=
+X-Google-Smtp-Source: APXvYqzVR5Etz/Es4HiMMf1UU0Ef58kwEksY2/0I7PJeRjGUW1kKtmEKe5E3i1zok0d9FQ5uFZGtdYzcPByiBOb1fvE=
+X-Received: by 2002:a37:aa07:: with SMTP id t7mr7032088qke.414.1571811845300;
+ Tue, 22 Oct 2019 23:24:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b2adaab0-bbc3-b7f0-77da-e1e3cab93b76@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <baabb9e9-a1b2-3a04-9fb6-aa632de5f722@web.de>
+In-Reply-To: <baabb9e9-a1b2-3a04-9fb6-aa632de5f722@web.de>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 23 Oct 2019 06:23:53 +0000
+Message-ID: <CACPK8XfUJ5VGpTS3gwxSVZbdWZKPH6PwT2JKGGJ2yzoXYKdtZg@mail.gmail.com>
+Subject: Re: [PATCH] EDAC: Aspeed: Use devm_platform_ioremap_resource() in aspeed_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-edac@vger.kernel.org,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Borislav Petkov <bp@alien8.de>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Stefan Schaeckeler <sschaeck@cisco.com>,
+        Tony Luck <tony.luck@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 21 Sep 2019 at 16:47, Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 21 Sep 2019 18:32:46 +0200
+>
+> Simplify this function implementation by using a known wrapper function.
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-On 10/22/2019 9:05 PM, Jason Wang wrote:
->
-> On 2019/10/22 下午2:53, Zhu Lingshan wrote:
->>
->> On 10/21/2019 6:19 PM, Jason Wang wrote:
->>>
->>> On 2019/10/21 下午5:53, Zhu, Lingshan wrote:
->>>>
->>>> On 10/16/2019 6:19 PM, Jason Wang wrote:
->>>>>
->>>>> On 2019/10/16 上午9:30, Zhu Lingshan wrote:
->>>>>> This commit introduced IFC VF operations for vdpa, which complys to
->>>>>> vhost_mdev interfaces, handles IFC VF initialization,
->>>>>> configuration and removal.
->>>>>>
->>>>>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->>>>>> ---
->
->
-> [...]
->
->
->>>
->>>
->>>>
->>>>>
->>>>>
->>>>>> +}
->>>>>> +
->>>>>> +static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64 
->>>>>> features)
->>>>>> +{
->>>>>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->>>>>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->>>>>> +
->>>>>> +    vf->req_features = features;
->>>>>> +
->>>>>> +    return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 
->>>>>> qid)
->>>>>> +{
->>>>>> +    struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
->>>>>> +    struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
->>>>>> +
->>>>>> +    return vf->vring[qid].last_avail_idx;
->>>>>
->>>>>
->>>>> Does this really work? I'd expect it should be fetched from hw 
->>>>> since it's an internal state.
->>>> for now, it's working, we intend to support LM in next version 
->>>> drivers.
->>>
->>>
->>> I'm not sure I understand here, I don't see any synchronization 
->>> between the hardware and last_avail_idx, so last_avail_idx should 
->>> not change.
->>>
->>> Btw, what did "LM" mean :) ?
->>
->> I can add bar IO operations here, LM = live migration, sorry for the 
->> abbreviation.
->
->
-> Just make sure I understand here, I believe you mean reading 
-> last_avail_idx through IO bar here?
->
-> Thanks
-
-Hi Jason,
-
-Yes, I mean last_avail_idx. is that correct?
-
-THanks
-
->
->
+Acked-by: Joel Stanley <joel@jms.id.au>
