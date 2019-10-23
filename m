@@ -2,68 +2,104 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80ADCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C269CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF522064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5793B2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404138AbfJWJrt (ORCPT
+        id S2404150AbfJWJsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:47:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:53366 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403892AbfJWJrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:47:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 02:47:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
-   d="scan'208";a="209891035"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 02:47:44 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 12:47:43 +0300
-Date:   Wed, 23 Oct 2019 12:47:43 +0300
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>
-Subject: Re: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
- parameters
-Message-ID: <20191023094743.GU2819@lahna.fi.intel.com>
-References: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+        Wed, 23 Oct 2019 05:48:52 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:60460 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732648AbfJWJsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:48:51 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9N9mV3W003891, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9N9mV3W003891
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Oct 2019 17:48:31 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCAS11.realtek.com.tw ([fe80::7c6d:ced5:c4ff:8297%15]) with mapi id
+ 14.03.0468.000; Wed, 23 Oct 2019 17:48:30 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     nic_swsd <nic_swsd@realtek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "pmalani@chromium.org" <pmalani@chromium.org>,
+        "grundler@chromium.org" <grundler@chromium.org>,
+        "'Linux Samsung SOC'" <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: RE: [PATCH net-next] r8152: support request_firmware for RTL8153
+Thread-Topic: [PATCH net-next] r8152: support request_firmware for RTL8153
+Thread-Index: AQHVg84yG1svvwJLbEa5ZZ4zq0Zj+qdnd3YAgACNnOA=
+Date:   Wed, 23 Oct 2019 09:48:28 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18ED3FA@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-329-Taiwan-albertk@realtek.com>
+        <CGME20191023091648eucas1p12dcc4e9041169e3c7ae43f4ea525dd7f@eucas1p1.samsung.com>
+ <44261242-ff44-0067-bbb9-2241e400ad53@samsung.com>
+In-Reply-To: <44261242-ff44-0067-bbb9-2241e400ad53@samsung.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 08:37:48AM +0000, Nicholas Johnson wrote:
->  			} else if (!strncmp(str, "hpmemsize=", 10)) {
-> -				pci_hotplug_mem_size = memparse(str + 10, &str);
-> +				pci_hotplug_mmio_size =
-> +					memparse(str + 10, &str);
-> +				pci_hotplug_mmio_pref_size =
-> +					memparse(str + 10, &str);
-
-Does this actually work correctly? The first memparse(str + 10, &str)
-modifies str so the next call will not start from the correct position
-anymore.
-
-Otherwise the patch looks good to me.
+TWFyZWsgU3p5cHJvd3NraSBbbWFpbHRvOm0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbV0NCj4gU2Vu
+dDogV2VkbmVzZGF5LCBPY3RvYmVyIDIzLCAyMDE5IDU6MTcgUE0NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCBuZXQtbmV4dF0gcjgxNTI6IHN1cHBvcnQgcmVxdWVzdF9maXJtd2FyZSBmb3IgUlRMODE1
+Mw0KPiANCj4gSGkgSGF5ZXMsDQo+IA0KPiBPbiAxNi4xMC4yMDE5IDA1OjAyLCBIYXllcyBXYW5n
+IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggc3VwcG9ydHMgbG9hZGluZyBhZGRpdGlvbmFsIGZpcm13
+YXJlIGZpbGUgdGhyb3VnaA0KPiA+IHJlcXVlc3RfZmlybXdhcmUoKS4NCj4gPg0KPiA+IEEgZmly
+bXdhcmUgZmlsZSBtYXkgaW5jbHVkZSBhIGhlYWRlciBmb2xsb3dlZCBieSBzZXZlcmFsIGJsb2Nr
+cw0KPiA+IHdoaWNoIGhhdmUgZGlmZmVyZW50IHR5cGVzIG9mIGZpcm13YXJlLiBDdXJyZW50bHks
+IHRoZSBzdXBwb3J0ZWQNCj4gPiB0eXBlcyBhcmUgUlRMX0ZXX0VORCwgUlRMX0ZXX1BMQSwgYW5k
+IFJUTF9GV19VU0IuDQo+ID4NCj4gPiBUaGUgZmlybXdhcmUgaXMgdXNlZCB0byBmaXggc29tZSBj
+b21wYXRpYmxlIG9yIGhhcmR3YXJlIGlzc3Vlcy4gRm9yDQo+ID4gZXhhbXBsZSwgdGhlIGRldmlj
+ZSBjb3VsZG4ndCBiZSBmb3VuZCBhZnRlciByZWJvb3Rpbmcgc2V2ZXJhbCB0aW1lcy4NCj4gPg0K
+PiA+IFRoZSBzdXBwb3J0ZWQgY2hpcHMgYXJlDQo+ID4gCVJUTF9WRVJfMDQgKHJ0bDgxNTNhLTIu
+ZncpDQo+ID4gCVJUTF9WRVJfMDUgKHJ0bDgxNTNhLTMuZncpDQo+ID4gCVJUTF9WRVJfMDYgKHJ0
+bDgxNTNhLTQuZncpDQo+ID4gCVJUTF9WRVJfMDkgKHJ0bDgxNTNiLTIuZncpDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBIYXllcyBXYW5nIDxoYXllc3dhbmdAcmVhbHRlay5jb20+DQo+ID4gUmV2
+aWV3ZWQtYnk6IFByYXNoYW50IE1hbGFuaSA8cG1hbGFuaUBjaHJvbWl1bS5vcmc+DQo+IA0KPiBU
+aGlzIHBhdGNoICh3aGljaCBsYW5kZWQgaW4gbGludXgtbmV4dCBsYXN0IGRheXMpIGNhdXNlcyBh
+IGZvbGxvd2luZw0KPiBrZXJuZWwgb29wcyBvbiB0aGUgQVJNIDMyYml0IEV4eW5vczU0MjIgU29D
+IGJhc2VkIE9kcm9pZCBYVTQgYm9hcmQ6DQoNClBsZWFzZSB0cnkgdGhlIGZvbGxvd2luZyBwYXRj
+aC4NCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3VzYi9yODE1Mi5jIGIvZHJpdmVycy9uZXQv
+dXNiL3I4MTUyLmMNCmluZGV4IGQzYzMwY2NjODU3Ny4uMjgzYjM1YTc2Y2YwIDEwMDY0NA0KLS0t
+IGEvZHJpdmVycy9uZXQvdXNiL3I4MTUyLmMNCisrKyBiL2RyaXZlcnMvbmV0L3VzYi9yODE1Mi5j
+DQpAQCAtNDAwMCw4ICs0MDAwLDggQEAgc3RhdGljIHZvaWQgcnRsODE1Ml9md19tYWNfYXBwbHko
+c3RydWN0IHI4MTUyICp0cCwgc3RydWN0IGZ3X21hYyAqbWFjKQ0KIHN0YXRpYyB2b2lkIHJ0bDgx
+NTJfYXBwbHlfZmlybXdhcmUoc3RydWN0IHI4MTUyICp0cCkNCiB7DQogCXN0cnVjdCBydGxfZncg
+KnJ0bF9mdyA9ICZ0cC0+cnRsX2Z3Ow0KLQljb25zdCBzdHJ1Y3QgZmlybXdhcmUgKmZ3ID0gcnRs
+X2Z3LT5mdzsNCi0Jc3RydWN0IGZ3X2hlYWRlciAqZndfaGRyID0gKHN0cnVjdCBmd19oZWFkZXIg
+Kilmdy0+ZGF0YTsNCisJY29uc3Qgc3RydWN0IGZpcm13YXJlICpmdzsNCisJc3RydWN0IGZ3X2hl
+YWRlciAqZndfaGRyOw0KIAlzdHJ1Y3QgZndfcGh5X3BhdGNoX2tleSAqa2V5Ow0KIAl1MTYga2V5
+X2FkZHIgPSAwOw0KIAlpbnQgaTsNCkBAIC00MDA5LDYgKzQwMDksOSBAQCBzdGF0aWMgdm9pZCBy
+dGw4MTUyX2FwcGx5X2Zpcm13YXJlKHN0cnVjdCByODE1MiAqdHApDQogCWlmIChJU19FUlJfT1Jf
+TlVMTChydGxfZnctPmZ3KSkNCiAJCXJldHVybjsNCiANCisJZncgPSBydGxfZnctPmZ3Ow0KKwlm
+d19oZHIgPSAoc3RydWN0IGZ3X2hlYWRlciAqKWZ3LT5kYXRhOw0KKw0KIAlpZiAocnRsX2Z3LT5w
+cmVfZncpDQogCQlydGxfZnctPnByZV9mdyh0cCk7DQoNCj4gPiArc3RhdGljIHZvaWQgcnRsODE1
+Ml9hcHBseV9maXJtd2FyZShzdHJ1Y3QgcjgxNTIgKnRwKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3Qg
+cnRsX2Z3ICpydGxfZncgPSAmdHAtPnJ0bF9mdzsNCj4gPiArCWNvbnN0IHN0cnVjdCBmaXJtd2Fy
+ZSAqZncgPSBydGxfZnctPmZ3Ow0KPiA+ICsJc3RydWN0IGZ3X2hlYWRlciAqZndfaGRyID0gKHN0
+cnVjdCBmd19oZWFkZXIgKilmdy0+ZGF0YTsNCj4gPiArCWludCBpOw0KPiA+ICsNCj4gPiArCWlm
+IChJU19FUlJfT1JfTlVMTChydGxfZnctPmZ3KSkNCj4gPiArCQlyZXR1cm47DQo+ID4gKw0KPiA+
+ICsJaWYgKHJ0bF9mdy0+cHJlX2Z3KQ0KPiA+ICsJCXJ0bF9mdy0+cHJlX2Z3KHRwKTsNCj4gPiAr
+DQoNCkJlc3QgUmVnYXJkcywNCkhheWVzDQoNCg0K
