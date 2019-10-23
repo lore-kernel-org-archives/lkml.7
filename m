@@ -2,93 +2,138 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0479CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14A4CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F16214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571834378;
-	bh=bvyBf20OEalBpr2xyujUzSBC1iW8BWaImgjxR07N6t0=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=mMpwIUcsVRBE9tU7QECgj1jg5qFTj14gwrfMg/NP3Efwmycrb7MwMh5gZvLhK2tYA
-	 Owr7kc74WbiQHWmDmy7HIHLTLqp2zG9urp005b6jyVSSYayajBpuvxkd1ei5RJ8xfY
-	 W/lLuQpEyoVeLOpPUGkmarZIBPv43r8rWupwi2vw=
+	by mail.kernel.org (Postfix) with ESMTP id B758D214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V0U8f57h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390567AbfJWMjh (ORCPT
+        id S2390634AbfJWMkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:39:37 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:60501 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732680AbfJWMjh (ORCPT
+        Wed, 23 Oct 2019 08:40:08 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40849 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732361AbfJWMkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:39:37 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iNFv9-0001yJ-KM; Wed, 23 Oct 2019 14:39:23 +0200
-To:     Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH v7 00/10] arm64: Stolen time support
-X-PHP-Originating-Script: 0:main.inc
+        Wed, 23 Oct 2019 08:40:08 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o49so24173160qta.7
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sHrU87Sp2KOFYTsvWXjU9c1Yq8vcTmrg/74YWaKD3a8=;
+        b=V0U8f57hbh/kqVmvb4NEPwMp/oVE2TvJJWWuT8r2xtWeb2kjEKRohU30BBj1D4O2un
+         4Asp50Vk4TlgIM4WOGwFVlt/TKVbThDn4wyzVG59Zg9+ehmrTo5NkWDVECEvYB/p05ij
+         89oRzrjxzraFKPjN92uVcsNx6zorvZm3IXBPH0CJnFkAR5xewOtEd+zm7O/1awHRUvka
+         gzQC9ZXN4h8zvTHMuZSl/BqXLn6DFqWjwp8DRxUAQoKbeC/souX0wtOIWdofNAByg3P0
+         Va5RZDDIzcEaNgGF1aVCdJs+hTI8BcvIB0LhK1Gn37xmbwkx14+Hsx2pRSHXAnmh6ST1
+         LA9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sHrU87Sp2KOFYTsvWXjU9c1Yq8vcTmrg/74YWaKD3a8=;
+        b=q2ITnv75okc/DSuUyuREC6RuYtkrR1p6IqOri+QArpp7EovilEx7ZPLLmDReGcEBSV
+         QHQMfaFVxt9/l+ydkzxWcuZhZvvPBiGGsk/pLr5BC60uQXbEZgv2VCYRTbM0fYiGzTTY
+         WTgt79JwSCU5vsdmKmGpv4pg6BzAxFcuFSgiQoXrSWlx1muINJRy6v6Yzl9/CLZezxEl
+         FZv3k+aZBLNd46M1Hs7FjoCrJK/wj5tUvTwrapvyVw581xyjQ+bODx1m38qkCEjyIESL
+         0aZ/cNKziL+XLi9vq5P4mjoyE2G5K2qBq0SgGfYqq6yY51WPNZ//wLmVqlR2vIvBhHYB
+         1cIA==
+X-Gm-Message-State: APjAAAW2susggNs+JzbPvrExx+ahjhU6gZlYe+C7KOyNQROEdT/2VgCf
+        ivJrAZ/M5TyigJrZ4WWB1yn4VDRC7ye9fMwP/scyyNtU
+X-Google-Smtp-Source: APXvYqxmYjzw+S8GEZ4LSXFaGlWKYoIc87ESkRfbQVUthnxlSIcx3JRuSQnJS6UdQAlWpKex6x4TgBf0F79RTchEsJo=
+X-Received: by 2002:a0c:fec3:: with SMTP id z3mr8670778qvs.122.1571834406888;
+ Wed, 23 Oct 2019 05:40:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 23 Oct 2019 13:39:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?Q?Radim_Kr=C4=8Dm=C3=A1?= =?UTF-8?Q?=C5=99?= 
-        <rkrcmar@redhat.com>, Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, <kvm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191021152823.14882-1-steven.price@arm.com>
-References: <20191021152823.14882-1-steven.price@arm.com>
-Message-ID: <f0d79362ab994e269680fba75f913044@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: steven.price@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, catalin.marinas@arm.com, pbonzini@redhat.com, rkrcmar@redhat.com, linux@armlinux.org.uk, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, mark.rutland@arm.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com> <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+In-Reply-To: <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 23 Oct 2019 14:39:55 +0200
+Message-ID: <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
+Subject: Re: [PATCH v6] taskstats: fix data-race
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        stable <stable@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
-
-On 2019-10-21 16:28, Steven Price wrote:
-> This series add support for paravirtualized time for arm64 guests and
-> KVM hosts following the specification in Arm's document DEN 0057A:
+On Wed, Oct 23, 2019 at 2:16 PM Andrea Parri <parri.andrea@gmail.com> wrote:
 >
-> https://developer.arm.com/docs/den0057/a
+> On Mon, Oct 21, 2019 at 01:33:27PM +0200, Christian Brauner wrote:
+> > When assiging and testing taskstats in taskstats_exit() there's a race
+> > when writing and reading sig->stats when a thread-group with more than
+> > one thread exits:
+> >
+> > cpu0:
+> > thread catches fatal signal and whole thread-group gets taken down
+> >  do_exit()
+> >  do_group_exit()
+> >  taskstats_exit()
+> >  taskstats_tgid_alloc()
+> > The tasks reads sig->stats without holding sighand lock.
+> >
+> > cpu1:
+> > task calls exit_group()
+> >  do_exit()
+> >  do_group_exit()
+> >  taskstats_exit()
+> >  taskstats_tgid_alloc()
+> > The task takes sighand lock and assigns new stats to sig->stats.
+> >
+> > The first approach used smp_load_acquire() and smp_store_release().
+> > However, after having discussed this it seems that the data dependency
+> > for kmem_cache_alloc() would be fixed by WRITE_ONCE().
+> > Furthermore, the smp_load_acquire() would only manage to order the stats
+> > check before the thread_group_empty() check. So it seems just using
+> > READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
+> > up for discussion at least.
 >
-> It implements support for stolen time, allowing the guest to
-> identify time when it is forcibly not executing.
+> Mmh, the RELEASE was intended to order the memory initialization in
+> kmem_cache_zalloc() with the later ->stats pointer assignment; AFAICT,
+> there is no data dependency between such memory accesses.
+
+I agree. This needs smp_store_release. The latest version that I
+looked at contained:
+smp_store_release(&sig->stats, stats_new);
+
+> Correspondingly, the ACQUIRE was intended to order the ->stats pointer
+> load with later, _independent dereferences of the same pointer; the
+> latter are, e.g., in taskstats_exit() (but not thread_group_empty()).
+
+How these later loads can be completely independent of the pointer
+value? They need to obtain the pointer value from somewhere. And this
+can only be done by loaded it. And if a thread loads a pointer and
+then dereferences that pointer, that's a data/address dependency and
+we assume this is now covered by READ_ONCE.
+Or these later loads of the pointer can also race with the store? If
+so, I think they also need to use READ_ONCE (rather than turn this earlier
+pointer load into acquire).
+
+
+> Looking again, I see that fill_tgid_exit()'s dereferences of ->stats
+> are protected by ->siglock: maybe you meant to rely on such a critical
+> section pairing with the critical section in taskstats_tgid_alloc()?
 >
-> Note that Live Physical Time (LPT) which was previously part of the
-> above specification has now been removed.
+> That memcpy(-, tsk->signal->stats, -) at the end of taskstats_exit()
+> also bugs me: could these dereferences of ->stats happen concurrently
+> with other stores to the same memory locations?
 >
-> Also available as a git tree:
-> git://linux-arm.org/linux-sp.git stolen_time/v7
-
-Can you please point me to userspace patches that I could apply to
-kvmtool? I'd like to give this series a go as part of my normal 
-testing.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> Thanks,
+>   Andrea
