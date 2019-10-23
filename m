@@ -2,48 +2,69 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C07CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB68CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F374221A4A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30AB2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 21:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XcUqdG2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391974AbfJWVHR (ORCPT
+        id S2392056AbfJWVHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 17:07:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:7010 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391934AbfJWVHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 17:07:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 14:07:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="201260317"
-Received: from ayamada-mobl1.gar.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.95.208])
-  by orsmga003.jf.intel.com with ESMTP; 23 Oct 2019 14:07:11 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 4/4] soundwire: intel: update stream callbacks for hwparams/free stream operations
-Date:   Wed, 23 Oct 2019 16:06:57 -0500
-Message-Id: <20191023210657.32440-5-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191023210657.32440-1-pierre-louis.bossart@linux.intel.com>
-References: <20191023210657.32440-1-pierre-louis.bossart@linux.intel.com>
+        Wed, 23 Oct 2019 17:07:30 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37352 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391902AbfJWVH3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 17:07:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p1so12862132pgi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 14:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hTdZZnlA7EABBBAHUknV0T6AXSDyE/LhNtrQ1WO3UbI=;
+        b=XcUqdG2izYOn+mbHak6wx+UZELo+hDTuO/+fxjKpVKHu0vitTZdRpxSAWCiL288QOM
+         Y4sQAcicvH5dezcg14hGy1Asu7I5ifDnXHph8pEEYigQaild/ZOsD1de9jXymX4iAo4U
+         YtPkllEHsNkBl1XYV8p60uhU9i8FsE8WCeV/8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hTdZZnlA7EABBBAHUknV0T6AXSDyE/LhNtrQ1WO3UbI=;
+        b=lo1W5f4+BgG19xVw0osCYbSYfiadqDcvJoD0Mpdi8UUYJQ9CXGchjQAJRaSnRXRzQf
+         J/GQIHZB9D7zKAXAsm9FrS0Z12fQJvZMshk4tShjzy49dAz4mibGcxPVzqN4jBL0oLAE
+         NWn6Z9L3Hq1NkTpsI3rCx9uROJ0r71ZfaFNK82U+4vP07b3yYgJvVL5wwA8vDXItdcVL
+         bpNA4LBnJwwTUVXjFkpdVXohYFggwWbTI2pmdZmw6Ni6rafDkBpyb8vvQUK272vcW65u
+         jGSw1QkgDxL5DZh792qyWjHrc5ZUn3foHWF16RAgwRswFLsERvPKANqst3Frb3o2Lbi+
+         /tOw==
+X-Gm-Message-State: APjAAAU0yJMEtN+O3beOr/dTUEV/TxNr8i1l3n3pmOcDbnUQHiPJfqFD
+        UiJ+g812wHuYMmdAsiQnmR8xJA==
+X-Google-Smtp-Source: APXvYqxIMniSNwAkzc2lHxYvMbXHhVnLpxKHVTcbtv205RmdruWuesi6Yx4Fs/+BBpFofGh5PgQlew==
+X-Received: by 2002:a63:3d41:: with SMTP id k62mr11959835pga.129.1571864848131;
+        Wed, 23 Oct 2019 14:07:28 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id z12sm26529195pfj.41.2019.10.23.14.07.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 14:07:27 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     linux-rockchip@lists.infradead.org, stefan.wahren@i2se.com,
+        mka@chromium.org, Alexandru M Stan <amstan@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] usb: dwc2: Fix NULL qh in dwc2_queue_transaction
+Date:   Wed, 23 Oct 2019 14:06:31 -0700
+Message-Id: <20191023140530.v2.1.I9850aab29e945168070b0a9c50c421d5485e7d97@changeid>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,155 +72,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@linux.intel.com>
+From: Alexandru M Stan <amstan@chromium.org>
 
-Rename 'config_stream' as 'params_stream' to be closer to ALSA/ASoC
-concepts.
+When a usb device disconnects in a certain way, dwc2_queue_transaction
+still gets called after dwc2_hcd_cleanup_channels.
 
-Add a 'free_stream' callback in case any resources allocated in the
-'params_stream' stage need to be released.
+dwc2_hcd_cleanup_channels does "channel->qh = NULL;" but
+dwc2_queue_transaction still wants to dereference qh.
+This adds a check for a null qh.
 
-Define structures for callbacks, mainly to allow for extensions as
-needed.
-
-Add the link_id and alh_stream_id parameters which are needed to align
-with firmware IPC needs.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Alexandru M Stan <amstan@chromium.org>
+[dianders: rebased to mainline]
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/soundwire/intel.c           | 20 ++++++++++++------
- drivers/soundwire/intel.h           |  4 ++--
- drivers/soundwire/intel_init.c      |  1 +
- include/linux/soundwire/sdw_intel.h | 32 +++++++++++++++++++++++++----
- 4 files changed, 45 insertions(+), 12 deletions(-)
+While testing a newer version of the Linux kernel on rk3288-veyron
+devices we saw a bunch of crashes reported in dwc2_queue_transaction()
+where chan->qh was NULL [1].  I don't know how to reproduce those
+crashes myself, but I noticed that in our 3.14 kernel we had a patch
+that probably fixed it.  That patch was sent upstream ages ago [2] but
+never landed.  Here I've rebased the patch.  While I haven't
+reproduced the crash myself, it seems fairly likely that this will fix
+the problem.
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index acdec12d748d..10ff03d3a9e5 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -523,17 +523,24 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
- 	intel_writel(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id), conf);
- }
+[1] https://crbug.com/1017388
+[2] https://lore.kernel.org/r/1442952651-4341-2-git-send-email-amstan@chromium.org
+
+Changes in v2:
+- Rebased to mainline
+
+ drivers/usb/dwc2/hcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+index 81afe553aa66..b90f858af960 100644
+--- a/drivers/usb/dwc2/hcd.c
++++ b/drivers/usb/dwc2/hcd.c
+@@ -2824,7 +2824,7 @@ static int dwc2_queue_transaction(struct dwc2_hsotg *hsotg,
+ 		list_move_tail(&chan->split_order_list_entry,
+ 			       &hsotg->split_order);
  
--static int intel_config_stream(struct sdw_intel *sdw,
-+static int intel_params_stream(struct sdw_intel *sdw,
- 			       struct snd_pcm_substream *substream,
- 			       struct snd_soc_dai *dai,
--			       struct snd_pcm_hw_params *hw_params, int link_id)
-+			       struct snd_pcm_hw_params *hw_params,
-+			       int link_id, int alh_stream_id)
- {
- 	struct sdw_intel_link_res *res = sdw->res;
-+	struct sdw_intel_stream_params_data params_data;
- 
--	if (res->ops && res->ops->config_stream && res->arg)
--		return res->ops->config_stream(res->arg,
--				substream, dai, hw_params, link_id);
-+	params_data.substream = substream;
-+	params_data.dai = dai;
-+	params_data.hw_params = hw_params;
-+	params_data.link_id = link_id;
-+	params_data.alh_stream_id = alh_stream_id;
- 
-+	if (res->ops && res->ops->params_stream && res->dev)
-+		return res->ops->params_stream(res->dev,
-+					       &params_data);
- 	return -EIO;
- }
- 
-@@ -648,7 +655,8 @@ static int intel_hw_params(struct snd_pcm_substream *substream,
- 
- 
- 	/* Inform DSP about PDI stream number */
--	ret = intel_config_stream(sdw, substream, dai, params,
-+	ret = intel_params_stream(sdw, substream, dai, params,
-+				  sdw->instance,
- 				  pdi->intel_alh_id);
- 	if (ret)
- 		goto error;
-diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
-index e4cc1d3804ff..38b7c125fb10 100644
---- a/drivers/soundwire/intel.h
-+++ b/drivers/soundwire/intel.h
-@@ -14,7 +14,7 @@
-  * @alh: ALH (Audio Link Hub) pointer
-  * @irq: Interrupt line
-  * @ops: Shim callback ops
-- * @arg: Shim callback ops argument
-+ * @dev: device implementing hw_params and free callbacks
-  */
- struct sdw_intel_link_res {
- 	struct platform_device *pdev;
-@@ -24,7 +24,7 @@ struct sdw_intel_link_res {
- 	void __iomem *alh;
- 	int irq;
- 	const struct sdw_intel_ops *ops;
--	void *arg;
-+	struct device *dev;
- };
- 
- #endif /* __SDW_INTEL_LOCAL_H */
-diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-index f8ae199094d3..6bc167c83b47 100644
---- a/drivers/soundwire/intel_init.c
-+++ b/drivers/soundwire/intel_init.c
-@@ -119,6 +119,7 @@ static struct sdw_intel_ctx
- 		link->alh = res->mmio_base + SDW_ALH_BASE;
- 
- 		link->ops = res->ops;
-+		link->dev = res->dev;
- 
- 		memset(&pdevinfo, 0, sizeof(pdevinfo));
- 
-diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
-index 2cb653299731..36e2b522a749 100644
---- a/include/linux/soundwire/sdw_intel.h
-+++ b/include/linux/soundwire/sdw_intel.h
-@@ -4,15 +4,39 @@
- #ifndef __SDW_INTEL_H
- #define __SDW_INTEL_H
- 
-+/**
-+ * struct sdw_intel_stream_params_data: configuration passed during
-+ * the @params_stream callback, e.g. for interaction with DSP
-+ * firmware.
-+ */
-+struct sdw_intel_stream_params_data {
-+	struct snd_pcm_substream *substream;
-+	struct snd_soc_dai *dai;
-+	struct snd_pcm_hw_params *hw_params;
-+	int link_id;
-+	int alh_stream_id;
-+};
-+
-+/**
-+ * struct sdw_intel_stream_free_data: configuration passed during
-+ * the @free_stream callback, e.g. for interaction with DSP
-+ * firmware.
-+ */
-+struct sdw_intel_stream_free_data {
-+	struct snd_pcm_substream *substream;
-+	struct snd_soc_dai *dai;
-+	int link_id;
-+};
-+
- /**
-  * struct sdw_intel_ops: Intel audio driver callback ops
-  *
-- * @config_stream: configure the stream with the hw_params
-- * the first argument containing the context is mandatory
-  */
- struct sdw_intel_ops {
--	int (*config_stream)(void *arg, void *substream,
--			     void *dai, void *hw_params, int stream_num);
-+	int (*params_stream)(struct device *dev,
-+			     struct sdw_intel_stream_params_data *params_data);
-+	int (*free_stream)(struct device *dev,
-+			   struct sdw_intel_stream_free_data *free_data);
- };
- 
- /**
+-	if (hsotg->params.host_dma) {
++	if (hsotg->params.host_dma && chan->qh) {
+ 		if (hsotg->params.dma_desc_enable) {
+ 			if (!chan->xfer_started ||
+ 			    chan->ep_type == USB_ENDPOINT_XFER_ISOC) {
 -- 
-2.20.1
+2.23.0.866.gb869b98d4c-goog
 
