@@ -2,77 +2,117 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBB1CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E45CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C28F2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F52820679
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:59:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9Xv4ssA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392732AbfJWW7n (ORCPT
+        id S2407987AbfJWW7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:59:43 -0400
-Received: from mga17.intel.com ([192.55.52.151]:52756 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392721AbfJWW7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:59:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 15:59:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="398217103"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Oct 2019 15:59:42 -0700
-Date:   Wed, 23 Oct 2019 16:04:03 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 02/10] iommu/vt-d: Add custom allocator for IOASID
-Message-ID: <20191023160403.1bc56772@jacob-builder>
-In-Reply-To: <20191022210400.357e69a9@jacob-builder>
-References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571788403-42095-3-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20191023005129.GC100970@otc-nc-03>
-        <20191022210400.357e69a9@jacob-builder>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 23 Oct 2019 18:59:48 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44917 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392721AbfJWW7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 18:59:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q21so13819541pfn.11;
+        Wed, 23 Oct 2019 15:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VBEn/ZEVvdF0PqXom7XbyG81OSCKs1CYpQEi1Eolam8=;
+        b=D9Xv4ssAOo2hZ/YGQdDTtME2FAHVqoWaRy5aJoAHz6gy1Ci3f7i42Pb4UGYG+abd29
+         fk2pRdZJEKYVmxaW5L9obfNOKqEwRjwig57aCo+x9GR/SMN6N51feS558DuO6+u9fbTd
+         rXu+2ywkwdlD/dPu9nqnJaLJn+6af8vSAUZluXsH9OXdnvkPbNMRX4QVK0H/Fw+Dyb/R
+         Mncl2w6T7m9AVw8REiHK0P6w+Qo9fWeyQ0SBC70ZWCp/aeIOdoBodjpNns9fZ+iAG9ql
+         u76e7qqCh8tjqr7/tVUP0yEANPeQspoKdLHioH2uXdhl6WjaIE+vm2D9A4SIUFM064j2
+         8OtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VBEn/ZEVvdF0PqXom7XbyG81OSCKs1CYpQEi1Eolam8=;
+        b=kaLtDpRG6I7oWj0ltddiE+70yGAkPtwfMG0iIpPke6WkLh7TBjKVy1rr3MOoUIGC7M
+         9oh8FITG13UTa2ccGrB/jDEqbiryeuFygAw3gIpF6JeOVHfpAcwtr6ZNZbWwFBEmWwWO
+         qC/bGJ7mBiVIJA0Tli2MpfpJY25W0DZDjvJ2/BsZXoN5HNfTnZSpUw3ySfLF4b2tZj8I
+         IFZZqMJHQ6dRc39rk66DC8MjuB34rCgsivBK7Yvb+dZDJUTBG0kDCx+hJ+EyoBe4A+No
+         yPp1JAygcuuyJs4aXCu2yC4IpUbRn/kxmO3pZ5E6a6CYLunGGAZAHdWKMZoQVRNNIip6
+         jp/A==
+X-Gm-Message-State: APjAAAXXdNm32L5ohKmIBfcP3ubSXUFjxMOmGNZHZOqwc79hYkoNZVZs
+        xSv0JmSCciYWxHgp5FALEBw=
+X-Google-Smtp-Source: APXvYqx3N2SmZe1Lma+SZXSglX0ZRaurx+TsuCKC4IH2bF3mV551cJT9zYZsSuPilhdCYoomVw3/Bg==
+X-Received: by 2002:a63:2f47:: with SMTP id v68mr12804624pgv.318.1571871582843;
+        Wed, 23 Oct 2019 15:59:42 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id s21sm26262778pgv.37.2019.10.23.15.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 15:59:41 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 15:59:39 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH][RESEND] input: adp5589: Make keypad support optional
+Message-ID: <20191023225939.GA35946@dtor-ws>
+References: <20190927123836.28047-1-alexandru.ardelean@analog.com>
+ <20191023070541.13940-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023070541.13940-1-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 21:04:00 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+Hi Alexandru,
 
-> > > +		if (cap_caching_mode(iommu->cap) &&
-> > > sm_supported(iommu)) {    
-> > 
-> > do you need to check against cap_caching_mode() or ecap_vcmd?
-> >   
-> I guess ecap_vcmd() will suffice. Kind of redundant.
-Actually, we can check vcmd and vcmd_pasid here, then we dont need to
-check it on every alloc/free calls.
+On Wed, Oct 23, 2019 at 10:05:41AM +0300, Alexandru Ardelean wrote:
+> From: Lars-Peter Clausen <lars@metafoo.de>
+> 
+> On some platforms the adp5589 is used in GPIO only mode. On these platforms
+> we do not want to register a input device, so make that optional and only
+> create the input device if a keymap is supplied.
+> 
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/input/keyboard/adp5589-keys.c | 197 +++++++++++++++-----------
+>  1 file changed, 111 insertions(+), 86 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
+> index 4f96a4a99e5b..08bfa8b213e8 100644
+> --- a/drivers/input/keyboard/adp5589-keys.c
+> +++ b/drivers/input/keyboard/adp5589-keys.c
+> @@ -495,10 +495,10 @@ static int adp5589_build_gpiomap(struct adp5589_kpad *kpad,
+>  	return n_unused;
+>  }
+>  
+> -static int adp5589_gpio_add(struct adp5589_kpad *kpad)
+> +static int adp5589_gpio_add(struct adp5589_kpad *kpad,
+> +	const struct adp5589_kpad_platform_data *pdata)
+>  {
+>  	struct device *dev = &kpad->client->dev;
+> -	const struct adp5589_kpad_platform_data *pdata = dev_get_platdata(dev);
+>  	const struct adp5589_gpio_platform_data *gpio_data = pdata->gpio_data;
+>  	int i, error;
+>  
 
-Thanks,
+All these changes passing pdata to various functions are not really
+needed for this patch. I dropped them and applied.
 
-Jacob
+Sorry for the delay.
+
+-- 
+Dmitry
