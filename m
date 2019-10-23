@@ -2,189 +2,116 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33702CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58D4CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB3021872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3GY4JRD"
+	by mail.kernel.org (Postfix) with ESMTP id 9E53821920
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392132AbfJWOQm (ORCPT
+        id S2392143AbfJWORI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:16:42 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37434 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392122AbfJWOQm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:16:42 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e11so13596952wrv.4;
-        Wed, 23 Oct 2019 07:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UAmBCpYVREnT9sFsheyKh8dqijvBgfTzNlMnZDlGZ1s=;
-        b=l3GY4JRDwmepq3JEx195FaY4MISpM12L2SwTCrDmUsI+DmxrqdeHu6Yq2SV+zXiMd+
-         zALd/UI++9YBxBmWDng8KiSyxyh31WJO3sCkR0w2TcJY9FI7HevZ1mBPUO6fbOA33eOW
-         pdt0c365RNm9rccaEgiiDqn16A7ODiFax2ywr1xaJGR4SqPWSO6eCzITYBc0cGwmVCRV
-         ddpA0LJcp7a06iZ1RlEV9gPrKB2AZdBnxNlpkCIK4a01IrU8h9FhNvk0egojBGmhj51I
-         2DQshaZj+FLsg6QALWtHF3i/AsLWZ8TTew4kiIMEJ0EhqEl70VXKmJ+bnXlVGrJqmD27
-         pImw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UAmBCpYVREnT9sFsheyKh8dqijvBgfTzNlMnZDlGZ1s=;
-        b=pBnB+2waLT5rM6sbyBFq7VCa8ZcQVkLybytgrBZVwqHCJn63jVeUXXQbObQHk+8X+T
-         +g0qH+mEX3cRJxDHjrl7l0JjA72d7vfOZljHNtTLuFdwuetaOYnJJlLZhiyvDVXDUOuE
-         FH1ccznILnTyWr+SQg1chMqGeYP7+Wsim8QRwFFUk6gFHtu7Jv/sB1HfBUWpWrOGoHUB
-         eKXWZIwzHl88Oxtnd4eN2R2MB/f48hBgwnjn+yeImaUPwmkjZfnPJjG1ysxG+NxE03YU
-         mOLl+5h6BGbcZbyiO5wgtkLWCKMrI30EZ4pwwHxXSjSb/2XXJ0IaYjb9IBPcoQU/fLNG
-         mm2Q==
-X-Gm-Message-State: APjAAAU6FOoT+dczxGjQfOkmEx4PtYAX8kx0n7w/nnJrLYOISbEhivwO
-        mcGZys15mldrT+C4pIEUhCQ=
-X-Google-Smtp-Source: APXvYqwzpFUkA2x7B4BUKk0AY/CpNtGQNLhOYNdD30hhYEmMWqVVjOYUONq0veuhkqZJwqzXXfTp+g==
-X-Received: by 2002:a5d:614e:: with SMTP id y14mr9133892wrt.329.1571840199240;
-        Wed, 23 Oct 2019 07:16:39 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id u1sm32589818wru.90.2019.10.23.07.16.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 07:16:37 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 16:16:36 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] drm/tegra: plane: Remove format-modifier checking
-Message-ID: <20191023141636.GB2711737@ulmo>
-References: <20190224153405.8447-1-digetx@gmail.com>
+        Wed, 23 Oct 2019 10:17:08 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10364 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389669AbfJWORI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:17:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 07:17:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="398054644"
+Received: from kmsmsx151.gar.corp.intel.com ([172.21.73.86])
+  by fmsmga005.fm.intel.com with ESMTP; 23 Oct 2019 07:17:04 -0700
+Received: from pgsmsx101.gar.corp.intel.com ([169.254.1.80]) by
+ KMSMSX151.gar.corp.intel.com ([169.254.10.97]) with mapi id 14.03.0439.000;
+ Wed, 23 Oct 2019 22:17:02 +0800
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>
+CC:     Shawn Guo <shawnguo@kernel.org>, Olof Johansson <olof@lixom.net>,
+        "Maxime Ripard" <mripard@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        "Anson Huang" <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Ong, Hean Loong" <hean.loong.ong@intel.com>,
+        "See, Chin Liang" <chin.liang.see@intel.com>,
+        "Tan, Ley Foon" <ley.foon.tan@intel.com>
+Subject: RE: [PATCHv2] arm64: defconfig: add JFFS FS support in defconfig
+Thread-Topic: [PATCHv2] arm64: defconfig: add JFFS FS support in defconfig
+Thread-Index: AQHVhLQ1uC9R903uo0+8xK6FATnE6KdkwMoAgAOObJA=
+Date:   Wed, 23 Oct 2019 14:17:02 +0000
+Message-ID: <D53702B8F0ACD34B9B1D7D82EE03C045078535F3@PGSMSX101.gar.corp.intel.com>
+References: <1571293732-13667-1-git-send-email-joyce.ooi@intel.com>
+ <99d66573-a66f-947a-6f50-098c745ebab7@kernel.org>
+In-Reply-To: <99d66573-a66f-947a-6f50-098c745ebab7@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMTg1ZTc5YTQtYWI1Mi00NjBlLWJiYTctZTIwM2RmNmM1NmY3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOVRXSnBvYzhnWUhYMmEwZm5NNWptYlVOak5SY0pNXC9IMHBJVDRXWGFDQkNhK3JEcmdHZ2Q2cHhCWUlBcnppWmwifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.205]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
-Content-Disposition: inline
-In-Reply-To: <20190224153405.8447-1-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---hQiwHBbRI9kgIhsi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Feb 24, 2019 at 06:34:05PM +0300, Dmitry Osipenko wrote:
-> Tiling modifier can't be applied to YV12 video overlay because all tiling
-> modifiers are filtered out for multi-plane formats. AFAIK, all modifiers
-> should work with all of formats, hence the checking is incorrect and
-> simply not needed.
->=20
-> Fixes: e90124cb46bdb ("drm/tegra: plane: Support format modifiers")
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/gpu/drm/tegra/plane.c | 16 ----------------
->  1 file changed, 16 deletions(-)
-
-I'm hesitant to apply this because we don't really have a good way to
-test that this is actually the case. I vaguely recall that at least for
-some of the block-linear formats supported on Tegra124 and later there
-are additional restrictions on when they can be used.
-
-There's also the problem that using these block-linear formats, and I
-think this even applies to the TILED format on older Tegra SoCs, results
-in higher bandwidth requirements.
-
-Bandwidth requirements is something that we don't really concern
-ourselves with, and that's bad enough as it is. I suspect that once we
-blindly allow all format modifiers we could easily run into situations
-where the display controllers underflow.
-
-Now, regardless of which way you look at this, it boils down to testing.
-We don't have a good way of testing various combinations of format
-modifiers to verify that they work. You say yourself that "AFAIK, all
-modifiers should work with all formats", but can you really know for
-certain? Until we're able to properly test this, we really can't.
-
-Given all of the above, I think it's better to be prudent and only allow
-format/modifier combinations that we've actually tested. I'm not aware
-of a good way to test planar formats, so we don't have a good way to get
-the results that we need.
-
-I'm all ears if you know of a good way to test this. It doesn't have to
-be anything fully automated. Automated testing is especially difficult
-to do for display because it usually needs visual inspection. But that's
-okay, I'm willing to settle for something that we can roll into a script
-and run manually after boot until we can find a way to automatically do
-this type of test.
-
-Thierry
-
-> diff --git a/drivers/gpu/drm/tegra/plane.c b/drivers/gpu/drm/tegra/plane.c
-> index d068e8aa3553..5a8a3387f5ee 100644
-> --- a/drivers/gpu/drm/tegra/plane.c
-> +++ b/drivers/gpu/drm/tegra/plane.c
-> @@ -72,21 +72,6 @@ static void tegra_plane_atomic_destroy_state(struct dr=
-m_plane *plane,
->  	kfree(state);
->  }
-> =20
-> -static bool tegra_plane_format_mod_supported(struct drm_plane *plane,
-> -					     uint32_t format,
-> -					     uint64_t modifier)
-> -{
-> -	const struct drm_format_info *info =3D drm_format_info(format);
-> -
-> -	if (modifier =3D=3D DRM_FORMAT_MOD_LINEAR)
-> -		return true;
-> -
-> -	if (info->num_planes =3D=3D 1)
-> -		return true;
-> -
-> -	return false;
-> -}
-> -
->  const struct drm_plane_funcs tegra_plane_funcs =3D {
->  	.update_plane =3D drm_atomic_helper_update_plane,
->  	.disable_plane =3D drm_atomic_helper_disable_plane,
-> @@ -94,7 +79,6 @@ const struct drm_plane_funcs tegra_plane_funcs =3D {
->  	.reset =3D tegra_plane_reset,
->  	.atomic_duplicate_state =3D tegra_plane_atomic_duplicate_state,
->  	.atomic_destroy_state =3D tegra_plane_atomic_destroy_state,
-> -	.format_mod_supported =3D tegra_plane_format_mod_supported,
->  };
-> =20
->  int tegra_plane_state_add(struct tegra_plane *plane,
-> --=20
-> 2.20.1
->=20
-
---hQiwHBbRI9kgIhsi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2wYMIACgkQ3SOs138+
-s6HMUBAAkMcnsil5fbLkuO3EK8JFeZkIcJpkCrVe3OK7UjFRAi8RGLKxLc4n5N3Q
-3WSZG6CHX4YmtHa8jkjUnX9dzgqTmmm2WBh5IjR2+XuySf9c7rSD0EF2Gzsy6Y4w
-YJDAas34D73oWmP5HfF4bg+WV7kXFvorx+zb+QUzbu7GpJw/mEuPGqaE4KQQwt+A
-eF0XjJPEitEhmGMSEgXR4DEA9NxeckZMYYuPl8jENunE8LlMIpqZy0Y3WQPT4y2W
-G9AFYI4VTK3kk8sdAAFkjwbWXCk++VDiGKDDcKg+8K0fCiVpRnzTo1bI9AAQWyoU
-Adf4i//PLZ3ieZgNzm9KafoRGVttPIo6JcrvQfi/0e8SO/8ynktPmCEwGPnJnDVZ
-xMRPz8jlUlj7kovq0DodXL2OKFmNCdO9jS1FMALtyojS+iSZejqXUJ3mlScckxIT
-6JSi/n7GhoPGaQWKnRsSDIjCSal5dGwVzOD2phZUwYPjaVwkJ6tjhQpY0KFE0kb6
-i9layrE5Pb/49/RuqlXfkrprKKpO7skRLz4kmliDa86nKMW9c2aFI1N15YA7D39O
-uFkQPm3HE86SPv0ZqYZYzne3BEKw0E1oWn54m0jCIu/Ixh1POjRfcsALsrvzOcIY
-VuBZmgntOG32AEnVVMHKFrAXHxa4yQTLEUJ5g4zDCKDl63Enqf0=
-=LGMI
------END PGP SIGNATURE-----
-
---hQiwHBbRI9kgIhsi--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGluaCBOZ3V5ZW4gPGRp
+bmd1eWVuQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAyMSwgMjAxOSAxMTo1
+NyBQTQ0KPiBUbzogT29pLCBKb3ljZSA8am95Y2Uub29pQGludGVsLmNvbT47IFZsYWRpbWlyIE11
+cnppbg0KPiA8dmxhZGltaXIubXVyemluQGFybS5jb20+OyBDYXRhbGluIE1hcmluYXMgPGNhdGFs
+aW4ubWFyaW5hc0Bhcm0uY29tPjsgV2lsbA0KPiBEZWFjb24gPHdpbGxAa2VybmVsLm9yZz4NCj4g
+Q2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IE9sb2YgSm9oYW5zc29uIDxvbG9m
+QGxpeG9tLm5ldD47DQo+IE1heGltZSBSaXBhcmQgPG1yaXBhcmRAa2VybmVsLm9yZz47IEJqb3Ju
+IEFuZGVyc3Nvbg0KPiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+OyBBcm5kIEJlcmdtYW5u
+IDxhcm5kQGFybmRiLmRlPjsgSmFnYW4gVGVraQ0KPiA8amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5j
+b20+OyBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT47DQo+IExlb25hcmQgQ3Jlc3Rl
+eiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+OyBNYXJjaW4gSnVzemtpZXdpY3oNCj4gPG1hcmNp
+bi5qdXN6a2lld2ljekBsaW5hcm8ub3JnPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgT25nLCBIZWFuIExvb25n
+IDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+OyBTZWUsDQo+IENoaW4gTGlhbmcgPGNoaW4ubGlh
+bmcuc2VlQGludGVsLmNvbT47IFRhbiwgTGV5IEZvb24NCj4gPGxleS5mb29uLnRhbkBpbnRlbC5j
+b20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2Ml0gYXJtNjQ6IGRlZmNvbmZpZzogYWRkIEpGRlMg
+RlMgc3VwcG9ydCBpbiBkZWZjb25maWcNCj4gDQo+IA0KPiANCj4gT24gMTAvMTcvMTkgMToyOCBB
+TSwgT29pLCBKb3ljZSB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgSkZGUzIgRlMgc3VwcG9y
+dCBhbmQgcmVtb3ZlIFFTUEkgU2VjdG9yIDRLIHNpemUgZm9yY2UNCj4gPiBpbiB0aGUgZGVmYXVs
+dCBkZWZjb25maWcNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE9vaSwgSm95Y2UgPGpveWNlLm9v
+aUBpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gdjI6IGRpc2FibGUgQ09ORklHX01URF9TUElfTk9S
+X1VTRV80S19TRUNUT1JTIHVzaW5nIHRoZSBjb3JyZWN0IHN5bnRheA0KPiA+IC0tLQ0KPiA+ICBh
+cmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIHwgMiArKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+MiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9jb25maWdz
+L2RlZmNvbmZpZw0KPiA+IGIvYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyBpbmRleCBjOWFk
+YWU0Li42MDgwYzZlIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25m
+aWcNCj4gPiArKysgYi9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQo+ID4gQEAgLTg2MCwz
+ICs4NjAsNSBAQCBDT05GSUdfREVCVUdfS0VSTkVMPXkgICMNCj4gQ09ORklHX0RFQlVHX1BSRUVN
+UFQgaXMNCj4gPiBub3Qgc2V0ICAjIENPTkZJR19GVFJBQ0UgaXMgbm90IHNldCAgQ09ORklHX01F
+TVRFU1Q9eQ0KPiA+ICtDT05GSUdfSkZGUzJfRlM9eQ0KPiA+ICsjIENPTkZJR19NVERfU1BJX05P
+Ul9VU0VfNEtfU0VDVE9SUyBpcyBub3Qgc2V0DQo+ID4NCj4gDQo+IENhbiB5b3UgZXhwbGFpbiB3
+aHkgeW91J3JlIHJlbW92aW5nDQo+IENPTkZJR19NVERfU1BJX05PUl9VU0VfNEtfU0VDVE9SUz8N
+ClJlbW92aW5nIENPTkZJR19NVERfU1BJX05PUl9VU0VfNEtfU0VDVE9SUyB3aWxsIGZpeCBlcnJv
+cnMgbGlrZSB0aGlzOg0KWyAxLjkwNTc3Ml0gamZmczI6IGpmZnMyX3NjYW5fZXJhc2VibG9jaygp
+OiBNYWdpYyBiaXRtYXNrIDB4MTk4NSBub3QgZm91bmQgYXQgMHgwMDAwMGY5MDogMHgwMGJmIGlu
+c3RlYWQgDQpbIDEuOTE1Mjc1XSBqZmZzMjogamZmczJfc2Nhbl9lcmFzZWJsb2NrKCk6IE1hZ2lj
+IGJpdG1hc2sgMHgxOTg1IG5vdCBmb3VuZCBhdCAweDAwMDAwZjk0OiAweDZhYmIgaW5zdGVhZA0K
+DQpJJ2xsIGFkZCB0aGlzIGV4cGxhbmF0aW9uIGluIHRoZSBjb21taXQgbWVzc2FnZS4NCj4gDQo+
+IERpbmgNCg==
