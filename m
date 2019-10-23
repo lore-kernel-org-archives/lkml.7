@@ -2,145 +2,127 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C15EC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EB2CA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0622084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536D22084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 11:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404772AbfJWLis (ORCPT
+        id S2404628AbfJWLlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 07:38:48 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:49132 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S2390678AbfJWLis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 07:38:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33944494;
-        Wed, 23 Oct 2019 04:38:27 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74B523F718;
-        Wed, 23 Oct 2019 04:38:26 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 12:38:24 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] cpufreq: vexpress-spc: find and skip duplicates when
- merging frequencies
-Message-ID: <20191023113824.GC29654@bogus>
-References: <20191023110811.15086-1-sudeep.holla@arm.com>
- <20191023110811.15086-2-sudeep.holla@arm.com>
- <20191023112537.pywnhihvmokcveeu@vireshk-i7>
+        Wed, 23 Oct 2019 07:41:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17445 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390623AbfJWLlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 07:41:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 04:41:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="399363728"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.121])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Oct 2019 04:41:33 -0700
+Date:   Wed, 23 Oct 2019 14:41:33 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
+        jsnitsel@redhat.com, linux-kernel@vger.kernel.org,
+        daniel.thompson@linaro.org
+Subject: Re: [Patch v8 0/4] Create and consolidate trusted keys subsystem
+Message-ID: <20191023114133.GD21973@linux.intel.com>
+References: <1571202895-32651-1-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023112537.pywnhihvmokcveeu@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1571202895-32651-1-git-send-email-sumit.garg@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 04:55:37PM +0530, Viresh Kumar wrote:
-> On 23-10-19, 12:08, Sudeep Holla wrote:
-> > Currently the cpufreq core aborts the validation and return error
-> > immediately when it encounter duplicate frequency table entries.
-> > This change was introduced long back since commit da0c6dc00c69
-> > ("cpufreq: Handle sorted frequency tables more efficiently").
-> >
-> > However, this missed the testing with modified firmware for long time.
-> > Inorder to make it work with default settings, we need to ensure the
-> > merged table for bL switcher contains no duplicates. Find the duplicates
-> > and skip them when merging the frequenct tables of A15 and A7 clusters.
-> >
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  drivers/cpufreq/vexpress-spc-cpufreq.c | 35 ++++++++++++++++++++------
-> >  1 file changed, 28 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
-> > index 093ef8d3a8d4..921dbd42b3bb 100644
-> > --- a/drivers/cpufreq/vexpress-spc-cpufreq.c
-> > +++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
-> > @@ -242,6 +242,19 @@ static inline u32 get_table_max(struct cpufreq_frequency_table *table)
-> >  	return max_freq;
-> >  }
-> >
-> > +static bool search_frequency(struct cpufreq_frequency_table *table, int size,
-> > +			     unsigned int freq)
-> > +{
-> > +	int count;
-> > +
-> > +	for (count = 0; count < size; count++) {
-> > +		if (table[count].frequency == freq)
-> > +			return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> >  static int merge_cluster_tables(void)
-> >  {
-> >  	int i, j, k = 0, count = 1;
-> > @@ -256,13 +269,21 @@ static int merge_cluster_tables(void)
-> >
-> >  	freq_table[MAX_CLUSTERS] = table;
-> >
-> > -	/* Add in reverse order to get freqs in increasing order */
-> > -	for (i = MAX_CLUSTERS - 1; i >= 0; i--) {
-> > -		for (j = 0; freq_table[i][j].frequency != CPUFREQ_TABLE_END;
-> > -		     j++, k++) {
-> > -			table[k].frequency =
-> > -				VIRT_FREQ(i, freq_table[i][j].frequency);
-> > -		}
->
-> I think we can still use this single loop, which already starts from
-> A7 cluster. Just that we can add an if (A15) block inside it as the
-> first line.
->
+On Wed, Oct 16, 2019 at 10:44:51AM +0530, Sumit Garg wrote:
+> This patch-set does restructuring of trusted keys code to create and
+> consolidate trusted keys subsystem.
+> 
+> Also, patch #2 replaces tpm1_buf code used in security/keys/trusted.c and
+> crypto/asymmertic_keys/asym_tpm.c files to use the common tpm_buf code.
+> 
+> Changes in v8:
+> 1. Rebased to latest tpmdd/master.
+> 2. Added Reviewed-by tags.
+> 
+> Changes in v7:
+> 1. Rebased to top of tpmdd/master
+> 2. Patch #4: update tpm2 trusted keys code to use tpm_send() instead of
+>    tpm_transmit_cmd() which is an internal function.
+> 
+> Changes in v6:
+> 1. Switch TPM asymmetric code also to use common tpm_buf code. These
+>    changes required patches #1 and #2 update, so I have dropped review
+>    tags from those patches.
+> 2. Incorporated miscellaneous comments from Jarkko.
+> 
+> Changes in v5:
+> 1. Drop 5/5 patch as its more relavant along with TEE patch-set.
+> 2. Add Reviewed-by tag for patch #2.
+> 3. Fix build failure when "CONFIG_HEADER_TEST" and
+>    "CONFIG_KERNEL_HEADER_TEST" config options are enabled.
+> 4. Misc changes to rename files.
+> 
+> Changes in v4:
+> 1. Separate patch for export of tpm_buf code to include/linux/tpm.h
+> 2. Change TPM1.x trusted keys code to use common tpm_buf
+> 3. Keep module name as trusted.ko only
+> 
+> Changes in v3:
+> 
+> Move TPM2 trusted keys code to trusted keys subsystem.
+> 
+> Changes in v2:
+> 
+> Split trusted keys abstraction patch for ease of review.
+> 
+> Sumit Garg (4):
+>   tpm: Move tpm_buf code to include/linux/
+>   KEYS: Use common tpm_buf for trusted and asymmetric keys
+>   KEYS: trusted: Create trusted keys subsystem
+>   KEYS: trusted: Move TPM2 trusted keys code
+> 
+>  crypto/asymmetric_keys/asym_tpm.c                  | 101 +++----
+>  drivers/char/tpm/tpm-interface.c                   |  56 ----
+>  drivers/char/tpm/tpm.h                             | 223 ---------------
+>  drivers/char/tpm/tpm2-cmd.c                        | 307 --------------------
+>  include/Kbuild                                     |   1 -
+>  include/keys/{trusted.h => trusted_tpm.h}          |  49 +---
+>  include/linux/tpm.h                                | 248 ++++++++++++++--
+>  security/keys/Makefile                             |   2 +-
+>  security/keys/trusted-keys/Makefile                |   8 +
+>  .../{trusted.c => trusted-keys/trusted_tpm1.c}     |  96 +++----
+>  security/keys/trusted-keys/trusted_tpm2.c          | 314 +++++++++++++++++++++
+>  11 files changed, 649 insertions(+), 756 deletions(-)
+>  rename include/keys/{trusted.h => trusted_tpm.h} (77%)
+>  create mode 100644 security/keys/trusted-keys/Makefile
+>  rename security/keys/{trusted.c => trusted-keys/trusted_tpm1.c} (94%)
+>  create mode 100644 security/keys/trusted-keys/trusted_tpm2.c
+> 
+> -- 
+> 2.7.4
+> 
 
-Yes, I can do that.
+Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-> > +	/* Add A7_CLUSTER first to get freqs in increasing order */
-> > +	for (j = 0; freq_table[A7_CLUSTER][j].frequency != CPUFREQ_TABLE_END;
-> > +	     j++, k++) {
-> > +		table[k].frequency =
-> > +			VIRT_FREQ(A7_CLUSTER, freq_table[A7_CLUSTER][j].frequency);
-> > +	}
-> > +	count = k;
-> > +
-> > +	/* And then A15_CLUSTER checking for duplicates */
-> > +	for (j = 0; freq_table[A15_CLUSTER][j].frequency != CPUFREQ_TABLE_END;
-> > +	     j++) {
-> > +		if (search_frequency(table, count,
-> > +				     freq_table[A15_CLUSTER][j].frequency))
-> > +			continue; /* skip duplicates */
-> > +		table[k++].frequency = freq_table[A15_CLUSTER][j].frequency;
-> >  	}
->
-> How many duplicate entries are there anyway in the firmware? Or do we
-> really need to make it that generic? I mean, only the last of A7 and
-> first of A15 should be overlapping, in that case why search entire
-> table again ?
->
-
-Yes I thought about the same. But since one can play with the firmware
-table, I thought it's better to keep it generic instead of assuming that.
-Since I had changed the firmware table, I didn't notice this issue. I
-don't want to get into similar situation again ;)
-
-But if you still insist that we can assume and work only for default, I
-am fine by that, just that someone else may face the same issue if they
-have some modified/experimental firmware table.
-
---
-Regards,
-Sudeep
+/Jarkko
