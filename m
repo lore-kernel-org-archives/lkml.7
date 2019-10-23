@@ -2,134 +2,105 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB20CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0226CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823AD20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5AD21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WTeLh8M3"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="NuBGn7lY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392073AbfJWNj0 (ORCPT
+        id S2392087AbfJWNjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:39:26 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50344 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391615AbfJWNjZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:39:25 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q13so11239629wmj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:39:24 -0700 (PDT)
+        Wed, 23 Oct 2019 09:39:45 -0400
+Received: from mail-eopbgr80114.outbound.protection.outlook.com ([40.107.8.114]:44758
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391615AbfJWNjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:39:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MpOl8WzxRWxQUIpZ7lzBfKSFYQWZF5I1IaGZrruaR53jgSsgx77TezGiEST243nG0lNBVE0czv3e8P3og9Ak/CcdNLd5QF9pRR8YTu2yUbmGDWI75DK964/myU2p2mlzeMWSeFBTR50g2sla0bAG8/NN+xkIEi288/RVJ6+i4i6bDzOGxzMqPwagWgyljVkdgREjWKIkYv8eIhcubEhKtQEYmoVL/9SRiHPphDwgUy7eGWBV6nILw/C28oaNiT68wrvHqgtBh8bSuTLGjC0qja615fz3H5Fwl+KUpvisr5qP4ONAmoJtRSZiSL/gzrI/PEgP1oG/Tm7OlnAmGKRphw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WT1PRXvpLeXkddn7h7qxO7ktFLA+CLYY4s31dKPhjsY=;
+ b=ZNfC4KIdlqrRS6TBKpcmqQc8IoY1XCiafAWs/92jZBWQs62fabzbH05BP+26auAZQgiEK+Z+UDkHHRBqq7aFOfxb675C1Zow6b1UC7XuoX4WVnuC/MKimkwK2JmESL92+uIZoCrxXkqqXupb0BnqTzqYGENLYUQYE/TomzJwrof/E1NDfPtqHxGVEEcWbGCsybh7gzbr1gcCew2XxdB07ZN7FBo/e9Kg84o/KcopzYANa+gLN3nPy5JAUg0MUGcQawmmvB3BSzlevyYM4Q6TLF/aQjCLVaAHNci4qNNMOYDhgvGZuDXGbztiTueJ7MnivIAcPN0TIq20WaFWzJAl0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=5T/MoSeXRvOkVox5hp0mSxwsnPbBwGiugOsPGPiVrU8=;
-        b=WTeLh8M3lxNhpkfwYwFMHlcPhKIXYRT0p9/eP9nI54LGkFxOxk8DhkIGWl2q4NFVHl
-         2EA7zM0yapmyaIetbOq2dc+BjjnvfxL7amqvYonpgiDt710d/mKF1L9uh5llf2Xh7rkf
-         A/ErZoT5sPtCN32j+1ScJ1VEWQP6Top+BG8t/WSLVuz5qoKI6S3wodXQ23DNW/13PhOS
-         xWu74+92vmUXgvyZQOGWtqJ887kZh+v27wvQBDhdBSXH5s4vmkQNt//dTxba6fU3beq3
-         gkUqqRwzx11uv0fudpX/lrYtz17W3mVa76N7wLtRmXGjUD86E43D8Ji0wkD6ZLiOhUwY
-         YWfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5T/MoSeXRvOkVox5hp0mSxwsnPbBwGiugOsPGPiVrU8=;
-        b=ELXh89ZWYyC90deRHq1sr40her/kQxMx23OfiCwjttS5XplKrlg/725/2w1ognlj0n
-         H3lAkvKk7ep/4uayLQb4NmmuH0af6oPork3oSfk/45p55urednrRDGHIurYV7Nw5PGUZ
-         ZjaJit/2lUu9SHtrlOId0hyBocRwD+BtmAqPwTkPP3fZaIUf9lZil/4dmPmSVpkQx2vA
-         QZwLnOpHs+Z1hSTHdYsbmnoM5C1UifDw70ZvVMBhTl/9WVXpdGN6JV0ePlcr0llItjRD
-         AkvH3XhqOOlY7M4+8CPqSDMWtsr8G6F/pMw2iVukCmfzWPZf04s7im6+tR/CNC+lyDp1
-         TebA==
-X-Gm-Message-State: APjAAAWsm0X/OIumqaF34aZnfjOZrWxNoz0xFjVAGXGv/RuOmSTt6e0z
-        vBcrRvV5/M50DtFD0XcrzH03dw==
-X-Google-Smtp-Source: APXvYqyuEJaMFICfXNABHTPXz7GkIecaJLIiU1WeYhAN+gYZFSeibrU2kiSo91fXlKup1iWBQ4gD9A==
-X-Received: by 2002:a1c:9c0c:: with SMTP id f12mr7972419wme.133.1571837963549;
-        Wed, 23 Oct 2019 06:39:23 -0700 (PDT)
-Received: from [192.168.27.135] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id b5sm19095690wmj.18.2019.10.23.06.39.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 06:39:22 -0700 (PDT)
-Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191013080804.10231-1-masneyb@onstation.org>
- <20191013080804.10231-6-masneyb@onstation.org>
- <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
- <20191023124753.GA14218@onstation.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Message-ID: <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
-Date:   Wed, 23 Oct 2019 16:39:21 +0300
-MIME-Version: 1.0
-In-Reply-To: <20191023124753.GA14218@onstation.org>
-Content-Type: text/plain; charset=utf-8
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WT1PRXvpLeXkddn7h7qxO7ktFLA+CLYY4s31dKPhjsY=;
+ b=NuBGn7lY+IrpKdAHRUjJSwzQ1okYXtl0fmAdc8u16AZaT9zHMJQpcyWAmuX/oeJ6uA5Mq1tgwPuqYHYWB4MIbzuSvhEkKT9uhFgMkMWkqAmgSavgxhZc6DORnGVtLbkXIJNIqwxIf8ThZT88Y3XP79Xh+y0ti1Jqvu57AyLYR/8=
+Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com (52.133.8.16) by
+ AM6PR0202MB3400.eurprd02.prod.outlook.com (52.133.8.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Wed, 23 Oct 2019 13:39:41 +0000
+Received: from AM6PR0202MB3382.eurprd02.prod.outlook.com
+ ([fe80::6479:5608:22f:e251]) by AM6PR0202MB3382.eurprd02.prod.outlook.com
+ ([fe80::6479:5608:22f:e251%5]) with mapi id 15.20.2367.022; Wed, 23 Oct 2019
+ 13:39:41 +0000
+From:   Omer Shpigelman <oshpigelman@habana.ai>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] habanalabs: support kernel memory mapping
+Thread-Topic: [PATCH v2 1/2] habanalabs: support kernel memory mapping
+Thread-Index: AQHViKI2kzFSWJT/Dk6DGcovF5gSd6dn9PuAgABElLA=
+Date:   Wed, 23 Oct 2019 13:39:41 +0000
+Message-ID: <AM6PR0202MB3382B554A4C7F0F677A804D7B86B0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
+References: <20191022063028.9030-1-oshpigelman@habana.ai>
+ <20191023092035.GA12222@infradead.org>
+In-Reply-To: <20191023092035.GA12222@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oshpigelman@habana.ai; 
+x-originating-ip: [31.154.181.186]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1e524e25-f8c7-4f22-eaa2-08d757be7520
+x-ms-traffictypediagnostic: AM6PR0202MB3400:
+x-microsoft-antispam-prvs: <AM6PR0202MB34005B2A17E7DD7E2E9B89D1B86B0@AM6PR0202MB3400.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 019919A9E4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(39840400004)(366004)(346002)(189003)(199004)(74316002)(8676002)(53546011)(6506007)(4326008)(76176011)(7696005)(14454004)(81156014)(81166006)(6916009)(26005)(6436002)(102836004)(6116002)(186003)(305945005)(25786009)(7736002)(99286004)(478600001)(486006)(446003)(55016002)(2906002)(9686003)(11346002)(6246003)(3846002)(476003)(229853002)(33656002)(76116006)(66446008)(64756008)(66476007)(316002)(71190400001)(71200400001)(66066001)(66946007)(5660300002)(52536014)(54906003)(4744005)(86362001)(8936002)(66556008)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3400;H:AM6PR0202MB3382.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pk7xD0J16oinzFx/+N8Pm6io0ykJv5MpVJcfRlGjXBv+Pg9R+cZXRMTudBaRnbvEwQ3RrJ7MoPSCK+J57FLJBmdiVdfN/2KaZVL+U5J6pq0SG5jJYIOGHvGa7W27bxc4L1whSb+X6ONS+rmvp9S/LwwN4W6ejUJV2Mu56R0T9PitOzTqLH+qZwk8K4a8ILphUhMdpwJTb70+hMeQzYg6H65udqIJnmgsN55Bw6ocpnhvwliVGDDsmohyEwWqLzzef+cuVeeQvNwbWHzC5QREMDU14IlwObi3z06XVj68YxRS8rAkTlrESud1qk5NR2rMBpXsU+We0+y1rVDAaQ7YqvoWSZteB7KCQe7tGzN2wYX2iZth7GgEFIrv0PXs6/tBqgdzN9WAcKtpD79613gAB4+LTwJvEKca4PraohkMPjOrq2N6Me2G84+GuZmuXxfz
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e524e25-f8c7-4f22-eaa2-08d757be7520
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 13:39:41.5539
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0W6hVTtvnsj1gxsnDGBlS3rFeV+di2ef2g6zDhrMgfsgZwuFv/W4drAGQmictzneABWpsOUJkt7025L5NVILSA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3400
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.10.19 г. 15:47 ч., Brian Masney wrote:
-> On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
->> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
->>> Add interconnect nodes that's needed to support bus scaling.
->>>
->>> Signed-off-by: Brian Masney <masneyb@onstation.org>
->>> ---
->>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
->>>  1 file changed, 60 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
->>> @@ -1152,6 +1207,11 @@
->>>  				              "core",
->>>  				              "vsync";
->>>  
->>> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
->>> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
->>
->> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
->> or both? The above seem like GPU-related interconnects, so maybe these
->> properties should be in the GPU DT node.
-> 
-> The display is what currently requests the interconnect path,
-> specifically mdp5_setup_interconnect() in
-> drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
-> currently don't have interconnect support. Maybe this is something that
-> I should add to that driver as well?
-
-The "mdp0-mem" and "mdp1-mem" paths mentioned in the mdp5_kms.c are the two
-interconnects between the display and DDR memory. There is actually a patch [1]
-to add to GPU bindings, but it seems that we missed to pick it up.
-
-> 
->>> +				interconnect-names = "mdp0-mem",
->>> +				                     "mdp1-mem";
->>
->> As the second path is not to DDR, but to ocmem, it might be better to call it
->> something like "gpu-ocmem".
-> 
-> I used what mdp5_kms.c expected.
-
-This is for the display and here [2] are some patches for the GPU. Not sure how
-the NoCs are configured on 8974 by default, but if you notice any blue/black
-screens, you may need to request bandwidth for display too.
-
-Thanks,
-Georgi
-
-[1]
-https://lore.kernel.org/r/1555703787-10897-1-git-send-email-jcrouse@codeaurora.org
-[2] https://lore.kernel.org/r/20181220173026.3857-1-jcrouse@codeaurora.org
-
+T24gVGh1LCBPY3QgMjMsIDIwMTkgYXQgMTI6MjEgUE0gQ2hyaXN0b3BoIEhlbGx3aWcgPGhjaEBp
+bmZyYWRlYWQub3JnPiB3cm90ZToNCj4gT24gVHVlLCBPY3QgMjIsIDIwMTkgYXQgMDY6MzA6MzVB
+TSArMDAwMCwgT21lciBTaHBpZ2VsbWFuIHdyb3RlOg0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4g
+IC0gdXNlIGEgYm9vbGVhbiBwYXJhbWV0ZXIgdG8gaW5kaWNhdGUgZm9yIGtlcm5lbCBhZGRyZXNz
+IHJhdGhlciB0aGFuDQo+ID4gICAgY2FsbGluZyBpc192bWFsbG9jX2FkZHIsIGFzIGtlcm5lbCBh
+bmQgdXNlciBhZGRyZXNzZXMgY2FuIG92ZXJsYXAgb24NCj4gPiAgICBzb21lIGFyY2hpdGVjdHVy
+ZXMuDQo+IA0KPiBUaGF0IGlzIHN0aWxsIGJyb2tlbi4gIFBsZWFzZSB1c2UgYW4gYWN0dWFsIGtl
+cm5lbCBwb2ludGVyIGluc3RlYWQgb2YgbG9zaW5nIGFsbA0KPiB0eXBlIHNhZmV0eSBieSBjYXN0
+aW5nIGl0IGFuIGludGVnZXIgdHlwZS4NCg0KSSdtIG5vdCBzdXJlIEkgdW5kZXJzdGFuZC4gQ2Fu
+IHlvdSBwbGVhc2UgcGluIHBvaW50IHRoZSBwcm9ibGVtYXRpYyBsaW5lPw0K
