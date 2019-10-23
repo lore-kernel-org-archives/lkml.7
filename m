@@ -2,106 +2,109 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19777CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFE3CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FA12086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B62214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405056AbfJWMTR (ORCPT
+        id S2405241AbfJWMTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:19:17 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:49946 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfJWMTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:19:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94AE3494;
-        Wed, 23 Oct 2019 05:18:56 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C6EED3F6C4;
-        Wed, 23 Oct 2019 05:18:55 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] cpufreq: vexpress-spc: find and skip duplicates when merging frequencies
-Date:   Wed, 23 Oct 2019 13:18:51 +0100
-Message-Id: <20191023121851.26277-1-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191023110811.15086-2-sudeep.holla@arm.com>
-References: <20191023110811.15086-2-sudeep.holla@arm.com>
+        Wed, 23 Oct 2019 08:19:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55594 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726636AbfJWMT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:19:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 615F3AD1A;
+        Wed, 23 Oct 2019 12:19:27 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 14:19:24 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Bart Van Assche <Bart.VanAssche@wdc.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "pombredanne@nexb.com" <pombredanne@nexb.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
+        "christophe.jaillet@wanadoo.fr" <christophe.jaillet@wanadoo.fr>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "tim@cyberelk.net" <tim@cyberelk.net>
+Subject: Re: [PATCH resend 3/6] cdrom: wait for tray to close
+Message-ID: <20191023121924.GD938@kitsune.suse.cz>
+References: <cover.1516985620.git.msuchanek@suse.de>
+ <03915a2e64f50ec04ea6d8e6f80e36ecf16e4f0f.1516985620.git.msuchanek@suse.de>
+ <1517245546.2687.17.camel@wdc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1517245546.2687.17.camel@wdc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the cpufreq core aborts the validation and return error
-immediately when it encounter duplicate frequency table entries.
-This change was introduced long back since commit da0c6dc00c69
-("cpufreq: Handle sorted frequency tables more efficiently").
+On Mon, Jan 29, 2018 at 05:05:47PM +0000, Bart Van Assche wrote:
+> On Fri, 2018-01-26 at 17:58 +0100, Michal Suchanek wrote:
+> > +static int cdrom_tray_close(struct cdrom_device_info *cdi)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = cdi->ops->tray_move(cdi, 0);
+> > +	if (ret || !cdi->ops->drive_status)
+> > +		return ret;
+> > +
+> > +	return poll_event_interruptible(CDS_TRAY_OPEN !=
+> > +			cdi->ops->drive_status(cdi, CDSL_CURRENT), 500);
+> > +}
+> > +
+> >  static
+> >  int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
+> >  {
+> > @@ -1048,7 +1062,9 @@ int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
+> >  			if (CDROM_CAN(CDC_CLOSE_TRAY) &&
+> >  			    cdi->options & CDO_AUTO_CLOSE) {
+> >  				cd_dbg(CD_OPEN, "trying to close the tray\n");
+> > -				ret = cdo->tray_move(cdi, 0);
+> > +				ret = cdrom_tray_close(cdi);
+> > +				if (ret == -ERESTARTSYS)
+> > +					return ret;
+> >  				if (ret) {
+> >  					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
+> >  					/* Ignore the error from the low
+> > @@ -2312,7 +2328,8 @@ static int cdrom_ioctl_closetray(struct cdrom_device_info *cdi)
+> >  
+> >  	if (!CDROM_CAN(CDC_CLOSE_TRAY))
+> >  		return -ENOSYS;
+> > -	return cdi->ops->tray_move(cdi, 0);
+> > +
+> > +	return cdrom_tray_close(cdi);
+> >  }
+> 
+> So this patch changes code that does not wait into code that potentially waits
+> forever? Sorry but I don't think that's ideal. Please make sure that after a
+> certain time (a few seconds?) the loop finishes.
 
-However, this missed the testing with modified firmware for long time.
-Inorder to make it work with default settings, we need to ensure the
-merged table for bL switcher contains no duplicates. Find the duplicates
-and skip them when merging the frequenct tables of A15 and A7 clusters.
+Unfortunately, a few seconds is NOT sufficinet. I have no idea what is
+the upper bound on the time it can take to close the tray taking into
+account all hardware implementations like media changers. For the usual
+desktop units it takes tens of seconds so you would need to wait minutes
+to give some headroom - basically near-eternity.
 
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/cpufreq/vexpress-spc-cpufreq.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+Thanks
 
-v1->v2:
-	- Removed loop unrolling for clusters
-
-diff --git a/drivers/cpufreq/vexpress-spc-cpufreq.c b/drivers/cpufreq/vexpress-spc-cpufreq.c
-index 093ef8d3a8d4..506e3f2bf53a 100644
---- a/drivers/cpufreq/vexpress-spc-cpufreq.c
-+++ b/drivers/cpufreq/vexpress-spc-cpufreq.c
-@@ -242,6 +242,19 @@ static inline u32 get_table_max(struct cpufreq_frequency_table *table)
- 	return max_freq;
- }
-
-+static bool search_frequency(struct cpufreq_frequency_table *table, int size,
-+			     unsigned int freq)
-+{
-+	int count;
-+
-+	for (count = 0; count < size; count++) {
-+		if (table[count].frequency == freq)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- static int merge_cluster_tables(void)
- {
- 	int i, j, k = 0, count = 1;
-@@ -257,10 +270,13 @@ static int merge_cluster_tables(void)
- 	freq_table[MAX_CLUSTERS] = table;
- 
- 	/* Add in reverse order to get freqs in increasing order */
--	for (i = MAX_CLUSTERS - 1; i >= 0; i--) {
-+	for (i = MAX_CLUSTERS - 1; i >= 0; i--, count = k) {
- 		for (j = 0; freq_table[i][j].frequency != CPUFREQ_TABLE_END;
--		     j++, k++) {
--			table[k].frequency =
-+		     j++) {
-+			if (i == A15_CLUSTER &&
-+			    search_frequency(table, count, freq_table[i][j].frequency))
-+				continue; /* skip duplicates */
-+			table[k++].frequency =
- 				VIRT_FREQ(i, freq_table[i][j].frequency);
- 		}
- 	}
--- 
-2.17.1
-
+Michal
