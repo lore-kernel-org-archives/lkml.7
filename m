@@ -2,118 +2,147 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A5ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C23ECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A301214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OjQIaDmg"
+	by mail.kernel.org (Postfix) with ESMTP id 26D0A21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571833671;
+	bh=t8T7r1ufu3VJCAxY8EdZbRggUlqydUzVwu4ytEqymNY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qXTEAd1M5huiKbmLeQ+DiYOlsic/A9/EHeME+ZnVqqxmOs9QtEdW0exNS7w3Tdy+Z
+	 A9EFYRMQfX9IEY0wAKRuaFancLzMFT5XBCyj8ib4ZuY0pmbgpdjQP/o6hZl/Adwy9z
+	 OaJUC5rX4MUpqq9iR2NxfIT8z+dYibz5G2xSFynw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391290AbfJWMZo (ORCPT
+        id S2388034AbfJWM1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:25:44 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46734 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJWMZn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:25:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NCPevr108427;
-        Wed, 23 Oct 2019 07:25:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571833540;
-        bh=snNVf3bc8UtAfUt7sWc/Ao17r0XA6k0DLqh6nrpj5WU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OjQIaDmgEPwwgfH0UshyjUySGXkavlhKcvCXh7pgBgWt3KK5FXIMjTi/cV+LIe2n9
-         ZbWOxcCRIJ7Bu3lPHIiuBQfCW9lQ6OS3OrozM2ZcCy9AKvS1b7TXuqFxUJDOOAahK4
-         WwcHnwymrnc0iR9ZKsTq1TmhLUXOlT2mSFHz8lRA=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NCPe0R023680
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 23 Oct 2019 07:25:40 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
- Oct 2019 07:25:40 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 23 Oct 2019 07:25:30 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NCPe6t073320;
-        Wed, 23 Oct 2019 07:25:40 -0500
-Subject: Re: [PATCH v14 13/19] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191018122521.6757-1-dmurphy@ti.com>
- <20191018122521.6757-14-dmurphy@ti.com>
- <2da123af-8cbe-e143-73f2-ca741e0923d2@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <3b0a4424-b742-0f19-94ca-1ed24aa8692d@ti.com>
-Date:   Wed, 23 Oct 2019 07:25:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 08:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfJWM1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:27:49 -0400
+Received: from earth.universe (monacowifi.monaco.mc [82.113.13.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EE942086D;
+        Wed, 23 Oct 2019 12:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571833668;
+        bh=t8T7r1ufu3VJCAxY8EdZbRggUlqydUzVwu4ytEqymNY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rEP/KHnEMJt+p5oYo2wj9P7HvDzYxvMMwbEVPFb+ct/AWVpFypiPGZHrOr4EWYoAE
+         jlhMIW2NSPmc6niovedZIbrtq6DoVMMbZ2gRRS9/YcbVTFlwTJQY/yAge1392WcaYi
+         MH10fJB3ITMrv12A5eyEmGMImZ8HqZj4mTiHnPro=
+Received: by earth.universe (Postfix, from userid 1000)
+        id A982F3C09B2; Wed, 23 Oct 2019 14:27:45 +0200 (CEST)
+Date:   Wed, 23 Oct 2019 14:27:45 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCHv2 4/4] Bluetooth: btwilink: drop superseded driver
+Message-ID: <20191023122745.ldh2ghnzazdhaf2x@earth.universe>
+References: <20191003134147.9458-1-sre@kernel.org>
+ <20191003134147.9458-5-sre@kernel.org>
+ <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
+ <20191020205901.56bafijk7cu3rpaj@earth.universe>
+ <AC376F8D-77F3-4497-94D1-FE25A5ED9337@holtmann.org>
 MIME-Version: 1.0
-In-Reply-To: <2da123af-8cbe-e143-73f2-ca741e0923d2@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iqu4xmpkphwkun2f"
+Content-Disposition: inline
+In-Reply-To: <AC376F8D-77F3-4497-94D1-FE25A5ED9337@holtmann.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
 
-On 10/18/19 5:02 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> I forgot to mention one thing below.
->
-> On 10/18/19 2:25 PM, Dan Murphy wrote:
->> Add multicolor framework support for the lp55xx family.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
-> [...]
->
->> -	led->cdev.default_trigger = pdata->led_config[chan].default_trigger;
->>   
->>   	if (led->chan_nr >= max_channel) {
->>   		dev_err(dev, "Use channel numbers between 0 and %d\n",
->> @@ -170,18 +242,13 @@ static int lp55xx_init_led(struct lp55xx_led *led,
->>   		return -EINVAL;
->>   	}
->>   
->> -	led->cdev.brightness_set_blocking = lp55xx_set_brightness;
->> -	led->cdev.groups = lp55xx_led_groups;
->> -
->> -	if (pdata->led_config[chan].name) {
->> -		led->cdev.name = pdata->led_config[chan].name;
->> -	} else {
->> -		snprintf(name, sizeof(name), "%s:channel%d",
->> -			pdata->label ? : chip->cl->name, chan);
->> -		led->cdev.name = name;
->> -	}
->> +#if IS_ENABLED(CONFIG_LEDS_CLASS_MULTI_COLOR)
->> +	if (pdata->led_config[chan].num_colors > 1)
->> +		ret = devm_led_classdev_multicolor_register(dev, &led->mc_cdev);
->> +	else
->> +#endif
-> This looks odd. I think that no-ops from previous version were OK.
+--iqu4xmpkphwkun2f
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hmm.  I will add it back but there were issues compiling with modules.
+Hi,
 
-But maybe if I use IS_ENABLED in the header that may solve the issue
+On Mon, Oct 21, 2019 at 05:14:15PM +0200, Marcel Holtmann wrote:
+> Hi Sebastian,
+>=20
+> >>> All users of this driver have been converted to the serdev based
+> >>> hci_ll driver. The unused driver can be safely dropped now.
+> >>>=20
+> >>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> >>> ---
+> >>> drivers/bluetooth/Kconfig    |  11 --
+> >>> drivers/bluetooth/Makefile   |   1 -
+> >>> drivers/bluetooth/btwilink.c | 337 -----------------------------------
+> >>> 3 files changed, 349 deletions(-)
+> >>> delete mode 100644 drivers/bluetooth/btwilink.c
+> >>=20
+> >> patch has been applied to bluetooth-next tree.
+> >>=20
+> >> However what I really like to see is that you re-introduce a
+> >> btwilink driver that is purely serdev based and doesn=E2=80=99t rely on
+> >> any hci_uart/hci_ldisc code. A clean serdev only driver is that
+> >> best and easier to maintain long term.
+> >=20
+> > So basically move the serdev implementation from hci_ll.c into its
+> > own driver and make hci_ll hci_uart based only? That effectively
+> > means, that we have two implementations of the protocol. I don't
+> > think this will improve maintainability, since then bugs needs to
+> > be fixed in two places? Note, that we have a couple of drivers
+> > with serdev+hci_uart by now:
+> >=20
+> > for file in $(grep -l serdev drivers/bluetooth/hci_*c) ; grep -l hci_ua=
+rt_register_proto "${file}"
+> > hci_bcm.c
+> > hci_h5.c
+> > hci_ldisc.c
+> > hci_ll.c
+> > hci_mrvl.c
+> > hci_qca.c
+>=20
+> I would like to have something similar to btmtkuart.c which is a
+> pure serdev driver that doesn=E2=80=99t depend on any hci_ldisc.c
+> framework. If we have this, then we would just drop hci_ll.c from
+> the kernel and focus on the serdev only version. As noted, there
+> is no need for any other driver at that point since everything is
+> probed anyway. Users will not even notice the difference.
 
-Dan
+This can be achieved by just removing the hci_uart part from
+hci_ll. But AFAIK there are some non-wilink based TI HCILL
+devices, which do not require any extra platform data and might
+still use the hci_uart part.
 
+-- Sebastian
 
+--iqu4xmpkphwkun2f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2wRzoACgkQ2O7X88g7
++pogDw//Xb2ZDLcdKOs0TDYMMcP6rvRkA9S5ou7bDl8c2XgGbqsQSr7a851UVUxK
+S6ya43Jt6jQFTyR1pB55sSvoNu278E/TuBS3dPVwML5LasWRte3eFnITIdI0lHZ4
+ixeJ7JUUsvFLsiZ0GYTFm9ps4lAoh8qvpMFy0zrF4sdNoUq8QEUH4iAePN7Y7C+z
+Tc8RKRND96YNf1oar+mOpwDjqrV9DLahcOncO5VQn5pIO6N65g28K5tBslPIG3ZV
+MDoDmQTpjLnUxLpXs6oWkEbgBmBpI3Hx+ogRZfj1OF0m0qeCEGhvvcBp6STHiEkG
+u0vlQUC4RvnbGVul73MdOTSqfoghGuHiqyxazDWNmHFpo81HdhaHSB6/IxCKl8e4
+XJYYCbDTur4uWIMw9t5NTe7QUHrOezj2QrCNXDyikz1mNN4O4WrahKzkiLA0GSAu
+V2r+gcr6Z7r0QJs5cAimiYF3Hm5xl/sPhnhCqyRfFSBX93SeraGPkqF/PvcPWDRu
+J0H10QcDLI3xo3jnhUQPgcDoMeuNsKhE4w6sQvUPfbsXUme4/6d2+hrLsevQj+HE
+1Ozg/BKkIAlPQ8Pbtz93lZoseLJPCFROArLqLZERiRb++iAfVj/inJZzyhewhZJD
+cYzanohB9A6ZpLXiZLtuRKsQxCEoBYLX314LKlZJ2FaaUeSKIDY=
+=qmL6
+-----END PGP SIGNATURE-----
+
+--iqu4xmpkphwkun2f--
