@@ -2,400 +2,151 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC2FCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4C6CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817F421872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:14:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FFzYOHOp"
+	by mail.kernel.org (Postfix) with ESMTP id 02B3421920
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571836498;
+	bh=E6T55uP3FrNoFRn1ScztDiriAouaJNVm+C23qSgGr54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S2V3BqkXE8C7JYIki0s880tHQZ2s2ZLTo6nvo8epIDwBhagvjuvM0YIM87Y1PwYD7
+	 eKYoPuBSQmGtZ/ywqQ/MQ0M9OL60X0UntSN4es8z463hCQbvz4Ji8hsaYIEUbj2+D1
+	 GyxLPsaEgiowJ451WZcvyh4sytOGqY6ha7MvGRks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391849AbfJWNO3 (ORCPT
+        id S2405204AbfJWNO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:14:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46236 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731951AbfJWNO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:14:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571836467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TjCPajc4CEGR5rS6ag/k9ArXmJclaoe4P99dbfRjJ0k=;
-        b=FFzYOHOp5bgyHv0UgvTqBFGERcfrWY5YIROkg1QANj2GybafZtrmKe1680U4G+H24Ghz6Y
-        mO2Yz0wBjfsBX6lcXr5FZpdSPO0qofxjmsll8qcN50SXCv0LVx4Ss5CWnW8OlnGu3GbDLZ
-        nVESK3Mlw3hvDFsd3USaekz2a6OnFTo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-p1Bzi35XNCiDsbI1W_34VA-1; Wed, 23 Oct 2019 09:14:23 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 23 Oct 2019 09:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389590AbfJWNO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:14:56 -0400
+Received: from earth.universe (monacowifi.monaco.mc [82.113.13.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AA7B800D58;
-        Wed, 23 Oct 2019 13:14:17 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-126.pek2.redhat.com [10.72.12.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 90B7460161;
-        Wed, 23 Oct 2019 13:11:00 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V5 1/6] mdev: class id support
-Date:   Wed, 23 Oct 2019 21:07:47 +0800
-Message-Id: <20191023130752.18980-2-jasowang@redhat.com>
-In-Reply-To: <20191023130752.18980-1-jasowang@redhat.com>
-References: <20191023130752.18980-1-jasowang@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D31E21906;
+        Wed, 23 Oct 2019 13:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571836495;
+        bh=E6T55uP3FrNoFRn1ScztDiriAouaJNVm+C23qSgGr54=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KRZo+1m99h+6klvOJNcfToHQwLue1EIjCd65zwAMbXCJmUecwaD6rTEZZMg9+kYGQ
+         X5a4WwTr2/f7Tv+/O8EavXhqMgoo2QXEcQz50Xv0uqv9yVI1aI0ToD4bwbFdEjF4FY
+         xMiNVRLd3aBYkcz5+MbbKBcELuqBmnzcS8WN5k6k=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 6FA8C3C09B2; Wed, 23 Oct 2019 15:14:52 +0200 (CEST)
+Date:   Wed, 23 Oct 2019 15:14:52 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwrng: omap3-rom - Fix unused function warnings
+Message-ID: <20191023131452.2rilepif7x5lpfma@earth.universe>
+References: <20191022142741.1794378-1-arnd@arndb.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: p1Bzi35XNCiDsbI1W_34VA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sf4hte6kcc3ifsee"
+Content-Disposition: inline
+In-Reply-To: <20191022142741.1794378-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mdev bus only supports vfio driver right now, so it doesn't implement
-match method. But in the future, we may add drivers other than vfio,
-the first driver could be virtio-mdev. This means we need to add
-device class id support in bus match method to pair the mdev device
-and mdev driver correctly.
 
-So this patch adds id_table to mdev_driver and class_id for mdev
-device with the match method for mdev bus.
+--sf4hte6kcc3ifsee
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- .../driver-api/vfio-mediated-device.rst       |  5 +++++
- drivers/gpu/drm/i915/gvt/kvmgt.c              |  1 +
- drivers/s390/cio/vfio_ccw_ops.c               |  1 +
- drivers/s390/crypto/vfio_ap_ops.c             |  1 +
- drivers/vfio/mdev/mdev_core.c                 | 18 +++++++++++++++
- drivers/vfio/mdev/mdev_driver.c               | 22 +++++++++++++++++++
- drivers/vfio/mdev/mdev_private.h              |  1 +
- drivers/vfio/mdev/vfio_mdev.c                 |  6 +++++
- include/linux/mdev.h                          |  8 +++++++
- include/linux/mod_devicetable.h               |  8 +++++++
- samples/vfio-mdev/mbochs.c                    |  1 +
- samples/vfio-mdev/mdpy.c                      |  1 +
- samples/vfio-mdev/mtty.c                      |  1 +
- 13 files changed, 74 insertions(+)
+Hi,
 
-diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentat=
-ion/driver-api/vfio-mediated-device.rst
-index 25eb7d5b834b..6709413bee29 100644
---- a/Documentation/driver-api/vfio-mediated-device.rst
-+++ b/Documentation/driver-api/vfio-mediated-device.rst
-@@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
-       * @probe: called when new device created
-       * @remove: called when device removed
-       * @driver: device driver structure
-+      * @id_table: the ids serviced by this driver
-       */
-      struct mdev_driver {
- =09     const char *name;
- =09     int  (*probe)  (struct device *dev);
- =09     void (*remove) (struct device *dev);
- =09     struct device_driver    driver;
-+=09     const struct mdev_class_id *id_table;
-      };
-=20
- A mediated bus driver for mdev should use this structure in the function c=
-alls
-@@ -170,6 +172,9 @@ that a driver should use to unregister itself with the =
-mdev core driver::
-=20
- =09extern void mdev_unregister_device(struct device *dev);
-=20
-+It is also required to specify the class_id in create() callback through::
-+
-+=09int mdev_set_class(struct mdev_device *mdev, u16 id);
-=20
- Mediated Device Management Interface Through sysfs
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kv=
-mgt.c
-index 343d79c1cb7e..6420f0dbd31b 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj, stru=
-ct mdev_device *mdev)
- =09=09     dev_name(mdev_dev(mdev)));
- =09ret =3D 0;
-=20
-+=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- out:
- =09return ret;
- }
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_op=
-s.c
-index f0d71ab77c50..cf2c013ae32f 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, s=
-truct mdev_device *mdev)
- =09=09=09   private->sch->schid.ssid,
- =09=09=09   private->sch->schid.sch_no);
-=20
-+=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- =09return 0;
- }
-=20
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_a=
-p_ops.c
-index 5c0f53c6dde7..07c31070afeb 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, st=
-ruct mdev_device *mdev)
- =09list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
- =09mutex_unlock(&matrix_dev->lock);
-=20
-+=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- =09return 0;
- }
-=20
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index b558d4cfd082..3a9c52d71b4e 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -45,6 +45,16 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *da=
-ta)
- }
- EXPORT_SYMBOL(mdev_set_drvdata);
-=20
-+/* Specify the class for the mdev device, this must be called during
-+ * create() callback.
-+ */
-+void mdev_set_class(struct mdev_device *mdev, u16 id)
-+{
-+=09WARN_ON(mdev->class_id);
-+=09mdev->class_id =3D id;
-+}
-+EXPORT_SYMBOL(mdev_set_class);
-+
- struct device *mdev_dev(struct mdev_device *mdev)
- {
- =09return &mdev->dev;
-@@ -135,6 +145,7 @@ static int mdev_device_remove_cb(struct device *dev, vo=
-id *data)
-  * mdev_register_device : Register a device
-  * @dev: device structure representing parent device.
-  * @ops: Parent device operation structure to be registered.
-+ * @id: class id.
-  *
-  * Add device to list of registered parent devices.
-  * Returns a negative value on error, otherwise 0.
-@@ -324,6 +335,13 @@ int mdev_device_create(struct kobject *kobj,
- =09if (ret)
- =09=09goto ops_create_fail;
-=20
-+=09if (!mdev->class_id) {
-+=09=09ret =3D -EINVAL;
-+=09=09WARN(1, "class id must be specified for device %s\n",
-+=09=09     dev_name(dev));
-+=09=09goto add_fail;
-+=09}
-+
- =09ret =3D device_add(&mdev->dev);
- =09if (ret)
- =09=09goto add_fail;
-diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mdev_drive=
-r.c
-index 0d3223aee20b..319d886ffaf7 100644
---- a/drivers/vfio/mdev/mdev_driver.c
-+++ b/drivers/vfio/mdev/mdev_driver.c
-@@ -69,8 +69,30 @@ static int mdev_remove(struct device *dev)
- =09return 0;
- }
-=20
-+static int mdev_match(struct device *dev, struct device_driver *drv)
-+{
-+=09unsigned int i;
-+=09struct mdev_device *mdev =3D to_mdev_device(dev);
-+=09struct mdev_driver *mdrv =3D to_mdev_driver(drv);
-+=09const struct mdev_class_id *ids =3D mdrv->id_table;
-+
-+=09for (i =3D 0; ids[i].id; i++)
-+=09=09if (ids[i].id =3D=3D mdev->class_id)
-+=09=09=09return 1;
-+=09return 0;
-+}
-+
-+static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
-+{
-+=09struct mdev_device *mdev =3D to_mdev_device(dev);
-+
-+=09return add_uevent_var(env, "MODALIAS=3Dmdev:c%02X", mdev->class_id);
-+}
-+
- struct bus_type mdev_bus_type =3D {
- =09.name=09=09=3D "mdev",
-+=09.match=09=09=3D mdev_match,
-+=09.uevent=09=09=3D mdev_uevent,
- =09.probe=09=09=3D mdev_probe,
- =09.remove=09=09=3D mdev_remove,
- };
-diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_priv=
-ate.h
-index 7d922950caaf..c65f436c1869 100644
---- a/drivers/vfio/mdev/mdev_private.h
-+++ b/drivers/vfio/mdev/mdev_private.h
-@@ -33,6 +33,7 @@ struct mdev_device {
- =09struct kobject *type_kobj;
- =09struct device *iommu_device;
- =09bool active;
-+=09u16 class_id;
- };
-=20
- #define to_mdev_device(dev)=09container_of(dev, struct mdev_device, dev)
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index 30964a4e0a28..7b24ee9cb8dd 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -120,10 +120,16 @@ static void vfio_mdev_remove(struct device *dev)
- =09vfio_del_group_dev(dev);
- }
-=20
-+static const struct mdev_class_id id_table[] =3D {
-+=09{ MDEV_CLASS_ID_VFIO },
-+=09{ 0 },
-+};
-+
- static struct mdev_driver vfio_mdev_driver =3D {
- =09.name=09=3D "vfio_mdev",
- =09.probe=09=3D vfio_mdev_probe,
- =09.remove=09=3D vfio_mdev_remove,
-+=09.id_table =3D id_table,
- };
-=20
- static int __init vfio_mdev_init(void)
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index 0ce30ca78db0..78b69d09eb54 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -118,6 +118,7 @@ struct mdev_type_attribute mdev_type_attr_##_name =3D=
-=09=09\
-  * @probe: called when new device created
-  * @remove: called when device removed
-  * @driver: device driver structure
-+ * @id_table: the ids serviced by this driver
-  *
-  **/
- struct mdev_driver {
-@@ -125,6 +126,7 @@ struct mdev_driver {
- =09int  (*probe)(struct device *dev);
- =09void (*remove)(struct device *dev);
- =09struct device_driver driver;
-+=09const struct mdev_class_id *id_table;
- };
-=20
- #define to_mdev_driver(drv)=09container_of(drv, struct mdev_driver, driver=
-)
-@@ -132,6 +134,7 @@ struct mdev_driver {
- void *mdev_get_drvdata(struct mdev_device *mdev);
- void mdev_set_drvdata(struct mdev_device *mdev, void *data);
- const guid_t *mdev_uuid(struct mdev_device *mdev);
-+void mdev_set_class(struct mdev_device *mdev, u16 id);
-=20
- extern struct bus_type mdev_bus_type;
-=20
-@@ -145,4 +148,9 @@ struct device *mdev_parent_dev(struct mdev_device *mdev=
-);
- struct device *mdev_dev(struct mdev_device *mdev);
- struct mdev_device *mdev_from_dev(struct device *dev);
-=20
-+enum {
-+=09MDEV_CLASS_ID_VFIO =3D 1,
-+=09/* New entries must be added here */
-+};
-+
- #endif /* MDEV_H */
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetabl=
-e.h
-index 5714fd35a83c..f32c6e44fb1a 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -821,4 +821,12 @@ struct wmi_device_id {
- =09const void *context;
- };
-=20
-+/**
-+ * struct mdev_class_id - MDEV device class identifier
-+ * @id: Used to identify a specific class of device, e.g vfio-mdev device.
-+ */
-+struct mdev_class_id {
-+=09__u16 id;
-+};
-+
- #endif /* LINUX_MOD_DEVICETABLE_H */
-diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-index ac5c8c17b1ff..115bc5074656 100644
---- a/samples/vfio-mdev/mbochs.c
-+++ b/samples/vfio-mdev/mbochs.c
-@@ -561,6 +561,7 @@ static int mbochs_create(struct kobject *kobj, struct m=
-dev_device *mdev)
- =09mbochs_reset(mdev);
-=20
- =09mbochs_used_mbytes +=3D type->mbytes;
-+=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- =09return 0;
-=20
- err_mem:
-diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-index cc86bf6566e4..665614574d50 100644
---- a/samples/vfio-mdev/mdpy.c
-+++ b/samples/vfio-mdev/mdpy.c
-@@ -269,6 +269,7 @@ static int mdpy_create(struct kobject *kobj, struct mde=
-v_device *mdev)
- =09mdpy_reset(mdev);
-=20
- =09mdpy_count++;
-+=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- =09return 0;
- }
-=20
-diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-index ce84a300a4da..90da12ff7fd9 100644
---- a/samples/vfio-mdev/mtty.c
-+++ b/samples/vfio-mdev/mtty.c
-@@ -755,6 +755,7 @@ static int mtty_create(struct kobject *kobj, struct mde=
-v_device *mdev)
- =09list_add(&mdev_state->next, &mdev_devices_list);
- =09mutex_unlock(&mdev_list_lock);
-=20
-+=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
- =09return 0;
- }
-=20
---=20
-2.19.1
+On Tue, Oct 22, 2019 at 04:27:31PM +0200, Arnd Bergmann wrote:
+> When runtime-pm is disabled, we get a few harmless warnings:
+>=20
+> drivers/char/hw_random/omap3-rom-rng.c:65:12: error: unused function 'oma=
+p_rom_rng_runtime_suspend' [-Werror,-Wunused-function]
+> drivers/char/hw_random/omap3-rom-rng.c:81:12: error: unused function 'oma=
+p_rom_rng_runtime_resume' [-Werror,-Wunused-function]
+>=20
+> Mark these functions as __maybe_unused so gcc can drop them
+> silently.
+>=20
+> Fixes: 8d9d4bdc495f ("hwrng: omap3-rom - Use runtime PM instead of custom=
+ functions")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+>  drivers/char/hw_random/omap3-rom-rng.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_ran=
+dom/omap3-rom-rng.c
+> index 0b90983c95c8..e08a8887e718 100644
+> --- a/drivers/char/hw_random/omap3-rom-rng.c
+> +++ b/drivers/char/hw_random/omap3-rom-rng.c
+> @@ -62,7 +62,7 @@ static int omap3_rom_rng_read(struct hwrng *rng, void *=
+data, size_t max, bool w)
+>  	return r;
+>  }
+> =20
+> -static int omap_rom_rng_runtime_suspend(struct device *dev)
+> +static int __maybe_unused omap_rom_rng_runtime_suspend(struct device *de=
+v)
+>  {
+>  	struct omap_rom_rng *ddata;
+>  	int r;
+> @@ -78,7 +78,7 @@ static int omap_rom_rng_runtime_suspend(struct device *=
+dev)
+>  	return 0;
+>  }
+> =20
+> -static int omap_rom_rng_runtime_resume(struct device *dev)
+> +static int __maybe_unused omap_rom_rng_runtime_resume(struct device *dev)
+>  {
+>  	struct omap_rom_rng *ddata;
+>  	int r;
+> --=20
+> 2.20.0
+>=20
+
+--sf4hte6kcc3ifsee
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl2wUkQACgkQ2O7X88g7
++prkIQ//eDW6JCdb1BVZK+8ld4GNb5f9QiGBp78CEzw4Nt7b9sjiSkuODvtpwUEz
+LUYeSj3XJErABjT9CEteFHYmXlS4Tge9a12s4596KR1sut3960u83ZSVMD2MaFd7
+jnNp9oZsiJivbZPWMqCiFPxpaV8nmvYvnyX5yMgDFrAMFFS6qk2w6ZznJctahXzs
+WyKmQQTOc7wFo0AsT3iomSxZsyPKjPWUcXF1fO49Anzka3+6aV5k6mmEVEhMep/r
+txA1zr6Fw3OKwF72r1x1bg2VcLluU4K66cm8R636W1FzujvHUgkWYr3BcUwaCqwr
+LlTzvVokm6Pq2L9hFVIo5WrCP2qnnlzKXu6M0BoFcSWq0sXi2slhE1J1jlg63NpG
+nHn/cpu8DPDfvZ/SdvDfESCGaMubItcv4EhauN/Ar8x2buf3duK4OE4ApJGUWnOV
+BzghZnt1iY6y1JC4Rbnl6NJYaZm54sYjMildCKza4OuoLYGeTZKEM/bqpbiVodtI
+Rm4nUpxCkZ2vfI2XxyDYuxmzzF/lu+1oZOTHDpVlv0OlqAJhgXzvUiuikMxS+6xQ
+LSAzY1uG14pfrwKAUtWoh1vG/ZVoK5UpRYyhBnAAPcXH3C4h6TKxBwGCJ0BrhLmI
+PfZIF2uCFofMB8Q3A8/cGxx6WGVgKWU1xkQhGr51TMgxA13+vwk=
+=uPzb
+-----END PGP SIGNATURE-----
+
+--sf4hte6kcc3ifsee--
