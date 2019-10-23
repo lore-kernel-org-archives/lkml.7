@@ -2,45 +2,42 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F83CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FF0CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7019F2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55ECC21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NSjudj3A"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VzM9m/nR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390321AbfJWTzX (ORCPT
+        id S2390946AbfJWTzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:55:23 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19354 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727595AbfJWTzW (ORCPT
+        Wed, 23 Oct 2019 15:55:24 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13559 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727595AbfJWTzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:55:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db0b0330000>; Wed, 23 Oct 2019 12:55:31 -0700
+        Wed, 23 Oct 2019 15:55:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db0b02f0000>; Wed, 23 Oct 2019 12:55:27 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 23 Oct 2019 12:55:21 -0700
+  Wed, 23 Oct 2019 12:55:22 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 23 Oct 2019 12:55:21 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 23 Oct
- 2019 19:55:21 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 23 Oct
- 2019 19:55:19 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 23 Oct 2019 19:55:19 +0000
+        by hqpgpgate101.nvidia.com on Wed, 23 Oct 2019 12:55:22 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 23 Oct
+ 2019 19:55:17 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 23 Oct 2019 19:55:17 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5db0b0270001>; Wed, 23 Oct 2019 12:55:19 -0700
+        id <B5db0b0250003>; Wed, 23 Oct 2019 12:55:17 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     Jerome Glisse <jglisse@redhat.com>,
         John Hubbard <jhubbard@nvidia.com>,
@@ -49,70 +46,80 @@ To:     Jerome Glisse <jglisse@redhat.com>,
 CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
         <linux-kernel@vger.kernel.org>,
         Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v3 2/3] mm/hmm: allow snapshot of the special zero page
-Date:   Wed, 23 Oct 2019 12:55:14 -0700
-Message-ID: <20191023195515.13168-3-rcampbell@nvidia.com>
+Subject: [PATCH v3 0/3] HMM tests and minor fixes
+Date:   Wed, 23 Oct 2019 12:55:12 -0700
+Message-ID: <20191023195515.13168-1-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191023195515.13168-1-rcampbell@nvidia.com>
-References: <20191023195515.13168-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
 X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571860531; bh=EX0bbHxK/iAtD7z9QXzYOmMILzO2RoXi4bWaJEIf6tU=;
+        t=1571860527; bh=pKsqywyqkPUWdC01GQUc5JE3JAYljHqFpxxgzuwg5Ig=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Type:Content-Transfer-Encoding;
-        b=NSjudj3Amk7YhSyBkxDUUsM8HQ70EkOJRBtGC1+hAxxF4v1egWqIkh/zJZYNC1Q+S
-         5w56SvKKzQknvOOP/RFwj+bE7kc3iWtQMG3FTES26Tke1g8A+6OhaLeMLWH90BOT3s
-         Sm094urfKBVURhdYRBZX8UUDccf3ZVvEjbnVLpqArlgm2AAkGvlY9fbl3J8Dv/2tOO
-         Yd9QEk80QBSQo3zjh/Sq1YI7oOGscc3SXK6JBnvxSNV7VQ6VIDbEfkBEw2Dtall2fV
-         NVOBYn6SI+RatjZA3KAG5LhyXUK8AmQejMJHQeb+/AgW9UMpg7RmFmnYjescoBEuXi
-         pHIHEZuEDeKSw==
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=VzM9m/nRhsUN+U0kVN1J6xlUJ+TUD0ZT40vMiAjmyzZQKCCfLs6vn3GbAgUDkcEZQ
+         0rLM2QdgwPTibNN38mym9vKUICrJ0g/hjQDEFEMuMM/QRULteFtF9YBC9NiRGWMrY/
+         gZWTikGFvoXHp6TctNP+dkKMQIxHcR7usLwoW+MepWuGUlmFhTajxDw9OP8N6FKfc4
+         b9hB9lWTb8oBcdukIeua+CWrtoWhD9F9S1EEcmRBlbomo5VO2eyLpiQDVvMVg8nyNY
+         617gBwTBE6cZMwx4FH9LPQeGJgT0vrmqdNyWCqRFgkmMbvfh9D2WIq6nZcPnkw75pD
+         AJz33oCCmeh7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a device driver like nouveau tries to use hmm_range_fault() to access
-the special shared zero page in system memory, hmm_range_fault() will
-return -EFAULT and kill the process.
-Allow hmm_range_fault() to return success (0) when the CPU pagetable
-entry points to the special shared zero page.
-page_to_pfn() and pfn_to_page() are defined on the zero page so just
-handle it like any other page.
+These changes are based on Jason's rdma/hmm branch (5.4.0-rc1).
+Patch 1 was previously posted here [1] but was dropped from that orginal
+series. Hopefully, the tests will reduce concerns about edge conditions.
+I'm sure more tests could be usefully added but I thought this was a good
+starting point.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
----
- mm/hmm.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Changes since v2:
+patch 1:
+Removed hmm_range_needs_fault() and just use hmm_range_need_fault().
+Updated the change log to include that it fixes a bug where
+hmm_range_fault() incorrectly returned an error when no fault is requested.
+patch 2:
+Removed the confusing change log wording about DMA.
+Changed hmm_range_fault() to return the PFN of the zero page like any other
+page.
+patch 3:
+Adjusted the test code to match the new zero page behavior.
 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index acf7a664b38c..8c96c9ddcae5 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -529,8 +529,14 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, un=
-signed long addr,
- 		if (unlikely(!hmm_vma_walk->pgmap))
- 			return -EBUSY;
- 	} else if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL) && pte_special(pte)) {
--		*pfn =3D range->values[HMM_PFN_SPECIAL];
--		return -EFAULT;
-+		if (!is_zero_pfn(pte_pfn(pte))) {
-+			*pfn =3D range->values[HMM_PFN_SPECIAL];
-+			return -EFAULT;
-+		}
-+		/*
-+		 * Since each architecture defines a struct page for the zero
-+		 * page, just fall through and treat it like a normal page.
-+		 */
- 	}
-=20
- 	*pfn =3D hmm_device_entry_from_pfn(range, pte_pfn(pte)) | cpu_flags;
+Changes since v1:
+Rebased to Jason's rdma/hmm branch (5.4.0-rc1).
+Cleaned up locking for the test driver's page tables.
+Incorporated Christoph Hellwig's comments.
+
+[1] https://lore.kernel.org/linux-mm/20190726005650.2566-6-rcampbell@nvidia=
+.com/
+
+Ralph Campbell (3):
+  mm/hmm: make full use of walk_page_range()
+  mm/hmm: allow snapshot of the special zero page
+  mm/hmm/test: add self tests for HMM
+
+ MAINTAINERS                            |    3 +
+ drivers/char/Kconfig                   |   11 +
+ drivers/char/Makefile                  |    1 +
+ drivers/char/hmm_dmirror.c             | 1566 ++++++++++++++++++++++++
+ include/Kbuild                         |    1 +
+ include/uapi/linux/hmm_dmirror.h       |   74 ++
+ mm/hmm.c                               |  136 +-
+ tools/testing/selftests/vm/.gitignore  |    1 +
+ tools/testing/selftests/vm/Makefile    |    3 +
+ tools/testing/selftests/vm/config      |    3 +
+ tools/testing/selftests/vm/hmm-tests.c | 1311 ++++++++++++++++++++
+ tools/testing/selftests/vm/run_vmtests |   16 +
+ tools/testing/selftests/vm/test_hmm.sh |   97 ++
+ 13 files changed, 3158 insertions(+), 65 deletions(-)
+ create mode 100644 drivers/char/hmm_dmirror.c
+ create mode 100644 include/uapi/linux/hmm_dmirror.h
+ create mode 100644 tools/testing/selftests/vm/hmm-tests.c
+ create mode 100755 tools/testing/selftests/vm/test_hmm.sh
+
 --=20
 2.20.1
 
