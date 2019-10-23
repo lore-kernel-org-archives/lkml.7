@@ -4,202 +4,356 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63884CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F64BCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371FF214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE458214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391605AbfJWMdh (ORCPT
+        id S2390088AbfJWMeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:33:37 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:16838 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389633AbfJWMde (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:33:34 -0400
-Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 23 Oct
- 2019 20:33:42 +0800
-Subject: Re: [PATCH v3 2/4] pinctrl: meson: add a new dt parse callback for
- Meson-A series SoCs
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <1571050492-6598-1-git-send-email-qianggui.song@amlogic.com>
- <1571050492-6598-3-git-send-email-qianggui.song@amlogic.com>
- <1j4kzzvnrr.fsf@starbuckisacylon.baylibre.com>
-From:   Qianggui Song <qianggui.song@amlogic.com>
-Message-ID: <4e4aa76e-d315-2b99-91f4-6667eb5221e7@amlogic.com>
-Date:   Wed, 23 Oct 2019 20:33:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 08:34:24 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:50552 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S2389459AbfJWMeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 08:34:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5725F497;
+        Wed, 23 Oct 2019 05:34:07 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D991E3F6C4;
+        Wed, 23 Oct 2019 05:34:05 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 13:34:03 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, qperret@google.com,
+        balsini@android.com
+Subject: Re: [PATCH v2] sched: rt: Make RT capacity aware
+Message-ID: <20191023123403.oo5m2fgkiem2qnsc@e107158-lin.cambridge.arm.com>
+References: <20191009104611.15363-1-qais.yousef@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1j4kzzvnrr.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.18.45]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191009104611.15363-1-qais.yousef@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Adding some Android folks who might be interested.
 
+Steven/Peter, in case this has dropped off your queue; it'd be great to get
+some feedback when you get a chance to look at it.
 
-On 2019/10/23 17:01, Jerome Brunet wrote:
+Thanks
+
+--
+Qais Yousef
+
+On 10/09/19 11:46, Qais Yousef wrote:
+> Capacity Awareness refers to the fact that on heterogeneous systems
+> (like Arm big.LITTLE), the capacity of the CPUs is not uniform, hence
+> when placing tasks we need to be aware of this difference of CPU
+> capacities.
 > 
-> On Mon 14 Oct 2019 at 12:54, Qianggui Song <qianggui.song@amlogic.com> wrote:
+> In such scenarios we want to ensure that the selected CPU has enough
+> capacity to meet the requirement of the running task. Enough capacity
+> means here that capacity_orig_of(cpu) >= task.requirement.
 > 
->> Meson A1 Soc share the same register layout of pinmux with previous
->> Meson-G12A, however there is difference for gpio and pin config register
->> in A1. The main difference is that registers before A1 are grouped by
->> function while those of A1 are by bank. The new register layout is as
->> below:
->>
->> /* first bank */	      /* addr */
->> - P_PADCTRL_GPIOP_I         base + 0x00 << 2
->> - P_PADCTRL_GPIOP_O         base + 0x01 << 2
->> - P_PADCTRL_GPIOP_OEN       base + 0x02 << 2
->> - P_PADCTRL_GPIOP_PULL_EN   base + 0x03 << 2
->> - P_PADCTRL_GPIOP_PULL_UP   base + 0x04 << 2
->> - P_PADCTRL_GPIOP_DS        base + 0x05 << 2
->>
->> /* second bank */
->> - P_PADCTRL_GPIOB_I         base + 0x10 << 2
->> - P_PADCTRL_GPIOB_O         base + 0x11 << 2
->> - P_PADCTRL_GPIOB_OEN       base + 0x12 << 2
->> - P_PADCTRL_GPIOB_PULL_EN   base + 0x13 << 2
->> - P_PADCTRL_GPIOB_PULL_UP   base + 0x14 << 2
->> - P_PADCTRL_GPIOB_DS        base + 0x15 << 2
->>
->> Each bank contains at least 6 registers to be configured, if one bank
->> has more than 16 gpios, an extra P_PADCTRL_GPIO[X]_DS_EXT is included.
->> Between two adjacent P_PADCTRL_GPIO[X]_I, there is an offset 0x10, that
->> is to say, for third bank, the offsets will be 0x20,0x21,0x22,0x23,0x24
->> ,0x25 according to above register layout. For previous chips, registers
->> are grouped according to their functions while registers of A1 are
->> according to bank.
->>
->> Current Meson pinctrl driver can cover such change by using base address
->> of GPIO as that of drive-strength.While simply giving reg_ds = reg_pullen
->> make wrong value to reg_ds for Socs that do not support drive-strength
->> like AXG.To make things simple, add an extra dt parser function for
->> a1 or later chip and remain the old dt parser function for old Socs.
->>
->> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
->> ---
->>  drivers/pinctrl/meson/pinctrl-meson.c | 16 +++++++++++++++-
->>  drivers/pinctrl/meson/pinctrl-meson.h |  7 +++++++
->>  2 files changed, 22 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
->> index 8bba9d053d9f..e8f6298fc96a 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->> @@ -695,6 +695,17 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
->>  	return 0;
->>  }
->>  
->> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
->> +				 struct device_node *node)
+> The definition of task.requirement is dependent on the scheduling class.
 > 
-> This function is the fixup for the a1 family, AFAICT.
-> It should be named as such and it belong in pinctrl-meson-a1.c
+> For CFS, utilization is used to select a CPU that has >= capacity value
+> than the cfs_task.util.
 > 
-> Every controller performing fixups should have their function as well:
->  (1) AO of gxbb, gxl and axg 
->  (2) AO of g12 and sm
+> 	capacity_orig_of(cpu) >= cfs_task.util
 > 
-OK, Will try to move this function to pinctrl-meson-a1.c. That should be
-better than rewriting parse function for each chips EE/AO alone.
->> +{
->> +	int ret;
->> +
->> +	ret = meson_pinctrl_parse_dt(pc, node);
+> DL isn't capacity aware at the moment but can make use of the bandwidth
+> reservation to implement that in a similar manner CFS uses utilization.
+> The following patchset implements that:
 > 
-> As said in previous review,  meson_pinctrl_parse_dt() should be called
-> for every SoC to parse the *available* regions.
+> https://lore.kernel.org/lkml/20190506044836.2914-1-luca.abeni@santannapisa.it/
 > 
-> The fixup, if necessary, will be done by providing a callback
+> 	capacity_orig_of(cpu)/SCHED_CAPACITY >= dl_deadline/dl_runtime
 > 
-> IOW, please:
->  * rework meson_pinctrl_parse_dt() to only parse the avaialble region
->  * don't call meson_pinctrl_parse_dt() from the extra function
->  * provided the extra function for the AO controllers of the other SoCs
+> For RT we don't have a per task utilization signal and we lack any
+> information in general about what performance requirement the RT task
+> needs. But with the introduction of uclamp, RT tasks can now control
+> that by setting uclamp_min to guarantee a minimum performance point.
 > 
-That means I need to move not only ao fixup but ds to extra function for
-old chips do not support this.But it will touch other Socs, should I do
-this in A1 pinctrl patchset? or do this rework in another patchset.
->> +	pc->reg_ds = pc->reg_pullen;
->> +
->> +	return ret;
->> +}
->> +
->>  int meson_pinctrl_probe(struct platform_device *pdev)
->>  {
->>  	struct device *dev = &pdev->dev;
->> @@ -708,7 +719,10 @@ int meson_pinctrl_probe(struct platform_device *pdev)
->>  	pc->dev = dev;
->>  	pc->data = (struct meson_pinctrl_data *) of_device_get_match_data(dev);
->>  
->> -	ret = meson_pinctrl_parse_dt(pc, dev->of_node);
->> +	if (pc->data->parse_dt)
->> +		ret = pc->data->parse_dt(pc, dev->of_node);
->> +	else
->> +		ret = meson_pinctrl_parse_dt(pc, dev->of_node);
->>  	if (ret)
+> ATM the uclamp value are only used for frequency selection; but on
+> heterogeneous systems this is not enough and we need to ensure that the
+> capacity of the CPU is >= uclamp_min. Which is what implemented here.
+> 
+> 	capacity_orig_of(cpu) >= rt_task.uclamp_min
+> 
+> Note that by default uclamp.min is 1024, which means that RT tasks will
+> always be biased towards the big CPUs, which make for a better more
+> predictable behavior for the default case.
+> 
+> Must stress that the bias acts as a hint rather than a definite
+> placement strategy. For example, if all big cores are busy executing
+> other RT tasks we can't guarantee that a new RT task will be placed
+> there.
+> 
+> On non-heterogeneous systems the original behavior of RT should be
+> retained. Similarly if uclamp is not selected in the config.
+> 
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> ---
+> 
+> Changes in v2:
+> 	- Use cpupri_find() to check the fitness of the task instead of
+> 	  sprinkling find_lowest_rq() with several checks of
+> 	  rt_task_fits_capacity().
+> 
+> 	  The selected implementation opted to pass the fitness function as an
+> 	  argument rather than call rt_task_fits_capacity() capacity which is
+> 	  a cleaner to keep the logical separation of the 2 modules; but it
+> 	  means the compiler has less room to optimize rt_task_fits_capacity()
+> 	  out when it's a constant value.
+> 
+> The logic is not perfect. For example if a 'small' task is occupying a big CPU
+> and another big task wakes up; we won't force migrate the small task to clear
+> the big cpu for the big task that woke up.
+> 
+> IOW, the logic is best effort and can't give hard guarantees. But improves the
+> current situation where a task can randomly end up on any CPU regardless of
+> what it needs. ie: without this patch an RT task can wake up on a big or small
+> CPU, but with this it will always wake up on a big CPU (assuming the big CPUs
+> aren't overloaded) - hence provide a consistent performance.
+> 
+> I'm looking at ways to improve this best effort, but this patch should be
+> a good start to discuss our Capacity Awareness requirement. There's a trade-off
+> of complexity to be made here and I'd like to keep things as simple as
+> possible and build on top as needed.
 > 
 > 
+>  kernel/sched/cpupri.c | 23 ++++++++++--
+>  kernel/sched/cpupri.h |  4 ++-
+>  kernel/sched/rt.c     | 81 +++++++++++++++++++++++++++++++++++--------
+>  3 files changed, 91 insertions(+), 17 deletions(-)
 > 
->>  		return ret;
->>  
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
->> index c696f3241a36..0cd6a869cae3 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.h
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
->> @@ -11,6 +11,8 @@
->>  #include <linux/regmap.h>
->>  #include <linux/types.h>
->>  
->> +struct meson_pinctrl;
->> +
->>  /**
->>   * struct meson_pmx_group - a pinmux group
->>   *
->> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
->>  	unsigned int num_banks;
->>  	const struct pinmux_ops *pmx_ops;
->>  	void *pmx_data;
->> +	int (*parse_dt)(struct meson_pinctrl *pc, struct device_node *node);
->>  };
->>  
->>  struct meson_pinctrl {
->> @@ -171,3 +174,7 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev,
->>  
->>  /* Common probe function */
->>  int meson_pinctrl_probe(struct platform_device *pdev);
->> +
->> +/* Extra dt parse function for register layout grouped by bank */
->> +int meson_pinctrl_parse_dt_extra(struct meson_pinctrl *pc,
->> +				 struct device_node *node);
-> 
-> .
+> diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
+> index b7abca987d94..799791c01d60 100644
+> --- a/kernel/sched/cpupri.c
+> +++ b/kernel/sched/cpupri.c
+> @@ -57,7 +57,8 @@ static int convert_prio(int prio)
+>   * Return: (int)bool - CPUs were found
+>   */
+>  int cpupri_find(struct cpupri *cp, struct task_struct *p,
+> -		struct cpumask *lowest_mask)
+> +		struct cpumask *lowest_mask,
+> +		bool (*fitness_fn)(struct task_struct *p, int cpu))
+>  {
+>  	int idx = 0;
+>  	int task_pri = convert_prio(p->prio);
+> @@ -98,6 +99,8 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
+>  			continue;
+>  
+>  		if (lowest_mask) {
+> +			int cpu;
+> +
+>  			cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
+>  
+>  			/*
+> @@ -108,7 +111,23 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
+>  			 * condition, simply act as though we never hit this
+>  			 * priority level and continue on.
+>  			 */
+> -			if (cpumask_any(lowest_mask) >= nr_cpu_ids)
+> +			if (cpumask_empty(lowest_mask))
+> +				continue;
+> +
+> +			if (!fitness_fn)
+> +				return 1;
+> +
+> +			/* Ensure the capacity of the CPUs fit the task */
+> +			for_each_cpu(cpu, lowest_mask) {
+> +				if (!fitness_fn(p, cpu))
+> +					cpumask_clear_cpu(cpu, lowest_mask);
+> +			}
+> +
+> +			/*
+> +			 * If no CPU at the current priority can fit the task
+> +			 * continue looking
+> +			 */
+> +			if (cpumask_empty(lowest_mask))
+>  				continue;
+>  		}
+>  
+> diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
+> index 7dc20a3232e7..32dd520db11f 100644
+> --- a/kernel/sched/cpupri.h
+> +++ b/kernel/sched/cpupri.h
+> @@ -18,7 +18,9 @@ struct cpupri {
+>  };
+>  
+>  #ifdef CONFIG_SMP
+> -int  cpupri_find(struct cpupri *cp, struct task_struct *p, struct cpumask *lowest_mask);
+> +int  cpupri_find(struct cpupri *cp, struct task_struct *p,
+> +		 struct cpumask *lowest_mask,
+> +		 bool (*fitness_fn)(struct task_struct *p, int cpu));
+>  void cpupri_set(struct cpupri *cp, int cpu, int pri);
+>  int  cpupri_init(struct cpupri *cp);
+>  void cpupri_cleanup(struct cpupri *cp);
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index ebaa4e619684..3a68054e15b3 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -437,6 +437,45 @@ static inline int on_rt_rq(struct sched_rt_entity *rt_se)
+>  	return rt_se->on_rq;
+>  }
+>  
+> +#ifdef CONFIG_UCLAMP_TASK
+> +/*
+> + * Verify the fitness of task @p to run on @cpu taking into account the uclamp
+> + * settings.
+> + *
+> + * This check is only important for heterogeneous systems where uclamp_min value
+> + * is higher than the capacity of a @cpu. For non-heterogeneous system this
+> + * function will always return true.
+> + *
+> + * The function will return true if the capacity of the @cpu is >= the
+> + * uclamp_min and false otherwise.
+> + *
+> + * Note that uclamp_min will be clamped to uclamp_max if uclamp_min
+> + * > uclamp_max.
+> + */
+> +inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
+> +{
+> +	unsigned int min_cap;
+> +	unsigned int max_cap;
+> +	unsigned int cpu_cap;
+> +
+> +	/* Only heterogeneous systems can benefit from this check */
+> +	if (!static_branch_unlikely(&sched_asym_cpucapacity))
+> +		return true;
+> +
+> +	min_cap = uclamp_eff_value(p, UCLAMP_MIN);
+> +	max_cap = uclamp_eff_value(p, UCLAMP_MAX);
+> +
+> +	cpu_cap = capacity_orig_of(cpu);
+> +
+> +	return cpu_cap >= min(min_cap, max_cap);
+> +}
+> +#else
+> +static inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
+> +{
+> +	return true;
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_RT_GROUP_SCHED
+>  
+>  static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
+> @@ -1391,6 +1430,7 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+>  {
+>  	struct task_struct *curr;
+>  	struct rq *rq;
+> +	bool test;
+>  
+>  	/* For anything but wake ups, just return the task_cpu */
+>  	if (sd_flag != SD_BALANCE_WAKE && sd_flag != SD_BALANCE_FORK)
+> @@ -1422,10 +1462,16 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+>  	 *
+>  	 * This test is optimistic, if we get it wrong the load-balancer
+>  	 * will have to sort it out.
+> +	 *
+> +	 * We take into account the capacity of the cpu to ensure it fits the
+> +	 * requirement of the task - which is only important on heterogeneous
+> +	 * systems like big.LITTLE.
+>  	 */
+> -	if (curr && unlikely(rt_task(curr)) &&
+> -	    (curr->nr_cpus_allowed < 2 ||
+> -	     curr->prio <= p->prio)) {
+> +	test = curr &&
+> +	       unlikely(rt_task(curr)) &&
+> +	       (curr->nr_cpus_allowed < 2 || curr->prio <= p->prio);
+> +
+> +	if (test || !rt_task_fits_capacity(p, cpu)) {
+>  		int target = find_lowest_rq(p);
+>  
+>  		/*
+> @@ -1449,7 +1495,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
+>  	 * let's hope p can move out.
+>  	 */
+>  	if (rq->curr->nr_cpus_allowed == 1 ||
+> -	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL))
+> +	    !cpupri_find(&rq->rd->cpupri, rq->curr, NULL, NULL))
+>  		return;
+>  
+>  	/*
+> @@ -1457,7 +1503,7 @@ static void check_preempt_equal_prio(struct rq *rq, struct task_struct *p)
+>  	 * see if it is pushed or pulled somewhere else.
+>  	 */
+>  	if (p->nr_cpus_allowed != 1
+> -	    && cpupri_find(&rq->rd->cpupri, p, NULL))
+> +	    && cpupri_find(&rq->rd->cpupri, p, NULL, NULL))
+>  		return;
+>  
+>  	/*
+> @@ -1600,7 +1646,8 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p, struct rq_fla
+>  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+>  {
+>  	if (!task_running(rq, p) &&
+> -	    cpumask_test_cpu(cpu, p->cpus_ptr))
+> +	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
+> +	    rt_task_fits_capacity(p, cpu))
+>  		return 1;
+>  
+>  	return 0;
+> @@ -1642,7 +1689,8 @@ static int find_lowest_rq(struct task_struct *task)
+>  	if (task->nr_cpus_allowed == 1)
+>  		return -1; /* No other targets possible */
+>  
+> -	if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask))
+> +	if (!cpupri_find(&task_rq(task)->rd->cpupri, task, lowest_mask,
+> +			 rt_task_fits_capacity))
+>  		return -1; /* No targets found */
+>  
+>  	/*
+> @@ -2146,12 +2194,14 @@ static void pull_rt_task(struct rq *this_rq)
+>   */
+>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
+>  {
+> -	if (!task_running(rq, p) &&
+> -	    !test_tsk_need_resched(rq->curr) &&
+> -	    p->nr_cpus_allowed > 1 &&
+> -	    (dl_task(rq->curr) || rt_task(rq->curr)) &&
+> -	    (rq->curr->nr_cpus_allowed < 2 ||
+> -	     rq->curr->prio <= p->prio))
+> +	bool need_to_push = !task_running(rq, p) &&
+> +			    !test_tsk_need_resched(rq->curr) &&
+> +			    p->nr_cpus_allowed > 1 &&
+> +			    (dl_task(rq->curr) || rt_task(rq->curr)) &&
+> +			    (rq->curr->nr_cpus_allowed < 2 ||
+> +			     rq->curr->prio <= p->prio);
+> +
+> +	if (need_to_push || !rt_task_fits_capacity(p, cpu_of(rq)))
+>  		push_rt_tasks(rq);
+>  }
+>  
+> @@ -2223,7 +2273,10 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
+>  	 */
+>  	if (task_on_rq_queued(p) && rq->curr != p) {
+>  #ifdef CONFIG_SMP
+> -		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
+> +		bool need_to_push = rq->rt.overloaded ||
+> +				    !rt_task_fits_capacity(p, cpu_of(rq));
+> +
+> +		if (p->nr_cpus_allowed > 1 && need_to_push)
+>  			rt_queue_push_tasks(rq);
+>  #endif /* CONFIG_SMP */
+>  		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
+> -- 
+> 2.17.1
 > 
