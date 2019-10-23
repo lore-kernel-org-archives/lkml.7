@@ -2,277 +2,217 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE73CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D420CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8955120684
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C02C20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 00:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="eAkFbQ19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbfJWA7B (ORCPT
+        id S1732449AbfJWA7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 20:59:01 -0400
-Received: from mga06.intel.com ([134.134.136.31]:32827 "EHLO mga06.intel.com"
+        Tue, 22 Oct 2019 20:59:03 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58784 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbfJWA7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 20:59:00 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 17:59:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,218,1569308400"; 
-   d="scan'208";a="399226426"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Oct 2019 17:58:59 -0700
-Date:   Tue, 22 Oct 2019 17:58:59 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v6 03/10] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-Message-ID: <20191023005859.GD100970@otc-nc-03>
-References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1571788403-42095-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        id S1728353AbfJWA7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 22 Oct 2019 20:59:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=11Vqwg4tXNQgzPmbrmiQIKL9Uv3EImVmIGVjIdVb9yU=; b=eAkFbQ19AOy7AcPuIFcXCdVsDf
+        JukmpNkaPhfE7/BXHZOtsyr0UiuHZycgZZ2PdTrXvtiAt3EOrnJgCETuXC9i9K/HsBp9RhEayFkD/
+        OOYt75aWxodQDyKP+IO6khMejbYuUte29Mqn9Vo8Lg8bR++heb/mS/HFYwiAMfGqLtjA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iN4zC-0004Ox-CT; Wed, 23 Oct 2019 02:58:50 +0200
+Date:   Wed, 23 Oct 2019 02:58:50 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Chris Snook <chris.snook@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 5/5] net: dsa: add support for Atheros AR9331 build-in
+ switch
+Message-ID: <20191023005850.GG5707@lunn.ch>
+References: <20191022055743.6832-1-o.rempel@pengutronix.de>
+ <20191022055743.6832-6-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571788403-42095-4-git-send-email-jacob.jun.pan@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191022055743.6832-6-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 04:53:16PM -0700, Jacob Pan wrote:
-> Make use of generic IOASID code to manage PASID allocation,
-> free, and lookup. Replace Intel specific code.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/intel-iommu.c | 12 ++++++------
->  drivers/iommu/intel-pasid.c | 36 ------------------------------------
->  drivers/iommu/intel-svm.c   | 37 +++++++++++++++++++++----------------
->  3 files changed, 27 insertions(+), 58 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 3aff0141c522..72febcf2c48f 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5311,7 +5311,7 @@ static void auxiliary_unlink_device(struct dmar_domain *domain,
->  	domain->auxd_refcnt--;
+> --- a/drivers/net/dsa/Kconfig
+> +++ b/drivers/net/dsa/Kconfig
+> @@ -52,6 +52,8 @@ source "drivers/net/dsa/microchip/Kconfig"
 >  
->  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -		intel_pasid_free_id(domain->default_pasid);
-> +		ioasid_free(domain->default_pasid);
+>  source "drivers/net/dsa/mv88e6xxx/Kconfig"
+>  
+> +source "drivers/net/dsa/qca/Kconfig"
+> +
+>  source "drivers/net/dsa/sja1105/Kconfig"
+>  
+>  config NET_DSA_QCA8K
 
-if the domain is gauranteed to be torn down, its ok.. but otherwise
-do you need to clear domain->default_pasid to avoid accidental reference
-in some other code path?
+> diff --git a/drivers/net/dsa/qca/Kconfig b/drivers/net/dsa/qca/Kconfig
+> new file mode 100644
+> index 000000000000..7e4978f46642
+> --- /dev/null
+> +++ b/drivers/net/dsa/qca/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config NET_DSA_AR9331
+> +	tristate "Atheros AR9331 Ethernet switch support"
 
->  }
->  
->  static int aux_domain_add_dev(struct dmar_domain *domain,
-> @@ -5329,10 +5329,10 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
->  	if (domain->default_pasid <= 0) {
->  		int pasid;
->  
-> -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
-> -					     pci_max_pasids(to_pci_dev(dev)),
-> -					     GFP_KERNEL);
-> -		if (pasid <= 0) {
-> +		/* No private data needed for the default pasid */
-> +		pasid = ioasid_alloc(NULL, PASID_MIN, pci_max_pasids(to_pci_dev(dev)) - 1,
+This is where things are a little bit unobvious. If you do
+make menu
 
-If we ensure IOMMU max-pasid is full 20bit width, its good. In a vIOMMU
-if iommu max pasid is restricted for some kind of partitioning in future
-you want to consider limiting to no more than what's provisioned in the vIOMMU 
-right?
+and go into the DSA menu, you will find the drivers are all sorted
+into Alphabetic order, based on the tristate text. But you have
+inserted your "Atheros AR9331", after "NXP SJA1105".
 
+It would probably be best if you make the tristate "Qualcomm Atheros
+AR9331 ...". The order would be correct then,
 
-> +				NULL);
-> +		if (pasid == INVALID_IOASID) {
->  			pr_err("Can't allocate default pasid\n");
->  			return -ENODEV;
->  		}
-> @@ -5368,7 +5368,7 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
->  	spin_unlock(&iommu->lock);
->  	spin_unlock_irqrestore(&device_domain_lock, flags);
->  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -		intel_pasid_free_id(domain->default_pasid);
-> +		ioasid_free(domain->default_pasid);
->  
->  	return ret;
->  }
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index 76bcbb21e112..c0d1f28d3412 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -26,42 +26,6 @@
->   */
->  static DEFINE_SPINLOCK(pasid_lock);
->  u32 intel_pasid_max_id = PASID_MAX;
-> -static DEFINE_IDR(pasid_idr);
-> -
-> -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
-> -{
-> -	int ret, min, max;
-> -
-> -	min = max_t(int, start, PASID_MIN);
-> -	max = min_t(int, end, intel_pasid_max_id);
-> -
-> -	WARN_ON(in_interrupt());
-> -	idr_preload(gfp);
-> -	spin_lock(&pasid_lock);
-> -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
-> -	spin_unlock(&pasid_lock);
-> -	idr_preload_end();
-> -
-> -	return ret;
-> -}
-> -
-> -void intel_pasid_free_id(int pasid)
-> -{
-> -	spin_lock(&pasid_lock);
-> -	idr_remove(&pasid_idr, pasid);
-> -	spin_unlock(&pasid_lock);
-> -}
-> -
-> -void *intel_pasid_lookup_id(int pasid)
-> -{
-> -	void *p;
-> -
-> -	spin_lock(&pasid_lock);
-> -	p = idr_find(&pasid_idr, pasid);
-> -	spin_unlock(&pasid_lock);
-> -
-> -	return p;
-> -}
->  
->  static int check_vcmd_pasid(struct intel_iommu *iommu)
->  {
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 9b159132405d..5aef5b7bf561 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -17,6 +17,7 @@
->  #include <linux/dmar.h>
->  #include <linux/interrupt.h>
->  #include <linux/mm_types.h>
-> +#include <linux/ioasid.h>
->  #include <asm/page.h>
->  
->  #include "intel-pasid.h"
-> @@ -318,16 +319,15 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->  		if (pasid_max > intel_pasid_max_id)
->  			pasid_max = intel_pasid_max_id;
->  
-> -		/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
-> -		ret = intel_pasid_alloc_id(svm,
-> -					   !!cap_caching_mode(iommu->cap),
-> -					   pasid_max - 1, GFP_KERNEL);
-> -		if (ret < 0) {
-> +		/* Do not use PASID 0, reserved for RID to PASID */
-> +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
-> +					pasid_max - 1, svm);
-> +		if (svm->pasid == INVALID_IOASID) {
->  			kfree(svm);
->  			kfree(sdev);
-> +			ret = ENOSPC;
->  			goto out;
->  		}
-> -		svm->pasid = ret;
->  		svm->notifier.ops = &intel_mmuops;
->  		svm->mm = mm;
->  		svm->flags = flags;
-> @@ -337,7 +337,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->  		if (mm) {
->  			ret = mmu_notifier_register(&svm->notifier, mm);
->  			if (ret) {
-> -				intel_pasid_free_id(svm->pasid);
-> +				ioasid_free(svm->pasid);
->  				kfree(svm);
->  				kfree(sdev);
->  				goto out;
-> @@ -353,7 +353,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->  		if (ret) {
->  			if (mm)
->  				mmu_notifier_unregister(&svm->notifier, mm);
-> -			intel_pasid_free_id(svm->pasid);
-> +			ioasid_free(svm->pasid);
->  			kfree(svm);
->  			kfree(sdev);
->  			goto out;
-> @@ -401,7 +401,12 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
->  	if (!iommu)
->  		goto out;
->  
-> -	svm = intel_pasid_lookup_id(pasid);
-> +	svm = ioasid_find(NULL, pasid, NULL);
-> +	if (IS_ERR(svm)) {
-> +		ret = PTR_ERR(svm);
-> +		goto out;
+> +static int ar9331_sw_port_enable(struct dsa_switch *ds, int port,
+> +				 struct phy_device *phy)
+> +{
+> +	struct ar9331_sw_priv *priv = (struct ar9331_sw_priv *)ds->priv;
+> +	struct regmap *regmap = priv->regmap;
+> +	int ret;
+> +
+> +	/* nothing to enable. Just set link to initial state */
+> +	ret = regmap_write(regmap, AR9331_SW_REG_PORT_STATUS(port), 0);
+> +	if (ret)
+> +		dev_err_ratelimited(priv->dev, "%s: %i\n", __func__, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static void ar9331_sw_port_disable(struct dsa_switch *ds, int port)
+> +{
+> +	struct ar9331_sw_priv *priv = (struct ar9331_sw_priv *)ds->priv;
+> +	struct regmap *regmap = priv->regmap;
+> +	int ret;
+> +
+> +	ret = regmap_write(regmap, AR9331_SW_REG_PORT_STATUS(port), 0);
+> +	if (ret)
+> +		dev_err_ratelimited(priv->dev, "%s: %i\n", __func__, ret);
+> +}
+
+I've asked this before, but i don't remember the answer. Why are
+port_enable and port_disable the same?
+
+> +static int ar9331_sw_irq_init(struct ar9331_sw_priv *priv)
+> +{
+> +	struct device_node *np = priv->dev->of_node;
+> +	struct device *dev = priv->dev;
+> +	int ret, irq;
+> +
+> +	irq = of_irq_get(np, 0);
+> +	if (irq <= 0) {
+> +		dev_err(dev, "failed to get parent IRQ\n");
+> +		return irq ? irq : -EINVAL;
 > +	}
 > +
->  	if (!svm)
->  		goto out;
->  
-> @@ -423,7 +428,7 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
->  				kfree_rcu(sdev, rcu);
->  
->  				if (list_empty(&svm->devs)) {
-> -					intel_pasid_free_id(svm->pasid);
-> +					ioasid_free(svm->pasid);
->  					if (svm->mm)
->  						mmu_notifier_unregister(&svm->notifier, svm->mm);
->  
-> @@ -458,10 +463,11 @@ int intel_svm_is_pasid_valid(struct device *dev, int pasid)
->  	if (!iommu)
->  		goto out;
->  
-> -	svm = intel_pasid_lookup_id(pasid);
-> -	if (!svm)
-> +	svm = ioasid_find(NULL, pasid, NULL);
-> +	if (IS_ERR(svm)) {
-> +		ret = PTR_ERR(svm);
->  		goto out;
-> -
+> +	ret = devm_request_threaded_irq(dev, irq, NULL, ar9331_sw_irq,
+> +					IRQF_ONESHOT, AR9331_SW_NAME, priv);
+> +	if (ret) {
+> +		dev_err(dev, "unable to request irq: %d\n", ret);
+> +		return ret;
 > +	}
->  	/* init_mm is used in this case */
->  	if (!svm->mm)
->  		ret = 1;
-> @@ -568,13 +574,12 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->  
->  		if (!svm || svm->pasid != req->pasid) {
->  			rcu_read_lock();
-> -			svm = intel_pasid_lookup_id(req->pasid);
-> +			svm = ioasid_find(NULL, req->pasid, NULL);
->  			/* It *can't* go away, because the driver is not permitted
->  			 * to unbind the mm while any page faults are outstanding.
->  			 * So we only need RCU to protect the internal idr code. */
->  			rcu_read_unlock();
-> -
-> -			if (!svm) {
-> +			if (IS_ERR(svm) || !svm) {
->  				pr_err("%s: Page request for invalid PASID %d: %08llx %08llx\n",
->  				       iommu->name, req->pasid, ((unsigned long long *)req)[0],
->  				       ((unsigned long long *)req)[1]);
-> -- 
-> 2.7.4
-> 
+> +
+> +	priv->irqdomain = irq_domain_add_linear(np, 1, &ar9331_sw_irqdomain_ops,
+> +						priv);
+> +	if (!priv->irqdomain) {
+> +		dev_err(dev, "failed to create IRQ domain\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	irq_set_parent(irq_create_mapping(priv->irqdomain, 0), irq);
+> +
+> +	return 0;
+> +}
+
+
+> +static int ar9331_sw_probe(struct mdio_device *mdiodev)
+> +{
+> +	struct ar9331_sw_priv *priv;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&mdiodev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->regmap = devm_regmap_init(&mdiodev->dev, &ar9331_sw_bus, priv,
+> +					&ar9331_mdio_regmap_config);
+> +	if (IS_ERR(priv->regmap)) {
+> +		ret = PTR_ERR(priv->regmap);
+> +		dev_err(&mdiodev->dev, "regmap init failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	priv->sw_reset = devm_reset_control_get(&mdiodev->dev, "switch");
+> +	if (IS_ERR(priv->sw_reset)) {
+> +		dev_err(&mdiodev->dev, "missing switch reset\n");
+> +		return PTR_ERR(priv->sw_reset);
+> +	}
+> +
+> +	priv->sbus = mdiodev->bus;
+> +	priv->dev = &mdiodev->dev;
+> +
+> +	ret = ar9331_sw_irq_init(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->ds = dsa_switch_alloc(&mdiodev->dev, AR9331_SW_PORTS);
+> +	if (!priv->ds)
+> +		return -ENOMEM;
+> +
+> +	priv->ds->priv = priv;
+> +	priv->ops = ar9331_sw_ops;
+> +	priv->ds->ops = &priv->ops;
+> +	dev_set_drvdata(&mdiodev->dev, priv);
+> +
+> +	return dsa_register_switch(priv->ds);
+
+If there is an error here, you need to undo the IRQ code, etc.
+
+> +}
+> +
+> +static void ar9331_sw_remove(struct mdio_device *mdiodev)
+> +{
+> +	struct ar9331_sw_priv *priv = dev_get_drvdata(&mdiodev->dev);
+> +
+> +	mdiobus_unregister(priv->mbus);
+> +	dsa_unregister_switch(priv->ds);
+> +
+> +	reset_control_assert(priv->sw_reset);
+
+You also need to clean up the IRQ code here.
+
+Thanks
+    Andrew
