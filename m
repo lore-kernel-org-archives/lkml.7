@@ -2,103 +2,108 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FF4CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F900CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24ABB2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E96C214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391635AbfJWMmr convert rfc822-to-8bit (ORCPT
+        id S2391646AbfJWMnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:42:47 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:47812 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732361AbfJWMmp (ORCPT
+        Wed, 23 Oct 2019 08:43:55 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:34143 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729191AbfJWMnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:42:45 -0400
-Received: from marcel-macpro.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
-        by mail.holtmann.org (Postfix) with ESMTPSA id E0B6ACECDE;
-        Wed, 23 Oct 2019 14:51:43 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCHv2 4/4] Bluetooth: btwilink: drop superseded driver
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191023122745.ldh2ghnzazdhaf2x@earth.universe>
-Date:   Wed, 23 Oct 2019 14:42:43 +0200
-Cc:     Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-bluetooth@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <299B10E1-E7A8-4346-BED9-A48446C4D866@holtmann.org>
-References: <20191003134147.9458-1-sre@kernel.org>
- <20191003134147.9458-5-sre@kernel.org>
- <BC1F82AC-2988-4BC6-99EA-1C9F9289E582@holtmann.org>
- <20191020205901.56bafijk7cu3rpaj@earth.universe>
- <AC376F8D-77F3-4497-94D1-FE25A5ED9337@holtmann.org>
- <20191023122745.ldh2ghnzazdhaf2x@earth.universe>
-To:     Sebastian Reichel <sre@kernel.org>
-X-Mailer: Apple Mail (2.3594.4.19)
+        Wed, 23 Oct 2019 08:43:55 -0400
+Received: from mail-qt1-f170.google.com ([209.85.160.170]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Miqvq-1hkv2T3MQ8-00ey7s; Wed, 23 Oct 2019 14:43:54 +0200
+Received: by mail-qt1-f170.google.com with SMTP id t20so32002027qtr.10;
+        Wed, 23 Oct 2019 05:43:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAUsi8K06+gM1liavPuZEqai+ERGQU0ngcAP3QpNZZ1m5c5Iedin
+        7t/+FUOJqAjMhw8HjHYDkPBQhOxxuDp/riuFVkA=
+X-Google-Smtp-Source: APXvYqwNvhXDrr6AHjcTLNQwmEbDOVOaCUMULb04vjXb82DPGWeMlJtUjbZ9hzvBPBa+1tZw0f1o0rKNFQGqQEfhgWY=
+X-Received: by 2002:ac8:6956:: with SMTP id n22mr8785341qtr.7.1571834632511;
+ Wed, 23 Oct 2019 05:43:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191010202802.1132272-1-arnd@arndb.de> <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-8-arnd@arndb.de> <20191023105717.GF10630@pi3>
+In-Reply-To: <20191023105717.GF10630@pi3>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 23 Oct 2019 14:43:36 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2k0nZCJu-DCC7unMM_rOU7edmBOnb7dTKw_mAsi5sUuA@mail.gmail.com>
+Message-ID: <CAK8P3a2k0nZCJu-DCC7unMM_rOU7edmBOnb7dTKw_mAsi5sUuA@mail.gmail.com>
+Subject: Re: [PATCH 08/36] ARM: exynos: stop selecting PLAT_SAMSUNG
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:L4atwlEocu90YjR8kiseY9DslQMah477JvLfpWOhKR/rmD2Bv6N
+ lpxuh4EyXZHErIWkJIPqqttHoJUiUAiJ5cJTFNpOIPhOdz15qWoTsZHvroO38XGLiw52cZ0
+ 0z72sejYN1kRj3EgrXryKCXN+NhLFdDZL4gc3P8GWAVxlpe6C5YU0UZDeerkajM4PRlG88r
+ uQV74O4Pj+RP8Gptliz9A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IW6Av6rs4T0=:VPxx28Gp8EMmMBDCDFDd59
+ BTxb7zuxHXwCMGHJqsZFM337k0SBt1J8Vaxl5w9EM43CwFhI2RLsI09MMk1C00/fNdcq1nK7r
+ t8069eoiB87XGoIuT+GMGa71uHSOF3PTinoB3lc+g6bebkIVtqlvTt8QOA4wQ55A1PoICaVy0
+ oHGQhaK5sbsOUKyBRQzeum2bHuPCaKjjooiCl/BjGQxwncAn4H+GC0uz5K0fZQp0zCLYFn30O
+ Qpf3QMWPMUCHUcLtW0DIc6Q6yvoRIZR/P7tX5iW09p5H547tLkqtcA7iDtjzFaBHu8sGsI7kd
+ jpVoAMgQTdEMlV5UcMSP4hEeEsi2oIg+N/Jc7s7dBluuVnZXMun8AuJd4nzpgmpqu5Lr9W9ST
+ KSUkktbWwhL0V+MJRgSD2LoAiTFHDtl7wHaek05038LGBdxtnvWDNRXmFN7xdy/BjwelDThTS
+ mvJhQRQQQIpn4NmjcaucPKnWH7mkvWbRy3pr3bp0pCmaAPBic7aGy2d+SKPErDMfpXP4LiCcT
+ Q2oXnnYd05yCEunJH9ILMwtitcUVu4rg6bj/07zaioC2ePeZY2fPdgUixQPwA7B1fLmR6IMMq
+ LpIdkiL2BlgykIPpW8SidODeECo0ym96jwjxAHmHyolxGvkzrTi8zjWayeR5gc0kw7g0Ou7qn
+ /FRsecRduMpcpJsyFuBqxSOWD2ctn5O0Ul87qvpA4HJIdVKsxmn7ymjkSjiUTnPmJ0vMWhSUM
+ rFlTdcU5y1/CbiSt71AHa3DaeM50zXGhiPZGx/9BCdyHdbW4BklPdiY7/ak8jprwLgjnSI261
+ EKoFZNchJhmKcm6wPAASuQN0HGm6hEhmw1Qdz8q3423aN8vmltPSReNeC0PMKpvo+wVsmd11P
+ eJSaAhz1gF+sGZkNDmhw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+On Wed, Oct 23, 2019 at 12:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Thu, Oct 10, 2019 at 10:29:52PM +0200, Arnd Bergmann wrote:
+> > @@ -1022,7 +1022,7 @@ choice
+> >                 by the boot-loader before use.
+> >
+> >       config DEBUG_S3C_UART2
+> > -             depends on PLAT_SAMSUNG
+> > +             depends on PLAT_SAMSUNG || ARCH_EXYNOS
+> >               select DEBUG_EXYNOS_UART if ARCH_EXYNOS
+> >               select DEBUG_S3C24XX_UART if ARCH_S3C24XX
+> >               select DEBUG_S3C64XX_UART if ARCH_S3C64XX
+> > @@ -1034,7 +1034,7 @@ choice
+> >                 by the boot-loader before use.
+> >
+> >       config DEBUG_S3C_UART3
+> > -             depends on PLAT_SAMSUNG && (ARCH_EXYNOS || ARCH_S5PV210)
+> > +             depends on ARCH_EXYNOS || ARCH_S5PV210
+>
+> You need to keep PLAT_SAMSUNG because of additional architectures, so
+> follow pattern from DEBUG_S3C_UART2.
 
->>>>> All users of this driver have been converted to the serdev based
->>>>> hci_ll driver. The unused driver can be safely dropped now.
->>>>> 
->>>>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->>>>> ---
->>>>> drivers/bluetooth/Kconfig    |  11 --
->>>>> drivers/bluetooth/Makefile   |   1 -
->>>>> drivers/bluetooth/btwilink.c | 337 -----------------------------------
->>>>> 3 files changed, 349 deletions(-)
->>>>> delete mode 100644 drivers/bluetooth/btwilink.c
->>>> 
->>>> patch has been applied to bluetooth-next tree.
->>>> 
->>>> However what I really like to see is that you re-introduce a
->>>> btwilink driver that is purely serdev based and doesn’t rely on
->>>> any hci_uart/hci_ldisc code. A clean serdev only driver is that
->>>> best and easier to maintain long term.
->>> 
->>> So basically move the serdev implementation from hci_ll.c into its
->>> own driver and make hci_ll hci_uart based only? That effectively
->>> means, that we have two implementations of the protocol. I don't
->>> think this will improve maintainability, since then bugs needs to
->>> be fixed in two places? Note, that we have a couple of drivers
->>> with serdev+hci_uart by now:
->>> 
->>> for file in $(grep -l serdev drivers/bluetooth/hci_*c) ; grep -l hci_uart_register_proto "${file}"
->>> hci_bcm.c
->>> hci_h5.c
->>> hci_ldisc.c
->>> hci_ll.c
->>> hci_mrvl.c
->>> hci_qca.c
->> 
->> I would like to have something similar to btmtkuart.c which is a
->> pure serdev driver that doesn’t depend on any hci_ldisc.c
->> framework. If we have this, then we would just drop hci_ll.c from
->> the kernel and focus on the serdev only version. As noted, there
->> is no need for any other driver at that point since everything is
->> probed anyway. Users will not even notice the difference.
-> 
-> This can be achieved by just removing the hci_uart part from
-> hci_ll. But AFAIK there are some non-wilink based TI HCILL
-> devices, which do not require any extra platform data and might
-> still use the hci_uart part.
+Are you sure? I think my version is correct: for UART2, the
+"PLAT_SAMSUNG || ARCH_EXYNOS" is equivalent to "s3c24xx || s3c64xx ||
+s5pv210 || exynos", which keeps the existing behavior unchanged.
 
-the hci_ldisc and hci_uart driver abstraction provides enqueue and dequeue handling that just needs to be removed and done natively in the serdev driver. This should be all straight forward and we can keep the current hci_ll.c around for a bit to see what users we have. However I really want to migrate everything over to native serdev drivers that are standalone. The TI HCILL is complex enough to warrant a separate driver.
+For UART3, the "PLAT_SAMSUNG && ..." is redundant, this is already
+limited to "s5pv210 || exynos", which my patch keeps. Changing it to
+"PLAT_SAMSUNG || ..." would allow selecting the symbol on s3c24xx
+and s3c64xx, which presumably is not valid.
 
-Regards
-
-Marcel
-
+      Arnd
