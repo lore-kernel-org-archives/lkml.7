@@ -2,157 +2,91 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED1ACA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DC5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DE620650
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C3F2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571825218;
+	bh=xSBk4uoZNFTKj0PyuxnDnxpzw4qL+YRHeTDkcl3iQ84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FJFIm0x2Jd1d3JpnSh8mp6Y2V+3OKc4VF58JiDQJ+gmJRF7kdTCS/mZrvvcnNL5YR
+	 qQikq0I6PdSatCTwYCOoZVLhgeMidk4Wr/rP04ayOGVsLRk7zhwlC7pN5hchY2V4dZ
+	 7vlGQ0XyORT4G+7/+b6STCZHQtxbcAqQD1lXaVQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391038AbfJWKGV (ORCPT
+        id S2391052AbfJWKG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:06:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56624 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390361AbfJWKGV (ORCPT
+        Wed, 23 Oct 2019 06:06:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37007 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390496AbfJWKG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:06:21 -0400
-Received: from [114.245.47.48] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1iNDX0-0006Qg-9r; Wed, 23 Oct 2019 10:06:18 +0000
-Subject: Re: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
-To:     Kailang <kailang@realtek.com>, Takashi Iwai <tiwai@suse.de>
-Cc:     "perex@perex.cz" <perex@perex.cz>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191022153855.14368-1-aaron.ma@canonical.com>
- <s5hpniodaq4.wl-tiwai@suse.de> <848ebd7fd86e4c05936e70f500f718e9@realtek.com>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <892889ae-0ce1-fbf6-d19f-50a5686e84c2@canonical.com>
-Date:   Wed, 23 Oct 2019 18:06:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 23 Oct 2019 06:06:56 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r4so15307104edy.4;
+        Wed, 23 Oct 2019 03:06:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EBRXEMc7lMsrJ/hp7p+9t6+SuvDqUDCqV0bNi5LwlYI=;
+        b=rJREtFFkSZJ6Vtjz97lcic52ot7qIp5qnd0U0BP8TUzumZV6C6TzF/4mBiQYIIpoCR
+         KFKjLEmH0jCNttvMuU9e7xh16IsiBvqKOIonLIv1ePUPJjsEEIGUxOHea9rbgk01/MRD
+         qn9eWmjldYsRS72TOwYj3LJfjG1opoYpVT2/gDRkKjNpZ+YMUzd+MvQWpWAluTMsblLc
+         PAEqD3n8kOWoLdYrSquKXKs+l2kHpl+IJKJjjgg+hh7vj7kz+6AnRUpoiIQhCKA040Pm
+         8HIgskAaR92DWo1pVTB5g5YNuIpy5KU+2igt7Dg75l8ky1qEQ3+9Wt+IDCnTiRbkxpyr
+         /UwA==
+X-Gm-Message-State: APjAAAXIm/Plf6YK8gj5xWrxN4JN0D3be43lzhZ25oy9fG6pnMRYLuqc
+        y42ekP49jQ3QziIxo5uKjvA=
+X-Google-Smtp-Source: APXvYqzmUyleea+kaoxwbwCps1piJlDZMPDxMUqgQmotfwkU5RMpq6RZ19BwwBOBQG+256tr0IQnzQ==
+X-Received: by 2002:a50:ab10:: with SMTP id s16mr35925216edc.118.1571825214725;
+        Wed, 23 Oct 2019 03:06:54 -0700 (PDT)
+Received: from pi3 ([194.230.155.217])
+        by smtp.googlemail.com with ESMTPSA id a26sm831024edm.45.2019.10.23.03.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 03:06:53 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 12:06:51 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 03/36] usb: gadget: s3c: use platform resources
+Message-ID: <20191023100651.GA10630@pi3>
+References: <20191010202802.1132272-1-arnd@arndb.de>
+ <20191010203043.1241612-1-arnd@arndb.de>
+ <20191010203043.1241612-3-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <848ebd7fd86e4c05936e70f500f718e9@realtek.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191010203043.1241612-3-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 4:44 PM, Kailang wrote:
+On Thu, Oct 10, 2019 at 10:29:47PM +0200, Arnd Bergmann wrote:
+> The resources are correctly initialized, so just use them
+> instead of relying on hardcoded data from platform headers.
 > 
-> 
->> -----Original Message-----
->> From: Takashi Iwai <tiwai@suse.de>
->> Sent: Wednesday, October 23, 2019 12:08 AM
->> To: Aaron Ma <aaron.ma@canonical.com>
->> Cc: perex@perex.cz; Kailang <kailang@realtek.com>;
->> hui.wang@canonical.com; alsa-devel@alsa-project.org;
->> linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
->>
->> On Tue, 22 Oct 2019 17:38:55 +0200,
->> Aaron Ma wrote:
->>>
->>> These 2 ThinkCentres installed a new realtek codec ID 0x623, it has 2
->>> front mics with the same location on pin 0x18 and 0x19.
->>>
->>> Apply fixup ALC283_FIXUP_HEADSET_MIC to change 1 front mic location to
->>> right, then pulseaudio can handle them.
->>> One "Front Mic" and one "Mic" will be shown, and audio output works
->>> fine.
->>>
->>> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
->>
->> I'd like to have Kailang's review about the new codec before applying.
->>
->> Kailang, could you take a look?
-> OK.
-> I will post you the patch for ALC623 codec tomorrow.
-> Thanks.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/usb/gadget/udc/s3c2410_udc.c          | 31 +++++++------------
+>  drivers/usb/gadget/udc/s3c2410_udc.h          |  1 +
+>  .../usb/gadget/udc/s3c2410_udc_regs.h         |  0
+>  3 files changed, 12 insertions(+), 20 deletions(-)
+>  rename arch/arm/plat-samsung/include/plat/regs-udc.h => drivers/usb/gadget/udc/s3c2410_udc_regs.h (100%)
 
-Cc me too.
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Thank you.
-Aaron
+Best regards,
+Krzysztof
 
-> 
->>
->>
->> thanks,
->>
->> Takashi
->>
->>> ---
->>>  sound/pci/hda/patch_realtek.c | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/sound/pci/hda/patch_realtek.c
->>> b/sound/pci/hda/patch_realtek.c index b000b36ac3c6..c34d8b435f58
->>> 100644
->>> --- a/sound/pci/hda/patch_realtek.c
->>> +++ b/sound/pci/hda/patch_realtek.c
->>> @@ -7186,6 +7186,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[]
->> = {
->>>  	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station",
->> ALC294_FIXUP_LENOVO_MIC_LOCATION),
->>>  	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station",
->> ALC294_FIXUP_LENOVO_MIC_LOCATION),
->>>  	SND_PCI_QUIRK(0x17aa, 0x3151, "ThinkCentre Station",
->>> ALC283_FIXUP_HEADSET_MIC),
->>> +	SND_PCI_QUIRK(0x17aa, 0x3178, "ThinkCentre Station",
->> ALC283_FIXUP_HEADSET_MIC),
->>> +	SND_PCI_QUIRK(0x17aa, 0x3176, "ThinkCentre Station",
->>> +ALC283_FIXUP_HEADSET_MIC),
->>>  	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80",
->> ALC269_FIXUP_DMIC_THINKPAD_ACPI),
->>>  	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210",
->> ALC283_FIXUP_INT_MIC),
->>>  	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70",
->>> ALC269_FIXUP_DMIC_THINKPAD_ACPI), @@ -9187,6 +9189,7 @@ static
->> const struct hda_device_id snd_hda_id_realtek[] = {
->>>  	HDA_CODEC_ENTRY(0x10ec0298, "ALC298", patch_alc269),
->>>  	HDA_CODEC_ENTRY(0x10ec0299, "ALC299", patch_alc269),
->>>  	HDA_CODEC_ENTRY(0x10ec0300, "ALC300", patch_alc269),
->>> +	HDA_CODEC_ENTRY(0x10ec0623, "ALC623", patch_alc269),
->>>  	HDA_CODEC_REV_ENTRY(0x10ec0861, 0x100340, "ALC660",
->> patch_alc861),
->>>  	HDA_CODEC_ENTRY(0x10ec0660, "ALC660-VD", patch_alc861vd),
->>>  	HDA_CODEC_ENTRY(0x10ec0861, "ALC861", patch_alc861),
->>> --
->>> 2.17.1
->>>
->>
->> ------Please consider the environment before printing this e-mail.
