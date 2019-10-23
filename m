@@ -2,159 +2,138 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59B4CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AB6CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C412173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF4B2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 03:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBkAkT8K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDTH3vIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733110AbfJWDnO (ORCPT
+        id S1733204AbfJWDyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 23:43:14 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43959 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730808AbfJWDnO (ORCPT
+        Tue, 22 Oct 2019 23:54:09 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35015 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729994AbfJWDyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 23:43:14 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a194so14436443qkg.10;
-        Tue, 22 Oct 2019 20:43:13 -0700 (PDT)
+        Tue, 22 Oct 2019 23:54:09 -0400
+Received: by mail-il1-f195.google.com with SMTP id p8so7861715ilp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 20:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1VLjmkD3Rwi0EmWCkc7vL9OT1uRUJflAVuUFK1TCUfs=;
-        b=jBkAkT8KEpSceUnUT5D05nwe+iUUaw4Z2mTUBn3UmLbvelJfBJ0apbdnjAvMT5YvY3
-         ntlBx/J1kfkGuRuxJfFxXJf2vGgCVZTHEIHO57WyPJwTDbFtfIHT+ZKaN/KMYhlFvbZg
-         l5uHyObZQT100bTkbf22/rl6axphYwccnbaGlNbtA7ZHNCnG5G+uK+fKnMQcl0zxeKhy
-         OjEkXlm2lczwehiMu+tWksfrRrrhUMMho7Ws55ENPgLgFzE/p/4SpSz1sJWyxxny2pCR
-         I84UJUFwbPpDwBAgMSF7HEay+FmmXN2jMIRe5bgfbKXigapMT68B3xN3ohWxw4Xv9+yv
-         6X3g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/LHGxMJgC9fsphY4M+7ir7vJgAGyj8pWVsdCiE4QA6o=;
+        b=lDTH3vIpVKOT4cHUqTnhkivTQ/0ICLeWcMIrK5ZpKQrPpEFQiBap0C9/xiuuA7wMxu
+         8qBj7L4RonbFjzmHvGBvSUy8aBkmXf57NlETXJkYp2JYk1Gs5XYFODyLJGmOygbbtq1n
+         ZzoXTonLboEb9/AoN4tpBNFgcjkThTFUlluD+mVvTUlVccwdHYK0POuC2eN1/YMikfVZ
+         oQhuvJhEVkSsPRc8/jRE4P2ZEt3qp1ejyR5m8zyHnDg0SuT6JavrrseUCrEJfdDrrMAp
+         O16+zL3BDiIswbyFWElgVoRfqbC92XM2WGHKAz78vQqXUCUyWuZFD+jSb1/8B5eWe7Ue
+         RRSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1VLjmkD3Rwi0EmWCkc7vL9OT1uRUJflAVuUFK1TCUfs=;
-        b=ClIVLf5A/lh41Z4zexUPHGBx4y87X1oWdoUcY48xVnwq/m5ywxPqqB8yzGxTHfkvxE
-         BB40oYAQcN2UmESTZullRmDqKSzySBma9/JBcj7/ZA5PIgE3VQxXu/EsU3m4FmyJetah
-         4us3ClohzwsqdkXDAcPYOQcXL7LbTe7ZXxzyFokge9LshpWSTodH4K4l0Whg62y1P7+i
-         UVuWpu18A+FLWK1VnzoakdB6+h5UsZpdMm6QQFUZOroZkIIoYtds0eBcklxG3Rp7xTUn
-         /NmmwrGOVUeaoKkffCFM1omcS3b96ZTJNi88v1rn1DvqeF5KkDzpaQT3nxRVIICXvKbO
-         fQeQ==
-X-Gm-Message-State: APjAAAW4KF0I6+UiKmotqvdVAkHXTM+nTWIYMPNq8rtfv9Ml1pnRlg9T
-        SiF3NWgFVzJ5fFKRZ52Hz6rinSVbuGc=
-X-Google-Smtp-Source: APXvYqyfwugcAWTEZOsrSK/23d7kNjtNUgsTU3k7oaizdL5WSdU/HGKgK5xsqWdRyhpv5GrVnl6Udw==
-X-Received: by 2002:a37:9a8a:: with SMTP id c132mr6452527qke.92.1571802192882;
-        Tue, 22 Oct 2019 20:43:12 -0700 (PDT)
-Received: from smtp.gmail.com (gwcrusp.semfio.usp.br. [143.107.150.86])
-        by smtp.gmail.com with ESMTPSA id c15sm146qkc.101.2019.10.22.20.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 20:43:12 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 00:43:07 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add DT docs for AD7292
-Message-ID: <20191023034305.f6zm6hyvh3nlltas@smtp.gmail.com>
-References: <20191016025220.td3xb7oxlfkznxl6@smtp.gmail.com>
- <20191017191152.GA11222@bogus>
- <20191019150652.h6bkfz2w2ohemvwy@smtp.gmail.com>
- <CAL_JsqKqgko02KstmytNNUUF0-QR7rpMF4dV=X55N=TnDahd+Q@mail.gmail.com>
- <20191022140604.ovmooly47qax2sms@smtp.gmail.com>
- <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/LHGxMJgC9fsphY4M+7ir7vJgAGyj8pWVsdCiE4QA6o=;
+        b=BudtZ0Bem5RGWCpiRr1vFA3I1XY3PnX8pOtLl2FW7NP/VqSVlU1rnlgRZCujdfyTlI
+         B6g+khPNKATyUuEqcmG+delOmcPVCbrePyKhxrW0yRoOKYSG1NdCQeib9zBhd51Qy/G4
+         o7jVxqcqqmcgwFM7EcHxcU1uvZNs1PYXvTRyx5ZjuX1OXvOdy24EYQs6UDHva4CEO8Fs
+         zyWfz8nHkdQxmcoSPYhh8q++4e8/PIv7jCyQ+IOttinHyN1YNV7ktwgt6bpaYVl5SVvX
+         kk1IUe4PsImme4bBMIXQnfoxk5qGQmY8MwUlKYeT1/ZW3k+p1aaQn6M1oAf69b3cN2BU
+         zvig==
+X-Gm-Message-State: APjAAAX1p/3n9+ebxirbsO3Em1jwYt/twlCOUq21q0hfdfJzuitcgOvn
+        mpgMndwRN+Y7r/eeNx6Mco54CYTj0xSA8nZZi+oE9q9f
+X-Google-Smtp-Source: APXvYqwrn/WBtVMHAFAqhmGHKKoxDT87Sr8DyCIRMO6XG644b9uQ571IH4gZTRLXpqfbcU/Odip8LocEhUk4d72c8Iw=
+X-Received: by 2002:a92:4144:: with SMTP id o65mr35736635ila.172.1571802848526;
+ Tue, 22 Oct 2019 20:54:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo+2BAVqfX8yGQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20191021185250.26130-1-navid.emamdoost@gmail.com> <20191022093654.GF11828@phenom.ffwll.local>
+In-Reply-To: <20191022093654.GF11828@phenom.ffwll.local>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Tue, 22 Oct 2019 22:53:57 -0500
+Message-ID: <CAEkB2ETFM7u6YiUOT3fz4UQ3U_za9iM1arTnYNg-rjs5+wxOfw@mail.gmail.com>
+Subject: Re: [PATCH] drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Tue, Oct 22, 2019 at 4:36 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Mon, Oct 21, 2019 at 01:52:49PM -0500, Navid Emamdoost wrote:
+> > In the impelementation of v3d_submit_cl_ioctl() there are two memory
+> > leaks. One is when allocation for bin fails, and the other is when bin
+> > initialization fails. If kcalloc fails to allocate memory for bin then
+> > render->base should be put. Also, if v3d_job_init() fails to initialize
+> > bin->base then allocated memory for bin should be released.
+> >
+> > Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > ---
+> >  drivers/gpu/drm/v3d/v3d_gem.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
+> > index 5d80507b539b..19c092d75266 100644
+> > --- a/drivers/gpu/drm/v3d/v3d_gem.c
+> > +++ b/drivers/gpu/drm/v3d/v3d_gem.c
+> > @@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
+> >
+> >       if (args->bcl_start != args->bcl_end) {
+> >               bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
+> > -             if (!bin)
+> > +             if (!bin) {
+> > +                     v3d_job_put(&render->base);
+>
+> The job isn't initialized yet, this doesn't work.
+Do you mean we have to release render via kfree() here?
 
-OK, thanks for the explanation.
+>
+> >                       return -ENOMEM;
+> > +             }
+> >
+> >               ret = v3d_job_init(v3d, file_priv, &bin->base,
+> >                                  v3d_job_free, args->in_sync_bcl);
+> >               if (ret) {
+> >                       v3d_job_put(&render->base);
+>
+> v3d_job_put will call kfree, if you chase the callchain long enough (in
+> v3d_job_free). So no bug here, this would lead to a double kfree and
+> crash.
+Yes, v3d_job_put() takes care of render,
 
-I indeed missed some details from the documentation. I will be more
-careful on my next readings.
+> -Daniel
+>
+> > +                     kfree(bin);
+but how about leaking bin?
 
-I see there are other documentation files at Documentation/devicetree/
-and Documentation/devicetree/bindings/. Besides these, would you
-recommend other documentation and/or material for those who want to
-write dt-bindings that validate with dt-schema?
+> >                       return ret;
+> >               }
+> >
+> > --
+> > 2.17.1
+> >
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-Thanks in advance,
 
-Marcelo
 
-On 10/22, Rob Herring wrote:
-> On Tue, Oct 22, 2019 at 9:06 AM Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > I ran the DTC and CHECK for AD7292 schema however, the target '__build'
-> > did not run due to errors found in regulator/fixed-regulator.yaml and
-> > arm/allwinner,sun4i-a10-csi.yaml.
-> 
-> Fixes for those are still pending in -next. Use 'make -k' and ignore those.
-> 
-> >
-> > I recall seeing something about the maxItems requirement over regulator
-> > supplies being changed on the iio mailing list, so I updated my repo
-> > locally, cloned and reinstalled the dt-schema toolset. However, I still
-> > can't make it go through the '__build' target.
-> >
-> > Python 3.7.5rc1 is my default python and I got the following pip3
-> > packages installed:
-> >
-> > ruamel.yaml        0.16.5
-> > ruamel.yaml.clib   0.2.0
-> > rfc3987            1.3.8
-> > jsonschema         3.0.1
-> > dtschema           0.0.1  at $HOME/<iio repo dir>/dt-schema
-> >
-> > Debian Bullseye packages installed:
-> > python3-yaml/testing,now 5.1.2-1
-> > libyaml-dev/testing,now 0.2.2-1
-> >
-> > I was only able to run DTC after installing the libyaml-dev package, so
-> > I think it might be worth to add it to the project dependencies at
-> > https://github.com/robherring/dt-schema.
-> 
-> Strictly speaking, it's not a dependency for dt-schema. It's
-> documented in Documentation/devicetree/writing-schema.rst. I've added
-> a pointer to that in bindings/submitting-patches.txt. I'm not sure how
-> else to make it more obvious.
-> 
-> BTW, You will get a useful error message if libyaml is missing when
-> building 'make dtbs_check'. I need to make that work for
-> dt_binding_check.
-> 
-> > apt-get install libyaml-dev
-> 
-> You need the lib too, but that tends to already be installed. IIRC,
-> installing the headers doesn't install the lib automatically.
-> 
-> In any case, I wanted to avoid putting in distro specific instructions
-> in the kernel.
-> 
-> Rob
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "Kernel USP" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/CAL_JsqLf8kpOu0MQN-TAhQkiZCGfMKWmztnHNo%2B2BAVqfX8yGQ%40mail.gmail.com.
+-- 
+Navid.
