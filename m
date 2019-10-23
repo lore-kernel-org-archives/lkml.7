@@ -2,97 +2,114 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBC6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5219ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0136D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2533B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 02:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VFpIpDW4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mOy5hTZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389277AbfJWCmZ (ORCPT
+        id S2389283AbfJWCn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 22 Oct 2019 22:42:25 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48536 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfJWCmY (ORCPT
+        Tue, 22 Oct 2019 22:43:56 -0400
+Received: from mail-pf1-f174.google.com ([209.85.210.174]:40086 "EHLO
+        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730655AbfJWCnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 22 Oct 2019 22:42:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N2dxPS040561;
-        Wed, 23 Oct 2019 02:42:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=BOMIM0qJpKftkmTp2/DXxh1Jk4ZVQovuQbzQ6r5LR5U=;
- b=VFpIpDW4qp6A0v86GGAvvWiZNfClqJSOBpISGYw3OMFfduEIJ1kn1hyhhU78O332QcDB
- npmSmVnzBEDB31fLD9c6EXiE+SnHEnC6+bGlfwoyOpTcVR1NLaeM0MQMtDT0KwBNsNZ4
- 34AWo4Yc0Uqeennqsyu0gQqPZX+0YqHx6thF4EsVA4P29mIocxITat3rJ1NiMFEIV4wC
- Qse6ApiWTILQEV+bMU+/151MLegpe3rtMeQCC0rniri/B3ZVvZAo6Ho5zm9hY/kVjph1
- S9ZMpI2NuSgKON+L3oncQDlAUvo9jFlM7x70D1HdgSb7JoKyi5Y5l7JsIzV9Hq9QqnmE pg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vqteptc1n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 02:42:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9N2d6k1012843;
-        Wed, 23 Oct 2019 02:40:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2vt2heaen8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Oct 2019 02:40:14 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9N2eC17031533;
-        Wed, 23 Oct 2019 02:40:12 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 22 Oct 2019 19:40:12 -0700
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <manoj@linux.ibm.com>, <mrochs@linux.ibm.com>,
-        <ukrishn@linux.ibm.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] scsi: cxlflash: remove set but not used variable 'ioarcb'
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191021141957.18828-1-yuehaibing@huawei.com>
-Date:   Tue, 22 Oct 2019 22:40:09 -0400
-In-Reply-To: <20191021141957.18828-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Mon, 21 Oct 2019 22:19:57 +0800")
-Message-ID: <yq11rv4dw1i.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 22 Oct 2019 22:43:55 -0400
+Received: by mail-pf1-f174.google.com with SMTP id x127so11915305pfb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 19:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mofPZU0gDfCeMdQs09aoNyZbpVsgKBRv49oSTcbrnzI=;
+        b=mOy5hTZQlIbUw/dLIeqJ54nqXPthp1Z+w+N0xfknDKFXtqQwMk7Wnfn5/rNspav5uV
+         MDdW15WOQGDrNUHwqTPtFPR2ayZOR8PMkZQPsCoIGFkMa15/YWeG535VD4rhqVXQc9QF
+         hbxhmYfc7eY5CvzZRVxMHsmJhf0O38G/wX6CI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mofPZU0gDfCeMdQs09aoNyZbpVsgKBRv49oSTcbrnzI=;
+        b=aqsaZ5+IrKPQZ1UPcciRixMcjpn6poaDO1G6l2fTdiG4IiyoXAoEiPVoxvZXwc+mwi
+         64i77wR7LHus/Lvnw0Ii8ma3gGYeC8NIoBpQ2REbbbznofwaDPydn2HWk3wt/ZqDxcpG
+         6+wywBqCXTqD5Tc1R0+vXZEAoOZvPSyHujaE0EpVL2ejxUVcqNefTAfhS3Ut7NKnTDmk
+         okgPVZ/xluUfqjvQ9FtUUF+2I/DPxdwEPtrXBpdPSC5VqH9bp/kwSDiWB4xfNMpxnUyX
+         g7zeOvEErA8fPawBEfBqTHg1nEbPKP6T0xdTuJfPpwZmI5AHkXZrTS9/Y6nw/OxsPASS
+         rKEw==
+X-Gm-Message-State: APjAAAW5PkrzxXd6RZlsrP7AYYBHvS8EfYEwmsTIwfHJ7Hog/88Wmr5k
+        KqLNZNBks8at8P5HcZXUyliVzQ==
+X-Google-Smtp-Source: APXvYqxv+U6sKv24k78c6mmhFtzdjMFTEVjKujp5UDRJgvxJ5YW1F0J5Ur7LHviLgSGCAZnRoVmNKQ==
+X-Received: by 2002:a63:fe56:: with SMTP id x22mr7379113pgj.282.1571798635041;
+        Tue, 22 Oct 2019 19:43:55 -0700 (PDT)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:254e:2b40:ef8:ee17])
+        by smtp.gmail.com with ESMTPSA id o64sm45970901pjb.24.2019.10.22.19.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 19:43:54 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH v3 1/2] dt-bindings: input: Add DT bindings for Whiskers switch
+Date:   Wed, 23 Oct 2019 10:43:48 +0800
+Message-Id: <20191023024348.225969-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=825
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910230025
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9418 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=924 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910230025
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the DT binding document for Hammer's TABLET_MODE switch.
 
-YueHaibing,
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
+ .../devicetree/bindings/input/cros-cbas.yaml  | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/cros-cbas.yaml
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/scsi/cxlflash/main.c:47:22: warning:
->  variable ioarcb set but not used [-Wunused-but-set-variable]
-
-Applied to 5.5/scsi-queue, thanks!
-
+diff --git a/Documentation/devicetree/bindings/input/cros-cbas.yaml b/Documentation/devicetree/bindings/input/cros-cbas.yaml
+new file mode 100644
+index 000000000000..3bc989c6a295
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/cros-cbas.yaml
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/cros-cbas.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ChromeOS Hammer's Base Attached Switch
++
++maintainers:
++  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
++
++description:
++  This device is used to signal when a detachable base is attached to a
++  Chrome OS tablet. The node for this device must be under a cros-ec node
++  like google,cros-ec-spi or google,cros-ec-i2c.
++
++properties:
++  compatible:
++    const: google,cros-cbas
++
++required:
++  - compatible
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.23.0.866.gb869b98d4c-goog
+
