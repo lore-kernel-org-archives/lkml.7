@@ -2,140 +2,220 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B571CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20169CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20DDA2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="P7m4Rk84"
+	by mail.kernel.org (Postfix) with ESMTP id E8A0F2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 08:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390242AbfJWIUh (ORCPT
+        id S2390256AbfJWIWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 04:20:37 -0400
-Received: from mout.web.de ([217.72.192.78]:48157 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390020AbfJWIUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 04:20:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1571818815;
-        bh=1urHB5QX4TImKjSn5rNYrLD++7pMPjelkawIGF5kTrI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=P7m4Rk844Uc8RcUThTIJqzdEdQEhgIICRE0EfqVGVkTuuSX8V8JQXZUfxyY3p9kcL
-         ROsDFDPPCjNkH5jXpaV3Y5cje3HfIf4kDTtP7X6W+zd7C1s/9wBv3oEN6Crew5cy37
-         En2fow/TAANI39gm+4bINRr7wjkzW93JrdwmH8IE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.140.249]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lp71s-1hkqNe3ZXY-00exfy; Wed, 23
- Oct 2019 10:20:15 +0200
-Subject: Re: [PATCH] clocksource/drivers: Fix error handling in
- ttc_setup_clocksource
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <2a6cdb63-397b-280a-7379-740e8f43ddf6@xilinx.com>
- <20191023044737.2824-1-navid.emamdoost@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <5913e1b8-b292-de06-e47f-d5f982db2b10@web.de>
-Date:   Wed, 23 Oct 2019 10:20:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 23 Oct 2019 04:22:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390088AbfJWIWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:22:48 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E8491EEA58C97B172FF5;
+        Wed, 23 Oct 2019 16:22:46 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
+ 16:22:44 +0800
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mhocko@kernel.org>, <peterz@infradead.org>,
+        <robin.murphy@arm.com>, <geert@linux-m68k.org>,
+        <gregkh@linuxfoundation.org>, <paul.burton@mips.com>
+References: <20191022210420.GA17717@google.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <76d37d5b-49bd-e45c-d42c-415235504893@huawei.com>
+Date:   Wed, 23 Oct 2019 16:22:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191023044737.2824-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191022210420.GA17717@google.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jB/9/sNWnRg7fAXxmE9K1RoIPmjkhyq0QzhkP43nkMA5Emp6kAI
- KocIVANYQavqi6O1Pqrs6DlclG3w22AH2CGQHTH6kl8hS1y5P3cF/EDSN9RD7iocRZx5uT3
- MSbJG6WcTueYh9Y1BkKN87I6K0uuUX1kqbSP/5gIFOmhmOnPt15Qi1aqfGbiIDhNtOUc1Vv
- TI1NYqhu/qNIGN9iAaCtg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4xhHCnPgOyM=:bo0DmfHB14HK/aUTgUa63Q
- V5onzlyvu8gTGD4xAvOCeLTcObbW+Crc2xi2jJdl75OnGdTadOjZ98pDHq7fDwby6lV6xuRAy
- xEEEN7yWtUpnUeZFflvY/1Xamsif/8OKBy76S9ss244QYrbXs7M97KWvCEGPnFXpWmBThdr0V
- i8sMx6Te8T8kqpuABhwd3luLsiFppSXAks8san4bDLKQiJZHwsgn5Vd2/ibtQhgMBe6cHBpVL
- yvzKl0Et9zx+xHz8yqgcz7czoceaiKS57lig0d+1Py3/91IpXoj+2QAhiexYxHTZ3QhY8kOLE
- HsNyAepIyMzU+6LkcobA7uPMrTuVFZZEQsB5DWS6bv/mYa4F6X8qEKeeCkJDKW1PkYn7HPG4t
- 69T3f85K1leQx0yclbyepiGsKPwP3nXxSn1yJ/HjS/CuCbpavPPh6x9tETpkAuW0+7CTbeyZY
- juIlKMMswwIEd3943HPWaaKS66zntUT6JmfVYEErYd5ySVo/AlQuQypuvu090E0DZLXdrBnDd
- OMlJAhBQf+iEtJScg6WTYhWpqjr61enNFCMB6MzcsPwe4cwsDpHCMc4sDWmAWF1sbwl0X105L
- s/hKgxzgSPU5jhXvgBGLNOERbkuGhrrKy6DM+xia9FYBntk60f9RkTP9/dch6FesWijwCREWt
- zSiP4XOVOHdFVdZxOqpSS/1+2zBfqjiOfSwdw8AefQ3ZjG2gRjPmIzyiQMOzH1bMmG6jFZmQw
- vbs2N+BvQ93JBH6umBQ+6xsRYsGWsnNA0pzxqyMRCdtb4jpFKPg0csRomyqqSFZs+LOtKar3E
- qYh2OPfVdKh4MCE1XSupP9c7ENVVnLDAhqKfR8TeKKVh5OkNnUUpxIZaR48goQNSoKdHD3lH5
- h7YbTk+V3iD+kfKuWXyON3hR6tjriM7ZFLbv69+d4USrrUIe7GvxHlLvHvpoJLJf2Ecmhdccu
- m1uJDRypUTv7ZBnvc5QlzrzaCxqK8YhGxbFCVPLYEmdjtGoRFsUZb67eAH5+XYVhpYVB5s1k3
- cWCu0mXHY11cwQti9PLK47bUPCgTRR5fFRocQYZhsDpPRZP8tShEilmtz1AtwePDYZmtoztv8
- q5aTXykTnOXsV4jn9sQFjv+JsMIEpYxYJWK6Xce935rSHigPIgcsAO5uvzWtDETI/0jjPiZWt
- vFEiYpKjGmaOYWOsnBlhHL3dHLP3d7aKYomdtp0VW+giRBP1t7zIT13F/vZU8BUVP2nwp1XAm
- d9bEjaSMkA12/snhZn4nWIzwaNYAPSUffBh3PUeU3kCAPUOYXxk1xsdelDdg=
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fixes: e932900a3279 ("arm: zynq: Use standard timer binding")
+On 2019/10/23 5:04, Bjorn Helgaas wrote:
+> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
+>> As the disscusion in [1]:
+> 
+> We need to justify this patch right here in the commit log, not with a
+> pointer to a 50+ message email thread.
 
-How do you think about to add the tag =E2=80=9CReported-by=E2=80=9D for Mi=
-chal Simek?
-https://lore.kernel.org/linux-arm-kernel/2a6cdb63-397b-280a-7379-740e8f43d=
-df6@xilinx.com/
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D3b7c59a1950c75f2c0152e5a9c=
-d77675b09233d6#n584
+Ok, thanks.
 
-Regards,
-Markus
+> 
+>> A PCI device really _MUST_ have a node assigned. 
+> 
+> No, it's not really essential.  It's *nice* if we know the node
+> closest to a PCI device, but the system should function correctly even
+> if we don't.  The only problem is that it will be slower.
+
+Ok, will try to mention the info you mention here in the commit log.
+
+> 
+> I think the underlying problem you're addressing is that:
+> 
+>   - NUMA_NO_NODE == -1,
+>   - dev_to_node(dev) may return NUMA_NO_NODE,
+>   - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
+>   - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
+> 
+> For example, on arm64, mips loongson, s390, and x86,
+> cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
+> an invalid array index.
+
+The invalid array index of -1 is the underlying problem here when
+cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
+is not NUMA_NO_NODE aware yet.
+
+In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
+disscusion, it is requested that it is better to warn about the pcie
+device without a node assigned by the firmware before making the
+cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
+devices of "NUMA_NO_NODE" node can be fixed by their vendor.
+
+See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+
+> 
+> That problem can't be solved by emitting a warning, of course.  I
+> assume some variation of your "numa: make node_to_cpumask_map()
+> NUMA_NO_NODE aware" patch [a] will solve that problem.
+> 
+> [a] https://lore.kernel.org/linux-mips/1568535656-158979-1-git-send-email-linyunsheng@huawei.com/T/#u
+> 
+> It is probably a good idea to emit a warning about the performance
+> issue.
+> 
+> When I run your patch on qemu, I see this:
+> 
+>   ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+>   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+>   acpi PNP0A08:00: _OSC: platform does not support [LTR]
+>   acpi PNP0A08:00: _OSC: OS now controls [PME AER PCIeCapability]
+>   PCI host bridge to bus 0000:00
+>   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+>   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+>   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+>   pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+>   pci_bus 0000:00: root bus resource [mem 0x100000000-0x8ffffffff window]
+>   pci_bus 0000:00: root bus resource [bus 00-ff]
+>    pci0000:00: [Firmware Bug]: No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.
+> 
+> I didn't debug it to see what's wrong with the " pci0000:00" string.
+> Ideally it would be connected with "acpi PNP0A08:00" since that's the
+> place where BIOS would make a fix but I suppose "pci_bus 0000:00"
+> would be adequate.
+
+It seems the string at the beginning of dev_err() output is consisted
+of dev_driver_string() and dev_name().
+
+drivers/base/core.c:
+const char *dev_driver_string(const struct device *dev)
+{
+	struct device_driver *drv;
+
+	/* dev->driver can change to NULL underneath us because of unbinding,
+	 * so be careful about accessing it.  dev->bus and dev->class should
+	 * never change once they are set, so they don't need special care.
+	 */
+	drv = READ_ONCE(dev->driver);
+	return drv ? drv->name :
+			(dev->bus ? dev->bus->name :
+			(dev->class ? dev->class->name : ""));
+}
+
+The bridge device does not have a driver, a bus or a class, so
+dev_driver_string() will return "", that is why there is a extral
+space at the beginning of the " pci0000:00". I am not familiar with
+the pci, so not sure if this is a problem that the bridge device
+does not have a driver, a bus or a class.
+
+And the bus device has a class of pcibus_class, and name of
+pcibus_class is "pci_bus".
+
+So maybe change the warning to below:
+
+if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
+	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
+
+And it seems a pci device's parent will always set to the bridge
+device in pci_setup_device(), and device_add() which will set the
+node to its parent's when the child device' node is NUMA_NO_NODE,
+maybe we can add the bridge device' node checking to make sure
+the pci device really does not have a node assigned, as below:
+
+if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE &&
+    dev_to_node(bus->bridge) == NUMA_NO_NODE)
+	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
+
+
+> 
+>> It is possible to
+>> have a PCI bridge shared between two nodes, such that the PCI
+>> devices have equidistance. But the moment you scale this out, you
+>> either get devices that are 'local' to a package while having
+>> multiple packages, or if you maintain a single bridge in a big
+>> system, things become so slow it all doesn't matter anyway.
+>> Assigning a node (one of the shared) is, in the generic ase of
+>> multiple packages, the better solution over assigning all nodes.
+>>
+>> As pci_device_add() will assign the pci device' node according to
+>> the bus the device is on, which is decided by pcibus_to_node().
+>> Currently different arch may implement the pcibus_to_node() based
+>> on bus->sysdata or bus device' node, which has the same node as
+>> the bridge device.
+>>
+>> And for devices behind another bridge case, the child bus device
+>> is setup with proper parent bus device and inherit its parent'
+>> sysdata in pci_alloc_child_bus(), so the pcie device under the
+>> child bus should have the same node as the parent bridge when
+>> device_add() is called, which will set the node to its parent's
+>> node when the child device' node is NUMA_NO_NODE.
+>>
+>> So this patch only warns about the case when a host bridge device
+>> is registered with a node of NO_NODE in pci_register_host_bridge().
+>> And it only warns about that when there are more than one numa
+>> nodes in the system.
+> 
+> 
+>> [1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
+>>
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>> ---
+>>  drivers/pci/probe.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 3d5271a..22be96a 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>>  	list_add_tail(&bus->node, &pci_root_buses);
+>>  	up_write(&pci_bus_sem);
+>>  
+>> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
+>> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
+>> +
+>>  	return 0;
+>>  
+>>  unregister:
+> 
+> .
+> 
+
