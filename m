@@ -2,87 +2,109 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1BBC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A795ECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB7F21A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEAE21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 09:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571822989;
+	bh=p11JZ/878S75pE68Mq2TwTFjvlVsPceSwhIak764zRU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=G+zgS41vdnUeQXFKPGkPf6U+kfx0PX8Gu2BRW8mzwh4NV60M1ZMzqrUnXTRDsLOWN
+	 0b6APMl8LMxcTJywmo542pIunF/LhYMUZGMK3/m4cRfl811JmFsHi/EM2OizeyVJf6
+	 /Q5wfTuKDxnEazOzl+zIvquE/05pEeA1nrCckBMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403955AbfJWJ3o (ORCPT
+        id S2403970AbfJWJ3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 05:29:44 -0400
-Received: from [217.140.110.172] ([217.140.110.172]:45868 "EHLO foss.arm.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1732648AbfJWJ3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 05:29:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7286D15DB;
-        Wed, 23 Oct 2019 02:29:21 -0700 (PDT)
-Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.145.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1A653F718;
-        Wed, 23 Oct 2019 02:29:20 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 11:29:19 +0200
-From:   Christoffer Dall <christoffer.dall@arm.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v2 09/15] KVM: Move memslot deletion to helper function
-Message-ID: <20191023092919.GF2652@e113682-lin.lund.arm.com>
-References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
- <20191022003537.13013-10-sean.j.christopherson@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022003537.13013-10-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 23 Oct 2019 05:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732648AbfJWJ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 05:29:46 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3496C21872;
+        Wed, 23 Oct 2019 09:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571822985;
+        bh=p11JZ/878S75pE68Mq2TwTFjvlVsPceSwhIak764zRU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KJ0lWbj7yEZITHCGoNKDiGQOlWVlNOeeSEbv7hOaZVC7gzq9lwNaqlDwb8tff52kn
+         sQa2DlsjgxcxRO+4CFk3D6SFOBlCVxV5qlqhBcDstabmlnIwRphVv9CrwgFyFBqY2v
+         tnepF690eLpdzT3se4GU9mjnaDmpZ579Eh4f8Ye4=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
+        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 03/12] c6x: use pgtable-nopud instead of 4level-fixup
+Date:   Wed, 23 Oct 2019 12:28:52 +0300
+Message-Id: <1571822941-29776-4-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-On Mon, Oct 21, 2019 at 05:35:31PM -0700, Sean Christopherson wrote:
-> Move memslot deletion into its own routine so that the success path for
-> other memslot updates does not need to use kvm_free_memslot(), i.e. can
-> explicitly destroy the dirty bitmap when necessary.  This paves the way
-> for dropping @dont from kvm_free_memslot(), i.e. all callers now pass
-> NULL for @dont.
-> 
-> Add a comment above the code to make a copy of the existing memslot
-> prior to deletion, it is not at all obvious that the pointer will become
-> stale due sorting and/or installation of new memslots.
+c6x is a nommu architecture and does not require fixup for upper layers of
+the page tables because it is already handled by the generic nommu
+implementation.
 
-nit: due to / during
+Replace usage of include/asm-generic/4level-fixup.h with
+include/asm-generic/pgtable-nopud.h
 
-> 
-> Note, kvm_arch_commit_memory_region() allows an architecture to free
-> resources when moving a memslot or changing its flags, i.e. implement
-> logic similar to the dirty bitmap is handling, if such functionality is
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/c6x/include/asm/pgtable.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-nit: s/is handling/handling/
+diff --git a/arch/c6x/include/asm/pgtable.h b/arch/c6x/include/asm/pgtable.h
+index 0b6919c..197c473 100644
+--- a/arch/c6x/include/asm/pgtable.h
++++ b/arch/c6x/include/asm/pgtable.h
+@@ -8,7 +8,7 @@
+ #ifndef _ASM_C6X_PGTABLE_H
+ #define _ASM_C6X_PGTABLE_H
+ 
+-#include <asm-generic/4level-fixup.h>
++#include <asm-generic/pgtable-nopud.h>
+ 
+ #include <asm/setup.h>
+ #include <asm/page.h>
+-- 
+2.7.4
 
-> needed in the future.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-Otherwise looks good to me.
-
-Acked-by: Christoffer Dall <christoffer.dall@arm.com>
