@@ -2,78 +2,108 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90491CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EEACA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632C921A4C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8D921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 15:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571845118;
+	bh=eE8y1vH8jBO0acryf9BCwImwIuhGJ07TIWhlosnHoNA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=c6x6/oKPoTQbqsYb+M/459TivbTulZj0/jzmlnzfu4755JywX5zCWR8svHOiUm7hp
+	 7+xivpURr5k5JJ6wQgs3JRorkEJPMPqo8zUBAm5ROtOX1PPq5GDKZ2IQ3KRL2yn4id
+	 YgiytmlPclwY5auM75A7B6ULgZLJZ0H9J8X8bCmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406764AbfJWPie (ORCPT
+        id S2406777AbfJWPih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 11:38:34 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9170 "EHLO mga04.intel.com"
+        Wed, 23 Oct 2019 11:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406692AbfJWPie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 11:38:34 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 08:38:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
-   d="scan'208";a="399432082"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Oct 2019 08:38:33 -0700
-Date:   Wed, 23 Oct 2019 08:38:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, peterz@infradead.org, will@kernel.org,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v8 2/5] x86/kvm: Change print code to use pr_*() format
-Message-ID: <20191023153832.GM329@linux.intel.com>
-References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
- <1571829384-5309-3-git-send-email-zhenzhong.duan@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571829384-5309-3-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S2406692AbfJWPif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 11:38:35 -0400
+Received: from localhost.localdomain (unknown [194.230.155.217])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58C302064A;
+        Wed, 23 Oct 2019 15:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571845115;
+        bh=eE8y1vH8jBO0acryf9BCwImwIuhGJ07TIWhlosnHoNA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gu6Ab9QAgNfM7NGUJR3zkec5u+/CuBA16gfkL/0IFK2M8wzH4uDyT/qkxGVnmgoSO
+         QFQW79CTNSghX8IzQpE927M+HA3Ir9B1LwqlFj18bzKf6MouKcw0GZ8VWmBjkz/agk
+         2Xk2jUDyZRjUxTGfmT7NQTGHvpiBetl6kAXZnSVE=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/2] ARM: s3c: Rename s3c64xx_spi_setname() function
+Date:   Wed, 23 Oct 2019 17:38:23 +0200
+Message-Id: <20191023153824.6085-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 07:16:21PM +0800, Zhenzhong Duan wrote:
-> pr_*() is preferred than printk(KERN_* ...), after change all the print
-> in arch/x86/kernel/kvm.c will have "kvm-guest: xxx" style.
-> 
-> No functional change.
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krcmar <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> ---
+The name s3c64xx_spi_setname() suggests it is shared with S3C64xx
+platform, but except of contents it is not.  It is called only by
+S3C24xx code, so make it clear in the name.
 
-Reviewed-and-tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/mach-s3c24xx/s3c2416.c  | 2 +-
+ arch/arm/mach-s3c24xx/s3c2443.c  | 2 +-
+ arch/arm/mach-s3c24xx/spi-core.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/mach-s3c24xx/s3c2416.c b/arch/arm/mach-s3c24xx/s3c2416.c
+index 1cdb7bd3e713..9514196cad8c 100644
+--- a/arch/arm/mach-s3c24xx/s3c2416.c
++++ b/arch/arm/mach-s3c24xx/s3c2416.c
+@@ -113,7 +113,7 @@ void __init s3c2416_map_io(void)
+ 	/* initialize device information early */
+ 	s3c2416_default_sdhci0();
+ 	s3c2416_default_sdhci1();
+-	s3c64xx_spi_setname("s3c2443-spi");
++	s3c24xx_spi_setname("s3c2443-spi");
+ 
+ 	iotable_init(s3c2416_iodesc, ARRAY_SIZE(s3c2416_iodesc));
+ }
+diff --git a/arch/arm/mach-s3c24xx/s3c2443.c b/arch/arm/mach-s3c24xx/s3c2443.c
+index 313e369c3ddd..4cbeb74cf3d6 100644
+--- a/arch/arm/mach-s3c24xx/s3c2443.c
++++ b/arch/arm/mach-s3c24xx/s3c2443.c
+@@ -91,7 +91,7 @@ void __init s3c2443_map_io(void)
+ 	s3c24xx_gpiocfg_default.get_pull = s3c2443_gpio_getpull;
+ 
+ 	/* initialize device information early */
+-	s3c64xx_spi_setname("s3c2443-spi");
++	s3c24xx_spi_setname("s3c2443-spi");
+ 
+ 	iotable_init(s3c2443_iodesc, ARRAY_SIZE(s3c2443_iodesc));
+ }
+diff --git a/arch/arm/mach-s3c24xx/spi-core.h b/arch/arm/mach-s3c24xx/spi-core.h
+index bb555ccbe057..1048fac629a2 100644
+--- a/arch/arm/mach-s3c24xx/spi-core.h
++++ b/arch/arm/mach-s3c24xx/spi-core.h
+@@ -11,7 +11,7 @@
+  */
+ 
+ /* re-define device name depending on support. */
+-static inline void s3c64xx_spi_setname(char *name)
++static inline void s3c24xx_spi_setname(char *name)
+ {
+ #ifdef CONFIG_S3C64XX_DEV_SPI0
+ 	s3c64xx_device_spi0.name = name;
+-- 
+2.17.1
+
