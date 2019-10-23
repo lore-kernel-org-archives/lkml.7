@@ -2,98 +2,126 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27774CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BFBCA9EB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0782820640
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEFF2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 12:16:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ojnE0Dcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391260AbfJWMPH (ORCPT
+        id S2391270AbfJWMQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 08:15:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33426 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbfJWMPG (ORCPT
+        Wed, 23 Oct 2019 08:16:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51610 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730796AbfJWMQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 08:15:06 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a22so20864232ljd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 05:15:06 -0700 (PDT)
+        Wed, 23 Oct 2019 08:16:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q70so13804830wme.1;
+        Wed, 23 Oct 2019 05:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CVMZIlFOmsUq+Vskr+tW0iGHn90ty7G6Hxjpnt8OG8M=;
+        b=ojnE0DcvbLt/j4uUZPeFzmfKmga2rO8E+9NXFcWrlKCvPSGUgr/vQUU+szzDg1mDA+
+         v5NhCBILtyORwkN20a+IzCYLSo0bhiFsahfEB5sOikH758RLyZdDpnK4LsnhdngGsI7Q
+         jq3Z7lDpcyKYLQ6He4l2vT2rSbdmO3/R74AlnQvfKurtejnhO9FBxTBItXeVcM92zZvB
+         dl56umDy9DdZX68gLVthIzBQFJEeG9E3tmamcBX6IiC6Dg7isKf9s1Rb17K7BNQa2tI9
+         VHYNAv7l98J09PaL6TE344tTiLdPL3w/vbngEYCQSU2/6Zhi4FwLQwR9oCw1x9zOTmTg
+         EPJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Z/k85i8nlgEEzJnCRu3J+C4eQIiRFZ+iLahNCa8Diy4=;
-        b=SKs0c69BGb1AB0c9O4HHNjhUP4scb1295c+j8eMgzhvodO9rLYBtFe7QqCJ+3gul4U
-         z6k11UpJJcHTAgQldSuXHIl1lZNXW7ywqgxoIr/ao7AeoIP3oKHQ055LyCeyWvNGoHdU
-         xSxOi6MW1Aw8kwr4n2g4jfL0xGMabh/hdd5DD1fayeiBC0cBDhzvdSMyugmJ9ZCHw1Y+
-         hRRPcJKaWq0H3Z7UzIXhObhrfqL38MbWI+tMi3e/WhdZ3iWhEuovdZQEt8NSegmldGfc
-         bvggHsEYgWbVLnZMk/unhyjDCvq0giu5NyTEgmEkibqyQ0TCmDxB0O0IUoGZiDptMVmm
-         Hn8w==
-X-Gm-Message-State: APjAAAVb5c77TYaIK/PRG8RH4CHSDhhTor9y65+7UKtK0uCri0fux4Jl
-        +Jb2tz7e3fzQ5QSr2BEYxO2wA+Wdsvg=
-X-Google-Smtp-Source: APXvYqxXToY8fUYE7VFS51j5C4zvxqFyTqwoA8S2vJBG+b4z6dI/ijdRo7IbVMtjX/lPT1OKsafsaQ==
-X-Received: by 2002:a2e:97ca:: with SMTP id m10mr2904793ljj.190.1571832905573;
-        Wed, 23 Oct 2019 05:15:05 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id a28sm9162243lfk.29.2019.10.23.05.15.04
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CVMZIlFOmsUq+Vskr+tW0iGHn90ty7G6Hxjpnt8OG8M=;
+        b=oe/Kib51tvoG5skXGBDRuLLGSIFTSB+2fttQgBbjEWxH4haKTvDj2TCO+li+jNl6tK
+         2VFs3HdcufEGdT9/ZVJkkrOSDtj/wCXYiB7IUBOsXu+WKcSNQa9ZaZ61iRr1aRb2A+dc
+         p0mqMROwdr2LTCo92YT+X1ST3pOprkmenKiupvbPIskpdCHbJ1LVBEt6DhxcfWqmvFgR
+         7PiaCoUuZZU5xq+SZ2m8D1EQkke33eXdj15eeyU4wEJ4Wo4L3C0ix+Etuc+wMI7bJSjD
+         sQcoo4wsT5rvfLrRgfbQKK7gjZOarHeMFQxFupRykW1AcAdarxVHlhYeJTWIe/FrzZHT
+         Kkzg==
+X-Gm-Message-State: APjAAAW0Ps5WABEvoAA7IvR2VokWQ+PssuOL5gXpm0VzxlMCduD46usO
+        s0ueEPugLp42N6XP2CDeiXCO8GBZvTU=
+X-Google-Smtp-Source: APXvYqyPu5nM/9wohUAJp6nNJluOH/TU3xDM7gzETkX6nv5t8ka6YdF9i5MOGNXaVmNYHrsl/qf8Hw==
+X-Received: by 2002:a1c:6405:: with SMTP id y5mr3559550wmb.175.1571832970440;
+        Wed, 23 Oct 2019 05:16:10 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:517c:6bd4:d9e0:aab5])
+        by smtp.gmail.com with ESMTPSA id a189sm7930047wma.2.2019.10.23.05.16.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 05:15:05 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:14:52 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: bd70528: Add MODULE_ALIAS to allow module auto
- loading
-Message-ID: <20191023121452.GA1812@localhost.localdomain>
+        Wed, 23 Oct 2019 05:16:09 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 14:16:03 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        bsingharora@gmail.com, dvyukov@google.com, elver@google.com,
+        stable@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191021113327.22365-1-christian.brauner@ubuntu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bd70528 regulator driver is probed by MFD driver. Add MODULE_ALIAS
-in order to allow udev to load the module when MFD sub-device cell for
-regulators is added.
+On Mon, Oct 21, 2019 at 01:33:27PM +0200, Christian Brauner wrote:
+> When assiging and testing taskstats in taskstats_exit() there's a race
+> when writing and reading sig->stats when a thread-group with more than
+> one thread exits:
+> 
+> cpu0:
+> thread catches fatal signal and whole thread-group gets taken down
+>  do_exit()
+>  do_group_exit()
+>  taskstats_exit()
+>  taskstats_tgid_alloc()
+> The tasks reads sig->stats without holding sighand lock.
+> 
+> cpu1:
+> task calls exit_group()
+>  do_exit()
+>  do_group_exit()
+>  taskstats_exit()
+>  taskstats_tgid_alloc()
+> The task takes sighand lock and assigns new stats to sig->stats.
+> 
+> The first approach used smp_load_acquire() and smp_store_release().
+> However, after having discussed this it seems that the data dependency
+> for kmem_cache_alloc() would be fixed by WRITE_ONCE().
+> Furthermore, the smp_load_acquire() would only manage to order the stats
+> check before the thread_group_empty() check. So it seems just using
+> READ_ONCE() and WRITE_ONCE() will do the job and I wanted to bring this
+> up for discussion at least.
 
-Fixes: 99ea37bd1e7d7 ("regulator: bd70528: Support ROHM BD70528 regulator block")
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+Mmh, the RELEASE was intended to order the memory initialization in
+kmem_cache_zalloc() with the later ->stats pointer assignment; AFAICT,
+there is no data dependency between such memory accesses.
 
-I'm not really sure if this is a bug-fix or feature but I guess the
-Fixes tag won't harm, right?
+Correspondingly, the ACQUIRE was intended to order the ->stats pointer
+load with later, _independent dereferences of the same pointer; the
+latter are, e.g., in taskstats_exit() (but not thread_group_empty()).
 
- drivers/regulator/bd70528-regulator.c | 1 +
- 1 file changed, 1 insertion(+)
+Looking again, I see that fill_tgid_exit()'s dereferences of ->stats
+are protected by ->siglock: maybe you meant to rely on such a critical
+section pairing with the critical section in taskstats_tgid_alloc()?
 
-diff --git a/drivers/regulator/bd70528-regulator.c b/drivers/regulator/bd70528-regulator.c
-index 0248a61f1006..ec764022621f 100644
---- a/drivers/regulator/bd70528-regulator.c
-+++ b/drivers/regulator/bd70528-regulator.c
-@@ -286,3 +286,4 @@ module_platform_driver(bd70528_regulator);
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
- MODULE_DESCRIPTION("BD70528 voltage regulator driver");
- MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:bd70528-pmic");
--- 
-2.21.0
+That memcpy(-, tsk->signal->stats, -) at the end of taskstats_exit()
+also bugs me: could these dereferences of ->stats happen concurrently
+with other stores to the same memory locations?
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Thanks,
+  Andrea
