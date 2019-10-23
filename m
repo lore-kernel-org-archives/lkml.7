@@ -2,73 +2,79 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E081CA9EB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89CECA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEDE214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="sF90pXPO"
+	by mail.kernel.org (Postfix) with ESMTP id 82C03214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389860AbfJWHqF (ORCPT
+        id S2389992AbfJWHqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:46:05 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55526 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732328AbfJWHqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:46:04 -0400
-Received: from zn.tnic (p200300EC2F11E8005961F1FA34C94581.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:e800:5961:f1fa:34c9:4581])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B69C01EC0C97;
-        Wed, 23 Oct 2019 09:46:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1571816763;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=33x7ICr9fxs1J4Vu9qmTnOIG8Qr9Paia3taGadlBeds=;
-        b=sF90pXPOJvEOtqF8Zq0yKWXrr3MeSgzvDQ0HYHx+rjLoH2+4RmK73uq/jUqNeB7aEDtm8x
-        IX9nXFmsaljQqV1fzFtTxdjFv0qD5Kd+xBedwsBx7DzFAkf8jpWYIp6dg6Fr60NnWP4NUg
-        Lo3n0JOPGdzv4oLF6joYAx1XUFfSmyc=
-Date:   Wed, 23 Oct 2019 09:46:02 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     lijiang <lijiang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
-Subject: Re: [PATCH 1/3 v4] x86/kdump: always reserve the low 1MiB when the
- crashkernel option is specified
-Message-ID: <20191023074602.GB16060@zn.tnic>
-References: <20191017094347.20327-1-lijiang@redhat.com>
- <20191017094347.20327-2-lijiang@redhat.com>
- <20191022083015.GB31700@zn.tnic>
- <75648e8d-4ef7-0537-618e-e4a57f0d3b9b@redhat.com>
+        Wed, 23 Oct 2019 03:46:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4750 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732328AbfJWHqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:46:36 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 339628C4DF37949A8DBF;
+        Wed, 23 Oct 2019 15:46:34 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 23 Oct 2019
+ 15:46:26 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kishon@ti.com>, <yuehaibing@huawei.com>, <rogerq@ti.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] phy: ti: dm816x: remove set but not used variable 'phy_data'
+Date:   Wed, 23 Oct 2019 15:45:23 +0800
+Message-ID: <20191023074523.31888-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <75648e8d-4ef7-0537-618e-e4a57f0d3b9b@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 01:35:09PM +0800, lijiang wrote:
-> Would you mind if i improve this patch as follow? Thanks.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Yap, looks good to me.
+drivers/phy/ti/phy-dm816x-usb.c:192:29: warning:
+ variable phy_data set but not used [-Wunused-but-set-variable]
 
-Thx.
+It is never used, so can be removed.
 
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/phy/ti/phy-dm816x-usb.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/phy/ti/phy-dm816x-usb.c b/drivers/phy/ti/phy-dm816x-usb.c
+index cbcce7c..26f1947 100644
+--- a/drivers/phy/ti/phy-dm816x-usb.c
++++ b/drivers/phy/ti/phy-dm816x-usb.c
+@@ -189,7 +189,6 @@ static int dm816x_usb_phy_probe(struct platform_device *pdev)
+ 	struct phy_provider *phy_provider;
+ 	struct usb_otg *otg;
+ 	const struct of_device_id *of_id;
+-	const struct usb_phy_data *phy_data;
+ 	int error;
+ 
+ 	of_id = of_match_device(of_match_ptr(dm816x_usb_phy_id_table),
+@@ -220,8 +219,6 @@ static int dm816x_usb_phy_probe(struct platform_device *pdev)
+ 	if (phy->usbphy_ctrl == 0x2c)
+ 		phy->instance = 1;
+ 
+-	phy_data = of_id->data;
+-
+ 	otg = devm_kzalloc(&pdev->dev, sizeof(*otg), GFP_KERNEL);
+ 	if (!otg)
+ 		return -ENOMEM;
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
