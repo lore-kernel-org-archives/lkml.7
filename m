@@ -2,131 +2,93 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1D9CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A92CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA8E2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BCA205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 22:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571869878;
+	bh=DWYa+x0xITM9x5wWaEuEOfOVystvbEdQhFiEO2C4nug=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gTs4jzPuSDwHarqiECA6SNqm2KTR1VRCI/0drWuplXz6zWJ/NQyiRzExk5G2KD4tX
+	 24CbaJ1XAI1bRvb7wjqBSUCVKgrGuVSW0pLXumrHAhkhwzVEfaXEsshUPOLWlREbpu
+	 OihU/z0YgTgsuHhim531tpyVjMcvzxvOrbSfCJgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436825AbfJWWYn (ORCPT
+        id S2407867AbfJWWan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 18:24:43 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31336 "EHLO mga03.intel.com"
+        Wed, 23 Oct 2019 18:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405952AbfJWWYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 18:24:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 15:24:41 -0700
-X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="191984438"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 15:24:41 -0700
-Message-ID: <29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com>
-Subject: Re: [PATCH v12 0/6] mm / virtio: Provide support for unused page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, konrad.wilk@oracle.com, david@redhat.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-Date:   Wed, 23 Oct 2019 15:24:41 -0700
-In-Reply-To: <c50e102c-f72e-df8a-714f-a33897ddbb9f@redhat.com>
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
-         <c50e102c-f72e-df8a-714f-a33897ddbb9f@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
+        id S2405952AbfJWWan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 18:30:43 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E159E205F4;
+        Wed, 23 Oct 2019 22:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571869841;
+        bh=DWYa+x0xITM9x5wWaEuEOfOVystvbEdQhFiEO2C4nug=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ro1EeVpxrO5SIABm2XMFzd+1A3Hs7vUtQSbjUTQneiaoSYyxXKyDcXhVU9MLn/cun
+         +Txt75/UI6hdcK8IC0nlOtxvpX5xXqCTUatAcX/AF7o1JSn+1sXMigEF8fDQ1p0tYO
+         Rb1a3EToiaRUk9iIugb2w7CdCN90dZW4Gikl4dzM=
+Date:   Wed, 23 Oct 2019 15:30:40 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>
+Subject: Re: [PATCH] mm/vmstat: Reduce zone lock hold time when reading
+ /proc/pagetypeinfo
+Message-Id: <20191023153040.c7fff4bc7c86ed605fc4667f@linux-foundation.org>
+In-Reply-To: <a4398f60-c07e-8fa9-c26d-3b8f688e65a1@redhat.com>
+References: <20191022162156.17316-1-longman@redhat.com>
+        <20191022145902.d9c4a719c0b32175e06e4eee@linux-foundation.org>
+        <2236495a-ead0-e08e-3fb6-f3ab906b75b6@redhat.com>
+        <1571842093.5937.84.camel@lca.pw>
+        <a4398f60-c07e-8fa9-c26d-3b8f688e65a1@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-10-23 at 07:35 -0400, Nitesh Narayan Lal wrote:
-> On 10/22/19 6:27 PM, Alexander Duyck wrote:
-> > This series provides an asynchronous means of reporting unused guest
-> > pages to a hypervisor so that the memory associated with those pages can
-> > be dropped and reused by other processes and/or guests.
-> > 
+On Wed, 23 Oct 2019 11:01:04 -0400 Waiman Long <longman@redhat.com> wrote:
 
-<snip>
+> On 10/23/19 10:48 AM, Qian Cai wrote:
+> >>> this still isn't a bulletproof fix.  Maybe just terminate the list
+> >>> walk if freecount reaches 1024.  Would anyone really care?
+> >>>
+> >>> Sigh.  I wonder if anyone really uses this thing for anything
+> >>> important.  Can we just remove it all?
+> >>>
+> >> Removing it will be a breakage of kernel API.
+> > Who cares about breaking this part of the API that essentially nobody will use
+> > this file?
+> >
+> There are certainly tools that use /proc/pagetypeinfo and this is how
+> the problem is found. I am not against removing it, but we have to be
+> careful and deprecate it in way that minimize user impact.
 
-> > 
-> I think Michal Hocko suggested us to include a brief detail about the background
-> explaining how we ended up with the current approach and what all things we have
-> already tried.
-> That would help someone reviewing the patch-series for the first time to
-> understand it in a better way.
+Yes, removing things is hard.  One approach is to add printk_once(this
+is going away, please email us if you use it) then wait a few years. 
+Backport that one-liner into -stable kernels to hopefully speed up the
+process.
 
-I'm not entirely sure it helps. The problem is that even the "brief"
-version will probably be pretty long.
-
-From what I know the first real public discussion of guest memory
-overcommit and free page hinting dates back to the 2011 KVM forum and a
-presentation by Rik van Riel[0].
-
-Before I got started in the code there was already virtio-balloon free
-page hinting[1]. However it was meant to be an all-at-once reporting of
-the free pages in the system at a given point in time, and used only for
-VM migration. All it does is inflate a balloon until it encounters an OOM
-and then it frees the memory back to the guest. One interesting piece that
-came out of the work on that patch set was the suggestion by Linus to use
-an array based incremental approach[2] which is what I based my later
-implementation on.
-
-I believe Nitesh had already been working on his own approach for unused
-page hinting for some time at that point. Prior to submitting my RFC there
-was already a v7 that had been submitted by Nitesh back in mid 2018[3].
-The solution was an array based approach which appeared to instrument
-arch_alloc_page and arch_free_page and would prevent allocations while
-hinting was occurring.
-
-The first RFC I had written[4] was a synchronous approach that made use of
-arch_free_page to make a hypercall that would immediately flag the page as
-being unused. However a hypercall per page can be expensive and we ideally
-don't want the guest vCPU potentially being hung up while waiting on the
-host mmap_sem.
-
-At about this time I believe Nitesh's solution[5] was still trying to keep
-an array of pages that were unused and tracking that via arch_free_page.
-In the synchronous case it could cause OOM errors, and in the asynchronous
-approach it had issues with being overrun and not being able to track
-unused pages.
-
-Later I switched to an asynchronous approach[6], originally calling it
-"bubble hinting". With the asynchronous approach it is necessary to have a
-way to track what pages have been reported and what haven't. I originally
-was using the page type to track it as I had a Buddy and a TreatedBuddy,
-but ultimately that moved to a "Reported" page flag. In addition I pulled
-the counters and pointers out of the free_area/free_list  and instead now
-have a stand-alone set of pointers and keep the reported statistics in a
-separate dynamic allocation.
-
-Then Nitesh's solution had changed to the bitmap approach[7]. However it
-has been pointed out that this solution doesn't deal with sparse memory,
-hotplug, and various other issues.
-
-Since then both my approach and Nitesh's approach have been iterating with
-mostly minor changes.
-
-[0]: https://www.linux-kvm.org/images/f/ff/2011-forum-memory-overcommit.pdf
-[1]: https://lore.kernel.org/lkml/1535333539-32420-1-git-send-email-wei.w.wang@intel.com/
-[2]: https://lore.kernel.org/lkml/CA+55aFzqj8wxXnHAdUTiOomipgFONVbqKMjL_tfk7e5ar1FziQ@mail.gmail.com/
-[3]: https://www.spinics.net/lists/kvm/msg170113.html
-[4]: https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
-[5]: https://lore.kernel.org/lkml/20190204201854.2328-1-nitesh@redhat.com/
-[6]: https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-[7]: https://lore.kernel.org/lkml/20190603170306.49099-1-nitesh@redhat.com/
-
+Meanwhile, we need to fix the DoS opportunity.  How about my suggestion
+that we limit the count to 1024, see if anyone notices?  I bet they
+don't!
