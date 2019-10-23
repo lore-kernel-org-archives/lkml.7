@@ -2,355 +2,246 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB89CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D40BCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E537B21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B802086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 19:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHgAa1Z5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bm14vLj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391197AbfJWTC0 (ORCPT
+        id S2391310AbfJWTDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 15:02:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33670 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387929AbfJWTCZ (ORCPT
+        Wed, 23 Oct 2019 15:03:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58986 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390221AbfJWTDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:02:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c184so3982241pfb.0;
-        Wed, 23 Oct 2019 12:02:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=reIXHhG5b1rddgAzCk0P29EYhg5kg0ttetuyZNdFMeI=;
-        b=PHgAa1Z595hPOFr3l1uZkYYBuydJ2xuEHoNkNa9LtXUQZiMAcPqfJeClQKN9L2dXdD
-         AQePuhR+CzrUoaqUbksAvGw2+Lnr77VSq0jcLtPyfPRxm/d6xTf6RP9wxF2+fLPCVxnN
-         fD5Y7zMCBmpD/nzB5wAOSH/h+zlqboVG5Kq20zw6BDNf8nS2UEdXJ6n4sLSLrUHqfzbS
-         PFKv5dnLaLHIw3N6H7PjEkRFyEseAuZF2UeneldyTecGAPsZEmJqI3bgN4OdogXNm/RP
-         vMFpe9/xnH8Mv0UQHdyl2XRtq7evjNej7i1krILGS2KSi0eZZqzIamhsj3VrT2NMVDkq
-         7L9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=reIXHhG5b1rddgAzCk0P29EYhg5kg0ttetuyZNdFMeI=;
-        b=E55+Nyj5ZwSshmS+erZd8QsYRkCD5qTTU5VW3JefaJUnH87GW0ir6rlXB7gfg10In4
-         8/AcpUazJz7vCvAtTO5p9OWsdd8NtrG2pV+3Ml5fynKbxYYb/eGezfnCTmgGyTa/vyqs
-         jgj0l5siGzl7YyCOHYt3CXfF8r0ZTub9FsyBrHXn466sid/wffShQ3B7eg+ZnX+aUw8m
-         kHOxAQKY9BEjQBCw14jB9/nPsPdfhSyj2Qdc76CbcwnjoNX8l0wvmEGxzTn0z4mfMb27
-         OetTma033UI/q7EY9cAjLvp3BcCLfFoQvKnSEca4lrt6oa+ytErofxW3kyf1Mv3rhPRJ
-         TItQ==
-X-Gm-Message-State: APjAAAVndHL7xI3hv9NlCqObGbsHy8/Aw4Bi38orgN92UsVw9lHraOHG
-        iPa83ZJiH26Ok+rdZxNzLQ==
-X-Google-Smtp-Source: APXvYqxM1gSPP+lsu8vDcO91VLPp5/IAb5RlK3PhQoGZMiSPVyICPc1pPtWfLjjegLhcXG/3CkiFbA==
-X-Received: by 2002:a65:64da:: with SMTP id t26mr11651443pgv.180.1571857343779;
-        Wed, 23 Oct 2019 12:02:23 -0700 (PDT)
-Received: from localhost.localdomain ([216.52.21.4])
-        by smtp.gmail.com with ESMTPSA id m13sm22430901pgi.22.2019.10.23.12.02.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 23 Oct 2019 12:02:23 -0700 (PDT)
-From:   Praveen Chaudhary <praveen5582@gmail.com>
-X-Google-Original-From: Praveen Chaudhary <pchaudhary@linkedin.com>
-To:     davem@davemloft.net, fw@strlen.de, kadlec@netfilter.org,
-        pablo@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix skb->csum calculation when netfilter manipulation for NF_NAT_MANIP_SRC\DST is done on IPV6 packet.
-Date:   Wed, 23 Oct 2019 12:02:21 -0700
-Message-Id: <1571857342-8407-1-git-send-email-pchaudhary@linkedin.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 23 Oct 2019 15:03:14 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9NJ3DYG047935;
+        Wed, 23 Oct 2019 14:03:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571857393;
+        bh=RBsrmB5dRbnER8qyESHGRPNFCeESgDOnj0P1hXdDZlQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Bm14vLj9hbnbB3TxnihbcS4H14B6zT+VB0WFfx07hMqz+eFmKoLYDUMr3GwK6aQl+
+         IG+wnUg8HWljnBxWO0jeDtWbGWv0LVxGFc5HnE2ew6Df7o4bW3QQNOQQ8qAEVpqM+m
+         evPNzo1DZp1w7C3W8DKU65dAttaL5zzQJA9vdmt8=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9NJ3C8O106139
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Oct 2019 14:03:13 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 23
+ Oct 2019 14:03:02 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 23 Oct 2019 14:03:02 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9NJ3Bx1066089;
+        Wed, 23 Oct 2019 14:03:12 -0500
+Subject: Re: [PATCH 3/3] power: supply: bq2515x: Introduce the bq2515x family
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190930143137.21624-1-dmurphy@ti.com>
+ <20190930143137.21624-3-dmurphy@ti.com>
+ <20191020121514.yt3vgfpgldsxe2x4@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <66e6ebdf-628b-458a-8acb-65691ea83866@ti.com>
+Date:   Wed, 23 Oct 2019 14:02:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191020121514.yt3vgfpgldsxe2x4@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
--------------Issue [BUG in current code]:-------------
-
-IPV6 UDP packet is dropped by kernel in function udp6_csum_init(), when netfilter for NF_NAT_MANIP_SRC\DST is applied.
-    
-Counter increased: Udp6InCsumErrors. Note: incoming UPD6 packet has correct UDP checksum. 
-
-
--------------Reproduction steps: (using IPV6 UDP DNS Query)--- [linux kernel any version > 4.9.110]-------------
-
-1.) Set an SNAT entry in /etc/iptables/rules.v6 as show below.
-```
-    -A POSTROUTING -p udp -m udp --dport 53 -o Ethernet+ -j SNAT --to-source 2a04:xxxx:xxxx:4::2 (Masked)
-```
-Note: Above rule will change ipv6 source address to 2a04:xxxx:xxxx:4::2 for outgoing UDPv6 DNS packet , and will change the ipv6     destination address from 2a04:xxxx:xxxx:4::2 to original ipv6 address for incoming DNS response.
-
-2.) Apply the iptable changes.
-```
-    switch$ sudo /etc/network/if-pre-up.d/iptables
-```
-3.) Run a DNS query using IPV6 DNS server for any site. We can observe that DNS query is timed out.
-```
-    switch$ host facebook.com 2a04:xxxx:xx:1::c216
-    ;; connection timed out; no servers could be reached
-```
-
----------------Details of issue----------------
-
-1.) On incoming path: 
-Function Trace: udp_error()-->nf_checksum()-->nf_ip6_checksum():
-
-In function nf_ip6_checksum(); checksum is verified for incoming packet. Here skb->data points to IPV6 HEADER and ip_summed == CHECKSUM_NONE. So after a call to __skb_checksum_complete, skb->csum will store the 16-bit sum of [ipv6 header + UDP header + UDP data].
-
-Checksum verification will be successful here, because csum_ipv6_magic() subtracts 16-bit sum of IPv6 header from 16-bit sum of Pseudo header.
-
-Note: UDP checksum = ~[pseudo header + UDP header + UDP data].
-
-
-2.) SNAT iptable rule processing, 
-
-Function Trace: nf_nat_ipv6_manip_pkt()--> l4proto_manip_pkt()-->udp_manip_pkt()-->__udp_manip_pkt()-->nf_csum_update()---> nf_nat_ipv6_csum_update()-->inet_proto_csum_replace16():
-
-In function inet_proto_csum_replace16(), first udp_header checksum field will be updated as below, because of the NF_NAT_MANIP_SRC manipulation,     I.e to reflect IPV6 src address change in IPV6 header.
-```
-        *sum = csum_fold(csum_partial(diff, sizeof(diff),
-                 ~csum_unfold(*sum)));
-```
-Since skb->csum includes udp header checksum field, skb->csum will also go through similar calculation to reflect udp header checksum field change.
-```
-    if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
-            skb->csum = ~csum_partial(diff, sizeof(diff),
-                          ~skb->csum);
-```
-After this update, skb->csum = [Original IPV6 Header + Modified UDP header + UDP data]
-
-
-
-3.) Then in function nf_nat_ipv6_manip_pkt(), ipv6 header will be updated to have target IPV6 src address:
-    
-```
-    ipv6h->saddr = target->src.u3.in6;
-```
-Here we do not update skb->csum. So skb->csum will still be equal to [Original IPV6 Header + Modified UDP header + UDP data]. 
-**BUG BUG BUG**: This is the bug, skb->csum must be updated to reflect this change in IPV6 SRC Address.
-
-Ideally change in UDP header checksum field and change is IPV6 SRC address cancels each other in this case, so no update was needed in skb->csum.
-
-4.) IPV6 header processing: 
-
-Function Trace: ip6_input() --> ip6_input_finish() --> ip6_protocol_deliver_rcu():
-
-In ip6_protocol_deliver_rcu(), 16-bit sum of IPV6 header will be subtracted from skb->csum.
-
-```
-    skb_postpull_rcsum(skb, skb_network_header(skb),
-                       skb_network_header_len(skb));
-```
-
-This is the sum of new IPV6 header with modified IPV6 Source address. After this subtraction 
-
-skb->csum = [Original IPV6 Header + Modified UDP header + UDP data] - [Modified IPv6 Header]
-This is wrong value of skb->csum.
-
-
-5.) UDP Header Checksum init:
-
-Function Trace: __udp6_lib_rcv() --> udp6_csum_init() -->  __skb_checksum_validate_complete()
-
-In  __skb_checksum_validate_complete() below condition will never met. Because value of skb->csum is unexpected. 
-```
-    if (skb->ip_summed == CHECKSUM_COMPLETE) {
-        if (!csum_fold(csum_add(psum, skb->csum))) {
-            skb->csum_valid = 1;
-            return 0;
-        }
-    }
-```
-
-In udp6_csum_init(), below check will be true:
-```
-if (skb->ip_summed == CHECKSUM_COMPLETE && !skb->csum_valid) {
-        /* If SW calculated the value, we know it's bad */
-        if (skb->csum_complete_sw)
-            return 1;
-```
-
-and this packet will be dropped in  __udp6_lib_rcv() due to below check
-
-```
-if (udp6_csum_init(skb, uh, proto))
-        goto csum_error;
-.......
-.......
-
-csum_error:
-    __UDP6_INC_STATS(net, UDP_MIB_CSUMERRORS, proto == IPPROTO_UDPLITE);
-```
-
-
-
--------------------Related JPROBE LOGS:-------------------
-```
-Oct 19 05:15:01.420147 asw03 NOTICE kernel: [350574.264081]  nf_ip6_checksum: dataoff=40   
-Oct 19 05:15:01.420180 asw03 NOTICE kernel: [350574.264084]  nf_ip6_checksum: skb:ffff9faa71cbc500 ip_sum=0 csum_valid=0 csum_com_sw=0 csum=0
-```
-[Explanation]: dataoff = 40 for ipv6 header and checksum is not verified yet, so skb->csum = 0.
-
-```
-Oct 19 05:15:01.420190 asw03 NOTICE kernel: [350574.264090]  nf_ip6_checksum: len:228 psum:ffffd68e csum=2e57fb19 sum=0
-```
-[Explanation]: psum = pseudo header sum - ipv6 header sum. Csum = skb->csm = [ipv6 header + UDP header + UDP data]
-psum + csum (16-bit sum) = ffff + d68e + 2e57 + fb19 = 0x2FFFD = 0xFFFD + 0x2 = 0xFFFF.
-
-```
-Oct 19 05:15:01.420199 asw03 NOTICE kernel: [350574.264105] inet_proto_csum_replace16 : prev_hw_check=7feb uh_check=01cb
-```
-[Explanation]: With SNAT, IPV6 address will change from 2axx:xxxx:00xx:0004:0000:0000:0000:0002 to 2axx:xxx:00xx:2082:0000:0000:0000:0002. So the 16 bit diff is: 0x2082 - 0x0004 = 0x207E . So UDP header checksum changes from 0xEB7f to 0xCB01, Diff = ~(0x207E). [Printed without htons above.]
-
-```
-Oct 19 05:15:01.420203 asw03 NOTICE kernel: [350574.264107] inet_proto_csum_replace16: skb:ffff9faa71cbc500 ip_sum=2 csum_valid=1 csum_com_sw=1 csum= b037fb18
-```
-[Explanation]: Skb->csum changed according to udp header checksum diff: 16-bit diff for (b037fb18 - 2e57fb19) = ~htons(0x207E).
-
-```
-Oct 19 05:15:01.420218 asw03 NOTICE kernel: [350574.264116] ip6_rcv_finish: skb:ffff9faa71cbc500 ip_sum=2 csum_valid=1 csum_com_sw=1 csum=b037fb18
-Oct 19 05:15:01.420227 asw03 NOTICE kernel: [350574.264135] __udp6_lib_rcv: src: 2axx:xxxx:00xx:0001:0000:0000:0000:c216 dst: 2axx:xxxx:00xx:2082:0000:0000:0000:0002 port: 53 uh_check: cb01
-Oct 19 05:15:01.420230 asw03 NOTICE kernel: [350574.264137] __udp6_lib_rcv: skb:ffff9faa71cbc500 ip_sum=2 csum_valid=1 csum_com_sw=1 csum=57e294da
-```
-[Explanation]: Between ip6_rcv_finish and __udp6_lib_rcv, 16-bit sum of ipv6 header is subtracted from skb->csum. So skb->csum = 57e294da at __udp6_lib_rcv.
-
-```
-Oct 19 05:15:01.420236 asw03 NOTICE kernel: [350574.264140] __udp6_lib_rcv_post: len:188 psum:ffff9522 csum=57e294da
-```
-Here psum + csum = ffff + 9522 + 57e2 + 94da = 0x281DD = 0x81DF = ~(htons(207E)). Which shows that SKB_CSUM should be updated due to change IPV6 address.
-
-
---------------FIX ------------------------
-
-nf_nat_ipv6_csum_update():
-
-If nf_nat_ipv6_csum_update() function is called, it is guaranteed that one of the manipulation (NF_NAT_MANIP_SRC\NF_NAT_MANIP_DST) will surely happen. So skb->csum can be updated here for IPV6 header change. 
-
-With IPV6 address update, skb->csum must be updated as below:
-
-```
-    skb->csum = csum_partial(diff, sizeof(diff),
-                  skb->csum);
-```
-Where diff is:
-```
-__be32 diff[] = {
-        ~from[0], ~from[1], ~from[2], ~from[3],
-        to[0], to[1], to[2], to[3],
-    };
-```
-Here From contains old IPV6 address and to contains new IPV6 address.
-
-
------------------------
-Interesting Facts:
-
-------------------Why Problem is not seen for IPV4--------------
-
-IPV4 suffers with similar issue, but since 16-bit sum of IPV4 header is always zero [Due to IPv4 header checksum present in IPV4 header]. Skb->csum as per below state will correct:
-
-skb->csum = [Original IPV6 Header + Modified UDP header + UDP data - Modified IPv6 Header] = [Modified UDP header + UDP data]
-
-
-------------------Why Problem is not seen for IPV6 TCP--------------
-
-Even though skb->csum will be incorrect, when packet hit tcp_v6_rcv()--> skb_checksum_init()--> __skb_checksum_validate().
-
-TCP code start checksum calculation from scratch by assigning pseudo header sum in skb->csum and by returning 0 from skb_checksum_init().
-
-With this fix,  validation will be successful in __skb_checksum_validate() even for tcpv6 packet, so kernel will not recalculate checksum.
-
-
-------------------Why Problem is not seen in linux kernel version < 3.16--------------
-
-Call to udp_csum_pull_header(skb) in udpv6_queue_rcv_one_skb(struct sock *sk, struct sk_buff *skb) has exposed the issue for UDPv6.
-
--------------------------------------------------------------------------------------
-
-Note: 
-
--- Please let me know correct name and the file for new function inet_proto_skb_csum_replace16().
-
--- I am new to linux kernel contribution, so please let me know if any guideline is missed, I will follow it. I appreciate any suggestion. Thanks. 
-
--- I see KernelPRBot reply on each PR, let me know if that is the correct way to contribute.
-
--- Kindly let me know, If needed I can present entire packet and example with checksum calculation at each stage.
-
--------------------------------------------------------------------------------------
-
-
-
----------------------------Testing (with JPROBE LOGS) [AFTER FIX UDPv6 DNS query works fine]:---------------------------
-
-
-1.) 
-```
-pchaudha@asw03:~$ sudo cat /etc/iptables/rules.v6 | grep SNAT
-# SNAT
--A POSTROUTING -p tcp -m tcp --dport 443 -o Ethernet+ -j SNAT --to-source 2a04:xxxx:62:4::2
--A POSTROUTING -p udp -m udp --dport 53 -o Ethernet+ -j SNAT --to-source 2a04:xxxx:62:4::2
--A POSTROUTING -p tcp -m tcp --dport 53 -o Ethernet+ -j SNAT --to-source 2a04:xxxx:62:4::2
-```
-
-
-2.)
-```
- pchaudha@asw03:~$ sudo /etc/network/if-pre-up.d/iptables
-```
-3.) UDPv6 DNS query:
-```
-pchaudha@asw03:~$ host facebook.com 2a04:xxxx:xx:1::c216
-Using domain server:
-Name: 2a04:xxxx:32:1::c216
-Address: 2a04:xxxx:32:1::c216#53
-Aliases:
-
-facebook.com has address 157.240.11.35
-facebook.com has IPv6 address 2a03:2880:f10d:183:face:b00c:0:25de
-facebook.com mail is handled by 10 smtpin.vvv.facebook.com.
-```
-4.) JPROBE LOGS: 
-```
-Oct 22 05:51:20.748153 asw03 NOTICE kernel: [611954.922595] nf_nat_ipv6_manip_pkt: skb:ffff9faa7c9bf400 t->dst.protonum=17
-Oct 22 05:51:20.748186 asw03 NOTICE kernel: [611954.922600] inet_proto_csum_replace16: skb:ffff9faa7c9bf400 ips=2 csumv=1 csumsw=1 csum=4914e05c
-Oct 22 05:51:20.748192 asw03 NOTICE kernel: [611954.922601] inet_proto_csum_replace16: new sum:c734e05c <<<<<<<<
-Oct 22 05:51:20.748195 asw03 NOTICE kernel: [611954.922605] ip6_rcv_finish: skb:ffff9faa7c9bf400 ips=2 csumv=1 csumsw=1 csum=4914e05c
-```
-5.) TCPv6 query:
-```
-pchaudha@asw03:~$ host -T facebook.com 2a04:xxxx:32:1::c216
-Using domain server:
-Name: 2a04:xxxx:32:1::c216
-Address: 2a04:xxxx:32:1::c216#53
-Aliases:
-
-facebook.com has address 31.13.70.36
-facebook.com has IPv6 address 2a03:2880:f10d:183:face:b00c:0:25de
-facebook.com mail is handled by 10 smtpin.vvv.facebook.com.
---------------------------
-```
-6.) JPROBE LOGS:
-```
-Oct 22 18:13:29.199793 asw03 NOTICE kernel: [656483.605018] nf_nat_ipv6_manip_pkt: skb:ffff9faab3e79400 t->dst.protonum=6
-Oct 22 18:13:29.199826 asw03 NOTICE kernel: [656483.605032] inet_proto_csum_replace16: skb:ffff9faab3e79400 ips=2 csumv=1 csumsw=1 csum=c6796dec
-Oct 22 18:13:29.199831 asw03 NOTICE kernel: [656483.605033] inet_proto_csum_replace16: new sum:c4996dec
-Oct 22 18:13:29.199835 asw03 NOTICE kernel: [656483.605038] ip6_rcv_finish: skb:ffff9faab3e79400 ips=2 csumv=1 csumsw=1 csum=c6796dec
-```
-
-Praveen Chaudhary (1):
-  [netfilter]: Fix skb->csum calculation when netfilter manipulation for
-    NF_NAT_MANIP_SRC\DST is done on IPV6 packet.
-
- include/net/checksum.h       |  2 ++
- net/core/utils.c             | 13 +++++++++++++
- net/netfilter/nf_nat_proto.c |  2 ++
- 3 files changed, 17 insertions(+)
-
--- 
-2.7.4
+Sebastian
+
+On 10/20/19 7:15 AM, Sebastian Reichel wrote:
+> Hi Dan,
+>
+> On Mon, Sep 30, 2019 at 09:31:37AM -0500, Dan Murphy wrote:
+[...]
+>> +
+>> +static int bq2515x_power_supply_register(struct bq2515x_device *bq2515x)
+>> +{
+>> +	struct power_supply_config psy_cfg = { .drv_data = bq2515x, };
+>> +	int ret = -EINVAL;
+>> +
+>> +	bq2515x->mains = devm_power_supply_register(bq2515x->dev,
+>> +						    &bq2515x_mains_desc,
+>> +						    &psy_cfg);
+>> +	if (IS_ERR(bq2515x->mains))
+>> +		return ret;
+>> +
+>> +	bq2515x->battery = devm_power_supply_register(bq2515x->dev,
+>> +						      &bq2515x_battery_desc,
+>> +						      &psy_cfg);
+>> +	if (IS_ERR(bq2515x->battery)) {
+>> +		power_supply_unregister(bq2515x->mains);
+> you registered the mains power-supply with devm_ prefix, so it
+> will be removed automatically.
+Ack
+>
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bq2515x_hw_init(struct bq2515x_device *bq2515x)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (bq2515x->init_data.ichg)
+>> +		ret = bq2515x_set_ilim_lvl(bq2515x, bq2515x->init_data.ichg);
+>> +
+>> +	if (bq2515x->init_data.vreg)
+>> +		ret = bq2515x_set_batt_reg(bq2515x, bq2515x->init_data.vreg);
+> This throws away potential error code from bq2515x_set_ilim_lvl().
+Ack
+>> +	return ret;
+>> +}
+>> +
+>> +static int bq2515x_read_properties(struct bq2515x_device *bq2515x)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = device_property_read_u8(bq2515x->dev, "ti,charge-current",
+>> +				      &bq2515x->init_data.ichg);
+>> +	if (ret)
+>> +		goto fail;
+>> +
+>> +	ret = device_property_read_u8(bq2515x->dev,
+>> +				      "ti,battery-regulation-voltage",
+>> +				      &bq2515x->init_data.vreg);
+>> +	if (ret)
+>> +		goto fail;
+> The above properties are marked as optional in the DT bindings
+> document.
+ACK.  Will just set them to the data sheet default values
+>
+>> +	bq2515x->pg_gpio = devm_gpiod_get_optional(bq2515x->dev,
+>> +						   "pg", GPIOD_IN);
+>> +	if (IS_ERR(bq2515x->pg_gpio))
+>> +		dev_info(bq2515x->dev, "PG GPIO not defined");
+>> +
+>> +	bq2515x->reset_gpio = devm_gpiod_get_optional(bq2515x->dev,
+>> +						   "reset", GPIOD_OUT_LOW);
+>> +	if (IS_ERR(bq2515x->reset_gpio))
+>> +		dev_info(bq2515x->dev, "reset GPIO not defined");
+>> +
+>> +	bq2515x->lp_gpio = devm_gpiod_get_optional(bq2515x->dev, "low-power",
+>> +						   GPIOD_OUT_LOW);
+>> +	if (IS_ERR(bq2515x->lp_gpio))
+>> +		dev_info(bq2515x->dev, "LP GPIO not defined");
+>> +
+>> +	bq2515x->ce_gpio = devm_gpiod_get_optional(bq2515x->dev,
+>> +						   "charge-enable",
+>> +						   GPIOD_OUT_HIGH);
+>> +	if (IS_ERR(bq2515x->ce_gpio))
+>> +		dev_info(bq2515x->dev, "Charge enable GPIO not defined");
+> The GPIO errors should not be ignored, especially since you
+> might get a -EPROBE_DEFER.
+
+ACK
+
+
+>> +fail:
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct regmap_config bq2515x_regmap_config = {
+>> +	.reg_bits = 8,
+>> +	.val_bits = 8,
+>> +
+>> +	.max_register = BQ2515X_DEVICE_ID,
+>> +	.reg_defaults     = bq2515x_reg_defs,
+>> +	.num_reg_defaults = ARRAY_SIZE(bq2515x_reg_defs),
+>> +	.cache_type	  = REGCACHE_RBTREE,
+>> +};
+>> +
+>> +static int bq2515x_probe(struct i2c_client *client,
+>> +			 const struct i2c_device_id *id)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct bq2515x_device *bq;
+>> +	int ret;
+>> +
+>> +	bq = devm_kzalloc(dev, sizeof(*bq), GFP_KERNEL);
+>> +	if (!bq)
+>> +		return -ENOMEM;
+>> +
+>> +	bq->client = client;
+>> +	bq->dev = dev;
+>> +
+>> +	mutex_init(&bq->lock);
+>> +
+>> +	bq->regmap = devm_regmap_init_i2c(client, &bq2515x_regmap_config);
+>> +	if (IS_ERR(bq->regmap)) {
+>> +		dev_err(dev, "failed to allocate register map\n");
+>> +		return PTR_ERR(bq->regmap);
+>> +	}
+>> +
+>> +	strncpy(bq->model_name, id->name, I2C_NAME_SIZE);
+>> +
+>> +	i2c_set_clientdata(client, bq);
+>> +
+>> +	ret = bq2515x_read_properties(bq);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Failed to register power supply\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = bq2515x_hw_init(bq);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Cannot initialize the chip.\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	return bq2515x_power_supply_register(bq);
+>> +}
+>> +
+>> +static const struct i2c_device_id bq2515x_i2c_ids[] = {
+>> +	{ "bq25150", 0 },
+>> +	{ "bq25155", 1 },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, bq2515x_i2c_ids);
+>> +
+>> +static const struct of_device_id bq2515x_of_match[] = {
+>> +	{ .compatible = "ti,bq25150", },
+>> +	{ .compatible = "ti,bq25155", },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, bq2515x_of_match);
+>> +
+>> +static struct i2c_driver bq2515x_driver = {
+>> +	.driver = {
+>> +		.name = "bq2515x-charger",
+>> +		.of_match_table = of_match_ptr(bq2515x_of_match),
+> You need to do one of those:
+>
+>   * remove of_match_ptr and specify bq2515x_of_match directly
+>   * put the OF table in #ifdef CONFIG_OF
+>   * mark the OF table as __maybe_unused
+
+Probably just do the first one.
+
+Dan
 
