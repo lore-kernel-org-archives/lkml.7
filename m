@@ -2,121 +2,243 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8050ECA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79591CA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E9F21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571836258;
-	bh=XfD1Vyk8Auehu+lpd/AA3ke17tRs+2Dw4K2hWCStsDc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q7yTF+rkIb3hNI2ys78TRFtfRZ/bGwqXu2/qUEZbpnEmfBCQvFCLrrp1+wJ9M+Z0S
-	 cuRXldlehILKVH4HgIvKQpb+/kTUFKY3fKeSPPgKzMCgJ1DpGf0Xk5kYGbIP8bQdBZ
-	 x8vKS62jA3+FtxWHUu9+f+FZfYB5/BeQ/ifRC8UY=
+	by mail.kernel.org (Postfix) with ESMTP id 4A19A21872
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 13:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405627AbfJWNK5 convert rfc822-to-8bit (ORCPT
+        id S2405637AbfJWNLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 09:10:57 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35592 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfJWNK4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 09:10:56 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k2so5018362edx.2;
-        Wed, 23 Oct 2019 06:10:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lzwXfyhUE7yc9zrzbjqMe71sKuHvjq9U3aqm0Bd1AoI=;
-        b=S/A3aIGnph7/r49FdcX/+rOROLnuReURWi9z5AaaiFgwNDyHNguoHy2jLTKIg0AobS
-         Ii8Aob7iyqUE9px3EJl+QbMXPlHqS2i4AJjUkEXgVYMOpJB5ylqfR28AxSRz0LGrE0oN
-         dz0N+b0G4A1+WoZyqXNpZC27TiMgZrwh3OQIocjQVBgN+3XtOoyCaMvlIaqATpBbxqeb
-         aH+TRLRapqnj+ldkTcAZ0Bi9oR73bzEGJ0oLBkEdJwU7OEXluqUoH1Bhl4rcsWPwWDMa
-         DGF3xhA2WaMsusqyac2NzMIPJnBzhBlKnq/yDYu7/oI4+szOWAtVn2bNxBf1GiYtQfaY
-         jRtQ==
-X-Gm-Message-State: APjAAAXIBu2F0LkRRidZBYch85DAr88A/27wF1+klG85knTLuwFmQPUI
-        Ki2dfON5MI5tkKTRGbG4ylA=
-X-Google-Smtp-Source: APXvYqyft44OcCGb0xN0+fC1gmfK8usNRgvA/I5KY4vuTv2zLifQ5kptU9qNo1AQahi2rM4m7Aa/dg==
-X-Received: by 2002:aa7:c595:: with SMTP id g21mr36717915edq.79.1571836252860;
-        Wed, 23 Oct 2019 06:10:52 -0700 (PDT)
-Received: from pi3 ([194.230.155.217])
-        by smtp.googlemail.com with ESMTPSA id b12sm785479edq.75.2019.10.23.06.10.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 06:10:52 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 15:10:49 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-clk@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        Lihua Yao <ylhuajnu@163.com>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Lihua Yao <ylhuajnu@outlook.com>,
-        Sergio Prado <sergio.prado@e-labworks.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 00/36] ARM: samsung platform cleanup
-Message-ID: <20191023131049.GG11048@pi3>
-References: <20191010202802.1132272-1-arnd@arndb.de>
+        Wed, 23 Oct 2019 09:11:03 -0400
+Received: from [217.140.110.172] ([217.140.110.172]:51720 "EHLO foss.arm.com"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfJWNLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 09:11:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 593254A7;
+        Wed, 23 Oct 2019 06:10:44 -0700 (PDT)
+Received: from [10.37.9.47] (unknown [10.37.9.47])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FFD3F6C4;
+        Wed, 23 Oct 2019 06:10:42 -0700 (PDT)
+Subject: Re: [PATCH v4] coresight: Serialize enabling/disabling a link device.
+To:     yabinc@google.com, mathieu.poirier@linaro.org,
+        alexander.shishkin@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191018181403.106836-1-yabinc@google.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <d4b10a7f-6823-8b6d-c63d-a1df3c719a2e@arm.com>
+Date:   Wed, 23 Oct 2019 14:14:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20191010202802.1132272-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191018181403.106836-1-yabinc@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 10:28:02PM +0200, Arnd Bergmann wrote:
-> I've spent some time looking at the remaining ARMv4/ARMv5 platforms
-> that are not part of ARCH_MULTIPLATFORM, and tried to get them closer
-> to that. Here is what came out of that for the samsung platforms:
+On 10/18/2019 07:14 PM, Yabin Cui wrote:
+> When tracing etm data of multiple threads on multiple cpus through perf
+> interface, some link devices are shared between paths of different cpus.
+> It creates race conditions when different cpus wants to enable/disable
+> the same link device at the same time.
 > 
-> * Exynos and s5pv210 are made independent of plat-samsung
-> * device drivers stop using mach/*.h headers for s3c24xx
->   (and other platforms not in this series)
-> * s3c24xx and s3c64xx get merged into mach-s3c, removing
->   the need for plat-samsung (I have other patches for the
->   remaining plat-* directories)
-> * mach/io.h gets cleaned up to only be needed for BAST
->   PC104 mode (looking for ideas to proceed)
-> * mach/irqs.h remains for now, this still needs to be converted
->   to sparse IRQs.
+> Example 1:
+> Two cpus want to enable different ports of a coresight funnel, thus
+> calling the funnel enable operation at the same time. But the funnel
+> enable operation isn't reentrantable.
 > 
-> Some bits are a little ugly, but overall I think this a big
-> improvement.
+> Example 2:
+> For an enabled coresight dynamic replicator with refcnt=1, one cpu wants
+> to disable it, while another cpu wants to enable it. Ideally we still have
+> an enabled replicator with refcnt=1 at the end. But in reality the result
+> is uncertain.
 > 
-> The contents are available for testing in
+> Since coresight devices claim themselves when enabled for self-hosted
+> usage, the race conditions above usually make the link devices not usable
+> after many cycles.
 > 
-> git://kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git s3c-multiplatform
+> To fix the race conditions, this patch uses spinlocks to serialize
+> enabling/disabling link devices.
+> 
+> Fixes: a06ae8609b3d ("coresight: add CoreSight core layer framework")
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> ---
+> 
+> v3 -> v4: moved lock from coresight_enable/disable_link() to
+> enable/disable functions of each link device.
+> 
+> I also removed lock protection of csdev->enable in v3. Because that
+> needs to move csdev->enable inside the enable/disable functions of
+> each link device. That's much effort with almost no benefits.
+> csdev->enable seems only used for source devices in sysfs interface.
+> 
+> ---
+>   .../hwtracing/coresight/coresight-funnel.c    | 29 ++++++++----
+>   .../coresight/coresight-replicator.c          | 31 +++++++++----
+>   .../hwtracing/coresight/coresight-tmc-etf.c   | 39 ++++++++--------
+>   drivers/hwtracing/coresight/coresight.c       | 45 ++++++-------------
+>   4 files changed, 77 insertions(+), 67 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+> index 05f7896c3a01..8326d03a0d03 100644
+> --- a/drivers/hwtracing/coresight/coresight-funnel.c
+> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
+> @@ -44,6 +44,7 @@ struct funnel_drvdata {
+>   	struct clk		*atclk;
+>   	struct coresight_device	*csdev;
+>   	unsigned long		priority;
+> +	spinlock_t		spinlock;
+>   };
+>   
+>   static int dynamic_funnel_enable_hw(struct funnel_drvdata *drvdata, int port)
+> @@ -76,12 +77,20 @@ static int funnel_enable(struct coresight_device *csdev, int inport,
+>   {
+>   	int rc = 0;
+>   	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +	unsigned long flags;
+>   
+> -	if (drvdata->base)
+> -		rc = dynamic_funnel_enable_hw(drvdata, inport);
+> +	spin_lock_irqsave(&drvdata->spinlock, flags);
+> +	if (atomic_inc_return(&csdev->refcnt[inport]) == 1) {
+> +		if (drvdata->base)
+> +			rc = dynamic_funnel_enable_hw(drvdata, inport);
+>   
+> -	if (!rc)
+> -		dev_dbg(&csdev->dev, "FUNNEL inport %d enabled\n", inport);
+> +		if (rc)
+> +			atomic_dec(&csdev->refcnt[inport]);
+> +		else
+> +			dev_dbg(&csdev->dev, "FUNNEL inport %d enabled\n",
+> +				inport);
+> +	}
+> +	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+>   	return rc;
+>   }
+>   
+> @@ -107,11 +116,15 @@ static void funnel_disable(struct coresight_device *csdev, int inport,
+>   			   int outport)
+>   {
+>   	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +	unsigned long flags;
+>   
+> -	if (drvdata->base)
+> -		dynamic_funnel_disable_hw(drvdata, inport);
+> -
+> -	dev_dbg(&csdev->dev, "FUNNEL inport %d disabled\n", inport);
+> +	spin_lock_irqsave(&drvdata->spinlock, flags);
+> +	if (atomic_dec_return(&csdev->refcnt[inport]) == 0) {
+> +		if (drvdata->base)
+> +			dynamic_funnel_disable_hw(drvdata, inport);
+> +		dev_dbg(&csdev->dev, "FUNNEL inport %d disabled\n", inport);
+> +	}
+> +	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+>   }
+>   
+>   static const struct coresight_ops_link funnel_link_ops = {
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index b29ba640eb25..427d8b8d0917 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -36,6 +36,7 @@ struct replicator_drvdata {
+>   	void __iomem		*base;
+>   	struct clk		*atclk;
+>   	struct coresight_device	*csdev;
+> +	spinlock_t		spinlock;
+>   };
+>   
+>   static void dynamic_replicator_reset(struct replicator_drvdata *drvdata)
+> @@ -97,11 +98,20 @@ static int replicator_enable(struct coresight_device *csdev, int inport,
+>   {
+>   	int rc = 0;
+>   	struct replicator_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> -
+> -	if (drvdata->base)
+> -		rc = dynamic_replicator_enable(drvdata, inport, outport);
+> -	if (!rc)
+> -		dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&drvdata->spinlock, flags);
+> +	if (atomic_inc_return(&csdev->refcnt[outport]) == 1) {
 
-When sending v2, can you Cc:
+Since we now have the spinlock to protect us, we could simply do an
+atomic_read() and then do the hw_enable() followed by an atomic_inc(),
+if we are successful. That way we could make it more cleaner and avoid
+the atomic_dec() if we encounter a failure. In fact we could simply get
+away with the refcnt and replace them with a simple integer, but that
+may be a different patch.
 
-Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Lihua Yao <ylhuajnu@outlook.com>
-(or Lihua Yao <ylhuajnu@163.com> if outlook.com bounces)
-Sergio Prado <sergio.prado@e-labworks.com>
-Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-These are folks which to my knowledge had working S3C and S5P boards
-so maybe they could provide testing.
+> +		if (drvdata->base)
+> +			rc = dynamic_replicator_enable(drvdata, inport,
+> +						       outport);
+> +
+> +		if (rc)
+> +			atomic_dec(&csdev->refcnt[outport]);
+> +		else
+> +			dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
+> +	}
+> +	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+>   	return rc;
+>   }
+>   
+> @@ -137,10 +147,15 @@ static void replicator_disable(struct coresight_device *csdev, int inport,
+>   			       int outport)
+>   {
+>   	struct replicator_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +	unsigned long flags;
+>   
+> -	if (drvdata->base)
+> -		dynamic_replicator_disable(drvdata, inport, outport);
+> -	dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
+> +	spin_lock_irqsave(&drvdata->spinlock, flags);
+> +	if (atomic_dec_return(&csdev->refcnt[outport]) == 0) {
+> +		if (drvdata->base)
+> +			dynamic_replicator_disable(drvdata, inport, outport);
+> +		dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
+> +	}
+> +	spin_unlock_irqrestore(&drvdata->spinlock, flags);
 
-Best regards,
-Krzysztof
 
+>   }
+>   
+>   static const struct coresight_ops_link replicator_link_ops = {
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> index 807416b75ecc..cb4a38541bf8 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+> @@ -334,23 +334,25 @@ static int tmc_disable_etf_sink(struct coresight_device *csdev)
+>   static int tmc_enable_etf_link(struct coresight_device *csdev,
+>   			       int inport, int outport)
+>   {
+> -	int ret;
+> +	int ret = 0;
+>   	unsigned long flags;
+>   	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+>   
+>   	spin_lock_irqsave(&drvdata->spinlock, flags);
+> -	if (drvdata->reading) {
+> -		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+> -		return -EBUSY;
+> +	if (atomic_inc_return(&csdev->refcnt[0]) == 1) {
+> +		if (drvdata->reading)
+> +			ret = -EBUSY;
+
+Could we not check the drvdata->reading before the refcount and bail
+out early ? We are protected by the spinlock anyway. Similar to the
+above case we could check the refcount and only increment when we have
+enabled.
+
+
+Cheers
+Suzuki
