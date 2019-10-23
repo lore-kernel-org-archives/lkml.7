@@ -2,115 +2,97 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884DFCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC661CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE7A2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571827393;
-	bh=w17ansr82Cw8bMrH42KGu0yry/M/xvT4mqS/2dVIBBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BRdjDKcJnRN9+XdLq05MjcjdQcQR6Y31H74E9jcNrNGmn9Ox9PgXpX2RzEUMYLR3G
-	 jK0OEqIW5ggC7vd3QxmJ7xaOVLymKnWO53mjkKXibxnQB7Cq3OzT6zNxTo0t3xtO+k
-	 Jpa/E6q1Oeg/ivZUkFX6V3D6a3sEbTnn5pOSIxDs=
+	by mail.kernel.org (Postfix) with ESMTP id 8CF182064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 10:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404585AbfJWKnM (ORCPT
+        id S2404592AbfJWKnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 06:43:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49322 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390566AbfJWKnM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 06:43:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=o8+aRiWYArgOfcIQUpcz0HRWYDcLBPfXp8bzXS/M6uk=; b=osCh/jbEew5Dyc2YthYufYOzT
-        /wWvYeSc75A8nWZCJhQPtPZQJIPzRLmVMjAZHWDrgPwEE/cD+/tXhLi+RnPHgD+OxlAHWnpdBLkTV
-        GlWNDNNzdGUT/gMTgUuVag18SmkkVxCDkpkaaAQASWnWKQnpLoDjBpCmbLBxBwdkDyz48=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNE6b-0000J4-QS; Wed, 23 Oct 2019 10:43:05 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 0557E2743259; Wed, 23 Oct 2019 11:43:04 +0100 (BST)
-Date:   Wed, 23 Oct 2019 11:43:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] cpufreq: s3c64xx: Remove pointless NULL check in
- s3c64xx_cpufreq_driver_init
-Message-ID: <20191023104304.GA5723@sirena.co.uk>
-References: <20191023000906.14374-1-natechancellor@gmail.com>
- <20191023032302.tu5nkvulo2yoctgr@vireshk-i7>
+        Wed, 23 Oct 2019 06:43:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26893 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390386AbfJWKnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 06:43:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 03:43:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,220,1569308400"; 
+   d="scan'208";a="209898367"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 23 Oct 2019 03:43:46 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 23 Oct 2019 13:43:45 +0300
+Date:   Wed, 23 Oct 2019 13:43:45 +0300
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH 1/1] PCI: Add hp_mmio_size and hp_mmio_pref_size
+ parameters
+Message-ID: <20191023104345.GY2819@lahna.fi.intel.com>
+References: <PSXP216MB01833367A1A154AEB816AE4E806B0@PSXP216MB0183.KORP216.PROD.OUTLOOK.COM>
+ <20191023094743.GU2819@lahna.fi.intel.com>
+ <SL2P216MB0187D47276DED3EA634123BE806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+ <20191023100359.GW2819@lahna.fi.intel.com>
+ <SL2P216MB0187E0B5D83583094065CA35806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023032302.tu5nkvulo2yoctgr@vireshk-i7>
-X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <SL2P216MB0187E0B5D83583094065CA35806B0@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 10:33:42AM +0000, Nicholas Johnson wrote:
+> On Wed, Oct 23, 2019 at 01:03:59PM +0300, mika.westerberg@linux.intel.com wrote:
+> > On Wed, Oct 23, 2019 at 09:57:17AM +0000, Nicholas Johnson wrote:
+> > > On Wed, Oct 23, 2019 at 12:47:43PM +0300, mika.westerberg@linux.intel.com wrote:
+> > > > On Wed, Oct 23, 2019 at 08:37:48AM +0000, Nicholas Johnson wrote:
+> > > > >  			} else if (!strncmp(str, "hpmemsize=", 10)) {
+> > > > > -				pci_hotplug_mem_size = memparse(str + 10, &str);
+> > > > > +				pci_hotplug_mmio_size =
+> > > > > +					memparse(str + 10, &str);
+> > > > > +				pci_hotplug_mmio_pref_size =
+> > > > > +					memparse(str + 10, &str);
+> > > > 
+> > > > Does this actually work correctly? The first memparse(str + 10, &str)
+> > > > modifies str so the next call will not start from the correct position
+> > > > anymore.
+> > > I have been using this for a long time now and have not had any issues.
+> > > Does it modify str? I thought that was done by the loop.
+> > 
+> > If you add "hpmemsize=xxx" in the command line and print both
+> > pci_hotplug_mmio_size and pci_hotplug_mmio_pref_size after the
+> > assignment, do they have the same value? If yes, then there is no
+> > problem.
+> Looking at lib/cmdline.c line 125, it looks like there is no point in me 
+> testing it. It looks like you are right.
+> 
+> What is the better fix?
+> 
+> pci_hotplug_mmio_size = pci_hotplug_mmio_pref_size = memparse(str + 10, &str);
+> 
+> ^ Could be too long, even if we are ignoring the 80-character limit.
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I prefer this:
 
-On Wed, Oct 23, 2019 at 08:53:02AM +0530, Viresh Kumar wrote:
-> On 22-10-19, 17:09, Nathan Chancellor wrote:
-> > When building with Clang + -Wtautological-pointer-compare:
-> >=20
-> > drivers/cpufreq/s3c64xx-cpufreq.c:152:6: warning: comparison of array
-> > 's3c64xx_freq_table' equal to a null pointer is always false
-> > [-Wtautological-pointer-compare]
-> >         if (s3c64xx_freq_table =3D=3D NULL) {
-> >             ^~~~~~~~~~~~~~~~~~    ~~~~
-> > 1 warning generated.
-> >=20
-> > The definition of s3c64xx_freq_table is surrounded by an ifdef
-> > directive for CONFIG_CPU_S3C6410, which is always true for this driver
-> > because it depends on it in drivers/cpufreq/Kconfig.arm (and if it
-> > weren't, there would be a build error because s3c64xx_freq_table would
-> > not be a defined symbol).
+				pci_hotplug_mmio_size = memparse(str + 10, &str);
+				pci_hotplug_mmio_pref_size = pci_hotplug_mmio_size;
 
-> +broonie, who wrote this patch to see his views on why he kept it like
-> this.
-
-The driver should also have supported s3c6400 as well.
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2wLrMACgkQJNaLcl1U
-h9B2ZAf/eQxJSi8vjkh2szC5fpPoxL3PqhhtoNyHk9pyamhKksLnfq8Wfc5cXoYf
-m805fFfs10op9oNpI//wwBy+WtmSWx7wFDZx+by2GeKvzPfCqjdXBvUziAtQhq/q
-pU4RI10nDISz7KV5+MogDYKIqS86tiaCpprrXQI9B524i1u1TCIiaqoW9EC6eho5
-104of9kneV1wM3wKRtz1W9HkOlV+Dnm1rDRWldGriYbd+HAJNhxGe+LNiLubnATf
-N3ntYDNTJmhuwc4KWuzOTHQE+5RXi2VBkk599ZoLoNSZhd6M5a4UU896+XYBjvEN
-NBjAKyjIVg55uIINznEJ2YtoD+u6qg==
-=wd9j
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+And you can ignore the 80-char limit. The above is much more readable
+IMHO.
