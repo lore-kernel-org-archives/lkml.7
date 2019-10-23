@@ -2,130 +2,174 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C705BCA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B196ECA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E0C214B2
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E6E214B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 06:39:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hVvgTKdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389010AbfJWGiF (ORCPT
+        id S2389055AbfJWGji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 02:38:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:18149 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbfJWGiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 02:38:05 -0400
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 23 Oct 2019 02:39:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29835 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730402AbfJWGjh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 02:39:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571812776;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JPoAZ12wvzk0gM/LMQmdcsjRqyc3hj/9X0DxYyB3fTs=;
+        b=hVvgTKdc/bNeH9Wd6Ff8dmsch9XkS8ftV+OW2xaNYTq+d09Og0l3N50DSCJVWDrmDOfwrG
+        ZDu+gOyOaaUT/QkX4Ek0TL3OcwcevVsaegTwgK8nvzuwiJi8LbilbMrkxUO/Cg5ATJjpnw
+        YmfytHTxO9F5TQ30W1xO33jHs4CQA2g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-pxA18oaXO4G0FL33orpGpw-1; Wed, 23 Oct 2019 02:39:33 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9D0192A09B9
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 06:38:04 +0000 (UTC)
-Received: by mail-il1-f200.google.com with SMTP id h22so11704056ild.19
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 23:38:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rZiwgaG4Q2oxKOaeX7bWyobeJyJbNtWOopUfWLYGvao=;
-        b=KdufJYhgRdZjPM70R5CN06RzKtxw6Istw9iiD7Pjy1gqphIBvanwmwvUkYouRDIOuv
-         uBccLWW6Sx4eoaiSw630teRJDS76zi/o3D7YsKwgjSbxy2sdVq72FmYNfkuRAOKB1Nt1
-         a3JOZ7NYFqrO6VTOwxKCtJPzcyPB5XYEYuj6V3amUaVv0eUQfHWnmtOlv2qmv18g4DD+
-         0Uhzfjd6DiwlegCF08ffhabmIFeXLpUG5g987HxNu0bQVQy2hqW0TtnNZmtTC0WN9Xyh
-         2aCy0Uh3Gwu6ZtdRCJhANnazSvb/cRCifaK44gbqj5MoHAGKmgTfOh2mw5yZZiXNgz9U
-         nHGQ==
-X-Gm-Message-State: APjAAAXuuAWCDSJez55FNkwjzK/E4XhiBaH9raqIAXW3wYvmOCeCQaM8
-        wZm9+IOaiwRh89rlIi22aaBglyJatJPm8+wcaVeKN9UoBEHHI+Sz5YW2TWoe3Pre8DT98xvbAnS
-        ZlLkpEjNrlNaVKOl9ptyob6alClupYOw32fMWgmUk
-X-Received: by 2002:a6b:c701:: with SMTP id x1mr1787394iof.162.1571812683951;
-        Tue, 22 Oct 2019 23:38:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqz87D0JJBDmy24snBhOLsA0a1X8znm+78nXbfkXRsztcEsuLQnqi8SeRaKSgs996uX8hxQVx/gXzwCiBUSBCM4=
-X-Received: by 2002:a6b:c701:: with SMTP id x1mr1787376iof.162.1571812683643;
- Tue, 22 Oct 2019 23:38:03 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A9AE801E52;
+        Wed, 23 Oct 2019 06:39:31 +0000 (UTC)
+Received: from [10.72.12.161] (ovpn-12-161.pek2.redhat.com [10.72.12.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BB4A19C70;
+        Wed, 23 Oct 2019 06:39:16 +0000 (UTC)
+Subject: Re: [RFC 2/2] vhost: IFC VF vdpa layer
+To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        Zhu Lingshan <lingshan.zhu@linux.intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
+        zhiyuan.lv@intel.com
+References: <20191016013050.3918-1-lingshan.zhu@intel.com>
+ <20191016013050.3918-3-lingshan.zhu@intel.com>
+ <9495331d-3c65-6f49-dcd9-bfdb17054cf0@redhat.com>
+ <f65358e9-6728-8260-74f7-176d7511e989@intel.com>
+ <1cae60b6-938d-e2df-2dca-fbf545f06853@redhat.com>
+ <ddf412c6-69e2-b3ca-d0c8-75de1db78ed9@linux.intel.com>
+ <b2adaab0-bbc3-b7f0-77da-e1e3cab93b76@redhat.com>
+ <6588d9f4-f357-ec78-16a4-ccaf0e3768e7@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <02d44f0a-687f-ed87-518b-7a4d3e83c5d3@redhat.com>
+Date:   Wed, 23 Oct 2019 14:39:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191017093020.28658-1-kasong@redhat.com> <CAKv+Gu8nJ0uDn0G9s5N1ZM=FE4JB5c2Kjs=mKpatTFkwF0WaaQ@mail.gmail.com>
- <20191022074422.GA31700@zn.tnic> <CAKv+Gu_GxP+83D0cOT=0UgDrxunm2CuKpAfK1SnVkVqV=E0Ozw@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_GxP+83D0cOT=0UgDrxunm2CuKpAfK1SnVkVqV=E0Ozw@mail.gmail.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Wed, 23 Oct 2019 14:37:51 +0800
-Message-ID: <CACPcB9fFaU1JQaZvXZTjHJ7mqay64RS-ruWY0i9uo+ad8PTnyg@mail.gmail.com>
-Subject: Re: [PATCH v4] x86, efi: never relocate kernel below lowest
- acceptable address
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6588d9f4-f357-ec78-16a4-ccaf0e3768e7@intel.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: pxA18oaXO4G0FL33orpGpw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 6:15 PM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> On Tue, 22 Oct 2019 at 09:45, Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Tue, Oct 22, 2019 at 08:13:56AM +0200, Ard Biesheuvel wrote:
-> > > On Thu, 17 Oct 2019 at 11:30, Kairui Song <kasong@redhat.com> wrote:
-> > > >
-> > > > Currently, kernel fails to boot on some HyperV VMs when using EFI.
-> > > > And it's a potential issue on all platforms.
-> > > >
-> > > > It's caused by broken kernel relocation on EFI systems, when below three
-> > > > conditions are met:
-> > > >
-> > > > 1. Kernel image is not loaded to the default address (LOAD_PHYSICAL_ADDR)
-> > > >    by the loader.
-> > > > 2. There isn't enough room to contain the kernel, starting from the
-> > > >    default load address (eg. something else occupied part the region).
-> > > > 3. In the memmap provided by EFI firmware, there is a memory region
-> > > >    starts below LOAD_PHYSICAL_ADDR, and suitable for containing the
-> > > >    kernel.
-> > > >
-> > > > EFI stub will perform a kernel relocation when condition 1 is met. But
-> > > > due to condition 2, EFI stub can't relocate kernel to the preferred
-> > > > address, so it fallback to ask EFI firmware to alloc lowest usable memory
-> > > > region, got the low region mentioned in condition 3, and relocated
-> > > > kernel there.
-> > > >
-> > > > It's incorrect to relocate the kernel below LOAD_PHYSICAL_ADDR. This
-> > > > is the lowest acceptable kernel relocation address.
-> > > >
-> > > > The first thing goes wrong is in arch/x86/boot/compressed/head_64.S.
-> > > > Kernel decompression will force use LOAD_PHYSICAL_ADDR as the output
-> > > > address if kernel is located below it. Then the relocation before
-> > > > decompression, which move kernel to the end of the decompression buffer,
-> > > > will overwrite other memory region, as there is no enough memory there.
-> > > >
-> > > > To fix it, just don't let EFI stub relocate the kernel to any address
-> > > > lower than lowest acceptable address.
-> > > >
-> > > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > > > Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > >
-> > >
-> > > Ingo, Boris, could you please comment on this?
-> >
-> > Yah, the commit message makes more sense now.
-> >
->
->
-> Thanks Boris.
->
-> Kairui, I will apply the requested changes myself - no need to spin a v5
 
-Thanks for review and the suggestion, that change is a good idea.
+On 2019/10/23 =E4=B8=8B=E5=8D=882:19, Zhu, Lingshan wrote:
+>
+> On 10/22/2019 9:05 PM, Jason Wang wrote:
+>>
+>> On 2019/10/22 =E4=B8=8B=E5=8D=882:53, Zhu Lingshan wrote:
+>>>
+>>> On 10/21/2019 6:19 PM, Jason Wang wrote:
+>>>>
+>>>> On 2019/10/21 =E4=B8=8B=E5=8D=885:53, Zhu, Lingshan wrote:
+>>>>>
+>>>>> On 10/16/2019 6:19 PM, Jason Wang wrote:
+>>>>>>
+>>>>>> On 2019/10/16 =E4=B8=8A=E5=8D=889:30, Zhu Lingshan wrote:
+>>>>>>> This commit introduced IFC VF operations for vdpa, which complys to
+>>>>>>> vhost_mdev interfaces, handles IFC VF initialization,
+>>>>>>> configuration and removal.
+>>>>>>>
+>>>>>>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>>>>>>> ---
+>>
+>>
+>> [...]
+>>
+>>
+>>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int ifcvf_mdev_set_features(struct mdev_device *mdev,=20
+>>>>>>> u64 features)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvd=
+ata(mdev);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapt=
+er);
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 vf->req_features =3D features;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev,=20
+>>>>>>> u16 qid)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_adapter *adapter =3D mdev_get_drvd=
+ata(mdev);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct ifcvf_hw *vf =3D IFC_PRIVATE_TO_VF(adapt=
+er);
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 return vf->vring[qid].last_avail_idx;
+>>>>>>
+>>>>>>
+>>>>>> Does this really work? I'd expect it should be fetched from hw=20
+>>>>>> since it's an internal state.
+>>>>> for now, it's working, we intend to support LM in next version=20
+>>>>> drivers.
+>>>>
+>>>>
+>>>> I'm not sure I understand here, I don't see any synchronization=20
+>>>> between the hardware and last_avail_idx, so last_avail_idx should=20
+>>>> not change.
+>>>>
+>>>> Btw, what did "LM" mean :) ?
+>>>
+>>> I can add bar IO operations here, LM =3D live migration, sorry for the=
+=20
+>>> abbreviation.
+>>
+>>
+>> Just make sure I understand here, I believe you mean reading=20
+>> last_avail_idx through IO bar here?
+>>
+>> Thanks
+>
+> Hi Jason,
+>
+> Yes, I mean last_avail_idx. is that correct?
+>
+> THanks
 
--- 
-Best Regards,
-Kairui Song
+
+Yes.
+
+Thanks
+
+
+>
+>>
+>>
+
