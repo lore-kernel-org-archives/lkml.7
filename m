@@ -2,297 +2,156 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED19CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82326CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815052173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524A9205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 04:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="O1Vynvw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbfJWEPL (ORCPT
+        id S1727134AbfJWEUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 00:15:11 -0400
-Received: from mga09.intel.com ([134.134.136.24]:40073 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbfJWEPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 00:15:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Oct 2019 21:15:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,219,1569308400"; 
-   d="scan'208";a="201874968"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 22 Oct 2019 21:15:09 -0700
-Date:   Tue, 22 Oct 2019 21:19:30 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v6 03/10] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-Message-ID: <20191022211930.2ef8138f@jacob-builder>
-In-Reply-To: <20191023005859.GD100970@otc-nc-03>
-References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571788403-42095-4-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20191023005859.GD100970@otc-nc-03>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 23 Oct 2019 00:20:43 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51873 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfJWEUn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 00:20:43 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q70so12371875wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Oct 2019 21:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Y/LNPigbQ9TB22k2a7RkBNKb5Cm/9R5+HbTyQH04m7U=;
+        b=O1Vynvw3eN1/NbNkI1c0SyDg2V/EkrhR9wp6vkwC4xTXDLAluIn8cynh/VXr4ZdtLc
+         YkLjkqyRjDf2WIMYXKfuyQYtOQE30/5EgnWBn65L/7X+wul5U/YEsA8xDxSAh58xQrpr
+         /+BujZ4ra4A6iDundfSpVzKYMhWNuxHpJ+5BNaIgsAJOGXUX9A6p3vCOU1iyHIhOMVsf
+         s+8w+vDRWfin/kSpbgmwYNMs/hgi+9teFu96AFopk3VG7DhHb/gkkLgNe0fNdzTbRNbi
+         9uEI5ryHesei0FaCHhUvwDVkmOKtyqRWRgkhJ1C+GbW1NqdHhJILuUsf8wKazszK2Ghl
+         pc/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Y/LNPigbQ9TB22k2a7RkBNKb5Cm/9R5+HbTyQH04m7U=;
+        b=tn3iHYrTZzoYT0pXVVceAFeJfpg8yYzJN28o8hxrjRLWtiDvYdv6NbBr5374pR3Pks
+         PhXPNOp9I7ROXK1+rZK36ZckLZpkbiX7tH/5/vPQ7YPXjBS9jVVEBUfftoZMHNctSmXE
+         nwlMh4/5t9OA75tD4WBhGr1tfFlTjiD/s2H3s3Pet/xRsF3qAozIoOtxjyxrlvJw5ZRt
+         IjQU3VlzI0BHwrc+LOdn1DPzRFIAdoj/OQXmAMI+97QOBpXkZTB9X6iGtm2GQLF344dt
+         N6CnjbbfKfe9PbgkfdCUwZoYLHCYjSjf6/9AE/CEqQSDFMSEvVsMVWngQnS2VXXnoQdV
+         xdPA==
+X-Gm-Message-State: APjAAAW7qMn/3C78rbG9C9u6siEfGfnOM4IbEe9iTYDq17TpmyeEYP73
+        b+BUnQZqUXlz/2MX/8B/A8lcHrSIW7J84aN/8uB7Aw==
+X-Google-Smtp-Source: APXvYqzbNjvdXoXovFD8/74Z9eOicgtaHQjLEWjtEDYS8CkjXlBNsXXL+yHcMacIcWKZs+ur8tNREX6MBtUxkd3hHkQ=
+X-Received: by 2002:a1c:20d8:: with SMTP id g207mr5789097wmg.79.1571804439825;
+ Tue, 22 Oct 2019 21:20:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191022215841.2qsmhd6vxi4mwade@ast-mbp.dhcp.thefacebook.com>
+ <7364B113-DD65-423D-BED3-FF90C4DF8334@amacapital.net> <20191022234921.n5nplxlyq25mksxg@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20191022234921.n5nplxlyq25mksxg@ast-mbp.dhcp.thefacebook.com>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Tue, 22 Oct 2019 21:20:27 -0700
+Message-ID: <CALCETrUa02muQYndyyeOZu8C6v33+A+9-2bsktxaW5N5-X6axA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] x86/ftrace: Use text_poke()
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 22 Oct 2019 17:58:59 -0700
-"Raj, Ashok" <ashok.raj@intel.com> wrote:
+On Tue, Oct 22, 2019 at 4:49 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Tue, Oct 22, 2019 at 03:45:26PM -0700, Andy Lutomirski wrote:
+> >
+> >
+> > >> On Oct 22, 2019, at 2:58 PM, Alexei Starovoitov <alexei.starovoitov@=
+gmail.com> wrote:
+> > >>
+> > >> =EF=BB=BFOn Tue, Oct 22, 2019 at 05:04:30PM -0400, Steven Rostedt wr=
+ote:
+> > >> I gave a solution for this. And that is to add another flag to allow
+> > >> for just the minimum to change the ip. And we can even add another f=
+lag
+> > >> to allow for changing the stack if needed (to emulate a call with th=
+e
+> > >> same parameters).
+> > >
+> > > your solution is to reduce the overhead.
+> > > my solution is to remove it competely. See the difference?
+> > >
+> > >> By doing this work, live kernel patching will also benefit. Because =
+it
+> > >> is also dealing with the unnecessary overhead of saving regs.
+> > >> And we could possibly even have kprobes benefit from this if a kprob=
+e
+> > >> doesn't need full regs.
+> > >
+> > > Neither of two statements are true. The per-function generated trampo=
+line
+> > > I'm talking about is bpf specific. For a function with two arguments =
+it's just:
+> > > push rbp
+> > > mov rbp, rsp
+> > > push rdi
+> > > push rsi
+> > > lea  rdi,[rbp-0x10]
+> > > call jited_bpf_prog
+> > > pop rsi
+> > > pop rdi
+> > > leave
+> > > ret
+> >
+> > Why are you saving rsi?  You said upthread that you=E2=80=99re saving t=
+he args, but rsi is already available in rsi.
+>
+> because rsi is caller saved. The above example is for probing something
+> like tcp_set_state(struct sock *sk, int state) that everyone used to
+> kprobe until we got a tracepoint there.
+> The main bpf prog has only one argument R1 =3D=3D rdi on x86,
+> but it's allowed to clobber all caller saved regs.
+> Just like x86 function that accepts one argument in rdi can clobber rsi a=
+nd others.
+> So it's essential to save 'sk' and 'state' for tcp_set_state()
+> to continue as nothing happened.
 
-> On Tue, Oct 22, 2019 at 04:53:16PM -0700, Jacob Pan wrote:
-> > Make use of generic IOASID code to manage PASID allocation,
-> > free, and lookup. Replace Intel specific code.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-iommu.c | 12 ++++++------
-> >  drivers/iommu/intel-pasid.c | 36
-> > ------------------------------------ drivers/iommu/intel-svm.c   |
-> > 37 +++++++++++++++++++++---------------- 3 files changed, 27
-> > insertions(+), 58 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 3aff0141c522..72febcf2c48f
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -5311,7 +5311,7 @@ static void auxiliary_unlink_device(struct
-> > dmar_domain *domain, domain->auxd_refcnt--;
-> >  
-> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> > -		intel_pasid_free_id(domain->default_pasid);
-> > +		ioasid_free(domain->default_pasid);  
-> 
-> if the domain is gauranteed to be torn down, its ok.. but otherwise
-> do you need to clear domain->default_pasid to avoid accidental
-> reference in some other code path?
-> 
-Good point, but i think it is out of the scope of this patch. Perhaps
-another patch to fix that.
-> >  }
-> >  
-> >  static int aux_domain_add_dev(struct dmar_domain *domain,
-> > @@ -5329,10 +5329,10 @@ static int aux_domain_add_dev(struct
-> > dmar_domain *domain, if (domain->default_pasid <= 0) {
-> >  		int pasid;
-> >  
-> > -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
-> > -
-> > pci_max_pasids(to_pci_dev(dev)),
-> > -					     GFP_KERNEL);
-> > -		if (pasid <= 0) {
-> > +		/* No private data needed for the default pasid */
-> > +		pasid = ioasid_alloc(NULL, PASID_MIN,
-> > pci_max_pasids(to_pci_dev(dev)) - 1,  
-> 
-> If we ensure IOMMU max-pasid is full 20bit width, its good. In a
-> vIOMMU if iommu max pasid is restricted for some kind of partitioning
-> in future you want to consider limiting to no more than what's
-> provisioned in the vIOMMU right?
-> 
-Yes, I agree we should double check IOMMU ecap PSS.
-But it is outside the scope of this patch, which is merely replacing the
-current logic with a different API.
-Also, unless we do nested mdev, this code should run in host only,
-no vIOMMU, right?
-> 
-> > +				NULL);
-> > +		if (pasid == INVALID_IOASID) {
-> >  			pr_err("Can't allocate default pasid\n");
-> >  			return -ENODEV;
-> >  		}
-> > @@ -5368,7 +5368,7 @@ static int aux_domain_add_dev(struct
-> > dmar_domain *domain, spin_unlock(&iommu->lock);
-> >  	spin_unlock_irqrestore(&device_domain_lock, flags);
-> >  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> > -		intel_pasid_free_id(domain->default_pasid);
-> > +		ioasid_free(domain->default_pasid);
-> >  
-> >  	return ret;
-> >  }
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index 76bcbb21e112..c0d1f28d3412
-> > 100644 --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -26,42 +26,6 @@
-> >   */
-> >  static DEFINE_SPINLOCK(pasid_lock);
-> >  u32 intel_pasid_max_id = PASID_MAX;
-> > -static DEFINE_IDR(pasid_idr);
-> > -
-> > -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
-> > -{
-> > -	int ret, min, max;
-> > -
-> > -	min = max_t(int, start, PASID_MIN);
-> > -	max = min_t(int, end, intel_pasid_max_id);
-> > -
-> > -	WARN_ON(in_interrupt());
-> > -	idr_preload(gfp);
-> > -	spin_lock(&pasid_lock);
-> > -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
-> > -	spin_unlock(&pasid_lock);
-> > -	idr_preload_end();
-> > -
-> > -	return ret;
-> > -}
-> > -
-> > -void intel_pasid_free_id(int pasid)
-> > -{
-> > -	spin_lock(&pasid_lock);
-> > -	idr_remove(&pasid_idr, pasid);
-> > -	spin_unlock(&pasid_lock);
-> > -}
-> > -
-> > -void *intel_pasid_lookup_id(int pasid)
-> > -{
-> > -	void *p;
-> > -
-> > -	spin_lock(&pasid_lock);
-> > -	p = idr_find(&pasid_idr, pasid);
-> > -	spin_unlock(&pasid_lock);
-> > -
-> > -	return p;
-> > -}
-> >  
-> >  static int check_vcmd_pasid(struct intel_iommu *iommu)
-> >  {
-> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> > index 9b159132405d..5aef5b7bf561 100644
-> > --- a/drivers/iommu/intel-svm.c
-> > +++ b/drivers/iommu/intel-svm.c
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/dmar.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/mm_types.h>
-> > +#include <linux/ioasid.h>
-> >  #include <asm/page.h>
-> >  
-> >  #include "intel-pasid.h"
-> > @@ -318,16 +319,15 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (pasid_max >
-> > intel_pasid_max_id) pasid_max = intel_pasid_max_id;
-> >  
-> > -		/* Do not use PASID 0 in caching mode (virtualised
-> > IOMMU) */
-> > -		ret = intel_pasid_alloc_id(svm,
-> > -					   !!cap_caching_mode(iommu->cap),
-> > -					   pasid_max - 1,
-> > GFP_KERNEL);
-> > -		if (ret < 0) {
-> > +		/* Do not use PASID 0, reserved for RID to PASID */
-> > +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
-> > +					pasid_max - 1, svm);
-> > +		if (svm->pasid == INVALID_IOASID) {
-> >  			kfree(svm);
-> >  			kfree(sdev);
-> > +			ret = ENOSPC;
-> >  			goto out;
-> >  		}
-> > -		svm->pasid = ret;
-> >  		svm->notifier.ops = &intel_mmuops;
-> >  		svm->mm = mm;
-> >  		svm->flags = flags;
-> > @@ -337,7 +337,7 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (mm) {
-> >  			ret =
-> > mmu_notifier_register(&svm->notifier, mm); if (ret) {
-> > -				intel_pasid_free_id(svm->pasid);
-> > +				ioasid_free(svm->pasid);
-> >  				kfree(svm);
-> >  				kfree(sdev);
-> >  				goto out;
-> > @@ -353,7 +353,7 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (ret) {
-> >  			if (mm)
-> >  				mmu_notifier_unregister(&svm->notifier,
-> > mm);
-> > -			intel_pasid_free_id(svm->pasid);
-> > +			ioasid_free(svm->pasid);
-> >  			kfree(svm);
-> >  			kfree(sdev);
-> >  			goto out;
-> > @@ -401,7 +401,12 @@ int intel_svm_unbind_mm(struct device *dev,
-> > int pasid) if (!iommu)
-> >  		goto out;
-> >  
-> > -	svm = intel_pasid_lookup_id(pasid);
-> > +	svm = ioasid_find(NULL, pasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> > +		goto out;
-> > +	}
-> > +
-> >  	if (!svm)
-> >  		goto out;
-> >  
-> > @@ -423,7 +428,7 @@ int intel_svm_unbind_mm(struct device *dev, int
-> > pasid) kfree_rcu(sdev, rcu);
-> >  
-> >  				if (list_empty(&svm->devs)) {
-> > -
-> > intel_pasid_free_id(svm->pasid);
-> > +					ioasid_free(svm->pasid);
-> >  					if (svm->mm)
-> >  						mmu_notifier_unregister(&svm->notifier,
-> > svm->mm); 
-> > @@ -458,10 +463,11 @@ int intel_svm_is_pasid_valid(struct device
-> > *dev, int pasid) if (!iommu)
-> >  		goto out;
-> >  
-> > -	svm = intel_pasid_lookup_id(pasid);
-> > -	if (!svm)
-> > +	svm = ioasid_find(NULL, pasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> >  		goto out;
-> > -
-> > +	}
-> >  	/* init_mm is used in this case */
-> >  	if (!svm->mm)
-> >  		ret = 1;
-> > @@ -568,13 +574,12 @@ static irqreturn_t prq_event_thread(int irq,
-> > void *d) 
-> >  		if (!svm || svm->pasid != req->pasid) {
-> >  			rcu_read_lock();
-> > -			svm = intel_pasid_lookup_id(req->pasid);
-> > +			svm = ioasid_find(NULL, req->pasid, NULL);
-> >  			/* It *can't* go away, because the driver
-> > is not permitted
-> >  			 * to unbind the mm while any page faults
-> > are outstanding.
-> >  			 * So we only need RCU to protect the
-> > internal idr code. */ rcu_read_unlock();
-> > -
-> > -			if (!svm) {
-> > +			if (IS_ERR(svm) || !svm) {
-> >  				pr_err("%s: Page request for
-> > invalid PASID %d: %08llx %08llx\n", iommu->name, req->pasid,
-> > ((unsigned long long *)req)[0], ((unsigned long long *)req)[1]);
-> > -- 
-> > 2.7.4
-> >   
+Oh, right, you're hijacking the very first instruction, so you know
+that the rest of the arg regs as well as rax are unused.
+
+But I find it hard to believe that this is a particularly meaningful
+optimization compared to the version that saves all the C-clobbered
+registers.  Steven,
+
+Also, Alexei, are you testing on a CONFIG_FRAME_POINTER=3Dy kernel?  The
+ftrace code has a somewhat nasty special case to make
+CONFIG_FRAME_POINTER=3Dy work right, and your example trampoline does
+not but arguably should have exaclty the same fixup.  For good
+performance, you should be using CONFIG_FRAME_POINTER=3Dn.
+
+Steven, with your benchmark, could you easily make your actual ftrace
+hook do nothing at all and get a perf report on the result (i.e. call
+the traced function in a loop a bunch of times under perf record -e
+cycles or similar)?  It would be interesting to see exactly what
+trampoline code you're generating and just how bad it is.  ISTM it
+should be possible to squeeze very good performance out of ftrace.  I
+suppose you could also have a fancier mode than just "IP" that
+specifies that the caller knows exactly which registers are live and
+what they are.  Then you could generate code that's exactly as good as
+Alexei's.
