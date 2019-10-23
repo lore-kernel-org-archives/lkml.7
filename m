@@ -2,236 +2,64 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015C1CA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778EBCA9EB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C443521906
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571840082;
-	bh=UEJ1bsyRoLWQyANjmZa8cQCCIzI3t96qN6IwAsKz9Xo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DgA01GvWyv4RHrLuTLbT6BnZXt2K3opxKYye4fzlZq0bUPc1T04YaY+fiSerSHSmh
-	 EB64Ca4GTPlYheg4aKloQ5Z+M+ZnExC6COV6qNiVJnfPm9c51+lZgsgfY2iH0wB1D/
-	 0+qI7dwv+CFQHva/79BBilCpNsUv1mCk5GtMx0Yo=
+	by mail.kernel.org (Postfix) with ESMTP id 5477120650
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 14:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406344AbfJWOOl (ORCPT
+        id S2392089AbfJWOQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 10:14:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33556 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727194AbfJWOOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 10:14:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83806B2BF;
-        Wed, 23 Oct 2019 14:14:38 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 16:14:36 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 4/8] mm: vmscan: naming fixes: global_reclaim() and
- sane_reclaim()
-Message-ID: <20191023141436.GE17610@dhcp22.suse.cz>
-References: <20191022144803.302233-1-hannes@cmpxchg.org>
- <20191022144803.302233-5-hannes@cmpxchg.org>
+        Wed, 23 Oct 2019 10:16:06 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58837 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727194AbfJWOQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 10:16:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 07:16:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,221,1569308400"; 
+   d="scan'208";a="228140901"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Oct 2019 07:16:04 -0700
+Date:   Wed, 23 Oct 2019 07:16:04 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [patch V2 04/17] x86/entry: Make DEBUG_ENTRY_ASSERT_IRQS_OFF
+ available for 32bit
+Message-ID: <20191023141603.GD329@linux.intel.com>
+References: <20191023122705.198339581@linutronix.de>
+ <20191023123117.976831752@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022144803.302233-5-hannes@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191023123117.976831752@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 22-10-19 10:47:59, Johannes Weiner wrote:
-> Seven years after introducing the global_reclaim() function, I still
-> have to double take when reading a callsite. I don't know how others
-> do it, this is a terrible name.
-
-I somehow never had problem with that but ...
+On Wed, Oct 23, 2019 at 02:27:09PM +0200, Thomas Gleixner wrote:
+> Move the interrupt state verification debug macro to common code and fixup
+> the irqflags and paravirt components so it can be used in 32bit code later.
 > 
-> Invert the meaning and rename it to cgroup_reclaim().
-> 
-> [ After all, "global reclaim" is just regular reclaim invoked from the
->   page allocator. It's reclaim on behalf of a cgroup limit that is a
->   special case of reclaim, and should be explicit - not the reverse. ]
-
-... this is a valid point.
-
-> sane_reclaim() isn't very descriptive either: it tests whether we can
-> use the regular writeback throttling - available during regular page
-> reclaim or cgroup2 limit reclaim - or need to use the broken
-> wait_on_page_writeback() method. Use "writeback_throttling_sane()".
-
-I do have a stronger opinion on this one. sane_reclaim is really a
-terrible name. As you say the only thing this should really tell is
-whether writeback throttling is available so I would rather go with
-has_writeback_throttling() or writeba_throttling_{eabled,available}
-If you insist on having sane in the name then I won't object but it just
-raises a question whether we have some levels of throttling with a
-different level of sanity.
-
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->  mm/vmscan.c | 38 ++++++++++++++++++--------------------
->  1 file changed, 18 insertions(+), 20 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 622b77488144..302dad112f75 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -239,13 +239,13 @@ static void unregister_memcg_shrinker(struct shrinker *shrinker)
->  	up_write(&shrinker_rwsem);
->  }
->  
-> -static bool global_reclaim(struct scan_control *sc)
-> +static bool cgroup_reclaim(struct scan_control *sc)
->  {
-> -	return !sc->target_mem_cgroup;
-> +	return sc->target_mem_cgroup;
->  }
->  
->  /**
-> - * sane_reclaim - is the usual dirty throttling mechanism operational?
-> + * writeback_throttling_sane - is the usual dirty throttling mechanism available?
->   * @sc: scan_control in question
->   *
->   * The normal page dirty throttling mechanism in balance_dirty_pages() is
-> @@ -257,11 +257,9 @@ static bool global_reclaim(struct scan_control *sc)
->   * This function tests whether the vmscan currently in progress can assume
->   * that the normal dirty throttling mechanism is operational.
->   */
-> -static bool sane_reclaim(struct scan_control *sc)
-> +static bool writeback_throttling_sane(struct scan_control *sc)
->  {
-> -	struct mem_cgroup *memcg = sc->target_mem_cgroup;
-> -
-> -	if (!memcg)
-> +	if (!cgroup_reclaim(sc))
->  		return true;
->  #ifdef CONFIG_CGROUP_WRITEBACK
->  	if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
-> @@ -302,12 +300,12 @@ static void unregister_memcg_shrinker(struct shrinker *shrinker)
->  {
->  }
->  
-> -static bool global_reclaim(struct scan_control *sc)
-> +static bool cgroup_reclaim(struct scan_control *sc)
->  {
-> -	return true;
-> +	return false;
->  }
->  
-> -static bool sane_reclaim(struct scan_control *sc)
-> +static bool writeback_throttling_sane(struct scan_control *sc)
->  {
->  	return true;
->  }
-> @@ -1227,7 +1225,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  				goto activate_locked;
->  
->  			/* Case 2 above */
-> -			} else if (sane_reclaim(sc) ||
-> +			} else if (writeback_throttling_sane(sc) ||
->  			    !PageReclaim(page) || !may_enter_fs) {
->  				/*
->  				 * This is slightly racy - end_page_writeback()
-> @@ -1821,7 +1819,7 @@ static int too_many_isolated(struct pglist_data *pgdat, int file,
->  	if (current_is_kswapd())
->  		return 0;
->  
-> -	if (!sane_reclaim(sc))
-> +	if (!writeback_throttling_sane(sc))
->  		return 0;
->  
->  	if (file) {
-> @@ -1971,7 +1969,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
->  	reclaim_stat->recent_scanned[file] += nr_taken;
->  
->  	item = current_is_kswapd() ? PGSCAN_KSWAPD : PGSCAN_DIRECT;
-> -	if (global_reclaim(sc))
-> +	if (!cgroup_reclaim(sc))
->  		__count_vm_events(item, nr_scanned);
->  	__count_memcg_events(lruvec_memcg(lruvec), item, nr_scanned);
->  	spin_unlock_irq(&pgdat->lru_lock);
-> @@ -1985,7 +1983,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
->  	spin_lock_irq(&pgdat->lru_lock);
->  
->  	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
-> -	if (global_reclaim(sc))
-> +	if (!cgroup_reclaim(sc))
->  		__count_vm_events(item, nr_reclaimed);
->  	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
->  	reclaim_stat->recent_rotated[0] += stat.nr_activate[0];
-> @@ -2309,7 +2307,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
->  	 * using the memory controller's swap limit feature would be
->  	 * too expensive.
->  	 */
-> -	if (!global_reclaim(sc) && !swappiness) {
-> +	if (cgroup_reclaim(sc) && !swappiness) {
->  		scan_balance = SCAN_FILE;
->  		goto out;
->  	}
-> @@ -2333,7 +2331,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
->  	 * thrashing file LRU becomes infinitely more attractive than
->  	 * anon pages.  Try to detect this based on file LRU size.
->  	 */
-> -	if (global_reclaim(sc)) {
-> +	if (!cgroup_reclaim(sc)) {
->  		unsigned long pgdatfile;
->  		unsigned long pgdatfree;
->  		int z;
-> @@ -2564,7 +2562,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
->  	 * abort proportional reclaim if either the file or anon lru has already
->  	 * dropped to zero at the first pass.
->  	 */
-> -	scan_adjusted = (global_reclaim(sc) && !current_is_kswapd() &&
-> +	scan_adjusted = (!cgroup_reclaim(sc) && !current_is_kswapd() &&
->  			 sc->priority == DEF_PRIORITY);
->  
->  	blk_start_plug(&plug);
-> @@ -2853,7 +2851,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->  		 * Legacy memcg will stall in page writeback so avoid forcibly
->  		 * stalling in wait_iff_congested().
->  		 */
-> -		if (!global_reclaim(sc) && sane_reclaim(sc) &&
-> +		if (cgroup_reclaim(sc) && writeback_throttling_sane(sc) &&
->  		    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
->  			set_memcg_congestion(pgdat, root, true);
->  
-> @@ -2948,7 +2946,7 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
->  		 * Take care memory controller reclaiming has small influence
->  		 * to global LRU.
->  		 */
-> -		if (global_reclaim(sc)) {
-> +		if (!cgroup_reclaim(sc)) {
->  			if (!cpuset_zone_allowed(zone,
->  						 GFP_KERNEL | __GFP_HARDWALL))
->  				continue;
-> @@ -3048,7 +3046,7 @@ static unsigned long do_try_to_free_pages(struct zonelist *zonelist,
->  retry:
->  	delayacct_freepages_start();
->  
-> -	if (global_reclaim(sc))
-> +	if (!cgroup_reclaim(sc))
->  		__count_zid_vm_events(ALLOCSTALL, sc->reclaim_idx, 1);
->  
->  	do {
-> -- 
-> 2.23.0
 
--- 
-Michal Hocko
-SUSE Labs
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
