@@ -2,120 +2,199 @@ Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3BACA9EB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037E4CA9EAE
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6858C2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C907F20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 07:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389703AbfJWHOq (ORCPT
+        id S2389737AbfJWHUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 03:14:46 -0400
-Received: from mx-out.tlen.pl ([193.222.135.140]:60281 "EHLO mx-out.tlen.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389327AbfJWHOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 03:14:45 -0400
-Received: (wp-smtpd smtp.tlen.pl 3618 invoked from network); 23 Oct 2019 09:14:36 +0200
-Received: from unknown (HELO localhost.localdomain) (p.sarna@o2.pl@[31.179.144.84])
-          (envelope-sender <p.sarna@tlen.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linux-fsdevel@vger.kernel.org>; 23 Oct 2019 09:14:36 +0200
-Subject: Re: [PATCH] hugetlbfs: add O_TMPFILE support
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org
-References: <22c29acf9c51dae17802e1b05c9e5e4051448c5c.1571129593.git.p.sarna@tlen.pl>
- <20191015105055.GA24932@dhcp22.suse.cz>
- <766b4370-ba71-85a2-5a57-ca9ed7dc7870@oracle.com>
- <eb6206ee-eb2e-ffbc-3963-d80eec04119c@oracle.com>
- <c0415816-2682-7bf5-2c82-43c3a8941a54@tlen.pl>
- <d29bc957-a074-22f6-51d7-e043719d5f98@oracle.com>
-From:   Piotr Sarna <p.sarna@tlen.pl>
-Message-ID: <36c17999-caf6-9f0a-d63a-cc6e4b5fabb8@tlen.pl>
-Date:   Wed, 23 Oct 2019 09:14:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 23 Oct 2019 03:20:10 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:53200 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732481AbfJWHUK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 03:20:10 -0400
+Received: by mail-il1-f197.google.com with SMTP id h22so11779195ild.19
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 00:20:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=CW1/ZENZVkmujzszXBL2Qc2HPyGtTn9ZTe23cOJtASo=;
+        b=czUFYjV3UKmpgUNZgL1ZkxdYVr+AgePLJfnO5iFdxuRoZKcUw9XJM/hKNwOJy6pkcx
+         8mwFtVNsjNHQl5EMXCVNAAK7UH1JpDXuQeGvpwfEf/K52u7Ym7nrzHuhReTdlN1cPdN0
+         81J4hupC07CIKKnFbxW+f6sk5Pb8Xbe/Fy/sIH4uIzLwsEfFite2gj8CNNzFggxsF3+9
+         ugplHJCxc+zNUlMs4aHw/K2SDfCe4yvd1x3HRW9jv0Rovb8g5CW71LyW+L8pU8AbHOJT
+         IC8vsFBAPS2k4kA4S66EWgRb8lLKhOedX6527mv/CB8gtGya9/nqh7tKqNiEDAgsCOdC
+         mEDw==
+X-Gm-Message-State: APjAAAUp/f4g/iJ6fRKLHrkEtxpCFtQOCj3NIHb39CGx3pe5wWJAero1
+        FqAWSQai8EY0+lU3gqChsItnEeOgSSI0tv1I0cyI8+UViCBH
+X-Google-Smtp-Source: APXvYqzMJY+w78xkP5yBFfSJ+W9a5kjXNrLNIYN0Nzq55BKH/eM0z9HHro8QTstNUmM/VgBggko4NTAbiyq8xRrukOu2RD99+qrU
 MIME-Version: 1.0
-In-Reply-To: <d29bc957-a074-22f6-51d7-e043719d5f98@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-WP-MailID: 424e793a204962c7684229931db4e0c3
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [IXNk]                               
+X-Received: by 2002:a02:3208:: with SMTP id j8mr7914697jaa.86.1571815207678;
+ Wed, 23 Oct 2019 00:20:07 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 00:20:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001b3b9f05958ebf2c@google.com>
+Subject: INFO: task hung in acct_process
+From:   syzbot <syzbot+bece7c62047c98a5aa90@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 4:55 AM, Mike Kravetz wrote:
-> On 10/22/19 12:09 AM, Piotr Sarna wrote:
->> On 10/21/19 7:17 PM, Mike Kravetz wrote:
->>> On 10/15/19 4:37 PM, Mike Kravetz wrote:
->>>> On 10/15/19 3:50 AM, Michal Hocko wrote:
->>>>> On Tue 15-10-19 11:01:12, Piotr Sarna wrote:
->>>>>> With hugetlbfs, a common pattern for mapping anonymous huge pages
->>>>>> is to create a temporary file first.
->>>>>
->>>>> Really? I though that this is normally done by shmget(SHM_HUGETLB) or
->>>>> mmap(MAP_HUGETLB). Or maybe I misunderstood your definition on anonymous
->>>>> huge pages.
->>>>>
->>>>>> Currently libraries like
->>>>>> libhugetlbfs and seastar create these with a standard mkstemp+unlink
->>>>>> trick,
->>>>
->>>> I would guess that much of libhugetlbfs was writen before MAP_HUGETLB
->>>> was implemented.  So, that is why it does not make (more) use of that
->>>> option.
->>>>
->>>> The implementation looks to be straight forward.  However, I really do
->>>> not want to add more functionality to hugetlbfs unless there is specific
->>>> use case that needs it.
->>>
->>> It was not my intention to shut down discussion on this patch.  I was just
->>> asking if there was a (new) use case for such a change.  I am checking with
->>> our DB team as I seem to remember them using the create/unlink approach for
->>> hugetlbfs in one of their upcoming models.
->>>
->>> Is there a new use case you were thinking about?
->>>
->>
->> Oh, I indeed thought it was a shutdown. The use case I was thinking about was in Seastar, where the create+unlink trick is used for creating temporary files (in a generic way, not only for hugetlbfs). I simply intended to migrate it to a newer approach - O_TMPFILE. However,
->> for the specific case of hugetlbfs it indeed makes more sense to skip it and use mmap's MAP_HUGETLB, so perhaps it's not worth it to patch a perfectly good and stable file system just to provide a semi-useful flag support. My implementation of tmpfile for hugetlbfs is straightforward indeed, but the MAP_HUGETLB argument made me realize that it may not be worth the trouble - especially that MAP_HUGETLB is here since 2.6 and O_TMPFILE was introduced around v3.11, so the mmap way looks more portable.
->>
->> tldr: I'd be very happy to get my patch accepted, but the use case I had in mind can be easily solved with MAP_HUGETLB, so I don't insist.
-> 
-> If you really are after something like 'anonymous memory' for Seastar,
-> then MAP_HUGETLB would be the better approach.
+Hello,
 
-Just to clarify - my original goal was to migrate Seastar's temporary 
-file implementation (which is fs-agnostic, based on descriptors) from 
-the current create+unlink to O_TMPFILE, for robustness. One of the 
-internal usages of this generic mechanism was to create a tmpfile on 
-hugetlbfs and that's why I sent this patch. However, this particular 
-internal usage can be easily switched to more portable MAP_HUGETLB, 
-which will also mean that the generic tmpfile implementation will not be 
-used internally for hugetlbfs anymore.
+syzbot found the following crash on:
 
-There *may* still be value in being able to support hugetlbfs once 
-Seastar's tmpfile implementation migrates to O_TMPFILE, since the 
-library offers creating temporary files in its public API, but there's 
-no immediate use case I can apply it to.
+HEAD commit:    4f5cafb5 Linux 5.4-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e1d2a0e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=de66e73d1c10cebb
+dashboard link: https://syzkaller.appspot.com/bug?extid=bece7c62047c98a5aa90
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-> 
-> I'm still checking with Oracle DB team as they may have a use for O_TMPFILE
-> in an upcoming release.  In their use case, they want an open fd to work with.
-> If it looks like they will proceed in this direction, we can work to get
-> your patch moved forward.
-> 
-> Thanks,
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Great, if it turns out that my patch helps anyone with their O_TMPFILE 
-usage, I'd be very glad to see it merged.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bece7c62047c98a5aa90@syzkaller.appspotmail.com
 
+INFO: task syz-executor.5:19837 blocked for more than 143 seconds.
+       Not tainted 5.4.0-rc3 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.5  D24680 19837      1 0x80004004
+Call Trace:
+  context_switch kernel/sched/core.c:3384 [inline]
+  __schedule+0x74b/0xb80 kernel/sched/core.c:4069
+  schedule+0x131/0x1e0 kernel/sched/core.c:4136
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4195
+  __mutex_lock_common+0x1411/0x2e20 kernel/locking/mutex.c:1033
+  __mutex_lock kernel/locking/mutex.c:1103 [inline]
+  mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
+  acct_get kernel/acct.c:161 [inline]
+  slow_acct_process kernel/acct.c:577 [inline]
+  acct_process+0x3af/0x570 kernel/acct.c:605
+  do_exit+0x573/0x2190 kernel/exit.c:807
+  do_group_exit+0x15c/0x2b0 kernel/exit.c:921
+  get_signal+0x4ac/0x1d60 kernel/signal.c:2734
+  do_signal+0x37/0x640 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop arch/x86/entry/common.c:159 [inline]
+  prepare_exit_to_usermode+0x303/0x580 arch/x86/entry/common.c:194
+  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
+  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4139ea
+Code: 00 48 89 04 24 48 c7 44 24 08 21 00 00 00 e8 ed 7e 01 00 0f 0b 48 89  
+1c 24 e8 b2 f9 03 00 48 8b 44 24 10 48 89 44 24 38 48 8b <4c> 24 08 48 89  
+4c 24 40 e8 69 88 01 00 48 8d 05 f3 a4 4e 00 48 89
+RSP: 002b:00007ffcbd566058 EFLAGS: 00000246 ORIG_RAX: 000000000000003d
+RAX: fffffffffffffe00 RBX: 0000000000bfa940 RCX: 00000000004139ea
+RDX: 0000000040000000 RSI: 00007ffcbd566090 RDI: ffffffffffffffff
+RBP: 00000000000039b0 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000011
+R13: 00007ffcbd566090 R14: 0000000000bfa99b R15: 00007ffcbd5660a0
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1064:
+  #0: ffffffff888d3f80 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0x30  
+include/linux/rcupdate.h:207
+1 lock held by rsyslogd/7848:
+  #0: ffff8880a2fecde0 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x243/0x2e0  
+fs/file.c:801
+2 locks held by getty/7938:
+  #0: ffff88809a98c090 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: ffffc90005f012e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x221/0x1b00 drivers/tty/n_tty.c:2156
+2 locks held by getty/7939:
+  #0: ffff8880a58d5090 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: ffffc90005f152e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x221/0x1b00 drivers/tty/n_tty.c:2156
+2 locks held by getty/7940:
+  #0: ffff8880a12f7090 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: ffffc90005f092e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x221/0x1b00 drivers/tty/n_tty.c:2156
+2 locks held by getty/7941:
+  #0: ffff8880a7a88090 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: ffffc90005f1d2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x221/0x1b00 drivers/tty/n_tty.c:2156
+2 locks held by getty/7942:
+  #0: ffff8880a892b090 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: ffffc90005f292e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x221/0x1b00 drivers/tty/n_tty.c:2156
+2 locks held by getty/7943:
+  #0: ffff8880a7bb4090 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: ffffc90005f252e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x221/0x1b00 drivers/tty/n_tty.c:2156
+2 locks held by getty/7944:
+  #0: ffff8880993fd090 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: ffffc90005ef12e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x221/0x1b00 drivers/tty/n_tty.c:2156
+1 lock held by syz-executor.5/19837:
+  #0: ffff8880a7dbb0f0 (&acct->lock#2){+.+.}, at: acct_get kernel/acct.c:161  
+[inline]
+  #0: ffff8880a7dbb0f0 (&acct->lock#2){+.+.}, at: slow_acct_process  
+kernel/acct.c:577 [inline]
+  #0: ffff8880a7dbb0f0 (&acct->lock#2){+.+.}, at: acct_process+0x3af/0x570  
+kernel/acct.c:605
+3 locks held by syz-executor.5/17136:
+  #0: ffff8880a7dbb0f0 (&acct->lock#2){+.+.}, at: acct_get kernel/acct.c:161  
+[inline]
+  #0: ffff8880a7dbb0f0 (&acct->lock#2){+.+.}, at: slow_acct_process  
+kernel/acct.c:577 [inline]
+  #0: ffff8880a7dbb0f0 (&acct->lock#2){+.+.}, at: acct_process+0x3af/0x570  
+kernel/acct.c:605
+  #1: ffff88809b314420 (sb_writers#3){.+.+}, at: file_start_write_trylock  
+include/linux/fs.h:2889 [inline]
+  #1: ffff88809b314420 (sb_writers#3){.+.+}, at:  
+do_acct_process+0xf0c/0x1370 kernel/acct.c:517
+  #2: ffff888093bd4a48 (&sb->s_type->i_mutex_key#10){++++}, at:  
+inode_trylock include/linux/fs.h:811 [inline]
+  #2: ffff888093bd4a48 (&sb->s_type->i_mutex_key#10){++++}, at:  
+ext4_file_write_iter+0x1a8/0x15b0 fs/ext4/file.c:234
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1064 Comm: khungtaskd Not tainted 5.4.0-rc3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  nmi_cpu_backtrace+0xaf/0x1a0 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x174/0x290 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace+0x17/0x20 include/linux/nmi.h:146
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0xbb9/0xbd0 kernel/hung_task.c:289
+  kthread+0x332/0x350 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10  
+arch/x86/include/asm/irqflags.h:60
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
