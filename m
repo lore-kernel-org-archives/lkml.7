@@ -2,213 +2,87 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E923BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5B1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACDF20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4812166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="n//OPWXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393814AbfJXNrQ (ORCPT
+        id S2393830AbfJXNrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:47:16 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:38094 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390397AbfJXNrL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:47:11 -0400
-Received: by mail-il1-f199.google.com with SMTP id f6so2028806ilg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:47:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=laGJg/ITA0QZDqhx2+KD2negO7qyTZ2zFKV8v0w7O54=;
-        b=KC9dFlGKex7NajrAv7YlI/HJImaOSUE+FqLf/I5vse5MA3U7vGsds1RXI39yOh/cUl
-         g0yqNUhSA3v43IS2OZiB6QKTPnG7UTtQKGnA+2OcjsAeNkzdq1R6xpDMiUMJFeERDiYj
-         8nyzvUBzTf14gllsPW0kM84zTtJJh73is94ts1+NQRkU1eLShID0PDcwGanBXZck1cFn
-         tVIU7WGf/p+a8Y2jq6bB/7/OY6slCY+lXj8VpQBA5uOItcsmfz6ncIoeLvU7dYSdpn7s
-         YJ5W7/gSbdVkO4LVLu0huVCOzBPslGtHpRcut8+NgGiCtToVnYwt2S9+Y/UrTRlmlcje
-         gvzA==
-X-Gm-Message-State: APjAAAVsFXaaxZQGN1W6v2pU+FduZWrwh7/HwdFcFMy7gMOiS2aBQ7rV
-        hxXjkhWSnZU7rDZ7XU8tRFnZg0hOHYm4hKv071IOFhWRZV0v
-X-Google-Smtp-Source: APXvYqxNbhylOM/zQfqXCs0IhtVFm68yuCUa5QbK8V/In+I9GYJrWp56z5nUn953E0abnkZYettHEO8nbKLmeCU/Vyq4p2l67uEG
+        Thu, 24 Oct 2019 09:47:20 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:52638 "EHLO uho.ysoft.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393816AbfJXNrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:47:19 -0400
+Received: from iota-build.ysoft.local (unknown [10.1.5.151])
+        by uho.ysoft.cz (Postfix) with ESMTP id EBF7DA46D1;
+        Thu, 24 Oct 2019 15:47:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1571924837;
+        bh=09J4vORehZpPUrCjny9gMof7LTXInUPHQqnUVJsRbps=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n//OPWXdEDnZd017TCo9yp15YZ5BasUfGALobr6LZixLa/KX90UNZ2EXqF+uvLOFa
+         ju8lGPSdQIjymJYYp/NA1xqsR7hJ61kdtEvrGcL9qgmUsRmHB+4T/cEqA5hjEb8afU
+         VD8L/E0Nbd2IJXBxfaHo+XJV6TGROvImCTOuDdec=
+From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+To:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Subject: [PATCH net-next] net: dsa: qca8k: Initialize the switch with correct number of ports
+Date:   Thu, 24 Oct 2019 15:46:58 +0200
+Message-Id: <1571924818-27725-1-git-send-email-michal.vokac@ysoft.com>
+X-Mailer: git-send-email 2.1.4
 MIME-Version: 1.0
-X-Received: by 2002:a02:a199:: with SMTP id n25mr14962560jah.92.1571924828332;
- Thu, 24 Oct 2019 06:47:08 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 06:47:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000001b0a40595a84593@google.com>
-Subject: KASAN: use-after-free Read in parse_term_proc_unit
-From:   syzbot <syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, alsa-devel@alsa-project.org,
-        andreyknvl@google.com, benquike@gmail.com,
-        dan.carpenter@oracle.com, g@b4.vu, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, perex@perex.cz,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        tiwai@suse.com, wang6495@umn.edu, yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Since commit 0394a63acfe2 ("net: dsa: enable and disable all ports")
+the dsa core disables all unused ports of a switch. In this case
+disabling ports with numbers higher than QCA8K_NUM_PORTS causes that
+some switch registers are overwritten with incorrect content.
 
-syzbot found the following crash on:
+To fix this, initialize the dsa_switch->num_ports with correct number
+of ports.
 
-HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=13a38628e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
-dashboard link: https://syzkaller.appspot.com/bug?extid=97e24236f1e2918ad968
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12184764e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1432ae28e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com
-
-usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-usb 1-1: Product: syz
-usb 1-1: Manufacturer: syz
-usb 1-1: SerialNumber: syz
-==================================================================
-BUG: KASAN: use-after-free in uac_processing_unit_iProcessing  
-include/uapi/linux/usb/audio.h:429 [inline]
-BUG: KASAN: use-after-free in parse_term_proc_unit+0x57a/0x5e0  
-sound/usb/mixer.c:896
-Read of size 1 at addr ffff8881d5346d0e by task kworker/1:2/83
-
-CPU: 1 PID: 83 Comm: kworker/1:2 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:634
-  uac_processing_unit_iProcessing include/uapi/linux/usb/audio.h:429 [inline]
-  parse_term_proc_unit+0x57a/0x5e0 sound/usb/mixer.c:896
-  __check_input_term+0xc32/0x13f0 sound/usb/mixer.c:984
-  parse_audio_feature_unit sound/usb/mixer.c:1875 [inline]
-  parse_audio_unit+0x101d/0x36f0 sound/usb/mixer.c:2753
-  snd_usb_mixer_controls+0x715/0xb90 sound/usb/mixer.c:3095
-  snd_usb_create_mixer+0x2b5/0x1890 sound/usb/mixer.c:3445
-  usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2201
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
-  port_event drivers/usb/core/hub.c:5469 [inline]
-  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 83:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
-  kmalloc include/linux/slab.h:561 [inline]
-  usb_alloc_urb+0x65/0xb0 drivers/usb/core/urb.c:73
-  usb_internal_control_msg drivers/usb/core/message.c:94 [inline]
-  usb_control_msg+0x1c9/0x4a0 drivers/usb/core/message.c:152
-  usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
-  usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
-  usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
-  usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
-  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
-  port_event drivers/usb/core/hub.c:5469 [inline]
-  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 83:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
-  slab_free_hook mm/slub.c:1424 [inline]
-  slab_free_freelist_hook mm/slub.c:1475 [inline]
-  slab_free mm/slub.c:3018 [inline]
-  kfree+0xe4/0x320 mm/slub.c:3967
-  urb_destroy drivers/usb/core/urb.c:26 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  usb_free_urb.part.0+0x7a/0xc0 drivers/usb/core/urb.c:95
-  usb_free_urb+0x1b/0x30 drivers/usb/core/urb.c:94
-  usb_start_wait_urb+0x1e5/0x2b0 drivers/usb/core/message.c:79
-  usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
-  usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:152
-  usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
-  usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
-  usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
-  usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
-  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
-  port_event drivers/usb/core/hub.c:5469 [inline]
-  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881d5346d00
-  which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 14 bytes inside of
-  192-byte region [ffff8881d5346d00, ffff8881d5346dc0)
-The buggy address belongs to the page:
-page:ffffea000754d180 refcount:1 mapcount:0 mapping:ffff8881da002a00  
-index:0x0
-flags: 0x200000000000200(slab)
-raw: 0200000000000200 ffffea0007548ac0 0000000900000009 ffff8881da002a00
-raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881d5346c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff8881d5346c80: 00 00 00 00 05 fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881d5346d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                       ^
-  ffff8881d5346d80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffff8881d5346e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I actually tried and gave a T-b tag to the whole series that contains
+the offending commit but obviously I was not careful enough. Who knows
+what was on my mind and what I actually tested back then. Sorry.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+ drivers/net/dsa/qca8k.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index 7e742cd491e8..36c6ed98f8e7 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -1083,7 +1083,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
+ 		return -ENOMEM;
+ 
+ 	priv->ds->dev = &mdiodev->dev;
+-	priv->ds->num_ports = DSA_MAX_PORTS;
++	priv->ds->num_ports = QCA8K_NUM_PORTS;
+ 	priv->ds->priv = priv;
+ 	priv->ops = qca8k_switch_ops;
+ 	priv->ds->ops = &priv->ops;
+-- 
+2.1.4
+
