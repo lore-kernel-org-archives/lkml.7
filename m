@@ -2,224 +2,109 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437F1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761D4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BCA21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D5B21906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502237AbfJXM6t (ORCPT
+        id S2502246AbfJXNAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:58:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11911 "EHLO mga02.intel.com"
+        Thu, 24 Oct 2019 09:00:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730113AbfJXM6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 08:58:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 05:58:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
-   d="scan'208";a="210373133"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 24 Oct 2019 05:58:48 -0700
-Received: from atirumal-mobl1.amr.corp.intel.com (unknown [10.251.26.228])
-        by linux.intel.com (Postfix) with ESMTP id 9D0D158049A;
-        Thu, 24 Oct 2019 05:58:47 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH 3/3] soundwire: ignore uniqueID when
- irrelevant
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20191022234808.17432-1-pierre-louis.bossart@linux.intel.com>
- <20191022234808.17432-4-pierre-louis.bossart@linux.intel.com>
- <20191024113911.GD2620@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <cd8637df-a400-a683-13b9-fd98231d0134@linux.intel.com>
-Date:   Thu, 24 Oct 2019 07:59:06 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        id S1726484AbfJXNAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:00:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A16F92166E;
+        Thu, 24 Oct 2019 13:00:39 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 09:00:37 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Subject: Re: [PATCH 4/5] tracing: Handle the trace array ref counter in new
+ functions
+Message-ID: <20191024090037.78fe9f30@gandalf.local.home>
+In-Reply-To: <2b08751a-4028-2130-9a70-c2aa2d76a31c@oracle.com>
+References: <1565805327-579-1-git-send-email-divya.indi@oracle.com>
+        <1565805327-579-5-git-send-email-divya.indi@oracle.com>
+        <20191015190436.65c8c7a3@gandalf.local.home>
+        <4cad186e-ba8b-8e1a-731b-4350a095ba5a@oracle.com>
+        <20191022225253.4086195c@oasis.local.home>
+        <2b08751a-4028-2130-9a70-c2aa2d76a31c@oracle.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191024113911.GD2620@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 6:39 AM, Vinod Koul wrote:
-> On 22-10-19, 18:48, Pierre-Louis Bossart wrote:
->> The uniqueID is useful when there are two or more devices of the same
->> type (identical manufacturer ID, part ID) on the same link.
-> 
-> Right!
+On Wed, 23 Oct 2019 15:57:49 -0700
+Divya Indi <divya.indi@oracle.com> wrote:
 
-the key part is "two or more". When it's "one" then the uniqueID has no 
-defined meaning.
+> Hi Steven,                                                                         
+>                                                                                  
+> A few clarifications on this discussion on reference counter -                   
+>                                                                                  
+> 1) We will still need to export trace_array_put() to be used for every           
+> trace_array_get_by_name() OR trace_array_create() + trace_array_get().        
 
-> 
->> When there is a single device of a given type on a link, its uniqueID
->> is irrelevant. It's not uncommon on actual platforms to see variations
->> of the uniqueID, or differences between devID registers and ACPI _ADR
->> fields.
-> 
-> Ideally this should be fixed in firmware, I do not like the fact the we are
-> poking in core for firmware issues!
+I'm fine with exporting trace_array_put, and even trace_array_get.
+      
+>                                                                                  
+> How else will we reduce the reference counter [For eg: When multiple modules     
+> lookup the same trace array (say, reference counter = 4)]?                       
+>                                                                                  
+> 2) tr = trace_array_create("my_tr");                                             
+>    trace_array_get(tr);                                                          
+>                                                                                  
+> Both of these functions will iterate through the list of trace arrays to verify  
+> whether the trace array exists (redundant, but more intuitive? Does this seem    
+> acceptable?)                                                                     
+>                                                                                  
+> To avoid iterating twice, we went with increasing ref_ctr in trace_array_create. 
+> This necessitated a trace_array_put() in instance_mkdir (Or as suggested below,
+> we can do this trace_array_put() in instance_rmdir().)                        
+>                                                                                                                
+>                                                                                  
+> 3) A summary of suggested changes (Let me know if this looks good) -                                              
+>                                                                                  
+> tr = trace_array_get_by_name("foo-bar"); // ref_ctr++.                           
+>                                                                                  
+> if (!tr)                                                                         
+> {                                                                                
+>         // instance_mkdir also causes ref_ctr = 1                                
 
-I will be the first to complain about BIOS issues, and the need for 
-workarounds in the kernel, but here the BIOS vendors rely on permissions 
-defined in the standard, see lines 3320..31 in the MIPI SoundWire 1.2 
-document. You will see that there is no requirement to use the full set 
-of devID registers to identify a Slave device. The only requirement is 
-to read devID0 first to force a state machine transition and enable 
-arbitration.
+You'll need locking for anyone who does this, and check the return
+status below for "foo-bar" existing already (due to another thread
+jumping in here).
 
-In other words, it's a nice case of BIOS folks telling the kernel folks 
-we are too strict in our interpretation of the standard, and what they 
-do is a feature and not a bug.
+-- Steve
 
-> 
->> This patch suggests a filter on startup to identify 'single' devices
->> and tag them accordingly.
-> 
-> So you try to see if the board has a single device and mark them so that
-> you can skip the unique id, did I get that right?
-> 
-> What about the boards which have multiple devices? How doing solve
-> these?
-
-The uniqueID is used when multiple devices of the same type are detected 
-in ACPI tables. No change, see [1] below
-
-> 
->> The uniqueID is then not used for the probe,
->> and the device name omits the uniqueID as well.
->>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> ---
->>   drivers/soundwire/bus.c   |  7 +++---
->>   drivers/soundwire/slave.c | 52 ++++++++++++++++++++++++++++++++++++---
->>   2 files changed, 52 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
->> index fc53dbe57f85..be5d437058ed 100644
->> --- a/drivers/soundwire/bus.c
->> +++ b/drivers/soundwire/bus.c
->> @@ -422,10 +422,11 @@ static struct sdw_slave *sdw_get_slave(struct sdw_bus *bus, int i)
->>   
->>   static int sdw_compare_devid(struct sdw_slave *slave, struct sdw_slave_id id)
->>   {
->> -	if (slave->id.unique_id != id.unique_id ||
->> -	    slave->id.mfg_id != id.mfg_id ||
->> +	if (slave->id.mfg_id != id.mfg_id ||
->>   	    slave->id.part_id != id.part_id ||
->> -	    slave->id.class_id != id.class_id)
->> +	    slave->id.class_id != id.class_id ||
->> +	    (slave->id.unique_id != SDW_IGNORED_UNIQUE_ID &&
->> +	     slave->id.unique_id != id.unique_id))
-
-[1] this is where the unique_id is ignored if it was tagged as 
-irrelevant while scanning ACPI tables. If it is not ignored, then the 
-same comparison applied
-
->>   		return -ENODEV;
->>   
->>   	return 0;
->> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
->> index 5dbc76772d21..19919975bb6d 100644
->> --- a/drivers/soundwire/slave.c
->> +++ b/drivers/soundwire/slave.c
->> @@ -29,10 +29,17 @@ static int sdw_slave_add(struct sdw_bus *bus,
->>   	slave->dev.parent = bus->dev;
->>   	slave->dev.fwnode = fwnode;
->>   
->> -	/* name shall be sdw:link:mfg:part:class:unique */
->> -	dev_set_name(&slave->dev, "sdw:%x:%x:%x:%x:%x",
->> -		     bus->link_id, id->mfg_id, id->part_id,
->> -		     id->class_id, id->unique_id);
->> +	if (id->unique_id == SDW_IGNORED_UNIQUE_ID) {
->> +		/* name shall be sdw:link:mfg:part:class */
->> +		dev_set_name(&slave->dev, "sdw:%x:%x:%x:%x",
->> +			     bus->link_id, id->mfg_id, id->part_id,
->> +			     id->class_id);
->> +	} else {
->> +		/* name shall be sdw:link:mfg:part:class:unique */
->> +		dev_set_name(&slave->dev, "sdw:%x:%x:%x:%x:%x",
->> +			     bus->link_id, id->mfg_id, id->part_id,
->> +			     id->class_id, id->unique_id);
->> +	}
->>   
->>   	slave->dev.release = sdw_slave_release;
->>   	slave->dev.bus = &sdw_bus_type;
->> @@ -103,6 +110,7 @@ static bool find_slave(struct sdw_bus *bus,
->>   int sdw_acpi_find_slaves(struct sdw_bus *bus)
->>   {
->>   	struct acpi_device *adev, *parent;
->> +	struct acpi_device *adev2, *parent2;
->>   
->>   	parent = ACPI_COMPANION(bus->dev);
->>   	if (!parent) {
->> @@ -112,10 +120,46 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
->>   
->>   	list_for_each_entry(adev, &parent->children, node) {
->>   		struct sdw_slave_id id;
->> +		struct sdw_slave_id id2;
->> +		bool ignore_unique_id = true;
->>   
->>   		if (!find_slave(bus, adev, &id))
->>   			continue;
->>   
->> +		/* brute-force O(N^2) search for duplicates */
->> +		parent2 = parent;
->> +		list_for_each_entry(adev2, &parent2->children, node) {
->> +
->> +			if (adev == adev2)
->> +				continue;
->> +
->> +			if (!find_slave(bus, adev2, &id2))
->> +				continue;
->> +
->> +			if (id.sdw_version != id2.sdw_version ||
->> +			    id.mfg_id != id2.mfg_id ||
->> +			    id.part_id != id2.part_id ||
->> +			    id.class_id != id2.class_id)
->> +				continue;
->> +
->> +			if (id.unique_id != id2.unique_id) {
->> +				dev_dbg(bus->dev,
->> +					"Valid unique IDs %x %x for Slave mfg %x part %d\n",
->> +					id.unique_id, id2.unique_id,
->> +					id.mfg_id, id.part_id);
->> +				ignore_unique_id = false;
->> +			} else {
->> +				dev_err(bus->dev,
->> +					"Invalid unique IDs %x %x for Slave mfg %x part %d\n",
->> +					id.unique_id, id2.unique_id,
->> +					id.mfg_id, id.part_id);
->> +				return -ENODEV;
->> +			}
->> +		}
->> +
->> +		if (ignore_unique_id)
->> +			id.unique_id = SDW_IGNORED_UNIQUE_ID;
->> +
->>   		/*
->>   		 * don't error check for sdw_slave_add as we want to continue
->>   		 * adding Slaves
->> -- 
->> 2.20.1
-> 
+>         tr = trace_array_create("foo-bar"); // ref_ctr = 1                       
+>         trace_array_get(tr); // ref_ctr++                                        
+> }                                                                                
+>                                                                                  
+> trace_array_printk(.....);                                                       
+> trace_array_set_clr_event(......);                                               
+> ...                                                                              
+> ...                                                                              
+> ...                                                                              
+> // Done using the trace array.                                                   
+> trace_array_put(tr); // ref_ctr--                                                
+> ...                                                                              
+> ...                                                                              
+> ...                                                                              
+> // We can now remove the trace array via trace_array_destroy or instance_rmdir()
+> trace_array_destroy(tr); // ref_ctr > 1 returns -EBUSY.
 
