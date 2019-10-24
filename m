@@ -2,151 +2,134 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6285CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6A0CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D3C20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D3C205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:52:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EE6ULXMa"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="c3gScaiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502166AbfJXMwP (ORCPT
+        id S2502177AbfJXMwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:52:15 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8508 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731315AbfJXMwP (ORCPT
+        Thu, 24 Oct 2019 08:52:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37530 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731315AbfJXMwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 08:52:15 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9OCpL3a031995;
-        Thu, 24 Oct 2019 14:52:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=NTyg2cKVDskIQP5k+lTXj0XW5CLq2Yn3o933I6C84NA=;
- b=EE6ULXMaQF8YbBV5UrS6beaGs5rVC1yLwC8wbX7WYWmp9CYme0oO/s+Dmh1pici70vGJ
- Sc4L5iztdNtA0KpVciDpHynRxkRbseq5UJ6rx6kWFgXbFdiYpTcnqOnpxWsgRCvOpIE3
- BMrviEj+qesKjJwzdNOVv+1QjEPhKgf/OiPIjNz6iH0ZM1XAQSJ4zBPC/hTnqXZDrarN
- hNhluXCrYT0rZnPTEWHCHqxzDpRBwqyLcusmgYL6XPJ2uP1qiniTYJzdbOKzeFeJHuZA
- PEXHk51YMInySfvsEdk3IMDQMyWss1y5Bdftu9uhisPg6O0EN5x7m78ivuV+dB3BYgiE dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vt9s51qwu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 24 Oct 2019 14:52:03 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D001710002A;
-        Thu, 24 Oct 2019 14:52:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 68D382BAB98;
-        Thu, 24 Oct 2019 14:52:01 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 24 Oct 2019 14:52:01
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
-CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: [PATCH] i2c: i2c-stm32f7: report dma error during probe
-Date:   Thu, 24 Oct 2019 14:52:00 +0200
-Message-ID: <1571921521-8502-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-24_08:2019-10-23,2019-10-24 signatures=0
+        Thu, 24 Oct 2019 08:52:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e11so17249498wrv.4
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 05:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=Gp7w0CtXS7ruAPklTtPyVZtj6tEuTD3cIiAzzfhQRVA=;
+        b=c3gScaiSiuSQAr39lZY8I7G1TApjk3EA/mdkJJzcMp+pIetKvw8wWnL6NyUMGENyyU
+         3k137WtLzyHVyZwFdN/XeWymlPYLio/Fce3DG+uxslTJFlQ4Fz+ofwU80z/8rzzRnSXm
+         MM48hzOyEl56IoYKeDpaKb5gyuSxKU2xGH7nF2LFjUmfHdHeY7b2fMCRsdJpWNjxAp0y
+         eEvsDhNg+RYY1gZVmDvDJlHC5TFYivd8yJDFqRU8v+J/7exKPtffY79JJPoduRwg5v8l
+         wPyZs+5bahu2bSX9ZEEBjVdA0JJP7KqCxakoLZ8kDtdegfZSyo7C/QAGqyUipLm9uWxn
+         nu7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=Gp7w0CtXS7ruAPklTtPyVZtj6tEuTD3cIiAzzfhQRVA=;
+        b=uBnwoYFTp3fSEZzjL1JHMzclvcB/aUsTyNwk+zFzQIJbc60V1dzpplOmx2Kbamyn4c
+         XdvBc2bKzoxHmdacsdo6jouHrKMi2sd3+lJhkf6FTuC4U45hP1StEyd553lU/8eTb2hE
+         d/G4IFQ5Szkhrh34cFPhA+V9HcX65p23plaSfM4b0n14jWg9o5XEd47ddlPREaowpe9U
+         q/qmH5fx3gnhoz6Ss8b8SrMBZ+BsH7aQIsy8lgUM4hGBF2H+i+jaeeJOR/Of7wMsDX3R
+         hYqVuxLeyyXDvYGtcgtzL1Fl8mwjhwNjQFyamiimWWc4T8Ktp41u4ZgGSqYxzCwcO0aY
+         5svA==
+X-Gm-Message-State: APjAAAXEkMjaU4aaolX0vsDPTxzDAHZCTiC3/LsVAkNm6b2bV7nrrhtB
+        3BsZf0+KYUDVsMAcjMIaszkY3Q==
+X-Google-Smtp-Source: APXvYqx5PxXCsgOAtnabXr44Wc7UjjcydX19m7KM+dGbPTZ2Xq7vY9OrubLua2c2mKVrXupORzKKIw==
+X-Received: by 2002:adf:f44e:: with SMTP id f14mr3603127wrp.56.1571921541265;
+        Thu, 24 Oct 2019 05:52:21 -0700 (PDT)
+Received: from [10.83.36.220] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id 65sm25428205wrs.9.2019.10.24.05.52.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 05:52:20 -0700 (PDT)
+From:   James Sewart <jamessewart@arista.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: [PATCH] Ensure pci transactions coming from PLX NTB are handled when 
+ IOMMU is turned on
+Message-Id: <A3FA9DE1-2EEF-41D8-9AC2-B1F760E7F5D5@arista.com>
+Date:   Thu, 24 Oct 2019 13:52:19 +0100
+Cc:     linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>
+To:     iommu@lists.linux-foundation.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Distinguish between the case where dma information is not provided
-within the DT and the case of an error during the dma init.
-Exit the probe with error in case of an error during dma init.
+The PLX PEX NTB forwards DMA transactions using Requester ID's that =
+don't exist as
+PCI devices. The devfn for a transaction is used as an index into a =
+lookup table
+storing the origin of a transaction on the other side of the bridge.
 
-Fixes: bb8822cbbc53 ("i2c: i2c-stm32: Add generic DMA API")
+This patch aliases all possible devfn's to the NTB device so that any =
+transaction
+coming in is governed by the mappings for the NTB.
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Signed-Off-By: James Sewart <jamessewart@arista.com>
 ---
- drivers/i2c/busses/i2c-stm32.c   | 16 ++++++++--------
- drivers/i2c/busses/i2c-stm32f7.c |  9 +++++++++
- 2 files changed, 17 insertions(+), 8 deletions(-)
+ drivers/pci/quirks.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-stm32.c b/drivers/i2c/busses/i2c-stm32.c
-index 07d5dfce68d4..1da347e6a358 100644
---- a/drivers/i2c/busses/i2c-stm32.c
-+++ b/drivers/i2c/busses/i2c-stm32.c
-@@ -20,13 +20,13 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 
- 	dma = devm_kzalloc(dev, sizeof(*dma), GFP_KERNEL);
- 	if (!dma)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	/* Request and configure I2C TX dma channel */
--	dma->chan_tx = dma_request_slave_channel(dev, "tx");
--	if (!dma->chan_tx) {
-+	dma->chan_tx = dma_request_chan(dev, "tx");
-+	if (IS_ERR(dma->chan_tx)) {
- 		dev_dbg(dev, "can't request DMA tx channel\n");
--		ret = -EINVAL;
-+		ret = PTR_ERR(dma->chan_tx);
- 		goto fail_al;
- 	}
- 
-@@ -42,10 +42,10 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	}
- 
- 	/* Request and configure I2C RX dma channel */
--	dma->chan_rx = dma_request_slave_channel(dev, "rx");
--	if (!dma->chan_rx) {
-+	dma->chan_rx = dma_request_chan(dev, "rx");
-+	if (IS_ERR(dma->chan_rx)) {
- 		dev_err(dev, "can't request DMA rx channel\n");
--		ret = -EINVAL;
-+		ret = PTR_ERR(dma->chan_rx);
- 		goto fail_tx;
- 	}
- 
-@@ -75,7 +75,7 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	devm_kfree(dev, dma);
- 	dev_info(dev, "can't use DMA\n");
- 
--	return NULL;
-+	return ERR_PTR(ret);
- }
- 
- void stm32_i2c_dma_free(struct stm32_i2c_dma *dma)
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index d36cf08461f7..cc8ba8f49ae6 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1950,6 +1950,15 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 	i2c_dev->dma = stm32_i2c_dma_request(i2c_dev->dev, phy_addr,
- 					     STM32F7_I2C_TXDR,
- 					     STM32F7_I2C_RXDR);
-+	if (PTR_ERR(i2c_dev->dma) == -ENODEV)
-+		i2c_dev->dma = NULL;
-+	else if (IS_ERR(i2c_dev->dma)) {
-+		ret = PTR_ERR(i2c_dev->dma);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"Failed to request dma error %i\n", ret);
-+		goto clk_free;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 320255e5e8f8..647f546e427f 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5315,6 +5315,28 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+ SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+ SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+=20
++/*
++ * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. =
+These IDs
++ * are used to forward responses to the originator on the other side of =
+the
++ * NTB. Alias all possible IDs to the NTB to permit access when the =
+IOMMU is
++ * turned on.
++ */
++static void quirk_PLX_NTB_dma_alias(struct pci_dev *pdev)
++{
++	if (!pdev->dma_alias_mask)
++		pdev->dma_alias_mask =3D kcalloc(BITS_TO_LONGS(U8_MAX),
++					      sizeof(long), GFP_KERNEL);
++	if (!pdev->dma_alias_mask) {
++		dev_warn(&pdev->dev, "Unable to allocate DMA alias =
+mask\n");
++		return;
 +	}
- 
- 	platform_set_drvdata(pdev, i2c_dev);
- 
--- 
-2.7.4
++
++	// PLX NTB may use all 256 devfns
++	memset(pdev->dma_alias_mask, U8_MAX, (U8_MAX+1)/BITS_PER_BYTE);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, =
+quirk_PLX_NTB_dma_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, =
+quirk_PLX_NTB_dma_alias);
++
+ /*
+  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS =
+does
+  * not always reset the secondary Nvidia GPU between reboots if the =
+system
+--=20
+2.19.1
+
 
