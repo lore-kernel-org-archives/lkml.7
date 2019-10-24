@@ -2,138 +2,144 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93009C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DD0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CC420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:52:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrxFfBuN"
+	by mail.kernel.org (Postfix) with ESMTP id E6A2B20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438486AbfJXIwG (ORCPT
+        id S2438496AbfJXIwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:52:06 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46134 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730467AbfJXIwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:52:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id q21so3444120plr.13;
-        Thu, 24 Oct 2019 01:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uPX6O9l+kuYjBcPYdh37KOiS7f3AWvLRqvSNRDK/hlY=;
-        b=rrxFfBuNj1V+uFY7mLjfFUPtV4lB6aOMWJC30bQxiPaE9cV/lD9sVOk3SIk3xxu0UX
-         7F6JWvBWNVcMfeQWKPE8B5LBRJjebHT/fuosPKegNwFQzyIYFqbONhmfvmuGJ4lcZfxN
-         MDyqg014EdBJuLkMqaIOgHYKfC8AYe+RSXf2U0eV33pxwwElrd7XoEzdWfO0gI2utY+f
-         2uNL8ed8lY1uV4upV/zKMvG/NspEHAmx+GchOcN00B0baykx4rU66sP4SS9BkTDBMdRV
-         25+LfK7LnYZKNtfAg4wEHKm85FsLkusC2tgS3ToH08UFikNjzerI4RCY9jdRwyBgtwdb
-         pgsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uPX6O9l+kuYjBcPYdh37KOiS7f3AWvLRqvSNRDK/hlY=;
-        b=Pp7aTGlLmlj69k73EB4mIzKLJsspL7zQ11zRs/Tj+Slgr3TtCi4ZuOP7S1n2aYLcB1
-         AomH5N7XunEwzrWWxuz7LM26PUMb9hTdHNEyGUtcceHS43f6tj1otwrnBhmyhbIFxQpL
-         WzFWKY30QiCG7JMzKI4ZITb0s4BXSbQoBzp3/CfT9ZhhMMAd7jnXYbS+7PKZQAAXEDaf
-         kX5h9bL1wf7/5MVXDjARPKAlCa+1Wwxozf7fczPUXIwCqW60QLh9pg4z9i+TVrvDK5d5
-         Clzds1qJEeP5ZkiZeQbtGfzn/udA2+o1Z5IodxKh6pFFmMSo49EoXHPY8CgySm6Cz1me
-         odUg==
-X-Gm-Message-State: APjAAAWG/pPwv+v+EHnlliDcfkibmj/d5HRh6NiAQ7WJ6de33PHBLZqI
-        nLd+/DG1pAIi1wNYfEkuo+o=
-X-Google-Smtp-Source: APXvYqwhJuw0T1sHz53pKJca5ZWdTYoQJUWebP9bGeR93OHzONyszouIpVMtloMWhRzOz/GbyuihGw==
-X-Received: by 2002:a17:902:b60a:: with SMTP id b10mr15125831pls.130.1571907123451;
-        Thu, 24 Oct 2019 01:52:03 -0700 (PDT)
-Received: from [192.168.1.60] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id s191sm23097338pgc.94.2019.10.24.01.52.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 01:52:02 -0700 (PDT)
-Subject: Re: [PATCH V2 5/7] USB: serial: f81232: Set F81534A serial port with
- RS232 mode
-To:     Johan Hovold <johan@kernel.org>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
- <20190923022449.10952-6-hpeter+linux_kernel@gmail.com>
- <20191023115300.GU24768@localhost>
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Message-ID: <f3a8b0bd-79f7-3bef-4d07-69774c87873a@gmail.com>
-Date:   Thu, 24 Oct 2019 16:52:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 04:52:16 -0400
+Received: from sauhun.de ([88.99.104.3]:37578 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730467AbfJXIwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 04:52:15 -0400
+Received: from localhost (x4e374e90.dyn.telefonica.de [78.55.78.144])
+        by pokefinder.org (Postfix) with ESMTPSA id 283C22C011D;
+        Thu, 24 Oct 2019 10:52:14 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 10:52:13 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Gene Chen <gene.chen.richtek@gmail.com>, matthias.bgg@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v4] mfd: mt6360: add pmic mt6360 driver
+Message-ID: <20191024085212.GB2850@kunai>
+References: <1571749359-15752-1-git-send-email-gene.chen.richtek@gmail.com>
+ <20191024082623.GK15843@dell>
 MIME-Version: 1.0
-In-Reply-To: <20191023115300.GU24768@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+Content-Disposition: inline
+In-Reply-To: <20191024082623.GK15843@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
 
-Johan Hovold 於 2019/10/23 下午 07:53 寫道:
-> On Mon, Sep 23, 2019 at 10:24:47AM +0800, Ji-Ze Hong (Peter Hong) wrote:
->> The Fintek F81532A/534A/535/536 is USB-to-2/4/8/12 serial ports device
->> and the serial ports are default disabled. Each port contains max 3 pins
->> GPIO and the 3 pins are default pull high with input mode.
->>
->> When the serial port had activated (running probe()), we'll transform the
->> 3 pins from GPIO function publicly to control Tranceiver privately use.
-> 
-> I'm not sure I understand what you're saying here.
-> 
->> We'll default set to 0/0/1 for control transceiver to RS232 mode.
->>
->> Otherwise, If the serial port is not active, the 3 pins is in GPIO mode
->> and controlled by global GPIO device with VID/PID: 2c42/16f8.
-> 
-> Does this mean that you can control the three GPIOs either through the
-> serial device or through the gpio-control device (which are two separate
-> USB devices)?
-> 
-
-Yes, when 1 F81534A connect to Host, it'll report device as following.
-	virtual HUB
-		GPIO Device.
-		serial port 1
-		...
-		serial port n
-
-The link are F81534A pin-out:
-	https://imgur.com/a/AZHqQ1N
-
-So we can control F81534A series all GPIO pins via GPIO Device.
-Serial ports are also control MODE0_x,  MODE1_x,  MODE2_x
-(e.g. UART1 MODE0_1,  MODE1_1,  MODE2_1), but when Serial ports
-is h/w disabled (DTR pull low), the mode pin will change to GPIO pin.
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
-> Ok, so you reset the tranceiver config on every probe.
-> 
-> Are the three GPIOs always connected to one particular tranceiver, or
-> are they truly general purpose?
-> 
-> In the latter case, it doesn't seem like a good idea to drive pins 0
-> and 1 low here as you have know idea what they're used for.
+> > +	for (i = 0; i < MT6360_SLAVE_MAX; i++) {
+> > +		if (mt6360_slave_addr[i] == client->addr) {
+> > +			mpd->i2c[i] = client;
+> > +			continue;
+> > +		}
 
-If we want to change the mode pin to GPIO pin, it need do h/w disable.
-It the serial ports are activated, the 3 pin will be mode pin and set
-default 0/0/1 to RS232 mode due to this driver not implement RS422/485
-currently.
+Not knowing the DT bindings, I wonder if we can let the for-loop start
+at 1 and do beforehand:
+	mpd->i2c[0] = client;
 
-Thanks
--- 
-With Best Regards,
-Peter Hong
+That would save the above if block. However, this is a minor nit.
+
+
+> > +		mpd->i2c[i] = i2c_new_dummy(client->adapter,
+> > +					    mt6360_slave_addr[i]);
+
+Please use the new API i2c_new_dummy_device here...
+
+> > +		if (!mpd->i2c[i]) {
+
+... and IS_ERR() here.
+
+> > +			dev_err(&client->dev, "new i2c dev [%d] fail\n", i);
+> > +			ret = -ENODEV;
+
+Then you can also return a proper errno value.
+
+You can probably also use devm_i2c_new_dummy_device()...
+
+
+> > +			goto out;
+> > +		}
+> > +		i2c_set_clientdata(mpd->i2c[i], mpd);
+> > +	}
+> > +
+> > +	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
+> > +				   mt6360_devs, ARRAY_SIZE(mt6360_devs), NULL,
+> > +				   0, regmap_irq_get_domain(mpd->irq_data));
+> > +	if (ret < 0) {
+> > +		dev_err(&client->dev, "mfd add cells fail\n");
+> > +		goto out;
+> > +	}
+> > +
+> > +	return 0;
+> > +out:
+> > +	while (--i >= 0) {
+> > +		if (mpd->i2c[i]->addr == client->addr)
+> > +			continue;
+> > +		i2c_unregister_device(mpd->i2c[i]);
+
+... to save this ...
+
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int mt6360_pmu_remove(struct i2c_client *client)
+> > +{
+> > +	struct mt6360_pmu_data *mpd = i2c_get_clientdata(client);
+> > +	int i;
+> > +
+> > +	for (i = 0; i < MT6360_SLAVE_MAX; i++) {
+> > +		if (mpd->i2c[i]->addr == client->addr)
+> > +			continue;
+> > +		i2c_unregister_device(mpd->i2c[i]);
+> > +	}
+
+... and this. But please double check.
+
+
+--s/l3CgOIzMHHjg/5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2xZjwACgkQFA3kzBSg
+KbbRSQ/+KeAeLPnHYJBgZYJS5bMotybmbaM9VfBSaGUp5IofDuEyobHAph3O4y49
++qLo5KN/PusE8qnTUfTxs5+7ZC4vWwlwkCMOSK/iX74H5jxXlu3aM3hitvMtWqCD
+Sq3eqHRtMqw9Q+Qm5LEEIUdhcmSk7ExoDoVrShZImg3ZjqcGTRVB8+JOfI3GrLfl
+dEfyRwn5u/epXucr39dP3NCZTgSCCQOIl3bJGLqRn4jDM/K3WaZu4/SwEYTOQy/d
+y8MzBZjKJY3xDIl3WIPOVAcw1fz3wrr/Ff3sfGczPR+jEQAac6E5hGDmsdsbvG4G
+CqNYEGb9ey96S1wcrYeBnZjMu5lX672L5rNSSXnEp47UlU3zynovqqYDvh8tEcsB
+r1nWY54EUzCKm5KNWRGhsEj99O4Ellz0+7ocpOyqeP+7oPviuXee3L1pv0MtHQcc
+Cs1IcT07FmGSSOwyUl+f9neOmNDx2RyK4OCGZn3G3dqE5ncuQUbafQR0LnYjCodB
+ui3gQw7SnSGAnusmVsJQPaaPHzJ9o39EHO6TzFKXgWMU6CLprEdRmkGIhLZ6YkcD
+IgpgVvN7YSgHqulUAAjnjueJ4qP8jdEIqZx6BpnrWH0DthprMWBNPjThEdHO5pUi
+2kXCG5sCZbmg9j/H0apIMNXZAgLJggvRjwt5nz9ftT/bL1ZQuas=
+=yXdj
+-----END PGP SIGNATURE-----
+
+--s/l3CgOIzMHHjg/5--
