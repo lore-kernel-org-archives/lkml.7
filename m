@@ -2,122 +2,96 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822ECCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32023CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5947320650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="anHytsPE"
+	by mail.kernel.org (Postfix) with ESMTP id 05DFB205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503896AbfJXRk0 (ORCPT
+        id S2503917AbfJXRkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:40:26 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6176 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729458AbfJXRkZ (ORCPT
+        Thu, 24 Oct 2019 13:40:49 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:49092 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729458AbfJXRks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:40:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db1e20d0000>; Thu, 24 Oct 2019 10:40:29 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 24 Oct 2019 10:40:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 24 Oct 2019 10:40:25 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 24 Oct
- 2019 17:40:24 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 24 Oct
- 2019 17:40:24 +0000
-Subject: Re: [PATCH v2] mm: gup: fix comment of __get_user_pages()
-To:     Liu Xiang <liuxiang_1999@126.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <1571929472-3091-1-git-send-email-liuxiang_1999@126.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <91d727c8-d2d3-8498-d3ff-8032da9a055d@nvidia.com>
-Date:   Thu, 24 Oct 2019 10:40:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 24 Oct 2019 13:40:48 -0400
+Received: from localhost.localdomain (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 602ADCECF4;
+        Thu, 24 Oct 2019 19:49:47 +0200 (CEST)
+From:   Marcel Holtmann <marcel@holtmann.org>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        johannes@sipsolutions.net, davem@davemloft.net
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH] rfkill: allocate static minor
+Date:   Thu, 24 Oct 2019 19:40:42 +0200
+Message-Id: <20191024174042.19851-1-marcel@holtmann.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1571929472-3091-1-git-send-email-liuxiang_1999@126.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571938829; bh=n7We2NgiNuh1YUglpKmrd+msDu/DGyBImzj+mPZ4P8A=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=anHytsPEY3EL2wS/3U/3lK9AYPqWUJqjQi5HFB1jA4FMRKp4/suPKiIJL6u0HnhlG
-         Kr1L+nA2XiRPJRF6r7OLLvgxgS0DTr03CNKyvqgkJI5ZQxmZ75Wlnq5xA/+hVXeJ/d
-         KEZ2nJopfe6SUsPt7ssx69XrRM5OJ2qtN17jOMLdw0kz9TiqfvQ4kNR/fVZ9Zi8gdT
-         xqnKCGXksCa+Ugh75yi4mke/BfWoj7HSRo3buus09sFuTdbLKEbLqDNJjNQUdhkjBo
-         97F4olg7tVtoHPCG9784gzZGpdSFhAmT3Q3UAPcOZLdHR6Nxwo8OZTPpevrWzhmptw
-         ea7UkKY7eLotw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 8:04 AM, Liu Xiang wrote:
-> Fix comment of __get_user_pages() and make it more clear.
-> 
-> Suggested-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
-> ---
-> 
-> Changes in v2:
->  as suggested by John, rewrite the comment about return value.
-> 
->  mm/gup.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
+udev has a feature of creating /dev/<node> device-nodes if it finds
+a devnode:<node> modalias. This allows for auto-loading of modules that
+provide the node. This requires to use a statically allocated minor
+number for misc character devices.
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+However, rfkill uses dynamic minor numbers and prevents auto-loading
+of the module. So allocate the next static misc minor number and use
+it for rfkill.
 
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+---
+ include/linux/miscdevice.h | 1 +
+ net/rfkill/core.c          | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-thanks,
+diff --git a/include/linux/miscdevice.h b/include/linux/miscdevice.h
+index 3247a3dc7934..b06b75776a32 100644
+--- a/include/linux/miscdevice.h
++++ b/include/linux/miscdevice.h
+@@ -57,6 +57,7 @@
+ #define UHID_MINOR		239
+ #define USERIO_MINOR		240
+ #define VHOST_VSOCK_MINOR	241
++#define RFKILL_MINOR		242
+ #define MISC_DYNAMIC_MINOR	255
+ 
+ struct device;
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index f9b08a6d8dbe..0bf9bf1ceb8f 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -1316,10 +1316,12 @@ static const struct file_operations rfkill_fops = {
+ 	.llseek		= no_llseek,
+ };
+ 
++#define RFKILL_NAME "rfkill"
++
+ static struct miscdevice rfkill_miscdev = {
+-	.name	= "rfkill",
+ 	.fops	= &rfkill_fops,
+-	.minor	= MISC_DYNAMIC_MINOR,
++	.name	= RFKILL_NAME,
++	.minor	= RFKILL_MINOR,
+ };
+ 
+ static int __init rfkill_init(void)
+@@ -1371,3 +1373,6 @@ static void __exit rfkill_exit(void)
+ 	class_unregister(&rfkill_class);
+ }
+ module_exit(rfkill_exit);
++
++MODULE_ALIAS_MISCDEV(RFKILL_MINOR);
++MODULE_ALIAS("devname:" RFKILL_NAME);
 -- 
-John Hubbard
-NVIDIA
+2.21.0
 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8f236a3..bc6a254 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -734,11 +734,17 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
->   *		Or NULL if the caller does not require them.
->   * @nonblocking: whether waiting for disk IO or mmap_sem contention
->   *
-> - * Returns number of pages pinned. This may be fewer than the number
-> - * requested. If nr_pages is 0 or negative, returns 0. If no pages
-> - * were pinned, returns -errno. Each page returned must be released
-> - * with a put_page() call when it is finished with. vmas will only
-> - * remain valid while mmap_sem is held.
-> + * Returns either number of pages pinned (which may be less than the
-> + * number requested), or an error. Details about the return value:
-> + *
-> + * -- If nr_pages is 0, returns 0.
-> + * -- If nr_pages is >0, but no pages were pinned, returns -errno.
-> + * -- If nr_pages is >0, and some pages were pinned, returns the number of
-> + *    pages pinned. Again, this may be less than nr_pages.
-> + *
-> + * The caller is responsible for releasing returned @pages, via put_page().
-> + *
-> + * @vmas are valid only as long as mmap_sem is held.
->   *
->   * Must be called with mmap_sem held.  It may be released.  See below.
->   *
-> 
