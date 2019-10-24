@@ -2,132 +2,77 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B0BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974F2CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95A12084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571920754;
-	bh=mmazZYdk5a6LhHAGNiJ4hLIx0tAfhGRJnKAr4K7eECY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AUr6ljPVZm03huXKM0awRfQGbg8oYgD/IWWyJR9TB+zB5Ro9YsNGDAo+PcE6CSPUW
-	 sAGsEn6cAGw/rGzAqHK/xud37DJJzy9XMZ57e0BTIjZc6CMuixIty/71Gb/trJkpFE
-	 wMhr6Z7g/z5l+Pad/Hlgz4aDW+lJQEPhAkbn11QA=
+	by mail.kernel.org (Postfix) with ESMTP id 78D022084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501973AbfJXMjM (ORCPT
+        id S2501984AbfJXMkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:39:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45830 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfJXMjM (ORCPT
+        Thu, 24 Oct 2019 08:40:12 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:41536 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728594AbfJXMkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 08:39:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 41so20478255oti.12
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 05:39:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h/Ozpin6WAJYhCs7IuxGEPTaFDrBNPxT2ybsEoTgZa8=;
-        b=VRa08cahs+XeKWz1yxbvfYDYbyCZuchC1Gqd+ykGczLQhf2jcdZQTetjFMWFylZ2EC
-         RVnM4L15fI06E9ZYj85Ui21VImiCIb1r5DYCRq4E+XN8/Pwg9npcZWV120ZwoiuCIxRu
-         QSCplAgfe1psaL85jdwfCmUpoRsMSYsfU8PHWG4g+cYT7AYld9nBT5mr9LrEn7G6LeNI
-         Z09oXxecaFHwq2xcjwbs0Y6WB+iTRn7mtPxFeXcVt+C5RJJgZ+cZz0/h06eKBJTF25Gt
-         mJgBZr4hxwazgymiUNnBf5yu7vaeVqRCdHAiE3Z23YdT/AL4sAWCkJ6hHXgPPJ9Jui0M
-         ut4g==
-X-Gm-Message-State: APjAAAXZnspAntKiunIs65C6olNwDDP7Y/zpJhh4N4EFJP2mDl5x6Pqu
-        FOgsoyp65Aeu4lxrTnzAoUUeuQTNOvhThMKGyXM=
-X-Google-Smtp-Source: APXvYqw0Ig2z1uuW9alu3vhqiC0nMabAO0elG1y20TV13hU8hqVTNjUIi4wsceW9yCuJQGS6MLGKCernIca5rkJjg6w=
-X-Received: by 2002:a9d:459b:: with SMTP id x27mr10908377ote.167.1571920749753;
- Thu, 24 Oct 2019 05:39:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191023122505.64684-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20191023122505.64684-1-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 24 Oct 2019 14:38:57 +0200
-Message-ID: <CAJZ5v0j5UH52ze=wL_kc394ojaudkaAKGp5=x6-bq4dEnPHp-g@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: platform: Declare ret variable only once
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 24 Oct 2019 08:40:12 -0400
+Received: from ramsan ([84.195.182.253])
+        by andre.telenet-ops.be with bizsmtp
+        id HQg9210055USYZQ01Qg9e3; Thu, 24 Oct 2019 14:40:09 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNcPR-0005xB-7B; Thu, 24 Oct 2019 14:40:09 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNcPR-0003YX-5K; Thu, 24 Oct 2019 14:40:09 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 resend net-next] dt-bindings: net: btusb: DT fix s/interrupt-name/interrupt-names/
+Date:   Thu, 24 Oct 2019 14:40:07 +0200
+Message-Id: <20191024124007.13628-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 2:25 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> We may define ret variable only once and avoid adding it each time
-> platform_get_irq_optional() get extended.
->
-> For the sake of consistency do the same in __platform_get_irq_byname().
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The standard DT property name is "interrupt-names".
 
-Fine by me:
+Fixes: fd913ef7ce619467 ("Bluetooth: btusb: Add out-of-band wakeup support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v4:
+  - Add Acked-by,
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+v3:
+  - New.
+---
+ Documentation/devicetree/bindings/net/btusb.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  drivers/base/platform.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index e0ca682a756d..dad9806875f7 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -106,9 +106,9 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
->         return dev->archdata.irqs[num];
->  #else
->         struct resource *r;
-> -       if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node) {
-> -               int ret;
-> +       int ret;
->
-> +       if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node) {
->                 ret = of_irq_get(dev->dev.of_node, num);
->                 if (ret > 0 || ret == -EPROBE_DEFER)
->                         return ret;
-> @@ -117,8 +117,6 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
->         r = platform_get_resource(dev, IORESOURCE_IRQ, num);
->         if (has_acpi_companion(&dev->dev)) {
->                 if (r && r->flags & IORESOURCE_DISABLED) {
-> -                       int ret;
-> -
->                         ret = acpi_irq_get(ACPI_HANDLE(&dev->dev), num, r);
->                         if (ret)
->                                 return ret;
-> @@ -151,8 +149,7 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
->          * allows a common code path across either kind of resource.
->          */
->         if (num == 0 && has_acpi_companion(&dev->dev)) {
-> -               int ret = acpi_dev_gpio_irq_get(ACPI_COMPANION(&dev->dev), num);
-> -
-> +               ret = acpi_dev_gpio_irq_get(ACPI_COMPANION(&dev->dev), num);
->                 /* Our callers expect -ENXIO for missing IRQs. */
->                 if (ret >= 0 || ret == -EPROBE_DEFER)
->                         return ret;
-> @@ -240,10 +237,9 @@ static int __platform_get_irq_byname(struct platform_device *dev,
->                                      const char *name)
->  {
->         struct resource *r;
-> +       int ret;
->
->         if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node) {
-> -               int ret;
-> -
->                 ret = of_irq_get_byname(dev->dev.of_node, name);
->                 if (ret > 0 || ret == -EPROBE_DEFER)
->                         return ret;
-> --
-> 2.23.0
->
+diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
+index b1ad6ee68e909318..c51dd99dc0d3cb73 100644
+--- a/Documentation/devicetree/bindings/net/btusb.txt
++++ b/Documentation/devicetree/bindings/net/btusb.txt
+@@ -38,7 +38,7 @@ Following example uses irq pin number 3 of gpio0 for out of band wake-on-bt:
+ 	compatible = "usb1286,204e";
+ 	reg = <1>;
+ 	interrupt-parent = <&gpio0>;
+-	interrupt-name = "wakeup";
++	interrupt-names = "wakeup";
+ 	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+     };
+ };
+-- 
+2.17.1
+
