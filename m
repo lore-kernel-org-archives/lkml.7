@@ -2,196 +2,138 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC55CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7258ACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9107A20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4897C21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:32:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqHv9xqA"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="l5kJGcsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392917AbfJXDbq (ORCPT
+        id S2437228AbfJXDc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 23:31:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22171 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390450AbfJXDbq (ORCPT
+        Wed, 23 Oct 2019 23:32:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35542 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392870AbfJXDcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 23:31:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571887905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9q/far8ZjPdd6hm4WFk0gBs9u30vGVUeCdmmKgZKaN4=;
-        b=NqHv9xqAuWmq8l9Yd6Y7bumojL1eiDWTHArYQRhqiI8X3EJL0Zpz7QTdSuDviGN5LBwDEG
-        BopLNLTqFaGI9UUqRX3b4KORyv0z3eP485NBiO/w35yhGCZJXW5ni+BVFAH49ngEab2r4E
-        yRaCYpOC0VraJiO+0bvDDmwttx65mcM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-PfRyBGzKPp-hwj43X41j_g-1; Wed, 23 Oct 2019 23:31:43 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F6171005509;
-        Thu, 24 Oct 2019 03:31:39 +0000 (UTC)
-Received: from [10.72.12.199] (ovpn-12-199.pek2.redhat.com [10.72.12.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE78260BF1;
-        Thu, 24 Oct 2019 03:31:06 +0000 (UTC)
-Subject: Re: [PATCH V5 2/6] modpost: add support for mdev class id
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191023130752.18980-1-jasowang@redhat.com>
- <20191023130752.18980-3-jasowang@redhat.com>
- <20191023154245.32e4fa49@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <555a101e-0ed1-2e9d-c1a4-e3b37d76bd18@redhat.com>
-Date:   Thu, 24 Oct 2019 11:31:04 +0800
+        Wed, 23 Oct 2019 23:32:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c8so8544526pgb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 20:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x9yyQ2FOaYcmSfcpOJxtcwGG2Qu1XU68PHFcRqzXa3M=;
+        b=l5kJGcsHDzkhBVaQTnz47UD9J1r2EmTtlolEqaO5EjuBlCtue3iG0RvKqmtBm2YwXR
+         +8xepoTs24e/xk4M/s+f7E7+EwKKKZp/FE5YERFeXwtjz1auyqSYxDJUMg8UbLlaPFdB
+         3VffsRs0Ugwj+erGFiWCyDNCi9CJRFmgsh7fQHFjQ9wNJPwdh/k2PXzAOk0VFHWDHWu+
+         IajaTpK1/Gk7IONkVrWywQ/wiPOs4C5HohianltFhvm24sSeWfmeoRgxEk9olnOESANF
+         O6TMAkmFj5lXneRX4r7OL4lDekc3wS/p1piBZzlQcYYcdTguBhAAsN5e4jrx1Bc5YZT1
+         OK6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x9yyQ2FOaYcmSfcpOJxtcwGG2Qu1XU68PHFcRqzXa3M=;
+        b=OdPP2J5ALBsneCRzmIsFkj5j0Nw4OLyIuwFY4ESjcLrgzNWtXX/DM8yfbMLzt3jYCm
+         Lg17GsrmcZsKorYbqq6tvSJ6NuRROqWlzGVMODbn01biMweYkdJyL5ZaAXW4+JQ4MWUo
+         AmiiOTQSGLvT6glTDTOzhx0bU7KLqA5DdbaHvzjpAVpgWJMI2o6KSiLmKb8SpfJlQlTc
+         eWq72czsGJ9jB3PRMMQiUP9UiXd+gV6hzovSH9QxgLgN1TWsb1v4fd1PuujV7ymc2P//
+         Q5dMQ4eUkqjSBDnINrfB+8zJ5Ft+r9dyssPXGtan+XYcfVlNRvh4CoQ8ZAF65Xhba9WS
+         kAYA==
+X-Gm-Message-State: APjAAAUXrNP6a+XHNw9e+n1sYEy70jzrPEyfFMk5j9HnBwQt5y/9vRW1
+        2ppM6BZrVTYggqqUthQeaxFkKw==
+X-Google-Smtp-Source: APXvYqxbNeSTJySZFCyFfN/ef676Nbp3ELs2xUm7ue0KSYLuBZnSumm7Lik1hNs0oOuY7TDT2WmUdg==
+X-Received: by 2002:a63:c40e:: with SMTP id h14mr13966574pgd.254.1571887975017;
+        Wed, 23 Oct 2019 20:32:55 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id n2sm25393079pgg.77.2019.10.23.20.32.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 20:32:54 -0700 (PDT)
+Subject: Re: [PATCH] blk-mq: remove needless goto from blk_mq_get_driver_tag
+To:     Bart Van Assche <bvanassche@acm.org>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel@collabora.com, krisman@collabora.com
+References: <20191022174108.15554-1-andrealmeid@collabora.com>
+ <2a8a99a6-4b39-e459-988a-ba9502919044@acm.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f3e19c37-2430-81d5-ed5b-bc15d93e93c2@kernel.dk>
+Date:   Wed, 23 Oct 2019 21:32:52 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191023154245.32e4fa49@x1.home>
+In-Reply-To: <2a8a99a6-4b39-e459-988a-ba9502919044@acm.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: PfRyBGzKPp-hwj43X41j_g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/10/24 =E4=B8=8A=E5=8D=885:42, Alex Williamson wrote:
-> On Wed, 23 Oct 2019 21:07:48 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Add support to parse mdev class id table.
+On 10/23/19 7:34 PM, Bart Van Assche wrote:
+> On 2019-10-22 10:41, André Almeida wrote:
+>> The only usage of the label "done" is when (rq->tag != -1) at the
+>> begging of the function. Rather than jumping to label, we can just
+>> remove this label and execute the code at the "if". Besides that,
+>> the code that would be executed after the label "done" is the return of
+>> the logical expression (rq->tag != -1) but since we are already inside
+>> the if, we now that this is true. Remove the label and replace the goto
+>> with the proper result of the label.
 >>
->> Reviewed-by: Parav Pandit <parav@mellanox.com>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> Signed-off-by: André Almeida <andrealmeid@collabora.com>
 >> ---
->>   drivers/vfio/mdev/vfio_mdev.c     |  2 ++
->>   scripts/mod/devicetable-offsets.c |  3 +++
->>   scripts/mod/file2alias.c          | 10 ++++++++++
->>   3 files changed, 15 insertions(+)
+>> Hello,
 >>
->> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev=
-.c
->> index 7b24ee9cb8dd..cb701cd646f0 100644
->> --- a/drivers/vfio/mdev/vfio_mdev.c
->> +++ b/drivers/vfio/mdev/vfio_mdev.c
->> @@ -125,6 +125,8 @@ static const struct mdev_class_id id_table[] =3D {
->>   =09{ 0 },
->>   };
->>  =20
->> +MODULE_DEVICE_TABLE(mdev, id_table);
->> +
-> Two questions, first we have:
->
-> #define MODULE_DEVICE_TABLE(type, name)                                 \
-> extern typeof(name) __mod_##type##__##name##_device_table               \
->    __attribute__ ((unused, alias(__stringify(name))))
->
-> Therefore we're defining __mod_mdev__id_table_device_table with alias
-> id_table.  When the virtio mdev bus driver is added in 5/6 it uses the
-> same name value.  I see virtio types all register this way (virtio,
-> id_table), so I assume there's no conflict, but pci types mostly (not
-> entirely) seem to use unique names.  Is there a preference to one way
-> or the other or it simply doesn't matter?
-
-
-It looks to me that those symbol were local, so it doesn't matter. But=20
-if you wish I can switch to use unique name.
-
-
->
->>   static struct mdev_driver vfio_mdev_driver =3D {
->>   =09.name=09=3D "vfio_mdev",
->>   =09.probe=09=3D vfio_mdev_probe,
->> diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable=
--offsets.c
->> index 054405b90ba4..6cbb1062488a 100644
->> --- a/scripts/mod/devicetable-offsets.c
->> +++ b/scripts/mod/devicetable-offsets.c
->> @@ -231,5 +231,8 @@ int main(void)
->>   =09DEVID(wmi_device_id);
->>   =09DEVID_FIELD(wmi_device_id, guid_string);
->>  =20
->> +=09DEVID(mdev_class_id);
->> +=09DEVID_FIELD(mdev_class_id, id);
->> +
->>   =09return 0;
+>> I've used `blktest` to check if this change add any regression. I have
+>> used `./check block` and I got the same results with and without this
+>> patch (a bunch of "passed" and three "not run" because of the virtual
+>> scsi capabilities). Please let me know if there would be a better way to
+>> test changes at block stack.
+>>
+>> This commit was rebase at linux-block/for-5.5/block.
+>>
+>> Thanks,
+>> 	André
+>> ---
+>>   block/blk-mq.c | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>> index 8538dc415499..1e067b78ab97 100644
+>> --- a/block/blk-mq.c
+>> +++ b/block/blk-mq.c
+>> @@ -1036,7 +1036,7 @@ bool blk_mq_get_driver_tag(struct request *rq)
+>>   	bool shared;
+>>   
+>>   	if (rq->tag != -1)
+>> -		goto done;
+>> +		return true;
+>>   
+>>   	if (blk_mq_tag_is_reserved(data.hctx->sched_tags, rq->internal_tag))
+>>   		data.flags |= BLK_MQ_REQ_RESERVED;
+>> @@ -1051,7 +1051,6 @@ bool blk_mq_get_driver_tag(struct request *rq)
+>>   		data.hctx->tags->rqs[rq->tag] = rq;
+>>   	}
+>>   
+>> -done:
+>>   	return rq->tag != -1;
 >>   }
->> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
->> index c91eba751804..d365dfe7c718 100644
->> --- a/scripts/mod/file2alias.c
->> +++ b/scripts/mod/file2alias.c
->> @@ -1335,6 +1335,15 @@ static int do_wmi_entry(const char *filename, voi=
-d *symval, char *alias)
->>   =09return 1;
->>   }
->>  =20
->> +/* looks like: "mdev:cN" */
->> +static int do_mdev_entry(const char *filename, void *symval, char *alia=
-s)
->> +{
->> +=09DEF_FIELD(symval, mdev_class_id, id);
->> +
->> +=09sprintf(alias, "mdev:c%02X", id);
-> A lot of entries call add_wildcard() here, should we?  Sorry for the
-> basic questions, I haven't played in this code.  Thanks,
+> 
+> Do we really need code changes like the above? I'm not aware of any text
+> in the Documentation/ directory that forbids the use of goto statements.
 
+Agree, it looks fine as-is. It's also a fast path, so I'd never get rid
+of that without looking at the generated code.
 
-It's really good question. My understanding is we won't have a module=20
-that can deal with all kinds of classes like CLASS_ID_ANY. So there's=20
-probably no need for the wildcard.
-
-Thanks
-
-
->
-> Alex
->
->> +=09return 1;
->> +}
->> +
->>   /* Does namelen bytes of name exactly match the symbol? */
->>   static bool sym_is(const char *name, unsigned namelen, const char *sym=
-bol)
->>   {
->> @@ -1407,6 +1416,7 @@ static const struct devtable devtable[] =3D {
->>   =09{"typec", SIZE_typec_device_id, do_typec_entry},
->>   =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
->>   =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
->> +=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
->>   };
->>  =20
->>   /* Create MODULE_ALIAS() statements.
+-- 
+Jens Axboe
 
