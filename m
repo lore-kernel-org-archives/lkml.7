@@ -2,129 +2,252 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E67CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AD4CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3743621925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:51:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fCanMbbT"
+	by mail.kernel.org (Postfix) with ESMTP id C523021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439447AbfJXLvf (ORCPT
+        id S2439460AbfJXLwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:51:35 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38477 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729203AbfJXLve (ORCPT
+        Thu, 24 Oct 2019 07:52:21 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37435 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfJXLwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:51:34 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p4so23101922qkf.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 04:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fn71rS6ReHvy4UBLvwf94Jworjf0D0oVW+GNxGRscwE=;
-        b=fCanMbbThrjQ8BD1rKmwg7faRCTM9M3H48xUKhe8TvnCH1bzJfuGFeLvZ5W6+aAXV0
-         nm6R1jR9Hsv7ETPrzmmHJ6GzAoOKpw2yuc/ZnWZqvLypmiRPxlSBrFUYOowfg02DQCx5
-         nGOBmTZtj219z7P+SAO7uKe3pZChryDOLtwiIwUENGEvMy11k338XaT3srqPR4vgoWsb
-         u+qIimV7ArVdxpwHJLD+te8PR7+I5bheOqtXrCcddeXoyFpVv0/2TEOlen9dBOUbLtiq
-         Uth+M7QzikkXJPW/M9656ra3UVRFKMxE0TtCvOWisoK0c/gWpOo5fbJlJrxQxJWy9fVG
-         fYGg==
+        Thu, 24 Oct 2019 07:52:21 -0400
+Received: by mail-lf1-f67.google.com with SMTP id g21so17787302lfh.4;
+        Thu, 24 Oct 2019 04:52:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fn71rS6ReHvy4UBLvwf94Jworjf0D0oVW+GNxGRscwE=;
-        b=AgQe3DaU8HHXsW9HmksNcATWid5UZLeP37XqhPwTfEZGO7z8zoSmgsXVV5K+kfBQ8p
-         +kV5q4OLHgFH37AQt2Te5skTuziLHeaSyFPeJbwLsAZyrjolr0IlC6pGAyVfWa2ysqro
-         pqxd649oiCLxsAZATmZqWrToGvx5iYek8uN08aFz4QgAT/SOHqlbzCPggqR7H+QLnwFz
-         1ZYs0YYfVjkphQf/Gm18EAGPFVwi9qgcqq1X+Fgon8nootL2A+raIhATncfp2gNX7KXI
-         lfYOTSV1knp3WvRgmEzurX5U8e/UFm6jYOH/o/N3qCGbnmUqiITpGUJ4BmrD0scPu/rF
-         1gaA==
-X-Gm-Message-State: APjAAAWgmhLtlCUwm/tfPhs68Ojrdb0u1GG5vzN1ahetZqY0V47bZL8h
-        C/Z3zVr5exIDrkVziJJrBrskeYTtGr+1Eu36Wnozeg==
-X-Google-Smtp-Source: APXvYqy9hgBd93nPeWGRHTk3cy25U/c44xf7hFfKXooycp0aSt7g/D0iewfPfLS973ff2Y3BmC8nPcng6i/Dm+0JgnY=
-X-Received: by 2002:a37:4a87:: with SMTP id x129mr2134986qka.43.1571917893077;
- Thu, 24 Oct 2019 04:51:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2xjDvDx4J/ULodwmxVgHkawtTdPLuzeZvbnwRBC/GYE=;
+        b=SiKfvL1j7YUpf72ckuZl6oLoW61jsM1b/QjAFutJLYhXyGja53n5VapP0/EjzaBmCW
+         eAvwchKPHpjs5GY+Zq1UKGGe+Y8RRnlYmcNdIZLJ7AMeqBsZyBPo0h4GfVk8Yb3t5CbA
+         Cpa8szxheILXXDjIhm/NgytZ1FhkEeP1dRmoY9KJjg5tCQicbhC3Id1UQBQUGuHLO8s2
+         BjQyGfHmXFmtuDYEC5cMssuqiOanFy8vdHQvBCA4jA5Y1Srr4tY7WpuhRQ0dWQMICB+C
+         Zcnbx0hENDOrjhORsklkp9H6j3MIZpoOKUuwVyBAQVvZgpQbP7sRt5sxFmszpn+FEDTY
+         tMgQ==
+X-Gm-Message-State: APjAAAWXikj6Ul0QLkAwhicTlAA9GEb561mF+WlGD/rXXYielXPLQLOe
+        OJtf3wI1GunQJTvUep37pGA=
+X-Google-Smtp-Source: APXvYqx9mP+SoMYyBN3oxB8WXzkporfgjl++/OEIzJCNFvjD1irkzgqzQxIdLDe5R/i+SOtx1WX/wQ==
+X-Received: by 2002:a19:ae18:: with SMTP id f24mr27194101lfc.186.1571917936919;
+        Thu, 24 Oct 2019 04:52:16 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id w28sm7984990lfq.61.2019.10.24.04.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 04:52:16 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 14:52:09 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH v2 13/13] led: bd71828: Support LED outputs on ROHM
+ BD71828 PMIC
+Message-ID: <8ca44c947374df2e2479e83a1eedce561cc72098.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com> <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
- <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com> <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
-In-Reply-To: <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 24 Oct 2019 13:51:20 +0200
-Message-ID: <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
-Subject: Re: [PATCH v6] taskstats: fix data-race
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        stable <stable@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 1:32 PM Andrea Parri <parri.andrea@gmail.com> wrote:
->
-> > How these later loads can be completely independent of the pointer
-> > value? They need to obtain the pointer value from somewhere. And this
-> > can only be done by loaded it. And if a thread loads a pointer and
-> > then dereferences that pointer, that's a data/address dependency and
-> > we assume this is now covered by READ_ONCE.
->
-> The "dependency" I was considering here is a dependency _between the
-> load of sig->stats in taskstats_tgid_alloc() and the (program-order)
-> later loads of *(sig->stats) in taskstats_exit().  Roughly speaking,
-> such a dependency should correspond to a dependency chain at the asm
-> or registers level from the first load to the later loads; e.g., in:
->
->   Thread [register r0 contains the address of sig->stats]
->
->   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
->      ...
->   B: LOAD r2,[r0]       // LOAD *(sig->stats)
->   C: LOAD r3,[r2]
->
-> there would be no such dependency from A to C.  Compare, e.g., with:
->
->   Thread [register r0 contains the address of sig->stats]
->
->   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
->      ...
->   C: LOAD r3,[r1]       // LOAD *(sig->stats)
->
-> AFAICT, there's no guarantee that the compilers will generate such a
-> dependency from the code under discussion.
+ROHM BD71828 power management IC has two LED outputs for charge status
+and button pressing indications. The LED outputs can also be forced
+by SW so add driver allowing to use these LEDs for other indications
+as well.
 
-Fixing this by making A ACQUIRE looks like somewhat weird code pattern
-to me (though correct). B is what loads the address used to read
-indirect data, so B ought to be ACQUIRE (or LOAD-DEPENDS which we get
-from READ_ONCE).
+Leds are controlled by SW using 'Force ON' bits. Please note the
+constrains mentioned in data-sheet:
+1. If one LED is forced ON - then also the other LED is forced.
+	=> You can't use SW control to force ON one LED and allow HW
+	   to control the other.
+2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
+   zero, then LEDs are controlled by HW and indicate button/charger
+   states as explained in data-sheet.
 
-What you are suggesting is:
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-addr = ptr.load(memory_order_acquire);
-if (addr) {
-  addr = ptr.load(memory_order_relaxed);
-  data = *addr;
-}
+No changes since v1. Changes still under discussion.
 
-whereas the canonical/non-convoluted form of this pattern is:
+ drivers/leds/Kconfig        | 10 ++++
+ drivers/leds/Makefile       |  1 +
+ drivers/leds/leds-bd71828.c | 97 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 108 insertions(+)
+ create mode 100644 drivers/leds/leds-bd71828.c
 
-addr = ptr.load(memory_order_consume);
-if (addr)
-  data = *addr;
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index b0fdeef10bd9..ec59f28bcb39 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -529,6 +529,16 @@ config LEDS_BD2802
+ 	  This option enables support for BD2802GU RGB LED driver chips
+ 	  accessed via the I2C bus.
+ 
++config LEDS_BD71828
++	tristate "LED driver for LED pins on ROHM BD71828 PMIC"
++	depends on LEDS_CLASS
++	depends on I2C
++	help
++	  This option enables support for LED outputs located on ROHM
++	   BD71828 power management IC. ROHM BD71828 has two led output pins
++	   which can be left to indicate HW states or controlled by SW. Say
++	   yes here if you want to enable SW control for these LEDs.
++
+ config LEDS_INTEL_SS4200
+ 	tristate "LED driver for Intel NAS SS4200 series"
+ 	depends on LEDS_CLASS
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 41fb073a39c1..2a8f6a8e4c7c 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
+ obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
+ obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
+ obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
++obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
+ obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
+ obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
+ obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
+diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
+new file mode 100644
+index 000000000000..2427619444f5
+--- /dev/null
++++ b/drivers/leds/leds-bd71828.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2019 ROHM Semiconductors
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/leds.h>
++#include <linux/mfd/rohm-bd71828.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++
++#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
++	container_of((l), struct bd71828_leds, green) : \
++	container_of((l), struct bd71828_leds, amber))
++
++enum {
++	ID_GREEN_LED,
++	ID_AMBER_LED,
++	ID_NMBR_OF,
++};
++
++struct bd71828_led {
++	int id;
++	struct led_classdev l;
++	u8 force_mask;
++};
++
++struct bd71828_leds {
++	struct rohm_regmap_dev *bd71828;
++	struct bd71828_led green;
++	struct bd71828_led amber;
++};
++
++static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
++				      enum led_brightness value)
++{
++	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
++	struct bd71828_leds *data;
++	unsigned int val = BD71828_LED_OFF;
++
++	data = BD71828_LED_TO_DATA(l);
++	if (value != LED_OFF)
++		val = BD71828_LED_ON;
++
++	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
++			    l->force_mask, val);
++}
++
++static int bd71828_led_probe(struct platform_device *pdev)
++{
++	struct rohm_regmap_dev *bd71828;
++	struct bd71828_leds *l;
++	struct bd71828_led *g, *a;
++	static const char *GNAME = "bd71828-green-led";
++	static const char *ANAME = "bd71828-amber-led";
++	int ret;
++
++	pr_info("bd71828 LED driver probed\n");
++
++	bd71828 = dev_get_drvdata(pdev->dev.parent);
++	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
++	if (!l)
++		return -ENOMEM;
++	l->bd71828 = bd71828;
++	a = &l->amber;
++	g = &l->green;
++	a->id = ID_AMBER_LED;
++	g->id = ID_GREEN_LED;
++	a->force_mask = BD71828_MASK_LED_AMBER;
++	g->force_mask = BD71828_MASK_LED_GREEN;
++
++	a->l.name = ANAME;
++	g->l.name = GNAME;
++	a->l.brightness_set_blocking = bd71828_led_brightness_set;
++	g->l.brightness_set_blocking = bd71828_led_brightness_set;
++
++	ret = devm_led_classdev_register(&pdev->dev, &g->l);
++	if (ret)
++		return ret;
++
++	return devm_led_classdev_register(&pdev->dev, &a->l);
++}
++
++static struct platform_driver bd71828_led_driver = {
++	.driver = {
++		.name  = "bd71828-led",
++	},
++	.probe  = bd71828_led_probe,
++};
++
++module_platform_driver(bd71828_led_driver);
++
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("ROHM BD71828 LED driver");
++MODULE_LICENSE("GPL");
+-- 
+2.21.0
 
-Moreover the second load of ptr is not even atomic in our case, so it
-is a subject to another data race?
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
