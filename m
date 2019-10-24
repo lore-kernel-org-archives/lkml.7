@@ -2,86 +2,82 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA11CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF76CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B7C2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D192084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KIlXMDOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438837AbfJXKcZ (ORCPT
+        id S2438854AbfJXKce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:32:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34487 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438820AbfJXKcY (ORCPT
+        Thu, 24 Oct 2019 06:32:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55895 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438841AbfJXKcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:32:24 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iNaPj-0007Cl-6A; Thu, 24 Oct 2019 10:32:19 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: dsa: fix dereference on ds->dev before null check error
-Date:   Thu, 24 Oct 2019 11:32:18 +0100
-Message-Id: <20191024103218.2592-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 24 Oct 2019 06:32:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571913152;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LIKdOL11Ozx/PWJsb0Bia7eThEnrLMvgCNlbfPe+qhE=;
+        b=KIlXMDOMxKPSSAvg9kGz3sda5MqOHLHENWTns7LnTsjwebdSxKGRoLNaWyjz+ZKiMlapdy
+        ET9+jUDhssh/nyvu2t8dZ9AX9r28x9DJtvhtLC88fsX92D8kRAtL4Ma0bqqj+CP2BNn08a
+        Sr3vaii5XfMX/UDj3tx4+drhz/ejacI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-52-kf6BhbzrPzCAs2tEP3KZ1A-1; Thu, 24 Oct 2019 06:32:29 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C9DA8107AD33;
+        Thu, 24 Oct 2019 10:32:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-40.rdu2.redhat.com [10.10.121.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 14CB41001B30;
+        Thu, 24 Oct 2019 10:32:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+References: <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk> <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring, not cursor and length [ver #2]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-ID: <13193.1571913143.1@warthog.procyon.org.uk>
+Date:   Thu, 24 Oct 2019 11:32:23 +0100
+Message-ID: <13194.1571913143@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: kf6BhbzrPzCAs2tEP3KZ1A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+I've pushed to git a new version that fixes an incomplete conversion in
+pipe_zero(), ports the powerpc virtio_console driver and fixes a comment in
+splice.
 
-Currently ds->dev is dereferenced on the assignments of pdata and
-np before ds->dev is null checked, hence there is a potential null
-pointer dereference on ds->dev.  Fix this by assigning pdata and
-np after the ds->dev null pointer sanity check.
-
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/dsa/dsa2.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index 1e3ac9b56c89..214dd703b0cc 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -842,13 +842,16 @@ static int dsa_switch_add(struct dsa_switch *ds)
- 
- static int dsa_switch_probe(struct dsa_switch *ds)
- {
--	struct dsa_chip_data *pdata = ds->dev->platform_data;
--	struct device_node *np = ds->dev->of_node;
-+	struct dsa_chip_data *pdata;
-+	struct device_node *np;
- 	int err;
- 
- 	if (!ds->dev)
- 		return -ENODEV;
- 
-+	pdata = ds->dev->platform_data;
-+	np = ds->dev->of_node;
-+
- 	if (!ds->num_ports)
- 		return -EINVAL;
- 
--- 
-2.20.1
+David
 
