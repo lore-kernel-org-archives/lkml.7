@@ -2,175 +2,61 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29461CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D01CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E934020663
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:19:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGokp3uk"
+	by mail.kernel.org (Postfix) with ESMTP id 8307B20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbfJXWTB (ORCPT
+        id S1731516AbfJXWTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:19:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34786 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730134AbfJXWRl (ORCPT
+        Thu, 24 Oct 2019 18:19:54 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52636 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730505AbfJXWTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:17:41 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 139so175939ljf.1;
-        Thu, 24 Oct 2019 15:17:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2wB82R3MFt67D59fjq1rNSmAnF6D5wU77YsrpbjBZwI=;
-        b=iGokp3ukRR7ewHcVMoCNHaHnK/gTGCdknRlM2lNAlBCvMpZQaJi9NdHGzedfS/bxA4
-         ahIbx6PihpwDlH8tzYNCZ4NGp+3dsJh6CzS8icdF9XxJ1h+UfuZVmVboDguTKiLYs11p
-         GpI9KxHKEKszoFQVToDGNjK26eD2sX0I8fTuRDSNVZUdVoiSH7cwa8VOPJFUhgTOqq68
-         H+p4bctm1tx4vUrQexT2zzkkqgVD7k0Nfnn5smbcmAYY/5/9T2IU5F7gQz3e6XpgTEE1
-         1Xltwr2fyS3PJNGNan1YDHhqky6qPrfywgCyQ7OSuCuJ5pSLmlYwjXC/M49nDP4rb7Qa
-         RgoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2wB82R3MFt67D59fjq1rNSmAnF6D5wU77YsrpbjBZwI=;
-        b=CFyB4uyk2VmJSb1LOMCv1grz6zR9ftPF59oVckPRf5yxTwz1GISAAX9YDrVHfl5oZg
-         VnsSFgAZ5+YfuCVb4pyrE7RyEjskNE50TStb/VJT42qdcAOnrJpI+Co+yDVQlxME6RNY
-         GqnwpBQT1Wb7FEA+u02K8xcn88pdTieqajC3MgbwsfaKaoTME4RFc9uvt2uL7MN5xD6P
-         Gvt/+4fytiDytFHstO8cZhOT0RB8yAAGDIDib8C6uBQeMvPeYAnbFMgQO1aV9HyxEKxa
-         mYL5AQ9BZBVBENel2R0nIXmqSpjR/kdZzwl5oa/uTpzKcab6MNB9+YtPNXPfpWx5zfu8
-         eJNw==
-X-Gm-Message-State: APjAAAWo2PWAZE3nxEEeZ8Lqh0fsvGZfk5ETQNxjrWzsslWucto/CRJc
-        qxgBToeg44L0cG7KchnCp5c=
-X-Google-Smtp-Source: APXvYqxPQaepcEj5dkqg9xQNacRaP9CR0JTafW0HoCSEsdqzoqAcdGvKnmgYYnYbWFn2rVThzWRsIg==
-X-Received: by 2002:a2e:b1c7:: with SMTP id e7mr24620lja.239.1571955458243;
-        Thu, 24 Oct 2019 15:17:38 -0700 (PDT)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id i6sm11338765lfo.83.2019.10.24.15.17.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 15:17:37 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/17] clk: tegra: cclk: Add helpers for handling PLLX rate changes
-Date:   Fri, 25 Oct 2019 01:14:02 +0300
-Message-Id: <20191024221416.14197-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191024221416.14197-1-digetx@gmail.com>
-References: <20191024221416.14197-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 24 Oct 2019 18:19:53 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 28FCA14B79EBE;
+        Thu, 24 Oct 2019 15:19:53 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 15:19:52 -0700 (PDT)
+Message-Id: <20191024.151952.183800816459145037.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     varkabhadram@gmail.com, alex.aring@gmail.com,
+        stefan@datenfreihafen.org, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] ieee802154: remove set but not used variable
+ 'status'
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191023070618.30044-1-yuehaibing@huawei.com>
+References: <20191023070618.30044-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 24 Oct 2019 15:19:53 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCLK should be re-parented away from PLLX if PLLX's rate is changing.
-The PLLP parent is a common safe CPU parent for all Tegra SoCs, thus
-CCLK will be re-parented to PLLP before PLLX rate-change begins and then
-switched back to PLLX after the rate-change completion. This patch adds
-helper functions which perform CCLK re-parenting, these helpers will be
-utilized by further patches.
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Wed, 23 Oct 2019 15:06:18 +0800
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clk/tegra/clk-tegra-super-cclk.c | 34 ++++++++++++++++++++++++
- drivers/clk/tegra/clk.h                  |  2 ++
- 2 files changed, 36 insertions(+)
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/net/ieee802154/cc2520.c:221:5: warning:
+>  variable status set but not used [-Wunused-but-set-variable]
+> 
+> It is never used, so can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-diff --git a/drivers/clk/tegra/clk-tegra-super-cclk.c b/drivers/clk/tegra/clk-tegra-super-cclk.c
-index a032d2701fc9..56e7626ef288 100644
---- a/drivers/clk/tegra/clk-tegra-super-cclk.c
-+++ b/drivers/clk/tegra/clk-tegra-super-cclk.c
-@@ -21,6 +21,9 @@
- #define PLLP_INDEX	4
- #define PLLX_INDEX	8
- 
-+static struct tegra_clk_super_mux *cclk_super;
-+static bool cclk_on_pllx;
-+
- static u8 cclk_super_get_parent(struct clk_hw *hw)
- {
- 	return tegra_clk_super_ops.get_parent(hw);
-@@ -98,6 +101,9 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	struct clk *clk;
- 	struct clk_init_data init;
- 
-+	if (WARN_ON(cclk_super))
-+		return ERR_PTR(-EBUSY);
-+
- 	super = kzalloc(sizeof(*super), GFP_KERNEL);
- 	if (!super)
- 		return ERR_PTR(-ENOMEM);
-@@ -125,6 +131,34 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 	clk = clk_register(NULL, &super->hw);
- 	if (IS_ERR(clk))
- 		kfree(super);
-+	else
-+		cclk_super = super;
- 
- 	return clk;
- }
-+
-+int tegra_cclk_pre_pllx_rate_change(void)
-+{
-+	if (IS_ERR_OR_NULL(cclk_super))
-+		return -EINVAL;
-+
-+	if (cclk_super_get_parent(&cclk_super->hw) == PLLX_INDEX)
-+		cclk_on_pllx = true;
-+	else
-+		cclk_on_pllx = false;
-+
-+	/*
-+	 * CPU needs to be temporarily re-parented away from PLLX if PLLX
-+	 * changes its rate. PLLP is a safe parent for CPU on all Tegra SoCs.
-+	 */
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLP_INDEX);
-+
-+	return 0;
-+}
-+
-+void tegra_cclk_post_pllx_rate_change(void)
-+{
-+	if (cclk_on_pllx)
-+		cclk_super_set_parent(&cclk_super->hw, PLLX_INDEX);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 2be38aa2c204..3285b0332ae8 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -709,6 +709,8 @@ struct clk *tegra_clk_register_super_cclk(const char *name,
- 		const char * const *parent_names, u8 num_parents,
- 		unsigned long flags, void __iomem *reg, u8 clk_super_flags,
- 		spinlock_t *lock);
-+int tegra_cclk_pre_pllx_rate_change(void);
-+void tegra_cclk_post_pllx_rate_change(void);
- 
- /**
-  * struct tegra_sdmmc_mux - switch divider with Low Jitter inputs for SDMMC
--- 
-2.23.0
-
+I am assuming the WPAN folks will pick this up, thanks.
