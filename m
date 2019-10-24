@@ -2,252 +2,82 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F731CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE5ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7B321A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571952262;
-	bh=7M6g3d23nu+as4txKP7qhtwdggKIeiqbAUCLIQNX5tE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uCDLnE/WzSN4hIaA6QW5y/cfJVvOs5Lru05kuY/GUjUCVMtxY0CEtUrQD6LTwsAsJ
-	 5K2T3qrkmCDlBbcQ8zPyEso7BYRZF1ukY+nKdMqPUtenhwtqJqvYIucOUy4Z5wgiFh
-	 6p+ZCXiDZ5iRuPvXlR2RT+G/vC7SUXyRQm3lbp0A=
+	by mail.kernel.org (Postfix) with ESMTP id 1562921A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbfJXVYU (ORCPT
+        id S1729099AbfJXVZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbfJXVYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:24:20 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381BF21D81
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 21:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571952259;
-        bh=7M6g3d23nu+as4txKP7qhtwdggKIeiqbAUCLIQNX5tE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D+Ji1qCqi6wEDbkfRtaHJsGTQoMB0ku3AvlncPFcTTOO+gps42gk8JAMqP6Dxlivh
-         GbcD6qM6Ux1ae6fDJULM7ykx3x/P68vMI61pp/B2KVYXsVEvHVHCB3ttK+RmRiwWot
-         aTTdsg7B/kRi624k4I9BS04MJMCYUZogTxFq+irk=
-Received: by mail-wm1-f48.google.com with SMTP id 11so890477wmk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:24:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAWxVHnOC0T+6auF1ntlG2nF0iZHkha9QebJB9XyscPnL1yzs6Vl
-        htrFV/ELaPMeASdCua9HwwKjFNVYkqra/i5bxX65kg==
-X-Google-Smtp-Source: APXvYqx3YbuVjjW90sEqQPfhPCRz3d4DpXfSdJJFWHTpqYg0Brg2oBFw6/G/nbDEGNRgrJMOsQbez2v6JlMOebzuFyY=
-X-Received: by 2002:a1c:20d8:: with SMTP id g207mr323194wmg.79.1571952257553;
- Thu, 24 Oct 2019 14:24:17 -0700 (PDT)
+        Thu, 24 Oct 2019 17:25:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52046 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728930AbfJXVZv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 17:25:51 -0400
+Received: from [213.220.153.21] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iNkcA-00040X-EG; Thu, 24 Oct 2019 21:25:50 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org, keescook@chromium.org
+Cc:     luto@amacapital.net,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH] seccomp: rework define for SECCOMP_USER_NOTIF_FLAG_CONTINUE
+Date:   Thu, 24 Oct 2019 23:25:39 +0200
+Message-Id: <20191024212539.4059-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20191023122705.198339581@linutronix.de> <20191023123118.296135499@linutronix.de>
- <20191023220618.qsmog2k5oaagj27v@treble> <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de>
- <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com> <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 24 Oct 2019 14:24:06 -0700
-X-Gmail-Original-Message-ID: <CALCETrXyhnMwwOyWQ-FtsNFAsrcG41-pPrAp8Wj2vc0N9JzP-Q@mail.gmail.com>
-Message-ID: <CALCETrXyhnMwwOyWQ-FtsNFAsrcG41-pPrAp8Wj2vc0N9JzP-Q@mail.gmail.com>
-Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt disable
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 1:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Thu, 24 Oct 2019, Andy Lutomirski wrote:
-> > On Wed, Oct 23, 2019 at 4:52 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
-> > > > What happens if somebody accidentally leaves irqs enabled?  How do we
-> > > > know you found all the leaks?
-> > >
-> > > For the DO_ERROR() ones that's trivial:
-> > >
-> > >  #define DO_ERROR(trapnr, signr, sicode, addr, str, name)                  \
-> > >  dotraplinkage void do_##name(struct pt_regs *regs, long error_code)       \
-> > >  {                                                                         \
-> > >         do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
-> > > +       lockdep_assert_irqs_disabled();                                    \
-> > >  }
-> > >
-> > >  DO_ERROR(X86_TRAP_DE,     SIGFPE,  FPE_INTDIV,   IP, "divide error",        divide_error)
-> > >
-> > > Now for the rest we surely could do:
-> > >
-> > > dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
-> > > {
-> > >         __do_bounds(regs, error_code);
-> > >         lockdep_assert_irqs_disabled();
-> > > }
-> > >
-> > > and move the existing body into a static function so independent of any
-> > > (future) return path there the lockdep assert will be invoked.
-> > >
-> >
-> > If we do this, can we macro-ize it:
-> >
-> > DEFINE_IDTENTRY_HANDLER(do_bounds)
-> > {
-> >  ...
-> > }
-> >
-> > If you do this, please don't worry about the weird ones that take cr2
-> > as a third argument.  Once your series lands, I will send a follow-up
-> > to get rid of it.  It's 2/3 written already.
->
-> I spent quite some time digging deeper into this. Finding all corner cases
-> which eventually enable interrupts from an exception handler is not as
-> trivial as it looked in the first place. Especially the fault handler is a
-> nightmare. Also PeterZ's approach of doing
->
->            if (regs->eflags & IF)
->                 local_irq_disable();
->
-> is doomed due to sys_iopl(). See below.
+Switch from BIT(0) to (1UL << 0).
+First, there are already two different forms used in the header, so there's
+no need to add a third. Second, the BIT() macros is kernel internal and
+afaict not actually exposed to userspace. Maybe there's some magic there
+I'm missing but it definitely causes issues when compiling a program that
+tries to use SECCOMP_USER_NOTIF_FLAG_CONTINUE. It currently fails in the
+following way:
 
-I missed something in the discussion.  What breaks?  Can you check
-user_mode(regs) too?
+	# github.com/lxc/lxd/lxd
+	/usr/bin/ld: $WORK/b001/_x003.o: in function
+	`__do_user_notification_continue':
+	lxd/main_checkfeature.go:240: undefined reference to `BIT'
+	collect2: error: ld returned 1 exit status
 
->
-> I'm tempted to do pretty much the same thing as the syscall rework did
-> as a first step:
->
->   - Move the actual handler invocation to C
->
->   - Do the irq tracing on entry in C
->
->   - Move irq disable before return to ASM
->
-> Peter gave me some half finished patches which pretty much do that by
-> copying half of the linux/syscalls.h macro maze into the entry code. That's
-> one possible solution, but TBH it sucks big times.
->
-> We have the following variants:
->
-> do_divide_error(struct pt_regs *regs, long error_code);
-> do_debug(struct pt_regs *regs, long error_code);
-> do_nmi(struct pt_regs *regs, long error_code);
-> do_int3(struct pt_regs *regs, long error_code);
-> do_overflow(struct pt_regs *regs, long error_code);
-> do_bounds(struct pt_regs *regs, long error_code);
-> do_invalid_op(struct pt_regs *regs, long error_code);
-> do_device_not_available(struct pt_regs *regs, long error_code);
-> do_coprocessor_segment_overrun(struct pt_regs *regs, long error_code);
-> do_invalid_TSS(struct pt_regs *regs, long error_code);
-> do_segment_not_present(struct pt_regs *regs, long error_code);
-> do_stack_segment(struct pt_regs *regs, long error_code);
-> do_general_protection(struct pt_regs *regs, long error_code);
-> do_spurious_interrupt_bug(struct pt_regs *regs, long error_code);
-> do_coprocessor_error(struct pt_regs *regs, long error_code);
-> do_alignment_check(struct pt_regs *regs, long error_code);
-> do_machine_check(struct pt_regs *regs, long error_code);
-> do_simd_coprocessor_error(struct pt_regs *regs, long error_code);
-> do_iret_error(struct pt_regs *regs, long error_code);
-> do_mce(struct pt_regs *regs, long error_code);
->
-> do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
-> do_double_fault(struct pt_regs *regs, long error_code, unsigned long address);
-> do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
->
-> So if we can remove the third argument then we can spare most of the macro
-> maze and just have one common function without bells and whistels. The
-> other option would be to extend all handlers to have three arguments,
-> i.e. add 'long unused', which is not pretty either.
->
-> What's your plan with cr2? Stash it in pt_regs or something else?
+Switching to (1UL << 0) should prevent that and is more in line what is
+already done in the rest of the header.
 
-Just read it from CR2.  I added a new idtentry macro arg called
-"entry_work", and setting it to 0 causes the enter_from_user_mode to
-be skipped.  Then C code calls enter_from_user_mode() after reading
-CR2 (and DR7).  WIP code is here:
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ include/uapi/linux/seccomp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=x86/idtentry
+diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+index 61fbbb7c1ee9..9099972200cd 100644
+--- a/include/uapi/linux/seccomp.h
++++ b/include/uapi/linux/seccomp.h
+@@ -102,7 +102,7 @@ struct seccomp_notif {
+  * SECCOMP_USER_NOTIF_FLAG_CONTINUE. Note that SECCOMP_RET_USER_NOTIF can
+  * equally be overriden by SECCOMP_USER_NOTIF_FLAG_CONTINUE.
+  */
+-#define SECCOMP_USER_NOTIF_FLAG_CONTINUE BIT(0)
++#define SECCOMP_USER_NOTIF_FLAG_CONTINUE (1UL << 0)
+ 
+ struct seccomp_notif_resp {
+ 	__u64 id;
+-- 
+2.23.0
 
-The idea is that, if everything is converted, then we get rid of the
-entry_work=1 case, which is easier if there's a macro.
-
-So my suggestion is to use a macro for the 2-arg version and open-code
-all the 3-arg cases.  Then, when the dust settles, we get rid of the
-third arg and they can use the macro.
-
->
-> The interesting bells and whistels result from sys_iopl(). If user space
-> has been granted iopl(level = 3) it gains cli/sti priviledges. When the
-> application has interrupts disabled in userspace:
->
->   - invocation of a syscall
->
->   - any exception (aside of NMI/MCE) which conditionally enables interrupts
->     depending on user_mode(regs) and therefor can be preempted and
->     schedule
->
-> is just undefined behaviour and I personally consider it to be a plain bug.
->
-> Just for the record: This results in running a resulting or even completely
-> unrelated signal handler with interrupts disabled as well.
-
-I am seriously tempted to say that the solution is to remove iopl(),
-at least on 64-bit kernels.  Doing STI in user mode is BS :)
-
-Otherwise we need to give it semantics, no?  I personally have no
-actual problem with the fact that an NMI can cause scheduling to
-happen.  Big fscking deal.
-
->
-> Whatever we decide it is, leaving it completely inconsistent is not a
-> solution at all. The options are:
->
->   1)  Always do conditional tracing depending on the user_regs->eflags.IF
->       state.
-
-I'm okay with always tracing like user mode means IRQs on or doing it
-"correctly".  I consider the former to be simpler and therefore quite
-possibly better.
-
->
->   2)  #1 + warn once when syscalls and exceptions (except NMI/MCE) happen
->       and user_regs->eflags.IF is cleared.
->
->   3a) #2 + enforce signal handling to run with interrupts enabled.
->
->   3b) #2 + set regs->eflags.IF. So the state is always correct from the
->       kernel POV. Of course that changes existing behaviour, but its
->       changing undefined and inconsistent behaviour.
->
->   4) Let iopl(level) return -EPERM if level == 3.
->
->      Yeah, I know it's not possible due to regressions (DPKD uses iopl(3)),
->      but TBH that'd be the sanest option of all.
->
->      Of course the infinite wisdom of hardware designers tied IN, INS, OUT,
->      OUTS and CLI/STI together on IOPL so we cannot even distangle them in
->      any way.
-
->
->      The only way out would be to actually use a full 8K sized I/O bitmap,
->      but that's a massive pain as it has to be copied on every context
->      switch.
-
-Hmm.  This actually doesn't seem that bad.  We already have a TIF_
-flag to optimize this.  So basically iopl() would effectively become
-ioperm(everything on).
