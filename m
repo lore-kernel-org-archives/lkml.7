@@ -2,98 +2,115 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84378CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D42CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B2E21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7150A21E6F
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WemCD9We"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVwVowrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393703AbfJXNn2 (ORCPT
+        id S2393714AbfJXNnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:43:28 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36081 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393656AbfJXNn1 (ORCPT
+        Thu, 24 Oct 2019 09:43:31 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39348 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393656AbfJXNn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:43:27 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c22so2671207wmd.1;
-        Thu, 24 Oct 2019 06:43:26 -0700 (PDT)
+        Thu, 24 Oct 2019 09:43:29 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 4so23431889qki.6
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=FGm/Y7V816AbGprOQHUkgpBjccypqHGHqD5N/dMxVkw=;
-        b=WemCD9WeMOlk2CrvosRt1hMf4Lxem6lm1hZUuyoJj0K6NGWgX+19cYcBRdqNTF1ixs
-         nlh1LJY5VZtICct6frTaqVEVQql6wmU2dSjd6C3zNeiwgELILHPNudrwZvNdIlVDEPLq
-         BJ73ykuJ+94u4uQBPNyV6tMgo0+ZUCp+bITF5QywIsdfDdC7jUIdAE17pFsc36PxQ4xV
-         vTCReHMAJl8u78OBLKl+EAV7iyvexnZ1AhZoSIYgkKHBhwgYVLTcTBZkhYdtjrBMVgMm
-         QjtxBqDMzT3+wxvIx9QrBTJjUHsuCvdPR3l7fqri3ZZWQX/SN7CDxmP1Gcl/uWO84fe1
-         4Lgg==
+        bh=OcApvEga4pQ/hiufvVDblUpoC7Hup+MwXzzzVtEdKJs=;
+        b=cVwVowrmtSnGY7X6icWn3ocdRMNwrWeJZv7wRZE8Dh9RXt/vLtQ0weXv6xX8Dk36cQ
+         yhf6Pn5fLefJET71zSmnXF8D3y+uLiD2Mvs/+1y8z7PdtrdgtBkMAg1Qwp55RRr5XhOg
+         yRQ9EDQb3+0/E7TOYpSjYiDHZ4On/eYPDhRpNBgGz76B2GuvaHQ9Z1+dVxDJ+1j+eUVE
+         YFlaESlz3NbjCxWG2uUMCm7dQxbA/XdviZVEmeiEkU4w+edXyTfkFw7WP6645hZTEjR+
+         qKNZHGSePJ9QCgzGODl0sjDLhqvuVn9+KRjHX9GmDvyyW4ApX03xcaR9BFiH5FgZgpVt
+         2heQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FGm/Y7V816AbGprOQHUkgpBjccypqHGHqD5N/dMxVkw=;
-        b=i4lX+0Oc7ue6+81NUA8GZE/BHEtuP+L/IdnPtVmBAncwlFhQvzkutC5jEEA1QDX81B
-         0CQfh7yu9zCxJh8FCd6ZsXqNH0pMG40lsJKgkt4Iuc+fVl/R/JXqCWYDuVvAdt7wz0PM
-         esbIwRz8vXWKIeNCpPrXs9jVIl2ER6NWpaVcJ9YaIpoHWokjfJngU07SkrZoOsfenlyH
-         TV/HSHGB4UNMas6vEa3nC1ob2SxGwh4ygZq9Ro1o6J8lY9zGMHQNEH2uquwZAqM0U3ek
-         c6way7LGxSiv2n5en8OWif332jn23Ugrdqa0G1AbiSycPDf5KoGDypL49mCdBFIYykbT
-         xotA==
-X-Gm-Message-State: APjAAAW0kvt/Kphgd1ouWfEbFhC9FkPjPavkrPiCrFNsSRUc9k2vn7YZ
-        BDoSANhk70t1kYwCa4Ig4h4=
-X-Google-Smtp-Source: APXvYqzOXOUeSsq0bKR1Uijb/ZiwdTPLXJEsLwvGyotcdrS+xtT/7Fg0PiKSxgnSjNVkIwYqOuYnSQ==
-X-Received: by 2002:a7b:cd19:: with SMTP id f25mr5273390wmj.154.1571924605222;
-        Thu, 24 Oct 2019 06:43:25 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1012:e185:86b0:69d4:5ba5])
-        by smtp.gmail.com with ESMTPSA id o6sm15323168wrx.89.2019.10.24.06.43.24
+        bh=OcApvEga4pQ/hiufvVDblUpoC7Hup+MwXzzzVtEdKJs=;
+        b=GelH5qRoeEluS3RU8SZsxqhezhCLguOe7sNxrawGyCKcquBC3eofFdG8bfKKDYJw0A
+         TVbWmgJJaEqTkm99e31qO5B0BGKE/jz1k23apgB1ZY6AYfHwMqK4hRdHolPOHLLptQZQ
+         x3l2dcS1jUFdZ54R1IdRWA+tVJGSuwm1tMzr3X/iN2SnBtG6PDzEyJtG4poI2YsMelPw
+         qjqAi+CPqqqGO7uR1Rd5CUfuihGxR0Zphb505BRhymKkMbG1DKCnx4SeZ/hg+S6h9prG
+         pt9OKu7LsE2McMcl98DUlpEK/E/b1+nQYGH+b73J0s2+/5FDrLu0L/0SdxuNspDKTArg
+         EmYQ==
+X-Gm-Message-State: APjAAAXh9XFUz4TK4A/kypRMWsLyrsR1mR/pz/CkaFfLSOXZQBFk/sba
+        KDxBc9+jm8MzbIwWjRZfQ59pEU1U
+X-Google-Smtp-Source: APXvYqxCfU5tjQVYt1vf1ozi/JhWh2WbPrMHcqRh6lRT4d7QKXWpC9WAt5CxOkqFD/JPJL4/G4J9hg==
+X-Received: by 2002:a37:a2d1:: with SMTP id l200mr13373114qke.158.1571924608486;
+        Thu, 24 Oct 2019 06:43:28 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id p7sm14380392qkc.21.2019.10.24.06.43.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 06:43:24 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:43:19 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        stable <stable@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH v6] taskstats: fix data-race
-Message-ID: <20191024134319.GA12693@andrea.guest.corp.microsoft.com>
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com>
- <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
- <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
- <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
- <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
- <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
- <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
+        Thu, 24 Oct 2019 06:43:27 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1CFB04DDC9; Thu, 24 Oct 2019 10:43:25 -0300 (-03)
+Date:   Thu, 24 Oct 2019 10:43:25 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH 0/3] perf/probe: Fix available line bugs
+Message-ID: <20191024134325.GA1666@kernel.org>
+References: <157190834681.1859.7399361844806238387.stgit@devnote2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <157190834681.1859.7399361844806238387.stgit@devnote2>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> But why? I think kernel contains lots of such cases and it seems to be
-> officially documented by the LKMM:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt
-> address dependencies and ppo
+Em Thu, Oct 24, 2019 at 06:12:27PM +0900, Masami Hiramatsu escreveu:
+> Hi,
+> 
+> Here are some bugfixes related to showing available line (--line/-L)
+> option. I found that gcc generated some subprogram DIE with only
+> range attribute but no entry_pc or low_pc attributes.
+> In that case, perf probe failed to show the available lines in that
+> subprogram (function). To fix that, I introduced some bugfixes to
+> handle such cases correctly.
 
-Well, that same documentation also alerts about some of the pitfalls
-developers can incur while relying on dependencies.  I'm sure you're
-more than aware of some of the debate surrounding these issues.
+Thanks, applied, next time please provide concrete examples for things
+that don't work before and gets fixed with your patches, this way we can
+more easily reproduce your steps.
 
-  Andrea
+- Arnaldo
+ 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (3):
+>       perf/probe: Fix to find range-only function instance
+>       perf/probe: Walk function lines in lexical blocks
+>       perf/probe: Fix to show function entry line as probe-able
+> 
+> 
+>  tools/perf/util/dwarf-aux.c |   44 ++++++++++++++++++++++++++++++++++++-------
+>  tools/perf/util/dwarf-aux.h |    3 +++
+>  2 files changed, 40 insertions(+), 7 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+
+-- 
+
+- Arnaldo
