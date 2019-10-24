@@ -2,68 +2,152 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88A5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671D5CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92DDB20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE9B20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:41:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d2nf1cpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503330AbfJXPiC (ORCPT
+        id S2409584AbfJXPlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:38:02 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:38806 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503151AbfJXPiC (ORCPT
+        Thu, 24 Oct 2019 11:41:22 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35241 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405824AbfJXPlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:38:02 -0400
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id HTdz2100b5USYZQ01Te0tX; Thu, 24 Oct 2019 17:38:00 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNfBX-0007CB-T1; Thu, 24 Oct 2019 17:37:59 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iNfBX-0008Id-QU; Thu, 24 Oct 2019 17:37:59 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Boris Brezillon <bbrezillon@kernel.org>
-Cc:     linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] MAINTAINERS: Mark linux-i3c mailing list moderated
-Date:   Thu, 24 Oct 2019 17:37:56 +0200
-Message-Id: <20191024153756.31861-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 24 Oct 2019 11:41:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571931680;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3wFDaqZ0NbxQNGne9paddG3mzo8aRis+uvC8kKNNdSM=;
+        b=d2nf1cpjgMHDl3jGz3GYBAgIuwwO3b/xCtn1EfFM0RdNT0FJhAaceOV8aS1tvjHMxaTd8I
+        QvMSnHRFi1BlbA/drCjhCejf0bAHg2ev3St3ANB0cFe23B8Y3d849PEKn7yllz4Y5KNUA/
+        038XQpwsx/s8VVzVDU8INuVryb8jOnY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-ra28wWr0N-iUCwABpxgLJw-1; Thu, 24 Oct 2019 11:41:11 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35FCA801E74;
+        Thu, 24 Oct 2019 15:21:58 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.34.246.221])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 90C7C5D9CA;
+        Thu, 24 Oct 2019 15:21:53 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH] x86/hyper-v: micro-optimize send_ipi_one case
+Date:   Thu, 24 Oct 2019 17:21:52 +0200
+Message-Id: <20191024152152.25577-1-vkuznets@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: ra28wWr0N-iUCwABpxgLJw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-i3c mailing list is moderated for non-subscribers.
+When sending an IPI to a single CPU there is no need to deal with cpumasks.
+With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+cycles) improvement with smp_call_function_single() loop benchmark. The
+optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+important for PV spinlock kick.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I was also wondering if it would make sense to switch to using regular
+APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
+cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+vector)).
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/hyperv/hv_apic.c           | 22 +++++++++++++++++++---
+ arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
+ 2 files changed, 34 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7f361fba6c4070ae..937017266a2edf08 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7746,7 +7746,7 @@ F:	drivers/i2c/i2c-stub.c
- 
- I3C SUBSYSTEM
- M:	Boris Brezillon <bbrezillon@kernel.org>
--L:	linux-i3c@lists.infradead.org
-+L:	linux-i3c@lists.infradead.org (moderated for non-subscribers)
- C:	irc://chat.freenode.net/linux-i3c
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git
- S:	Maintained
--- 
-2.17.1
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index e01078e93dd3..847f9d0328fe 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -194,10 +194,26 @@ static bool __send_ipi_mask(const struct cpumask *mas=
+k, int vector)
+=20
+ static bool __send_ipi_one(int cpu, int vector)
+ {
+-=09struct cpumask mask =3D CPU_MASK_NONE;
++=09int ret;
+=20
+-=09cpumask_set_cpu(cpu, &mask);
+-=09return __send_ipi_mask(&mask, vector);
++=09trace_hyperv_send_ipi_one(cpu, vector);
++
++=09if (unlikely(!hv_hypercall_pg))
++=09=09return false;
++
++=09if (unlikely((vector < HV_IPI_LOW_VECTOR) ||
++=09=09     (vector > HV_IPI_HIGH_VECTOR)))
++=09=09return false;
++
++=09if (cpu >=3D 64)
++=09=09goto do_ex_hypercall;
++
++=09ret =3D hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
++=09=09=09=09     BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
++=09return ((ret =3D=3D 0) ? true : false);
++
++do_ex_hypercall:
++=09return __send_ipi_mask_ex(cpumask_of(cpu), vector);
+ }
+=20
+ static void hv_send_ipi(int cpu, int vector)
+diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/tra=
+ce/hyperv.h
+index ace464f09681..4d705cb4d63b 100644
+--- a/arch/x86/include/asm/trace/hyperv.h
++++ b/arch/x86/include/asm/trace/hyperv.h
+@@ -71,6 +71,21 @@ TRACE_EVENT(hyperv_send_ipi_mask,
+ =09=09      __entry->ncpus, __entry->vector)
+ =09);
+=20
++TRACE_EVENT(hyperv_send_ipi_one,
++=09    TP_PROTO(int cpu,
++=09=09     int vector),
++=09    TP_ARGS(cpu, vector),
++=09    TP_STRUCT__entry(
++=09=09    __field(int, cpu)
++=09=09    __field(int, vector)
++=09=09    ),
++=09    TP_fast_assign(__entry->cpu =3D cpu;
++=09=09=09   __entry->vector =3D vector;
++=09=09    ),
++=09    TP_printk("cpu %d vector %x",
++=09=09      __entry->cpu, __entry->vector)
++=09);
++
+ #endif /* CONFIG_HYPERV */
+=20
+ #undef TRACE_INCLUDE_PATH
+--=20
+2.20.1
 
