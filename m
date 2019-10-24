@@ -2,295 +2,151 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7225DC47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B54CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3192821925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD4521925
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rjhd/M55"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UbcY2S3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407079AbfJXOR0 (ORCPT
+        id S2407454AbfJXOSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:17:26 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44247 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405890AbfJXOR0 (ORCPT
+        Thu, 24 Oct 2019 10:18:12 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20712 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2407362AbfJXOSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:17:26 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n48so5858221ota.11
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 07:17:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S8i+kPsaZWRIBXyQ2g5/YSOuQEjiriODMzIUUPGICqQ=;
-        b=rjhd/M55ZS2DHpPVEyvmw+51VqoZKT+aKpBMcndrlavHNG5q2vOXiJVQS+s8EXv9Dd
-         iCsoOVhsJ+G7gYkpFkn14zYdOpz0vSBpUzDsDu0PBCQ6NzT8xUq5cmrA4xocXCdFwB2z
-         OY76EBmbTCadlVIzDU0S3rEb6LzKAsP2pySsCW8pNgaKuG8yg1KYKhaeOwpjz6pjIre3
-         ZEktUEMMOiAjH3feXIg6+YO0mzPvWpCriPh+vEPfhR6gnJPhxdJyw0QnglSg76VNRtTS
-         8IVxVkGqkZRoWCHuKSqjF3oWPtlHkYAoqyjWFNbEZcdU6FuP7HsXigSzaREmQGaHV4Ln
-         7pkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S8i+kPsaZWRIBXyQ2g5/YSOuQEjiriODMzIUUPGICqQ=;
-        b=i7aSQ8u1slAitUb5jVK5QJvh5vPbsSWqigFInSG+aLd4GU8md2zP1UzIxKHFWbYJ/B
-         wfDzFmQEEDcsegXPbwlhOZay4JgHzSa24hWBv2I4lyq0fHG62vf+Og6G//gUIUtg9G4C
-         Io62Lt5n195v9j18Gc8CxtwoH8CcFVNKnA5gNcnRJY5lDeSUnmnY1X09l2U8glEnPMo/
-         uNpePx61QfuyxQxv9Ar+zsG0pSdff7yYYn1rj/ZFrXarL91L0xIg8gvNrjCGuOUnoHZI
-         8jlz8JBIyx7VBr0xEn+SDO/YFVtQHiDzbRnFxsS/r0UUJQeuAjOlTnlJFjj5ZTwbUtpS
-         qiGw==
-X-Gm-Message-State: APjAAAXDt5s02+HuOmLH/2ifAUcs2mKDu2zY3D8s/8R8EWRf9iINGrfe
-        Q7w9iZNanP+/O2Y3HqVhGAWZml3Aa8dxaaCM3jo1Fw==
-X-Google-Smtp-Source: APXvYqzNSa3dJF91Ue/oxJ5CO5LETslsoJo48bQPunzQ1TmiLszytnOsFp8RpLz63hx9k13on0dq1OrbCD1kyNZI6S8=
-X-Received: by 2002:a9d:5f0f:: with SMTP id f15mr11239283oti.251.1571926644575;
- Thu, 24 Oct 2019 07:17:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191017141305.146193-1-elver@google.com> <20191017141305.146193-5-elver@google.com>
- <20191024122801.GD4300@lakrids.cambridge.arm.com>
-In-Reply-To: <20191024122801.GD4300@lakrids.cambridge.arm.com>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 24 Oct 2019 16:17:11 +0200
-Message-ID: <CANpmjNPFkqOSEcEP475-NeeJnY5pZ44m+bEhtOs8E_xkRKr-TQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] seqlock, kcsan: Add annotations for KCSAN
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thu, 24 Oct 2019 10:18:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571926689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1702oBnAkkDkloBZidrcVo+vVTWenxIy5EZn+eImf0s=;
+        b=UbcY2S3M1qA1DmOZsBSKmhH4Rjk56eXwWX6dm8qvqZprOUjN5ZNoE03jr6EMQC6AbNCvFh
+        rcLtJRbZHYx/AqCCHVaA3DkxmviipwI0gz9UTGda9xKlnmGAgDu3znCKa47WU4T+G7gNgc
+        Ls55e8TgnKV3cmHkyaWqhgQdByIhfYc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-qxqBDIHWOzK-fIZtGMOReA-1; Thu, 24 Oct 2019 10:18:07 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD33A47B;
+        Thu, 24 Oct 2019 14:18:04 +0000 (UTC)
+Received: from redhat.com (ovpn-125-229.rdu2.redhat.com [10.10.125.229])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B5AC5D712;
+        Thu, 24 Oct 2019 14:18:01 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 10:17:59 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Kenneth Lee <Kenneth-Lee-2012@foxmail.com>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
+        linux-accelerators@lists.ozlabs.org
+Subject: Re: [PATCH v6 2/3] uacce: add uacce driver
+Message-ID: <20191024141759.GA4793@redhat.com>
+References: <1571214873-27359-1-git-send-email-zhangfei.gao@linaro.org>
+ <1571214873-27359-3-git-send-email-zhangfei.gao@linaro.org>
+ <20191022184929.GC5169@redhat.com>
+ <20191024064129.GB17723@kllp10>
+MIME-Version: 1.0
+In-Reply-To: <20191024064129.GB17723@kllp10>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: qxqBDIHWOzK-fIZtGMOReA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019 at 14:28, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Thu, Oct 17, 2019 at 04:13:01PM +0200, Marco Elver wrote:
-> > Since seqlocks in the Linux kernel do not require the use of marked
-> > atomic accesses in critical sections, we teach KCSAN to assume such
-> > accesses are atomic. KCSAN currently also pretends that writes to
-> > `sequence` are atomic, although currently plain writes are used (their
-> > corresponding reads are READ_ONCE).
-> >
-> > Further, to avoid false positives in the absence of clear ending of a
-> > seqlock reader critical section (only when using the raw interface),
-> > KCSAN assumes a fixed number of accesses after start of a seqlock
-> > critical section are atomic.
->
-> Do we have many examples where there's not a clear end to a seqlock
-> sequence? Or are there just a handful?
->
-> If there aren't that many, I wonder if we can make it mandatory to have
-> an explicit end, or to add some helper for those patterns so that we can
-> reliably hook them.
+On Thu, Oct 24, 2019 at 02:41:29PM +0800, Kenneth Lee wrote:
+> On Tue, Oct 22, 2019 at 02:49:29PM -0400, Jerome Glisse wrote:
+> > Date: Tue, 22 Oct 2019 14:49:29 -0400
+> > From: Jerome Glisse <jglisse@redhat.com>
+> > To: Zhangfei Gao <zhangfei.gao@linaro.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann
+> >  <arnd@arndb.de>, Herbert Xu <herbert@gondor.apana.org.au>,
+> >  jonathan.cameron@huawei.com, grant.likely@arm.com, jean-philippe
+> >  <jean-philippe@linaro.org>, ilias.apalodimas@linaro.org,
+> >  francois.ozog@linaro.org, kenneth-lee-2012@foxmail.com, Wangzhou
+> >  <wangzhou1@hisilicon.com>, "haojian . zhuang" <haojian.zhuang@linaro.o=
+rg>,
+> >  Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
+> >  linux-crypto@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
+> >  linux-accelerators@lists.ozlabs.org
+> > Subject: Re: [PATCH v6 2/3] uacce: add uacce driver
+> > Message-ID: <20191022184929.GC5169@redhat.com>
+> >=20
+> > On Wed, Oct 16, 2019 at 04:34:32PM +0800, Zhangfei Gao wrote:
+> > > From: Kenneth Lee <liguozhu@hisilicon.com>
+> > >=20
+> > > Uacce (Unified/User-space-access-intended Accelerator Framework) targ=
+ets to
+> > > provide Shared Virtual Addressing (SVA) between accelerators and proc=
+esses.
+> > > So accelerator can access any data structure of the main cpu.
+> > > This differs from the data sharing between cpu and io device, which s=
+hare
+> > > data content rather than address.
+> > > Since unified address, hardware and user space of process can share t=
+he
+> > > same virtual address in the communication.
+> > >=20
+> > > Uacce create a chrdev for every registration, the queue is allocated =
+to
+> > > the process when the chrdev is opened. Then the process can access th=
+e
+> > > hardware resource by interact with the queue file. By mmap the queue
+> > > file space to user space, the process can directly put requests to th=
+e
+> > > hardware without syscall to the kernel space.
+> >=20
+> > You need to remove all API that is not use by your first driver as
+> > it will most likely bit rot without users. It is way better to add
+> > things when a driver start to make use of it.
+>=20
+> Yes. Good point. Thank you:)
+>=20
+> >=20
+> > I am still not convince of the value of adding a new framework here
+> > with only a single device as an example. It looks similar to some of
+> > the fpga devices. Saddly because framework layering is not something
+> > that exist i guess inventing a new framework is the only answer when
+> > you can not quite fit into an existing one.
+> >=20
+> > More fundamental question is why do you need to change the IOMMU
+> > domain of the device ? I do not see any reason for that unless the
+> > PASID has some restriction on ARM that i do not know of.
+>=20
+> But I think this is the only way. As my understanding, by default, the
+> system creates a DMA IOMMU domain for each device behine an IOMMU. If
+> you want to call iommu interface directly, we have to rebind the device
+> to an unmanaged domain.
 
-In an ideal world, all usage of seqlocks would be via seqlock_t, which
-follows a somewhat saner usage, where we already do normal begin/end
-markings -- with subtle exception to readers needing to be flat atomic
-regions, e.g. because usage like this:
-- fs/namespace.c:__legitimize_mnt - unbalanced read_seqretry
-- fs/dcache.c:d_walk - unbalanced need_seqretry
+Why would you need to call iommu directly ? On some GPUs we do use
+PASID and we do not rebind to different domain, we just don't mess
+with that. So i do not see any reason to change the domain.
 
-But anything directly accessing seqcount_t seems to be unpredictable.
-Filtering for usage of read_seqcount_retry not following 'do { .. }
-while (read_seqcount_retry(..));' (although even the ones in while
-loops aren't necessarily predictable):
+Cheers,
+J=E9r=F4me
 
-$ git grep 'read_seqcount_retry' | grep -Ev 'seqlock.h|Doc|\* ' | grep
--v 'while ('
-=> about 1/3 of the total read_seqcount_retry usage.
-
-Just looking at fs/namei.c, I would conclude that it'd be a pretty
-daunting task to prescribe and migrate to an interface that forces
-clear begin/end.
-
-Which is why I concluded that for now, it is probably better to make
-KCSAN play well with the existing code.
-
-Thanks,
--- Marco
-
-> Thanks,
-> Mark.
->
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  include/linux/seqlock.h | 44 +++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 40 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-> > index bcf4cf26b8c8..1e425831a7ed 100644
-> > --- a/include/linux/seqlock.h
-> > +++ b/include/linux/seqlock.h
-> > @@ -37,8 +37,24 @@
-> >  #include <linux/preempt.h>
-> >  #include <linux/lockdep.h>
-> >  #include <linux/compiler.h>
-> > +#include <linux/kcsan.h>
-> >  #include <asm/processor.h>
-> >
-> > +/*
-> > + * The seqlock interface does not prescribe a precise sequence of read
-> > + * begin/retry/end. For readers, typically there is a call to
-> > + * read_seqcount_begin() and read_seqcount_retry(), however, there are more
-> > + * esoteric cases which do not follow this pattern.
-> > + *
-> > + * As a consequence, we take the following best-effort approach for *raw* usage
-> > + * of seqlocks under KCSAN: upon beginning a seq-reader critical section,
-> > + * pessimistically mark then next KCSAN_SEQLOCK_REGION_MAX memory accesses as
-> > + * atomics; if there is a matching read_seqcount_retry() call, no following
-> > + * memory operations are considered atomic. Non-raw usage of seqlocks is not
-> > + * affected.
-> > + */
-> > +#define KCSAN_SEQLOCK_REGION_MAX 1000
-> > +
-> >  /*
-> >   * Version using sequence counter only.
-> >   * This can be used when code has its own mutex protecting the
-> > @@ -115,6 +131,7 @@ static inline unsigned __read_seqcount_begin(const seqcount_t *s)
-> >               cpu_relax();
-> >               goto repeat;
-> >       }
-> > +     kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
-> >       return ret;
-> >  }
-> >
-> > @@ -131,6 +148,7 @@ static inline unsigned raw_read_seqcount(const seqcount_t *s)
-> >  {
-> >       unsigned ret = READ_ONCE(s->sequence);
-> >       smp_rmb();
-> > +     kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
-> >       return ret;
-> >  }
-> >
-> > @@ -183,6 +201,7 @@ static inline unsigned raw_seqcount_begin(const seqcount_t *s)
-> >  {
-> >       unsigned ret = READ_ONCE(s->sequence);
-> >       smp_rmb();
-> > +     kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
-> >       return ret & ~1;
-> >  }
-> >
-> > @@ -202,7 +221,8 @@ static inline unsigned raw_seqcount_begin(const seqcount_t *s)
-> >   */
-> >  static inline int __read_seqcount_retry(const seqcount_t *s, unsigned start)
-> >  {
-> > -     return unlikely(s->sequence != start);
-> > +     kcsan_atomic_next(0);
-> > +     return unlikely(READ_ONCE(s->sequence) != start);
-> >  }
-> >
-> >  /**
-> > @@ -225,6 +245,7 @@ static inline int read_seqcount_retry(const seqcount_t *s, unsigned start)
-> >
-> >  static inline void raw_write_seqcount_begin(seqcount_t *s)
-> >  {
-> > +     kcsan_begin_atomic(true);
-> >       s->sequence++;
-> >       smp_wmb();
-> >  }
-> > @@ -233,6 +254,7 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
-> >  {
-> >       smp_wmb();
-> >       s->sequence++;
-> > +     kcsan_end_atomic(true);
-> >  }
-> >
-> >  /**
-> > @@ -262,18 +284,20 @@ static inline void raw_write_seqcount_end(seqcount_t *s)
-> >   *
-> >   *      void write(void)
-> >   *      {
-> > - *              Y = true;
-> > + *              WRITE_ONCE(Y, true);
-> >   *
-> >   *              raw_write_seqcount_barrier(seq);
-> >   *
-> > - *              X = false;
-> > + *              WRITE_ONCE(X, false);
-> >   *      }
-> >   */
-> >  static inline void raw_write_seqcount_barrier(seqcount_t *s)
-> >  {
-> > +     kcsan_begin_atomic(true);
-> >       s->sequence++;
-> >       smp_wmb();
-> >       s->sequence++;
-> > +     kcsan_end_atomic(true);
-> >  }
-> >
-> >  static inline int raw_read_seqcount_latch(seqcount_t *s)
-> > @@ -398,7 +422,9 @@ static inline void write_seqcount_end(seqcount_t *s)
-> >  static inline void write_seqcount_invalidate(seqcount_t *s)
-> >  {
-> >       smp_wmb();
-> > +     kcsan_begin_atomic(true);
-> >       s->sequence+=2;
-> > +     kcsan_end_atomic(true);
-> >  }
-> >
-> >  typedef struct {
-> > @@ -430,11 +456,21 @@ typedef struct {
-> >   */
-> >  static inline unsigned read_seqbegin(const seqlock_t *sl)
-> >  {
-> > -     return read_seqcount_begin(&sl->seqcount);
-> > +     unsigned ret = read_seqcount_begin(&sl->seqcount);
-> > +
-> > +     kcsan_atomic_next(0);  /* non-raw usage, assume closing read_seqretry */
-> > +     kcsan_begin_atomic(false);
-> > +     return ret;
-> >  }
-> >
-> >  static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
-> >  {
-> > +     /*
-> > +      * Assume not nested: read_seqretry may be called multiple times when
-> > +      * completing read critical section.
-> > +      */
-> > +     kcsan_end_atomic(false);
-> > +
-> >       return read_seqcount_retry(&sl->seqcount, start);
-> >  }
-> >
-> > --
-> > 2.23.0.866.gb869b98d4c-goog
-> >
