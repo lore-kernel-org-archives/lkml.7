@@ -2,132 +2,99 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE54CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF6DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F79121BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B5521BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EKMmDj8Y"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BsAUU74u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732723AbfJXX4J (ORCPT
+        id S1733031AbfJXX7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 19:56:09 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41147 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726713AbfJXX4J (ORCPT
+        Thu, 24 Oct 2019 19:59:05 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43777 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731922AbfJXX7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 19:56:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571961368;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pZbVv/eoz3kxY1CN8zY37wwX4BSuQr2pMX8JrPLKB1U=;
-        b=EKMmDj8Yc1XTllMGi2Vxbotjx4dj+BWTFFwxhpnPD0BEY8NwfYoxUumUgnFyecZe1gDge9
-        eQ3pgCMadDAriApYVW0rZFB1EvQgI+Ig9zcfRRfyJZ9YOCUMULXENojA4ON9FIvGHfCTUj
-        9FSakPJsritMyLRojowZOoYyc4z42Xs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-BJlz3gQ0NoKtL_0blcrA5g-1; Thu, 24 Oct 2019 19:56:04 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06F8B107AD31;
-        Thu, 24 Oct 2019 23:56:02 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-33.pek2.redhat.com [10.72.12.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 31B471001B20;
-        Thu, 24 Oct 2019 23:55:48 +0000 (UTC)
-Subject: Re: [PATCH] x86/kdump: always reserve the low 1MiB when the
- crashkernel
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, bhe@redhat.com, dyoung@redhat.com,
-        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org
-References: <75648e8d-4ef7-0537-618e-e4a57f0d3b9b@redhat.com>
- <201910250603.En7IO6Xd%lkp@intel.com>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <3fce1517-2a76-53da-1538-aa75f3427d5b@redhat.com>
-Date:   Fri, 25 Oct 2019 07:55:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 24 Oct 2019 19:59:04 -0400
+Received: by mail-il1-f196.google.com with SMTP id t5so234602ilh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 16:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=nrYq+Fut0kmQhvcRn7pxSXUfim+ixb8xYZ7zEoN8gXo=;
+        b=BsAUU74uS8B0k+6fZmvognM6tez13o3m6eEh19qshytOcDMGPC6/x5LGe/utbx+1Nm
+         Gl1SGTWaU8I6VXpWeZ96RVdo7Frjt9AcOHaxwXXe7MH3vVU1iFa/l7vyawBgOEZVPXxt
+         CueHWNYxJECkUK4BvK6ePH4zszEQ5pLR2MCh5x2zHXdWwdLD+6LxuAyu4qVRPSLopghr
+         DyOME0SHIzrw5NVMiUWTiCA+Jlc0cRHJ2Ssf5JeQcGMjRTX2DBunouQ9WY5kRqmbAu+2
+         ieryA2hktUS1oEOY23HDFq8SVOrlikVEKeY6qw/rRZ/K/x1KjS8crEvmviI3tXGCwjs+
+         YXCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=nrYq+Fut0kmQhvcRn7pxSXUfim+ixb8xYZ7zEoN8gXo=;
+        b=LJBlUy8DcL0gBK17NAZQh3Kr/hjrv2R0yurn98s1h2cA9CEQSk3Wh51Ih+14Py8ej8
+         dehe2wfOC0B0SqrWcVWUgA3hnPRArwbEaCGLGqHH8KjKMmGDLt048+CfC4CUJkzd7o3i
+         nLSWM3SzVm3SeMqNN5doyZl8DA4+Dv5t/3Vl50QzrkhA4y+KFQs6a7W5PEuaWgMWNZoV
+         CHUFLP1jA48lszn2unzR+ptQACWWDHExuTNep7k3EnN0v/6aPOMl4QJpYIdbkRqZQWT1
+         SkqJE/dulzgfcqnSP3C2A8WAROck2bROLX/SbSkqfBGnPULCgIxVB6jreREBVBw4j6ox
+         HxzQ==
+X-Gm-Message-State: APjAAAUTg0NxW0PLsfE3bUMOxhhnRS+uUgx37b/b/HhHaCvgnixacr2q
+        fOTmsuOSM+mg0unsJ7JcC6YEew==
+X-Google-Smtp-Source: APXvYqxSqNsy/Qwmu3LlHURutjKdJmHQxsFx2ie7La+PrF/qzATogjgyh4MjolOQL4abtFIhbi4ZfQ==
+X-Received: by 2002:a92:ce83:: with SMTP id r3mr959589ilo.176.1571961543943;
+        Thu, 24 Oct 2019 16:59:03 -0700 (PDT)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id t68sm88604ilb.66.2019.10.24.16.59.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 16:59:03 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 16:59:01 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Christoph Hellwig <hch@infradead.org>
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] riscv: add prototypes for assembly language
+ functions from entry.S
+In-Reply-To: <20191018154923.GA23279@infradead.org>
+Message-ID: <alpine.DEB.2.21.9999.1910231812080.6074@viisi.sifive.com>
+References: <20191018080841.26712-1-paul.walmsley@sifive.com> <20191018080841.26712-2-paul.walmsley@sifive.com> <20191018154923.GA23279@infradead.org>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <201910250603.En7IO6Xd%lkp@intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: BJlz3gQ0NoKtL_0blcrA5g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E5=9C=A8 2019=E5=B9=B410=E6=9C=8825=E6=97=A5 06:12, kbuild test robot =E5=
-=86=99=E9=81=93:
-> Hi lijiang,
->=20
-> Thank you for the patch! Perhaps something to improve:
->=20
-> [auto build test WARNING on linus/master]
-> [cannot apply to v5.4-rc4 next-20191024]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help
-> improve the system. BTW, we also suggest to use '--base' option to specif=
-y the
-> base tree in git format-patch, please see https://stackoverflow.com/a/374=
-06982]
->=20
-> url:    https://github.com/0day-ci/linux/commits/lijiang/x86-kdump-always=
--reserve-the-low-1MiB-when-the-crashkernel/20191025-030439
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t f116b96685a046a89c25d4a6ba2da489145c8888
-> config: i386-defconfig (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=3Di386=20
->=20
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->=20
-> All warnings (new ones prefixed by >>):
->=20
->>> WARNING: vmlinux.o(.text+0xe39b7): Section mismatch in reference from t=
-he function kexec_reserve_low_1MiB() to the variable .init.data:boot_comman=
-d_line
->    The function kexec_reserve_low_1MiB() references
->    the variable __initdata boot_command_line.
->    This is often because kexec_reserve_low_1MiB lacks a __initdata
->    annotation or the annotation of boot_command_line is wrong.
-> --
->>> WARNING: vmlinux.o(.text+0xe39d0): Section mismatch in reference from t=
-he function kexec_reserve_low_1MiB() to the function .meminit.text:memblock=
-_reserve()
->    The function kexec_reserve_low_1MiB() references
->    the function __meminit memblock_reserve().
->    This is often because kexec_reserve_low_1MiB lacks a __meminit
->    annotation or the annotation of memblock_reserve is wrong.
->=20
-These warnings have been fixed in patch v5. Please refer to the latest patc=
-h v5.
+On Fri, 18 Oct 2019, Christoph Hellwig wrote:
 
-Thanks.
-Lianbo
+> On Fri, Oct 18, 2019 at 01:08:34AM -0700, Paul Walmsley wrote:
+> > Add prototypes for assembly language functions defined in entry.S,
+> > and include these prototypes into C source files that call those
+> > functions.
+> > 
+> > This patch resolves the following warnings from sparse:
+> > 
+> > arch/riscv/kernel/signal.c:32:53: warning: incorrect type in initializer (different address spaces)
+> 
+> I don't see how adding prototypes will fix an address space warning.
 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Ce=
-nter
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
-tion
->=20
+You're right - that was a cut-and-paste error on my part.
 
+[ ... ]
+> All these are not defined in entry.S, but called from entry.S.
+
+Indeed.  After reviewing this patch closely, I've just dropped it, and 
+used __visible for just about everything.  All that is reflected in the v4 
+series.
+
+Thanks for the review.
+
+- Paul
