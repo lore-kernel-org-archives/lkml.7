@@ -2,109 +2,168 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EF9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96860CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC990205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:26:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VvGDl+Z9"
+	by mail.kernel.org (Postfix) with ESMTP id 768302166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503173AbfJXP0E (ORCPT
+        id S2503185AbfJXP0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:26:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58400 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503092AbfJXP0E (ORCPT
+        Thu, 24 Oct 2019 11:26:38 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:39432 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503175AbfJXP0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:26:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BTqk/quYZ0PsikyKSM8B9GWYX1I9kMYV4Oehz8S/Sn0=; b=VvGDl+Z9DRnvhV+J0LRBvrhlw
-        /6BjlEs+PEg3z1OR9FxnlREDa6eCqsYM4wl0/fALby7IY1yPiOOdfphsLoIk0nJ2mPCECrPZSQpCc
-        8Ut7ZY9Hxab5yHfrvcNj0vHf8QwFMn+5IPC3SrREX0uuW7A329qOj2lttjc4h1/HDqAKLs5zg3i2C
-        v6D+aVJfnun54lP8NDQn+FWJ88qmmuKD/ELm9FmYI6yrRD5YFzRXzX5HTvWYpP1fMc4Ex4qrokUjj
-        3VgnKbbVmGbTh0fGFhO/3ZcPy3++KUPz0/RjqGqs+bEYNiKSuYpvn+GDwhY9U3483p4ePsXnT1TFb
-        SaXF+otHQ==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNf00-0008Nj-Ca; Thu, 24 Oct 2019 15:26:04 +0000
-Subject: Re: [PATCH] reset: fix kernel-doc warnings
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-References: <6e166445-2a3d-dd4d-22ea-3ab77d3d3b11@infradead.org>
- <1971768470f06ad1a051b44ed0041de6550964b8.camel@pengutronix.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <aa63055c-c015-0383-02eb-494bfb312f9d@infradead.org>
-Date:   Thu, 24 Oct 2019 08:26:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <1971768470f06ad1a051b44ed0041de6550964b8.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 24 Oct 2019 11:26:37 -0400
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id HTSa2100D5USYZQ06TSaTu; Thu, 24 Oct 2019 17:26:35 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNf0U-00077A-IL; Thu, 24 Oct 2019 17:26:34 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNf0U-0007vR-Fq; Thu, 24 Oct 2019 17:26:34 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Russell King <linux@armlinux.org.uk>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        GOTO Masanori <gotom@debian.or.jp>,
+        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial] scsi: Fix various misspellings of "connect"
+Date:   Thu, 24 Oct 2019 17:26:33 +0200
+Message-Id: <20191024152633.30404-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 1:47 AM, Philipp Zabel wrote:
-> Hi Randy,
-> 
-> thank you for the fixes.
-> 
-> On Tue, 2019-10-22 at 20:57 -0700, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix kernel-doc warnings discovered in the reset controller API chapter.
->> Fixes these warnings:
->>
->> ./drivers/reset/core.c:86: warning: Excess function parameter 'flags' description in 'of_reset_simple_xlate'
->> ./drivers/reset/core.c:830: warning: Incorrect use of kernel-doc format:  * of_reset_control_get_count - Count number of resets available with a device
->> ./drivers/reset/core.c:838: warning: Function parameter or member 'node' not described in 'of_reset_control_get_count'
->> ./include/linux/reset-controller.h:45: warning: Function parameter or member 'con_id' not described in 'reset_control_lookup'
->> ./drivers/reset/core.c:86: warning: Excess function parameter 'flags' description in 'of_reset_simple_xlate'
->> ./drivers/reset/core.c:830: warning: Incorrect use of kernel-doc format:  * of_reset_control_get_count - Count number of resets available with a device
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Philipp Zabel <p.zabel@pengutronix.de>
->> ---
->>  drivers/reset/core.c             |    4 ++--
->>  include/linux/reset-controller.h |    4 ++--
-> [...]
->> @@ -7,7 +7,7 @@
->>  struct reset_controller_dev;
->>  
->>  /**
->> - * struct reset_control_ops
->> + * struct reset_control_ops - reset controller driver callbacks
->>   *
->>   * @reset: for self-deasserting resets, does all necessary
->>   *         things to reset the device
-> 
-> This is all that remains when I rebase onto reset/fixes. Ok to apply
-> this and change the commit message to:
-> 
->   reset: fix reset_control_ops kerneldoc comment
-> 
->   Add a missing short description to the reset_control_ops
->   documentation.
-> 
-> ?
+Fix misspellings of "disonnect", "reconnect", "connection", "connected",
+and "disconnection".
 
-Of course.  Go for it.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/scsi/arm/acornscsi.c          | 4 ++--
+ drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h | 2 +-
+ drivers/scsi/isci/remote_device.c     | 2 +-
+ drivers/scsi/ncr53c8xx.c              | 2 +-
+ drivers/scsi/nsp32.c                  | 2 +-
+ drivers/scsi/qedf/qedf_dbg.h          | 2 +-
+ drivers/scsi/qedi/qedi_dbg.h          | 2 +-
+ 7 files changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
+index d12dd89538df2990..ddb52e7ba6226b51 100644
+--- a/drivers/scsi/arm/acornscsi.c
++++ b/drivers/scsi/arm/acornscsi.c
+@@ -1067,7 +1067,7 @@ void acornscsi_dma_setup(AS_Host *host, dmadir_t direction)
+  * Purpose : ensure that all DMA transfers are up-to-date & host->scsi.SCp is correct
+  * Params  : host - host to finish
+  * Notes   : This is called when a command is:
+- *		terminating, RESTORE_POINTERS, SAVE_POINTERS, DISCONECT
++ *		terminating, RESTORE_POINTERS, SAVE_POINTERS, DISCONNECT
+  *	   : This must not return until all transfers are completed.
+  */
+ static
+@@ -1816,7 +1816,7 @@ int acornscsi_reconnect(AS_Host *host)
+ }
+ 
+ /*
+- * Function: int acornscsi_reconect_finish(AS_Host *host)
++ * Function: int acornscsi_reconnect_finish(AS_Host *host)
+  * Purpose : finish reconnecting a command
+  * Params  : host - host to complete
+  * Returns : 0 if failed
+diff --git a/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h b/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h
+index e4469df9c4695ab9..698f5ebaa0c29f98 100644
+--- a/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h
++++ b/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h
+@@ -813,7 +813,7 @@ struct fcoe_confqe {
+ 
+ 
+ /*
+- * FCoE conection data base
++ * FCoE connection data base
+  */
+ struct fcoe_conn_db {
+ #if defined(__BIG_ENDIAN)
+diff --git a/drivers/scsi/isci/remote_device.c b/drivers/scsi/isci/remote_device.c
+index 49aa4e657c44fc65..cd1e4b4d95bbbba0 100644
+--- a/drivers/scsi/isci/remote_device.c
++++ b/drivers/scsi/isci/remote_device.c
+@@ -1504,7 +1504,7 @@ static enum sci_status isci_remote_device_construct(struct isci_port *iport,
+  * This function builds the isci_remote_device when a libsas dev_found message
+  *    is received.
+  * @isci_host: This parameter specifies the isci host object.
+- * @port: This parameter specifies the isci_port conected to this device.
++ * @port: This parameter specifies the isci_port connected to this device.
+  *
+  * pointer to new isci_remote_device.
+  */
+diff --git a/drivers/scsi/ncr53c8xx.c b/drivers/scsi/ncr53c8xx.c
+index e0b427fdf81800c3..11a2cb844ecb3782 100644
+--- a/drivers/scsi/ncr53c8xx.c
++++ b/drivers/scsi/ncr53c8xx.c
+@@ -1722,7 +1722,7 @@ struct ncb {
+ 	**	Miscellaneous configuration and status parameters.
+ 	**----------------------------------------------------------------
+ 	*/
+-	u_char		disc;		/* Diconnection allowed		*/
++	u_char		disc;		/* Disconnection allowed	*/
+ 	u_char		scsi_mode;	/* Current SCSI BUS mode	*/
+ 	u_char		order;		/* Tag order to use		*/
+ 	u_char		verbose;	/* Verbosity for this controller*/
+diff --git a/drivers/scsi/nsp32.c b/drivers/scsi/nsp32.c
+index 70db79254155677d..b6e04d14292d2f90 100644
+--- a/drivers/scsi/nsp32.c
++++ b/drivers/scsi/nsp32.c
+@@ -1542,7 +1542,7 @@ static void nsp32_scsi_done(struct scsi_cmnd *SCpnt)
+  * with ACK reply when below condition is matched:
+  *	MsgIn 00: Command Complete.
+  *	MsgIn 02: Save Data Pointer.
+- *	MsgIn 04: Diconnect.
++ *	MsgIn 04: Disconnect.
+  * In other case, unexpected BUSFREE is detected.
+  */
+ static int nsp32_busfree_occur(struct scsi_cmnd *SCpnt, unsigned short execph)
+diff --git a/drivers/scsi/qedf/qedf_dbg.h b/drivers/scsi/qedf/qedf_dbg.h
+index d979f095aeda06a8..2386bfb73c4616aa 100644
+--- a/drivers/scsi/qedf/qedf_dbg.h
++++ b/drivers/scsi/qedf/qedf_dbg.h
+@@ -42,7 +42,7 @@ extern uint qedf_debug;
+ #define QEDF_LOG_LPORT		0x4000		/* lport logs */
+ #define QEDF_LOG_ELS		0x8000		/* ELS logs */
+ #define QEDF_LOG_NPIV		0x10000		/* NPIV logs */
+-#define QEDF_LOG_SESS		0x20000		/* Conection setup, cleanup */
++#define QEDF_LOG_SESS		0x20000		/* Connection setup, cleanup */
+ #define QEDF_LOG_TID		0x80000         /*
+ 						 * FW TID context acquire
+ 						 * free
+diff --git a/drivers/scsi/qedi/qedi_dbg.h b/drivers/scsi/qedi/qedi_dbg.h
+index 243acc8b520a44a5..37d084086fd43410 100644
+--- a/drivers/scsi/qedi/qedi_dbg.h
++++ b/drivers/scsi/qedi/qedi_dbg.h
+@@ -44,7 +44,7 @@ extern uint qedi_dbg_log;
+ #define QEDI_LOG_LPORT		0x4000		/* lport logs */
+ #define QEDI_LOG_ELS		0x8000		/* ELS logs */
+ #define QEDI_LOG_NPIV		0x10000		/* NPIV logs */
+-#define QEDI_LOG_SESS		0x20000		/* Conection setup, cleanup */
++#define QEDI_LOG_SESS		0x20000		/* Connection setup, cleanup */
+ #define QEDI_LOG_UIO		0x40000		/* iSCSI UIO logs */
+ #define QEDI_LOG_TID		0x80000         /* FW TID context acquire,
+ 						 * free
 -- 
-~Randy
+2.17.1
 
