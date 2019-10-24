@@ -2,229 +2,75 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F97CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C411CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB46720684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6E72084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="TfHpue/N";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="TfHpue/N"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="fQTpJKMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409144AbfJXK3l (ORCPT
+        id S2407472AbfJXKbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:29:41 -0400
-Received: from mail-eopbgr00072.outbound.protection.outlook.com ([40.107.0.72]:50245
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729612AbfJXK3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:29:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gWgs3sbC16cn7inaJPJyqJyzSrdVIOpy+Oz7YRfzMBw=;
- b=TfHpue/Nck5N+8cdhIrv3+HsT1F4kzylROBaopmny3IB+QSZWxRN65UoZfQFVp5XIsThaj8DgGC8gbIMtVJ6fhK2CfhFzQCP6FD7YbR9UP9IxeCDF0RZ7ebB7OW1JL7n5PDGtIrjzwEN8BHm6ytRRuc2VEppQ+GbTpk0cgtppIs=
-Received: from DB6PR0801CA0066.eurprd08.prod.outlook.com (2603:10a6:4:2b::34)
- by AM6PR08MB4754.eurprd08.prod.outlook.com (2603:10a6:20b:c7::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.17; Thu, 24 Oct
- 2019 10:29:35 +0000
-Received: from VE1EUR03FT039.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::208) by DB6PR0801CA0066.outlook.office365.com
- (2603:10a6:4:2b::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.22 via Frontend
- Transport; Thu, 24 Oct 2019 10:29:35 +0000
-Authentication-Results: spf=fail (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
- designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT039.mail.protection.outlook.com (10.152.19.196) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Thu, 24 Oct 2019 10:29:35 +0000
-Received: ("Tessian outbound 927f2cdd66cc:v33"); Thu, 24 Oct 2019 10:29:33 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: e37256e9fd77938c
-X-CR-MTA-TID: 64aa7808
-Received: from 1de29da3d394.2 (cr-mta-lb-1.cr-mta-net [104.47.10.52])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5BE48767-E7FD-493F-AFF1-67D287FED492.1;
-        Thu, 24 Oct 2019 10:29:28 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2052.outbound.protection.outlook.com [104.47.10.52])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 1de29da3d394.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Thu, 24 Oct 2019 10:29:28 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q33deolQNpjrwhaAa+PBHloZpiq2A15esXE7zm6sWcJtm0J2TEwU7Q++jg27oNKWAfxbampgzgshHNp3EDXji0lBuXEGHRlr79WAer8be7bg5himNth/vz8DWvV/uWMrfKyrUsQDJdpkxtHyzJmW4p2bSB4I9+OqYebTdRPyqhnbfuhl34DdwTWNYHz8XrIVD90E1LJ5acabODmF8AfDB3bApZRnK6yWN9ueOKfLJqel1Dpx4dnkzUZY3gbPYunDYSyWVpSNu7XVpEyvoe2t5Xq/uuz6fK4rg5AVCyTu8xaFMy5IDjdEWdPvpkxy8NxYQZZ+bOr0HQnxzq9hJ3GCMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gWgs3sbC16cn7inaJPJyqJyzSrdVIOpy+Oz7YRfzMBw=;
- b=APk5+4ssos9fhUxxUVMOlZpgiYs23KC3vtG9bIl9ytfJWvaOxefuc6AAvn9mWYQeR1Q/v1SmhozT7+b2OFYAuJ+/tNU2pQ1QgygakdJIWrVO0yWstCsDM1iorn1BGlZ368v/woRB0JOMrcliN23+byjx70hc1nF4wsFbCb+QNNKIC4ylep8w3kubn5Z5hqXJhmcgk0Y0cB9B37OFGm9aA0dMpuU+zqdbV264q4bMX/+9b31FPNqVzs1DPlUFm+yKEB9EtHdDb/4M2l8+z/FNgPfGAfQy7G7PhuM/Di8ZdRQ76HqD4B+IB6qZmvybDvoPdaWEc171RXzKfIRwTDNAgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gWgs3sbC16cn7inaJPJyqJyzSrdVIOpy+Oz7YRfzMBw=;
- b=TfHpue/Nck5N+8cdhIrv3+HsT1F4kzylROBaopmny3IB+QSZWxRN65UoZfQFVp5XIsThaj8DgGC8gbIMtVJ6fhK2CfhFzQCP6FD7YbR9UP9IxeCDF0RZ7ebB7OW1JL7n5PDGtIrjzwEN8BHm6ytRRuc2VEppQ+GbTpk0cgtppIs=
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
- VI1PR08MB5535.eurprd08.prod.outlook.com (10.255.196.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Thu, 24 Oct 2019 10:29:26 +0000
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::7d25:d1f2:e3eb:868b]) by VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::7d25:d1f2:e3eb:868b%6]) with mapi id 15.20.2387.023; Thu, 24 Oct 2019
- 10:29:26 +0000
-From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-CC:     nd <nd@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "imirkin@alum.mit.edu" <imirkin@alum.mit.edu>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Ben Davis <Ben.Davis@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH v7 1/4] drm: Add a new helper
- drm_color_ctm_s31_32_to_qm_n()
-Thread-Topic: [PATCH v7 1/4] drm: Add a new helper
- drm_color_ctm_s31_32_to_qm_n()
-Thread-Index: AQHViW0fItuU7WZLdkGpC7zJtSS7AadpmFSA
-Date:   Thu, 24 Oct 2019 10:29:25 +0000
-Message-ID: <13265658.8ZLHS0ihAi@e123338-lin>
-References: <20191023064226.10969-1-james.qian.wang@arm.com>
- <20191023064226.10969-2-james.qian.wang@arm.com>
-In-Reply-To: <20191023064226.10969-2-james.qian.wang@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [217.140.106.51]
-x-clientproxiedby: LNXP265CA0041.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5c::29) To VI1PR08MB4078.eurprd08.prod.outlook.com
- (2603:10a6:803:e5::28)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2b914c23-3a27-4cb7-1d48-08d7586d10e8
-X-MS-TrafficTypeDiagnostic: VI1PR08MB5535:|VI1PR08MB5535:|AM6PR08MB4754:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR08MB4754EF5DECAA3E43894429DE8F6A0@AM6PR08MB4754.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:7691;OLM:7691;
-x-forefront-prvs: 0200DDA8BE
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(366004)(396003)(346002)(136003)(376002)(189003)(199004)(2906002)(81166006)(81156014)(3846002)(6116002)(316002)(6436002)(8936002)(229853002)(6512007)(4326008)(71190400001)(71200400001)(86362001)(6486002)(9686003)(66446008)(5660300002)(66476007)(66556008)(64756008)(66946007)(54906003)(6506007)(14454004)(386003)(486006)(99286004)(52116002)(11346002)(476003)(478600001)(186003)(76176011)(25786009)(7736002)(305945005)(66066001)(6246003)(6862004)(6636002)(26005)(33716001)(102836004)(256004)(14444005)(8676002)(446003)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB5535;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: WZs7VudCRGUZwCOtpOQ1GXoNknlGfQNoe/YoS8bFWXuAWc9/IJeuOjPuW5EBI0fU+i5ceqg6IO+pvXFRgShyN9ys4IUIsKlZ67nxGdAYayuyoXIajkhfDPJ+o3XjcwZXNlTxrNY/y03ipty6NFIXj6XT2d4r04PRCdOs98bW8AxLL5vc6Q8UaxSCKHzeiIjRwSG76s2qSZdlxHp1auJ88pM3FsvyNY3bo+GEF5Ux6EkgDTJXm4M7xOM/YVauLZKzmWBrhMNd2RMCRMisGLFQWmoqFobT3W44S0VseaCjXe4n7FFtha2t6cLkmnjjrDWJG9FhFf1JKwi1sLSEPA9LY1yVIKLW/IatCuedJRcNI75UTTs44stDBSoSmO0rM5ZDDYdrZfs9XtU9XpHqClwxtucn6E9p5pC7yjncEPaO1pmnlGO3dR2gAGrnf3YUtUij
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F6395156436986419B3320FA6FDDA39F@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 24 Oct 2019 06:31:06 -0400
+Received: from onstation.org ([52.200.56.107]:37172 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404801AbfJXKbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:31:05 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 29D713E951;
+        Thu, 24 Oct 2019 10:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1571913064;
+        bh=yJXhW2YAvxRlZip0bP5m7RlkRR4+fexngI8FBQ676yw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fQTpJKMtXW2dbjwt6j5ka6YgqbZ1crOJ375u/XDBlX+E3kEubIOEidtWfTGO8gd3X
+         EmvSEIkaN/JB0j3agUtqEoA36nv91bryIQ4T43hjD0IiWEWLRRNbBKjBXJH6M7WjrF
+         AYEZSF7Qb4NU/FGWVajkoWPnVmvHvBZLWGs5bjWw=
+From:   Brian Masney <masneyb@onstation.org>
+To:     bjorn.andersson@linaro.org, georgi.djakov@linaro.org
+Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        jonathan@marek.ca
+Subject: [PATCH v3 0/2] interconnect: qcom: add msm8974 support
+Date:   Thu, 24 Oct 2019 06:30:52 -0400
+Message-Id: <20191024103054.9770-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB5535
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT039.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(346002)(136003)(376002)(396003)(39860400002)(1110001)(339900001)(199004)(189003)(54906003)(70586007)(6862004)(5660300002)(316002)(8936002)(4326008)(36906005)(6512007)(305945005)(9686003)(3846002)(356004)(6116002)(47776003)(50466002)(23676004)(8676002)(2486003)(81156014)(81166006)(99286004)(76176011)(33716001)(476003)(22756006)(478600001)(26826003)(446003)(6506007)(436003)(25786009)(11346002)(70206006)(6486002)(105606002)(66066001)(486006)(107886003)(6246003)(7736002)(2906002)(76130400001)(229853002)(14454004)(126002)(26005)(186003)(86362001)(336012)(14444005)(386003)(6636002)(102836004)(39026011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR08MB4754;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: c6b920f1-f768-4359-7fe3-08d7586d0b2a
-NoDisclaimer: True
-X-Forefront-PRVS: 0200DDA8BE
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eqwwJTHK639x4g6N5paLGxS29mw2/TQeZs9KhII3WTVI+Wh0RzCVz9N+osJjtT8+lDyz/K9wOvIsRb96Rm5WXjlmAYQ3cqrLpyg6BrQO7TrgrAcIr6n6cZF+ae1Yd1eHMOMCVFzXlVg3pd396J0rxRS+SRQOz9KRejTH3EZKVbMrn7zwvNdqf4bbFVCYGY61QbHjmBS83avS40uVlQLAcODeHakbcroydR0yFm36j/Xa1Lg7KfQBbuAeTxfDYXXaaDkLWmSWMQoj8UZor8yUzOeUglwdpZU6FHisJUeLN230ia5zArMEcTGSLBuWzI8Ykq4Xu/SQ68Q3CRMUpyPCHy9Any9TAkyLZbaNuEGloLh+2zJSOlyL+ueqxBd8ozNdPpy6q4FGY18pKIxIdParcE24JR13/wDurYqmSop9ZZat3/URcpajlkMWK6MV9kiu
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2019 10:29:35.2499
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b914c23-3a27-4cb7-1d48-08d7586d10e8
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4754
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFtZXMsDQoNCllvdSBhbHJlYWR5IGhhdmUgbXkgci1iIG9uIHRoZSBwYXRjaCwgc28gZm9y
-IHBvc3Rlcml0eTogbm8gZnVydGhlcg0KaW1wb3J0YW50IGNvbW1lbnRzIGZyb20gbXkgc2lkZS4N
-Cg0KT24gV2VkbmVzZGF5LCAyMyBPY3RvYmVyIDIwMTkgMDc6NDI6NTUgQlNUIGphbWVzIHFpYW4g
-d2FuZyAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpIHdyb3RlOg0KPiBBZGQgYSBuZXcgaGVscGVyIGZ1
-bmN0aW9uIGRybV9jb2xvcl9jdG1fczMxXzMyX3RvX3FtX24oKSBmb3IgZHJpdmVyIHRvDQo+IGNv
-bnZlcnQgUzMxLjMyIHNpZ24tbWFnbml0dWRlIHRvIFFtLm4gMidzIGNvbXBsZW1lbnQgdGhhdCBz
-dXBwb3J0ZWQgYnkNCj4gaGFyZHdhcmUuDQo+IA0KPiBWNDogQWRkcmVzcyBNaWhhaSwgRGFuaWVs
-IGFuZCBJbGlhJ3MgcmV2aWV3IGNvbW1lbnRzLg0KPiBWNTogSW5jbHVkZXMgdGhlIHNpZ24gYml0
-IGluIHRoZSB2YWx1ZSBvZiBtIChRbS5uKS4NCj4gVjY6IEFsbG93cyBtID0gMCBhY2NvcmRpbmcg
-dG8gTWloYWlsJ3MgY29tbWVudHMuDQo+IFY2OiBBZGRyZXNzIE1paGFpbCdzIGNvbW1lbnRzLg0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogamFtZXMgcWlhbiB3YW5nIChBcm0gVGVjaG5vbG9neSBDaGlu
-YSkgPGphbWVzLnFpYW4ud2FuZ0Bhcm0uY29tPg0KPiBSZXZpZXdlZC1ieTogTWloYWlsIEF0YW5h
-c3NvdiA8bWloYWlsLmF0YW5hc3NvdkBhcm0uY29tPg0KPiBSZXZpZXdlZC1ieTogRGFuaWVsIFZl
-dHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4NCj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0v
-ZHJtX2NvbG9yX21nbXQuYyB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+
-ICBpbmNsdWRlL2RybS9kcm1fY29sb3JfbWdtdC5oICAgICB8ICAyICsrDQo+ICAyIGZpbGVzIGNo
-YW5nZWQsIDM4IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vZHJtX2NvbG9yX21nbXQuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fY29sb3JfbWdtdC5jDQo+
-IGluZGV4IDRjZTVjNmQ4ZGU5OS4uZjVmYmE1ODAyYTA3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vZHJtX2NvbG9yX21nbXQuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2Nv
-bG9yX21nbXQuYw0KPiBAQCAtMTMyLDYgKzEzMiw0MiBAQCB1aW50MzJfdCBkcm1fY29sb3JfbHV0
-X2V4dHJhY3QodWludDMyX3QgdXNlcl9pbnB1dCwgdWludDMyX3QgYml0X3ByZWNpc2lvbikNCj4g
-IH0NCj4gIEVYUE9SVF9TWU1CT0woZHJtX2NvbG9yX2x1dF9leHRyYWN0KTsNCj4gIA0KPiArLyoq
-DQo+ICsgKiBkcm1fY29sb3JfY3RtX3MzMV8zMl90b19xbV9uDQo+ICsgKg0KPiArICogQHVzZXJf
-aW5wdXQ6IGlucHV0IHZhbHVlDQo+ICsgKiBAbTogbnVtYmVyIG9mIGludGVnZXIgYml0cywgb25s
-eSBzdXBwb3J0IG0gPD0gMzIsIGluY2x1ZGUgdGhlIHNpZ24tYml0DQo+ICsgKiBAbjogbnVtYmVy
-IG9mIGZyYWN0aW9uYWwgYml0cywgb25seSBzdXBwb3J0IG4gPD0gMzINCj4gKyAqDQo+ICsgKiBD
-b252ZXJ0IGFuZCBjbGFtcCBTMzEuMzIgc2lnbi1tYWduaXR1ZGUgdG8gUW0ubiAoc2lnbmVkIDIn
-cyBjb21wbGVtZW50KS4NCj4gKyAqIFRoZSBzaWduLWJpdCBCSVQobStuKSBhbmQgYWJvdmUgYXJl
-IDAgZm9yIHBvc2l0aXZlIHZhbHVlIGFuZCAxIGZvciBuZWdhdGl2ZS4NCg0KW3JlYWxseSBwZWRh
-bnRpY10gbStuLTEgOikNCg0KPiArICogdGhlIHJhbmdlIG9mIHZhbHVlIGlzIFstMl4obS0xKSwg
-Ml4obS0xKSAtIDJeLW5dDQo+ICsgKg0KPiArICogRm9yIGV4YW1wbGUNCj4gKyAqIEEgUTMuMTIg
-Zm9ybWF0IG51bWJlcjoNCj4gKyAqIC0gcmVxdWlyZWQgYml0OiAzICsgMTIgPSAxNWJpdHMNCj4g
-KyAqIC0gcmFuZ2U6IFstMl4yLCAyXjIgLSAyXuKIkjE1XQ0KPiArICoNCj4gKyAqIE5PVEU6IHRo
-ZSBtIGNhbiBiZSB6ZXJvIGlmIGFsbCBiaXRfcHJlY2lzaW9uIGFyZSB1c2VkIHRvIHByZXNlbnQg
-ZnJhY3Rpb25hbA0KPiArICogICAgICAgYml0cyBsaWtlIFEwLjMyDQo+ICsgKi8NCj4gK3VpbnQ2
-NF90IGRybV9jb2xvcl9jdG1fczMxXzMyX3RvX3FtX24odWludDY0X3QgdXNlcl9pbnB1dCwNCj4g
-KwkJCQkgICAgICB1aW50MzJfdCBtLCB1aW50MzJfdCBuKQ0KPiArew0KPiArCXU2NCBtYWcgPSAo
-dXNlcl9pbnB1dCAmIH5CSVRfVUxMKDYzKSkgPj4gKDMyIC0gbik7DQo+ICsJYm9vbCBuZWdhdGl2
-ZSA9ICEhKHVzZXJfaW5wdXQgJiBCSVRfVUxMKDYzKSk7DQo+ICsJczY0IHZhbDsNCj4gKw0KPiAr
-CVdBUk5fT04obSA+IDMyIHx8IG4gPiAzMik7DQo+ICsNCj4gKw0KPiArCXZhbCA9IGNsYW1wX3Zh
-bChtYWcsIDAsIG5lZ2F0aXZlID8NCj4gKwkJCQlCSVRfVUxMKG4gKyBtIC0gMSkgOiBCSVRfVUxM
-KG4gKyBtIC0gMSkgLSAxKTsNCj4gKw0KPiArCXJldHVybiBuZWdhdGl2ZSA/IC12YWwgOiB2YWw7
-DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGRybV9jb2xvcl9jdG1fczMxXzMyX3RvX3FtX24pOw0K
-PiArDQo+ICAvKioNCj4gICAqIGRybV9jcnRjX2VuYWJsZV9jb2xvcl9tZ210IC0gZW5hYmxlIGNv
-bG9yIG1hbmFnZW1lbnQgcHJvcGVydGllcw0KPiAgICogQGNydGM6IERSTSBDUlRDDQo+IGRpZmYg
-LS1naXQgYS9pbmNsdWRlL2RybS9kcm1fY29sb3JfbWdtdC5oIGIvaW5jbHVkZS9kcm0vZHJtX2Nv
-bG9yX21nbXQuaA0KPiBpbmRleCBkMWM2NjJkOTJhYjcuLjYwZmVhNTUwMTg4NiAxMDA2NDQNCj4g
-LS0tIGEvaW5jbHVkZS9kcm0vZHJtX2NvbG9yX21nbXQuaA0KPiArKysgYi9pbmNsdWRlL2RybS9k
-cm1fY29sb3JfbWdtdC5oDQo+IEBAIC0zMCw2ICszMCw4IEBAIHN0cnVjdCBkcm1fY3J0YzsNCj4g
-IHN0cnVjdCBkcm1fcGxhbmU7DQo+ICANCj4gIHVpbnQzMl90IGRybV9jb2xvcl9sdXRfZXh0cmFj
-dCh1aW50MzJfdCB1c2VyX2lucHV0LCB1aW50MzJfdCBiaXRfcHJlY2lzaW9uKTsNCj4gK3VpbnQ2
-NF90IGRybV9jb2xvcl9jdG1fczMxXzMyX3RvX3FtX24odWludDY0X3QgdXNlcl9pbnB1dCwNCj4g
-KwkJCQkgICAgICB1aW50MzJfdCBtLCB1aW50MzJfdCBuKTsNCj4gIA0KPiAgdm9pZCBkcm1fY3J0
-Y19lbmFibGVfY29sb3JfbWdtdChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ICAJCQkJdWludCBk
-ZWdhbW1hX2x1dF9zaXplLA0KPiAtLSANCj4gMi4yMC4xDQo+IA0KPiANCg0KDQotLSANCk1paGFp
-bA0KDQoNCg0K
+Here's a patch series that adds interconnect support for the Qualcomm
+MSM8974, which is needed so that the GPU can be supported upstream.
+
+The only change in this series is support for more paths that were
+hardcoded in the downstream drivers. See patch #2 for details.
+
+Brian Masney (2):
+  dt-bindings: interconnect: qcom: add msm8974 bindings
+  interconnect: qcom: add msm8974 driver
+
+ .../bindings/interconnect/qcom,msm8974.yaml   |  62 ++
+ drivers/interconnect/qcom/Kconfig             |   9 +
+ drivers/interconnect/qcom/Makefile            |   2 +
+ drivers/interconnect/qcom/msm8974.c           | 784 ++++++++++++++++++
+ .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++
+ 5 files changed, 1003 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+ create mode 100644 drivers/interconnect/qcom/msm8974.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
+
+-- 
+2.21.0
+
