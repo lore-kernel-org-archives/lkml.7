@@ -2,101 +2,114 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76958CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39896CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4960C20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F24D20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="T2bbeZtv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437322AbfJXDfs (ORCPT
+        id S2406521AbfJXDjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 23:35:48 -0400
-Received: from mx1.unisoc.com ([222.66.158.135]:45203 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2392415AbfJXDfr (ORCPT
+        Wed, 23 Oct 2019 23:39:05 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37427 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406600AbfJXDjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 23:35:47 -0400
-Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id x9O3YLUh004509
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 24 Oct 2019 11:34:21 +0800 (CST)
-        (envelope-from Chunyan.Zhang@unisoc.com)
-Received: from localhost (10.0.93.106) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Thu, 24 Oct 2019 11:34:35
- +0800
-From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, Yuming Han <yuming.han@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH] tracing: use kvcalloc for tgid_map array allocation
-Date:   Thu, 24 Oct 2019 11:34:30 +0800
-Message-ID: <1571888070-24425-1-git-send-email-chunyan.zhang@unisoc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571884773-23990-1-git-send-email-chunyan.zhang@unisoc.com>
-References: <1571884773-23990-1-git-send-email-chunyan.zhang@unisoc.com>
+        Wed, 23 Oct 2019 23:39:05 -0400
+Received: by mail-pl1-f196.google.com with SMTP id u20so11156723plq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 20:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W8sgLGjMxM6EuY1mpsS+9Tn33OqsmcrGz0uhv99VAHA=;
+        b=T2bbeZtvsO039PfGe+EjPR125EqRdU9mKD894GYoR0zBnNNVcSR1u3DGiXZFKGUrwF
+         Q1L4mEl5u7aBDGEgAvXjkzTOXSSGhbHMY7JwyTtpuA/1lUXfeioaDSSD5DwpPF81FKT1
+         ajJMYUZOWHJQq3Czs4YHreOwy2CVWx9lD7yEqbXak5+nnWYpgJsNSp3cviar/kEx8g3A
+         JL2eoJFhv69W7IpzFJO3QBiRSBRWpD2PYo0i6gZ0SVVJGOTgtJG3panMDXQqq/fdjcQQ
+         JYHL/HihPBR2U1KB50B+TI1h2RA9YPd7A7tX1ZQWp7kanwYzwZ3TCAZYt7pKgxi2zf4H
+         C+5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W8sgLGjMxM6EuY1mpsS+9Tn33OqsmcrGz0uhv99VAHA=;
+        b=i8NvqeG76abbOhkTujz06UPhlCD1SmlsJp1+xtkoSAnfpBlUY0h8h6rnjcn3Jacylu
+         J14R+h0lXecejbNTKrYtknJbI4KeIXqGxhRkdcvHEhKWu98j0/Gt9YWhrVGGZyruflZW
+         oUUivFUjRn1zHb+MMye+W3TekKMIPMPdlTwV0pbyrkkMDPEy4qUYlt6kVPnaF7lPE9Ad
+         Xv4cdEL/Ff9L1CsUGk6cNBZtOdzNnguK6xpDA8XVyMoItSuVIMI0UjVw1DC3+akzTHWc
+         ZN8v/ofmhvzkZuEjywCvWnZQKQbsmp/A8yxsIZjPVp7gWwhjWT9e0YRjjLVxttZWjlWb
+         4vkQ==
+X-Gm-Message-State: APjAAAV37e11s1ZPgdTacRyZVPFGxBX0zMjnPDfcl3IKrBNXmRDDOzsI
+        QgA5yw3HNc2kxZnstbize+rH+w==
+X-Google-Smtp-Source: APXvYqzjuWYGP5CVydefv3aAYM4Zf7GeakbWEIFeuKC0sgKLKckuazE4qo+gNK3oOsra0rup9w7uiQ==
+X-Received: by 2002:a17:902:968f:: with SMTP id n15mr13304176plp.191.1571888344349;
+        Wed, 23 Oct 2019 20:39:04 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id b17sm9759144pfr.17.2019.10.23.20.39.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 20:39:03 -0700 (PDT)
+Subject: Re: [Kgdb-bugreport] [PATCH] kernel: convert switch/case fallthrough
+ comments to fallthrough;
+To:     Joe Perches <joe@perches.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-pm@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+References: <f31b38b9ad515a138edaecf85701b1e3db064114.camel@perches.com>
+ <20191021090909.yjyed4qodjjcioqc@holly.lan>
+ <bff0a1c4fc69b83c763ffbce42a0152e1573499a.camel@perches.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2808c960-6178-17b8-23d7-a6945987a658@kernel.dk>
+Date:   Wed, 23 Oct 2019 21:39:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.0.93.106]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL: SHSQR01.spreadtrum.com x9O3YLUh004509
+In-Reply-To: <bff0a1c4fc69b83c763ffbce42a0152e1573499a.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/23/19 12:49 PM, Joe Perches wrote:
+> On Mon, 2019-10-21 at 10:09 +0100, Daniel Thompson wrote:
+>> On Fri, Oct 18, 2019 at 09:35:08AM -0700, Joe Perches wrote:
+>>> Use the new pseudo keyword "fallthrough;" and not the
+>>> various /* fallthrough */ style comments.
+>>>
+>>> Signed-off-by: Joe Perches <joe@perches.com>
+>>> ---
+>>>
+>>> This is a single patch for the kernel/ source tree,
+>>> which would otherwise be sent through as separate
+>>> patches to 19 maintainer sections.
+>>
+>> For the kernel/debug/ files:
+>>
+>> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+>>
+>> Will you be putting this in an immutable branch once you've collected
+>> enough acks?
+> 
+> No, I expect Linus will either run the script
+> or apply this patch one day.
 
-From: Yuming Han <yuming.han@unisoc.com>
+Please coordinate and get something like this run/applied a few days
+before -rc1 to cause the least amount of needless merge issues.
 
-Fail to allocate memory for tgid_map, because it requires order-6 page.
-detail as:
-
-c3 sh: page allocation failure: order:6,
-   mode:0x140c0c0(GFP_KERNEL), nodemask=(null)
-c3 sh cpuset=/ mems_allowed=0
-c3 CPU: 3 PID: 5632 Comm: sh Tainted: G        W  O    4.14.133+ #10
-c3 Hardware name: Generic DT based system
-c3 Backtrace:
-c3 [<c010bdbc>] (dump_backtrace) from [<c010c08c>](show_stack+0x18/0x1c)
-c3 [<c010c074>] (show_stack) from [<c0993c54>](dump_stack+0x84/0xa4)
-c3 [<c0993bd0>] (dump_stack) from [<c0229858>](warn_alloc+0xc4/0x19c)
-c3 [<c0229798>] (warn_alloc) from [<c022a6e4>](__alloc_pages_nodemask+0xd18/0xf28)
-c3 [<c02299cc>] (__alloc_pages_nodemask) from [<c0248344>](kmalloc_order+0x20/0x38)
-c3 [<c0248324>] (kmalloc_order) from [<c0248380>](kmalloc_order_trace+0x24/0x108)
-c3 [<c024835c>] (kmalloc_order_trace) from [<c01e6078>](set_tracer_flag+0xb0/0x158)
-c3 [<c01e5fc8>] (set_tracer_flag) from [<c01e6404>](trace_options_core_write+0x7c/0xcc)
-c3 [<c01e6388>] (trace_options_core_write) from [<c0278b1c>](__vfs_write+0x40/0x14c)
-c3 [<c0278adc>] (__vfs_write) from [<c0278e10>](vfs_write+0xc4/0x198)
-c3 [<c0278d4c>] (vfs_write) from [<c027906c>](SyS_write+0x6c/0xd0)
-c3 [<c0279000>] (SyS_write) from [<c01079a0>](ret_fast_syscall+0x0/0x54)
-
-Switch to use kvcalloc to avoid unexpected allocation failures.
-
-Signed-off-by: Yuming Han <yuming.han@unisoc.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6a0ee9178365..2fa72419bbd7 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4609,7 +4609,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- 
- 	if (mask == TRACE_ITER_RECORD_TGID) {
- 		if (!tgid_map)
--			tgid_map = kcalloc(PID_MAX_DEFAULT + 1,
-+			tgid_map = kvcalloc(PID_MAX_DEFAULT + 1,
- 					   sizeof(*tgid_map),
- 					   GFP_KERNEL);
- 		if (!tgid_map) {
 -- 
-2.20.1
-
+Jens Axboe
 
