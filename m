@@ -4,192 +4,218 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5137DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C24921872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0B120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393190AbfJXKH0 (ORCPT
+        id S2393210AbfJXKH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:07:26 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:46852 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfJXKH0 (ORCPT
+        Thu, 24 Oct 2019 06:07:59 -0400
+Received: from fudo.makrotopia.org ([185.142.180.71]:45402 "EHLO
+        fudo.makrotopia.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389290AbfJXKH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:07:26 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 32F3F25B768;
-        Thu, 24 Oct 2019 21:07:23 +1100 (AEDT)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id 8C36236BD; Thu, 24 Oct 2019 12:07:20 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 12:07:20 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Lianbo Jiang <lijiang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, jgross@suse.com,
-        Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org,
-        kexec@lists.infradead.org, dhowells@redhat.com, mingo@redhat.com,
-        bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com,
-        tglx@linutronix.de, dyoung@redhat.com, vgoyal@redhat.com,
-        d.hatayama@fujitsu.com
-Subject: Re: [PATCH 1/2 v5] x86/kdump: always reserve the low 1MiB when the
- crashkernel option is specified
-Message-ID: <20191024100719.GC11441@verge.net.au>
-References: <20191023141912.29110-1-lijiang@redhat.com>
- <20191023141912.29110-2-lijiang@redhat.com>
+        Thu, 24 Oct 2019 06:07:59 -0400
+X-Greylist: delayed 1422 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 06:07:57 EDT
+Received: from local
+        by fudo.makrotopia.org with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+         (Exim 4.92.2)
+        (envelope-from <daniel@makrotopia.org>)
+        id 1iNZey-0004X9-F4; Thu, 24 Oct 2019 11:44:04 +0200
+Date:   Thu, 24 Oct 2019 11:43:39 +0200
+From:   Daniel Golle <daniel@makrotopia.org>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Roy Luo <royluo@google.com>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>, Felix Fietkau <nbd@nbd.name>
+Subject: Re: mt76x2e hardware restart
+Message-ID: <20191024094339.GB1252@makrotopia.org>
+References: <deaafa7a3e9ea2111ebb5106430849c6@natalenko.name>
+ <c6d621759c190f7810d898765115f3b4@natalenko.name>
+ <9d581001e2e6cece418329842b2b0959@natalenko.name>
+ <20191012165028.GA8739@lore-desk-wlan.lan>
+ <f7695bc79d40bbc96744a639b1243027@natalenko.name>
+ <96f43a2103a9f2be152c53f867f5805c@natalenko.name>
+ <20191016163842.GA18799@localhost.localdomain>
+ <20191023085039.GB2461@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023141912.29110-2-lijiang@redhat.com>
-Organisation: Horms Solutions BV
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191023085039.GB2461@localhost.localdomain>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linbo,
+Hi Lorenzo,
 
-thanks for your patch.
+On Wed, Oct 23, 2019 at 10:50:39AM +0200, Lorenzo Bianconi wrote:
+> ...
+> I think I spotted the SG issue on mt76x2e. Could you please:
+> - keep pcie_aspm patch I sent
+> - remove the debug patch where I disabled TX Scatter-Gather on mt76x2e
+> - apply the following patch
 
-On Wed, Oct 23, 2019 at 10:19:11PM +0800, Lianbo Jiang wrote:
-> Kdump kernel will reuse the first 640k region because the real mode
-> trampoline has to work in this area. When the vmcore is dumped, the
-> old memory in this area may be accessed, therefore, kernel has to
-> copy the contents of the first 640k area to a backup region so that
-> kdump kernel can read the old memory from the backup area of the
-> first 640k area, which is done in the purgatory().
+With those two patches I'm for the first time able to use the U7612
+mPCIe module on my x86 Laptop in a more or less stable way.
+In now 10 hours uptime I had one serious hickup of
+[35790.926455] mt76x2e 0000:02:00.0: MCU message 31 (seq 11) timed out
+[35790.991227] mt76x2e 0000:02:00.0: Firmware Version: 0.0.00
+[35790.991231] mt76x2e 0000:02:00.0: Build: 1
+[35790.991233] mt76x2e 0000:02:00.0: Build Time: 201507311614____
+[35791.016460] mt76x2e 0000:02:00.0: Firmware running!
+[35791.017153] ieee80211 phy0: Hardware restart was requested
+...(repeating about 10 times, every 20 seconds)
+and one less serious, all related to MCU message 31.
+However, unlike before, the hardware actually recovers and works
+quite well most of the time.
+
+Thank you!!!
+
+Cheers
+
+Daniel
+
 > 
-> But, the current handling of copying the first 640k area runs into
-> problems when SME is enabled, kernel does not properly copy these
-> old memory to the backup area in the purgatory(), thereby, kdump
-> kernel reads out the encrypted contents, because the kdump kernel
-> must access the first kernel's memory with the encryption bit set
-> when SME is enabled in the first kernel. Please refer to this link:
+> Regards,
+> Lorenzo
 > 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
+> mt76: dma: fix buffer unmap with non-linear skbs
 > 
-> Finally, it causes the following errors, and the crash tool gets
-> invalid pointers when parsing the vmcore.
+> mt76 dma layer is supposed to unmap skb data buffers while keep txwi mapped
+> on hw dma ring. At the moment mt76 wrongly unmap txwi or does not unmap data
+> fragments in even positions for non-linear skbs. This issue may result in hw
+> hangs with A-MSUD if the system relies on IOMMU or SWIOTLB.
+> Fix this behaviour marking first and last queue entries introducing
+> MT_QUEUE_ENTRY_FIRST and MT_QUEUE_ENTRY_LAST flags and properly unmap
+> data fragments
 > 
-> crash> kmem -s|grep -i invalid
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> crash>
-> 
-> To avoid the above errors, when the crashkernel option is specified,
-> lets reserve the remaining low 1MiB memory(after reserving real mode
-> memory) so that the allocated memory does not fall into the low 1MiB
-> area, which makes us not to copy the first 640k content to a backup
-> region in purgatory(). This indicates that it does not need to be
-> included in crash dumps or used for anything except the processor
-> trampolines that must live in the low 1MiB.
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> Fixes: 17f1de56df05 ("mt76: add common code shared between multiple chipsets")
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > ---
-> BTW:I also tried to fix the above problem in purgatory(), but there
-> are too many restricts in purgatory() context, for example: i can't
-> allocate new memory to create the identity mapping page table for
-> SME situation.
+>  drivers/net/wireless/mediatek/mt76/dma.c  | 33 +++++++++++++----------
+>  drivers/net/wireless/mediatek/mt76/mt76.h |  3 +++
+>  2 files changed, 22 insertions(+), 14 deletions(-)
 > 
-> Currently, there are two places where the first 640k area is needed,
-> the first one is in the find_trampoline_placement(), another one is
-> in the reserve_real_mode(), and their content doesn't matter.
-> 
-> In addition, also need to clean all the code related to the backup
-> region later.
-> 
->  arch/x86/realmode/init.c |  2 ++
->  include/linux/kexec.h    |  2 ++
->  kernel/kexec_core.c      | 13 +++++++++++++
->  3 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-> index 7dce39c8c034..064cc79a015d 100644
-> --- a/arch/x86/realmode/init.c
-> +++ b/arch/x86/realmode/init.c
-> @@ -3,6 +3,7 @@
->  #include <linux/slab.h>
->  #include <linux/memblock.h>
->  #include <linux/mem_encrypt.h>
-> +#include <linux/kexec.h>
+> diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+> index 4da7cffbab29..a3026a0ca8c5 100644
+> --- a/drivers/net/wireless/mediatek/mt76/dma.c
+> +++ b/drivers/net/wireless/mediatek/mt76/dma.c
+> @@ -54,7 +54,7 @@ mt76_dma_add_buf(struct mt76_dev *dev, struct mt76_queue *q,
+>  	int i, idx = -1;
 >  
->  #include <asm/set_memory.h>
->  #include <asm/pgtable.h>
-> @@ -34,6 +35,7 @@ void __init reserve_real_mode(void)
+>  	if (txwi)
+> -		q->entry[q->head].txwi = DMA_DUMMY_DATA;
+> +		q->entry[q->head].flags = MT_QUEUE_ENTRY_FIRST;
 >  
->  	memblock_reserve(mem, size);
->  	set_real_mode_mem(mem);
-> +	kexec_reserve_low_1MiB();
->  }
+>  	for (i = 0; i < nbufs; i += 2, buf += 2) {
+>  		u32 buf0 = buf[0].addr, buf1 = 0;
+> @@ -83,6 +83,7 @@ mt76_dma_add_buf(struct mt76_dev *dev, struct mt76_queue *q,
+>  		q->queued++;
+>  	}
 >  
->  static void __init setup_real_mode(void)
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 1776eb2e43a4..30acf1d738bc 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -306,6 +306,7 @@ extern void __crash_kexec(struct pt_regs *);
->  extern void crash_kexec(struct pt_regs *);
->  int kexec_should_crash(struct task_struct *);
->  int kexec_crash_loaded(void);
-> +void __init kexec_reserve_low_1MiB(void);
->  void crash_save_cpu(struct pt_regs *regs, int cpu);
->  extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
+> +	q->entry[idx].flags |= MT_QUEUE_ENTRY_LAST;
+>  	q->entry[idx].txwi = txwi;
+>  	q->entry[idx].skb = skb;
 >  
-> @@ -397,6 +398,7 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
->  static inline void crash_kexec(struct pt_regs *regs) { }
->  static inline int kexec_should_crash(struct task_struct *p) { return 0; }
->  static inline int kexec_crash_loaded(void) { return 0; }
-> +static inline void __init kexec_reserve_low_1MiB(void) { }
->  #define kexec_in_progress false
->  #endif /* CONFIG_KEXEC_CORE */
+> @@ -93,27 +94,31 @@ static void
+>  mt76_dma_tx_cleanup_idx(struct mt76_dev *dev, struct mt76_queue *q, int idx,
+>  			struct mt76_queue_entry *prev_e)
+>  {
+> +	__le32 addr, __ctrl = READ_ONCE(q->desc[idx].ctrl);
+>  	struct mt76_queue_entry *e = &q->entry[idx];
+> -	__le32 __ctrl = READ_ONCE(q->desc[idx].ctrl);
+> -	u32 ctrl = le32_to_cpu(__ctrl);
+> -
+> -	if (!e->txwi || !e->skb) {
+> -		__le32 addr = READ_ONCE(q->desc[idx].buf0);
+> -		u32 len = FIELD_GET(MT_DMA_CTL_SD_LEN0, ctrl);
+> +	u32 len, ctrl = le32_to_cpu(__ctrl);
 >  
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 15d70a90b50d..5bd89f1fee42 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -37,6 +37,7 @@
->  #include <linux/compiler.h>
->  #include <linux/hugetlb.h>
->  #include <linux/frame.h>
-> +#include <linux/memblock.h>
+> +	if (e->flags & MT_QUEUE_ENTRY_FIRST) {
+> +		addr = READ_ONCE(q->desc[idx].buf1);
+> +		len = FIELD_GET(MT_DMA_CTL_SD_LEN1, ctrl);
+>  		dma_unmap_single(dev->dev, le32_to_cpu(addr), len,
+>  				 DMA_TO_DEVICE);
+> -	}
+> -
+> -	if (!(ctrl & MT_DMA_CTL_LAST_SEC0)) {
+> -		__le32 addr = READ_ONCE(q->desc[idx].buf1);
+> -		u32 len = FIELD_GET(MT_DMA_CTL_SD_LEN1, ctrl);
+> -
+> +	} else {
+> +		addr = READ_ONCE(q->desc[idx].buf0);
+> +		len = FIELD_GET(MT_DMA_CTL_SD_LEN0, ctrl);
+>  		dma_unmap_single(dev->dev, le32_to_cpu(addr), len,
+>  				 DMA_TO_DEVICE);
+> +		if (e->txwi &&
+> +		    ((ctrl & MT_DMA_CTL_LAST_SEC1) ||
+> +		     !(e->flags & MT_QUEUE_ENTRY_LAST))) {
+> +			addr = READ_ONCE(q->desc[idx].buf1);
+> +			len = FIELD_GET(MT_DMA_CTL_SD_LEN1, ctrl);
+> +			dma_unmap_single(dev->dev, le32_to_cpu(addr), len,
+> +					 DMA_TO_DEVICE);
+> +		}
+>  	}
 >  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -70,6 +71,18 @@ struct resource crashk_low_res = {
->  	.desc  = IORES_DESC_CRASH_KERNEL
+> -	if (e->txwi == DMA_DUMMY_DATA)
+> +	if (!(e->flags & MT_QUEUE_ENTRY_LAST))
+>  		e->txwi = NULL;
+>  
+>  	if (e->skb == DMA_DUMMY_DATA)
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
+> index e95a5893f93b..b0ac82b31789 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
+> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+> @@ -83,6 +83,8 @@ struct mt76_tx_info {
+>  	u32 info;
 >  };
 >  
-> +/*
-> + * When the crashkernel option is specified, only use the low
-> + * 1MiB for the real mode trampoline.
-> + */
-> +void __init kexec_reserve_low_1MiB(void)
-> +{
-> +	if (strstr(boot_command_line, "crashkernel=")) {
-
-Could you comment on the issue of using strstr which
-was raised by Hatayama-san in response to an earlier revision
-of this patch?
-
-Thanks in advance!
-
-> +		memblock_reserve(0, 1<<20);
-> +		pr_info("Reserving the low 1MiB of memory for crashkernel\n");
-> +	}
-> +}
-> +
->  int kexec_should_crash(struct task_struct *p)
->  {
->  	/*
+> +#define MT_QUEUE_ENTRY_FIRST	BIT(0)
+> +#define MT_QUEUE_ENTRY_LAST	BIT(1)
+>  struct mt76_queue_entry {
+>  	union {
+>  		void *buf;
+> @@ -95,6 +97,7 @@ struct mt76_queue_entry {
+>  	enum mt76_txq_id qid;
+>  	bool schedule;
+>  	bool done;
+> +	u32 flags;
+>  };
+>  
+>  struct mt76_queue_regs {
 > -- 
-> 2.17.1
+> 2.21.0
+> 
+> > 
+> > Regards,
+> > Lorenzo
+> > 
+> > > 
+> > > -- 
+> > >   Oleksandr Natalenko (post-factum)
 > 
 > 
+
+
+
 > _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
