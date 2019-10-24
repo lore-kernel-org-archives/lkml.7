@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385AACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC526CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAF921872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD86021872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571903323;
-	bh=nEkaVq4FO8CG23Md1bkPeG2m5r7YUzla9UALRzU1j70=;
+	s=default; t=1571903327;
+	bh=yxBzuY5vQ1qSryK6IQg7fvOnrKcvDa+SSEeBRqhkPxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fooSbYFQin6fWMssY0byXPpofOdXE8uk5FY/37BZHKVmwgUlcvtqbPi0z3Lgesbkp
-	 nxDrarhPr6Khsq4YME+DlwaSuGc6u/zuP73dllvj5VnpVqgogwwtSjVmKo48XxF30S
-	 DpCXd0oyFzqorJd4ol/kGFN8rfD3Ho/dnx32hvpM=
+	b=MY7RLCcTTOq0CUDP43mYHc2V9RW4xDRmuVygeDaue91Us1n8lBYvdHkKJeB94mmjX
+	 ZcoAx5/KXkD8p6cOvoHNVfTf4vDwC5ifjWV7mLS3pyF8rbRLOzZlw6Htk/gysmqVm8
+	 d0Lby4W2/J9zbYOERkQJK3MYgx3V6wZtfxtNnHNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408722AbfJXHsm (ORCPT
+        id S2408733AbfJXHsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:48:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54272 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 03:48:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404701AbfJXHsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:48:41 -0400
+        id S2404701AbfJXHsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 03:48:45 -0400
 Received: from localhost.localdomain (unknown [122.181.210.10])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA9162166E;
-        Thu, 24 Oct 2019 07:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7662E2084C;
+        Thu, 24 Oct 2019 07:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571903320;
-        bh=nEkaVq4FO8CG23Md1bkPeG2m5r7YUzla9UALRzU1j70=;
+        s=default; t=1571903324;
+        bh=yxBzuY5vQ1qSryK6IQg7fvOnrKcvDa+SSEeBRqhkPxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hO3qkVyVc663w59H6ohgAhIuoxUz6O5Mu7UFR6m9WQZMUjhG5Ng35FepQspy8909y
-         dK8FENawcgQ4xhiGSo5RfkZKSSkwFg67+DRm2TQktjC46Io606SHpXJY0XjGbNVXMZ
-         PnBGd+zGd8+Wpt3nqtQ4VBPye/il8uu8mj2/x4yA=
+        b=pF2kgEu9XntoVcWKyu8gAlTtFColK9gK1fB7ANdbn7GNLfZjh0V85EZwEDBY12puM
+         /SYx3sBcdxLVtsrrfxEvzg03JeUisxhA783KqrJv7FAyBeCSxzHJWfh4DhuXp+0qib
+         NqPkybYe+qwnHVFMrKDiPGDCBR04nBqjyh8gKhIA=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -47,17 +47,11 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Can Guo <cang@codeaurora.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/3] dt-bindings: ufs: Add sm8150 compatible string
-Date:   Thu, 24 Oct 2019 13:18:00 +0530
-Message-Id: <20191024074802.26526-2-vkoul@kernel.org>
+Subject: [PATCH v3 2/3] dt-bindings: phy-qcom-qmp: Add sm8150 UFS phy compatible string
+Date:   Thu, 24 Oct 2019 13:18:01 +0530
+Message-Id: <20191024074802.26526-3-vkoul@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191024074802.26526-1-vkoul@kernel.org>
 References: <20191024074802.26526-1-vkoul@kernel.org>
@@ -68,29 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document "qcom,sm8150-ufshc" compatible string for UFS HC found on
-SM8150.
+Document "qcom,sdm845-qmp-ufs-phy" compatible string for QMP UFS PHY
+found on SM8150.
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index d78ef63935f9..415ccdd7442d 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -13,6 +13,7 @@ Required properties:
- 			    "qcom,msm8996-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
- 			    "qcom,msm8998-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
- 			    "qcom,sdm845-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
-+			    "qcom,sm8150-ufshc", "qcom,ufshc", "jedec,ufs-2.0"
- - interrupts        : <interrupt mapping for UFS host controller IRQ>
- - reg               : <registers mapping>
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+index 085fbd676cfc..eac9ad3cbbc8 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+@@ -14,7 +14,8 @@ Required properties:
+ 	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
+ 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+ 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+-	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
++	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845,
++	       "qcom,sm8150-qmp-ufs-phy" for UFS QMP phy on sm8150.
  
+ - reg:
+   - index 0: address and length of register set for PHY's common
+@@ -57,6 +58,8 @@ Required properties:
+ 			"aux", "cfg_ahb", "ref", "com_aux".
+ 		For "qcom,sdm845-qmp-ufs-phy" must contain:
+ 			"ref", "ref_aux".
++		For "qcom,sm8150-qmp-ufs-phy" must contain:
++			"ref", "ref_aux".
+ 
+  - resets: a list of phandles and reset controller specifier pairs,
+ 	   one for each entry in reset-names.
+@@ -83,6 +86,8 @@ Required properties:
+ 			"phy", "common".
+ 		For "qcom,sdm845-qmp-ufs-phy": must contain:
+ 			"ufsphy".
++		For "qcom,sm8150-qmp-ufs-phy": must contain:
++			"ufsphy".
+ 
+  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
+  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
 -- 
 2.20.1
 
