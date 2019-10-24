@@ -2,82 +2,108 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FA3CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82D7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9B620659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B2A20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393992AbfJXQpe (ORCPT
+        id S2439914AbfJXQqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:45:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:56604 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390181AbfJXQpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:45:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1589F328;
-        Thu, 24 Oct 2019 09:45:18 -0700 (PDT)
-Received: from [10.1.194.37] (unknown [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 637533F71F;
-        Thu, 24 Oct 2019 09:45:16 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] sched/topology: Don't try to build empty sched
- domains
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        morten.rasmussen@arm.com, qperret@google.com,
-        stable@vger.kernel.org
-References: <20191023153745.19515-1-valentin.schneider@arm.com>
- <20191023153745.19515-2-valentin.schneider@arm.com>
- <27d8a51d-a899-67f4-8b74-224281f25cef@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <7e20f309-3ca0-b916-b703-052ab8284012@arm.com>
-Date:   Thu, 24 Oct 2019 17:45:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <27d8a51d-a899-67f4-8b74-224281f25cef@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 24 Oct 2019 12:46:22 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:47242 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2439902AbfJXQqW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:46:22 -0400
+Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9OGkKMr023696
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:46:20 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9OGkFB8017741
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:46:20 -0400
+Received: by mail-qk1-f198.google.com with SMTP id h18so2881238qkj.22
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:46:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=EsIPMrPy/NQRL+kAPu6vRsFGMxp34/kqcwgNBhAoed4=;
+        b=PhYnVmE33dNKbtXpJDHTFmdwXMU/8hJgkY61mLDjbU5OF4AHN7nBbyGGx8yfU1H5fX
+         0mrf0ru+X+ADbcTwLyrxHDfuNevMWvRkEjqbuvq0okfm767sMlSigoqvqgsvrTSyR9w1
+         bOTA+ylcF2i2stVkhcPVNiuYCe2M/1A7AOWjlkV2nVnxLvSyul55SPxehDvy28DqEqZI
+         SithGdn/YwBAXKBltJgOMW2bDCxiVbzPckbbOejVK1rz1vzUU0zsq+cvLf3TagR6z9rf
+         mCfIFwZkBuuJ+Ft29VaMaQnTEBAAWWpPLCPCC+/XD2i0Vr+RdvWx6J4EPsEbKNn0KCWe
+         8Riw==
+X-Gm-Message-State: APjAAAU1cEzJ23mJKd7jK+lUU0r5/elNe2lMPVABCtEIEWORcssske/O
+        ONDTJx3UXKABwZYtteIiwQITUsjUrbeAkqU8VPVn3rJj4IODFUAz/zqFiV1+g4ILasw/Y3IepRo
+        e8vRFBLYqj0KwCQqK1TX/E6Kv8GMTe5Q18YM=
+X-Received: by 2002:aed:241c:: with SMTP id r28mr2210120qtc.148.1571935575568;
+        Thu, 24 Oct 2019 09:46:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxwOx2g9Rq1d1Pyls0CB0utL2xABAepZupau/TdbqZ6xqsFeKRv/w6rIr8Gn2U/r+gM8+T5hg==
+X-Received: by 2002:aed:241c:: with SMTP id r28mr2210083qtc.148.1571935575248;
+        Thu, 24 Oct 2019 09:46:15 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id c21sm11331089qkg.4.2019.10.24.09.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 09:46:13 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/15] staging: exfat: Clean up return codes - FFS_SUCCESS
+In-Reply-To: <5c7a7fe972469296d367dba504f0b6c8063a7d55.camel@perches.com>
+References: <20191024155327.1095907-1-Valdis.Kletnieks@vt.edu> <20191024155327.1095907-16-Valdis.Kletnieks@vt.edu>
+ <5c7a7fe972469296d367dba504f0b6c8063a7d55.camel@perches.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1571935572_59326P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 24 Oct 2019 12:46:12 -0400
+Message-ID: <1116783.1571935572@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/10/2019 17:19, Dietmar Eggemann wrote:
-> Sorry for being picky but IMHO you should also mention that it fixes
-> 
-> f9a25f776d78 ("cpusets: Rebuild root domain deadline accounting
-> information")
-> 
+--==_Exmh_1571935572_59326P
+Content-Type: text/plain; charset=us-ascii
 
-I can append the following to the changelog, although I'd like some
-feedback from the cgroup folks before doing a respin:
+On Thu, 24 Oct 2019 09:29:00 -0700, Joe Perches said:
 
-"""
-Note that commit
+> > -	if (sector_read(sb, sec, &bp->buf_bh, 1) != FFS_SUCCESS) {
+> > +	if (sector_read(sb, sec, &bp->buf_bh, 1) != 0) {
+>
+> Probably nicer to just drop the != 0
 
-  f9a25f776d78 ("cpusets: Rebuild root domain deadline accounting information")
+Again, that's on the to-do list.
 
-introduced a similar issue. Since doms_new is assigned to doms_cur without
-any filtering, we can end up with an empty cpumask in the doms_cur array.
+--==_Exmh_1571935572_59326P
+Content-Type: application/pgp-signature
 
-The next time we go through a rebuild, this will break on:
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
-  rd = cpu_rq(cpumask_any(doms_cur[i]))->rd;
+iQIVAwUBXbHVUgdmEQWDXROgAQLooBAAjVK/FBta4kL6kv8k49RtGTrWLd5FD8zr
+OtoLLQLewcYlbmpWjneJPKZpTjg+nsOF0cHELzEXKkIzCmg5YAnlG2w8OOlEW6AO
+jTdhUTY9rrFOKuQeZmzalltqYjVHCMOie+oD8xGNXT1bSj5DTKarJfHwFGD3yPss
+nJBhADhUm1L/n1aviplbSsm7BFjrFbqWjtMLKW3+qOLeA+OpEQMAf877I+3CYNPS
+k7evBj/qN9sVgvPM0w86nff0mo5s+fYNak6V22KrnX39z+7zb+DA5NjR3Bd1u930
+gr/ZdVPOuepeoZnNvDIR/bj6NMqsPhkP/YE8QYr1jHAE7ZPc3ADaDVP0mPV6ekIC
+DymnE7CGhz0fBAQwaOnEeylkQilfx9XPGYedPPA9/QjbA3R2n3Vgtesa74QP505a
+UuEtf0YeQde+46a0t7M1KIix1MGnAMYrB7zlqwyaCMeEQQZ0laHPRUkLQEMxd32T
+WT0m0n6/pL6aXAuvPkoAzsQB1bFPsrf/Bz6Gx58ZRlk0303MAD0Lr8oVGpaEV5rT
+AMdJ8TM8CdvvkASuC6fzHHpsf68YfXaIq0uvQtu/bvYi7TMtlYuOVowuCYWvZEtf
+i01HkSLHyBUbGj+hzgoDjXafMFt9q7nKtrgsYT6tFForrf3FGIKHWVetwGbaKJY0
+i0VtHsFXSMA=
+=hBtD
+-----END PGP SIGNATURE-----
 
-If there wasn't enough already, this is yet another argument for *not*
-handing over empty cpumasks to the sched domain rebuild.
-"""
-
-I tagged the commit that introduces the static key with Fixes: because it
-was introduced earlier - I don't think it would make sense to have two
-"Fixes:" lines? In any case, it'll now be listed in the changelog.
-
+--==_Exmh_1571935572_59326P--
