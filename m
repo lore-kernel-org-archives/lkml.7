@@ -2,124 +2,148 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA886CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2739CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D74021872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571933924;
-	bh=hqVw2CfkuDpCReYQpVPUdZMTX306EhtBcgoPSJOsN8E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e/lxyFk/mw3iRtP7qUvo2YWhO2u8bEqs2yozZq9m+CfAKI8Vw3b1Hn3eOTgUQTRnt
-	 AafirLfPtDnrOt/SUDyN047sulvfmurO2W3bQYekYeLG3dGObO+BEZHp3kXQ30qSwW
-	 S6xv1q+3DEuwm0fmHKDJo/IW2ZY5Scb2Y3rREsxE=
+	by mail.kernel.org (Postfix) with ESMTP id 4692F21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439782AbfJXQSn (ORCPT
+        id S2439794AbfJXQUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52920 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 12:20:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:55716 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439771AbfJXQSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:18:43 -0400
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8147E21D71
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 16:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571933921;
-        bh=hqVw2CfkuDpCReYQpVPUdZMTX306EhtBcgoPSJOsN8E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YuONv0zjyooTw5EzBFHZ+d1WPpe7ePP7JFGd9g8Xvcdxp5jB91QtALUIM9yCm1fsB
-         WznBi7LPAE6yRdV7SPAgRFMo+++htnKc1X4n4b75Z4+jPC0G1cyubBUjwhPm9y8NM5
-         ScmiCywZTQeSJ94V80AJefCAUvYOXFhKspW9aDII=
-Received: by mail-wr1-f51.google.com with SMTP id z11so3391500wro.11
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:18:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAWwXk6KSPNREWw6twypQg5A3cHhgJCKRh+RH6YRk472+091R2Ja
-        NvO8eusam/eOsBcdln5XOfO0bthwyIgusTxlC6p06Q==
-X-Google-Smtp-Source: APXvYqwZ4YJrjYk6QF+5lCb0xhRWY6z2YGe3C91dvqETvmz9oQm459bN5hIePwJfq3A8uLCu5XSi1H3ybkHIPu8sa4U=
-X-Received: by 2002:a5d:4d0f:: with SMTP id z15mr4403914wrt.195.1571933919909;
- Thu, 24 Oct 2019 09:18:39 -0700 (PDT)
+        id S2436636AbfJXQUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:20:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D7F7328;
+        Thu, 24 Oct 2019 09:19:49 -0700 (PDT)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E9AC3F71F;
+        Thu, 24 Oct 2019 09:19:47 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] sched/topology: Don't try to build empty sched
+ domains
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        morten.rasmussen@arm.com, qperret@google.com,
+        stable@vger.kernel.org
+References: <20191023153745.19515-1-valentin.schneider@arm.com>
+ <20191023153745.19515-2-valentin.schneider@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <27d8a51d-a899-67f4-8b74-224281f25cef@arm.com>
+Date:   Thu, 24 Oct 2019 18:19:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191023122705.198339581@linutronix.de> <20191023123118.296135499@linutronix.de>
- <20191023220618.qsmog2k5oaagj27v@treble> <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 24 Oct 2019 09:18:26 -0700
-X-Gmail-Original-Message-ID: <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com>
-Message-ID: <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com>
-Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt disable
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191023153745.19515-2-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 4:52 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
->
-> > On Wed, Oct 23, 2019 at 02:27:12PM +0200, Thomas Gleixner wrote:
-> > > Now that the trap handlers return with interrupts disabled, the
-> > > unconditional disabling of interrupts in the low level entry code can be
-> > > removed along with the trace calls.
-> > >
-> > > Add debug checks where appropriate.
-> >
-> > This seems a little scary.  Does anybody other than Andy actually run
-> > with CONFIG_DEBUG_ENTRY?
->
-> I do.
->
-> > What happens if somebody accidentally leaves irqs enabled?  How do we
-> > know you found all the leaks?
->
-> For the DO_ERROR() ones that's trivial:
->
->  #define DO_ERROR(trapnr, signr, sicode, addr, str, name)                  \
->  dotraplinkage void do_##name(struct pt_regs *regs, long error_code)       \
->  {                                                                         \
->         do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
-> +       lockdep_assert_irqs_disabled();                                    \
->  }
->
->  DO_ERROR(X86_TRAP_DE,     SIGFPE,  FPE_INTDIV,   IP, "divide error",        divide_error)
->
-> Now for the rest we surely could do:
->
-> dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
-> {
->         __do_bounds(regs, error_code);
->         lockdep_assert_irqs_disabled();
-> }
->
-> and move the existing body into a static function so independent of any
-> (future) return path there the lockdep assert will be invoked.
->
+On 23/10/2019 17:37, Valentin Schneider wrote:
+> Turns out hotplugging CPUs that are in exclusive cpusets can lead to the
+> cpuset code feeding empty cpumasks to the sched domain rebuild machinery.
+> This leads to the following splat:
 
-If we do this, can we macro-ize it:
+[...]
 
-DEFINE_IDTENTRY_HANDLER(do_bounds)
-{
+> The faulty line in question is
+> 
+>   cap = arch_scale_cpu_capacity(cpumask_first(cpu_map));
+> 
+> and we're not checking the return value against nr_cpu_ids (we shouldn't
+> have to!), which leads to the above.
+> 
+> Prevent generate_sched_domains() from returning empty cpumasks, and add
+> some assertion in build_sched_domains() to scream bloody murder if it
+> happens again.
+> 
+> The above splat was obtained on my Juno r0 with:
+> 
+>   cgcreate -g cpuset:asym
+>   cgset -r cpuset.cpus=0-3 asym
+>   cgset -r cpuset.mems=0 asym
+>   cgset -r cpuset.cpu_exclusive=1 asym
+> 
+>   cgcreate -g cpuset:smp
+>   cgset -r cpuset.cpus=4-5 smp
+>   cgset -r cpuset.mems=0 smp
+>   cgset -r cpuset.cpu_exclusive=1 smp
+> 
+>   cgset -r cpuset.sched_load_balance=0 .
+> 
+>   echo 0 > /sys/devices/system/cpu/cpu4/online
+>   echo 0 > /sys/devices/system/cpu/cpu5/online
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 05484e098448 ("sched/topology: Add SD_ASYM_CPUCAPACITY flag detection")
+
+Sorry for being picky but IMHO you should also mention that it fixes
+
+f9a25f776d78 ("cpusets: Rebuild root domain deadline accounting
+information")
+
+Tested it on a hikey620 (8 CPus SMP) with v5.4-rc4 and a local fix for
+asym_cpu_capacity_level().
+2 exclusive cpusets [0-3] and [4-7], hp'ing out [0-3] and then hp'ing in
+[0] again.
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 5a174ae6ecf3..8f83e8e3ea9a 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -2203,8 +2203,19 @@ void partition_sched_domains_locked(int
+ndoms_new, cpumask_var_t doms_new[],
+        for (i = 0; i < ndoms_cur; i++) {
+                for (j = 0; j < n && !new_topology; j++) {
+                        if (cpumask_equal(doms_cur[i], doms_new[j]) &&
+-                           dattrs_equal(dattr_cur, i, dattr_new, j))
++                           dattrs_equal(dattr_cur, i, dattr_new, j)) {
++                               struct root_domain *rd;
++
++                        /*
++                         * This domain won't be destroyed and as such
++                         * its dl_bw->total_bw needs to be cleared.  It
++                         * will be recomputed in function
++                         * update_tasks_root_domain().
++                         */
++                         rd = cpu_rq(cpumask_any(doms_cur[i]))->rd;
+
+We have an issue here if doms_cur[i] is empty.
+
++                         dl_clear_root_domain(rd);
+                          goto match1;
+
+
+There is yet another similar issue behind the first one
+(asym_cpu_capacity_level()).
+
+342 static bool build_perf_domains(const struct cpumask *cpu_map)
+ 343 {
+ 344     int i, nr_pd = 0, nr_cs = 0, nr_cpus = cpumask_weight(cpu_map);
+ 345     struct perf_domain *pd = NULL, *tmp;
+ 346     int cpu = cpumask_first(cpu_map);          <--- !!!
+ 347     struct root_domain *rd = cpu_rq(cpu)->rd;  <--- !!!
+ 348     struct cpufreq_policy *policy;
+ 349     struct cpufreq_governor *gov;
  ...
-}
+ 406     tmp = rd->pd;                              <--- !!!
 
-If you do this, please don't worry about the weird ones that take cr2
-as a third argument.  Once your series lands, I will send a follow-up
-to get rid of it.  It's 2/3 written already.
+Caught when running hikey620 (8 CPus SMP) with v5.4-rc4 and a local fix
+for asym_cpu_capacity_level() with CONFIG_ENERGY_MODEL=y.
+
+There might be other places in build_sched_domains() suffering from the
+same issue. So I assume it's wise to not call it with an empty cpu_map
+and warn if done so.
+
+[...]
