@@ -2,92 +2,142 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D3BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5800CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B7220856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728F920856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="BvbxtNUu"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="H1gxlygd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436990AbfJXKzV (ORCPT
+        id S2393349AbfJXKzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:55:21 -0400
-Received: from vps.xff.cz ([195.181.215.36]:33904 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393303AbfJXKzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:55:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1571914508; bh=rvHO6Ql5Z6q6IXgZ/y4EmcuplbV8fwNwaT/xhLAZqRo=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=BvbxtNUueqhappaLJUWDxEGYA7JlQ6HWbKvyK5pHxteWG5EUqDliJiutekRC8TyCP
-         ftpu9j6GMibnxIPHz0SgTtKYZrPlEhgFfX9QxFE9gpJF2J1xgWVrEbTVZVqz3SQcjA
-         FNuLK63+b+fS2vtSzGlN0JNIjGcIFFP1EheeL9iQ=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 4/4] arm64: dts: allwinner: orange-pi-3: Enable USB 3.0 host support
-Date:   Thu, 24 Oct 2019 12:55:00 +0200
-Message-Id: <20191024105500.2252707-5-megous@megous.com>
-In-Reply-To: <20191024105500.2252707-1-megous@megous.com>
-References: <20191024105500.2252707-1-megous@megous.com>
+        Thu, 24 Oct 2019 06:55:50 -0400
+Received: from mail-eopbgr130081.outbound.protection.outlook.com ([40.107.13.81]:58381
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731524AbfJXKzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:55:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XrnphfQmJCVSGleiVlsgDlzuy3+CdcnPGbMrnfEqd+utTdpX09L1jO4lA6gh7wwu8c2Nq/t8f4PnsgMTQqLAIPDNyxA7zSGSVtPBjmkmd5/wlL4NO1w0zbYQ54/t8Urvnq9hjxTUTJoui83jOSF3flE0Okx+Ro7M6wk7HLvfism4ZWEoY069X+8gARY01/lnczlypNrduRz8OyS8F7bcdlPSvqnyL1v0UGKqhIAVcFmqK3onXzlLRmhUWRPx2F5vJxqD/tAbwM9Wt3FBEC/w7xFHMa+n3/kxmb82TOET49t6z8m/U7mVzMUpq161WseLSuxBVQFtnvNB63nYhxVICA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BK/VUYkuopB9YKqkb8pfdqdhlyaubzd5T82wEHuaK9M=;
+ b=l6Fja/UoYZATfy9Hk+AXNAEoQfKTyN6AKfvxwFBZcTl4Enl5WS6EugoIPHnfAry0TbtwgvYozaPw/5d6Pgg1iTxohRCZarG/pxKbjyJbjeTrnsvVwDHFDvH5lL9X+Zfc+8xDF9wLJLxlWILmRV2lJTVx/FlrAwGGb2cXj30HvXWP9ivqvnlPsmVsJNfRVmw/hyfkfJMN2B4ME9edtg4UIBaR1T1Q5x2Y/KC7f74PNKKCRCfnt+6KGqkYxk46Bqjv3G7BRmxaiI0FWBpVsZjmgW/DtwDxtT1LCAw6ygHMpODj8MEjjDjIrO4Iyrg4oROrk4b11+Fbz+P6u9I6CpfO1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BK/VUYkuopB9YKqkb8pfdqdhlyaubzd5T82wEHuaK9M=;
+ b=H1gxlygdmqxlWen7vygdk0rkMZ9hm5YxO+jl1yXSrO/1E6z1VNqeAlNj0ktrM9acUHpI7R/CxnyCvANurkd5+fsU098mIXs1+/9Wu7/jguc/MGJ6Vxpe2aFZJZkya/YVyPkjsqFcju9OvWstu54amWGPRI46JameXQ4be9J2q00=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
+ VI1PR04MB4190.eurprd04.prod.outlook.com (52.134.123.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.22; Thu, 24 Oct 2019 10:55:45 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb%7]) with mapi id 15.20.2347.030; Thu, 24 Oct 2019
+ 10:55:45 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     "hch@lst.de" <hch@lst.de>, "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH 0/3] dma-mapping: introduce new dma unmap and sync variants
+Thread-Topic: [PATCH 0/3] dma-mapping: introduce new dma unmap and sync
+ variants
+Thread-Index: AQHVilmWnBiSTB7mCkK1r1G1J/8hmw==
+Date:   Thu, 24 Oct 2019 10:55:45 +0000
+Message-ID: <20191024105534.16102-1-laurentiu.tudor@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0040.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:61::28) To VI1PR04MB5134.eurprd04.prod.outlook.com
+ (2603:10a6:803:5f::16)
+x-mailer: git-send-email 2.17.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 539f9a76-1983-4447-8656-08d75870b8a1
+x-ms-traffictypediagnostic: VI1PR04MB4190:|VI1PR04MB4190:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB4190ED777B074B4925AAF75FEC6A0@VI1PR04MB4190.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(189003)(199004)(71190400001)(71200400001)(2906002)(476003)(8676002)(2201001)(36756003)(316002)(1076003)(52116002)(966005)(81156014)(14454004)(2501003)(81166006)(478600001)(7736002)(2616005)(6436002)(6486002)(4326008)(66446008)(86362001)(54906003)(186003)(6636002)(66066001)(99286004)(6116002)(66946007)(66476007)(305945005)(66556008)(8936002)(50226002)(64756008)(14444005)(3846002)(256004)(5660300002)(25786009)(486006)(6512007)(6506007)(110136005)(6306002)(44832011)(102836004)(386003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4190;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6L+YwMmISylrxdh0fhJntkgZV4KWY8Yxt0coX9kp50MVXorTrZxRgAlrQ0UZ+1lmw43PgLDRbxh1dFqEBXD4z8o34cqPaQdBcfds9g6DxH6K+7c48k2ksTvz4gMb8NXbnq84Awxm3cmCywvPrx/dhw5RKYDHwBri4+TsOV5nyvlw49qbwCKFFX28xJya1eWgzrA9GJzdUX3qAxA70sOBdMR4gV81tq7ha9ZXnb+Ikf6viAMT6l7P2km47W3+//Ekqfs/8JTWjPAlkiRocMmnZDRE0/kHrImV7eZ4e7bydF/NoJTHyLSOkRkEiPvQNLLq16QJEQr+H+7YW8Q6EczaFdlQhHEY2Q9IMiJ6DunVxf2v+2XOt93nbqvGvSU/388YhdZ7VmUhIrhcvCtrCV8HtLI6f766YGpYsR262p5ZlXS5Du3lf5pNrol0ePMeg5N6vGEpC1s7Ndnx0M6WbskiGZmiEfX7VeMvaXjaRyMSnhk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F968FEAF617D9D47AB288047DA22708F@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 539f9a76-1983-4447-8656-08d75870b8a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 10:55:45.6767
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 51MN89D8M+hSPG9l5X+AjzMPyDm+FCS3yJLJt/x3oxShKSPBFdM/rPlte4EsVWUOJtF3T15nqUnC7o2xQVSkIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4190
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable Allwinner's USB 3.0 phy and the host controller. Orange Pi 3
-board has GL3510 USB 3.0 4-port hub connected to the SoC's USB 3.0
-port. All four ports are exposed via USB3-A connectors. VBUS is
-always on, since it's powered directly from DCIN (VCC-5V) and
-not switchable.
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This series introduces a few new dma unmap and sync api variants that,
+on top of what the originals do, return the physical address
+corresponding to the input dma address. In order to do that a new dma
+map op is added, .get_phys_addr that takes the input dma address and
+returns the physical address backing it up.
+The second patch adds an implementation for this new dma map op in the
+generic iommu dma glue code and wires it in.
+The third patch updates the dpaa2-eth driver to use the new apis.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index eb379cd402ac..259af5b0f1a7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -94,6 +94,10 @@
- 	status = "okay";
- };
- 
-+&dwc3 {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -285,3 +289,7 @@
- 	usb3_vbus-supply = <&reg_vcc5v>;
- 	status = "okay";
- };
-+
-+&usb3phy {
-+	status = "okay";
-+};
--- 
-2.23.0
+Context: https://lkml.org/lkml/2019/5/31/684
+
+Changes since RFC
+ * completely changed the approach: added unmap and sync variants that
+   return the phys addr instead of adding a new dma to phys conversion
+   function
+
+Laurentiu Tudor (3):
+  dma-mapping: introduce new dma unmap and sync api variants
+  iommu/dma: wire-up new dma map op .get_phys_addr
+  dpaa2_eth: use new unmap and sync dma api variants
+
+ drivers/iommu/dma-iommu.c                     | 12 ++++
+ .../net/ethernet/freescale/dpaa2/dpaa2-eth.c  | 43 ++++++---------
+ .../net/ethernet/freescale/dpaa2/dpaa2-eth.h  |  1 -
+ include/linux/dma-mapping.h                   | 55 +++++++++++++++++++
+ 4 files changed, 85 insertions(+), 26 deletions(-)
+
+--=20
+2.17.1
 
