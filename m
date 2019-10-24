@@ -5,71 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9173ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D4CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533EF20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CB52166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UsqP464/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AT5TqI2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393859AbfJXNtH (ORCPT
+        id S2502200AbfJXNtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:49:07 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46590 "EHLO
+        Thu, 24 Oct 2019 09:49:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45569 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393838AbfJXNtF (ORCPT
+        with ESMTP id S1732240AbfJXNtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:49:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e15so14270683pgu.13
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:49:04 -0700 (PDT)
+        Thu, 24 Oct 2019 09:49:16 -0400
+Received: by mail-pg1-f195.google.com with SMTP id r1so14280561pgj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rL9YpRyTuHk70/QoA0F/U1TMIayhb73ZwaCrSIsUGq0=;
-        b=UsqP464/4ZYI6OWZL4XHYBwL9bycMfpKQ5++JhEVtMKo0dG3NjwPEiX9R2NsXXWc4M
-         XowBM8KWPOdtXCdYW5OEa81lXuS4k5IZ1px4o4beFuuF1DvWAR84tc2Xu7RehMxglk/f
-         j57YzsaO+CJsTz5T6lDe0dFrntlZwRoWXvd9SuG5IF/DuV/cOQneovTMeo4ec3ZrMiw5
-         dSCC+cdQLxBc8gur4COhlz3olcHe/hzc845romh421NdfIM9+XJzPTaSSWY0LqHlEAUE
-         he48zkk61qfDW1TdbCe17vGExz/XLebfCtHWRXDHAMv+YIOqDbUc2tHVyprOiP7DFlMv
-         1m6g==
+        bh=Epp7roKhlKHGAskpWn/rk4LYqkhZ0PXTtiAIXJ0osJY=;
+        b=AT5TqI2O5QHrSsCP4a4wU0Ji7l5qDJl48Z8kHrNOqDc0DauuFIBtuedNrQcKIjpm48
+         bnF0Aff+/ERiaQQNy/bwGN6OR2L+FTpmNEcuZs10VmkcUNRfNI2QKRB6dfcGi6XZD3uJ
+         XbOiWx6wb1L91v9Q6dQF0av0fmYFlMHS6uJFi/qeUbtFU89sTDlRGNb4mtpAU/U7Ie39
+         NUmI0wlAsVzik7BMAJPkt7n4CPZhK3AVKC0ytAgO39TrAXAEPeJTMyG5KOaq/GSE5Lj5
+         KR/FZDj3k6cOhpmSSAEO0NgTmViJueqRZWC5ADUP5iyzPrZ/pE5MmgAis8kt3k0XSit6
+         Axmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rL9YpRyTuHk70/QoA0F/U1TMIayhb73ZwaCrSIsUGq0=;
-        b=V/HwqcmAOBUPAQdw0Z21/8IWGXb8CNakkHSoXbZvVyQsjucNkuUfeYa8yxp2OZwN+I
-         q6A0tp3xtmC1x42clbkfHgC8Ixke1cTEk6uwIfSa9AzBw40OWySUuVueHwe5Ok+43Y5M
-         Egp7cYUjnyv0mPKUg3Ts3OcaT0MkH1H9tLsbrL9YJXKTWUh/+A8VRQaJ71dql8Oky8Uw
-         hmwK8W6Iu+U5xvBLKKJEdWbl/OCjwDt6t0HiSBve53+l2imKc7s5oAn8UFOPFNBBmU4u
-         7ggUtCC1zADdrN5O3h9veBnwf9OxSpr3EPkpbUXCWozBB5GV0MCOYq2B4oqu0OvbWyuF
-         wbqA==
-X-Gm-Message-State: APjAAAWYNS81qvkx3nhzJ6GooDLk1GXRW1rKP9e5nX57dKrC8c6OyYZp
-        2RkSUgXDLDeHqQJvJNk6poJHGs/mlrSer6fCu7/qlA==
-X-Google-Smtp-Source: APXvYqzl/ZdSWSJ6mWUTfcNmk43PKaG+hCJrqHP/SB40ZEQLszeBwep9Yue5+aKI7eAEuVPxWq1LOM2ITfL5h6qRWgc=
-X-Received: by 2002:a62:5503:: with SMTP id j3mr17488831pfb.93.1571924943211;
- Thu, 24 Oct 2019 06:49:03 -0700 (PDT)
+        bh=Epp7roKhlKHGAskpWn/rk4LYqkhZ0PXTtiAIXJ0osJY=;
+        b=igEZWDMlXzCKJ78XlR9JWbdpTRU//lfiy0dJrmgvghLvpnkRjrYGWtDSBYJ+O1sccC
+         UgSBk2hEsIxXGE1T+lVIYi4tMwnVSgNSxDhHKGz/yu9Ry/vMNsnLnjiDOYGQ8mFmV4/q
+         U1yhxDLs3O/XTsk90FQEJ/SRHlaPucQpYRuETD8sUYAX7HMvIr7I1dJEJAn+bszSDCS6
+         bwfLI7Eq/7Rs3Ule0AIOZ/W+VcdRTTFVweWvPA7Ppklr3XpG1WrB1fMluHxaSgL5/Rp9
+         g8bwcf+fmUqCfbwtL2ypLTbRUx3cAW8SI+Rpu8VSP8JRyZqxotEqRmNq1Ark6CxldTAf
+         I3Cg==
+X-Gm-Message-State: APjAAAXIgIAAjQvGRH92PdA0+j270XvbbiFP3byp/8dP/UunAw2YtbcR
+        v32LFB9iSCjw2mePAYP2rRZrPSBgNobfjYp78YYmrg==
+X-Google-Smtp-Source: APXvYqxLe8KHesj6gA4iauDrWWbEGuaZ8KBBM7JPPyWbx/nPNfQVymo5EvHkb8EfQazchk8Z+Fu45HXtWEluaqdUL4o=
+X-Received: by 2002:a63:541e:: with SMTP id i30mr16689978pgb.130.1571924955198;
+ Thu, 24 Oct 2019 06:49:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <00000000000001b0a40595a84593@google.com>
-In-Reply-To: <00000000000001b0a40595a84593@google.com>
+References: <00000000000006bb9c0595a84569@google.com>
+In-Reply-To: <00000000000006bb9c0595a84569@google.com>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 24 Oct 2019 15:48:52 +0200
-Message-ID: <CAAeHK+yM9+69_au5oZzqmRuFuh_SQr3nFCWGCcGueDrvsxyFgA@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in parse_term_proc_unit
-To:     syzbot <syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com>
-Cc:     Allison Randal <allison@lohutok.net>, alsa-devel@alsa-project.org,
+Date:   Thu, 24 Oct 2019 15:49:03 +0200
+Message-ID: <CAAeHK+yOsChMWj=fnd55mG05asOzFo1Q8dgpiMYpRYnv+_NPbg@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in build_audio_procunit
+To:     syzbot <syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com>
+Cc:     alsa-devel@alsa-project.org,
         =?UTF-8?B?5b2t6L6J?= <benquike@gmail.com>,
         Dan Carpenter <dan.carpenter@oracle.com>, g@b4.vu,
         LKML <linux-kernel@vger.kernel.org>,
         USB list <linux-usb@vger.kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
+        Richard Fontana <rfontana@redhat.com>,
         syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Takashi Iwai <tiwai@suse.com>, wang6495@umn.edu,
-        yuehaibing@huawei.com
+        Takashi Iwai <tiwai@suse.com>, wang6495@umn.edu
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -77,7 +77,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Oct 24, 2019 at 3:47 PM syzbot
-<syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com> wrote:
+<syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
@@ -85,28 +85,28 @@ On Thu, Oct 24, 2019 at 3:47 PM syzbot
 >
 > HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
 > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13a38628e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17cdccc4e00000
 > kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=97e24236f1e2918ad968
+> dashboard link: https://syzkaller.appspot.com/bug?extid=fd965c77e4711eb13b82
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12184764e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1432ae28e00000
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13fe752f600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17989fd8e00000
 >
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com
+> Reported-by: syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com
 >
 > usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
 > usb 1-1: Product: syz
 > usb 1-1: Manufacturer: syz
 > usb 1-1: SerialNumber: syz
 > ==================================================================
-> BUG: KASAN: use-after-free in uac_processing_unit_iProcessing
-> include/uapi/linux/usb/audio.h:429 [inline]
-> BUG: KASAN: use-after-free in parse_term_proc_unit+0x57a/0x5e0
-> sound/usb/mixer.c:896
-> Read of size 1 at addr ffff8881d5346d0e by task kworker/1:2/83
+> BUG: KASAN: use-after-free in uac_extension_unit_iExtension
+> include/uapi/linux/usb/audio.h:483 [inline]
+> BUG: KASAN: use-after-free in build_audio_procunit+0xeab/0x13f0
+> sound/usb/mixer.c:2434
+> Read of size 1 at addr ffff8881d4c0140d by task kworker/0:1/12
 >
-> CPU: 1 PID: 83 Comm: kworker/1:2 Not tainted 5.4.0-rc3+ #0
+> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.4.0-rc3+ #0
 > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
 > Google 01/01/2011
 > Workqueue: usb_hub_wq hub_event
@@ -116,11 +116,10 @@ On Thu, Oct 24, 2019 at 3:47 PM syzbot
 >   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
 >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
 >   kasan_report+0xe/0x20 mm/kasan/common.c:634
->   uac_processing_unit_iProcessing include/uapi/linux/usb/audio.h:429 [inline]
->   parse_term_proc_unit+0x57a/0x5e0 sound/usb/mixer.c:896
->   __check_input_term+0xc32/0x13f0 sound/usb/mixer.c:984
->   parse_audio_feature_unit sound/usb/mixer.c:1875 [inline]
->   parse_audio_unit+0x101d/0x36f0 sound/usb/mixer.c:2753
+>   uac_extension_unit_iExtension include/uapi/linux/usb/audio.h:483 [inline]
+>   build_audio_procunit+0xeab/0x13f0 sound/usb/mixer.c:2434
+>   parse_audio_extension_unit sound/usb/mixer.c:2483 [inline]
+>   parse_audio_unit+0x1812/0x36f0 sound/usb/mixer.c:2761
 >   snd_usb_mixer_controls+0x715/0xb90 sound/usb/mixer.c:3095
 >   snd_usb_create_mixer+0x2b5/0x1890 sound/usb/mixer.c:3445
 >   usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
@@ -152,7 +151,7 @@ On Thu, Oct 24, 2019 at 3:47 PM syzbot
 >   kthread+0x318/0x420 kernel/kthread.c:255
 >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 >
-> Allocated by task 83:
+> Allocated by task 12:
 >   save_stack+0x1b/0x80 mm/kasan/common.c:69
 >   set_track mm/kasan/common.c:77 [inline]
 >   __kasan_kmalloc mm/kasan/common.c:510 [inline]
@@ -174,7 +173,7 @@ On Thu, Oct 24, 2019 at 3:47 PM syzbot
 >   kthread+0x318/0x420 kernel/kthread.c:255
 >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 >
-> Freed by task 83:
+> Freed by task 12:
 >   save_stack+0x1b/0x80 mm/kasan/common.c:69
 >   set_track mm/kasan/common.c:77 [inline]
 >   kasan_set_free_info mm/kasan/common.c:332 [inline]
@@ -203,25 +202,25 @@ On Thu, Oct 24, 2019 at 3:47 PM syzbot
 >   kthread+0x318/0x420 kernel/kthread.c:255
 >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 >
-> The buggy address belongs to the object at ffff8881d5346d00
+> The buggy address belongs to the object at ffff8881d4c01400
 >   which belongs to the cache kmalloc-192 of size 192
-> The buggy address is located 14 bytes inside of
->   192-byte region [ffff8881d5346d00, ffff8881d5346dc0)
+> The buggy address is located 13 bytes inside of
+>   192-byte region [ffff8881d4c01400, ffff8881d4c014c0)
 > The buggy address belongs to the page:
-> page:ffffea000754d180 refcount:1 mapcount:0 mapping:ffff8881da002a00
+> page:ffffea0007530040 refcount:1 mapcount:0 mapping:ffff8881da002a00
 > index:0x0
 > flags: 0x200000000000200(slab)
-> raw: 0200000000000200 ffffea0007548ac0 0000000900000009 ffff8881da002a00
+> raw: 0200000000000200 ffffea000754fec0 0000000200000002 ffff8881da002a00
 > raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
 > page dumped because: kasan: bad access detected
 >
 > Memory state around the buggy address:
->   ffff8881d5346c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->   ffff8881d5346c80: 00 00 00 00 05 fc fc fc fc fc fc fc fc fc fc fc
-> > ffff8881d5346d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d4c01300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>   ffff8881d4c01380: 00 00 00 07 fc fc fc fc fc fc fc fc fc fc fc fc
+> > ffff8881d4c01400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
 >                        ^
->   ffff8881d5346d80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->   ffff8881d5346e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d4c01480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>   ffff8881d4c01500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
 > ==================================================================
 >
 >
