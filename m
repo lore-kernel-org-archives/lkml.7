@@ -2,107 +2,94 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D72CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B647CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1069D222CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8B7205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571959376;
+	bh=lmpdMzLdGN4J6KFDzz3GgF4H5PsEQKCr4B/I49Nm34M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uZQTjb8py2IDyAedDPjGbOdY/9FU1rnA+wUvgfy3pGL/j1NKO2kkzXxzFmStE0dbP
+	 JNJ+SVy2/Y1EpiB/mp6OmlxFjiosLMKEaf1fLGIcphD4m3/6I0MhpsmE0NEWod2xXB
+	 W+HZ9/H/evAdUAkYSEsYAu6mzRNk7YdoCX6zzhOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388236AbfJXXJP (ORCPT
+        id S1729514AbfJXXWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 19:09:15 -0400
-Received: from mga18.intel.com ([134.134.136.126]:23481 "EHLO mga18.intel.com"
+        Thu, 24 Oct 2019 19:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387475AbfJXXHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 19:07:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 16:07:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,226,1569308400"; 
-   d="scan'208";a="202445841"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 24 Oct 2019 16:07:46 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v3 04/15] KVM: x86: Allocate memslot resources during prepare_memory_region()
-Date:   Thu, 24 Oct 2019 16:07:33 -0700
-Message-Id: <20191024230744.14543-5-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191024230744.14543-1-sean.j.christopherson@intel.com>
-References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1728719AbfJXXWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 19:22:54 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D111B205F4;
+        Thu, 24 Oct 2019 23:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571959373;
+        bh=lmpdMzLdGN4J6KFDzz3GgF4H5PsEQKCr4B/I49Nm34M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xkSE8lFTJJe/fl4BXI8jK4Hx43EyRv3A9u1EhVimbjXAm9DvnG0Vdbx5LXn6KqgzL
+         vLjF5m/VMiAD/fXefAqPRKpOqVeFtChPHPpIhXVAk01BAQIilGjKWTZN/ZVkRYg/1o
+         4TJKcZlfP9Or8J4tqG/DJb8hxQYeC4we9K4MM/kY=
+Date:   Fri, 25 Oct 2019 08:22:49 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH 0/3] perf/probe: Fix available line bugs
+Message-Id: <20191025082249.2ef5cdbe89f6c5176d785c06@kernel.org>
+In-Reply-To: <20191024202327.GA19678@kernel.org>
+References: <157190834681.1859.7399361844806238387.stgit@devnote2>
+        <20191024134325.GA1666@kernel.org>
+        <20191025003648.af4216cbf71bf2d5e60d2932@kernel.org>
+        <20191024202327.GA19678@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate the various metadata structures associated with a memslot
-during during kvm_arch_prepare_memory_region(), which paves the way for
-removing kvm_arch_create_memslot() altogether.  Moving x86's memory
-allocation only changes the order of kernel memory allocations between
-x86 and common KVM code.
+On Thu, 24 Oct 2019 17:23:27 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-No functional change intended.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/x86.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> But why can't I probe this thing again?
+> 
+> [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
+> Probe point 'clear_tasks_mm_cpumask' not found.
+>   Error: Failed to add events.
+> [root@quaco ~]# perf probe clear_tasks_mm_cpumask:1
+> Failed to get entry address of clear_tasks_mm_cpumask
+>   Error: Failed to add events.
+> [root@quaco ~]# perf probe clear_tasks_mm_cpumask:2
+> Failed to get entry address of clear_tasks_mm_cpumask
+>   Error: Failed to add events.
+> [root@quaco ~]# perf probe clear_tasks_mm_cpumask:11
+> Failed to get entry address of clear_tasks_mm_cpumask
+>   Error: Failed to add events.
+> [root@quaco ~]# perf probe clear_tasks_mm_cpumask:12
+> Failed to get entry address of clear_tasks_mm_cpumask
+>   Error: Failed to add events.
+> [root@quaco ~]# perf probe clear_tasks_mm_cpumask:13
+> Failed to get entry address of clear_tasks_mm_cpumask
+>   Error: Failed to add events.
+> root@quaco ~]#
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 19a0dc96beca..fc63b1f07ba9 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9628,6 +9628,12 @@ void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
- 
- int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
- 			    unsigned long npages)
-+{
-+	return 0;
-+}
-+
-+static int kvm_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
-+			      unsigned long npages)
- {
- 	int i;
- 
-@@ -9705,6 +9711,9 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 				const struct kvm_userspace_memory_region *mem,
- 				enum kvm_mr_change change)
- {
-+	if (change == KVM_MR_CREATE)
-+		return kvm_create_memslot(kvm, memslot,
-+					  mem->memory_size >> PAGE_SHIFT);
- 	return 0;
- }
- 
+Oops, it's a verification error in convert_to_trace_point().
+I'll fix it too!
+
+Thank you,
+
+
 -- 
-2.22.0
-
+Masami Hiramatsu <mhiramat@kernel.org>
