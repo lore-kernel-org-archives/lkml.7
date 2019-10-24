@@ -2,74 +2,91 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FCECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EDACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E67F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:44:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571942661;
-	bh=vvS8NHgWqzFAvjFh6auB7LQrOacNbGqy2A0HschvZqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k89H/muGKH5CmDnRGJt4Bz03hoolZaIcBkfrrwtRGeg+jEREhCSqdHJOoOEQYl1j7
-	 Wiw8M5VNtMBuWFg2+vw4JoeinFKSmqWyicJxq71M1LKCAwPoDu5b7bvzWAXDg2gHs9
-	 lMo3Bbgnxl5LQcjtD4dWQcx3NnPd67179VkfEzL8=
+	by mail.kernel.org (Postfix) with ESMTP id AD23320684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504122AbfJXSoU (ORCPT
+        id S2440143AbfJXSok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:44:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 14:44:40 -0400
+Received: from sauhun.de ([88.99.104.3]:43808 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440075AbfJXSoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:44:20 -0400
-Received: from localhost (unknown [75.104.69.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5798E205F4;
-        Thu, 24 Oct 2019 18:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571942658;
-        bh=vvS8NHgWqzFAvjFh6auB7LQrOacNbGqy2A0HschvZqU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=csXyKMqTL8c7qWdUUYVj52JXHYhKQZLnDB2HeJkx/bf6DcrVqq6CLVnbaM54L9UTz
-         Mf7ZhLnUas0Xi5PkLPhscb4psZL/OgCUBIZGn1c33424Cp99JBuINFdhoinZx8Vj/j
-         IeTGBXtV1aa577YUKuvk90tRGhPw/zF+E/5WZfhE=
-Date:   Thu, 24 Oct 2019 14:44:08 -0400
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     arnd@arndb.de, johannes@sipsolutions.net, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] rfkill: allocate static minor
-Message-ID: <20191024184408.GA260560@kroah.com>
-References: <20191024174042.19851-1-marcel@holtmann.org>
+        id S2437082AbfJXSok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 14:44:40 -0400
+Received: from localhost (x4d0bc9de.dyn.telefonica.de [77.11.201.222])
+        by pokefinder.org (Postfix) with ESMTPSA id 5D9E82C011D;
+        Thu, 24 Oct 2019 20:44:38 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 20:44:37 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH v2] i2c: i2c-stm32f7: remove warning when compiling with
+ W=1
+Message-ID: <20191024184437.GE1870@kunai>
+References: <1571145118-3522-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a+b56+3nqLzpiR9O"
 Content-Disposition: inline
-In-Reply-To: <20191024174042.19851-1-marcel@holtmann.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1571145118-3522-1-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 07:40:42PM +0200, Marcel Holtmann wrote:
-> udev has a feature of creating /dev/<node> device-nodes if it finds
-> a devnode:<node> modalias. This allows for auto-loading of modules that
-> provide the node. This requires to use a statically allocated minor
-> number for misc character devices.
-> 
-> However, rfkill uses dynamic minor numbers and prevents auto-loading
-> of the module. So allocate the next static misc minor number and use
-> it for rfkill.
 
-As rfkill has been around for a long time, what new use case is needing
-to auto-load this based on a major number?
+--a+b56+3nqLzpiR9O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
+On Tue, Oct 15, 2019 at 03:11:58PM +0200, Alain Volmat wrote:
+> Remove the following warning:
+>=20
+> drivers/i2c/busses/i2c-stm32f7.c:315:
+> warning: cannot understand function prototype:
+> 'struct stm32f7_i2c_spec i2c_specs[] =3D
+>=20
+> Replace a comment starting with /** by simply /* to avoid having
+> it interpreted as a kernel-doc comment.
+>=20
+> Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 
-greg k-h
+Applied to for-current, thanks!
+
+
+--a+b56+3nqLzpiR9O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2x8RUACgkQFA3kzBSg
+Kbbyqw/8D1GESh2wz7RCGgify6hbIO/FgUOUJigLMBvN7ElqmAgJbf23OvTg1zQx
+67AJ5QhuUzw3oXySC2ntHIbBvM5pfiJjCp3knOLIrjWCUVZ2KvBPEprieW5tpBj6
+sXy+6ZzojJj8vpA6LqmIu/jX0vMo9NBGLUGkWcnkklz0J0k3U+0VzdAUHGvVpJGd
+xWUxHGG8q5vJ5Y4t1RDktRj+vraHaV7SZwp5QL5+tD0LDZ1e00pqupVpHL+vEzIj
+GPljclhyWiF/fQzBpY4MZWZ2Gpk4ZCJ5aL2oQtY9HTzy3UmPQJAu2ZjfDzAwM2cy
+UfX9vpo9Uzg5k3sphhQz8lL35KYeRNj/HHGn4ricMT05G6AnLZ3PvPN3N6XL7dbk
+BFnN1xaDmiF0izsXGQQbkpHvywAL/glYaImGZ2B4cKUN58JXavsmFsW6qM1mlrNl
+hAFPFwJWffGJRW91lxC++v4LwjkpuypnRghWwy6sllU28/MgBESKnQwDqW4X3hmA
+SsUijLNTRUgUWjgbUJ7s0YQ0zOEP/3U0k/Jv8XY8aLRu38fJ5jCxREQinZF6+Ner
+G1DvSW9mfisN2HQqV9lWdADiiM5qfDyqJMT+SkSkXuaYqWqn9FNSFNn9bWjVRqut
+aTEeMGUPOljpMtVflUPoV6nPF8LhFNXGhKaZqx5RkGQD9blcWaQ=
+=yMm2
+-----END PGP SIGNATURE-----
+
+--a+b56+3nqLzpiR9O--
