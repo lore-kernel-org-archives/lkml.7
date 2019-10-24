@@ -4,166 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96860CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C2ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768302166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65FBC2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503185AbfJXP0i (ORCPT
+        id S2503198AbfJXP1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:26:38 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:39432 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503175AbfJXP0h (ORCPT
+        Thu, 24 Oct 2019 11:27:04 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:55342 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503129AbfJXP1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:26:37 -0400
+        Thu, 24 Oct 2019 11:27:03 -0400
 Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id HTSa2100D5USYZQ06TSaTu; Thu, 24 Oct 2019 17:26:35 +0200
+        by andre.telenet-ops.be with bizsmtp
+        id HTT12100Y5USYZQ01TT1J4; Thu, 24 Oct 2019 17:27:01 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNf0U-00077A-IL; Thu, 24 Oct 2019 17:26:34 +0200
+        id 1iNf0v-00077O-H8; Thu, 24 Oct 2019 17:27:01 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNf0U-0007vR-Fq; Thu, 24 Oct 2019 17:26:34 +0200
+        id 1iNf0v-0007wz-G0; Thu, 24 Oct 2019 17:27:01 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Russell King <linux@armlinux.org.uk>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        GOTO Masanori <gotom@debian.or.jp>,
-        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Jiri Kosina <trivial@kernel.org>
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial] scsi: Fix various misspellings of "connect"
-Date:   Thu, 24 Oct 2019 17:26:33 +0200
-Message-Id: <20191024152633.30404-1-geert+renesas@glider.be>
+Subject: [PATCH trivial] sh: mach-highlander: Spelling s/Conector/Connector/
+Date:   Thu, 24 Oct 2019 17:27:00 +0200
+Message-Id: <20191024152700.30520-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix misspellings of "disonnect", "reconnect", "connection", "connected",
-and "disconnection".
+Fix misspellings of "Connector".
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/scsi/arm/acornscsi.c          | 4 ++--
- drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h | 2 +-
- drivers/scsi/isci/remote_device.c     | 2 +-
- drivers/scsi/ncr53c8xx.c              | 2 +-
- drivers/scsi/nsp32.c                  | 2 +-
- drivers/scsi/qedf/qedf_dbg.h          | 2 +-
- drivers/scsi/qedi/qedi_dbg.h          | 2 +-
- 7 files changed, 8 insertions(+), 8 deletions(-)
+ arch/sh/include/mach-common/mach/highlander.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
-index d12dd89538df2990..ddb52e7ba6226b51 100644
---- a/drivers/scsi/arm/acornscsi.c
-+++ b/drivers/scsi/arm/acornscsi.c
-@@ -1067,7 +1067,7 @@ void acornscsi_dma_setup(AS_Host *host, dmadir_t direction)
-  * Purpose : ensure that all DMA transfers are up-to-date & host->scsi.SCp is correct
-  * Params  : host - host to finish
-  * Notes   : This is called when a command is:
-- *		terminating, RESTORE_POINTERS, SAVE_POINTERS, DISCONECT
-+ *		terminating, RESTORE_POINTERS, SAVE_POINTERS, DISCONNECT
-  *	   : This must not return until all transfers are completed.
-  */
- static
-@@ -1816,7 +1816,7 @@ int acornscsi_reconnect(AS_Host *host)
- }
- 
- /*
-- * Function: int acornscsi_reconect_finish(AS_Host *host)
-+ * Function: int acornscsi_reconnect_finish(AS_Host *host)
-  * Purpose : finish reconnecting a command
-  * Params  : host - host to complete
-  * Returns : 0 if failed
-diff --git a/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h b/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h
-index e4469df9c4695ab9..698f5ebaa0c29f98 100644
---- a/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h
-+++ b/drivers/scsi/bnx2fc/57xx_hsi_bnx2fc.h
-@@ -813,7 +813,7 @@ struct fcoe_confqe {
- 
- 
- /*
-- * FCoE conection data base
-+ * FCoE connection data base
-  */
- struct fcoe_conn_db {
- #if defined(__BIG_ENDIAN)
-diff --git a/drivers/scsi/isci/remote_device.c b/drivers/scsi/isci/remote_device.c
-index 49aa4e657c44fc65..cd1e4b4d95bbbba0 100644
---- a/drivers/scsi/isci/remote_device.c
-+++ b/drivers/scsi/isci/remote_device.c
-@@ -1504,7 +1504,7 @@ static enum sci_status isci_remote_device_construct(struct isci_port *iport,
-  * This function builds the isci_remote_device when a libsas dev_found message
-  *    is received.
-  * @isci_host: This parameter specifies the isci host object.
-- * @port: This parameter specifies the isci_port conected to this device.
-+ * @port: This parameter specifies the isci_port connected to this device.
-  *
-  * pointer to new isci_remote_device.
-  */
-diff --git a/drivers/scsi/ncr53c8xx.c b/drivers/scsi/ncr53c8xx.c
-index e0b427fdf81800c3..11a2cb844ecb3782 100644
---- a/drivers/scsi/ncr53c8xx.c
-+++ b/drivers/scsi/ncr53c8xx.c
-@@ -1722,7 +1722,7 @@ struct ncb {
- 	**	Miscellaneous configuration and status parameters.
- 	**----------------------------------------------------------------
- 	*/
--	u_char		disc;		/* Diconnection allowed		*/
-+	u_char		disc;		/* Disconnection allowed	*/
- 	u_char		scsi_mode;	/* Current SCSI BUS mode	*/
- 	u_char		order;		/* Tag order to use		*/
- 	u_char		verbose;	/* Verbosity for this controller*/
-diff --git a/drivers/scsi/nsp32.c b/drivers/scsi/nsp32.c
-index 70db79254155677d..b6e04d14292d2f90 100644
---- a/drivers/scsi/nsp32.c
-+++ b/drivers/scsi/nsp32.c
-@@ -1542,7 +1542,7 @@ static void nsp32_scsi_done(struct scsi_cmnd *SCpnt)
-  * with ACK reply when below condition is matched:
-  *	MsgIn 00: Command Complete.
-  *	MsgIn 02: Save Data Pointer.
-- *	MsgIn 04: Diconnect.
-+ *	MsgIn 04: Disconnect.
-  * In other case, unexpected BUSFREE is detected.
-  */
- static int nsp32_busfree_occur(struct scsi_cmnd *SCpnt, unsigned short execph)
-diff --git a/drivers/scsi/qedf/qedf_dbg.h b/drivers/scsi/qedf/qedf_dbg.h
-index d979f095aeda06a8..2386bfb73c4616aa 100644
---- a/drivers/scsi/qedf/qedf_dbg.h
-+++ b/drivers/scsi/qedf/qedf_dbg.h
-@@ -42,7 +42,7 @@ extern uint qedf_debug;
- #define QEDF_LOG_LPORT		0x4000		/* lport logs */
- #define QEDF_LOG_ELS		0x8000		/* ELS logs */
- #define QEDF_LOG_NPIV		0x10000		/* NPIV logs */
--#define QEDF_LOG_SESS		0x20000		/* Conection setup, cleanup */
-+#define QEDF_LOG_SESS		0x20000		/* Connection setup, cleanup */
- #define QEDF_LOG_TID		0x80000         /*
- 						 * FW TID context acquire
- 						 * free
-diff --git a/drivers/scsi/qedi/qedi_dbg.h b/drivers/scsi/qedi/qedi_dbg.h
-index 243acc8b520a44a5..37d084086fd43410 100644
---- a/drivers/scsi/qedi/qedi_dbg.h
-+++ b/drivers/scsi/qedi/qedi_dbg.h
-@@ -44,7 +44,7 @@ extern uint qedi_dbg_log;
- #define QEDI_LOG_LPORT		0x4000		/* lport logs */
- #define QEDI_LOG_ELS		0x8000		/* ELS logs */
- #define QEDI_LOG_NPIV		0x10000		/* NPIV logs */
--#define QEDI_LOG_SESS		0x20000		/* Conection setup, cleanup */
-+#define QEDI_LOG_SESS		0x20000		/* Connection setup, cleanup */
- #define QEDI_LOG_UIO		0x40000		/* iSCSI UIO logs */
- #define QEDI_LOG_TID		0x80000         /* FW TID context acquire,
- 						 * free
+diff --git a/arch/sh/include/mach-common/mach/highlander.h b/arch/sh/include/mach-common/mach/highlander.h
+index 66d3e40fd0464b9c..fb44c299d0337e3f 100644
+--- a/arch/sh/include/mach-common/mach/highlander.h
++++ b/arch/sh/include/mach-common/mach/highlander.h
+@@ -18,7 +18,7 @@
+ #define PA_IRLPRI4      (PA_BCR+0x000a) /* Interrupt Priorty 4 */
+ #define PA_RSTCTL       (PA_BCR+0x000c) /* Reset Control */
+ #define PA_PCIBD        (PA_BCR+0x000e) /* PCI Board detect control */
+-#define PA_PCICD        (PA_BCR+0x0010) /* PCI Conector detect control */
++#define PA_PCICD        (PA_BCR+0x0010) /* PCI Connector detect control */
+ #define PA_EXTGIO       (PA_BCR+0x0016) /* Extension GPIO Control */
+ #define PA_IVDRMON      (PA_BCR+0x0018) /* iVDR Moniter control */
+ #define PA_IVDRCTL      (PA_BCR+0x001a) /* iVDR control */
+@@ -80,7 +80,7 @@
+ #define	PA_SDPOW	(PA_BCR+0x0004)	/* SD Power control */
+ #define	PA_RSTCTL	(PA_BCR+0x0006)	/* Device Reset control */
+ #define	PA_PCIBD	(PA_BCR+0x0008)	/* PCI Board detect control */
+-#define	PA_PCICD	(PA_BCR+0x000a)	/* PCI Conector detect control */
++#define	PA_PCICD	(PA_BCR+0x000a)	/* PCI Connector detect control */
+ #define	PA_ZIGIO1	(PA_BCR+0x000c)	/* Zigbee IO control 1 */
+ #define	PA_ZIGIO2	(PA_BCR+0x000e)	/* Zigbee IO control 2 */
+ #define	PA_ZIGIO3	(PA_BCR+0x0010)	/* Zigbee IO control 3 */
 -- 
 2.17.1
 
