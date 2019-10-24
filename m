@@ -2,91 +2,147 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34851CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB9FCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1494D21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8EF21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502681AbfJXONS (ORCPT
+        id S2393905AbfJXONp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:13:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5155 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389916AbfJXOLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:11:36 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 44DD4B3BD7F8C7BC19CC;
-        Thu, 24 Oct 2019 22:11:30 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 24 Oct 2019 22:11:24 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
-        <linux-kernel@vger.kernel.org>,
-        Xiang Chen <chenxiang66@hisilicon.com>,
-        "John Garry" <john.garry@huawei.com>
-Subject: [PATCH v2 02/18] scsi: hisi_sas: Set the BIST init value before enabling BIST
-Date:   Thu, 24 Oct 2019 22:08:09 +0800
-Message-ID: <1571926105-74636-3-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1571926105-74636-1-git-send-email-john.garry@huawei.com>
-References: <1571926105-74636-1-git-send-email-john.garry@huawei.com>
+        Thu, 24 Oct 2019 10:13:45 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:60699 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfJXONp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 10:13:45 -0400
+X-Originating-IP: 92.137.17.54
+Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EC63E240003;
+        Thu, 24 Oct 2019 14:13:40 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        "kernelci.org bot" <bot@kernelci.org>, stable@vger.kernel.org
+Subject: [PATCH] spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO CS
+Date:   Thu, 24 Oct 2019 16:13:09 +0200
+Message-Id: <20191024141309.22434-1-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+Even if the flag use_gpio_descriptors is set, it is possible that
+cs_gpiods was not allocated, which leads to a kernel crash:
 
-If set the BIST init value after enabling BIST, there may be still some
-few error bits. According to the process, need to set the BIST init value
-before enabling BIST.
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+pgd = (ptrval)
+[00000000] *pgd=00000000
+Internal error: Oops: 5 [#1] ARM
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.4.0-rc3 #1
+Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+PC is at of_register_spi_device+0x20c/0x38c
+LR is at __of_find_property+0x3c/0x60
+pc : [<c09b45dc>]    lr : [<c0c47a98>]    psr: 20000013
+sp : ea0b5d88  ip : aae04461  fp : ea1a8810
+r10: 00000055  r9 : 00000000  r8 : ea6dc800
+r7 : 00000001  r6 : c1704048  r5 : eafc8c7c  r4 : ea7fd800
+r3 : 00000000  r2 : 00000000  r1 : ffffffff  r0 : 00000001
+Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+Control: 10c5387d  Table: 80204059  DAC: 00000051
+Process swapper (pid: 1, stack limit = 0x(ptrval))
+Stack: (0xea0b5d88 to 0xea0b6000)
+5d80:                   00000000 aae04461 00000000 aae04461 ea6dc800 00000000
+5da0: eafc8c7c c131fbdc ea6dc9c0 c09b4e24 ea7f4500 00000040 c09b3e24 ea7f3dc0
+5dc0: ea6dc800 ea1a8800 ea1a8810 00000000 00000000 00000055 0000014b c09b5020
+5de0: ea6dc800 ea6dcb80 ea1a8800 ea1a8810 00000000 c09cb884 ea1a69c0 ea6dcb80
+5e00: ea1a8810 00000000 c1862448 00000000 00000000 c1862448 00000000 c08dba2c
+5e20: c18e66dc ea1a8810 c18e66e0 00000000 00000000 c08d9b28 ea1a8810 c1862448
+5e40: c1862448 c08da0c8 00000000 c15c5850 c18a4200 c08d9e18 00000000 c15c5850
+5e60: c18a4200 ea1a8810 00000000 c1862448 c08da0c8 00000000 c15c5850 c18a4200
+5e80: 0000014b c08da0c0 00000000 c1862448 ea1a8810 c08da120 ea1aa0b0 c1704048
+5ea0: c1862448 c08d7ed4 c15c5850 ea0894cc ea1aa0b0 aae04461 c18522c8 c1862448
+5ec0: ea7f3800 c18522c8 00000000 c08d8f14 c1321b68 c15977a0 c1862448 c1862448
+5ee0: c1704048 c15977b0 c15c5830 c08daa8c c18992a0 c1704048 c15977b0 c0302ce4
+5f00: ebfffcd1 c03566f0 c14031b4 c1346700 00000000 00000006 00000006 c1242794
+5f20: 00000000 c1704048 c1252144 c1242808 c1655778 ebfffcc0 ebfffcc3 aae04461
+5f40: 00000000 00000006 c18992a0 aae04461 c16564e8 c18992a0 c18a4200 c15c5830
+5f60: c15004a8 c1501028 00000006 00000006 00000000 c15004a8 00000000 00000007
+5f80: c0e01028 00000000 c0e01028 00000000 00000000 00000000 00000000 00000000
+5fa0: 00000000 c0e01030 00000000 c03010e8 00000000 00000000 00000000 00000000
+5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+5fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+[<c09b45dc>] (of_register_spi_device) from [<c09b4e24>] (spi_register_controller+0x558/0x720)
+[<c09b4e24>] (spi_register_controller) from [<c09b5020>] (devm_spi_register_controller+0x34/0x6c)
+[<c09b5020>] (devm_spi_register_controller) from [<c09cb884>] (tegra_spi_probe+0x344/0x438)
+[<c09cb884>] (tegra_spi_probe) from [<c08dba2c>] (platform_drv_probe+0x48/0x98)
+[<c08dba2c>] (platform_drv_probe) from [<c08d9b28>] (really_probe+0x1e0/0x348)
+[<c08d9b28>] (really_probe) from [<c08d9e18>] (driver_probe_device+0x60/0x168)
+[<c08d9e18>] (driver_probe_device) from [<c08da0c0>] (device_driver_attach+0x58/0x60)
+[<c08da0c0>] (device_driver_attach) from [<c08da120>] (__driver_attach+0x58/0xcc)
+[<c08da120>] (__driver_attach) from [<c08d7ed4>] (bus_for_each_dev+0x74/0xb4)
+[<c08d7ed4>] (bus_for_each_dev) from [<c08d8f14>] (bus_add_driver+0x1b8/0x1d8)
+[<c08d8f14>] (bus_add_driver) from [<c08daa8c>] (driver_register+0x74/0x108)
+[<c08daa8c>] (driver_register) from [<c0302ce4>] (do_one_initcall+0x50/0x1a8)
+[<c0302ce4>] (do_one_initcall) from [<c1501028>] (kernel_init_freeable+0x15c/0x1fc)
+[<c1501028>] (kernel_init_freeable) from [<c0e01030>] (kernel_init+0x8/0x10c)
+[<c0e01030>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
+Exception stack(0xea0b5fb0 to 0xea0b5ff8)
+5fa0:                                     00000000 00000000 00000000 00000000
+5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+Code: e3520000 0a000006 e59822a8 e6ef3073 (e7923103)
 
-Fixes: 97b151e75861 ("scsi: hisi_sas: Add BIST support for phy loopback")
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Hello,
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index cb8d087762db..cc594937fa8d 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3022,11 +3022,6 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- 		hisi_sas_phy_write32(hisi_hba, phy_id,
- 				     SAS_PHY_BIST_CTRL, reg_val);
+Following the report from
+https://kernelci.org/boot/id/5daa485f59b5142f647525a0/, I managed to
+reproduce the bug on my platform, and fixed it.
+
+The commit ID provided for the fixes tag is the one of the branch
+for-linus on
+git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+
+Gregory
+
+ drivers/spi/spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 1b68acc28c8f..dd7cdd996086 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1949,7 +1949,8 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+ 	 * handled in the gpiolib, so all gpio chip selects are "active high"
+ 	 * in the logical sense, the gpiolib will invert the line if need be.
+ 	 */
+-	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
++	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods &&
++	    ctlr->cs_gpiods[spi->chip_select])
+ 		spi->mode |= SPI_CS_HIGH;
  
--		mdelay(100);
--		reg_val |= (CFG_RX_BIST_EN_MSK | CFG_TX_BIST_EN_MSK);
--		hisi_sas_phy_write32(hisi_hba, phy_id,
--				     SAS_PHY_BIST_CTRL, reg_val);
--
- 		/* set the bist init value */
- 		hisi_sas_phy_write32(hisi_hba, phy_id,
- 				     SAS_PHY_BIST_CODE,
-@@ -3035,6 +3030,11 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- 				     SAS_PHY_BIST_CODE1,
- 				     SAS_PHY_BIST_CODE1_INIT);
- 
-+		mdelay(100);
-+		reg_val |= (CFG_RX_BIST_EN_MSK | CFG_TX_BIST_EN_MSK);
-+		hisi_sas_phy_write32(hisi_hba, phy_id,
-+				     SAS_PHY_BIST_CTRL, reg_val);
-+
- 		/* clear error bit */
- 		mdelay(100);
- 		hisi_sas_phy_read32(hisi_hba, phy_id, SAS_BIST_ERR_CNT);
+ 	/* Device speed */
 -- 
-2.17.1
+2.23.0
 
