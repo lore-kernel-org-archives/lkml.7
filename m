@@ -2,171 +2,131 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D582CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FFFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B2C21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571932816;
-	bh=CMtWBK9bGXQgrwqfgHwn/rmOpH3VPeTWFKvQSvvYcNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NUryKYKGCSDP36klViqad5ArE8t8l0f/j2u7g/0q3zuSsjXCjvnQCTFxeSoKPpM+1
-	 TnhsoJ3/pPZjA9o6kLRi4pD4ySXzGVQYvHbotrVlLiIGbWdoAbOM081CeDlu4Pw4B0
-	 wEbnMKDLz6Z5hGJo8vwB1DnVcaY0ycZPE34mt4k0=
+	by mail.kernel.org (Postfix) with ESMTP id 2CF6B2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393960AbfJXQAO (ORCPT
+        id S2406141AbfJXQFE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389313AbfJXQAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:00:14 -0400
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AA5220663;
-        Thu, 24 Oct 2019 16:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571932813;
-        bh=CMtWBK9bGXQgrwqfgHwn/rmOpH3VPeTWFKvQSvvYcNk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WvqVjoRRXrd3JkI1omDW7PBhgmLthVCuqvNSxIoFPGM/xK9FH45m+Tyjn4lxywyFU
-         qiSjcoxpNdVSUBYJVn4495qy4G4/bgc1wTkwBDhEUegPwysGw00g1mQIocUJqgzlFv
-         mhcI3uQ1aiQgODaNP61ox2Q4KQDVJEXDRjeX2Ocg=
-Date:   Thu, 24 Oct 2019 19:00:06 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Helge Deller <deller@gmx.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
-Message-ID: <20191024160005.GD12281@rapoport-lnx>
-References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
- <1571822941-29776-9-git-send-email-rppt@kernel.org>
- <20191024120208.GA17545@ls3530.fritz.box>
+        Thu, 24 Oct 2019 12:05:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56404 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405273AbfJXQFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:05:03 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iNfbe-00029v-FV; Thu, 24 Oct 2019 18:04:58 +0200
+Date:   Thu, 24 Oct 2019 18:04:58 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        tglx@linutronix.de, Paul Mackerras <paulus@samba.org>
+Subject: [PATCH 03/34 v3] powerpc: Use CONFIG_PREEMPTION
+Message-ID: <20191024160458.vlnf3wlcyjl2ich7@linutronix.de>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-4-bigeasy@linutronix.de>
+ <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
+ <87d0ext4q3.fsf@mpe.ellerman.id.au>
+ <20191024135920.cp673ivbcomu2bgy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191024120208.GA17545@ls3530.fritz.box>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191024135920.cp673ivbcomu2bgy@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 02:02:08PM +0200, Helge Deller wrote:
-> * Mike Rapoport <rppt@kernel.org>:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> >
-> > parisc has two or three levels of page tables and can use appropriate
-> > pgtable-nopXd and folding of the upper layers.
-> >
-> > Replace usage of include/asm-generic/4level-fixup.h and explicit
-> > definitions of __PAGETABLE_PxD_FOLDED in parisc with
-> > include/asm-generic/pgtable-nopmd.h for two-level configurations and with
-> > include/asm-generic/pgtable-nopmd.h for three-lelve configurations and
-> > adjust page table manipulation macros and functions accordingly.
-> >
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > ---
-> >  arch/parisc/include/asm/page.h    | 30 +++++++++++++---------
-> >  arch/parisc/include/asm/pgalloc.h | 41 +++++++++++-------------------
-> >  arch/parisc/include/asm/pgtable.h | 52 +++++++++++++++++++--------------------
-> >  arch/parisc/include/asm/tlb.h     |  2 ++
-> >  arch/parisc/kernel/cache.c        | 13 ++++++----
-> >  arch/parisc/kernel/pci-dma.c      |  9 +++++--
-> >  arch/parisc/mm/fixmap.c           | 10 +++++---
-> >  7 files changed, 81 insertions(+), 76 deletions(-)
-> 
-> Mike, thanks for this clean-up!
-> 
-> Your patch is functional OK. I successfully tested it with a 32-bit
-> kernel in qemu, and with a 64-bit kernel on a physical box.
-> For 64-bit you missed to adapt the parisc hugetlb code, so maybe you
-> can add the patch below to your series?
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Sure.
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
+
+Switch the entry code over to use CONFIG_PREEMPTION.
+
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bigeasy: +Kconfig]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v2…v3: Don't mention die.c changes in the description.
+v1…v2: Remove the changes to die.c.
+
+ arch/powerpc/Kconfig           | 2 +-
+ arch/powerpc/kernel/entry_32.S | 4 ++--
+ arch/powerpc/kernel/entry_64.S | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 3e56c9c2f16ee..8ead8d6e1cbc8 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -106,7 +106,7 @@ config LOCKDEP_SUPPORT
+ config GENERIC_LOCKBREAK
+ 	bool
+ 	default y
+-	depends on SMP && PREEMPT
++	depends on SMP && PREEMPTION
  
-> Other than that (and the lexical corrections which other already mentioned):
-> Acked-by: Helge Deller <deller@gmx.de>
-
-Thanks!
+ config GENERIC_HWEIGHT
+ 	bool
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index d60908ea37fb9..e1a4c39b83b86 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -897,7 +897,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
+ 	bne-	0b
+ 1:
  
-> Thanks!
-> Helge
-> 
-> ----------------
-> parisc/hugetlb: use pgtable-nopXd instead of 4level-fixup
-> 
-> Signed-off-by: Helge Deller <deller@gmx.de>
-> 
-> diff --git a/arch/parisc/mm/hugetlbpage.c b/arch/parisc/mm/hugetlbpage.c
-> index d578809e55cf..0e1e212f1c96 100644
-> --- a/arch/parisc/mm/hugetlbpage.c
-> +++ b/arch/parisc/mm/hugetlbpage.c
-> @@ -49,6 +49,7 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
->  			unsigned long addr, unsigned long sz)
->  {
->  	pgd_t *pgd;
-> +	p4d_t *p4d;
->  	pud_t *pud;
->  	pmd_t *pmd;
->  	pte_t *pte = NULL;
-> @@ -61,7 +62,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
->  	addr &= HPAGE_MASK;
-> 
->  	pgd = pgd_offset(mm, addr);
-> -	pud = pud_alloc(mm, pgd, addr);
-> +	p4d = p4d_offset(pgd, addr);
-> +	pud = pud_alloc(mm, p4d, addr);
->  	if (pud) {
->  		pmd = pmd_alloc(mm, pud, addr);
->  		if (pmd)
-> @@ -74,6 +76,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
->  		       unsigned long addr, unsigned long sz)
->  {
->  	pgd_t *pgd;
-> +	p4d_t *p4d;
->  	pud_t *pud;
->  	pmd_t *pmd;
->  	pte_t *pte = NULL;
-> @@ -82,11 +85,14 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
-> 
->  	pgd = pgd_offset(mm, addr);
->  	if (!pgd_none(*pgd)) {
-> -		pud = pud_offset(pgd, addr);
-> -		if (!pud_none(*pud)) {
-> -			pmd = pmd_offset(pud, addr);
-> -			if (!pmd_none(*pmd))
-> -				pte = pte_offset_map(pmd, addr);
-> +		p4d = p4d_offset(pgd, addr);
-> +		if (!p4d_none(*p4d)) {
-> +			pud = pud_offset(p4d, addr);
-> +			if (!pud_none(*pud)) {
-> +				pmd = pmd_offset(pud, addr);
-> +				if (!pmd_none(*pmd))
-> +					pte = pte_offset_map(pmd, addr);
-> +			}
->  		}
->  	}
->  	return pte;
-> 
-> 
-> 
-> 
-> 
-
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	/* check current_thread_info->preempt_count */
+ 	lwz	r0,TI_PREEMPT(r2)
+ 	cmpwi	0,r0,0		/* if non-zero, just restore regs and return */
+@@ -921,7 +921,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
+ 	 */
+ 	bl	trace_hardirqs_on
+ #endif
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+ restore_kuap:
+ 	kuap_restore r1, r2, r9, r10, r0
+ 
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 6467bdab8d405..83733376533e8 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -840,7 +840,7 @@ _GLOBAL(ret_from_except_lite)
+ 	bne-	0b
+ 1:
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	/* Check if we need to preempt */
+ 	andi.	r0,r4,_TIF_NEED_RESCHED
+ 	beq+	restore
+@@ -871,7 +871,7 @@ _GLOBAL(ret_from_except_lite)
+ 	li	r10,MSR_RI
+ 	mtmsrd	r10,1		  /* Update machine state */
+ #endif /* CONFIG_PPC_BOOK3E */
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+ 
+ 	.globl	fast_exc_return_irq
+ fast_exc_return_irq:
 -- 
-Sincerely yours,
-Mike.
+2.23.0
+
