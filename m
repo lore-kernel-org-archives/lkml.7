@@ -2,105 +2,106 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A8DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46FBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E2920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E8720856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571908391;
+	bh=94SGITL+w13cs21+YWm/2mrBkeLrhfSnXixPWxASHZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CSaLg44KixzWzW3WwaeadnizjrgXkT5J1au2ro53+zwqEcV6xSE9kGjbAerVHWYo9
+	 hZYKaOyphLLCc2Fvdo4k2O0FTXqVyGcv26zXffliBr41IH28qWH/Nf79ZWcEpv/zQq
+	 Z7XCbmv4KvKM5R+jJ/mW9uN5mb2U9fKHgXlgN+tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393011AbfJXJNF (ORCPT
+        id S2393020AbfJXJNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:13:05 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4756 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727653AbfJXJNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:13:05 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3BF70C2EBFE337937027;
-        Thu, 24 Oct 2019 17:13:03 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 24 Oct
- 2019 17:12:59 +0800
-Subject: =?UTF-8?Q?Re:_[f2fs-dev]_[bug_report]_compiler_warning:_fs/f2fs/nod?=
- =?UTF-8?B?ZS5jOiBJbiBmdW5jdGlvbiDigJhfX3NldF9uYXRfY2FjaGVfZGlydHnigJk6IA==?=
- =?UTF-8?Q?=e2=80=98head=e2=80=99_may_be_used_uninitialized?=
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>
-References: <fc71f3b73116115f78bcee2753e7bb3d5331731e.camel@analog.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <e815981a-50ef-0f49-cab6-e510ea44ddc0@huawei.com>
-Date:   Thu, 24 Oct 2019 17:12:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 24 Oct 2019 05:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727653AbfJXJNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:13:08 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F91A2166E;
+        Thu, 24 Oct 2019 09:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571908387;
+        bh=94SGITL+w13cs21+YWm/2mrBkeLrhfSnXixPWxASHZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e7eBgKB/LnonMT8DJUrTUn7M2Re+QL7lE04vQh3IVdmZgI515HPhtzdWbfAT77KMO
+         l2C9GMpZ6riIM/3taO6yPSL4Kmzao9gbNPNwx4BxuboVrLGUhnnGJyKc3KckYB/nwE
+         u0AXlOCkNvAR4pAEtOfX6eVx3ePI74WKvVbGBJkU=
+Date:   Thu, 24 Oct 2019 11:13:04 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Michael Lange <linuxstuff@milaw.biz>
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: tanix-tx6: Add IR remote
+ mapping
+Message-ID: <20191024091304.kx27imohmuzufvtr@gilmour>
+References: <20191024054135.3819223-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <fc71f3b73116115f78bcee2753e7bb3d5331731e.camel@analog.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yoemxlzmfbbaspsf"
+Content-Disposition: inline
+In-Reply-To: <20191024054135.3819223-1-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/23 22:02, Ardelean, Alexandru wrote:
-> Seems to have been introduced via:
-> 
-> ----------------------------------------------------------------
-> 
-> commit 780de47cf6cb5f524cd98ec8ffbffc3da5696e17
-> Author: Chao Yu <yuchao0@huawei.com>
-> Date:   Tue Mar 20 23:08:30 2018 +0800
-> 
->     f2fs: don't track new nat entry in nat set
->     
->     Nat entry set is used only in checkpoint(), and during checkpoint() we
->     won't flush new nat entry with unallocated address, so we don't need to
->     add new nat entry into nat set, then nat_entry_set::entry_cnt can
->     indicate actual entry count we need to flush in checkpoint().
->     
->     Signed-off-by: Yunlei He <heyunlei@huawei.com>
->     Signed-off-by: Chao Yu <yuchao0@huawei.com>
->     Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ----------------------------------------------------------------
-> 
-> Compiler warning is:
-> ----------------------------------------------------------------
-> 
->   CC      fs/f2fs/node.o
-> In file included from ./include/linux/wait.h:7:0,
->                  from ./include/linux/wait_bit.h:8,
->                  from ./include/linux/fs.h:6,
->                  from fs/f2fs/node.c:11:
-> fs/f2fs/node.c: In function ‘__set_nat_cache_dirty’:
-> ./include/linux/list.h:63:13: error: ‘head’ may be used uninitialized in
-> this function [-Werror=maybe-uninitialized]
->   next->prev = new;
->              ^
-> fs/f2fs/node.c:238:24: note: ‘head’ was declared here
->   struct nat_entry_set *head;
 
-That's not correct, @head will only be assigned and used if new_ne equals NULL.
+--yoemxlzmfbbaspsf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
+Hi,
 
->                         ^
-> cc1: all warnings being treated as errors
-> ----------------------------------------------------------------
-> 
-> Thanks
-> Alex
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> 
+On Thu, Oct 24, 2019 at 07:41:35AM +0200, Jernej Skrabec wrote:
+> Tanix TX6 box comes with a remote. Add a mapping for it.
+>
+> Suggested-by: Michael Lange <linuxstuff@milaw.biz>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> index 7e7cb10e3d96..e9428ad4266e 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> @@ -81,6 +81,7 @@
+>  };
+>
+>  &r_ir {
+> +	linux,rc-map-name = "rc-tanix-tx5max";
+>  	status = "okay";
+>  };
+
+It doesn't look like it's documented in the binding. Please add it
+there as well.
+
+Maxime
+
+--yoemxlzmfbbaspsf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXbFrIAAKCRDj7w1vZxhR
+xSLmAQCrGSV7h6ubrgNIb93gmoTRSxqGtJeh8hrmzYdc3uFNbwD+MBU0i/CRyUNp
+RH2WGZE4M2I578Xre1fIqzZ5VlEiaQk=
+=Wl18
+-----END PGP SIGNATURE-----
+
+--yoemxlzmfbbaspsf--
