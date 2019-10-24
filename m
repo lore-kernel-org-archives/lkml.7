@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B04BCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA2CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516BE20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F6E20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437370AbfJXDr4 (ORCPT
+        id S2437378AbfJXDsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 23:47:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26800 "EHLO
+        Wed, 23 Oct 2019 23:48:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29994 "EHLO
         mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437359AbfJXDrz (ORCPT
+        by vger.kernel.org with ESMTP id S2392934AbfJXDsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 23:47:55 -0400
+        Wed, 23 Oct 2019 23:48:02 -0400
 Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9O3l4Il116737
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:47:54 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vt3kjgpwb-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9O3l4Yj116734
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:48:01 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vt3kjgq16-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:47:54 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:48:01 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Thu, 24 Oct 2019 04:47:52 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 24 Oct 2019 04:47:59 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 24 Oct 2019 04:47:46 +0100
+        Thu, 24 Oct 2019 04:47:55 +0100
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9O3lipj54591500
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9O3ls3l59506718
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Oct 2019 03:47:44 GMT
+        Thu, 24 Oct 2019 03:47:54 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F1F2AE045;
-        Thu, 24 Oct 2019 03:47:44 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DA365AE058;
+        Thu, 24 Oct 2019 03:47:53 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D42F8AE051;
-        Thu, 24 Oct 2019 03:47:41 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 144A4AE055;
+        Thu, 24 Oct 2019 03:47:51 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.40.192.65])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 24 Oct 2019 03:47:41 +0000 (GMT)
+        Thu, 24 Oct 2019 03:47:50 +0000 (GMT)
 From:   Nayna Jain <nayna@linux.ibm.com>
 To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
         linux-integrity@vger.kernel.org
@@ -68,109 +68,155 @@ Cc:     linux-kernel@vger.kernel.org,
         Nayna Jain <nayna@linux.ibm.com>,
         Prakhar Srivastava <prsriva02@gmail.com>,
         Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Subject: [PATCH v9 3/8] powerpc: detect the trusted boot state of the system
-Date:   Wed, 23 Oct 2019 22:47:12 -0500
+Subject: [PATCH v9 5/8] ima: make process_buffer_measurement() generic
+Date:   Wed, 23 Oct 2019 22:47:14 -0500
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191024034717.70552-1-nayna@linux.ibm.com>
 References: <20191024034717.70552-1-nayna@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19102403-0016-0000-0000-000002BC7C2F
+x-cbid: 19102403-0020-0000-0000-0000037D810D
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102403-0017-0000-0000-0000331DBEC2
-Message-Id: <20191024034717.70552-4-nayna@linux.ibm.com>
+x-cbparentid: 19102403-0021-0000-0000-000021D3C52C
+Message-Id: <20191024034717.70552-6-nayna@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-24_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=639 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=978 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1908290000 definitions=main-1910240033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While secure boot permits only properly verified signed kernels to be
-booted, trusted boot calculates the file hash of the kernel image and
-stores the measurement prior to boot, that can be subsequently compared
-against good known values via attestation services.
+process_buffer_measurement() is limited to measuring the kexec boot
+command line. This patch makes process_buffer_measurement() more
+generic, allowing it to measure other types of buffer data (e.g.
+blacklisted binary hashes or key hashes).
 
-This patch reads the trusted boot state of a PowerNV system. The state
-is used to conditionally enable additional measurement rules in the IMA
-arch-specific policies.
+process_buffer_measurement() may be called directly from an IMA
+hook or as an auxiliary measurement record. In both cases the buffer
+measurement is based on policy. This patch modifies the function to
+conditionally retrieve the policy defined PCR and template for the IMA
+hook case.
 
 Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
 ---
- arch/powerpc/include/asm/secure_boot.h |  6 ++++++
- arch/powerpc/kernel/secure_boot.c      | 26 ++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ security/integrity/ima/ima.h      |  3 ++
+ security/integrity/ima/ima_main.c | 51 ++++++++++++++++++++-----------
+ 2 files changed, 36 insertions(+), 18 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
-index 07d0fe0ca81f..a2ff556916c6 100644
---- a/arch/powerpc/include/asm/secure_boot.h
-+++ b/arch/powerpc/include/asm/secure_boot.h
-@@ -11,6 +11,7 @@
- #ifdef CONFIG_PPC_SECURE_BOOT
- 
- bool is_ppc_secureboot_enabled(void);
-+bool is_ppc_trustedboot_enabled(void);
- 
- #else
- 
-@@ -19,5 +20,10 @@ static inline bool is_ppc_secureboot_enabled(void)
- 	return false;
- }
- 
-+static inline bool is_ppc_trustedboot_enabled(void)
-+{
-+	return false;
-+}
-+
- #endif
- #endif
-diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
-index 63dc82c50862..a6a5f17ede03 100644
---- a/arch/powerpc/kernel/secure_boot.c
-+++ b/arch/powerpc/kernel/secure_boot.c
-@@ -7,6 +7,17 @@
- #include <linux/of.h>
- #include <asm/secure_boot.h>
- 
-+static struct device_node *get_ppc_fw_sb_node(void)
-+{
-+	static const struct of_device_id ids[] = {
-+		{ .compatible = "ibm,secureboot-v1", },
-+		{ .compatible = "ibm,secureboot-v2", },
-+		{},
-+	};
-+
-+	return of_find_matching_node(NULL, ids);
-+}
-+
- bool is_ppc_secureboot_enabled(void)
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 3689081aaf38..a65772ffa427 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -217,6 +217,9 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
+ 			   struct evm_ima_xattr_data *xattr_value,
+ 			   int xattr_len, const struct modsig *modsig, int pcr,
+ 			   struct ima_template_desc *template_desc);
++void process_buffer_measurement(const void *buf, int size,
++				const char *eventname, enum ima_hooks func,
++				int pcr);
+ void ima_audit_measurement(struct integrity_iint_cache *iint,
+ 			   const unsigned char *filename);
+ int ima_alloc_init_template(struct ima_event_data *event_data,
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 60027c643ecd..fe0b704ffdeb 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -626,14 +626,14 @@ int ima_load_data(enum kernel_load_data_id id)
+  * @buf: pointer to the buffer that needs to be added to the log.
+  * @size: size of buffer(in bytes).
+  * @eventname: event name to be used for the buffer entry.
+- * @cred: a pointer to a credentials structure for user validation.
+- * @secid: the secid of the task to be validated.
++ * @func: IMA hook
++ * @pcr: pcr to extend the measurement
+  *
+  * Based on policy, the buffer is measured into the ima log.
+  */
+-static void process_buffer_measurement(const void *buf, int size,
+-				       const char *eventname,
+-				       const struct cred *cred, u32 secid)
++void process_buffer_measurement(const void *buf, int size,
++				const char *eventname, enum ima_hooks func,
++				int pcr)
  {
- 	struct device_node *node;
-@@ -30,3 +41,18 @@ bool is_ppc_secureboot_enabled(void)
- 	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
- 	return enabled;
+ 	int ret = 0;
+ 	struct ima_template_entry *entry = NULL;
+@@ -642,19 +642,38 @@ static void process_buffer_measurement(const void *buf, int size,
+ 					    .filename = eventname,
+ 					    .buf = buf,
+ 					    .buf_len = size};
+-	struct ima_template_desc *template_desc = NULL;
++	struct ima_template_desc *template = NULL;
+ 	struct {
+ 		struct ima_digest_data hdr;
+ 		char digest[IMA_MAX_DIGEST_SIZE];
+ 	} hash = {};
+ 	int violation = 0;
+-	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+ 	int action = 0;
++	u32 secid;
+ 
+-	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr,
+-				&template_desc);
+-	if (!(action & IMA_MEASURE))
+-		return;
++	if (func) {
++		security_task_getsecid(current, &secid);
++		action = ima_get_action(NULL, current_cred(), secid, 0, func,
++					&pcr, &template);
++		if (!(action & IMA_MEASURE))
++			return;
++	}
++
++	if (!pcr)
++		pcr = CONFIG_IMA_MEASURE_PCR_IDX;
++
++	if (!template) {
++		template = lookup_template_desc("ima-buf");
++		ret = template_desc_init_fields(template->fmt,
++						&(template->fields),
++						&(template->num_fields));
++		if (ret < 0) {
++			pr_err("template %s init failed, result: %d\n",
++			       (strlen(template->name) ?
++				template->name : template->fmt), ret);
++			return;
++		}
++	}
+ 
+ 	iint.ima_hash = &hash.hdr;
+ 	iint.ima_hash->algo = ima_hash_algo;
+@@ -664,7 +683,7 @@ static void process_buffer_measurement(const void *buf, int size,
+ 	if (ret < 0)
+ 		goto out;
+ 
+-	ret = ima_alloc_init_template(&event_data, &entry, template_desc);
++	ret = ima_alloc_init_template(&event_data, &entry, template);
+ 	if (ret < 0)
+ 		goto out;
+ 
+@@ -686,13 +705,9 @@ static void process_buffer_measurement(const void *buf, int size,
+  */
+ void ima_kexec_cmdline(const void *buf, int size)
+ {
+-	u32 secid;
+-
+-	if (buf && size != 0) {
+-		security_task_getsecid(current, &secid);
++	if (buf && size != 0)
+ 		process_buffer_measurement(buf, size, "kexec-cmdline",
+-					   current_cred(), secid);
+-	}
++					   KEXEC_CMDLINE, 0);
  }
-+
-+bool is_ppc_trustedboot_enabled(void)
-+{
-+	struct device_node *node;
-+	bool enabled = false;
-+
-+	node = get_ppc_fw_sb_node();
-+	enabled = of_property_read_bool(node, "trusted-enabled");
-+
-+	of_node_put(node);
-+
-+	pr_info("Trusted boot mode %s\n", enabled ? "enabled" : "disabled");
-+
-+	return enabled;
-+}
+ 
+ static int __init init_ima(void)
 -- 
 2.20.1
 
