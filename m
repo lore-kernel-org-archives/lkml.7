@@ -2,254 +2,212 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D79CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D28721A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB7621BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:27:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="En/E4jkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfJXV0K (ORCPT
+        id S1729192AbfJXV1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:26:10 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:50961 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729108AbfJXV0K (ORCPT
+        Thu, 24 Oct 2019 17:27:01 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44688 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729108AbfJXV1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:26:10 -0400
-Received: by mail-io1-f69.google.com with SMTP id t193so2309441iof.17
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:26:09 -0700 (PDT)
+        Thu, 24 Oct 2019 17:27:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e10so68901pgd.11;
+        Thu, 24 Oct 2019 14:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kUkEbegezOtNGv0tUZu87phHyx71IxZmkeyn60SQnOg=;
+        b=En/E4jkLnZHZy+mU0n+xYo6A5B2QCPZA7Q5Kl1DQ+zCBV2Hc9wujaBMWBIae6tUFs4
+         tIcWnJGOEas0Od0B5sk2Ti3COX9G44JnBiYC282/0jlx7tOc0tenD0sXLtqAmoB6CNS9
+         6SgVrQwFsaaOX+qnA/Byep1ttXDrnwRjv2jfKA2naIWKz5oHetekopM1VVPsAxLJOkCQ
+         oKnBFocH6OnRolWm3MB9T2WRI3+VyYB5OjJWz1D4Of8d64k+zNXQmcbnMaCNgv56F+Jj
+         /9dVAMeY3RoPG/51PUPpwCYtvWiTBP3lgfy9NRiLwmV+4DEmHcgi8u4A1rjlGptiuU83
+         JABA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=OgziGrqICJORLpk9uRJLJfmAgXK9EaKOjfhNbrWBTPU=;
-        b=H/Oxe/mnJNtKcyqAJbeZZR5q4DIWiiT3+GYH4ODH/H43Su/q+TfF56PSVh3ojz4UBM
-         m2/gJSCcAFZQClmVng3ZKdu0LYZqf+3grOhTsvQURWwbYuPLqQq+lzBW5O/jeQ/mAmXN
-         0fNqQyzYODeE3ukJXrss/06SBf1dfhEm4nxQraVEs6CBmOPtX20fAvkzB9oGHEGk0QeB
-         2Vm87chykeb53yvXk0hNtQ5ux6+3NcalLj5mSPOW2Su6vhIKcEPrK7iENV+CD06WqCL2
-         j9JCkh+D167SqW+BFskpXbiQ6TcEfyxWVz4C85XTeJeTzDlkbHVvgpVNeCxRWpEqT00W
-         0fkQ==
-X-Gm-Message-State: APjAAAUIl7UiSK3BrRvwe1dbJe+q0XoeLrM//uNHoZy3LG+cTHv/CKfV
-        HCy76qCHTuWz7uxIFcK2zoFBm43v2zqkYIjMo5ZTpLGZCcyl
-X-Google-Smtp-Source: APXvYqwhSejVvUD9IAyiXZ8CkYt98QbUnXdefY7RPmTUyw2EBJ2sogOLWSunzdUKfyJjn2mYuqmoMXPn3N0lU4HePuqlkBDgrTnX
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kUkEbegezOtNGv0tUZu87phHyx71IxZmkeyn60SQnOg=;
+        b=ZYonQvr89ElLPmnGuKZGBloXlS2oWE4JyvWToVobMRmjsMAK+CxQIdebqK/ZGgIZDO
+         rE7brCKyhr/7+JoCrUMMuVvSTf34S/q50eFC5elKP9NHmY6O/FqVxpYOUs/mbpqzxAVL
+         URyqdbn3892Hz24s5t58NpauN4rtWFKBskLNH8FbSzsLnxJe03JAX7PPPI9O3dMOpO+o
+         gIXoCMdfxo9MPd5xgG2l2bty6iussAFnIK8fmEAKcrHRvaE9VafQ8aOCBfulc7tbgTCK
+         gL68vBz8BP4LKYS4k/nz4lW+VDDnjN/hbEVU2ZkchPT6idwuCUi/aC4BMZ3kI2MvHWMG
+         Tv3g==
+X-Gm-Message-State: APjAAAVOS0Gxw25DR0IXLvVgNICRwLVA7s9KOq9pYRGQVpu7g29dMF9z
+        ww25Wbq4vOPj856HMtMB8Vs=
+X-Google-Smtp-Source: APXvYqy6D+C9a9cPHnf7c33gGSyEGcOdFs+7BB5wTPvhaC/RYI6SU99fdnydvmpO1wCIr8aRTVKUTQ==
+X-Received: by 2002:a65:5503:: with SMTP id f3mr106651pgr.351.1571952418762;
+        Thu, 24 Oct 2019 14:26:58 -0700 (PDT)
+Received: from localhost (g143.222-224-150.ppp.wakwak.ne.jp. [222.224.150.143])
+        by smtp.gmail.com with ESMTPSA id y17sm41661514pfo.171.2019.10.24.14.26.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 14:26:58 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 06:26:55 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org, Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 1/1] openrisc: add support for LiteX
+Message-ID: <20191024212655.GJ24874@lianli.shorne-pla.net>
+References: <20191023115427.23684-0-mholenko@antmicro.com>
+ <20191023115427.23684-1-mholenko@antmicro.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:8d09:: with SMTP id p9mr166371iod.227.1571952368718;
- Thu, 24 Oct 2019 14:26:08 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 14:26:08 -0700
-In-Reply-To: <00000000000074bc3105958042ef@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008a9ab60595aeaede@google.com>
-Subject: Re: KASAN: use-after-free Read in nf_ct_deliver_cached_events
-From:   syzbot <syzbot+c7aabc9fe93e7f3637ba@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023115427.23684-1-mholenko@antmicro.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hello,
 
-HEAD commit:    12d61c69 Add linux-next specific files for 20191024
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=121f85a7600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=afb75fd8c9fd5ed8
-dashboard link: https://syzkaller.appspot.com/bug?extid=c7aabc9fe93e7f3637ba
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10938e18e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147caa97600000
+On Wed, Oct 23, 2019 at 11:54:44AM +0200, Mateusz Holenko wrote:
+> From: Filip Kokosinski <fkokosinski@internships.antmicro.com>
+> 
+> This adds support for a basic LiteX-based SoC with a mor1kx soft CPU.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c7aabc9fe93e7f3637ba@syzkaller.appspotmail.com
+Thanks for getting these patches ready.
+ 
+> Signed-off-by: Filip Kokosinski <fkokosinski@internships.antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> ---
+>  MAINTAINERS                               |  1 +
+>  arch/openrisc/boot/dts/or1klitex.dts      | 49 +++++++++++++++++++++++
+>  arch/openrisc/configs/or1klitex_defconfig | 18 +++++++++
+>  3 files changed, 68 insertions(+)
+>  create mode 100644 arch/openrisc/boot/dts/or1klitex.dts
+>  create mode 100644 arch/openrisc/configs/or1klitex_defconfig
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c24a37833e78..e84b2cb4c186 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9500,6 +9500,7 @@ S:	Maintained
+>  F:	include/linux/litex.h
+>  F:	Documentation/devicetree/bindings/*/litex,*.yaml
+>  F:	drivers/tty/serial/liteuart.c
+> +F:	arch/openrisc/boot/dts/or1klitex.dts
+>  
+>  LIVE PATCHING
+>  M:	Josh Poimboeuf <jpoimboe@redhat.com>
+> diff --git a/arch/openrisc/boot/dts/or1klitex.dts b/arch/openrisc/boot/dts/or1klitex.dts
+> new file mode 100644
+> index 000000000000..63399398002d
+> --- /dev/null
+> +++ b/arch/openrisc/boot/dts/or1klitex.dts
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LiteX-based System on Chip
+> + *
+> + * Copyright (C) 2019 Antmicro Ltd <www.antmicro.com>
+> + */
+> +
+> +/dts-v1/;
+> +/ {
+> +	compatible = "opencores,or1ksim";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&pic>;
+> +
+> +	aliases {
+> +		serial0 = &serial0;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=liteuart";
 
-==================================================================
-BUG: KASAN: use-after-free in __nf_ct_ext_exist  
-include/net/netfilter/nf_conntrack_extend.h:53 [inline]
-BUG: KASAN: use-after-free in nf_ct_ext_exist  
-include/net/netfilter/nf_conntrack_extend.h:58 [inline]
-BUG: KASAN: use-after-free in __nf_ct_ext_find  
-include/net/netfilter/nf_conntrack_extend.h:63 [inline]
-BUG: KASAN: use-after-free in nf_ct_ecache_find  
-include/net/netfilter/nf_conntrack_ecache.h:35 [inline]
-BUG: KASAN: use-after-free in nf_ct_deliver_cached_events+0x5c3/0x6d0  
-net/netfilter/nf_conntrack_ecache.c:205
-Read of size 1 at addr ffff88809b955204 by task syz-executor245/8557
+As this depents on litex uart I will wait to queue this until it looks like the
+uart patches are accepted for 5.5 merge window.
 
-CPU: 1 PID: 8557 Comm: syz-executor245 Not tainted 5.4.0-rc4-next-20191024  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:129
-  __nf_ct_ext_exist include/net/netfilter/nf_conntrack_extend.h:53 [inline]
-  nf_ct_ext_exist include/net/netfilter/nf_conntrack_extend.h:58 [inline]
-  __nf_ct_ext_find include/net/netfilter/nf_conntrack_extend.h:63 [inline]
-  nf_ct_ecache_find include/net/netfilter/nf_conntrack_ecache.h:35 [inline]
-  nf_ct_deliver_cached_events+0x5c3/0x6d0  
-net/netfilter/nf_conntrack_ecache.c:205
-  nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:65 [inline]
-  nf_confirm+0x3d8/0x4d0 net/netfilter/nf_conntrack_proto.c:154
-  ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:262 [inline]
-  NF_HOOK_COND include/linux/netfilter.h:295 [inline]
-  ip_output+0x40d/0x670 net/ipv4/ip_output.c:432
-  dst_output include/net/dst.h:436 [inline]
-  ip_local_out+0xbb/0x1b0 net/ipv4/ip_output.c:125
-  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1559
-  udp_send_skb.isra.0+0x6d5/0x11b0 net/ipv4/udp.c:891
-  udp_sendmsg+0x1e8f/0x2810 net/ipv4/udp.c:1178
-  inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
-  sock_sendmsg_nosec net/socket.c:638 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:658
-  kernel_sendmsg+0x44/0x50 net/socket.c:678
-  rxrpc_send_data_packet+0x10cb/0x36b0 net/rxrpc/output.c:416
-  rxrpc_queue_packet net/rxrpc/sendmsg.c:220 [inline]
-  rxrpc_send_data+0x1097/0x4130 net/rxrpc/sendmsg.c:427
-  rxrpc_do_sendmsg+0xb8e/0x1d5f net/rxrpc/sendmsg.c:736
-  rxrpc_sendmsg+0x4d6/0x5f0 net/rxrpc/af_rxrpc.c:585
-  sock_sendmsg_nosec net/socket.c:638 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:658
-  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2312
-  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2414
-  __do_sys_sendmmsg net/socket.c:2443 [inline]
-  __se_sys_sendmmsg net/socket.c:2440 [inline]
-  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2440
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441279
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffcbb84fa8 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441279
-RDX: 0000000000000001 RSI: 0000000020005c00 RDI: 0000000000000003
-RBP: 00000000000141b6 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004020a0
-R13: 0000000000402130 R14: 0000000000000000 R15: 0000000000000000
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x10000000>;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
+> +			compatible = "opencores,or1200-rtlsvn481";
+> +			reg = <0>;
+> +			clock-frequency = <100000000>;
+> +		};
+> +	};
+> +
+> +	pic: pic {
+> +		compatible = "opencores,or1k-pic";
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +	};
+> +
+> +	serial0: serial@e0001800 {
+> +		device_type = "serial";
+> +		compatible = "litex,liteuart";
+> +		reg = <0xe0001800 0x100>;
+> +	};
+> +};
+> diff --git a/arch/openrisc/configs/or1klitex_defconfig b/arch/openrisc/configs/or1klitex_defconfig
+> new file mode 100644
+> index 000000000000..0e4c2e74451c
+> --- /dev/null
+> +++ b/arch/openrisc/configs/or1klitex_defconfig
+> @@ -0,0 +1,18 @@
+> +CONFIG_BLK_DEV_INITRD=y
+> +CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=y
+> +CONFIG_BUG_ON_DATA_CORRUPTION=y
+> +CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+> +CONFIG_CROSS_COMPILE="or32-linux-"
 
-Allocated by task 8557:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:510 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-  kasan_krealloc+0x84/0xc0 mm/kasan/common.c:565
-  __do_krealloc mm/slab_common.c:1655 [inline]
-  krealloc+0xa6/0xd0 mm/slab_common.c:1710
-  nf_ct_ext_add+0x2c7/0x630 net/netfilter/nf_conntrack_extend.c:74
-  nf_ct_ecache_ext_add include/net/netfilter/nf_conntrack_ecache.h:55  
-[inline]
-  init_conntrack.isra.0+0x5ed/0x11a0 net/netfilter/nf_conntrack_core.c:1470
-  resolve_normal_ct net/netfilter/nf_conntrack_core.c:1547 [inline]
-  nf_conntrack_in+0xd94/0x1460 net/netfilter/nf_conntrack_core.c:1707
-  ipv4_conntrack_local+0x127/0x220 net/netfilter/nf_conntrack_proto.c:200
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:262 [inline]
-  __ip_local_out+0x403/0x870 net/ipv4/ip_output.c:114
-  ip_local_out+0x2d/0x1b0 net/ipv4/ip_output.c:123
-  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1559
-  udp_send_skb.isra.0+0x6d5/0x11b0 net/ipv4/udp.c:891
-  udp_sendmsg+0x1e8f/0x2810 net/ipv4/udp.c:1178
-  inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
-  sock_sendmsg_nosec net/socket.c:638 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:658
-  kernel_sendmsg+0x44/0x50 net/socket.c:678
-  rxrpc_send_data_packet+0x10cb/0x36b0 net/rxrpc/output.c:416
-  rxrpc_queue_packet net/rxrpc/sendmsg.c:220 [inline]
-  rxrpc_send_data+0x1097/0x4130 net/rxrpc/sendmsg.c:427
-  rxrpc_do_sendmsg+0xb8e/0x1d5f net/rxrpc/sendmsg.c:736
-  rxrpc_sendmsg+0x4d6/0x5f0 net/rxrpc/af_rxrpc.c:585
-  sock_sendmsg_nosec net/socket.c:638 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:658
-  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2312
-  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2414
-  __do_sys_sendmmsg net/socket.c:2443 [inline]
-  __se_sys_sendmmsg net/socket.c:2440 [inline]
-  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2440
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+We use or1k-linux- now.  Is this what you really use?
 
-Freed by task 8557:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3757
-  nf_ct_ext_destroy+0x2ab/0x2e0 net/netfilter/nf_conntrack_extend.c:38
-  nf_conntrack_free+0x8f/0xe0 net/netfilter/nf_conntrack_core.c:1418
-  destroy_conntrack+0x1a2/0x270 net/netfilter/nf_conntrack_core.c:626
-  nf_conntrack_destroy+0xed/0x230 net/netfilter/core.c:600
-  nf_conntrack_put include/linux/netfilter/nf_conntrack_common.h:34 [inline]
-  nf_conntrack_put include/linux/netfilter/nf_conntrack_common.h:31 [inline]
-  nf_ct_resolve_clash net/netfilter/nf_conntrack_core.c:915 [inline]
-  __nf_conntrack_confirm+0x21ca/0x2830 net/netfilter/nf_conntrack_core.c:1038
-  nf_conntrack_confirm include/net/netfilter/nf_conntrack_core.h:63 [inline]
-  nf_confirm+0x3e7/0x4d0 net/netfilter/nf_conntrack_proto.c:154
-  ipv4_confirm+0x14c/0x240 net/netfilter/nf_conntrack_proto.c:169
-  nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
-  nf_hook_slow+0xbc/0x1e0 net/netfilter/core.c:512
-  nf_hook include/linux/netfilter.h:262 [inline]
-  NF_HOOK_COND include/linux/netfilter.h:295 [inline]
-  ip_output+0x40d/0x670 net/ipv4/ip_output.c:432
-  dst_output include/net/dst.h:436 [inline]
-  ip_local_out+0xbb/0x1b0 net/ipv4/ip_output.c:125
-  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1559
-  udp_send_skb.isra.0+0x6d5/0x11b0 net/ipv4/udp.c:891
-  udp_sendmsg+0x1e8f/0x2810 net/ipv4/udp.c:1178
-  inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
-  sock_sendmsg_nosec net/socket.c:638 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:658
-  kernel_sendmsg+0x44/0x50 net/socket.c:678
-  rxrpc_send_data_packet+0x10cb/0x36b0 net/rxrpc/output.c:416
-  rxrpc_queue_packet net/rxrpc/sendmsg.c:220 [inline]
-  rxrpc_send_data+0x1097/0x4130 net/rxrpc/sendmsg.c:427
-  rxrpc_do_sendmsg+0xb8e/0x1d5f net/rxrpc/sendmsg.c:736
-  rxrpc_sendmsg+0x4d6/0x5f0 net/rxrpc/af_rxrpc.c:585
-  sock_sendmsg_nosec net/socket.c:638 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:658
-  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2312
-  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2414
-  __do_sys_sendmmsg net/socket.c:2443 [inline]
-  __se_sys_sendmmsg net/socket.c:2440 [inline]
-  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2440
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> +CONFIG_DEVTMPFS=y
+> +CONFIG_DEVTMPFS_MOUNT=y
+> +CONFIG_EMBEDDED=y
+> +CONFIG_HZ_100=y
+> +CONFIG_INITRAMFS_SOURCE="openrisc-rootfs.cpio.gz"
+> +CONFIG_OF_OVERLAY=y
+> +CONFIG_OPENRISC_BUILTIN_DTB="or1klitex"
+> +CONFIG_PANIC_ON_OOPS=y
+> +CONFIG_PRINTK_TIME=y
+> +CONFIG_SERIAL_LITEUART=y
+> +CONFIG_SERIAL_LITEUART_CONSOLE=y
 
-The buggy address belongs to the object at ffff88809b955200
-  which belongs to the cache kmalloc-128 of size 128
-The buggy address is located 4 bytes inside of
-  128-byte region [ffff88809b955200, ffff88809b955280)
-The buggy address belongs to the page:
-page:ffffea00026e5540 refcount:1 mapcount:0 mapping:ffff8880aa400700  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea0002867b48 ffffea0002a3df88 ffff8880aa400700
-raw: 0000000000000000 ffff88809b955000 0000000100000010 0000000000000000
-page dumped because: kasan: bad access detected
+Note, Litex uart dependency lookds fine nere.
 
-Memory state around the buggy address:
-  ffff88809b955100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809b955180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff88809b955200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff88809b955280: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88809b955300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
+> +CONFIG_SOFTLOCKUP_DETECTOR=y
+> +CONFIG_TTY_PRINTK=y
+> -- 
+> 2.23.0
+> 
 
+-Stafford
