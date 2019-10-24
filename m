@@ -2,174 +2,93 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381DBCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57EFCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169C021925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B79721D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iHeBh7de"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410190AbfJXRF0 (ORCPT
+        id S2410179AbfJXRFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:05:26 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:34300 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410170AbfJXRFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 24 Oct 2019 13:05:25 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: dTzbzup2PDTL1ft7e2VxNAcemzw2cAxVjj32wRrm9+7FzrcmgC6IggiOGjXpht6kLf8o8r+uBh
- wb2H0ecdo1UisR+/q2pMKgKS86ZbuMT1zvNtej1xLG5f0Vp43hnrIZjtoescD/bIqhlI+wcCWv
- YCNejmVQr6JaeO9DNCoqFWnV9AippM1dkIk0QbXIoG6aNkH1tqaxUXgo+3/UZcoQsmjT25bk2J
- 2tC13Gc6O8etHnASx70oUdhx2Qoyo95kKvK6537HVy1GSHHvkQ/p1JYckbR5a3fTvmuIDJah6s
- T3M=
-X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
-   d="scan'208";a="52806866"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Oct 2019 10:05:24 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 24 Oct 2019 10:05:23 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 24 Oct 2019 10:05:20 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mpm@selenic.com>, <herbert@gondor.apana.org.au>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <arnd@arndb.de>,
-        <Tudor.Ambarus@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 2/2] hwrng: atmel: add new platform support for sam9x60
-Date:   Thu, 24 Oct 2019 20:04:52 +0300
-Message-ID: <20191024170452.2145-2-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191024170452.2145-1-codrin.ciubotariu@microchip.com>
-References: <20191024170452.2145-1-codrin.ciubotariu@microchip.com>
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39115 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2410164AbfJXRFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:05:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571936722;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=03+5VBqCPd68lTAQRb1/kJfIJ/zUP3/Day5xyJuYTDk=;
+        b=iHeBh7deK3GUuk+MT5EmdtQT+VJqfR8JxS+SlMf2gE23/BI84cqdwl/tsPscol6y8bj/5D
+        llz8i85IW3NpG8OFRbpE7uc/K/+Wg8trPWVTqQdrGCX9pVV2cIHo/CcfmpfFqitCByWsZN
+        Ubbvi0xrSCSlOc9v6hO8LuAv7MNBR4o=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-60-2XGw77MHNBi44lXx18IItw-1; Thu, 24 Oct 2019 13:05:18 -0400
+Received: by mail-lj1-f199.google.com with SMTP id m7so353982lje.11
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:05:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j/o8TfhScpVV/SFKEy17AB1Zf2axWbjJiCRdK+oaodM=;
+        b=VMkrt3HbWdkDCRgmDg5dqVeKt5QGoeJo6phR/vTfbpOGBTznhjOebSHdDFRFNVexrK
+         daDEeeCCIwm8d5jL2XbQMpveZBcmhccqlMrGqIqQCZB8sjijY/0XPHF12iPUBVx644j+
+         WwihCzmpBqngrQZzp4oGxlU+6Jy7PuBB/Dr+Iu1bIZBK+3KXSgh7h9cq/3tNIfP8Vj8t
+         qQtXbEU+Po9sRzeLqQ4xVeyQotol5G/EPDyT7gNW5GSf28SlhEt1G/XqPIadUW5O/LJO
+         +3n9PQXagRAp1LTW3Jb5taVkWhWa0LG3EHKb951QlSOEHLFW/rAso6y8LAyPTOZXTVKB
+         rkYw==
+X-Gm-Message-State: APjAAAVNdS/XEDBEaApmbwP4Uvszl1bs4kuQwRRrbRUGs+eSdXRIdZ3s
+        T0YsoJ4t6CsRYyyW57EPI+bOP/B0c7KRMUS3j3wpQ3rZrM4iPcyVzgEMfKehWsC8Nd0wEVO3Rhp
+        qPQFT3JEyQ4knbS3e6H4Pwd+eDKUfGT+IMr+v9aHf
+X-Received: by 2002:a05:6512:51a:: with SMTP id o26mr3538272lfb.132.1571936717132;
+        Thu, 24 Oct 2019 10:05:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzIPhBNg98lecbpGanzXdv/jvDEOMcLhjDgpSTFOb/kzuzr1Y8DKoHvodVSYY7pWM8MkSV9AFU5hw5SZdcroyw=
+X-Received: by 2002:a05:6512:51a:: with SMTP id o26mr3538262lfb.132.1571936716917;
+ Thu, 24 Oct 2019 10:05:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+References: <20191022141438.22002-1-mcroce@redhat.com> <20191023.202813.607713311547571229.davem@davemloft.net>
+In-Reply-To: <20191023.202813.607713311547571229.davem@davemloft.net>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 24 Oct 2019 19:04:40 +0200
+Message-ID: <CAGnkfhwbuXS7hYWuBqERi-FA1ZbjFqWN81aOP_MpcqsmPkkLVQ@mail.gmail.com>
+Subject: Re: [PATCH net-next] mvpp2: prefetch frame header
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        LKML <linux-kernel@vger.kernel.org>
+X-MC-Unique: 2XGw77MHNBi44lXx18IItw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add platform support for the new IP found on sam9x60 SoC. For this
-version, if the peripheral clk is above 100MHz, the HALFR bit must be
-set. This bit is available only if the IP can generate a random number
-every 168 cycles (instead of 84).
+On Thu, Oct 24, 2019 at 5:28 AM David Miller <davem@davemloft.net> wrote:
+> You cannot unmap it this early, because of all of the err_drop_frame
+> code paths that might be taken next.  The DMA mapping must stay in place
+> in those cases.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- drivers/char/hw_random/atmel-rng.c | 39 ++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+Thanks for noting this.
+I'm sending a series with this and other small fixes.
 
-diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
-index e55705745d5e..0aa9425e6c3e 100644
---- a/drivers/char/hw_random/atmel-rng.c
-+++ b/drivers/char/hw_random/atmel-rng.c
-@@ -14,14 +14,22 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/hw_random.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- 
- #define TRNG_CR		0x00
-+#define TRNG_MR		0x04
- #define TRNG_ISR	0x1c
- #define TRNG_ODATA	0x50
- 
- #define TRNG_KEY	0x524e4700 /* RNG */
- 
-+#define TRNG_HALFR	BIT(0) /* generate RN every 168 cycles */
-+
-+struct atmel_trng_pdata {
-+	bool has_half_rate;
-+};
-+
- struct atmel_trng {
- 	struct clk *clk;
- 	void __iomem *base;
-@@ -63,6 +71,7 @@ static int atmel_trng_probe(struct platform_device *pdev)
- {
- 	struct atmel_trng *trng;
- 	struct resource *res;
-+	const struct atmel_trng_pdata *pdata;
- 	int ret;
- 
- 	trng = devm_kzalloc(&pdev->dev, sizeof(*trng), GFP_KERNEL);
-@@ -77,6 +86,17 @@ static int atmel_trng_probe(struct platform_device *pdev)
- 	trng->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(trng->clk))
- 		return PTR_ERR(trng->clk);
-+	pdata = of_device_get_match_data(&pdev->dev);
-+	if (!pdata)
-+		return -ENODEV;
-+
-+	if (pdata->has_half_rate) {
-+		unsigned long rate = clk_get_rate(trng->clk);
-+
-+		/* if peripheral clk is above 100MHz, set HALFR */
-+		if (rate > 100000000)
-+			writel(TRNG_HALFR, trng->base + TRNG_MR);
-+	}
- 
- 	ret = clk_prepare_enable(trng->clk);
- 	if (ret)
-@@ -141,9 +161,24 @@ static const struct dev_pm_ops atmel_trng_pm_ops = {
- };
- #endif /* CONFIG_PM */
- 
-+static struct atmel_trng_pdata at91sam9g45_config = {
-+	.has_half_rate = false,
-+};
-+
-+static struct atmel_trng_pdata sam9x60_config = {
-+	.has_half_rate = true,
-+};
-+
- static const struct of_device_id atmel_trng_dt_ids[] = {
--	{ .compatible = "atmel,at91sam9g45-trng" },
--	{ /* sentinel */ }
-+	{
-+		.compatible = "atmel,at91sam9g45-trng",
-+		.data = &at91sam9g45_config,
-+	}, {
-+		.compatible = "microchip,sam9x60-trng",
-+		.data = &sam9x60_config,
-+	}, {
-+		/* sentinel */
-+	}
- };
- MODULE_DEVICE_TABLE(of, atmel_trng_dt_ids);
- 
--- 
-2.20.1
+Regards,
+--=20
+Matteo Croce
+per aspera ad upstream
 
