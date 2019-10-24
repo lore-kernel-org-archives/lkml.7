@@ -2,191 +2,70 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C49CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724DACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754712166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CSvPKwrI"
+	by mail.kernel.org (Postfix) with ESMTP id 40A1620659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393671AbfJXNsO (ORCPT
+        id S2439194AbfJXNsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:48:14 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36609 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391190AbfJXNsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:48:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v19so1154139pfm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YTkxn8NFML1hJbNb7nJmkzGe0KQtmV++af9G21VfEyE=;
-        b=CSvPKwrIgJPFj0aoiORTrDPRUZUgt7G0G2LGBujFZLU4bUkmSThfgZC/XsoGD2XXyO
-         1p3JVWhe4qu+wRH7UI3d4HQls64/1MFEIfPPfLB/mcdc1e3rL5BXz4iscOCtBLmhXyBu
-         Ylbo2PTxvm8T0Fz/zoBAhv+PlwY2rbfi/mXuH1AEG0o3cX0LxgZ/NS5q2AEE+FF/rAY1
-         jhzyDg+pxMQeQ41GgzIA/0Gl246bs2Q4U4tsWNJz5mYnbVDTX5SVx3ApNqqkGvoo479J
-         Y8VDN3yR8mFjiy2K2QeMjHDzM1umYLqrPEBpPB4jnGoAXu/9hzPe977YfEZz/Ejit5f0
-         arxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YTkxn8NFML1hJbNb7nJmkzGe0KQtmV++af9G21VfEyE=;
-        b=QI7hlHLrgtJo0TwCWkjp1FkuxY1k4bm80P5TUB7i+GXEJBpsUyf+pkQlHTAZUNH6gc
-         iTsI4Jd/eiH6gaOndF2yItiDBlldwNbhaYX5RbGuEewuvWagayHq9Hy9Z9TdixhR8Qq1
-         P1iTkkUPo/ypXuEuHn5Iudde8jp1M9Xo7HmpVzYy6QIok0qffU4/VDiWLGFPfM2l/ViO
-         qEeFr7z/NLxvwHapUJYbm0DBHVl37yHyck4G/r2378cnUHcVyF22c0UgzIHZkS0RTLXL
-         gzbOXweAS24Rq0Hy67fHD5XUzfE0QSZmHc+5386M5698JXsG+j1FZgVO4LVLP+s/36M1
-         sugg==
-X-Gm-Message-State: APjAAAUC3bl3rRB+pYlSYYcltt64aFvIWc1FFw8zoLr5RLYWkvBYiycc
-        pbZPI4X88qNWvMDT1XvNm0M+dMDAreofLlLcs1iKHg==
-X-Google-Smtp-Source: APXvYqwvLbt82jqjHLzp4xdwup+ogWdEiiBcSfJpJJLRribFLRZByhVHCu5c0rObT2Ia7jCUl/nz/1FIZpdLOJSAfzg=
-X-Received: by 2002:a17:90a:6509:: with SMTP id i9mr7155187pjj.47.1571924893072;
- Thu, 24 Oct 2019 06:48:13 -0700 (PDT)
+        Thu, 24 Oct 2019 09:48:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:52040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393832AbfJXNsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:48:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF12B7A7;
+        Thu, 24 Oct 2019 06:48:08 -0700 (PDT)
+Received: from [10.1.194.37] (unknown [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A65853F6C4;
+        Thu, 24 Oct 2019 06:48:07 -0700 (PDT)
+Subject: Re: [QUESTION] Hung task warning while running syzkaller test
+To:     Zhihao Cheng <chengzhihao1@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, peterz@infradead.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        patrick.bellasi@arm.com, tglx@linutronix.de
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+References: <0d7aa66d-d2b9-775c-56b3-543d132fdb84@huawei.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <1693d19e-56c7-9d6f-8e80-10fe82101cff@arm.com>
+Date:   Thu, 24 Oct 2019 14:48:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1571844200.git.andreyknvl@google.com> <beeae42e313ef57b4630cc9f36e2e78ad42fd5b7.1571844200.git.andreyknvl@google.com>
- <20191023152216.796aeafd832ba5351d86d3ca@linux-foundation.org>
-In-Reply-To: <20191023152216.796aeafd832ba5351d86d3ca@linux-foundation.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 24 Oct 2019 15:48:01 +0200
-Message-ID: <CAAeHK+xBrJSqicGC-T3c9V2yg6po4HSiekxVSBbT0uxLfVkwbA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] kcov: remote coverage support
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0d7aa66d-d2b9-775c-56b3-543d132fdb84@huawei.com>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:22 AM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Wed, 23 Oct 2019 17:24:29 +0200 Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> > This patch adds background thread coverage collection ability to kcov.
-> >
-> > With KCOV_ENABLE coverage is collected only for syscalls that are issued
-> > from the current process. With KCOV_REMOTE_ENABLE it's possible to collect
-> > coverage for arbitrary parts of the kernel code, provided that those parts
-> > are annotated with kcov_remote_start()/kcov_remote_stop().
-> >
-> > This allows to collect coverage from two types of kernel background
-> > threads: the global ones, that are spawned during kernel boot and are
-> > always running (e.g. USB hub_event()); and the local ones, that are
-> > spawned when a user interacts with some kernel interface (e.g. vhost
-> > workers).
-> >
-> > To enable collecting coverage from a global background thread, a unique
-> > global handle must be assigned and passed to the corresponding
-> > kcov_remote_start() call. Then a userspace process can pass a list of such
-> > handles to the KCOV_REMOTE_ENABLE ioctl in the handles array field of the
-> > kcov_remote_arg struct. This will attach the used kcov device to the code
-> > sections, that are referenced by those handles.
-> >
-> > Since there might be many local background threads spawned from different
-> > userspace processes, we can't use a single global handle per annotation.
-> > Instead, the userspace process passes a non-zero handle through the
-> > common_handle field of the kcov_remote_arg struct. This common handle gets
-> > saved to the kcov_handle field in the current task_struct and needs to be
-> > passed to the newly spawned threads via custom annotations. Those threads
-> > should in turn be annotated with kcov_remote_start()/kcov_remote_stop().
-> >
-> > Internally kcov stores handles as u64 integers. The top byte of a handle
-> > is used to denote the id of a subsystem that this handle belongs to, and
-> > the lower 4 bytes are used to denote a handle id within that subsystem.
-> > A reserved value 0 is used as a subsystem id for common handles as they
-> > don't belong to a particular subsystem. The bytes 4-7 are currently
-> > reserved and must be zero. In the future the number of bytes used for the
-> > subsystem or handle ids might be increased.
-> >
-> > When a particular userspace proccess collects coverage by via a common
-> > handle, kcov will collect coverage for each code section that is annotated
-> > to use the common handle obtained as kcov_handle from the current
-> > task_struct. However non common handles allow to collect coverage
-> > selectively from different subsystems.
-> >
-> > ...
-> >
-> > +static struct kcov_remote *kcov_remote_add(struct kcov *kcov, u64 handle)
-> > +{
-> > +     struct kcov_remote *remote;
-> > +
-> > +     if (kcov_remote_find(handle))
-> > +             return ERR_PTR(-EEXIST);
-> > +     remote = kmalloc(sizeof(*remote), GFP_ATOMIC);
-> > +     if (!remote)
-> > +             return ERR_PTR(-ENOMEM);
-> > +     remote->handle = handle;
-> > +     remote->kcov = kcov;
-> > +     hash_add(kcov_remote_map, &remote->hnode, handle);
-> > +     return remote;
-> > +}
-> > +
-> >
-> > ...
-> >
-> > +             spin_lock(&kcov_remote_lock);
-> > +             for (i = 0; i < remote_arg->num_handles; i++) {
-> > +                     kcov_debug("handle %llx\n", remote_arg->handles[i]);
-> > +                     if (!kcov_check_handle(remote_arg->handles[i],
-> > +                                             false, true, false)) {
-> > +                             spin_unlock(&kcov_remote_lock);
-> > +                             kcov_disable(t, kcov);
-> > +                             return -EINVAL;
-> > +                     }
-> > +                     remote = kcov_remote_add(kcov, remote_arg->handles[i]);
-> > +                     if (IS_ERR(remote)) {
-> > +                             spin_unlock(&kcov_remote_lock);
-> > +                             kcov_disable(t, kcov);
-> > +                             return PTR_ERR(remote);
-> > +                     }
-> > +             }
->
-> It's worrisome that this code can perform up to 65536 GFP_ATOMIC
-> allocations without coming up for air.  The possibility of ENOMEM or of
-> causing collateral problems is significant.  It doesn't look too hard
-> to change this to use GFP_KERNEL?
+Hi,
 
-Sure, I'll do that in v3. I can also change the limit on the number of
-handles to something lower (0x100?).
+On 14/10/2019 08:03, Zhihao Cheng wrote:
+> Hi, everyone. We met a hung task problem while running syzkaller test. The stacks of hung tasks vary in net/fs/sched, and we provide a stable reproduce test case in fs. The higher the kernel version, the lower the probability of reproduce. Maybe the mainline has gradually optimized the scheduling and mutex.
+> 
+> Environment:
+> 	A. qemu(x86_64 8-core 16GB-RAM)
+> 	B. physical machine (x86_64 8-core 314GB-RAM)
+> 
+> 	./syz-execprog -executor=/home/abc/syz-executor -repeat=0 -procs=16 -cover=0 repro
+> repro is a configuration file containing syzkaller execution instructions, which shown as follows:
+> 	syz_execute_func(&(0x7f0000000140)="f2aa984413e80f059532058300000071f32ef30f1b6f002e676666440f381d953b0000009fcc77a7141e8f6978e394db96000000928640c4e2b140da6c4f086447deecf2460fd6c40f49100045660fc462c0f726448047000040df6e32b8417e10bd61796e91565646bc16442ecbb1a978c33537771656c441add398b50000000feb76f7f7210173dddfc421785a6600a32c9f5d04ecc7c764660f600500040000c4035922770063c4217be62e450f8a0163000021f0c4e25dbe044c31e053b3eb53b3eb890f32d393400f383ca8faffec1f8dbf4feeee1e480404fb2e400f1ad30fae746d00ab07c4a2d538cb0ff803461439f5e3480f5140a3c4c4021bf7e8561eeaea0f6c3dce67460ffd1a000fb2430f12f5c423557904e774")
+> 	socket(0x1, 0x80000, 0x4)
+> 
 
->
-> > +u64 kcov_common_handle(void)
-> > +{
-> > +     return current->kcov_handle;
-> > +}
->
-> I don't immediately understand what this "common handle" thing is all about.
-> Code is rather lacking in this sort of high-level commentary?
+I did try to run that but kept hitting cgroup config options that aren't
+enabled in my defconfig - I gave up after net_cls, net_prio and the freezer.
 
-It's described in the documentation, but I'll add comments to the
-exported functions to explain how they work and how they should be
-used.
-
-Thanks!
+Could you please share your .config?
+ 
