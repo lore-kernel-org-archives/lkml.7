@@ -2,125 +2,154 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A075BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312B1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A1B20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76EE20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZ4aahfn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZWe+8JC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfJXVbm (ORCPT
+        id S1729484AbfJXVcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:31:42 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40593 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729404AbfJXVbl (ORCPT
+        Thu, 24 Oct 2019 17:32:23 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43526 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbfJXVcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:31:41 -0400
-Received: by mail-lj1-f195.google.com with SMTP id u22so253744lji.7;
-        Thu, 24 Oct 2019 14:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eSQ3m+e1MU4dsQtSCsit4VaAvQDaKTn6EdmojNuKjSc=;
-        b=NZ4aahfnXpfmG4v61UhNZ9t7J+0jrG3GJ4nh3YI98GcIV/6jRgCwZR7kYfoeh/+DyC
-         pzGSWcOEjKw64BWaRhIV06rtXMgnkHsBYhkGB4ZV7jbBwu901zxcW2IXthWIWqMFJDoe
-         Df7iGNVRcg3RY/vJr7gnRUrhhb2R9Px2vMG080yQhwpW1YnwA2nEZ2fkL6P1VEc1rr8V
-         XoRJ/TtkT50zq9LCWJCE0KPukh+687r2T/Gux5HHz1Pj0yrkBfso3IwvkscO2awx4ywP
-         NByLwLiyAu4RiEnCAPoS4h6dRLLlmQwwxTGs+UbMP/ys0EvEGkbR7IWwk0iw9By6sSJn
-         OwYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=eSQ3m+e1MU4dsQtSCsit4VaAvQDaKTn6EdmojNuKjSc=;
-        b=C7bAWZp0TazJshTutp8hmKxdQqbkSK3oXuzG3A/G3FSqbr75po2eATuOExHkZbFm0n
-         iHdEtASp7wgWk9aGK7aTfiEdsNXAwnSymxYb1FcFDezwxb7fSJJnACK7dq6N+oBlcdgB
-         u7+df8zmMpIN75iEilkXffeUqgq7L7kJUmE10thcYhv3X1jaulf7riGhlKRHHX2zO13L
-         nilvwyXFfIut897C9HQvuV+csuqc3UYffR9DpQh3UsYPjPyux/CAHfXZfZxGJJcR7Reh
-         9w0KP10HpLlHhtHCpM9IQYw/UrlhDg20UiKNOeoJZ9ni8nvPo6/x9/3xLole+XYJkBvl
-         Yb4Q==
-X-Gm-Message-State: APjAAAXkdHc1GfS68cXx5Eq73Ff0GmWR02TQex/ZprwNt2kyOcDQdI/8
-        niW/JB0x295l1UdVpa6dLYY=
-X-Google-Smtp-Source: APXvYqzC0nwCxdi3VvyO1zohmAjYqJFlsSgakuNgILaQ+FnFsVqoq3/yMLnmQgg55KmRQ8gQrCMblA==
-X-Received: by 2002:a2e:4751:: with SMTP id u78mr27323211lja.210.1571952698932;
-        Thu, 24 Oct 2019 14:31:38 -0700 (PDT)
-Received: from localhost.localdomain ([93.152.168.243])
-        by smtp.gmail.com with ESMTPSA id t8sm20228336ljd.18.2019.10.24.14.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 14:31:38 -0700 (PDT)
-From:   Samuil Ivanov <samuil.ivanovbg@gmail.com>
-To:     gregkh@linuxfoundation.org, manishc@marvell.com,
-        GR-Linux-NIC-Dev@marvell.com
-Cc:     samuil.ivanovbg@gmail.com, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] Staging: qlge: Rename prefix of a function to qlge
-Date:   Fri, 25 Oct 2019 00:29:41 +0300
-Message-Id: <20191024212941.28149-4-samuil.ivanovbg@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024212941.28149-1-samuil.ivanovbg@gmail.com>
-References: <20191024212941.28149-1-samuil.ivanovbg@gmail.com>
+        Thu, 24 Oct 2019 17:32:23 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9OLSVH7149758;
+        Thu, 24 Oct 2019 21:31:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=7VNCm8/h59zAbyDESPWUwTXCjH05vwC9XImN45kK2og=;
+ b=ZWe+8JC8tshXEZcb6gNK3DIukQBAeEETMDfC0XT+N8FqGLQdH+2w/5kCuFjMuhYFZfrF
+ jmBi5rHi6Gp04aj29Gtkcuipcx3qIlSvzQn65mu6O2Pa9dOs/GymgzHnXfK6kwVO3OfF
+ SEScMPC4vddgRHA9rKDDOI/ql3xPgRjrO2Lu6l+H7+yhB0J8kzDEK0PqlnChiJAm3Rz1
+ ALRRvJlEHcg0QtxHc6Ved+o1gxypFqjqP5HJty2LtbuGc6o7kJDjmC939b8bZUux993k
+ Dfh/uaB77xaC2dXC20VbSg1iTtOuYdOcadr0p7mXpE7My9AXjLmsabANBNw8tyfO2crW eg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2vqteq6c9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Oct 2019 21:31:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9OLSQLM014161;
+        Thu, 24 Oct 2019 21:31:54 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2vtsk5t3by-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Oct 2019 21:31:54 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9OLVrJF006728;
+        Thu, 24 Oct 2019 21:31:53 GMT
+Received: from dhcp-10-10-58-254.usdhcp.oraclecorp.com (/10.10.58.254)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 24 Oct 2019 14:31:52 -0700
+Subject: Re: [PATCH 4/5] tracing: Handle the trace array ref counter in new
+ functions
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Joe Jin <joe.jin@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+References: <1565805327-579-1-git-send-email-divya.indi@oracle.com>
+ <1565805327-579-5-git-send-email-divya.indi@oracle.com>
+ <20191015190436.65c8c7a3@gandalf.local.home>
+ <4cad186e-ba8b-8e1a-731b-4350a095ba5a@oracle.com>
+ <20191022225253.4086195c@oasis.local.home>
+ <2b08751a-4028-2130-9a70-c2aa2d76a31c@oracle.com>
+ <20191024090037.78fe9f30@gandalf.local.home>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <74a1af20-5f99-bb64-1e0f-c8405bd68014@oracle.com>
+Date:   Thu, 24 Oct 2019 14:31:51 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191024090037.78fe9f30@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910240202
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910240202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ql_mb_about_fw renamed to
-qlge_mb_about_fw and it's clients updated.
+Hi Steven,
 
-Signed-off-by: Samuil Ivanov <samuil.ivanovbg@gmail.com>
----
- drivers/staging/qlge/qlge.h      | 2 +-
- drivers/staging/qlge/qlge_main.c | 2 +-
- drivers/staging/qlge/qlge_mpi.c  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On 10/24/19 6:00 AM, Steven Rostedt wrote:
+> On Wed, 23 Oct 2019 15:57:49 -0700
+> Divya Indi <divya.indi@oracle.com> wrote:
+>
+>> Hi Steven,                                                                         
+>>                                                                                  
+>> A few clarifications on this discussion on reference counter -                   
+>>                                                                                  
+>> 1) We will still need to export trace_array_put() to be used for every           
+>> trace_array_get_by_name() OR trace_array_create() + trace_array_get().        
+> I'm fine with exporting trace_array_put, and even trace_array_get.
+>       
+>>                                                                                  
+>> How else will we reduce the reference counter [For eg: When multiple modules     
+>> lookup the same trace array (say, reference counter = 4)]?                       
+>>                                                                                  
+>> 2) tr = trace_array_create("my_tr");                                             
+>>    trace_array_get(tr);                                                          
+>>                                                                                  
+>> Both of these functions will iterate through the list of trace arrays to verify  
+>> whether the trace array exists (redundant, but more intuitive? Does this seem    
+>> acceptable?)                                                                     
+>>                                                                                  
+>> To avoid iterating twice, we went with increasing ref_ctr in trace_array_create. 
+>> This necessitated a trace_array_put() in instance_mkdir (Or as suggested below,
+>> we can do this trace_array_put() in instance_rmdir().)                        
+>>                                                                                                                
+>>                                                                                  
+>> 3) A summary of suggested changes (Let me know if this looks good) -                                              
+>>                                                                                  
+>> tr = trace_array_get_by_name("foo-bar"); // ref_ctr++.                           
+>>                                                                                  
+>> if (!tr)                                                                         
+>> {                                                                                
+>>         // instance_mkdir also causes ref_ctr = 1                                
+> You'll need locking for anyone who does this, and check the return
+> status below for "foo-bar" existing already (due to another thread
+> jumping in here).
 
-diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-index d3f10c95c781..649f1fd10739 100644
---- a/drivers/staging/qlge/qlge.h
-+++ b/drivers/staging/qlge/qlge.h
-@@ -2266,7 +2266,7 @@ int qlge_soft_reset_mpi_risc(struct ql_adapter *qdev);
- int ql_dump_risc_ram_area(struct ql_adapter *qdev, void *buf, u32 ram_addr,
- 			  int word_count);
- int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump);
--int ql_mb_about_fw(struct ql_adapter *qdev);
-+int qlge_mb_about_fw(struct ql_adapter *qdev);
- int ql_mb_wol_set_magic(struct ql_adapter *qdev, u32 enable_wol);
- int ql_mb_wol_mode(struct ql_adapter *qdev, u32 wol);
- int ql_mb_set_led_cfg(struct ql_adapter *qdev, u32 led_config);
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 0c381d91faa6..b8f4f4e5e579 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -880,7 +880,7 @@ static int ql_8000_port_initialize(struct ql_adapter *qdev)
- 	 * Get MPI firmware version for driver banner
- 	 * and ethool info.
- 	 */
--	status = ql_mb_about_fw(qdev);
-+	status = qlge_mb_about_fw(qdev);
- 	if (status)
- 		goto exit;
- 	status = ql_mb_get_fw_state(qdev);
-diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-index ccffe0b256fa..092695719c58 100644
---- a/drivers/staging/qlge/qlge_mpi.c
-+++ b/drivers/staging/qlge/qlge_mpi.c
-@@ -612,7 +612,7 @@ static int ql_mailbox_command(struct ql_adapter *qdev, struct mbox_params *mbcp)
-  * driver banner and for ethtool info.
-  * Returns zero on success.
-  */
--int ql_mb_about_fw(struct ql_adapter *qdev)
-+int qlge_mb_about_fw(struct ql_adapter *qdev)
- {
- 	struct mbox_params mbc;
- 	struct mbox_params *mbcp = &mbc;
--- 
-2.17.1
+Right, Noted! Thanks for the pointer. 
 
+>
+> -- Steve
+>
+>>         tr = trace_array_create("foo-bar"); // ref_ctr = 1                       
+>>         trace_array_get(tr); // ref_ctr++                                        
+>> }                                                                                
+>>                                                                                  
+>> trace_array_printk(.....);                                                       
+>> trace_array_set_clr_event(......);                                               
+>> ...                                                                              
+>> ...                                                                              
+>> ...                                                                              
+>> // Done using the trace array.                                                   
+>> trace_array_put(tr); // ref_ctr--                                                
+>> ...                                                                              
+>> ...                                                                              
+>> ...                                                                              
+>> // We can now remove the trace array via trace_array_destroy or instance_rmdir()
+>> trace_array_destroy(tr); // ref_ctr > 1 returns -EBUSY.
