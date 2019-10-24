@@ -2,52 +2,54 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4613CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A567CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A693220650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E424820679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="CrpDtFtR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="FlWPxduv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410072AbfJXRFI (ORCPT
+        id S2410085AbfJXRFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:05:08 -0400
-Received: from dougal.metanate.com ([90.155.101.14]:4724 "EHLO metanate.com"
+        Thu, 24 Oct 2019 13:05:11 -0400
+Received: from dougal.metanate.com ([90.155.101.14]:18348 "EHLO metanate.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405819AbfJXRFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:05:08 -0400
-X-Greylist: delayed 1158 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 13:05:07 EDT
+        id S2405819AbfJXRFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:05:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
-         s=stronger; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+         s=stronger; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=VPmIoUH0glx+4sENj5EpAXnVlu8h+LV7UwdHblVC1Ng=; b=CrpDtFtRqbksIhycdO0lgzURu+
-        8yjQ5E8VqRi22Exu5Z2OryrkD5BvTXOSvzoz5/VbTwGdOgtVFTe9EAO+XmJzVsJBtK+GCJXPeOU8q
-        JyW0P1mrrB39R/NO9aMAtuo7mHixa6/7kK6fenK3uGHOmx2BVccR8YjDuMrJgR2gy3C4HdJBOJN7O
-        bHQbvWOaAo3M47xf7okxFiQLebFekLLDQp4Aq+xpr+YCkOGmwaZqm06/gwsZUPcJBuE/tOGaSRg3v
-        1ATaMjAG7/apiZ+TlttBvy7uurNgYfL/bvG96VNt99pYkDC0gQVuP9xYLl92jtbbWV9kBIzR2UUY+
-        p6bp7lHg==;
+        bh=mQaqDJfBUJCKU7f6avq0mzD47+ygTkCFs3EjoJcaN+4=; b=FlWPxduvtt9U8hlkrCWU30aFS2
+        Xb0YnEt4mEuav2Od5AyttpkUw55dCU6CFJm3Zgs+bGhLBRBx0BzMiq6dJ0OVs7IoJysSYCZvY5+HG
+        Z6v5Okdi599VEl+TJL/YcHdr8Q4rUEBSv8fG8wSz6mVC6FAa0CzxrkI7UzLckZyuuE0Isx8AEpuwq
+        h6uow3vlflYQ/kj4s/QZmIui8/ijUo/GxSq3j/gDHZe/5OikLxob/4Ks40QvHAdG/YjJ3giTIvxp4
+        3UYe45ageLPt04rWFuGxoxJPRK9i5xXptUWkUNUFHSq2cO+fMrQYNg5Km+Q4sws2utg2CHenNtcZ2
+        zYcfCHDA==;
 Received: from 188-39-28-98.static.enta.net ([188.39.28.98] helo=donbot.corp.numark.com)
         by email.metanate.com with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92.3)
         (envelope-from <john@metanate.com>)
-        id 1iNgF9-0004oc-4a; Thu, 24 Oct 2019 17:45:47 +0100
+        id 1iNgF9-0004oc-LY; Thu, 24 Oct 2019 17:45:47 +0100
 From:   John Keeping <john@metanate.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, John Keeping <john@metanate.com>
-Subject: [PATCH 0/6] USB: gadget: f_hid: fix lifetime issues
-Date:   Thu, 24 Oct 2019 17:45:32 +0100
-Message-Id: <20191024164538.3161474-1-john@metanate.com>
+Subject: [PATCH 2/6] USB: gadget: f_hid: switch to IDR for tracking minors
+Date:   Thu, 24 Oct 2019 17:45:34 +0100
+Message-Id: <20191024164538.3161474-3-john@metanate.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191024164538.3161474-1-john@metanate.com>
+References: <20191024164538.3161474-1-john@metanate.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Authenticated: YES
@@ -56,36 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-File descriptors referencing the /dev/hidgN device created by the HID
-gadget can outlive the underlying gadget function, which creates easy to
-trigger use-after-frees in the kernel.
+In the following commits, we are going to move the cdev allocation up to
+the module initialisation, and will look up the associated f_hidg
+structure from the open operation.
 
-A simple reproduction for this using the libusbgx example programs is:
+Start preparing for this by switching from IDA to IDR.
 
-	$ gadget-hid
-	$ exec 3<> /dev/hidg0
-	$ gadget-vid-pid-remove
-	$ exec 3<&-
+Signed-off-by: John Keeping <john@metanate.com>
+---
+ drivers/usb/gadget/function/f_hid.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Closing the file descriptor on the last line triggers a use-after-free
-which can be seen immediately with slub_debug=P.
-
-This series fixes this by making the struct cdev associated with the
-module rather than dynamically allocated for the gadget and changing
-struct f_hidg to be refcounted instead of tied to the gadget lifetime.
-
-John Keeping (6):
-  USB: gadget: f_hid: move chardev setup to module init
-  USB: gadget: f_hid: switch to IDR for tracking minors
-  USB: gadget: f_hid: find f_hidg by IDR lookup on open
-  USB: gadget: f_hid: decouple cdev from f_hidg lifetime
-  USB: gadget: f_hid: refcount f_hidg structure
-  USB: gadget: f_hid: return ENODEV from read/write after deletion
-
- drivers/usb/gadget/function/f_hid.c | 141 +++++++++++++++++++---------
- drivers/usb/gadget/function/u_hid.h |   3 -
- 2 files changed, 95 insertions(+), 49 deletions(-)
-
+diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
+index e9e45f9eae80..838256086bd2 100644
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -24,8 +24,8 @@
+ 
+ static int major, minors;
+ static struct class *hidg_class;
+-static DEFINE_IDA(hidg_ida);
+-static DEFINE_MUTEX(hidg_ida_lock); /* protects access to hidg_ida */
++static DEFINE_IDR(hidg_idr);
++static DEFINE_MUTEX(hidg_idr_lock); /* protects access to hidg_idr */
+ 
+ /*-------------------------------------------------------------------------*/
+ /*                            HID gadget struct                            */
+@@ -851,9 +851,9 @@ static inline int hidg_get_minor(void)
+ {
+ 	int ret;
+ 
+-	ret = ida_simple_get(&hidg_ida, 0, 0, GFP_KERNEL);
++	ret = idr_alloc(&hidg_idr, NULL, 0, 0, GFP_KERNEL);
+ 	if (ret >= HIDG_MINORS) {
+-		ida_simple_remove(&hidg_ida, ret);
++		idr_remove(&hidg_idr, ret);
+ 		ret = -ENODEV;
+ 	}
+ 
+@@ -996,7 +996,7 @@ static const struct config_item_type hid_func_type = {
+ 
+ static inline void hidg_put_minor(int minor)
+ {
+-	ida_simple_remove(&hidg_ida, minor);
++	idr_remove(&hidg_idr, minor);
+ }
+ 
+ static void hidg_free_inst(struct usb_function_instance *f)
+@@ -1005,9 +1005,9 @@ static void hidg_free_inst(struct usb_function_instance *f)
+ 
+ 	opts = container_of(f, struct f_hid_opts, func_inst);
+ 
+-	mutex_lock(&hidg_ida_lock);
++	mutex_lock(&hidg_idr_lock);
+ 	hidg_put_minor(opts->minor);
+-	mutex_unlock(&hidg_ida_lock);
++	mutex_unlock(&hidg_idr_lock);
+ 
+ 	if (opts->report_desc_alloc)
+ 		kfree(opts->report_desc);
+@@ -1027,7 +1027,7 @@ static struct usb_function_instance *hidg_alloc_inst(void)
+ 	opts->func_inst.free_func_inst = hidg_free_inst;
+ 	ret = &opts->func_inst;
+ 
+-	mutex_lock(&hidg_ida_lock);
++	mutex_lock(&hidg_idr_lock);
+ 
+ 	opts->minor = hidg_get_minor();
+ 	if (opts->minor < 0) {
+@@ -1038,7 +1038,7 @@ static struct usb_function_instance *hidg_alloc_inst(void)
+ 	config_group_init_type_name(&opts->func_inst.group, "", &hid_func_type);
+ 
+ unlock:
+-	mutex_unlock(&hidg_ida_lock);
++	mutex_unlock(&hidg_idr_lock);
+ 	return ret;
+ }
+ 
 -- 
 2.23.0
 
