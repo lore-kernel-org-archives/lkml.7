@@ -2,144 +2,128 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A70CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC2ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BE32166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903EC20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="fEAnr2/i"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1mM97qM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408899AbfJXJfU (ORCPT
+        id S2408910AbfJXJfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:35:20 -0400
-Received: from mail-eopbgr70103.outbound.protection.outlook.com ([40.107.7.103]:4005
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408871AbfJXJfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:35:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cmGiBsQxz3T86HnbxSahtPCZQiOWo7K6bAsIeym0n5GpvZzeBpAcVwPs2v1+jHPgkoZpf8wUxIqs4YKZyHUCb6LSOH3pn8rkgbx5ZAA2vZXzw8hV21FScyu3GH5I0r4sFLpBptfoU4tumfDYDdaHhOAoqIAg7KKfBTzHwEKjypdmB9kqKpNNp22c2deK8HocEfd3TK6nt6fRz1XaHO6fEV7azWsAp0XqdnZZ7gCWUP7w8Sx3WzKa33mbMYQ6esS8paBXPYjEqYOpJeldDHbcGbh64EtbL4RDNvcYRf8SWnQqoCy9ZMg0PmzzRiDXWKRie1gumqVD2k6f3X3+mUmthg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DIt9WUl36EPMd6/sTow+jAoauCcP0HziIST+STpNbbY=;
- b=gEJ6Fr4/2XPwmUqdJEkHtAcqkzJLv1qKL92rKRfQh6AfQePvhiZ67pZFNwV/VuoKe65CRS8NdKty6ok7y/eR3u0Vd6dpfEVoyb9FU/Dyk0pzzLdbB+NmRlRmROjW4AejpDFddoYDfiIgRL8RFh/UXZVvXfiSyCTjMw9+QKj+l2vZjV1pDSH3pT9rtkOSqh9nVcSAOrqdyKJWxmlC/kITIf74nrliU4n7uCYMLCvZQOkDnX5sHnQLfVyTnUvACFZe8PxNI8uyTqi0I2bRFcH8iI1aGIPoXlNoNlRKLRqFDeuL3XLEz4uOEGTsMI1RYv/923GMEGV1vVoztnQTdxwmww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DIt9WUl36EPMd6/sTow+jAoauCcP0HziIST+STpNbbY=;
- b=fEAnr2/i3O1AFS3nbpfEP8nNqk2J98i29Ta1hHaixE6dDgnhOQxfsfxuZdfA1FoKmOIky8RikVrhIENBJQZaDuSscfbgTUCYfJwUvhLLXD96t0J3rrr38rgQM1Hq/pS9wFlWvV0Gz7tHQUrFL7AK1wapZGeBnZx/qiLMDB7cTGA=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3546.eurprd02.prod.outlook.com (52.134.69.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.22; Thu, 24 Oct 2019 09:35:12 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.030; Thu, 24 Oct 2019
- 09:35:12 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     "rppt@kernel.org" <rppt@kernel.org>
-CC:     "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "deanbo422@gmail.com" <deanbo422@gmail.com>,
-        "deller@gmx.de" <deller@gmx.de>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "gerg@linux-m68k.org" <gerg@linux-m68k.org>,
-        "green.hu@gmail.com" <green.hu@gmail.com>,
-        "jdike@addtoit.com" <jdike@addtoit.com>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "mattst88@gmail.com" <mattst88@gmail.com>,
-        "monstr@monstr.eu" <monstr@monstr.eu>,
-        "msalter@redhat.com" <msalter@redhat.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "sammy@sammy.net" <sammy@sammy.net>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
-Thread-Topic: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
-Thread-Index: AQHVik5IAuql7dy41k6PeTHw6KB4tA==
-Date:   Thu, 24 Oct 2019 09:35:12 +0000
-Message-ID: <20191024093451.15161-1-peda@axentia.se>
-References: <1571822941-29776-9-git-send-email-rppt@kernel.org>
-In-Reply-To: <1571822941-29776-9-git-send-email-rppt@kernel.org>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.11.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0501CA0011.eurprd05.prod.outlook.com
- (2603:10a6:3:1a::21) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c3bd73e-ee81-4715-6d9a-08d7586577ad
-x-ms-traffictypediagnostic: DB3PR0202MB3546:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0202MB35468A3E1F5AE0EF9B52833BBC6A0@DB3PR0202MB3546.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0200DDA8BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(396003)(366004)(376002)(136003)(346002)(199004)(189003)(64756008)(1076003)(66946007)(66476007)(66446008)(66556008)(4744005)(50226002)(8936002)(8676002)(1730700003)(4001150100001)(86362001)(305945005)(7406005)(7736002)(66066001)(7416002)(2501003)(54906003)(99286004)(81156014)(81166006)(186003)(14454004)(5660300002)(76176011)(316002)(52116002)(2616005)(53546011)(6506007)(256004)(102836004)(386003)(26005)(6436002)(6512007)(71190400001)(71200400001)(446003)(11346002)(229853002)(486006)(5640700003)(508600001)(6486002)(25786009)(4326008)(476003)(2906002)(6246003)(107886003)(6916009)(6116002)(3846002)(2351001)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3546;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6Z+ITuVOvCqKitQmaADNxgLO2KW0fDtwzxFLSRNNn7r/d6V85rreanKo2s+2tZaj57S+YSqLI8dMNxycmFP8TlbakDoiFDVeKSRPOuJMnSnLz1FzJ7iBy5FiQjktww9Zw3RWbkbaN4l8LIFun9RYGE1a+THN5jNpOMYuioTqkSimDg+3oKV0TYwESyYh1EUIGoUOwF4rz96lC1DTez136wnhWjR8bRzbsSQlFYS9NScyPinY2fuJ4aYSJh+2DAxCiSAFCobU6RUtFi4veZnHL30ia6pfX28Yt3ehNs5GYmVtFyV9xNES/PlYYRfl6QOXFPAbB1XEzjvbSKf4E0nKvP5X+69BruKyQA070TgGVgdtHQJdNqcM3TihTxK47muVoD9QxJUr985Mz1Js63GkmAokSqaiYs0iRgoJbAAJ+NZnMA++qwWJCmuskvsG/Dto
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 24 Oct 2019 05:35:51 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33169 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408901AbfJXJfv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:35:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s1so16499950wro.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 02:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kmED9H3HhgwVVQ86s12b9wU01cqR0QgzFhbCOFHeClU=;
+        b=S1mM97qME0Ixk73g4LGqcCagCBx33p9xYc6nmNo95xpmoy4pywt5jOn1AOzctxPT0N
+         nB8+li9SpYltwU9/B58VVKFmqClfis9qWSOprXtc6VB6a9Puf83HLXQkNBet/h33yqAR
+         WVArAD+EZt2+aaggCpxWLw+3LbCroUBv86+xfu3mB6539VfCotaYfsEgnnCDrmW5n5+E
+         XHbqIRWbvT+T7Np7UUuoTXPX8BPuLV6v0uHCj35eGdrCSPzSfzUz9Eo49WkDWFFsqcgS
+         vLpKsOhAAQstb+gTrd/fpMaJDfK81gR6ltUBmaTVsSQ0P+GSWyVj3T4N0+tHa5V2Pqnh
+         9SFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kmED9H3HhgwVVQ86s12b9wU01cqR0QgzFhbCOFHeClU=;
+        b=HwEtMBeaVTORrQqbXeBxfglbCOPBxlgtertvEIGhN0YC24F9D1pCUISLPcSJCWuL4A
+         PaH71luBJbKeq5W/l5Ugc2U9iq2fNenltnK6giqEDDqhSR3i1gt0xVWd3UHXd16rPL+n
+         hsGDDXip13eZrBgHARzeJKqEB2xFG45UDz2W1HKyxYF6iuFFrwrlkGjjAx+8MdVHMPtD
+         lMHlAmSoXVnRSmgZGhyN7QUwrOEa1jNfQnahEGkFXPudFXWKiiplX67PO4zgynbFC8hs
+         vydfbxl0XIpc+/FL6r6h0+fa6mnoc57V1wGkX/1rHXlbN50+5GsICmRBOMK+PcoSZ/Dq
+         GQeQ==
+X-Gm-Message-State: APjAAAVVOq3bxeAXgdn1AT+iWvA41dsBmeNVF2VOkywJ2yy1dyBWocCf
+        12xHeu57F7eLA5Am6xZULi3pJw==
+X-Google-Smtp-Source: APXvYqwxrDmy4CJmsq3rBjQJVIc2QqLxi0MkLafXCzaC4bsC3/cOsLzto1cuoPgY1rOynnJee1G1RA==
+X-Received: by 2002:a5d:630f:: with SMTP id i15mr2972442wru.226.1571909747667;
+        Thu, 24 Oct 2019 02:35:47 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id i18sm22647040wrx.14.2019.10.24.02.35.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 02:35:47 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 10:35:46 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Martijn Coenen <maco@android.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Shaun Ruffell <sruffell@sruffell.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-modules@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] export/modpost: avoid renaming __ksymtab entries
+ for symbol namespaces
+Message-ID: <20191024093546.GB199239@google.com>
+References: <20191010151443.7399-1-maennich@google.com>
+ <20191018093143.15997-1-maennich@google.com>
+ <20191023122222.GA27861@42.do-not-panic.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c3bd73e-ee81-4715-6d9a-08d7586577ad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 09:35:12.1588
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OVrjWJqkAg7QlUmFAou+rEr+R3o62OggdRIdKwgVr0fz9Ctp3nIcWVOZEyuS4mrB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3546
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191023122222.GA27861@42.do-not-panic.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-23 12:28, Mike Rapoport <rppt@kernel.org> wrote:
-> parisc has two or three levels of page tables and can use appropriate
-> pgtable-nopXd and folding of the upper layers.
+On Wed, Oct 23, 2019 at 12:22:22PM +0000, Luis Chamberlain wrote:
+>On Fri, Oct 18, 2019 at 10:31:39AM +0100, Matthias Maennich wrote:
+>> The introduction of the symbol namespace patches changed the way symbols are
+>> named in the ksymtab entries. That caused userland tools to fail (such as
+>> kmod's depmod). As depmod is used as part of the kernel build it was worth
+>> having another look whether this name change can be avoided.
 >
-> Replace usage of include/asm-generic/4level-fixup.h and explicit
-> definitions of __PAGETABLE_PxD_FOLDED in parisc with
-> include/asm-generic/pgtable-nopmd.h for two-level configurations and with
-> include/asm-generic/pgtable-nopmd.h for three-lelve configurations and
+>Why have this as a default feature? What about having an option to
+>disable this feature? The benefit being that without a full swing of
+>tests to avoid regressions its not clear what other issues may creep
+>up. With this as optional, those wanting the mechanism can enable it
+>and happilly find the issues for those more conservative.
 
-I think you mean .../pgtable-nopud.h in the latter case.
+The strongest argument against that is, that the 'conservative' people
+would constantly break things for the more 'adventurous' ones. They
+would introduce namespace requirements by just using symbols without
+correctly adjusting the imports.
+
+Second, vmlinux and modules would have to be compiled in the same
+configuration. Otherwise they are incompatible and we would likely have
+to maintain code in the module loader to catch issues caused by that.
+In general, I think for the adoption of this feature and one of its
+purposes - making unexpected use of symbols across the tree visible
+already at review time - we should not make this an optional one.
+Enforcing the imports at module load time is optional (there is an
+option).
+
+And finally, having that code configurable for both options introduces
+quite some complexity in kernel/module.c, modpost and
+include/linux/export.h that would make the code hard to maintain and
+complex to test. Hence that would likely introduce more issues.
+
+I know the feature came with some rough edges. Sorry about that. I
+think, we got most of them worked out pretty well (big thanks to
+Masahiro and Jessica and others helping with that). Now the actual
+change to the surface exposed to userland tools is much smaller and the
+feature itself less intrusive.
 
 Cheers,
-Peter
+Matthias
+
+>
+>  Luis
