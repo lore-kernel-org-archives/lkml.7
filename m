@@ -2,95 +2,83 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408C5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB322CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F17D20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:16:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bNp+7fUR"
+	by mail.kernel.org (Postfix) with ESMTP id 9029520659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439976AbfJXRQD (ORCPT
+        id S2439988AbfJXRSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:16:03 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33085 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405901AbfJXRQC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:16:02 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 71so20258963qkl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=crG+DRT5ntTO6UrnZjz7Zk+aIch4CLzmhTF61MiVCPc=;
-        b=bNp+7fURF9Ol8vUPwHGKGm6mK9ijx7pSmONTo8SbOqpmSf0D+KM+IwQY2l8cYRl0tc
-         4Jlf4tFma80yY3usPo8m8fNAx2W3NJVos7I5+Fy3FYeouo5F7elc73VyeznclDfRUKJ6
-         1GQuz3/rw88FlDhwFBVqYsiDxvtt5Si747jAG4IuuZuyBtTUXxSgpxctMMsWrQHI2KXC
-         L4kMhUMuXKs1qttPbAlVMMH9KKVo9HAGMIHvPYm9S97Q9Oer5iiXEy3Yi0arikGoB0rO
-         +td1l/vUo1NwJh2Ncplo9FWjk5/JcFWW548edS3pxJbv/LR2OyPs0zvvU0VdgI5PWi4G
-         W/JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=crG+DRT5ntTO6UrnZjz7Zk+aIch4CLzmhTF61MiVCPc=;
-        b=N0KWKVhVX+ItI6QjWmi1o5/YdeAkVM2w1tjSFFRn7juaRXyFXmXMzUet3VLTj7Fjg1
-         BiIyAcxe2e66OEeYMRRmsz3WsYwQgw4DK8ovLeBhEnBExnrskwZyrsns+tnymgWOyajh
-         afcQst2CRTshBYVPsBsUISRaDUhGj6uKK0X6HWWCbYKNGK1Bpu31iWLLuyh2DyKwh8t7
-         qMYEscLzwobYfXm7M1G4OhcdlCNueh4kvgFxbkC1PEN4T/xYXaZ8Jxb85oLGav9m3cgD
-         5hkr/JHRxW/b5tkbSlqUPNHe1NyIPi14uHoSqUCKgd9YMhBzgvLVMc5DrMuLmieu7f51
-         GJnA==
-X-Gm-Message-State: APjAAAWCuwyfE2NRiI63rO5RvCVkxw/8wMfMXqZge4ma4pvfCmLNFDIy
-        J52WvbzGk+mWWr34Xh0zf9DDzDcaNMWOvHFPmj7VIg==
-X-Google-Smtp-Source: APXvYqwO+pjq/T6cA1+tZZRLnofnfCEwAKnPL1uQAxpaH1IWS8TnV2isw/FukpIexYC5euabMYGxtp47q9ysO8wbEl8=
-X-Received: by 2002:a37:9a8a:: with SMTP id c132mr14717102qke.92.1571937359669;
- Thu, 24 Oct 2019 10:15:59 -0700 (PDT)
+        Thu, 24 Oct 2019 13:18:31 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39994 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436828AbfJXRSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:18:31 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1iNgkh-0005m1-1a; Thu, 24 Oct 2019 11:18:25 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20191023163545.4193-1-logang@deltatee.com>
+ <20191023163545.4193-4-logang@deltatee.com> <20191024011743.GC5190@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <382906f0-ce0b-282a-9665-8317b50fe374@deltatee.com>
+Date:   Thu, 24 Oct 2019 11:18:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191024124610.18182-1-colin.king@canonical.com>
-In-Reply-To: <20191024124610.18182-1-colin.king@canonical.com>
-From:   Curtis Malainey <cujomalainey@google.com>
-Date:   Thu, 24 Oct 2019 10:15:48 -0700
-Message-ID: <CAOReqxhzYnN4vkoiJ1vDN3UwmkJs--u7cUgpoSDtMr1dSThR3Q@mail.gmail.com>
-Subject: Re: [PATCH][next] ASoC: rt5677: Add missing null check for failed
- allocation of rt5677_dsp
-To:     Colin King <colin.king@canonical.com>
-Cc:     Bard Liao <bardliao@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Ben Zhang <benzh@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191024011743.GC5190@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, sagi@grimberg.me, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 3/7] nvmet: Introduce common execute function for
+ get_log_page and identify
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 5:46 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The allocation of rt5677_dsp can potentially fail and return null, so add
-> a null check and return -ENOMEM on a memory allocation failure.
->
-> Addresses-Coverity: ("Dereference null return")
-> Fixes: a0e0d135427c ("ASoC: rt5677: Add a PCM device for streaming hotword via SPI")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Thanks
 
-Acked-by Curtis Malainey <cujomalainey@chromium.org>
-> ---
->  sound/soc/codecs/rt5677-spi.c | 2 ++
->  1 file changed, 2 insertions(+)
+
+On 2019-10-23 7:17 p.m., Christoph Hellwig wrote:
+> On Wed, Oct 23, 2019 at 10:35:41AM -0600, Logan Gunthorpe wrote:
+>> Instead of picking the sub-command handler to execute in a nested
+>> switch statement introduce a landing functions that calls out
+>> to the appropriate sub-command handler.
+>>
+>> This will allow us to have a common place in the handler to check
+>> the transfer length in a future patch.
+>>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> [logang@deltatee.com: separated out of a larger draft patch from hch]
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> 
+> First signoff needs to be the From line picked up by git.  I don't really
+> care if you keep my attribution or not, but if you do it needs From
+> line for me as the first theing in the mail body, and if not it
+> should drop by signoff and just say based on a patch from me.
+> 
+> Otherwise the series looks fine.
+
+Ok, understood. Do you want me to fix this up in a v2? Or can you fix it
+up when you pick up the patches?
+
+Thanks,
+
+Logan
