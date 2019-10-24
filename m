@@ -2,97 +2,86 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ABBCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0999CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC0021925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7C921925
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438664AbfJXJiK (ORCPT
+        id S2438674AbfJXJiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:38:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:44546 "EHLO foss.arm.com"
+        Thu, 24 Oct 2019 05:38:13 -0400
+Received: from mga09.intel.com ([134.134.136.24]:1200 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438644AbfJXJiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:38:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3C354F2;
-        Thu, 24 Oct 2019 02:37:55 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F26493F71F;
-        Thu, 24 Oct 2019 02:37:52 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
-Subject: [PATCH v13 09/22] sparc: mm: Add p?d_leaf() definitions
-Date:   Thu, 24 Oct 2019 10:37:03 +0100
-Message-Id: <20191024093716.49420-10-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191024093716.49420-1-steven.price@arm.com>
-References: <20191024093716.49420-1-steven.price@arm.com>
+        id S2438652AbfJXJiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:38:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 02:38:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
+   d="scan'208";a="210117869"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 24 Oct 2019 02:38:04 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 24 Oct 2019 12:38:03 +0300
+Date:   Thu, 24 Oct 2019 12:38:03 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
+Message-ID: <20191024093803.GU2819@lahna.fi.intel.com>
+References: <20190812143133.75319-2-mika.westerberg@linux.intel.com>
+ <20191022230006.GA46791@google.com>
+ <20191023075248.GO2819@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023075248.GO2819@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-walk_page_range() is going to be allowed to walk page tables other than
-those of user space. For this it needs to know when it has reached a
-'leaf' entry in the page tables. This information is provided by the
-p?d_leaf() functions/macros.
+On Wed, Oct 23, 2019 at 10:52:53AM +0300, Mika Westerberg wrote:
+> > Shouldn't we check for slot_status being an error response (~0)
+> > instead of looking for PCIBIOS_DEVICE_NOT_FOUND?  There are 7 RsvdP
+> > bits in Slot Status, so ~0 is not a valid value for the register.
+> > 
+> > All 16 bits of Link Status are defined, but ~0 is still an invalid
+> > value because the Current Link Speed and Negotiated Link Width fields
+> > only define a few valid encodings.
+> 
+> Indeed that's a good point. I'll try that.
 
-For sparc 64 bit, pmd_large() and pud_large() are already provided, so
-add macros to provide the p?d_leaf names required by the generic code.
+Just checking if I understand correctly what you are suggesting.
 
-CC: "David S. Miller" <davem@davemloft.net>
-CC: sparclinux@vger.kernel.org
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/sparc/include/asm/pgtable_64.h | 2 ++
- 1 file changed, 2 insertions(+)
+Currently we use pcie_capability_read_word() and check the return value.
+If the device is gone it returns an error and resets *val to 0. That
+only works if pci_dev_is_disconnected() is true so we would need to do
+something like below.
 
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 6ae8016ef4ec..43206652eaf5 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -683,6 +683,7 @@ static inline unsigned long pte_special(pte_t pte)
- 	return pte_val(pte) & _PAGE_SPECIAL;
- }
- 
-+#define pmd_leaf	pmd_large
- static inline unsigned long pmd_large(pmd_t pmd)
- {
- 	pte_t pte = __pte(pmd_val(pmd));
-@@ -867,6 +868,7 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
- /* only used by the stubbed out hugetlb gup code, should never be called */
- #define pgd_page(pgd)			NULL
- 
-+#define pud_leaf	pud_large
- static inline unsigned long pud_large(pud_t pud)
- {
- 	pte_t pte = __pte(pud_val(pud));
--- 
-2.20.1
+pciehp_check_link_active():
 
+	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
+		return -ENODEV;
+
+Or you mean that we check only for ~0 in which case we either need to
+use pci_read_config_word() directly here or modify pcie_capability_read_word()
+return ~0 instead of clearing it?
