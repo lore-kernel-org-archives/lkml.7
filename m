@@ -2,97 +2,106 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73559CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80929CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564AE21906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC9821906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394159AbfJXScR (ORCPT
+        id S2504066AbfJXSd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:32:17 -0400
-Received: from smtprelay0156.hostedemail.com ([216.40.44.156]:32801 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726155AbfJXScQ (ORCPT
+        Thu, 24 Oct 2019 14:33:59 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:35404 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfJXSd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:32:16 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 029588E78;
-        Thu, 24 Oct 2019 18:32:15 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: vest26_87e0d9178874e
-X-Filterd-Recvd-Size: 2764
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 24 Oct 2019 18:32:13 +0000 (UTC)
-Message-ID: <4d53be6c963542878d370ff1a6dc7c3a89b28d23.camel@perches.com>
-Subject: [PATCH] mac80211.h: Trivial typo fixes
-From:   Joe Perches <joe@perches.com>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Thu, 24 Oct 2019 11:32:12 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
+        Thu, 24 Oct 2019 14:33:59 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1iNhve-0007jA-Qd; Thu, 24 Oct 2019 13:33:47 -0500
+Message-ID: <ef150e9eb155eff410194ba5362ef404ce117c4a.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Ran Wang <ran.wang_1@nxp.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 24 Oct 2019 13:33:45 -0500
+In-Reply-To: <20191021034927.19300-2-ran.wang_1@nxp.com>
+References: <20191021034927.19300-1-ran.wang_1@nxp.com>
+         <20191021034927.19300-2-ran.wang_1@nxp.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: ran.wang_1@nxp.com, rjw@rjwysocki.net, robh+dt@kernel.org, leoyang.li@nxp.com, mark.rutland@arm.com, pavel@ucw.cz, biwen.li@nxp.com, len.brown@intel.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v7 2/3] Documentation: dt: binding: fsl: Add
+ 'little-endian' and update Chassis define
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just typos...
+On Mon, 2019-10-21 at 11:49 +0800, Ran Wang wrote:
+> By default, QorIQ SoC's RCPM register block is Big Endian. But
+> there are some exceptions, such as LS1088A and LS2088A, are
+> Little Endian. So add this optional property to help identify
+> them.
+> 
+> Actually LS2021A and other Layerscapes won't totally follow Chassis
+> 2.1, so separate them from powerpc SoC.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- include/net/mac80211.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Did you mean LS1021A and "don't" instead of "won't", given the change to the
+examples?
 
-diff --git a/include/net/mac80211.h b/include/net/mac80211.h
-index d69081..edd6d0 100644
---- a/include/net/mac80211.h
-+++ b/include/net/mac80211.h
-@@ -1702,7 +1702,7 @@ struct wireless_dev *ieee80211_vif_to_wdev(struct ieee80211_vif *vif);
-  *	%IEEE80211_KEY_FLAG_SW_MGMT_TX flag to encrypt such frames in SW.
-  * @IEEE80211_KEY_FLAG_GENERATE_IV_MGMT: This flag should be set by the
-  *	driver for a CCMP/GCMP key to indicate that is requires IV generation
-- *	only for managment frames (MFP).
-+ *	only for management frames (MFP).
-  * @IEEE80211_KEY_FLAG_RESERVE_TAILROOM: This flag should be set by the
-  *	driver for a key to indicate that sufficient tailroom must always
-  *	be reserved for ICV or MIC, even when HW encryption is enabled.
-@@ -2626,7 +2626,7 @@ ieee80211_get_alt_retry_rate(const struct ieee80211_hw *hw,
-  * @hw: the hardware
-  * @skb: the skb
-  *
-- * Free a transmit skb. Use this funtion when some failure
-+ * Free a transmit skb. Use this function when some failure
-  * to transmit happened and thus status cannot be reported.
-  */
- void ieee80211_free_txskb(struct ieee80211_hw *hw, struct sk_buff *skb);
-@@ -3193,7 +3193,7 @@ enum ieee80211_rate_control_changed {
-  *
-  * @IEEE80211_ROC_TYPE_NORMAL: There are no special requirements for this ROC.
-  * @IEEE80211_ROC_TYPE_MGMT_TX: The remain on channel request is required
-- *	for sending managment frames offchannel.
-+ *	for sending management frames offchannel.
-  */
- enum ieee80211_roc_type {
- 	IEEE80211_ROC_TYPE_NORMAL = 0,
-@@ -5616,7 +5616,7 @@ void ieee80211_iter_keys_rcu(struct ieee80211_hw *hw,
- 
- /**
-  * ieee80211_iter_chan_contexts_atomic - iterate channel contexts
-- * @hw: pointre obtained from ieee80211_alloc_hw().
-+ * @hw: pointer obtained from ieee80211_alloc_hw().
-  * @iter: iterator function
-  * @iter_data: data passed to iterator function
-  *
+> Change in v5:
+> 	- Add 'Reviewed-by: Rob Herring <robh@kernel.org>' to commit message.
+> 	- Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-
+> cells'.
+> 	please see https://lore.kernel.org/patchwork/patch/1101022/
+
+I'm not sure why Rob considers this the "correct form" -- there are other
+examples of the current form, such as ibm,#dma-address-cells and ti,#tlb-
+entries, and the current form makes more logical sense (# is part of the
+property name, not the vendor).  Oh well.
+
+> Required properites:
+>    - reg : Offset and length of the register set of the RCPM block.
+> -  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
+> +  - #fsl,rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
+>  	fsl,rcpm-wakeup property.
+>    - compatible : Must contain a chip-specific RCPM block compatible string
+>  	and (if applicable) may contain a chassis-version RCPM compatible
+> @@ -20,6 +20,7 @@ Required properites:
+>  	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
+>  	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
+>  	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
+> +	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
+
+Is there something actually called "2.1+"?  It looks a bit like an attempt to
+claim compatibility with all future versions.  If the former, is it a name
+that comes from the hardware side with an intent for it to describe a stable
+interface, or are we later going to see a patch changing some by-then-existing 
+device trees from "2.1+" to "2.1++" when some new incompatibility is found?
+
+Perhaps it would be better to bind to the specific chip compatibles.
+
+-Scott
 
 
