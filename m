@@ -2,69 +2,73 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3B2CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A969FCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E6C21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571956508;
-	bh=UxS1/0iOkIcZ9qv0FyZweVUjggL6cG18LH/dVZuywE0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=lTqbcj+L+UVFqNn0vmYbBSopG8suAxlbQiYlDVoVvm00gn+ZmDmIFb64d5FrrWZmV
-	 TsjQQrXSDnXG0SoExFR1uf9CZm0YIqZlx9JXWgG0KDSP4YqIItY4lq58Fyn2nSvePv
-	 1+6palKH5wEW4e85PIcsiVG626/SMv7tg71Dsysk=
+	by mail.kernel.org (Postfix) with ESMTP id 89DAB21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbfJXWfH (ORCPT
+        id S1731888AbfJXWiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731543AbfJXWfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:35:06 -0400
-Subject: Re: [GIT PULL] Devicetree fixes for v5.4, round 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571956506;
-        bh=UxS1/0iOkIcZ9qv0FyZweVUjggL6cG18LH/dVZuywE0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1dYf/QBvnWfqCzu5YO0ZwW1gzZYOX2OnYQcJryTef6+J7q0ILUCEOzLknyrB7DdNI
-         12QaNcf9rWQByorXpfOBYm4apBC1q8yFMwkHS2/I6gAeuGsCeDgVdHCwP5WwdoHbl4
-         lxKxtTJWYx084fsIAbmfXtjSn5y2GcJMHI6b5FZA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191024222255.GA25776@bogus>
-References: <20191024222255.GA25776@bogus>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191024222255.GA25776@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-fixes-for-5.4-2
-X-PR-Tracked-Commit-Id: 5dba51754b04a941a1064f584e7a7f607df3f9bc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 39a38bcba4ab6e5285b07675b0e42c96eec35e67
-Message-Id: <157195650608.8812.1605642294686975929.pr-tracker-bot@kernel.org>
-Date:   Thu, 24 Oct 2019 22:35:06 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Thu, 24 Oct 2019 18:38:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34272 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731152AbfJXWiL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 18:38:11 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iNlk6-0002Wn-Sd; Fri, 25 Oct 2019 00:38:07 +0200
+Date:   Fri, 25 Oct 2019 00:38:05 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Roman Kagan <rkagan@virtuozzo.com>
+cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] x86/hyper-v: micro-optimize send_ipi_one case
+In-Reply-To: <20191024163204.GA4673@rkaganb.sw.ru>
+Message-ID: <alpine.DEB.2.21.1910250036090.1783@nanos.tec.linutronix.de>
+References: <20191024152152.25577-1-vkuznets@redhat.com> <20191024163204.GA4673@rkaganb.sw.ru>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 24 Oct 2019 17:22:55 -0500:
+On Thu, 24 Oct 2019, Roman Kagan wrote:
+> > +
+> > +	if (cpu >= 64)
+> > +		goto do_ex_hypercall;
+> > +
+> > +	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
+> > +				     BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
+> > +	return ((ret == 0) ? true : false);
+> 
+> D'oh.  Isn't "return ret == 0;" or just "return ret;" good enough?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.4-2
+   'return ret == 0' != 'return ret'
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/39a38bcba4ab6e5285b07675b0e42c96eec35e67
+!ret perhaps :)
 
-Thank you!
+Thanks,
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+	tglx
