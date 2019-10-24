@@ -2,78 +2,105 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FEDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AEACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E533F21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F492070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:01:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoVP/lMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502966AbfJXPA1 convert rfc822-to-8bit (ORCPT
+        id S2502978AbfJXPBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502956AbfJXPA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:00:27 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D64232166E;
-        Thu, 24 Oct 2019 15:00:25 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 11:00:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191024110024.324a9435@gandalf.local.home>
-In-Reply-To: <20191024101609.GA4131@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
-        <20191018074634.801435443@infradead.org>
-        <20191021222110.49044eb5@oasis.local.home>
-        <20191022202401.GO1817@hirez.programming.kicks-ass.net>
-        <20191023145245.53c75d70@gandalf.local.home>
-        <20191024101609.GA4131@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 24 Oct 2019 11:01:11 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:32785 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502933AbfJXPBK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 11:01:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 6so2198417wmf.0;
+        Thu, 24 Oct 2019 08:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9OIRMBAMD/IGNv6LdXwINxw42BZ8L0+aAzrRbp7Nb0M=;
+        b=UoVP/lMjO0q8d6tSI+3LsoD8CBnAJKfLt1vflnsZg9pKFQ2eZP7gLYZ0TidaP1se+K
+         ImsXu2+3HTONlVnw+CjIETwWA1CHriCAPO3tJnlSAwQyf0YDY5NVOzvySJe4WVJGj0Ex
+         8gQNGpiyN67S77owCm0Nsm7pw5a7v3jW/H0JJM5vHystoNhf1oWYGQkTDSSfNkIFxrR9
+         7DNEy0tmPaD65x7UGA7EfwlQxY5aedul3xqRU1BGuT+tqgFszH56jSFeOske7cmiB+z3
+         oBWjulsnB06Zny3vXiwyZSEgkETuGB5V2KVzbWL+uYdYLAYWmpI2a7SZf1S281v90v96
+         Ytpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9OIRMBAMD/IGNv6LdXwINxw42BZ8L0+aAzrRbp7Nb0M=;
+        b=ofRFE6FMiAhhbNCtI+lUs/e68VCBi/Lbt0g7cP62osO6M91kLJHLYbDyfVMQ8RTzuS
+         +OMI+BeJiwvMjNjV703KlRqmLVnyKS6d8Fuue0ynqPlf0OKMuJkTXAnUj7JeGD7l46/m
+         suGcB3qg+VQQ5FXATd6dL2VuqZUvf1JuqwscMR7xF/9PBI0LJEbgOrV4eCtGIV2wgKzm
+         caY1Z0CIn7mlE8/gQA8ipGDNtgYEPs+ZfnACQFxyOpkptO5ndC4KbzP3Yx3TldCAoVFh
+         ZXkRY+fJ1YMB5UHTugSGLCZy9V2vL4HxdGIZRoybnqNuBwHnPR2VlNzf2jm6HVsAlYdS
+         nZ6A==
+X-Gm-Message-State: APjAAAUUv1/5el+IHALjIDBj4GMZu5Mu9t7HMD9uAEQdynD5lZxA4n7S
+        ZcwVEfCh4UymU3VLoVpYggw=
+X-Google-Smtp-Source: APXvYqw1zRG4DrgTfQvcuF6g42B7nb/pJgiuLBfEHO25QU3txybg2ydt3lrhCnQsyP1SSS0KPCiLzQ==
+X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr5545214wml.86.1571929268442;
+        Thu, 24 Oct 2019 08:01:08 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.210.43])
+        by smtp.gmail.com with ESMTPSA id l18sm35809016wrn.48.2019.10.24.08.01.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2019 08:01:07 -0700 (PDT)
+Subject: Re: File system for scratch space (in HPC cluster)
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Donald Buczek <buczek@molgen.mpg.de>
+References: <e143071a-b1dc-56a4-a82e-865bae4c60c1@molgen.mpg.de>
+ <20191024145504.GD1124@mit.edu>
+From:   Boaz Harrosh <openosd@gmail.com>
+Message-ID: <70755c40-b800-8ba0-a0df-4206f6b8c8d4@gmail.com>
+Date:   Thu, 24 Oct 2019 18:01:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191024145504.GD1124@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019 12:16:09 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Wed, Oct 23, 2019 at 02:52:45PM -0400, Steven Rostedt wrote:
-> > After applying this series and this patch I triggered this:  
+On 24/10/2019 17:55, Theodore Y. Ts'o wrote:
+> On Thu, Oct 24, 2019 at 12:43:40PM +0200, Paul Menzel wrote:
+>>
+>> In our cluster, we offer scratch space for temporary files. As
+>> these files are temporary, we do not need any safety
+>> requirements – especially not those when the system crashes or
+>> shuts down. So no `sync` is for example needed.
+>>
+>> Are there file systems catering to this need? I couldn’t find
+>> any? Maybe I missed some options for existing file systems.
 > 
-> Bah, I hate C.
-> 
-> (also for some reason I had KPROBE_EVENTS disabled, when I enabled it it
-> failed on boot due to selftests)
-> 
-> this one seems to boot and survive your selftests thing (that takes for
-> bloody ever to run).
+> You could use ext4 in nojournal mode.  If you want to make sure that
+> fsync() doesn't force a cache flush, you can mount with the nobarrier
+> mount option.
 > 
 
-Care to enable CONFIG_HIST_TRIGGERS?
+And open the file with O_TMPFILE|O_EXCL so there is no metadata as well.
 
-  CC [M]  drivers/gpu/drm/i915/gem/i915_gem_context.o
-/work/git/linux-trace.git/kernel/trace/trace_events_hist.c: In function ‘register_synth_event’:
-/work/git/linux-trace.git/kernel/trace/trace_events_hist.c:1157:15: error: ‘struct trace_event_class’ has no member named ‘define_fields’; did you mean ‘get_fields’?
-  call->class->define_fields = synth_event_define_fields;
-               ^~~~~~~~~~~~~
-               get_fields
-make[3]: *** [/work/git/linux-trace.git/scripts/Makefile.build:265: kernel/trace/trace_events_hist.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
+I think xfs for O_TMPFILE|O_EXCL does not do any fsync, but I'm
+not sure
 
--- Steve
+> 					- Ted
+> 
+
