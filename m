@@ -2,89 +2,62 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959E6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8915ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0AF21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2BF21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jVAPqZMo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FZxmLY5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfJXUP5 (ORCPT
+        id S1727294AbfJXUQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:15:57 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47111 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfJXUP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:15:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46zdm96Vy5z9sPh;
-        Fri, 25 Oct 2019 07:15:53 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571948154;
-        bh=aRC2jJ14Z0q9E7pKfWMvfD3N+zOtp79wdq4A6A5XKos=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jVAPqZMozD8BS8U3ERcOg9AkUVSSOahUQD5+FGKr7JgIRatDf5WSY1Y3kTDpcr7xK
-         wQYhWcVO2y/9f8wZ3LAp25DLLR6lHawoEJhb2um9N2fIA1lBOJQWJdnJzptjX0LM8N
-         msQO85qC/wT/Kq+v/WM0vYbc1zb4Dv4XawDd+aFRJi8Qq9gOtoWNMM9wka7tX7uqfM
-         j7XppVD+mjZvWo1tKV8URcTNwdAsGn8ZaO33NsGJRMkRf5eviPbUdXt22fhoez+48x
-         5EzkMy/VJsFj7Fuu01q8T3qupzc3L2RAjfq/3mCwkozI2IK+sAUsmKiX3YzCFBH4UD
-         5I4VnOX4TMgbg==
-Date:   Fri, 25 Oct 2019 07:15:52 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the pinctrl-intel
- tree
-Message-ID: <20191025071552.609fcead@canb.auug.org.au>
+        Thu, 24 Oct 2019 16:16:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35756 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfJXUQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 16:16:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3hTyeN9xmnC/Yhvndz3wJnR6k4/3+2nRERhWgX7Ke30=; b=FZxmLY5GViBzQY4rQFc6SofwP
+        OHI09ws/PdZcw8ujlRy4h1oHWD0amPAnqKVbEibFkhprvd0q0dOTxltklCWKFib/O2qTssCIx6GhQ
+        40cEt/hbAcxnov6Pd/P56QHxO4sqYCJW/usqdEgk//M/P178VrHpatlVmKRjVN7/iteoylbICVeQL
+        fyhcpsrmmAgxFX697ItpvX78FZ8HMA7e8eJCgk2Lf8tcxwC7P5+oM0gMdG2ymBq95jkCdYOFQeRGx
+        1V1AQWFUslewS9b2ZsxsD/iCvPIYz4Ngn0oBCHMf8lz5uO152x9faqfAXOP8sfc8Ju5wjsc3R6/In
+        nz6BI8sDQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNjX2-0002Xr-5R; Thu, 24 Oct 2019 20:16:28 +0000
+Date:   Thu, 24 Oct 2019 13:16:28 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     corbet@lwn.net, rppt@linux.ibm.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] docs/core-api: memory-allocation: minor cleanups
+Message-ID: <20191024201628.GL2963@bombadil.infradead.org>
+References: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aN6f/U.FYgxGtQ3qURU+tVG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aN6f/U.FYgxGtQ3qURU+tVG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Oct 25, 2019 at 08:50:13AM +1300, Chris Packham wrote:
+> Clean up some formatting and add references to helpers for calculating sizes
+> safely.
 
-Hi all,
+For the whole series:
 
-Commits
-
-  ec7ec598997d ("pinctrl: cherryview: Fix irq_valid_mask calculation")
-  2fe72dbce079 ("pinctrl: cherryview: restore Strago DMI workaround for all=
- versions")
-
-are missing a Signed-off-by from their committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/aN6f/U.FYgxGtQ3qURU+tVG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2yBngACgkQAVBC80lX
-0GyKDwf9GJkvaojkToysQkr5sJnIZrO8mWWZ7r470nakFbn9fcv93aBR7RXrNIpR
-byiMsl3BA/yvsXXm4aBtlolMp7BZ+o07BIiAw5dmQK5Xaqd4FOtp5v0Cw58vJV11
-VpSaE0JrtuvPtDV2GFxW+nNHUbGRkHXWFmhjNgxaEzYjdb4F8IiRR+z+1+fUdnAD
-VCSIUzYVL8XSr2gwt8ixe5WS0qcWcQsUAZ8R8rROxqRsBo8/9i5o6obdukCVImPz
-I1gGCr3K/G2am3YPeHd7p5U33GMNxs4KWWKEwSFKfqzRNIYpCAPpbnzvV2lmDyBC
-NtgzHDHqE20fJ4AS3M8umxSUhHuJWg==
-=Crt7
------END PGP SIGNATURE-----
-
---Sig_/aN6f/U.FYgxGtQ3qURU+tVG--
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
