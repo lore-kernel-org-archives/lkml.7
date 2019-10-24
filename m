@@ -2,82 +2,158 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C937CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14171CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5361520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA12E20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IQ8lRqhl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="msl1HfiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502422AbfJXNM4 (ORCPT
+        id S2502435AbfJXNOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:12:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43422 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393478AbfJXNM4 (ORCPT
+        Thu, 24 Oct 2019 09:14:04 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33355 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502405AbfJXNOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ytz4euQ3Q9IiQz4tzDOyqx9l5irsf3dHQZgptwpBWK4=; b=IQ8lRqhl5fUKjdfhzlK2LtcFbT
-        ADtwLGl+3iKxddWBK8Tla9MBG84wPpzPvgJOMdMkgp7fyM1UvasRb742v4912vRIUM0v4ntKXfvrr
-        0FXECfgafbisrvDHiF+eb/hyEdWJCGyvhRFV+YGD5U/tSTegRmptZ9bHLpG1ohFMPrYj/AkKduclU
-        gG6uyXAOCEsXDRjo2wTpFO0EHREP0idSNbpJofcTFCuZtVx5LXYEGsPIs0uUjN7/7tF4jBW71Dp1L
-        OZZf5qqSL2/j0rdyCSCz/32qXI7cnab27HRgxXsLK0Ry73JygnlTWgfguNcMYXUgk12NuQmKgfPre
-        BaVZk9Zw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNcv8-0004bG-FR; Thu, 24 Oct 2019 13:12:54 +0000
-Date:   Thu, 24 Oct 2019 06:12:54 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 6/8] bdev: add open_finish.
-Message-ID: <20191024131254.GE2963@bombadil.infradead.org>
-References: <cover.1571834862.git.msuchanek@suse.de>
- <ea2652294651cbc8549736728c650d16d2fe1808.1571834862.git.msuchanek@suse.de>
- <20191024022232.GB11485@infradead.org>
- <20191024085514.GI938@kitsune.suse.cz>
+        Thu, 24 Oct 2019 09:14:04 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 71so19468922qkl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JQHcyUnSIp339K9FKmfDYw9UCbM8Q9Ch8P2/s1FBU9s=;
+        b=msl1HfiQYnIpkl7hU80XjsF7bZtllIkrpxf3WO7plSCw75gbGg9RfOzqf2ThJZSI9i
+         hySC5uA444uiteodVBFS1PuxXkqcIBEAGVnS9rhaFOgYInfKZb2HE4tv+ORlaR3bd5V7
+         6bULjoWlbDAk3UE14BgBJOacrxfygYoQHHuPXVPNi0LoRJcSqnb/qH5qPywqpal6Veo4
+         nSXSq5u5REQ7ylpz/K9g4INW6rc8Emxwne+UJN6j7alhtV4PJe+7UK7ju1lsMeLtp7eY
+         G1B/60+BQkYSYGxZlGD9iZnpGHT9I2XFZhaoNBH2iEhi+A4e9IbyLeZNH/UH0opzzvl3
+         E/Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JQHcyUnSIp339K9FKmfDYw9UCbM8Q9Ch8P2/s1FBU9s=;
+        b=GD9qlSxr009oDJ5ypE+FQyGn299H7ACw6zEBWNm/OhSd8XedgTIAyw7hRh3WUwydbR
+         KEK6XV4n0DrYH1VxgCIsSNJRy0oirK7oNvVtljPRxxPUecnM7+arD+uhF7ebWovtSgDU
+         lM212OBPQrJPk4KoWWXX6cmnNmqBWQYWS44AnO0Ht90tWCuWo6MLssOwN9lxcXze+2/U
+         LYeeZafw2kfT0zUE0a8XG0VxC2NbA3cjFKFIXBhenFoIz6j4tz9qDhxwhGOhB/03QMAY
+         m38zHE7ND4DOmxn2aG73FW9Yo71+yied71wvecN18ob46ite4L/vpwITvp+2xvnLbkg6
+         yfHQ==
+X-Gm-Message-State: APjAAAVrfce+jNwIflWg4f8kD0Gvj83LXsGEm+5T04VOWZ7umzFQTkNS
+        YRcYgHGjVz1u1vm7FcxS5U7igU7KlZi7mXS6vq58bQ==
+X-Google-Smtp-Source: APXvYqwZ7apFX/YX+sP24Otc+tiWUNJLzt1FSVCurx1ko1dlteIYXugGs1AhlFccwEmG7l/NhWDo20oDb1SkZ5RCcGw=
+X-Received: by 2002:a05:620a:a11:: with SMTP id i17mr3508638qka.8.1571922840980;
+ Thu, 24 Oct 2019 06:14:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191024085514.GI938@kitsune.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com> <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
+ <20191024113155.GA7406@andrea.guest.corp.microsoft.com> <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
+ <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
+In-Reply-To: <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 24 Oct 2019 15:13:48 +0200
+Message-ID: <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
+Subject: Re: [PATCH v6] taskstats: fix data-race
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        stable <stable@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:55:14AM +0200, Michal Suchánek wrote:
-> On Wed, Oct 23, 2019 at 07:22:32PM -0700, Christoph Hellwig wrote:
-> > On Wed, Oct 23, 2019 at 02:52:45PM +0200, Michal Suchanek wrote:
-> > > Opening a block device may require a long operation such as waiting for
-> > > the cdrom tray to close. Performing this operation with locks held locks
-> > > out other attempts to open the device. These processes waiting to open
-> > > the device are not killable.
+On Thu, Oct 24, 2019 at 3:05 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+>
+> On Thu, Oct 24, 2019 at 01:51:20PM +0200, Dmitry Vyukov wrote:
+> > On Thu, Oct 24, 2019 at 1:32 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+> > >
+> > > > How these later loads can be completely independent of the pointer
+> > > > value? They need to obtain the pointer value from somewhere. And this
+> > > > can only be done by loaded it. And if a thread loads a pointer and
+> > > > then dereferences that pointer, that's a data/address dependency and
+> > > > we assume this is now covered by READ_ONCE.
+> > >
+> > > The "dependency" I was considering here is a dependency _between the
+> > > load of sig->stats in taskstats_tgid_alloc() and the (program-order)
+> > > later loads of *(sig->stats) in taskstats_exit().  Roughly speaking,
+> > > such a dependency should correspond to a dependency chain at the asm
+> > > or registers level from the first load to the later loads; e.g., in:
+> > >
+> > >   Thread [register r0 contains the address of sig->stats]
+> > >
+> > >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
+> > >      ...
+> > >   B: LOAD r2,[r0]       // LOAD *(sig->stats)
+> > >   C: LOAD r3,[r2]
+> > >
+> > > there would be no such dependency from A to C.  Compare, e.g., with:
+> > >
+> > >   Thread [register r0 contains the address of sig->stats]
+> > >
+> > >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
+> > >      ...
+> > >   C: LOAD r3,[r1]       // LOAD *(sig->stats)
+> > >
+> > > AFAICT, there's no guarantee that the compilers will generate such a
+> > > dependency from the code under discussion.
+> >
+> > Fixing this by making A ACQUIRE looks like somewhat weird code pattern
+> > to me (though correct). B is what loads the address used to read
+> > indirect data, so B ought to be ACQUIRE (or LOAD-DEPENDS which we get
+> > from READ_ONCE).
+> >
+> > What you are suggesting is:
+> >
+> > addr = ptr.load(memory_order_acquire);
+> > if (addr) {
+> >   addr = ptr.load(memory_order_relaxed);
+> >   data = *addr;
+> > }
+> >
+> > whereas the canonical/non-convoluted form of this pattern is:
+> >
+> > addr = ptr.load(memory_order_consume);
+> > if (addr)
+> >   data = *addr;
+>
+> No, I'd rather be suggesting:
+>
+>   addr = ptr.load(memory_order_acquire);
+>   if (addr)
+>     data = *addr;
+>
+> since I'd not expect any form of encouragement to rely on "consume" or
+> on "READ_ONCE() + true-address-dependency" from myself.  ;-)
 
-You can use mutex_lock_killable() to fix that.
+But why? I think kernel contains lots of such cases and it seems to be
+officially documented by the LKMM:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt
+address dependencies and ppo
+Am I missing something? Why do we need acquire with address dependency?
 
+> IAC, v6 looks more like:
+>
+>   addr = ptr.load(memory_order_consume);
+>   if (!!addr)
+>     *ptr = 1;
+>   data = *ptr;
+>
+> to me (hence my comments/questions ...).
+>
+> Thanks,
+>   Andrea
