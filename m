@@ -2,356 +2,194 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1CCCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D06ECA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6188621655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:47:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="svp6SU6A"
+	by mail.kernel.org (Postfix) with ESMTP id 613032166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439294AbfJXLrv (ORCPT
+        id S2439307AbfJXLsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:47:51 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37182 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfJXLrt (ORCPT
+        Thu, 24 Oct 2019 07:48:13 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32995 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfJXLsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:47:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OBlRdv090838;
-        Thu, 24 Oct 2019 06:47:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571917647;
-        bh=ciEj34BSmcAuMPWj19RZ2KnOAQGksDL9yK2/nBQJFXA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=svp6SU6AfW/AYgP6pEOK1nVJsyuowmS9Qe3zLKkKdrI6LmNeMgD+mbfkHn4hHX7Hj
-         Ematjzk8T3sCznZc5pBaEq8Ktx4jdXgxC/LT1ipkratGTPC/EWEioEZ7uO+wdppCw7
-         +JLHHjobfpSfPlYdM/HCVBCdHWgPTXWWt2++3eaM=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OBlRRA129907
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Oct 2019 06:47:27 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
- Oct 2019 06:47:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 24 Oct 2019 06:47:26 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OBlIAL061379;
-        Thu, 24 Oct 2019 06:47:24 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
-CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
-        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v3 2/2] usb: cdns3: Add TI specific wrapper driver
-Date:   Thu, 24 Oct 2019 14:47:17 +0300
-Message-ID: <20191024114717.30984-3-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024114717.30984-1-rogerq@ti.com>
-References: <20191024114717.30984-1-rogerq@ti.com>
+        Thu, 24 Oct 2019 07:48:12 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a22so24685499ljd.0;
+        Thu, 24 Oct 2019 04:48:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8J2+2b/3DwPctSPRqZRS55vvq4sBN5gRrY6PrhiAAS4=;
+        b=A6HAHYErCxIRaB9k1eW/L459j1+pyTOYnEUhX2mM28PJeGwNokJQovaqjALJlQCyn5
+         wbAhKey2PN/nJSHCeU2tMp3/xBGq+9k1zkr2f6mJ9XLJ8TN+Rup4RwcOaitUotKFjD9b
+         m/3F13P8Yg7gVBrKHBZCxR6zYHSlKLyf9A35+Av2HIYFk3vaGwzZXBxN/RP30ZspAJ36
+         XJOp1N9yNltNGfY+xvkuTvp2B/u0LYKtZlRiCrr72hF9b0YLn2LP4SEw8WYXCCdijnr8
+         fvhX8pKzObFnP9543XkNi6lZDE27s7OCD7wjbJrVz0dsKGTEGKtzn+q/JEmq1S3Iucz/
+         KlaQ==
+X-Gm-Message-State: APjAAAWs1O/dh28OjIcY6dtCfZNQGqCmgOrmF15sKaTkSQer0wVijytw
+        6F9IiLc67YSbyvmCur/tYqs=
+X-Google-Smtp-Source: APXvYqxN8dcNomoDwNF2GbvvQMePhthWb0lfDLo9guH463q8RkhSVhWtxrzpFc5Fvl8TqSnHgcaACw==
+X-Received: by 2002:a2e:9890:: with SMTP id b16mr26169264ljj.4.1571917689423;
+        Thu, 24 Oct 2019 04:48:09 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id j7sm11764858lfc.16.2019.10.24.04.48.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 04:48:08 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 14:47:56 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH v2 10/13] regulator: bd71828: Support in-kernel APIs to
+ change run-level
+Message-ID: <8e97e506bab0358dbbff2786796f4123db7e3961.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The J721e platform comes with 2 Cadence USB3 controller
-instances. This driver supports the TI specific wrapper
-on this platform.
+Add exported functions bd71828_set_runlevel and
+bd71828_get_runlevel for setting and getting the system run
+level.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/usb/cdns3/Kconfig    |  10 ++
- drivers/usb/cdns3/Makefile   |   1 +
- drivers/usb/cdns3/cdns3-ti.c | 236 +++++++++++++++++++++++++++++++++++
- 3 files changed, 247 insertions(+)
- create mode 100644 drivers/usb/cdns3/cdns3-ti.c
 
-diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
-index d0331613a355..2a1e89d12ed9 100644
---- a/drivers/usb/cdns3/Kconfig
-+++ b/drivers/usb/cdns3/Kconfig
-@@ -43,4 +43,14 @@ config USB_CDNS3_PCI_WRAP
- 	  If you choose to build this driver as module it will
- 	  be dynamically linked and module will be called cdns3-pci.ko
+No changes since v1
+
+ drivers/regulator/bd71828-regulator.c | 67 +++++++++++++++++++++++++++
+ include/linux/mfd/rohm-bd71828.h      |  2 +
+ 2 files changed, 69 insertions(+)
+
+diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
+index d9e1381b5964..eaff9b1b20f9 100644
+--- a/drivers/regulator/bd71828-regulator.c
++++ b/drivers/regulator/bd71828-regulator.c
+@@ -505,6 +505,73 @@ int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
+ }
+ EXPORT_SYMBOL(bd71828_set_runlevel_voltage);
  
-+config USB_CDNS3_TI
-+	tristate "Cadence USB3 support on TI platforms"
-+	depends on ARCH_K3 || COMPILE_TEST
-+	default USB_CDNS3
-+	help
-+	  Say 'Y' or 'M' here if you are building for Texas Instruments
-+	  platforms that contain Cadence USB3 controller core.
-+
-+	  e.g. J721e.
-+
- endif
-diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-index a703547350bb..948e6b88d1a9 100644
---- a/drivers/usb/cdns3/Makefile
-+++ b/drivers/usb/cdns3/Makefile
-@@ -14,3 +14,4 @@ endif
- cdns3-$(CONFIG_USB_CDNS3_HOST)		+= host.o
- 
- obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci-wrap.o
-+obj-$(CONFIG_USB_CDNS3_TI)		+= cdns3-ti.o
-diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
-new file mode 100644
-index 000000000000..89620e40023f
---- /dev/null
-+++ b/drivers/usb/cdns3/cdns3-ti.c
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0
 +/**
-+ * cdns3-ti.c - TI specific Glue layer for Cadence USB Controller
++ * bd71828_set_runlevel - change system run-level.
 + *
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ * @regulator:	pointer to one of the BD71828 regulators obtained by
++ *		call to regulator_get
++ * @level:	New run-level the system should enter
++ *
++ * Changes the system to run-level which was given as argument. This
++ * operation will change state of all regulators which are set to be
++ * controlled by run-levels. Note that 'regulator' must point to a
++ * regulator which is controlled by run-levels.
 + */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/pm_runtime.h>
-+
-+/* USB Wrapper register offsets */
-+#define USBSS_PID		0x0
-+#define	USBSS_W1		0x4
-+#define USBSS_STATIC_CONFIG	0x8
-+#define USBSS_PHY_TEST		0xc
-+#define	USBSS_DEBUG_CTRL	0x10
-+#define	USBSS_DEBUG_INFO	0x14
-+#define	USBSS_DEBUG_LINK_STATE	0x18
-+#define	USBSS_DEVICE_CTRL	0x1c
-+
-+/* Wrapper 1 register bits */
-+#define USBSS_W1_PWRUP_RST		BIT(0)
-+#define USBSS_W1_OVERCURRENT_SEL	BIT(8)
-+#define USBSS_W1_MODESTRAP_SEL		BIT(9)
-+#define USBSS_W1_OVERCURRENT		BIT(16)
-+#define USBSS_W1_MODESTRAP_MASK		GENMASK(18, 17)
-+#define USBSS_W1_MODESTRAP_SHIFT	17
-+#define USBSS_W1_USB2_ONLY		BIT(19)
-+
-+/* Static config register bits */
-+#define USBSS1_STATIC_PLL_REF_SEL_MASK	GENMASK(8, 5)
-+#define USBSS1_STATIC_PLL_REF_SEL_SHIFT	5
-+#define USBSS1_STATIC_LOOPBACK_MODE_MASK	GENMASK(4, 3)
-+#define USBSS1_STATIC_LOOPBACK_MODE_SHIFT	3
-+#define USBSS1_STATIC_VBUS_SEL_MASK	GENMASK(2, 1)
-+#define USBSS1_STATIC_VBUS_SEL_SHIFT	1
-+#define USBSS1_STATIC_LANE_REVERSE	BIT(0)
-+
-+/* Modestrap modes */
-+enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
-+		      USBSS_MODESTRAP_MODE_HOST,
-+		      USBSS_MODESTRAP_MODE_PERIPHERAL};
-+
-+struct cdns_ti {
-+	struct device *dev;
-+	void __iomem *usbss;
-+	int usb2_only:1;
-+	int vbus_divider:1;
-+	struct clk *usb2_refclk;
-+	struct clk *lpm_clk;
-+};
-+
-+static const int cdns_ti_rate_table[] = {	/* in KHZ */
-+	9600,
-+	10000,
-+	12000,
-+	19200,
-+	20000,
-+	24000,
-+	25000,
-+	26000,
-+	38400,
-+	40000,
-+	58000,
-+	50000,
-+	52000,
-+};
-+
-+static inline u32 cdns_ti_readl(struct cdns_ti *data, u32 offset)
++int bd71828_set_runlevel(struct regulator *regulator, unsigned int level)
 +{
-+	return readl(data->usbss + offset);
-+}
++	struct regulator_dev *rdev = regulator->rdev;
++	struct bd71828_regulator_data *rd = rdev_get_drvdata(rdev);
 +
-+static inline void cdns_ti_writel(struct cdns_ti *data, u32 offset, u32 value)
-+{
-+	writel(value, data->usbss + offset);
-+}
++	if (!rd)
++		return -ENOENT;
 +
-+static int cdns_ti_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct cdns_ti *data;
-+	struct resource	*res;
-+	int error;
-+	u32 reg;
-+	int rate_code, i;
-+	unsigned long rate;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->usbss = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(data->usbss))
-+		return PTR_ERR(data->usbss);
-+
-+	data->usb2_refclk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(data->usb2_refclk)) {
-+		dev_err(dev, "can't get usb2_refclk\n");
-+		return PTR_ERR(data->usb2_refclk);
-+	}
-+
-+	data->lpm_clk = devm_clk_get(dev, "lpm");
-+	if (IS_ERR(data->lpm_clk)) {
-+		dev_err(dev, "can't get lpm_clk\n");
-+		return PTR_ERR(data->lpm_clk);
-+	}
-+
-+	rate = clk_get_rate(data->usb2_refclk);
-+	rate /= 1000;	/* To KHz */
-+	for (i = 0; i < ARRAY_SIZE(cdns_ti_rate_table); i++) {
-+		if (cdns_ti_rate_table[i] == rate)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(cdns_ti_rate_table)) {
-+		dev_err(dev, "unsupported usb2_refclk rate: %lu KHz\n", rate);
++	if (!rd || !rd->allow_runlvl)
 +		return -EINVAL;
-+	}
 +
-+	rate_code = i;
++	if (rd->gps)
++		return bd71828_dvs_gpio_set_run_level(rd, level);
 +
-+	pm_runtime_enable(dev);
-+	error = pm_runtime_get_sync(dev);
-+	if (error < 0) {
-+		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
-+		goto err_get;
-+	}
-+
-+	/* assert RESET */
-+	reg = cdns_ti_readl(data, USBSS_W1);
-+	reg &= ~USBSS_W1_PWRUP_RST;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	/* set static config */
-+	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-+	reg &= ~USBSS1_STATIC_PLL_REF_SEL_MASK;
-+	reg |= rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
-+
-+	reg &= ~USBSS1_STATIC_VBUS_SEL_MASK;
-+	data->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
-+	if (data->vbus_divider)
-+		reg |= 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
-+
-+	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
-+	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
-+
-+	/* set USB2_ONLY mode if requested */
-+	reg = cdns_ti_readl(data, USBSS_W1);
-+	data->usb2_only = device_property_read_bool(dev, "ti,usb2-only");
-+	if (data->usb2_only)
-+		reg |= USBSS_W1_USB2_ONLY;
-+
-+	/* set default modestrap */
-+	reg |= USBSS_W1_MODESTRAP_SEL;
-+	reg &= ~USBSS_W1_MODESTRAP_MASK;
-+	reg |= USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	/* de-assert RESET */
-+	reg |= USBSS_W1_PWRUP_RST;
-+	cdns_ti_writel(data, USBSS_W1, reg);
-+
-+	error = of_platform_populate(node, NULL, NULL, dev);
-+	if (error) {
-+		dev_err(dev, "failed to create children: %d\n", error);
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	pm_runtime_put_sync(data->dev);
-+err_get:
-+	pm_runtime_disable(data->dev);
-+
-+	return error;
++	return bd71828_dvs_i2c_set_run_level(rd->regmap, level);
 +}
++EXPORT_SYMBOL(bd71828_set_runlevel);
 +
-+static int cdns_ti_remove_core(struct device *dev, void *c)
++/**
++ * bd71828_get_runlevel - get the current system run-level.
++ *
++ * @regulator:	pointer to one of the BD71828 regulators obtained by
++ *		call to regulator_get
++ * @level:	Pointer to value where current run-level is stored
++ *
++ * Returns the current system run-level. Note that 'regulator' must
++ * point to a regulator which is controlled by run-levels.
++ */
++int bd71828_get_runlevel(struct regulator *regulator, unsigned int *level)
 +{
-+	struct platform_device *pdev = to_platform_device(dev);
++	struct regulator_dev *rdev = regulator->rdev;
++	struct bd71828_regulator_data *rd = rdev_get_drvdata(rdev);
++	int ret;
 +
-+	platform_device_unregister(pdev);
++	if (!rd)
++		return -ENOENT;
++
++	if (!rd || !rd->allow_runlvl)
++		return -EINVAL;
++
++	if (!rd->gps)
++		ret = bd71828_dvs_i2c_get_run_level(rd->regmap, rd);
++	else
++		ret = bd71828_dvs_gpio_get_run_level(rd);
++
++	if (ret < 0)
++		return ret;
++
++	*level = (unsigned int) ret;
 +
 +	return 0;
 +}
++EXPORT_SYMBOL(bd71828_get_runlevel);
 +
-+static int cdns_ti_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
 +
-+	device_for_each_child(dev, NULL, cdns_ti_remove_core);
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cdns_ti_of_match[] = {
-+	{ .compatible = "ti,j721e-usb", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cdns_ti_of_match);
-+
-+static struct platform_driver cdns_ti_driver = {
-+	.probe		= cdns_ti_probe,
-+	.remove		= cdns_ti_remove,
-+	.driver		= {
-+		.name	= "cdns3-ti",
-+		.of_match_table	= cdns_ti_of_match,
-+	},
-+};
-+
-+module_platform_driver(cdns_ti_driver);
-+
-+MODULE_ALIAS("platform:cdns3-ti");
-+MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Cadence USB3 TI Glue Layer");
+ static const struct regulator_ops dvs_buck_gpio_ops = {
+ 	.is_enabled = bd71828_dvs_gpio_is_enabled,
+ 	.get_voltage = bd71828_dvs_gpio_get_voltage,
+diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
+index 5f15c6a309e6..bbbd4f118550 100644
+--- a/include/linux/mfd/rohm-bd71828.h
++++ b/include/linux/mfd/rohm-bd71828.h
+@@ -424,5 +424,7 @@ enum {
+ 
+ int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
+ 				 unsigned int level);
++int bd71828_set_runlevel(struct regulator *regulator, unsigned int level);
++int bd71828_get_runlevel(struct regulator *regulator, unsigned int *level);
+ 
+ #endif /* __LINUX_MFD_BD71828_H__ */
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
