@@ -2,134 +2,95 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12973CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC454CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A2121A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA75921929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfJXUs2 (ORCPT
+        id S1728483AbfJXUuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:48:28 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31973 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbfJXUs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:48:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 13:48:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,226,1569308400"; 
-   d="scan'208";a="201596808"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 24 Oct 2019 13:48:26 -0700
-Date:   Thu, 24 Oct 2019 13:48:26 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 14/15] KVM: Terminate memslot walks via used_slots
-Message-ID: <20191024204826.GE28043@linux.intel.com>
-References: <20191022003537.13013-1-sean.j.christopherson@intel.com>
- <20191022003537.13013-15-sean.j.christopherson@intel.com>
- <642f73ee-9425-0149-f4f4-f56be9ae5713@redhat.com>
- <20191022152827.GC2343@linux.intel.com>
- <625e511f-bd35-3b92-0c6d-550c10fc5827@redhat.com>
- <20191022155220.GD2343@linux.intel.com>
- <5c61c094-ee32-4dcf-b3ae-092eba0159c5@redhat.com>
- <20191024193856.GA28043@linux.intel.com>
- <5320341c-1abb-610b-8f5e-090a6726a9b1@redhat.com>
+        Thu, 24 Oct 2019 16:50:07 -0400
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:57898 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727338AbfJXUuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 16:50:06 -0400
+Received: from belgarion ([90.76.41.223])
+        by mwinf5d87 with ME
+        id HYps210044otT8A03Ypz5w; Thu, 24 Oct 2019 22:50:03 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Thu, 24 Oct 2019 22:50:03 +0200
+X-ME-IP: 90.76.41.223
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        IDE-ML <linux-ide@vger.kernel.org>,
+        "open list\:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
+References: <20191018154052.1276506-1-arnd@arndb.de>
+        <87v9slg9k5.fsf@belgarion.home>
+        <CAK8P3a1JDtHsOW=iaxEycbJ4TBkR9MHUyDMeJnwxCtb=tefnBQ@mail.gmail.com>
+        <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
+        <87r239f2g8.fsf@belgarion.home>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Thu, 24 Oct 2019 22:49:51 +0200
+In-Reply-To: <87r239f2g8.fsf@belgarion.home> (Robert Jarzmik's message of
+        "Sat, 19 Oct 2019 12:35:03 +0200")
+Message-ID: <87eez1rhqo.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5320341c-1abb-610b-8f5e-090a6726a9b1@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:24:09PM +0200, Paolo Bonzini wrote:
-> On 24/10/19 21:38, Sean Christopherson wrote:
-> > only
-> >  * its new index into the array is update.
-> 
-> s/update/tracked/?
+Robert Jarzmik <robert.jarzmik@free.fr> writes:
 
-Ya, tracked is better.  Waffled between updated and tracked, chose poorly :-)
+>>> I've now pushed it to
+>>>
+>>> git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
+>>> pxa-multiplatform
+>>
+>> Sorry for the duplication, I had some problems with email configuration
+>> so my reply got rejected, let's see if it goes through this time.
+> I have it now, thanks, I'll test and review as soon as I can.
+>
+> Cheers.
 
->   Returns the changed memslot's
-> >  * current index into the memslots array.
-> >  */
-> > static inline int kvm_memslot_move_backward(struct kvm_memslots *slots,
-> > 					    struct kvm_memory_slot *memslot)
-> > {
-> > 	struct kvm_memory_slot *mslots = slots->memslots;
-> > 	int i;
-> > 
-> > 	if (WARN_ON_ONCE(slots->id_to_index[memslot->id] == -1) ||
-> > 	    WARN_ON_ONCE(!slots->used_slots))
-> > 		return -1;
-> > 
-> > 	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots - 1; i++) {
-> > 		if (memslot->base_gfn > mslots[i + 1].base_gfn)
-> > 			break;
-> > 
-> > 		WARN_ON_ONCE(memslot->base_gfn == mslots[i + 1].base_gfn);
-> > 
-> > 		/* Shift the next memslot forward one and update its index. */
-> > 		mslots[i] = mslots[i + 1];
-> > 		slots->id_to_index[mslots[i].id] = i;
-> > 	}
-> > 	return i;
-> > }
-> > 
-> > /*
-> >  * Move a changed memslot forwards in the array by shifting existing slots with
-> >  * a lower GFN toward the back of the array.  Note, the changed memslot itself
-> >  * is not preserved in the array, i.e. not swapped at this time, only its new
-> >  * index into the array is updated
-> 
-> Same here?
-> 
-> >  * Note, slots are sorted from highest->lowest instead of lowest->highest for
-> >  * historical reasons.
-> 
-> Not just that, the largest slot (with all RAM above 4GB) is also often
-> at the highest address at least on x86.
+Ok Arnd, I have a preliminary test report.
 
-Ah, increasing the odds of a quick hit on lookup...but only when using a
-linear search.  The binary search starts in the middle, so that
-optimization is also historical :-)
+I tested only the pxa27x (mioa701), which happens to have a lot of drivers, and
+only the platform_data flavor (ie. no device-tree test yet). Apart a panic in
+the regulator framework (which is a known issue [1]), your version seems
+equivalent so far in terms of runtime to Linux 5.4-rc3).
 
-> But we could sort them by size now, so I agree to call these historical
-> reasons.
+The sound and RTC seem broken, but not by you ...
 
-That wouldn't work with the binary search though.
+I'll continue the test onwards for pxa3xx and pxa2xx when I'll gather a bit of
+time, and try to review as well the mach-pxa part.
 
-> The code itself is fine, thanks for the work on documenting it.
-> 
-> Paolo
-> 
+Cheers.
+
+-- 
+Robert
+
+[1] https://lore.kernel.org/patchwork/patch/1130436/
