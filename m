@@ -2,220 +2,209 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE29BCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C49ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DAD2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAE62166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:57:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDbM/pi4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gPb0CPnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391552AbfJXP41 (ORCPT
+        id S2407567AbfJXP5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:56:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46182 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389313AbfJXP41 (ORCPT
+        Thu, 24 Oct 2019 11:57:23 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26810 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391173AbfJXP5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:56:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n15so15894155wrw.13;
-        Thu, 24 Oct 2019 08:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3FEVQfMU4k8NRH+uUCDudqXkRQhIb1m0V7SnTPPyUQw=;
-        b=jDbM/pi4pyyEMm0HzKj+pwffwpozZ/uDi4tlWmC465PZpKxCUVpayNhnEmsDQgm0ca
-         +XE7C2vR2/H9oaVLE+Prn/AtqoSLY6U7nW/4iQ+aCLs1W26gcXD7r3drQotXX7mc8zQk
-         XbR8X9+tfsZcs+E8B3tDxH/0xtr+I7gDA9wKFptzk214jPx9ArCnEu+kkjpWCB3t96af
-         zUX81pJNqsNWNG+OfBldMSvX0iPCVIdu+KunUvkYK4eyLmT5TK5tJ2H8VdeE/GfFNuwR
-         cHWr+3wwK+GTRBb86ew4ZsXKQCXD+6qClHAjwzBun5l/sI1DusBblnW72b2gR1MzofNT
-         2djA==
+        Thu, 24 Oct 2019 11:57:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571932641;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RYIycPZ7xwd/64WhlxXgAIdNrBNTMMCEk8QEeLMzlhE=;
+        b=gPb0CPnZlY5ObaL+aSvvJWMffT/fNiA/CyX3F7DlysdLl6+6dfMXAcvEDEO2ic/McPYLYJ
+        Wld6ijPwPnWnPBoPGMguQUL61Nz+6nvPPop+XaRn9fEeD+vAcjZ0oHiDdLH1w1ADaX1kOl
+        M7CPs64ANDYI3ioyM79fzlkW0h9/YXQ=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-62KTNdSnPLqr8nMafcAv4w-1; Thu, 24 Oct 2019 11:57:11 -0400
+Received: by mail-io1-f70.google.com with SMTP id r5so26385304iop.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 08:57:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3FEVQfMU4k8NRH+uUCDudqXkRQhIb1m0V7SnTPPyUQw=;
-        b=eukZEbMEDwo1IYzbFjVMDVxeCSVjCV5IdPaTnXuPndQmfzUwCxqnPl9zK0dAHD9gUT
-         VkosYoAmYO/DZN5U3u8royjmqGiBaB0BmqrJB66Td0vQjTQb8kH57JgHphRZKUB2r5dw
-         NV6LxZHxtVIUj8V/Ks5gNScqlw6q4oLncjlUYrahd6dxdAxFPnXqdHzpf5rX/mOVvSkq
-         5QmUeJ823J0BgcCDJxL4YgDYI6eU9HsDdaC5sJ71eztDqmGv8iFWRt6mKdEeY/Nqb5wb
-         rBxtHkRF3HWiIh78CylB7a1HzvgLougp56z8u1NJUrdexRqRexHrh6FGs+JQXCpzBsOw
-         X4+g==
-X-Gm-Message-State: APjAAAVCMvquUHmmYfSeTOuyrxF8Emx/YP46/VwWoQ52H6nocKdLQW7L
-        ZFCSwKp5kDrrGlbmNFqC7V5kg1zh
-X-Google-Smtp-Source: APXvYqzakL6vA+MtQfouFvECcGA+jysk9mP3Rsz0RIyo0ketWkejCxwUVgjIvb+/CpBIRzm2oWE+zg==
-X-Received: by 2002:a5d:4588:: with SMTP id p8mr4487262wrq.180.1571932584795;
-        Thu, 24 Oct 2019 08:56:24 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id l22sm24162439wrb.45.2019.10.24.08.56.21
+        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=lVFoCFngLW9ciVYAq4RQbMPG6k9IMnqdRdRMrW8KJM4=;
+        b=rFijuW5UYf6PaFBBlELsy6ZLNLZmVrgmeDmrcxdse08LKRam2MN/eDbtp+YGebYhvZ
+         SGZTu4JJUhpH39EzVfDOXjF0uZG4Hsn2PaMqrnEV4uTWwxsmDvIEa2VXX7qVRoA+hI0U
+         kuHxfdEgEwvzV1xxXVVqu5ThtwD+SnGnNA+sCqm9JdzGzvTGSlMdE/iKK6yJfIJHFfob
+         g2hfnBwxaPa71+KhjmuS/dWwU3XHlgpHQ8Qj/QXVJ2k7sN1JEtuXSvHp3w63CUtmLVkX
+         318GFQm/tKF0hghAD5HVacus5VK1rv/XBcNL0fiAdC2RaUIlj/DAJhHr5GYGETAogSaN
+         dmjA==
+X-Gm-Message-State: APjAAAWlLeIyzPqrkI8xEyIoxu5Ie+cwwi3JEga9B/e5QSXJ2DM3OBB9
+        uuNiiW1D1XFqCzE2qLnF+uISdQKEmr87M/909V4cYrNm8obPrc3Dljf7HCZwLWeEANWItkyjAhk
+        ZglB0ugMpdUOHjfPZiWxVRsh0
+X-Received: by 2002:a05:6602:2254:: with SMTP id o20mr273088ioo.25.1571932630771;
+        Thu, 24 Oct 2019 08:57:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwKK/wDC8a1RTcR/5IybiL8/VSKAkuXsO2wJUmTxAvoCksSlrZObgPKaGMLq6lV4ivyfUTynQ==
+X-Received: by 2002:a05:6602:2254:: with SMTP id o20mr273058ioo.25.1571932630437;
+        Thu, 24 Oct 2019 08:57:10 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id u190sm10711104ilc.36.2019.10.24.08.57.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 08:56:21 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 17:56:20 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] drm/tegra: Fix 2d and 3d clients detaching from
- IOMMU domain
-Message-ID: <20191024155620.GG2924027@ulmo>
-References: <20190623173743.24088-1-digetx@gmail.com>
- <20190623173743.24088-2-digetx@gmail.com>
- <20191024115804.GB2924027@ulmo>
- <45926d95-3e7a-c56b-402a-2b2c6475c5db@gmail.com>
- <20191024135018.GD2924027@ulmo>
- <38a67df0-2ede-e7fe-8eca-6c4491cdcc7b@gmail.com>
+        Thu, 24 Oct 2019 08:57:09 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 08:57:08 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        ivan.lazeev@gmail.com, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Message-ID: <20191024155708.w3obpo3i6wz5b5er@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        ivan.lazeev@gmail.com, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191016182814.18350-1-ivan.lazeev@gmail.com>
+ <20191021155735.GA7387@linux.intel.com>
+ <20191023115151.GF21973@linux.intel.com>
+ <20191023232035.ir7hmed4m3emovyx@cantor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="64j1qyTOoGvYcHb1"
+In-Reply-To: <20191023232035.ir7hmed4m3emovyx@cantor>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: 62KTNdSnPLqr8nMafcAv4w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <38a67df0-2ede-e7fe-8eca-6c4491cdcc7b@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed Oct 23 19, Jerry Snitselaar wrote:
+>On Wed Oct 23 19, Jarkko Sakkinen wrote:
+>>On Mon, Oct 21, 2019 at 06:57:35PM +0300, Jarkko Sakkinen wrote:
+>>>Almost tested this today. Unfortunately the USB stick at hand was
+>>>broken.  I'll retry tomorrow or Wed depending on which day I visit at
+>>>the office and which day I WFH.
+>>>
+>>>At least the AMI BIOS had all the TPM stuff in it. The hardware I'll be
+>>>using is Udoo Bolt V8 (thanks Jerry for pointing me out this device)
+>>>with AMD Ryzen Embedded V1605B [1]
+>>>
+>>>Thanks for the patience with your patch.
+>>>
+>>>[1] https://en.wikichip.org/wiki/amd/ryzen_embedded/v1605b
+>>
+>>Jerry, are you confident to give this tested-by?
+>>
+>>I'm still in process of finding what I should put to .config in order
+>>to get USB keyboard working with UDOO BOLT.
+>>
+>>/Jarkko
+>
+>I ran it through the tpm2 kselftests and it passed:
+>
+>TAP version 13
+>1..2
+># selftests: tpm2: test_smoke.sh
+># test_read_partial_overwrite (tpm2_tests.SmokeTest) ... ok
+># test_read_partial_resp (tpm2_tests.SmokeTest) ... ok
+># test_seal_with_auth (tpm2_tests.SmokeTest) ... ok
+># test_seal_with_policy (tpm2_tests.SmokeTest) ... ok
+># test_seal_with_too_long_auth (tpm2_tests.SmokeTest) ... ok
+># test_send_two_cmds (tpm2_tests.SmokeTest) ... ok
+># test_too_short_cmd (tpm2_tests.SmokeTest) ... ok
+># test_unseal_with_wrong_auth (tpm2_tests.SmokeTest) ... ok
+># test_unseal_with_wrong_policy (tpm2_tests.SmokeTest) ... ok
+>#
+># ----------------------------------------------------------------------
+># Ran 9 tests in 12.305s
+>#
+># OK
+>ok 1 selftests: tpm2: test_smoke.sh
+># selftests: tpm2: test_space.sh
+># test_flush_context (tpm2_tests.SpaceTest) ... ok
+># test_get_handles (tpm2_tests.SpaceTest) ... ok
+># test_invalid_cc (tpm2_tests.SpaceTest) ... ok
+># test_make_two_spaces (tpm2_tests.SpaceTest) ... ok
+>#
+># ----------------------------------------------------------------------
+># Ran 4 tests in 11.355s
+>#
+># OK
+>ok 2 selftests: tpm2: test_space.sh
+>
+>
+>I also did some other testing of tpm2-tools commands, creating a
+>trusted key and encrypted key, and running rngtest against /dev/random
+>with the current hwrng being tpm-rng-0.
+>
+>I ran the selftests on an intel nuc as well:
+>
+>TAP version 13
+>1..2
+># selftests: tpm2: test_smoke.sh
+># test_read_partial_overwrite (tpm2_tests.SmokeTest) ... ok
+># test_read_partial_resp (tpm2_tests.SmokeTest) ... ok
+># test_seal_with_auth (tpm2_tests.SmokeTest) ... ok
+># test_seal_with_policy (tpm2_tests.SmokeTest) ... ok
+># test_seal_with_too_long_auth (tpm2_tests.SmokeTest) ... ok
+># test_send_two_cmds (tpm2_tests.SmokeTest) ... ok
+># test_too_short_cmd (tpm2_tests.SmokeTest) ... ok
+># test_unseal_with_wrong_auth (tpm2_tests.SmokeTest) ... ok
+># test_unseal_with_wrong_policy (tpm2_tests.SmokeTest) ... ok
+># #=20
+>----------------------------------------------------------------------
+># Ran 9 tests in 29.620s
+># # OK
+>ok 1 selftests: tpm2: test_smoke.sh
+># selftests: tpm2: test_space.sh
+># test_flush_context (tpm2_tests.SpaceTest) ... ok
+># test_get_handles (tpm2_tests.SpaceTest) ... ok
+># test_invalid_cc (tpm2_tests.SpaceTest) ... ok
+># test_make_two_spaces (tpm2_tests.SpaceTest) ... ok
+># #=20
+>----------------------------------------------------------------------
+># Ran 4 tests in 26.337s
+># # OK
+>ok 2 selftests: tpm2: test_space.sh
+>
+>
+>So,
+>
+>Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>
+>
+>
+>One thing I've noticed on the bolt and the nuc:
+>
+>[    0.808935] tpm_tis MSFT0101:00: IRQ index 0 not found
+>
+>I'm guessing this is Stefan's patches causing this?
+>
+>1ea32c83c699 | 2019-09-02 | tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before pro=
+bing for interrupts (Stefan Berger)
+>5b359c7c4372 | 2019-09-02 | tpm_tis_core: Turn on the TPM before probing I=
+RQ's (Stefan Berger)
+>
+>I've never noticed tpm_tis messages before on a tpm_crb system, and double=
+checked that I don't see it with 5.3.
 
---64j1qyTOoGvYcHb1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see there is a patch from Hans de Goede already dealing with this: "tpm: =
+Switch to platform_get_irq_optional()".
 
-On Thu, Oct 24, 2019 at 06:47:23PM +0300, Dmitry Osipenko wrote:
-> 24.10.2019 16:50, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Thu, Oct 24, 2019 at 04:28:41PM +0300, Dmitry Osipenko wrote:
-> >> 24.10.2019 14:58, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> On Sun, Jun 23, 2019 at 08:37:42PM +0300, Dmitry Osipenko wrote:
-> >>>> This should should fire up on the DRM's driver module re-loader beca=
-use
-> >>>> there won't be enough available domains on older Tegra SoCs.
-> >>>>
-> >>>> Cc: stable <stable@vger.kernel.org>
-> >>>> Fixes: 0c407de5ed1a ("drm/tegra: Refactor IOMMU attach/detach")
-> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >>>> ---
-> >>>>  drivers/gpu/drm/tegra/dc.c   | 4 ++--
-> >>>>  drivers/gpu/drm/tegra/drm.c  | 9 ++++++---
-> >>>>  drivers/gpu/drm/tegra/drm.h  | 3 ++-
-> >>>>  drivers/gpu/drm/tegra/gr2d.c | 4 ++--
-> >>>>  drivers/gpu/drm/tegra/gr3d.c | 4 ++--
-> >>>>  5 files changed, 14 insertions(+), 10 deletions(-)
-> >>>
-> >>> I think I understand what this is trying to do, but the commit message
-> >>> does not help at all. So what's really going on here is that we need =
-to
-> >>> detach the device from the group regardless of whether we're sharing =
-the
-> >>> group or not, just like we attach groups to the shared domain whether
-> >>> they share the same group or not.
-> >>
-> >> Yes, the commit's message could be improved.
-> >>
-> >>> But in that case, I wonder if it's even worth splitting groups the way
-> >>> we are right now. Wouldn't it be better to just put all the devices i=
-nto
-> >>> the same group and be done with it?
-> >>>
-> >>> The current code gives me headaches every time I read it, so if we can
-> >>> just make it so that all the devices under the DRM device share the s=
-ame
-> >>> group, this would become a lot easier to deal with. I'm not really
-> >>> convinced that it makes much sense to keep them on separate domains,
-> >>> especially given the constraints on the number of domains available on
-> >>> earlier Tegra devices.
-> >>>
-> >>> Note that sharing a group will also make it much easier for these to =
-use
-> >>> the DMA API if it is backed by an IOMMU.
-> >>
-> >> Probably I'm blanking on everything about IOMMU now.. could you please
-> >> remind me what "IOMMU group" is?
-> >>
-> >> Isn't it that each IOMMU group relates to the HW ID (SWGROUP)? But then
-> >> each display controller has its own SWGROUP.. and thus that sharing ju=
-st
-> >> doesn't make any sense, hm.
-> >=20
-> > IOMMU groups are not directly related to SWGROUPs. But by default the
-> > IOMMU framework will share a domain between members of the same IOMMU
-> > group.
->=20
-> Ah, I re-figured out that again. The memory controller drivers are
-> defining a single "IOMMU group" for both of the display controllers.
->=20
-> > Seems like that's really what we want here, so that when we do
-> > use the DMA API, all the devices part of the DRM device get attached to
-> > the same IOMMU domain, yet if we don't want to use the DMA API we only
-> > need to detach the one group from the backing.
->=20
-> Yes, it should be okay to put all DRM devices into the same group, like
-> it is done now for the displays. It also should resolve problem with the
-> domains shortage on T30 since now there are maximum 3 domains in use:
-> host1x, drm and vde.
->=20
-> I actually just checked that the original problem still exists
-> and this change solves it as well:
->=20
-> ---
-> diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra3=
-0.c
-> index 5a0f6e0a1643..e71096498436 100644
-> --- a/drivers/memory/tegra/tegra30.c
-> +++ b/drivers/memory/tegra/tegra30.c
-> @@ -1021,6 +1021,9 @@ static const struct tegra_smmu_swgroup
-> tegra30_swgroups[] =3D {
->  static const unsigned int tegra30_group_display[] =3D {
->  	TEGRA_SWGROUP_DC,
->  	TEGRA_SWGROUP_DCB,
-> +	TEGRA_SWGROUP_G2,
-> +	TEGRA_SWGROUP_NV,
-> +	TEGRA_SWGROUP_NV2,
->  };
->=20
->  static const struct tegra_smmu_group_soc tegra30_groups[] =3D {
-> ---
->=20
-> Please let me know whether you're going to make a patch or if I should
-> do it.
-
-I've been testing with a similar change and couldn't find any
-regressions. I've also made the same modifications for Tegra114 and
-Tegra124.
-
-Are you saying that none of these patches are needed anymore? Or do we
-still need a patch to fix detaching? I'm thinking that maybe we can
-drastrically simplify the detachment now by dropping the shared
-parameter altogether.
-
-Let me draft a patch and send out the whole set for testing.
-
-Thierry
-
---64j1qyTOoGvYcHb1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2xyaEACgkQ3SOs138+
-s6HnnQ/45Iq7p3JKafC7dZfiSyfjIwnyT796I2ftsGsYuTIyx6PgUnFPo14rEC27
-/GQU/Ih/ojsx1HuK6/T7DyatN273kKn7UqyyeKj9dt2sl35N99ffNBJyNxoE69K8
-2BgH+TZi4Dryp638YhvuHukVgdXqlyb4EFuuVhdo/eCGlx9+uVfAxXuMshtLmENz
-/Fikj/6fwNO6AQn6oRxdre4Qp4XU/YSBk1QVN3J1P13NF3O6tp+3s+UN3Ox6hgB4
-9owf80JZNPbP6FscSlTHwxba+41duQJ5Y2u0TNFzJwYsIj9kJZ7FFGlaJTE8xU0o
-TJCX1t2Jz8AsERHwQnH0UTIBbFc/lKqyxqM4FrRQZOs5udRto5pb/3wSl9+nFfRf
-CSf5zTBTREnNMMZXv79HrRQFeIzcrPtOaZHOJp4je+Y04XV4qPk9ZANe+5gcMqxc
-9jv60dZSrh4EM1uEeFqJDwesW1huPK9jQXfZoYjXkjIXHL3igqAGrvovGGD2yeO9
-S2kDAexj+9XQNvOXxjjF8QMq/pTpyx8E6PRzXkZTtui47pRhWXZYTAPvUKPDu0Zi
-hz1w/BQUap3S3axNKa4FaFA1F9E40bY2RRaFXGvPW80pbya9qRJx/p/UuDrqCSY6
-RoX9lvDgtj2a+8b9KILk1ZwzyNfkkKhJgbQQpVG+3OPzXcHfyQ==
-=Ymgn
------END PGP SIGNATURE-----
-
---64j1qyTOoGvYcHb1--
