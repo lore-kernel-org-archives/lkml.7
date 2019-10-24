@@ -2,113 +2,80 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640F9CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82055CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0B92166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:16:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jzQkdh3u"
+	by mail.kernel.org (Postfix) with ESMTP id 5C9E02084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502480AbfJXNQo (ORCPT
+        id S2502489AbfJXNTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:16:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45122 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbfJXNQn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:16:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eH1UaNlHCBowXwx10je1E06F7q5EkSmxj/AwDu3/pAw=; b=jzQkdh3uJYTJF5EBja/2oC5L7
-        SnOFhthPrNPnqYnuVLRXs3Mk12vTuDWCXMLHE55B3BUk0lqJWxvvSs5mdJQlGNgz5udRK44qz1+iI
-        mVAzlv3QoIVmUO3OgiLDb8APeu/YQx2uE8awjv5ddfMDq4Glcj9OqQo6f1bHRkPCuoaXevMnqrfBZ
-        Sz39u3SA66hH9+VD4kgLNIzBnth3FXmmXyxo+AZ05seOcBvy7T8Gtr8edVRU8+ex0jbTgrvuZr7DN
-        BxSN5unHxqaT3gx0qVcXkdpu+oFX8X8sRae/lodn/ARo6zdtQ+zF8XSYXhZPdm7a5xV6GWvaVocbR
-        rIoiOkGWw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNcyi-0006oC-G3; Thu, 24 Oct 2019 13:16:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC36C300EBF;
-        Thu, 24 Oct 2019 15:15:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2EE692B1D7C81; Thu, 24 Oct 2019 15:16:34 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 15:16:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jeyu@kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191024131634.GC4131@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
- <20191018074634.801435443@infradead.org>
- <20191021135312.jbbxsuipxldocdjk@treble>
- <20191021141402.GI1817@hirez.programming.kicks-ass.net>
- <20191023114835.GT1817@hirez.programming.kicks-ass.net>
- <20191023170025.f34g3vxaqr4f5gqh@treble>
+        Thu, 24 Oct 2019 09:19:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34614 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730061AbfJXNTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:19:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A9A3DB7FD;
+        Thu, 24 Oct 2019 13:19:07 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 15:19:05 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 6/8] bdev: add open_finish.
+Message-ID: <20191024131905.GM938@kitsune.suse.cz>
+References: <cover.1571834862.git.msuchanek@suse.de>
+ <ea2652294651cbc8549736728c650d16d2fe1808.1571834862.git.msuchanek@suse.de>
+ <20191024022232.GB11485@infradead.org>
+ <20191024085514.GI938@kitsune.suse.cz>
+ <20191024131254.GE2963@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191023170025.f34g3vxaqr4f5gqh@treble>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191024131254.GE2963@bombadil.infradead.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:00:25PM -0500, Josh Poimboeuf wrote:
-
-> > This then raises a number of questions:
-> > 
-> >  1) why is that RELA (that obviously does not depend on any module)
-> >     applied so late?
+On Thu, Oct 24, 2019 at 06:12:54AM -0700, Matthew Wilcox wrote:
+> On Thu, Oct 24, 2019 at 10:55:14AM +0200, Michal Suchánek wrote:
+> > On Wed, Oct 23, 2019 at 07:22:32PM -0700, Christoph Hellwig wrote:
+> > > On Wed, Oct 23, 2019 at 02:52:45PM +0200, Michal Suchanek wrote:
+> > > > Opening a block device may require a long operation such as waiting for
+> > > > the cdrom tray to close. Performing this operation with locks held locks
+> > > > out other attempts to open the device. These processes waiting to open
+> > > > the device are not killable.
 > 
-> Good question.  The 'pv_ops' symbol is exported by the core kernel, so I
-> can't see any reason why we'd need to apply that rela late.  In theory,
-> kpatch-build isn't supposed to convert that to a klp rela.  Maybe
-> something went wrong in the patch creation code.
+> You can use mutex_lock_killable() to fix that.
 > 
-> I'm also questioning why we even need to apply the parainstructions
-> section late.  Maybe we can remove that apply_paravirt() call
-> altogether, along with .klp.arch.parainstruction sections.
-> 
-> I'll need to look into it...
 
-Right, that really should be able to run early. Esp. after commit
+That solves only half of the problem.
 
-  11e86dc7f274 ("x86/paravirt: Detect over-sized patching bugs in paravirt_patch_call()")
+It still does not give access to the device to processes that open with
+O_NONBLOCK.
 
-paravirt patching is unconditional. We _never_ run with the indirect
-call except very early boot, but modules should have them patched way
-before their init section runs.
+Thanks
 
-We rely on this for spectre-v2 and friends.
-
-> >  3) Is there ever a possible module-dependent RELA to a paravirt /
-> >     alternative site?
-> 
-> Good question...
-
-> > Then for 3) we only have alternatives left, and I _think_ it unlikely to
-> > be the case, but I'll have to have a hard look at that.
-> 
-> I'm not sure about alternatives, but maybe we can enforce such
-> limitations with tooling and/or kernel checks.
-
-Right, so on IRC you implied you might have some additional details on
-how alternatives were affected; did you manage to dig that up?
+Michal
