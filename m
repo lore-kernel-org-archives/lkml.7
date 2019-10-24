@@ -2,132 +2,104 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B755CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3116ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F41820684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrzuVLf6"
+	by mail.kernel.org (Postfix) with ESMTP id ED6AA20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571902077;
+	bh=fgT7IamvkaDSulA7YYTpY8PTrrEwCzQuYdtLVExDsEU=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=tyDgX+aLgRxgvSZ4ANNWfvnkv4HSZizf97NIEzMjIdFXdISTxDSPbJvb4Op3qUzA2
+	 dT73g4T7AkleKkIr2drIRYI3fvyhssQiP+DAb4S8k7YSGDUE3G/qhP7nUiTY6ixp4k
+	 MzGRZ0OoyUiv3Dh4ahJ+R+mZBj7ALRRTUOd3SRMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408587AbfJXH1F (ORCPT
+        id S2408599AbfJXH1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:27:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39871 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408569AbfJXH1E (ORCPT
+        Thu, 24 Oct 2019 03:27:55 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:33725 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2408571AbfJXH1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:27:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id t8so18923825qtc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 00:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rR+/2C/x3kiaj39AAUm04JfYyfeKX8N8SiuzYvghj0s=;
-        b=hrzuVLf6ajJ+WcLgB9Lbeu+QpAKrWbF2mPO3sT9AzVHmiPQ8GqYWJy+AD/rywikhqB
-         kIC2LFBHqmBatWlJcp+iSROqXmTBz7Dd++TJT5kItpu82Z9Gty9fgCQ4N9UWAAHbwP0F
-         A4Y9IuMKaITHBf9ElHLWQpsXNa1+seMtGTfUDEwXo1HoTQN4WuLIZROZLtq9P0s3Uldb
-         1eevF1n6l3IiVU0DYm0huy3PlsYWiOIvPsX6Nm7PYpi+djps9p7blVDq638WYodKNHRM
-         KLn+qX1P9g6t+BtjPQywgvJJjDDsSc5C0xltydxvDS6PIejjVYDnTS07VNS5svGYtvP6
-         MvnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rR+/2C/x3kiaj39AAUm04JfYyfeKX8N8SiuzYvghj0s=;
-        b=UlhdjpN9i5QVhW3epLA+57HycHQMZnScv1MolHVt6Iierxjl3ZOqrMhiVtHXXz3JPw
-         EwGXjtwcxDz7N6k9Z/IAtxeG0mwv9/9C5CqSTsMYnEPv65InwFBHr5Iwg8q27TwIk0j6
-         JfYzyL6rwdYQmfTNRDK4oCinxj+5JQRdpqCl3L//NDA+/n1svwJH1vtv3bdHtAFWCh5Y
-         T/2epOgTZTgshaAD+okgH9CLQt9Ka4ubKLxqSVc57fTy8NKdVoojV3eVFETzQ5/57rf4
-         xE+YYDjrQvqbsfjaU8JeXPGMabEuMHRoVZ+h4gRq/xHXoAAquNkXE9sYcXIPxLgGB4rK
-         CZtw==
-X-Gm-Message-State: APjAAAWDGFh/7OGiT1g2z9UYOn79sMkpvVE+txzVXYyvf23VC4tsfCDl
-        7juPTiczVri1NS3S67YPraMyCCsNALXjQL/05CxwIw==
-X-Google-Smtp-Source: APXvYqzLkvPiMyJIYtWQ5uRQfPL6nkIrOlG3sj9/1E1Wc1lj5bM1AzSKU18YzvgzGKdHfFrN7b/Qd0KdcTZhcyEtoVY=
-X-Received: by 2002:a0c:95ca:: with SMTP id t10mr7062131qvt.22.1571902023325;
- Thu, 24 Oct 2019 00:27:03 -0700 (PDT)
+        Thu, 24 Oct 2019 03:27:55 -0400
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iNXXE-0002IH-M6; Thu, 24 Oct 2019 09:27:52 +0200
+To:     Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] irqchip: Skip contexts other supervisor in  =?UTF-8?Q?plic=5Finit=28=29?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-References: <cover.1571844200.git.andreyknvl@google.com> <beeae42e313ef57b4630cc9f36e2e78ad42fd5b7.1571844200.git.andreyknvl@google.com>
-In-Reply-To: <beeae42e313ef57b4630cc9f36e2e78ad42fd5b7.1571844200.git.andreyknvl@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 24 Oct 2019 09:26:52 +0200
-Message-ID: <CACT4Y+a6t08RmtSYfF=3TuASx9ReCEe0Qp0AP=GbCtNyL2j+TA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] kcov: remote coverage support
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 24 Oct 2019 08:27:52 +0100
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        <alan.mikhak@sifive.com>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>
+In-Reply-To: <20191024070311.GA16652@infradead.org>
+References: <alpine.DEB.2.21.9999.1910231152580.16536@viisi.sifive.com>
+ <mhng-aefb3209-29c4-46db-8cf2-e12db46d9a6e@palmer-si-x1c4>
+ <20191024013019.GA675@infradead.org> <20191024075116.48055961@why>
+ <20191024070311.GA16652@infradead.org>
+Message-ID: <67fff4d811c27017e7b34267365c8c0f@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: hch@infradead.org, palmer@sifive.com, paul.walmsley@sifive.com, alan.mikhak@sifive.com, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 5:24 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+On 2019-10-24 08:03, Christoph Hellwig wrote:
+> On Thu, Oct 24, 2019 at 07:51:16AM +0100, Marc Zyngier wrote:
+>> > > > Will this need to change for RISC-V M-mode Linux support?
+>> > > >
+>> > > > 
+>> https://lore.kernel.org/linux-riscv/20191017173743.5430-1-hch@lst.de/
+>> > >
+>> > > Yes.
+>> >
+>> > For M-mode we'll want to check IRQ_M_EXT above.  So we should just
+>> > merge this patch ASAP and then for my rebased M-mode series I'll
+>> > fix the check to do that for the M-Mode case, which is much 
+>> cleaner
+>> > than my hack.
+>>
+>> Does this need to be taken as a fix, potentially Cc to stable? Or is
+>> that 5.5 material?
 >
-> This patch adds background thread coverage collection ability to kcov.
-...
-> +static struct kcov_remote *kcov_remote_add(struct kcov *kcov, u64 handle)
-> +{
-> +       struct kcov_remote *remote;
-> +
-> +       if (kcov_remote_find(handle))
-> +               return ERR_PTR(-EEXIST);
-> +       remote = kmalloc(sizeof(*remote), GFP_ATOMIC);
-> +       if (!remote)
-> +               return ERR_PTR(-ENOMEM);
-> +       remote->handle = handle;
-> +       remote->kcov = kcov;
-> +       hash_add(kcov_remote_map, &remote->hnode, handle);
+> So I though that the S-mode context were kinda aways to be sorted 
+> before
+> M-mode, but I can't find anything guranteeing it.  So I think this
+> actually is a fix, and getting this queued up in the next -rc would
+> really help me with the nommu stuff - otherwise we'd need to take it
+> through the riscv tree for 5.5 to avoid conflicts.
+>
+> Btw, here is my:
+>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>
+> for the patch.
 
-I think it will make sense to check that there is no existing kcov
-with the same handle registered. Such condition will be extremely hard
-to debug based on episodically missing coverage.
+Thanks for that.
 
-...
->  void kcov_task_exit(struct task_struct *t)
->  {
->         struct kcov *kcov;
-> @@ -256,15 +401,23 @@ void kcov_task_exit(struct task_struct *t)
->         kcov = t->kcov;
->         if (kcov == NULL)
->                 return;
-> +
->         spin_lock(&kcov->lock);
-> +       kcov_debug("t = %px, kcov->t = %px\n", t, kcov->t);
-> +       /*
-> +        * If !kcov->remote, this checks that t->kcov->t == t.
-> +        * If kcov->remote == true then the exiting task is either:
-> +        * 1. a remote task between kcov_remote_start() and kcov_remote_stop(),
-> +        *    in this case t != kcov->t and we'll print a warning; or
+Alan, if you can respin this patch with an updated commit message, I'll 
+queue
+it with a couple of other nits I have lying around, and send it to 
+Thomas by
+the end of the week.
 
-Why? Is kcov->t == NULL for remote kcov's? May be worth mentioning in
-the comment b/c it's a very condensed form to check lots of different
-things at once.
-
-Otherwise the series look good to me:
-
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-
-But Andrew's comments stand. It's possible I understand all of this
-only because I already know how it works and why it works this way.
+         M.
+-- 
+Jazz is not dead. It just smells funny...
