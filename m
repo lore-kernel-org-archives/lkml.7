@@ -2,142 +2,118 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553A2CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5588CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF332084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68F92084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="rWfKpJmH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWBgBckl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437078AbfJXCbS (ORCPT
+        id S2406394AbfJXCej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 22:31:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38724 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437066AbfJXCbR (ORCPT
+        Wed, 23 Oct 2019 22:34:39 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38922 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfJXCej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 22:31:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id y8so5073250edu.5
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 19:31:16 -0700 (PDT)
+        Wed, 23 Oct 2019 22:34:39 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 4so21959146qki.6;
+        Wed, 23 Oct 2019 19:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gnpimtDmP0lqthi2a9dQUIzsbuDYbXbk8lwy1rA6ZU4=;
-        b=rWfKpJmH4ifuIAc04embim+n/JBDGLFT0Hj+ihXkCmiMhnOlUJ7dovXsW/rUmYCG6F
-         NxvohT6iNXBI6t174vtu7YcDkT26RFlgZNkwGZix5mNkPhEVfaQJud2KWOstCgH42cLL
-         C6TMjBSQEmYIn9WfT37PSeJ/iFVaR6bQjE0zyQcvJKF2mvrqFmnCmfG0685/oCLWd2D/
-         kj3C67iakdIgJwUCaU7RXbrXgjL50UBwhAsUqAr4lASSx5NA4IH+9zeFS8WnF3708s4S
-         VD43nmX5iXHmxRFB4FSaXMMTYJZZ+KuoOiJB3j+OaIRifCMquB5u1LE663zK8s24CJAE
-         4+WQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rCbbBeI2mrlE99eAAhqWdNCOhdnLzoQ596t+H8kOQ94=;
+        b=CWBgBcklTcLn5N9+5T3lhBBa8/2KvbnIHecMFx8Sn6ezg4ntO94DQXxmtoALyatiuu
+         JpqJ7sESPaZHgaiPheOA4Bjnov8uP2W/FBskCBzYYQMnw4ovuj51lDUgd4SgqaCEfMh1
+         kNC38pL30X8jA6eqeM0GPzTKRZs1kP/Q+8l6UBpGFcgpqZ7xW/7zBKPDFIHBgwZpgCkH
+         cyd6Q1XW/oKB8i4ChYU61oA1FbbXm3DfyNo9ugf+9YThwiZeYVpzA3P4y4Of+dmS2ZFD
+         m9epYsfEkDzfx1xZQ6FPTOAR2/UoCZcgzMnX1BtclhbRK91KJJaIKs+Cw3SbFNNejn/N
+         glbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gnpimtDmP0lqthi2a9dQUIzsbuDYbXbk8lwy1rA6ZU4=;
-        b=nawRc9G295eYg2r/t0HeGqjgJORv305G+kklOT5QPC2IjOzDYtYMZdeaECxAeNlGel
-         anZz08mWdSKul+wpOLS1mQNWtQ03yepK7T3rI4OoMBy6aN3zvoBfKzrqMUEjGHDCsOyq
-         5PdEgRcuqA9wnfHPr8c6qiVLv+BGn7nLW6NKVv/np0xeNEfPyE5GiMw4sfxYUsbXwarX
-         mXjFkX7k9H8TUXdgMrvw+x8LvW4Q59tQfzVAsdccXQ3DR1Y3WzPx3CyWdw4KAnT0uAGW
-         pFlSq2Ovdk1TE2bdodHnEMzGREADoAbuGPH9Sul1YvjfjUdKLaOmI5+MB/pio1KtOnGb
-         UHVA==
-X-Gm-Message-State: APjAAAVJO3Ijwp2nh2VMucXyKY1jQ8axgkG2dt5mdmTnJjyfDdEhzWDu
-        8HdPLoo7Eff7ghQHrMGkmDjcqg==
-X-Google-Smtp-Source: APXvYqy84bemiVw55n7fco+FbX1+KuwznFlI0XsqhDfwNJccDH40WXATcHh+QUP1GE+pY3XO2S2c9A==
-X-Received: by 2002:a17:906:780e:: with SMTP id u14mr26591750ejm.97.1571884275784;
-        Wed, 23 Oct 2019 19:31:15 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.210.43])
-        by smtp.googlemail.com with ESMTPSA id x23sm430555eda.83.2019.10.23.19.31.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Oct 2019 19:31:15 -0700 (PDT)
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
- <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
- <20191023221332.GE2044@dread.disaster.area>
-From:   Boaz Harrosh <boaz@plexistor.com>
-Message-ID: <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
-Date:   Thu, 24 Oct 2019 05:31:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        bh=rCbbBeI2mrlE99eAAhqWdNCOhdnLzoQ596t+H8kOQ94=;
+        b=jeGhE4eccQ+F9lsWwAfKxBxVZtwcQ0A7zc3MO7aRPYFvZFfBRrYgVLfc/vDEmvw5HK
+         0QiVbDNqiWFdqIOswlTvFrUjMCsgX5hiowUrog5RLWplnuT3uTU+sTV08nX/17YoPu7y
+         KpwMr8Yq7N6nmNHRdAC9cWsQzVxECYQmjkvQUmi+DrLtUMEFIofLB6drklIcQckY4Cbb
+         TrP7ix3y5BYNQQlo+6bVdbDW5rAtUG5i7h0tV/sWqYVnObzUa0/yr43/49BLmVPQrtTt
+         pC1ld6p3WzeRs1df+xtzKiKLG6RLEb7TRMU+1S3HcmzoW/+awi4DYpnyp9dAuxzb501f
+         /cdg==
+X-Gm-Message-State: APjAAAVfpy+ekNcIS5Z5tc30ZlyLAFt6cLSbwUkzwfrOncaRhfIjaZDF
+        SNb6Nch6n5QSVUZpjd7pruJ3LwCn
+X-Google-Smtp-Source: APXvYqw+V9P8bgtlsBvYAp2Zw06lp4vJkz8+U8vjUyxESApoZj4w5UguZkhj9rCVeIZzsjbpgTHBdA==
+X-Received: by 2002:a37:2fc1:: with SMTP id v184mr11964494qkh.18.1571884477856;
+        Wed, 23 Oct 2019 19:34:37 -0700 (PDT)
+Received: from localhost.localdomain ([186.212.94.31])
+        by smtp.gmail.com with ESMTPSA id q16sm10252495qke.22.2019.10.23.19.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Oct 2019 19:34:37 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, mpdesouza@suse.com
+Subject: [PATCH 0/5] btrfs: send uevent on subvolume add/remove
+Date:   Wed, 23 Oct 2019 23:36:31 -0300
+Message-Id: <20191024023636.21124-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191023221332.GE2044@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/10/2019 01:13, Dave Chinner wrote:
-> On Wed, Oct 23, 2019 at 04:09:50PM +0300, Boaz Harrosh wrote:
->> On 22/10/2019 14:21, Boaz Harrosh wrote:
->>> On 20/10/2019 18:59, ira.weiny@intel.com wrote:
->> Please explain the use case behind your model?
-> 
-> No application changes needed to control whether they use DAX or
-> not. It allows the admin to control the application behaviour
-> completely, so they can turn off DAX if necessary. Applications are
-> unaware of constraints that may prevent DAX from being used, and so
-> admins need a mechanism to prevent DAX aware application from
-> actually using DAX if the capability is present.
-> 
-> e.g. given how slow some PMEM devices are when it comes to writing
-> data, especially under extremely high concurrency, DAX is not
-> necessarily a performance win for every application. Admins need a
-> guaranteed method of turning off DAX in these situations - apps may
-> not provide such a knob, or even be aware of a thing called DAX...
-> 
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-Thank you Dave for explaining. Forgive my slowness. I now understand
-your intention.
+Hey guys,
 
-But if so please address my first concern. That in the submitted implementation
-you must set the flag-bit after the create of the file but before the write.
-So exactly the above slow writes must always be DAX if I ever want the file
-to be DAX accessed in the future.
+these patches make btrfs to send an uevent to userspace whenever a subvolume is
+added/removed. The changes are pretty straightforward. This patchset was based
+in btrfs-misc-next.
 
-In fact I do not see how you do this without changing the application because
-most applications create thier own files, so you do not have a chance to set
-the DAX-flag before the write happens. So the only effective fixture is the
-inheritance from the parent directory.
-But then again how do you separate from the slow writes that we would like
-none-DAX to the DAX reads that are fast and save so much resources and latency.
+The first patch adds an additional argument to btrfs_kobject_uevent to receive a
+envp, and just forward this argument to kobject_uevent_envp.
 
-What if, say in XFS when setting the DAX-bit we take all the three write-locks
-same as a truncate. Then we check that there are no active page-cache mappings
-ie. a single opener. Then allow to set the bit. Else return EBUISY. (file is in use)
+Patch number 2 creates a new function that will be called by patches 4 and 5 to
+setup the environment variable to be set to userspace using uevent. These two
+environment variables are BTRFS_VOL_{NEW,DEL} and BTRFS_VOL_NAME. The first
+variable will have the value 1 for subvolume add/remove (only one will be
+exported, so udev can distinguish the event), and the second one hold the name
+of the subvolume being added/removed.
 
-> e.g. the data set being accessed by the application is mapped and
-> modified by RDMA applications, so those files must not be accessed
-> using DAX by any application because DAX+RDMA are currently
-> incompatible. Hence you can have RDMA on pmem devices co-exist
-> within the same filesystem as other applications using DAX to access
-> the pmem...
-> 
+Feel free to suggest any other useful information to be exported to userspace
+when adding/removing a subvolume.
 
-I actually like the lastest patchset that takes a lease on the file.
-But yes an outside admin tool to set different needs.
+Patches 3 and 5 call btrfs_vol_uevent to send the event on subvolume add/remove.
 
-> Cheers,
-> Dave.
-> 
+Patch 4 creates a helper function to distinguish a subvolume from a snapshot,
+since the same function is used to delete both. This function is used in patch
+5.
 
-Yes, thanks
-Boaz
+Thanks for you reviews!
+
+Marcos Paulo de Souza (5):
+  btrfs: sysfs: Add envp argument to btrfs_kobject_uevent
+  btrfs: ioctl: Introduce btrfs_vol_uevent
+  btrfs: ioctl: Call btrfs_vol_uevent on subvol creation
+  btrfs: ctree.h: Add btrfs_is_snapshot function
+  btrfs: ioctl: Call btrfs_vol_uevent on subvolume deletion
+
+ fs/btrfs/ctree.h   | 14 ++++++++++++++
+ fs/btrfs/ioctl.c   | 39 ++++++++++++++++++++++++++++++++++++++-
+ fs/btrfs/sysfs.c   |  7 +++++--
+ fs/btrfs/sysfs.h   |  3 ++-
+ fs/btrfs/volumes.c |  2 +-
+ 5 files changed, 60 insertions(+), 5 deletions(-)
+
+-- 
+2.23.0
+
