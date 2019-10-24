@@ -2,131 +2,69 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3479CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C28FCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3462166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604982166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="f9smkoN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438538AbfJXJ2h (ORCPT
+        id S2390079AbfJXJ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:28:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:44064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732234AbfJXJ2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:28:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E10B31F;
-        Thu, 24 Oct 2019 02:28:23 -0700 (PDT)
-Received: from [10.37.9.200] (unknown [10.37.9.200])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC5843F718;
-        Thu, 24 Oct 2019 02:28:15 -0700 (PDT)
-Subject: Re: [PATCHv7 18/33] lib/vdso: Add unlikely() hint into
- vdso_read_begin()
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-References: <20191011012341.846266-1-dima@arista.com>
- <20191011012341.846266-19-dima@arista.com>
- <100f6921-9081-7eb0-7acc-f10cfb647c21@arm.com>
- <20191024061311.GA4541@gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <9aa9857e-ee1c-0117-bfcb-45fc6bcab866@arm.com>
-Date:   Thu, 24 Oct 2019 10:30:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191024061311.GA4541@gmail.com>
-Content-Type: text/plain; charset=koi8-r
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 24 Oct 2019 05:29:58 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25484 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732032AbfJXJ35 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:29:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571909364; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=P9v8S+T/aSvPxpLtfGnb/Aj/FOqG4F1JcOV15pTqDvpDF72pHDgq8BcLhMBKldXAJ49ZQhIRmkfC5FYnY68rEQgMPkYM0U5m8S6C8p6df8P3/C7EzIF6TVuh5iGw2sTTfCY50Ci16yIgZUUNtDVCfCBqN1XwIMDbdjF7c98tB54=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1571909364; h=Cc:Date:From:Message-ID:Subject:To; 
+        bh=E6SJtj7SgWDgqxZyq+RY+asKIpxFZx/oK0gQ7wFDxMw=; 
+        b=nYOHrbkp0LDdBrS8FSTulnu4Drv/PgV3ZKqmiGHzEoTZByEnmLS66KSJThV2LLwUVvhqRZ/WhMTHnC9vl4sQ3SL7hSWhWyGwWiExQ/kuMBQYbODvkx6FTSbUp5zMiAFfWDXvlZPEHtEUg5jiVLFN5j03++jtkq1pAzjlkKwXAfM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id; 
+  b=HYwOxV+AgJpaVqqk+wQHanf6YHfOoGoiZGCBrnKTM46UGMiHtQK5D6t0I5k3JkXNkz6K3rmVyJ/J
+    2JOGzhccBX4OIS87TBROeFFLsat63VIM+W9Czrfv/sjhIQXxklz8  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571909364;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id; l=65;
+        bh=E6SJtj7SgWDgqxZyq+RY+asKIpxFZx/oK0gQ7wFDxMw=;
+        b=f9smkoN4yiFGDbMdt6MNY1jNntfgjB3GynSsOcMX4m9HYypaGDCMgDcMR/Vk74R/
+        GL5Ue4KDj9reLixGuGBIF8GTs9Wp7EpUbo80TA7XL83Xgwm1zzg+x25+X7+39udampt
+        ogqUh7bTnRI0SV8wom/iV0jvQPorokND0/xoi9k0=
+Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
+        with SMTPS id 1571909359956612.7028861589881; Thu, 24 Oct 2019 02:29:19 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
+        jhogan@kernel.org, gregkh@linuxfoundation.org,
+        paul.burton@mips.com, chenhc@lemote.com, paul@crapouillou.net,
+        tglx@linutronix.de, jiaxun.yang@flygoat.com
+Subject: MIPS: Ingenic: Disable abandoned HPTLB function. 
+Date:   Thu, 24 Oct 2019 17:28:59 +0800
+Message-Id: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrei,
+1.rename JZRISC to XBurst.
+2.disable abandoned HPTLB function.
 
-On 10/24/19 7:13 AM, Andrei Vagin wrote:
-> On Wed, Oct 16, 2019 at 12:24:14PM +0100, Vincenzo Frascino wrote:
->> On 10/11/19 2:23 AM, Dmitry Safonov wrote:
->>> From: Andrei Vagin <avagin@gmail.com>
->>>
->>> Place the branch with no concurrent write before contended case.
->>>
->>> Performance numbers for Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
->>> (more clock_gettime() cycles - the better):
->>>         | before    | after
->>> -----------------------------------
->>>         | 150252214 | 153242367
->>>         | 150301112 | 153324800
->>>         | 150392773 | 153125401
->>>         | 150373957 | 153399355
->>>         | 150303157 | 153489417
->>>         | 150365237 | 153494270
->>> -----------------------------------
->>> avg     | 150331408 | 153345935
->>> diff %  | 2	    | 0
->>> -----------------------------------
->>> stdev % | 0.3	    | 0.1
->>>
->>> Signed-off-by: Andrei Vagin <avagin@gmail.com>
->>> Co-developed-by: Dmitry Safonov <dima@arista.com>
->>> Signed-off-by: Dmitry Safonov <dima@arista.com>
->>
->> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->> Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> 
-> Hello Vincenzo,
-> 
-> Could you test the attached patch on aarch64? On x86, it gives about 9%
-> performance improvement for CLOCK_MONOTONIC and CLOCK_BOOTTIME.
-> 
 
-I did run similar tests in past with a previous version of the unified vDSO
-library and what I can tell based on the results of those is that the impact of
-"__always_inline" alone was around 7% on arm64, in fact I had a comment stating
-"To improve performances, in this file, __always_inline it is used for the
-functions called multiple times." in my implementation [1].
-
-[1] https://bit.ly/2W9zMxB
-
-I spent some time yesterday trying to dig out why the approach did not make the
-cut but I could not infer it from the review process.
-
-> Here is my test:
-> https://github.com/avagin/vdso-perf
-> 
-> It is calling clock_gettime() in a loop for three seconds and then
-> reports a number of iterations.
-> 
-
-I am happy to run the test on arm64 and provide some results.
-
-> Thanks,
-> Andrei
-> 
-
--- 
-Regards,
-Vincenzo
