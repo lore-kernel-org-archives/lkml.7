@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B251CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87518CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D0521925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B85C2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="C/V0R/MU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="mcsf8BDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410124AbfJXRFR (ORCPT
+        id S2410137AbfJXRFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:05:17 -0400
-Received: from dougal.metanate.com ([90.155.101.14]:53162 "EHLO metanate.com"
+        Thu, 24 Oct 2019 13:05:19 -0400
+Received: from dougal.metanate.com ([90.155.101.14]:26826 "EHLO metanate.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2410088AbfJXRFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:05:15 -0400
+        id S2410113AbfJXRFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:05:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
          s=stronger; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=WeI3FCFsNE1HtrK6jYQxaZQOHZIpKCcPIjwM0XSj0NI=; b=C/V0R/MUeQdPA/QR4pMfSn+0pG
-        EPGql0q8F7wWhh4lkGorFnBQLKOfp4Pkx3helkiEidXsi5walZ1ciGBTRmvqfVvCVNZLNHPIbTXcF
-        hvglhk4OHG3AUFinX2f7uRI4LFbGTwSv9Ti9HDMLCawsABwjAAHkhJgu9mYPvA4VwWxhvEefUxX9b
-        1+zD2C8tRMSjRdpdXYkaO9SZQOn+wE50lKWByVKPLqWmSt17G7pxtfYw3BK5pDqEkP5RZoj2cBONS
-        NUA2lHVAiN0mx4IFs2wmNYtYHN7/X86+2CA4+42i8kN5pqziaEyxucGnPRGGtmFbNq9OjlbjEB/gS
-        1nreoq8Q==;
+        bh=lt/emEqve1MDsXN2KXFtvpLb9DsysvYyUGYvLNkp2YY=; b=mcsf8BDUrZsbXUMnw8/VOODNpt
+        cKd7svVlnEuCbh1IkBi2vkuJhAKYTezDTzplQft0sq4awiEHsbCQzQG/lw/yPszE8Y3QiLV5146dN
+        FUPk1F50HBsC5S28wRz8Z8H/RfuCAkjrAGYJZ+eDNwCIDXg64gDCgq4z8NIAx3acqeKvlskIfKBhN
+        qkoE3ubX7p9JdHwLGIB+u8m6c1qgfXYo4chzpwF+qTnxE8OTkffIEaUqIisQChua2pX+AIpmIPO1Y
+        0AmRd/gNFGGoecM0X5yx2wPH/HES0VGso1juuTVnBX0KbllrzzwNKNLJNc/u6gtptNY+hAfJirl8g
+        x15XgrFQ==;
 Received: from 188-39-28-98.static.enta.net ([188.39.28.98] helo=donbot.corp.numark.com)
         by email.metanate.com with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92.3)
         (envelope-from <john@metanate.com>)
-        id 1iNgF9-0004oc-DV; Thu, 24 Oct 2019 17:45:47 +0100
+        id 1iNgFA-0004oc-GA; Thu, 24 Oct 2019 17:45:48 +0100
 From:   John Keeping <john@metanate.com>
 To:     linux-usb@vger.kernel.org
 Cc:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, John Keeping <john@metanate.com>
-Subject: [PATCH 1/6] USB: gadget: f_hid: move chardev setup to module init
-Date:   Thu, 24 Oct 2019 17:45:33 +0100
-Message-Id: <20191024164538.3161474-2-john@metanate.com>
+Subject: [PATCH 5/6] USB: gadget: f_hid: refcount f_hidg structure
+Date:   Thu, 24 Oct 2019 17:45:37 +0100
+Message-Id: <20191024164538.3161474-6-john@metanate.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191024164538.3161474-1-john@metanate.com>
 References: <20191024164538.3161474-1-john@metanate.com>
@@ -58,119 +58,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lifetime of the objects in the HID gadget is currently tied to the USB
-function, which makes it very easy to trigger a use-after-free by
-holding a file descriptor on the HID device after deleting the gadget.
+f_hidg is referenced by file descriptors opened on /dev/hidgN as well as
+being the USB gadget function.  Since these file descriptors can be kept
+alive after the gadget function has been deleted, we need to decouple
+the lifetime of the f_hidg structure from the function.
 
-As a first step towards fixing this, move the character device
-allocation to module initialisation so that we don't have to worry about
-when the allocation can be released after closing all of the open
-handles on the device.
+Make f_hidg reference counted so that it remains alive after the gadget
+function has been deleted if necessary.
 
 Signed-off-by: John Keeping <john@metanate.com>
 ---
- drivers/usb/gadget/function/f_hid.c | 27 +++++++--------------------
- drivers/usb/gadget/function/u_hid.h |  3 ---
- 2 files changed, 7 insertions(+), 23 deletions(-)
+ drivers/usb/gadget/function/f_hid.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
-index f3816a5c861e..e9e45f9eae80 100644
+index ee94348b85ef..2c3e835962a5 100644
 --- a/drivers/usb/gadget/function/f_hid.c
 +++ b/drivers/usb/gadget/function/f_hid.c
-@@ -1006,11 +1006,7 @@ static void hidg_free_inst(struct usb_function_instance *f)
- 	opts = container_of(f, struct f_hid_opts, func_inst);
+@@ -58,6 +58,7 @@ struct f_hidg {
+ 	wait_queue_head_t		write_queue;
+ 	struct usb_request		*req;
  
- 	mutex_lock(&hidg_ida_lock);
--
- 	hidg_put_minor(opts->minor);
--	if (ida_is_empty(&hidg_ida))
--		ghid_cleanup();
--
- 	mutex_unlock(&hidg_ida_lock);
++	struct kref			kref;
+ 	int				minor;
+ 	struct usb_function		func;
  
- 	if (opts->report_desc_alloc)
-@@ -1023,7 +1019,6 @@ static struct usb_function_instance *hidg_alloc_inst(void)
+@@ -70,6 +71,14 @@ static inline struct f_hidg *func_to_hidg(struct usb_function *f)
+ 	return container_of(f, struct f_hidg, func);
+ }
+ 
++static void hidg_release(struct kref *kref)
++{
++	struct f_hidg *hidg = container_of(kref, struct f_hidg, kref);
++
++	kfree(hidg->report_desc);
++	kfree(hidg);
++}
++
+ /*-------------------------------------------------------------------------*/
+ /*                           Static descriptors                            */
+ 
+@@ -435,6 +444,9 @@ static __poll_t f_hidg_poll(struct file *file, poll_table *wait)
+ 
+ static int f_hidg_release(struct inode *inode, struct file *fd)
  {
- 	struct f_hid_opts *opts;
- 	struct usb_function_instance *ret;
--	int status = 0;
- 
- 	opts = kzalloc(sizeof(*opts), GFP_KERNEL);
- 	if (!opts)
-@@ -1034,21 +1029,10 @@ static struct usb_function_instance *hidg_alloc_inst(void)
- 
- 	mutex_lock(&hidg_ida_lock);
- 
--	if (ida_is_empty(&hidg_ida)) {
--		status = ghid_setup(NULL, HIDG_MINORS);
--		if (status)  {
--			ret = ERR_PTR(status);
--			kfree(opts);
--			goto unlock;
--		}
--	}
--
- 	opts->minor = hidg_get_minor();
- 	if (opts->minor < 0) {
- 		ret = ERR_PTR(opts->minor);
- 		kfree(opts);
--		if (ida_is_empty(&hidg_ida))
--			ghid_cleanup();
- 		goto unlock;
- 	}
- 	config_group_init_type_name(&opts->func_inst.group, "", &hid_func_type);
-@@ -1133,7 +1117,7 @@ DECLARE_USB_FUNCTION_INIT(hid, hidg_alloc_inst, hidg_alloc);
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Fabien Chouteau");
- 
--int ghid_setup(struct usb_gadget *g, int count)
-+static int ghid_setup(void)
- {
- 	int status;
- 	dev_t dev;
-@@ -1145,7 +1129,7 @@ int ghid_setup(struct usb_gadget *g, int count)
- 		return status;
- 	}
- 
--	status = alloc_chrdev_region(&dev, 0, count, "hidg");
-+	status = alloc_chrdev_region(&dev, 0, HIDG_MINORS, "hidg");
- 	if (status) {
- 		class_destroy(hidg_class);
- 		hidg_class = NULL;
-@@ -1153,12 +1137,12 @@ int ghid_setup(struct usb_gadget *g, int count)
- 	}
- 
- 	major = MAJOR(dev);
--	minors = count;
-+	minors = HIDG_MINORS;
- 
++	struct f_hidg *hidg = fd->private_data;
++
++	kref_put(&hidg->kref, hidg_release);
+ 	fd->private_data = NULL;
  	return 0;
  }
+@@ -445,6 +457,8 @@ static int f_hidg_open(struct inode *inode, struct file *fd)
  
--void ghid_cleanup(void)
-+static void ghid_cleanup(void)
- {
- 	if (major) {
- 		unregister_chrdev_region(MKDEV(major, 0), minors);
-@@ -1168,3 +1152,6 @@ void ghid_cleanup(void)
- 	class_destroy(hidg_class);
- 	hidg_class = NULL;
- }
+ 	mutex_lock(&hidg_idr_lock);
+ 	hidg = idr_find(&hidg_idr, iminor(inode));
++	if (hidg)
++		kref_get(&hidg->kref);
+ 	mutex_unlock(&hidg_idr_lock);
+ 
+ 	if (!hidg)
+@@ -1056,8 +1070,7 @@ static void hidg_free(struct usb_function *f)
+ 
+ 	hidg = func_to_hidg(f);
+ 	opts = container_of(f->fi, struct f_hid_opts, func_inst);
+-	kfree(hidg->report_desc);
+-	kfree(hidg);
++	kref_put(&hidg->kref, hidg_release);
+ 	mutex_lock(&opts->lock);
+ 	--opts->refcnt;
+ 	mutex_unlock(&opts->lock);
+@@ -1109,6 +1122,8 @@ static struct usb_function *hidg_alloc(struct usb_function_instance *fi)
+ 
+ 	mutex_unlock(&opts->lock);
+ 
++	kref_init(&hidg->kref);
 +
-+module_init(ghid_setup);
-+module_exit(ghid_cleanup);
-diff --git a/drivers/usb/gadget/function/u_hid.h b/drivers/usb/gadget/function/u_hid.h
-index 1594bfa312eb..d52acc977c7e 100644
---- a/drivers/usb/gadget/function/u_hid.h
-+++ b/drivers/usb/gadget/function/u_hid.h
-@@ -33,7 +33,4 @@ struct f_hid_opts {
- 	 int				refcnt;
- };
- 
--int ghid_setup(struct usb_gadget *g, int count);
--void ghid_cleanup(void);
--
- #endif /* U_HID_H */
+ 	hidg->func.name    = "hid";
+ 	hidg->func.bind    = hidg_bind;
+ 	hidg->func.unbind  = hidg_unbind;
 -- 
 2.23.0
 
