@@ -2,114 +2,72 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39896CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC9DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F24D20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="T2bbeZtv"
+	by mail.kernel.org (Postfix) with ESMTP id D32A720679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406521AbfJXDjF (ORCPT
+        id S2392940AbfJXDnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 23:39:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37427 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406600AbfJXDjF (ORCPT
+        Wed, 23 Oct 2019 23:43:13 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:41544 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390576AbfJXDnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 23:39:05 -0400
-Received: by mail-pl1-f196.google.com with SMTP id u20so11156723plq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 20:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=W8sgLGjMxM6EuY1mpsS+9Tn33OqsmcrGz0uhv99VAHA=;
-        b=T2bbeZtvsO039PfGe+EjPR125EqRdU9mKD894GYoR0zBnNNVcSR1u3DGiXZFKGUrwF
-         Q1L4mEl5u7aBDGEgAvXjkzTOXSSGhbHMY7JwyTtpuA/1lUXfeioaDSSD5DwpPF81FKT1
-         ajJMYUZOWHJQq3Czs4YHreOwy2CVWx9lD7yEqbXak5+nnWYpgJsNSp3cviar/kEx8g3A
-         JL2eoJFhv69W7IpzFJO3QBiRSBRWpD2PYo0i6gZ0SVVJGOTgtJG3panMDXQqq/fdjcQQ
-         JYHL/HihPBR2U1KB50B+TI1h2RA9YPd7A7tX1ZQWp7kanwYzwZ3TCAZYt7pKgxi2zf4H
-         C+5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=W8sgLGjMxM6EuY1mpsS+9Tn33OqsmcrGz0uhv99VAHA=;
-        b=i8NvqeG76abbOhkTujz06UPhlCD1SmlsJp1+xtkoSAnfpBlUY0h8h6rnjcn3Jacylu
-         J14R+h0lXecejbNTKrYtknJbI4KeIXqGxhRkdcvHEhKWu98j0/Gt9YWhrVGGZyruflZW
-         oUUivFUjRn1zHb+MMye+W3TekKMIPMPdlTwV0pbyrkkMDPEy4qUYlt6kVPnaF7lPE9Ad
-         Xv4cdEL/Ff9L1CsUGk6cNBZtOdzNnguK6xpDA8XVyMoItSuVIMI0UjVw1DC3+akzTHWc
-         ZN8v/ofmhvzkZuEjywCvWnZQKQbsmp/A8yxsIZjPVp7gWwhjWT9e0YRjjLVxttZWjlWb
-         4vkQ==
-X-Gm-Message-State: APjAAAV37e11s1ZPgdTacRyZVPFGxBX0zMjnPDfcl3IKrBNXmRDDOzsI
-        QgA5yw3HNc2kxZnstbize+rH+w==
-X-Google-Smtp-Source: APXvYqzjuWYGP5CVydefv3aAYM4Zf7GeakbWEIFeuKC0sgKLKckuazE4qo+gNK3oOsra0rup9w7uiQ==
-X-Received: by 2002:a17:902:968f:: with SMTP id n15mr13304176plp.191.1571888344349;
-        Wed, 23 Oct 2019 20:39:04 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id b17sm9759144pfr.17.2019.10.23.20.39.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 20:39:03 -0700 (PDT)
-Subject: Re: [Kgdb-bugreport] [PATCH] kernel: convert switch/case fallthrough
- comments to fallthrough;
-To:     Joe Perches <joe@perches.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pm@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-References: <f31b38b9ad515a138edaecf85701b1e3db064114.camel@perches.com>
- <20191021090909.yjyed4qodjjcioqc@holly.lan>
- <bff0a1c4fc69b83c763ffbce42a0152e1573499a.camel@perches.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2808c960-6178-17b8-23d7-a6945987a658@kernel.dk>
-Date:   Wed, 23 Oct 2019 21:39:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <bff0a1c4fc69b83c763ffbce42a0152e1573499a.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 23 Oct 2019 23:43:13 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::b7e])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6796C14B7A921;
+        Wed, 23 Oct 2019 20:43:12 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 20:43:11 -0700 (PDT)
+Message-Id: <20191023.204311.1181447784152558295.davem@davemloft.net>
+To:     rentao.bupt@gmail.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, olteanv@gmail.com,
+        arun.parameswaran@broadcom.com, justinpopo6@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH net-next v10 0/3] net: phy: support 1000Base-X
+ auto-negotiation for BCM54616S
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191022183108.14029-1-rentao.bupt@gmail.com>
+References: <20191022183108.14029-1-rentao.bupt@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 23 Oct 2019 20:43:12 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/19 12:49 PM, Joe Perches wrote:
-> On Mon, 2019-10-21 at 10:09 +0100, Daniel Thompson wrote:
->> On Fri, Oct 18, 2019 at 09:35:08AM -0700, Joe Perches wrote:
->>> Use the new pseudo keyword "fallthrough;" and not the
->>> various /* fallthrough */ style comments.
->>>
->>> Signed-off-by: Joe Perches <joe@perches.com>
->>> ---
->>>
->>> This is a single patch for the kernel/ source tree,
->>> which would otherwise be sent through as separate
->>> patches to 19 maintainer sections.
->>
->> For the kernel/debug/ files:
->>
->> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
->>
->> Will you be putting this in an immutable branch once you've collected
->> enough acks?
+From: rentao.bupt@gmail.com
+Date: Tue, 22 Oct 2019 11:31:05 -0700
+
+> From: Tao Ren <rentao.bupt@gmail.com>
 > 
-> No, I expect Linus will either run the script
-> or apply this patch one day.
+> This patch series aims at supporting auto negotiation when BCM54616S is
+> running in 1000Base-X mode: without the patch series, BCM54616S PHY driver
+> would report incorrect link speed in 1000Base-X mode.
+> 
+> Patch #1 (of 3) modifies assignment to OR when dealing with dev_flags in
+> phy_attach_direct function, so that dev_flags updated in BCM54616S PHY's
+> probe callback won't be lost.
+> 
+> Patch #2 (of 3) adds several genphy_c37_* functions to support clause 37
+> 1000Base-X auto-negotiation, and these functions are called in BCM54616S
+> PHY driver.
+> 
+> Patch #3 (of 3) detects BCM54616S PHY's operation mode and calls according
+> genphy_c37_* functions to configure auto-negotiation and parse link
+> attributes (speed, duplex, and etc.) in 1000Base-X mode.
 
-Please coordinate and get something like this run/applied a few days
-before -rc1 to cause the least amount of needless merge issues.
-
--- 
-Jens Axboe
-
+Series applied to net-next, thank you.
