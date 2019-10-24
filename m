@@ -2,328 +2,212 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D182ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E10CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0F020578
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WVowUe9w"
+	by mail.kernel.org (Postfix) with ESMTP id 88E7420659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393800AbfJXNrC (ORCPT
+        id S2393806AbfJXNrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:47:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46023 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2393764AbfJXNrC (ORCPT
+        Thu, 24 Oct 2019 09:47:12 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:55730 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390294AbfJXNrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:47:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571924819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EfRA8cSd2wOIFv2uoOiidflVlPEJr9nmbvdtu17QN6g=;
-        b=WVowUe9wQqRgw8lY3bfmYYX+74+Fs/y7jL0K4Rs+H/SbZ4d/zylCBilLo5XMfM/9YBi4hd
-        fzxsTEgTZMeCmFJPr2HdZcc3B0WfVOi2Eb7IwDDxFMqNy66ycHbcRKoWq7z4CAOfKrmVPa
-        PFiC2ek+Ansq+FxG3LmCFQd7o1KBWXU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-HTUcDf8sNRuo5RIHR4MeMQ-1; Thu, 24 Oct 2019 09:46:56 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94180801E5C;
-        Thu, 24 Oct 2019 13:46:54 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E82015FCDF;
-        Thu, 24 Oct 2019 13:46:52 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 09:46:51 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v4 00/10] sched/fair: rework the CFS load balance
-Message-ID: <20191024134650.GD2708@pauld.bos.csb>
-References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
- <20191021075038.GA27361@gmail.com>
- <CAKfTPtCcvKuf1Gt0W-BeEbQxFP_co14jdv_L5zEpS==Ecibabg@mail.gmail.com>
- <20191024123844.GB2708@pauld.bos.csb>
+        Thu, 24 Oct 2019 09:47:11 -0400
+Received: by mail-io1-f69.google.com with SMTP id c67so13449178iof.22
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:47:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=t2Yf9L/jBVvBAHkV3yxbLEvtZ5yOPvbhkvRuGLMDhJk=;
+        b=sXwftVB2wUeJDGS5oB6j4lVO43SOdfiQQm520zNq7ST+1Irx7MpMgG5qPHnqYd77H+
+         ic+VMMuN4U0Zz7wZDT+RoAi3vh9ZrMY/kKJsJelBAhi753OEDPz+KTnf+I1s3EwtIB5r
+         UkNlBcXlcNr0SwliQkAqDY9yUOHGlaLLB08IDLAWJkyLz3+NwxYHUn0fmYTKTp/Jczjl
+         BnGc/FqHA/LTLqKUZ9WfNhETjf/22OrxpUWsrOwIM0BKJWKjoo7zfk19vGi1gtz557CI
+         RclwIXkVEQyZywjpjOwWxYBIPX3HuzYGBAE93O6k4tQlUaNOFISFcWJ4GLjK5KklH3e/
+         xPCA==
+X-Gm-Message-State: APjAAAVyLH6kXMTFw+etA+sInKDJygUHsPc1UVXGCrmRqY+Wo5ch+u94
+        J+2CmpeYU8lBLll9t9i1M038sPOKdHR6lJtD3aCHaua/MqVF
+X-Google-Smtp-Source: APXvYqyC4sdEy11y07JTP5+9irjs97ov2ZNLsdTU94ijiWJNUO9SeMFZ36861bQ4WlArQN0D9fkIp83R8dTI541peCgTmGGF24tG
 MIME-Version: 1.0
-In-Reply-To: <20191024123844.GB2708@pauld.bos.csb>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: HTUcDf8sNRuo5RIHR4MeMQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+X-Received: by 2002:a6b:ea19:: with SMTP id m25mr2163572ioc.256.1571924828662;
+ Thu, 24 Oct 2019 06:47:08 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 06:47:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000006bb9c0595a84569@google.com>
+Subject: KASAN: use-after-free Read in build_audio_procunit
+From:   syzbot <syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, andreyknvl@google.com,
+        benquike@gmail.com, dan.carpenter@oracle.com, g@b4.vu,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        perex@perex.cz, rfontana@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tiwai@suse.com, wang6495@umn.edu
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 08:38:44AM -0400 Phil Auld wrote:
-> Hi Vincent,
->=20
-> On Mon, Oct 21, 2019 at 10:44:20AM +0200 Vincent Guittot wrote:
-> > On Mon, 21 Oct 2019 at 09:50, Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > >
-> > > * Vincent Guittot <vincent.guittot@linaro.org> wrote:
-> > >
-> > > > Several wrong task placement have been raised with the current load
-> > > > balance algorithm but their fixes are not always straight forward a=
-nd
-> > > > end up with using biased values to force migrations. A cleanup and =
-rework
-> > > > of the load balance will help to handle such UCs and enable to fine=
- grain
-> > > > the behavior of the scheduler for other cases.
-> > > >
-> > > > Patch 1 has already been sent separately and only consolidate asym =
-policy
-> > > > in one place and help the review of the changes in load_balance.
-> > > >
-> > > > Patch 2 renames the sum of h_nr_running in stats.
-> > > >
-> > > > Patch 3 removes meaningless imbalance computation to make review of
-> > > > patch 4 easier.
-> > > >
-> > > > Patch 4 reworks load_balance algorithm and fixes some wrong task pl=
-acement
-> > > > but try to stay conservative.
-> > > >
-> > > > Patch 5 add the sum of nr_running to monitor non cfs tasks and take=
- that
-> > > > into account when pulling tasks.
-> > > >
-> > > > Patch 6 replaces runnable_load by load now that the signal is only =
-used
-> > > > when overloaded.
-> > > >
-> > > > Patch 7 improves the spread of tasks at the 1st scheduling level.
-> > > >
-> > > > Patch 8 uses utilization instead of load in all steps of misfit tas=
-k
-> > > > path.
-> > > >
-> > > > Patch 9 replaces runnable_load_avg by load_avg in the wake up path.
-> > > >
-> > > > Patch 10 optimizes find_idlest_group() that was using both runnable=
-_load
-> > > > and load. This has not been squashed with previous patch to ease th=
-e
-> > > > review.
-> > > >
-> > > > Patch 11 reworks find_idlest_group() to follow the same steps as
-> > > > find_busiest_group()
-> > > >
-> > > > Some benchmarks results based on 8 iterations of each tests:
-> > > > - small arm64 dual quad cores system
-> > > >
-> > > >            tip/sched/core        w/ this patchset    improvement
-> > > > schedpipe      53125 +/-0.18%        53443 +/-0.52%   (+0.60%)
-> > > >
-> > > > hackbench -l (2560/#grp) -g #grp
-> > > >  1 groups      1.579 +/-29.16%       1.410 +/-13.46% (+10.70%)
-> > > >  4 groups      1.269 +/-9.69%        1.205 +/-3.27%   (+5.00%)
-> > > >  8 groups      1.117 +/-1.51%        1.123 +/-1.27%   (+4.57%)
-> > > > 16 groups      1.176 +/-1.76%        1.164 +/-2.42%   (+1.07%)
-> > > >
-> > > > Unixbench shell8
-> > > >   1 test     1963.48 +/-0.36%       1902.88 +/-0.73%    (-3.09%)
-> > > > 224 tests    2427.60 +/-0.20%       2469.80 +/-0.42%  (1.74%)
-> > > >
-> > > > - large arm64 2 nodes / 224 cores system
-> > > >
-> > > >            tip/sched/core        w/ this patchset    improvement
-> > > > schedpipe     124084 +/-1.36%       124445 +/-0.67%   (+0.29%)
-> > > >
-> > > > hackbench -l (256000/#grp) -g #grp
-> > > >   1 groups    15.305 +/-1.50%       14.001 +/-1.99%   (+8.52%)
-> > > >   4 groups     5.959 +/-0.70%        5.542 +/-3.76%   (+6.99%)
-> > > >  16 groups     3.120 +/-1.72%        3.253 +/-0.61%   (-4.92%)
-> > > >  32 groups     2.911 +/-0.88%        2.837 +/-1.16%   (+2.54%)
-> > > >  64 groups     2.805 +/-1.90%        2.716 +/-1.18%   (+3.17%)
-> > > > 128 groups     3.166 +/-7.71%        3.891 +/-6.77%   (+5.82%)
-> > > > 256 groups     3.655 +/-10.09%       3.185 +/-6.65%  (+12.87%)
-> > > >
-> > > > dbench
-> > > >   1 groups   328.176 +/-0.29%      330.217 +/-0.32%   (+0.62%)
-> > > >   4 groups   930.739 +/-0.50%      957.173 +/-0.66%   (+2.84%)
-> > > >  16 groups  1928.292 +/-0.36%     1978.234 +/-0.88%   (+0.92%)
-> > > >  32 groups  2369.348 +/-1.72%     2454.020 +/-0.90%   (+3.57%)
-> > > >  64 groups  2583.880 +/-3.39%     2618.860 +/-0.84%   (+1.35%)
-> > > > 128 groups  2256.406 +/-10.67%    2392.498 +/-2.13%   (+6.03%)
-> > > > 256 groups  1257.546 +/-3.81%     1674.684 +/-4.97%  (+33.17%)
-> > > >
-> > > > Unixbench shell8
-> > > >   1 test     6944.16 +/-0.02     6605.82 +/-0.11      (-4.87%)
-> > > > 224 tests   13499.02 +/-0.14    13637.94 +/-0.47%     (+1.03%)
-> > > > lkp reported a -10% regression on shell8 (1 test) for v3 that
-> > > > seems that is partially recovered on my platform with v4.
-> > > >
-> > > > tip/sched/core sha1:
-> > > >   commit 563c4f85f9f0 ("Merge branch 'sched/rt' into sched/core, to=
- pick up -rt changes")
-> > > >
-> > > > Changes since v3:
-> > > > - small typo and variable ordering fixes
-> > > > - add some acked/reviewed tag
-> > > > - set 1 instead of load for migrate_misfit
-> > > > - use nr_h_running instead of load for asym_packing
-> > > > - update the optimization of find_idlest_group() and put back somes
-> > > >  conditions when comparing load
-> > > > - rework find_idlest_group() to match find_busiest_group() behavior
-> > > >
-> > > > Changes since v2:
-> > > > - fix typo and reorder code
-> > > > - some minor code fixes
-> > > > - optimize the find_idles_group()
-> > > >
-> > > > Not covered in this patchset:
-> > > > - Better detection of overloaded and fully busy state, especially f=
-or cases
-> > > >   when nr_running > nr CPUs.
-> > > >
-> > > > Vincent Guittot (11):
-> > > >   sched/fair: clean up asym packing
-> > > >   sched/fair: rename sum_nr_running to sum_h_nr_running
-> > > >   sched/fair: remove meaningless imbalance calculation
-> > > >   sched/fair: rework load_balance
-> > > >   sched/fair: use rq->nr_running when balancing load
-> > > >   sched/fair: use load instead of runnable load in load_balance
-> > > >   sched/fair: evenly spread tasks when not overloaded
-> > > >   sched/fair: use utilization to select misfit task
-> > > >   sched/fair: use load instead of runnable load in wakeup path
-> > > >   sched/fair: optimize find_idlest_group
-> > > >   sched/fair: rework find_idlest_group
-> > > >
-> > > >  kernel/sched/fair.c | 1181 +++++++++++++++++++++++++++++----------=
-------------
-> > > >  1 file changed, 682 insertions(+), 499 deletions(-)
-> > >
-> > > Thanks, that's an excellent series!
-> > >
-> > > I've queued it up in sched/core with a handful of readability edits t=
-o
-> > > comments and changelogs.
-> >=20
-> > Thanks
-> >=20
-> > >
-> > > There are some upstreaming caveats though, I expect this series to be=
- a
-> > > performance regression magnet:
-> > >
-> > >  - load_balance() and wake-up changes invariably are such: some workl=
-oads
-> > >    only work/scale well by accident, and if we touch the logic it mig=
-ht
-> > >    flip over into a less advantageous scheduling pattern.
-> > >
-> > >  - In particular the changes from balancing and waking on runnable lo=
-ad
-> > >    to full load that includes blocking *will* shift IO-intensive
-> > >    workloads that you tests don't fully capture I believe. You also m=
-ade
-> > >    idle balancing more aggressive in essence - which might reduce cac=
-he
-> > >    locality for some workloads.
-> > >
-> > > A full run on Mel Gorman's magic scalability test-suite would be supe=
-r
-> > > useful ...
-> > >
-> > > Anyway, please be on the lookout for such performance regression repo=
-rts.
-> >=20
-> > Yes I monitor the regressions on the mailing list
->=20
->=20
-> Our kernel perf tests show good results across the board for v4.=20
->=20
-> The issue we hit on the 8-node system is fixed. Thanks!
->=20
-> As we didn't see the fairness issue I don't expect the results to be
-> that different on v4a (with the followup patch) but those tests are
-> queued up now and we'll see what they look like.=20
->=20
+Hello,
 
-Initial results with fix patch (v4a) show that the outlier issues on=20
-the 8-node system have returned.  Median time for 152 and 156 threads=20
-(160 cpu system) goes up significantly and worst case goes from 340=20
-and 250 to 550 sec. for both. And doubles from 150 to 300 for 144=20
-threads. These look more like the results from v3.=20
+syzbot found the following crash on:
 
-We're re-running the test to get more samples.=20
+HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=17cdccc4e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd965c77e4711eb13b82
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13fe752f600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17989fd8e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com
+
+usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 1-1: Product: syz
+usb 1-1: Manufacturer: syz
+usb 1-1: SerialNumber: syz
+==================================================================
+BUG: KASAN: use-after-free in uac_extension_unit_iExtension  
+include/uapi/linux/usb/audio.h:483 [inline]
+BUG: KASAN: use-after-free in build_audio_procunit+0xeab/0x13f0  
+sound/usb/mixer.c:2434
+Read of size 1 at addr ffff8881d4c0140d by task kworker/0:1/12
+
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:634
+  uac_extension_unit_iExtension include/uapi/linux/usb/audio.h:483 [inline]
+  build_audio_procunit+0xeab/0x13f0 sound/usb/mixer.c:2434
+  parse_audio_extension_unit sound/usb/mixer.c:2483 [inline]
+  parse_audio_unit+0x1812/0x36f0 sound/usb/mixer.c:2761
+  snd_usb_mixer_controls+0x715/0xb90 sound/usb/mixer.c:3095
+  snd_usb_create_mixer+0x2b5/0x1890 sound/usb/mixer.c:3445
+  usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+  port_event drivers/usb/core/hub.c:5469 [inline]
+  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 12:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
+  kmalloc include/linux/slab.h:561 [inline]
+  usb_alloc_urb+0x65/0xb0 drivers/usb/core/urb.c:73
+  usb_internal_control_msg drivers/usb/core/message.c:94 [inline]
+  usb_control_msg+0x1c9/0x4a0 drivers/usb/core/message.c:152
+  usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
+  usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
+  usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
+  usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
+  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+  port_event drivers/usb/core/hub.c:5469 [inline]
+  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 12:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
+  slab_free_hook mm/slub.c:1424 [inline]
+  slab_free_freelist_hook mm/slub.c:1475 [inline]
+  slab_free mm/slub.c:3018 [inline]
+  kfree+0xe4/0x320 mm/slub.c:3967
+  urb_destroy drivers/usb/core/urb.c:26 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  usb_free_urb.part.0+0x7a/0xc0 drivers/usb/core/urb.c:95
+  usb_free_urb+0x1b/0x30 drivers/usb/core/urb.c:94
+  usb_start_wait_urb+0x1e5/0x2b0 drivers/usb/core/message.c:79
+  usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
+  usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:152
+  usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
+  usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
+  usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
+  usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
+  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+  port_event drivers/usb/core/hub.c:5469 [inline]
+  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d4c01400
+  which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 13 bytes inside of
+  192-byte region [ffff8881d4c01400, ffff8881d4c014c0)
+The buggy address belongs to the page:
+page:ffffea0007530040 refcount:1 mapcount:0 mapping:ffff8881da002a00  
+index:0x0
+flags: 0x200000000000200(slab)
+raw: 0200000000000200 ffffea000754fec0 0000000200000002 ffff8881da002a00
+raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881d4c01300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff8881d4c01380: 00 00 00 07 fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff8881d4c01400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                       ^
+  ffff8881d4c01480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffff8881d4c01500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
-Other tests and systems were still fine.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-Cheers,
-Phil
-
-
-> Numbers for my specific testcase (the cgroup imbalance) are basically=20
-> the same as I posted for v3 (plus the better 8-node numbers). I.e. this
-> series solves that issue.=20
->=20
->=20
-> Cheers,
-> Phil
->=20
->=20
-> >=20
-> > >
-> > > Also, we seem to have grown a fair amount of these TODO entries:
-> > >
-> > >   kernel/sched/fair.c: * XXX borrowed from update_sg_lb_stats
-> > >   kernel/sched/fair.c: * XXX: only do this for the part of runnable >=
- running ?
-> > >   kernel/sched/fair.c:     * XXX illustrate
-> > >   kernel/sched/fair.c:    } else if (sd_flag & SD_BALANCE_WAKE) { /* =
-XXX always ? */
-> > >   kernel/sched/fair.c: * can also include other factors [XXX].
-> > >   kernel/sched/fair.c: * [XXX expand on:
-> > >   kernel/sched/fair.c: * [XXX more?]
-> > >   kernel/sched/fair.c: * [XXX write more on how we solve this.. _afte=
-r_ merging pjt's patches that
-> > >   kernel/sched/fair.c:             * XXX for now avg_load is not comp=
-uted and always 0 so we
-> > >   kernel/sched/fair.c:            /* XXX broken for overlapping NUMA =
-groups */
-> > >
-> >=20
-> > I will have a look :-)
-> >=20
-> > > :-)
-> > >
-> > > Thanks,
-> > >
-> > >         Ingo
->=20
-> --=20
->=20
-
---=20
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
