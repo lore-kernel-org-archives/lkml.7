@@ -2,68 +2,94 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9DECA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F5CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ED82084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o+3jGmAq"
+	by mail.kernel.org (Postfix) with ESMTP id BBB4F2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571884633;
+	bh=jzD/o5fFFKb4zWGB61Nq3oM/Rw9gexxnXww5qQGCnnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BYdTG6cX6677JTBhlAty3MnMjnXG8amz41U8E7TJmFZdLaYoJeWZVxSnpH8fzzUJo
+	 DYJSTrmUr+a6az/4B2AiI+hdH7WGxJe8erxNMMAyrFcCYOr74z1v5cHSaW1yTdPvJQ
+	 BVY7wb1jcekkFLiQwWzBYvABcCwMNHqCDz63QISQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437122AbfJXCgI (ORCPT
+        id S2408252AbfJXChM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 22:36:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50726 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391468AbfJXCgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 22:36:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7Fj9mHRF3mevdCZVhB7KKO9UNPbwjnvX89JMWBIzhco=; b=o+3jGmAqn0XHHr5GOXSJrA0oc
-        shld319a6f6WtdzX9apf3HCHkkWxFIFvwfqb0yjN5VRW6deoAw04ZNe0ZCkPfy7eBFenlcN9RhOT6
-        BTFxpLhy4E1hnVi6ZcuGjchtN1kNNgWOhClLWFZYDZh9ihdxRvewI17ri0YLZpTVAs/iEp1Wjroql
-        ZWc9Dcga4AUhAll8gI8PzOAUYPzqhjPOvkrO1ztPsc01XrcZGaqB3PWXplDxB/qxFAPpTvyh8lJsN
-        aOFFoNjRz8K90j07uU5/DKv7m/ptYEVTNun+vXQTyFCy7B5/G6K5SpWBzMHS/4JRkaCkIy7wV0Vn/
-        SvJiFTAFQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNSys-0001uQ-Pm; Thu, 24 Oct 2019 02:36:06 +0000
-Date:   Wed, 23 Oct 2019 19:36:06 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Boaz Harrosh <boaz@plexistor.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Wed, 23 Oct 2019 22:37:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406322AbfJXChM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 22:37:12 -0400
+Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9087E205ED;
+        Thu, 24 Oct 2019 02:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571884631;
+        bh=jzD/o5fFFKb4zWGB61Nq3oM/Rw9gexxnXww5qQGCnnc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QGHV+0RWpDokCcVFBTQ6ochibC6yeFefd3NENUYBx6NKaKfgAIC2LHU+i/Z0boyx6
+         QhDrVJegviiXyxWzpUxADfgu+OjZf6JsncZvsO8Db7CLGgVT6LYPBaP/5hJzfA7hBK
+         OSTURxqzz7+fkE7m8UtdRxnKX+NTmYA8LtNgTeKI=
+Date:   Thu, 24 Oct 2019 11:37:04 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: Please add the zuf tree to linux-next
-Message-ID: <20191024023606.GA1884@infradead.org>
-References: <1b192a85-e1da-0925-ef26-178b93d0aa45@plexistor.com>
+Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
+ back old behavior
+Message-ID: <20191024023704.GA3152@redsun51.ssa.fujisawa.hgst.com>
+References: <20191023192205.97024-1-olof@lixom.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b192a85-e1da-0925-ef26-178b93d0aa45@plexistor.com>
+In-Reply-To: <20191023192205.97024-1-olof@lixom.net>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 03:34:29AM +0300, Boaz Harrosh wrote:
-> Hello Stephen
+On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
+> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+> the behavior was changed such that native (kernel) handling of DPC
+> got tied to whether the kernel also handled AER. While this is what
+> the standard recommends, there are BIOSes out there that lack the DPC
+> handling since it was never required in the past.
 > 
-> Please add the zuf tree below to the linux-next tree.
-> 	[https://github.com/NetApp/zufs-zuf zuf]
+> To make DPC still work on said platforms the same way they did before,
+> add a "pcie_ports=dpc-native" kernel parameter that can be passed in
+> if needed, while keeping defaults unchanged.
 
-I don't remember us coming to the conclusion that this actually is
-useful doesn't just badly duplicate the fuse functionality.
+If platform firmware wants to handle AER events, but the kernel enables
+the DPC capability, the ports will be trapping events that firmware is
+expecting to handle. Not that that's a bad thing: firmware is generally
+worse at handling these errors.
+
+> +/*
+> + * If the user specified "pcie_ports=dpc-native", use the PCIe services
+> + * for DPC, but cuse platform defaults for the others.
+
+s/cuse/use
+
+> @@ -1534,9 +1534,11 @@ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
+>  #ifdef CONFIG_PCIEPORTBUS
+>  extern bool pcie_ports_disabled;
+>  extern bool pcie_ports_native;
+> +extern bool pcie_ports_dpc_native;
+>  #else
+>  #define pcie_ports_disabled	true
+>  #define pcie_ports_native	false
+> +#define pcie_ports_dpc_native	false
+>  #endif
+
+You do not have any references to pcie_ports_dpc_native outside of files that
+require CONFIG_PCIEPORTBUS, so no need to define a default.
