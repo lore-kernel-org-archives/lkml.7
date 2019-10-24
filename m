@@ -2,151 +2,185 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAEDCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E7CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C5221906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0657721D71
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AO2viM8R"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OT4cDmsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503696AbfJXQje (ORCPT
+        id S2503706AbfJXQjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:39:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34270 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503504AbfJXQil (ORCPT
+        Thu, 24 Oct 2019 12:39:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54658 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503686AbfJXQje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:38:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t16so21708960wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:38:39 -0700 (PDT)
+        Thu, 24 Oct 2019 12:39:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g7so3573440wmk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UL330JCxNCb1QfPA7XEdnee8d8sanDm58UEp+DpPD5E=;
-        b=AO2viM8RfA1DxiniDHFsPnX7EJHu7id0/Nbauz4pHVAcEh/Vqn3h1cCsIRCAaGNIJr
-         ZjlMabMeGfI++dacJ1ty4Ouq/jr7hOu1XAeoUkC1u+G903TpW9UwEjkRM1uCUUrcLVxI
-         H/H643bgLQqGEWNJw5wEUgSR2bEqy2cfVXnngqm+AfFt0J2WpsMNXHexR2K3WYED4KND
-         5mSLuNIQ72aRBZgvd7e+0KcCpu5+ZxUSH+089gVL4hDpasT4MWDHRnUdhJFbpRUu6rim
-         ZFOwtDQ0W393tuxnG/lfjtS+iV+0GJXV74Y3KSZgyVIRWQsZLwLeBhH/kvS3Dlr7XQ3g
-         bKEA==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=6airdfmWbPo+9H8q8yF8Fow5EQ+bKYy5OYJZbu/8klg=;
+        b=OT4cDmsUunbscfxvhDw+rIVX2AsuGIv9mDVd9Lz1JmIYVvwuXSxmr+inrLJOCkaPlp
+         Z57x8PvO+vWADTq1pOJQK78YuP5oUWFPIpmVNDmTi+yAc0QbSG2tr9ojk+PQ6S98bUxo
+         egLtniHBPwO+5iTboWMsWoM/TMqXQFup6d2H4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=UL330JCxNCb1QfPA7XEdnee8d8sanDm58UEp+DpPD5E=;
-        b=iFJHcPB1mFZe+tZNgQhDpnTfcDVPoamkbqL4OaUWphLpcT2HbqLtyUc0753//vD8rD
-         w2jytXwdCw+x9zz2qUExJaofl8VfoOetQ4TRHLOG4Z+qxTHoARr9VlAhzH2GrsjjK9M1
-         hFPvqp08epsqtphHVl0mLqMvI5ZweuZ/ZLdWqeEydaqbW4nbnmBcAzTq777tSU8JAeFK
-         FqGXmQporkrn4VCq+Vk4KgBUECXoE5Q1vgl9vT/INDPVprSxjmGepSU2zOgvPCr5q0Yx
-         9d/WNluXUO0crIQ0J0hruAU//cnYWr/8bnt6DVc5ohWth1uEjckoo8uadKpeiCT8X6YL
-         uwaA==
-X-Gm-Message-State: APjAAAW6n8A4M7iTGbd7DjTKaeHbinbGzgesgYdILzMmSzY0XximMviu
-        LNDIfuQoOYXrjBzutjZHpb05LA==
-X-Google-Smtp-Source: APXvYqy2xkfi86nA4mhOrLIzpA090ARXwDKjuWsAZVNAIY7/Ok8ONn/AZjlyCf2mh96jrKmo/A+TgA==
-X-Received: by 2002:adf:da42:: with SMTP id r2mr4493849wrl.383.1571935118290;
-        Thu, 24 Oct 2019 09:38:38 -0700 (PDT)
-Received: from localhost.localdomain ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id 6sm3446175wmd.36.2019.10.24.09.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 09:38:37 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     daniel.thompson@linaro.org, arnd@arndb.de, broonie@kernel.org,
-        linus.walleij@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        baohua@kernel.org, stephan@gerhold.net,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 02/10] mfd: cs5535-mfd: Remove mfd_cell->id hack
-Date:   Thu, 24 Oct 2019 17:38:24 +0100
-Message-Id: <20191024163832.31326-3-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024163832.31326-1-lee.jones@linaro.org>
-References: <20191024163832.31326-1-lee.jones@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=6airdfmWbPo+9H8q8yF8Fow5EQ+bKYy5OYJZbu/8klg=;
+        b=RnQd7p7uurChpbyg2lz3QPRNA89bGGlQ6rxqCwdAvHLn8RJWOb2SzgYHB7mC66xNHC
+         jumWXAv012Zs7u0mLRKXYYZaRU4lYQjAwnGmmTTKBrBS9rQj0VclKhmDPNhnnsOndpkR
+         Hpt91QGtraSXE0irZdeEo4qNhXgsbCjt79waAAEJ5v654spr0e6FO38a+IwxU695MCpe
+         4lnvmkR5DfBifNe07MIBrOL5Z2IemBR72ykmJJoMio6FzdzyDyunA59whIvfwMz4qTfg
+         NJD1xn4qJZ4JZpoHPmv3RU9PN5VJKoA4JgVrluXv056gf4kXHoaO9YUwRtdBAofLVCRS
+         c6uQ==
+X-Gm-Message-State: APjAAAVcAOVgeHw8OYBWsVjPd+E9MEBp0+eqVF8mb2zuaVYT68dFNZhZ
+        OJX0pZeicqHUulVmDuxu0tKppECoHeSynYosz4n1Ic2vLT3oKub4RGfhj7+Zd1f7nCrgvujf8Xo
+        7v8hrlTD4S5PG9p5wZOvUX9AyouY7cQ4zVVxNA333LYWhq6h00Cxqbtu/izGy61z8ZgvHAjGedv
+        R2M5mdHwh9+3I=
+X-Google-Smtp-Source: APXvYqz3vCdn5X+pVSPFYILymZ7NnZuRiPFSO7yPCexT8xbKvyQr1f9rcrSOfkcoYmxikGkdR5xgng==
+X-Received: by 2002:a1c:48c4:: with SMTP id v187mr5904648wma.27.1571935172517;
+        Thu, 24 Oct 2019 09:39:32 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id x7sm37064980wrg.63.2019.10.24.09.39.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 09:39:31 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: brcm: Add bindings for
+ xgs-iproc
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191024004816.5539-1-chris.packham@alliedtelesis.co.nz>
+ <20191024004816.5539-2-chris.packham@alliedtelesis.co.nz>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <db6d6cc7-6844-7079-7115-da1eb9c1feac@broadcom.com>
+Date:   Thu, 24 Oct 2019 09:39:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191024004816.5539-2-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current implementation abuses the platform 'id' mfd_cell member
-to index into the correct resources entry.  Seeing as enough resource
-slots are already available, let's just loop through all available
-bars and allocate them to their appropriate slot, even if they happen
-to be zero.
+Hi Chris,
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/cs5535-mfd.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/mfd/cs5535-mfd.c b/drivers/mfd/cs5535-mfd.c
-index cda7f5b942e7..b35f1efa01f6 100644
---- a/drivers/mfd/cs5535-mfd.c
-+++ b/drivers/mfd/cs5535-mfd.c
-@@ -63,25 +63,21 @@ static struct resource cs5535_mfd_resources[NR_BARS];
- 
- static struct mfd_cell cs5535_mfd_cells[] = {
- 	{
--		.id = SMB_BAR,
- 		.name = "cs5535-smb",
- 		.num_resources = 1,
- 		.resources = &cs5535_mfd_resources[SMB_BAR],
- 	},
- 	{
--		.id = GPIO_BAR,
- 		.name = "cs5535-gpio",
- 		.num_resources = 1,
- 		.resources = &cs5535_mfd_resources[GPIO_BAR],
- 	},
- 	{
--		.id = MFGPT_BAR,
- 		.name = "cs5535-mfgpt",
- 		.num_resources = 1,
- 		.resources = &cs5535_mfd_resources[MFGPT_BAR],
- 	},
- 	{
--		.id = PMS_BAR,
- 		.name = "cs5535-pms",
- 		.num_resources = 1,
- 		.resources = &cs5535_mfd_resources[PMS_BAR],
-@@ -90,7 +86,6 @@ static struct mfd_cell cs5535_mfd_cells[] = {
- 		.disable = cs5535_mfd_res_disable,
- 	},
- 	{
--		.id = ACPI_BAR,
- 		.name = "cs5535-acpi",
- 		.num_resources = 1,
- 		.resources = &cs5535_mfd_resources[ACPI_BAR],
-@@ -108,23 +103,18 @@ static const char *olpc_acpi_clones[] = {
- static int cs5535_mfd_probe(struct pci_dev *pdev,
- 		const struct pci_device_id *id)
- {
--	int err, i;
-+	int err, bar;
- 
- 	err = pci_enable_device(pdev);
- 	if (err)
- 		return err;
- 
--	/* fill in IO range for each cell; subdrivers handle the region */
--	for (i = 0; i < ARRAY_SIZE(cs5535_mfd_cells); i++) {
--		int bar = cs5535_mfd_cells[i].id;
-+	for (bar = 0; bar < NR_BARS; bar++) {
- 		struct resource *r = &cs5535_mfd_resources[bar];
- 
- 		r->flags = IORESOURCE_IO;
- 		r->start = pci_resource_start(pdev, bar);
- 		r->end = pci_resource_end(pdev, bar);
--
--		/* id is used for temporarily storing BAR; unset it now */
--		cs5535_mfd_cells[i].id = 0;
- 	}
- 
- 	err = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, cs5535_mfd_cells,
--- 
-2.17.1
+On 2019-10-23 5:48 p.m., Chris Packham wrote:
+> This GPIO controller is present on a number of Broadcom switch ASICs
+> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
+> blocks but different enough to require a separate driver.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>
+> Notes:
+>      Changes in v3:
+>      - incorporate review comments from Rob and Bart
+>      
+>      Changes in v2:
+>      - Document as DT schema
+>      - Include ngpios, #gpio-cells and gpio-controller properties
+>
+>   .../bindings/gpio/brcm,xgs-iproc.yaml         | 70 +++++++++++++++++++
+>   1 file changed, 70 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+> new file mode 100644
+> index 000000000000..ec1fd3a64aa2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
+This doc needs to have gpio in the name to make all other gpio binding 
+documents.
+ie.
+brcm,xgs-iproc-gpio.yaml.
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom XGS iProc GPIO controller
+> +
+> +maintainers:
+> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
+> +
+> +description: |
+> +  This controller is the Chip Common A GPIO present on a number of Broadcom
+> +  switch ASICs with integrated SoCs.
+> +
+> +properties:
+> +  compatible:
+> +    const: brcm,iproc-gpio-cca
+> +
+> +  reg:
+> +    items:
+> +      - description: the I/O address containing the GPIO controller
+> +                     registers.
+> +      - description: the I/O address containing the Chip Common A interrupt
+> +                     registers.
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +      const: 2
+> +
+> +  ngpios:
+> +    minimum: 0
+> +    maximum: 32
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +
+> +dependencies:
+> +  interrupt-controller: [ interrupts ]
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    gpio@18000060 {
+> +        compatible = "brcm,iproc-gpio-cca";
+> +        #gpio-cells = <2>;
+> +        reg = <0x18000060 0x50>,
+> +              <0x18000000 0x50>;
+> +        ngpios = <12>;
+> +        gpio-controller;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> +
+> +...
 
