@@ -2,165 +2,269 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C641CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F77CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7EF20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0221520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732744AbfJXI4g (ORCPT
+        id S2387653AbfJXI5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:56:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54994 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727079AbfJXI4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:56:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E21C7B7EF;
-        Thu, 24 Oct 2019 08:56:33 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 10:56:31 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] scsi: sr: workaround VMware ESXi cdrom emulation
- bug
-Message-ID: <20191024085631.GJ938@kitsune.suse.cz>
-References: <cover.1571834862.git.msuchanek@suse.de>
- <abf81ec4f8b6139fffc609df519856ff8dc01d0d.1571834862.git.msuchanek@suse.de>
- <08f1e291-0196-2402-1947-c0cdaaf534da@suse.de>
- <20191023162313.GE938@kitsune.suse.cz>
- <2bc50e71-6129-a482-00bd-0425b486ce07@suse.de>
+        Thu, 24 Oct 2019 04:57:16 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:36447 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727079AbfJXI5P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 04:57:15 -0400
+X-UUID: fcd8404f8dd847e583cfd21705ce994d-20191024
+X-UUID: fcd8404f8dd847e583cfd21705ce994d-20191024
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1577409883; Thu, 24 Oct 2019 16:57:09 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 24 Oct 2019 16:57:05 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 24 Oct 2019 16:57:05 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v3 1/2] kasan: detect negative size in memory operation function
+Date:   Thu, 24 Oct 2019 16:57:06 +0800
+Message-ID: <20191024085706.12844-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2bc50e71-6129-a482-00bd-0425b486ce07@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 07:46:57AM +0200, Hannes Reinecke wrote:
-> On 10/23/19 6:23 PM, Michal Suchánek wrote:
-> > On Wed, Oct 23, 2019 at 04:13:15PM +0200, Hannes Reinecke wrote:
-> >> On 10/23/19 2:52 PM, Michal Suchanek wrote:
-> >>> The WMware ESXi cdrom identifies itself as:
-> >>> sr 0:0:0:0: [sr0] scsi3-mmc drive: vendor: "NECVMWarVMware SATA CD001.00"
-> >>> model: "VMware SATA CD001.00"
-> >>> with the following get_capabilities print in sr.c:
-> >>>         sr_printk(KERN_INFO, cd,
-> >>>                   "scsi3-mmc drive: vendor: \"%s\" model: \"%s\"\n",
-> >>>                   cd->device->vendor, cd->device->model);
-> >>>
-> >>> So the model looks like reliable identification while vendor does not.
-> >>>
-> >>> The drive claims to have a tray and claims to be able to close it.
-> >>> However, the UI has no notion of a tray - when medium is ejected it is
-> >>> dropped in the floor and the user must select a medium again before the
-> >>> drive can be re-loaded.  On the kernel side the tray_move call to close
-> >>> the tray succeeds but the drive state does not change as a result of the
-> >>> call.
-> >>>
-> >>> The drive does not in fact emulate the tray state. There are two ways to
-> >>> get the medium state. One is the SCSI status:
-> >>>
-> >>> Physical drive:
-> >>>
-> >>> Fixed format, current; Sense key: Not Ready
-> >>> Additional sense: Medium not present - tray open
-> >>> Raw sense data (in hex):
-> >>>         70 00 02 00 00 00 00 0a  00 00 00 00 3a 02 00 00
-> >>>         00 00
-> >>>
-> >>> Fixed format, current; Sense key: Not Ready
-> >>> Additional sense: Medium not present - tray closed
-> >>>  Raw sense data (in hex):
-> >>>         70 00 02 00 00 00 00 0a  00 00 00 00 3a 01 00 00
-> >>>         00 00
-> >>>
-> >>> VMware ESXi:
-> >>>
-> >>> Fixed format, current; Sense key: Not Ready
-> >>> Additional sense: Medium not present
-> >>>   Info fld=0x0 [0]
-> >>>  Raw sense data (in hex):
-> >>>         f0 00 02 00 00 00 00 0a  00 00 00 00 3a 00 00 00
-> >>>         00 00
-> >>>
-> >>> So the tray state is not reported here. Other is medium status which the
-> >>> kernel prefers if available. Adding a print here gives:
-> >>>
-> >>> cdrom: get_media_event success: code = 0, door_open = 1, medium_present = 0
-> >>>
-> >>> door_open is interpreted as open tray. This is fine so long as tray_move
-> >>> would close the tray when requested or report an error which never
-> >>> happens on VMware ESXi servers (5.5 and 6.5 tested).
-> >>>
-> >>> This is a popular virtualization platform so a workaround is worthwhile.
-> >>>
-> >>> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> >>> ---
-> >>>  drivers/scsi/sr.c | 6 ++++++
-> >>>  1 file changed, 6 insertions(+)
-> >>>
-> >>> diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-> >>> index 4664fdf75c0f..8090c5bdec09 100644
-> >>> --- a/drivers/scsi/sr.c
-> >>> +++ b/drivers/scsi/sr.c
-> >>> @@ -867,6 +867,7 @@ static void get_capabilities(struct scsi_cd *cd)
-> >>>  	unsigned int ms_len = 128;
-> >>>  	int rc, n;
-> >>>  
-> >>> +	static const char *model_vmware = "VMware";
-> >>>  	static const char *loadmech[] =
-> >>>  	{
-> >>>  		"caddy",
-> >>> @@ -922,6 +923,11 @@ static void get_capabilities(struct scsi_cd *cd)
-> >>>  		  buffer[n + 4] & 0x20 ? "xa/form2 " : "",	/* can read xa/from2 */
-> >>>  		  buffer[n + 5] & 0x01 ? "cdda " : "", /* can read audio data */
-> >>>  		  loadmech[buffer[n + 6] >> 5]);
-> >>> +	if (!strncmp(cd->device->model, model_vmware, strlen(model_vmware))) {
-> >>> +		buffer[n + 6] &= ~(0xff << 5);
-> >>> +		sr_printk(KERN_INFO, cd,
-> >>> +			  "VMware ESXi bug workaround: tray -> caddy\n");
-> >>> +	}
-> >>>  	if ((buffer[n + 6] >> 5) == 0)
-> >>>  		/* caddy drives can't close tray... */
-> >>>  		cd->cdi.mask |= CDC_CLOSE_TRAY;
-> >>>
-> >> This looks something which should be handled via a blacklist flag, not
-> >> some inline hack which everyone forgets about it...
-> > 
-> > AFAIK we used to have a blacklist but don't have anymore. So either it
-> > has to be resurrected for this one flag or an inline hack should be good
-> > enough.
-> > 
-> But we do have one for generic scsi; cf drivers/scsi/scsi_devinfo.c.
-> And this pretty much falls into the category of SCSI quirks, so I'd
-> prefer have it hooked into that.
+KASAN missed detecting size is negative numbers in memset(), memcpy(),
+and memmove(), it will cause out-of-bounds bug, so needs to be detected
+by KASAN.
 
-But generic scsi does not know about cdrom trays, does it?
+If size is negative numbers, then it has three reasons to be
+defined as heap-out-of-bounds bug type.
+1) Casting negative numbers to size_t would indeed turn up as
+   a large size_t and its value will be larger than ULONG_MAX/2,
+   so that this can qualify as out-of-bounds.
+2) If KASAN has new bug type and user-space passes negative size,
+   then there are duplicate reports. So don't produce new bug type
+   in order to prevent duplicate reports by some systems (e.g. syzbot)
+   to report the same bug twice.
+3) When size is negative numbers, it may be passed from user-space.
+   So we always print heap-out-of-bounds in order to prevent that
+   kernel-space and user-space have the same bug but have duplicate
+   reports.
 
-Thanks
+KASAN report:
 
-Michal
+ BUG: KASAN: heap-out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
+ Read of size 18446744073709551608 at addr ffffff8069660904 by task cat/72
+
+ CPU: 2 PID: 72 Comm: cat Not tainted 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
+ Hardware name: linux,dummy-virt (DT)
+ Call trace:
+  dump_backtrace+0x0/0x288
+  show_stack+0x14/0x20
+  dump_stack+0x10c/0x164
+  print_address_description.isra.9+0x68/0x378
+  __kasan_report+0x164/0x1a0
+  kasan_report+0xc/0x18
+  check_memory_region+0x174/0x1d0
+  memmove+0x34/0x88
+  kmalloc_memmove_invalid_size+0x70/0xa0
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+
+Changes in v2:
+Fix the indentation bug, thanks for the reminder Matthew.
+
+Changes in v3:
+Add a confition for memory operation function, need to
+avoid the false alarm when KASAN un-initialized.
+
+Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+ mm/kasan/common.c         | 18 +++++++++++++-----
+ mm/kasan/generic.c        |  5 +++++
+ mm/kasan/generic_report.c | 18 ++++++++++++++++++
+ mm/kasan/report.c         |  2 +-
+ mm/kasan/tags.c           |  5 +++++
+ mm/kasan/tags_report.c    | 18 ++++++++++++++++++
+ 6 files changed, 60 insertions(+), 6 deletions(-)
+
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index 6814d6d6a023..4ff67e2fd2db 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -99,10 +99,14 @@ bool __kasan_check_write(const volatile void *p, unsigned int size)
+ }
+ EXPORT_SYMBOL(__kasan_check_write);
+ 
++extern bool report_enabled(void);
++
+ #undef memset
+ void *memset(void *addr, int c, size_t len)
+ {
+-	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
++	if (report_enabled() &&
++	    !check_memory_region((unsigned long)addr, len, true, _RET_IP_))
++		return NULL;
+ 
+ 	return __memset(addr, c, len);
+ }
+@@ -110,8 +114,10 @@ void *memset(void *addr, int c, size_t len)
+ #undef memmove
+ void *memmove(void *dest, const void *src, size_t len)
+ {
+-	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+-	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
++	if (report_enabled() &&
++	   (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
++	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_)))
++		return NULL;
+ 
+ 	return __memmove(dest, src, len);
+ }
+@@ -119,8 +125,10 @@ void *memmove(void *dest, const void *src, size_t len)
+ #undef memcpy
+ void *memcpy(void *dest, const void *src, size_t len)
+ {
+-	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+-	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
++	if (report_enabled() &&
++	   (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
++	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_)))
++		return NULL;
+ 
+ 	return __memcpy(dest, src, len);
+ }
+diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+index 616f9dd82d12..02148a317d27 100644
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -173,6 +173,11 @@ static __always_inline bool check_memory_region_inline(unsigned long addr,
+ 	if (unlikely(size == 0))
+ 		return true;
+ 
++	if (unlikely((long)size < 0)) {
++		kasan_report(addr, size, write, ret_ip);
++		return false;
++	}
++
+ 	if (unlikely((void *)addr <
+ 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
+ 		kasan_report(addr, size, write, ret_ip);
+diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
+index 36c645939bc9..52a92c7db697 100644
+--- a/mm/kasan/generic_report.c
++++ b/mm/kasan/generic_report.c
+@@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct kasan_access_info *info)
+ 
+ const char *get_bug_type(struct kasan_access_info *info)
+ {
++	/*
++	 * If access_size is negative numbers, then it has three reasons
++	 * to be defined as heap-out-of-bounds bug type.
++	 * 1) Casting negative numbers to size_t would indeed turn up as
++	 *    a large size_t and its value will be larger than ULONG_MAX/2,
++	 *    so that this can qualify as out-of-bounds.
++	 * 2) If KASAN has new bug type and user-space passes negative size,
++	 *    then there are duplicate reports. So don't produce new bug type
++	 *    in order to prevent duplicate reports by some systems
++	 *    (e.g. syzbot) to report the same bug twice.
++	 * 3) When size is negative numbers, it may be passed from user-space.
++	 *    So we always print heap-out-of-bounds in order to prevent that
++	 *    kernel-space and user-space have the same bug but have duplicate
++	 *    reports.
++	 */
++	if ((long)info->access_size < 0)
++		return "heap-out-of-bounds";
++
+ 	if (addr_has_shadow(info->access_addr))
+ 		return get_shadow_bug_type(info);
+ 	return get_wild_bug_type(info);
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 621782100eaa..c79e28814e8f 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -446,7 +446,7 @@ static void print_shadow_for_address(const void *addr)
+ 	}
+ }
+ 
+-static bool report_enabled(void)
++bool report_enabled(void)
+ {
+ 	if (current->kasan_depth)
+ 		return false;
+diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
+index 0e987c9ca052..b829535a3ad7 100644
+--- a/mm/kasan/tags.c
++++ b/mm/kasan/tags.c
+@@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
+ 	if (unlikely(size == 0))
+ 		return true;
+ 
++	if (unlikely((long)size < 0)) {
++		kasan_report(addr, size, write, ret_ip);
++		return false;
++	}
++
+ 	tag = get_tag((const void *)addr);
+ 
+ 	/*
+diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
+index 969ae08f59d7..f7ae474aef3a 100644
+--- a/mm/kasan/tags_report.c
++++ b/mm/kasan/tags_report.c
+@@ -36,6 +36,24 @@
+ 
+ const char *get_bug_type(struct kasan_access_info *info)
+ {
++	/*
++	 * If access_size is negative numbers, then it has three reasons
++	 * to be defined as heap-out-of-bounds bug type.
++	 * 1) Casting negative numbers to size_t would indeed turn up as
++	 *    a large size_t and its value will be larger than ULONG_MAX/2,
++	 *    so that this can qualify as out-of-bounds.
++	 * 2) If KASAN has new bug type and user-space passes negative size,
++	 *    then there are duplicate reports. So don't produce new bug type
++	 *    in order to prevent duplicate reports by some systems
++	 *    (e.g. syzbot) to report the same bug twice.
++	 * 3) When size is negative numbers, it may be passed from user-space.
++	 *    So we always print heap-out-of-bounds in order to prevent that
++	 *    kernel-space and user-space have the same bug but have duplicate
++	 *    reports.
++	 */
++	if ((long)info->access_size < 0)
++		return "heap-out-of-bounds";
++
+ #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+ 	struct kasan_alloc_meta *alloc_meta;
+ 	struct kmem_cache *cache;
+-- 
+2.18.0
+
