@@ -2,80 +2,128 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4701DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09027CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB822166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF81D205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:32:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYpyjBWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439019AbfJXLad (ORCPT
+        id S2408113AbfJXLcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:30:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35712 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436509AbfJXLad (ORCPT
+        Thu, 24 Oct 2019 07:32:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52729 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404851AbfJXLcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:30:33 -0400
-Received: from [113.5.8.176] (helo=[192.168.43.4])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <hui.wang@canonical.com>)
-        id 1iNbK3-0002ko-9X; Thu, 24 Oct 2019 11:30:31 +0000
-Subject: Re: [PATCH v2] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
-To:     Aaron Ma <aaron.ma@canonical.com>, perex@perex.cz, tiwai@suse.com,
-        kailang@realtek.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20191022153855.14368-1-aaron.ma@canonical.com>
- <20191024111850.31137-1-aaron.ma@canonical.com>
-From:   Hui Wang <hui.wang@canonical.com>
-Message-ID: <24766a9d-3328-b70b-abd1-1a88470b08c0@canonical.com>
-Date:   Thu, 24 Oct 2019 19:30:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 07:32:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p21so977404wmg.2;
+        Thu, 24 Oct 2019 04:32:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DZXnuoq0kzhyK3ZfyoChFruO7ulVTQT5yFbmA2HiD5E=;
+        b=aYpyjBWHp2ru8kuGR9sy99ozfEb8hLsT7plp3/t5h3GBLaJU57Mm68N/rIWhzrMKor
+         8lDwjKC/z9P+LdyymtMnjeiSWtXfMFDqh0vnOKym4NTPhMgQ0Iql+FxCLBpgQBB+lDxS
+         Rafte8ufY3uz8wIyqfs+Ij/7JuMZDXYji+52pcKdU8k49DEWROdU9v+K4Ql1K5465prS
+         dj+EfmeNGhtUPuWLjV4dWuB1jS5RzwEFg3JZ9PbB9PjYgULkr0ZFMnP6hLeIDkHhLx6Z
+         tHv+IqtxP+DMTF6yAqQa5+sTQJPWiVkqPQ5VsSqvK5BykzkG/bNkhU+I9VA+uXkYEh5k
+         PDnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DZXnuoq0kzhyK3ZfyoChFruO7ulVTQT5yFbmA2HiD5E=;
+        b=mIojsoMyxxGbBYy29E8cUZYksQmTkq6eM5D904SAXc9VeABkjSDWMvDIF+54jRKfHy
+         pEI2C8aeBHlbXFTu/nTLszx2sGP/uQrGP4reQLm+PytVQo8DM7AnDVKAgYptOjulr0hA
+         QdsyMZhw+DKE871YLqPFHUS7S4tsCqJtbor/EPTu3QmIXcilH7nuhAb4WH6wVI/7WnJU
+         8gGtRurGQ/QjG6RvHbS5I2o8rq9e9OsURBQEPPvBVHmNfl+arhejR6MLXcy9lkq1/eh8
+         FH/KBe9kgYg9rvZ4Ycy1RdwG+ptesqMetjD1wrG1QEqAEtyeLxUBSLf8zDLshRIEG7Iv
+         erQA==
+X-Gm-Message-State: APjAAAURqiwlxw8/burun6fJrxplxGAr/qsMthzDEU0f1XBqjCr6/fhL
+        HEOFUDycRLH16zHI2FnRgnWYImC+cPY=
+X-Google-Smtp-Source: APXvYqyjgIfeo3Ch2UyCdDU3CvMg5d9whxkZEKIlIftTVIk/yJnJwVCnwhUKTT34dYwEP+gC9dOGeA==
+X-Received: by 2002:a1c:1f4b:: with SMTP id f72mr4221461wmf.22.1571916721880;
+        Thu, 24 Oct 2019 04:32:01 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:e187:86b0:69d4:5ba5])
+        by smtp.gmail.com with ESMTPSA id h3sm10822210wrt.88.2019.10.24.04.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 04:32:01 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 13:31:55 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        stable <stable@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
+ <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191024111850.31137-1-aaron.ma@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> How these later loads can be completely independent of the pointer
+> value? They need to obtain the pointer value from somewhere. And this
+> can only be done by loaded it. And if a thread loads a pointer and
+> then dereferences that pointer, that's a data/address dependency and
+> we assume this is now covered by READ_ONCE.
 
-On 2019/10/24 下午7:18, Aaron Ma wrote:
-> These 2 ThinkCentres installed a new realtek codec ID 0x623,
-> it has 2 front mics with the same location on pin 0x18 and 0x19.
->
-> Apply fixup ALC283_FIXUP_HEADSET_MIC to change 1 front mic
-> location to right, then pulseaudio can handle them.
-> One "Front Mic" and one "Mic" will be shown, and audio output works
-> fine.
->
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> ---
->   sound/pci/hda/patch_realtek.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-> index a0c237cc13d4..173a7867bb45 100644
-> --- a/sound/pci/hda/patch_realtek.c
-> +++ b/sound/pci/hda/patch_realtek.c
-> @@ -7221,6 +7221,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
->   	SND_PCI_QUIRK(0x17aa, 0x312f, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
->   	SND_PCI_QUIRK(0x17aa, 0x313c, "ThinkCentre Station", ALC294_FIXUP_LENOVO_MIC_LOCATION),
->   	SND_PCI_QUIRK(0x17aa, 0x3151, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
-> +	SND_PCI_QUIRK(0x17aa, 0x3178, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
-> +	SND_PCI_QUIRK(0x17aa, 0x3176, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+The "dependency" I was considering here is a dependency _between the
+load of sig->stats in taskstats_tgid_alloc() and the (program-order)
+later loads of *(sig->stats) in taskstats_exit().  Roughly speaking,
+such a dependency should correspond to a dependency chain at the asm
+or registers level from the first load to the later loads; e.g., in:
 
-Please sort them in numerical order, 0x3176 is ahead of 0x3178.
+  Thread [register r0 contains the address of sig->stats]
 
-thanks
+  A: LOAD r1,[r0]	// LOAD_ACQUIRE sig->stats
+     ...
+  B: LOAD r2,[r0]	// LOAD *(sig->stats)
+  C: LOAD r3,[r2]
 
->   	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
->   	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
->   	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+there would be no such dependency from A to C.  Compare, e.g., with:
+
+  Thread [register r0 contains the address of sig->stats]
+
+  A: LOAD r1,[r0]	// LOAD_ACQUIRE sig->stats
+     ...
+  C: LOAD r3,[r1]	// LOAD *(sig->stats)
+
+AFAICT, there's no guarantee that the compilers will generate such a
+dependency from the code under discussion.
+
+
+> Or these later loads of the pointer can also race with the store? If
+> so, I think they also need to use READ_ONCE (rather than turn this earlier
+> pointer load into acquire).
+
+AFAICT, _if the LOAD_ACQUIRE reads from the mentioned STORE_RELEASE,
+then the former must induce enough synchronization to eliminate data
+races (as well as any undesired re-ordering).
+
+TBH, I am not familiar enough with the underlying logic of this code
+to say whether that "if .. reads from .." pre-condition holds by the
+time those *(sig->stats) execute.
+
+Thanks,
+  Andrea
