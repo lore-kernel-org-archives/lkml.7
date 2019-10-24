@@ -2,286 +2,190 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA93CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F929CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174E32070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="njrWeh+s"
+	by mail.kernel.org (Postfix) with ESMTP id EB4A021929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571943800;
+	bh=ePbGhKrM0X2X47Ig0cCqNbkm6vptO7VyM2yJnt4HOIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hj/PV+zlL2BdQDKc0N++xrk/qquVW7A/1Pj2B5gEX1nL/XK4yAiUMEIXhSlQWD9Ht
+	 jbfJo6X8WdfelbnibMufNTK+hFH7/Bdw55j3drHU5Msfd1zvZ2aa53qC6UG8UQXwdQ
+	 B64LYFz2vZQfp/op4YvA5xYB9zHIb32hN4VXhUY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504398AbfJXTDA (ORCPT
+        id S2504407AbfJXTDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:03:00 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:34660 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406551AbfJXTCT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:02:19 -0400
-Received: by mail-pl1-f202.google.com with SMTP id 70so15739830ple.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:02:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=9DHgkR7cmmDrBt85CUovVuVoj+UrHvSyU5cnghVTVvs=;
-        b=njrWeh+sbAdONIL4M+qDAPy6FeUbjIz8Y+r75zIJrT+FpwypYZgyu8D7Cnh9BEDBoO
-         fkb+GBgNs7BxxS3qLlDK+SAMaTbGuatl/eRoSg5aU+gUJr5iaa/saQvKOS175o40lrJQ
-         VMF8uWSXsc7IwqXZUwckFBCCIWZ/pmJ0D+DC9aITKmUH+0KbCbHjTtIHWr1K0blw6KZ4
-         JFP5IZKF4HNNUdCWL6hg7Mw61tq7ZVk+3FFouiPonzJvHF1vJeFHlOb7rYu7SutA09HH
-         8r3SoBtLVutU5ZU/mKJRMR0TMHYMnwealITu9gIJRZvnFIuvik2ceA7M1zcdL+EKPCfF
-         /SVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=9DHgkR7cmmDrBt85CUovVuVoj+UrHvSyU5cnghVTVvs=;
-        b=YoZqUTM3RB2Nu+q8g9hkZO2HPO2CHgUyg6U4Rpx/3CpYRKX27EtoV4NQ1vF8b3rZXw
-         CxT3xwzESvhGSgirnaz8yE7GsPnKLBVfrudoLJY2Mf05LySDgtjUKv+hQp1q8V4hiFEl
-         vEHCyMa8+51X8M94b1A5URiw3pNzWou4vTk022TKQwGBYJ+77mu/s7jo5Qo6XMtd1tvE
-         YLTcELBNLff7erlqcOxz+84egRuAtVjjePpBx24uO8ujmfaXgIQo4ObUa3C0z5pQ8HiP
-         dnmlZTnVFMtQQvuJ0rj/8yn4KjavLTbVk2JTPKFqtg/ly3VaeVI0ZEwyG1V6fdC3okPl
-         21bg==
-X-Gm-Message-State: APjAAAV+nBhvYGzhUU3UN3xZ0bvGwOf4WmL+uUDJympK1kBIFbxWaIoH
-        Ik1Pm/vnMGO18agwx3IHfKvW6tJP1bW6
-X-Google-Smtp-Source: APXvYqzelXf36KO1GuY7vPLyoOqoDTOAhASTvcfwB+CjhBS6/0GCLK8yl7e6WIPyqX2LqkwViOrAiVHhMT5K
-X-Received: by 2002:a63:1511:: with SMTP id v17mr18054703pgl.34.1571943738017;
- Thu, 24 Oct 2019 12:02:18 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 12:01:57 -0700
-In-Reply-To: <20191024190202.109403-1-irogers@google.com>
-Message-Id: <20191024190202.109403-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20191023005337.196160-1-irogers@google.com> <20191024190202.109403-1-irogers@google.com>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v3 4/9] perf tools: move ALLOC_LIST into a function
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 24 Oct 2019 15:03:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391577AbfJXTDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:03:18 -0400
+Received: from localhost (unknown [109.190.253.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBE492070B;
+        Thu, 24 Oct 2019 19:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571943797;
+        bh=ePbGhKrM0X2X47Ig0cCqNbkm6vptO7VyM2yJnt4HOIA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RtSj9ZsU+Qi/+k4LBe1ymBcSWx41hn33zdDT0kZRVK/BKRx2NjzZaugw+m+Ax7OgR
+         1of8SxMH/iJeyGtG2GxLaBGjUnkI9tRXqPBq3sj8s9batNIfLycusnajxA8I1HUfEF
+         l9r+xiRzlYUv7fKlZKX/QOAKdLIBdxgGFsrUltjA=
+Date:   Thu, 24 Oct 2019 20:27:49 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+Message-ID: <20191024182749.czihj3gnvj5yz2eo@hendrix>
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-6-jagan@amarulasolutions.com>
+ <20191007105708.raxavxk4n7bvxh7x@gilmour>
+ <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
+ <20191016080306.44pmo3rfmtnkgosq@gilmour>
+ <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
+ <20191017095225.ntx647ivegaldlyf@gilmour>
+ <CAMty3ZAvqRLh16vFd-63h4+SzQkNydGfNKX_pByqFD-hZfncpQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZAvqRLh16vFd-63h4+SzQkNydGfNKX_pByqFD-hZfncpQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having a YYABORT in a macro makes it hard to free memory for components
-of a rule. Separate the logic out.
+On Thu, Oct 24, 2019 at 01:28:28PM +0530, Jagan Teki wrote:
+> On Thu, Oct 17, 2019 at 3:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
+> > > On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
+> > > > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > > > >
+> > > > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
+> > > > > > > Add MIPI DSI pipeline for Allwinner A64.
+> > > > > > >
+> > > > > > > - dsi node, with A64 compatible since it doesn't support
+> > > > > > >   DSI_SCLK gating unlike A33
+> > > > > > > - dphy node, with A64 compatible with A33 fallback since
+> > > > > > >   DPHY on A64 and A33 is similar
+> > > > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
+> > > > > > >
+> > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > > > > > ---
+> > > > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
+> > > > > > >  1 file changed, 38 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > index 69128a6dfc46..ad4170b8aee0 100644
+> > > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > @@ -382,6 +382,12 @@
+> > > > > > >                                       #address-cells = <1>;
+> > > > > > >                                       #size-cells = <0>;
+> > > > > > >                                       reg = <1>;
+> > > > > > > +
+> > > > > > > +                                     tcon0_out_dsi: endpoint@1 {
+> > > > > > > +                                             reg = <1>;
+> > > > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
+> > > > > > > +                                             allwinner,tcon-channel = <1>;
+> > > > > > > +                                     };
+> > > > > > >                               };
+> > > > > > >                       };
+> > > > > > >               };
+> > > > > > > @@ -1003,6 +1009,38 @@
+> > > > > > >                       status = "disabled";
+> > > > > > >               };
+> > > > > > >
+> > > > > > > +             dsi: dsi@1ca0000 {
+> > > > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
+> > > > > > > +                     reg = <0x01ca0000 0x1000>;
+> > > > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> > > > > > > +                     clock-names = "bus";
+> > > > > >
+> > > > > > This won't validate with the bindings you have either here, since it
+> > > > > > still expects bus and mod.
+> > > > > >
+> > > > > > I guess in that cas, we can just drop clock-names, which will require
+> > > > > > a bit of work on the driver side as well.
+> > > > >
+> > > > > Okay.
+> > > > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
+> > > > > patch. Adjust the clock-names: on dt-bindings would make sense here,
+> > > > > what do you think?
+> > > >
+> > > > I'm confused, what are you suggesting?
+> > >
+> > > Sorry for the confusion.
+> > >
+> > > The mod clock is not required for A64 and we have a patch for handling
+> > > mod clock using has_mod_clk quirk(on the series), indeed the mod clock
+> > > is available in A31 and not needed for A64. So, to satisfy this
+> > > requirement the clock-names on dt-bindings can update to make mod
+> > > clock-name is optional and bus clock is required.
+> >
+> > No, the bus clock name is not needed if there's only one clock.
+>
+> Okay, is it because the same clock handle it on PHY side?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.y | 65 ++++++++++++++++++++++------------
- 1 file changed, 43 insertions(+), 22 deletions(-)
+No, because there's only one clock and thus you don't need to
+differentiate them.
 
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 27d6b187c9b1..26cb65798522 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -25,12 +25,17 @@ do { \
- 		YYABORT; \
- } while (0)
- 
--#define ALLOC_LIST(list) \
--do { \
--	list = malloc(sizeof(*list)); \
--	ABORT_ON(!list);              \
--	INIT_LIST_HEAD(list);         \
--} while (0)
-+static struct list_head* alloc_list()
-+{
-+	struct list_head *list;
-+
-+	list = malloc(sizeof(*list));
-+	if (!list)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(list);
-+	return list;
-+}
- 
- static void inc_group_count(struct list_head *list,
- 		       struct parse_events_state *parse_state)
-@@ -238,7 +243,8 @@ PE_NAME opt_pmu_config
- 	if (error)
- 		error->idx = @1.first_column;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	if (parse_events_add_pmu(_parse_state, list, $1, $2, false, false)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
-@@ -306,7 +312,8 @@ value_sym '/' event_config '/'
- 	int type = $1 >> 16;
- 	int config = $1 & 255;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_numeric(_parse_state, list, type, config, $3));
- 	parse_events_terms__delete($3);
- 	$$ = list;
-@@ -318,7 +325,8 @@ value_sym sep_slash_slash_dc
- 	int type = $1 >> 16;
- 	int config = $1 & 255;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_numeric(_parse_state, list, type, config, NULL));
- 	$$ = list;
- }
-@@ -327,7 +335,8 @@ PE_VALUE_SYM_TOOL sep_slash_slash_dc
- {
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_tool(_parse_state, list, $1));
- 	$$ = list;
- }
-@@ -339,7 +348,8 @@ PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT '-' PE_NAME_CACHE_OP_RESULT opt_e
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_cache(list, &parse_state->idx, $1, $3, $5, error, $6));
- 	parse_events_terms__delete($6);
- 	$$ = list;
-@@ -351,7 +361,8 @@ PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT opt_event_config
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_cache(list, &parse_state->idx, $1, $3, NULL, error, $4));
- 	parse_events_terms__delete($4);
- 	$$ = list;
-@@ -363,7 +374,8 @@ PE_NAME_CACHE_TYPE opt_event_config
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_cache(list, &parse_state->idx, $1, NULL, NULL, error, $2));
- 	parse_events_terms__delete($2);
- 	$$ = list;
-@@ -375,7 +387,8 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE ':' PE_MODIFIER_BP sep_dc
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
- 					     (void *) $2, $6, $4));
- 	$$ = list;
-@@ -386,7 +399,8 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE sep_dc
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
- 					     (void *) $2, NULL, $4));
- 	$$ = list;
-@@ -397,7 +411,8 @@ PE_PREFIX_MEM PE_VALUE ':' PE_MODIFIER_BP sep_dc
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
- 					     (void *) $2, $4, 0));
- 	$$ = list;
-@@ -408,7 +423,8 @@ PE_PREFIX_MEM PE_VALUE sep_dc
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_breakpoint(list, &parse_state->idx,
- 					     (void *) $2, NULL, 0));
- 	$$ = list;
-@@ -421,7 +437,8 @@ tracepoint_name opt_event_config
- 	struct parse_events_error *error = parse_state->error;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	if (error)
- 		error->idx = @1.first_column;
- 
-@@ -457,7 +474,8 @@ PE_VALUE ':' PE_VALUE opt_event_config
- {
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_numeric(_parse_state, list, (u32)$1, $3, $4));
- 	parse_events_terms__delete($4);
- 	$$ = list;
-@@ -468,7 +486,8 @@ PE_RAW opt_event_config
- {
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, $1, $2));
- 	parse_events_terms__delete($2);
- 	$$ = list;
-@@ -480,7 +499,8 @@ PE_BPF_OBJECT opt_event_config
- 	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_load_bpf(parse_state, list, $1, false, $2));
- 	parse_events_terms__delete($2);
- 	$$ = list;
-@@ -490,7 +510,8 @@ PE_BPF_SOURCE opt_event_config
- {
- 	struct list_head *list;
- 
--	ALLOC_LIST(list);
-+	list = alloc_list();
-+	ABORT_ON(!list);
- 	ABORT_ON(parse_events_load_bpf(_parse_state, list, $1, true, $2));
- 	parse_events_terms__delete($2);
- 	$$ = list;
--- 
-2.23.0.866.gb869b98d4c-goog
+> >
+> > > I'm not exactly sure, this is correct but trying to understand if it
+> > > is possible or not? something like
+> > >
+> > >    clocks:
+> > >       minItems: 1
+> > >       maxItems: 2
+> > >      items:
+> > >        - description: Bus Clock
+> > >        - description: Module Clock
+> >
+> > That's correct.
+> >
+> > >    clock-names:
+> > >       minItems: 1
+> > >       maxItems: 2
+> > >      items:
+> > >        - const: bus
+> > >        - const: mod
+> >
+> > Here, just keep the current clock-names definition, and make it
+> > required only for SoCs that are not the A64
+>
+> Okay, please have a look here I have pasted the diff for comments.
+>
+>    clocks:
+> +    minItems: 2
+>      items:
+>        - description: Bus Clock
+>        - description: Module Clock
 
+Didn't you tell me that you didn't need the module clock?
+
+How do you handle the case were you just have the bus clock then?
+
+Maxime
