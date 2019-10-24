@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43F5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F41CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4B820684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F2E20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571912717;
-	bh=9ua7zFuiH5fKqiw1gYBXsuFyIEUExKT/bxIiD1Atahs=;
+	s=default; t=1571912720;
+	bh=tXRmztpTH++++m+GX9hGSr6ayfLOEjEjKvJZKIyUfaQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=B4PFPxJ/SBZVpeYrhPNJvwl0O0i6xdhHF4BKO5nkPvd+2NZ17sQ20/9Os0/nmmssd
-	 N5KPf4SM6HiDgvowowA2L45URVAcVF6z+CD61EipqrMlNjHSmKErvSqWJw5zZQbxQT
-	 9NTEJnzZyoeapDcLmaNGrsCq9r6165Nx6XMginWw=
+	b=zTAvtMZ9ldvk9eXg6D/BIb1QkZe4Q3K9MMmJxPIaXQcLC3Sc+Kqj+L0nS0hWi7aJi
+	 hW4jgEvaVJXWGY6eN7ndL5jnk8SokDJHx3SY2kUYo+aKIZQLU9VWIvrT486i9MDdl3
+	 cr4QIZ8IiYejtkrqTtgVNElyaMc+08DPNLHGk6eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438735AbfJXKZJ (ORCPT
+        id S2438768AbfJXKZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:25:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 06:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407344AbfJXKZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:25:07 -0400
-Subject: Re: [GIT PULL] VFIO fixes for v5.4-rc5
+        id S2438721AbfJXKZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:25:08 -0400
+Subject: Re: [GIT PULL] sound fixes for 5.4-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571912707;
-        bh=9ua7zFuiH5fKqiw1gYBXsuFyIEUExKT/bxIiD1Atahs=;
+        s=default; t=1571912708;
+        bh=tXRmztpTH++++m+GX9hGSr6ayfLOEjEjKvJZKIyUfaQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=L2IfEz65TP0NqHo5Hqrpgv7zQOOnPpDUHTFUnx1U2wndwn8pg5Y4jdtYpj+TBnbZk
-         uxXKb4f5uQ36OZNyzL4bxU4hM2kGdn196NCL0Y8AjAHxk5zf+x5WdouakH5X9EKGay
-         YJIzWxrsb9UKND+G4Fl+s27KZ4w3ZJHnLC5r1n+M=
+        b=acZgJ0+PVwmxGr9k+68mTRKl9TqXYncNNXq1IuGD1p6wOqesYrwnf4e7xzToWnLvw
+         k62+KuJMTL3kjyaQIIRRP7afRaOxX+Hf7pqo5LtCA07ssMnXMRt5gSg1MSGEl/XF0V
+         tOdrnm0ujV3zQRLMcqN1ZbANKpoVnwKWGNKsDIqA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191023110822.6122562f@x1.home>
-References: <20191023110822.6122562f@x1.home>
+In-Reply-To: <s5hv9seoczv.wl-tiwai@suse.de>
+References: <s5hv9seoczv.wl-tiwai@suse.de>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191023110822.6122562f@x1.home>
-X-PR-Tracked-Remote: git://github.com/awilliam/linux-vfio.git
- tags/vfio-v5.4-rc5
-X-PR-Tracked-Commit-Id: 95f89e090618efca63918b658c2002e57d393036
+X-PR-Tracked-Message-Id: <s5hv9seoczv.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ tags/sound-5.4-rc5
+X-PR-Tracked-Commit-Id: 4750c212174892d26645cdf5ad73fb0e9d594ed3
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 64131618e8c8a1d5c1470d4d788214f6d4b43cde
-Message-Id: <157191270740.16083.17616593345898198780.pr-tracker-bot@kernel.org>
-Date:   Thu, 24 Oct 2019 10:25:07 +0000
-To:     Alex Williamson <alex.williamson@redhat.com>
+X-PR-Merge-Commit-Id: f632bfaa33ed147ba9eade15f137fc32a13bd4b8
+Message-Id: <157191270801.16083.3144518174117540644.pr-tracker-bot@kernel.org>
+Date:   Thu, 24 Oct 2019 10:25:08 +0000
+To:     Takashi Iwai <tiwai@suse.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 23 Oct 2019 11:08:22 -0600:
+The pull request you sent on Thu, 24 Oct 2019 08:48:20 +0200:
 
-> git://github.com/awilliam/linux-vfio.git tags/vfio-v5.4-rc5
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.4-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/64131618e8c8a1d5c1470d4d788214f6d4b43cde
+https://git.kernel.org/torvalds/c/f632bfaa33ed147ba9eade15f137fc32a13bd4b8
 
 Thank you!
 
