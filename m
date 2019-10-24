@@ -2,96 +2,107 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB04CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2D3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D1A2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="js0nZAfz"
+	by mail.kernel.org (Postfix) with ESMTP id 57C7121872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408997AbfJXKKc (ORCPT
+        id S2406917AbfJXKLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:10:32 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41624 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438612AbfJXKKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:10:30 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OAANZc124464;
-        Thu, 24 Oct 2019 05:10:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571911823;
-        bh=GF0YCeVR6JL6hzbMYjpu9XNNzB9GXjetMPl8CEuVNls=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=js0nZAfzg33Z5kQcrrIEdTpllx18IHupN/cQzRL4ZTLkbt4brVKmHEmbL4/M4gOq/
-         Fd7ZmbtDeFsSo06sGSY6xxFVFLTiALhEDQJX1S6YU1ccCC5rOPfn1QSBZICOAScUZT
-         cBaCqd4hR9GY0zJj6TXAOIGiKlFYGCrRBYeRBNXk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OAANqr123771
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Oct 2019 05:10:23 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
- Oct 2019 05:10:12 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 24 Oct 2019 05:10:23 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OAALUh029093;
-        Thu, 24 Oct 2019 05:10:22 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v5 net-next 12/12] arm: omap2plus_defconfig: enable new cpsw switchdev driver
-Date:   Thu, 24 Oct 2019 13:09:14 +0300
-Message-ID: <20191024100914.16840-13-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024100914.16840-1-grygorii.strashko@ti.com>
-References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+        Thu, 24 Oct 2019 06:11:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56916 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390611AbfJXKLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:11:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89A03B68C;
+        Thu, 24 Oct 2019 10:11:14 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 12:11:12 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 7/8] scsi: sr: workaround VMware ESXi cdrom emulation
+ bug
+Message-ID: <20191024101112.GK938@kitsune.suse.cz>
+References: <cover.1571834862.git.msuchanek@suse.de>
+ <abf81ec4f8b6139fffc609df519856ff8dc01d0d.1571834862.git.msuchanek@suse.de>
+ <08f1e291-0196-2402-1947-c0cdaaf534da@suse.de>
+ <20191023162313.GE938@kitsune.suse.cz>
+ <2bc50e71-6129-a482-00bd-0425b486ce07@suse.de>
+ <20191024085631.GJ938@kitsune.suse.cz>
+ <15c972ea-5b3a-487f-7be5-a62d780896da@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <15c972ea-5b3a-487f-7be5-a62d780896da@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add CONFIG_TI_CPSW_SWITCHDEV option to enable new cpsw switchdev driver
+On Thu, Oct 24, 2019 at 11:41:38AM +0200, Hannes Reinecke wrote:
+> On 10/24/19 10:56 AM, Michal Suchánek wrote:
+> > On Thu, Oct 24, 2019 at 07:46:57AM +0200, Hannes Reinecke wrote:
+> >> On 10/23/19 6:23 PM, Michal Suchánek wrote:
+> >>> On Wed, Oct 23, 2019 at 04:13:15PM +0200, Hannes Reinecke wrote:
+> [ .. ]>>>> This looks something which should be handled via a blacklist
+> flag, not
+> >>>> some inline hack which everyone forgets about it...
+> >>>
+> >>> AFAIK we used to have a blacklist but don't have anymore. So either it
+> >>> has to be resurrected for this one flag or an inline hack should be good
+> >>> enough.
+> >>>
+> >> But we do have one for generic scsi; cf drivers/scsi/scsi_devinfo.c.
+> >> And this pretty much falls into the category of SCSI quirks, so I'd
+> >> prefer have it hooked into that.
+> > 
+> > But generic scsi does not know about cdrom trays, does it?
+> > 
+> No, just about 'flags'. What you _do_ with those flags is up to you.
+> Or, rather, the driver.
+> Just define a 'tray detection broken' flag, and evaluate it in sr.c.
+> 
+> Where is the problem with that?
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm/configs/omap2plus_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+And how do you set the flag?
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index d3f50971e451..c271d409b610 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -554,3 +554,4 @@ CONFIG_DEBUG_INFO_DWARF4=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_SCHEDSTATS=y
- # CONFIG_DEBUG_BUGVERBOSE is not set
-+CONFIG_TI_CPSW_SWITCHDEV=y
--- 
-2.17.1
+The blacklist lists exact manufacturer and model while this rule only
+depends on model because manufacturer is bogus. Also the blacklist
+itself is deprecated:
 
+/*
+ * scsi_static_device_list: deprecated list of devices that require
+ * settings that differ from the default, includes black-listed (broken)
+ * devices. The entries here are added to the tail of scsi_dev_info_list
+ * via scsi_dev_info_list_init.
+ *
+ * Do not add to this list, use the command line or proc interface to add
+ * to the scsi_dev_info_list. This table will eventually go away.
+ */
+
+Thanks
+
+Michal
