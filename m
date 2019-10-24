@@ -2,95 +2,230 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA941CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34987CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974D520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C6B20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437249AbfJXTRT (ORCPT
+        id S2408268AbfJXTYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:17:19 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:59946 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2437179AbfJXTRS (ORCPT
+        Thu, 24 Oct 2019 15:24:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2840 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725963AbfJXTYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:17:18 -0400
-Received: (qmail 6262 invoked by uid 2102); 24 Oct 2019 15:17:18 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 24 Oct 2019 15:17:18 -0400
-Date:   Thu, 24 Oct 2019 15:17:18 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     syzbot <syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com>,
-        "Jacky . Cao @ sony . com" <Jacky.Cao@sony.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: divide error in dummy_timer
-In-Reply-To: <CAAeHK+yu2MYmh86wJ_DxYoUEU-vp9R+jXRVMh_SpsSNFdHVO7g@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1910241507450.1318-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Thu, 24 Oct 2019 15:24:16 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9OJMv4L083549
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:24:14 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vuhmm90en-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:24:14 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 24 Oct 2019 20:24:12 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 24 Oct 2019 20:24:09 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9OJO8Cw29819056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Oct 2019 19:24:08 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D3C945204F;
+        Thu, 24 Oct 2019 19:24:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.206.5])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5EC6D5204E;
+        Thu, 24 Oct 2019 19:24:07 +0000 (GMT)
+Subject: Re: [PATCH v1] selftest/trustedkeys: TPM 1.2 trusted keys test
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     David Howells <dhowells@redhat.com>, Petr Vorel <pvorel@suse.cz>,
+        shuah <shuah@kernel.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>
+Date:   Thu, 24 Oct 2019 15:24:06 -0400
+In-Reply-To: <1571944467-13097-1-git-send-email-zohar@linux.ibm.com>
+References: <1571944467-13097-1-git-send-email-zohar@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102419-0020-0000-0000-0000037E1506
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102419-0021-0000-0000-000021D45DEA
+Message-Id: <1571945046.11756.5.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-24_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910240182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019, Andrey Konovalov wrote:
+Hi Jarkko,
 
-> On Thu, Oct 24, 2019 at 7:57 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Thu, 24 Oct 2019, Andrey Konovalov wrote:
-> >
-> > > > Is this really the sort of thing we need to catch?  It isn't a bug in
-> > > > any existing kernel code, as far as I know.  Maybe only gadgetfs and
-> > > > configfs need to worry about it.
-> > >
-> > > Hi Alan,
-> > >
-> > > Do you mean that the gadget driver must ensure that the max packet
-> > > size in the endpoint descriptor is not zero? Do HCDs rely on that? I
-> > > can add this check into the driver we use for USB fuzzing.
-> >
-> > Well, if there are any gadget drivers in the kernel which do set an
-> > endpoint's maxpacket size to 0, they should be fixed.  I'm not aware of
-> > any.
-> >
-> > Of course, gadget drivers in userspace are always suspect.  That's why
-> > I suggested having gadgetfs and configfs perform this check.  Even so
-> > it's not really a _security_ risk, because only the superuser is
-> > allowed to run a userspace gadget driver.  (Although obviously it is
-> > better to have a clean failure than to crash the system when a buggy
-> > program runs with superuser privileges.)
-> >
-> > Yes, HCDs do depend on endpoints having reasonable maxpacket values.  I
-> > suppose the core should check for this.  Currently we check for values
-> > that are too large or invalid in other ways (like high-speed bulk
-> > endpoints with maxpacket != 512), but we don't check for 0.
+Please note that I'm seeing "add_key: Timer expired" frequently.  This
+is something new.  I have no idea if this is a new TPM or keys
+regression.
+
+Mimi
+
+
+On Thu, 2019-10-24 at 15:14 -0400, Mimi Zohar wrote:
+> Create, save and load trusted keys test
 > 
-> Oh, I think I've confused the terms here. I meant to ask about UDCs.
-> The question is whether it's OK to try and emulate a gadget with
-> maxpacket = 0 on a board with a hardware UDC? Or can it cause issues?
-> The fact that HCDs must ensure correct maxpacket values of course
-> makes sense.
-
-It doesn't make any sense to have an endpoint with maxpacket = 0 --
-either real or emulated.  The USB spec doesn't prohibit them (probably
-an oversight), but such endpoints would be useless since it would not
-be possible to transfer any data to/from them.
-
-And as you surmised, it wouldn't be at all surprising for UDC drivers
-to crash (much like dummy-hcd does) when faced with an endpoint having
-maxpacket = 0.  Best to rule out the possibility entirely.
-
-Alan Stern
+> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> 
+> Change log v1:
+> - Replace the directions for using Trousers to take ownership of the TPM
+> with directions for using the IBM TSS.
+> - Differentiate between different types of errors.  Recent bug is causing
+> "add_key: Timer expired".
+> ---
+>  tools/testing/selftests/tpm2/Makefile            |   2 +-
+>  tools/testing/selftests/tpm2/test_trustedkeys.sh | 109 +++++++++++++++++++++++
+>  2 files changed, 110 insertions(+), 1 deletion(-)
+>  create mode 100755 tools/testing/selftests/tpm2/test_trustedkeys.sh
+> 
+> diff --git a/tools/testing/selftests/tpm2/Makefile b/tools/testing/selftests/tpm2/Makefile
+> index 1a5db1eb8ed5..055bf62510b5 100644
+> --- a/tools/testing/selftests/tpm2/Makefile
+> +++ b/tools/testing/selftests/tpm2/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+>  include ../lib.mk
+>  
+> -TEST_PROGS := test_smoke.sh test_space.sh
+> +TEST_PROGS := test_smoke.sh test_space.sh test_trustedkey.sh
+>  TEST_PROGS_EXTENDED := tpm2.py tpm2_tests.py
+> diff --git a/tools/testing/selftests/tpm2/test_trustedkeys.sh b/tools/testing/selftests/tpm2/test_trustedkeys.sh
+> new file mode 100755
+> index 000000000000..dc7df7467670
+> --- /dev/null
+> +++ b/tools/testing/selftests/tpm2/test_trustedkeys.sh
+> @@ -0,0 +1,109 @@
+> +#!/bin/sh
+> +
+> +VERBOSE="${VERBOSE:-1}"
+> +TRUSTEDKEY1="$(mktemp -u XXXX).blob"
+> +TRUSTEDKEY2="$(mktemp -u XXXX).blob"
+> +ERRMSG="$(mktemp -u XXXX)"
+> +trap "echo PRETRAP" SIGINT SIGTERM SIGTSTP
+> +trap "{ rm -f $TRUSTEDKEY1 $TRUSTEDKEY2 $ERRMSG; }" EXIT
+> +
+> +log_info()
+> +{
+> +        [ $VERBOSE -ne 0 ] && echo "[INFO] $1"
+> +}
+> +
+> +# The ksefltest framework requirement returns 0 for PASS.
+> +log_pass()
+> +{
+> +        [ $VERBOSE -ne 0 ] && echo "$1 [PASS]"
+> +        exit 0
+> +}
+> +
+> +# The ksefltest framework requirement returns 1 for FAIL.
+> +log_fail()
+> +{
+> +        [ $VERBOSE -ne 0 ] && echo "$1 [FAIL]"
+> +        exit 1
+> +}
+> +
+> +# The ksefltest framework requirement returns 4 for SKIP.
+> +log_skip()
+> +{
+> +        [ $VERBOSE -ne 0 ] && echo "$1"
+> +        exit 4
+> +}
+> +
+> +is_tpm1()
+> +{
+> +	local pcrs_path="/sys/class/tpm/tpm0/device/pcrs"
+> +	if [ ! -f "$pcrs_path" ]; then
+> +		pcrs_path="/sys/class/misc/tpm0/device/pcrs"
+> +	fi
+> +
+> +	if [ ! -f "$pcrs_path" ]; then
+> +		log_skip "TPM 1.2 chip not found"
+> +	fi
+> +}
+> +
+> +takeownership_info()
+> +{
+> +	log_info "creating trusted key failed, probably requires taking TPM ownership:"
+> +	which tss1oiap > /dev/null 2>&1 || \
+> +		log_info "    tss1oiap not found, install IBM TSS"
+> +
+> +	log_info "    export TPM_DEVICE=/dev/tpm0"
+> +	log_info "    export TPM_ENCRYPT_SESSIONS=0"
+> +
+> +	log_info "    OIAP=\$(tss1oiap | cut -d' ' -f 2)"
+> +	log_info "    tss1takeownership -se0 \$OIAP 0"
+> +	log_fail "creating trusted key"
+> +}
+> +
+> +test_trustedkey()
+> +{
+> +	#local keyid="$(keyctl add trusted kmk-test "new 64" @u)" &> $ERRMSG
+> +	local keyid="$(keyctl add trusted kmk-test "new 64" @u 2> $ERRMSG)"
+> +
+> +	grep -E -q "add_key: Operation not permitted" $ERRMSG
+> +	if [ $? -eq 0 ]; then
+> +		takeownership_info
+> +	fi
+> +
+> +	grep -E -q "add_key: " $ERRMSG
+> +	if [ $? -eq 0 ]; then
+> +		log_info "`cat ${ERRMSG}`"
+> +		log_fail "creating trusted key"
+> +	fi
+> +	
+> +	if [ -z "$keyid" ]; then
+> +		log_fail "creating trusted key failed"
+> +	fi
+> +	log_info "creating trusted key succeeded"
+> +
+> +	# save newly created trusted key and remove from keyring
+> +	keyctl pipe "$keyid" > "$TRUSTEDKEY1"
+> +	keyctl unlink "$keyid" &> /dev/null
+> +
+> +	keyid=$(keyctl add trusted kmk-test "load `cat $TRUSTEDKEY1`" @u)
+> +	if [ $? -eq 0 ]; then
+> +		log_info "loading trusted key succeeded"
+> +	else
+> +		log_fail "loading trusted key failed"
+> +	fi
+> +
+> +	# save loaded trusted key and remove from keyring again
+> +	keyctl pipe "$keyid" > "$TRUSTEDKEY2"
+> +	keyctl unlink "$keyid" &> /dev/null
+> +
+> +	# compare trusted keys
+> +	diff "$TRUSTEDKEY1" "$TRUSTEDKEY2" &> /dev/null
+> +	ret=$?
+> +	if [ $ret -eq 0 ]; then
+> +		log_pass "trusted key test succeeded"
+> +	else
+> +		log_fail "trusted key test failed"
+> +	fi
+> +}
+> +
+> +is_tpm1
+> +test_trustedkey
 
