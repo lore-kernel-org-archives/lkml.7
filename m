@@ -2,44 +2,54 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB9FCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895FCCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8EF21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EFA2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571926452;
+	bh=+oHqz3rmKle2RsB++pQ8L0t3Z5ejbaCBP9QKC2mYU/o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=eMhgDnhHoVJNRZUVxEFHWOmb8okNiy7ymNw8LGEmDClOJtc7AcFlf82pxwGFITalD
+	 XHmLVepp3n7xGWlX5e9rquhrlFcisMFHlCXsPV7MuyTwnlOr4c+/tfddyGB0GVFwCP
+	 /2Q2HUj85c9SSYmr5vuqxCW+M53W/Di2U321Urlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393905AbfJXONp (ORCPT
+        id S2502739AbfJXOOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:13:45 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:60699 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfJXONp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:13:45 -0400
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EC63E240003;
-        Thu, 24 Oct 2019 14:13:40 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        "kernelci.org bot" <bot@kernelci.org>, stable@vger.kernel.org
-Subject: [PATCH] spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO CS
-Date:   Thu, 24 Oct 2019 16:13:09 +0200
-Message-Id: <20191024141309.22434-1-gregory.clement@bootlin.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 24 Oct 2019 10:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfJXOOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 10:14:10 -0400
+Received: from localhost.localdomain (unknown [122.181.210.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 399772166E;
+        Thu, 24 Oct 2019 14:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571926449;
+        bh=+oHqz3rmKle2RsB++pQ8L0t3Z5ejbaCBP9QKC2mYU/o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wCGIoM9vDWhiB3emldzOnjeqyEEXHS+ASfp75OvNpLfVTaQuC4lZGpn9D1bxpBi3C
+         nhe6wBVXhjTmhn2olxuHfOAdUgVMThC6ezRXgto5rpcaBm7IHkOEExPLHiy+AAPD1R
+         Zrhk9jYo73/3s13Wss9Mz2PcGAyGMQkTSC9A47VM=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] clk: qcom: gcc: Add missing clocks in SM8150
+Date:   Thu, 24 Oct 2019 19:43:44 +0530
+Message-Id: <20191024141344.7023-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,102 +57,286 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even if the flag use_gpio_descriptors is set, it is possible that
-cs_gpiods was not allocated, which leads to a kernel crash:
+The initial upstreaming of SM8150 GCC driver missed few clock so add
+them up now.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000000
-pgd = (ptrval)
-[00000000] *pgd=00000000
-Internal error: Oops: 5 [#1] ARM
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.4.0-rc3 #1
-Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-PC is at of_register_spi_device+0x20c/0x38c
-LR is at __of_find_property+0x3c/0x60
-pc : [<c09b45dc>]    lr : [<c0c47a98>]    psr: 20000013
-sp : ea0b5d88  ip : aae04461  fp : ea1a8810
-r10: 00000055  r9 : 00000000  r8 : ea6dc800
-r7 : 00000001  r6 : c1704048  r5 : eafc8c7c  r4 : ea7fd800
-r3 : 00000000  r2 : 00000000  r1 : ffffffff  r0 : 00000001
-Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-Control: 10c5387d  Table: 80204059  DAC: 00000051
-Process swapper (pid: 1, stack limit = 0x(ptrval))
-Stack: (0xea0b5d88 to 0xea0b6000)
-5d80:                   00000000 aae04461 00000000 aae04461 ea6dc800 00000000
-5da0: eafc8c7c c131fbdc ea6dc9c0 c09b4e24 ea7f4500 00000040 c09b3e24 ea7f3dc0
-5dc0: ea6dc800 ea1a8800 ea1a8810 00000000 00000000 00000055 0000014b c09b5020
-5de0: ea6dc800 ea6dcb80 ea1a8800 ea1a8810 00000000 c09cb884 ea1a69c0 ea6dcb80
-5e00: ea1a8810 00000000 c1862448 00000000 00000000 c1862448 00000000 c08dba2c
-5e20: c18e66dc ea1a8810 c18e66e0 00000000 00000000 c08d9b28 ea1a8810 c1862448
-5e40: c1862448 c08da0c8 00000000 c15c5850 c18a4200 c08d9e18 00000000 c15c5850
-5e60: c18a4200 ea1a8810 00000000 c1862448 c08da0c8 00000000 c15c5850 c18a4200
-5e80: 0000014b c08da0c0 00000000 c1862448 ea1a8810 c08da120 ea1aa0b0 c1704048
-5ea0: c1862448 c08d7ed4 c15c5850 ea0894cc ea1aa0b0 aae04461 c18522c8 c1862448
-5ec0: ea7f3800 c18522c8 00000000 c08d8f14 c1321b68 c15977a0 c1862448 c1862448
-5ee0: c1704048 c15977b0 c15c5830 c08daa8c c18992a0 c1704048 c15977b0 c0302ce4
-5f00: ebfffcd1 c03566f0 c14031b4 c1346700 00000000 00000006 00000006 c1242794
-5f20: 00000000 c1704048 c1252144 c1242808 c1655778 ebfffcc0 ebfffcc3 aae04461
-5f40: 00000000 00000006 c18992a0 aae04461 c16564e8 c18992a0 c18a4200 c15c5830
-5f60: c15004a8 c1501028 00000006 00000006 00000000 c15004a8 00000000 00000007
-5f80: c0e01028 00000000 c0e01028 00000000 00000000 00000000 00000000 00000000
-5fa0: 00000000 c0e01030 00000000 c03010e8 00000000 00000000 00000000 00000000
-5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-5fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-[<c09b45dc>] (of_register_spi_device) from [<c09b4e24>] (spi_register_controller+0x558/0x720)
-[<c09b4e24>] (spi_register_controller) from [<c09b5020>] (devm_spi_register_controller+0x34/0x6c)
-[<c09b5020>] (devm_spi_register_controller) from [<c09cb884>] (tegra_spi_probe+0x344/0x438)
-[<c09cb884>] (tegra_spi_probe) from [<c08dba2c>] (platform_drv_probe+0x48/0x98)
-[<c08dba2c>] (platform_drv_probe) from [<c08d9b28>] (really_probe+0x1e0/0x348)
-[<c08d9b28>] (really_probe) from [<c08d9e18>] (driver_probe_device+0x60/0x168)
-[<c08d9e18>] (driver_probe_device) from [<c08da0c0>] (device_driver_attach+0x58/0x60)
-[<c08da0c0>] (device_driver_attach) from [<c08da120>] (__driver_attach+0x58/0xcc)
-[<c08da120>] (__driver_attach) from [<c08d7ed4>] (bus_for_each_dev+0x74/0xb4)
-[<c08d7ed4>] (bus_for_each_dev) from [<c08d8f14>] (bus_add_driver+0x1b8/0x1d8)
-[<c08d8f14>] (bus_add_driver) from [<c08daa8c>] (driver_register+0x74/0x108)
-[<c08daa8c>] (driver_register) from [<c0302ce4>] (do_one_initcall+0x50/0x1a8)
-[<c0302ce4>] (do_one_initcall) from [<c1501028>] (kernel_init_freeable+0x15c/0x1fc)
-[<c1501028>] (kernel_init_freeable) from [<c0e01030>] (kernel_init+0x8/0x10c)
-[<c0e01030>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-Exception stack(0xea0b5fb0 to 0xea0b5ff8)
-5fa0:                                     00000000 00000000 00000000 00000000
-5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-Code: e3520000 0a000006 e59822a8 e6ef3073 (e7923103)
-
-Reported-by: "kernelci.org bot" <bot@kernelci.org>
-Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
-Hello,
+Changes in v2:
+ - rebase on 5.4-rc1
+ - add comments for BRANCH_HALT_SKIP
 
-Following the report from
-https://kernelci.org/boot/id/5daa485f59b5142f647525a0/, I managed to
-reproduce the bug on my platform, and fixed it.
+ drivers/clk/qcom/gcc-sm8150.c | 184 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 184 insertions(+)
 
-The commit ID provided for the fixes tag is the one of the branch
-for-linus on
-git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
-
-Gregory
-
- drivers/spi/spi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 1b68acc28c8f..dd7cdd996086 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1949,7 +1949,8 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
- 	 * handled in the gpiolib, so all gpio chip selects are "active high"
- 	 * in the logical sense, the gpiolib will invert the line if need be.
- 	 */
--	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
-+	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods &&
-+	    ctlr->cs_gpiods[spi->chip_select])
- 		spi->mode |= SPI_CS_HIGH;
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index 20877214acff..0334b2be5fca 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -1616,6 +1616,40 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk = {
+ 	},
+ };
  
- 	/* Device speed */
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_gpu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(15),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_gpu_gpll0_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gpll0.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* these are external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(16),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_gpu_gpll0_div_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gcc_gpu_gpll0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_gpu_iref_clk = {
+ 	.halt_reg = 0x8c010,
+ 	.halt_check = BRANCH_HALT,
+@@ -1698,6 +1732,40 @@ static struct clk_branch gcc_npu_cfg_ahb_clk = {
+ 	},
+ };
+ 
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_npu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(18),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_npu_gpll0_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gpll0.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_npu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(19),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_npu_gpll0_div_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gcc_npu_gpll0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_npu_trig_clk = {
+ 	.halt_reg = 0x4d00c,
+ 	.halt_check = BRANCH_VOTED,
+@@ -2812,6 +2880,45 @@ static struct clk_branch gcc_ufs_card_phy_aux_hw_ctl_clk = {
+ 	},
+ };
+ 
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x7501c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_rx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_card_rx_symbol_1_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x750ac,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_rx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_card_tx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x75018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_tx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_card_unipro_core_clk = {
+ 	.halt_reg = 0x75058,
+ 	.halt_check = BRANCH_HALT,
+@@ -2992,6 +3099,45 @@ static struct clk_branch gcc_ufs_phy_phy_aux_hw_ctl_clk = {
+ 	},
+ };
+ 
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x7701c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_rx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_phy_rx_symbol_1_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x770ac,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_rx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_ufs_phy_tx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x77018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_tx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_phy_unipro_core_clk = {
+ 	.halt_reg = 0x77058,
+ 	.halt_check = BRANCH_HALT,
+@@ -3171,6 +3317,19 @@ static struct clk_branch gcc_usb3_prim_phy_com_aux_clk = {
+ 	},
+ };
+ 
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0xf058,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_usb3_prim_phy_pipe_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_usb3_sec_clkref_clk = {
+ 	.halt_reg = 0x8c028,
+ 	.halt_check = BRANCH_HALT,
+@@ -3201,6 +3360,19 @@ static struct clk_branch gcc_usb3_sec_phy_aux_clk = {
+ 	},
+ };
+ 
++/* external clocks so add BRANCH_HALT_SKIP */
++static struct clk_branch gcc_usb3_sec_phy_pipe_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x10058,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_usb3_sec_phy_pipe_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_usb3_sec_phy_com_aux_clk = {
+ 	.halt_reg = 0x10054,
+ 	.halt_check = BRANCH_HALT,
+@@ -3332,12 +3504,16 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
+ 	[GCC_GP3_CLK_SRC] = &gcc_gp3_clk_src.clkr,
+ 	[GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
++	[GCC_GPU_GPLL0_CLK_SRC] = &gcc_gpu_gpll0_clk_src.clkr,
++	[GCC_GPU_GPLL0_DIV_CLK_SRC] = &gcc_gpu_gpll0_div_clk_src.clkr,
+ 	[GCC_GPU_IREF_CLK] = &gcc_gpu_iref_clk.clkr,
+ 	[GCC_GPU_MEMNOC_GFX_CLK] = &gcc_gpu_memnoc_gfx_clk.clkr,
+ 	[GCC_GPU_SNOC_DVM_GFX_CLK] = &gcc_gpu_snoc_dvm_gfx_clk.clkr,
+ 	[GCC_NPU_AT_CLK] = &gcc_npu_at_clk.clkr,
+ 	[GCC_NPU_AXI_CLK] = &gcc_npu_axi_clk.clkr,
+ 	[GCC_NPU_CFG_AHB_CLK] = &gcc_npu_cfg_ahb_clk.clkr,
++	[GCC_NPU_GPLL0_CLK_SRC] = &gcc_npu_gpll0_clk_src.clkr,
++	[GCC_NPU_GPLL0_DIV_CLK_SRC] = &gcc_npu_gpll0_div_clk_src.clkr,
+ 	[GCC_NPU_TRIG_CLK] = &gcc_npu_trig_clk.clkr,
+ 	[GCC_PCIE0_PHY_REFGEN_CLK] = &gcc_pcie0_phy_refgen_clk.clkr,
+ 	[GCC_PCIE1_PHY_REFGEN_CLK] = &gcc_pcie1_phy_refgen_clk.clkr,
+@@ -3442,6 +3618,9 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_UFS_CARD_PHY_AUX_CLK_SRC] = &gcc_ufs_card_phy_aux_clk_src.clkr,
+ 	[GCC_UFS_CARD_PHY_AUX_HW_CTL_CLK] =
+ 		&gcc_ufs_card_phy_aux_hw_ctl_clk.clkr,
++	[GCC_UFS_CARD_RX_SYMBOL_0_CLK] = &gcc_ufs_card_rx_symbol_0_clk.clkr,
++	[GCC_UFS_CARD_RX_SYMBOL_1_CLK] = &gcc_ufs_card_rx_symbol_1_clk.clkr,
++	[GCC_UFS_CARD_TX_SYMBOL_0_CLK] = &gcc_ufs_card_tx_symbol_0_clk.clkr,
+ 	[GCC_UFS_CARD_UNIPRO_CORE_CLK] = &gcc_ufs_card_unipro_core_clk.clkr,
+ 	[GCC_UFS_CARD_UNIPRO_CORE_CLK_SRC] =
+ 		&gcc_ufs_card_unipro_core_clk_src.clkr,
+@@ -3459,6 +3638,9 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_UFS_PHY_PHY_AUX_CLK] = &gcc_ufs_phy_phy_aux_clk.clkr,
+ 	[GCC_UFS_PHY_PHY_AUX_CLK_SRC] = &gcc_ufs_phy_phy_aux_clk_src.clkr,
+ 	[GCC_UFS_PHY_PHY_AUX_HW_CTL_CLK] = &gcc_ufs_phy_phy_aux_hw_ctl_clk.clkr,
++	[GCC_UFS_PHY_RX_SYMBOL_0_CLK] = &gcc_ufs_phy_rx_symbol_0_clk.clkr,
++	[GCC_UFS_PHY_RX_SYMBOL_1_CLK] = &gcc_ufs_phy_rx_symbol_1_clk.clkr,
++	[GCC_UFS_PHY_TX_SYMBOL_0_CLK] = &gcc_ufs_phy_tx_symbol_0_clk.clkr,
+ 	[GCC_UFS_PHY_UNIPRO_CORE_CLK] = &gcc_ufs_phy_unipro_core_clk.clkr,
+ 	[GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC] =
+ 		&gcc_ufs_phy_unipro_core_clk_src.clkr,
+@@ -3480,10 +3662,12 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_USB3_PRIM_PHY_AUX_CLK] = &gcc_usb3_prim_phy_aux_clk.clkr,
+ 	[GCC_USB3_PRIM_PHY_AUX_CLK_SRC] = &gcc_usb3_prim_phy_aux_clk_src.clkr,
+ 	[GCC_USB3_PRIM_PHY_COM_AUX_CLK] = &gcc_usb3_prim_phy_com_aux_clk.clkr,
++	[GCC_USB3_PRIM_PHY_PIPE_CLK] = &gcc_usb3_prim_phy_pipe_clk.clkr,
+ 	[GCC_USB3_SEC_CLKREF_CLK] = &gcc_usb3_sec_clkref_clk.clkr,
+ 	[GCC_USB3_SEC_PHY_AUX_CLK] = &gcc_usb3_sec_phy_aux_clk.clkr,
+ 	[GCC_USB3_SEC_PHY_AUX_CLK_SRC] = &gcc_usb3_sec_phy_aux_clk_src.clkr,
+ 	[GCC_USB3_SEC_PHY_COM_AUX_CLK] = &gcc_usb3_sec_phy_com_aux_clk.clkr,
++	[GCC_USB3_SEC_PHY_PIPE_CLK] = &gcc_usb3_sec_phy_pipe_clk.clkr,
+ 	[GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
+ 	[GCC_VIDEO_AXI0_CLK] = &gcc_video_axi0_clk.clkr,
+ 	[GCC_VIDEO_AXI1_CLK] = &gcc_video_axi1_clk.clkr,
 -- 
-2.23.0
+2.20.1
 
