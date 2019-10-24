@@ -2,265 +2,139 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0969ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487F4C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF36E205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 186E4205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H5JCI2DQ"
+	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="fpAp9ltE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407130AbfJXJWT (ORCPT
+        id S2393055AbfJXJWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:22:19 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55682 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390366AbfJXJWS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:22:18 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g24so1937234wmh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 02:22:15 -0700 (PDT)
+        Thu, 24 Oct 2019 05:22:44 -0400
+Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:20743
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390366AbfJXJWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:22:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FgCMlrM6Ecti4Hd9hTdHLzS/83+wmxsfPYThGVe6xHaw0kR0se7lSjccTpL/MDsWA35AHEHykXua1tL1kE1reW07Q1Z3KdiCFl3iFjr+Tvw79YOGvYwQTgjU0flFqbbnuTiRPy5bykl/MAkypdk/qCuyEcsaTes3W8Z+9HJ0gHUWtneY/hqN6d+UC898qjXq8vuzRKFAPs75uf2HKc8VGTzoV4tQxaYc/eewN5sQhAfDpsqa6OKb/5hETUkU40nAQcUfzjhCu2nyfQ49ZoOhPLIjXt97pMHzipuwWpWu4CWHuiNT7UOf3Q7MxcCx9T/YG8GC5KoLAbSp8SmhYMQS/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hp2/tszh1uV2uZFTm/3yFBy1aiyTRNcA5omq7eB7/78=;
+ b=HIaSukiw0/+D4J+z2mdviPSrdlR0RZkAvPdRkXTQ2+j+nel0I1/6iL45BYoG2ycvvKgw3ppLAXHRE15pv0Eynbeswwvm8q0Qa280qFwozpDnd7YIUSP6RSBWkPe4LYr25cQjfsIThXXPTXqyKJCwItp6NbtO1amNRKazr6yRMLOkjlVzUrkxQp4BK0rMWAZlcXLWI/NtUvr3lKfoY4FkEOyqoV8J/Bfd0i6LDbWzLjb3q1rEf9cZd4+QI1Cjz7YDOcXidB3WD78f9ZL3Q3JlO4ZZDXXvmq5I3GW2xifd7m4nwOQQcSiJWCP6eebXh7bZuDmp6KJPa+GI1tNrG8hFbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kococonnector.com; dmarc=pass action=none
+ header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZE04pxpYdyRA9XdoTz9P68mHI4Lq7kaCFDsvg5rhNDQ=;
-        b=H5JCI2DQYx7MmqK/3h/jzgkARGKag8ncdrLjMsqvhSxC/zopgafA5v/eJoTsyKk+mW
-         u25AaN6U7l7ipXfxaS3+Gf9O7m+m7gv43a3HngVr/Tr2+FosfZje3zIfh+crL8fazcn1
-         geIbBJ3z/Mmz253nHW0W9PWomDDsEkfIWXlLrWcIkGsvouG7JeIwRg4Qs88iiRyJTRuG
-         77Q/6paJZhOIyLUAHFslT+GpTixTU69xI/ZQ6pBC9NJLfL+6jVC7RUERJoxhfFaFxE+/
-         dyHrovabQ93i48DH8vzS9qIz/+efN+4vFU8jrtkAwZP6M1PSirTDqKn15G2s6gnyFwB2
-         WH/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZE04pxpYdyRA9XdoTz9P68mHI4Lq7kaCFDsvg5rhNDQ=;
-        b=GC6tV0N1liTj3FCh4w1Recx0r3esTkj6UY6rYS6A0RDAnus6yVOi3/0UubST1FnaJw
-         3wFq4Lx6HpFg3DWtI8syOOZ4tDv0ENLaRQGdPifnfRHnXBjf0GqrlnTz0SArKdbWtX1J
-         Az0uiRgxCkrUAtLCrlyXTf7Wv3ZkC9G/tYJesJFqV4Jobsb04TtLDHrHKdE4+ev2TXEC
-         DEHwPp7OpcmvCF96qoAhUeped2FwBFxywm7iYebp+3TtysiGSpO7sKu+Q5u6m18qUc6r
-         nYdHM1go0D8myoIQEo9YNsVfcKBfJ5RnsyafemDVsISIUpNfP+FO4jQeE2WXImEIY0qk
-         apIQ==
-X-Gm-Message-State: APjAAAUq2JUfgjSPJmf3qhPkBFntqApRD5zxPRGNNFli1Zvf744kD6uO
-        OyEgpMALvdveiswOrlPXgR1dtA==
-X-Google-Smtp-Source: APXvYqwWLj6L6TKs78ndUuP77XJVxWCBVDt/hgEtNwju3aljWTPIu5XSVW6kdi7dJ0z0XxkP2zLokA==
-X-Received: by 2002:a1c:a90f:: with SMTP id s15mr3931818wme.100.1571908934614;
-        Thu, 24 Oct 2019 02:22:14 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id c16sm12055975wrw.32.2019.10.24.02.22.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 02:22:13 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 10:22:13 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: Module loading problem since 5.3
-Message-ID: <20191024092213.GA199239@google.com>
-References: <20191014085235.GW16384@42.do-not-panic.com>
- <20191014144440.GG35313@google.com>
- <20191016125030.GH16384@42.do-not-panic.com>
- <20191016133710.GB35139@google.com>
- <20191018121848.GB11244@42.do-not-panic.com>
- <20191023104940.GD27616@google.com>
- <20191023123551.GJ11244@42.do-not-panic.com>
+ d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hp2/tszh1uV2uZFTm/3yFBy1aiyTRNcA5omq7eB7/78=;
+ b=fpAp9ltEqCfX52I7g2nf6FuwVbYzgkfy2QOnaP8qIAB/1Cz4hZgdcarJ1fKOmETua+aimYkzAPetHdPEWtXyntQ+Slr5vxUhAA3ZzILSiMUWYFoCn/CkGJ34/yJTmJO1nycbVqyB0AzhQQOOde/Sw4dQno/8Q9mHzJi4aoyItpM=
+Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
+ DB6PR0902MB1797.eurprd09.prod.outlook.com (10.171.76.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Thu, 24 Oct 2019 09:22:38 +0000
+Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
+ ([fe80::b1b2:ecb1:9c98:6b74]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
+ ([fe80::b1b2:ecb1:9c98:6b74%6]) with mapi id 15.20.2367.025; Thu, 24 Oct 2019
+ 09:22:38 +0000
+From:   Oliver Graute <oliver.graute@kococonnector.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        =?iso-8859-1?Q?S=E9bastien_Szymanski?= 
+        <sebastien.szymanski@armadeus.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
+ devicetree
+Thread-Topic: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
+ devicetree
+Thread-Index: AQHVikyT2KF91MXB10mxyuBdtabWTw==
+Date:   Thu, 24 Oct 2019 09:22:37 +0000
+Message-ID: <20191024092019.4020-1-oliver.graute@kococonnector.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR0101CA0048.eurprd01.prod.exchangelabs.com
+ (2603:10a6:200:41::16) To DB6PR0902MB2072.eurprd09.prod.outlook.com
+ (2603:10a6:6:8::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oliver.graute@kococonnector.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-patchwork-bot: notify
+x-originating-ip: [193.47.161.132]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3e15ed6d-1f7c-4ba2-4f0b-08d75863b601
+x-ms-traffictypediagnostic: DB6PR0902MB1797:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0902MB17970E6E870CE4DE6A2EB5E0EB6A0@DB6PR0902MB1797.eurprd09.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:510;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(39830400003)(136003)(199004)(189003)(26005)(2351001)(508600001)(36756003)(2906002)(6486002)(99286004)(102836004)(8676002)(14454004)(1730700003)(316002)(50226002)(52116002)(6512007)(25786009)(44832011)(6436002)(81166006)(5640700003)(66556008)(64756008)(66446008)(66476007)(386003)(6506007)(8936002)(66946007)(66066001)(4326008)(256004)(4744005)(476003)(5660300002)(1076003)(305945005)(2616005)(7416002)(71190400001)(7736002)(486006)(54906003)(6916009)(86362001)(71200400001)(6116002)(186003)(2501003)(3846002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1797;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: kococonnector.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Q9K0UAVaEfYD4N7AriQr5s4cKZ5MpEaepEB4/2KRt9gr4MpYoFcu7+CayrOnmmmz6y0UWSnm2Dccv7fioRbJlKWGJyN0ljc8IwoQbXc1RjooCza0ElB8ZvobDB5CCmq7Lq+yK6WM1eFnE3p6tn6ndMMmm4BH+322PqwzsbjR6267YEyj8mT3VfIZXnWnJ/z/7zFOFLY6vEoKQavZ4G0TD83m2UNgGyqjDB+ZPIuynLCNqrOU+QzyknBuSQv68bjW4a1fRHDi5rYjlJBCqbgsrB0KCMbrujgHYyrszQ/M6qDoRRpq0+5JofFbHKvIm27zQhhdpqGbROzusf0HfjWzl9cvOraTsIkGmHk7YjWL7lFAP2BfFrKkS6oWt7UH5E/O9iJWBameKvfrsPR8P4Ob6P9fXT7EgVwC3V/WBR6DXc/UOLWP/Pa/n6rvsc1gjQPl
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191023123551.GJ11244@42.do-not-panic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: kococonnector.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e15ed6d-1f7c-4ba2-4f0b-08d75863b601
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 09:22:37.7558
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 21/8QaNnwz/woFKN3tPNPQTMaL081MuyCj/c88kkhb9FE2RSgefr+955etu91GIM53Vby0YyRfhR6r539t2WS/B5TtiYKtWwkTQaYTEF4Xk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1797
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:35:51PM +0000, Luis Chamberlain wrote:
->On Wed, Oct 23, 2019 at 11:49:40AM +0100, Matthias Maennich wrote:
->> On Fri, Oct 18, 2019 at 12:18:48PM +0000, Luis Chamberlain wrote:
->> > On Wed, Oct 16, 2019 at 02:37:10PM +0100, Matthias Maennich wrote:
->> > > On Wed, Oct 16, 2019 at 12:50:30PM +0000, Luis Chamberlain wrote:
->> > > > On Mon, Oct 14, 2019 at 03:44:40PM +0100, Matthias Maennich wrote:
->> > > > > Hi Luis!
->> > > > >
->> > > > > On Mon, Oct 14, 2019 at 08:52:35AM +0000, Luis Chamberlain wrote:
->> > > > > > On Fri, Oct 11, 2019 at 09:26:05PM +0200, Heiner Kallweit wrote:
->> > > > > > > On 10.10.2019 19:15, Luis Chamberlain wrote:
->> > > > > > > >
->> > > > > > > >
->> > > > > > > > On Thu, Oct 10, 2019, 6:50 PM Heiner Kallweit <hkallweit1@gmail.com <mailto:hkallweit1@gmail.com>> wrote:
->> > > > > > > >
->> > > > > > > >        MODULE_SOFTDEP("pre: realtek")
->> > > > > > > >
->> > > > > > > >     Are you aware of any current issues with module loading
->> > > > > > > >     that could cause this problem?
->> > > > > > > >
->> > > > > > > >
->> > > > > > > > Nope. But then again I was not aware of
->> > > > > > > > MODULE_SOFTDEP(). I'd encourage an extension to
->> > > > > > > > lib/kmod.c or something similar which stress tests this.
->> > > > > > > > One way that comes to mind to test this is to allow a
->> > > > > > > > new tests case which loads two drives which co depend on
->> > > > > > > > each other using this macro. That'll surely blow things
->> > > > > > > > up fast. That is, the current kmod tests uses
->> > > > > > > > request_module() or get_fs_type(), you'd want a new test
->> > > > > > > > case with this added using then two new dummy test
->> > > > > > > > drivers with the macro dependency.
->> > > > > > > >
->> > > > > > > > If you want to resolve this using a more tested path,
->> > > > > > > > you could have request_module() be used as that is
->> > > > > > > > currently tested. Perhaps a test patch for that can rule
->> > > > > > > > out if it's the macro magic which is the issue.
->> > > > > > > >
->> > > > > > > >   Luis
->> > > > > > >
->> > > > > > > Maybe issue is related to a bug in introduction of symbol namespaces, see here:
->> > > > > > > https://lkml.org/lkml/2019/10/11/659
->> > > > > >
->> > > > > > Can you have your user with issues either revert 8651ec01daed or apply the fixes
->> > > > > > mentioned by Matthias to see if that was the issue?
->> > > > > >
->> > > > > > Matthias what module did you run into which let you run into the issue
->> > > > > > with depmod? I ask as I think it would be wise for us to add a test case
->> > > > > > using lib/test_kmod.c and tools/testing/selftests/kmod/kmod.sh for the
->> > > > > > regression you detected.
->> > > > >
->> > > > > The depmod warning can be reproduced when using a symbol that is built
->> > > > > into vmlinux and used from a module. E.g. with CONFIG_USB_STORAGE=y and
->> > > > > CONFIG_USB_UAS=m, the symbol `usb_stor_adjust_quirks` is built in with
->> > > > > namespace USB_STORAGE and depmod stumbles upon this emitting the
->> > > > > following warning (e.g. during make modules_install).
->> > > > >
->> > > > >  depmod: WARNING: [...]/uas.ko needs unknown symbol usb_stor_adjust_quirks
->
->But this was an issue only when the symbol namespace stuff was used?
->Or do we know if it regressed other generic areas of the kernel?
+Document the Variscite i.MX6qdl board devicetree binding
+already supported:
 
-The only known regression was caused by the changed ksymtab entry name
-as pointed out above. (Userland) tools depending on that representation
-might report issues. That is what [1] addresses by not requiring that
-name change any longer and reverting to the previous scheme.
+- variscite,dt6customboard
 
->
->> > > > > As there is another (less intrusive) way of implementing the namespace
->> > > > > feature, I posted a patch series [1] on last Thursday that should
->> > > > > mitigate the issue as the ksymtab entries depmod eventually relies on
->> > > > > are no longer carrying the namespace in their names.
->> > > > >
->> > > > > Cheers,
->> > > > > Matthias
->> > > > >
->> > > > > [1] https://lore.kernel.org/lkml/20191010151443.7399-1-maennich@google.com/
->> > > >
->> > > > Yes but kmalloc() is built-in, and used by *all* drivers compiled as
->> > > > modules, so why was that not an issue?
->> >
->> > > In ksymtab, namespaced symbols had the format
->> > >
->> > >  __ksymtab_<NAMESPACE>.<symbol>
->> > >
->> > > while symbols without namespace would still use the old format
->> > >
->> > >  __ksymtab_<symbol>
->> >
->> > Ah, I didn't see the symbol namespace patches, good stuff!
->> >
->> > > These are also the names that are extracted into System.map (using
->> > > scripts/mksysmap). Depmod is reading the System.map and for symbols used
->> > > by modules that are in a namespace, it would not find a match as it does
->> > > not understand the namespace notation. Depmod would still not emit a
->> > > warning for symbols without namespace as their format did not change.
->
->Now that I reviewed the symbol namespace implementation, and its
->respective new fixes, it would seem to me that the issue is an after
->thought issue with old userspace tools not being able to grock a new
->expected format for symbol namespaces, and so with old kmod you'd run
->into the depmod warning any time symbol namespaces are used.
->
->Is that correct?
->
->If so, I can't see how this issue could affect the reported issue in
->this thread, where folks seem to be detecting a regression where a
->module dependency is not being loaded. That is, I don't see how the
->symbol namespace stuff could regress existing older symbols, specially
->if the EXPORT_SYMBOL_NS() stuff is not used yet.
->
->If this is correct the issue reported with r8169 may be different,
->unless the implementation had some side consequences or issues which
->we may not yet be aware of.
->
+Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-I don't disagree that the issue that started the thread could be caused
-by a different problem. I was merely responding to the question how to
-reproduce the outstanding issues in the symbol namespaces that caused
-depmod to emit a warning.
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation=
+/devicetree/bindings/arm/fsl.yaml
+index 41db01d77c23..f0ddebfcf1a1 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -121,6 +121,7 @@ properties:
+               - fsl,imx6q-sabresd
+               - technologic,imx6q-ts4900
+               - technologic,imx6q-ts7970
++              - variscite,dt6customboard
+           - const: fsl,imx6q
+=20
+       - description: i.MX6QP based Boards
+--=20
+2.17.1
 
->Having the user with what may be a regression with r8169 and module
->dependency loading try to revert 8651ec01daed would be good to see if
->the issue goes away.
->
->> > Can we have a test case for this to ensure we don't regress on this
->> > again? Or put another way, what test cases were implemented for symbol
->> > namespaces?
->>
->> While modpost and kernel/module.c are the tests at build and runtime
->> resp. to enforce proper use of symbol namespaces,
->
->Well clearly it can also be buggy :)
-
-Again, not disagreeing.
-
->
->> I could imagine to test for the proper layout in the ksymtab entries
->
->Do we not have this already done at compile time?
-
-Modpost (now) depends on the proper layout to validate namespaces at
-modpost time. But that does not guard against e.g. growth of that entry.
-
->
->> (
->> note, as mentioned
->> earlier there are some fixes in flight to finalize the layout).
->
->Reviewed now, thanks for the lore URL reference!
->
->> In addition, I could imagine adding a test that tries to load a module
->> that uses symbols from a namespace without importing it. The kernel
->> should deny loading or complain about it (depending on the
->> configuration). These are also some of the test cases I had when working
->> on that feature. I did not implement these as automated tests though. I
->> will put that on my list but help with that would be very welcome.
->
->Happy to help with that, sure. Now that I grok the namespace kmod issue,
->indeed tools/testing/selftests/kmod/kmod.sh and lib/test_kmod.c could be
->extended with a new test case for namespaces. Two demo test drivers
->would be written which allow for testing the different cases. Let me
->know if the suggestion is unclear or if you have any questions about the
->code.
-
-I would like to defer this work until the fixes are in. That will
-hopefully be -rc5. One additional test case could be to check that the
-symbol namespaces required by the module's symbol use are consistent
-with the declared imports via modinfo.
-
-Thanks for your input!
-
-Cheers,
-Matthias
-
->
->  Luis
