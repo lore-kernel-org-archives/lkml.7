@@ -2,113 +2,93 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA4DCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A995CCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D7D20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ofNboEQU"
+	by mail.kernel.org (Postfix) with ESMTP id 8A54920650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407717AbfJXBsI (ORCPT
+        id S2408004AbfJXBvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 21:48:08 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:17634 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbfJXBsH (ORCPT
+        Wed, 23 Oct 2019 21:51:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36551 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfJXBvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 21:48:07 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x9O1m38r025121
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:48:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x9O1m38r025121
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571881684;
-        bh=Pg0PBlnvPGzMa1Lyb7SgzTssmkI1SxEtJ6FEB1T4F30=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ofNboEQUqp9lsgicKTvUAhaI7rxygS4zx6c0oGCexmwGMPEnMQ2X2tFyof+S6L0J6
-         v0OmQrC6FYcrzKSBR3CwB375LfzIrrpjUdons4tKy3jNeXm/SD874D9IsRl4EWrzNp
-         AjNjFCpTMcSsJCfcmcotwgHuxmfSEPWVX5uHhVjI3yoONOKjO0dL6pnEoKFQdXWHLL
-         vpvhZaeulMcrd9JVnoaJWAOwCMbJzvw7ZD38JJ4c0m6AOkpSah3shwoWHWn0wGLBTf
-         X7yYyHqp8S9OjAFYIPhc3QrG0AUr7iQoh/FqYciJRtC/TCAFmaJckK+MB/dxA7Z62/
-         xXXczs18i3CRA==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id m21so6646308ual.13
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 18:48:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAXqhaCeoxRxgc0ESYmXbVgvVDmaSK8YOZsPnBkTEgPL8U/ThyJv
-        UBXyk4V19NPdvI6B139gWmYTcC15+3sk/qZyUZ4=
-X-Google-Smtp-Source: APXvYqx1CqHmDEr3VPRqLGPoMM6fTlsUos2Z4E1CXGQPNl+XNURVhKBiM/jscveAYlAHmW9WHc6ytxEH92P8yvA+VtU=
-X-Received: by 2002:a9f:3e81:: with SMTP id x1mr7475449uai.121.1571881682588;
- Wed, 23 Oct 2019 18:48:02 -0700 (PDT)
+        Wed, 23 Oct 2019 21:51:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 23so13229460pgk.3;
+        Wed, 23 Oct 2019 18:51:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dC2JOSYLSqsQKskxCJEnzUZbandc2aRmShMqQ/yyRms=;
+        b=UE577jVc9UJbU1v+WWtk/HgqeKHX8gdxifxJIqG9YnNL0x1dUXVLitMxxCLo9Ipcai
+         3MEhCrTMlETgREZLcHoTIlyXLB9p4LSEE4lFtpdeyBcF04ONElfy5r5qiD73uPiQfn1M
+         OPS5YCUnqPR/HRkn4U+jVwR40gyyaWO0fBzsKqYB8GDfPLWrDz6aGSs4nnzrEDkXzs3P
+         Wb3pV17ExFXzC9kxrHBDGqWGDCvbHpG574qwrpMFJaW8pshj5GwibfZsJHhAjujR9r65
+         YL40aK3iPRSMue0kkocjd8xTDC+cQ1i9bzHtwVmFEwtOLMkagbx8zWQ8pjQnJcejOikv
+         NM8Q==
+X-Gm-Message-State: APjAAAXo4zQ+AmMw7cs2nKllBX5GNxME7l52SgJ5Bha8ByCc0J14Xa2F
+        PT0JTB29x1pdVRqBtjASyz8KIWPD
+X-Google-Smtp-Source: APXvYqwydSoB8gVso3rsDpUc5pi921+AX3MVUhhzVkWKIgjkQwkV0QLQ5ryNMjhQmHy1BVgok7j0Zg==
+X-Received: by 2002:aa7:92c9:: with SMTP id k9mr14607454pfa.215.1571881894594;
+        Wed, 23 Oct 2019 18:51:34 -0700 (PDT)
+Received: from localhost.localdomain ([2601:647:4000:c3:68e9:e651:6431:4a0])
+        by smtp.gmail.com with ESMTPSA id 64sm24733672pfx.31.2019.10.23.18.51.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2019 18:51:33 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] blk-mq: fill header with kernel-doc
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com
+References: <20191022000724.32746-1-andrealmeid@collabora.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <8ed6b0f8-4655-9a76-77c1-11962cee6ebf@acm.org>
+Date:   Wed, 23 Oct 2019 18:51:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191018161033.261971-7-samitolvanen@google.com> <20191022162826.GC699@lakrids.cambridge.arm.com>
- <CABCJKudsD6jghk4i8Tp4aJg0d7skt6sU=gQ3JXqW8sjkUuX7vA@mail.gmail.com>
-In-Reply-To: <CABCJKudsD6jghk4i8Tp4aJg0d7skt6sU=gQ3JXqW8sjkUuX7vA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 24 Oct 2019 10:47:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATrz4fTp1RWHfwq36M4Xs1CdkoZtnoYfZ4ouNKow5F0RQ@mail.gmail.com>
-Message-ID: <CAK7LNATrz4fTp1RWHfwq36M4Xs1CdkoZtnoYfZ4ouNKow5F0RQ@mail.gmail.com>
-Subject: Re: [PATCH 06/18] add support for Clang's Shadow Call Stack (SCS)
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191022000724.32746-1-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 1:59 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> On Tue, Oct 22, 2019 at 9:28 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > I think it would be preferable to follow the example of CC_FLAGS_FTRACE
-> > so that this can be filtered out, e.g.
-> >
-> > ifdef CONFIG_SHADOW_CALL_STACK
-> > CFLAGS_SCS := -fsanitize=shadow-call-stack
-> > KBUILD_CFLAGS += $(CFLAGS_SCS)
-> > export CC_FLAGS_SCS
-> > endif
-> >
-> > ... with removal being:
-> >
-> > CFLAGS_REMOVE := $(CC_FLAGS_SCS)
-> >
-> > ... or:
-> >
-> > CFLAGS_REMOVE_obj.o := $(CC_FLAGS_SCS)
-> >
-> > That way you only need to define the flags once, so the enable and
-> > disable falgs remain in sync by construction.
->
-> CFLAGS_REMOVE appears to be only implemented for objects, which means
-> there's no convenient way to filter out flags for everything in
-> arch/arm64/kvm/hyp, for example. I could add a CFLAGS_REMOVE
-> separately for each object file, or we could add something like
-> ccflags-remove-y to complement ccflags-y, which should be relatively
-> simple. Masahiro, do you have any suggestions?
+On 2019-10-21 17:07, André Almeida wrote:
+> Insert documentation for structs, enums and functions at header file.
+> Format existing and new comments at struct blk_mq_ops as
+> kernel-doc comments.
 
-
-I am fine with 'ccflags-remove-y'.
-
-Thanks.
-
-
--- 
-Best Regards
-Masahiro Yamada
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
