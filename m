@@ -2,73 +2,134 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F61CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4D8CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9A321655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F3521655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fHx25Q4c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFJf8rPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439533AbfJXL6h (ORCPT
+        id S2409285AbfJXL75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:58:37 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33370 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfJXL6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:58:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=dpdPtQ9YYpbeXJdY8m/o433LsLuOnXN6uIZDYX/6rAM=; b=fHx25Q4caYOzwuBrhSqpJ+DJEz
-        Sz/0DM3QFO3se0K96dUAlqJdoDQRXSeYUPN0pJP3qLPVWD1uGw6rx3dx2KVC9OTAZZNjE5kQEndfJ
-        pl8k3aAzUn1+iAhqf2/yNvzlYbf/+bFLPxYb+nBa4bQPwgw6RHUZzYKPVjYJbjvA3A4I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iNbl9-0003K5-OU; Thu, 24 Oct 2019 13:58:31 +0200
-Date:   Thu, 24 Oct 2019 13:58:31 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net: dsa: fix dereference on ds->dev before null
- check error
-Message-ID: <20191024115831.GA12631@lunn.ch>
-References: <20191024103218.2592-1-colin.king@canonical.com>
+        Thu, 24 Oct 2019 07:59:57 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:45192 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404689AbfJXL74 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 07:59:56 -0400
+Received: by mail-ua1-f67.google.com with SMTP id j5so7041550uak.12
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 04:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HQknb1r4LbQcuicy72xSu/tgsIIaO3/jaqndS1RuQsc=;
+        b=VFJf8rPVcfBhCVGRiyWkFLZVnbUFpTifhzTj5iKAGigKUYb2mx6ocPrzDzt6IJChrs
+         oOOO15Q/mhQIUzQPhtxvo0TNjytFVHYbU7kRUIRJ9vEQB3hX1ULsEXYVSfyrc3EpN7hf
+         Cw1B4hyYPGiCX+Bqb+qgxl3inKrOU8PJRNFNQSNXyp/nBjSq0ew9NnWXz5IocrCkXRwB
+         hA4KZF1HTMR2ym6jT85fQiHJ5AgYmgXz7ELPcVkznCESu75Xrol0sfEGsse5mdY1+LaR
+         MHx7VEOcg9hUEPRqPuC7CXOjt/MOtoiaAjdLsFOHYcr33rEJl1usNxI1z5roeADziwwk
+         dH/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HQknb1r4LbQcuicy72xSu/tgsIIaO3/jaqndS1RuQsc=;
+        b=dWkOV91uVj9uiM+PSHmtaq9xjkdlp3hvBAS3NLiq9cXwaeUsdVKKQa/iYRHW0tRhP0
+         piTa3QShcb5iO4PDflPG9ez7mJ/OanuXzzt7EsOnLAVb9j8cIk+A6cg+XL7WbP9VIIzi
+         0H83en7d7ZyDMHI42QzY1E2v3aY3qLQg1Z5pHTsuE1V654MsWmm6wFtgcoL9p1tz+aRp
+         D9EUUJYMdj5pfPuwxCGtvmpqc4x8bvRfNxQcuChKsorkdsdj+BjFOlYcHiZkZiT+FFEW
+         x9K3KdCwbegoaS8fz2lbOBny+rvtFQMZepFzLz1YvRvJFWSnOvChH+JT+Ao/CbysvVXU
+         m9Iw==
+X-Gm-Message-State: APjAAAWpDkZreJ2yqedUHPFzZaeidBszK9afz8voLdAk+Za43m7O/f4s
+        8fr+a9ojvJ+LFMDIWIw8LBQcVFgrgaOsxFqi+DXBPw==
+X-Google-Smtp-Source: APXvYqx8rjUk6KPqTIkjXHT1x3MUAIDpq7Im00SmJqvx96HxmfrRAzRMzoQEKZ+wnRhBT8VyGXo59Y1YR0OaexZHsWY=
+X-Received: by 2002:ab0:7043:: with SMTP id v3mr8397635ual.84.1571918395846;
+ Thu, 24 Oct 2019 04:59:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024103218.2592-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com> <9b53139b7043572b3846a214694dbf8fe1f56f50.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <9b53139b7043572b3846a214694dbf8fe1f56f50.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 24 Oct 2019 13:59:44 +0200
+Message-ID: <CACRpkdZ5CC4mtNYrurx_2M_3BN6Tu7rQ=d4-y-HOsDbRteKjjA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 12/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 11:32:18AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently ds->dev is dereferenced on the assignments of pdata and
-> np before ds->dev is null checked, hence there is a potential null
-> pointer dereference on ds->dev.  Fix this by assigning pdata and
-> np after the ds->dev null pointer sanity check.
-> 
-> Addresses-Coverity: ("Dereference before null check")
-> Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Hi Matti,
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Thanks for your patch!
 
-    Andrew
+On Thu, Oct 24, 2019 at 1:51 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+
+> ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+> to be used for general purposes. First 3 can be used as outputs
+> and 4.th pin can be used as input. Allow them to be controlled
+> via GPIO framework.
+>
+> The driver assumes all of the pins are configured as GPIOs and
+> trusts that the reserved pins in other OTP configurations are
+> excluded from control using "gpio-reserved-ranges" device tree
+> property (or left untouched by GPIO users).
+>
+> Typical use for 4.th pin (input) is to use it as HALL sensor
+> input so that this pin state is toggled when HALL sensor detects
+> LID position change (from close to open or open to close). PMIC
+> HW implements some extra logic which allows PMIC to power-up the
+> system when this pin is toggled. Please see the data sheet for
+> details of GPIO options which can be selcted by OTP settings.
+
+spelling of selected
+
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+
+Overall looks very good.
+
+> +// SPDX-License-Identifier: GPL-2.0
+
+I think they want you to use GPL-2.0-only these days.
+
+> +#define BD71828_OUT 0
+> +#define BD71828_IN 1
+
+These have nothing to do with BD71828, just skip these defines
+and hardcode 0/1 in the code called from gpiolib. If we want defines
+for this they should be generically named and put in
+<linux/gpio/driver.h>
+
+Nice use of the config API!
+
+Yours,
+Linus Walleij
