@@ -2,94 +2,65 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBAFCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D0ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5A12084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E792084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GVTdJblk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FRnJsusz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392367AbfJXBYA (ORCPT
+        id S2392384AbfJXB2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 21:24:00 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:57235 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390315AbfJXBYA (ORCPT
+        Wed, 23 Oct 2019 21:28:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54770 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbfJXB2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 21:24:00 -0400
-Received: by mail-pf1-f201.google.com with SMTP id b17so17591091pfo.23
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 18:23:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=Q/IgTcyWpllq9cHFnznuYs6JbwLGBHOeL0Smj+J7ca0=;
-        b=GVTdJblkvvjClYZLs2bPvvMBuk5g/tKBRxCD5d8zrFawK/dUnVTzn3mLelDR1LljIf
-         WaPj34fR/p/NSXU5aWa6UCp4wqu1QC+CpeOwH5SunJ8fTwmdg4R0p3g1LrKiwjCP85vw
-         aA3z1MQcgTWZ75eQ6nUP5jpZTEVkC9ZoxPk1/ofFb3267KglmdU5Xk6/2/B3P3NZN79G
-         YYVZpv2wYExaSdQPW1qKK7+TqSnD1mNb+T6zS2MZ+027vXm5q409SxCtaLizMDnXvyLp
-         gpcCvMtjFDWZKF9wDsLW1ghOzLE4/kWrTLT9aTpgJ6Q8+t3t39xEaT/vGRsb1pmn41U5
-         l+LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=Q/IgTcyWpllq9cHFnznuYs6JbwLGBHOeL0Smj+J7ca0=;
-        b=mYcCpZMT1Beu/2GqE4/9Ko/kN1/W6xaiEQDA3J2d9MGa+oAv2B1uPlLH5XScT3M/kR
-         40qt22ul24Xg2baDzprVeCBB+IiCi64ubPRefv/D8lAJvbR6tGUxt6es+PZ5ftCWOx6T
-         Hl1DkmVNCLuwdAsKNmbiZaH7sGqnG0Wk72PuGaAGfwa3v9FulVOK6RA5JlK4ogFZxUxV
-         o6CDv+zD6psk6sjurK8/Z+zjyOr9Ik5VX3a8iX+mU8PmLxhhSnkE93zJ9UMZ/dOOuaE3
-         mkQx2ycRpMBHlO277ftC3wq0atutlWs1il5UBYaxOGPCiqzNB80OsPdLpRQXpP6tuiG3
-         7eaQ==
-X-Gm-Message-State: APjAAAW1eM+E0JL6YqGGAiih7ttWtII2ZpJGgHk8KdLg7YTE3ik1Ec2W
-        Ru5V6jYzCYmBijtA/6SdtQ4m5BPuE5o=
-X-Google-Smtp-Source: APXvYqwxTYWRsvyLKEC+CppJbx1Z24G5t2QVXsJ5xsbKJwDJeCg0MJIZxzpQyX/Vs6LO+ZNkmUnI1gw1ZkM=
-X-Received: by 2002:a63:e055:: with SMTP id n21mr13369058pgj.411.1571880239317;
- Wed, 23 Oct 2019 18:23:59 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 10:23:54 +0900
-In-Reply-To: <20191018010846.186484-1-pliard@google.com>
-Message-Id: <20191024012354.105261-1-pliard@google.com>
-Mime-Version: 1.0
-References: <20191018010846.186484-1-pliard@google.com>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: Re: [PATCH] squashfs: Migrate from ll_rw_block usage to BIO
-From:   Philippe Liard <pliard@google.com>
-To:     phillip@squashfs.org.uk
-Cc:     linux-kernel@vger.kernel.org, groeck@chromium.org,
-        pliard@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 23 Oct 2019 21:28:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jD3ajuwfKZdk4JSIR8vGZp1pzv/W899TJw8TAPz4bwc=; b=FRnJsusz6bSIUrtKJ6Rs+PrZV
+        Rc9FtFgXZBhIBEkKenmtYBEcir5YrbubUFQYHHfE9g3/FDpXB9kOL6/1Qi8+G01C/rQSE9aNme4yY
+        MMUmUSJI9YGor3UtogZ2VQcLoi4/y5H1P5oNsd1xDjt91IesmvUN7ADATTlrxwp1MnQEiafDwsv/F
+        LNFly8yS18xzdzOqDRwRCYir98guFp+/o/79TgnadysBMIB1udT59a6QXxt800zUNNA2746hL0T3H
+        zlkrcgr/f2f6i3eHFi9uPvDkQD/xlBuvSX6NWogmJNaCUZQqy6hFOUK7QAqJowy+BBJYut9znFEQU
+        jrUOn0UQA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNRvl-0000AW-1o; Thu, 24 Oct 2019 01:28:49 +0000
+Date:   Wed, 23 Oct 2019 18:28:49 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Omer Shpigelman <oshpigelman@habana.ai>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] habanalabs: support kernel memory mapping
+Message-ID: <20191024012849.GB32358@infradead.org>
+References: <20191022063028.9030-1-oshpigelman@habana.ai>
+ <20191023092035.GA12222@infradead.org>
+ <AM6PR0202MB3382B554A4C7F0F677A804D7B86B0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR0202MB3382B554A4C7F0F677A804D7B86B0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Cristoph for taking a look. I like the idea of simplifying this if
-possible. I think I understand your suggestion in principle but I'm not
-seeing a way to apply it here. Would it be possible for you to be a little
-more specific? Let me try to explain this below.
+On Wed, Oct 23, 2019 at 01:39:41PM +0000, Omer Shpigelman wrote:
+> I'm not sure I understand. Can you please pin point the problematic line?
 
-My admittedly=C2=A0limited understanding is that using BIO indirectly requi=
-res
-buffer_head or an alternative including some synchronization mechanism at
-least.
-It's true that the bio_{alloc,add_page,submit}() functions don't require
-passing a buffer_head. However because bio_submit() is asynchronous AFAICT
-the client needs to use a synchronization mechanism to wait for and notify
-the completion of the request which buffer heads provide. This is achieved
-respectively by wait_on_buffer() and {set,clear}_buffer_uptodate().
-
-Another dependency on buffer heads is the fact that squashfs_read_data()
-calls into other squashfs functions operating on buffer heads outside this
-file. For example squashfs_decompress() operates on a buffer_head array.
-
-Given that bio_submit() is asynchronous I'm also not seeing how the
-squashfs_bio_request allocation can be removed? There can be multiple BIO
-requests in flight each needing to carry some context used on completion
-of the request.
+Every line you touch addr field basically.  If you have a kernel
+address please store it in an actual C pointer type, not in a u64
+to ensure that the compiler can do proper type checking.
