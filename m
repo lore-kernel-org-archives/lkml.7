@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C27CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B599CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DEE2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D256520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393217AbfJXK1s (ORCPT
+        id S2409079AbfJXK1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:27:48 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:46202 "EHLO
+        Thu, 24 Oct 2019 06:27:50 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:45634 "EHLO
         out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390754AbfJXK1r (ORCPT
+        by vger.kernel.org with ESMTP id S2390754AbfJXK1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:27:47 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01451;MF=shannon.zhao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tg2wxnK_1571912847;
-Received: from localhost(mailfrom:shannon.zhao@linux.alibaba.com fp:SMTPD_---0Tg2wxnK_1571912847)
+        Thu, 24 Oct 2019 06:27:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=shannon.zhao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Tg32PEs_1571912865;
+Received: from localhost(mailfrom:shannon.zhao@linux.alibaba.com fp:SMTPD_---0Tg32PEs_1571912865)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Oct 2019 18:27:44 +0800
+          Thu, 24 Oct 2019 18:27:46 +0800
 From:   Shannon Zhao <shannon.zhao@linux.alibaba.com>
 To:     kvmarm@lists.cs.columbia.edu, maz@kernel.org, james.morse@arm.com,
         suzuki.poulose@arm.com, christoffer.dall@arm.com
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH RFC 1/7] KVM: ARM: call hyp_cpu_pm_exit on correct fail and exit path
-Date:   Thu, 24 Oct 2019 18:27:44 +0800
-Message-Id: <1571912870-18471-2-git-send-email-shannon.zhao@linux.alibaba.com>
+Subject: [PATCH RFC 2/7] KVM: arch_timer: Fix resource leak on error path
+Date:   Thu, 24 Oct 2019 18:27:45 +0800
+Message-Id: <1571912870-18471-3-git-send-email-shannon.zhao@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1571912870-18471-1-git-send-email-shannon.zhao@linux.alibaba.com>
 References: <1571912870-18471-1-git-send-email-shannon.zhao@linux.alibaba.com>
@@ -40,39 +40,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It needs to cleanup irq setup for host_vtimer_irq when
+request_percpu_irq fails for host_ptimer_irq. It needs to cleanup irq
+setup for both host_vtimer_irq and host_ptimer_irq when seeting vcpu
+affinity error as well.
+
+Fixes: 9e01dc76be6a ("KVM: arm/arm64: arch_timer: Assign the phys timer on VHE systems")
 Signed-off-by: Shannon Zhao <shannon.zhao@linux.alibaba.com>
 ---
- virt/kvm/arm/arm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ virt/kvm/arm/arch_timer.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 86c6aa1..da32c9b 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -1488,6 +1488,7 @@ static int init_subsystems(void)
- 	kvm_coproc_table_init();
+diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
+index e2bb5bd..f5a5d51 100644
+--- a/virt/kvm/arm/arch_timer.c
++++ b/virt/kvm/arm/arch_timer.c
+@@ -960,7 +960,7 @@ int kvm_timer_hyp_init(bool has_gic)
+ 		if (err) {
+ 			kvm_err("kvm_arch_timer: can't request ptimer interrupt %d (%d)\n",
+ 				host_ptimer_irq, err);
+-			return err;
++			goto out_free_irq;
+ 		}
  
- out:
-+	hyp_cpu_pm_exit();
- 	on_each_cpu(_kvm_arch_hardware_disable, NULL, 1);
+ 		if (has_gic) {
+@@ -968,7 +968,7 @@ int kvm_timer_hyp_init(bool has_gic)
+ 						    kvm_get_running_vcpus());
+ 			if (err) {
+ 				kvm_err("kvm_arch_timer: error setting vcpu affinity\n");
+-				goto out_free_irq;
++				goto out_free_pirq;
+ 			}
+ 		}
  
+@@ -984,6 +984,8 @@ int kvm_timer_hyp_init(bool has_gic)
+ 			  "kvm/arm/timer:starting", kvm_timer_starting_cpu,
+ 			  kvm_timer_dying_cpu);
+ 	return 0;
++out_free_pirq:
++	free_percpu_irq(host_ptimer_irq, kvm_get_running_vcpus());
+ out_free_irq:
+ 	free_percpu_irq(host_vtimer_irq, kvm_get_running_vcpus());
  	return err;
-@@ -1500,7 +1501,6 @@ static void teardown_hyp_mode(void)
- 	free_hyp_pgds();
- 	for_each_possible_cpu(cpu)
- 		free_page(per_cpu(kvm_arm_hyp_stack_page, cpu));
--	hyp_cpu_pm_exit();
- }
- 
- /**
-@@ -1724,6 +1724,7 @@ int kvm_arch_init(void *opaque)
- void kvm_arch_exit(void)
- {
- 	kvm_perf_teardown();
-+	hyp_cpu_pm_exit();
- }
- 
- static int arm_init(void)
 -- 
 1.8.3.1
 
