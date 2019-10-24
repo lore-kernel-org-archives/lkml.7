@@ -2,96 +2,152 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E14CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75422C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABC021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571937066;
-	bh=50LiASavYQZLbe6nfO7wdHLLLfE3YL2HyvzWd+ySzPE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=DO4jHtZFJJhM5/9SwFPhXbhpiQUWAfq++hmjIMlaOUurqsxjcEet6VQK57VfgovbT
-	 UnB0UALGpY5TrQ1kfXo9wPCoaLnIKaP3+UJxIMhfINWoR7eaUecAXePa84MKCerp3G
-	 M8FTvmxxRd9ar7ggKEff+vsVyZaY0G3SGL8UBjc8=
+	by mail.kernel.org (Postfix) with ESMTP id 4A64220650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:13:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MM/18hyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439940AbfJXRLF (ORCPT
+        id S2439969AbfJXRNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439855AbfJXRLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:11:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC4FC20650;
-        Thu, 24 Oct 2019 17:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571937064;
-        bh=50LiASavYQZLbe6nfO7wdHLLLfE3YL2HyvzWd+ySzPE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qtbTWnH9LA3tbkJFClj5FPXT3Mtrc4X0jALff5Ub3dJQBOsMB9ZTw5xWY6LnRIT1K
-         DshfISJ7KzW+Ubkjy5thaBOIiRSFSEC/CxfvkfZtPfvzDzpw4YMQP+D0Rz4BiCbtJq
-         kIZ8ib0J215lecEYJkXFVeeKcJ6aULHrnG+QixvI=
-Date:   Thu, 24 Oct 2019 12:11:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Message-ID: <20191024171102.GA147451@google.com>
+        Thu, 24 Oct 2019 13:13:23 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9280 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439946AbfJXRNX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:13:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5db1dbba0002>; Thu, 24 Oct 2019 10:13:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 24 Oct 2019 10:13:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 24 Oct 2019 10:13:21 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 24 Oct
+ 2019 17:13:20 +0000
+Received: from [10.21.133.51] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 24 Oct
+ 2019 17:13:18 +0000
+Subject: Re: [PATCH] spi: Fix SPI_CS_HIGH setting when using native and GPIO
+ CS
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191018152929.3287-1-gregory.clement@bootlin.com>
+ <dfabf9eb-4f81-91e5-55dc-caea0cdabd2d@nvidia.com> <87zhhqp4wf.fsf@FE-laptop>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4be58f82-eeb1-83a5-4c83-1e86f3b82769@nvidia.com>
+Date:   Thu, 24 Oct 2019 18:13:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024093803.GU2819@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87zhhqp4wf.fsf@FE-laptop>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1571937210; bh=IGHxywHeWHbvWN/dGZiODRU1Pgz0qNdz6PS2iL/zybc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=MM/18hyCWxGXMxY6YT9ReV/7/ZgXYKVgBZMHvbH4pc2hpiV43cLaFtS00fWFPWRDL
+         erOSBvWRwITrxAmnu2xrjxMScAx1CyoARtjFmjxmuecIcturc7XchVXhRhRHkK1EhZ
+         RUa/+fsDshDTE0sfaPU98V/ztsOr5bWkKCNLPzlDx2xEQGuwFGCB4vYCaWyOgFVAze
+         b2qg3RWIFVcZwaqmRVm02T8T6xHLsg6CP2Bvz7tZfhgr3LQRfn9Mq1vr652b1mczLM
+         t3YFFCZdh8Yaz054QJzum2+fA47872r3mtNIn1caKFtR/05p0aoV4hRfHuuav11qYR
+         4tTyid1yiKBpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:38:03PM +0300, Mika Westerberg wrote:
-> On Wed, Oct 23, 2019 at 10:52:53AM +0300, Mika Westerberg wrote:
-> > > Shouldn't we check for slot_status being an error response (~0)
-> > > instead of looking for PCIBIOS_DEVICE_NOT_FOUND?  There are 7 RsvdP
-> > > bits in Slot Status, so ~0 is not a valid value for the register.
-> > > 
-> > > All 16 bits of Link Status are defined, but ~0 is still an invalid
-> > > value because the Current Link Speed and Negotiated Link Width fields
-> > > only define a few valid encodings.
-> > 
-> > Indeed that's a good point. I'll try that.
-> 
-> Just checking if I understand correctly what you are suggesting.
-> 
-> Currently we use pcie_capability_read_word() and check the return value.
-> If the device is gone it returns an error and resets *val to 0. That
-> only works if pci_dev_is_disconnected() is true so we would need to do
-> something like below.
-> 
-> pciehp_check_link_active():
-> 
-> 	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> 	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-> 		return -ENODEV;
 
-Yes, I guess this is what you'd have to do.
+On 24/10/2019 15:57, Gregory CLEMENT wrote:
+> Hello Jon,
+> 
+>> On 18/10/2019 16:29, Gregory CLEMENT wrote:
+>>> When improving the CS GPIO support at core level, the SPI_CS_HIGH
+>>> has been enabled for all the CS lines used for a given SPI controller.
+>>>
+>>> However, the SPI framework allows to have on the same controller native
+>>> CS and GPIO CS. The native CS may not support the SPI_CS_HIGH, so they
+>>> should not be setup automatically.
+>>>
+>>> With this patch the setting is done only for the CS that will use a
+>>> GPIO as CS
+>>>
+>>> Fixes: f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs")
+>>> Cc: <stable@vger.kernel.org>
+>>> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>>> ---
+>>>  drivers/spi/spi.c | 18 +++++++++---------
+>>>  1 file changed, 9 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+>>> index 5414a10afd65..1b68acc28c8f 100644
+>>> --- a/drivers/spi/spi.c
+>>> +++ b/drivers/spi/spi.c
+>>> @@ -1880,15 +1880,7 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+>>>  		spi->mode |= SPI_3WIRE;
+>>>  	if (of_property_read_bool(nc, "spi-lsb-first"))
+>>>  		spi->mode |= SPI_LSB_FIRST;
+>>> -
+>>> -	/*
+>>> -	 * For descriptors associated with the device, polarity inversion is
+>>> -	 * handled in the gpiolib, so all chip selects are "active high" in
+>>> -	 * the logical sense, the gpiolib will invert the line if need be.
+>>> -	 */
+>>> -	if (ctlr->use_gpio_descriptors)
+>>> -		spi->mode |= SPI_CS_HIGH;
+>>> -	else if (of_property_read_bool(nc, "spi-cs-high"))
+>>> +	if (of_property_read_bool(nc, "spi-cs-high"))
+>>>  		spi->mode |= SPI_CS_HIGH;
+>>>  
+>>>  	/* Device DUAL/QUAD mode */
+>>> @@ -1952,6 +1944,14 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+>>>  	}
+>>>  	spi->chip_select = value;
+>>>  
+>>> +	/*
+>>> +	 * For descriptors associated with the device, polarity inversion is
+>>> +	 * handled in the gpiolib, so all gpio chip selects are "active high"
+>>> +	 * in the logical sense, the gpiolib will invert the line if need be.
+>>> +	 */
+>>> +	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
+>>> +		spi->mode |= SPI_CS_HIGH;
+>>> +
+>>
+>> This patch is causing a boot regression on one of our Tegra boards. 
+>> Bisect is pointing to this commit and reverting on top of today's -next
+>> fixes the problem. 
+>>
+>> This patch is causing the following NULL pointer crash which I assume is
+>> because we have not checked if 'ctlr->cs_gpiods' is valid before
+>> dereferencing ...
+> 
+> I've just submitted a fixe for it
+> 
+> https://patchwork.kernel.org/patch/11209839/
 
-> Or you mean that we check only for ~0 in which case we either need to
-> use pci_read_config_word() directly here or modify pcie_capability_read_word()
-> return ~0 instead of clearing it?
+Great! Thanks, Jon
 
-I *would* like to explore removing the "*val = 0" code from
-pci_capability_read*(), but not in the context of this issue.
+-- 
+nvpublic
