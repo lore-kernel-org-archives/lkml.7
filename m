@@ -2,143 +2,167 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63801CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D8BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3476B21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="ItcTVGWc"
+	by mail.kernel.org (Postfix) with ESMTP id 2EFBC20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571939527;
+	bh=hsDpjEAp46ywWUrxnhTCi5DooEkYl1jS3uW3z/8KfqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P5OAO2LqQKxRQhDrns1Rmlr20NG9dWiDnTHB/Rm99fMasvd5baScg5KC4LdnopVc3
+	 R5uWgBHa8Qf/RamxPPpZqmGMftiGwIy0b1yO38MwUNTA+/aMEQ/s5Z6hfwZfxLpsAJ
+	 J1h8CDVwp6vEDxE6OZjrhCFfveri8nGErviA81Oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394068AbfJXRvz (ORCPT
+        id S2394079AbfJXRwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:51:55 -0400
-Received: from mail-pl1-f182.google.com ([209.85.214.182]:44343 "EHLO
-        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394057AbfJXRvy (ORCPT
+        Thu, 24 Oct 2019 13:52:06 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40028 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394057AbfJXRwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:51:54 -0400
-Received: by mail-pl1-f182.google.com with SMTP id q15so12214561pll.11
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:51:54 -0700 (PDT)
+        Thu, 24 Oct 2019 13:52:05 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y81so20344750qkb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:52:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=tF/2SELAonCjUta1zWhD10pXJwE2qHwIT91x2FMVMcU=;
-        b=ItcTVGWcgUBL7MH8dVFfdUkhXO0Z0i5PPWM/g8sKszgo8cLrwFQNCQ3A4dnQsb2TE1
-         LUOdjP21CWEkS247RR26lBtQyX1H18zZRj/ImqY0cYa7GkMxGB3Ant1YrT6e6dZ33W2V
-         88YByfanT0NuQLkjmn7eIX+8E521sNaBCBhz96gORCFhs0DDDdVQDzLASxSoYc5Qk5Jg
-         Un6MjocSvGg9L8ILwpIHVmaBdeZpVfSA/46ukWobRZ9OjHLnwA5b2C9FLKXhwir/Fn3m
-         OY5TaaxCypa9cJeip8fSeYtKgX7UZAy0EL0MQCs+73WNolOjA1aEZHcSYiPB8Vrv3VuH
-         EbCw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I2Vh8208W/buzInmSGpqP83enbLuiB5igBHyJQm0B7A=;
+        b=Y6ta8XGyVwTVUYfNkxeOtxn8mnAy0nI9TEmCzj4LKbvepb3L8zZzV8eZCSXULGtlRZ
+         cWOedHCBpQEg0mUSokyTE5zPoAjKu0pPtCCJZqdaXj0Zz+AxS+kt50+17roceA6wZBGw
+         8HpHf7AfJc3JQoCg8iE5GzdCnUIJMSlteBEGfjCIKcQdFhxnFQ5yrKCATLk+oNYXWNZh
+         jcZene3v2WSkokgvL/q/DIe3jG1b6mvQbjH1g50655M0PiBBX/EmJk1w9CbjUxOpfd6Y
+         F4W8zobZLvWidP77swgwCi0R5BTndLOshRd4032Urc86Bel6RSDm5jvii9eIgDqtUOMd
+         uYSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=tF/2SELAonCjUta1zWhD10pXJwE2qHwIT91x2FMVMcU=;
-        b=t8No3oWRffRdn/UEI65d05NfyGPrwvB7IguAzmxgg//yde4EKxaAWLEVy4UebOvSFL
-         XgPfsuGIvlexjNOJuG/iaf76mj+XHVZlEbsXH6t0Uin+o7o+5SD/kpUSicsfXOx2y1TP
-         yN1frSaNZv/yWI6G8S52/64ju3uc8cKfdZUiCYmhn93BEgrXTvo1cjaIUW8ZN8hnnb3V
-         zP4KmxXTjjJCv2G1B0cHzR9fRj2eha8XkyZbWFGFNsj944xn+mrCrMC+4tKi77PghZ11
-         bTYBbtf+PiCvXuYnDU4JiLCJhnCxIejiHVOaH8iqC0Emw7TQe7agaKg+NJJ38Ay6bhhO
-         Oziw==
-X-Gm-Message-State: APjAAAWktmUQ6MO5ni2+9izyVsDdj5FWOgVQ8dW7av8c1enIzVMMUlfy
-        Mwf8UsocDfn0S0tKq8XDUGmWXWLpHAQ=
-X-Google-Smtp-Source: APXvYqxEeiS8Do8r+HAuQAZh96z/nEPdQmOdhWd+IVg9M6wNaQvIpVjKYpFMoL00QXvKV1g32bqB7Q==
-X-Received: by 2002:a17:902:8606:: with SMTP id f6mr851241plo.226.1571939514002;
-        Thu, 24 Oct 2019 10:51:54 -0700 (PDT)
-Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id z7sm10546493pfr.165.2019.10.24.10.51.52
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I2Vh8208W/buzInmSGpqP83enbLuiB5igBHyJQm0B7A=;
+        b=sc8vY7khMgHsASjzfdCiGVN1iLeiTEXIjVzWjyCmaeYe2rGU+yA6oBf+nPc8nDjsse
+         stT8QGioMMDRqlyKhZOcKfyUprWHBqaomZh6Fl5YyBLMS3uJ8uSMyZzWjg3UQEEhzwBT
+         mW+JdJv3rSI2/YzZum0zn5nO6CSCzj0QhQJ+47Kpdc8SUGgJZK9g9+QThstsWcwqi6jb
+         4vXMLBdJ79Oy7zenmG6jYZBNcxV/C0P/gZ9RP8eKxbnuzSqSqYM6kpTaptRvonTAuLp2
+         4/eZjXwI84tGSzIiciwKnvj5WPtMbszybtLeAVC9ENlxqJah7Pw5d1wdU3MfLA1ser+G
+         +EXQ==
+X-Gm-Message-State: APjAAAX5C/5r293igujzzPiAB0dFxDpZo6KoDw6gUPdM1vFkCzHgcBol
+        B2cSuyVQwpuvmaOJK1/JYdA=
+X-Google-Smtp-Source: APXvYqxNpWHM24ADFxyYHacE7pNu1H3xEOSoV2bn3cK/zMB/krk3Oy1IMW/hm1UpsAY9AynqSOMUIA==
+X-Received: by 2002:a37:8dc6:: with SMTP id p189mr14896632qkd.132.1571939524331;
+        Thu, 24 Oct 2019 10:52:04 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:b2e])
+        by smtp.gmail.com with ESMTPSA id 92sm13263541qte.30.2019.10.24.10.52.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 10:51:52 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <2794A217-0A93-44C1-B0A2-A67504A711F0@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: File system for scratch space (in HPC cluster)
-Date:   Thu, 24 Oct 2019 11:51:51 -0600
-In-Reply-To: <e143071a-b1dc-56a4-a82e-865bae4c60c1@molgen.mpg.de>
-Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Donald Buczek <buczek@molgen.mpg.de>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-References: <e143071a-b1dc-56a4-a82e-865bae4c60c1@molgen.mpg.de>
-X-Mailer: Apple Mail (2.3273)
+        Thu, 24 Oct 2019 10:52:03 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 10:52:01 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Song Liu <liu.song.a23@gmail.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: Re: [PATCH 2/2] kernfs: Allow creation with external gen + ino
+ numbers
+Message-ID: <20191024175201.GB3622521@devbig004.ftw2.facebook.com>
+References: <20191016125019.157144-1-namhyung@kernel.org>
+ <20191016125019.157144-3-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016125019.157144-3-namhyung@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 16, 2019 at 09:50:19PM +0900, Namhyung Kim wrote:
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+> index 6ebae6bbe6a5..f2e54532c110 100644
+> --- a/fs/kernfs/dir.c
+> +++ b/fs/kernfs/dir.c
+> @@ -618,10 +618,10 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
+>  					     struct kernfs_node *parent,
+>  					     const char *name, umode_t mode,
+>  					     kuid_t uid, kgid_t gid,
+> +					     u32 gen, int ino,
 
---Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+Shouldn't this be ino_t so that we can use 64bit uniq id as ino
+directly where possible?  Also, it might make more sense if ino comes
+before gen.
 
-On Oct 24, 2019, at 4:43 AM, Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->=20
-> Dear Linux folks,
->=20
->=20
-> In our cluster, we offer scratch space for temporary files. As
-> these files are temporary, we do not need any safety
-> requirements =E2=80=93 especially not those when the system crashes or
-> shuts down. So no `sync` is for example needed.
->=20
-> Are there file systems catering to this need? I couldn=E2=80=99t find
-> any? Maybe I missed some options for existing file systems.
+> @@ -635,11 +635,24 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
+>  
+>  	idr_preload(GFP_KERNEL);
+>  	spin_lock(&kernfs_idr_lock);
+> -	cursor = idr_get_cursor(&root->ino_idr);
+> -	ret = idr_alloc_cyclic(&root->ino_idr, kn, 1, 0, GFP_ATOMIC);
+> -	if (ret >= 0 && ret < cursor)
+> -		root->next_generation++;
+> -	gen = root->next_generation;
+> +
+> +	if (ino == 0) {
+> +		cursor = idr_get_cursor(&root->ino_idr);
+> +		ret = idr_alloc_cyclic(&root->ino_idr, kn, 1, 0, GFP_ATOMIC);
+> +		if (ret >= 0 && ret < cursor)
+> +			root->next_generation++;
+> +		gen = root->next_generation;
+> +	} else {
+> +		ret = idr_alloc(&root->ino_idr, kn, ino, ino + 1, GFP_ATOMIC);
+> +		if (ret != ino) {
+> +			WARN_ONCE(1, "kernfs ino was used: %d", ino);
+> +			ret = -EINVAL;
+> +		} else {
+> +			WARN_ON(root->next_generation > gen);
+> +			root->next_generation = gen;
+> +		}
+> +	}
 
-How big do you need the scratch filesystem to be?  Is it local
-to the node or does it need to be shared between nodes?  If it
-needs to be large and shared between nodes then Lustre is typically
-used for this.  If it is local and relatively small you could
-consider using tmpfs backed by swab on an NVMe flash device
-(M.2 or U.2, Optane if you can afford it) inside the node.
+Oh, I see, so the code is still depending on idr and thus the use of
+32bit ino.  Hmm....
 
-That way you get RAM-like performance for many files, with a
-larger capacity than RAM when needed (tmpfs can use swap).
+>  static inline struct kernfs_node *
+> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+> index 44c67d26c1fe..13d0d181a9f8 100644
+> --- a/kernel/cgroup/cgroup.c
+> +++ b/kernel/cgroup/cgroup.c
+> @@ -3916,16 +3916,22 @@ static int cgroup_add_file(struct cgroup_subsys_state *css, struct cgroup *cgrp,
+>  	char name[CGROUP_FILE_NAME_MAX];
+>  	struct kernfs_node *kn;
+>  	struct lock_class_key *key = NULL;
+> +	struct cgroup_root *root = cgrp->root;
+> +	int ino, gen;
+>  	int ret;
+>  
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>  	key = &cft->lockdep_key;
+>  #endif
+> +
+> +	ino = cgroup_idr_alloc(&root->cgroup_idr, NULL, false, GFP_KERNEL);
+> +	gen = root->cgroup_idr.generation;
+> +
+>  	kn = __kernfs_create_file(cgrp->kn, cgroup_file_name(cgrp, cft, name),
+>  				  cgroup_file_mode(cft),
+>  				  GLOBAL_ROOT_UID, GLOBAL_ROOT_GID,
+>  				  0, cft->kf_ops, cft,
+> -				  NULL, key);
+> +				  NULL, key, gen, ino);
 
-You might consider to mount a new tmpfs filesystem per job (no
-formatting is needed for tmpfs), and then unmount it when the job
-is done, so that the old files are automatically cleaned up.
+Can we move this to a separate patch so that this patch can be an
+identity conversion?
 
-Cheers, Andreas
+Thanks.
 
-
-
-
-
-
---Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl2x5LcACgkQcqXauRfM
-H+AO/BAAhhassljSPZNXP7jy6M2GM78gdwO+QEkZxI8+iC2Qh8ObAQt26DhtP7QA
-A0RimYBaT4yeKy5Fg5n+WVVgpUzos1s9Jb9hHSQyb49RIgSnDppfojTcfXrr5xeL
-yVzFqXsvAxDiDF15jTYyq9k8FG0BUuUgmV0BmtXUsCoRd+dQQqMW2r8QPxfKvKrI
-ue588jhz+inlYVzQM3V5GZdV+h/Dk+ztqYsCp6f/OIRuQ41gxs3+XmZm9+Vj/yaO
-3X9uOVM9uLqe8H31DDGdiRI0InDc08AlXYOhu2N9ioJrk54LYFSX4Tfo/Z1hvuPC
-CmrakEBt1y4NRiB9vOUJBhBbxx8jGXf+uqy5RYIkWuwxF5r/jeqUDl7rAR65I5MX
-SWz8AS37fubkc712L7JZoFQn/CN0U/1xoWTGH/8J5D9QeoeFl2TvK/ArLae6pC2u
-2CsmpIhVcHeSAawb4wLFYa/u6S/APiyqMY1towyWfLpDZO0ohMT5IjNE7YwIugP5
-IrtNUJEAMri58Anvrceaf8Fy2ZHeuQLRJ8uSSbkccEkSMGq6GIRXS3JkkbUJ6lsO
-9bwsJRiBmKT1yu5x1iemJlu3zJ9P0z1J+J8XMmc5mISkw1ZmR5sUY+LB3O/2zfa6
-9XVbxMVcqXAbOiTr3J/jycaBHFUtRjx9sAYeajJEoEp83osYyf4=
-=LytI
------END PGP SIGNATURE-----
-
---Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D--
+-- 
+tejun
