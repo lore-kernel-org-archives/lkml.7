@@ -2,115 +2,146 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D42CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C07ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7150A21E6F
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVwVowrm"
+	by mail.kernel.org (Postfix) with ESMTP id 4B21A20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571924638;
+	bh=caSJPvAyaGnacOClomQ1HCfNRqauq+PIcyVlnhrA6XI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XZqhz9tk9l+slmRdgKxnCzgt9CcOaptOAr72fAyJ2YcbfSulqLJUgVjuXo4PEf23P
+	 zwTmV5CpXhK7zmGk7nKLXGgD6yigvPilGeoDmXWMOrV9d2MdMtFo4WLVWqIwEc6m/h
+	 uIyZ8NMev/7NvUe4stX+O5y0cU3fMOZNJ7zN3Zdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393714AbfJXNnb (ORCPT
+        id S2393726AbfJXNn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:43:31 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39348 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393656AbfJXNn3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:43:29 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 4so23431889qki.6
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OcApvEga4pQ/hiufvVDblUpoC7Hup+MwXzzzVtEdKJs=;
-        b=cVwVowrmtSnGY7X6icWn3ocdRMNwrWeJZv7wRZE8Dh9RXt/vLtQ0weXv6xX8Dk36cQ
-         yhf6Pn5fLefJET71zSmnXF8D3y+uLiD2Mvs/+1y8z7PdtrdgtBkMAg1Qwp55RRr5XhOg
-         yRQ9EDQb3+0/E7TOYpSjYiDHZ4On/eYPDhRpNBgGz76B2GuvaHQ9Z1+dVxDJ+1j+eUVE
-         YFlaESlz3NbjCxWG2uUMCm7dQxbA/XdviZVEmeiEkU4w+edXyTfkFw7WP6645hZTEjR+
-         qKNZHGSePJ9QCgzGODl0sjDLhqvuVn9+KRjHX9GmDvyyW4ApX03xcaR9BFiH5FgZgpVt
-         2heQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OcApvEga4pQ/hiufvVDblUpoC7Hup+MwXzzzVtEdKJs=;
-        b=GelH5qRoeEluS3RU8SZsxqhezhCLguOe7sNxrawGyCKcquBC3eofFdG8bfKKDYJw0A
-         TVbWmgJJaEqTkm99e31qO5B0BGKE/jz1k23apgB1ZY6AYfHwMqK4hRdHolPOHLLptQZQ
-         x3l2dcS1jUFdZ54R1IdRWA+tVJGSuwm1tMzr3X/iN2SnBtG6PDzEyJtG4poI2YsMelPw
-         qjqAi+CPqqqGO7uR1Rd5CUfuihGxR0Zphb505BRhymKkMbG1DKCnx4SeZ/hg+S6h9prG
-         pt9OKu7LsE2McMcl98DUlpEK/E/b1+nQYGH+b73J0s2+/5FDrLu0L/0SdxuNspDKTArg
-         EmYQ==
-X-Gm-Message-State: APjAAAXh9XFUz4TK4A/kypRMWsLyrsR1mR/pz/CkaFfLSOXZQBFk/sba
-        KDxBc9+jm8MzbIwWjRZfQ59pEU1U
-X-Google-Smtp-Source: APXvYqxCfU5tjQVYt1vf1ozi/JhWh2WbPrMHcqRh6lRT4d7QKXWpC9WAt5CxOkqFD/JPJL4/G4J9hg==
-X-Received: by 2002:a37:a2d1:: with SMTP id l200mr13373114qke.158.1571924608486;
-        Thu, 24 Oct 2019 06:43:28 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id p7sm14380392qkc.21.2019.10.24.06.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 06:43:27 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1CFB04DDC9; Thu, 24 Oct 2019 10:43:25 -0300 (-03)
-Date:   Thu, 24 Oct 2019 10:43:25 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH 0/3] perf/probe: Fix available line bugs
-Message-ID: <20191024134325.GA1666@kernel.org>
-References: <157190834681.1859.7399361844806238387.stgit@devnote2>
+        Thu, 24 Oct 2019 09:43:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390977AbfJXNn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:43:57 -0400
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E1CA21872;
+        Thu, 24 Oct 2019 13:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571924635;
+        bh=caSJPvAyaGnacOClomQ1HCfNRqauq+PIcyVlnhrA6XI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tUa0Pg2Mn3DvNc6g2InTIhVUe2oTAODOSrgEYn+XRxvy6ZmrAOrFKaQOst92uuLBv
+         S2JT3ThsRk5QEXP4sUlFhdnwyxQAIQXUoiMBgk9TbC2MUBCIOlXv7xk/OclQPV869c
+         Avr220gPzM4n7H/1UF9mH9zBRsWClxGquhMFZEl8=
+Received: by mail-lj1-f176.google.com with SMTP id u22so7091590lji.7;
+        Thu, 24 Oct 2019 06:43:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAW843DnVNtoMEx79QiMR3E1dU9Oiqr/aj0hf60mEYzNUMRnDF/n
+        7K19WZNNJnkU7jyZG8djqumYIknGcjjnUPo+z6o=
+X-Google-Smtp-Source: APXvYqzONfnyNEwRsWpMnM9gNIgiRSukkKKMwEXSa9QMdk8AsXyfGNhvzssWnDDRpo2MxLwilM9jDntvj1Q+BKD6ips=
+X-Received: by 2002:a2e:9848:: with SMTP id e8mr7727758ljj.148.1571924633210;
+ Thu, 24 Oct 2019 06:43:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157190834681.1859.7399361844806238387.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191024123526.4778-1-ribalda@kernel.org> <20191024133333.GE3966@mara.localdomain>
+In-Reply-To: <20191024133333.GE3966@mara.localdomain>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Thu, 24 Oct 2019 15:43:36 +0200
+X-Gmail-Original-Message-ID: <CAPybu_2hdvq_M-8X0_-MVxSjaJ8H0x+zDRaa4Cf=b0PQtVnzmQ@mail.gmail.com>
+Message-ID: <CAPybu_2hdvq_M-8X0_-MVxSjaJ8H0x+zDRaa4Cf=b0PQtVnzmQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Documentation: media: *_DEFAULT targets for subdevs
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 24, 2019 at 06:12:27PM +0900, Masami Hiramatsu escreveu:
-> Hi,
-> 
-> Here are some bugfixes related to showing available line (--line/-L)
-> option. I found that gcc generated some subprogram DIE with only
-> range attribute but no entry_pc or low_pc attributes.
-> In that case, perf probe failed to show the available lines in that
-> subprogram (function). To fix that, I introduced some bugfixes to
-> handle such cases correctly.
+Hi Sakari
 
-Thanks, applied, next time please provide concrete examples for things
-that don't work before and gets fixed with your patches, this way we can
-more easily reproduce your steps.
+Lets say the user wants to select the active pixels. He needs to set
+the crop and the compose.
 
-- Arnaldo
- 
-> Thank you,
-> 
-> ---
-> 
-> Masami Hiramatsu (3):
->       perf/probe: Fix to find range-only function instance
->       perf/probe: Walk function lines in lexical blocks
->       perf/probe: Fix to show function entry line as probe-able
-> 
-> 
->  tools/perf/util/dwarf-aux.c |   44 ++++++++++++++++++++++++++++++++++++-------
->  tools/perf/util/dwarf-aux.h |    3 +++
->  2 files changed, 40 insertions(+), 7 deletions(-)
-> 
+1) he gets V4L2_SEL_TGT_CROP_DEFAULT
+
+2) he sets V4L2_SEL_TGT_CROP
+
+How does he knows which compose to use? What if the compose starts at
+(0,0) instead of (32,32)....?
+
+I think it is easier if
+
+3) he gets V4L2_SEL_TGT_COMPOSE_DEFAULT
+
+4) he sets V4L2_SEL_TGT_COMPOSE
+
+This is similar as how we do it today with a v4l2_device. What if we
+simply replicate that behaviour?
+
+
+Best regards
+
+On Thu, Oct 24, 2019 at 3:32 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Ricardo,
+>
+> On Thu, Oct 24, 2019 at 02:35:25PM +0200, Ricardo Ribalda Delgado wrote:
+> > Some sensors have optical blanking areas, this is, pixels that are
+> > painted and do not account for light, only noise.
+> >
+> > These special pixels are very useful for calibrating the sensor, but
+> > should not be displayed on a DEFAULT target.
+> >
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >
+> > v2: Changes by Sakari Ailus <sakari.ailus@linux.intel.com>
+> >
+> > Only change CROP_DEFAULT
+> >
+> >  Documentation/media/uapi/v4l/v4l2-selection-targets.rst | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> > index f74f239b0510..41c6674ec283 100644
+> > --- a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> > +++ b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> > @@ -38,8 +38,10 @@ of the two interfaces they are used.
+> >      * - ``V4L2_SEL_TGT_CROP_DEFAULT``
+> >        - 0x0001
+> >        - Suggested cropping rectangle that covers the "whole picture".
+> > +        This includes only active pixels and excludes other non-active
+> > +        pixels such as black pixels.
+> > +      - Yes
+> >        - Yes
+> > -      - No
+> >      * - ``V4L2_SEL_TGT_CROP_BOUNDS``
+> >        - 0x0002
+> >        - Bounds of the crop rectangle. All valid crop rectangles fit inside
+> > @@ -61,7 +63,7 @@ of the two interfaces they are used.
+> >        - 0x0101
+> >        - Suggested composition rectangle that covers the "whole picture".
+> >        - Yes
+> > -      - No
+> > +      - Yes
+>
+> This is COMPOSE_DEFAULT that wasn't meant to be changed. So with this chunk
+> dropped,
+>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>
+> >      * - ``V4L2_SEL_TGT_COMPOSE_BOUNDS``
+> >        - 0x0102
+> >        - Bounds of the compose rectangle. All valid compose rectangles fit
+>
 > --
-> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
-
--- 
-
-- Arnaldo
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
