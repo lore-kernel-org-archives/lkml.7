@@ -2,94 +2,91 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F5CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26D5CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB4F2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571884633;
-	bh=jzD/o5fFFKb4zWGB61Nq3oM/Rw9gexxnXww5qQGCnnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BYdTG6cX6677JTBhlAty3MnMjnXG8amz41U8E7TJmFZdLaYoJeWZVxSnpH8fzzUJo
-	 DYJSTrmUr+a6az/4B2AiI+hdH7WGxJe8erxNMMAyrFcCYOr74z1v5cHSaW1yTdPvJQ
-	 BVY7wb1jcekkFLiQwWzBYvABcCwMNHqCDz63QISQ=
+	by mail.kernel.org (Postfix) with ESMTP id B9CBC205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408252AbfJXChM (ORCPT
+        id S2392322AbfJXChb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 22:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40736 "EHLO mail.kernel.org"
+        Wed, 23 Oct 2019 22:37:31 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:34812 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406322AbfJXChM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 22:37:12 -0400
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9087E205ED;
-        Thu, 24 Oct 2019 02:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571884631;
-        bh=jzD/o5fFFKb4zWGB61Nq3oM/Rw9gexxnXww5qQGCnnc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QGHV+0RWpDokCcVFBTQ6ochibC6yeFefd3NENUYBx6NKaKfgAIC2LHU+i/Z0boyx6
-         QhDrVJegviiXyxWzpUxADfgu+OjZf6JsncZvsO8Db7CLGgVT6LYPBaP/5hJzfA7hBK
-         OSTURxqzz7+fkE7m8UtdRxnKX+NTmYA8LtNgTeKI=
-Date:   Thu, 24 Oct 2019 11:37:04 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        id S2390493AbfJXChb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 22:37:31 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 39FB7200345;
+        Thu, 24 Oct 2019 04:37:30 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ADA0D2000F8;
+        Thu, 24 Oct 2019 04:37:25 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D9D0E402C4;
+        Thu, 24 Oct 2019 10:37:19 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
- back old behavior
-Message-ID: <20191024023704.GA3152@redsun51.ssa.fujisawa.hgst.com>
-References: <20191023192205.97024-1-olof@lixom.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023192205.97024-1-olof@lixom.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] ARM: dts: imx6q: Add missing cooling device properties for CPUs
+Date:   Thu, 24 Oct 2019 10:34:23 +0800
+Message-Id: <1571884465-19720-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
-> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
-> the behavior was changed such that native (kernel) handling of DPC
-> got tied to whether the kernel also handled AER. While this is what
-> the standard recommends, there are BIOSes out there that lack the DPC
-> handling since it was never required in the past.
-> 
-> To make DPC still work on said platforms the same way they did before,
-> add a "pcie_ports=dpc-native" kernel parameter that can be passed in
-> if needed, while keeping defaults unchanged.
+The cooling device properties "#cooling-cells" should either be present
+for all the CPUs of a cluster or none. If these are present only for a
+subset of CPUs of a cluster then things will start falling apart as soon
+as the CPUs are brought online in a different order. For example, this
+will happen because the operating system looks for such properties in the
+CPU node it is trying to bring up, so that it can register a cooling
+device.
 
-If platform firmware wants to handle AER events, but the kernel enables
-the DPC capability, the ports will be trapping events that firmware is
-expecting to handle. Not that that's a bad thing: firmware is generally
-worse at handling these errors.
+Add such missing properties.
 
-> +/*
-> + * If the user specified "pcie_ports=dpc-native", use the PCIe services
-> + * for DPC, but cuse platform defaults for the others.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6q.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-s/cuse/use
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index d038f41..9d3be1c 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -73,6 +73,7 @@
+ 				396000	1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6QDL_CLK_ARM>,
+ 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+ 				 <&clks IMX6QDL_CLK_STEP>,
+@@ -107,6 +108,7 @@
+ 				396000	1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6QDL_CLK_ARM>,
+ 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+ 				 <&clks IMX6QDL_CLK_STEP>,
+@@ -141,6 +143,7 @@
+ 				396000	1175000
+ 			>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
++			#cooling-cells = <2>;
+ 			clocks = <&clks IMX6QDL_CLK_ARM>,
+ 				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+ 				 <&clks IMX6QDL_CLK_STEP>,
+-- 
+2.7.4
 
-> @@ -1534,9 +1534,11 @@ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
->  #ifdef CONFIG_PCIEPORTBUS
->  extern bool pcie_ports_disabled;
->  extern bool pcie_ports_native;
-> +extern bool pcie_ports_dpc_native;
->  #else
->  #define pcie_ports_disabled	true
->  #define pcie_ports_native	false
-> +#define pcie_ports_dpc_native	false
->  #endif
-
-You do not have any references to pcie_ports_dpc_native outside of files that
-require CONFIG_PCIEPORTBUS, so no need to define a default.
