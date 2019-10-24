@@ -2,86 +2,100 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6ACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA56BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135922166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571893509;
-	bh=gJ/EKDiWsyHKaqbWGzDjLkKpfS2PCdHGvPf4JF5qzMA=;
-	h=Date:From:To:CC:CC:Subject:References:In-Reply-To:List-ID:From;
-	b=fP8vBwLx80hSTrW0B4VxiUgZgTCyrUwELaqf24wfTKk9mtp+jztEnPv5tDr0Afr4/
-	 wS905FCaYuAUc7voKiCMdiVp8AlHx95UR2Ge+f8FBCPWhazGhTkR6Ya6NeClAkx3jm
-	 iekvfWkbeelb66Dk5mfe9gnJghB79lAswCI+nBbQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9D1BD20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Le9HX99k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437448AbfJXFFI (ORCPT
+        id S2408412AbfJXFTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 01:05:08 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45333 "EHLO
+        Thu, 24 Oct 2019 01:19:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45610 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbfJXFFH (ORCPT
+        with ESMTP id S2406809AbfJXFTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 01:05:07 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r1so13464610pgj.12;
-        Wed, 23 Oct 2019 22:05:07 -0700 (PDT)
+        Thu, 24 Oct 2019 01:19:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r1so13484857pgj.12;
+        Wed, 23 Oct 2019 22:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=R4Qpue11zRbP6z8jWqVbc0HPRRdY1MnnS2DG8TFSNZE=;
+        b=Le9HX99kwkofdfuaGDLYlD93OYMmAz0ui7OB+Gf9j5PKoxGXjUNHW3263e+zoqaptL
+         OPVhzCR/5Sr/81rasnbqjmWuJu+Lt2HxSVAmIrwK8vMRiNxvPW/+dwZp+xoxh6NQGvU7
+         gW5PvX/1EHqfEpBl2FXvESm3al9qUlOzNngsdEbWIZvSOK4mzMiQ1eHfxguLkn2S4NKo
+         LXbS7SRiNoKPVWw/84u/rQMkM1o1etiCcbjL60ISnE+TpjUg4az7WfxDo7KlebVknCF6
+         Sndo1Zte89XlU4wPUMML9hDajpj1HRFyNPsPwNHAEn+zbCfbC4N/NEoia5hzaAR3IA1h
+         WFmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:subject:references
-         :in-reply-to;
-        bh=G+f5MPws5w1xb4+khTasH/MQ2+uZ0KNewuOhaLIpsww=;
-        b=Dr3bnTk8rnjcUeaYarJDwAErTuX9yRxbDM5RbAlbUUj9E8R2SVOy+JnHnpoHmihlQ9
-         M312EEHisbwStpTesq+CDapLURWyiOtCcEAzBiiJIe6zbGo2dM4Cyh+ASJNOeJUSMI6Z
-         xzjbBzx0Lc2cnWb6geQGT079SNHWbO03OoxtL2NwMRJaImgsqsiVGclV/lrTZmD0ufaE
-         Ef8sgSCZXAXhDLKm7VEert5gJquCjch9rPbrSvRObA+jB758kT+ttmlAWEfR2v3GEQH9
-         guqF2kzpitYbXum/lVHu9Vt3nhQkMkZ/dyAkn7QH/rCz1BDlHT0ikIuJoqvAYhA7CDlM
-         WUIA==
-X-Gm-Message-State: APjAAAUrqsmDcCNpwObtJR0A8YRZ6WxWRVOIiT3I+0jGcKc2DK7Pdft/
-        vBmh0lb3XBrHxGgM8twqHjI=
-X-Google-Smtp-Source: APXvYqyDtRl0L6anMSVVkm+9vOzgcwuMwgxtp4NPNVgz8PfjTaOKac5Cew56HQ+sw7L21FEQ9r8aHw==
-X-Received: by 2002:a17:90a:d991:: with SMTP id d17mr4731443pjv.73.1571893506599;
-        Wed, 23 Oct 2019 22:05:06 -0700 (PDT)
-Received: from localhost ([2601:646:8a00:9810:5cfa:8da3:1021:be72])
-        by smtp.gmail.com with ESMTPSA id e184sm26235280pfa.87.2019.10.23.22.05.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 22:05:06 -0700 (PDT)
-Message-ID: <5db13102.1c69fb81.21bba.4852@mx.google.com>
-Date:   Wed, 23 Oct 2019 22:05:05 -0700
-From:   Paul Burton <paulburton@kernel.org>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MIPS: include: remove unsued header file asm/sgi/sgi.h
-References:  <20191022130919.18582-1-tbogendoerfer@suse.de>
-In-Reply-To:  <20191022130919.18582-1-tbogendoerfer@suse.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=R4Qpue11zRbP6z8jWqVbc0HPRRdY1MnnS2DG8TFSNZE=;
+        b=TRhZqNsW7hMqHIY18juiXJFr41ZTht6THsA0tqzn606f23foVnKulGPr7TIG7DPSni
+         DhybprfL5S4VZIIfS9XRBx0XDOY6vyYcJRNCRjp47Zku1ZFKfNXXASsEPki6eqpiGKY7
+         npVh971AfekyJ7wc6TWFUajoVHxR0Ky1v2lvwyA48zaX3ZLl1Ap9N9OCXjyw8Dkhr9Sv
+         XZYuIvotaUW0BkW78l7m2FpNPcyOVA6A+a/mt+xEGKpCRPGAhtp3XLVWKOCJSwtuChcL
+         hdi4TsQ+XMaX92dS8ug3RGAre7nmPWmM7fBqnX3JibsJQhhyhlY/Mesij4oebP7xFmO2
+         LJZA==
+X-Gm-Message-State: APjAAAXYdwZLDjiNqNrv+GnvgvGqEz9QJIutraG8sO3XbfNCL14BU9s/
+        pXZ8b42015HTqG2iFMH8b3sGJC3AnA==
+X-Google-Smtp-Source: APXvYqzMlJMza8lkLM/ZvnpHLH51f/SsdzAW2vS337pS4FRKKEVVkZh//Ls2n8HFeiJB3xXgqI35vg==
+X-Received: by 2002:a63:8443:: with SMTP id k64mr14828888pgd.307.1571894375723;
+        Wed, 23 Oct 2019 22:19:35 -0700 (PDT)
+Received: from localhost.localdomain ([216.52.21.4])
+        by smtp.gmail.com with ESMTPSA id q11sm7612161pgq.71.2019.10.23.22.19.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 23 Oct 2019 22:19:35 -0700 (PDT)
+From:   Praveen Chaudhary <praveen5582@gmail.com>
+X-Google-Original-From: Praveen Chaudhary <pchaudhary@linkedin.com>
+To:     fw@strlen.de
+Cc:     astracner@linkedin.com, davem@davemloft.net, kadlec@netfilter.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pablo@netfilter.org, praveen5582@gmail.com, zxu@linkedin.com
+Subject: RE: [netfilter]: Fix skb->csum calculation when netfilter
+Date:   Wed, 23 Oct 2019 22:19:33 -0700
+Message-Id: <1571894373-11188-1-git-send-email-pchaudhary@linkedin.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20191024011218.GT25052@breakpoint.cc>
+References: <20191024011218.GT25052@breakpoint.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Florian
 
-Thomas Bogendoerfer wrote:
-> asm/sgi/sgi.h is unused, time to remove it.
+Thanks for giving time for review. This fix is pretty important for SONiC OS (https://azure.github.io/SONiC/). So I really appreciate it.
 
-Applied to mips-next.
+>> inet_proto_csum_replace16 is called from many places, whereas this fix is
+>> applicable only for nf_nat_ipv6_csum_update. where we need to update
+>> skb->csum for ipv6 src/dst address change.
+>
+>Under which circumstances does inet_proto_csum_replace16 upate
+>skb->csum correctly?
 
-> commit 2409839ab6bf
-> https://git.kernel.org/mips/c/2409839ab6bf
-> 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
+inet_proto_csum_replace16 calculates skb->csum correctly if skb->csum does not include 16-bit sum of IPv6 Header i.e skb->data points to UDP\TCP\ICMPv6 header while calling __skb_checksum_complete() on packet. Function inet_proto_csum_replace16 is called from  nf_nat_ipv6_csum_update(),  nf_flow_nat_ipv6_tcp(),  nf_flow_nat_ipv6_udp() and update_ipv6_checksum(). For all nf_*() functions, inet_proto_csum_replace16() will not update skb->csum correctly\completely. 
+But I am not sure about update_ipv6_checksum() (in net/openvswitch/actions.c). This is where I seek help from experts. If even for update_ipv6_checksum(), skb->csum includes 16-bit sum of IPv6 Header then inet_proto_csum_replace16() does updates skb->csum correctly. Then our fix will be to remove below line from this function. Because change in UDP\TCP\ICMPv6 header checksum field and change in IPv6 SRC\DST address cancels each other for checksum calculation, i.e. no update to skb->csum is needed.
+```
+if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
+    skb->csum = ~csum_partial(diff, sizeof(diff),
+            ~skb->csum);
+```
+>
+>> So, I added a new function. Basically, I used a safe approach to fix it,
+>> without impacting other cases. Let me know other options,  I am open to
+>> suggestions.
+>
+>You seem to imply inet_proto_csum_replace16 is fine and only broken for ipv6
+>nat.
 
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+Yeah, as mentioned above, I took safe approach to fix only nf_nat_ipv6_csum_update() part, where I am sure that skb->csum is broken. But I am not sure if (net/openvswitch/actions.c) needs this fix or not. Consider this my lack of expertise, So kindly suggest whether net/openvswitch/actions.c needs this fix or not. Note: I may not be able to test this part. After your suggestion, I will change my patch. Again Thanks for your time. 
