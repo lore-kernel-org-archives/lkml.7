@@ -2,160 +2,190 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51723CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7EBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5DB21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571895348;
-	bh=HtXRJiY7E2WBnhLRCrWIVwj9zwzEbWwIp+kCGNGU0Vg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Agbdlc70lwEbmEf7XJVJrgypvexEpdemkJOX2RLxe2Zq5VzZ2vNiOlKQZ4jDYaVEf
-	 axDCBJFkLeqCtVpF+wvET50UBeinRUwhgm9nOF492YAQL+3O5xcU4GfHs9v0sZwfzE
-	 BkuvA/6fsMFJkeMeBjVThrH/EoFaGviJfSYWSKns=
+	by mail.kernel.org (Postfix) with ESMTP id DE47521655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408455AbfJXFfr (ORCPT
+        id S2437479AbfJXFlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 01:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390377AbfJXFfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 01:35:46 -0400
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B28CB21655;
-        Thu, 24 Oct 2019 05:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571895345;
-        bh=HtXRJiY7E2WBnhLRCrWIVwj9zwzEbWwIp+kCGNGU0Vg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tpPSOqsLnoWaoVDB4h50UjvklrLgrRrHwG3rkhRndGIgW8V6sc9hNTf4UN34hFwxd
-         EDlIQgRgR2JO3vRsExo5akPfc8ur10rMzq+eFhkh9/wE3wVVi86wgylxz9wN3JsIOW
-         jZczc3/Wgo5n0bXYOQjP4NRTDpq4bC2/PUFWinU8=
-Date:   Thu, 24 Oct 2019 08:35:34 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH 04/12] m68k: nommu: use pgtable-nopud instead of
- 4level-fixup
-Message-ID: <20191024053533.GA12281@rapoport-lnx>
-References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
- <1571822941-29776-5-git-send-email-rppt@kernel.org>
- <de03a882-fb1a-455c-7c60-84ab0c4f9674@linux-m68k.org>
+        Thu, 24 Oct 2019 01:41:08 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40244 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390377AbfJXFlI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 01:41:08 -0400
+Received: by mail-io1-f69.google.com with SMTP id 125so9948719iou.7
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 22:41:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=qTVxFo3HdO6z5TZWXw04u3dfnIn/I3qJHsYWtua5niA=;
+        b=fVYu9rondkMSbUe2nEuY6PTmsASkJJqzhFi4uJpgzAy7Gp8z/cm/L88HSQDcNL+a7W
+         vDKSymqKsI2rMQxQTjwqVlJRPxsAM4ltUPyoXTRR7dU8LUfMCkOnshlMo7jk12kLwCyl
+         xNIKEk9fp6QpsobuTqasOqik/spyGv0FgjLUD6YIqbezdcCXzrHEk9aI58tbYrozTLR2
+         hIJ+ZJGKC6zlvpOWKNdf4ya7RkynTYztiXoaWZqIwjcHOcegJjXXancIlf7j0Y2y6iBx
+         b4KisD3XFOjIWNGmkl59FiCEuQqJTeJu4z+lbebJM2fXvvb3//sKpzY0+xgxVvGBpLrK
+         P4KQ==
+X-Gm-Message-State: APjAAAUh3pXoR1j8LSINGflytZIockGVF02lONtGcrG7fvU2D6o7t1C1
+        2u0lBlizJCN7fF3IFNNMj8AFGfIqpQl0qGUCD2bj67dWz/Le
+X-Google-Smtp-Source: APXvYqxIitDkoL/+XE9OagriX+lVJtdpL/L4jMmuCArawskq6JXSx2y80ga0/MGcZ0DkpUwvpk2az4jKKier8V13JnGRACA5nxzF
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <de03a882-fb1a-455c-7c60-84ab0c4f9674@linux-m68k.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a02:b619:: with SMTP id h25mr13146316jam.40.1571895667272;
+ Wed, 23 Oct 2019 22:41:07 -0700 (PDT)
+Date:   Wed, 23 Oct 2019 22:41:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000df373f0595a17a83@google.com>
+Subject: KASAN: use-after-free Read in cma_cancel_listens
+From:   syzbot <syzbot+57a3b121df74c4eccbc7@syzkaller.appspotmail.com>
+To:     bvanassche@acm.org, danitg@mellanox.com, dledford@redhat.com,
+        jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, mhjungk@gmail.com, parav@mellanox.com,
+        shamir.rabinovitch@oracle.com, swise@opengridcomputing.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hello,
 
-On Thu, Oct 24, 2019 at 02:09:01PM +1000, Greg Ungerer wrote:
-> Hi Mike,
-> 
-> On 23/10/19 7:28 pm, Mike Rapoport wrote:
-> >From: Mike Rapoport <rppt@linux.ibm.com>
-> >
-> >The generic nommu implementation of page table manipulation takes care of
-> >folding of the upper levels and does not require fixups.
-> >
-> >Simply replace of include/asm-generic/4level-fixup.h with
-> >include/asm-generic/pgtable-nopud.h.
-> >
-> >Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> >---
-> >  arch/m68k/include/asm/pgtable_no.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> >diff --git a/arch/m68k/include/asm/pgtable_no.h b/arch/m68k/include/asm/pgtable_no.h
-> >index c18165b..ccc4568 100644
-> >--- a/arch/m68k/include/asm/pgtable_no.h
-> >+++ b/arch/m68k/include/asm/pgtable_no.h
-> >@@ -2,7 +2,7 @@
-> >  #ifndef _M68KNOMMU_PGTABLE_H
-> >  #define _M68KNOMMU_PGTABLE_H
-> >-#include <asm-generic/4level-fixup.h>
-> >+#include <asm-generic/pgtable-nopud.h>
-> >  /*
-> >   * (C) Copyright 2000-2002, Greg Ungerer <gerg@snapgear.com>
-> 
-> This fails to compile for me (targeting m5208evb_defconfig):
-> 
->   CC      init/main.o
-> In file included from ./arch/m68k/include/asm/pgtable_no.h:56:0,
->                  from ./arch/m68k/include/asm/pgtable.h:3,
->                  from ./include/linux/mm.h:99,
->                  from ./include/linux/ring_buffer.h:5,
->                  from ./include/linux/trace_events.h:6,
->                  from ./include/trace/syscall.h:7,
->                  from ./include/linux/syscalls.h:85,
->                  from init/main.c:21:
-> ./include/asm-generic/pgtable.h:738:34: error: unknown type name ‘pmd_t’
->  static inline int pmd_soft_dirty(pmd_t pmd)
->                                   ^
+syzbot found the following crash on:
 
-...
+HEAD commit:    3b7c59a1 Merge tag 'pinctrl-v5.4-2' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12b639ff600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6c03e4d33fa96d51
+dashboard link: https://syzkaller.appspot.com/bug?extid=57a3b121df74c4eccbc7
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-> scripts/Makefile.build:265: recipe for target 'init/main.o' failed
-> make[1]: *** [init/main.o] Error 1
-> Makefile:1649: recipe for target 'init' failed
-> make: *** [init] Error 2
+Unfortunately, I don't have any reproducer for this crash yet.
 
-The hunk below fixes the build.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+57a3b121df74c4eccbc7@syzkaller.appspotmail.com
 
-diff --git a/arch/m68k/include/asm/page.h b/arch/m68k/include/asm/page.h
-index c00b67a..05e1e1e 100644
---- a/arch/m68k/include/asm/page.h
-+++ b/arch/m68k/include/asm/page.h
-@@ -21,7 +21,7 @@
- /*
-  * These are used to make use of C type-checking..
-  */
--#if CONFIG_PGTABLE_LEVELS == 3
-+#if !defined(CONFIG_MMU) || CONFIG_PGTABLE_LEVELS == 3
- typedef struct { unsigned long pmd[16]; } pmd_t;
- #define pmd_val(x)	((&x)->pmd[0])
- #define __pmd(x)	((pmd_t) { { (x) }, })
- 
-> Regards
-> Greg
-> 
+==================================================================
+BUG: KASAN: use-after-free in __list_del_entry_valid+0x9c/0x100  
+lib/list_debug.c:54
+Read of size 8 at addr ffff888097eda1e8 by task syz-executor.2/15086
 
--- 
-Sincerely yours,
-Mike.
+CPU: 1 PID: 15086 Comm: syz-executor.2 Not tainted 5.4.0-rc4+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
+  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
+  kasan_report+0x26/0x50 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __list_del_entry_valid+0x9c/0x100 lib/list_debug.c:54
+  __list_del_entry include/linux/list.h:131 [inline]
+  list_del include/linux/list.h:139 [inline]
+  cma_cancel_listens+0x40/0x390 drivers/infiniband/core/cma.c:1750
+  cma_cancel_operation drivers/infiniband/core/cma.c:1778 [inline]
+  rdma_destroy_id+0x44f/0x1080 drivers/infiniband/core/cma.c:1842
+  ucma_close+0x1eb/0x2c0 drivers/infiniband/core/ucma.c:1762
+  __fput+0x2e4/0x740 fs/file_table.c:280
+  ____fput+0x15/0x20 fs/file_table.c:313
+  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x5e8/0x2190 kernel/exit.c:817
+  do_group_exit+0x15c/0x2b0 kernel/exit.c:921
+  get_signal+0x4ac/0x1d60 kernel/signal.c:2734
+  do_signal+0x37/0x640 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop arch/x86/entry/common.c:159 [inline]
+  prepare_exit_to_usermode+0x303/0x580 arch/x86/entry/common.c:194
+  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
+  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459ef9
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007faedb0c5cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000075bf28 RCX: 0000000000459ef9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000075bf28
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075bf2c
+R13: 00007ffe74d4703f R14: 00007faedb0c69c0 R15: 000000000075bf2c
+
+Allocated by task 15089:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3550
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:690 [inline]
+  __rdma_create_id+0x66/0x480 drivers/infiniband/core/cma.c:882
+  ucma_create_id+0x250/0x540 drivers/infiniband/core/ucma.c:501
+  ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
+  __vfs_write+0xb8/0x740 fs/read_write.c:494
+  vfs_write+0x275/0x590 fs/read_write.c:558
+  ksys_write+0x117/0x220 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 15272:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x115/0x200 mm/slab.c:3756
+  rdma_destroy_id+0xea2/0x1080 drivers/infiniband/core/cma.c:1877
+  ucma_close+0x1eb/0x2c0 drivers/infiniband/core/ucma.c:1762
+  __fput+0x2e4/0x740 fs/file_table.c:280
+  ____fput+0x15/0x20 fs/file_table.c:313
+  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+  get_signal+0x1ca8/0x1d60 kernel/signal.c:2528
+  do_signal+0x37/0x640 arch/x86/kernel/signal.c:815
+  exit_to_usermode_loop arch/x86/entry/common.c:159 [inline]
+  prepare_exit_to_usermode+0x303/0x580 arch/x86/entry/common.c:194
+  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
+  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888097eda000
+  which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 488 bytes inside of
+  2048-byte region [ffff888097eda000, ffff888097eda800)
+The buggy address belongs to the page:
+page:ffffea00025fb680 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0002982a08 ffffea0002561a48 ffff8880aa400e00
+raw: 0000000000000000 ffff888097eda000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888097eda080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888097eda100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff888097eda180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                           ^
+  ffff888097eda200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888097eda280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
