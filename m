@@ -2,105 +2,130 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E07CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D026CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BCA20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:23:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="A4y/omKw"
+	by mail.kernel.org (Postfix) with ESMTP id F141F205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503711AbfJXRXD (ORCPT
+        id S2503719AbfJXRXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:23:03 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25442 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389384AbfJXRXC (ORCPT
+        Thu, 24 Oct 2019 13:23:19 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:56303 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389384AbfJXRXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:23:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571937775; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=X/RbDHeP6dJCNtZcSeOTfQ0Ys48We0cjcNPbrxbaT+HuNyqTyf02W2/W83UHGjXcLp7uyqghwZRv+iomOF+0UCIT+VchmwRdlYMTtzdP9ria73hH0ZKYC0eMUaSpWVA66qqIZ2g811z960dZsHk3kNmNyEtYVo9BumXPx91nqPA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1571937775; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=4E+Rpg5l5lwQv4Fs+9WoNkjj0J33QSsoc+dKM2jzHQw=; 
-        b=jY0J4W42g7/gT5MVAVg2QkmarVk3DeBcK9umeiN04D7zT7pAT0Sw6SU68aT+2mnqZ/6JVtC3eb3EcZaG9bcWNSPXOlk/suiO1aB7LfhCDZS06n25WYEIbgO+vEPy0p6itl/vO+clvinSFRdBZfUdnbkJ3EnV4UBZh86DJB0K6dg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=JXj9iOjOYcqi2t/rG7odkldOG2QdvmfXhvIesGZXSIJ9dL0WzKfyz7yK2I2gLQjZDDtHGFBLZz+i
-    dOIrUz3ukQ0YIXqm+ridoxMuT/GKq+AGqYu8Sp1wNR7MzAOCcKnK  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571937775;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=1231; bh=4E+Rpg5l5lwQv4Fs+9WoNkjj0J33QSsoc+dKM2jzHQw=;
-        b=A4y/omKw2ab7vGPKPtYPW9TB7hWrRSema0DX7z6N8N04UC13ai9ls+e/yu7ajm+5
-        +ds6jwlLU2W3XL3h9JeqrUY3Qx/1Cu8Vr/C15+cUBpsYMVx/3Tn+g6cuIeM3XScES65
-        vQsMSR8/czHTkXWFtsFVIaxFayohNXuCGmedpKcQ=
-Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.49 [171.221.113.49]) by mx.zohomail.com
-        with SMTPS id 1571937774306831.6615968475469; Thu, 24 Oct 2019 10:22:54 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, vkoul@kernel.org, paul@crapouillou.net,
-        mark.rutland@arm.com, Zubair.Kakakhel@imgtec.com,
-        dan.j.williams@intel.com
-Subject: [PATCH 2/2 v2] dmaengine: JZ4780: Add support for the X1000.
-Date:   Fri, 25 Oct 2019 01:21:10 +0800
-Message-Id: <1571937670-30828-3-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571937670-30828-1-git-send-email-zhouyanjie@zoho.com>
-References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
- <1571937670-30828-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Thu, 24 Oct 2019 13:23:19 -0400
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Ou7W54TmqnFbEssWRvvbgNW8+4qLBBSu7XfMUuQXVxtxNVRg59cp6yDJJ9HPQyWqUAOyj11hGV
+ 3B9g0Ltci1F3/A1xdS2kcLIlfLWVCAUZafgtcaJvxWhRQl32Sp4lIim/vQn73AjezM689iU29S
+ MJZWTR4mrH1VJVcbuNE0kpPC9XvaLnH2XC9D6bSexrft96uj5qj6GX3PCOjdBmgvObnUq3O02p
+ 88CADXvikp/+uYPbaF++VnoKHy9eiFnRhlJNjrWccV62z8sOjZoF9i0bDOp5pfcyI/laY9u3iQ
+ dwk=
+X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
+   d="scan'208";a="52860411"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Oct 2019 10:23:18 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 24 Oct 2019 10:23:17 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Thu, 24 Oct 2019 10:23:15 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <ludovic.desroches@microchip.com>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <robh+dt@kernel.org>, <claudiu.beznea@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH] pinctrl: at91: Enable slewrate by default on SAM9X60
+Date:   Thu, 24 Oct 2019 20:22:34 +0300
+Message-ID: <20191024172234.5267-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for probing the dma-jz4780 driver on the X1000 Soc.
+On SAM9X60, slewrate should be enabled on pins with a switching frequency
+below 50Mhz. Since most of our pins do not exceed this value, we enable
+slewrate by default. Pins with a switching value that exceeds 50Mhz will
+have to explicitly disable slewrate.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Suggested-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 ---
- drivers/dma/dma-jz4780.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pinctrl/pinctrl-at91.c     | 4 ++--
+ include/dt-bindings/pinctrl/at91.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index cafb1cc0..5e3af48 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -1019,11 +1019,18 @@ static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
- 	.flags = JZ_SOC_DATA_ALLOW_LEGACY_DT | JZ_SOC_DATA_PROGRAMMABLE_DMA,
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 117075b5798f..c135149e84e9 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -85,8 +85,8 @@ enum drive_strength_bit {
+ 					 DRIVE_STRENGTH_SHIFT)
+ 
+ enum slewrate_bit {
+-	SLEWRATE_BIT_DIS,
+ 	SLEWRATE_BIT_ENA,
++	SLEWRATE_BIT_DIS,
  };
  
-+static const struct jz4780_dma_soc_data x1000_dma_soc_data = {
-+	.nb_channels = 8,
-+	.transfer_ord_max = 7,
-+	.flags = JZ_SOC_DATA_PROGRAMMABLE_DMA,
-+};
-+
- static const struct of_device_id jz4780_dma_dt_match[] = {
- 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
- 	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
- 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
- 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
-+	{ .compatible = "ingenic,x1000-dma", .data = &x1000_dma_soc_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
+ #define SLEWRATE_BIT_MSK(name)		(SLEWRATE_BIT_##name << SLEWRATE_SHIFT)
+@@ -669,7 +669,7 @@ static void at91_mux_sam9x60_set_slewrate(void __iomem *pio, unsigned pin,
+ {
+ 	unsigned int tmp;
+ 
+-	if (setting < SLEWRATE_BIT_DIS || setting > SLEWRATE_BIT_ENA)
++	if (setting < SLEWRATE_BIT_ENA || setting > SLEWRATE_BIT_DIS)
+ 		return;
+ 
+ 	tmp = readl_relaxed(pio + SAM9X60_PIO_SLEWR);
+diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+index 3831f91fb3ba..e8e117306b1b 100644
+--- a/include/dt-bindings/pinctrl/at91.h
++++ b/include/dt-bindings/pinctrl/at91.h
+@@ -27,8 +27,8 @@
+ #define AT91_PINCTRL_DRIVE_STRENGTH_MED			(0x2 << 5)
+ #define AT91_PINCTRL_DRIVE_STRENGTH_HI			(0x3 << 5)
+ 
+-#define AT91_PINCTRL_SLEWRATE_DIS	(0x0 << 9)
+-#define AT91_PINCTRL_SLEWRATE_ENA	(0x1 << 9)
++#define AT91_PINCTRL_SLEWRATE_ENA	(0x0 << 9)
++#define AT91_PINCTRL_SLEWRATE_DIS	(0x1 << 9)
+ 
+ #define AT91_PIOA	0
+ #define AT91_PIOB	1
 -- 
-2.7.4
-
+2.20.1
 
