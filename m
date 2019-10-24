@@ -2,113 +2,159 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55B8C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BED9CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9452166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD1321A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="RtMqzL4Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMP5pmUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438554AbfJXJam (ORCPT
+        id S2408855AbfJXJb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:30:42 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25413 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732032AbfJXJam (ORCPT
+        Thu, 24 Oct 2019 05:31:26 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37384 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732686AbfJXJb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:30:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571909381; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=WrguYXjCAtP48ftR77eMdv1x8/txy+wFKzts+xbut14CvvmE5+4yqtWJaQyixckVvhFI9/7F/K5pdQrVxcWF6xEmpyIk04g+L8TaC3btBmJ6eogB1lRi1l/mKBFYUCWQnr7JMT7t4oUlRZZLtElJ00jo5bUo7O08maFaWLinbm8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1571909381; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=3EybGsCTLxuKvUWQ2ksrSw4vKwwSU7hELaxSXjrfIyc=; 
-        b=oATNIDKZi64y1gXvWA+R608jkbf086GI586owFtU+GZRpGHD9464Xmvokwjw0Ok/NJV/rTX2J6VZESGgPvnKzB0JLYqwshADSqm2rBLdYfK3yoFpfmAnXgioX4sxoKSoI3/AMZW/rh5dTCao/MHi1KagqXZLPuehSiquuTCj71s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=LYmiRmL/b/WzL/HBXARM4GiuEfWYUmnTGaERPjQqZoqBFR1Z+7p5qDm3PK6ACwN9UjQYwDtBopTE
-    r2GD2rh6c81+ugDz3uXsY5Yp78OqX9OMP7h7SaV7O4fbVmUCJfo1  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571909381;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=1561; bh=3EybGsCTLxuKvUWQ2ksrSw4vKwwSU7hELaxSXjrfIyc=;
-        b=RtMqzL4YOqR/jFtiaF4GFNidbxLhf1sKVSLl+YxvqKHUCudokAtqQ85ABrSyPDFw
-        IwRwccTH/rbHxPDJIk5CtumcHxe5QHg/HiS5pZfp0d5SjSvOoHaPbr1UDDRYtSdS+7R
-        kV3VDAtal5AfFrgg/bGbOhL5s6qvlBri0A+5q/lo=
-Received: from zhouyanjie-virtual-machine.localdomain (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
-        with SMTPS id 1571909376311135.5670853491555; Thu, 24 Oct 2019 02:29:36 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, ralf@linux-mips.org,
-        jhogan@kernel.org, gregkh@linuxfoundation.org,
-        paul.burton@mips.com, chenhc@lemote.com, paul@crapouillou.net,
-        tglx@linutronix.de, jiaxun.yang@flygoat.com
-Subject: [PATCH 2/2] MIPS: Ingenic: Disable abandoned HPTLB function.
-Date:   Thu, 24 Oct 2019 17:29:01 +0800
-Message-Id: <1571909341-10108-3-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
-References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Thu, 24 Oct 2019 05:31:26 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e11so16542774wrv.4;
+        Thu, 24 Oct 2019 02:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6XIbW73y9ctw9e/3P96K5zJqGLVfoAK/VYWpXjJw2cg=;
+        b=XMP5pmUHvn9M98uKH+J5MZT8v5M4PCWkjafEhZUbn3F2eeF1DOLIflDiDHyJWqq+/i
+         F/KS6/w6gkyxjYy4l1Dv7ZDbB/wOtgXlNitmSlg6K4TDT4loDeB9xqdD1ZQJKyukOv8T
+         bgaMQT0ZFy2X2EZl6fsDIhAbKc09Du3rC8ATq7cJQGkgC77uh+FmMiK50UuF9KBx/uBy
+         LriRMp2Bdw7ekGE8Iccm2v1B4fthtqUgf9euw+nS9CmK5p0qQSDfD6EiLr1Mu3QJ5gw4
+         V7G+qw9j6JUCU/RvlKTO6UPQezqdO8LRbeZ5ZMvG4w7bJ/iWsuczWeBRSd8k0DIh5XTo
+         vrmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6XIbW73y9ctw9e/3P96K5zJqGLVfoAK/VYWpXjJw2cg=;
+        b=CiwP7y7k14VuxCJ5lTL9GreR8eEtQkjC5REXUjvSwpOjzhKgsDcOo+yIC4SJO3z0as
+         NRE/Kgj3XoK78Ad9CysCgQbj7S9jZ+R4xN7ekLBphMtUJjEbFz7ISqqE6AJZrYzY36/J
+         /pQEJHu8Mqx7Ms7akg7hDgKWx98SBcthsdKMTYwAzi/WQbAu81DNdG6CnmdTlXOVEJ/e
+         Oj7FyW6oR+w4u0zKjd7vY3QLoh6UxdpvRgfDVxcbidYJsDB4LHIwrayrjZNPM3LPo+M0
+         Se/p7eap68tPrPw5gyX32gYqAEjGUbM3oaz2s2WnXs86UXGg60TJeX6YxUffd6GhaDjX
+         K2vg==
+X-Gm-Message-State: APjAAAW6X9Ohh+lZJAkQEZK0jkhgcp5Bsx7iR2T4KDnhMzsLcjrSJMzh
+        p/bdfbOPMHjMTSZlBWxi7U8=
+X-Google-Smtp-Source: APXvYqwZ8rjiLOJ/UB5QcbVNrlN7zQLDzi8Rcsr89hkCErMnGSUnJEExfdTvM7cc4w4Yj9zFIeYJLQ==
+X-Received: by 2002:a5d:404d:: with SMTP id w13mr3037712wrp.185.1571909482912;
+        Thu, 24 Oct 2019 02:31:22 -0700 (PDT)
+Received: from Red (lfbn-1-7036-79.w90-116.abo.wanadoo.fr. [90.116.209.79])
+        by smtp.googlemail.com with ESMTPSA id o6sm14733871wrx.89.2019.10.24.02.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 02:31:22 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 11:31:18 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 2/4] dt-bindings: crypto: Add DT bindings
+ documentation for sun8i-ss Security System
+Message-ID: <20191024093118.GA15113@Red>
+References: <20191023201016.26195-1-clabbe.montjoie@gmail.com>
+ <20191023201016.26195-3-clabbe.montjoie@gmail.com>
+ <20191024065005.hdypdl2dgqsrry5i@gilmour>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024065005.hdypdl2dgqsrry5i@gilmour>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page
-tlb, write 0xa9000000 to cp0 config5 sel4 to disable this
-function to prevent getting stuck. Confirmed by Ingenic,
-this operation will not adversely affect processors
-without HPTLB function.
+On Thu, Oct 24, 2019 at 08:50:05AM +0200, Maxime Ripard wrote:
+> Hi,
+> 
+> On Wed, Oct 23, 2019 at 10:10:14PM +0200, Corentin Labbe wrote:
+> > This patch adds documentation for Device-Tree bindings of the
+> > Security System cryptographic offloader driver.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > ---
+> >  .../bindings/crypto/allwinner,sun8i-ss.yaml   | 64 +++++++++++++++++++
+> >  1 file changed, 64 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> > new file mode 100644
+> > index 000000000000..99b7736975bc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+> > @@ -0,0 +1,64 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/crypto/allwinner,sun8i-ss.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner Security System v2 driver
+> > +
+> > +maintainers:
+> > +  - Corentin Labbe <corentin.labbe@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - allwinner,sun8i-a83t-crypto
+> > +      - allwinner,sun9i-a80-crypto
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: Bus clock
+> > +      - description: Module clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: bus
+> > +      - const: mod
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> 
+> The A83t at least has a reset line, so please make a condition to have
+> it required.
+> 
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- arch/mips/kernel/cpu-probe.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Hello
 
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index 16033a4..cfebf8c 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -1966,11 +1966,23 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
- 	}
- 
- 	/*
--	 * The config0 register in the Xburst CPUs with a processor ID of
-+	 * The config0 register in the XBurst CPUs with a processor ID of
-+	 * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb, write
-+	 * 0xa9000000 to cp0 config5 sel4 to disable this function to
-+	 * prevent getting stuck.
-+	 */
-+	if ((c->processor_id & PRID_COMP_MASK) == PRID_COMP_INGENIC_D1) {
-+		__asm__ (
-+			"li    $2, 0xa9000000 \n\t"
-+			"mtc0  $2, $5, 4      \n\t"
-+			"nop                  \n\t"
-+			::"r"(2));
-+	/*
-+	 * The config0 register in the XBurst CPUs with a processor ID of
- 	 * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2 compatible,
- 	 * but they don't actually support this ISA.
- 	 */
--	if ((c->processor_id & PRID_COMP_MASK) == PRID_COMP_INGENIC_D0)
-+	} else if ((c->processor_id & PRID_COMP_MASK) == PRID_COMP_INGENIC_D0)
- 		c->isa_level &= ~MIPS_CPU_ISA_M32R2;
- }
- 
--- 
-2.7.4
+The A80 have one also, so I need to set minItems: 1
+But setting both minItems: 1 and maxItems:1 lead to a check failure:
+properties:resets: {'minItems': 1, 'maxItems': 1} is not valid under any of the given schemas
 
+How to do that ?
 
+Furthermore, I try to do that for interrupts and reg, since they are also mandatory and same failure.
+
+> > +  reset-names:
+> > +    const: bus
+> 
+> You don't need reset-names at all in that binding.
+
+Fixed
+
+Thanks
