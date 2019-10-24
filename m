@@ -2,157 +2,173 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E206CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D214C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BFD2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CE221929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exxfDv/k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pqYYecC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393480AbfJXNFM (ORCPT
+        id S2393498AbfJXNFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:05:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51158 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730937AbfJXNFL (ORCPT
+        Thu, 24 Oct 2019 09:05:55 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38539 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730366AbfJXNFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:05:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q13so2769170wmj.0;
-        Thu, 24 Oct 2019 06:05:09 -0700 (PDT)
+        Thu, 24 Oct 2019 09:05:55 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q78so9827541lje.5
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:05:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sc0yPCVfEQ0pK0/NGjx6W8CYcehYA6aagiijMrOtEy4=;
-        b=exxfDv/km68V7c4r9FPU52WfWb76KUvX5zkVz2NErtmjm6rlB8EFH1DOXat1A4mcph
-         QrQmRA39YPKwmyIv9FZY5HvuzdDxYgN2hKhNVeKGcwF6sEGHcJmRAfxUIZ0Waw1vNTwa
-         UhWNW9PZxwPi7HkiK0tkHEyAgl3vBf5FAIoDIXcgnI2fEA6Ypkkn+gu6+HTb46pm7kdP
-         k+mgG2U9QwyI4Irzp6ZrLwwSoSarNb2IOVMc3OrAnkqz92JXiUW+SGV0z9VYnKXCw9dc
-         4v/iWnH2NAA0ZSFqcmZ75TVo4toh5rl2X7Z4NXLep/HXAz/QDySZBThD4Nfzj1Bvl30t
-         TbkQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3v7HH2EtuoXM2xnYmFQQeluZt2onP/7EoTuMaBySF5U=;
+        b=pqYYecC9th9J+VMMUSolsRioNbW/0/V0vjiWIHl+uu0z7rYYHip2twHnjAB8pA/e4+
+         NY06bM0/dAlPMsGT91KAjlvpX1B2sYR++kMK39hV5mBasK3u+6yJPcwXOmeKsosabJcY
+         F7nlEXJnzLEY4t47EahMVbav3mRqBdpHxmO/Spi1U7knnubGN91YjpvNMrka6/ELrZzn
+         VjyCzI6mEmQ7WrDHaXFlppakXY8WS6MM+yhLTSzTQCDwxxSTzfgbABIB2vAze3KsoLlv
+         SvEtrjoPO1h0pB40w+Skj2BcKhdpx1QvMOS2UMXw3gt1T6VvPy1KyKALT5KNK43GlIV2
+         8HdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sc0yPCVfEQ0pK0/NGjx6W8CYcehYA6aagiijMrOtEy4=;
-        b=WU3uHJa8bbMFOap5m3Dp3myLlz3hOpeORlOeLp9F2xxa/SgPXctLI2cSrCa36nxYDu
-         adi/0L8oBWxq45gL+p12h6SWXbj/cm2mNmoSmJ4jIwogl/0V+rabvXBbk7Tr8eSC3cYV
-         KnOzR6jCscMe6LXiQwcYqLyFfDlKLqQTc9Bsd5oA4+bpjqiA1pWPKJBB62Duqj879Sgr
-         wMR6XGdNyczWVTuNWbu3y3UFZ4NzraGFStDN2tw5xosQmgvR/Uby65LnUuTRphaHrbct
-         7FSFPQ4iybuKnhYHXv62K9DCl6epgT8vrcskCMk9XOhdHmi6v02IR7+Qk6b1MbGG1HOo
-         tI/Q==
-X-Gm-Message-State: APjAAAX9s3XOavZ5EgGsL4PMw15mueT1EtXMXueQ0PcORhrUDUdOLxq5
-        CAgdmwLxSmQZsuabp2ODOSU=
-X-Google-Smtp-Source: APXvYqy3mBItBc7WBTEJWCzdSzT7R8VrpWyTlH9x1LISMYKss+/Eg/CcOUqTfkhwDq/TtrKFIpfAwg==
-X-Received: by 2002:a7b:cb05:: with SMTP id u5mr4534526wmj.36.1571922308834;
-        Thu, 24 Oct 2019 06:05:08 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:e187:86b0:69d4:5ba5])
-        by smtp.gmail.com with ESMTPSA id l14sm10298010wrr.37.2019.10.24.06.05.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 06:05:07 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:05:02 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        stable <stable@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH v6] taskstats: fix data-race
-Message-ID: <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com>
- <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
- <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
- <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
- <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3v7HH2EtuoXM2xnYmFQQeluZt2onP/7EoTuMaBySF5U=;
+        b=r+8HGcrWWsgb6u/T6Mq7zXYuVqO81eA/BLWNrVTxsvGEm3aWnFaMARH/LEmFKil2B6
+         7eyTEYfiR8gG931TMWhZoD7BPeJDfHVVF9x8Bsam+xHPBiYCwRSosBGxXsPZQoLOLsyP
+         wAB9JrHpW9xawwxoGGwYaRMqz1Cfp0v02d1x4ck8XUCVsmzvdcO9pRFvh6iKIe05cAxz
+         o5H/yUuxR9NDGGUPHyjZTJo3h53Z0XoCHt8f+k/sxLPlJIia2X519PAc/yiwWDkbpUyu
+         OQOwP4/LozfY9KlLX1TD7ilogI9ubq4Qm/mXoz4UScfDAvY3we8jB/So/dRpm9K/jgwf
+         E/YQ==
+X-Gm-Message-State: APjAAAVMzzpKy3EI5UVR8Q3hx85erIPzu1GaMGN3UNYdqF4pHqPHehRu
+        rQ/1aaTnO3UUI7gyDSa2+UznfGqN9Qj2v5Wislk=
+X-Google-Smtp-Source: APXvYqyCfZieYyM9plUxMjd6WgwJX7NZdXwGL0kJacHdG/yeJ3DtK/SWrNwnJoNrghLsNdJEWI+EiN9bnEo6avAv3i4=
+X-Received: by 2002:a2e:6101:: with SMTP id v1mr26121771ljb.122.1571922353123;
+ Thu, 24 Oct 2019 06:05:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191018101248.33727-1-steven.price@arm.com> <20191018101248.33727-13-steven.price@arm.com>
+In-Reply-To: <20191018101248.33727-13-steven.price@arm.com>
+From:   Zong Li <zongbox@gmail.com>
+Date:   Thu, 24 Oct 2019 21:05:41 +0800
+Message-ID: <CA+ZOyaiE2w686TmWWPT6tzu1MR3Fkm805k2hY1_VMfAnAwQPuQ@mail.gmail.com>
+Subject: Re: [PATCH v12 12/22] mm: pagewalk: Allow walking without vma
+To:     Steven Price <steven.price@arm.com>
+Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 01:51:20PM +0200, Dmitry Vyukov wrote:
-> On Thu, Oct 24, 2019 at 1:32 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> >
-> > > How these later loads can be completely independent of the pointer
-> > > value? They need to obtain the pointer value from somewhere. And this
-> > > can only be done by loaded it. And if a thread loads a pointer and
-> > > then dereferences that pointer, that's a data/address dependency and
-> > > we assume this is now covered by READ_ONCE.
-> >
-> > The "dependency" I was considering here is a dependency _between the
-> > load of sig->stats in taskstats_tgid_alloc() and the (program-order)
-> > later loads of *(sig->stats) in taskstats_exit().  Roughly speaking,
-> > such a dependency should correspond to a dependency chain at the asm
-> > or registers level from the first load to the later loads; e.g., in:
-> >
-> >   Thread [register r0 contains the address of sig->stats]
-> >
-> >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
-> >      ...
-> >   B: LOAD r2,[r0]       // LOAD *(sig->stats)
-> >   C: LOAD r3,[r2]
-> >
-> > there would be no such dependency from A to C.  Compare, e.g., with:
-> >
-> >   Thread [register r0 contains the address of sig->stats]
-> >
-> >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
-> >      ...
-> >   C: LOAD r3,[r1]       // LOAD *(sig->stats)
-> >
-> > AFAICT, there's no guarantee that the compilers will generate such a
-> > dependency from the code under discussion.
-> 
-> Fixing this by making A ACQUIRE looks like somewhat weird code pattern
-> to me (though correct). B is what loads the address used to read
-> indirect data, so B ought to be ACQUIRE (or LOAD-DEPENDS which we get
-> from READ_ONCE).
-> 
-> What you are suggesting is:
-> 
-> addr = ptr.load(memory_order_acquire);
-> if (addr) {
->   addr = ptr.load(memory_order_relaxed);
->   data = *addr;
-> }
-> 
-> whereas the canonical/non-convoluted form of this pattern is:
-> 
-> addr = ptr.load(memory_order_consume);
-> if (addr)
->   data = *addr;
+Steven Price <steven.price@arm.com> =E6=96=BC 2019=E5=B9=B410=E6=9C=8819=E6=
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=884:12=E5=AF=AB=E9=81=93=EF=BC=9A
 
-No, I'd rather be suggesting:
+>
+> Since 48684a65b4e3: "mm: pagewalk: fix misbehavior of walk_page_range
+> for vma(VM_PFNMAP)", page_table_walk() will report any kernel area as
+> a hole, because it lacks a vma.
+>
+> This means each arch has re-implemented page table walking when needed,
+> for example in the per-arch ptdump walker.
+>
+> Remove the requirement to have a vma except when trying to split huge
+> pages.
+>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  mm/pagewalk.c | 25 +++++++++++++++++--------
+>  1 file changed, 17 insertions(+), 8 deletions(-)
+>
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index fc4d98a3a5a0..4139e9163aee 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -38,7 +38,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long add=
+r, unsigned long end,
+>         do {
+>  again:
+>                 next =3D pmd_addr_end(addr, end);
+> -               if (pmd_none(*pmd) || !walk->vma) {
+> +               if (pmd_none(*pmd)) {
+>                         if (ops->pte_hole)
+>                                 err =3D ops->pte_hole(addr, next, walk);
+>                         if (err)
+> @@ -61,9 +61,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long ad=
+dr, unsigned long end,
+>                 if (!ops->pte_entry)
+>                         continue;
+>
+> -               split_huge_pmd(walk->vma, pmd, addr);
+> -               if (pmd_trans_unstable(pmd))
+> -                       goto again;
+> +               if (walk->vma) {
+> +                       split_huge_pmd(walk->vma, pmd, addr);
+> +                       if (pmd_trans_unstable(pmd))
+> +                               goto again;
+> +               } else if (pmd_leaf(*pmd)) {
+> +                       continue;
+> +               }
+> +
+>                 err =3D walk_pte_range(pmd, addr, next, walk);
+>                 if (err)
+>                         break;
+> @@ -84,7 +89,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long add=
+r, unsigned long end,
+>         do {
+>   again:
+>                 next =3D pud_addr_end(addr, end);
+> -               if (pud_none(*pud) || !walk->vma) {
+> +               if (pud_none(*pud)) {
+>                         if (ops->pte_hole)
+>                                 err =3D ops->pte_hole(addr, next, walk);
+>                         if (err)
+> @@ -98,9 +103,13 @@ static int walk_pud_range(p4d_t *p4d, unsigned long a=
+ddr, unsigned long end,
+>                                 break;
+>                 }
+>
+> -               split_huge_pud(walk->vma, pud, addr);
+> -               if (pud_none(*pud))
+> -                       goto again;
+> +               if (walk->vma) {
+> +                       split_huge_pud(walk->vma, pud, addr);
+> +                       if (pud_none(*pud))
+> +                               goto again;
+> +               } else if (pud_leaf(*pud)) {
+> +                       continue;
+> +               }
+>
+>                 if (ops->pmd_entry || ops->pte_entry)
+>                         err =3D walk_pmd_range(pud, addr, next, walk);
+> --
+> 2.20.1
+>
 
-  addr = ptr.load(memory_order_acquire);
-  if (addr)
-    data = *addr;
+It's good to me.
 
-since I'd not expect any form of encouragement to rely on "consume" or
-on "READ_ONCE() + true-address-dependency" from myself.  ;-)
-
-IAC, v6 looks more like:
-
-  addr = ptr.load(memory_order_consume);
-  if (!!addr)
-    *ptr = 1;
-  data = *ptr;
-
-to me (hence my comments/questions ...).
-
-Thanks,
-  Andrea
+Tested-by: Zong Li <zong.li@sifive.com>
