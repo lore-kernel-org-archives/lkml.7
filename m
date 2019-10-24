@@ -2,338 +2,548 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFAACA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA237CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B61520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C1220684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cGz4EQAS"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Ibji9vJE";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Ibji9vJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392959AbfJXIDn (ORCPT
+        id S2436525AbfJXIDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:03:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26243 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725783AbfJXIDm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:03:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571904221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GScdzynAifafaA4GuDkCvFIT18RuVR7Ax9npT6VQLf8=;
-        b=cGz4EQASFvVE5ZD+eNijWrlohMeYVti4sGgPTkNHvpcM9PYEXga86ORpWqvyZ2kM0VS+4Q
-        /fGUMH/BnaaWVAvssjdIDQnyLXmsfb4ttSsISz3g8KayYq30i6VLgDdTCcO7VOj5qBSO3G
-        YHIXUogBYcjRMULdHhKGVk22cOfvQ/8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-xPpbzsJpPjWn3UfKSPXlJw-1; Thu, 24 Oct 2019 04:03:38 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4C9D107AD31;
-        Thu, 24 Oct 2019 08:03:36 +0000 (UTC)
-Received: from [10.72.12.208] (ovpn-12-208.pek2.redhat.com [10.72.12.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D7A915D9DC;
-        Thu, 24 Oct 2019 08:03:25 +0000 (UTC)
-Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20191022095230.2514-1-tiwei.bie@intel.com>
- <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
- <20191023030253.GA15401@___>
- <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
- <20191023070747.GA30533@___>
- <106834b5-dae5-82b2-0f97-16951709d075@redhat.com> <20191023101135.GA6367@___>
- <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
- <20191024042155.GA21090@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
-Date:   Thu, 24 Oct 2019 16:03:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191024042155.GA21090@___>
+        Thu, 24 Oct 2019 04:03:45 -0400
+Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:64004
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725860AbfJXIDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 04:03:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X2OUT2Z+7aGZACB/eB25FMCiFYY98b/g1HOtfCBAf48=;
+ b=Ibji9vJE3DdW4aY9mwFL4tl70pHUFlWeGxvyxUSfX+6QzMy3j2bY/UkJuXWUG48yedPL6U8A8s/kExgH2GMuUtmdERDi/AkF9IPhk7OD5lzq3FgcL5f8JT/aQ/Qyuqqz45CeXI4uU99UWcWLVPr1USfpzfak8tlONTGKr8I8tvA=
+Received: from VI1PR08CA0100.eurprd08.prod.outlook.com (2603:10a6:800:d3::26)
+ by HE1PR0801MB1996.eurprd08.prod.outlook.com (2603:10a6:3:54::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.22; Thu, 24 Oct
+ 2019 08:03:32 +0000
+Received: from DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::201) by VI1PR08CA0100.outlook.office365.com
+ (2603:10a6:800:d3::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.22 via Frontend
+ Transport; Thu, 24 Oct 2019 08:03:32 +0000
+Authentication-Results: spf=fail (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT042.mail.protection.outlook.com (10.152.21.123) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.23 via Frontend Transport; Thu, 24 Oct 2019 08:03:32 +0000
+Received: ("Tessian outbound e4042aced47b:v33"); Thu, 24 Oct 2019 08:03:28 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 01e845c14af7a5bc
+X-CR-MTA-TID: 64aa7808
+Received: from 06fe89dfd3da.2 (cr-mta-lb-1.cr-mta-net [104.47.6.52])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8840981D-DE34-446D-88A1-B1E9F15AD98D.1;
+        Thu, 24 Oct 2019 08:03:23 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-ve1eur02lp2052.outbound.protection.outlook.com [104.47.6.52])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 06fe89dfd3da.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 24 Oct 2019 08:03:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VJKYv0ZoYF0wCx0ZMJB7/4hQw4A3BvcFIx5ENLmyjQhLalpiX835CvYgpry4ldHg8XrhEYDn2HryVHFdPkUwsM3iiKLv6hnFdnw1Q3SKWUmtYsqu3Kmdx5l+rcp1ZMa9WteCGEl+WrRiNf+q87+fZSExYafkU/5FbjRHCXGrGeElnO9BMnXg41zqLcCiobS12txKWFlbnPD8yc+qmoVuoHL2wqrXxWWHiq12Z+9TZLBjs7clkt0qznZlgTa/y8OhgkMXJ7BNwBgCBhA9Nd+q7lj596YnevPZF1UNKRmCMAKz53hGaTeQA7cOUviav43DITQxh1R8MXGPIOhNMSquag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X2OUT2Z+7aGZACB/eB25FMCiFYY98b/g1HOtfCBAf48=;
+ b=IznyRgltrgRl+PkBXj6tBoX3o8eVNqg2+2XVro1AgvG7O9WcWLs80ypdE67tx7oeC3hXIXEYRON/Tuq0u6yQE0Dg060Gouh79kW1vNrgno4eE8QiDUtYzRQMrXB6xAfqEvOaQ59KAUsp3KWP8Sj80p4ivqRCebYY4Ce0wbpHPKE+d4V83WMyzLxkXJpX9bKuV8q++zmmFsORXFFHxtHu0AwRKm1y4GCSNSPF/d6wSq11Ybu9Diiexyms0qJnrqutyQ9pnBDHZ9vIlvi69ZvY9oBFu2u83wSqlcntJNrFKfvAI3FSep6sjhiaU8s6IRBGaQI71ABy/wIOrdafdcRSJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X2OUT2Z+7aGZACB/eB25FMCiFYY98b/g1HOtfCBAf48=;
+ b=Ibji9vJE3DdW4aY9mwFL4tl70pHUFlWeGxvyxUSfX+6QzMy3j2bY/UkJuXWUG48yedPL6U8A8s/kExgH2GMuUtmdERDi/AkF9IPhk7OD5lzq3FgcL5f8JT/aQ/Qyuqqz45CeXI4uU99UWcWLVPr1USfpzfak8tlONTGKr8I8tvA=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB2813.eurprd08.prod.outlook.com (10.170.237.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.22; Thu, 24 Oct 2019 08:03:21 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::7d25:d1f2:e3eb:868b%6]) with mapi id 15.20.2387.023; Thu, 24 Oct 2019
+ 08:03:21 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     nd <nd@arm.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [RFC,3/3] drm/komeda: Allow non-component drm_bridge only
+ endpoints
+Thread-Topic: [RFC,3/3] drm/komeda: Allow non-component drm_bridge only
+ endpoints
+Thread-Index: AQHVfmYCVHmeR23TD0SRvLooFH2IJKddhx2A///3y4CAALR0gIAAV3AAgAAhkICAAAeWAIAADuyAgAephQCAAAHAAIAAAKIAgABiMICAAAMtgIACshCA
+Date:   Thu, 24 Oct 2019 08:03:21 +0000
+Message-ID: <2680521.ztbuDzSfBp@e123338-lin>
+References: <20191016162206.u2yo37rtqwou4oep@DESKTOP-E1NTVVP.localdomain>
+ <20191022144207.GV25745@shell.armlinux.org.uk>
+ <20191022145328.GW25745@shell.armlinux.org.uk>
+In-Reply-To: <20191022145328.GW25745@shell.armlinux.org.uk>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: xPpbzsJpPjWn3UfKSPXlJw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.51]
+x-clientproxiedby: LO2P265CA0345.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:d::21) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ade9476e-2ab6-487f-8340-08d75858a9a0
+X-MS-TrafficTypeDiagnostic: VI1PR08MB2813:|VI1PR08MB2813:|HE1PR0801MB1996:
+X-MS-Exchange-PUrlCount: 2
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR0801MB1996AD9D6BF786A312F8D3858F6A0@HE1PR0801MB1996.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-forefront-prvs: 0200DDA8BE
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(136003)(376002)(346002)(366004)(39860400002)(396003)(51914003)(189003)(199004)(3846002)(6486002)(316002)(229853002)(446003)(386003)(6916009)(11346002)(53546011)(6116002)(6436002)(2906002)(6506007)(26005)(8676002)(81156014)(476003)(8936002)(54906003)(30864003)(81166006)(6512007)(6306002)(52116002)(6246003)(66476007)(14444005)(5024004)(256004)(7736002)(86362001)(71190400001)(25786009)(102836004)(64756008)(66446008)(66556008)(71200400001)(966005)(14454004)(478600001)(33716001)(4326008)(76176011)(305945005)(5660300002)(66066001)(99286004)(486006)(66946007)(9686003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB2813;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: JAj3xBJegLOGYzebHSP9gCf+z4EwZLlBpYRjtud9igJ/eFxMTDUG6bjsyCuwVpJAjCbYJ/3Klk5vkL6c+vKHVqFQKjbkBwTXR9gd8crw8GwbY2bc555dQPGEwRIGk7pQrPkpdHgfaPA3WNLWCIE9CgwlyhY7ihs6/o6Xkefox/sj0xeBFEOFw/Z7QJYCCszpCVzilNBh5LYbLxZUBK1+Evsj6a22ZZJfFHxBx0Pi263cccOrFpiVk5sQv9XVbqblwfXPWeL8mkxFyGBK40UOqbzXk1qenrIy4K5mRnLTnYaDFIthrUOAoogPxH7Aicnph8k33S0eBhNaQ58M2+W3Zno4w0xyEfF3RDzx8VljPlKRH+ZKUcLDQmJiaNdI9XH/ssPxfKeEbuWcNQBw/aRGLQZMg5NcOtdw4a6Levuq9PblDl6w6NZMTu7Pwjyxx+im5JpwAgE32vtiB5AwInCHTcQqqztCfghWL9I0oJQfOig=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <286F3A4C8A08224799208CC2FFA7F210@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2813
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(396003)(376002)(136003)(346002)(1110001)(339900001)(51914003)(199004)(189003)(54906003)(46406003)(99286004)(5024004)(50466002)(14444005)(97756001)(316002)(6486002)(966005)(305945005)(7736002)(478600001)(26826003)(6246003)(229853002)(107886003)(6306002)(9686003)(6512007)(6862004)(30864003)(5660300002)(356004)(2906002)(23726003)(6116002)(3846002)(22756006)(33716001)(86362001)(4326008)(26005)(25786009)(186003)(102836004)(76176011)(70586007)(70206006)(6506007)(386003)(53546011)(66066001)(47776003)(76130400001)(336012)(486006)(126002)(476003)(81166006)(446003)(81156014)(11346002)(8676002)(105606002)(8936002)(8746002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1996;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 1438d893-2a6c-4dab-3756-08d75858a317
+NoDisclaimer: True
+X-Forefront-PRVS: 0200DDA8BE
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YOGk3cDMOfVCwrPxhFYJmzFdvjU1TI7Yb4dktvz7Tn8gW7jPb4Z+uOLy1tlwiFtd55QDfURsQMdVWR0x/4+oMXiVfRsZ7TXYkBA06pige/tOQ3RXcLTNKWziFfNPrZbFYDLSsF5d4qhHjE7crKJrY7pWA9QuRyVzhPz3K3XYqb6AobAQ+zjNyQ3l9j+LaZQm/TbKk8NO97R2wJM+9wFwfT69IgeiBwX/nOBDPeDd3ha4Qcmcb7i4YsrwWHE6hoEIQdurrQrdw0HDGlSnicsNazDuH0CFduQ673nfJ46lwtsSmhkXJ4EtnEnCePzb9vWWwIsY/3WcuTQcabSxOzXehf+oZIoaYYpvL8fF/52e9BcxxLX9UsOw24HyBULbCuzrdwe5mOTLSPIFR9R5+bgH9XXZSlHGEVlxkfBwNzy9DiVxGoz0m343rrXUl1Wacdzsd9bqjrlPdmOOpqkBS2z3+B6hslgmWc0jT9V++qi90xk=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2019 08:03:32.1699
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ade9476e-2ab6-487f-8340-08d75858a9a0
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1996
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Russell,
 
-On 2019/10/24 =E4=B8=8B=E5=8D=8812:21, Tiwei Bie wrote:
-> On Wed, Oct 23, 2019 at 06:29:21PM +0800, Jason Wang wrote:
->> On 2019/10/23 =E4=B8=8B=E5=8D=886:11, Tiwei Bie wrote:
->>> On Wed, Oct 23, 2019 at 03:25:00PM +0800, Jason Wang wrote:
->>>> On 2019/10/23 =E4=B8=8B=E5=8D=883:07, Tiwei Bie wrote:
->>>>> On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
->>>>>> On 2019/10/23 =E4=B8=8A=E5=8D=8811:02, Tiwei Bie wrote:
->>>>>>> On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
->>>>>>>> On 2019/10/22 =E4=B8=8B=E5=8D=885:52, Tiwei Bie wrote:
->>>>>>>>> This patch introduces a mdev based hardware vhost backend.
->>>>>>>>> This backend is built on top of the same abstraction used
->>>>>>>>> in virtio-mdev and provides a generic vhost interface for
->>>>>>>>> userspace to accelerate the virtio devices in guest.
->>>>>>>>>
->>>>>>>>> This backend is implemented as a mdev device driver on top
->>>>>>>>> of the same mdev device ops used in virtio-mdev but using
->>>>>>>>> a different mdev class id, and it will register the device
->>>>>>>>> as a VFIO device for userspace to use. Userspace can setup
->>>>>>>>> the IOMMU with the existing VFIO container/group APIs and
->>>>>>>>> then get the device fd with the device name. After getting
->>>>>>>>> the device fd of this device, userspace can use vhost ioctls
->>>>>>>>> to setup the backend.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
->>>>>>>>> ---
->>>>>>>>> This patch depends on below series:
->>>>>>>>> https://lkml.org/lkml/2019/10/17/286
->>>>>>>>>
->>>>>>>>> v1 -> v2:
->>>>>>>>> - Replace _SET_STATE with _SET_STATUS (MST);
->>>>>>>>> - Check status bits at each step (MST);
->>>>>>>>> - Report the max ring size and max number of queues (MST);
->>>>>>>>> - Add missing MODULE_DEVICE_TABLE (Jason);
->>>>>>>>> - Only support the network backend w/o multiqueue for now;
->>>>>>>> Any idea on how to extend it to support devices other than net? I =
-think we
->>>>>>>> want a generic API or an API that could be made generic in the fut=
-ure.
->>>>>>>>
->>>>>>>> Do we want to e.g having a generic vhost mdev for all kinds of dev=
-ices or
->>>>>>>> introducing e.g vhost-net-mdev and vhost-scsi-mdev?
->>>>>>> One possible way is to do what vhost-user does. I.e. Apart from
->>>>>>> the generic ring, features, ... related ioctls, we also introduce
->>>>>>> device specific ioctls when we need them. As vhost-mdev just needs
->>>>>>> to forward configs between parent and userspace and even won't
->>>>>>> cache any info when possible,
->>>>>> So it looks to me this is only possible if we expose e.g set_config =
-and
->>>>>> get_config to userspace.
->>>>> The set_config and get_config interface isn't really everything
->>>>> of device specific settings. We also have ctrlq in virtio-net.
->>>> Yes, but it could be processed by the exist API. Isn't it? Just set ct=
-rl vq
->>>> address and let parent to deal with that.
->>> I mean how to expose ctrlq related settings to userspace?
->>
->> I think it works like:
->>
->> 1) userspace find ctrl_vq is supported
->>
->> 2) then it can allocate memory for ctrl vq and set its address through
->> vhost-mdev
->>
->> 3) userspace can populate ctrl vq itself
-> I see. That is to say, userspace e.g. QEMU will program the
-> ctrl vq with the existing VHOST_*_VRING_* ioctls, and parent
-> drivers should know that the addresses used in ctrl vq are
-> host virtual addresses in vhost-mdev's case.
-
-
-That's really good point. And that means parent needs to differ vhost=20
-from virtio. It should work. But is there any chance to use DMA address?=20
-I'm asking since the API then tends to be device specific.
-
-
->
->>
->>>>>>> I think it might be better to do
->>>>>>> this in one generic vhost-mdev module.
->>>>>> Looking at definitions of VhostUserRequest in qemu, it mixed generic=
- API
->>>>>> with device specific API. If we want go this ways (a generic vhost-m=
-dev),
->>>>>> more questions needs to be answered:
->>>>>>
->>>>>> 1) How could userspace know which type of vhost it would use? Do we =
-need to
->>>>>> expose virtio subsystem device in for userspace this case?
->>>>>>
->>>>>> 2) That generic vhost-mdev module still need to filter out unsupport=
-ed
->>>>>> ioctls for a specific type. E.g if it probes a net device, it should=
- refuse
->>>>>> API for other type. This in fact a vhost-mdev-net but just not modul=
-arize it
->>>>>> on top of vhost-mdev.
->>>>>>
->>>>>>
->>>>>>>>> - Some minor fixes and improvements;
->>>>>>>>> - Rebase on top of virtio-mdev series v4;
->>>>> [...]
->>>>>>>>> +
->>>>>>>>> +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __=
-user *featurep)
->>>>>>>>> +{
->>>>>>>>> +=09if (copy_to_user(featurep, &m->features, sizeof(m->features))=
-)
->>>>>>>>> +=09=09return -EFAULT;
->>>>>>>> As discussed in previous version do we need to filter out MQ featu=
-re here?
->>>>>>> I think it's more straightforward to let the parent drivers to
->>>>>>> filter out the unsupported features. Otherwise it would be tricky
->>>>>>> when we want to add more features in vhost-mdev module,
->>>>>> It's as simple as remove the feature from blacklist?
->>>>> It's not really that easy. It may break the old drivers.
->>>> I'm not sure I understand here, we do feature negotiation anyhow. For =
-old
->>>> drivers do you mean the guest drivers without MQ?
->>> For old drivers I mean old parent drivers. It's possible
->>> to compile old drivers on new kernels.
->>
->> Yes, but if old parent driver itself can not support MQ it should just n=
-ot
->> advertise that feature.
->>
->>
->>> I'm not quite sure how will we implement MQ support in
->>> vhost-mdev.
->>
->> Yes, that's why I ask here. I think we want the vhost-mdev to be generic
->> which means it's better not let vhost-mdev to know anything which is dev=
-ice
->> specific. So this is a question that should be considered.
-> +1
->
->>
->>> If we need to introduce new virtio_mdev_device_ops
->>> callbacks and an old driver exposed the MQ feature,
->>> then the new vhost-mdev will see this old driver expose
->>> MQ feature but not provide corresponding callbacks.ean
->>
->> That's exact the issue which current API can not handle, so that's why I
->> suggest to filter MQ out for vhost-mdev.
->>
->> And in the future, we can:
->>
->> 1) invent new ioctls and convert them to config access or
->>
->> 2) just exposing config for userspace to access (then vhost-mdev work mu=
-ch
->> more similar to virtio-mdev).
->>
->>
->>>>>>> i.e. if
->>>>>>> the parent drivers may expose unsupported features and relay on
->>>>>>> vhost-mdev to filter them out, these features will be exposed
->>>>>>> to userspace automatically when they are enabled in vhost-mdev
->>>>>>> in the future.
->>>>>> The issue is, it's only that vhost-mdev knows its own limitation. E.=
-g in
->>>>>> this patch, vhost-mdev only implements a subset of transport API, bu=
-t parent
->>>>>> doesn't know about that.
->>>>>>
->>>>>> Still MQ as an example, there's no way (or no need) for parent to kn=
-ow that
->>>>>> vhost-mdev does not support MQ.
->>>>> The mdev is a MDEV_CLASS_ID_VHOST mdev device. When the parent
->>>>> is being developed, it should know the currently supported features
->>>>> of vhost-mdev.
->>>> How can parent know MQ is not supported by vhost-mdev?
->>> Good point. I agree vhost-mdev should filter out the unsupported
->>> features. But in the meantime, I think drivers also shouldn't
->>> expose unsupported features.
->>
->> Exactly. But there's a case in the middle, e.g parent drivers support MQ=
- and
->> virtio-mdev can do that but not vhost-mdev.
-> As we have different mdev class IDs between virtio-mdev and
-> vhost-mdev, maybe parent can leverage it to return different
-> sets of supported features for virtio-mdev and vhost-mdev
-> respectively.
-
-
-Yes, that should work.
-
-Thanks
-
-
->
->>
->>>>>> And this allows old kenrel to work with new
->>>>>> parent drivers.
->>>>> The new drivers should provide things like VIRTIO_MDEV_F_VERSION_1
->>>>> to be compatible with the old kernels. When VIRTIO_MDEV_F_VERSION_1
->>>>> is provided/negotiated, the behaviours should be consistent.
->>>> To be clear, I didn't mean a change in virtio-mdev API, I meant:
->>>>
->>>> 1) old vhost-mdev kernel driver that filters out MQ
->>>>
->>>> 2) new parent driver that support MQ
->>>>
->>>>
->>>>>> So basically we have three choices here:
->>>>>>
->>>>>> 1) Implement what vhost-user did and implement a generic vhost-mdev =
-(but may
->>>>>> still have lots of device specific code). To support advanced featur=
-e which
->>>>>> requires the access to config, still lots of API that needs to be ad=
-ded.
->>>>>>
->>>>>> 2) Implement what vhost-kernel did, have a generic vhost-mdev driver=
- and a
->>>>>> vhost bus on top for match a device specific API e.g vhost-mdev-net.=
- We
->>>>>> still have device specific API but limit them only to device specifi=
-c
->>>>>> module. Still require new ioctls for advanced feature like MQ.
->>>>>>
->>>>>> 3) Simply expose all virtio-mdev transport to userspace.
->>>>> Currently, virtio-mdev transport is a set of function callbacks
->>>>> defined in kernel. How to simply expose virtio-mdev transport to
->>>>> userspace?
->>>> The most straightforward way is to have an 1:1 mapping between ioctl a=
-nd
->>>> virito_mdev_device_ops.
->>> Seems we are already trying to do 1:1 mapping between ioctl
->>> and virtio_mdev_device_ops in vhost-mdev now (the major piece
->>> missing is get_device_id/get_config/set_config).
->>
->> Yes, with this we can have a device independent API. Do you think this i=
+On Tuesday, 22 October 2019 15:53:29 BST Russell King - ARM Linux admin wro=
+te:
+> On Tue, Oct 22, 2019 at 03:42:07PM +0100, Russell King - ARM Linux admin =
+wrote:
+> > On Tue, Oct 22, 2019 at 10:50:42AM +0200, Daniel Vetter wrote:
+> > > On Tue, Oct 22, 2019 at 10:48 AM Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > > I had a patches, which is why I raised the problem with the core:
+> > > >
+> > > > 6961edfee26d bridge hacks using device links
+> > > >
+> > > > but it never went further than an experiment at the time because of=
+ the
+> > > > problems in the core.  As it was a hack, it never got posted.  Seem=
 s
->> better?
-> Yeah, I agree.
->
-> Thanks,
-> Tiwei
->
->> Thanks
->>
->>
->>>
->>>> Thanks
->>>>
->>>>
->>>>>> A generic module
->>>>>> without any type specific code (like virtio-mdev). No need dedicated=
- API for
->>>>>> e.g MQ. But then the API will look much different than current vhost=
- did.
->>>>>>
->>>>>> Consider the limitation of 1) I tend to choose 2 or 3. What's you op=
-inion?
->>>>>>
->>>>>>
+> > > > that kernel tree (for the cubox) is still 5.2 based, so has a lot o=
+f
+> > > > patches and might need updating to a more recent base before anythi=
+ng
+> > > > can be tested.
+> > >=20
+> > >=20
+> > > For reference, the panel patch:
+> > >=20
+> > > https://patchwork.kernel.org/patch/10364873/
+> > >=20
+> > > And the huge discussion around bridges, that resulted in Rafael
+> > > Wyzocki fixing all the core issues:
+> > >=20
+> > > https://www.spinics.net/lists/dri-devel/msg201927.html
+> > >=20
+> > > James, do you want to look into this for bridges?
+> >=20
+> > I can now confirm that it does work.
+>=20
+> Something like this - it's based off an older kernel, so may be missing
+> some of the bridge drivers, but should be sufficient for people to test
+> with.
+
+Thanks for the patch, I tested to the limit that our driver allows at
+the moment -- rmmod'ing the bridge while the driver is not in use --
+and I don't see any issues there. komeda successfully gets removed then
+re-probed once the bridge reappears. For that part,
+
+Tested-by: Mihail Atanassov <mihail.atanassov@arm.com>
+
+I couldn't sadly check a hot unplug since we have an mm bug or two that
+I need to sort out first. If anyone else has a hot-unplug capable
+driver and can test, it'd be good to ensure that also functions
+properly.
+
+>=20
+> 8<=3D=3D=3D=3D
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+> Subject: [PATCH] drm/bridge: add support for device links to bridge
+>=20
+> Bridge devices have been a potential for kernel oops as their lifetime
+> is independent of the DRM device that they are bound to.  Hence, if a
+> bridge device is unbound while the parent DRM device is using them, the
+> parent happily continues to use the bridge device, calling the driver
+> and accessing its objects that have been freed.
+>=20
+> This can cause kernel memory corruption and kernel oops.
+>=20
+> To control this, use device links to ensure that the parent DRM device
+> is unbound when the bridge device is unbound, and when the bridge
+> device is re-bound, automatically rebind the parent DRM device.
+>=20
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> ---
+>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c  |  1 +
+>  drivers/gpu/drm/bridge/analogix-anx78xx.c     |  1 +
+>  drivers/gpu/drm/bridge/dumb-vga-dac.c         |  1 +
+>  drivers/gpu/drm/bridge/lvds-encoder.c         |  1 +
+>  .../bridge/megachips-stdpxxxx-ge-b850v3-fw.c  |  1 +
+>  drivers/gpu/drm/bridge/nxp-ptn3460.c          |  1 +
+>  drivers/gpu/drm/bridge/panel.c                |  1 +
+>  drivers/gpu/drm/bridge/parade-ps8622.c        |  1 +
+>  drivers/gpu/drm/bridge/sii902x.c              |  1 +
+>  drivers/gpu/drm/bridge/sii9234.c              |  1 +
+>  drivers/gpu/drm/bridge/sil-sii8620.c          |  1 +
+>  drivers/gpu/drm/bridge/tc358767.c             |  1 +
+>  drivers/gpu/drm/bridge/ti-tfp410.c            |  1 +
+>  drivers/gpu/drm/drm_bridge.c                  | 48 ++++++++++++++-----
+>  drivers/gpu/drm/i2c/tda998x_drv.c             |  1 +
+>  include/drm/drm_bridge.h                      |  4 ++
+>  16 files changed, 53 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/d=
+rm/bridge/adv7511/adv7511_drv.c
+> index f6d2681f6927..6a5906da58ea 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> @@ -1217,6 +1217,7 @@ static int adv7511_probe(struct i2c_client *i2c, co=
+nst struct i2c_device_id *id)
+>  		goto err_unregister_cec;
+> =20
+>  	adv7511->bridge.funcs =3D &adv7511_bridge_funcs;
+> +	adv7511->bridge.device =3D dev;
+>  	adv7511->bridge.of_node =3D dev->of_node;
+> =20
+>  	drm_bridge_add(&adv7511->bridge);
+> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/=
+bridge/analogix-anx78xx.c
+> index 3c7cc5af735c..77ff17c38037 100644
+> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+> @@ -1323,6 +1323,7 @@ static int anx78xx_i2c_probe(struct i2c_client *cli=
+ent,
+> =20
+>  	mutex_init(&anx78xx->lock);
+> =20
+> +	anx78xx->bridge.device =3D &client->dev;
+>  #if IS_ENABLED(CONFIG_OF)
+>  	anx78xx->bridge.of_node =3D client->dev.of_node;
+>  #endif
+> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/brid=
+ge/dumb-vga-dac.c
+> index d32885b906ae..40169920560e 100644
+> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> @@ -202,6 +202,7 @@ static int dumb_vga_probe(struct platform_device *pde=
+v)
+>  	}
+> =20
+>  	vga->bridge.funcs =3D &dumb_vga_bridge_funcs;
+> +	vga->bridge.device =3D &pdev->dev;
+>  	vga->bridge.of_node =3D pdev->dev.of_node;
+>  	vga->bridge.timings =3D of_device_get_match_data(&pdev->dev);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/lvds-encoder.c b/drivers/gpu/drm/brid=
+ge/lvds-encoder.c
+> index 2ab2c234f26c..5012be35a5fb 100644
+> --- a/drivers/gpu/drm/bridge/lvds-encoder.c
+> +++ b/drivers/gpu/drm/bridge/lvds-encoder.c
+> @@ -115,6 +115,7 @@ static int lvds_encoder_probe(struct platform_device =
+*pdev)
+>  	 * to look up.
+>  	 */
+>  	lvds_encoder->bridge.of_node =3D dev->of_node;
+> +	lvds_encoder->bridge.device =3D dev;
+>  	lvds_encoder->bridge.funcs =3D &funcs;
+>  	drm_bridge_add(&lvds_encoder->bridge);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c b/d=
+rivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> index 79311f8354bd..e211c57f6f56 100644
+> --- a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> +++ b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> @@ -304,6 +304,7 @@ static int stdp4028_ge_b850v3_fw_probe(struct i2c_cli=
+ent *stdp4028_i2c,
+> =20
+>  	/* drm bridge initialization */
+>  	ge_b850v3_lvds_ptr->bridge.funcs =3D &ge_b850v3_lvds_funcs;
+> +	ge_b850v3_lvds_ptr->bridge.device =3D dev;
+>  	ge_b850v3_lvds_ptr->bridge.of_node =3D dev->of_node;
+>  	drm_bridge_add(&ge_b850v3_lvds_ptr->bridge);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/nxp-ptn3460.c b/drivers/gpu/drm/bridg=
+e/nxp-ptn3460.c
+> index 98bc650b8c95..00097e314575 100644
+> --- a/drivers/gpu/drm/bridge/nxp-ptn3460.c
+> +++ b/drivers/gpu/drm/bridge/nxp-ptn3460.c
+> @@ -323,6 +323,7 @@ static int ptn3460_probe(struct i2c_client *client,
+>  	}
+> =20
+>  	ptn_bridge->bridge.funcs =3D &ptn3460_bridge_funcs;
+> +	ptn_bridge->bridge.device =3D dev;
+>  	ptn_bridge->bridge.of_node =3D dev->of_node;
+>  	drm_bridge_add(&ptn_bridge->bridge);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/pane=
+l.c
+> index b12ae3a4c5f1..eab7126f0d61 100644
+> --- a/drivers/gpu/drm/bridge/panel.c
+> +++ b/drivers/gpu/drm/bridge/panel.c
+> @@ -168,6 +168,7 @@ struct drm_bridge *drm_panel_bridge_add(struct drm_pa=
+nel *panel,
+>  	panel_bridge->panel =3D panel;
+> =20
+>  	panel_bridge->bridge.funcs =3D &panel_bridge_bridge_funcs;
+> +	panel_bridge->bridge.device =3D panel->dev;
+>  #ifdef CONFIG_OF
+>  	panel_bridge->bridge.of_node =3D panel->dev->of_node;
+>  #endif
+> diff --git a/drivers/gpu/drm/bridge/parade-ps8622.c b/drivers/gpu/drm/bri=
+dge/parade-ps8622.c
+> index 2d88146e4836..ff79df0ff183 100644
+> --- a/drivers/gpu/drm/bridge/parade-ps8622.c
+> +++ b/drivers/gpu/drm/bridge/parade-ps8622.c
+> @@ -589,6 +589,7 @@ static int ps8622_probe(struct i2c_client *client,
+>  	}
+> =20
+>  	ps8622->bridge.funcs =3D &ps8622_bridge_funcs;
+> +	ps8622->bridge.device =3D dev;
+>  	ps8622->bridge.of_node =3D dev->of_node;
+>  	drm_bridge_add(&ps8622->bridge);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/si=
+i902x.c
+> index dd7aa466b280..ef768b149bee 100644
+> --- a/drivers/gpu/drm/bridge/sii902x.c
+> +++ b/drivers/gpu/drm/bridge/sii902x.c
+> @@ -991,6 +991,7 @@ static int sii902x_probe(struct i2c_client *client,
+>  	}
+> =20
+>  	sii902x->bridge.funcs =3D &sii902x_bridge_funcs;
+> +	sii902x->bridge.device =3D dev;
+>  	sii902x->bridge.of_node =3D dev->of_node;
+>  	sii902x->bridge.timings =3D &default_sii902x_timings;
+>  	drm_bridge_add(&sii902x->bridge);
+> diff --git a/drivers/gpu/drm/bridge/sii9234.c b/drivers/gpu/drm/bridge/si=
+i9234.c
+> index 25d4ad8c7ad6..824ffaeff16e 100644
+> --- a/drivers/gpu/drm/bridge/sii9234.c
+> +++ b/drivers/gpu/drm/bridge/sii9234.c
+> @@ -936,6 +936,7 @@ static int sii9234_probe(struct i2c_client *client,
+>  	i2c_set_clientdata(client, ctx);
+> =20
+>  	ctx->bridge.funcs =3D &sii9234_bridge_funcs;
+> +	ctx->bridge.device =3D dev;
+>  	ctx->bridge.of_node =3D dev->of_node;
+>  	drm_bridge_add(&ctx->bridge);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridg=
+e/sil-sii8620.c
+> index bd3165ee5354..5bc56c5f6826 100644
+> --- a/drivers/gpu/drm/bridge/sil-sii8620.c
+> +++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+> @@ -2333,6 +2333,7 @@ static int sii8620_probe(struct i2c_client *client,
+>  	i2c_set_clientdata(client, ctx);
+> =20
+>  	ctx->bridge.funcs =3D &sii8620_bridge_funcs;
+> +	ctx->bridge.device =3D dev;
+>  	ctx->bridge.of_node =3D dev->of_node;
+>  	drm_bridge_add(&ctx->bridge);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/t=
+c358767.c
+> index 13ade28a36a8..d62c6925c5fe 100644
+> --- a/drivers/gpu/drm/bridge/tc358767.c
+> +++ b/drivers/gpu/drm/bridge/tc358767.c
+> @@ -1526,6 +1526,7 @@ static int tc_probe(struct i2c_client *client, cons=
+t struct i2c_device_id *id)
+>  		return ret;
+> =20
+>  	tc->bridge.funcs =3D &tc_bridge_funcs;
+> +	tc->bridge.device =3D dev;
+>  	tc->bridge.of_node =3D dev->of_node;
+>  	drm_bridge_add(&tc->bridge);
+> =20
+> diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/=
+ti-tfp410.c
+> index dbf35c7bc85e..2f9899d7d4b4 100644
+> --- a/drivers/gpu/drm/bridge/ti-tfp410.c
+> +++ b/drivers/gpu/drm/bridge/ti-tfp410.c
+> @@ -326,6 +326,7 @@ static int tfp410_init(struct device *dev, bool i2c)
+>  	dev_set_drvdata(dev, dvi);
+> =20
+>  	dvi->bridge.funcs =3D &tfp410_bridge_funcs;
+> +	dvi->bridge.device =3D dev;
+>  	dvi->bridge.of_node =3D dev->of_node;
+>  	dvi->bridge.timings =3D &dvi->timings;
+>  	dvi->dev =3D dev;
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index cba537c99e43..b4561ce63a49 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/mutex.h>
+> =20
+>  #include <drm/drm_bridge.h>
+> +#include <drm/drm_device.h>
+>  #include <drm/drm_encoder.h>
+> =20
+>  #include "drm_crtc_internal.h"
+> @@ -463,6 +464,32 @@ void drm_atomic_bridge_enable(struct drm_bridge *bri=
+dge,
+>  EXPORT_SYMBOL(drm_atomic_bridge_enable);
+> =20
+>  #ifdef CONFIG_OF
+> +static struct drm_bridge *drm_bridge_find(struct drm_device *dev,
+> +					  struct device_node *np, bool link)
+> +{
+> +	struct drm_bridge *bridge, *found =3D NULL;
+> +	struct device_link *dl;
+> +
+> +	mutex_lock(&bridge_lock);
+> +
+> +	list_for_each_entry(bridge, &bridge_list, list)
+> +		if (bridge->of_node =3D=3D np) {
+> +			found =3D bridge;
+> +			break;
+> +		}
+> +
+> +	if (found && link) {
+> +		dl =3D device_link_add(dev->dev, found->device,
+> +				     DL_FLAG_AUTOPROBE_CONSUMER);
+> +		if (!dl)
+> +			found =3D NULL;
+> +	}
+> +
+> +	mutex_unlock(&bridge_lock);
+> +
+> +	return found;
+> +}
+> +
+>  /**
+>   * of_drm_find_bridge - find the bridge corresponding to the device node=
+ in
+>   *			the global bridge list
+> @@ -474,21 +501,16 @@ EXPORT_SYMBOL(drm_atomic_bridge_enable);
+>   */
+>  struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+>  {
+> -	struct drm_bridge *bridge;
+> -
+> -	mutex_lock(&bridge_lock);
+> -
+> -	list_for_each_entry(bridge, &bridge_list, list) {
+> -		if (bridge->of_node =3D=3D np) {
+> -			mutex_unlock(&bridge_lock);
+> -			return bridge;
+> -		}
+> -	}
+> -
+> -	mutex_unlock(&bridge_lock);
+> -	return NULL;
+> +	return drm_bridge_find(NULL, np, false);
+>  }
+>  EXPORT_SYMBOL(of_drm_find_bridge);
+> +
+> +struct drm_bridge *of_drm_find_bridge_devlink(struct drm_device *dev,
+> +					      struct device_node *np)
+> +{
+> +	return drm_bridge_find(dev, np, true);
+> +}
+> +EXPORT_SYMBOL(of_drm_find_bridge_devlink);
+>  #endif
+> =20
+>  MODULE_AUTHOR("Ajay Kumar <ajaykumar.rs@samsung.com>");
+> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda9=
+98x_drv.c
+> index e79507fb225f..5d4122bcf7ff 100644
+> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
+> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
+> @@ -2201,6 +2201,7 @@ static int tda998x_create(struct device *dev)
+>  	}
+> =20
+>  	priv->bridge.funcs =3D &tda998x_bridge_funcs;
+> +	priv->bridge.device =3D dev;
+>  #ifdef CONFIG_OF
+>  	priv->bridge.of_node =3D dev->of_node;
+>  #endif
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 7616f6562fe4..f8a3af42a382 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -382,6 +382,8 @@ struct drm_bridge {
+>  	struct drm_encoder *encoder;
+>  	/** @next: the next bridge in the encoder chain */
+>  	struct drm_bridge *next;
+> +	/** @device: Linux driver model device */
+> +	struct device *device;
+>  #ifdef CONFIG_OF
+>  	/** @of_node: device node pointer to the bridge */
+>  	struct device_node *of_node;
+> @@ -403,6 +405,8 @@ struct drm_bridge {
+>  void drm_bridge_add(struct drm_bridge *bridge);
+>  void drm_bridge_remove(struct drm_bridge *bridge);
+>  struct drm_bridge *of_drm_find_bridge(struct device_node *np);
+> +struct drm_bridge *of_drm_find_bridge_devlink(struct drm_device *dev,
+> +					      struct device_node *np);
+>  int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *br=
+idge,
+>  		      struct drm_bridge *previous);
+> =20
+>=20
+
+
+--=20
+Mihail
+
+
 
