@@ -2,175 +2,273 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F6FCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2D6CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C0621655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FEmemtBD"
+	by mail.kernel.org (Postfix) with ESMTP id 215782070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408170AbfJXTpS (ORCPT
+        id S2437272AbfJXTqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:45:18 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58156 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407590AbfJXTpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:45:18 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9OJdhhh054750;
-        Thu, 24 Oct 2019 19:45:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=/TnQJ5UGPVxiEvHbnKiUchL/F1tRGlidcvPpnZv7wV4=;
- b=FEmemtBDIflI9JbfrghljbX94c8L6T8miPEQKi1VdsZ5iQN5+IFv56zeLYfJgJCgMPMl
- 6OkMa/lQNi92oN8lB3JWgP9Fd022ECaEEPfjJPl+KLE8H7TiKCV0p2/CnFB+WItEUqAT
- voCz74rkDC6uYA+D2KAEyaWtd81iOouTxXQQ/hWaH911NHUn+1/ZOhGmchh+BellrBVh
- xKRmripbpgYe8wPhU+WIs3b4tNO34va4wKY5po2aChRx4KjncAkNnyLrnzBgzM/ePDqP
- FQL1YuiiabqXuxGhs34queFMQ7JVTVc1RkC94XYfvNKakHBX96bFKsqMhHo2wUrgAMi6 9Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2vqu4r5nkm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Oct 2019 19:45:10 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9OJbhix099139;
-        Thu, 24 Oct 2019 19:45:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vtsk5k4rr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Oct 2019 19:45:10 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9OJj8Qc023168;
-        Thu, 24 Oct 2019 19:45:08 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 24 Oct 2019 12:45:07 -0700
-Date:   Thu, 24 Oct 2019 22:45:00 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Suwan Kim <suwan.kim027@gmail.com>
-Cc:     kbuild@lists.01.org, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, shuah@kernel.org
-Subject: Re: drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error:
- uninitialized symbol 'nents'.
-Message-ID: <20191024194500.GD23523@kadam>
-References: <20191022092839.GD10833@kadam>
- <20191023071120.GA3061@localhost.localdomain>
+        Thu, 24 Oct 2019 15:46:35 -0400
+Received: from vps-vb.mhejs.net ([37.28.154.113]:34010 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437148AbfJXTqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:46:34 -0400
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92.3)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1iNj40-0000Bu-7X; Thu, 24 Oct 2019 21:46:28 +0200
+Subject: Re: [PATCH v2] zswap: allow setting default status, compressor and
+ allocator in Kconfig
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Seth Jennings <sjenning@redhat.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vitaly Wool <vitalywool@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20191023232209.3016231-1-mail@maciej.szmigiero.name>
+ <eb65a87b-5bfe-345e-dd83-39243db717a9@suse.cz>
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mail@maciej.szmigiero.name; prefer-encrypt=mutual; keydata=
+ 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 PA==
+Message-ID: <a68081c6-17dd-11e9-311f-f6cc154e9536@maciej.szmigiero.name>
+Date:   Thu, 24 Oct 2019 21:46:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023071120.GA3061@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910240185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910240185
+In-Reply-To: <eb65a87b-5bfe-345e-dd83-39243db717a9@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 04:11:20PM +0900, Suwan Kim wrote:
-> On Tue, Oct 22, 2019 at 12:28:39PM +0300, Dan Carpenter wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   7d194c2100ad2a6dded545887d02754948ca5241
-> > commit: ea44d190764b4422af4d1c29eaeb9e69e353b406 usbip: Implement SG support to vhci-hcd and stub driver
-> > date:   7 weeks ago
-> > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > 
-> > New smatch warnings:
-> > drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error: uninitialized symbol 'nents'.
-> > 
-> > Old smatch warnings:
-> > drivers/usb/usbip/stub_rx.c:450 stub_recv_xbuff() error: uninitialized symbol 'ret'.
-> > 
-> > # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ea44d190764b4422af4d1c29eaeb9e69e353b406
-> > git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > git remote update linus
-> > git checkout ea44d190764b4422af4d1c29eaeb9e69e353b406
-> > vim +/nents +505 drivers/usb/usbip/stub_rx.c
-> > 
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  453  static void stub_recv_cmd_submit(struct stub_device *sdev,
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  454  				 struct usbip_header *pdu)
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  455  {
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  456  	struct stub_priv *priv;
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  457  	struct usbip_device *ud = &sdev->ud;
-> > 2d8f4595d1f275 drivers/staging/usbip/stub_rx.c Max Vozeler        2011-01-12  458  	struct usb_device *udev = sdev->udev;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  459  	struct scatterlist *sgl = NULL, *sg;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  460  	void *buffer = NULL;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  461  	unsigned long long buf_len;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  462  	int nents;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  463  	int num_urbs = 1;
-> > c6688ef9f29762 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  464  	int pipe = get_pipe(sdev, pdu);
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  465  	int use_sg = pdu->u.cmd_submit.transfer_flags & URB_DMA_MAP_SG;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  466  	int support_sg = 1;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  467  	int np = 0;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  468  	int ret, i;
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  469  
-> > 635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  470  	if (pipe == -1)
-> > 635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  471  		return;
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  472  
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  473  	priv = stub_priv_alloc(sdev, pdu);
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  474  	if (!priv)
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  475  		return;
-> > 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  476  
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  477  	buf_len = (unsigned long long)pdu->u.cmd_submit.transfer_buffer_length;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  478  
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  479  	/* allocate urb transfer buffer, if needed */
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  480  	if (buf_len) {
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  481  		if (use_sg) {
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  482  			sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  483  			if (!sgl)
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  484  				goto err_malloc;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  485  		} else {
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  486  			buffer = kzalloc(buf_len, GFP_KERNEL);
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  487  			if (!buffer)
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  488  				goto err_malloc;
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  489  		}
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  490  	}
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  491  
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  492  	/* Check if the server's HCD supports SG */
-> > ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  493  	if (use_sg && !udev->bus->sg_tablesize) {
-> > 
-> > Smatch thinks "use_sg" can be true when "buf_len" is zero.  It's hard
-> > to tell if Smatch is right or wrong without more context...
+On 24.10.2019 13:04, Vlastimil Babka wrote:
+> On 10/24/19 1:22 AM, Maciej S. Szmigiero wrote:
+>> The compressed cache for swap pages (zswap) currently needs from 1 to 3
+>> extra kernel command line parameters in order to make it work: it has to be
+>> enabled by adding a "zswap.enabled=1" command line parameter and if one
+>> wants a different compressor or pool allocator than the default lzo / zbud
+>> combination then these choices also need to be specified on the kernel
+>> command line in additional parameters.
+>>
+>> Using a different compressor and allocator for zswap is actually pretty
+>> common as guides often recommend using the lz4 / z3fold pair instead of
+>> the default one.
+>> In such case it is also necessary to remember to enable the appropriate
+>> compression algorithm and pool allocator in the kernel config manually.
+>>
+>> Let's avoid the need for adding these kernel command line parameters and
+>> automatically pull in the dependencies for the selected compressor
+>> algorithm and pool allocator by adding an appropriate default switches to
+>> Kconfig.
+>>
+>> The default values for these options match what the code was using
+>> previously as its defaults.
+>>
+>> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+>> ---
+>> Changes from v1:
+>> Rename CONFIG_ZSWAP_DEFAULT_COMP_* to CONFIG_ZSWAP_COMPRESSOR_DEFAULT_*
+>> and CONFIG_ZSWAP_DEFAULT_ZPOOL_* to CONFIG_ZSWAP_ZPOOL_DEFAULT_* while
+>> dropping the "_NAME" suffix from the final string option in both cases.
+>>
+>>  mm/Kconfig | 103 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>>  mm/zswap.c |  26 ++++++++------
+>>  2 files changed, 117 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/mm/Kconfig b/mm/Kconfig
+>> index a5dae9a7eb51..267316941324 100644
+>> --- a/mm/Kconfig
+>> +++ b/mm/Kconfig
+>> @@ -525,7 +525,6 @@ config MEM_SOFT_DIRTY
+>>  config ZSWAP
+>>  	bool "Compressed cache for swap pages (EXPERIMENTAL)"
+>>  	depends on FRONTSWAP && CRYPTO=y
+>> -	select CRYPTO_LZO
+>>  	select ZPOOL
+>>  	help
+>>  	  A lightweight compressed cache for swap pages.  It takes
+>> @@ -541,6 +540,108 @@ config ZSWAP
+>>  	  they have not be fully explored on the large set of potential
+>>  	  configurations and workloads that exist.
+>>  
+>> +choice
+>> +	prompt "Compressed cache for swap pages default compressor"
+>> +	depends on ZSWAP
+>> +	default ZSWAP_COMPRESSOR_DEFAULT_LZO
+>> +	help
+>> +	  Selects the default compression algorithm for the compressed cache
+>> +	  for swap pages.
+>> +	  If in doubt, select 'LZO'.
 > 
-> This is a bit strange. The meaning of "use_sg" is that client will
-> use scatter-gather and client's urb->num_sgs is not zero. And buffer
-> length should not be zero.
+> Could it e.g. suggest which one is the fastest and which most space
+> efficient?
+
+While even the algorithms themselves (CRYTPO_{DEFLATE,LZO,..}) don't
+have any particular descriptions with respect to their performance I
+guess we can add a reference to, for example, a recent benchmark of
+various in-kernel algorithms (when used for zram) that is available at
+https://lwn.net/Articles/751795/.
+This way the user will have at least some kind of reference.
+
+It is also worth noting here that similar CONFIG_PSTORE_* and
+CONFIG_RD_* options don't have detailed descriptions either.
+
+> Also does this cover all compression algorithms?
+
+Yes.
+
+> Are we going to add new
+> options if there are new ones? Wouldn't a string instead of choice be
+> sufficient here?
+
+If this is changed to a string prompt we'll lose automatic pulling in of
+an appropriate CONFIG_CRYPTO_* dependency.
+
+Other similar options are presented as a choice, too, see for example
+CONFIG_KERNEL_{GZIP,BZIP2,LZMA,XZ,LZO,LZ4,UNCOMPRESSED} and
+CONFIG_INITRAMFS_COMPRESSION_{NONE,GZIP,BZIP2,LZMA,XZ,LZO,LZ4} (that
+maps to an extension string table called CONFIG_INITRAMFS_COMPRESSION).
+
+New compression algorithm being added to the kernel is a rare event,
+I also envision that not every new algorithm will need to be presented
+as a choice for zswap default.
+
+>> +
+>> +choice
+>> +	prompt "Compressed cache for swap pages default allocator"
+>> +	depends on ZSWAP
+>> +	default ZSWAP_ZPOOL_DEFAULT_ZBUD
+>> +	help
+>> +	  Selects the default allocator for the compressed cache for
+>> +	  swap pages.
+>> +	  The default is 'zbud' for compatibility, however please do
+>> +	  read the description of each of the allocators below before
+>> +	  making a right choice.
 > 
-> usb_sg and buf_len are both client-dependent variables, so I think
-> if they have wrong value in the server side, the client must have
-> sent use_sg and buf_len with incorrect values.
-> 
-> Did this error occur when compiling?
+> It's somewhat unfortunate that the choice options don't include the
+> description and one has to go look for it elsewhere.
 
-Smatch is doing static analysis, yes.
+Could copy the allocator descriptions into these choice options but
+since the allocators themselves are literally the next set of options
+in Kconfig are their descriptions really worth repeating here?
 
-> If then, Did Smatch also consider vhci tx side?
+> Also, shouldn't the list include zsmalloc?
 
-I'm not really sure...  I can't reproduce the warning because on my
-system Smatch doesn't parse usbip_recv() correctly so it ends up
-silencing that warning.  :/
+You are right, will add zsmalloc in a respin.
 
-regards,
-dan carpenter
+>> +	  The selection made here can be overridden by using the kernel
+>> +	  command line 'zswap.zpool=' option.
+>> +
+>> +config ZSWAP_ZPOOL_DEFAULT_ZBUD
+>> +	bool "zbud"
+>> +	select ZBUD
+>> +	help
+>> +	  Use the zbud allocator as the default allocator.
+>> +
+>> +config ZSWAP_ZPOOL_DEFAULT_Z3FOLD
+>> +	bool "z3fold"
+>> +	select Z3FOLD
+>> +	help
+>> +	  Use the z3fold allocator as the default allocator.
+>> +endchoice
+>> +
+>> +config ZSWAP_ZPOOL_DEFAULT
+>> +       string
+>> +       default "zbud" if ZSWAP_ZPOOL_DEFAULT_ZBUD
+>> +       default "z3fold" if ZSWAP_ZPOOL_DEFAULT_Z3FOLD
+>> +       default ""
+>> +
+>> +config ZSWAP_DEFAULT_ON
+>> +	bool "Enable the compressed cache for swap pages by default"
+>> +	depends on ZSWAP
+>> +	help
+>> +	  If selected, the compressed cache for swap pages will be enabled
+>> +	  at boot, otherwise it will be disabled.
+>> +
+>> +	  The selection made here can be overridden by using the kernel
+>> +	  command line 'zswap.enabled=' option.
+>> +
+>>  config ZPOOL
+>>  	tristate "Common API for compressed memory storage"
+>>  	help
+>> diff --git a/mm/zswap.c b/mm/zswap.c
+>> index 46a322316e52..71795b6f5b71 100644
+>> --- a/mm/zswap.c
 
+Thanks,
+Maciej
