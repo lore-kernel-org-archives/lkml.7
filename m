@@ -2,479 +2,115 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168BCCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88852CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D75FE205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE5F21906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gu2EmY8T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cChmRdzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503653AbfJXQjT (ORCPT
+        id S2503665AbfJXQjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:39:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42279 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503636AbfJXQjQ (ORCPT
+        Thu, 24 Oct 2019 12:39:21 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44749 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503655AbfJXQjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:39:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so17039194wrs.9
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:39:15 -0700 (PDT)
+        Thu, 24 Oct 2019 12:39:20 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z22so18269402qtq.11;
+        Thu, 24 Oct 2019 09:39:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=sngj5o7xGqkV7qLAUdwJIeVbqtdWhiZfcov4EWWcqNw=;
-        b=gu2EmY8T4fHww6db/Ps4E+DzcyakXOegNWEK+k+nCJBavbQOa3coQ2lLDuLLKpJgH0
-         527sNalb8QrTyi16p3DfITfSx5Uh69Exsq2JOE5TJeLj6XP0RQhsbmm/y5o4ArWSOXT8
-         yRbTAwvueOgdrfReKGZhjfTNT1DmuokenN3BY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1qxEej9ZhTTEroEC+KQyp8Bt7h8gyIv3VgjtcTdAbGc=;
+        b=cChmRdzX28Kw1sZcn+RGsEflTdu+W0jowQ985PnjZ9JMREt9BwXphzbCAZw7enPVRO
+         FK3gUvfSYrD5tWP9/Xzr9PX7cpuu7ymqz6odOX8F4rK1198PnxVJ0rnX+6/UdzGP/sms
+         VXbz+zNUgnuMB11mVCofXcA3L1BGMVeXGx41c1C9ItAgdMzJ/jZbmyVj6+081eI4A8PW
+         ySnhjBu1TgDfl2QSn9S1KjUnMcbRvi9x6QpHUORPLiWZBgtnqTS8mwyZDCznUiEDFJdW
+         PDRnNI2VZ3f2RR0CqGFo2bCFtka+FIkrrKZine4AAuMzOqykTtuqDrYKTLrCDuuqnBgh
+         9J4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=sngj5o7xGqkV7qLAUdwJIeVbqtdWhiZfcov4EWWcqNw=;
-        b=ALfaWKOSPFI57OIiD0KLIyev4glO/Q+F05mNLiE28+TkxKEovPvKlYVy5JsLllS5iW
-         4nU32QVUr4K/szBC5nFeE51BR1WyeCmXZU76yHTUTcusaH0u/27yEHFp1DveQNjNWIbt
-         fHS/bMM+mcx5hLmeifpFNeHVAyZc7Estu1VmnO61/+cPFRgtoxlGnIPoM5NvFcrzqJ6E
-         WDCdsR4Z2eyWll4UwFIfC0QoaNtA5bFErBd5+2VxirRijs+KGbHCODKl4qEvbXLgYhFg
-         IZ13VQJXtS9Fehs3XeDrbrEfPZ4bTsCqdYRkyjY6Z/FoLvqhZMs/UpqVfslrrKn2NEid
-         u0qQ==
-X-Gm-Message-State: APjAAAWMOfbouBW5zbrDleh5U0wdSJNkewDcxuH+LtRKEcibCI3ow1cy
-        XnJ5b2GlZedLdMiiGuHQcIr/hm+da4zVJpx+XAthPIrNCfr4diFwVRA8HNEyxZBH+a3K+CiazyH
-        2nadLep4+aUKc4ZBrQYg9Jd7+lIcTaW0aecvzcMesPOcQ5PUQZvgQwMuLQhSqs6R+SAs+63O17e
-        AUy7Ry+mT6axI=
-X-Google-Smtp-Source: APXvYqyjhwovBTIEeMIpp6iSPZUvbueC+kdSnLk0tQnTPL2W+dwVPjZ4eNHddf0WxnYytVJv5c2dZQ==
-X-Received: by 2002:adf:9f08:: with SMTP id l8mr4473943wrf.325.1571935153628;
-        Thu, 24 Oct 2019 09:39:13 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id c16sm13340678wrw.32.2019.10.24.09.39.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 09:39:12 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] gpio: Add xgs-iproc driver
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191024004816.5539-1-chris.packham@alliedtelesis.co.nz>
- <20191024004816.5539-3-chris.packham@alliedtelesis.co.nz>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <94183c8d-6ab2-50a4-a1a3-5348a2e1d8da@broadcom.com>
-Date:   Thu, 24 Oct 2019 09:39:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1qxEej9ZhTTEroEC+KQyp8Bt7h8gyIv3VgjtcTdAbGc=;
+        b=BT1TNt6aLAJhRYbOpxalS7aHdaTGP2vhQEhNiBiXXcGfysIIxkMERg9JdsaxtaOcbl
+         dJjyfM/Ua1/QhlXRLNul5QR3KOMkZxG2iv9//TX5NeWakqhun3I6cba7PMiqgPtB0wxC
+         6v3ODynnXNTZ5UAkPe1Sw7gzyIynBsELqCF+Cs4fcjOX4nCAO9qLoH3oj74SSI3+a9pl
+         F2KPJ0zuClpytLEr2VEoRMauoqoUW/i890uGpR1vqWlRIaLQ6hfXaBoHv1U+/wet4hOe
+         r34Z3jz0bLit1bokVfDxaMjqa4zhDqGcFNWW2916J0dJSXoU8juNxVoNZpqY2N0KaVu7
+         A8Pg==
+X-Gm-Message-State: APjAAAWJ7jSIT8KAYWT3j0OYATeaQWfYYIURWQma9ctyGWyf/TegG2jS
+        7hFvIWV6HNGF1nc7feN/vNM=
+X-Google-Smtp-Source: APXvYqx5wkL3B+B9EVLQiK3NwD0XfT33+WW76uAeEeNoCepjIHPbYXy9SGJ7HSpve1JTxF1pjnaCwA==
+X-Received: by 2002:a0c:fe45:: with SMTP id u5mr15592957qvs.17.1571935157520;
+        Thu, 24 Oct 2019 09:39:17 -0700 (PDT)
+Received: from localhost.localdomain ([201.53.210.37])
+        by smtp.gmail.com with ESMTPSA id l15sm14660121qkj.16.2019.10.24.09.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 09:39:16 -0700 (PDT)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, sudipm.mukherjee@gmail.com,
+        teddy.wang@siliconmotion.com, gregkh@linuxfoundation.org,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        trivial@kernel.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH 3/3] staging: sm750fb: align arguments with open parenthesis in file sm750_cursor.h
+Date:   Thu, 24 Oct 2019 13:38:22 -0300
+Message-Id: <20191024163822.7157-4-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191024163822.7157-1-gabrielabittencourt00@gmail.com>
+References: <20191024163822.7157-1-gabrielabittencourt00@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191024004816.5539-3-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+Cleans up checks of "Alignment should match open parenthesis"
+in file sm750_cursor.h
 
-Some cleanups.
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+---
+ drivers/staging/sm750fb/sm750_cursor.h | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-On 2019-10-23 5:48 p.m., Chris Packham wrote:
-> This driver supports the Chip Common A GPIO controller present on a
-> number of Broadcom switch ASICs with integrated SoCs. The controller is
-> similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
-> different enough that a separate driver is required.
->
-> This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
-> support (pinctrl-iproc-gpio covers CCB).
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->
-> Notes:
->      Changes in v3:
->      - prefix local #defines with 'IPROC'
->      - use {readl,writel}_relaxed
->      - remove unnecessary headers
->      - actually use spinlock to guard hardware accesses
->      
->      Changes in v2:
->      - use more of the generic infrastructure for gpio chips
->      - handling the root interrupt is still done manually due to sharing with uart0.
->
->   drivers/gpio/Kconfig          |   9 +
->   drivers/gpio/Makefile         |   1 +
->   drivers/gpio/gpio-xgs-iproc.c | 321 ++++++++++++++++++++++++++++++++++
->   3 files changed, 331 insertions(+)
->   create mode 100644 drivers/gpio/gpio-xgs-iproc.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 38e096e6925f..4b3c0f8397d7 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -156,6 +156,15 @@ config GPIO_BRCMSTB
->   	help
->   	  Say yes here to enable GPIO support for Broadcom STB (BCM7XXX) SoCs.
->   
-> +config GPIO_XGS_IPROC
-Place config option in alpha order in this file, like the rest of the 
-config options.  Perhaps change the name to CONFIG_BCM_GPIO_XGS_IPROC
-> +	tristate "BRCM XGS iProc GPIO support"
-> +	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-> +	select GPIO_GENERIC
-> +	select GPIOLIB_IRQCHIP
-> +	default ARCH_BCM_IPROC
-> +	help
-> +	  Say yes here to enable GPIO support for Broadcom XGS iProc SoCs.
-> +
->   config GPIO_CADENCE
->   	tristate "Cadence GPIO support"
->   	depends on OF_GPIO
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index d2fd19c15bae..3783c3d43fbe 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -37,6 +37,7 @@ obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
->   obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
->   obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
->   obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
-> +obj-$(CONFIG_GPIO_XGS_IPROC)		+= gpio-xgs-iproc.o
-config options are in alpha order
->   obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
->   obj-$(CONFIG_GPIO_CADENCE)		+= gpio-cadence.o
->   obj-$(CONFIG_GPIO_CLPS711X)		+= gpio-clps711x.o
-> diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.c
-> new file mode 100644
-> index 000000000000..fcf41cf9efc3
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-xgs-iproc.c
-> @@ -0,0 +1,321 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2017 Broadcom Corporation
-Change "Broadcom Corporation" to "Broadcom."
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-#includes should be in alpha order
-> +
-> +#define IPROC_CCA_INT_F_GPIOINT		BIT(0)
-> +#define IPROC_CCA_INT_STS		0x20
-> +#define IPROC_CCA_INT_MASK		0x24
-> +
-> +#define IPROC_GPIO_CCA_DIN		0x0
-> +#define IPROC_GPIO_CCA_DOUT		0x4
-> +#define IPROC_GPIO_CCA_OUT_EN		0x8
-> +#define IPROC_GPIO_CCA_INT_LEVEL	0x10
-> +#define IPROC_GPIO_CCA_INT_LEVEL_MASK	0x14
-> +#define IPROC_GPIO_CCA_INT_EVENT	0x18
-> +#define IPROC_GPIO_CCA_INT_EVENT_MASK	0x1C
-> +#define IPROC_GPIO_CCA_INT_EDGE		0x24
-> +
-> +struct iproc_gpio_chip {
-> +	struct irq_chip irqchip;
-> +	struct gpio_chip gc;
-> +	spinlock_t lock;
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	void __iomem *intr;
-> +};
-> +
-> +static inline struct iproc_gpio_chip *
-> +to_iproc_gpio(struct gpio_chip *gc)
-> +{
-> +	return container_of(gc, struct iproc_gpio_chip, gc);
-> +}
-> +
-> +static void iproc_gpio_irq_ack(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct iproc_gpio_chip *chip = to_iproc_gpio(gc);
-> +	int pin = d->hwirq;
-> +	unsigned long flags;
-> +	u32 irq = d->irq;
-> +	u32 irq_type, event_status = 0;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	irq_type = irq_get_trigger_type(irq);
-> +	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-> +		event_status |= BIT(pin);
-> +		writel_relaxed(event_status,
-> +			       chip->base + IPROC_GPIO_CCA_INT_EVENT);
-> +	}
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +}
-> +
-> +static void iproc_gpio_irq_unmask(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct iproc_gpio_chip *chip = to_iproc_gpio(gc);
-> +	int pin = d->hwirq;
-> +	unsigned long flags;
-> +	u32 irq = d->irq;
-> +	u32 int_mask, irq_type, event_mask;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	irq_type = irq_get_trigger_type(irq);
-> +	event_mask = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-> +	int_mask = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-> +
-> +	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-> +		event_mask |= 1 << pin;
-> +		writel_relaxed(event_mask,
-> +			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-> +	} else {
-> +		int_mask |= 1 << pin;
-> +		writel_relaxed(int_mask,
-> +			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-> +	}
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +}
-> +
-> +static void iproc_gpio_irq_mask(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct iproc_gpio_chip *chip = to_iproc_gpio(gc);
-> +	int pin = d->hwirq;
-> +	unsigned long flags;
-> +	u32 irq = d->irq;
-> +	u32 irq_type, int_mask, event_mask;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	irq_type = irq_get_trigger_type(irq);
-> +	event_mask = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-> +	int_mask = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-> +
-> +	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-> +		event_mask &= ~BIT(pin);
-> +		writel_relaxed(event_mask,
-> +			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-> +	} else {
-> +		int_mask &= ~BIT(pin);
-> +		writel_relaxed(int_mask,
-> +			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-> +	}
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +}
-> +
-> +static int iproc_gpio_irq_set_type(struct irq_data *d, u32 type)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct iproc_gpio_chip *chip = to_iproc_gpio(gc);
-> +	int pin = d->hwirq;
-> +	unsigned long flags;
-> +	u32 irq = d->irq;
-> +	u32 event_pol, int_pol;
-> +	int ret = 0;
-> +
-> +	spin_lock_irqsave(&chip->lock, flags);
-> +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		event_pol = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
-> +		event_pol &= ~BIT(pin);
-> +		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
-> +		break;
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		event_pol = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
-> +		event_pol |= BIT(pin);
-> +		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
-> +		break;
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		int_pol = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-> +		int_pol &= ~BIT(pin);
-> +		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-> +		break;
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		int_pol = readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-> +		int_pol |= BIT(pin);
-> +		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-> +		break;
-> +	default:
-> +		/* should not come here */
-> +		ret = -EINVAL;
-> +		goto out_unlock;
-> +	}
-> +
-> +	if (type & IRQ_TYPE_LEVEL_MASK)
-> +		irq_set_handler_locked(irq_get_irq_data(irq), handle_level_irq);
-> +	else if (type & IRQ_TYPE_EDGE_BOTH)
-> +		irq_set_handler_locked(irq_get_irq_data(irq), handle_edge_irq);
-> +
-> +out_unlock:
-> +	spin_unlock_irqrestore(&chip->lock, flags);
-> +
-> +	return ret;
-> +}
-> +
-> +static irqreturn_t iproc_gpio_irq_handler(int irq, void *data)
-> +{
-> +	struct gpio_chip *gc = (struct gpio_chip *)data;
-> +	struct iproc_gpio_chip *chip = to_iproc_gpio(gc);
-> +	int bit;
-> +	unsigned long int_bits = 0;
-> +	u32 int_status;
-> +
-> +	/* go through the entire GPIOs and handle all interrupts */
-> +	int_status = readl_relaxed(chip->intr + IPROC_CCA_INT_STS);
-> +	if (int_status & IPROC_CCA_INT_F_GPIOINT) {
-> +		u32 event, level;
-> +
-> +		/* Get level and edge interrupts */
-> +		event =
-> +		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-> +		event &= readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT);
-> +		level = readl_relaxed(chip->base + IPROC_GPIO_CCA_DIN);
-> +		level ^= readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-> +		level &=
-> +		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-> +		int_bits = level | event;
-> +
-> +		for_each_set_bit(bit, &int_bits, gc->ngpio)
-> +			generic_handle_irq(irq_linear_revmap(gc->irq.domain, bit));
-> +	}
-> +
-> +	return int_bits ? IRQ_HANDLED : IRQ_NONE;
-> +}
-> +
-> +static int iproc_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *dn = pdev->dev.of_node;
-> +	struct iproc_gpio_chip *chip;
-> +	u32 num_gpios;
-> +	int irq, ret;
-> +
-> +	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
-> +
-> +	chip->dev = dev;
-> +	platform_set_drvdata(pdev, chip);
-> +	spin_lock_init(&chip->lock);
-> +
-> +	chip->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(chip->base))
-> +		return PTR_ERR(chip->base);
-> +
-> +	ret = bgpio_init(&chip->gc, dev, 4,
-> +			 chip->base + IPROC_GPIO_CCA_DIN,
-> +			 chip->base + IPROC_GPIO_CCA_DOUT,
-> +			 NULL,
-> +			 chip->base + IPROC_GPIO_CCA_OUT_EN,
-> +			 NULL,
-> +			 0);
-> +	if (ret) {
-> +		dev_err(dev, "unable to init GPIO chip\n");
-> +		return ret;
-> +	}
-> +
-> +	chip->gc.label = dev_name(dev);
-> +	if (of_property_read_u32(dn, "ngpios", &num_gpios))
-> +		chip->gc.ngpio = num_gpios;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq > 0) {
-> +		struct gpio_irq_chip *girq;
-> +		struct irq_chip *irqc;
-> +		u32 val;
-> +
-> +		irqc = &chip->irqchip;
-> +		irqc->name = dev_name(dev);
-> +		irqc->irq_ack = iproc_gpio_irq_ack;
-> +		irqc->irq_mask = iproc_gpio_irq_mask;
-> +		irqc->irq_unmask = iproc_gpio_irq_unmask;
-> +		irqc->irq_set_type = iproc_gpio_irq_set_type;
-> +
-> +		chip->intr = devm_platform_ioremap_resource(pdev, 1);
-> +		if (IS_ERR(chip->intr))
-> +			return PTR_ERR(chip->intr);
-> +
-> +		/* Enable GPIO interrupts for CCA GPIO */
-> +		val = readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
-> +		val |= IPROC_CCA_INT_F_GPIOINT;
-> +		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
-> +
-> +		/*
-> +		 * Directly request the irq here instead of passing
-> +		 * a flow-handler to gpiochip_set_chained_irqchip,
-> +		 * because the irq is shared.
-> +		 */
-> +		ret = devm_request_irq(dev, irq, iproc_gpio_irq_handler,
-> +				       IRQF_SHARED, chip->gc.label, &chip->gc);
-> +		if (ret) {
-> +			dev_err(dev, "Fail to request IRQ%d: %d\n", irq, ret);
-> +			return ret;
-> +		}
-> +
-> +		girq = &chip->gc.irq;
-> +		girq->chip = irqc;
-> +		/* This will let us handle the parent IRQ in the driver */
-> +		girq->parent_handler = NULL;
-> +		girq->num_parents = 0;
-> +		girq->parents = NULL;
-> +		girq->default_type = IRQ_TYPE_NONE;
-> +		girq->handler = handle_simple_irq;
-> +	}
-> +
-> +	ret = devm_gpiochip_add_data(dev, &chip->gc, chip);
-> +	if (ret) {
-> +		dev_err(dev, "unable to add GPIO chip\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __exit iproc_gpio_remove(struct platform_device *pdev)
-> +{
-> +	struct iproc_gpio_chip *chip;
-> +
-> +	chip = platform_get_drvdata(pdev);
-> +	if (!chip)
-> +		return -ENODEV;
-> +
-> +	if (chip->intr) {
-> +		u32 val;
-> +
-> +		val = readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
-> +		val &= ~IPROC_CCA_INT_F_GPIOINT;
-> +		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst = {
-> +	{ .compatible = "brcm,iproc-gpio-cca" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
-> +
-> +static struct platform_driver bcm_iproc_gpio_driver = {
-> +	.driver = {
-> +		.name = "iproc-xgs-gpio",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = bcm_iproc_gpio_of_match,
-> +	},
-> +	.probe = iproc_gpio_probe,
-> +	.remove = iproc_gpio_remove,
-> +};
-> +
-> +module_platform_driver(bcm_iproc_gpio_driver);
-> +
-> +MODULE_DESCRIPTION("XGS IPROC GPIO driver");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/drivers/staging/sm750fb/sm750_cursor.h b/drivers/staging/sm750fb/sm750_cursor.h
+index 16ac07eb58d6..b59643dd61ed 100644
+--- a/drivers/staging/sm750fb/sm750_cursor.h
++++ b/drivers/staging/sm750fb/sm750_cursor.h
+@@ -5,14 +5,11 @@
+ /* hw_cursor_xxx works for voyager,718 and 750 */
+ void sm750_hw_cursor_enable(struct lynx_cursor *cursor);
+ void sm750_hw_cursor_disable(struct lynx_cursor *cursor);
+-void sm750_hw_cursor_setSize(struct lynx_cursor *cursor,
+-						int w, int h);
+-void sm750_hw_cursor_setPos(struct lynx_cursor *cursor,
+-						int x, int y);
+-void sm750_hw_cursor_setColor(struct lynx_cursor *cursor,
+-						u32 fg, u32 bg);
+-void sm750_hw_cursor_setData(struct lynx_cursor *cursor,
+-			u16 rop, const u8 *data, const u8 *mask);
+-void sm750_hw_cursor_setData2(struct lynx_cursor *cursor,
+-			u16 rop, const u8 *data, const u8 *mask);
++void sm750_hw_cursor_setSize(struct lynx_cursor *cursor, int w, int h);
++void sm750_hw_cursor_setPos(struct lynx_cursor *cursor, int x, int y);
++void sm750_hw_cursor_setColor(struct lynx_cursor *cursor, u32 fg, u32 bg);
++void sm750_hw_cursor_setData(struct lynx_cursor *cursor, u16 rop,
++			     const u8 *data, const u8 *mask);
++void sm750_hw_cursor_setData2(struct lynx_cursor *cursor, u16 rop,
++			      const u8 *data, const u8 *mask);
+ #endif
+-- 
+2.20.1
 
