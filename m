@@ -2,131 +2,96 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4818ECA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E14CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1619921655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:09:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWbjhBCk"
+	by mail.kernel.org (Postfix) with ESMTP id 6ABC021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571937066;
+	bh=50LiASavYQZLbe6nfO7wdHLLLfE3YL2HyvzWd+ySzPE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=DO4jHtZFJJhM5/9SwFPhXbhpiQUWAfq++hmjIMlaOUurqsxjcEet6VQK57VfgovbT
+	 UnB0UALGpY5TrQ1kfXo9wPCoaLnIKaP3+UJxIMhfINWoR7eaUecAXePa84MKCerp3G
+	 M8FTvmxxRd9ar7ggKEff+vsVyZaY0G3SGL8UBjc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439827AbfJXRJ3 (ORCPT
+        id S2439940AbfJXRLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:09:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45196 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410207AbfJXRJ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:09:28 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q64so25829587ljb.12;
-        Thu, 24 Oct 2019 10:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IrAfe5w1HnK8l8FuW+hQKQUlkFSvckC54yQUeXG//ko=;
-        b=mWbjhBCkHaL5glMlAQhj6Agacp7Li+u9if1i1Ymo2qjHZ1lHG0TLeYiSC97M/nRPK1
-         Ad0R9qrXYKIE6zV1TcIBK6d9UtUT23ChFMh1uXvkVmiOVh+ukKHzfqd9bdHItfSID9zp
-         X044GzJxWSpeVpQ8tT9dk7DRx6V/FBx6lF1HqtlZJe7X7D1saoe/5HFlvLT217poA8ns
-         6skq943P1cTy+77942FQ8aBUiWYVacMA24Tn8E+YN7x6pNZABQ0Uwks5AW7Ezwtp+Y3o
-         85GpDedISXW8N/FKjQOdMcGN+r4jQaswCPUeV9UUOumjOnhDiy8Zkj2hVDZxE9oLGH6W
-         M/Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IrAfe5w1HnK8l8FuW+hQKQUlkFSvckC54yQUeXG//ko=;
-        b=Zr3PRk6S0lqpC3yZLULkkkiGhNEIJxUjlV0OZ0Kz0QuN54aN1t64l49BC42bKIJgSx
-         JJx7H7cyKbgdMBTmlbRP2v4uzcBc+WJtw+fc3fp5j+OkfGDYrgIBMt8n2n/59FsfYKXc
-         oqrumyaxkxjXs2cvlp3zfG0s7Or9EgnROGP7K9QzCJCfqK51Kp1z+vtE2iXUwoMsNeZ9
-         l1Kd5/uyss/YAuEdDnmHsWdd7zydJHyv/QsIis67Dp7uog3LIclgFFcmZuC7bY+FY1En
-         oX+ZGY8qPx8AXDoMLSgwQWi4Ls9BARJI/deBVlYFtop/QoX5YhuC35VYeuTiTy/sxqN3
-         Rwuw==
-X-Gm-Message-State: APjAAAWskwBJH1YsjWAkb/AvmkZYtle1WuV6zXzL8DP0GyxopBVpA/dQ
-        aoJfbhyfAan0JgKr1IEH3npJW8vN
-X-Google-Smtp-Source: APXvYqxSkIhVMx2JQ4ozADmzdOXgHT9YOY73BRvR0bq+4cNTs8tWmZwy3WI9LUw0lgPggYogDS0wbg==
-X-Received: by 2002:a2e:4e12:: with SMTP id c18mr27544082ljb.51.1571936965362;
-        Thu, 24 Oct 2019 10:09:25 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id n25sm10143389ljc.107.2019.10.24.10.09.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 10:09:24 -0700 (PDT)
-Subject: Re: [PATCH v1 1/3] gpu: host1x: Remove implicit IOMMU backing on
- client's registration
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190623173743.24088-1-digetx@gmail.com>
- <20191024115016.GA2924027@ulmo>
- <55ab29ad-da9b-c178-4480-dc6edb09b3e4@gmail.com>
-Message-ID: <b8a9fc65-3d2f-8461-e0de-83cbb45fea49@gmail.com>
-Date:   Thu, 24 Oct 2019 20:09:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 24 Oct 2019 13:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439855AbfJXRLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:11:04 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC4FC20650;
+        Thu, 24 Oct 2019 17:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571937064;
+        bh=50LiASavYQZLbe6nfO7wdHLLLfE3YL2HyvzWd+ySzPE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qtbTWnH9LA3tbkJFClj5FPXT3Mtrc4X0jALff5Ub3dJQBOsMB9ZTw5xWY6LnRIT1K
+         DshfISJ7KzW+Ubkjy5thaBOIiRSFSEC/CxfvkfZtPfvzDzpw4YMQP+D0Rz4BiCbtJq
+         kIZ8ib0J215lecEYJkXFVeeKcJ6aULHrnG+QixvI=
+Date:   Thu, 24 Oct 2019 12:11:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
+Message-ID: <20191024171102.GA147451@google.com>
 MIME-Version: 1.0
-In-Reply-To: <55ab29ad-da9b-c178-4480-dc6edb09b3e4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024093803.GU2819@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.10.2019 16:35, Dmitry Osipenko пишет:
-> 24.10.2019 14:50, Thierry Reding пишет:
->> On Sun, Jun 23, 2019 at 08:37:41PM +0300, Dmitry Osipenko wrote:
->>> On ARM32 we don't want any of the clients device to be backed by the
->>> implicit domain, simply because we can't afford such a waste on older
->>> Tegra SoCs that have very few domains available in total. The recent IOMMU
->>> support addition for the Video Decoder hardware uncovered the problem
->>> that an unfortunate drivers probe order results in the DRM driver probe
->>> failure if CONFIG_ARM_DMA_USE_IOMMU=y due to a shortage of IOMMU domains
->>> caused by the implicit backing. The host1x_client_register() is a common
->>> function that is invoked by all of the relevant DRM drivers during theirs
->>> probe and hence it is convenient to remove the implicit backing there,
->>> resolving the problem.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/gpu/host1x/bus.c | 19 +++++++++++++++++++
->>>  1 file changed, 19 insertions(+)
->>
->> I don't really want to do this in a central place like this. If we
->> really do need this, why can't we do it in the individual drivers?
+On Thu, Oct 24, 2019 at 12:38:03PM +0300, Mika Westerberg wrote:
+> On Wed, Oct 23, 2019 at 10:52:53AM +0300, Mika Westerberg wrote:
+> > > Shouldn't we check for slot_status being an error response (~0)
+> > > instead of looking for PCIBIOS_DEVICE_NOT_FOUND?  There are 7 RsvdP
+> > > bits in Slot Status, so ~0 is not a valid value for the register.
+> > > 
+> > > All 16 bits of Link Status are defined, but ~0 is still an invalid
+> > > value because the Current Link Speed and Negotiated Link Width fields
+> > > only define a few valid encodings.
+> > 
+> > Indeed that's a good point. I'll try that.
 > 
-> Why do you want to duplicate the same action for each driver instead of
-> doing it in a single common place?
+> Just checking if I understand correctly what you are suggesting.
 > 
->> we already call host1x_client_iommu_attach() from all the drivers and
->> that detaches from the IOMMU as well. So I'm not sure I understand why
->> this is needed.
+> Currently we use pcie_capability_read_word() and check the return value.
+> If the device is gone it returns an error and resets *val to 0. That
+> only works if pci_dev_is_disconnected() is true so we would need to do
+> something like below.
 > 
-> Wish you could ask that couple months ago. I'll try to refresh the details.
+> pciehp_check_link_active():
 > 
+> 	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+> 	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
+> 		return -ENODEV;
 
-In kernel's boot order:
+Yes, I guess this is what you'd have to do.
 
-1) Host1x is attached to exclusive implicit domain
-2) Host1x is detached from the implicit domain and attached to explicit
-3) Both DC's fail to attach to implicit domain because DMA-mapping code
-doesn't take into account multiple devices in the same group.
-4) GR2D is attached to exclusive implicit domain
-5) GR3D is attached to exclusive implicit domain
-6) VDE is attached to exclusive implicit domain
-7) VDE is detached from the implicit domain and attached to explicit
-8) DC client is trying to attach to DRM domain in
-host1x_client_iommu_attach() and that fails because tegra-smmu code
-allocates ASID in tegra_smmu_attach_dev()->tegra_smmu_as_prepare() (i.e.
-on IOMMU group's attaching) and all ASIDs are already busy.
+> Or you mean that we check only for ~0 in which case we either need to
+> use pci_read_config_word() directly here or modify pcie_capability_read_word()
+> return ~0 instead of clearing it?
 
-Hence if DRM sub-device drivers are detaching from the implicit domain
-on probe, then the problem is getting worked around because there are
-available ASIDs at the time of host1x clients initialization.
+I *would* like to explore removing the "*val = 0" code from
+pci_capability_read*(), but not in the context of this issue.
