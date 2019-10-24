@@ -2,160 +2,107 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965A5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2CCCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6175B21D71
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="LwRvdoqf"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD3B21A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571952615;
+	bh=e00/yHSlXvXqqf/JB2YJn64yA5+CxFA09Oq6zHURRsU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q7ZOBh9gToV+Pa9bhJ6W7i0X/iDpaeGLn67a5A+nn3p0I8I4naKod5KEefO2nT3OW
+	 5WqiKpI4uV8yeiJL+C/ZAclDkTWm8X8ztj4ggNWhSepI/FWYe9NzlfOrIqH+3GK0hH
+	 9FY2JX0JA4TdWhF+SWGYIrCPfO+JnAtB6XCreFcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbfJXV3a (ORCPT
+        id S1729294AbfJXVaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:29:30 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60001 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfJXV33 (ORCPT
+        Thu, 24 Oct 2019 17:30:14 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38676 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729262AbfJXVaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:29:29 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F0767891A9;
-        Fri, 25 Oct 2019 10:29:25 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571952565;
-        bh=Wai0zmL8BhTOFSPlvvfRb92+Xe8QbZw1Wnmhq2/VGsU=;
-        h=From:To:Cc:Subject:Date;
-        b=LwRvdoqf2hNEX/Q6H5vO1zvcCCgImz/sVGEsQTQG++8PZa/AL8Fpul/fp1aFAnt5O
-         ti8+2BiTsKy1kAOL0ccJh1lPzTYIexaQkQO705IZjJ0qtIsm4uEBFLy/z8v2N1mhCu
-         LllWf4veQC+6YLnrj4cw215zAqbyWh/Q+WoXiiHIgeKnf9d0dCIAYHSJ2f9d5Nt12E
-         yAvYLUQb6myhghpN3DuEPdF+7OZv0DhXefcFYSyfKAZB8Apw1eA6MuFyDM0hkFOG/h
-         qjTPWnP6uVqRPlvenrIcgGl1jD68S0NCGDYnkSrKap4lYHXKqm1TnqQLhgne+0+h0K
-         toLSriNoXmjuQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5db217af0000>; Fri, 25 Oct 2019 10:29:24 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id DCAA513EEEB;
-        Fri, 25 Oct 2019 10:29:24 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id A651828005C; Fri, 25 Oct 2019 10:29:20 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     johannes@sipsolutions.net, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        trivial@kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mac80211: typo fixes in kerneldoc comments
-Date:   Fri, 25 Oct 2019 10:29:15 +1300
-Message-Id: <20191024212915.4201-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
+        Thu, 24 Oct 2019 17:30:13 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q28so17082999lfa.5
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h5FP/voiQdxeaQU3Va8HH5cRZmi1OHTMwBKcRrrOo6E=;
+        b=G+CKE+0sNMbBuosjchwhgzz8NQwfbV/8kKBYcW1zgIA+wCHZXB0W4xnrddKNkrujly
+         nBXQf8TMFFxtwDaqAlubm1WQBu/DIP2jq0ClHTeKxpnxD8j4n3vqHGpl41RLHFrD0jXc
+         jfdzDY5G/0JxiPvAj8Pc7cihC14c7Kl2f6hiQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h5FP/voiQdxeaQU3Va8HH5cRZmi1OHTMwBKcRrrOo6E=;
+        b=h7A0jEY+aNfAfJ8RCmlZK4neNBVBlJ/+iBd3dpCfmjrZerBvc4pJ/PgVD+YqsiaZhp
+         yO7xp1Plxyyw34Do5GAz1Yjt01kZ9EEklsv2MXK3eehzRzNwXjO7fpd055At759178wO
+         01B9wKLLCCgeC13iVTlHgSSuk+zhaEFfdWz9w3tciaEwEKZxTdAGaGAhClac/0bcFIOI
+         rPzrdyD20SMuuJqjsF5fQoEeXREDIjB1X7fn6I3SRx0kPQciq2NXtZn/yfiEFLi672Wf
+         4edVD9FaxkQgWZXaLRTyU5oFcPxIKF1RDtNIHlYgLgfngfZijuQf7tkmYJJpMM86x//e
+         Q8Pg==
+X-Gm-Message-State: APjAAAVgEdH7QI9s9QtXDhIUvNrz0qWQ/lRy0NMFRp5Q+/VSKsBSAorz
+        HkzeLGBsFPYHcbmshJGCpOI2Q+fSXnkCTQ==
+X-Google-Smtp-Source: APXvYqxTeYRNDiiFxgFPogFWQ+89fYv2PckFtDlKHrNfp2BhUH5pTla3BE1u6aVeN7d2V9WOPSq74g==
+X-Received: by 2002:a19:ac01:: with SMTP id g1mr188110lfc.141.1571952610274;
+        Thu, 24 Oct 2019 14:30:10 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id b141sm12566315lfg.67.2019.10.24.14.30.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2019 14:30:08 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id y3so257407ljj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:30:08 -0700 (PDT)
+X-Received: by 2002:a05:651c:331:: with SMTP id b17mr3303284ljp.133.1571952607809;
+ Thu, 24 Oct 2019 14:30:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <30394.1571936252@warthog.procyon.org.uk>
+In-Reply-To: <30394.1571936252@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 24 Oct 2019 17:29:51 -0400
+X-Gmail-Original-Message-ID: <CAHk-=wiMho2AhcTWC3-3zGK7639XL9UT=AheMXY0pxGHDACn6g@mail.gmail.com>
+Message-ID: <CAHk-=wiMho2AhcTWC3-3zGK7639XL9UT=AheMXY0pxGHDACn6g@mail.gmail.com>
+Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correct some trivial typos in kerneldoc comments.
+On Thu, Oct 24, 2019 at 12:57 PM David Howells <dhowells@redhat.com> wrote:
+>
+> pipe: Add fsync() support
+>
+> The keyrings testsuite needs the ability to wait for all the outstanding
+> notifications in the queue to have been processed so that it can then go
+> through them to find out whether the notifications it expected have been
+> emitted.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- include/net/mac80211.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Can't you just do
 
-diff --git a/include/net/mac80211.h b/include/net/mac80211.h
-index 523c6a09e1c8..93d774e0d082 100644
---- a/include/net/mac80211.h
-+++ b/include/net/mac80211.h
-@@ -312,7 +312,7 @@ struct ieee80211_vif_chanctx_switch {
-  * @BSS_CHANGED_KEEP_ALIVE: keep alive options (idle period or protected
-  *	keep alive) changed.
-  * @BSS_CHANGED_MCAST_RATE: Multicast Rate setting changed for this inte=
-rface
-- * @BSS_CHANGED_FTM_RESPONDER: fime timing reasurement request responder
-+ * @BSS_CHANGED_FTM_RESPONDER: fine timing reasurement request responder
-  *	functionality changed for this BSS (AP mode).
-  * @BSS_CHANGED_TWT: TWT status changed
-  * @BSS_CHANGED_HE_OBSS_PD: OBSS Packet Detection status changed.
-@@ -1059,7 +1059,7 @@ struct ieee80211_tx_info {
- };
-=20
- /**
-- * struct ieee80211_tx_status - extended tx staus info for rate control
-+ * struct ieee80211_tx_status - extended tx status info for rate control
-  *
-  * @sta: Station that the packet was transmitted for
-  * @info: Basic tx status information
-@@ -1702,7 +1702,7 @@ struct wireless_dev *ieee80211_vif_to_wdev(struct i=
-eee80211_vif *vif);
-  *	%IEEE80211_KEY_FLAG_SW_MGMT_TX flag to encrypt such frames in SW.
-  * @IEEE80211_KEY_FLAG_GENERATE_IV_MGMT: This flag should be set by the
-  *	driver for a CCMP/GCMP key to indicate that is requires IV generation
-- *	only for managment frames (MFP).
-+ *	only for management frames (MFP).
-  * @IEEE80211_KEY_FLAG_RESERVE_TAILROOM: This flag should be set by the
-  *	driver for a key to indicate that sufficient tailroom must always
-  *	be reserved for ICV or MIC, even when HW encryption is enabled.
-@@ -1998,7 +1998,7 @@ struct ieee80211_sta {
- 	 *
- 	 * * If the skb is transmitted as part of a BA agreement, the
- 	 *   A-MSDU maximal size is min(max_amsdu_len, 4065) bytes.
--	 * * If the skb is not part of a BA aggreement, the A-MSDU maximal
-+	 * * If the skb is not part of a BA agreement, the A-MSDU maximal
- 	 *   size is min(max_amsdu_len, 7935) bytes.
- 	 *
- 	 * Both additional HT limits must be enforced by the low level
-@@ -3183,13 +3183,13 @@ enum ieee80211_rate_control_changed {
-  *
-  * With the support for multi channel contexts and multi channel operati=
-ons,
-  * remain on channel operations might be limited/deferred/aborted by oth=
-er
-- * flows/operations which have higher priority (and vise versa).
-+ * flows/operations which have higher priority (and vice versa).
-  * Specifying the ROC type can be used by devices to prioritize the ROC
-  * operations compared to other operations/flows.
-  *
-  * @IEEE80211_ROC_TYPE_NORMAL: There are no special requirements for thi=
-s ROC.
-  * @IEEE80211_ROC_TYPE_MGMT_TX: The remain on channel request is require=
-d
-- *	for sending managment frames offchannel.
-+ *	for sending management frames offchannel.
-  */
- enum ieee80211_roc_type {
- 	IEEE80211_ROC_TYPE_NORMAL =3D 0,
-@@ -5609,7 +5609,7 @@ void ieee80211_iter_keys_rcu(struct ieee80211_hw *h=
-w,
-=20
- /**
-  * ieee80211_iter_chan_contexts_atomic - iterate channel contexts
-- * @hw: pointre obtained from ieee80211_alloc_hw().
-+ * @hw: pointer obtained from ieee80211_alloc_hw().
-  * @iter: iterator function
-  * @iter_data: data passed to iterator function
-  *
-@@ -6357,7 +6357,7 @@ ieee80211_return_txq(struct ieee80211_hw *hw, struc=
-t ieee80211_txq *txq,
-  * again.
-  *
-  * The API ieee80211_txq_may_transmit() also ensures that TXQ list will =
-be
-- * aligned aginst driver's own round-robin scheduler list. i.e it rotate=
-s
-+ * aligned against driver's own round-robin scheduler list. i.e it rotat=
-es
-  * the TXQ list till it makes the requested node becomes the first entry
-  * in TXQ list. Thus both the TXQ list and driver's list are in sync. If=
- this
-  * function returns %true, the driver is expected to schedule packets
---=20
-2.23.0
+    ioctl(fd, FIONREAD, &count);
 
+in a loop instead? "No paperwork. Just sprinkle some msleep() crack on
+him, and let's get out of here"
+
+               Linus
