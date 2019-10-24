@@ -2,109 +2,94 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6B4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2279FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0BC21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9BB21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:53:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPG7f8FL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439470AbfJXLxD (ORCPT
+        id S2439486AbfJXLxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:53:03 -0400
-Received: from 7.mo7.mail-out.ovh.net ([46.105.43.131]:58691 "EHLO
-        7.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfJXLxD (ORCPT
+        Thu, 24 Oct 2019 07:53:06 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:39204 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfJXLxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:53:03 -0400
-X-Greylist: delayed 12499 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 07:53:02 EDT
-Received: from player788.ha.ovh.net (unknown [10.109.159.69])
-        by mo7.mail-out.ovh.net (Postfix) with ESMTP id D98AF138D5B
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:04:46 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player788.ha.ovh.net (Postfix) with ESMTPSA id CA63BB4D6960;
-        Thu, 24 Oct 2019 07:04:07 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 09:04:03 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/45] KVM: PPC: Book3S HV: Uninit vCPU if vcore
- creation fails
-Message-ID: <20191024090403.5e564e39@bahia.lan>
-In-Reply-To: <20191022015925.31916-2-sean.j.christopherson@intel.com>
-References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
-        <20191022015925.31916-2-sean.j.christopherson@intel.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 24 Oct 2019 07:53:04 -0400
+Received: by mail-ua1-f66.google.com with SMTP id o25so1805017uap.6
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 04:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q1KiAq2b3z/Z+oO2kUL2b8SkIvQVsNiMUo4648osU6s=;
+        b=CPG7f8FL9wOLdK9nhKnhAgR/LLHSeGiIsfemayzM3YOM8k9DvqtDznLrnrK5HaZW34
+         WuJ1PDvb7d3Atvp9n5QVciTPz2djxe8E5PYkMZFxeBtYzoQxasezhAivF80vRCYjuHDZ
+         Oau45TlDXKUS+xiX+T3OVtKal/X3GH/4RwyLNj5iE5M1lvnSC+E/3fz0ofEtGdT5ZGu6
+         Ez+BoOyCsGvk4IMmxp4ga/qiVxvLNNl4q4ERovcOQA+hKf6aBIwFxpf8qZ28vRRpUUcx
+         5PaAzGBUbmh+gBHzmGOfXNjEUs/4TTi4rIM3bnGsP0DOTkMj3OcheKRC/H7By+liQp7Y
+         m8Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q1KiAq2b3z/Z+oO2kUL2b8SkIvQVsNiMUo4648osU6s=;
+        b=fjFKW4WLzRTB7h3FoONd3kRGLNyj7V1+uLqYimlkLej4s15iPoYiULw87ZdvHOlQWz
+         924NxvEMatFzo87EhkSdGQVPc40UCqTknXjflsdpiomEljd0ZFjjr+fz6hu/KFrBKxz0
+         u1mxR39qoe8Y+Ap2dsk2B4YsZ/jCAZRoSUNGpFLyYuEzxD+RawkRsTq+Yt5IDBiuInu2
+         7DsusKV10JmndCMcto5C3Mqa8pJN+T+695wE3/ZRPqyFhqur08Cb95eCArYIAgpNd79d
+         JdqyMmQy/j/VcN8sNGUJsq525843fzQz44HqPvL4ZKMUmLSwSUDzfYsUmqWhYp4flqZC
+         6tlA==
+X-Gm-Message-State: APjAAAU3/5MJfJ78nNyStT2j34QNdBOuh2IVLbi9rmIwcBJyZI4/ma8V
+        WRrlZijCejw336q8wb5cEx0ipYaEkt8SeZdXKtMGJA==
+X-Google-Smtp-Source: APXvYqyY6iH8uNxzgTDilZDyz8IFIHovN0BIzfSE7mUMD+SKYWqS0pz2SdLZyWU+lC9L/MycjWutzQj5TgAf2o9qcso=
+X-Received: by 2002:ab0:7043:: with SMTP id v3mr8383913ual.84.1571917983366;
+ Thu, 24 Oct 2019 04:53:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 5552375392181655889
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrledtgdduudefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+References: <20191023152634.GA3749@nishad>
+In-Reply-To: <20191023152634.GA3749@nishad>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 24 Oct 2019 13:52:52 +0200
+Message-ID: <CACRpkdYmE9uQOJzxHBjcFa1mwr6t1G5FJ_fE2aSdKJB1fxEhsg@mail.gmail.com>
+Subject: Re: [PATCH] net: ethernet: Use the correct style for SPDX License Identifier
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 18:58:41 -0700
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+On Wed, Oct 23, 2019 at 5:26 PM Nishad Kamdar <nishadkamdar@gmail.com> wrote:
 
-> Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
-> resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
-> 
-> Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
+> This patch corrects the SPDX License Identifier style in
+> header file related to ethernet driver for Cortina Gemini
+> devices. For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used)
+>
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 
-Reviewed-by: Greg Kurz <groug@kaod.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
->  arch/powerpc/kvm/book3s_hv.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-> index 709cf1fd4cf4..36abbe3c346d 100644
-> --- a/arch/powerpc/kvm/book3s_hv.c
-> +++ b/arch/powerpc/kvm/book3s_hv.c
-> @@ -2354,7 +2354,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_hv(struct kvm *kvm,
->  	mutex_unlock(&kvm->lock);
->  
->  	if (!vcore)
-> -		goto free_vcpu;
-> +		goto uninit_vcpu;
->  
->  	spin_lock(&vcore->lock);
->  	++vcore->num_threads;
-> @@ -2371,6 +2371,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_hv(struct kvm *kvm,
->  
->  	return vcpu;
->  
-> +uninit_vcpu:
-> +	kvm_vcpu_uninit(vcpu);
->  free_vcpu:
->  	kmem_cache_free(kvm_vcpu_cache, vcpu);
->  out:
-
+Yours,
+Linus Walleij
