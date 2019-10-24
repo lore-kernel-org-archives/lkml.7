@@ -2,40 +2,79 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B61FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7668CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6942A20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3DF620856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:40:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="i5fxJt9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408656AbfJXHkC (ORCPT
+        id S2408672AbfJXHku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:40:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59750 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727635AbfJXHkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:40:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 44E04AF6A;
-        Thu, 24 Oct 2019 07:40:00 +0000 (UTC)
-Subject: Ping: [PATCH] x86/stackframe/32: repair 32-bit Xen PV
-From:   Jan Beulich <jbeulich@suse.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <ef1c9381-dfc7-7150-feca-581f4d798513@suse.com>
-Message-ID: <279e6368-7446-9419-fef9-c4069b6aee5a@suse.com>
-Date:   Thu, 24 Oct 2019 09:40:16 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thu, 24 Oct 2019 03:40:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33477 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727635AbfJXHku (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 03:40:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so23895979ljd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 00:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JPxiGhM5jRhlwHtnCIN5tDoQSbhFV2F/bKlTq8On7Yc=;
+        b=i5fxJt9a5fJOI692aJw6RO8RT1YxLreAKshwhvfWPpsOcbT8uSjszOVeisgIr3beAI
+         DFsiED5apInER6smWDbxyzhOy/DlKj8zdp5QvGS4mJC+wu8Rv/1U1pZDcWsT6Hvf2M8+
+         w4nM52/7O9ZTWt55RCipUjyyXdlOWUptgTYHs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JPxiGhM5jRhlwHtnCIN5tDoQSbhFV2F/bKlTq8On7Yc=;
+        b=erK1LdV3bbrFaT0h4PaySuVUdXZ01shinRO7KhyB8HGxRBActsnDQ9gq4qS0wAhZ40
+         +KDYv2uAQH2KIWyE+/fzn3R6SZmoKJY7zs1bDA6cnSXZwLB+Hd5R3acyshPI8ZAVYH/5
+         lSKUOEKqi7lCIPKvj0cokGJB60Y8RHORZFNUe/V10BmKPhLBA4N9r5ywIzP9N+j6gJBR
+         IFkiikSZM1JGv4dW1Erp3AZ9HAyQEDNZFu5ONXIPxxuQhRX9R5GYy9DO5Xk3YEDnxkez
+         Lg6g87pVPF3GpjH+8p8afP5YMtLGky/0GYONNLGKJDg5FINrUWWqwa9txSNHHDj19fDz
+         z53w==
+X-Gm-Message-State: APjAAAU/cGyy7a/3OpzrdNZYTpQVklQNXa+3DwK5lvgVwp5A8rXtI9yC
+        oAvKQABpuLXeN/6GT0CMbBtnlAHlVLjd77zm
+X-Google-Smtp-Source: APXvYqxX7Ws0oMg6WWgYA8lKqNAh68XyMJ4+E23AKZSb5ZI1mB2xMPsqfoKbR82T9sdrg7zZ36zRSg==
+X-Received: by 2002:a2e:b0d8:: with SMTP id g24mr22382743ljl.159.1571902846813;
+        Thu, 24 Oct 2019 00:40:46 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id m6sm10356184ljj.3.2019.10.24.00.40.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 00:40:46 -0700 (PDT)
+Subject: Re: [PATCH v4] string-choice: add yesno(), onoff(),
+ enableddisabled(), plural() helpers
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jani Nikula <jani.nikula@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+References: <20191023131308.9420-1-jani.nikula@intel.com>
+ <20191023155619.43e0013f0c8c673a5c508c1e@linux-foundation.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <18589470-c428-f4c8-6e3e-c8cfed3ad6e0@rasmusvillemoes.dk>
+Date:   Thu, 24 Oct 2019 09:40:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <ef1c9381-dfc7-7150-feca-581f4d798513@suse.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191023155619.43e0013f0c8c673a5c508c1e@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,65 +82,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.10.2019 12:41, Jan Beulich wrote:
-> Once again RPL checks have been introduced which don't account for a
-> 32-bit kernel living in ring 1 when running in a PV Xen domain. The
-> case in FIXUP_FRAME has been preventing boot; adjust BUG_IF_WRONG_CR3
-> as well just in case.
+On 24/10/2019 00.56, Andrew Morton wrote:
+> On Wed, 23 Oct 2019 16:13:08 +0300 Jani Nikula <jani.nikula@intel.com> wrote:
 > 
-> Fixes: 3c88c692c287 ("x86/stackframe/32: Provide consistent pt_regs")
-> Signed-off-by: Jan Beulich <jbeulich@suse.com>
+>> +
+>> +static inline const char *yesno(bool v)
+>> +{
+>> +	return v ? "yes" : "no";
+>> +}
+>> +
+>> +static inline const char *onoff(bool v)
+>> +{
+>> +	return v ? "on" : "off";
+>> +}
+>> +
+>> +static inline const char *enableddisabled(bool v)
+>> +{
+>> +	return v ? "enabled" : "disabled";
+>> +}
+>> +
+>> +static inline const char *plural(long v)
+>> +{
+>> +	return v == 1 ? "" : "s";
+>> +}
+>> +
+>> +#endif /* __STRING_CHOICE_H__ */
+> 
+> These aren't very good function names.  Better to create a kernel-style
+> namespace such as "choice_" and then add the expected underscores:
+> 
+> choice_yes_no()
+> choice_enabled_disabled()
+> choice_plural()
 
-Ping?
+I think I prefer the short names (no choice_ prefix), it's rather
+obvious what they do. I also asked for underscores, especially for the
+enableddisabled case, but Jani didn't want to change existing callers.
+But I'll keep out of the naming discussion from now on.
+> Also, I worry that making these functions inline means that each .o
+> file will contain its own copy of the strings 
 
-I'd like to further note that there appears to a likely related
-2nd problem - I'm seeing seemingly random attempts to enter VM86
-mode when running PV under Xen. I suspect a never written eflags
-value to get inspected. While the issue here kills the kernel
-reliably during boot, that other issue sometimes allows the
-system to at least come up in a partly functional way (depending
-on which user processes get killed because of there not being
-any VM86 mode available when running PV under [64-bit] Xen).
+They will, in .rodata.str1.1
 
-Jan
+("yes", "no", "enabled",
+> etc) if the .c file calls the relevant helper.  I'm not sure if the
+> linker is smart enough (yet) to fix this up. 
 
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -48,6 +48,17 @@
+AFAIK, that's an optimization the linker has done forever - the whole
+reason the SHF_MERGE | SHF_STRINGS (the MS in readelf -S output) flags
+exist (and AFAICT they have been part of the ELF spec since forever) is
+so the linker can do that trick. So no, do not make them ool.
+
+> And doing this will cause additional savings: calling a single-arg
+> out-of-line function generates less .text than calling yesno().  When I
+> did this: 
+> 
+> --- a/include/linux/string-choice.h~string-choice-add-yesno-onoff-enableddisabled-plural-helpers-fix
+> +++ a/include/linux/string-choice.h
+> @@ -8,10 +8,7 @@
 >  
->  #include "calling.h"
+>  #include <linux/types.h>
 >  
-> +#ifndef CONFIG_XEN_PV
-> +# define USER_SEGMENT_RPL_MASK SEGMENT_RPL_MASK
-> +#else
-> +/*
-> + * When running paravirtualized on Xen the kernel runs in ring 1, and hence
-> + * simple mask based tests (i.e. ones not comparing against USER_RPL) have to
-> + * ignore bit 0. See also the C-level get_kernel_rpl().
-> + */
-> +# define USER_SEGMENT_RPL_MASK (SEGMENT_RPL_MASK & ~1)
-> +#endif
-> +
->  	.section .entry.text, "ax"
+> -static inline const char *yesno(bool v)
+> -{
+> -	return v ? "yes" : "no";
+> -}
+> +const char *yesno(bool v);
 >  
->  /*
-> @@ -172,7 +183,7 @@
->  	ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_PTI
->  	.if \no_user_check == 0
->  	/* coming from usermode? */
-> -	testl	$SEGMENT_RPL_MASK, PT_CS(%esp)
-> +	testl	$USER_SEGMENT_RPL_MASK, PT_CS(%esp)
->  	jz	.Lend_\@
->  	.endif
->  	/* On user-cr3? */
-> @@ -217,7 +228,7 @@
->  	testl	$X86_EFLAGS_VM, 4*4(%esp)
->  	jnz	.Lfrom_usermode_no_fixup_\@
->  #endif
-> -	testl	$SEGMENT_RPL_MASK, 3*4(%esp)
-> +	testl	$USER_SEGMENT_RPL_MASK, 3*4(%esp)
->  	jnz	.Lfrom_usermode_no_fixup_\@
->  
->  	orl	$CS_FROM_KERNEL, 3*4(%esp)
+>  static inline const char *onoff(bool v)
+>  {
+> 
+> The text segment of drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.o
+> (78 callsites) shrunk by 118 bytes.
 > 
 
+Interesting, and not at all what I see. Mind dumping rss_config_show
+before/after? Even better, cxgb4_debugfs.s before/after. Here's what I get:
+
+static inline yesno:
+
+     cbb:       49 c7 c4 00 00 00 00    mov    $0x0,%r12        cbe:
+R_X86_64_32S       .rodata.str1.1+0x197
+     cc2:       44 89 ea                mov    %r13d,%edx
+     cc5:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi        cc8:
+R_X86_64_32S       .rodata.str1.1+0x1b7
+     ccc:       48 c7 c5 00 00 00 00    mov    $0x0,%rbp        ccf:
+R_X86_64_32S       .rodata.str1.1+0x19b
+
+Load "yes" into %12 and "no" into %rbp (or vice versa).
+
+     cd3:       4d 89 e7                mov    %r12,%r15
+     cd6:       e8 00 00 00 00          callq  cdb
+<rss_config_show+0x3b>       cd7: R_X86_64_PC32      seq_printf-0x4
+     cdb:       45 85 ed                test   %r13d,%r13d
+     cde:       4c 89 e2                mov    %r12,%rdx
+     ce1:       48 89 df                mov    %rbx,%rdi
+     ce4:       48 0f 49 d5             cmovns %rbp,%rdx
+     ce8:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi        ceb:
+R_X86_64_32S       .rodata.str1.1+0x1cb
+     cef:       e8 00 00 00 00          callq  cf4
+<rss_config_show+0x54>       cf0: R_X86_64_PC32      seq_printf-0x4
+     cf4:       41 f7 c5 00 00 00 40    test   $0x40000000,%r13d
+     cfb:       4c 89 e2                mov    %r12,%rdx
+     cfe:       48 89 df                mov    %rbx,%rdi
+     d01:       48 0f 44 d5             cmove  %rbp,%rdx
+     d05:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi        d08:
+R_X86_64_32S       .rodata.str1.1+0x1e1
+     d0c:       e8 00 00 00 00          callq  d11
+<rss_config_show+0x71>       d0d: R_X86_64_PC32      seq_printf-0x4
+
+Test a bit, move "yes" into %rdx, conditionally move "no" into %rdx
+instead, call seq_printf.
+
+     d11:       41 f7 c5 00 00 00 20    test   $0x20000000,%r13d
+     d18:       4c 89 e2                mov    %r12,%rdx
+     d1b:       48 89 df                mov    %rbx,%rdi
+     d1e:       48 0f 44 d5             cmove  %rbp,%rdx
+     d22:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi        d25:
+R_X86_64_32S       .rodata.str1.1+0x1f7
+     d29:       e8 00 00 00 00          callq  d2e
+<rss_config_show+0x8e>       d2a: R_X86_64_PC32      seq_printf-0x4
+
+etc. That's a marginal (i.e., after the preamble storing "yes" and "no"
+in callee-saved registers) cost of six instructions/29 bytes per
+seq_printf, three of which are to implement the yesno() call.
+
+extern const char *yesno():
+
+   64e7:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi        64ea:
+R_X86_64_32S      .rodata.str1.1+0x8e4
+    64ee:       89 ea                   mov    %ebp,%edx
+    64f0:       41 89 ed                mov    %ebp,%r13d
+    64f3:       e8 00 00 00 00          callq  64f8
+<rss_config_show+0x28>      64f4: R_X86_64_PC32     seq_printf-0x4
+    64f8:       89 ef                   mov    %ebp,%edi
+    64fa:       c1 ef 1f                shr    $0x1f,%edi
+    64fd:       e8 00 00 00 00          callq  6502
+<rss_config_show+0x32>      64fe: R_X86_64_PC32     yesno-0x4
+
+Three instructions to prepare the argument to yesno and call it.
+
+    6502:       48 c7 c6 00 00 00 00    mov    $0x0,%rsi        6505:
+R_X86_64_32S      .rodata.str1.1+0x8f8
+    6509:       48 89 c2                mov    %rax,%rdx
+
+One more to put the return from yesno in the right register.
+
+    650c:       48 89 df                mov    %rbx,%rdi
+    650f:       e8 00 00 00 00          callq  6514
+<rss_config_show+0x44>      6510: R_X86_64_PC32     seq_printf-0x4
+
+So not a lot, but still one more instruction, for a total of 31 bytes.
+bloat-o-meter says
+
+$ scripts/bloat-o-meter
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.o.{1,2}
+add/remove: 0/0 grow/shrink: 3/0 up/down: 301/0 (301)
+Function                                     old     new   delta
+rss_config_show                             2343    2482    +139
+rss_vf_config_show                           263     363    +100
+rss_pf_config_show                           342     404     +62
+
+which is more then 2*78, but I haven't looked at the code patterns in
+the other functions.
+
+Did you use size(1) to compare when you say "text segment"? That would
+include .rodata (and, more importantly, .rodata.strX.Y) in its text
+column. Maybe your compiler doesn't do string literal merging (since the
+linker does it anyway), so your .rodata.str1.1 might contain several
+copies of "yes" and "no", but they shouldn't really be counted.
+
+Rasmus
