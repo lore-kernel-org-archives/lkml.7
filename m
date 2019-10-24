@@ -2,151 +2,69 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D9ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFE6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E764420679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="biNiyBsU"
+	by mail.kernel.org (Postfix) with ESMTP id EB71020679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503032AbfJXPSK (ORCPT
+        id S2409687AbfJXPSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:18:10 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43917 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503020AbfJXPSJ (ORCPT
+        Thu, 24 Oct 2019 11:18:41 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:35798 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407433AbfJXPSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:18:09 -0400
-Received: by mail-il1-f194.google.com with SMTP id t5so22712022ilh.10
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 08:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Ounxj9cfL6O+QVspuA41qPrL+dtHlnd6zlmABTsVbws=;
-        b=biNiyBsUq1oC7u5yogZy8N29MX7ATTQIXUIPIqqI6g2N8EA9QhwEC0gQemO8Cy5L6a
-         UCFg3RDAYG9lnvohF8+tXuDf+IXq7fLq3dVHXnLyE5vPEUz/DrCR7X3R288BYePyqXg3
-         oYLT/wTPksWncWN9bXdK0yZ0nbFI3oEoJl84Ht2i67n/365THu308Y+OSHFJ18vXXUqR
-         ENefMt09zBo4nBburoq/NmiNK2bRI59OT7KW1kTA/yDrLysLajr6fUNNc1LVC2TMXMzE
-         JIj7P2KKqLbrHsjaQFkGpARY6E99HHxeUwRHMbgsRgF/uSl1vSWl2lvW9K349Ga0HXcy
-         1zXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Ounxj9cfL6O+QVspuA41qPrL+dtHlnd6zlmABTsVbws=;
-        b=rqbJAXeVxFxJsLSo8PSXBaa0sFp4Lo4r4mGHxAdHR8woYMHhdWdg/ypZC8x7bVhncN
-         XqRgRB+QY8ONMvsLWYkd7/TPCVfu9X46huDzVQ2K9uxUwNMCkHadMIzEHAgv+0eazSFd
-         ANNUii+abn/iWw+Cl/Xz4BDShsOPZk0BEOGcGCVxiv9tS4JvmyDo7jo+l1I6WbhqYUbG
-         H/qjWOciqZ6fs3KSpP8Smjj0yBGWDOKXTKPQWTj852kT7rIdjYY8S+eheXyjew6k4VFi
-         DKNhq74f6GEgTGXKOeMPnFaF6BYADDaxTxXO6+FKX+0ZTfUdTGD5WqP2VMTaHT4POukN
-         NbyQ==
-X-Gm-Message-State: APjAAAWwOleIG7W1a9Y5n9JNpFwq1B5LDopMHKM7UxxKuhYv3n9gZR1U
-        ouIJ9gFJrzaHW/9MrCbCpd2VOQ==
-X-Google-Smtp-Source: APXvYqxQ1LtEDnMpoN971luqOI7TbH4CJsi6LuiXRaB4c6bbMVkSBP/cjpjqc6MBqdQnstOla4Sq8g==
-X-Received: by 2002:a92:8fc6:: with SMTP id r67mr43423606ilk.5.1571930288560;
-        Thu, 24 Oct 2019 08:18:08 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id y5sm7755183ilm.63.2019.10.24.08.18.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 08:18:07 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 08:17:59 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Michal Simek <michal.simek@xilinx.com>
-cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        palmer@sifive.com, hch@infradead.org, longman@redhat.com,
-        helgaas@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Firoz Khan <firoz.khan@linaro.org>, sparclinux@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        James Hogan <jhogan@kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-snps-arc@lists.infradead.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 1/2] asm-generic: Make msi.h a mandatory include/asm
- header
-In-Reply-To: <a021f232968cfffe3f2d838da47214c6bbdeeedb.1571911976.git.michal.simek@xilinx.com>
-Message-ID: <alpine.DEB.2.21.9999.1910240810420.20010@viisi.sifive.com>
-References: <cover.1571911976.git.michal.simek@xilinx.com> <a021f232968cfffe3f2d838da47214c6bbdeeedb.1571911976.git.michal.simek@xilinx.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-165076562-1571930279=:20010"
+        Thu, 24 Oct 2019 11:18:41 -0400
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id HTJg210035USYZQ01TJg1v; Thu, 24 Oct 2019 17:18:40 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNesp-0006z0-Td; Thu, 24 Oct 2019 17:18:39 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNesp-0007fQ-RU; Thu, 24 Oct 2019 17:18:39 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial] HID: intel-ish-hid: Spelling s/diconnect/disconnect/
+Date:   Thu, 24 Oct 2019 17:18:37 +0200
+Message-Id: <20191024151837.29421-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Fix misspelling of "disconnect".
 
---8323329-165076562-1571930279=:20010
-Content-Type: text/plain; charset=ISO-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/hid/intel-ish-hid/ishtp/hbm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Thu, 24 Oct 2019, Michal Simek wrote:
+diff --git a/drivers/hid/intel-ish-hid/ishtp/hbm.c b/drivers/hid/intel-ish-hid/ishtp/hbm.c
+index c6c9ac09dac3a377..30a91d068306a000 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/hbm.c
++++ b/drivers/hid/intel-ish-hid/ishtp/hbm.c
+@@ -402,7 +402,7 @@ static void ishtp_hbm_cl_connect_res(struct ishtp_device *dev,
+  * @dev: ISHTP device instance
+  * @disconnect_req: disconnect request structure
+  *
+- * Disconnect request bus message from the fw. Send diconnect response.
++ * Disconnect request bus message from the fw. Send disconnect response.
+  */
+ static void ishtp_hbm_fw_disconnect_req(struct ishtp_device *dev,
+ 	struct hbm_client_connect_request *disconnect_req)
+-- 
+2.17.1
 
-> msi.h is generic for all architectures expect of x86 which has own versio=
-n.
-> Enabling MSI by including msi.h to architecture Kbuild is just additional
-> step which doesn't need to be done.
-> The patch was created based on request to enable MSI for Microblaze.
->=20
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->=20
-> https://lore.kernel.org/linux-riscv/20191008154604.GA7903@infradead.org/
-
-[ ... ]
-
-> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuil=
-d
-> index 16970f246860..1efaeddf1e4b 100644
-> --- a/arch/riscv/include/asm/Kbuild
-> +++ b/arch/riscv/include/asm/Kbuild
-> @@ -22,7 +22,6 @@ generic-y +=3D kvm_para.h
->  generic-y +=3D local.h
->  generic-y +=3D local64.h
->  generic-y +=3D mm-arch-hooks.h
-> -generic-y +=3D msi.h
->  generic-y +=3D percpu.h
->  generic-y +=3D preempt.h
->  generic-y +=3D sections.h
-
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # arch/riscv
-Tested-by: Paul Walmsley <paul.walmsley@sifive.com> # build only, rv32/rv64
-
-Thanks Micha=B3,
-
-
-- Paul
---8323329-165076562-1571930279=:20010--
