@@ -2,86 +2,317 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0999CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DB3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7C921925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B2921D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:38:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438674AbfJXJiN (ORCPT
+        id S2408914AbfJXJiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:38:13 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1200 "EHLO mga09.intel.com"
+        Thu, 24 Oct 2019 05:38:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:44546 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438652AbfJXJiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:38:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 02:38:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
-   d="scan'208";a="210117869"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 24 Oct 2019 02:38:04 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 24 Oct 2019 12:38:03 +0300
-Date:   Thu, 24 Oct 2019 12:38:03 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Prevent deadlock on disconnect
-Message-ID: <20191024093803.GU2819@lahna.fi.intel.com>
-References: <20190812143133.75319-2-mika.westerberg@linux.intel.com>
- <20191022230006.GA46791@google.com>
- <20191023075248.GO2819@lahna.fi.intel.com>
+        id S2438660AbfJXJiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:38:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7E167BB;
+        Thu, 24 Oct 2019 02:38:09 -0700 (PDT)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 314B53F71F;
+        Thu, 24 Oct 2019 02:38:07 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v13 14/22] mm: pagewalk: Add 'depth' parameter to pte_hole
+Date:   Thu, 24 Oct 2019 10:37:08 +0100
+Message-Id: <20191024093716.49420-15-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191024093716.49420-1-steven.price@arm.com>
+References: <20191024093716.49420-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023075248.GO2819@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 10:52:53AM +0300, Mika Westerberg wrote:
-> > Shouldn't we check for slot_status being an error response (~0)
-> > instead of looking for PCIBIOS_DEVICE_NOT_FOUND?  There are 7 RsvdP
-> > bits in Slot Status, so ~0 is not a valid value for the register.
-> > 
-> > All 16 bits of Link Status are defined, but ~0 is still an invalid
-> > value because the Current Link Speed and Negotiated Link Width fields
-> > only define a few valid encodings.
-> 
-> Indeed that's a good point. I'll try that.
+The pte_hole() callback is called at multiple levels of the page tables.
+Code dumping the kernel page tables needs to know what at what depth
+the missing entry is. Add this is an extra parameter to pte_hole().
+When the depth isn't know (e.g. processing a vma) then -1 is passed.
 
-Just checking if I understand correctly what you are suggesting.
+The depth that is reported is the actual level where the entry is
+missing (ignoring any folding that is in place), i.e. any levels where
+PTRS_PER_P?D is set to 1 are ignored.
 
-Currently we use pcie_capability_read_word() and check the return value.
-If the device is gone it returns an error and resets *val to 0. That
-only works if pci_dev_is_disconnected() is true so we would need to do
-something like below.
+Note that depth starts at 0 for a PGD so that PUD/PMD/PTE retain their
+natural numbers as levels 2/3/4.
 
-pciehp_check_link_active():
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ fs/proc/task_mmu.c       |  4 ++--
+ include/linux/pagewalk.h |  7 +++++--
+ mm/hmm.c                 |  8 ++++----
+ mm/migrate.c             |  5 +++--
+ mm/mincore.c             |  1 +
+ mm/pagewalk.c            | 31 +++++++++++++++++++++++++------
+ 6 files changed, 40 insertions(+), 16 deletions(-)
 
-	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-	if (ret == PCIBIOS_DEVICE_NOT_FOUND || lnk_status == (u16)~0)
-		return -ENODEV;
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 9442631fd4af..3ba9ae83bff5 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -505,7 +505,7 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
+ 
+ #ifdef CONFIG_SHMEM
+ static int smaps_pte_hole(unsigned long addr, unsigned long end,
+-		struct mm_walk *walk)
++			  __always_unused int depth, struct mm_walk *walk)
+ {
+ 	struct mem_size_stats *mss = walk->private;
+ 
+@@ -1282,7 +1282,7 @@ static int add_to_pagemap(unsigned long addr, pagemap_entry_t *pme,
+ }
+ 
+ static int pagemap_pte_hole(unsigned long start, unsigned long end,
+-				struct mm_walk *walk)
++			    __always_unused int depth, struct mm_walk *walk)
+ {
+ 	struct pagemapread *pm = walk->private;
+ 	unsigned long addr = start;
+diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+index df424197a25a..90466d60f87a 100644
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@ -17,7 +17,10 @@ struct mm_walk;
+  *			split_huge_page() instead of handling it explicitly.
+  * @pte_entry:		if set, called for each non-empty PTE (lowest-level)
+  *			entry
+- * @pte_hole:		if set, called for each hole at all levels
++ * @pte_hole:		if set, called for each hole at all levels,
++ *			depth is -1 if not known, 0:PGD, 1:P4D, 2:PUD, 3:PMD
++ *			4:PTE. Any folded depths (where PTRS_PER_P?D is equal
++ *			to 1) are skipped.
+  * @hugetlb_entry:	if set, called for each hugetlb entry
+  * @test_walk:		caller specific callback function to determine whether
+  *			we walk over the current vma or not. Returning 0 means
+@@ -45,7 +48,7 @@ struct mm_walk_ops {
+ 	int (*pte_entry)(pte_t *pte, unsigned long addr,
+ 			 unsigned long next, struct mm_walk *walk);
+ 	int (*pte_hole)(unsigned long addr, unsigned long next,
+-			struct mm_walk *walk);
++			int depth, struct mm_walk *walk);
+ 	int (*hugetlb_entry)(pte_t *pte, unsigned long hmask,
+ 			     unsigned long addr, unsigned long next,
+ 			     struct mm_walk *walk);
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 902f5fa6bf93..df3d531c8f2d 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -376,7 +376,7 @@ static void hmm_range_need_fault(const struct hmm_vma_walk *hmm_vma_walk,
+ }
+ 
+ static int hmm_vma_walk_hole(unsigned long addr, unsigned long end,
+-			     struct mm_walk *walk)
++			     __always_unused int depth, struct mm_walk *walk)
+ {
+ 	struct hmm_vma_walk *hmm_vma_walk = walk->private;
+ 	struct hmm_range *range = hmm_vma_walk->range;
+@@ -564,7 +564,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+ again:
+ 	pmd = READ_ONCE(*pmdp);
+ 	if (pmd_none(pmd))
+-		return hmm_vma_walk_hole(start, end, walk);
++		return hmm_vma_walk_hole(start, end, -1, walk);
+ 
+ 	if (thp_migration_supported() && is_pmd_migration_entry(pmd)) {
+ 		bool fault, write_fault;
+@@ -666,7 +666,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+ again:
+ 	pud = READ_ONCE(*pudp);
+ 	if (pud_none(pud))
+-		return hmm_vma_walk_hole(start, end, walk);
++		return hmm_vma_walk_hole(start, end, -1, walk);
+ 
+ 	if (pud_huge(pud) && pud_devmap(pud)) {
+ 		unsigned long i, npages, pfn;
+@@ -674,7 +674,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+ 		bool fault, write_fault;
+ 
+ 		if (!pud_present(pud))
+-			return hmm_vma_walk_hole(start, end, walk);
++			return hmm_vma_walk_hole(start, end, -1, walk);
+ 
+ 		i = (addr - range->start) >> PAGE_SHIFT;
+ 		npages = (end - addr) >> PAGE_SHIFT;
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 4fe45d1428c8..435258df9a36 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2123,6 +2123,7 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+ #ifdef CONFIG_DEVICE_PRIVATE
+ static int migrate_vma_collect_hole(unsigned long start,
+ 				    unsigned long end,
++				    __always_unused int depth,
+ 				    struct mm_walk *walk)
+ {
+ 	struct migrate_vma *migrate = walk->private;
+@@ -2167,7 +2168,7 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 
+ again:
+ 	if (pmd_none(*pmdp))
+-		return migrate_vma_collect_hole(start, end, walk);
++		return migrate_vma_collect_hole(start, end, -1, walk);
+ 
+ 	if (pmd_trans_huge(*pmdp)) {
+ 		struct page *page;
+@@ -2200,7 +2201,7 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 				return migrate_vma_collect_skip(start, end,
+ 								walk);
+ 			if (pmd_none(*pmdp))
+-				return migrate_vma_collect_hole(start, end,
++				return migrate_vma_collect_hole(start, end, -1,
+ 								walk);
+ 		}
+ 	}
+diff --git a/mm/mincore.c b/mm/mincore.c
+index 49b6fa2f6aa1..0e6dd9948f1a 100644
+--- a/mm/mincore.c
++++ b/mm/mincore.c
+@@ -112,6 +112,7 @@ static int __mincore_unmapped_range(unsigned long addr, unsigned long end,
+ }
+ 
+ static int mincore_unmapped_range(unsigned long addr, unsigned long end,
++				   __always_unused int depth,
+ 				   struct mm_walk *walk)
+ {
+ 	walk->private += __mincore_unmapped_range(addr, end,
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index 43acffefd43f..b67400dc1def 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -4,6 +4,22 @@
+ #include <linux/sched.h>
+ #include <linux/hugetlb.h>
+ 
++/*
++ * We want to know the real level where a entry is located ignoring any
++ * folding of levels which may be happening. For example if p4d is folded then
++ * a missing entry found at level 1 (p4d) is actually at level 0 (pgd).
++ */
++static int real_depth(int depth)
++{
++	if (depth == 3 && PTRS_PER_PMD == 1)
++		depth = 2;
++	if (depth == 2 && PTRS_PER_PUD == 1)
++		depth = 1;
++	if (depth == 1 && PTRS_PER_P4D == 1)
++		depth = 0;
++	return depth;
++}
++
+ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+ 			  struct mm_walk *walk)
+ {
+@@ -33,6 +49,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 	unsigned long next;
+ 	const struct mm_walk_ops *ops = walk->ops;
+ 	int err = 0;
++	int depth = real_depth(3);
+ 
+ 	if (ops->test_pmd) {
+ 		err = ops->test_pmd(addr, end, pmd_offset(pud, 0UL), walk);
+@@ -48,7 +65,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 		next = pmd_addr_end(addr, end);
+ 		if (pmd_none(*pmd)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, depth, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -92,6 +109,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 	unsigned long next;
+ 	const struct mm_walk_ops *ops = walk->ops;
+ 	int err = 0;
++	int depth = real_depth(2);
+ 
+ 	if (ops->test_pud) {
+ 		err = ops->test_pud(addr, end, pud_offset(p4d, 0UL), walk);
+@@ -107,7 +125,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 		next = pud_addr_end(addr, end);
+ 		if (pud_none(*pud)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, depth, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -143,6 +161,7 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
+ 	unsigned long next;
+ 	const struct mm_walk_ops *ops = walk->ops;
+ 	int err = 0;
++	int depth = real_depth(1);
+ 
+ 	if (ops->test_p4d) {
+ 		err = ops->test_p4d(addr, end, p4d_offset(pgd, 0UL), walk);
+@@ -157,7 +176,7 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
+ 		next = p4d_addr_end(addr, end);
+ 		if (p4d_none_or_clear_bad(p4d)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, depth, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -189,7 +208,7 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
+ 		next = pgd_addr_end(addr, end);
+ 		if (pgd_none_or_clear_bad(pgd)) {
+ 			if (ops->pte_hole)
+-				err = ops->pte_hole(addr, next, walk);
++				err = ops->pte_hole(addr, next, 0, walk);
+ 			if (err)
+ 				break;
+ 			continue;
+@@ -236,7 +255,7 @@ static int walk_hugetlb_range(unsigned long addr, unsigned long end,
+ 		if (pte)
+ 			err = ops->hugetlb_entry(pte, hmask, addr, next, walk);
+ 		else if (ops->pte_hole)
+-			err = ops->pte_hole(addr, next, walk);
++			err = ops->pte_hole(addr, next, -1, walk);
+ 
+ 		if (err)
+ 			break;
+@@ -280,7 +299,7 @@ static int walk_page_test(unsigned long start, unsigned long end,
+ 	if (vma->vm_flags & VM_PFNMAP) {
+ 		int err = 1;
+ 		if (ops->pte_hole)
+-			err = ops->pte_hole(start, end, walk);
++			err = ops->pte_hole(start, end, -1, walk);
+ 		return err ? err : 1;
+ 	}
+ 	return 0;
+-- 
+2.20.1
 
-Or you mean that we check only for ~0 in which case we either need to
-use pci_read_config_word() directly here or modify pcie_capability_read_word()
-return ~0 instead of clearing it?
