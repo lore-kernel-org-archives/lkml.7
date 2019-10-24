@@ -2,144 +2,191 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DC4CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C49CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CB32166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754712166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEj0umb7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CSvPKwrI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390605AbfJXNsF (ORCPT
+        id S2393671AbfJXNsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:48:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33929 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfJXNsF (ORCPT
+        Thu, 24 Oct 2019 09:48:14 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36609 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391190AbfJXNsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:48:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t16so21038153wrr.1;
-        Thu, 24 Oct 2019 06:48:03 -0700 (PDT)
+        Thu, 24 Oct 2019 09:48:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v19so1154139pfm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EZ0gauJbDLm6nT++pFl8IpdBYl9f3/pCB6BsG6ZimpU=;
-        b=IEj0umb7V/DNnn74s4u91JW4cJLZwnBTLzrk3vURlFx/ucbL1ugoCEj0hdXqyZ5tAe
-         R33iEMU2BnKysT7s/Fqw1e2/we0KMBz+Du+kN+s4PNkxc88QUSyPTkWGlNsFvboBH+M9
-         7lINu6cB7BNmLb9hi2WVXeMZ3fwB689CC1B6vkngaUusziM3wqIgH+bY4DngvULcRYZS
-         mHqE2G/wvVmWJeq5wAV9ytt9ONhwJvTItVr3Ghf9yhnAr5+nnp2Q/VnE1pQDoYY5s4MR
-         WWz7EQ/SZVYGEDnyXX0YMIyVoOHku9nVa9kS2Z6U2R5K3UnLjVAKwtziY5YfhyZSWJAL
-         oISw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YTkxn8NFML1hJbNb7nJmkzGe0KQtmV++af9G21VfEyE=;
+        b=CSvPKwrIgJPFj0aoiORTrDPRUZUgt7G0G2LGBujFZLU4bUkmSThfgZC/XsoGD2XXyO
+         1p3JVWhe4qu+wRH7UI3d4HQls64/1MFEIfPPfLB/mcdc1e3rL5BXz4iscOCtBLmhXyBu
+         Ylbo2PTxvm8T0Fz/zoBAhv+PlwY2rbfi/mXuH1AEG0o3cX0LxgZ/NS5q2AEE+FF/rAY1
+         jhzyDg+pxMQeQ41GgzIA/0Gl246bs2Q4U4tsWNJz5mYnbVDTX5SVx3ApNqqkGvoo479J
+         Y8VDN3yR8mFjiy2K2QeMjHDzM1umYLqrPEBpPB4jnGoAXu/9hzPe977YfEZz/Ejit5f0
+         arxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EZ0gauJbDLm6nT++pFl8IpdBYl9f3/pCB6BsG6ZimpU=;
-        b=Fcb7CiGNpFAIxLBIgd0LqPkn9B0UBYJvxj7gqwCQnXItVwAZuAnSLoXdzivOVKXpXA
-         8DCV98GG8HPGSLOKXmaH6/37rXg8REUQ0wxa+I2z9wUOZfJkmLkyf7tiVb5sJMbTxI+H
-         1p+V006Z3IiSwYhWw3LtwIu+85s1sZK67BJIchxLpd/MyZOmVsoNdtcyDjM68g+gt98V
-         z6NbQtLdoHV9s9ZCKYhsxkzwUOCai1LYbi+cNK7YO2zDD2DN50GrTqNN+spp9tvkaIDL
-         03hWZE72/gjQoH1srgCJC+O09xIrjDorrcbD/L5X9J7EhXMzb9nWiMhMmGbntvp+x32P
-         MghQ==
-X-Gm-Message-State: APjAAAWFsDQ51w1FF25IgWls7DFDXbiH6cizfwbRAbY/oQbQm0IyO+h5
-        EAWJay7JO/OngRFwPolRuo8=
-X-Google-Smtp-Source: APXvYqwkpODXAwasjgKLcXY1OWtr0pF5zM9bczif2plmipl0NDD3sP2jDlEomkFXqJnFmDE1VZZEJA==
-X-Received: by 2002:adf:dbd2:: with SMTP id e18mr4017887wrj.268.1571924882363;
-        Thu, 24 Oct 2019 06:48:02 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id v81sm1532612wmg.4.2019.10.24.06.47.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 06:47:57 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:47:56 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] gpu: host1x: Remove implicit IOMMU backing on
- client's registration
-Message-ID: <20191024134756.GC2924027@ulmo>
-References: <20190623173743.24088-1-digetx@gmail.com>
- <20191024115016.GA2924027@ulmo>
- <55ab29ad-da9b-c178-4480-dc6edb09b3e4@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YTkxn8NFML1hJbNb7nJmkzGe0KQtmV++af9G21VfEyE=;
+        b=QI7hlHLrgtJo0TwCWkjp1FkuxY1k4bm80P5TUB7i+GXEJBpsUyf+pkQlHTAZUNH6gc
+         iTsI4Jd/eiH6gaOndF2yItiDBlldwNbhaYX5RbGuEewuvWagayHq9Hy9Z9TdixhR8Qq1
+         P1iTkkUPo/ypXuEuHn5Iudde8jp1M9Xo7HmpVzYy6QIok0qffU4/VDiWLGFPfM2l/ViO
+         qEeFr7z/NLxvwHapUJYbm0DBHVl37yHyck4G/r2378cnUHcVyF22c0UgzIHZkS0RTLXL
+         gzbOXweAS24Rq0Hy67fHD5XUzfE0QSZmHc+5386M5698JXsG+j1FZgVO4LVLP+s/36M1
+         sugg==
+X-Gm-Message-State: APjAAAUC3bl3rRB+pYlSYYcltt64aFvIWc1FFw8zoLr5RLYWkvBYiycc
+        pbZPI4X88qNWvMDT1XvNm0M+dMDAreofLlLcs1iKHg==
+X-Google-Smtp-Source: APXvYqwvLbt82jqjHLzp4xdwup+ogWdEiiBcSfJpJJLRribFLRZByhVHCu5c0rObT2Ia7jCUl/nz/1FIZpdLOJSAfzg=
+X-Received: by 2002:a17:90a:6509:: with SMTP id i9mr7155187pjj.47.1571924893072;
+ Thu, 24 Oct 2019 06:48:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oJ71EGRlYNjSvfq7"
-Content-Disposition: inline
-In-Reply-To: <55ab29ad-da9b-c178-4480-dc6edb09b3e4@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <cover.1571844200.git.andreyknvl@google.com> <beeae42e313ef57b4630cc9f36e2e78ad42fd5b7.1571844200.git.andreyknvl@google.com>
+ <20191023152216.796aeafd832ba5351d86d3ca@linux-foundation.org>
+In-Reply-To: <20191023152216.796aeafd832ba5351d86d3ca@linux-foundation.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 24 Oct 2019 15:48:01 +0200
+Message-ID: <CAAeHK+xBrJSqicGC-T3c9V2yg6po4HSiekxVSBbT0uxLfVkwbA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] kcov: remote coverage support
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     USB list <linux-usb@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 24, 2019 at 12:22 AM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Wed, 23 Oct 2019 17:24:29 +0200 Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> > This patch adds background thread coverage collection ability to kcov.
+> >
+> > With KCOV_ENABLE coverage is collected only for syscalls that are issued
+> > from the current process. With KCOV_REMOTE_ENABLE it's possible to collect
+> > coverage for arbitrary parts of the kernel code, provided that those parts
+> > are annotated with kcov_remote_start()/kcov_remote_stop().
+> >
+> > This allows to collect coverage from two types of kernel background
+> > threads: the global ones, that are spawned during kernel boot and are
+> > always running (e.g. USB hub_event()); and the local ones, that are
+> > spawned when a user interacts with some kernel interface (e.g. vhost
+> > workers).
+> >
+> > To enable collecting coverage from a global background thread, a unique
+> > global handle must be assigned and passed to the corresponding
+> > kcov_remote_start() call. Then a userspace process can pass a list of such
+> > handles to the KCOV_REMOTE_ENABLE ioctl in the handles array field of the
+> > kcov_remote_arg struct. This will attach the used kcov device to the code
+> > sections, that are referenced by those handles.
+> >
+> > Since there might be many local background threads spawned from different
+> > userspace processes, we can't use a single global handle per annotation.
+> > Instead, the userspace process passes a non-zero handle through the
+> > common_handle field of the kcov_remote_arg struct. This common handle gets
+> > saved to the kcov_handle field in the current task_struct and needs to be
+> > passed to the newly spawned threads via custom annotations. Those threads
+> > should in turn be annotated with kcov_remote_start()/kcov_remote_stop().
+> >
+> > Internally kcov stores handles as u64 integers. The top byte of a handle
+> > is used to denote the id of a subsystem that this handle belongs to, and
+> > the lower 4 bytes are used to denote a handle id within that subsystem.
+> > A reserved value 0 is used as a subsystem id for common handles as they
+> > don't belong to a particular subsystem. The bytes 4-7 are currently
+> > reserved and must be zero. In the future the number of bytes used for the
+> > subsystem or handle ids might be increased.
+> >
+> > When a particular userspace proccess collects coverage by via a common
+> > handle, kcov will collect coverage for each code section that is annotated
+> > to use the common handle obtained as kcov_handle from the current
+> > task_struct. However non common handles allow to collect coverage
+> > selectively from different subsystems.
+> >
+> > ...
+> >
+> > +static struct kcov_remote *kcov_remote_add(struct kcov *kcov, u64 handle)
+> > +{
+> > +     struct kcov_remote *remote;
+> > +
+> > +     if (kcov_remote_find(handle))
+> > +             return ERR_PTR(-EEXIST);
+> > +     remote = kmalloc(sizeof(*remote), GFP_ATOMIC);
+> > +     if (!remote)
+> > +             return ERR_PTR(-ENOMEM);
+> > +     remote->handle = handle;
+> > +     remote->kcov = kcov;
+> > +     hash_add(kcov_remote_map, &remote->hnode, handle);
+> > +     return remote;
+> > +}
+> > +
+> >
+> > ...
+> >
+> > +             spin_lock(&kcov_remote_lock);
+> > +             for (i = 0; i < remote_arg->num_handles; i++) {
+> > +                     kcov_debug("handle %llx\n", remote_arg->handles[i]);
+> > +                     if (!kcov_check_handle(remote_arg->handles[i],
+> > +                                             false, true, false)) {
+> > +                             spin_unlock(&kcov_remote_lock);
+> > +                             kcov_disable(t, kcov);
+> > +                             return -EINVAL;
+> > +                     }
+> > +                     remote = kcov_remote_add(kcov, remote_arg->handles[i]);
+> > +                     if (IS_ERR(remote)) {
+> > +                             spin_unlock(&kcov_remote_lock);
+> > +                             kcov_disable(t, kcov);
+> > +                             return PTR_ERR(remote);
+> > +                     }
+> > +             }
+>
+> It's worrisome that this code can perform up to 65536 GFP_ATOMIC
+> allocations without coming up for air.  The possibility of ENOMEM or of
+> causing collateral problems is significant.  It doesn't look too hard
+> to change this to use GFP_KERNEL?
 
---oJ71EGRlYNjSvfq7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, I'll do that in v3. I can also change the limit on the number of
+handles to something lower (0x100?).
 
-On Thu, Oct 24, 2019 at 04:35:13PM +0300, Dmitry Osipenko wrote:
-> 24.10.2019 14:50, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Sun, Jun 23, 2019 at 08:37:41PM +0300, Dmitry Osipenko wrote:
-> >> On ARM32 we don't want any of the clients device to be backed by the
-> >> implicit domain, simply because we can't afford such a waste on older
-> >> Tegra SoCs that have very few domains available in total. The recent I=
-OMMU
-> >> support addition for the Video Decoder hardware uncovered the problem
-> >> that an unfortunate drivers probe order results in the DRM driver probe
-> >> failure if CONFIG_ARM_DMA_USE_IOMMU=3Dy due to a shortage of IOMMU dom=
-ains
-> >> caused by the implicit backing. The host1x_client_register() is a comm=
-on
-> >> function that is invoked by all of the relevant DRM drivers during the=
-irs
-> >> probe and hence it is convenient to remove the implicit backing there,
-> >> resolving the problem.
-> >>
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >> ---
-> >>  drivers/gpu/host1x/bus.c | 19 +++++++++++++++++++
-> >>  1 file changed, 19 insertions(+)
-> >=20
-> > I don't really want to do this in a central place like this. If we
-> > really do need this, why can't we do it in the individual drivers?
->=20
-> Why do you want to duplicate the same action for each driver instead of
-> doing it in a single common place?
+>
+> > +u64 kcov_common_handle(void)
+> > +{
+> > +     return current->kcov_handle;
+> > +}
+>
+> I don't immediately understand what this "common handle" thing is all about.
+> Code is rather lacking in this sort of high-level commentary?
 
-I don't mind doing it in a common place in particular, I just don't want
-to do this within the host1x bus infrastructure. This is really a policy
-decision that should be up to drivers. Consider the case where we had a
-different host1x driver (for V4L2 for example) that would actually want
-to use the DMA API. In that case we may want to detach in the DRM driver
-but not the V4L2 driver.
+It's described in the documentation, but I'll add comments to the
+exported functions to explain how they work and how they should be
+used.
 
-Thierry
-
---oJ71EGRlYNjSvfq7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2xq4kACgkQ3SOs138+
-s6FNag//dCQTLu7oPNT3zc3b6EaUkms9Hy4DuTeMGzeKtu+qZRIc8UeavqaUk+1h
-XydJK/GxuftWAPot/ZAPPeczZe5hWM7621VwYhCnArmwZkCmcxgiUDNy2hjgmtmZ
-K7PjUUhwLHAvckWHxwfaYy8Fd2m+nK2ALvppph7FNsAxfZrZ28KjEGIFx96mGwdv
-/uoZt6jlhjvmEk0C5xRI8CGjZSCUy3/HO8j1oTLiE21ErxreCqAUZNXCKC6otQad
-5NsRhzYIQA+SUiFx9a/OcvN9weYTk+9T1+6zm6zwxY1lWdMbsqztu8Ucm8Mt6OYC
-20wB2GhKJjEZJrcXGf58CfHrsc8Iv5HzB2ozwVQAZjj3GptZZyTA0xNiJYin5Qso
-9bTMICJqwwn2XLjKW/4+mqdZtd1/2fbJ3MOqYAwkCPC5PH/97NNN5RpcrQCYzvPF
-XCBUuYA86v4T6o1j0NeooKfPFUiPjIfHbyPigPs9Eb5BzMtcxqh3F3VTVZ0tpcZ0
-jl9ZbFNUQs690Zwc6MLTXePx58TwWU3GqHR+zcCEgn+1y7sTiZ9ePzDHuKGN8pnC
-xpaur5WtxLu28PS2Q6Uu4o+TD1Ey/Ifc1JJlmyoEzHHsdgOfNPIWPs3MYAZS+Nro
-IK8LIOje6av2v2hf1Jelpm/PbtIYOLFV2iFgDxofZy/bEoG0Xfg=
-=FCO/
------END PGP SIGNATURE-----
-
---oJ71EGRlYNjSvfq7--
+Thanks!
