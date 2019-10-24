@@ -2,175 +2,231 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D227ACA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5256DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B259B2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D75921929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:08:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SqRnrqQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbfJXWHD (ORCPT
+        id S1730182AbfJXWIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:07:03 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41073 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbfJXWHD (ORCPT
+        Thu, 24 Oct 2019 18:08:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42760 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730159AbfJXWIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:07:03 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 824E9240007;
-        Thu, 24 Oct 2019 22:06:59 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 00:06:58 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, a.zummo@towertech.it,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        phh@phh.me, b.galvani@gmail.com, stefan@agner.ch,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH 5/5] rtc: rtc-rc5t583: add ricoh rc5t619 RTC driver
-Message-ID: <20191024220658.GZ3125@piout.net>
-References: <20191021054104.26155-1-andreas@kemnade.info>
- <20191021054104.26155-6-andreas@kemnade.info>
- <20191021101528.GU3125@piout.net>
- <20191021231359.1cada218@kemnade.info>
- <20191023231717.GU3125@piout.net>
- <20191024222524.5c0ac910@kemnade.info>
+        Thu, 24 Oct 2019 18:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571954916;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Lt0ui2Zn4GJJ+6SRnh8DuJwgMxQuUYdZDUgODW613/I=;
+        b=SqRnrqQvoHTpOjdUQViRW+ADOrpzF2REeez/q+EUPxZJcVCXXD72OkmNDcw40baEVI/p78
+        bUWcJNl+lUVqHXdaHGUNZVMex4Fht4Lc5/9/ii1azxQE23uSvfF+IoHsE++AkBd+Jds8w+
+        Oasb58dyd1pMAOwCheV5JlQStrLpi+4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-163-Zc6GJbPyNASsY8gcpckuSQ-1; Thu, 24 Oct 2019 18:08:31 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48AFF47B;
+        Thu, 24 Oct 2019 22:08:29 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 961B05C1B5;
+        Thu, 24 Oct 2019 22:08:17 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 18:08:14 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V7 14/21] audit: contid check descendancy and
+ nesting
+Message-ID: <20191024220814.pid5ql6kvyr4ianb@madcap2.tricolour.ca>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <16abf1b2aafeb5f1b8dae20b9a4836e54f959ca5.1568834524.git.rgb@redhat.com>
+ <CAHC9VhSRmn46DcazH4Q35vOSxVoEu8PsX79aurkHkFymRoMwag@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <CAHC9VhSRmn46DcazH4Q35vOSxVoEu8PsX79aurkHkFymRoMwag@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: Zc6GJbPyNASsY8gcpckuSQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191024222524.5c0ac910@kemnade.info>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/10/2019 22:25:24+0200, Andreas Kemnade wrote:
-> > It is actually kind of an issue to clear it because it may have been set
-> > to a useful value. Anyway, I understand you don't know much about the
-> > register...
-> > 
-> Or to some nonsense. The reason I am clearing it is that the original driver
-> is doing that and is also exporting it via sysfs. But I could reduce it to 
-> clearing it at PON condition, then chances are low that there is something
-> important in there.
-> 
+On 2019-10-10 20:40, Paul Moore wrote:
+> On Wed, Sep 18, 2019 at 9:26 PM Richard Guy Briggs <rgb@redhat.com> wrote=
+:
+> > ?fixup! audit: convert to contid list to check for orch/engine ownershi=
+p
+>=20
+> ?
+>=20
+> > Require the target task to be a descendant of the container
+> > orchestrator/engine.
+> >
+> > You would only change the audit container ID from one set or inherited
+> > value to another if you were nesting containers.
+> >
+> > If changing the contid, the container orchestrator/engine must be a
+> > descendant and not same orchestrator as the one that set it so it is no=
+t
+> > possible to change the contid of another orchestrator's container.
+>=20
+> Did you mean to say that the container orchestrator must be an
+> ancestor of the target, and the same orchestrator as the one that set
+> the target process' audit container ID?
 
-That would be preferable to do it only at PON.
+Not quite, the first half yes, but the second half: if it was already
+set by that orchestrator, it can't be set again.  If it is a different
+orchestrator that is a descendant of the orchestrator that set it, then
+allow the action.
 
-> > It would be very useful to be able to detect voltage drop. Also PON is a
-> > useful information that is lost when probing the driver. You
-> > definitively know the time is incorrect after power on and this should
-> > be reset only after setting the time at least once (the same for voltage
-> > drop).
-> > 
-> So returing -EIO in read_time and clearing things only after set_time?
-> 
+> Or maybe I'm missing something about what you are trying to do?
 
-That would be EINVAL but yes, this would be the best.
+Does that help clarify it?
 
-> Do you see tha VDET issue as a blocker for accepting this driver?
-> I agree it might be useful. But IMHO it is too much guesswork and hard to test.
-> But contrary to the other bits used with a clear name it would be pure guesswork
-> and hard to test.  
-> 
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  kernel/audit.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++=
++-------
+> >  1 file changed, 62 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 9ce7a1ec7a92..69fe1e9af7cb 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -2560,6 +2560,39 @@ static struct task_struct *audit_cont_owner(stru=
+ct task_struct *tsk)
+> >  }
+> >
+> >  /*
+> > + * task_is_descendant - walk up a process family tree looking for a ma=
+tch
+> > + * @parent: the process to compare against while walking up from child
+> > + * @child: the process to start from while looking upwards for parent
+> > + *
+> > + * Returns 1 if child is a descendant of parent, 0 if not.
+> > + */
+> > +static int task_is_descendant(struct task_struct *parent,
+> > +                             struct task_struct *child)
+> > +{
+> > +       int rc =3D 0;
+> > +       struct task_struct *walker =3D child;
+> > +
+> > +       if (!parent || !child)
+> > +               return 0;
+> > +
+> > +       rcu_read_lock();
+> > +       if (!thread_group_leader(parent))
+> > +               parent =3D rcu_dereference(parent->group_leader);
+> > +       while (walker->pid > 0) {
+> > +               if (!thread_group_leader(walker))
+> > +                       walker =3D rcu_dereference(walker->group_leader=
+);
+> > +               if (walker =3D=3D parent) {
+> > +                       rc =3D 1;
+> > +                       break;
+> > +               }
+> > +               walker =3D rcu_dereference(walker->real_parent);
+> > +       }
+> > +       rcu_read_unlock();
+> > +
+> > +       return rc;
+> > +}
+> > +
+> > +/*
+> >   * audit_set_contid - set current task's audit contid
+> >   * @task: target task
+> >   * @contid: contid value
+> > @@ -2587,22 +2620,43 @@ int audit_set_contid(struct task_struct *task, =
+u64 contid)
+> >         oldcontid =3D audit_get_contid(task);
+> >         read_lock(&tasklist_lock);
+> >         /* Don't allow the contid to be unset */
+> > -       if (!audit_contid_valid(contid))
+> > +       if (!audit_contid_valid(contid)) {
+> >                 rc =3D -EINVAL;
+> > +               goto unlock;
+> > +       }
+> >         /* Don't allow the contid to be set to the same value again */
+> > -       else if (contid =3D=3D oldcontid) {
+> > +       if (contid =3D=3D oldcontid) {
+> >                 rc =3D -EADDRINUSE;
+> > +               goto unlock;
+> > +       }
+> >         /* if we don't have caps, reject */
+> > -       else if (!capable(CAP_AUDIT_CONTROL))
+> > +       if (!capable(CAP_AUDIT_CONTROL)) {
+> >                 rc =3D -EPERM;
+> > -       /* if task has children or is not single-threaded, deny */
+> > -       else if (!list_empty(&task->children))
+> > +               goto unlock;
+> > +       }
+> > +       /* if task has children, deny */
+> > +       if (!list_empty(&task->children)) {
+> >                 rc =3D -EBUSY;
+> > -       else if (!(thread_group_leader(task) && thread_group_empty(task=
+)))
+> > +               goto unlock;
+> > +       }
+> > +       /* if task is not single-threaded, deny */
+> > +       if (!(thread_group_leader(task) && thread_group_empty(task))) {
+> >                 rc =3D -EALREADY;
+> > -       /* if contid is already set, deny */
+> > -       else if (audit_contid_set(task))
+> > +               goto unlock;
+> > +       }
+> > +       /* if task is not descendant, block */
+> > +       if (task =3D=3D current) {
+> > +               rc =3D -EBADSLT;
+> > +               goto unlock;
+> > +       }
+> > +       if (!task_is_descendant(current, task)) {
+> > +               rc =3D -EXDEV;
+> > +               goto unlock;
+> > +       }
+> > +       /* only allow contid setting again if nesting */
+> > +       if (audit_contid_set(task) && current =3D=3D audit_cont_owner(t=
+ask))
+> >                 rc =3D -ECHILD;
+> > +unlock:
+> >         read_unlock(&tasklist_lock);
+> >         if (!rc) {
+> >                 struct audit_cont *oldcont =3D audit_cont(task);
+>=20
+> --
+> paul moore
+> www.paul-moore.com
 
-I understand this would be too much guessing so you can leave it out.
+- RGB
 
-> > There is no specific test because reading any time in the afternoon
-> > would fail if there is a mismatch. The correct way to handle this would
-> > be to support both 12h and 24h mode in read_time and always set 24h mode
-> > in set_time instead of setting it at probe time.
-> > 
-> I would expect undefined behavior, not necessarily a fail. Interesting
-> things will happen the next time the hour register is touched.
-> If you assume that the scenario with other users in 12h mode is important
-> enough to consider, then you are right, supporting both 12h and 24h in read_time
-> is better. About always set 24h: If there is some other user only prepared for
-> 12h mode, there will be trouble. Also we might need to reconfigure an alarm
-> to the selected mode.
-> 
-> I guess setting 24h mode at PON and checking at every time and alarm read/write
-> what mode we are in. Then we do not need to reprogram alarm.
-> 
-> What driver is doing 24h/12h in a good way, just as a good example?
-> 
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
-Very few drivers are caring and most are assuming 24h mode. The best
-ones are handling 12h in read. Very few are are keeping 12h mode when
-setting the time and I don't think it is worth it.
-
-My point was that it isn't really useful to set the 24h mode in probe
-because if it is in 12h mode, then the time will be invalid until the
-next set_time.
-
-> > > > If the PMIC can be used to start the platform, you probably don't want
-> > > > to disable the alarm here. Even if it doesn't, is it actually useful to
-> > > > disable the alarm?
-> > > >   
-> > > 
-> > > well, I think this is not executed if you do
-> > > rtcwake -m off -s something
-> > > At least my device powers on after that.
-> > >   
-> > 
-> > This is waking from suspend, I was thinking powering up the platform.
-> > 
-> well, -m mem is waking from suspend
-> -m off is halt
-> 
-> man rtcwake says:
-> 
->               off    ACPI state S5 (Poweroff).  This is done by calling
->               '/sbin/shutdown'.  Not officially supported by ACPI, but
->               it usually works.
-> 
-> 
-> testing
-> rtcwake -s 60 -m no
-> halt
-> 
-> it powers on successfully.
-> 
-> but
-> rtcwake -s 60 -m no
-> cd /sys/bus/platform/drivers/rc5t619-rtc
-> echo rc5t619-rtc >unbind
-> halt
-> 
-> does *not* power on. So only here .remove is called.
-> 
-> But that is just for understanding what we are doing here.
-> It is more important to have a common behavior across drivers.
-> 
-
-You are right and I'm wrong
-
-> > > Somehow I expect the driver to clean up there. e.g. rc5t583 does that, too.
-> > > But no strong opinion here.
-> > >   
-> > 
-> So it seems that I have found a driver doing something uncommon here an
-> an example.
-> 
-> > Again, the RTC is still running after a shutdown (which will run the
-> > .remove callback). Disabling the alarm means that it will not fire while
-> > linux is not running I'm not sure what the upside is. But this prevents
-> > the RTC from starting the system if someone uses the alarm pin to do
-> > that.
-> > 
-> As said disabling alarm at this place means not disabling alarm at shutdown
-> but think it is simply not necessary.
-> 
-
-That would still be my opinion.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
