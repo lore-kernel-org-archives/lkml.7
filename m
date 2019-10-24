@@ -2,169 +2,62 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E110ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 00:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BCECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BD720684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 00:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="o8wsuhOq"
+	by mail.kernel.org (Postfix) with ESMTP id BFF2520650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407890AbfJXAs2 (ORCPT
+        id S2391006AbfJXBMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 20:48:28 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58342 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405818AbfJXAsV (ORCPT
+        Wed, 23 Oct 2019 21:12:23 -0400
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:60006 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388218AbfJXBMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 20:48:21 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EFDDE886BF;
-        Thu, 24 Oct 2019 13:48:17 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571878097;
-        bh=Hjx2JI6pureQLHmmNJuUqkEbwbT6++g9hZ8eI416dYQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=o8wsuhOqs9YZLRGHDdAoCPKI29xyQ+qobp3y3jXloW/HQqA1NzOxdGNw+L18XdZ+c
-         GHxfTuNmGAvgiPhaT6XOb1QqKXnq2sKQb2f8hHpfWkXM0smjXb8KTLjwloXGbISDxV
-         5U0sWZJDZu9bAieprmNsN3IsOhcDoJ2gZe/S2o5Odhv2YJ3HQdMU78PQFA5UN9vh+k
-         K8Ef34z3QpukxDXYvXtfxrwNO5LSxvfEmveWEg/XtFlH/Qfc/MgDkJw8/Ym6DNLGDd
-         JyO9r0UNtbof5KXzewAwiHEZwv8vA8G96SSxs4yFUvGRW/FLfxdv6ZJZV4vYGeinjd
-         uYjjYZkaJXROw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5db0f4d10001>; Thu, 24 Oct 2019 13:48:17 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 0202A13ED56;
-        Thu, 24 Oct 2019 13:48:22 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id C5D8128005C; Thu, 24 Oct 2019 13:48:17 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
-Date:   Thu, 24 Oct 2019 13:48:14 +1300
-Message-Id: <20191024004816.5539-2-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191024004816.5539-1-chris.packham@alliedtelesis.co.nz>
-References: <20191024004816.5539-1-chris.packham@alliedtelesis.co.nz>
+        Wed, 23 Oct 2019 21:12:23 -0400
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1iNRfm-0007Dj-Uy; Thu, 24 Oct 2019 03:12:18 +0200
+Date:   Thu, 24 Oct 2019 03:12:18 +0200
+From:   Florian Westphal <fw@strlen.de>
+To:     praveen chaudhary <praveen5582@gmail.com>
+Cc:     Florian Westphal <fw@strlen.de>, davem@davemloft.net,
+        kadlec@netfilter.org, pablo@netfilter.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhenggen Xu <zxu@linkedin.com>,
+        Andy Stracner <astracner@linkedin.com>
+Subject: Re: [PATCH] [netfilter]: Fix skb->csum calculation when netfilter
+ manipulation for NF_NAT_MANIP_SRC\DST is done on IPV6 packet.
+Message-ID: <20191024011218.GT25052@breakpoint.cc>
+References: <1571857342-8407-1-git-send-email-pchaudhary@linkedin.com>
+ <1571857342-8407-2-git-send-email-pchaudhary@linkedin.com>
+ <20191023193337.GP25052@breakpoint.cc>
+ <CAJ_cd4qHM3kqz24Uywpyyz0mPz7axiNZk0Q385ROd4O8XZ11fA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ_cd4qHM3kqz24Uywpyyz0mPz7axiNZk0Q385ROd4O8XZ11fA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This GPIO controller is present on a number of Broadcom switch ASICs
-with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-blocks but different enough to require a separate driver.
+praveen chaudhary <praveen5582@gmail.com> wrote:
+> inet_proto_csum_replace16 is called from many places, whereas this fix is
+> applicable only for nf_nat_ipv6_csum_update. where we need to update
+> skb->csum for ipv6 src/dst address change.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+Under which circumstances does inet_proto_csum_replace16 upate
+skb->csum correctly?
 
-Notes:
-    Changes in v3:
-    - incorporate review comments from Rob and Bart
-   =20
-    Changes in v2:
-    - Document as DT schema
-    - Include ngpios, #gpio-cells and gpio-controller properties
+> So, I added a new function. Basically, I used a safe approach to fix it,
+> without impacting other cases. Let me know other options,  I am open to
+> suggestions.
 
- .../bindings/gpio/brcm,xgs-iproc.yaml         | 70 +++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc=
-.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml b=
-/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-new file mode 100644
-index 000000000000..ec1fd3a64aa2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom XGS iProc GPIO controller
-+
-+maintainers:
-+  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-+
-+description: |
-+  This controller is the Chip Common A GPIO present on a number of Broad=
-com
-+  switch ASICs with integrated SoCs.
-+
-+properties:
-+  compatible:
-+    const: brcm,iproc-gpio-cca
-+
-+  reg:
-+    items:
-+      - description: the I/O address containing the GPIO controller
-+                     registers.
-+      - description: the I/O address containing the Chip Common A interr=
-upt
-+                     registers.
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+      const: 2
-+
-+  ngpios:
-+    minimum: 0
-+    maximum: 32
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+dependencies:
-+  interrupt-controller: [ interrupts ]
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    gpio@18000060 {
-+        compatible =3D "brcm,iproc-gpio-cca";
-+        #gpio-cells =3D <2>;
-+        reg =3D <0x18000060 0x50>,
-+              <0x18000000 0x50>;
-+        ngpios =3D <12>;
-+        gpio-controller;
-+        interrupt-controller;
-+        #interrupt-cells =3D <2>;
-+        interrupts =3D <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+
-+
-+...
---=20
-2.23.0
-
+You seem to imply inet_proto_csum_replace16 is fine and only broken for ipv6
+nat.
