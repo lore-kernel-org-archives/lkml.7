@@ -2,137 +2,90 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BEACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4613CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C69020679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A693220650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2KqYige"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="CrpDtFtR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410058AbfJXRDj (ORCPT
+        id S2410072AbfJXRFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:03:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56468 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2410047AbfJXRDj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:03:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571936618;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KPuVZSjsJby28GYRrSW7KOOUQEyPDIp7ehYqx2CiMW8=;
-        b=B2KqYigeTOy41TCbKdWuujH9Kmc/DgRUCAo8a2h4j/s6nnLVD1Jetjp09J1WGB9d+QvcU3
-        048u/Ua6FXJaXijMUSEfFCR0SB5jJlC62e5lwwsQR+P06AfiYqzeiZBNtEv0QDgjzDPpfC
-        CewWVt/09BD0Cc5C/2e7lwHYjJm7sLo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-4DGjzRdVOO-j_UhaexIoDw-1; Thu, 24 Oct 2019 13:03:34 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CED11800DFB;
-        Thu, 24 Oct 2019 17:03:22 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA8096012E;
-        Thu, 24 Oct 2019 17:03:16 +0000 (UTC)
-Subject: Re: [PATCH 0/2] Enabling MSI for Microblaze
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        palmer@sifive.com, hch@infradead.org, helgaas@kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Firoz Khan <firoz.khan@linaro.org>, sparclinux@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        James Hogan <jhogan@kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Thu, 24 Oct 2019 13:05:08 -0400
+Received: from dougal.metanate.com ([90.155.101.14]:4724 "EHLO metanate.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405819AbfJXRFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:05:08 -0400
+X-Greylist: delayed 1158 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 13:05:07 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/simple; d=metanate.com;
+         s=stronger; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=VPmIoUH0glx+4sENj5EpAXnVlu8h+LV7UwdHblVC1Ng=; b=CrpDtFtRqbksIhycdO0lgzURu+
+        8yjQ5E8VqRi22Exu5Z2OryrkD5BvTXOSvzoz5/VbTwGdOgtVFTe9EAO+XmJzVsJBtK+GCJXPeOU8q
+        JyW0P1mrrB39R/NO9aMAtuo7mHixa6/7kK6fenK3uGHOmx2BVccR8YjDuMrJgR2gy3C4HdJBOJN7O
+        bHQbvWOaAo3M47xf7okxFiQLebFekLLDQp4Aq+xpr+YCkOGmwaZqm06/gwsZUPcJBuE/tOGaSRg3v
+        1ATaMjAG7/apiZ+TlttBvy7uurNgYfL/bvG96VNt99pYkDC0gQVuP9xYLl92jtbbWV9kBIzR2UUY+
+        p6bp7lHg==;
+Received: from 188-39-28-98.static.enta.net ([188.39.28.98] helo=donbot.corp.numark.com)
+        by email.metanate.com with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <john@metanate.com>)
+        id 1iNgF9-0004oc-4a; Thu, 24 Oct 2019 17:45:47 +0100
+From:   John Keeping <john@metanate.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-snps-arc@lists.infradead.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <cover.1571911976.git.michal.simek@xilinx.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <e9feafd1-8497-025b-e81d-f0e974038f3c@redhat.com>
-Date:   Thu, 24 Oct 2019 13:03:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        linux-kernel@vger.kernel.org, John Keeping <john@metanate.com>
+Subject: [PATCH 0/6] USB: gadget: f_hid: fix lifetime issues
+Date:   Thu, 24 Oct 2019 17:45:32 +0100
+Message-Id: <20191024164538.3161474-1-john@metanate.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1571911976.git.michal.simek@xilinx.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: 4DGjzRdVOO-j_UhaexIoDw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authenticated: YES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 6:13 AM, Michal Simek wrote:
-> Hi,
->
-> these two patches come from discussion with Christoph, Bjorn, Palmer and
-> Waiman. The first patch was suggestion by Christoph here
-> https://lore.kernel.org/linux-riscv/20191008154604.GA7903@infradead.org/
-> The second part was discussed
-> https://lore.kernel.org/linux-pci/mhng-5d9bcb53-225e-441f-86cc-b335624b3e=
-7c@palmer-si-x1e/
-> and
-> https://lore.kernel.org/linux-pci/20191017181937.7004-1-palmer@sifive.com=
-/
->
-> Thanks,
-> Michal
->
->
-> Michal Simek (1):
->   asm-generic: Make msi.h a mandatory include/asm header
->
-> Palmer Dabbelt (1):
->   pci: Default to PCI_MSI_IRQ_DOMAIN
->
->  arch/arc/include/asm/Kbuild     | 1 -
->  arch/arm/include/asm/Kbuild     | 1 -
->  arch/arm64/include/asm/Kbuild   | 1 -
->  arch/mips/include/asm/Kbuild    | 1 -
->  arch/powerpc/include/asm/Kbuild | 1 -
->  arch/riscv/include/asm/Kbuild   | 1 -
->  arch/sparc/include/asm/Kbuild   | 1 -
->  drivers/pci/Kconfig             | 2 +-
->  include/asm-generic/Kbuild      | 1 +
->  9 files changed, 2 insertions(+), 8 deletions(-)
->
-That looks OK.
+File descriptors referencing the /dev/hidgN device created by the HID
+gadget can outlive the underlying gadget function, which creates easy to
+trigger use-after-frees in the kernel.
 
-Acked-by: Waiman Long <longman@redhat.com>
+A simple reproduction for this using the libusbgx example programs is:
+
+	$ gadget-hid
+	$ exec 3<> /dev/hidg0
+	$ gadget-vid-pid-remove
+	$ exec 3<&-
+
+Closing the file descriptor on the last line triggers a use-after-free
+which can be seen immediately with slub_debug=P.
+
+This series fixes this by making the struct cdev associated with the
+module rather than dynamically allocated for the gadget and changing
+struct f_hidg to be refcounted instead of tied to the gadget lifetime.
+
+John Keeping (6):
+  USB: gadget: f_hid: move chardev setup to module init
+  USB: gadget: f_hid: switch to IDR for tracking minors
+  USB: gadget: f_hid: find f_hidg by IDR lookup on open
+  USB: gadget: f_hid: decouple cdev from f_hidg lifetime
+  USB: gadget: f_hid: refcount f_hidg structure
+  USB: gadget: f_hid: return ENODEV from read/write after deletion
+
+ drivers/usb/gadget/function/f_hid.c | 141 +++++++++++++++++++---------
+ drivers/usb/gadget/function/u_hid.h |   3 -
+ 2 files changed, 95 insertions(+), 49 deletions(-)
+
+-- 
+2.23.0
 
