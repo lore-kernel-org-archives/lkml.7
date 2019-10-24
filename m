@@ -2,90 +2,62 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4488CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8ADCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B3621929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7A721A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbfJXUyj (ORCPT
+        id S1728789AbfJXU5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:54:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33741 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728451AbfJXUyi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:54:38 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNk7u-0001L9-Jk; Thu, 24 Oct 2019 22:54:34 +0200
-Date:   Thu, 24 Oct 2019 22:54:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 08/17] x86/entry: Move syscall irq tracing to C code
-In-Reply-To: <20191024174044.GJ4114@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1910242253540.1783@nanos.tec.linutronix.de>
-References: <20191023122705.198339581@linutronix.de> <20191023123118.386844979@linutronix.de> <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com> <CALCETrV79pw7-nisp4VdEkQ4=fr2nfJFOMCtyKmWZR6PG3=oWg@mail.gmail.com>
- <20191024174044.GJ4114@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 24 Oct 2019 16:57:14 -0400
+Received: from ms.lwn.net ([45.79.88.28]:43254 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727924AbfJXU5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 16:57:13 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 31C33536;
+        Thu, 24 Oct 2019 20:57:13 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 14:57:12 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 2/3] docs/core-api: memory-allocation: remove uses of
+ c:func:
+Message-ID: <20191024145712.165556c1@lwn.net>
+In-Reply-To: <1ddbd3045d6a989b32065c0bd5b3a3c0ef525953.camel@alliedtelesis.co.nz>
+References: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
+        <20191024195016.11054-3-chris.packham@alliedtelesis.co.nz>
+        <20191024142902.6bd413f6@lwn.net>
+        <1ddbd3045d6a989b32065c0bd5b3a3c0ef525953.camel@alliedtelesis.co.nz>
+Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019, Peter Zijlstra wrote:
-> On Thu, Oct 24, 2019 at 09:24:13AM -0700, Andy Lutomirski wrote:
-> > On Wed, Oct 23, 2019 at 2:30 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > >
-> > > On Wed, Oct 23, 2019 at 5:31 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > >
-> > > > Interrupt state tracing can be safely done in C code. The few stack
-> > > > operations in assembly do not need to be covered.
-> > > >
-> > > > Remove the now pointless indirection via .Lsyscall_32_done and jump to
-> > > > swapgs_restore_regs_and_return_to_usermode directly.
-> > >
-> > > This doesn't look right.
-> > 
-> > Well, I feel a bit silly.  I read this:
+On Thu, 24 Oct 2019 20:51:23 +0000
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
 
-Happened to me before. Don't worry.
+> When I do actually get a series that applies to docs-next it'll
+> conflict with 59bb47985c1d ("mm, sl[aou]b: guarantee
+> natural alignment for kmalloc(power-of-two)") in Linus's tree.
 
-> > >
-> > > >  #define SYSCALL_EXIT_WORK_FLAGS                                \
-> > > > @@ -279,6 +282,9 @@ static void syscall_slow_exit_work(struc
-> > 
-> > ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > 
-> > and I applied the diff in my head to the wrong function, and I didn't
-> > notice that it didn't really apply there.  Oddly, gitweb gets this
-> 
-> I had the same when reviewing these patches; I was almost going to ask
-> tglx about it on IRC when the penny dropped.
-
-diff is weird at times.
+Alternatively, if I sync up to -rc4, does the problem go away?  I should
+be able to explain that to Linus without too much trouble...
 
 Thanks,
 
-	tglx
-
+jon
