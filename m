@@ -2,236 +2,162 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D4CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A58CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CB52166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F34B20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AT5TqI2O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXkfrlW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502200AbfJXNtR (ORCPT
+        id S2393838AbfJXNuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:49:17 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45569 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732240AbfJXNtQ (ORCPT
+        Thu, 24 Oct 2019 09:50:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39879 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbfJXNuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:49:16 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r1so14280561pgj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:49:16 -0700 (PDT)
+        Thu, 24 Oct 2019 09:50:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r141so2680918wme.4;
+        Thu, 24 Oct 2019 06:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Epp7roKhlKHGAskpWn/rk4LYqkhZ0PXTtiAIXJ0osJY=;
-        b=AT5TqI2O5QHrSsCP4a4wU0Ji7l5qDJl48Z8kHrNOqDc0DauuFIBtuedNrQcKIjpm48
-         bnF0Aff+/ERiaQQNy/bwGN6OR2L+FTpmNEcuZs10VmkcUNRfNI2QKRB6dfcGi6XZD3uJ
-         XbOiWx6wb1L91v9Q6dQF0av0fmYFlMHS6uJFi/qeUbtFU89sTDlRGNb4mtpAU/U7Ie39
-         NUmI0wlAsVzik7BMAJPkt7n4CPZhK3AVKC0ytAgO39TrAXAEPeJTMyG5KOaq/GSE5Lj5
-         KR/FZDj3k6cOhpmSSAEO0NgTmViJueqRZWC5ADUP5iyzPrZ/pE5MmgAis8kt3k0XSit6
-         Axmg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BNVT8s5YLvHt7gxW7SLpEK9iP3Gh4HQHf+HDtpo3lNo=;
+        b=cXkfrlW/4fM9olewKWD+UO6INbtmib8tnXAdXioxT6aF3jB5LnTGQHwBkRXgtC/qvN
+         FCHuG3FKIzQrt8+Ux9fPw2+ZGprDlI5mc/nsymvm8ZFUZYLJJbNo3B4etcJqSrTI1gG8
+         DLIz/gXXY+g1Awfmg/4zcTQVAM61neYCcd06/MSVNBZYxct1wT5yzkApdiVXZzTiD5+0
+         doVXP6OCKqWdsy9PtGeH52EGo+c7gQRc870gwSbrZCEKQksMI2dvZpIA/8u0xt2ZEk8O
+         QueQslfgLDZCa9Dl7uVPR/WSPMpUqFK5gGlEAiVNDlK21nFLo9lYpClyIZ6Lcm86W8Ca
+         bFPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Epp7roKhlKHGAskpWn/rk4LYqkhZ0PXTtiAIXJ0osJY=;
-        b=igEZWDMlXzCKJ78XlR9JWbdpTRU//lfiy0dJrmgvghLvpnkRjrYGWtDSBYJ+O1sccC
-         UgSBk2hEsIxXGE1T+lVIYi4tMwnVSgNSxDhHKGz/yu9Ry/vMNsnLnjiDOYGQ8mFmV4/q
-         U1yhxDLs3O/XTsk90FQEJ/SRHlaPucQpYRuETD8sUYAX7HMvIr7I1dJEJAn+bszSDCS6
-         bwfLI7Eq/7Rs3Ule0AIOZ/W+VcdRTTFVweWvPA7Ppklr3XpG1WrB1fMluHxaSgL5/Rp9
-         g8bwcf+fmUqCfbwtL2ypLTbRUx3cAW8SI+Rpu8VSP8JRyZqxotEqRmNq1Ark6CxldTAf
-         I3Cg==
-X-Gm-Message-State: APjAAAXIgIAAjQvGRH92PdA0+j270XvbbiFP3byp/8dP/UunAw2YtbcR
-        v32LFB9iSCjw2mePAYP2rRZrPSBgNobfjYp78YYmrg==
-X-Google-Smtp-Source: APXvYqxLe8KHesj6gA4iauDrWWbEGuaZ8KBBM7JPPyWbx/nPNfQVymo5EvHkb8EfQazchk8Z+Fu45HXtWEluaqdUL4o=
-X-Received: by 2002:a63:541e:: with SMTP id i30mr16689978pgb.130.1571924955198;
- Thu, 24 Oct 2019 06:49:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BNVT8s5YLvHt7gxW7SLpEK9iP3Gh4HQHf+HDtpo3lNo=;
+        b=oMFe/qQ0vSrp1hzkqYQ5VwB9xBFmGJjIBReSJeMQoITy9b9MDgqbOHLwQPc1WmR47c
+         oCqGSqqQC7KsqxWX5OdoicY5sxtHdhh+dDLwZq099QLaQtiluMhvbIKDjIjt3I3B36u0
+         FXE2p2wNQqzsM8kO7N1AuHcJXnzzVhEiwC+6m2Zc+7UaDlRL6RIvMO0oIEwEHuhPA0Zp
+         lF8o7OiweJdl9TU/Ga8Ky3xN7Kgwc7pKnaqNOZ0TMx52DgqlXLaw9QFYMs7TaxwNiZu0
+         dYJfw9uWfsVhf7Po7/d+sNfVIdhNQ7GrRpR02F+/dmCBONv5omYwFgDX+m0I6aGQUMoO
+         mHyw==
+X-Gm-Message-State: APjAAAWpCOUxwFDuM0mvOBZHTSE3o+PglU4kr0oM88gTNuDb8e1IaeVo
+        EJb9CyaJzjch9IQT7vD3m6o0jdPD
+X-Google-Smtp-Source: APXvYqyLpFMf0M3rkZjmRIwdx9h/rq2fKSXG/zj0MjpFy6R0GgeMfd5gHwKEPuKWVMJD4fRVLyBrgg==
+X-Received: by 2002:a1c:e154:: with SMTP id y81mr5110281wmg.126.1571925021103;
+        Thu, 24 Oct 2019 06:50:21 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id e3sm2690812wme.39.2019.10.24.06.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 06:50:19 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 15:50:18 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] drm/tegra: Fix 2d and 3d clients detaching from
+ IOMMU domain
+Message-ID: <20191024135018.GD2924027@ulmo>
+References: <20190623173743.24088-1-digetx@gmail.com>
+ <20190623173743.24088-2-digetx@gmail.com>
+ <20191024115804.GB2924027@ulmo>
+ <45926d95-3e7a-c56b-402a-2b2c6475c5db@gmail.com>
 MIME-Version: 1.0
-References: <00000000000006bb9c0595a84569@google.com>
-In-Reply-To: <00000000000006bb9c0595a84569@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 24 Oct 2019 15:49:03 +0200
-Message-ID: <CAAeHK+yOsChMWj=fnd55mG05asOzFo1Q8dgpiMYpRYnv+_NPbg@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in build_audio_procunit
-To:     syzbot <syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com>
-Cc:     alsa-devel@alsa-project.org,
-        =?UTF-8?B?5b2t6L6J?= <benquike@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>, g@b4.vu,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Takashi Iwai <tiwai@suse.com>, wang6495@umn.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="IMjqdzrDRly81ofr"
+Content-Disposition: inline
+In-Reply-To: <45926d95-3e7a-c56b-402a-2b2c6475c5db@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 3:47 PM syzbot
-<syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17cdccc4e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=fd965c77e4711eb13b82
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13fe752f600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17989fd8e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+fd965c77e4711eb13b82@syzkaller.appspotmail.com
->
-> usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-> usb 1-1: Product: syz
-> usb 1-1: Manufacturer: syz
-> usb 1-1: SerialNumber: syz
-> ==================================================================
-> BUG: KASAN: use-after-free in uac_extension_unit_iExtension
-> include/uapi/linux/usb/audio.h:483 [inline]
-> BUG: KASAN: use-after-free in build_audio_procunit+0xeab/0x13f0
-> sound/usb/mixer.c:2434
-> Read of size 1 at addr ffff8881d4c0140d by task kworker/0:1/12
->
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.4.0-rc3+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
->   kasan_report+0xe/0x20 mm/kasan/common.c:634
->   uac_extension_unit_iExtension include/uapi/linux/usb/audio.h:483 [inline]
->   build_audio_procunit+0xeab/0x13f0 sound/usb/mixer.c:2434
->   parse_audio_extension_unit sound/usb/mixer.c:2483 [inline]
->   parse_audio_unit+0x1812/0x36f0 sound/usb/mixer.c:2761
->   snd_usb_mixer_controls+0x715/0xb90 sound/usb/mixer.c:3095
->   snd_usb_create_mixer+0x2b5/0x1890 sound/usb/mixer.c:3445
->   usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0xae6/0x16f0 drivers/base/core.c:2201
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0xae6/0x16f0 drivers/base/core.c:2201
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5183 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
->   port_event drivers/usb/core/hub.c:5469 [inline]
->   hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Allocated by task 12:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:510 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
->   kmalloc include/linux/slab.h:561 [inline]
->   usb_alloc_urb+0x65/0xb0 drivers/usb/core/urb.c:73
->   usb_internal_control_msg drivers/usb/core/message.c:94 [inline]
->   usb_control_msg+0x1c9/0x4a0 drivers/usb/core/message.c:152
->   usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
->   usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
->   usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
->   usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
->   hub_port_connect drivers/usb/core/hub.c:5183 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
->   port_event drivers/usb/core/hub.c:5469 [inline]
->   hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 12:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   kasan_set_free_info mm/kasan/common.c:332 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
->   slab_free_hook mm/slub.c:1424 [inline]
->   slab_free_freelist_hook mm/slub.c:1475 [inline]
->   slab_free mm/slub.c:3018 [inline]
->   kfree+0xe4/0x320 mm/slub.c:3967
->   urb_destroy drivers/usb/core/urb.c:26 [inline]
->   kref_put include/linux/kref.h:65 [inline]
->   usb_free_urb.part.0+0x7a/0xc0 drivers/usb/core/urb.c:95
->   usb_free_urb+0x1b/0x30 drivers/usb/core/urb.c:94
->   usb_start_wait_urb+0x1e5/0x2b0 drivers/usb/core/message.c:79
->   usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
->   usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:152
->   usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
->   usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
->   usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
->   usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
->   hub_port_connect drivers/usb/core/hub.c:5183 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
->   port_event drivers/usb/core/hub.c:5469 [inline]
->   hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff8881d4c01400
->   which belongs to the cache kmalloc-192 of size 192
-> The buggy address is located 13 bytes inside of
->   192-byte region [ffff8881d4c01400, ffff8881d4c014c0)
-> The buggy address belongs to the page:
-> page:ffffea0007530040 refcount:1 mapcount:0 mapping:ffff8881da002a00
-> index:0x0
-> flags: 0x200000000000200(slab)
-> raw: 0200000000000200 ffffea000754fec0 0000000200000002 ffff8881da002a00
-> raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881d4c01300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->   ffff8881d4c01380: 00 00 00 07 fc fc fc fc fc fc fc fc fc fc fc fc
-> > ffff8881d4c01400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                        ^
->   ffff8881d4c01480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->   ffff8881d4c01500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
 
-#syz dup: KASAN: slab-out-of-bounds Read in build_audio_procunit
+--IMjqdzrDRly81ofr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 24, 2019 at 04:28:41PM +0300, Dmitry Osipenko wrote:
+> 24.10.2019 14:58, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Sun, Jun 23, 2019 at 08:37:42PM +0300, Dmitry Osipenko wrote:
+> >> This should should fire up on the DRM's driver module re-loader because
+> >> there won't be enough available domains on older Tegra SoCs.
+> >>
+> >> Cc: stable <stable@vger.kernel.org>
+> >> Fixes: 0c407de5ed1a ("drm/tegra: Refactor IOMMU attach/detach")
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  drivers/gpu/drm/tegra/dc.c   | 4 ++--
+> >>  drivers/gpu/drm/tegra/drm.c  | 9 ++++++---
+> >>  drivers/gpu/drm/tegra/drm.h  | 3 ++-
+> >>  drivers/gpu/drm/tegra/gr2d.c | 4 ++--
+> >>  drivers/gpu/drm/tegra/gr3d.c | 4 ++--
+> >>  5 files changed, 14 insertions(+), 10 deletions(-)
+> >=20
+> > I think I understand what this is trying to do, but the commit message
+> > does not help at all. So what's really going on here is that we need to
+> > detach the device from the group regardless of whether we're sharing the
+> > group or not, just like we attach groups to the shared domain whether
+> > they share the same group or not.
+>=20
+> Yes, the commit's message could be improved.
+>=20
+> > But in that case, I wonder if it's even worth splitting groups the way
+> > we are right now. Wouldn't it be better to just put all the devices into
+> > the same group and be done with it?
+> >=20
+> > The current code gives me headaches every time I read it, so if we can
+> > just make it so that all the devices under the DRM device share the same
+> > group, this would become a lot easier to deal with. I'm not really
+> > convinced that it makes much sense to keep them on separate domains,
+> > especially given the constraints on the number of domains available on
+> > earlier Tegra devices.
+> >=20
+> > Note that sharing a group will also make it much easier for these to use
+> > the DMA API if it is backed by an IOMMU.
+>=20
+> Probably I'm blanking on everything about IOMMU now.. could you please
+> remind me what "IOMMU group" is?
+>=20
+> Isn't it that each IOMMU group relates to the HW ID (SWGROUP)? But then
+> each display controller has its own SWGROUP.. and thus that sharing just
+> doesn't make any sense, hm.
+
+IOMMU groups are not directly related to SWGROUPs. But by default the
+IOMMU framework will share a domain between members of the same IOMMU
+group. Seems like that's really what we want here, so that when we do
+use the DMA API, all the devices part of the DRM device get attached to
+the same IOMMU domain, yet if we don't want to use the DMA API we only
+need to detach the one group from the backing.
+
+Thierry
+
+--IMjqdzrDRly81ofr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2xrBoACgkQ3SOs138+
+s6HAxA/5AeNjNjEtlebhSve7R8IrbcFhMUsOJ4W+Kk3Fht2LEborZyXuxc8rAu+a
+4ddRKtOPBDigYniq484cKh+HrDvpj3O0tkcoPotx84I7r0fDpyqdt/s47p3mOlLB
+pGeCEDR8RoQyfxPfKwVQOITYVlJ7GspcYheBWZUM2gaIdFJn9gK20gd5QITlYWMj
+IjjNOejpHSahXqoHKJ9pOWiNiW4YR6e0vciegEqYddRBIy3qhl34UsfQew0SejqU
+61J+mmcb0YyB5WnipM91yUZlVIG5s6iR+GzPXyMwiLIVIJRz/j7zT8gptFED+tGy
+/toXxINL3toi/t2jceIB0A7qTjUQ38UKkc/HNcsY9EJ+aeB/oOKX2KcwZjKTZjct
+KTuYrMVhOZfB4FSLy+0hRpmi2/wf7RSjmSV2g22eHPtvw5y0hmENIZBYPZn29O22
+lW/I/71RSYl0cJ61hxwzhZCpRx/zINKp63GFyZhtmxuR0uftEjLkZV1msItRZbOl
+3khkuU+ccAeLXr3P2LyriTGnhP0Jz73uC+KH6tZ4jcdJHFBP0q70TtROa3hBKY1Q
+TXE0pFDFdM8rA14IrqBIaNj4tdQoMrSVZhhlhy8loABjJ8azys+VW6SQGx4+lo0z
+EKyDaMw3lL9EwP8plsTqZHDSCHRO1BnsOuFhoBnDEJt8zgeEDwE=
+=YETi
+-----END PGP SIGNATURE-----
+
+--IMjqdzrDRly81ofr--
