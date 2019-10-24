@@ -2,148 +2,207 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2739CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C75CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4692F21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B47320650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:21:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EO7s0ELK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439794AbfJXQUG (ORCPT
+        id S2409888AbfJXQVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:20:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:55716 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436636AbfJXQUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:20:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D7F7328;
-        Thu, 24 Oct 2019 09:19:49 -0700 (PDT)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E9AC3F71F;
-        Thu, 24 Oct 2019 09:19:47 -0700 (PDT)
-Subject: Re: [PATCH v4 1/2] sched/topology: Don't try to build empty sched
- domains
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        morten.rasmussen@arm.com, qperret@google.com,
-        stable@vger.kernel.org
-References: <20191023153745.19515-1-valentin.schneider@arm.com>
- <20191023153745.19515-2-valentin.schneider@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <27d8a51d-a899-67f4-8b74-224281f25cef@arm.com>
-Date:   Thu, 24 Oct 2019 18:19:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 12:21:32 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37230 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407514AbfJXQVb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:21:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l21so25689238lje.4;
+        Thu, 24 Oct 2019 09:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y6vpyuqGEndKJgZCTHEAnCxtVuNFVWrtfqUZVwqL2Ng=;
+        b=EO7s0ELKUT0LoLkOsXrymBhnZ+Um63cplHZwdW2DvYQzxzx/Upwbsk4O3hwFsAwS7z
+         Yf77p2t3PzqubY0jYF7cwZ/0S8q6lng1IsfNO5hvl9eFaZLsVz64JM4xWvQkk0kictw4
+         sdtcm4Mgzrkn8hOJjRSoOnLiTR3X6xTNuydO1hdl8c03KARxq4o0Ag3dFbS4o7hnOOqf
+         WtT0Z5zbDRhEbKjJC+gVeKmXMoZt/2Yt68AYok6ePkAB8PAudbIzqelEEdfRlpSJXews
+         ohkLGW+/kofKPIQWsY2oj14PPqqyqaIFQSOAT3ay/SKPgcS2clOaNicBaTHZWTs3vasC
+         A9Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y6vpyuqGEndKJgZCTHEAnCxtVuNFVWrtfqUZVwqL2Ng=;
+        b=bEbl7IooREqPyamszcSf/pBJ2UAk8lEnu2UzSHVbW7bUhUypnlHQmJk7eHbmpsHDIg
+         4W2o3RWIAwApC9Tg6DigaHR9EBD5JIVnr9KJJp2PalcNSj2d3UJK9h7yupd6uA0g4yQf
+         UPioFvDFR+YMyjHRnk6vqLMW6S35M0Yi8VFZvaTWS41X0+24hk3eoxYD9UnfP8ZeBRgR
+         LJ4uOjwKuez7aGuFTxoXKFLqEQL58RNG1yXEc3VgE0WBIOa5pdeISQ1gtZERfEl7GNkv
+         4h/Htri4BCEff7n3VNRHQV+wp3IxfAwuOwME8KQmYYZ+h3BKi87g17BA1imZc9+eNJC7
+         JtMg==
+X-Gm-Message-State: APjAAAUX9zCZeTqhJwNptOBWwWcaC6p9q6wbFG57PDJzYvGe6n09RJJT
+        dSmo6RU4/0IdRDRmY3dQKb+i1+Vg
+X-Google-Smtp-Source: APXvYqy2n28hqWDRo4kqnxgUGEQS2SgvQy+9XYyW/qf76UBUgh99rNqc8qS/SsIPo1JJb69VWL8MXQ==
+X-Received: by 2002:a2e:8987:: with SMTP id c7mr1916966lji.225.1571934088363;
+        Thu, 24 Oct 2019 09:21:28 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id a11sm4449629ljp.97.2019.10.24.09.21.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2019 09:21:27 -0700 (PDT)
+Subject: Re: [PATCH v1 2/3] drm/tegra: Fix 2d and 3d clients detaching from
+ IOMMU domain
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190623173743.24088-1-digetx@gmail.com>
+ <20190623173743.24088-2-digetx@gmail.com> <20191024115804.GB2924027@ulmo>
+ <45926d95-3e7a-c56b-402a-2b2c6475c5db@gmail.com>
+ <20191024135018.GD2924027@ulmo>
+ <38a67df0-2ede-e7fe-8eca-6c4491cdcc7b@gmail.com>
+ <20191024155620.GG2924027@ulmo>
+ <bfc6c17d-f2df-32d0-67d6-2f763c81d7fc@gmail.com>
+ <7f7ecf90-531c-69ae-9011-684666ed8743@gmail.com>
+Message-ID: <ef2ccc90-be93-3cfb-6b8b-2a406dd8d362@gmail.com>
+Date:   Thu, 24 Oct 2019 19:21:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191023153745.19515-2-valentin.schneider@arm.com>
+In-Reply-To: <7f7ecf90-531c-69ae-9011-684666ed8743@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/10/2019 17:37, Valentin Schneider wrote:
-> Turns out hotplugging CPUs that are in exclusive cpusets can lead to the
-> cpuset code feeding empty cpumasks to the sched domain rebuild machinery.
-> This leads to the following splat:
-
-[...]
-
-> The faulty line in question is
+24.10.2019 19:09, Dmitry Osipenko пишет:
+> 24.10.2019 18:57, Dmitry Osipenko пишет:
+>> 24.10.2019 18:56, Thierry Reding пишет:
+>>> On Thu, Oct 24, 2019 at 06:47:23PM +0300, Dmitry Osipenko wrote:
+>>>> 24.10.2019 16:50, Thierry Reding пишет:
+>>>>> On Thu, Oct 24, 2019 at 04:28:41PM +0300, Dmitry Osipenko wrote:
+>>>>>> 24.10.2019 14:58, Thierry Reding пишет:
+>>>>>>> On Sun, Jun 23, 2019 at 08:37:42PM +0300, Dmitry Osipenko wrote:
+>>>>>>>> This should should fire up on the DRM's driver module re-loader because
+>>>>>>>> there won't be enough available domains on older Tegra SoCs.
+>>>>>>>>
+>>>>>>>> Cc: stable <stable@vger.kernel.org>
+>>>>>>>> Fixes: 0c407de5ed1a ("drm/tegra: Refactor IOMMU attach/detach")
+>>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>>> ---
+>>>>>>>>  drivers/gpu/drm/tegra/dc.c   | 4 ++--
+>>>>>>>>  drivers/gpu/drm/tegra/drm.c  | 9 ++++++---
+>>>>>>>>  drivers/gpu/drm/tegra/drm.h  | 3 ++-
+>>>>>>>>  drivers/gpu/drm/tegra/gr2d.c | 4 ++--
+>>>>>>>>  drivers/gpu/drm/tegra/gr3d.c | 4 ++--
+>>>>>>>>  5 files changed, 14 insertions(+), 10 deletions(-)
+>>>>>>>
+>>>>>>> I think I understand what this is trying to do, but the commit message
+>>>>>>> does not help at all. So what's really going on here is that we need to
+>>>>>>> detach the device from the group regardless of whether we're sharing the
+>>>>>>> group or not, just like we attach groups to the shared domain whether
+>>>>>>> they share the same group or not.
+>>>>>>
+>>>>>> Yes, the commit's message could be improved.
+>>>>>>
+>>>>>>> But in that case, I wonder if it's even worth splitting groups the way
+>>>>>>> we are right now. Wouldn't it be better to just put all the devices into
+>>>>>>> the same group and be done with it?
+>>>>>>>
+>>>>>>> The current code gives me headaches every time I read it, so if we can
+>>>>>>> just make it so that all the devices under the DRM device share the same
+>>>>>>> group, this would become a lot easier to deal with. I'm not really
+>>>>>>> convinced that it makes much sense to keep them on separate domains,
+>>>>>>> especially given the constraints on the number of domains available on
+>>>>>>> earlier Tegra devices.
+>>>>>>>
+>>>>>>> Note that sharing a group will also make it much easier for these to use
+>>>>>>> the DMA API if it is backed by an IOMMU.
+>>>>>>
+>>>>>> Probably I'm blanking on everything about IOMMU now.. could you please
+>>>>>> remind me what "IOMMU group" is?
+>>>>>>
+>>>>>> Isn't it that each IOMMU group relates to the HW ID (SWGROUP)? But then
+>>>>>> each display controller has its own SWGROUP.. and thus that sharing just
+>>>>>> doesn't make any sense, hm.
+>>>>>
+>>>>> IOMMU groups are not directly related to SWGROUPs. But by default the
+>>>>> IOMMU framework will share a domain between members of the same IOMMU
+>>>>> group.
+>>>>
+>>>> Ah, I re-figured out that again. The memory controller drivers are
+>>>> defining a single "IOMMU group" for both of the display controllers.
+>>>>
+>>>>> Seems like that's really what we want here, so that when we do
+>>>>> use the DMA API, all the devices part of the DRM device get attached to
+>>>>> the same IOMMU domain, yet if we don't want to use the DMA API we only
+>>>>> need to detach the one group from the backing.
+>>>>
+>>>> Yes, it should be okay to put all DRM devices into the same group, like
+>>>> it is done now for the displays. It also should resolve problem with the
+>>>> domains shortage on T30 since now there are maximum 3 domains in use:
+>>>> host1x, drm and vde.
+>>>>
+>>>> I actually just checked that the original problem still exists
+>>>> and this change solves it as well:
+>>>>
+>>>> ---
+>>>> diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+>>>> index 5a0f6e0a1643..e71096498436 100644
+>>>> --- a/drivers/memory/tegra/tegra30.c
+>>>> +++ b/drivers/memory/tegra/tegra30.c
+>>>> @@ -1021,6 +1021,9 @@ static const struct tegra_smmu_swgroup
+>>>> tegra30_swgroups[] = {
+>>>>  static const unsigned int tegra30_group_display[] = {
+>>>>  	TEGRA_SWGROUP_DC,
+>>>>  	TEGRA_SWGROUP_DCB,
+>>>> +	TEGRA_SWGROUP_G2,
+>>>> +	TEGRA_SWGROUP_NV,
+>>>> +	TEGRA_SWGROUP_NV2,
+>>>>  };
+>>>>
+>>>>  static const struct tegra_smmu_group_soc tegra30_groups[] = {
+>>>> ---
+>>>>
+>>>> Please let me know whether you're going to make a patch or if I should
+>>>> do it.
+>>>
+>>> I've been testing with a similar change and couldn't find any
+>>> regressions. I've also made the same modifications for Tegra114 and
+>>> Tegra124.
+>>>
+>>> Are you saying that none of these patches are needed anymore? Or do we
+>>> still need a patch to fix detaching? I'm thinking that maybe we can
+>>> drastrically simplify the detachment now by dropping the shared
+>>> parameter altogether.
+>>>
+>>> Let me draft a patch and send out the whole set for testing.
+>>
+>> Seems it's still not ideal because I noticed this in KMSG:
+>>
+>> [    0.703185] Failed to attached device 54200000.dc to IOMMU_mapping
+>> [    0.710404] Failed to attached device 54240000.dc to IOMMU_mapping
+>> [    0.719347] Failed to attached device 54140000.gr2d to IOMMU_mapping
+>> [    0.719569] Failed to attached device 54180000.gr3d to IOMMU_mapping
+>>
+>> which comes from the implicit IOMMU backing.
 > 
->   cap = arch_scale_cpu_capacity(cpumask_first(cpu_map));
+> And the error comes from here:
 > 
-> and we're not checking the return value against nr_cpu_ids (we shouldn't
-> have to!), which leads to the above.
-> 
-> Prevent generate_sched_domains() from returning empty cpumasks, and add
-> some assertion in build_sched_domains() to scream bloody murder if it
-> happens again.
-> 
-> The above splat was obtained on my Juno r0 with:
-> 
->   cgcreate -g cpuset:asym
->   cgset -r cpuset.cpus=0-3 asym
->   cgset -r cpuset.mems=0 asym
->   cgset -r cpuset.cpu_exclusive=1 asym
-> 
->   cgcreate -g cpuset:smp
->   cgset -r cpuset.cpus=4-5 smp
->   cgset -r cpuset.mems=0 smp
->   cgset -r cpuset.cpu_exclusive=1 smp
-> 
->   cgset -r cpuset.sched_load_balance=0 .
-> 
->   echo 0 > /sys/devices/system/cpu/cpu4/online
->   echo 0 > /sys/devices/system/cpu/cpu5/online
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: 05484e098448 ("sched/topology: Add SD_ASYM_CPUCAPACITY flag detection")
+> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/iommu/iommu.c#L1655
 
-Sorry for being picky but IMHO you should also mention that it fixes
-
-f9a25f776d78 ("cpusets: Rebuild root domain deadline accounting
-information")
-
-Tested it on a hikey620 (8 CPus SMP) with v5.4-rc4 and a local fix for
-asym_cpu_capacity_level().
-2 exclusive cpusets [0-3] and [4-7], hp'ing out [0-3] and then hp'ing in
-[0] again.
-
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 5a174ae6ecf3..8f83e8e3ea9a 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2203,8 +2203,19 @@ void partition_sched_domains_locked(int
-ndoms_new, cpumask_var_t doms_new[],
-        for (i = 0; i < ndoms_cur; i++) {
-                for (j = 0; j < n && !new_topology; j++) {
-                        if (cpumask_equal(doms_cur[i], doms_new[j]) &&
--                           dattrs_equal(dattr_cur, i, dattr_new, j))
-+                           dattrs_equal(dattr_cur, i, dattr_new, j)) {
-+                               struct root_domain *rd;
-+
-+                        /*
-+                         * This domain won't be destroyed and as such
-+                         * its dl_bw->total_bw needs to be cleared.  It
-+                         * will be recomputed in function
-+                         * update_tasks_root_domain().
-+                         */
-+                         rd = cpu_rq(cpumask_any(doms_cur[i]))->rd;
-
-We have an issue here if doms_cur[i] is empty.
-
-+                         dl_clear_root_domain(rd);
-                          goto match1;
-
-
-There is yet another similar issue behind the first one
-(asym_cpu_capacity_level()).
-
-342 static bool build_perf_domains(const struct cpumask *cpu_map)
- 343 {
- 344     int i, nr_pd = 0, nr_cs = 0, nr_cpus = cpumask_weight(cpu_map);
- 345     struct perf_domain *pd = NULL, *tmp;
- 346     int cpu = cpumask_first(cpu_map);          <--- !!!
- 347     struct root_domain *rd = cpu_rq(cpu)->rd;  <--- !!!
- 348     struct cpufreq_policy *policy;
- 349     struct cpufreq_governor *gov;
- ...
- 406     tmp = rd->pd;                              <--- !!!
-
-Caught when running hikey620 (8 CPus SMP) with v5.4-rc4 and a local fix
-for asym_cpu_capacity_level() with CONFIG_ENERGY_MODEL=y.
-
-There might be other places in build_sched_domains() suffering from the
-same issue. So I assume it's wise to not call it with an empty cpu_map
-and warn if done so.
-
-[...]
+So the detaching still should be needed, but at the moment the ARM32
+DMA-mapping code is simply not suitable for the case of having multiple
+devices in the same group. I'm wondering whether there are any real
+users for the implicit IOMMU backing on ARM32 at all :/
