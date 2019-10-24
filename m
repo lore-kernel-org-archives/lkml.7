@@ -2,152 +2,128 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D78CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEE6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A5621925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j/hXJF8M"
+	by mail.kernel.org (Postfix) with ESMTP id 392A621906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503348AbfJXQcf (ORCPT
+        id S2503448AbfJXQdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:32:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55853 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389313AbfJXQcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:32:35 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g24so3550031wmh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rU3z16VWtzBIk+svSwi6S4IWlLlcuR6vtu8ErKDXMGM=;
-        b=j/hXJF8MSfMcFr+8ICSDqKdkq+j9Yy67mheFRR0ZNWRAGX9lYMS508yglTK/wFKUE9
-         DYc+e6ecoTFRt9djQnLzSy8TC4KVONxfEbo1IQYHQMlQxKflhv8P8ZKClmbBVR+N7glr
-         eN6uNcMLf7ng+ZefcjCADWfDa4FD8YO9hi8Q4LOzeXKxLwHo2IObx/A98R3ti9u/98s2
-         fmwnQSLo/en94re6UBYGiC2HYRNvE+gRFg04970IrrIkRLEK1glUslSV4N03VNYRxPAP
-         Zzgsjgr58i2VB2Q7k6Pzs/3LiO2Y+S1/s/jtqqHjzTtwedCpc4os9eLdIE0KMUeUrdJE
-         RXxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rU3z16VWtzBIk+svSwi6S4IWlLlcuR6vtu8ErKDXMGM=;
-        b=FtIHNg8/AP1j7vTG2TyDqiGSPlwusWp+8sH3DGngW7HWH9JB466qpc8Tyop3OvejCX
-         K2dPXPUs98Nhk4OS5Rnpn1bDd3YfIMPv0j1NR8mFaWs7ffTvxsN+kttSWJLRGmy/axWC
-         Xc4YtxvW93ZxPJsggHSJAT8HnziBj7RsfT3+mROsyc+HsQG1rpCdOtdYuvuS+LnqfKK5
-         BAhfW4jYb8rstBtytcT+F4LLQe0ju+APa441M2rOyOtAnDLjOdRrIxvyPMWc6LK2udGK
-         o952S12IHW56ps3M37IRAYWHD0vTgAWHK6glDBheeteqq/Vsinw25v5l2DHnJoF5YjHh
-         JO2w==
-X-Gm-Message-State: APjAAAUH6aBE56s6NLHmpMxEoG1YNZWrEjmX3fneI3Rry4X051OIK0of
-        xkK6yWdYfCAbavC3Px1IBbk9eyG6dNTteVRaFXBBOA==
-X-Google-Smtp-Source: APXvYqx0OMPmXC4g7/6lRtvSZZdX1OSNshPAGnEVfbvjUnA3a71Kg021LSrWoZFQHpYWKwELZvB5L2ZCcxPFoWd7Gxs=
-X-Received: by 2002:a1c:64d6:: with SMTP id y205mr5334697wmb.136.1571934752887;
- Thu, 24 Oct 2019 09:32:32 -0700 (PDT)
+        Thu, 24 Oct 2019 12:33:03 -0400
+Received: from mga09.intel.com ([134.134.136.24]:44518 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503367AbfJXQdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:33:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 09:33:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
+   d="scan'208";a="202351313"
+Received: from unknown (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 24 Oct 2019 09:33:01 -0700
+Subject: Re: [RFC] Memory Tiering
+To:     Jonathan Adams <jwadams@google.com>
+Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        Wu Fengguang <fengguang.wu@intel.com>,
+        Huang Ying <ying.huang@intel.com>
+References: <c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com>
+ <CA+VK+GMAqMVXKQqjGzSj9P+-TKr_Jn6qQ1cHSyxhDsoChorm_w@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <bab0848c-3229-bcb5-8921-d150939a7ce2@intel.com>
+Date:   Thu, 24 Oct 2019 09:33:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191021163426.9408-1-mark.rutland@arm.com>
-In-Reply-To: <20191021163426.9408-1-mark.rutland@arm.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 24 Oct 2019 18:32:21 +0200
-Message-ID: <CAKv+Gu_ceWFQMNUABvOU5Gd_d3EgpfODkzan_riU1YY8rSRZaQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] arm64: ftrace cleanup + FTRACE_WITH_REGS
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Helge Deller <deller@gmx.de>, Torsten Duwe <duwe@suse.de>,
-        James Morse <james.morse@arm.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, jthierry@redhat.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, svens@stackframe.org,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+VK+GMAqMVXKQqjGzSj9P+-TKr_Jn6qQ1cHSyxhDsoChorm_w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 at 18:34, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Hi,
->
-> This series is a reworked version of Torsten's v8 FTRACE_WITH_REGS
-> series [1]. I've tried to rework the existing code in preparatory
-> patches so that the patchable-function-entry bits slot in with fewer
-> surprises. This version is based on v5.4-rc3, and can be found in my
-> arm64/ftrace-with-regs branch [2].
->
-> I've added an (optional) ftrace_init_nop(), which the core code uses to
-> initialize callsites. This allows us to avoid a synthetic MCOUNT_ADDR
-> symbol, and more cleanly separates the one-time initialization of the
-> callsite from dynamic NOP<->CALL modification. Architectures which don't
-> implement this get the existing ftrace_make_nop() with MCOUNT_ADDR.
->
-> I've moved the module PLT initialization to module load time, which
-> simplifies runtime callsite modification. This also means that we don't
-> transitently mark the module text RW, and will allow for the removal of
-> module_disable_ro().
->
-> Since the last posting, parisc gained ftrace support using
-> patchable-function-entry. I've made the handling of module callsite
-> locations common in kernel/module.c with a new FTRACE_CALLSITE_SECTION
-> definition, and removed the newly redundant bits from arch/parisc.
->
-> Thanks,
-> Mark.
->
-> [1] https://lore.kernel.org/r/20190208150826.44EBC68DD2@newverein.lst.de
-> [2] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arm64/ftrace-with-regs
->
-> Mark Rutland (7):
->   ftrace: add ftrace_init_nop()
->   module/ftrace: handle patchable-function-entry
->   arm64: module: rework special section handling
->   arm64: module/ftrace: intialize PLT at load time
->   arm64: insn: add encoder for MOV (register)
->   arm64: asm-offsets: add S_FP
->   arm64: ftrace: minimize ifdeffery
->
-> Torsten Duwe (1):
->   arm64: implement ftrace with regs
->
+On 10/23/19 4:11 PM, Jonathan Adams wrote:
+> we would have a bidirectional attachment:
+> 
+> A is marked "move cold pages to" B
+> B is marked "move hot pages to" A
+> C is marked "move cold pages to" D
+> D is marked "move hot pages to" C
+> 
+> By using autonuma for moving PMEM pages back to DRAM, you avoid
+> needing the B->A  & D->C links, at the cost of migrating the pages
+> back synchronously at pagefault time (assuming my understanding of how
+> autonuma works is accurate).
+> 
+> Our approach still lets you have multiple levels of hierarchy for a
+> given socket (you could imaging an "E" node with the same relation to
+> "B" as "B" has to "A"), but doesn't make it easy to represent (say) an
+> "E" which was equally close to all sockets (which I could imagine for
+> something like remote memory on GenZ or what-have-you), since there
+> wouldn't be a single back link; there would need to be something like
+> your autonuma support to achieve that.
+> 
+> Does that make sense?
 
-For the series,
+Yes, it does.  We've actually tried a few other approaches separate from
+autonuma-based ones for promotion.  For some of those, we have a
+promotion path which is separate from the demotion path.
 
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-
->  arch/arm64/Kconfig               |   2 +
->  arch/arm64/Makefile              |   5 ++
->  arch/arm64/include/asm/ftrace.h  |  23 +++++++
->  arch/arm64/include/asm/insn.h    |   3 +
->  arch/arm64/include/asm/module.h  |   2 +-
->  arch/arm64/kernel/asm-offsets.c  |   1 +
->  arch/arm64/kernel/entry-ftrace.S | 140 +++++++++++++++++++++++++++++++++++++--
->  arch/arm64/kernel/ftrace.c       | 123 ++++++++++++++++++++--------------
->  arch/arm64/kernel/insn.c         |  13 ++++
->  arch/arm64/kernel/module-plts.c  |   3 +-
->  arch/arm64/kernel/module.c       |  57 +++++++++++++---
->  arch/parisc/Makefile             |   1 -
->  arch/parisc/kernel/module.c      |  10 ++-
->  arch/parisc/kernel/module.lds    |   7 --
->  include/linux/ftrace.h           |   5 ++
->  kernel/module.c                  |   2 +-
->  kernel/trace/ftrace.c            |  13 +++-
->  17 files changed, 330 insertions(+), 80 deletions(-)
->  delete mode 100644 arch/parisc/kernel/module.lds
->
-> --
-> 2.11.0
->
+That said, I took a quick look to see what the autonuma behavior was and
+couldn't find anything obvious.  Ying, when moving a slow page due to
+autonuma, do we move it close to the CPU that did the access, or do we
+promote it to the DRAM close to the slow memory where it is now?
