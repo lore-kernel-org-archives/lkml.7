@@ -4,26 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17400C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F2ACA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABBF21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E5D20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfJXUNm (ORCPT
+        id S1726754AbfJXUNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:13:42 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57559 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfJXUNe (ORCPT
+        Thu, 24 Oct 2019 16:13:33 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:49927 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726505AbfJXUNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:13:34 -0400
+        Thu, 24 Oct 2019 16:13:31 -0400
 Received: from localhost (unknown [78.193.40.249])
         (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 343AA240008;
-        Thu, 24 Oct 2019 20:13:32 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 49E32200005;
+        Thu, 24 Oct 2019 20:13:29 +0000 (UTC)
 From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
 To:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -34,9 +35,9 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH v2 5/5] ARM: at91/dt: sama5d4: add i2c gpio pinctrl
-Date:   Thu, 24 Oct 2019 22:13:02 +0200
-Message-Id: <20191024201302.23376-6-kamel.bouhara@bootlin.com>
+Subject: [PATCH v2 2/5] dt-bindings: i2c: at91: document optional bus recovery properties
+Date:   Thu, 24 Oct 2019 22:12:59 +0200
+Message-Id: <20191024201302.23376-3-kamel.bouhara@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
 References: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
@@ -47,95 +48,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the i2c gpio pinctrls so the i2c bus recovery option can be enabled
+The at91 I2C controller can support bus recovery by re-assigning SCL
+and SDA to gpios. Add the optional pinctrl and gpio properties to do
+so.
 
 Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 ---
- arch/arm/boot/dts/sama5d4.dtsi | 33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 6ab27a7b388d..34351baab985 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -458,8 +458,11 @@
- 					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
- 					| AT91_XDMAC_DT_PERID(3))>;
- 				dma-names = "tx", "rx";
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "gpio";
- 				pinctrl-0 = <&pinctrl_i2c0>;
-+				pinctrl-1 = <&pinctrl_i2c0_gpio>;
-+				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 32>;
-@@ -477,8 +480,11 @@
- 					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
- 					| AT91_XDMAC_DT_PERID(5))>;
- 				dma-names = "tx", "rx";
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "gpio";
- 				pinctrl-0 = <&pinctrl_i2c1>;
-+				pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+				sda-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioE 30 GPIO_ACTIVE_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 33>;
-@@ -519,8 +525,11 @@
- 					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
- 					| AT91_XDMAC_DT_PERID(7))>;
- 				dma-names = "tx", "rx";
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "gpio";
- 				pinctrl-0 = <&pinctrl_i2c2>;
-+				pinctrl-1 = <&pinctrl_i2c2_gpio>;
-+				sda-gpios = <&pioB 29 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioB 30 GPIO_ACTIVE_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&pmc PMC_TYPE_PERIPHERAL 34>;
-@@ -1122,6 +1131,12 @@
- 							<AT91_PIOA 30 AT91_PERIPH_A AT91_PINCTRL_NONE
- 							 AT91_PIOA 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;
- 					};
-+
-+					pinctrl_i2c0_gpio: i2c0-gpio {
-+						atmel,pins =
-+							<AT91_PIOA 30 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
-+							 AT91_PIOA 31 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
- 				};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+index b7cec17c3daf..8ea2ce5d8610 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+@@ -19,8 +19,13 @@ Optional properties:
+   capable I2C controllers.
+ - i2c-sda-hold-time-ns: TWD hold time, only available for "atmel,sama5d4-i2c"
+   and "atmel,sama5d2-i2c".
++- scl-gpios: specify the gpio related to SCL pin
++- sda-gpios: specify the gpio related to SDA pin
++- pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
++  bus recovery, call it "gpio" state
+ - Child nodes conforming to i2c bus binding
  
- 				i2c1 {
-@@ -1130,6 +1145,12 @@
- 							<AT91_PIOE 29 AT91_PERIPH_C AT91_PINCTRL_NONE	/* TWD1, conflicts with UART0 RX and DIBP */
- 							 AT91_PIOE 30 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* TWCK1, conflicts with UART0 TX and DIBN */
- 					};
 +
-+					pinctrl_i2c1_gpio: i2c1-gpio {
-+						atmel,pins =
-+							<AT91_PIOE 29 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
-+							 AT91_PIOE 30 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
- 				};
+ Examples :
  
- 				i2c2 {
-@@ -1138,6 +1159,12 @@
- 							<AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE	/* TWD2, conflicts with RD0 and PWML1 */
- 							 AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* TWCK2, conflicts with RF0 */
- 					};
-+
-+					pinctrl_i2c2_gpio: i2c2-gpio {
-+						atmel,pins =
-+							<AT91_PIOB 29 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
-+							 AT91_PIOB 30 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
- 				};
+ i2c0: i2c@fff84000 {
+@@ -55,6 +60,11 @@ i2c0: i2c@f8034600 {
+ 	clocks = <&flx0>;
+ 	atmel,fifo-size = <16>;
+ 	i2c-sda-hold-time-ns = <336>;
++	pinctrl-names = "default", "gpio";
++	pinctrl-0 = <&pinctrl_i2c0>;
++	pinctrl-1 = <&pinctrl_i2c0_gpio>;
++	sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
++	scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
  
- 				isi {
+ 	wm8731: wm8731@1a {
+ 		compatible = "wm8731";
 -- 
 2.23.0
 
