@@ -6,95 +6,90 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE642CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868D9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B428D20578
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E34205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="bzZWVk1x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KarVPLaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408785AbfJXH5G (ORCPT
+        id S2408797AbfJXH5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:57:06 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41426 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408770AbfJXH5F (ORCPT
+        Thu, 24 Oct 2019 03:57:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55792 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408787AbfJXH5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:57:05 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x4so12011807lfn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 00:57:03 -0700 (PDT)
+        Thu, 24 Oct 2019 03:57:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g24so1623356wmh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 00:57:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k3oPwwXbd7aVpRc6mBG49c0derbL+ABsS83WbajBnnw=;
-        b=bzZWVk1xf3C9Ge+H3fkjakaR/mYMcxx2L27X/iVa2ADAj8YO0NmKGyQENunfk67bSo
-         A/Im4Lh6qWQl5euFpS1xIDgwzN1hBwLC6m3nD4Ra9JQaXHtEY8zHvRjrexwE3tFOS4QE
-         zrI7roAbGySgX/PGnKZNHY7qZ6M6BwFbTLwec=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2R2CzbjvEDjQmx61JPs0RIA5BRAZFdy1ELg14vUw0UQ=;
+        b=KarVPLaBPctaaN5I1bubIar3T/z7eSO6kv6QHJHU97Yb654aPehI+thVq0mZ3Jm8nx
+         n2c9tW1zImFk0i7AZS5BjlzwY9kxtexGvnoqflA6oaj3k1JJ0SOol5VCjorf9/t7/g+R
+         zkdk5KQf7KCombZznlxFlE+f0Hre2crdS44Cd1lSoeRAoGYWiqRjNyVer9cKHhTF4UR5
+         wzSWUb2gRLA7/KFvI++Xfpe0MFXxtl2mSbyfnVu7uFK1+eeSS5d2929gLYcg27fFo9vV
+         6wG10gP2E5B7FNLyrKcPOyKtL1kFOHm43pq0c/OPj/qmwyfPc9vqIjTig758Wzk3opYF
+         r+nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k3oPwwXbd7aVpRc6mBG49c0derbL+ABsS83WbajBnnw=;
-        b=NMCbx0f+2biAqOyKhtUb2DT5PA09Votn/qCh8oFgv5H5PnY7hy+vKowbzQ8Qi3fmTO
-         ue9IgAtB2gqCPcF7oVJ8lKZ2F7YcsOSWmAOyPsOE8FUpBDvVqDmTK4zvH9qyud6ZAgL4
-         H5SiHtDXxTAFGDMtu19yqjWf0LhAph/hakNinD4HiGptf6NyMaE+RUqjYgVIhSE0Ti1Z
-         YuCTyS2qqHGO0RT/xNnnboRgk8NZNUsuDJik7KxV3UubR1IiIAMDY+xK1MZvOPN9yjg+
-         oHwvr8X92LHt2lE4tQ0UsePXEwv1rOB4HEWmnLDb0L5ebCzlHhBiKeWEHzq9zs2w5mJg
-         mSJw==
-X-Gm-Message-State: APjAAAXnJ08hyLJ82ApfHp77y/y/tn/43vABvszoaM6thZOl6UPiuIih
-        RBkG+/VxTyvyLUAlX0j6YrfPfg==
-X-Google-Smtp-Source: APXvYqyDWxfhIyP/h3s0Oi6ErhsqhkZHAZBagsFf5qH/cpxvtKTTFtgwYnDOPtqZTw3woyGFBLgpuw==
-X-Received: by 2002:ac2:5ec2:: with SMTP id d2mr9235070lfq.112.1571903822235;
-        Thu, 24 Oct 2019 00:57:02 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id e8sm8739712ljf.1.2019.10.24.00.57.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 00:57:01 -0700 (PDT)
-Subject: Re: [PATCH v4] string-choice: add yesno(), onoff(),
- enableddisabled(), plural() helpers
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jani Nikula <jani.nikula@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
-References: <20191023131308.9420-1-jani.nikula@intel.com>
- <20191023155619.43e0013f0c8c673a5c508c1e@linux-foundation.org>
- <18589470-c428-f4c8-6e3e-c8cfed3ad6e0@rasmusvillemoes.dk>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <26bc9c97-363b-2a07-8338-e3fdc576ce68@rasmusvillemoes.dk>
-Date:   Thu, 24 Oct 2019 09:57:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2R2CzbjvEDjQmx61JPs0RIA5BRAZFdy1ELg14vUw0UQ=;
+        b=mcbxZvUCVD99ezJDP2UqbnidUZr2ZpVxsrvL/lCx0ARlZqgj5fGfQ7+xLqhDJnUYd8
+         1UUqbzZG6onxjLBEI6wIdv2AtalqO5hmUamhFBPLnevaneCq/0tYKzkjqVE19lrInZSw
+         zpogmbv/zY4PbzafQBkdQzj+KEkhXZyXGZ1PO5Zn8dZbEzR/q18AE5s+9KCZLw5wTH7A
+         T350pxSjl02ivUqCIyZui+ipl134bgYrNWb3Qx7oESc3bbit+aNmgqeDwnTuu5RjDqGR
+         nPMiEa6kHEM6M8BcfFXjflzRWgVhgTaAbW1CI2tkRdTHpFl1/DLdMqgqDnt6cYo4zMpl
+         m+6Q==
+X-Gm-Message-State: APjAAAUTqct+MqrCnaQK5e0KELhsiQ9Z1PgbGLAfCzLknAciciaNsqus
+        T+RGJbGF4TPXNmp6QjjEIbUdTg==
+X-Google-Smtp-Source: APXvYqzfzbyOD0kMrrQiasuUlY/4XG7ebzJuOpr4xPK79DUE6o1jWvTCFJ/oMBpjTCu4tX/LxTh1vw==
+X-Received: by 2002:a1c:6885:: with SMTP id d127mr3484113wmc.64.1571903842614;
+        Thu, 24 Oct 2019 00:57:22 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id d4sm31839931wrc.54.2019.10.24.00.57.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 24 Oct 2019 00:57:22 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 08:57:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] mfd: mt6397: fix probe after changing mt6397-core
+Message-ID: <20191024075720.GI15843@dell>
+References: <20191003185323.24646-1-frank-w@public-files.de>
+ <20191016095338.GD4365@dell>
+ <24600EAE-5379-475F-B83D-880E767F2CDA@public-files.de>
 MIME-Version: 1.0
-In-Reply-To: <18589470-c428-f4c8-6e3e-c8cfed3ad6e0@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <24600EAE-5379-475F-B83D-880E767F2CDA@public-files.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/10/2019 09.40, Rasmus Villemoes wrote:
+On Tue, 22 Oct 2019, Frank Wunderlich wrote:
 
-> column. Maybe your compiler doesn't do string literal merging (since the
-> linker does it anyway), so your .rodata.str1.1 might contain several
-> copies of "yes" and "no", but they shouldn't really be counted.
+> Will it be merged on rc-cycle?
+> 
+> I ask because i see it only in mfd-next but not in fixes/torvalds-master
 
-Sorry, that's of course nonsense - the strings only appear once in the
-TU (inside the static inline function), so gcc must treat them all as
-the same object - as opposed to the case where the implementation was
+It's been sent to Linus for the -rcs.
 
-#define yesno(x) ((x) ? "yes" : "no")
-
-So that can't explain why you saw a smaller text segment using the OOL
-version.
-
-Rasmus
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
