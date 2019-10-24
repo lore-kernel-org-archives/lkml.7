@@ -2,404 +2,137 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C59CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BEACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C6E20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C69020679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2KqYige"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410043AbfJXRDS (ORCPT
+        id S2410058AbfJXRDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:03:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54862 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730622AbfJXRDR (ORCPT
+        Thu, 24 Oct 2019 13:03:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56468 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2410047AbfJXRDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:03:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 79FD8286063
-Subject: Re: [PATCH v2 01/18] platform: chrome: Put docs with the code
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-References: <20191021055403.67849-1-gwendal@chromium.org>
- <20191021055403.67849-2-gwendal@chromium.org>
- <20191021163134.6d121b1e@archlinux>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <50b45b37-d02e-df9a-1ce5-54cea23debb6@collabora.com>
-Date:   Thu, 24 Oct 2019 19:03:12 +0200
+        Thu, 24 Oct 2019 13:03:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571936618;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KPuVZSjsJby28GYRrSW7KOOUQEyPDIp7ehYqx2CiMW8=;
+        b=B2KqYigeTOy41TCbKdWuujH9Kmc/DgRUCAo8a2h4j/s6nnLVD1Jetjp09J1WGB9d+QvcU3
+        048u/Ua6FXJaXijMUSEfFCR0SB5jJlC62e5lwwsQR+P06AfiYqzeiZBNtEv0QDgjzDPpfC
+        CewWVt/09BD0Cc5C/2e7lwHYjJm7sLo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-4DGjzRdVOO-j_UhaexIoDw-1; Thu, 24 Oct 2019 13:03:34 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CED11800DFB;
+        Thu, 24 Oct 2019 17:03:22 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA8096012E;
+        Thu, 24 Oct 2019 17:03:16 +0000 (UTC)
+Subject: Re: [PATCH 0/2] Enabling MSI for Microblaze
+To:     Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        palmer@sifive.com, hch@infradead.org, helgaas@kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Jackie Liu <liuyun01@kylinos.cn>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Firoz Khan <firoz.khan@linaro.org>, sparclinux@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        James Hogan <jhogan@kernel.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-snps-arc@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-mips@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <cover.1571911976.git.michal.simek@xilinx.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e9feafd1-8497-025b-e81d-f0e974038f3c@redhat.com>
+Date:   Thu, 24 Oct 2019 13:03:16 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191021163134.6d121b1e@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <cover.1571911976.git.michal.simek@xilinx.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 4DGjzRdVOO-j_UhaexIoDw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/24/19 6:13 AM, Michal Simek wrote:
+> Hi,
+>
+> these two patches come from discussion with Christoph, Bjorn, Palmer and
+> Waiman. The first patch was suggestion by Christoph here
+> https://lore.kernel.org/linux-riscv/20191008154604.GA7903@infradead.org/
+> The second part was discussed
+> https://lore.kernel.org/linux-pci/mhng-5d9bcb53-225e-441f-86cc-b335624b3e=
+7c@palmer-si-x1e/
+> and
+> https://lore.kernel.org/linux-pci/20191017181937.7004-1-palmer@sifive.com=
+/
+>
+> Thanks,
+> Michal
+>
+>
+> Michal Simek (1):
+>   asm-generic: Make msi.h a mandatory include/asm header
+>
+> Palmer Dabbelt (1):
+>   pci: Default to PCI_MSI_IRQ_DOMAIN
+>
+>  arch/arc/include/asm/Kbuild     | 1 -
+>  arch/arm/include/asm/Kbuild     | 1 -
+>  arch/arm64/include/asm/Kbuild   | 1 -
+>  arch/mips/include/asm/Kbuild    | 1 -
+>  arch/powerpc/include/asm/Kbuild | 1 -
+>  arch/riscv/include/asm/Kbuild   | 1 -
+>  arch/sparc/include/asm/Kbuild   | 1 -
+>  drivers/pci/Kconfig             | 2 +-
+>  include/asm-generic/Kbuild      | 1 +
+>  9 files changed, 2 insertions(+), 8 deletions(-)
+>
+That looks OK.
 
+Acked-by: Waiman Long <longman@redhat.com>
 
-On 21/10/19 17:31, Jonathan Cameron wrote:
-> On Sun, 20 Oct 2019 22:53:46 -0700
-> Gwendal Grignou <gwendal@chromium.org> wrote:
-> 
->> To avoid doc rot, put function documentations with code, not header.
->> Use kernel-doc style comments for exported functions.
->>
->> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> Looks good to me.
-> 
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-
-applied for 5.5, thanks.
-
-
->> ---
->> New in v2.
->>
->>  drivers/platform/chrome/cros_ec.c           |  33 +++++++
->>  drivers/platform/chrome/cros_ec_proto.c     |  70 +++++++++++++
->>  include/linux/platform_data/cros_ec_proto.h | 103 --------------------
->>  3 files changed, 103 insertions(+), 103 deletions(-)
->>
->> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
->> index fd77e6fa74c2c..9b2d07422e175 100644
->> --- a/drivers/platform/chrome/cros_ec.c
->> +++ b/drivers/platform/chrome/cros_ec.c
->> @@ -104,6 +104,15 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
->>  	return ret;
->>  }
->>  
->> +/**
->> + * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
->> + * @ec_dev: Device to register.
->> + *
->> + * Before calling this, allocate a pointer to a new device and then fill
->> + * in all the fields up to the --private-- marker.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_register(struct cros_ec_device *ec_dev)
->>  {
->>  	struct device *dev = ec_dev->dev;
->> @@ -198,6 +207,14 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
->>  }
->>  EXPORT_SYMBOL(cros_ec_register);
->>  
->> +/**
->> + * cros_ec_unregister() - Remove a ChromeOS EC.
->> + * @ec_dev: Device to unregister.
->> + *
->> + * Call this to deregister a ChromeOS EC, then clean up any private data.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_unregister(struct cros_ec_device *ec_dev)
->>  {
->>  	if (ec_dev->pd)
->> @@ -209,6 +226,14 @@ int cros_ec_unregister(struct cros_ec_device *ec_dev)
->>  EXPORT_SYMBOL(cros_ec_unregister);
->>  
->>  #ifdef CONFIG_PM_SLEEP
->> +/**
->> + * cros_ec_suspend() - Handle a suspend operation for the ChromeOS EC device.
->> + * @ec_dev: Device to suspend.
->> + *
->> + * This can be called by drivers to handle a suspend event.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_suspend(struct cros_ec_device *ec_dev)
->>  {
->>  	struct device *dev = ec_dev->dev;
->> @@ -243,6 +268,14 @@ static void cros_ec_report_events_during_suspend(struct cros_ec_device *ec_dev)
->>  					     1, ec_dev);
->>  }
->>  
->> +/**
->> + * cros_ec_resume() - Handle a resume operation for the ChromeOS EC device.
->> + * @ec_dev: Device to resume.
->> + *
->> + * This can be called by drivers to handle a resume event.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_resume(struct cros_ec_device *ec_dev)
->>  {
->>  	int ret;
->> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
->> index f659f96bda128..7db58771ec77c 100644
->> --- a/drivers/platform/chrome/cros_ec_proto.c
->> +++ b/drivers/platform/chrome/cros_ec_proto.c
->> @@ -117,6 +117,17 @@ static int send_command(struct cros_ec_device *ec_dev,
->>  	return ret;
->>  }
->>  
->> +/**
->> + * cros_ec_prepare_tx() - Prepare an outgoing message in the output buffer.
->> + * @ec_dev: Device to register.
->> + * @msg: Message to write.
->> + *
->> + * This is intended to be used by all ChromeOS EC drivers, but at present
->> + * only SPI uses it. Once LPC uses the same protocol it can start using it.
->> + * I2C could use it now, with a refactor of the existing code.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
->>  		       struct cros_ec_command *msg)
->>  {
->> @@ -141,6 +152,16 @@ int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
->>  }
->>  EXPORT_SYMBOL(cros_ec_prepare_tx);
->>  
->> +/**
->> + * cros_ec_check_result() - Check ec_msg->result.
->> + * @ec_dev: EC device.
->> + * @msg: Message to check.
->> + *
->> + * This is used by ChromeOS EC drivers to check the ec_msg->result for
->> + * errors and to warn about them.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_check_result(struct cros_ec_device *ec_dev,
->>  			 struct cros_ec_command *msg)
->>  {
->> @@ -326,6 +347,13 @@ static int cros_ec_get_host_command_version_mask(struct cros_ec_device *ec_dev,
->>  	return ret;
->>  }
->>  
->> +/**
->> + * cros_ec_query_all() -  Query the protocol version supported by the
->> + *         ChromeOS EC.
->> + * @ec_dev: Device to register.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_query_all(struct cros_ec_device *ec_dev)
->>  {
->>  	struct device *dev = ec_dev->dev;
->> @@ -453,6 +481,16 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
->>  }
->>  EXPORT_SYMBOL(cros_ec_query_all);
->>  
->> +/**
->> + * cros_ec_cmd_xfer() - Send a command to the ChromeOS EC.
->> + * @ec_dev: EC device.
->> + * @msg: Message to write.
->> + *
->> + * Call this to send a command to the ChromeOS EC.  This should be used
->> + * instead of calling the EC's cmd_xfer() callback directly.
->> + *
->> + * Return: 0 on success or negative error code.
->> + */
->>  int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
->>  		     struct cros_ec_command *msg)
->>  {
->> @@ -500,6 +538,18 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
->>  }
->>  EXPORT_SYMBOL(cros_ec_cmd_xfer);
->>  
->> +/**
->> + * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
->> + * @ec_dev: EC device.
->> + * @msg: Message to write.
->> + *
->> + * This function is identical to cros_ec_cmd_xfer, except it returns success
->> + * status only if both the command was transmitted successfully and the EC
->> + * replied with success status. It's not necessary to check msg->result when
->> + * using this function.
->> + *
->> + * Return: The number of bytes transferred on success or negative error code.
->> + */
->>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->>  			    struct cros_ec_command *msg)
->>  {
->> @@ -584,6 +634,16 @@ static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
->>  	return ec_dev->event_size;
->>  }
->>  
->> +/**
->> + * cros_ec_get_next_event() - Fetch next event from the ChromeOS EC.
->> + * @ec_dev: Device to fetch event from.
->> + * @wake_event: Pointer to a bool set to true upon return if the event might be
->> + *              treated as a wake event. Ignored if null.
->> + *
->> + * Return: negative error code on errors; 0 for no data; or else number of
->> + * bytes received (i.e., an event was retrieved successfully). Event types are
->> + * written out to @ec_dev->event_data.event_type on success.
->> + */
->>  int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
->>  {
->>  	u8 event_type;
->> @@ -628,6 +688,16 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
->>  }
->>  EXPORT_SYMBOL(cros_ec_get_next_event);
->>  
->> +/**
->> + * cros_ec_get_host_event() - Return a mask of event set by the ChromeOS EC.
->> + * @ec_dev: Device to fetch event from.
->> + *
->> + * When MKBP is supported, when the EC raises an interrupt, we collect the
->> + * events raised and call the functions in the ec notifier. This function
->> + * is a helper to know which events are raised.
->> + *
->> + * Return: 0 on error or non-zero bitmask of one or more EC_HOST_EVENT_*.
->> + */
->>  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
->>  {
->>  	u32 host_event;
->> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
->> index eab7036cda090..0d4e4aaed37af 100644
->> --- a/include/linux/platform_data/cros_ec_proto.h
->> +++ b/include/linux/platform_data/cros_ec_proto.h
->> @@ -187,133 +187,30 @@ struct cros_ec_platform {
->>  	u16 cmd_offset;
->>  };
->>  
->> -/**
->> - * cros_ec_suspend() - Handle a suspend operation for the ChromeOS EC device.
->> - * @ec_dev: Device to suspend.
->> - *
->> - * This can be called by drivers to handle a suspend event.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_suspend(struct cros_ec_device *ec_dev);
->>  
->> -/**
->> - * cros_ec_resume() - Handle a resume operation for the ChromeOS EC device.
->> - * @ec_dev: Device to resume.
->> - *
->> - * This can be called by drivers to handle a resume event.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_resume(struct cros_ec_device *ec_dev);
->>  
->> -/**
->> - * cros_ec_prepare_tx() - Prepare an outgoing message in the output buffer.
->> - * @ec_dev: Device to register.
->> - * @msg: Message to write.
->> - *
->> - * This is intended to be used by all ChromeOS EC drivers, but at present
->> - * only SPI uses it. Once LPC uses the same protocol it can start using it.
->> - * I2C could use it now, with a refactor of the existing code.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
->>  		       struct cros_ec_command *msg);
->>  
->> -/**
->> - * cros_ec_check_result() - Check ec_msg->result.
->> - * @ec_dev: EC device.
->> - * @msg: Message to check.
->> - *
->> - * This is used by ChromeOS EC drivers to check the ec_msg->result for
->> - * errors and to warn about them.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_check_result(struct cros_ec_device *ec_dev,
->>  			 struct cros_ec_command *msg);
->>  
->> -/**
->> - * cros_ec_cmd_xfer() - Send a command to the ChromeOS EC.
->> - * @ec_dev: EC device.
->> - * @msg: Message to write.
->> - *
->> - * Call this to send a command to the ChromeOS EC.  This should be used
->> - * instead of calling the EC's cmd_xfer() callback directly.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
->>  		     struct cros_ec_command *msg);
->>  
->> -/**
->> - * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
->> - * @ec_dev: EC device.
->> - * @msg: Message to write.
->> - *
->> - * This function is identical to cros_ec_cmd_xfer, except it returns success
->> - * status only if both the command was transmitted successfully and the EC
->> - * replied with success status. It's not necessary to check msg->result when
->> - * using this function.
->> - *
->> - * Return: The number of bytes transferred on success or negative error code.
->> - */
->>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->>  			    struct cros_ec_command *msg);
->>  
->> -/**
->> - * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
->> - * @ec_dev: Device to register.
->> - *
->> - * Before calling this, allocate a pointer to a new device and then fill
->> - * in all the fields up to the --private-- marker.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_register(struct cros_ec_device *ec_dev);
->>  
->> -/**
->> - * cros_ec_unregister() - Remove a ChromeOS EC.
->> - * @ec_dev: Device to unregister.
->> - *
->> - * Call this to deregister a ChromeOS EC, then clean up any private data.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_unregister(struct cros_ec_device *ec_dev);
->>  
->> -/**
->> - * cros_ec_query_all() -  Query the protocol version supported by the
->> - *         ChromeOS EC.
->> - * @ec_dev: Device to register.
->> - *
->> - * Return: 0 on success or negative error code.
->> - */
->>  int cros_ec_query_all(struct cros_ec_device *ec_dev);
->>  
->> -/**
->> - * cros_ec_get_next_event() - Fetch next event from the ChromeOS EC.
->> - * @ec_dev: Device to fetch event from.
->> - * @wake_event: Pointer to a bool set to true upon return if the event might be
->> - *              treated as a wake event. Ignored if null.
->> - *
->> - * Return: negative error code on errors; 0 for no data; or else number of
->> - * bytes received (i.e., an event was retrieved successfully). Event types are
->> - * written out to @ec_dev->event_data.event_type on success.
->> - */
->>  int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
->>  
->> -/**
->> - * cros_ec_get_host_event() - Return a mask of event set by the ChromeOS EC.
->> - * @ec_dev: Device to fetch event from.
->> - *
->> - * When MKBP is supported, when the EC raises an interrupt, we collect the
->> - * events raised and call the functions in the ec notifier. This function
->> - * is a helper to know which events are raised.
->> - *
->> - * Return: 0 on error or non-zero bitmask of one or more EC_HOST_EVENT_*.
->> - */
->>  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->>  
->>  #endif /* __LINUX_CROS_EC_PROTO_H */
-> 
