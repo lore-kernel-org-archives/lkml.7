@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA94CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824F9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C99C21D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5845121A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H2b3RZCL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sf2++rx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732624AbfJXWwe (ORCPT
+        id S1732682AbfJXWwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:52:34 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:52044 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732573AbfJXWw0 (ORCPT
+        Thu, 24 Oct 2019 18:52:37 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:43252 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732620AbfJXWwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:52:26 -0400
-Received: by mail-pl1-f202.google.com with SMTP id q13so172423plr.18
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:24 -0700 (PDT)
+        Thu, 24 Oct 2019 18:52:32 -0400
+Received: by mail-pl1-f201.google.com with SMTP id x18so182905plm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=3L2fKWe0mnTKbOXtDJWS5MdWfgbISjm7SM0mf8jhMMs=;
-        b=H2b3RZCLiylwud/YwS8XTUX1Nfxf49CmiNoouPiLQWiwkmkw6s5J3L6a6uOMooc4I/
-         if+ccaYBMM2Jc9mBIKeBZr0auWMA7zC6OkjcSJ1FJGr5CKQ2AKFeLXHSWQCh1T+Wk3pm
-         nyov8olG1fm/RHMhdTkccA9BSvy00AbYUCyfFQMmdOh2Xuacq9FgBu+HT9CuJQpEIC8Y
-         PNTFQVciC8sYwLstWG7sJf0mJ+TuwRuGM9jfM6cjlT4zPYuVFCG5+jqVPAX/8eswE8zf
-         bt35nEX73zZkPoG04qT4nAnZvMZgNDYWfIB2eks3sB+AlQloPZxuEBCzajWqBzSccSw9
-         NBmw==
+        bh=K9E/B478ig/3FT/HPhGFdlo0v28kyi4gF0t5BJVte+4=;
+        b=Sf2++rx6Q2f/i1fpiY1IH5BzPv/ntmDtPfAYAcJd6USBAJAOz9sAjWsxe+ZQUTmcnx
+         TMNKhZ9IeyI6W5I8YOZc8fXZ3u7T3/BLv8RDrQNIon+Exd84mb+I8CDhoR0YeS078Znp
+         iX0O0MXuFJ/BEJRR6bcFehBfigS7d/r0z9CxwLPRboIP4QhEcU+ca/u/4Xa4bj0S26uy
+         ghCd/C77mcUctZEMYZqeRUwOe0hyC5c8SFUlYqcW/iOIJ4/mnlU1ytp206qaDtb1qyhG
+         6rlkjs5YcBzM11A8IPnUQbN5y1qAQgVU/1FJ7AsSP5RvjVSpldSCmL3izOFewNOkwTDQ
+         bLSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=3L2fKWe0mnTKbOXtDJWS5MdWfgbISjm7SM0mf8jhMMs=;
-        b=Bw1kF1EFBp3zowxj2BILplR8/6vOlJz3f1b8aE7SQVwi29XzLFd2uspdMP2Ctu+EXM
-         bOXsJ+OexYpGj+BrCfC6YORusa8Cfo/FkGvVDrgStEu10Vqbnmu8w2+4Ha38yK6VT80l
-         Bm6ldv64tai52Rya1UDO4u52H0lcOvkfAk78hcFBlyNRo88X914WuK+yLDr/4kOAQUKe
-         ARCdlxQPCxhWjzmzTkEsrumIXKwYoDQIXp3ip8lchU/QdAssrMhfePDuyvlB4pZ28hl9
-         lV56TOspe8gI+mEpE4uiMv1/PqIW0/ZGts8Ee8DCaHuOCOnGh28cPgCiYJxrlusZcVxx
-         wpdQ==
-X-Gm-Message-State: APjAAAVciNgmPzd5qTCxhCFYZgYIhnGy6xlvKuj5oImMSs3tbyrogSV3
-        2d+mte30bTIh3NXsjpCpVAkpheZ8b46d6fPeCf4=
-X-Google-Smtp-Source: APXvYqy9g1XQvCTpQ3Jxss3Ar1eHiV+3ywS0nmj9a/zcS8ytsRAvfPgmUVmxVtOnVPORgMnA0aWwHbORKOrobXSREds=
-X-Received: by 2002:a63:af13:: with SMTP id w19mr469567pge.189.1571957543335;
- Thu, 24 Oct 2019 15:52:23 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:51:27 -0700
+        bh=K9E/B478ig/3FT/HPhGFdlo0v28kyi4gF0t5BJVte+4=;
+        b=OcAD1tzvF2FBdhJ/2s1yt3x0Ml2zYua8cMn02aJGNjCOKzkjOGxApc/BgmThOowTyb
+         R+v3EXFIQPk2GQICmCSu+zGNfY+k1pSHsN6sn02SWYm3HqW1o0j+apPkzOfIgZeJEUGW
+         rIrcUiVdElvP9Yo2hA8MX9+f0TYV5mHQAeNMgy3CzUJt+UmwULMM7QDyBPyjrInyzPeB
+         KLvFaJpUqcD/7nkgWj04TihOMjJVRCIL9O2Yk2cxgLA1oQIg03AYhZBzemSLUzf8LWks
+         lE0Il4lsagkcwJxqXAxqtFU+sMNSX7u8HRsWob5NcH9tgSqsMf+rlsG2QsTiujB9BVEJ
+         6jRw==
+X-Gm-Message-State: APjAAAUQ4tm7Xf4L1UnWzIrbOjKqzyMPtXhRxLWGpR/Nox7AefVfLpGl
+        QZkMRhBlYJ/0s6pyRE+3v2vEfpln5aAlYpC7uJc=
+X-Google-Smtp-Source: APXvYqwUVXHwobZjxnBDuN5eJ28nFXqkiy4fKRpIDKsINI+3xWarkHRyuPSmd2/SRLrM/YyI5fpTK4tzGG+Eou/B428=
+X-Received: by 2002:a63:1f4e:: with SMTP id q14mr536510pgm.144.1571957551921;
+ Thu, 24 Oct 2019 15:52:31 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 15:51:30 -0700
 In-Reply-To: <20191024225132.13410-1-samitolvanen@google.com>
-Message-Id: <20191024225132.13410-13-samitolvanen@google.com>
+Message-Id: <20191024225132.13410-16-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191024225132.13410-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v2 12/17] arm64: preserve x18 when CPU is suspended
+Subject: [PATCH v2 15/17] arm64: kprobes: fix kprobes without CONFIG_KRETPROBES
 From:   samitolvanen@google.com
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -83,61 +83,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't lose the current task's shadow stack when the CPU is suspended.
+This allows CONFIG_KRETPROBES to be disabled without disabling
+kprobes entirely.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/include/asm/suspend.h | 2 +-
- arch/arm64/mm/proc.S             | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/probes/kprobes.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/include/asm/suspend.h b/arch/arm64/include/asm/suspend.h
-index 8939c87c4dce..0cde2f473971 100644
---- a/arch/arm64/include/asm/suspend.h
-+++ b/arch/arm64/include/asm/suspend.h
-@@ -2,7 +2,7 @@
- #ifndef __ASM_SUSPEND_H
- #define __ASM_SUSPEND_H
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index c4452827419b..98230ae979ca 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -551,6 +551,7 @@ void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
+ 	return (void *)orig_ret_address;
+ }
  
--#define NR_CTX_REGS 12
-+#define NR_CTX_REGS 13
- #define NR_CALLEE_SAVED_REGS 12
- 
- /*
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index fdabf40a83c8..0e7c353c9dfd 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -49,6 +49,8 @@
-  * cpu_do_suspend - save CPU registers context
-  *
-  * x0: virtual address of context pointer
-+ *
-+ * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
-  */
- ENTRY(cpu_do_suspend)
- 	mrs	x2, tpidr_el0
-@@ -73,6 +75,9 @@ alternative_endif
- 	stp	x8, x9, [x0, #48]
- 	stp	x10, x11, [x0, #64]
- 	stp	x12, x13, [x0, #80]
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	str	x18, [x0, #96]
++#ifdef CONFIG_KRETPROBES
+ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				      struct pt_regs *regs)
+ {
+@@ -564,6 +565,7 @@ int __kprobes arch_trampoline_kprobe(struct kprobe *p)
+ {
+ 	return 0;
+ }
 +#endif
- 	ret
- ENDPROC(cpu_do_suspend)
  
-@@ -89,6 +94,10 @@ ENTRY(cpu_do_resume)
- 	ldp	x9, x10, [x0, #48]
- 	ldp	x11, x12, [x0, #64]
- 	ldp	x13, x14, [x0, #80]
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	ldr	x18, [x0, #96]
-+	str	xzr, [x0, #96]
-+#endif
- 	msr	tpidr_el0, x2
- 	msr	tpidrro_el0, x3
- 	msr	contextidr_el1, x4
+ int __init arch_init_kprobes(void)
+ {
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
