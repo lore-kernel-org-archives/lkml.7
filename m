@@ -2,109 +2,129 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E120ACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFC4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B77DC20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571934273;
-	bh=xD1gHG7sdYECgBcaX1I3ErLN5e+7Bcvxfw58Z5UkxWg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EvavgXyR3HhqudFA+CizWK+wosl5y4DYYvV9HQFUi/v9yZXUtPKZj38HLoF7Sw6TF
-	 nF2+UFcHzMfc5o2D0H+B+q9kZzP/tsD89QybN3dFwZprNsue30v6q1UrPMdt5khEY3
-	 TXqPwipW6by69yPKOJ/pCPRCaAgtXTJoRuB9AfEE=
+	by mail.kernel.org (Postfix) with ESMTP id 0BC2620659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0fNHH7wY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439856AbfJXQYc (ORCPT
+        id S2439868AbfJXQZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733261AbfJXQY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:24:29 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB6D20650
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 16:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571934269;
-        bh=xD1gHG7sdYECgBcaX1I3ErLN5e+7Bcvxfw58Z5UkxWg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cMgz30XMQHcj05ka5AvwAN4vg3QH06UOV2FiniGBcXY6aLJkgav30QRcBc4Yj5V4r
-         i8nr6g22rn/+HUJNQgotVd06w4Zv/wyX9vjfDHPv6LG0sdkcn4nTddMILQyCol0aE3
-         oiClyv3XYuC1hKYFlD6aF2kIocdrwoBL50dH+hno=
-Received: by mail-wr1-f44.google.com with SMTP id r1so16987852wrs.9
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:24:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAUTCsjsr3cDJihqeT9zdZdC5I7qNMGVy6/8nLIcGpfBrkix2nmD
-        2FXDiaEMLUQRltEMGn+0SfIknBhpUKoAGo+EQiGJsw==
-X-Google-Smtp-Source: APXvYqwH/8k3vOnYy8kFWtwcVyKD76drxnPThFvixiYP9/NJ4zhI9FrC8FyUhlrBqq3QTOq33KRRMBKNqm/rGC3Sdls=
-X-Received: by 2002:a5d:51c2:: with SMTP id n2mr4522564wrv.149.1571934267795;
- Thu, 24 Oct 2019 09:24:27 -0700 (PDT)
+        Thu, 24 Oct 2019 12:25:15 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58888 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733261AbfJXQZP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:25:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qRvbB1DtzyIxHygXmCt9H0/9hok1MUyXJRvheNP/d/A=; b=0fNHH7wYU8K5SQRItorJjuSmY
+        BDNJr8VcbWKdq5PzXU7KMo3ChB2WOzqRKkNaQPggtGijmFUWibJY5cZbmoBty7Ye7npOTFCr1CvVn
+        oi+w30QJVb2ACfsUGLjCyEmXuGnUG4wbByZQi6fmFgIqGjc3+507wrFWJZYnbLDvj2qkp2IkHtQlc
+        oj+AxStnPUeTxuJaR0b+7/SQ1bRFOi2nDg+rGmsZbMGTtGep1aFrAnFjjF9s8QIechHZqQPi0Plhe
+        ieZuCxykvVRcmsgVr7Yn7U1F5/7CaoPOqj2Yys2Sz/JT5HpHwv+6wKNXCFTkr1XPjTPB07kVJ4xGn
+        L+jnPuDnw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNfue-0001RD-3t; Thu, 24 Oct 2019 16:24:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7DC773056C0;
+        Thu, 24 Oct 2019 18:23:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F3AC82100B87D; Thu, 24 Oct 2019 18:24:32 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 18:24:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     syzbot <syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com>
+Cc:     aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, cyphar@cyphar.com, elena.reshetova@intel.com,
+        elver@google.com, guro@fb.com, keescook@chromium.org,
+        ldv@altlinux.org, linux-kernel@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk, wad@chromium.org
+Subject: Re: KCSAN: data-race in __rb_rotate_set_parents / vm_area_dup
+Message-ID: <20191024162432.GA4097@hirez.programming.kicks-ass.net>
+References: <000000000000b49e190595aa39fe@google.com>
 MIME-Version: 1.0
-References: <20191023122705.198339581@linutronix.de> <20191023123118.386844979@linutronix.de>
- <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com>
-In-Reply-To: <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 24 Oct 2019 09:24:13 -0700
-X-Gmail-Original-Message-ID: <CALCETrV79pw7-nisp4VdEkQ4=fr2nfJFOMCtyKmWZR6PG3=oWg@mail.gmail.com>
-Message-ID: <CALCETrV79pw7-nisp4VdEkQ4=fr2nfJFOMCtyKmWZR6PG3=oWg@mail.gmail.com>
-Subject: Re: [patch V2 08/17] x86/entry: Move syscall irq tracing to C code
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000b49e190595aa39fe@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 2:30 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Wed, Oct 23, 2019 at 5:31 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > Interrupt state tracing can be safely done in C code. The few stack
-> > operations in assembly do not need to be covered.
-> >
-> > Remove the now pointless indirection via .Lsyscall_32_done and jump to
-> > swapgs_restore_regs_and_return_to_usermode directly.
->
-> This doesn't look right.
+On Thu, Oct 24, 2019 at 09:07:08AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
+> git tree:       https://github.com/google/ktsan.git kcsan
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1060c47b600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c034966b0b02f94f7f34
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in __rb_rotate_set_parents / vm_area_dup
+> 
+> read to 0xffff88811eef53e8 of 200 bytes by task 7738 on cpu 0:
+>  vm_area_dup+0x70/0xf0 kernel/fork.c:359
+>  __split_vma+0x88/0x350 mm/mmap.c:2678
+>  __do_munmap+0xb02/0xb60 mm/mmap.c:2803
+>  do_munmap mm/mmap.c:2856 [inline]
+>  mmap_region+0x165/0xd50 mm/mmap.c:1749
+>  do_mmap+0x6d4/0xba0 mm/mmap.c:1577
+>  do_mmap_pgoff include/linux/mm.h:2353 [inline]
+>  vm_mmap_pgoff+0x12d/0x190 mm/util.c:496
+>  ksys_mmap_pgoff+0x2d8/0x420 mm/mmap.c:1629
+>  __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
+>  __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
+>  __x64_sys_mmap+0x91/0xc0 arch/x86/kernel/sys_x86_64.c:91
+>  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> write to 0xffff88811eef5440 of 8 bytes by task 7737 on cpu 1:
+>  __rb_rotate_set_parents+0x4d/0xf0 lib/rbtree.c:79
+>  __rb_insert lib/rbtree.c:215 [inline]
+>  __rb_insert_augmented+0x109/0x370 lib/rbtree.c:459
+>  rb_insert_augmented include/linux/rbtree_augmented.h:50 [inline]
+>  rb_insert_augmented_cached include/linux/rbtree_augmented.h:60 [inline]
+>  vma_interval_tree_insert+0x196/0x230 mm/interval_tree.c:23
+>  __vma_link_file+0xd9/0x110 mm/mmap.c:634
+>  __vma_adjust+0x1ac/0x12a0 mm/mmap.c:842
+>  vma_adjust include/linux/mm.h:2276 [inline]
+>  __split_vma+0x208/0x350 mm/mmap.c:2707
+>  split_vma+0x73/0xa0 mm/mmap.c:2736
+>  mprotect_fixup+0x43f/0x510 mm/mprotect.c:413
+>  do_mprotect_pkey+0x3eb/0x660 mm/mprotect.c:553
+>  __do_sys_mprotect mm/mprotect.c:578 [inline]
+>  __se_sys_mprotect mm/mprotect.c:575 [inline]
+>  __x64_sys_mprotect+0x51/0x70 mm/mprotect.c:575
+>  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Well, I feel a bit silly.  I read this:
+What is this thing trying to tell me? That the copy on alloc is racy,
+because at that point the object isn't exposed yet.
 
->
-> >  #define SYSCALL_EXIT_WORK_FLAGS                                \
-> > @@ -279,6 +282,9 @@ static void syscall_slow_exit_work(struc
-
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-and I applied the diff in my head to the wrong function, and I didn't
-notice that it didn't really apply there.  Oddly, gitweb gets this
-right:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=WIP.core/entry&id=e3158f93138ded84eb44fa97606197f6adcf9366
-
-Looking at the actual code:
-
-Acked-by: Andy Lutomirski <luto@kernel.org>
-
-with one minor caveat: you are making a subtle and mostly irrelevant
-semantic change: with your patch, user mode will be traced as IRQs on
-even if a nasty user has used iopl() to turn off interrupts.  This is
-probably a good thing, but I think you should mention it in the
-changelog.
-
-FWIW, the rest of the series looks pretty good, too.
+How do you tell it to shut up?
