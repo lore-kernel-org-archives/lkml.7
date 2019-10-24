@@ -2,121 +2,116 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A8ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0880CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948E621906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E9121906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:15:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NM5QxTW7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujgYMcpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410222AbfJXROg (ORCPT
+        id S2410234AbfJXRPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:14:36 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39069 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405901AbfJXROg (ORCPT
+        Thu, 24 Oct 2019 13:15:12 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41227 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405901AbfJXRPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:14:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571937274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=hGQbFOEkQFyCy0U41zGhn7pQEikaBMfg60zJuN/yD6g=;
-        b=NM5QxTW7k8mCQGulRevRSDck/NKS5DUB6md7Gfd/gLrLjVq+QAu2MySRXT/ocCHwVpb5XP
-        l42wSEMcyfD5FbpZ65KT51BgWaGhLhop7KIwhjUfbTPpedw3tjHN4XkZWHuV4iNHUDhT7S
-        DtCbBb475dFqF99AEJj66sHg/GkaCiA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-rg3A0xWPPUS5FssTmyfhbw-1; Thu, 24 Oct 2019 13:14:32 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A008C800D49;
-        Thu, 24 Oct 2019 17:14:31 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-12-89.pek2.redhat.com [10.72.12.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AECCD10027BF;
-        Thu, 24 Oct 2019 17:14:25 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        x86@kernel.org, Kairui Song <kasong@redhat.com>
-Subject: [PATCH] x86/kdump: Print a notice if SME/SEV is active on crash reservation
-Date:   Fri, 25 Oct 2019 01:14:17 +0800
-Message-Id: <20191024171417.14175-1-kasong@redhat.com>
+        Thu, 24 Oct 2019 13:15:11 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f5so25881078ljg.8;
+        Thu, 24 Oct 2019 10:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=B2u8s7gx7FtUmA2/ewnUbC7NCE9E4zM8QCdEvaltKG0=;
+        b=ujgYMcpcefyHEvPBjnG91nrFx1r96PE3NLBm2gv2VhmxVY9I0K6PXG1lTx6pIG6JRg
+         /RqVkcWokAR7Bfi4OkJ23KDI94at36+22bTxGko2LGvkyU2FpWiznLBh1KGkqh/AZSOq
+         f8qu4lyQTSdlU35N7g5G+qFSQAQfXkggUj4RYC+LsqJURhgS1n41UHU3Gb3yLOAIk3tu
+         JbD/QFOYbkDiiB5puMT1MS8+9GhQ5dk8YbaVnQEeGZB+jG69pRFMI1shocDZUkgWYRwX
+         cKSUnHhcridXgLQJEqTwOmzaFyYq88uaK2Chnoyx0im+Pkul1qUNjazuo2tvMzhsonBn
+         lh4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=B2u8s7gx7FtUmA2/ewnUbC7NCE9E4zM8QCdEvaltKG0=;
+        b=Ccq0mG5YaiyBCZHQAST/EIP30+0i9uVpHTH/CRUGahwVQtG0IOn42WGyeYqj1uAyUT
+         zgoVev+QzuZYnIJRvV/ZsUchbjygzXhsf+2+K5w3d/1Y8KvFRf4jqyabpygtfkJfX99J
+         LidxKwTEBPemvNX+5jPHwMfkaToEnPW7k2JzMkQ3xT9P/F1ekigZOF2O7/QxHoVd3Poa
+         Xr4x51qxeJpZhXkwBM50vIZ8HrRgv74w+8OoZzwAY58/6jC7vq8CfAYHWJXSjbxebrFJ
+         z6AmUchtSlGXULtyws09tWQo/pPN6MlRBlfvg7YRRtDpizEFWeIkSj7Jz/SKtgfDE3oT
+         r/uA==
+X-Gm-Message-State: APjAAAVcMcBbTXbm4v9MlbbfZyqAvg4fiCS1mCm04XOzpciPOGtMBXW7
+        wOm2WiS09gyAYhaoYqv1AKNyxnAZ
+X-Google-Smtp-Source: APXvYqw1RGIy1mL/CQkGrBGWGbJQNaMlq3LWK78yQ79zaSv2ZJhXCfvGJ9O9KDdEymqgGFfuRXFBiA==
+X-Received: by 2002:a2e:9799:: with SMTP id y25mr10627721lji.228.1571937309166;
+        Thu, 24 Oct 2019 10:15:09 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id p3sm10948363ljn.78.2019.10.24.10.15.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2019 10:15:08 -0700 (PDT)
+Subject: Re: [PATCH v1 1/3] gpu: host1x: Remove implicit IOMMU backing on
+ client's registration
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190623173743.24088-1-digetx@gmail.com>
+ <20191024115016.GA2924027@ulmo>
+ <55ab29ad-da9b-c178-4480-dc6edb09b3e4@gmail.com>
+ <20191024134756.GC2924027@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7d3b1e99-4c57-d6db-36dd-d0a840ead440@gmail.com>
+Date:   Thu, 24 Oct 2019 20:15:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: rg3A0xWPPUS5FssTmyfhbw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191024134756.GC2924027@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SME/SEV requires SWIOTLB to be force enabled in both first kernel
-and kdump kernel, the detail is covered in following 3 commits:
+24.10.2019 16:47, Thierry Reding пишет:
+> On Thu, Oct 24, 2019 at 04:35:13PM +0300, Dmitry Osipenko wrote:
+>> 24.10.2019 14:50, Thierry Reding пишет:
+>>> On Sun, Jun 23, 2019 at 08:37:41PM +0300, Dmitry Osipenko wrote:
+>>>> On ARM32 we don't want any of the clients device to be backed by the
+>>>> implicit domain, simply because we can't afford such a waste on older
+>>>> Tegra SoCs that have very few domains available in total. The recent IOMMU
+>>>> support addition for the Video Decoder hardware uncovered the problem
+>>>> that an unfortunate drivers probe order results in the DRM driver probe
+>>>> failure if CONFIG_ARM_DMA_USE_IOMMU=y due to a shortage of IOMMU domains
+>>>> caused by the implicit backing. The host1x_client_register() is a common
+>>>> function that is invoked by all of the relevant DRM drivers during theirs
+>>>> probe and hence it is convenient to remove the implicit backing there,
+>>>> resolving the problem.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/gpu/host1x/bus.c | 19 +++++++++++++++++++
+>>>>  1 file changed, 19 insertions(+)
+>>>
+>>> I don't really want to do this in a central place like this. If we
+>>> really do need this, why can't we do it in the individual drivers?
+>>
+>> Why do you want to duplicate the same action for each driver instead of
+>> doing it in a single common place?
+> 
+> I don't mind doing it in a common place in particular, I just don't want
+> to do this within the host1x bus infrastructure. This is really a policy
+> decision that should be up to drivers. Consider the case where we had a
+> different host1x driver (for V4L2 for example) that would actually want
+> to use the DMA API. In that case we may want to detach in the DRM driver
+> but not the V4L2 driver.
 
-- commit c7753208a94c ("x86, swiotlb: Add memory encryption support")
-force enables SWIOTLB when SME is active, even if there is less than
-4G of memory, to support DMA of devices that not support address with
-the encrypt bit.
-
-- commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is active"=
-)
-kernel keep SWIOTLB enabled even if there is an IOMMU, to support special
-devices that IOMMU can't handle.
-
-- commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory encryption")
-force enables SWIOTLB when SEV is active unconditionally.
-
-Force enabling SWIOTLB in kdump kernel will make it easily run out of
-already scarce pre-reserved crashkernel memory.
-
-The crashkernel value is user specified, and kernel should respect the
-given value to make the behavior clear and controllable. And currently
-there is no way kernel could estimate the crashkernel value after all.
-
-So when SME/SEV is active, just print a notice to let the user know the
-situation and adjust the crashkernel value accordingly. Suppress the
-notice if high reservation is used, as high reservation will always
-reserve a dedicated low memory region which will cover the SWIOTLB.
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- arch/x86/kernel/setup.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 77ea96b794bd..d5ceea03c0a3 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -594,6 +594,13 @@ static void __init reserve_crashkernel(void)
- =09=09return;
- =09}
-=20
-+=09if (crash_base < (1ULL << 32) && mem_encrypt_active()) {
-+=09=09pr_notice("Memory encrytion is active, SWIOTLB is required to work,\=
-n"
-+=09=09=09  "%luMB of low crash memory will be consumed by it.\n"
-+=09=09=09  "Please ensure crashkernel value is large enough.\n",
-+=09=09=09  (ALIGN(swiotlb_size_or_default(), SZ_1M) >> 20));
-+=09}
-+
- =09pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM=
-: %ldMB)\n",
- =09=09(unsigned long)(crash_size >> 20),
- =09=09(unsigned long)(crash_base >> 20),
---=20
-2.21.0
-
+Okay.
