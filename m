@@ -2,181 +2,132 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327FECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A928CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0085320684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:09:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MFpNo7lC"
+	by mail.kernel.org (Postfix) with ESMTP id 40AFC20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571904890;
+	bh=WzV4gtHEfjr3CBeEJoCF3xe52hV0QGkh855TcAsOGhY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KJC2Lg9UM/tlno/cteE8okY2FfrrSZWiQsoEDFqh+v6RvRfYvXvxXc/9mfQNpjEqw
+	 A9Bs2xNZikjGDjf/6wv89Rocpn9baABO6o1yGe7zHgmRNvb9K0QDSMqr0QZsd8gcBx
+	 BfLT+j1O/Rh+JRmPpDpwUBXwO2/5jSZfJhBiSfsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438037AbfJXIJt (ORCPT
+        id S2438056AbfJXIOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:09:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37796 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725977AbfJXIJt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:09:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571904588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BeX4D8O9z+tVBCKqcGZcr5ign6JXERCJLYcp/HFmwQY=;
-        b=MFpNo7lCPKb5Aelw1esoIagJycn7Strxg/cg+0MqFNo/V9uW5FKGekXdylE3I7ZvBy56J+
-        E8C4jDAMVxz4Pkw/4RHfwHmm0N1kHZ25QbBfuXgugBq/Xcq19Fcv0Sp8jcvVyH9t/gvUW9
-        Jb+D54kgEpvm/Dgk2qGL0aPOYs5hZcU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-cr7EmkoTMfCbqea0fLtTPw-1; Thu, 24 Oct 2019 04:09:44 -0400
-Received: by mail-wm1-f69.google.com with SMTP id q22so805228wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 01:09:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F8182UJbr670CLsPagPoudZb9pdwLWvpPAyPH6nj5ZE=;
-        b=miurvVlDdmN0YaL7DgQPFbc3oK8uND38fUmAIKyWfr22cVV1OBfCglni+/jj9L8dTo
-         1Q1RLbMN6ZMRJawcnMrudb1FpuUNTwANGEPqfjZ2X2NKi6Rqn66TfvVV+NCTEA4vA4Zq
-         DL/UxGzSQZioPbxXJxG3oGt2HzOvEJK79qAGJxGnf27U0hmtisD2oLUk8cutaC8xwgrV
-         9Uz1Td6xBJh+tzmQ9Bc79hw654d4lJzfPlAYkvRjg4kYTQHNGtdGjlp+3AQbj5qUjk7y
-         qDGQjINBOzNQ41QOCJBH31sZlqA61rhZEJl8nX7TcMf0MAe5rF8cThE99xCpTFBSx+GI
-         iygg==
-X-Gm-Message-State: APjAAAVco7b0knyKUr/FFTJNjjun+Narp5CwzosmQ7jmqHMqstcSIXyi
-        NLDmJW0WmvKFqKQml1DIamLxiaWxVUXxBAzBSILw4jnG5zgYuD6jKuza+F0TfEIb1wc1PbSSd6A
-        YM/LWIvlyvqdOwMonb8DTTW/h
-X-Received: by 2002:a5d:54c7:: with SMTP id x7mr2392139wrv.99.1571904583094;
-        Thu, 24 Oct 2019 01:09:43 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyKZOyZYyIUZdVQo/tZ2TZK5072qWStDiP0lwOfbyMiILgwgIpJZBlmoNkgpPMnERM/NoB8nQ==
-X-Received: by 2002:a5d:54c7:: with SMTP id x7mr2392118wrv.99.1571904582820;
-        Thu, 24 Oct 2019 01:09:42 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id w22sm1557244wmc.16.2019.10.24.01.09.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 01:09:42 -0700 (PDT)
-Subject: Re: [PATCH resend] Add touchscreen platform data for the Schneider
- SCT101CTM tablet
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Gorbea Ainz <danielgorbea@hotmail.com>
-References: <20191023185323.13552-1-hdegoede@redhat.com>
- <CAHp75VfhKzXfJEwHLdkwJHPXmL6bCRMtvo-0aCSQxdiHQyXHHQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1274f8b7-234b-1af4-0715-b47018d96946@redhat.com>
-Date:   Thu, 24 Oct 2019 10:09:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 24 Oct 2019 04:14:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54914 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726395AbfJXIOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 04:14:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 271B5B5F6;
+        Thu, 24 Oct 2019 08:14:46 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 10:14:45 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>, netdev@vger.kernel.org,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH] mm: memcontrol: fix network errors from failing
+ __GFP_ATOMIC charges
+Message-ID: <20191024081445.GR17610@dhcp22.suse.cz>
+References: <20191022233708.365764-1-hannes@cmpxchg.org>
+ <20191023064012.GB754@dhcp22.suse.cz>
+ <20191023154618.GA366316@cmpxchg.org>
+ <CALvZod6fDEqDrYmmVC42552Ej4Y47FVZUj_irSZNxKWRF4vPYw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfhKzXfJEwHLdkwJHPXmL6bCRMtvo-0aCSQxdiHQyXHHQ@mail.gmail.com>
-Content-Language: en-US
-X-MC-Unique: cr7EmkoTMfCbqea0fLtTPw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod6fDEqDrYmmVC42552Ej4Y47FVZUj_irSZNxKWRF4vPYw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed 23-10-19 10:38:36, Shakeel Butt wrote:
+> On Wed, Oct 23, 2019 at 8:46 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Wed, Oct 23, 2019 at 08:40:12AM +0200, Michal Hocko wrote:
+[...]
+> > > On the other hand this would allow to break the isolation by an
+> > > unpredictable amount. Should we put a simple cap on how much we can go
+> > > over the limit. If the memcg limit reclaim is not able to keep up with
+> > > those overflows then even __GFP_ATOMIC allocations have to fail. What do
+> > > you think?
+> >
+> > I don't expect a big overrun in practice, and it appears that Google
+> > has been letting even NOWAIT allocations pass through without
+> > isolation issues.
+> 
+> We have been overcharging for __GFP_HIGH allocations for couple of
+> years and see no isolation issues in the production.
+> 
+> > Likewise, we have been force-charging the skmem for
+> > a while now and it hasn't been an issue for reclaim to keep up.
+> >
+> > My experience from production is that it's a whole lot easier to debug
+> > something like a memory.max overrun than it is to debug a machine that
+> > won't respond to networking. So that's the side I would err on.
 
-On 23-10-2019 21:08, Andy Shevchenko wrote:
-> On Wed, Oct 23, 2019 at 9:53 PM Hans de Goede <hdegoede@redhat.com> wrote=
-:
->>
->> From: Daniel Gorbea Ainz <danielgorbea@hotmail.com>
->>
->> Add touchscreen platform data for the Schneider SCT101CTM tablet
->=20
-> Thanks, now patchwork sees it.
->=20
->> Signed-off-by: Daniel Gorbea <danielgorbea@hotmail.com>
->=20
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->=20
-> I'm not sure you need to put Rb when you have your SoB.
-> Do you think it's fine if I remove Rb when applying?
+It is definitely good to hear that your production systems are working well.
+I was not really worried about normal workloads but rather malicious
+kind of (work)loads where memcg is used to contain a potentially untrusted
+entities. That's where an unbounded atomic charges escapes would be a
+much bigger deal. Maybe this is not the case now because we do not
+have that many accounted __GFP_ATOMIC requests (I have tried to audit
+but gave up very shortly afterwards because there are not that many
+using __GFP_ACCOUNT directly so they are likely hidden behind
+SLAB_ACCOUNT). But I do not really like that uncertainty.
 
-I believe having a r-b here is fine, but if you want to remove
-it that is fine with me too.
+If you have a really strong opinion on an explicit limit then I
+would like to see at least some warning to the kernel log so that we
+learn when some workloads hit a pathological paths that and act upon
+that. Does that sound like something you would agree to?
 
-Regards,
+E.g. something like
 
-Hans
-
-
-
-
->=20
->> ---
->> hdegoede: Resend from my email address as vger.kernel.org does not like
->> Daniel's emails
->> ---
->>   drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x=
-86/touchscreen_dmi.c
->> index 8bfef880e216..ba494ace83d4 100644
->> --- a/drivers/platform/x86/touchscreen_dmi.c
->> +++ b/drivers/platform/x86/touchscreen_dmi.c
->> @@ -549,6 +549,24 @@ static const struct ts_dmi_data pov_mobii_wintab_p1=
-006w_v10_data =3D {
->>          .properties     =3D pov_mobii_wintab_p1006w_v10_props,
->>   };
->>
->> +static const struct property_entry schneider_sct101ctm_props[] =3D {
->> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
->> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
->> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
->> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
->> +       PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->> +       PROPERTY_ENTRY_STRING("firmware-name",
->> +                             "gsl1680-schneider-sct101ctm.fw"),
->> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
->> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->> +       { }
->> +};
->> +
->> +static const struct ts_dmi_data schneider_sct101ctm_data =3D {
->> +       .acpi_name      =3D "MSSL1680:00",
->> +       .properties     =3D schneider_sct101ctm_props,
->> +};
->> +
->>   static const struct property_entry teclast_x3_plus_props[] =3D {
->>          PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
->>          PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
->> @@ -968,6 +986,14 @@ const struct dmi_system_id touchscreen_dmi_table[] =
-=3D {
->>                          DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
->>                  },
->>          },
->> +       {
->> +               /* Schneider SCT101CTM */
->> +               .driver_data =3D (void *)&schneider_sct101ctm_data,
->> +               .matches =3D {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "Default string"),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "SCT101CTM"),
->> +               },
->> +       },
->>          {
->>                  /* Teclast X3 Plus */
->>                  .driver_data =3D (void *)&teclast_x3_plus_data,
->> --
->> 2.23.0
->>
->=20
->=20
-
+diff --git a/mm/page_counter.c b/mm/page_counter.c
+index de31470655f6..e6999f6cf79e 100644
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -62,6 +62,8 @@ void page_counter_cancel(struct page_counter *counter, unsigned long nr_pages)
+ 	WARN_ON_ONCE(new < 0);
+ }
+ 
++#define SAFE_OVERFLOW	1024
++
+ /**
+  * page_counter_charge - hierarchically charge pages
+  * @counter: counter
+@@ -82,8 +84,14 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
+ 		 * This is indeed racy, but we can live with some
+ 		 * inaccuracy in the watermark.
+ 		 */
+-		if (new > c->watermark)
++		if (new > c->watermark) {
+ 			c->watermark = new;
++			if (new > c->max + SAFE_OVERFLOW) {
++				pr_warn("Max limit %lu breached, usage:%lu. Please report.\n",
++						c->max, atomic_long_read(&c->usage);
++				dump_stack();
++			}
++		}
+ 	}
+ }
+ 
+-- 
+Michal Hocko
+SUSE Labs
