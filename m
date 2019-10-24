@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED92CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BC3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9096221D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D0FB21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I2431xJR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yue9uHjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732503AbfJXWwS (ORCPT
+        id S1732534AbfJXWwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:52:18 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:43682 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732326AbfJXWwP (ORCPT
+        Thu, 24 Oct 2019 18:52:22 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:37561 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732383AbfJXWwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:52:15 -0400
-Received: by mail-yw1-f73.google.com with SMTP id y200so398907ywg.10
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:15 -0700 (PDT)
+        Thu, 24 Oct 2019 18:52:07 -0400
+Received: by mail-pf1-f202.google.com with SMTP id p2so341560pff.4
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=R+pagykxtiUayWbEADuJoiydRcDW6HSTgqXK05LN0/E=;
-        b=I2431xJR5AtRuX5qoSiIk24z/5OCLlzSdjGi52dpOv12+bHMiaLVBU12PGCDes+r8X
-         wAjuAIWuv6ZomAao/O113wncVLizdeeBSlEx1bsxh2/lzn4uD6epbHPViDUva3cOvsU0
-         /UNdmDsfJIMrSw5i/0SaDjUj5Es5bVAzDEP1qir0eAi1qvv8mC+P/O4o1w4HC3L6pF50
-         AQP27T022w3AaGsGKKMo5gVcBxRaoqeynh9ofqgqyGFYUY3HeancjS86aO6xkUTlSXJv
-         nGykeYWoGX6nqGCK04zTzj6lvvXPcGONfsDAOADFXZa+d2m7LYp8SgIBde5lho4ylCuw
-         NBDg==
+        bh=Ut7YUpLvWAiZLonPATqZ5OL9tOEZJcNF7+tDsNdHEWU=;
+        b=Yue9uHjmOjCVuztIQPd86DzimLWI+fR6hTvdgEK/61gESlizanN/A26bP9cX7dKHQZ
+         oLJaaihwQeZ8TJTaC/aUcwdebnAqYL1UA2240obxSIMDp+j8AnFncQVqEMSmDWOZyolB
+         ZdO6BTWxOJWZJrdCoEIXzyAMbQCBE/lBQOUYz7LfURQr9FE/nOgK5wI5aA/YpCOOoAKs
+         ulfAhIsP7AvmLnNWY84oHIXlg/HfyhUjn7orwuaGMA3KCGHEhcJBj/YnjJpM4c+XXuZ0
+         YSvScvKza86L+Kajd8Kd/l8lRkcS8nw1BRebOUAsJOMUPyf3RTIJKK6kMU656U4CuO/+
+         09vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=R+pagykxtiUayWbEADuJoiydRcDW6HSTgqXK05LN0/E=;
-        b=ikr7Cb+lo3GX1tLMIDd1EGY0V1mGmYO7qsW+wnFbiusA66UHteI2ab96c1cd9NCi1h
-         BoWq5KFKGdWu6rKEnB9MO5BCX+ritsx/jy4LXVyXSd8xa1EBqcObC5MG1hA3XQ9c0gOM
-         rwkeCpuQKyWsF5DYm7pobRZpFBDb9XoghxDCP8+vV6ePmkoVvjVbnfknxQcmvgn34k9k
-         fKUUovAQh9wzzRr4Flxc7AvO0pAvPSQcfTfUp70Y1EXHvoL7QPpxy30Lfo0zZeE7Kfcl
-         3Zp3ei4fGIJ+wdGy/4dgxH84Syt3Np660iBIKzN7Qt2WHAI1eegdBhe3V1CtwGe+bq/K
-         c7gw==
-X-Gm-Message-State: APjAAAV2x6ogxah6YZcC4e+/qi4fxnfNQkV2KJ0DrY7UjGY7FonkB2K+
-        2VXe8hYBdGhCNapTXNdgnjWQUUe9MSrA6x1+Bts=
-X-Google-Smtp-Source: APXvYqxu3PYbJO97f2mzp9DNQTcnJCAUNKZZIOqlBzTc4OuUnzwTI3m0AgfuJaiQwAi1b2GOeoccGn5nuZqvAM1i7Q0=
-X-Received: by 2002:a25:cc87:: with SMTP id l129mr704884ybf.48.1571957534881;
- Thu, 24 Oct 2019 15:52:14 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:51:25 -0700
+        bh=Ut7YUpLvWAiZLonPATqZ5OL9tOEZJcNF7+tDsNdHEWU=;
+        b=RmfgAAbkFCh/457pNfAngb7UHebQxmvFEKUEYI74oxb80Kqas7t4fR6Vo65/eEnMy+
+         tqBJ15Ns4lYMvzmvkTUlayO2W0yxRC4YuoN+8qBtjQ45WEsZAGTbQ+Q4NN5k7BbfB2cJ
+         Q3mxRQ91QsFXjcNRZROT/RnKPFv9Ue38ssNGH/arK9OosDAJC+2N3wp/JU0keV+7rhq9
+         osEkBkFYfm0jPySa0ZygMqtNxGEg4sYz3isabtt+xR+WW/L+cELGrQ+dnTxw/gkx3BR4
+         k5Xk4toUzqIFACmLcmr4dEXYFG8aB9WZg4IXFIC34jEW5LwxB12byqUghiErPcGcFCgj
+         lMOA==
+X-Gm-Message-State: APjAAAUdG81vyr3OWU8m5mo55b/IhRUoIJ/NNWskTAT7eMNRH6bB9fvr
+        YRDi1dAu9xawr+AIH/BcTc+CFd5Z+SEaFCcsC60=
+X-Google-Smtp-Source: APXvYqyIrzZDUZW/ai1FBaSFozXCzV2dy/HKURTLyrbV1w3X+deCMyV91eFC953B77j0GjtVKG+bkdsaiwl8eZ9vJk4=
+X-Received: by 2002:a63:495b:: with SMTP id y27mr505887pgk.438.1571957526087;
+ Thu, 24 Oct 2019 15:52:06 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 15:51:23 -0700
 In-Reply-To: <20191024225132.13410-1-samitolvanen@google.com>
-Message-Id: <20191024225132.13410-11-samitolvanen@google.com>
+Message-Id: <20191024225132.13410-9-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191024225132.13410-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v2 10/17] arm64: disable kretprobes with SCS
+Subject: [PATCH v2 08/17] kprobes: fix compilation without CONFIG_KRETPROBES
 From:   samitolvanen@google.com
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -83,28 +83,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_KRETPROBES, function return addresses are modified to
-redirect control flow to kretprobe_trampoline. This is incompatible
-with SCS.
+kprobe_on_func_entry and arch_kprobe_on_func_entry need to be available
+even if CONFIG_KRETPROBES is not selected.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/arm64/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/kprobes.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 8cda176dad9a..42867174920f 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -165,7 +165,7 @@ config ARM64
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_KPROBES
--	select HAVE_KRETPROBES
-+	select HAVE_KRETPROBES if !SHADOW_CALL_STACK
- 	select HAVE_GENERIC_VDSO
- 	select IOMMU_DMA if IOMMU_SUPPORT
- 	select IRQ_DOMAIN
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 53534aa258a6..b5e20a4669b8 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1829,6 +1829,25 @@ unsigned long __weak arch_deref_entry_point(void *entry)
+ 	return (unsigned long)entry;
+ }
+ 
++bool __weak arch_kprobe_on_func_entry(unsigned long offset)
++{
++	return !offset;
++}
++
++bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
++{
++	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
++
++	if (IS_ERR(kp_addr))
++		return false;
++
++	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
++						!arch_kprobe_on_func_entry(offset))
++		return false;
++
++	return true;
++}
++
+ #ifdef CONFIG_KRETPROBES
+ /*
+  * This kprobe pre_handler is registered with every kretprobe. When probe
+@@ -1885,25 +1904,6 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ }
+ NOKPROBE_SYMBOL(pre_handler_kretprobe);
+ 
+-bool __weak arch_kprobe_on_func_entry(unsigned long offset)
+-{
+-	return !offset;
+-}
+-
+-bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset)
+-{
+-	kprobe_opcode_t *kp_addr = _kprobe_addr(addr, sym, offset);
+-
+-	if (IS_ERR(kp_addr))
+-		return false;
+-
+-	if (!kallsyms_lookup_size_offset((unsigned long)kp_addr, NULL, &offset) ||
+-						!arch_kprobe_on_func_entry(offset))
+-		return false;
+-
+-	return true;
+-}
+-
+ int register_kretprobe(struct kretprobe *rp)
+ {
+ 	int ret = 0;
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
