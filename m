@@ -2,146 +2,109 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1655CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E120ACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D59521D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77DC20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571934273;
+	bh=xD1gHG7sdYECgBcaX1I3ErLN5e+7Bcvxfw58Z5UkxWg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EvavgXyR3HhqudFA+CizWK+wosl5y4DYYvV9HQFUi/v9yZXUtPKZj38HLoF7Sw6TF
+	 nF2+UFcHzMfc5o2D0H+B+q9kZzP/tsD89QybN3dFwZprNsue30v6q1UrPMdt5khEY3
+	 TXqPwipW6by69yPKOJ/pCPRCaAgtXTJoRuB9AfEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439841AbfJXQY2 (ORCPT
+        id S2439856AbfJXQYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:24:28 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:39128 "EHLO ale.deltatee.com"
+        Thu, 24 Oct 2019 12:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733261AbfJXQY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:24:27 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1iNfuB-0004s9-36; Thu, 24 Oct 2019 10:24:08 -0600
-To:     Yash Shah <yash.shah@sifive.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@g.sifive.com>,
-        "Palmer Dabbelt ( Sifive)" <palmer@g.sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "sorear2@gmail.com" <sorear2@gmail.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "alex@ghiti.fr" <alex@ghiti.fr>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Greentime Hu <greentime.hu@g.sifive.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "will@kernel.org" <will@kernel.org>,
-        "allison@lohutok.net" <allison@lohutok.net>
-References: <1571908438-4802-1-git-send-email-yash.shah@sifive.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <c4817ec1-4e50-5646-68f0-caeb0ab6f0bf@deltatee.com>
-Date:   Thu, 24 Oct 2019 10:24:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1733261AbfJXQY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:24:29 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB6D20650
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 16:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571934269;
+        bh=xD1gHG7sdYECgBcaX1I3ErLN5e+7Bcvxfw58Z5UkxWg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cMgz30XMQHcj05ka5AvwAN4vg3QH06UOV2FiniGBcXY6aLJkgav30QRcBc4Yj5V4r
+         i8nr6g22rn/+HUJNQgotVd06w4Zv/wyX9vjfDHPv6LG0sdkcn4nTddMILQyCol0aE3
+         oiClyv3XYuC1hKYFlD6aF2kIocdrwoBL50dH+hno=
+Received: by mail-wr1-f44.google.com with SMTP id r1so16987852wrs.9
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:24:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAUTCsjsr3cDJihqeT9zdZdC5I7qNMGVy6/8nLIcGpfBrkix2nmD
+        2FXDiaEMLUQRltEMGn+0SfIknBhpUKoAGo+EQiGJsw==
+X-Google-Smtp-Source: APXvYqwH/8k3vOnYy8kFWtwcVyKD76drxnPThFvixiYP9/NJ4zhI9FrC8FyUhlrBqq3QTOq33KRRMBKNqm/rGC3Sdls=
+X-Received: by 2002:a5d:51c2:: with SMTP id n2mr4522564wrv.149.1571934267795;
+ Thu, 24 Oct 2019 09:24:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1571908438-4802-1-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: allison@lohutok.net, will@kernel.org, tglx@linutronix.de, gregkh@linuxfoundation.org, greentime.hu@g.sifive.com, sachin.ghadi@sifive.com, rppt@linux.ibm.com, Anup.Patel@wdc.com, catalin.marinas@arm.com, alex@ghiti.fr, aou@eecs.berkeley.edu, sorear2@gmail.com, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, palmer@g.sifive.com, paul.walmsley@g.sifive.com, yash.shah@sifive.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] RISC-V: Add PCIe I/O BAR memory mapping
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20191023122705.198339581@linutronix.de> <20191023123118.386844979@linutronix.de>
+ <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com>
+In-Reply-To: <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 24 Oct 2019 09:24:13 -0700
+X-Gmail-Original-Message-ID: <CALCETrV79pw7-nisp4VdEkQ4=fr2nfJFOMCtyKmWZR6PG3=oWg@mail.gmail.com>
+Message-ID: <CALCETrV79pw7-nisp4VdEkQ4=fr2nfJFOMCtyKmWZR6PG3=oWg@mail.gmail.com>
+Subject: Re: [patch V2 08/17] x86/entry: Move syscall irq tracing to C code
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Oct 23, 2019 at 2:30 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Wed, Oct 23, 2019 at 5:31 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > Interrupt state tracing can be safely done in C code. The few stack
+> > operations in assembly do not need to be covered.
+> >
+> > Remove the now pointless indirection via .Lsyscall_32_done and jump to
+> > swapgs_restore_regs_and_return_to_usermode directly.
+>
+> This doesn't look right.
 
+Well, I feel a bit silly.  I read this:
 
-On 2019-10-24 3:14 a.m., Yash Shah wrote:
-> For I/O BARs to work correctly on RISC-V Linux, we need to establish a
-> reserved memory region for them, so that drivers that wish to use I/O BARs
-> can issue reads and writes against a memory region that is mapped to the
-> host PCIe controller's I/O BAR MMIO mapping.
+>
+> >  #define SYSCALL_EXIT_WORK_FLAGS                                \
+> > @@ -279,6 +282,9 @@ static void syscall_slow_exit_work(struc
 
-I don't think other arches do this. ioremap() typically just uses
-virtual address space in the VMALLOC region, PCI doesn't need it's own
-range. As far as I know the ioremap() implementation in riscv already
-does this.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In any case, 16MB for PCI bar space seems woefully inadequate.
+and I applied the diff in my head to the wrong function, and I didn't
+notice that it didn't really apply there.  Oddly, gitweb gets this
+right:
 
-Logan
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=WIP.core/entry&id=e3158f93138ded84eb44fa97606197f6adcf9366
 
+Looking at the actual code:
 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/include/asm/io.h      | 7 +++++++
->  arch/riscv/include/asm/pgtable.h | 7 ++++++-
->  2 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
-> index fc1189a..3ba4d93 100644
-> --- a/arch/riscv/include/asm/io.h
-> +++ b/arch/riscv/include/asm/io.h
-> @@ -13,6 +13,7 @@
->  
->  #include <linux/types.h>
->  #include <asm/mmiowb.h>
-> +#include <asm/pgtable.h>
->  
->  extern void __iomem *ioremap(phys_addr_t offset, unsigned long size);
->  
-> @@ -162,6 +163,12 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
->  #endif
->  
->  /*
-> + *  I/O port access constants.
-> + */
-> +#define IO_SPACE_LIMIT		(PCI_IO_SIZE - 1)
-> +#define PCI_IOBASE		((void __iomem *)PCI_IO_START)
-> +
-> +/*
->   * Emulation routines for the port-mapped IO space used by some PCI drivers.
->   * These are defined as being "fully synchronous", but also "not guaranteed to
->   * be fully ordered with respect to other memory and I/O operations".  We're
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 7fc5e4a..d78cc74 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -7,6 +7,7 @@
->  #define _ASM_RISCV_PGTABLE_H
->  
->  #include <linux/mmzone.h>
-> +#include <linux/sizes.h>
->  
->  #include <asm/pgtable-bits.h>
->  
-> @@ -88,6 +89,7 @@ extern pgd_t swapper_pg_dir[];
->  #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
->  #define VMALLOC_END      (PAGE_OFFSET - 1)
->  #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-> +#define PCI_IO_SIZE      SZ_16M
->  
->  /*
->   * Roughly size the vmemmap space to be large enough to fit enough
-> @@ -102,7 +104,10 @@ extern pgd_t swapper_pg_dir[];
->  
->  #define vmemmap		((struct page *)VMEMMAP_START)
->  
-> -#define FIXADDR_TOP      (VMEMMAP_START)
-> +#define PCI_IO_END       VMEMMAP_START
-> +#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
-> +#define FIXADDR_TOP      PCI_IO_START
-> +
->  #ifdef CONFIG_64BIT
->  #define FIXADDR_SIZE     PMD_SIZE
->  #else
-> 
+Acked-by: Andy Lutomirski <luto@kernel.org>
+
+with one minor caveat: you are making a subtle and mostly irrelevant
+semantic change: with your patch, user mode will be traced as IRQs on
+even if a nasty user has used iopl() to turn off interrupts.  This is
+probably a good thing, but I think you should mention it in the
+changelog.
+
+FWIW, the rest of the series looks pretty good, too.
