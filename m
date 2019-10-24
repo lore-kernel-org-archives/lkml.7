@@ -2,106 +2,84 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A64ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E672166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KhtIu0dC"
+	by mail.kernel.org (Postfix) with ESMTP id 1949921929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409679AbfJXPPj (ORCPT
+        id S2502985AbfJXPQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:15:39 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45796 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409599AbfJXPPj (ORCPT
+        Thu, 24 Oct 2019 11:16:11 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:38284 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409599AbfJXPQL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:15:39 -0400
-Received: by mail-qk1-f195.google.com with SMTP id q70so16190183qke.12
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 08:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+iIRtubR+3wcJynWU+Kes2QJp/E/y+xxgrhDiusBOkw=;
-        b=KhtIu0dCBCIld0cRA5SUcUS0KOYjEc4cfXPg8KYjHxlBNZegNKIW0LE1dFWTzdCJXh
-         XUQXG5Zc6ePCGNVe7v+Y7NRdYoXFxV8EinQmz7Z4e3MQPPmeDGTHMpOLD8gDxqYKn22I
-         8hMZF9W4N4Dz6VQ48+unWncjtlnk+ljhv817Cs5eAP/8XOa7uUc3iPIyKfQ6XIfcnK/g
-         HbBn+S0oxLTyyEsLnnmGIkyOom6kq3bS9L/dzVAZ3LvkNtMAa4fJzxcyKT+LZzu5o33I
-         c6w4nBBsi08CAsqiaATFlWr5WDDf7fTODch3cCyRefSwjhMB6Onh+6g9Q1mDeqQVl+mK
-         vbCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=+iIRtubR+3wcJynWU+Kes2QJp/E/y+xxgrhDiusBOkw=;
-        b=WqFK9nxnAVN+KN65L9fgr05mj1cpr9iManB3Y1eFGNP1xaUX4rF9tVQ71ycfbLbLr0
-         XaTLCp8xAo4q0vzrA2z4B4JM1L5WJcOF367J9LhKS4Gnk9vvrryhMBo3JuisPdFwNAnf
-         sl5QqCSTay6nj/BNuKrtOLDYwN2kUV6RYwxBWQfsMZaLXbgPFwIw49zBzhtNeZKfTIF3
-         tT8FveeF2o2KebZCWGb7Sie2SFCMv/OIF4UMFMk9WCO5AoNcHsEPUTGT7QBTg9+o9f4P
-         OcwoaAVD2juTAEGei+b0KvXVW2x1ddQS9+tC4Y67J5V6nko3zfR1sU2yb/NhplElsp76
-         Q08w==
-X-Gm-Message-State: APjAAAU1gMB+NRQj7O3AMuLZhzWLiD/Ja09u6iVmJ2Icu7RBKQwVsuXf
-        altoFCl7Bdb7/x/cq0RUxrb4Tw==
-X-Google-Smtp-Source: APXvYqy18zf3XosU8y4peGneBh50FW2Gynb+ZaBTGHs+TmE6Px6rp0nwka0P0vb4Yv2oZ65stPVprg==
-X-Received: by 2002:a37:e50f:: with SMTP id e15mr14378854qkg.192.1571930138163;
-        Thu, 24 Oct 2019 08:15:38 -0700 (PDT)
-Received: from localhost.localdomain (li937-157.members.linode.com. [45.56.119.157])
-        by smtp.gmail.com with ESMTPSA id l5sm4346073qtj.52.2019.10.24.08.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 08:15:37 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        Robert Walker <robert.walker@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 4/4] perf cs-etm: Fix unsigned variable comparison to zero
-Date:   Thu, 24 Oct 2019 23:13:25 +0800
-Message-Id: <20191024151325.28623-5-leo.yan@linaro.org>
+        Thu, 24 Oct 2019 11:16:11 -0400
+Received: from ramsan ([84.195.182.253])
+        by albert.telenet-ops.be with bizsmtp
+        id HTG92100Z5USYZQ06TG9U7; Thu, 24 Oct 2019 17:16:10 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNeqP-0006xc-8R; Thu, 24 Oct 2019 17:16:09 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNeqP-0007ZC-62; Thu, 24 Oct 2019 17:16:09 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial] ASoC: Spelling s/configr/configur/
+Date:   Thu, 24 Oct 2019 17:16:03 +0200
+Message-Id: <20191024151603.29043-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024151325.28623-1-leo.yan@linaro.org>
-References: <20191024151325.28623-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable 'offset' in function cs_etm__sample() is u64 type, it's not
-appropriate to check it with 'while (offset > 0)'; this patch changes to
-'while (offset)'.
+Fix misspellings of "configuration" and "configure".
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- tools/perf/util/cs-etm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/sound/wm8904.h     | 2 +-
+ sound/soc/codecs/cx2072x.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index d9a857abaca8..52fe7d6d4f29 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -945,7 +945,7 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
- 	if (packet->isa == CS_ETM_ISA_T32) {
- 		u64 addr = packet->start_addr;
+diff --git a/include/sound/wm8904.h b/include/sound/wm8904.h
+index 14074405f5012f9a..88ac1870510ec063 100644
+--- a/include/sound/wm8904.h
++++ b/include/sound/wm8904.h
+@@ -120,7 +120,7 @@
+  * DRC configurations are specified with a label and a set of register
+  * values to write (the enable bits will be ignored).  At runtime an
+  * enumerated control will be presented for each DRC block allowing
+- * the user to choose the configration to use.
++ * the user to choose the configuration to use.
+  *
+  * Configurations may be generated by hand or by using the DRC control
+  * panel provided by the WISCE - see  http://www.wolfsonmicro.com/wisce/
+diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
+index 1c1ba7bea4d81969..2ad00ed21bec6c59 100644
+--- a/sound/soc/codecs/cx2072x.c
++++ b/sound/soc/codecs/cx2072x.c
+@@ -1507,7 +1507,7 @@ static int cx2072x_probe(struct snd_soc_component *codec)
+ 	regmap_multi_reg_write(cx2072x->regmap, cx2072x_reg_init,
+ 			       ARRAY_SIZE(cx2072x_reg_init));
  
--		while (offset > 0) {
-+		while (offset) {
- 			addr += cs_etm__t32_instr_size(etmq,
- 						       trace_chan_id, addr);
- 			offset--;
+-	/* configre PortC as input device */
++	/* configure PortC as input device */
+ 	regmap_update_bits(cx2072x->regmap, CX2072X_PORTC_PIN_CTRL,
+ 			   0x20, 0x20);
+ 
 -- 
 2.17.1
 
