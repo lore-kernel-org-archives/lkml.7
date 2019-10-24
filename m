@@ -2,204 +2,82 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93657CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058F4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DF821872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD78321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:01:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2RLgaYAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502559AbfJXOBY (ORCPT
+        id S2404981AbfJXOBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:01:24 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5153 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390982AbfJXOBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:01:23 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 775D38A1FC0A13841FB6;
-        Thu, 24 Oct 2019 22:01:12 +0800 (CST)
-Received: from huawei.com (10.175.102.38) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 24 Oct 2019
- 22:00:58 +0800
-From:   Tan Xiaojun <tanxiaojun@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <ak@linux.intel.com>,
-        <adrian.hunter@intel.com>, <yao.jin@linux.intel.com>,
-        <tmricht@linux.ibm.com>, <brueckner@linux.ibm.com>,
-        <songliubraving@fb.com>, <gregkh@linuxfoundation.org>,
-        <kim.phillips@arm.com>, <James.Clark@arm.com>,
-        <jeremy.linton@arm.com>
-CC:     <gengdongjiu@huawei.com>, <wxf.wang@hisilicon.com>,
-        <liwei391@huawei.com>, <tanxiaojun@huawei.com>,
-        <huawei.libin@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-Subject: [RFC v2 4/4] perf tools: Support "branch-misses:pp" on arm64
-Date:   Thu, 24 Oct 2019 22:48:30 +0800
-Message-ID: <20191024144830.16534-5-tanxiaojun@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024144830.16534-1-tanxiaojun@huawei.com>
-References: <20191024144830.16534-1-tanxiaojun@huawei.com>
+        Thu, 24 Oct 2019 10:01:54 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57888 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731381AbfJXOBy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 10:01:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PH0bJrrct13OtBTiOhljVf6qdjT6mdvYcPf9jH5za6c=; b=2RLgaYAnVgKkblXMxNOUOTT9h
+        Rf0uLT0nhkvEeARLz7h2ThZy4ujzXWuOBkzpxifosRltObEf80IMz5QgLfdeC0d6jNqDukg48j+if
+        pHXxZG1qAnNWADM5BxidUvMc/IpsphlN+8wZa87kZvfRkuKO/9qMiLcTorpq3jIh7yeYmRk/Wfv/O
+        cjKFvhyRl+byyl5Hyco98nsR/Cs7wTluom3VUW+8ygFQWrK4GBjwVS2YptzkPhPwaqqijnBYMtFIr
+        V4oQHkSOTGhcXOmWnmNz5myXFQ1hww4jTEwYNhyst6XUQTbfT2VEsEjkBDs2fNfkJkR0y0+7DsMav
+        yo2yGNM3Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNdgK-0000Aw-NU; Thu, 24 Oct 2019 14:01:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CBD44306DEB;
+        Thu, 24 Oct 2019 16:00:40 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2FE462B1D7CA3; Thu, 24 Oct 2019 16:01:39 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 16:01:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, mark.rutland@arm.com
+Subject: Re: [PATCH v2 1/4] perf: Allow using AUX data in perf samples
+Message-ID: <20191024140139.GF4114@hirez.programming.kicks-ass.net>
+References: <20191022095812.67071-1-alexander.shishkin@linux.intel.com>
+ <20191022095812.67071-2-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.38]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022095812.67071-2-alexander.shishkin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At the suggestion of James Clark, use spe to support the precise
-ip of some events. Currently its support event is:
-branch-misses.
+On Tue, Oct 22, 2019 at 12:58:09PM +0300, Alexander Shishkin wrote:
+> @@ -11213,6 +11367,9 @@ SYSCALL_DEFINE5(perf_event_open,
+>  	if (event->attr.aux_output && !perf_get_aux_event(event, group_leader))
+>  		goto err_locked;
+>  
+> +	if (event->attr.aux_sample_size && !perf_get_aux_event(event, group_leader))
+> +		goto err_locked;
+> +
 
-Example usage:
+Either aux_sample_size and aux_output are mutually exclusive, or you're
+leaking a refcount on group_leader. The first wants a check, the second
+wants error path fixes.
 
-$ ./perf record -e branch-misses:pp dd if=/dev/zero of=/dev/null count=10000
-(:p/pp/ppp is same for this case.)
-
-$ ./perf report --stdio
-("--stdio is not necessary")
-
---------------------------------------------------------------------
-...
- # Samples: 14  of event 'branch-misses:pp'
- # Event count (approx.): 14
- #
- # Children      Self  Command  Shared Object      Symbol
- # ........  ........  .......  .................  ..........................
- #
-    14.29%    14.29%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
-    14.29%    14.29%  dd       libc-2.28.so       [.] _dl_addr
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __free_pages
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __pi_memcpy
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] pagecache_get_page
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] unmap_single_vma
-     7.14%     7.14%  dd       dd                 [.] 0x00000000000025ec
-     7.14%     7.14%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
-     7.14%     7.14%  dd       ld-2.28.so         [.] check_match
-     7.14%     7.14%  dd       libc-2.28.so       [.] __mpn_rshift
-     7.14%     7.14%  dd       libc-2.28.so       [.] _nl_intern_locale_data
-     7.14%     7.14%  dd       libc-2.28.so       [.] read_alias_file
-...
---------------------------------------------------------------------
-
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
----
- tools/perf/util/arm-spe.c | 44 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/arm-spe.h |  3 +++
- tools/perf/util/evlist.c  |  2 ++
- 3 files changed, 49 insertions(+)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 596a48df6f4e..9851d1ed6d75 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -35,6 +35,19 @@
- 
- #define MAX_TIMESTAMP (~0ULL)
- 
-+#define SPE_ATTR_TS_ENABLE		BIT(0)
-+#define SPE_ATTR_PA_ENABLE		BIT(1)
-+#define SPE_ATTR_PCT_ENABLE		BIT(2)
-+#define SPE_ATTR_JITTER			BIT(16)
-+#define SPE_ATTR_BRANCH_FILTER		BIT(32)
-+#define SPE_ATTR_LOAD_FILTER		BIT(33)
-+#define SPE_ATTR_STORE_FILTER		BIT(34)
-+
-+#define SPE_ATTR_EV_RETIRED		BIT(1)
-+#define SPE_ATTR_EV_CACHE		BIT(3)
-+#define SPE_ATTR_EV_TLB			BIT(5)
-+#define SPE_ATTR_EV_BRANCH		BIT(7)
-+
- struct arm_spe {
- 	struct auxtrace			auxtrace;
- 	struct auxtrace_queues		queues;
-@@ -771,6 +784,15 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
-+	/* If it is in the precise ip mode, there is no need to
-+	 * synthesize new events. */
-+	if (!strncmp(evsel->name, "branch-misses", 13)) {
-+		spe->sample_branch_miss = true;
-+		spe->branch_miss_id = evsel->core.id[0];
-+
-+		return 0;
-+	}
-+
- 	/* create new id val to be a fixed offset from evsel id */
- 	id = evsel->core.id[0] + 1000000000;
- 
-@@ -880,3 +902,25 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 	free(spe);
- 	return err;
- }
-+
-+void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel)
-+{
-+	struct perf_pmu *pmu;
-+
-+	/* Currently only supports precise_ip for branch-misses on arm64 */
-+	if (!strcmp(perf_env__arch(evlist->env), "arm64")
-+			&& evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
-+			&& evsel->core.attr.precise_ip) {
-+		pmu = perf_pmu__find("arm_spe_0");
-+		if (pmu) {
-+			evsel->pmu_name = pmu->name;
-+			evsel->core.attr.type = PERF_RECORD_AUXTRACE;
-+			evsel->core.attr.config = SPE_ATTR_TS_ENABLE
-+						| SPE_ATTR_PA_ENABLE
-+						| SPE_ATTR_JITTER
-+						| SPE_ATTR_BRANCH_FILTER;
-+			evsel->core.attr.precise_ip = 0;
-+			evsel->core.attr.config1 = SPE_ATTR_EV_BRANCH;
-+		}
-+	}
-+}
-diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
-index 98d3235781c3..8b1fb191d03a 100644
---- a/tools/perf/util/arm-spe.h
-+++ b/tools/perf/util/arm-spe.h
-@@ -20,6 +20,8 @@ enum {
- union perf_event;
- struct perf_session;
- struct perf_pmu;
-+struct evlist;
-+struct evsel;
- 
- struct auxtrace_record *arm_spe_recording_init(int *err,
- 					       struct perf_pmu *arm_spe_pmu);
-@@ -28,4 +30,5 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session);
- 
- struct perf_event_attr *arm_spe_pmu_default_config(struct perf_pmu *arm_spe_pmu);
-+void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel);
- #endif
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index d277a98e62df..8a83d2b98209 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -9,6 +9,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <poll.h>
-+#include "arm-spe.h"
- #include "cpumap.h"
- #include "util/mmap.h"
- #include "thread_map.h"
-@@ -181,6 +182,7 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
- 	struct evsel *evsel, *temp;
- 
- 	__evlist__for_each_entry_safe(list, temp, evsel) {
-+		arm_spe_precise_ip_support(evlist, evsel);
- 		list_del_init(&evsel->core.node);
- 		evlist__add(evlist, evsel);
- 	}
--- 
-2.17.1
-
+>  	/*
+>  	 * Must be under the same ctx::mutex as perf_install_in_context(),
+>  	 * because we need to serialize with concurrent event creation.
