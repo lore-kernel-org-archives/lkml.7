@@ -2,112 +2,71 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A8FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90642CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063E320659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6554E20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="y7XhBL7y"
+	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="fJQtnkGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440022AbfJXRVI (ORCPT
+        id S2503678AbfJXRW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:21:08 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:33047 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfJXRVH (ORCPT
+        Thu, 24 Oct 2019 13:22:27 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25428 "EHLO
+        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503500AbfJXRW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:21:07 -0400
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x9OHKsN3002150;
-        Fri, 25 Oct 2019 02:20:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x9OHKsN3002150
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571937655;
-        bh=kUY/hERLTu/U3FtGdeL2N2bj0Nk4CzZvjOEYVh7raWM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=y7XhBL7yHCCy1CXKRy9en8lBOB9Sfa5UDLFSy4sDTH3nURMnzBJZ7JjwVBlicOMex
-         9jXtpJRaMB710ikKXsEcLOGh7pIP/RZULTi7UIYx0cqbAo6qV6IDBt6PkFA2eJyOwl
-         mOP4UfpwX/b0Q3OdE+LiDfkArMywNfcbDzhLqjKrfi+xOhzA+R9xhJtnRwrKijtp9X
-         Wc6Ya3XeMxasS5M7tyOFul4EDgp0ikwxpKWrTcHpc/O8/7CZUDTreSBC6hyr5BTVWQ
-         lS3H0TdJB69OhURgGpMbJL2TLyv8fblWUQ0uHkV923X8+pEN+VJZC5BFrDpmr1m7TZ
-         xwh/iri8MvtWA==
-X-Nifty-SrcIP: [209.85.221.174]
-Received: by mail-vk1-f174.google.com with SMTP id r85so1881285vke.3;
-        Thu, 24 Oct 2019 10:20:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAXpOpDOVaiQRxkBxWHl3BJ5NnBYC18uAuoJ/Qfv3lx274wpyS4+
-        tBWpyZzadLIpnDyjOKKYiWGe7HEO8pEy8E6lTL8=
-X-Google-Smtp-Source: APXvYqyMVWp8o1q4NYQSXLbT6BYGII56+juYvUv1u9de02v3EFh16jT4T6gV9Yv5L53FIsovHZ2TxJ7OWZFWGd4O1vs=
-X-Received: by 2002:a1f:4b05:: with SMTP id y5mr9077091vka.12.1571937653941;
- Thu, 24 Oct 2019 10:20:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016051547.11399-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20191016051547.11399-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 25 Oct 2019 02:20:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQM9eR5ZJXhUi-YDFAdMm82NFZKXuXFJ3OP7EsdwLnkNQ@mail.gmail.com>
-Message-ID: <CAK7LNAQM9eR5ZJXhUi-YDFAdMm82NFZKXuXFJ3OP7EsdwLnkNQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kbuild: reduce KBUILD_SINGLE_TARGETS as descending
- into subdirectories
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 24 Oct 2019 13:22:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571937737; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=A4RD+rwTmvJv9EkI+nlGgzoBhBgv/HGOA7Zi+hyda5AK/E/L6o6HVfIvoz9OcTsNlvoiYk0WT4ZOlsLGEiKzNAHKQ4dNENWri1gZq6OcIPjrFFCgVN+keV4/RNlm6LfjDyVhau13LwQjXEPMad8iPRfpdzIFmCGdqUAhZ/+W5YM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1571937737; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=nW4r9hfSpDvbnYrfHmG0XhOTR4iUAineFE87Et7nkUU=; 
+        b=hKCl+U4uD65rNluZtmmDeeHHT/mo/WurL7Gi637SNNMCuaFagJDch3z6L/c0VdHxosAAlVHS+VlaLdW9uAEjDC3kXwnB9eb6Xqh1fgcQwoYVzsSO0ItwJ8QFifE/i0ZLxbrI3OXRWjgreegqXwfFTYxz6ki+YleaR7ul1YfBYE8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zoho.com;
+        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
+        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
+  s=zapps768; d=zoho.com; 
+  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
+  b=ZqdzBT53l2Q1Sz9Te84EB01AGYpv45B2/YU82QrpWE6H++Fu9NDkVWRCEo/6FN/7l/BIOUniiV43
+    ZFYTH3ZUka+frqLnoCDwricKTQEvk1hNVtqYN07Ju/4HJmXundUK  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571937737;
+        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; l=49;
+        bh=nW4r9hfSpDvbnYrfHmG0XhOTR4iUAineFE87Et7nkUU=;
+        b=fJQtnkGvKFYula426xlDTpzgX7gLj3E9F32LR1sfVpKfHoqU4BNQTYs/AHGaqx9S
+        jU1/plQfKqCzlh6U40hzfKrNnOaghzKRfJ+WtA0/u6Xp0ab78Hf96fXm9UGeCrwBlDy
+        8BSdmsfqH+nPn6Vub/bsXxCZuHuqa+uomQuc3R0Q=
+Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.49 [171.221.113.49]) by mx.zohomail.com
+        with SMTPS id 1571937736333206.6263410656744; Thu, 24 Oct 2019 10:22:16 -0700 (PDT)
+From:   Zhou Yanjie <zhouyanjie@zoho.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, vkoul@kernel.org, paul@crapouillou.net,
+        mark.rutland@arm.com, Zubair.Kakakhel@imgtec.com,
+        dan.j.williams@intel.com
+Subject: dmaengine: JZ4780: Add support for the X1000 v2
+Date:   Fri, 25 Oct 2019 01:21:08 +0800
+Message-Id: <1571937670-30828-1-git-send-email-zhouyanjie@zoho.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
+References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 2:17 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> KBUILD_SINGLE_TARGETS does not need to contain all the targets.
-> Change it to keep track the targets only from the current directory
-> and its subdirectories.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-
-Series, applied to linux-kbuild.
+v1->v2:remove flag JZ_SOC_DATA_ALLOW_LEGACY_DT.
 
 
->
->  scripts/Makefile.build | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index a9e47953ca53..dcbb0124dac4 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -469,15 +469,15 @@ targets += $(call intermediate_targets, .asn1.o, .asn1.c .asn1.h) \
->
->  ifdef single-build
->
-> +KBUILD_SINGLE_TARGETS := $(filter $(obj)/%, $(KBUILD_SINGLE_TARGETS))
-> +
->  curdir-single := $(sort $(foreach x, $(KBUILD_SINGLE_TARGETS), \
->                         $(if $(filter $(x) $(basename $(x)).o, $(targets)), $(x))))
->
->  # Handle single targets without any rule: show "Nothing to be done for ..." or
->  # "No rule to make target ..." depending on whether the target exists.
->  unknown-single := $(filter-out $(addsuffix /%, $(subdir-ym)), \
-> -                       $(filter $(obj)/%, \
-> -                               $(filter-out $(curdir-single), \
-> -                                       $(KBUILD_SINGLE_TARGETS))))
-> +                       $(filter-out $(curdir-single), $(KBUILD_SINGLE_TARGETS)))
->
->  __build: $(curdir-single) $(subdir-ym)
->  ifneq ($(unknown-single),)
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
