@@ -2,104 +2,125 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B24CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B742070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3412070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C98ZSUR/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QZhxhWfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504224AbfJXTBl (ORCPT
+        id S2504237AbfJXTCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:01:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40143 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390493AbfJXTBk (ORCPT
+        Thu, 24 Oct 2019 15:02:09 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:42229 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504227AbfJXTCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:01:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d22so12312120pll.7
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:01:40 -0700 (PDT)
+        Thu, 24 Oct 2019 15:02:08 -0400
+Received: by mail-yw1-f73.google.com with SMTP id o14so18930221ywa.9
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:02:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=lGCdcxYn0fhxI/F+Acv75O+uiNWd2Mq3qhp7qlP+npM=;
-        b=C98ZSUR/4d7JgbXxedGADnm9ri1iP+4j59mYVyshMzIB+sPNTq05Zx/Wvh2qYBb58q
-         1F+xh7GoGea48bavabDj0ISu0sjYZC2Ueu8LRYU3BQ0EuXp1Zpj0MTybaPsAxY6GG6NQ
-         Rt+ON+PG2M2hpYS+huhURc4FwH8K5579hZhS1gKlJAhfIRoLZUwoxFDC3QpM+RCWWAUL
-         jrMDguCosKTJyInDGKkATia4svm81xLkg79QnHUUAEyUxHNLoCyEjliw6+QTloDbmEwJ
-         GqyzRY6gUVfwF4Vf9si1UNdIc8179Q+i1bFZwYIFnMJ1d9/h5yG2EToWNYkRZ1KZU0D5
-         uAFw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=StLsOwadC4o8p6VwUA79Cb5g5hBpyjdxZ8Va4K7Io2Y=;
+        b=QZhxhWfvgj/crSBx9d+GO3r08rd5P6BVS82LNd+Ehg/f0jTdzBLrAWrGMEvIdVP4So
+         xLhPAFCIpMtjXdHGwFect6AFUvfUFd+IVeY/umCEsFDjuz8O+g+O3UdJTQ/KW04oS0bq
+         tphX/B5Q+/2Tts6ASFcwP1m8d6ZTvrpdS7Wf8Y/RcniR30+O309uhBSFNNpON/fmNNAp
+         KRAdi522wh+TkDnIiBT7Z4HZ55B8mVV7sgY2paZq8DQgB8+VJa1wEv3+3105cm/EdZuK
+         Wms4gkFotY43Yd3dEREwoDYDJGZALonwJKUlH1g8D/kGhWWcR+1ffw6nNdrSM+AKkhg7
+         vJyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=lGCdcxYn0fhxI/F+Acv75O+uiNWd2Mq3qhp7qlP+npM=;
-        b=ngOXMkJaXToWVGBgLyr1+6TLlXx4wCXQ10CakTXnnLqSOpYyUTyLUbjJINPdcGGDZV
-         JcFB1yM0FSvzrLdX+NNcZIxDa6dZqOBeboBp9OTnB/cfORONHIcyzFMTJi1n0jjWvMek
-         hAZ2MkYkj2cdLDHsviYCDzTyP1nEIVeJbPp/JVZi+lviA6/faXGT06IhX0UOiKtsFeZi
-         VBaEJ9MdL92u31pZQupbRI4VuPRMWVjZxSu30SockPpnKBFuv2N8KM7KyYgqk8DhkkJW
-         5qKYG0ZKAc3rmY1yafgNTUoStAzYTzGojEtwBhDAssrOGnRDkx/qfhERbC+7wQKB9UDm
-         eyxw==
-X-Gm-Message-State: APjAAAWl0NFKvsjMJTSuYMv1tvi1Q/btpg3AFpPGzozn4qmjIA4fWdG5
-        FJqe12AErn008cRA9T0noLgPXQ==
-X-Google-Smtp-Source: APXvYqzMMHkwWVYf0svd1U4v301GL37PukLhZ41swJwynvJ3Hp2SER4PxVa6VktAX8Ez3A4qBWK+uA==
-X-Received: by 2002:a17:902:d698:: with SMTP id v24mr17062393ply.340.1571943699729;
-        Thu, 24 Oct 2019 12:01:39 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id j12sm3453005pjz.12.2019.10.24.12.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 12:01:38 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 12:01:38 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Michal Hocko <mhocko@kernel.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH 1/2] mm, vmstat: hide /proc/pagetypeinfo from normal
- users
-In-Reply-To: <20191023102737.32274-2-mhocko@kernel.org>
-Message-ID: <alpine.DEB.2.21.1910241201250.130350@chino.kir.corp.google.com>
-References: <20191023095607.GE3016@techsingularity.net> <20191023102737.32274-1-mhocko@kernel.org> <20191023102737.32274-2-mhocko@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=StLsOwadC4o8p6VwUA79Cb5g5hBpyjdxZ8Va4K7Io2Y=;
+        b=NPHKqMrpfi7//m030WKzVZ7svGe412snflloL/PeJRYmoUpb7+q95iL1Kw4TL/QQ4w
+         j/qZKqHQB4l5hBsheF8xRpIkU3Jhvt2BfKgKVNTMAcuyNMXqqukTU1s7GCL+vGqk2Lb9
+         c+j87srl3WKXlfQRvgGynw9Tb2VgBn4nBzG0zL2XtPoSekpDifnTKNPn4EfnoJfhucaL
+         qWu22DuKukKNsndWpq+pmc29svsSpuGiAdhtll9yL7nBD+mnL9lbWjY1jtDUC66WaR1p
+         TvL42VwiE/nBP7icSQIdPuZbhm8Wbmdd7eiSBxaKenkn6ZMHumTwoGRnypiTze/wSGqw
+         /tPQ==
+X-Gm-Message-State: APjAAAV6snmsivafW8xgShCuFVvSDkR9BM8sxsIU7jHmNpppXh2iIZAk
+        ttn/b6tFUKDFusA6PghQwU0sv1mHb8fM
+X-Google-Smtp-Source: APXvYqwwBcGirXU8CMxMhVsbS7PauC9YYQN7HiutNMY0S16PECuKPj/2/yGYD9TCX9TG+ynf3AbW7fdfxlYV
+X-Received: by 2002:a0d:d84b:: with SMTP id a72mr7582697ywe.331.1571943727482;
+ Thu, 24 Oct 2019 12:02:07 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 12:01:53 -0700
+In-Reply-To: <20191023005337.196160-1-irogers@google.com>
+Message-Id: <20191024190202.109403-1-irogers@google.com>
+Mime-Version: 1.0
+References: <20191023005337.196160-1-irogers@google.com>
+X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
+Subject: [PATCH v3 0/9] Improvements to memory usage by parse events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019, Michal Hocko wrote:
+The parse events parser leaks memory for certain expressions as well
+as allowing a char* to reference stack, heap or .rodata. This series
+of patches improves the hygeine and adds free-ing operations to
+reclaim memory in the parser in error and non-error situations.
 
-> From: Michal Hocko <mhocko@suse.com>
-> 
-> /proc/pagetypeinfo is a debugging tool to examine internal page
-> allocator state wrt to fragmentation. It is not very useful for
-> any other use so normal users really do not need to read this file.
-> 
-> Waiman Long has noticed that reading this file can have negative side
-> effects because zone->lock is necessary for gathering data and that
-> a) interferes with the page allocator and its users and b) can lead to
-> hard lockups on large machines which have very long free_list.
-> 
-> Reduce both issues by simply not exporting the file to regular users.
-> 
-> Reported-by: Waiman Long <longman@redhat.com>
-> Cc: stable
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+The series of patches was generated with LLVM's address sanitizer and
+libFuzzer:
+https://llvm.org/docs/LibFuzzer.html
+called on the parse_events function with randomly generated input. With
+the patches no leaks or memory corruption issues were present.
 
-Acked-by: David Rientjes <rientjes@google.com>
+The v3 patches address review comments from Jiri Olsa improving commit
+messages, handling ENOMEM errors from strdup better, and removing a
+printed warning if an invalid event is passed.
+
+The v2 patches are preferable to an earlier proposed patch:
+   perf tools: avoid reading out of scope array
+
+Ian Rogers (9):
+  perf tools: add parse events append error
+  perf tools: splice events onto evlist even on error
+  perf tools: ensure config and str in terms are unique
+  perf tools: move ALLOC_LIST into a function
+  perf tools: avoid a malloc for array events
+  perf tools: add destructors for parse event terms
+  perf tools: before yyabort-ing free components
+  perf tools: if pmu configuration fails free terms
+  perf tools: add a deep delete for parse event terms
+
+ tools/perf/util/parse-events.c | 193 +++++++++++-----
+ tools/perf/util/parse-events.h |   3 +
+ tools/perf/util/parse-events.y | 388 ++++++++++++++++++++++++---------
+ tools/perf/util/pmu.c          |  32 +--
+ 4 files changed, 449 insertions(+), 167 deletions(-)
+
+-- 
+2.23.0.866.gb869b98d4c-goog
+
