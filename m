@@ -2,85 +2,73 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8F0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF28CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F5520856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AA72084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="cdAuO8oW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409167AbfJXKbi (ORCPT
+        id S2409183AbfJXKbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:31:38 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:43424 "EHLO a.mx.secunet.com"
+        Thu, 24 Oct 2019 06:31:46 -0400
+Received: from onstation.org ([52.200.56.107]:37214 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389949AbfJXKbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:31:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 04D892052E;
-        Thu, 24 Oct 2019 12:31:36 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DZEo1hkksutq; Thu, 24 Oct 2019 12:31:35 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S2389949AbfJXKbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:31:45 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 4828E20189;
-        Thu, 24 Oct 2019 12:31:35 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 24 Oct 2019
- 12:31:35 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id CB32731801C0;
- Thu, 24 Oct 2019 12:31:34 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 12:31:34 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Tom Rix <trix@redhat.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Joerg Vehlow <lkml@jv-coder.de>
-Subject: Re: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
-Message-ID: <20191024103134.GD13225@gauss3.secunet.de>
-References: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 2F2243E951;
+        Thu, 24 Oct 2019 10:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1571913104;
+        bh=uiwwS5b2IphvBHKc+YmPSSJR2+batggLeJo4PNUTWsY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cdAuO8oWyjlmWMukRC/NePYDvVUGNozIkpuaPbKYgQ7LKo5WFfoyVH9SftAY55rye
+         iHckatKd1mQ7Hlq6OStIDxpYWoOfYffm1FekXcPB4M16yOC0kGqRduEj2v8c+ziOz+
+         fch16IavG7qW9DpuNZjW3XNVDb9ZMug3DnTNyagM=
+From:   Brian Masney <masneyb@onstation.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH v2 0/4] ARM: qcom: add defconfig items and dts nodes
+Date:   Thu, 24 Oct 2019 06:31:36 -0400
+Message-Id: <20191024103140.10077-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 05:22:04PM -0700, Tom Rix wrote:
-> On PREEMPT_RT_FULL while running netperf, a corruption
-> of the skb queue causes an oops.
-> 
-> This appears to be caused by a race condition here
->         __skb_queue_tail(&trans->queue, skb);
->         tasklet_schedule(&trans->tasklet);
-> Where the queue is changed before the tasklet is locked by
-> tasklet_schedule.
-> 
-> The fix is to use the skb queue lock.
-> 
-> This is the original work of Joerg Vehlow <joerg.vehlow@aox-tech.de>
-> https://lkml.org/lkml/2019/9/9/111
->   xfrm_input: Protect queue with lock
-> 
->   During the skb_queue_splice_init the tasklet could have been preempted
->   and __skb_queue_tail called, which led to an inconsistent queue.
-> 
-> ifdefs for CONFIG_PREEMPT_RT_FULL added to reduce runtime effects
-> on the normal kernel.
+Here's a small patch series that adds some additional functionality
+to qcom_defconfig and to qcom-msm8974.dtsi: interconnect, ocmem,
+and HDMI bridge (defconfig only).
 
-Has Herbert commented on your initial patch, please
-fix PREEMPT_RT_FULL instead. There are certainly many
-more codepaths that take such assumptions. You can not
-fix this by distributing a spin_lock_irqsave here
-and there.
+Some high-level changes since v1:
+- Updated interconnect support. See patch #4 in this series for details.
+- Dropped ocmem defconfig since that got merged.
+
+Brian Masney (4):
+  ARM: qcom_defconfig: add msm8974 interconnect support
+  ARM: qcom_defconfig: add anx78xx HDMI bridge support
+  ARM: dts: qcom: msm8974: add ocmem node
+  ARM: dts: qcom: msm8974: add interconnect nodes
+
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 77 +++++++++++++++++++++++++++++
+ arch/arm/configs/qcom_defconfig     |  4 ++
+ 2 files changed, 81 insertions(+)
+
+-- 
+2.21.0
 
