@@ -2,85 +2,141 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C81BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C751CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A213205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HAKr74f1"
+	by mail.kernel.org (Postfix) with ESMTP id 159ED20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571938818;
+	bh=AK45cAJQgYYbDoTHmTcOed8M7pP/HdE/Bk3NCrRcZaA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=q0cXy5iWL1wE3QlsmWJ2mDHby6NDJ6nSCPWzvIIiA2Cj+4D97KiaCTEZnUX9YSLCP
+	 2UvkJ060TKY0mtb0D83fjdizqDSNi0kfgrObAi7Y6afMxDLBeKzuwcNpN4+h0uurvf
+	 8EE3dmfU8wJW4cX+MKuD/GDBUCekRoxGB8iFoIMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503860AbfJXRin (ORCPT
+        id S2503870AbfJXRkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:38:43 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:59044 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729458AbfJXRim (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:38:42 -0400
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B1CC720F3BC1;
-        Thu, 24 Oct 2019 10:38:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B1CC720F3BC1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1571938721;
-        bh=jAzro5QgHA6OVAS90ZdpCnam0CrEJTVosK5szwE7n2M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=HAKr74f1Pnx9P2V2H2BkmgTxZjOt5gAvytgB5Le7ZERFnMBkqlNi3+aE2tlopHu2o
-         krpKOkiXFKct7xn4poUOKA7ReFKVdM5B3EFPFge3MvteTnsq5mtwaKzp4vG//bbwCw
-         AwWin41kd2m6SnBRGcbiEhbML+3+4SHCH2WceUf4=
-Subject: Re: [PATCH v9 3/8] powerpc: detect the trusted boot state of the
- system
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
- <20191024034717.70552-4-nayna@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <d713ae8c-7223-b3f3-999b-0c9076733c17@linux.microsoft.com>
-Date:   Thu, 24 Oct 2019 10:38:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 24 Oct 2019 13:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729458AbfJXRkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:40:16 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A33205ED;
+        Thu, 24 Oct 2019 17:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571938815;
+        bh=AK45cAJQgYYbDoTHmTcOed8M7pP/HdE/Bk3NCrRcZaA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KxPqFPDpmWLQHZ26pvLm9fAZ0mxG3FW4vgzaRU1xKD1W9fy3p/EuUA8xCKtd4aTu7
+         1SHQuuR6X+mQKC5fbEj1Xm1q97V7L6zld3x4EqKGWzzFiaT8zz8uHcYFW3Wk9FtlEY
+         b48nNPkT99QWaSHAaYTz1gx6A/84W5ECHfhkbq1U=
+Date:   Thu, 24 Oct 2019 12:40:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     peterz@infradead.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, paul.burton@mips.com
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+Message-ID: <20191024174013.GA149516@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191024034717.70552-4-nayna@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024092013.GW17610@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/2019 8:47 PM, Nayna Jain wrote:
+On Thu, Oct 24, 2019 at 11:20:13AM +0200, Michal Hocko wrote:
+> On Wed 23-10-19 12:10:39, Bjorn Helgaas wrote:
+> > On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
+> > > On 2019/10/23 5:04, Bjorn Helgaas wrote:
+> > > > On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
+> > 
+> > > > I think the underlying problem you're addressing is that:
+> > > > 
+> > > >   - NUMA_NO_NODE == -1,
+> > > >   - dev_to_node(dev) may return NUMA_NO_NODE,
+> > > >   - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
+> > > >   - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
+> > > > 
+> > > > For example, on arm64, mips loongson, s390, and x86,
+> > > > cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
+> > > > an invalid array index.
+> > > 
+> > > The invalid array index of -1 is the underlying problem here when
+> > > cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
+> > > is not NUMA_NO_NODE aware yet.
+> > > 
+> > > In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
+> > > disscusion, it is requested that it is better to warn about the pcie
+> > > device without a node assigned by the firmware before making the
+> > > cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
+> > > devices of "NUMA_NO_NODE" node can be fixed by their vendor.
+> > > 
+> > > See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+> > 
+> > Right.  We should warn if the NUMA node number would help us but DT or
+> > the firmware didn't give us one.
+> > 
+> > But we can do that independently of any cpumask_of_node() changes.
+> > There's no need to do one patch before the other.  Even if you make
+> > cpumask_of_node() tolerate NUMA_NO_NODE, we'll still get the warning
+> > because we're not actually changing any node assignments.
+> 
+> Agreed. And this has been proposed previously I believe but my
+> understanding was that Petr was against that.
 
-> +bool is_ppc_trustedboot_enabled(void)
-> +{
-> +	struct device_node *node;
-> +	bool enabled = false;
-> +
-> +	node = get_ppc_fw_sb_node();
-> +	enabled = of_property_read_bool(node, "trusted-enabled");
+I don't think Peter was opposed to a warning.  I assume you're
+referring to [1], which is about how cpumask_of_node() should work.
+That's not my area, so I don't have a strong opinion.  From that
+discussion:
 
-Can get_ppc_fw_sb_node return NULL?
-Would of_property_read_bool handle the case when node is NULL?
+Yunsheng> From what I can see, the problem can be fixed in three
+Yunsheng> place:
+Yunsheng> 1. Make user dev_to_node return a valid node id
+Yunsheng>    even when proximity domain is not set by bios(or node id
+Yunsheng>    set by buggy bios is not valid), which may need info from
+Yunsheng>    the numa system to make sure it will return a valid node.
+Yunsheng>
+Yunsheng> 2. User that call cpumask_of_node should ensure the node
+Yunsheng>    id is valid before calling cpumask_of_node, and user also
+Yunsheng>    need some info to make ensure node id is valid.
+Yunsheng>
+Yunsheng> 3. Make sure cpumask_of_node deal with invalid node id as
+Yunsheng>    this patchset.
 
-  -lakshmi
+Peter> 1) because even it is not set, the device really does belong
+Peter> to a node.  It is impossible a device will have magic
+Peter> uniform access to memory when CPUs cannot.
+Peter> 
+Peter> 2) is already true today, cpumask_of_node() requires a valid
+Peter> node_id.
+Peter> 
+Peter> 3) is just wrong and increases overhead for everyone.
+
+I think Peter is advocating (1), i.e., if firmware doesn't tell us a
+node ID, we just pick one.  We can certainly do that in *addition* to
+adding a warning.  I'd like it to be a separate patch because I think
+we want the warning no matter what so users have some clue that
+performance could be better.
+
+If we pick one, I guess we either assign some default, like node 0, to
+everything; or we somehow pick a random node to assign.
+
+FWIW, (3) might be wrong, but it is what alpha, ia64, mips (ip27),
+powerpc, sparc do already.  It'd be nice if they were all the same one
+way or the other.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20190831161247.GM2369@hirez.programming.kicks-ass.net/
