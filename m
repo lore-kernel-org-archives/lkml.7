@@ -2,126 +2,161 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2789CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02757CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8EC52075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:25:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfP9jwhq"
+	by mail.kernel.org (Postfix) with ESMTP id D602F2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408325AbfJXDZk (ORCPT
+        id S2408337AbfJXD1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 23:25:40 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39026 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390629AbfJXDZj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 23:25:39 -0400
-Received: by mail-pl1-f194.google.com with SMTP id s17so11117918plp.6;
-        Wed, 23 Oct 2019 20:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=hL+v0VkC8nJZ/yYasVVgoGkbvgueSaBBRK1E46vpngU=;
-        b=cfP9jwhqOFa3Vyoo5fskQENeWHMYsaigLQ8xtjIEM5zJoA+Rq1Ue06Np5/krsZaMIw
-         l/EQ2wbVLdCWYJAt1DcFCMNA8NIGRky3whO9LVAAQAALv9qr/uUgTVJveuDwr279TvN1
-         JX9y/RURDl96/B5aq8Lxyzzg96YbhzeARNUhFz8ehVls68FvU1lMOVk6nlrr0OyHTO1/
-         LO3bhuZgjxvH3RwjXK1nHRmHbfVs+dxy7T6w6t7ukMsrbfg+71lHzCG8Mcb7PNijQf38
-         Yz80yF8KKyRWQTW1UNKIgpv9V76hX4cVKry9PQzlVlQIydVnuQBKc6XKE6GsT3tBd6EP
-         9eLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=hL+v0VkC8nJZ/yYasVVgoGkbvgueSaBBRK1E46vpngU=;
-        b=r1gVwusupyRKxHXRvJ0jn/KucEChKkTrmaqZLV8/Z1l7QZg+h0/4ZgzYdErGbiIRPw
-         SqIKAM0eAMOB693Rz2xDv3bUBE3CpMHOOxYL1J27lhnYkELCYVjq5VRC88BWvaMIfJL/
-         3VNH05WfhqlCSQSGPibOtgdC7bJ8CIDSDt9ZhgoarOPDloWgTaWzW5zLkucjsVB1pLn3
-         4cT/k1YjqZtJlMv05P76AEFFcYg1zzJ6J5GnzE2Yj+jsdbT5aOpOC2W4kRsTbKH3nyaE
-         vfKS9TLqVOp8xGVsxk1SGi41hD4pprUgzemyUYxE14NCK7MMFevIuaDAYRNlNa7qWql6
-         tBfg==
-X-Gm-Message-State: APjAAAWiAisnC0GwYAYkv5t6UZ600A9hogWXqJb2PL6H2pVmC1f14zMd
-        FesRu+2z+nqtyqSHHgsmKk4=
-X-Google-Smtp-Source: APXvYqzbPeO9Sylf2UWrSs/mFlQJikvRlBtwZ0Ytzy9PU0f4W4+Z/AVwT9xzRUzfQkBXgjOJgWK+Hg==
-X-Received: by 2002:a17:902:524:: with SMTP id 33mr13606140plf.123.1571887538912;
-        Wed, 23 Oct 2019 20:25:38 -0700 (PDT)
-Received: from software.domain.org ([66.42.68.162])
-        by smtp.gmail.com with ESMTPSA id y10sm23642731pfe.148.2019.10.23.20.25.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 23 Oct 2019 20:25:38 -0700 (PDT)
-From:   Huacai Chen <chenhc@lemote.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        chenhuacai@gmail.com, linux-kernel@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>, stable@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] timekeeping/vsyscall: Update vdso data unconditionally
-Date:   Thu, 24 Oct 2019 11:28:29 +0800
-Message-Id: <1571887709-11447-1-git-send-email-chenhc@lemote.com>
-X-Mailer: git-send-email 2.7.0
+        Wed, 23 Oct 2019 23:27:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4754 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2403962AbfJXD1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 23:27:13 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4DCBAD337FCCB9B119C0;
+        Thu, 24 Oct 2019 11:27:11 +0800 (CST)
+Received: from [127.0.0.1] (10.133.224.57) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 24 Oct 2019
+ 11:27:01 +0800
+Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mingo@redhat.com>, <peterz@infradead.org>,
+        <alex.williamson@redhat.com>,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+References: <20191023204638.GA8868@google.com>
+From:   Xiang Zheng <zhengxiang9@huawei.com>
+Message-ID: <2b43a560-787b-9e59-d74a-2f454759563c@huawei.com>
+Date:   Thu, 24 Oct 2019 11:26:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <20191023204638.GA8868@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.224.57]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In do_hres(), we currently use whether the return value of __arch_get_
-hw_counter() is negative to indicate fallback, but MIPS returns 0 when
-clock_mode is invalid.
 
-It is sure that MIPS has a bug when clock_mode is invalid and should
-return ULL_MAX as ARM64 does (Vincenzo has already submitted a patch).
-But at the time we found another bug: currently update_vsyscall() and
-update_vsyscall_tz() rely on __arch_use_vsyscall() to update the vdso
-data, which causes __cvdso_clock_getres() and some other functions get
-wrong results when clock_mode is invalid. So, in this patch we update
-vdso data unconditionally.
+On 2019/10/24 4:46, Bjorn Helgaas wrote:
+> [+cc Thomas, Rafael, beginning of thread at
+> https://lore.kernel.org/r/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com]
+> 
+> On Wed, Oct 23, 2019 at 09:38:51AM -0700, Matthew Wilcox wrote:
+>> On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
+>>> I don't like being one of a handful of callers of __add_wait_queue(),
+>>> so I like that solution from that point of view.
+>>>
+>>> The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
+>>> device") commit log suggests that using __add_wait_queue() is a
+>>> significant optimization, but I don't know how important that is in
+>>> practical terms.  Config accesses are never a performance path anyway,
+>>> so I'd be inclined to use add_wait_queue() unless somebody complains.
+>>
+>> Wow, this has got pretty messy in the umpteen years since I last looked
+>> at it.
+>>
+>> Some problems I see:
+>>
+>> 1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
+>>
+>>     x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
+>>     
+>>     All x86 PCI configuration space accessors have either their own
+>>     serialization or can operate completely lockless (ECAM).
+>>     
+>>     Disable the global lock in the generic PCI configuration space accessors.
+>>
+>> The concept behind this patch is broken.  We still need to lock out
+>> config space accesses when devices are undergoing D-state transitions.
+>> I would suggest that for the contention case that tglx is concerned about,
+>> we should have a pci_bus_read_config_unlocked_##size set of functions
+>> which can be used for devices we know never go into D states.
+> 
+> Host bridges that can't do config accesses atomically, e.g., they have
+> something like the 0xcf8/0xcfc addr/data ports, need serialization.
+> CONFIG_PCI_LOCKLESS_CONFIG removes the use of pci_lock for that, and I
+> think that part makes sense regardless of whether devices can enter D
+> states.
+> 
+> We *should* prevent config accesses during D-state transitions (per
+> PCIe r5.0, sec 5.9), but I don't think pci_lock ever did that.
+> pci_raw_set_power_state() contains delays, but that only prevents
+> accesses from the caller, not from other threads or from userspace.
+> I suppose we should also prevent accesses by other threads during
+> transitions done by ACPI, e.g., _PS0, _PS1, _PS2, _PS3.  AFAICT we
+> don't do any of that.
+> 
+> It looks like pci_lock currently:
+> 
+>   - Serializes all kernel config accesses system-wide in
+>     pci_bus_read_config_##size() (unless CONFIG_PCI_LOCKLESS_CONFIG=y).
+> 
+>   - Serializes all userspace config accesses system-wide in
+>     pci_user_read_config_##size() (this seems unnecessary when
+>     CONFIG_PCI_LOCKLESS_CONFIG=y).
+> 
+>   - Serializes userspace config accesses with resets of the device via
+>     the dev->block_cfg_access bit and waitqueue mechanism.
+> 
+>   - Serializes kernel and userspace config accesses with bus->ops
+>     changes in pci_bus_set_ops() (except that we don't serialize
+>     kernel config accesses if CONFIG_PCI_LOCKLESS_CONFIG=y, which is
+>     probably a problem).  But pci_bus_set_ops() is hardly used and I'm
+>     not sure it's worth keeping it.
+> 
+>> 2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
+>>    exports pci_lock.  I think this is a mistake; at best there should be
+>>    accessors for the pci_lock.  But I don't understand why it needs to
+>>    exclude PCI config space changes throughout pci_check_and_set_intx_mask().
+>>    Why can it not do:
+>>
+>> -	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
+>> +	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
+>>
+>> 3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
+>>    changed pci_lock to be a raw spinlock.  The patch description
+>>    essentially says "We need it for RT" which isn't terribly helpful.
+>>
+>> 4. Finally, getting back to the original problem report here, I wouldn't
+>>    write this code this way today.  There's no reason not to use the
+>>    regular add_wait_queue etc.  BUT!  Why are we using this custom locking
+>>    mechanism?  It pretty much screams to me of an rwsem (reads/writes
+>>    of config space take it for read; changes to config space accesses
+>>    (disabling and changing of accessor methods) take it for write.
+> 
+> So maybe the immediate thing is to just convert to add_wait_queue()?
 
-Fixes: 44f57d788e7deecb50 ("timekeeping: Provide a generic update_vsyscall() implementation")
-Cc: stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
----
- kernel/time/vsyscall.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Hmmm... May I push a patch? :)
 
-diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
-index 4bc37ac..5ee0f77 100644
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -110,8 +110,7 @@ void update_vsyscall(struct timekeeper *tk)
- 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
- 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
- 
--	if (__arch_use_vsyscall(vdata))
--		update_vdso_data(vdata, tk);
-+	update_vdso_data(vdata, tk);
- 
- 	__arch_update_vsyscall(vdata, tk);
- 
-@@ -124,10 +123,8 @@ void update_vsyscall_tz(void)
- {
- 	struct vdso_data *vdata = __arch_get_k_vdso_data();
- 
--	if (__arch_use_vsyscall(vdata)) {
--		vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
--		vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
--	}
-+	vdata[CS_HRES_COARSE].tz_minuteswest = sys_tz.tz_minuteswest;
-+	vdata[CS_HRES_COARSE].tz_dsttime = sys_tz.tz_dsttime;
- 
- 	__arch_sync_vdso_data(vdata);
- }
+> 
+> There's a lot we could clean up here, but I think it would take a fair
+> bit of untangling before we actually solve this panic.
+> 
+> Bjorn
+> 
+> .
+> 
+
 -- 
-2.7.0
+
+Thanks,
+Xiang
 
