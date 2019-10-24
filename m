@@ -2,84 +2,91 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D58CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB2ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A6021872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81CF21906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438422AbfJXIvk (ORCPT
+        id S2438457AbfJXIvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:51:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52510 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730621AbfJXIvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:51:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 571B6B6A6;
-        Thu, 24 Oct 2019 08:51:38 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 10:51:36 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] scsi: sr: wait for the medium to become ready
-Message-ID: <20191024085136.GG938@kitsune.suse.cz>
-References: <cover.1571834862.git.msuchanek@suse.de>
- <94dc98dc67b1d183d04c338c7978efa0556db6ac.1571834862.git.msuchanek@suse.de>
- <20191024022406.GD11485@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024022406.GD11485@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 24 Oct 2019 04:51:49 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56520 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438424AbfJXIvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 04:51:48 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FAA71A037E;
+        Thu, 24 Oct 2019 10:51:46 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0FCB31A0B59;
+        Thu, 24 Oct 2019 10:51:42 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2F1B7402D3;
+        Thu, 24 Oct 2019 16:51:36 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO regulator
+Date:   Thu, 24 Oct 2019 16:48:38 +0800
+Message-Id: <1571906920-29966-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 07:24:06PM -0700, Christoph Hellwig wrote:
-> On Wed, Oct 23, 2019 at 02:52:47PM +0200, Michal Suchanek wrote:
-> > +static int sr_block_open_finish(struct block_device *bdev, fmode_t mode,
-> > +				int ret)
-> > +{
-> > +	struct scsi_cd *cd = scsi_cd(bdev->bd_disk);
-> > +
-> > +	/* wait for drive to get ready */
-> > +	if ((ret == -ENOMEDIUM) && !(mode & FMODE_NDELAY)) {
-> > +		struct scsi_device *sdev = cd->device;
-> > +		/*
-> > +		 * Cannot use sr_block_ioctl because it locks sr_mutex blocking
-> > +		 * out any processes trying to access the drive
-> > +		 */
-> > +		scsi_autopm_get_device(sdev);
-> > +		cdrom_ioctl(&cd->cdi, bdev, mode, CDROM_AUTOCLOSE, 0);
-> > +		ret = __sr_block_open(bdev, mode);
-> > +		scsi_autopm_put_device(sdev);
-> 
-> Ioctls should never be used from kernel space.  We have a few leftovers,
-> but we need to get rid of that and not add more.
+On i.MX6UL 14x14 EVK board, sensors' power are controlled
+by GPIO5_IO02, add GPIO regulator for sensors to manage
+their power.
 
-What is the alternative?
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Thanks
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index c2a9dd5..4074570 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -30,6 +30,16 @@
+ 		enable-active-high;
+ 	};
+ 
++	reg_sensors: regulator-sensors {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_sensors_reg>;
++		regulator-name = "sensors-supply";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio5 2 GPIO_ACTIVE_LOW>;
++	};
++
+ 	reg_can_3v3: regulator-can-3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "can-3v3";
+@@ -448,6 +458,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_sensors_reg: sensorsreggrp {
++		fsl,pins = <
++			MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0
++		>;
++	};
++
+ 	pinctrl_pwm1: pwm1grp {
+ 		fsl,pins = <
+ 			MX6UL_PAD_GPIO1_IO08__PWM1_OUT   0x110b0
+-- 
+2.7.4
 
-Michal
