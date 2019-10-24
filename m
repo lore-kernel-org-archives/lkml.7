@@ -2,122 +2,130 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D414CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF57CCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7070F2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571923156;
-	bh=Iq3tIW/M4EU3kskk8A3JDdCS8uVIwkhKDQO89M+kMDk=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=l1YmmWws2Qc6OpQuy9zqxrfGVDyaTOG9GUp9PtsUCFgLB5qtfcgRTY+TCJOK6xtKx
-	 TdMZcfix5QTGRNIS2NiI+jo5CV+mM9r4hEvtGqJWkUo/041hS9mhAknZJ5ql+BoU96
-	 AuAoic2WzTsn+ApZUu2IhWibg3JgTyAPHrsKldBg=
+	by mail.kernel.org (Postfix) with ESMTP id 8FAA72084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502502AbfJXNTP (ORCPT
+        id S2502511AbfJXNVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:19:15 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39373 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730061AbfJXNTO (ORCPT
+        Thu, 24 Oct 2019 09:21:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38776 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730061AbfJXNVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:19:14 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iNd1A-0000Sw-Ge; Thu, 24 Oct 2019 15:19:08 +0200
-To:     Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH] KVM: arm64: Select =?UTF-8?Q?SCHED=5FINFO=20before=20?=  =?UTF-8?Q?SCHEDSTATS?=
-X-PHP-Originating-Script: 0:main.inc
+        Thu, 24 Oct 2019 09:21:44 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iNd3Z-0002J4-Se; Thu, 24 Oct 2019 13:21:37 +0000
+Date:   Thu, 24 Oct 2019 15:21:37 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        stable <stable@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191024132136.jknzt7rgjssgv5b6@wittgenstein>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
+ <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
+ <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
+ <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
+ <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 24 Oct 2019 14:19:08 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Mao Wenan <maowenan@huawei.com>, <catalin.marinas@arm.com>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <6d037fa1-5e8b-38cd-e947-7547c1e8dd15@arm.com>
-References: <20191023032254.159510-1-maowenan@huawei.com>
- <26ee413334937b9530bc8f033fe378ec@www.loen.fr>
- <6d037fa1-5e8b-38cd-e947-7547c1e8dd15@arm.com>
-Message-ID: <3abfc893613caf529b0f6a933e74068d@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: steven.price@arm.com, maowenan@huawei.com, catalin.marinas@arm.com, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-24 12:22, Steven Price wrote:
+On Thu, Oct 24, 2019 at 03:13:48PM +0200, Dmitry Vyukov wrote:
+> On Thu, Oct 24, 2019 at 3:05 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+> >
+> > On Thu, Oct 24, 2019 at 01:51:20PM +0200, Dmitry Vyukov wrote:
+> > > On Thu, Oct 24, 2019 at 1:32 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+> > > >
+> > > > > How these later loads can be completely independent of the pointer
+> > > > > value? They need to obtain the pointer value from somewhere. And this
+> > > > > can only be done by loaded it. And if a thread loads a pointer and
+> > > > > then dereferences that pointer, that's a data/address dependency and
+> > > > > we assume this is now covered by READ_ONCE.
+> > > >
+> > > > The "dependency" I was considering here is a dependency _between the
+> > > > load of sig->stats in taskstats_tgid_alloc() and the (program-order)
+> > > > later loads of *(sig->stats) in taskstats_exit().  Roughly speaking,
+> > > > such a dependency should correspond to a dependency chain at the asm
+> > > > or registers level from the first load to the later loads; e.g., in:
+> > > >
+> > > >   Thread [register r0 contains the address of sig->stats]
+> > > >
+> > > >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
+> > > >      ...
+> > > >   B: LOAD r2,[r0]       // LOAD *(sig->stats)
+> > > >   C: LOAD r3,[r2]
+> > > >
+> > > > there would be no such dependency from A to C.  Compare, e.g., with:
+> > > >
+> > > >   Thread [register r0 contains the address of sig->stats]
+> > > >
+> > > >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
+> > > >      ...
+> > > >   C: LOAD r3,[r1]       // LOAD *(sig->stats)
+> > > >
+> > > > AFAICT, there's no guarantee that the compilers will generate such a
+> > > > dependency from the code under discussion.
+> > >
+> > > Fixing this by making A ACQUIRE looks like somewhat weird code pattern
+> > > to me (though correct). B is what loads the address used to read
+> > > indirect data, so B ought to be ACQUIRE (or LOAD-DEPENDS which we get
+> > > from READ_ONCE).
+> > >
+> > > What you are suggesting is:
+> > >
+> > > addr = ptr.load(memory_order_acquire);
+> > > if (addr) {
+> > >   addr = ptr.load(memory_order_relaxed);
+> > >   data = *addr;
+> > > }
+> > >
+> > > whereas the canonical/non-convoluted form of this pattern is:
+> > >
+> > > addr = ptr.load(memory_order_consume);
+> > > if (addr)
+> > >   data = *addr;
+> >
+> > No, I'd rather be suggesting:
+> >
+> >   addr = ptr.load(memory_order_acquire);
+> >   if (addr)
+> >     data = *addr;
+> >
+> > since I'd not expect any form of encouragement to rely on "consume" or
+> > on "READ_ONCE() + true-address-dependency" from myself.  ;-)
+> 
+> But why? I think kernel contains lots of such cases and it seems to be
+> officially documented by the LKMM:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt
+> address dependencies and ppo
 
-[...]
-
-> From 915893f5c57241cc29d90769b3f720a6135277d7 Mon Sep 17 00:00:00 
-> 2001
-> From: Steven Price <steven.price@arm.com>
-> Date: Thu, 24 Oct 2019 12:14:36 +0100
-> Subject: [PATCH] KVM: arm64: Select TASK_DELAY_ACCT rather than 
-> SCHEDSTATS
->
-> SCHEDSTATS requires DEBUG_KERNEL (and PROC_FS) and therefore isn't a
-> good choice for enabling the scheduling statistics required for 
-> stolen
-> time.
->
-> Instead match the x86 configuration and select TASK_DELAY_ACCT. This
-> adds the dependencies of NET && MULTIUSER for arm64 KVM.
->
-> Suggested-by: Marc Zyngier <maz@kernel.org>
-> Fixes: 8564d6372a7d ("KVM: arm64: Support stolen time reporting via
-> shared structure")
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/arm64/kvm/Kconfig | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> index d8b88e40d223..1ffb300e2d92 100644
-> --- a/arch/arm64/kvm/Kconfig
-> +++ b/arch/arm64/kvm/Kconfig
-> @@ -21,6 +21,8 @@ if VIRTUALIZATION
->  config KVM
->  	bool "Kernel-based Virtual Machine (KVM) support"
->  	depends on OF
-> +	# for TASKSTATS/TASK_DELAY_ACCT:
-> +	depends on NET && MULTIUSER
->  	select MMU_NOTIFIER
->  	select PREEMPT_NOTIFIERS
->  	select HAVE_KVM_CPU_RELAX_INTERCEPT
-> @@ -39,7 +41,7 @@ config KVM
->  	select IRQ_BYPASS_MANAGER
->  	select HAVE_KVM_IRQ_BYPASS
->  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
-> -	select SCHEDSTATS
-> +	select TASK_DELAY_ACCT
->  	---help---
->  	  Support hosting virtualized guest machines.
->  	  We don't support KVM with 16K page tables yet, due to the 
-> multiple
-
-Same issue as before: you have an implicit config symbol selection.
-TASK_DELAY_ACCT depends on TASKSTATS (which is why you have this NET &&
-MULTIUSER constraint).
-
-You need to select both TASK_DELAY_ACCT and TASKSTATS, as the comment 
-you
-add suggests.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+You mean this section:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt#n955
+and specifically:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt#n982
+?
