@@ -2,92 +2,133 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E73CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BBDCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E5220650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571938217;
-	bh=HWjvtKIWHIIGX9H9A+0FKHSjpeIBIeBvz6LT9O9kz5M=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=zZrMBr4HjFYVoqhoGBayxIccroaDhHd+w1MNxjnoGhk9ybGh63GUNmhbULGkGTQlA
-	 GgHP/xbOGcRRb0AHj193jXQigt5bKkct8StVwRIdFud8CTYnePPBX4H8HmmX0vPamY
-	 9OrRPOcEhVNTcPjv9zOiXj0XcTA7W/C+aJxsmKLw=
+	by mail.kernel.org (Postfix) with ESMTP id DE5FC21906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503724AbfJXRaQ (ORCPT
+        id S2503815AbfJXRbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:30:16 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40250 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732485AbfJXRaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:30:16 -0400
-Received: by mail-oi1-f194.google.com with SMTP id b25so9705208oib.7;
-        Thu, 24 Oct 2019 10:30:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=lkOZbhZtMPsM/+I6o00it0XZr+ITWQy6XHnfXpN9P0E=;
-        b=cApo0pBsgr4mTbUvd1CNk043+a9BVO0c9xzMbRC53vBrwhnnQPbJf09dHbtZtwgK/S
-         NvX34tiMzF1cyPnJ/zX2rSboVGboY26oA1QTs5B4gAX/aMX+/76NSXd5bXRvPHMlm6xG
-         ocifquTIhzXweklFRn4YvXTE03SGsuc/y1ScDvX+uu3MwMKBm19nsTNPEEvQGASgqzbO
-         NWmOwxXoZ2Xm4A0WW6e/CcU8Rr6ZKAf/N0cPW58QIVVPYcsaX1nRg8Xl+4uFJbVzmZV2
-         Ej7rpTkHG0hw2uhG09vQNG7cF+YCuT5gysGkITlmd08FzLAiW80RdaE8DVyvVcbYZh8K
-         ktOw==
-X-Gm-Message-State: APjAAAXWsQq5n0VkBkaApWRkeAbuW9AnLOaoSyU7mwikLwiLzfpa7PRL
-        ekQH0TZdup6Tgbck5CNgzPGIrNhYiGkPbf6wZM9ItIKQ
-X-Google-Smtp-Source: APXvYqwzcdAUK6yy3BxM08FDk8gjQyvykfdf8GrQRK34woNBfw6Uup4lfIxBeBio9dXS0N7g1LFyPFOOMdp5BhfcsP4=
-X-Received: by 2002:aca:5885:: with SMTP id m127mr5852467oib.110.1571938215561;
- Thu, 24 Oct 2019 10:30:15 -0700 (PDT)
+        Thu, 24 Oct 2019 13:31:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33122 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729458AbfJXRbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:31:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 10:31:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
+   d="scan'208";a="282008162"
+Received: from nesterov-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.8.153])
+  by orsmga001.jf.intel.com with ESMTP; 24 Oct 2019 10:30:52 -0700
+Date:   Thu, 24 Oct 2019 20:30:51 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        hersen wu <hersenxs.wu@amd.com>, Roman Li <Roman.Li@amd.com>,
+        Maxim Martynov <maxim@arista.com>,
+        David Ahern <dsahern@gmail.com>,
+        Francesco Ruggeri <fruggeri@arista.com>,
+        Linus =?iso-8859-1?Q?L=FCssing?= <linus.luessing@c0d3.blue>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Feng Tang <feng.tang@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rafael Aquini <aquini@redhat.com>, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org
+Subject: Re: [PATCH] Cleanup: replace prefered with preferred
+Message-ID: <20191024173051.GB7948@linux.intel.com>
+References: <20191022214208.211448-1-salyzyn@android.com>
+ <20191023115637.GA23733@linux.intel.com>
+ <fa12cb96-7a93-bf85-214d-a7bfaf8b8b0a@android.com>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 24 Oct 2019 19:30:04 +0200
-Message-ID: <CAJZ5v0j98Lhfs1cW88vuEHZcjjQpCPCBS9B8yBvW1wWfWLSFYQ@mail.gmail.com>
-Subject: [GIT PULL] ACPI fix for v5.4-rc5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa12cb96-7a93-bf85-214d-a7bfaf8b8b0a@android.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Oct 23, 2019 at 08:40:59AM -0700, Mark Salyzyn wrote:
+> On 10/23/19 4:56 AM, Jarkko Sakkinen wrote:
+> > On Tue, Oct 22, 2019 at 02:41:45PM -0700, Mark Salyzyn wrote:
+> > > Replace all occurrences of prefered with preferred to make future
+> > > checkpatch.pl's happy.  A few places the incorrect spelling is
+> > > matched with the correct spelling to preserve existing user space API.
+> > > 
+> > > Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> > I'd fix such things when the code is otherwise change and scope this
+> > patch only to Documentation/. There is no pragmatic benefit of doing
+> > this for the code.
+> > 
+> > /Jarkko
+> 
+> The pragmatic benefit comes with the use of an ABI/API checker (which is a
+> 'distro' thing, not a top of tree kernel thing) produces its map which is
+> typically required to be co-located in the same tree as the kernel
+> repository. Quite a few ABI/API update checkins result in a checkpatch.pl
+> complaint about the misspelled elements being (re-)recorded due to
+> proximity. We have a separate task to improve how it is tracked in Android
+> to reduce milepost marker changes that result in sweeping changes to the
+> database which would reduce the occurrences.
+> 
+> I will split this between pure and inert documentation/comments for now,
+> with a followup later for the code portion which understandably is more
+> controversial.
+> 
+> Cleanup is the least appreciated part of kernel maintenance ;-}.
+> 
+> Sincerely -- Mark Salyzyn
 
-Please pull from the tag
+I'm a strong believer of "evolutionary" approach. Patch sets for the
+most part (everything in the end has to be considered case by case, not
+a strict rule) should have some functional changes involved.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.4-rc5
+What I do require for the parts that I maintain is that any new change
+will result cleaner code base than the one that existed before that
+change was applied. Again, there are some exceptions to this e.g.
+circulating a firmware bug but this is my driving guideline as a
+maintainer.
 
-with top-most commit edffc70f505abdab885f4b4212438b4298dec78f
+Doing cleanups just for cleanups can sometimes add unnecessary merge
+conflicts when backporting patches to stable kernels. Thus, if you are
+doing just a cleanup you should have extremely good reasons to do so.
 
- ACPI: NFIT: Fix unlock on error in scrub_show()
-
-on top of commit 7d194c2100ad2a6dded545887d02754948ca5241
-
- Linux 5.4-rc4
-
-to receive an ACPI fix for 5.4-rc5.
-
-This fixes a locking issue in the error code path of a function
-that belongs to the sysfs interface exposed by the ACPI NFIT
-handling code (Dan Carpenter).
-
-Thanks!
-
-
----------------
-
-Dan Carpenter (1):
-      ACPI: NFIT: Fix unlock on error in scrub_show()
-
----------------
-
- drivers/acpi/nfit/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+/Jarkko
