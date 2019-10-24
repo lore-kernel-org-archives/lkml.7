@@ -2,133 +2,82 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC74CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9E4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFA521655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2911420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437428AbfJXDsW (ORCPT
+        id S2392439AbfJXDvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 23:48:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10870 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2437417AbfJXDsU (ORCPT
+        Wed, 23 Oct 2019 23:51:25 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38053 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390377AbfJXDvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 23:48:20 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9O3l6sD129555
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:48:19 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vu3kh9655-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:48:18 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Thu, 24 Oct 2019 04:48:17 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 24 Oct 2019 04:48:11 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9O3m9L840042988
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Oct 2019 03:48:09 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A420AE04D;
-        Thu, 24 Oct 2019 03:48:09 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B17B9AE053;
-        Thu, 24 Oct 2019 03:48:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.40.192.65])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 24 Oct 2019 03:48:06 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Subject: [PATCH v9 8/8] powerpc/ima: update ima arch policy to check for blacklist
-Date:   Wed, 23 Oct 2019 22:47:17 -0500
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191024034717.70552-1-nayna@linux.ibm.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
+        Wed, 23 Oct 2019 23:51:24 -0400
+Received: by mail-ed1-f66.google.com with SMTP id y8so5190299edu.5
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 20:51:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tqY8MkrFlRuB64lQselPYGZKvMHD/g09EyqNLXd31OI=;
+        b=tW5tO2aI0Wm8eYh5okwLDaEw5rqNRh8KOMa0tuSTIf25LnKze+O/ZZPORvSnvc6xvS
+         dHGH532/QLE8jUR94nquPNBpEzbovgiQ8CyfB6nSkgSi7qpbPjXv8yurs0leivhLq/yW
+         KekOqqO6d9zOyrwKXQ36vqvEPVN9ZHpU2kjKLShbyJRGzZ/z7ZsaUutTN/lEfJ0c4OyO
+         PMFgymzvk6cmLBnjLHqJjKKsYiUmBKxExVHQVPY0Ggr/82IU8NWcyG7en1gCWxJdYpy9
+         BRU8QmV7tgQHTyLmUJDikhoBdPk30+04GPv0BIQPPsxb6hjNPSyINK0qo5Ivkl7FfR6c
+         uK8Q==
+X-Gm-Message-State: APjAAAX9SZ4qogNlRFVlQsUvbxHP5JDfzF0JWBona24A+wGX72/vly+0
+        FfbLTj37o4Z05bW0TNyHjGxSxHdP/so=
+X-Google-Smtp-Source: APXvYqy2Aos7VKYJac5NrpRMhQy3juy70DcxEtrhke9nMbsQwZw6Fu4Gw5JnWXjDiFHWcj9K2lmpUw==
+X-Received: by 2002:a50:af45:: with SMTP id g63mr40404898edd.21.1571889082665;
+        Wed, 23 Oct 2019 20:51:22 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id b22sm56795ejq.87.2019.10.23.20.51.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2019 20:51:22 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id q130so827055wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 20:51:22 -0700 (PDT)
+X-Received: by 2002:a1c:c90f:: with SMTP id f15mr2815314wmb.125.1571889081917;
+ Wed, 23 Oct 2019 20:51:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102403-0008-0000-0000-000003267A2E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102403-0009-0000-0000-00004A45AB93
-Message-Id: <20191024034717.70552-9-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-24_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910240033
+References: <20191023120925.30668-1-tomeu.vizoso@collabora.com> <20191023122157.32067-1-tomeu.vizoso@collabora.com>
+In-Reply-To: <20191023122157.32067-1-tomeu.vizoso@collabora.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Thu, 24 Oct 2019 11:51:12 +0800
+X-Gmail-Original-Message-ID: <CAGb2v675oCOr6JR6CXB28hrUuwBN2M9C9SS6UPNpbEAfw9ztjA@mail.gmail.com>
+Message-ID: <CAGb2v675oCOr6JR6CXB28hrUuwBN2M9C9SS6UPNpbEAfw9ztjA@mail.gmail.com>
+Subject: Re: [PATCH v2] panfrost: Properly undo pm_runtime_enable when
+ deferring a probe
+To:     Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates the arch-specific policies for PowerNV system to make
-sure that the binary hash is not blacklisted.
+On Wed, Oct 23, 2019 at 8:22 PM Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>
+> When deferring the probe because of a missing regulator, we were calling
+> pm_runtime_disable even if pm_runtime_enable wasn't called.
+>
+> Move the call to pm_runtime_disable to the right place.
+>
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Reported-by: Chen-Yu Tsai <wens@csie.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Fixes: f4a3c6a44b35 ("drm/panfrost: Disable PM on probe failure")
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
----
- arch/powerpc/kernel/ima_arch.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-index 0ef5956c9753..b9de0fb45bb9 100644
---- a/arch/powerpc/kernel/ima_arch.c
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -23,9 +23,9 @@ bool arch_ima_get_secureboot(void)
-  * is not enabled.
-  */
- static const char *const secure_rules[] = {
--	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #ifndef CONFIG_MODULE_SIG_FORCE
--	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-+	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
- };
-@@ -49,9 +49,9 @@ static const char *const trusted_rules[] = {
- static const char *const secure_and_trusted_rules[] = {
- 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
- 	"measure func=MODULE_CHECK template=ima-modsig",
--	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #ifndef CONFIG_MODULE_SIG_FORCE
--	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-+	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
- };
--- 
-2.20.1
-
+Tested-by: Chen-Yu Tsai <wens@csie.org>
