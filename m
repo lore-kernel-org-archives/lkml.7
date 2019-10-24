@@ -2,98 +2,133 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EF2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101A3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF2120856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC9420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rctbzubu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438072AbfJXISV (ORCPT
+        id S2438092AbfJXIT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:18:21 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33979 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfJXISV (ORCPT
+        Thu, 24 Oct 2019 04:19:27 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38379 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfJXIT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:18:21 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iNYK2-0000XE-Qr; Thu, 24 Oct 2019 10:18:18 +0200
-Message-ID: <d3c9bbc44167009f647772e38168a51d2def36d5.camel@pengutronix.de>
-Subject: Re: [RFC] docs: add a reset controller chapter to the driver API
- docs
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de
-Date:   Thu, 24 Oct 2019 10:18:14 +0200
-In-Reply-To: <20191022110036.5c2edc05@lwn.net>
-References: <20191022164547.22632-1-p.zabel@pengutronix.de>
-         <20191022110036.5c2edc05@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 24 Oct 2019 04:19:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v9so13703998wrq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 01:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=bwpDjxlqC/mR626oiSg3Rt01CrIhV7qqzUguEfa254s=;
+        b=rctbzubuNGhdxVH1cHUWtH6wBzi8gxCG7yptBsEwlS4gWYi5kvsNmT5BF4Sx07qp03
+         58+QCW2JdBBoM9MZBOrilx3qjwt1pb3RAsdbjhrSXDYYFb4wml6EVX3Bs/aywQ4UNhG8
+         g19cVHb9HkAZ9rUULh4jSiUc2yNbtPugmpoip64TkSO4UIAAG18+IJE9hjxcq2qm8KJL
+         e2ayVuB/OBKuH/SKnTWW1287Id3pdrM8Kq8mS6QRWQ+9KMQAWQLgo0JsGf2XDVB07rnm
+         ovkLyNEZQ+K3iQzF/ep2WCT0oIDVsJbkvCmePPccdB22nf8flh0RBaX0s5BG6ckHuscZ
+         9Gug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=bwpDjxlqC/mR626oiSg3Rt01CrIhV7qqzUguEfa254s=;
+        b=pOJdhzA3MU90yz8kTTc7fdMeGmydDcQX2HTSha508KztEduCfBL6NTSTTUNDblThHJ
+         bTvEMNTMARCGI78iD1XXW7C3FPVPIVvokbK7Bmmb8QQIFDuRAgojDcrpw2i581ekAEPA
+         I5C7tcnGTq2L3ZjFY6Xx93eum4hKXZs1tHibqZLFo8HLCroEkayJ36oiwRXe/4CuvHKa
+         ppwriSjV/FUT6GwGeUvoKvGCB7Fu1yhn3TP8GCaAPZsdMk9J8lIxQY5SPngRH7olL+rF
+         b3G88wPdzcWhd8QSCDq+8KfPqP4PNlGMYVSnd08QqqgMZUUDWJLz2bVtW1QVkzB5/qav
+         osyg==
+X-Gm-Message-State: APjAAAUWYycDiXgSKYp58zBZjkdjfPqU6dqeh31i4XZ5wsAEs9LHUbyi
+        W/bQmXkXIBKXnarhSvCWZ9InPg==
+X-Google-Smtp-Source: APXvYqzeWDHSLcoAOmOaHrCuIDnceXDiEw2PFxiRUtr8YD5A9NrQvgKoaJB8J6nksskgcWcq450hBA==
+X-Received: by 2002:adf:c448:: with SMTP id a8mr2657636wrg.233.1571905165370;
+        Thu, 24 Oct 2019 01:19:25 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id u1sm35262518wru.90.2019.10.24.01.19.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 24 Oct 2019 01:19:24 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 09:19:23 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tianping Fang <tianping.fang@mediatek.com>
+Subject: [GIT PULL] Immutable branch between MFD, Power and RTC due for the
+ v5.5 merge window
+Message-ID: <20191024081923.GJ15843@dell>
+References: <20190910070446.639-1-frank-w@public-files.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Enjoy!
 
-On Tue, 2019-10-22 at 11:00 -0600, Jonathan Corbet wrote:
-> On Tue, 22 Oct 2019 18:45:47 +0200
-> Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> 
-> > Add initial reset controller API documentation. This is mostly indented
-> > to describe the concepts to users of the consumer API, and to tie the
-> > kerneldoc comments we already have into the driver API documentation.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> One quick comment...
-> 
-> >  Documentation/driver-api/index.rst |   1 +
-> >  Documentation/driver-api/reset.rst | 217 +++++++++++++++++++++++++++++
-> >  2 files changed, 218 insertions(+)
-> >  create mode 100644 Documentation/driver-api/reset.rst
-> > 
-> 
-> [...]
-> 
-> > +Shared and exclusive resets
-> > +---------------------------
-> > +
-> > +The reset controller API provides either reference counted deassertion and
-> > +assertion or direct, exclusive control.
-> > +The distinction between shared and exclusive reset controls is made at the time
-> > +the reset control is requested, either via :c:func:`devm_reset_control_get_shared`
-> > +or via :c:func:`devm_reset_control_get_exclusive`.
-> 
-> :c:func: isn't needed anymore, and is actively discouraged - the function
-> references will be linked anyway.  So just say function() rather than
-> :c:func:`function` everywhere, please.
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-That is great, thank you! I'll change them all in the next version.
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-regards
-Philipp
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-power-rtc-v5.5
+
+for you to fetch changes up to 9d0863baff497880c1427d3ea7b89b303ace9675:
+
+  MAINTAINERS: add Mediatek shutdown drivers (2019-10-24 09:04:00 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, Power and RTC due for the v5.5 merge window
+
+----------------------------------------------------------------
+Josef Friedl (6):
+      dt-bindings: rtc: mediatek: add missing mt6397 rtc
+      rtc: mt6397: move some common definitions into rtc.h
+      rtc: mt6397: improvements of rtc driver
+      rtc: mt6397: add compatible for mt6323
+      power: reset: add driver for mt6323 poweroff
+      MAINTAINERS: add Mediatek shutdown drivers
+
+ .../devicetree/bindings/rtc/rtc-mt6397.txt         |  29 ++++++
+ MAINTAINERS                                        |   7 ++
+ drivers/power/reset/Kconfig                        |  10 ++
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/mt6323-poweroff.c              |  97 +++++++++++++++++++
+ drivers/rtc/rtc-mt6397.c                           | 107 ++++-----------------
+ include/linux/mfd/mt6397/rtc.h                     |  71 ++++++++++++++
+ 7 files changed, 236 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+ create mode 100644 drivers/power/reset/mt6323-poweroff.c
+ create mode 100644 include/linux/mfd/mt6397/rtc.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
