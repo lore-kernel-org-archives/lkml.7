@@ -4,250 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AD4CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6B4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C523021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B0BC21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439460AbfJXLwV (ORCPT
+        id S2439470AbfJXLxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:52:21 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37435 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfJXLwV (ORCPT
+        Thu, 24 Oct 2019 07:53:03 -0400
+Received: from 7.mo7.mail-out.ovh.net ([46.105.43.131]:58691 "EHLO
+        7.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfJXLxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:52:21 -0400
-Received: by mail-lf1-f67.google.com with SMTP id g21so17787302lfh.4;
-        Thu, 24 Oct 2019 04:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2xjDvDx4J/ULodwmxVgHkawtTdPLuzeZvbnwRBC/GYE=;
-        b=SiKfvL1j7YUpf72ckuZl6oLoW61jsM1b/QjAFutJLYhXyGja53n5VapP0/EjzaBmCW
-         eAvwchKPHpjs5GY+Zq1UKGGe+Y8RRnlYmcNdIZLJ7AMeqBsZyBPo0h4GfVk8Yb3t5CbA
-         Cpa8szxheILXXDjIhm/NgytZ1FhkEeP1dRmoY9KJjg5tCQicbhC3Id1UQBQUGuHLO8s2
-         BjQyGfHmXFmtuDYEC5cMssuqiOanFy8vdHQvBCA4jA5Y1Srr4tY7WpuhRQ0dWQMICB+C
-         Zcnbx0hENDOrjhORsklkp9H6j3MIZpoOKUuwVyBAQVvZgpQbP7sRt5sxFmszpn+FEDTY
-         tMgQ==
-X-Gm-Message-State: APjAAAWXikj6Ul0QLkAwhicTlAA9GEb561mF+WlGD/rXXYielXPLQLOe
-        OJtf3wI1GunQJTvUep37pGA=
-X-Google-Smtp-Source: APXvYqx9mP+SoMYyBN3oxB8WXzkporfgjl++/OEIzJCNFvjD1irkzgqzQxIdLDe5R/i+SOtx1WX/wQ==
-X-Received: by 2002:a19:ae18:: with SMTP id f24mr27194101lfc.186.1571917936919;
-        Thu, 24 Oct 2019 04:52:16 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id w28sm7984990lfq.61.2019.10.24.04.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 04:52:16 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 14:52:09 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RFC PATCH v2 13/13] led: bd71828: Support LED outputs on ROHM
- BD71828 PMIC
-Message-ID: <8ca44c947374df2e2479e83a1eedce561cc72098.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 24 Oct 2019 07:53:03 -0400
+X-Greylist: delayed 12499 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 07:53:02 EDT
+Received: from player788.ha.ovh.net (unknown [10.109.159.69])
+        by mo7.mail-out.ovh.net (Postfix) with ESMTP id D98AF138D5B
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:04:46 +0200 (CEST)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player788.ha.ovh.net (Postfix) with ESMTPSA id CA63BB4D6960;
+        Thu, 24 Oct 2019 07:04:07 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 09:04:03 +0200
+From:   Greg Kurz <groug@kaod.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/45] KVM: PPC: Book3S HV: Uninit vCPU if vcore
+ creation fails
+Message-ID: <20191024090403.5e564e39@bahia.lan>
+In-Reply-To: <20191022015925.31916-2-sean.j.christopherson@intel.com>
+References: <20191022015925.31916-1-sean.j.christopherson@intel.com>
+        <20191022015925.31916-2-sean.j.christopherson@intel.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 5552375392181655889
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrledtgdduudefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71828 power management IC has two LED outputs for charge status
-and button pressing indications. The LED outputs can also be forced
-by SW so add driver allowing to use these LEDs for other indications
-as well.
+On Mon, 21 Oct 2019 18:58:41 -0700
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-Leds are controlled by SW using 'Force ON' bits. Please note the
-constrains mentioned in data-sheet:
-1. If one LED is forced ON - then also the other LED is forced.
-	=> You can't use SW control to force ON one LED and allow HW
-	   to control the other.
-2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
-   zero, then LEDs are controlled by HW and indicate button/charger
-   states as explained in data-sheet.
+> Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
+> resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
+> 
+> Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+Reviewed-by: Greg Kurz <groug@kaod.org>
 
-No changes since v1. Changes still under discussion.
+>  arch/powerpc/kvm/book3s_hv.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+> index 709cf1fd4cf4..36abbe3c346d 100644
+> --- a/arch/powerpc/kvm/book3s_hv.c
+> +++ b/arch/powerpc/kvm/book3s_hv.c
+> @@ -2354,7 +2354,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_hv(struct kvm *kvm,
+>  	mutex_unlock(&kvm->lock);
+>  
+>  	if (!vcore)
+> -		goto free_vcpu;
+> +		goto uninit_vcpu;
+>  
+>  	spin_lock(&vcore->lock);
+>  	++vcore->num_threads;
+> @@ -2371,6 +2371,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu_create_hv(struct kvm *kvm,
+>  
+>  	return vcpu;
+>  
+> +uninit_vcpu:
+> +	kvm_vcpu_uninit(vcpu);
+>  free_vcpu:
+>  	kmem_cache_free(kvm_vcpu_cache, vcpu);
+>  out:
 
- drivers/leds/Kconfig        | 10 ++++
- drivers/leds/Makefile       |  1 +
- drivers/leds/leds-bd71828.c | 97 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 108 insertions(+)
- create mode 100644 drivers/leds/leds-bd71828.c
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index b0fdeef10bd9..ec59f28bcb39 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -529,6 +529,16 @@ config LEDS_BD2802
- 	  This option enables support for BD2802GU RGB LED driver chips
- 	  accessed via the I2C bus.
- 
-+config LEDS_BD71828
-+	tristate "LED driver for LED pins on ROHM BD71828 PMIC"
-+	depends on LEDS_CLASS
-+	depends on I2C
-+	help
-+	  This option enables support for LED outputs located on ROHM
-+	   BD71828 power management IC. ROHM BD71828 has two led output pins
-+	   which can be left to indicate HW states or controlled by SW. Say
-+	   yes here if you want to enable SW control for these LEDs.
-+
- config LEDS_INTEL_SS4200
- 	tristate "LED driver for Intel NAS SS4200 series"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 41fb073a39c1..2a8f6a8e4c7c 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
- obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
- obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-+obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
- obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
- obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
- obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
-diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
-new file mode 100644
-index 000000000000..2427619444f5
---- /dev/null
-+++ b/drivers/leds/leds-bd71828.c
-@@ -0,0 +1,97 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2019 ROHM Semiconductors
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/mfd/rohm-bd71828.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
-+	container_of((l), struct bd71828_leds, green) : \
-+	container_of((l), struct bd71828_leds, amber))
-+
-+enum {
-+	ID_GREEN_LED,
-+	ID_AMBER_LED,
-+	ID_NMBR_OF,
-+};
-+
-+struct bd71828_led {
-+	int id;
-+	struct led_classdev l;
-+	u8 force_mask;
-+};
-+
-+struct bd71828_leds {
-+	struct rohm_regmap_dev *bd71828;
-+	struct bd71828_led green;
-+	struct bd71828_led amber;
-+};
-+
-+static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
-+				      enum led_brightness value)
-+{
-+	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
-+	struct bd71828_leds *data;
-+	unsigned int val = BD71828_LED_OFF;
-+
-+	data = BD71828_LED_TO_DATA(l);
-+	if (value != LED_OFF)
-+		val = BD71828_LED_ON;
-+
-+	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
-+			    l->force_mask, val);
-+}
-+
-+static int bd71828_led_probe(struct platform_device *pdev)
-+{
-+	struct rohm_regmap_dev *bd71828;
-+	struct bd71828_leds *l;
-+	struct bd71828_led *g, *a;
-+	static const char *GNAME = "bd71828-green-led";
-+	static const char *ANAME = "bd71828-amber-led";
-+	int ret;
-+
-+	pr_info("bd71828 LED driver probed\n");
-+
-+	bd71828 = dev_get_drvdata(pdev->dev.parent);
-+	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
-+	if (!l)
-+		return -ENOMEM;
-+	l->bd71828 = bd71828;
-+	a = &l->amber;
-+	g = &l->green;
-+	a->id = ID_AMBER_LED;
-+	g->id = ID_GREEN_LED;
-+	a->force_mask = BD71828_MASK_LED_AMBER;
-+	g->force_mask = BD71828_MASK_LED_GREEN;
-+
-+	a->l.name = ANAME;
-+	g->l.name = GNAME;
-+	a->l.brightness_set_blocking = bd71828_led_brightness_set;
-+	g->l.brightness_set_blocking = bd71828_led_brightness_set;
-+
-+	ret = devm_led_classdev_register(&pdev->dev, &g->l);
-+	if (ret)
-+		return ret;
-+
-+	return devm_led_classdev_register(&pdev->dev, &a->l);
-+}
-+
-+static struct platform_driver bd71828_led_driver = {
-+	.driver = {
-+		.name  = "bd71828-led",
-+	},
-+	.probe  = bd71828_led_probe,
-+};
-+
-+module_platform_driver(bd71828_led_driver);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("ROHM BD71828 LED driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
