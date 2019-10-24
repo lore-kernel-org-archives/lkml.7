@@ -2,108 +2,69 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82D7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6607ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B2A20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383F620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439914AbfJXQqW (ORCPT
+        id S2439927AbfJXQq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:46:22 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:47242 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2439902AbfJXQqW (ORCPT
+        Thu, 24 Oct 2019 12:46:28 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49000 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439916AbfJXQq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:46:22 -0400
-Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9OGkKMr023696
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:46:20 -0400
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9OGkFB8017741
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:46:20 -0400
-Received: by mail-qk1-f198.google.com with SMTP id h18so2881238qkj.22
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:46:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=EsIPMrPy/NQRL+kAPu6vRsFGMxp34/kqcwgNBhAoed4=;
-        b=PhYnVmE33dNKbtXpJDHTFmdwXMU/8hJgkY61mLDjbU5OF4AHN7nBbyGGx8yfU1H5fX
-         0mrf0ru+X+ADbcTwLyrxHDfuNevMWvRkEjqbuvq0okfm767sMlSigoqvqgsvrTSyR9w1
-         bOTA+ylcF2i2stVkhcPVNiuYCe2M/1A7AOWjlkV2nVnxLvSyul55SPxehDvy28DqEqZI
-         SithGdn/YwBAXKBltJgOMW2bDCxiVbzPckbbOejVK1rz1vzUU0zsq+cvLf3TagR6z9rf
-         mCfIFwZkBuuJ+Ft29VaMaQnTEBAAWWpPLCPCC+/XD2i0Vr+RdvWx6J4EPsEbKNn0KCWe
-         8Riw==
-X-Gm-Message-State: APjAAAU1cEzJ23mJKd7jK+lUU0r5/elNe2lMPVABCtEIEWORcssske/O
-        ONDTJx3UXKABwZYtteIiwQITUsjUrbeAkqU8VPVn3rJj4IODFUAz/zqFiV1+g4ILasw/Y3IepRo
-        e8vRFBLYqj0KwCQqK1TX/E6Kv8GMTe5Q18YM=
-X-Received: by 2002:aed:241c:: with SMTP id r28mr2210120qtc.148.1571935575568;
-        Thu, 24 Oct 2019 09:46:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxwOx2g9Rq1d1Pyls0CB0utL2xABAepZupau/TdbqZ6xqsFeKRv/w6rIr8Gn2U/r+gM8+T5hg==
-X-Received: by 2002:aed:241c:: with SMTP id r28mr2210083qtc.148.1571935575248;
-        Thu, 24 Oct 2019 09:46:15 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id c21sm11331089qkg.4.2019.10.24.09.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 09:46:13 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/15] staging: exfat: Clean up return codes - FFS_SUCCESS
-In-Reply-To: <5c7a7fe972469296d367dba504f0b6c8063a7d55.camel@perches.com>
-References: <20191024155327.1095907-1-Valdis.Kletnieks@vt.edu> <20191024155327.1095907-16-Valdis.Kletnieks@vt.edu>
- <5c7a7fe972469296d367dba504f0b6c8063a7d55.camel@perches.com>
+        Thu, 24 Oct 2019 12:46:27 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 31E891477CBB0;
+        Thu, 24 Oct 2019 09:46:26 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 09:46:23 -0700 (PDT)
+Message-Id: <20191024.094623.2182520936177775102.davem@davemloft.net>
+To:     steven.price@arm.com
+Cc:     linux-mm@kvack.org, luto@kernel.org, ard.biesheuvel@linaro.org,
+        arnd@arndb.de, bp@alien8.de, catalin.marinas@arm.com,
+        dave.hansen@linux.intel.com, mingo@redhat.com, james.morse@arm.com,
+        jglisse@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        will@kernel.org, x86@kernel.org, hpa@zytor.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark.Rutland@arm.com, kan.liang@linux.intel.com,
+        akpm@linux-foundation.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v13 09/22] sparc: mm: Add p?d_leaf() definitions
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191024093716.49420-10-steven.price@arm.com>
+References: <20191024093716.49420-1-steven.price@arm.com>
+        <20191024093716.49420-10-steven.price@arm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1571935572_59326P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 24 Oct 2019 12:46:12 -0400
-Message-ID: <1116783.1571935572@turing-police>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 24 Oct 2019 09:46:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1571935572_59326P
-Content-Type: text/plain; charset=us-ascii
+From: Steven Price <steven.price@arm.com>
+Date: Thu, 24 Oct 2019 10:37:03 +0100
 
-On Thu, 24 Oct 2019 09:29:00 -0700, Joe Perches said:
+> walk_page_range() is going to be allowed to walk page tables other than
+> those of user space. For this it needs to know when it has reached a
+> 'leaf' entry in the page tables. This information is provided by the
+> p?d_leaf() functions/macros.
+> 
+> For sparc 64 bit, pmd_large() and pud_large() are already provided, so
+> add macros to provide the p?d_leaf names required by the generic code.
+> 
+> CC: "David S. Miller" <davem@davemloft.net>
+> CC: sparclinux@vger.kernel.org
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-> > -	if (sector_read(sb, sec, &bp->buf_bh, 1) != FFS_SUCCESS) {
-> > +	if (sector_read(sb, sec, &bp->buf_bh, 1) != 0) {
->
-> Probably nicer to just drop the != 0
-
-Again, that's on the to-do list.
-
---==_Exmh_1571935572_59326P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXbHVUgdmEQWDXROgAQLooBAAjVK/FBta4kL6kv8k49RtGTrWLd5FD8zr
-OtoLLQLewcYlbmpWjneJPKZpTjg+nsOF0cHELzEXKkIzCmg5YAnlG2w8OOlEW6AO
-jTdhUTY9rrFOKuQeZmzalltqYjVHCMOie+oD8xGNXT1bSj5DTKarJfHwFGD3yPss
-nJBhADhUm1L/n1aviplbSsm7BFjrFbqWjtMLKW3+qOLeA+OpEQMAf877I+3CYNPS
-k7evBj/qN9sVgvPM0w86nff0mo5s+fYNak6V22KrnX39z+7zb+DA5NjR3Bd1u930
-gr/ZdVPOuepeoZnNvDIR/bj6NMqsPhkP/YE8QYr1jHAE7ZPc3ADaDVP0mPV6ekIC
-DymnE7CGhz0fBAQwaOnEeylkQilfx9XPGYedPPA9/QjbA3R2n3Vgtesa74QP505a
-UuEtf0YeQde+46a0t7M1KIix1MGnAMYrB7zlqwyaCMeEQQZ0laHPRUkLQEMxd32T
-WT0m0n6/pL6aXAuvPkoAzsQB1bFPsrf/Bz6Gx58ZRlk0303MAD0Lr8oVGpaEV5rT
-AMdJ8TM8CdvvkASuC6fzHHpsf68YfXaIq0uvQtu/bvYi7TMtlYuOVowuCYWvZEtf
-i01HkSLHyBUbGj+hzgoDjXafMFt9q7nKtrgsYT6tFForrf3FGIKHWVetwGbaKJY0
-i0VtHsFXSMA=
-=hBtD
------END PGP SIGNATURE-----
-
---==_Exmh_1571935572_59326P--
+Acked-by: David S. Miller <davem@davemloft.net>
