@@ -2,124 +2,158 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0621ECA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2934CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB39A2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BcaBLSXm"
+	by mail.kernel.org (Postfix) with ESMTP id 99F342166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571928679;
+	bh=MEaP5IL/IqooQRDNdNUcu8iypLi1gD3g0148DaXxsOA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zSVwTo/Vh7EMEN/4C9Yz8puIZR8U6MK5l8oTX7E0TLAo7lYXnQLGtyRW677qkqiJE
+	 E9zxQoT7NlJklhFylRx3yEYfPyYMTAE+pekNh6aarNRMdN8W85OvUaIwBbwkmhgu63
+	 YbNbE/om9zUiI7hbZX+LC7tfXFtMlvx0pB80X/fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409495AbfJXOtr (ORCPT
+        id S2409508AbfJXOvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:49:47 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46536 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409485AbfJXOtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:49:47 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u22so38198869qtq.13
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 07:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pd8O3Eb7qSMRp9Kj05XZyId359rCorPJtmLFzVCz1tU=;
-        b=BcaBLSXmWaHk5110Xo0O38xPCC95AqKidjb+KH5ChdckilUoZbt1WyEwYm1yUOa4RM
-         RfiRdAcCfWShMq1AjdO4X2NNxO19cCSlBCF7CR4/hwIxt4Qc9ZpW6S48IFadbBdf17cX
-         JALXMDwZp1n9/94SF0EcqIO9snuYmxP7M7P7Uz6YvVLb9xy5N6KEnmIYf6UEPboXYSS4
-         atki90J22tNTjqSCVObVMuAnhhzK1cJm0cqovSZ96lgg/WHDuWXptOynmVwTtSpq1U9m
-         ZexHeZgG4YVPSYrJr3pZGyq4CSR3sZlmC9nig7ZRz43wPKhTVKpcWL8SFOKxwtxlIzAv
-         Hxqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pd8O3Eb7qSMRp9Kj05XZyId359rCorPJtmLFzVCz1tU=;
-        b=SYG/zsb0t86UcK2YEuDdkjOBhJVYI4MSW4GX4sWAgEIidv2mirCPLoccgkRKdvgJqP
-         SXJG1GH+8yr1r7P4+4yXx8T/vlKsN2NOPDmeUpeRTUomdPjcreg/M24BiAdWT9Njunsw
-         +idst09kN18o+Cz10Z7v2eVVUHtRvsf7O4cPlByWzzVf5Y99wcnkJUbSI6GWJOmiqyYH
-         CxLTljzenqodZzgaIERHsj1wSZb4HSCZRJT02bk7J45kx5/00m+D9v0fOaYA5YHnhAhu
-         4whEZz+KW3smvg5S7QRKODRYKKlOrGpgWrfqN86S/BkgPGZcqYBiQM+o9beO/1x0IKVf
-         Vkvw==
-X-Gm-Message-State: APjAAAVl0pQiM6kWbWpAKFah88qPaxCzZeV6GCK/z01TzH5V9EzS//wG
-        psKZT67cUHB1RijtxxHEHWKgltqvZ+UouD4csYsG2A==
-X-Google-Smtp-Source: APXvYqxizfGeXucr8Xm3hiQaEdwpD1zIkSfhY2uthQgN/hAxrw59HH8nPL+eRe3wXdx0aAtlxBla3csbcsZB0vAO3is=
-X-Received: by 2002:a0c:fec3:: with SMTP id z3mr15231985qvs.122.1571928585784;
- Thu, 24 Oct 2019 07:49:45 -0700 (PDT)
+        Thu, 24 Oct 2019 10:51:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409497AbfJXOvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 10:51:18 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3597205F4;
+        Thu, 24 Oct 2019 14:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571928676;
+        bh=MEaP5IL/IqooQRDNdNUcu8iypLi1gD3g0148DaXxsOA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AhLTlEblswmwrWUsuXYU6je5kiKbSEAz/M0zJZKKJ0DIQ60EIdRbWyrk5REfexOGm
+         Oe4Ph5iPBlOcnF2uQ0YfG5vcfCeB+jCFaTgmE7IuBNtSLI7D7+S483zv39vG/VvGE/
+         YHxedsM80fsfFCj4chEONOo9lXEDwHlLnhWbiK70=
+Received: by mail-qt1-f181.google.com with SMTP id m15so38352940qtq.2;
+        Thu, 24 Oct 2019 07:51:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAXTuaOrKY8k7tl0wIDwXyQaCMwBhzyLj7F6xornI5ysT4P6BTqe
+        SYH84T/DVBWUE0RR7FdLhR1mcEjHRUP+5tJYLQ==
+X-Google-Smtp-Source: APXvYqyXI1R6tgkLf27Se2dMkBgfCAIms6JME3RgcEqcC6jce5AGFooEv86GX0hr06greCwOgnLCH683ZJIx8hx7MRM=
+X-Received: by 2002:a0c:f792:: with SMTP id s18mr14841198qvn.20.1571928675962;
+ Thu, 24 Oct 2019 07:51:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com> <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
- <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
- <20191024113155.GA7406@andrea.guest.corp.microsoft.com> <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
- <20191024130502.GA11335@andrea.guest.corp.microsoft.com> <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
- <20191024134319.GA12693@andrea.guest.corp.microsoft.com> <CACT4Y+ZXQyqgBvwgb6cy7NP5FTBbktq5j4ZyySp7jrbcJwFUTA@mail.gmail.com>
- <20191024144049.GA13747@andrea.guest.corp.microsoft.com>
-In-Reply-To: <20191024144049.GA13747@andrea.guest.corp.microsoft.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 24 Oct 2019 16:49:33 +0200
-Message-ID: <CACT4Y+aCSZmrmGv+=LPfzt0VBD5XqjsvSQ+6LHyr8VQW5tN6xg@mail.gmail.com>
-Subject: Re: [PATCH v6] taskstats: fix data-race
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        stable <stable@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20191024142211.GA29467@arm.com>
+In-Reply-To: <20191024142211.GA29467@arm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 24 Oct 2019 09:51:04 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJSSYdRyy=Hw4H613fWVyXM3ivFj8mgO6iwvXZQOr=9pA@mail.gmail.com>
+Message-ID: <CAL_JsqJSSYdRyy=Hw4H613fWVyXM3ivFj8mgO6iwvXZQOr=9pA@mail.gmail.com>
+Subject: Re: Question regarding "reserved-memory"
+To:     Ayan Halder <Ayan.Halder@arm.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 4:40 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+On Thu, Oct 24, 2019 at 9:22 AM Ayan Halder <Ayan.Halder@arm.com> wrote:
 >
-> On Thu, Oct 24, 2019 at 03:58:40PM +0200, Dmitry Vyukov wrote:
-> > On Thu, Oct 24, 2019 at 3:43 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> > >
-> > > > But why? I think kernel contains lots of such cases and it seems to be
-> > > > officially documented by the LKMM:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt
-> > > > address dependencies and ppo
-> > >
-> > > Well, that same documentation also alerts about some of the pitfalls
-> > > developers can incur while relying on dependencies.  I'm sure you're
-> > > more than aware of some of the debate surrounding these issues.
-> >
-> > I thought that LKMM is finally supposed to stop all these
-> > centi-threads around subtle details of ordering. And not we finally
-> > have it. And it says that using address-dependencies is legal. And you
-> > are one of the authors. And now you are arguing here that we better
-> > not use it :) Can we have some black/white yes/no for code correctness
-> > reflected in LKMM please :) If we are banning address dependencies,
-> > don't we need to fix all of rcu uses?
 >
-> Current limitations of the LKMM are listed in tools/memory-model/README
-> (and I myself discussed a number of them at LPC recently); the relevant
-> point here seems to be:
+> Hi Folks,
 >
-> 1.      Compiler optimizations are not accurately modeled.  Of course,
->         the use of READ_ONCE() and WRITE_ONCE() limits the compiler's
->         ability to optimize, but under some circumstances it is possible
->         for the compiler to undermine the memory model.  [...]
+> I have a question regarding "reserved-memory". I am using an Arm Juno
+> platform which has a chunk of ram in its fpga. I intend to make this
+> memory as reserved so that it can be shared between various devices
+> for passing framebuffer.
 >
->         Note that this limitation in turn limits LKMM's ability to
->         accurately model address, control, and data dependencies.
+> My dts looks like the following:-
 >
-> A less elegant, but hopefully more effective, way to phrase such point
-> is maybe "feel free to rely on dependencies, but then do not blame the
-> LKMM authors please".  ;-)
+> / {
+>         .... // some nodes
+>
+>         tlx@60000000 {
+>                 compatible = "simple-bus";
+>                 ...
+>
+>                 juno_wrapper {
+>
+>                         ... /* here we have all the nodes */
+>                             /* corresponding to the devices in the fpga */
+>
+>                         memory@d000000 {
+>                                device_type = "memory";
+>                                reg = <0x00 0x60000000 0x00 0x8000000>;
+>                         };
+>
+>                         reserved-memory {
+>                                #address-cells = <0x01>;
+>                                #size-cells = <0x01>;
+>                                ranges;
+>
+>                                framebuffer@d000000 {
+>                                         compatible = "shared-dma-pool";
+>                                         linux,cma-default;
+>                                         reusable;
+>                                         reg = <0x00 0x60000000 0x00 0x8000000>;
+>                                         phandle = <0x44>;
+>                                 };
+>                         };
+>                         ...
+>                 }
+>         }
+> ...
+> }
+>
+> Note that the depth of the "reserved-memory" node is 3.
+>
+> Refer __fdt_scan_reserved_mem() :-
+>
+>         if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
+>
+>                 if (__reserved_mem_check_root(node) != 0) {
+>                         pr_err("Reserved memory: unsupported node
+> format, ignoring\n");
+>                         /* break scan */
+>                         return 1;
+>                 }
+>                 found = 1;
+>
+>                 /* scan next node */
+>                 return 0;
+>         }
+>
+> It expects the "reserved-memory" node to be at depth == 1 and so it
+> does not probe it in our case.
+>
+> Niether from the
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>  nor from commit - e8d9d1f5485b52ec3c4d7af839e6914438f6c285,
+> I could understand the reason for such restriction.
+>
+> So, I seek the community's advice as to whether I should fix up
+> __fdt_scan_reserved_mem() so as to do away with the restriction or
+> put the "reserved-memory" node outside of 'tlx@60000000' (which looks
+>  logically incorrect as the memory is on the fpga platform).
 
-We are not going to blame LKMM authors :)
+For now, I'm going to say it must be at the root level. I'd guess the
+memory@d000000 node is also just ignored (wrong unit-address BTW).
 
-Acquire will introduce actual hardware barrier on arm/power/etc. Maybe
-it does not matter here. But I feel if we start replacing all
-load-depends/rcu with acquire, it will be noticeable overhead. So what
-do we do in the context of the whole kernel?
+I think you're also forgetting the later unflattened parsing of
+/reserved-memory. The other complication IIRC is booting with UEFI
+does it's own reserved memory table which often uses the DT table as
+its source.
+
+Rob
