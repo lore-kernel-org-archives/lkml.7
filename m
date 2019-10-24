@@ -2,157 +2,95 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C41FCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7059CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421512084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC6920684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OrB2X0i9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mq98I3fG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393262AbfJXKRc (ORCPT
+        id S2393275AbfJXKS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:17:32 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56684 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393238AbfJXKRb (ORCPT
+        Thu, 24 Oct 2019 06:18:29 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56058 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392678AbfJXKS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:17:31 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OAGrZv062102;
-        Thu, 24 Oct 2019 05:16:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571912213;
-        bh=EDshKvGHmjEvne+M6Hf6EnpsTzXcgkgN/NsvR3Me/fA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=OrB2X0i9vOq6STYWMQhlOd7VV5xFv+QVlwTG1BAPg777P1hzOCNNZhelH9YhXYCOQ
-         lg1j5kiGCgOF3IDjWqkCya4vuWdak+qw8hK5rFVOpJyMKx/Kp2NE9XeuzJmbiElybP
-         H65Rde5K804+tD8617dKMLFIkhVh6k0S6ftkivYs=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OAGr9w004417
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Oct 2019 05:16:53 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
- Oct 2019 05:16:43 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 24 Oct 2019 05:16:43 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OAGose119563;
-        Thu, 24 Oct 2019 05:16:51 -0500
-Subject: Re: [PATCH v2 1/2] dt-bindings: usb: Add binding for the TI wrapper
- for Cadence USB3 controller
-To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
-CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
-        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-References: <20191021131305.8689-1-rogerq@ti.com>
- <20191021131305.8689-2-rogerq@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <3fdcbd1f-f9e2-2363-56f4-30d2f8ea4560@ti.com>
-Date:   Thu, 24 Oct 2019 13:16:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 06:18:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1lwGcpbN8M6WZ6gKLWBoke01kFAviE7JTyirzjF13f8=; b=Mq98I3fGbM6CVFiZq/q0G3JXB
+        e8UjFZi1KNKdA0RWPk4Bgpk6t0+73lCcG2M87fzq2n7KK31DYyoddL9ihEVFeSQhJAegtMDFmWSwK
+        QnRi2cYvVUIrw/JtGYIS3tnrxOsfJ+J/uump3RnugsMsAJUTWAtDq9yhAKXmhzFql1bXQPAIDqsQl
+        BzDVN/lH8K1Rt5XxpkqNFYbZysVj5heYK+fZTVJYmm66FyisFMzj0nYzeJcO82iFcJHnWGay7/5QY
+        PV1iDuaakoVZMaMMAjc2lFiQRx8pu+Jp1ySTiZVuOKcTCmL4X28t2wFZcvpbh5XIP5ZccHFdT1R92
+        SkVDyKHPQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNaCC-0006Vp-Ex; Thu, 24 Oct 2019 10:18:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4C1E33006E3;
+        Thu, 24 Oct 2019 12:17:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AA5832100B874; Thu, 24 Oct 2019 12:18:18 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 12:18:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191024101818.GA5671@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021222110.49044eb5@oasis.local.home>
+ <20191022202401.GO1817@hirez.programming.kicks-ass.net>
+ <20191023145245.53c75d70@gandalf.local.home>
+ <20191024101609.GA4131@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20191021131305.8689-2-rogerq@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024101609.GA4131@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Oct 24, 2019 at 12:16:09PM +0200, Peter Zijlstra wrote:
+> +struct trace_event_fields {
+> +	const char *type;
+> +	union {
+> +		struct {
+> +			const char *name;
+> +			const int  size;
+> +			const int  align;
+> +			const int  is_signed;
+> +			const int  filter_type;
 
-On 21/10/2019 16:13, Roger Quadros wrote:
-> TI platforms have a wrapper module around the Cadence USB3
-> controller. Add binding information for that.
+FWIW, I suspect we can do:
 
-Please ignore this. I missed converting this to yaml format.
-Will send v3.
+			unsigned char size;
+			unsigned char align;
+			unsigned char is_signed;
+			unsigned char filter_type;
 
-cheers,
--roger
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> ---
->   .../devicetree/bindings/usb/ti,j721e-usb.txt  | 52 +++++++++++++++++++
->   1 file changed, 52 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt b/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
-> new file mode 100644
-> index 000000000000..bac57c26b09b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.txt
-> @@ -0,0 +1,52 @@
-> +Binding for the TI specific wrapper for the Cadence USBSS-DRD controller
-> +
-> +Required properties:
-> +  - compatible: Should contain "ti,j721e-usb"
-> +  - reg: Physical base address and size of the wrappers register area.
-> +  - power-domains: Should contain a phandle to a PM domain provider node
-> +                   and an args specifier containing the USB device id
-> +                   value. This property is as per the binding documentation:
-> +                   Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> +  - clocks: Clock phandles to usb2_refclk and lpm_clk
-> +  - clock-names: Should contain "ref" and "lpm"
-> +
-> +Optional properties:
-> + - ti,usb2-only: If present, it restricts the controller to USB2.0 mode of
-> +		 operation. Must be present if USB3 PHY is not available
-> +		 for USB.
-> + - ti,vbus-divider: Should be present if USB VBUS line is connected to the
-> +		 VBUS pin of the SoC via a 1/3 voltage divider.
-> +
-> +Sub-nodes:
-> +The USB2 PHY and the Cadence USB3 controller should be the sub-nodes.
-> +
-> +Example:
-> +
-> +	ti_usb0: cdns_usb@4104000 {
-> +		compatible = "ti,j721e-usb";
-> +		reg = <0x00 0x4104000 0x00 0x100>;
-> +		power-domains = <&k3_pds 288 TI_SCI_PD_EXCLUSIVE>;
-> +		clocks = <&k3_clks 288 15>, <&k3_clks 288 3>;
-> +		clock-names = "ref", "lpm";
-> +		assigned-clocks = <&k3_clks 288 15>;	/* USB2_REFCLK */
-> +		assigned-clock-parents = <&k3_clks 288 16>; /* HFOSC0 */
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		usb0: usb@6000000 {
-> +			compatible = "cdns,usb3";
-> +			reg = <0x00 0x6000000 0x00 0x10000>,
-> +			      <0x00 0x6010000 0x00 0x10000>,
-> +			      <0x00 0x6020000 0x00 0x10000>;
-> +			reg-names = "otg", "xhci", "dev";
-> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,	/* irq.0 */
-> +				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,	/* irq.6 */
-> +				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;	/* otgirq.0 */
-> +			interrupt-names = "host",
-> +					  "peripheral",
-> +					  "otg";
-> +			maximum-speed = "super-speed";
-> +			dr_mode = "otg";
+And save us some 8 bytes per entry (12 on 32bit).
+
 > +		};
+> +		int (*define_fields)(struct trace_event_call *);
 > +	};
-> 
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> +};
