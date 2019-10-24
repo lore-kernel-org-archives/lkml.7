@@ -2,180 +2,144 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54684CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A70CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB9F20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BE32166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HIjuI11K"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="fEAnr2/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393072AbfJXJdN (ORCPT
+        id S2408899AbfJXJfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:33:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50233 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2393060AbfJXJdN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:33:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571909591;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+aHv+pR5mZId7afsfSJDGJh91jfDpKxvVOzesly6jTQ=;
-        b=HIjuI11KxbYqHvj99LgcVbVY7nJaeaMb3tF5DCb3/d05ve7F3ZmmxdcQ/qopKQSiYdZoLr
-        LqT3LI6TWEUYQEcB8SeX8kOO4WkrGtfjeJ+JFruKUsoAcMUzYftd0PUnhisAm8KjmMHFbi
-        TsnLeNMxRfnDq0N1nWKNMdEywTs/N9Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-DFWeRJCOP32YI1hF-4AJrQ-1; Thu, 24 Oct 2019 05:33:08 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CD4C100550E;
-        Thu, 24 Oct 2019 09:33:06 +0000 (UTC)
-Received: from [10.36.117.225] (ovpn-117-225.ams2.redhat.com [10.36.117.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 05C535D6D0;
-        Thu, 24 Oct 2019 09:32:51 +0000 (UTC)
-Subject: Re: [PATCH v12 2/6] mm: Use zone and order instead of free area in
- free_list manipulators
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de
-References: <20191022221223.17338.5860.stgit@localhost.localdomain>
- <20191022222805.17338.3243.stgit@localhost.localdomain>
- <c3544859-606d-4e8f-2e48-2d7868e0fa13@redhat.com>
- <860dda361b6e0b94908d94beb0ad9f5519c8f2cf.camel@linux.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <78caedba-fc29-20d8-3043-2d7598aa3652@redhat.com>
-Date:   Thu, 24 Oct 2019 11:32:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <860dda361b6e0b94908d94beb0ad9f5519c8f2cf.camel@linux.intel.com>
+        Thu, 24 Oct 2019 05:35:20 -0400
+Received: from mail-eopbgr70103.outbound.protection.outlook.com ([40.107.7.103]:4005
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2408871AbfJXJfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:35:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cmGiBsQxz3T86HnbxSahtPCZQiOWo7K6bAsIeym0n5GpvZzeBpAcVwPs2v1+jHPgkoZpf8wUxIqs4YKZyHUCb6LSOH3pn8rkgbx5ZAA2vZXzw8hV21FScyu3GH5I0r4sFLpBptfoU4tumfDYDdaHhOAoqIAg7KKfBTzHwEKjypdmB9kqKpNNp22c2deK8HocEfd3TK6nt6fRz1XaHO6fEV7azWsAp0XqdnZZ7gCWUP7w8Sx3WzKa33mbMYQ6esS8paBXPYjEqYOpJeldDHbcGbh64EtbL4RDNvcYRf8SWnQqoCy9ZMg0PmzzRiDXWKRie1gumqVD2k6f3X3+mUmthg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DIt9WUl36EPMd6/sTow+jAoauCcP0HziIST+STpNbbY=;
+ b=gEJ6Fr4/2XPwmUqdJEkHtAcqkzJLv1qKL92rKRfQh6AfQePvhiZ67pZFNwV/VuoKe65CRS8NdKty6ok7y/eR3u0Vd6dpfEVoyb9FU/Dyk0pzzLdbB+NmRlRmROjW4AejpDFddoYDfiIgRL8RFh/UXZVvXfiSyCTjMw9+QKj+l2vZjV1pDSH3pT9rtkOSqh9nVcSAOrqdyKJWxmlC/kITIf74nrliU4n7uCYMLCvZQOkDnX5sHnQLfVyTnUvACFZe8PxNI8uyTqi0I2bRFcH8iI1aGIPoXlNoNlRKLRqFDeuL3XLEz4uOEGTsMI1RYv/923GMEGV1vVoztnQTdxwmww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DIt9WUl36EPMd6/sTow+jAoauCcP0HziIST+STpNbbY=;
+ b=fEAnr2/i3O1AFS3nbpfEP8nNqk2J98i29Ta1hHaixE6dDgnhOQxfsfxuZdfA1FoKmOIky8RikVrhIENBJQZaDuSscfbgTUCYfJwUvhLLXD96t0J3rrr38rgQM1Hq/pS9wFlWvV0Gz7tHQUrFL7AK1wapZGeBnZx/qiLMDB7cTGA=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3546.eurprd02.prod.outlook.com (52.134.69.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Thu, 24 Oct 2019 09:35:12 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2347.030; Thu, 24 Oct 2019
+ 09:35:12 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "rppt@kernel.org" <rppt@kernel.org>
+CC:     "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "deanbo422@gmail.com" <deanbo422@gmail.com>,
+        "deller@gmx.de" <deller@gmx.de>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "gerg@linux-m68k.org" <gerg@linux-m68k.org>,
+        "green.hu@gmail.com" <green.hu@gmail.com>,
+        "jdike@addtoit.com" <jdike@addtoit.com>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "mattst88@gmail.com" <mattst88@gmail.com>,
+        "monstr@monstr.eu" <monstr@monstr.eu>,
+        "msalter@redhat.com" <msalter@redhat.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "sammy@sammy.net" <sammy@sammy.net>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
+Thread-Topic: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
+Thread-Index: AQHVik5IAuql7dy41k6PeTHw6KB4tA==
+Date:   Thu, 24 Oct 2019 09:35:12 +0000
+Message-ID: <20191024093451.15161-1-peda@axentia.se>
+References: <1571822941-29776-9-git-send-email-rppt@kernel.org>
+In-Reply-To: <1571822941-29776-9-git-send-email-rppt@kernel.org>
+Accept-Language: en-US, sv-SE
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: DFWeRJCOP32YI1hF-4AJrQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.11.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0501CA0011.eurprd05.prod.outlook.com
+ (2603:10a6:3:1a::21) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8c3bd73e-ee81-4715-6d9a-08d7586577ad
+x-ms-traffictypediagnostic: DB3PR0202MB3546:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0202MB35468A3E1F5AE0EF9B52833BBC6A0@DB3PR0202MB3546.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(396003)(366004)(376002)(136003)(346002)(199004)(189003)(64756008)(1076003)(66946007)(66476007)(66446008)(66556008)(4744005)(50226002)(8936002)(8676002)(1730700003)(4001150100001)(86362001)(305945005)(7406005)(7736002)(66066001)(7416002)(2501003)(54906003)(99286004)(81156014)(81166006)(186003)(14454004)(5660300002)(76176011)(316002)(52116002)(2616005)(53546011)(6506007)(256004)(102836004)(386003)(26005)(6436002)(6512007)(71190400001)(71200400001)(446003)(11346002)(229853002)(486006)(5640700003)(508600001)(6486002)(25786009)(4326008)(476003)(2906002)(6246003)(107886003)(6916009)(6116002)(3846002)(2351001)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3546;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6Z+ITuVOvCqKitQmaADNxgLO2KW0fDtwzxFLSRNNn7r/d6V85rreanKo2s+2tZaj57S+YSqLI8dMNxycmFP8TlbakDoiFDVeKSRPOuJMnSnLz1FzJ7iBy5FiQjktww9Zw3RWbkbaN4l8LIFun9RYGE1a+THN5jNpOMYuioTqkSimDg+3oKV0TYwESyYh1EUIGoUOwF4rz96lC1DTez136wnhWjR8bRzbsSQlFYS9NScyPinY2fuJ4aYSJh+2DAxCiSAFCobU6RUtFi4veZnHL30ia6pfX28Yt3ehNs5GYmVtFyV9xNES/PlYYRfl6QOXFPAbB1XEzjvbSKf4E0nKvP5X+69BruKyQA070TgGVgdtHQJdNqcM3TihTxK47muVoD9QxJUr985Mz1Js63GkmAokSqaiYs0iRgoJbAAJ+NZnMA++qwWJCmuskvsG/Dto
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c3bd73e-ee81-4715-6d9a-08d7586577ad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 09:35:12.1588
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OVrjWJqkAg7QlUmFAou+rEr+R3o62OggdRIdKwgVr0fz9Ctp3nIcWVOZEyuS4mrB
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3546
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.10.19 17:16, Alexander Duyck wrote:
-> On Wed, 2019-10-23 at 10:26 +0200, David Hildenbrand wrote:
->> On 23.10.19 00:28, Alexander Duyck wrote:
->>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->>>
->>> In order to enable the use of the zone from the list manipulator functi=
-ons
->>> I will need access to the zone pointer. As it turns out most of the
->>> accessors were always just being directly passed &zone->free_area[order=
-]
->>> anyway so it would make sense to just fold that into the function itsel=
-f
->>> and pass the zone and order as arguments instead of the free area.
->>>
->>> In order to be able to reference the zone we need to move the declarati=
-on
->>> of the functions down so that we have the zone defined before we define=
- the
->>> list manipulation functions. Since the functions are only used in the f=
-ile
->>> mm/page_alloc.c we can just move them there to reduce noise in the head=
-er.
->>>
->>> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->>> Reviewed-by: David Hildenbrand <david@redhat.com>
->>> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
->>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->>> ---
->>>    include/linux/mmzone.h |   32 -----------------------
->>>    mm/page_alloc.c        |   67 +++++++++++++++++++++++++++++++++++---=
-----------
->>>    2 files changed, 49 insertions(+), 50 deletions(-)
->>
->> Did you see
->>
->> https://lore.kernel.org/lkml/20191001152928.27008.8178.stgit@localhost.l=
-ocaldomain/T/#m4d2bc2f37bd7bdc3ae35c4f197905c275d0ad2f9
->>
->> this time?
->>
->> And the difference to the old patch is only an empty line.
->>
->=20
-> I saw the report. However I have not had much luck reproducing it in orde=
-r
-> to get root cause. Here are my results for linux-next 20191021 with that
-> patch running page_fault2 over an average of 3 runs:
+On 2019-10-23 12:28, Mike Rapoport <rppt@kernel.org> wrote:
+> parisc has two or three levels of page tables and can use appropriate
+> pgtable-nopXd and folding of the upper layers.
+>
+> Replace usage of include/asm-generic/4level-fixup.h and explicit
+> definitions of __PAGETABLE_PxD_FOLDED in parisc with
+> include/asm-generic/pgtable-nopmd.h for two-level configurations and with
+> include/asm-generic/pgtable-nopmd.h for three-lelve configurations and
 
-It would have been good if you'd reply to the report or sth. like that.=20
-Then people (including me) are aware that you looked into it and what=20
-your results of your investigation were.
+I think you mean .../pgtable-nopud.h in the latter case.
 
->=20
-> Baseline:   3734692.00
-> This patch: 3739878.67
->=20
-> Also I am not so sure about these results as the same patch had passed
-> previously before and instead it was patch 3 that was reported as having =
-a
-> -1.2% regression[1]. All I changed in response to that report was to add
-
-Well, previously there was also a regression in the successor=20
-PageReported() patch, not sure how they bisect in this case.
-
-> page_is_reported() which just wrapped the bit test for the reported flag
-> in a #ifdef to avoid testing it for the blocks that were already #ifdef
-> wrapped anyway.
->=20
-> I am still trying to see if I can get access to a system that would be a
-> better match for the one that reported the issue. My working theory is
-
-I barely see false positives (well, I also barely see reports at all) on=20
-MM, that's why I asked.
-
-> that maybe it requires a high core count per node to reproduce. Either
-> that or it is some combination of the kernel being tested on and the patc=
-h
-> is causing some loop to go out of alignment and become more expensive.
-
-Yes, double check that the config and the setup roughly matches what has=20
-been reported.
-
->=20
-> I also included the page_fault2 results in my cover page as that seems to
-> show a slight improvement with all of the patches applied.
->=20
-> Thanks.
->=20
-> - Alex
->=20
-> [1]: https://lore.kernel.org/lkml/20190921152522.GU15734@shao2-debian/
->=20
-
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+Cheers,
+Peter
