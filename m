@@ -2,75 +2,131 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97D4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B332CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A988921872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F16620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504040AbfJXSRf convert rfc822-to-8bit (ORCPT
+        id S2504062AbfJXSTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:17:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
+        Thu, 24 Oct 2019 14:19:44 -0400
+Received: from ms.lwn.net ([45.79.88.28]:42668 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404839AbfJXSRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:17:35 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S2504042AbfJXSTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 14:19:43 -0400
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A204D20684;
-        Thu, 24 Oct 2019 18:17:33 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 14:17:31 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
-Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
-Message-ID: <20191024141731.5c7c414c@gandalf.local.home>
-In-Reply-To: <20191024164320.GD4131@hirez.programming.kicks-ass.net>
-References: <20191018073525.768931536@infradead.org>
-        <20191018074634.801435443@infradead.org>
-        <20191021222110.49044eb5@oasis.local.home>
-        <20191022202401.GO1817@hirez.programming.kicks-ass.net>
-        <20191023145245.53c75d70@gandalf.local.home>
-        <20191024101609.GA4131@hirez.programming.kicks-ass.net>
-        <20191024110024.324a9435@gandalf.local.home>
-        <20191024164320.GD4131@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by ms.lwn.net (Postfix) with ESMTPSA id B4C682F5;
+        Thu, 24 Oct 2019 18:19:41 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 12:19:40 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        jani.nikula@linux.intel.com,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
+ 'functions' to 'identifiers'
+Message-ID: <20191024121940.1d6a64df@lwn.net>
+In-Reply-To: <20191020131717.28990-1-changbin.du@gmail.com>
+References: <20191020131717.28990-1-changbin.du@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019 18:43:20 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Sun, 20 Oct 2019 21:17:17 +0800
+Changbin Du <changbin.du@gmail.com> wrote:
 
-> > 
-> >   CC [M]  drivers/gpu/drm/i915/gem/i915_gem_context.o
-> > /work/git/linux-trace.git/kernel/trace/trace_events_hist.c: In function ‘register_synth_event’:
-> > /work/git/linux-trace.git/kernel/trace/trace_events_hist.c:1157:15: error: ‘struct trace_event_class’ has no member named ‘define_fields’; did you mean ‘get_fields’?
-> >   call->class->define_fields = synth_event_define_fields;
-> >                ^~~~~~~~~~~~~
-> >                get_fields
-> > make[3]: *** [/work/git/linux-trace.git/scripts/Makefile.build:265: kernel/trace/trace_events_hist.o] Error 1
-> > make[3]: *** Waiting for unfinished jobs....  
+> The 'functions' directive is not only for functions, but also works for
+> structs/unions. So the name is misleading. This patch renames it to
+> 'identifiers', which specific the functions/types to be included in
+> documentation. We keep the old name as an alias of the new one before
+> all documentation are updated.
 > 
-> allmodconfig clean
-> 
-> (omg, so much __field(); fail)
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
-Well it built without warnings and passed the ftrace selftests.
+So I think this is basically OK, but I have one more request...
 
-I haven't ran it through the full suite, but that can wait for the v5.
+[...]
 
--- Steve
+> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+> index 1159405cb920..0689f9c37f1e 100644
+> --- a/Documentation/sphinx/kerneldoc.py
+> +++ b/Documentation/sphinx/kerneldoc.py
+> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
+>      optional_arguments = 4
+>      option_spec = {
+>          'doc': directives.unchanged_required,
+> -        'functions': directives.unchanged,
+>          'export': directives.unchanged,
+>          'internal': directives.unchanged,
+> +        'identifiers': directives.unchanged,
+> +        'functions': directives.unchanged,  # alias of 'identifiers'
+>      }
+>      has_content = False
+>  
+> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
+>  
+>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
+>          export_file_patterns = []
+> +        identifiers = None
+>  
+>          # Tell sphinx of the dependency
+>          env.note_dependency(os.path.abspath(filename))
+> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
+>              export_file_patterns = str(self.options.get('internal')).split()
+>          elif 'doc' in self.options:
+>              cmd += ['-function', str(self.options.get('doc'))]
+> +        elif 'identifiers' in self.options:
+> +            identifiers = self.options.get('identifiers').split()
+>          elif 'functions' in self.options:
+> -            functions = self.options.get('functions').split()
+> -            if functions:
+> -                for f in functions:
+> -                    cmd += ['-function', f]
+> -            else:
+> -                cmd += ['-no-doc-sections']
+> +            identifiers = self.options.get('functions').split()
+
+Rather than do this, can you just change the elif line to read:
+
+    elif ('identifiers' in self.options) or ('functions' in self.options):
+
+...then leave the rest of the code intact?  It keeps the logic together,
+and avoids the confusing distinction between identifiers=='' and
+identifiers==None .
+
+Thanks,
+
+jon
+
+>          for pattern in export_file_patterns:
+>              for f in glob.glob(env.config.kerneldoc_srctree + '/' + pattern):
+>                  env.note_dependency(os.path.abspath(f))
+>                  cmd += ['-export-file', f]
+>  
+> +        if identifiers:
+> +            for i in identifiers:
+> +                cmd += ['-function', i]
+> +        elif identifiers is not None:
+> +            cmd += ['-no-doc-sections']
+> +
+>          cmd += [filename]
+>  
+>          try:
