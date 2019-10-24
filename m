@@ -2,114 +2,171 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2D1CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B978CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D809721A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571945553;
-	bh=IEMnt2X1cna5Tuh4NlqBIok4T4DSYcKCcY2DLN7AiF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CWy4AYkhWsK8uyxxYMrjzlNy5XgwEpcM7OwKg9QkedkUuTNjqeqcWhfLmB2Iklub9
-	 gS6ErS+c/rHKwZNzYzIYBGuj6zS7ZblYhuZ0F4u52cTApz5Irh6Q2uPUsH9TCuG13M
-	 Eq17xjJL+C31/xMiMA83WjzBl3YhMG1JsEDlIKYI=
+	by mail.kernel.org (Postfix) with ESMTP id DCF8B2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:35:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eVdV8WPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436766AbfJXTcc (ORCPT
+        id S2392441AbfJXTfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:32:32 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55344 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405801AbfJXTcc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:32:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vttDbr1v3prfmmWDLzJK+9NKCnOd94v+/MHN5g7eafo=; b=CbE96/yh2YdFVA3lDo3rtgUW1
-        1nKGHL5oUytt+gNKSOzQltYdAVrbAYGCVdJRDWR5ElYjyGcNuSfoi39rOSctuCSd82zqjizgevvl/
-        RItWIKeeCoaAlflHirdSRmTem7K9x/GW5JqAO0MdF/ne4ysAJoQm40sjHSG8N3Yunv5xU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNiqP-0003zz-Rk; Thu, 24 Oct 2019 19:32:25 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 55273274293C; Thu, 24 Oct 2019 20:32:25 +0100 (BST)
-Date:   Thu, 24 Oct 2019 20:32:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "kernelci.org bot" <bot@kernelci.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO
- CS
-Message-ID: <20191024193225.GM46373@sirena.co.uk>
-References: <20191024141309.22434-1-gregory.clement@bootlin.com>
+        Thu, 24 Oct 2019 15:35:44 -0400
+Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:18243
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391088AbfJXTfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:35:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cN9Q/7Wyowfv2msZJyTTlngHiMa7teIamQqDci3Uy8AoV8LQJz+shT+jCSQf/oIkzfKD5kk46SBvy1pIWW/mAOfa8yLeXwLeMQjGzsGTCfqx7BSELb25/TUg/lo9vuKPQssY5uRbjaYaW32QqgjjHjfK7XhqjmoDcyNLqES6I5cANk6wFQmM14j05D+2zXoRQejMIoo73isym/ko86xRVenK/eUHhW4YypPcjnTqu2ep/REi9AW0xpv+XOUPkw/ND0RXVCTQtXV6dtGQzujO0fJSjqgEsXzQcUI0NSChk7Or9hYqCBkDipIUxaZA1wT0cH7n7nskKto15AGqAsjb4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YXImPREJvpn4T1Ft0gtPPdk6aLME9Ww4vx2zVcbnFPI=;
+ b=hgNQbdZb7HPJjgQOyRvSNIlYEkXiXU7S9UjSK2lUmJsNXbJka0qKGnR38gkn+i6ZFXzEW0E+BezfWrg0Owa6QSpFOsbfvUW37V+26wb5e0trIbFTtfFgBzvJ8qgpYY8YJVXkisK31M0U4nlft6dPISsDmF/S66Z8moE1T51FpN4GUwSDyO59B+2hsbqHuK4kK+ApeS3a8Jzb1KGuJqgxEnmR5r/b4YpsP5sx4Vf/K9p9taLodflqby4+orvnZt9zIEjEhiQ1rU1iOd4ch4kpa0htcyWZuzpMZOmGsbvbqgXyK9QmdcYHs7vHug4imC12sP+6IaeflKdWVxtG4MmsXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YXImPREJvpn4T1Ft0gtPPdk6aLME9Ww4vx2zVcbnFPI=;
+ b=eVdV8WPDpMmJDGev7uZE6tNbORoA/A7pccDEljRLGutvEpM8nc4hTNJz07aaH4hMKJXtwnQMP9ABJ6mpGEeVTjBNFNAGFj4dbrAjcUwVurx2UqzdH4cU6BaaUtnXviAHB6OcLozYW3rhB6w/H4ZrEVdF1qLtK9cBLsk6DIonc+0=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB6061.eurprd04.prod.outlook.com (20.179.25.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.20; Thu, 24 Oct 2019 19:34:59 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::24fb:fb99:b1c6:ba1f]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::24fb:fb99:b1c6:ba1f%4]) with mapi id 15.20.2387.021; Thu, 24 Oct 2019
+ 19:34:59 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Thread-Topic: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Thread-Index: AQHVhA83pBLldkQGO0OkZWmZhR1Vyw==
+Date:   Thu, 24 Oct 2019 19:34:59 +0000
+Message-ID: <VI1PR04MB70234EB305F60855491EBFDDEE6A0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <2811202.iOFZ6YHztY@kreacher> <4551555.oysnf1Sd0E@kreacher>
+ <VI1PR04MB7023ECFFD42193CF864524ACEE6A0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c6efb7da-5afb-4dc2-ac8b-08d758b94208
+x-ms-traffictypediagnostic: VI1PR04MB6061:
+x-microsoft-antispam-prvs: <VI1PR04MB60611DE784B381334A88B71AEE6A0@VI1PR04MB6061.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(396003)(366004)(376002)(189003)(199004)(25786009)(14444005)(26005)(6506007)(99286004)(76176011)(7696005)(53546011)(102836004)(4326008)(71200400001)(91956017)(6246003)(76116006)(110136005)(14454004)(316002)(54906003)(186003)(33656002)(66476007)(64756008)(66446008)(66556008)(2906002)(44832011)(486006)(446003)(66946007)(9686003)(256004)(476003)(55016002)(305945005)(7736002)(3846002)(6116002)(5660300002)(74316002)(86362001)(52536014)(229853002)(81166006)(6436002)(81156014)(8676002)(478600001)(8936002)(66066001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6061;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qPqVS3OWlRiG0uOYGUE1jHR5GGLwj5QR62lF5Oc+EqSsVp3Js2rTIgttu0KJX6bH7AXWcOl+IqKQE92T0pyvigdmTFTrFbTHkxsAss8HUPjW4Qhwukb3MFz41VBnBTwdtaz1PocbglmoQZcvY0GYn+XLGmnYUp2DX90jSVEkg7SZFhRb46JofVmYApkH+uV2eTcxPLWSVsIGKBPhrLJBsUbfhiCinbzcoZGKjXGmVRzvgVIXIZUtWwe+ePQkwIJZymsot3daBbFMYmd9xkhfPoaj38JQhYQKkU8YXPOePEFT+0ExlTgIjSW1uODLFDusT8kL8M4KIgLNv3CSeIeWfb6DPWiydQJvBaZxrdLDdjesHBCN1jsNk1dpKUmvi9GH26q7QLJrhzd6/wLWlE119DouUloyspWrlZ1tI5Z8YvCHHs/DylbW5yRJkqKH1F8Z
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0+35XlDF45POFHfm"
-Content-Disposition: inline
-In-Reply-To: <20191024141309.22434-1-gregory.clement@bootlin.com>
-X-Cookie: Filmed before a live audience.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6efb7da-5afb-4dc2-ac8b-08d758b94208
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 19:34:59.5765
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KdCTBZJfWmrP0PkF5mKuwWIAC7FW7T6LaKqkgPuuiV/NklpmFSikUTq9csnzyrJViVaWLeel/AOioOt9iY0Trw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---0+35XlDF45POFHfm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Oct 24, 2019 at 04:13:09PM +0200, Gregory CLEMENT wrote:
-> Even if the flag use_gpio_descriptors is set, it is possible that
-> cs_gpiods was not allocated, which leads to a kernel crash:
->=20
-> Unable to handle kernel NULL pointer dereference at virtual address 00000=
-000
-> pgd =3D (ptrval)
-> [00000000] *pgd=3D00000000
-> Internal error: Oops: 5 [#1] ARM
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.4.0-rc3 #1
-> Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-> PC is at of_register_spi_device+0x20c/0x38c
-> LR is at __of_find_property+0x3c/0x60
-> pc : [<c09b45dc>]    lr : [<c0c47a98>]    psr: 20000013
-
-Please think hard before including complete backtraces in upstream
-reports, they are very large and contain almost no useful information
-relative to their size so often obscure the relevant content in your
-message. If part of the backtrace is usefully illustrative then it's
-usually better to pull out the relevant sections.
-
---0+35XlDF45POFHfm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2x/EgACgkQJNaLcl1U
-h9Dc+Qf7BOBELW73o6MOZxD5Uq2/Eahp26z5rN7PMc+EvRwda/BzHGhUTsTrotmX
-ppdm6tsBosW3dH8P6tbwXIIJHO11BO4ma/pbO5ZZloEqeo3Zvxt89+AxZD4roa26
-GEnDMWLNn2Y3L0YENJzNelC3RMBY7sIv7wMgiGZR7qadTFrx6Y3v+VLAEEEsSnA6
-f3AmuiyCWtiNyuhi1gIst/hGeDzLyNOGVJuNfH7SV4RbQVN51k9Cam5JEaBB6NjK
-PTKDGt0u2CGaKQxTZRHb8al+SznFqEk0eKU06KEWpdcPJAOPW24cLVXl2YAb6b2l
-yg1Wz4gE+9D908qKFUl3e+fimC6N+A==
-=pES0
------END PGP SIGNATURE-----
-
---0+35XlDF45POFHfm--
+On 24.10.2019 22:01, Leonard Crestez wrote:=0A=
+> On 16.10.2019 13:48, Rafael J. Wysocki wrote:=0A=
+>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>=0A=
+>>=0A=
+>> Introduce frequency QoS, based on the "raw" low-level PM QoS, to=0A=
+>> represent min and max frequency requests and aggregate constraints.=0A=
+>>=0A=
+>> The min and max frequency requests are to be represented by=0A=
+>> struct freq_qos_request objects and the aggregate constraints are to=0A=
+>> be represented by struct freq_constraints objects.  The latter are=0A=
+>> expected to be initialized with the help of freq_constraints_init().=0A=
+>>=0A=
+>> The freq_qos_read_value() helper is defined to retrieve the aggregate=0A=
+>> constraints values from a given struct freq_constraints object and=0A=
+>> there are the freq_qos_add_request(), freq_qos_update_request() and=0A=
+>> freq_qos_remove_request() helpers to manipulate the min and max=0A=
+>> frequency requests.  It is assumed that the the helpers will not=0A=
+>> run concurrently with each other for the same struct freq_qos_request=0A=
+>> object, so if that may be the case, their uses must ensure proper=0A=
+>> synchronization between them (e.g. through locking).=0A=
+>>=0A=
+>> In addition, freq_qos_add_notifier() and freq_qos_remove_notifier()=0A=
+>> are provided to add and remove notifiers that will trigger on aggregate=
+=0A=
+>> constraint changes to and from a given struct freq_constraints object,=
+=0A=
+>> respectively.=0A=
+>>=0A=
+>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>=0A=
+>> ---=0A=
+>>    include/linux/pm_qos.h |   44 ++++++++=0A=
+>>    kernel/power/qos.c     |  240 +++++++++++++++++++++++++++++++++++++++=
+++++++++++=0A=
+>>    2 files changed, 284 insertions(+)=0A=
+>>=0A=
+>> Index: linux-pm/include/linux/pm_qos.h=0A=
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+>> --- linux-pm.orig/include/linux/pm_qos.h=0A=
+>> +++ linux-pm/include/linux/pm_qos.h=0A=
+>> @@ -267,4 +267,48 @@ static inline s32 dev_pm_qos_raw_resume_=0A=
+>>    }=0A=
+>>    #endif=0A=
+>>    =0A=
+>> +#define FREQ_QOS_MIN_DEFAULT_VALUE	0=0A=
+>> +#define FREQ_QOS_MAX_DEFAULT_VALUE	(-1)=0A=
+>> +=0A=
+>> +enum freq_qos_req_type {=0A=
+>> +	FREQ_QOS_MIN =3D 1,=0A=
+>> +	FREQ_QOS_MAX,=0A=
+>> +};=0A=
+>> +=0A=
+>> +struct freq_constraints {=0A=
+>> +	struct pm_qos_constraints min_freq;=0A=
+>> +	struct blocking_notifier_head min_freq_notifiers;=0A=
+>> +	struct pm_qos_constraints max_freq;=0A=
+>> +	struct blocking_notifier_head max_freq_notifiers;=0A=
+> =0A=
+> These min/max_freq_notifiers fields seem unused? They're initialized but=
+=0A=
+> the freq_qos_add/remove_notifier calls use min/max_freq.notifiers directl=
+y.=0A=
+> =0A=
+> Should probably just be dropped.=0A=
+=0A=
+Never mind, I see now that pm_qos_constraints.notifiers is actually a =0A=
+pointer to notifier block provided by somebody else.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
