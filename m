@@ -2,217 +2,168 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6395BCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F92CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F00B205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FF920650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="fq94FQCV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bv5nspXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbfJXX3K (ORCPT
+        id S1732214AbfJXXey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 19:29:10 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39558 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730945AbfJXX3K (ORCPT
+        Thu, 24 Oct 2019 19:34:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47080 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbfJXXex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 19:29:10 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l25so366914edt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 16:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=imd8LYeUoBm8DTeA8qPBj6oTMtTRlNJlWrB8UNsRURg=;
-        b=fq94FQCVljJL8n1QnCTPl/iL6H5w3bnf/+l73zNSFs6OakFnAWfM/UwnbraJrYTHkU
-         RQJxiVE6Pg1pfH3tAT2Ec+5vYbBGRvUfyMvoNi/mVJKbXl7dfS6Y+SPfbGz6XPTzfl+f
-         HIvKAuJaS0SEbGEg2Pd+yy8ModIRF7utPp6COh9wiLgA6uP/xMfcf4vh7SZ5Nki0Jg5j
-         ZPJiJKF7easac64tVp6DJrdgf6iAfGXoOYXUJEqwWtWbXTU3ZA0JqTTTNefzB4PTQkCh
-         Dinc4V36iNos5fK3zMAAqGXi2E+yX/ukF13w5iCb5GbleOn3I/vQddbJaieLDpV5EXwr
-         lxkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=imd8LYeUoBm8DTeA8qPBj6oTMtTRlNJlWrB8UNsRURg=;
-        b=qVQ4igPJoHGJQDC+9/d7d6mmMZCS+VndR5Tcg2TzjM1ZagswJAxbq2zRD0LYnNOHpL
-         C7esKTPsedev6ts9dZlaFOFYFq2zJXScCA3sN7UtTzWq2+w7LDew4AdCyf2dNgiCpsaa
-         orFQn6zkKCCGEi3yOpUdb2AJOih3dTCPoSG3TPPxMOyD6kdwsA+41SEMESGUV8HQuKzy
-         1DJHFIfv1gMx7G5YyoTSQXXPzSRCIChGWfroEz79U+3XB/3HB3aCqRHnRq83r8CXNkJ6
-         Tgs/UGFynv09l3lQRni/KWgmc8BWCj17L8WbDS6Wm/PacECujU2qfavxMD1FKMyZgb/A
-         i5WA==
-X-Gm-Message-State: APjAAAW+B8XnIDlHce4r9+sUl7dd1yhLWtZAeU82WmQyDkxe62Cu7EK7
-        bhVjg0Wd4+fGROG3D545armNGQ==
-X-Google-Smtp-Source: APXvYqw3KtG7+DSk8VtpXuw54AjSUY96h6dk6WFFfObVLeErXJlPS27jxyXyV6GZmNS8RM7R6Qen9g==
-X-Received: by 2002:a50:da0f:: with SMTP id z15mr769859edj.137.1571959747939;
-        Thu, 24 Oct 2019 16:29:07 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.210.43])
-        by smtp.googlemail.com with ESMTPSA id oq18sm1653ejb.22.2019.10.24.16.29.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 16:29:07 -0700 (PDT)
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-To:     Dave Chinner <david@fromorbit.com>,
-        Boaz Harrosh <boaz@plexistor.com>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
- <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
- <20191023221332.GE2044@dread.disaster.area>
- <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
- <20191024073446.GA4614@dread.disaster.area>
- <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
- <20191024213508.GB4614@dread.disaster.area>
-From:   Boaz Harrosh <boaz@plexistor.com>
-Message-ID: <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
-Date:   Fri, 25 Oct 2019 02:29:04 +0300
+        Thu, 24 Oct 2019 19:34:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:References:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OJw5ZmjGXAsA3sm9+sitk/amoBIrD9+6eN7vsgzpRII=; b=Bv5nspXZoUneRGQhj6pwSf/NB
+        wHanD+G8xtrEdxoLpdS4ujDhnbewXxhtblHghT3lqLR5GBhCaNCO2n/WSkGAYoJXdtLvsEYeC+SUx
+        qGILMiiDQQ38Ad+fBPNVY1DWQ0QeuAHlW7Xu5VlSIymdhkmJUXOkRBZ2cYbv46coIPdSEIrcCKS2B
+        Udpo1lMWrUAIrQDrRU7A+9w+X3qrbnsI1DoNLahrbL9birpNGja+rO1GodiMI2AFr8EOJg6yyBNiN
+        zM2YPrMTacxKZTGFPA+gQt8dpT5dGMU03idEKTcdmAP+VxMYAd57CtKazSFQTyeIK86uSWdCMYAhr
+        gSNnywJ7A==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNmcw-0007S0-JD; Thu, 24 Oct 2019 23:34:46 +0000
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+To:     Robert Stupp <snazy@snazy.de>, linux-kernel@vger.kernel.org,
+        Linux MM <linux-mm@kvack.org>
+References: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
+Date:   Thu, 24 Oct 2019 16:34:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191024213508.GB4614@dread.disaster.area>
+In-Reply-To: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/10/2019 00:35, Dave Chinner wrote:
-> On Thu, Oct 24, 2019 at 05:05:45PM +0300, Boaz Harrosh wrote:
-<>
->> Yes I said that as well.
+[adding linux-mm + people]
+
+I see only one change in the last 4 years:
+
+commit dedca63504a204dc8410d98883fdc16dffa8cb80
+Author: Potyra, Stefan <Stefan.Potyra@elektrobit.com>
+Date:   Thu Jun 13 15:55:55 2019 -0700
+
+    mm/mlock.c: mlockall error for flag MCL_ONFAULT
+
+
+On 10/24/19 12:36 AM, Robert Stupp wrote:
+> Hi guys,
 > 
-> You said "it must be set between creation and first write",
-> stating the requirement for an on-disk flag to work.
-
-Sorry for not being clear. Its not new, I do not explain myself
-very well.
-
-The above quote is if you set/clear the flag directly.
-
-> I'm describing how that requirement is actually implemented. i.e. what
-> you are stating is something we actually implemented years ago...
+> I've got an issue with `mlockall(MCL_CURRENT)` after upgrading Ubuntu 19.04 to 19.10 - i.e. kernel version change from 5.0.x to 5.3.x.
 > 
-
-What you are talking about is when the flag is inherited from parent.
-And I did mention that option as well.
-
-[Which is my concern because my main point is that I want creation+write
- to be none-DAX. Then after writer is done. Switch to DAX-on so READs can
- be fast and not take any memory.
- And you talked about another case when I start DAX-on and then for
- say, use for RDMA turn it off later.
-]
-
-This flag is Unique because current RFC has an i_size == 0 check
-that other flags do not have
-
->>> I also seem
->>> to recall that there was a need to take some vm level lock to really
->>> prevent page fault races, and that we can't safely take that in a
->>> safe combination with all the filesystem locks we need.
->>>
->>
->> We do not really care with page fault races in the Kernel as long
+> The following simple program hangs forever with one CPU running at 100% (kernel):
 > 
-> Oh yes we do. A write fault is a 2-part operation - a read fault to
-> populate the pte and mapping, then a write fault (->page_mkwrite) to 
-> do all the filesystem work needed to dirty the page and pte.
+> #include <stdio.h>
+> #include <sys/mman.h>
+> int main(char** argv) {
+>   printf("Before mlockall(MCL_CURRENT)\n");
+>   // works in 5.0
+>   // hangs forever w/ 5.1 and newer
+>   mlockall(MCL_CURRENT);
+>   printf("After mlockall(MCL_CURRENT)\n");
+> }
 > 
-> The read fault sets up the state for the write fault, and if we
-> change the aops between these two operations, then the
-> ->page_mkwrite implementation goes kaboom.
+> All kernel versions since 5.1 (tried 5.1.0, 5.1.21, 5.2.21, 5.3.0-19, 5.3.7, 5.4-rc4) show the same symptom (hanging in mlockall(MCL_CURRENT) with 100% kernel-CPU). 5.0 kernel versions (5.0.21) are fine.
 > 
-> This isn't a theoretical problem - this is exactly the race
-> condition that lead us to disabling the flag in the first place.
-> There is no serialisation between the read and write parts of the
-> page fault iand the filesystem changing the DAX flag and ops vector,
-> and so fixing this problem requires hold yet more locks in the
-> filesystem path to completely lock out page fault processing on the
-> inode's mapping.
+> First, I thought, that it's something generic, so I tried the above program in a fresh install of Ubuntu eoan (5.3.x) in a VM in virtualbox, but it works fine there. So I suspect, that it has to do with something that's specific to my machine.
 > 
-
-Again sorry that I do not explain very good.
-
-Already on the read fault we populate the xarray,
-My point was that if I want to set the DAX mode I must enforce that
-there are no other parallel users on my inode. The check that the
-xarray is empty is my convoluted way to check that there are no other
-users except me. If xarray is not empty I bail out with EBUISY
-
-I agree this is stupid.
-
-Which is the same stupid as i_size==0 check. Both have the same
-intention, to make sure that nothing is going on in parallel to
-me.
-
->> as I protect the xarray access and these are protected well if we
->> take truncate locking. But we have a bigger problem that you pointed
->> out with the change of the operations vector pointer.
->>
->> I was thinking about this last night. One way to do this is with
->> file-exclusive-lock. Correct me if I'm wrong:
->> file-exclusive-readwrite-lock means any other openers will fail and
->> if there are openers already the lock will fail. Which is what we want
->> no?
+> My first suspicion was that some library "hijacks" mlockall(), but calling the test program with `LD_DEBUG=all` shows that glibc gets called directly:
+>      12248:    symbol=mlockall;  lookup in file=./test [0]
+>      12248:    symbol=mlockall;  lookup in file=/lib/x86_64-linux-gnu/libc.so.6 [0]
+>      12248:    binding file ./test [0] to /lib/x86_64-linux-gnu/libc.so.6 [0]: normal symbol `mlockall' [GLIBC_2.2.5]
+> An `strace` doesn't show anything meaningful (beside that mlockall's been called but never returns). dmesg and syslog don't show anything obvious (to me) as well.
 > 
-> The filesystem ioctls and page faults have no visibility of file
-> locks.  They don't know and can't find out in a sane manner that an
-> inode has a single -user- reference.
+> Some information about the machine:
+> - Intel(R) Core(TM) i7-6900K, Intel X99 chipset
+> - NVMe 1.1b
+> - 64GB RAM (4x 16GB)
 > 
-
-This is not true. The FS has full control. It is not too hard a work
-to take a file-excl-lock from within the IOCTL implementation. then
-unlock. that is option 1. Option 2 of the App taking the lock then
-for the check we might need a new export from the lock-subsystem.
-
-> And it introduces a new problem for any application using the
-> fssetxattr() ioctl - accidentally not setting the S_DAX flag to be
-> unmodified will now fail, and that means such a change breaks
-> existing applications. Sure, you can say they are "buggy
-> applications", but the fact is this user API change breaks them.
+> I've also reverted all changes for sysctl and ld.conf and checked for other suspicious software without any luck.
 > 
-
-I am not sure I completely understood. let me try ...
-
-The app wants to set some foo flag. It can set the ignore mask to all
-1(s) except the flag it wants to set/clear.
-And/or get_current_flags(); modify foo_flag; set_flags().
-
-Off course in both the ignore case or when the DAX bit does not change
-we do not go on a locking rampage.
-
-So I'm not sure I see the problem
-
-> Hence I don't think we can change the user API for setting/clearing
-> this flag like this.
+> I also tried a bunch of variations of the above program, but only `mlockall(MCL_CURRENT)` or `mlockall(MCL_FUTURE | MCL_CURRENT)` hang.
+> 
+> A `git diff v5.0..v5.1 mm/` doesn't show anything obvious (to me).
+> 
+> It seems, there's no debug/trace information that would help to find out what exactly it's doing.
+> 
+> I'm kinda lost at the moment.
+> 
+> 
+> PS: Variations of the above test program:
+> 
+> #include <stdio.h>
+> #include <sys/mman.h>
+> char foo[65536];
+> int main(char** argv) {
+>   printf("Before mlock()\n");
+>   int e = mlock(foo, 8192); // works in 5.0, 5.1, 5.2, 5.3, 5.4
+>   printf("After mlock()=%d\n", e);
+> }
+> 
+> 
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <sys/mman.h>
+> int main(char** argv) {
+>   printf("Before mlockall(MCL_FUTURE)\n");
+>   int e = mlockall(MCL_FUTURE); // works in 5.0, 5.1, 5.2, 5.3, 5.4
+>   printf("After mlockall(MCL_FUTURE) = %d\n", e);
+>   void* mem = malloc(1024 * 1024 * 1024);
+>   printf("After malloc()\n");
+>   mem = malloc(1024 * 1024 * 1024);
+>   printf("After malloc()\n");
+>   mem = malloc(1024 * 1024 * 1024);
+>   printf("After malloc()\n");
+>   // works in 5.0, 5.1, 5.2, 5.3, 5.4
+> }
+> 
+> 
+> #include <stdio.h>
+> #include <sys/mman.h>
+> int main(char** argv) {
+>   printf("Before munlockall()\n");
+>   int e = munlockall(); // works in 5.0, 5.1, 5.2, 5.3, 5.4
+>   printf("After munlockall() = %d\n", e);
+> }
+> 
+> 
+> #include <stdio.h>
+> #include <sys/mman.h>
+> int main(char** argv) {
+>   printf("Before mlockall(MCL_CURRENT|MCL_FUTURE)\n");
+>   // works in 5.0
+>   // hangs forever w/ 5.1 and newer
+>   int e = mlockall(MCL_CURRENT|MCL_FUTURE);
+>   printf("After mlockall(MCL_CURRENT|MCL_FUTURE) = %d\n", e);
+> }
+> 
+> PPS: Kernel version images installed from https://kernel.ubuntu.com/~kernel-ppa/mainline/?C=N;O=D
 > 
 
-Yes we must not modify behavior of Apps that are modifing other flags.
 
-> Cheers,
-> Dave.
-> 
+-- 
+~Randy
 
-Perhaps we always go by the directory. And then do an mv dir_DAX/foo dir_NODAX/foo
-to have an effective change. In hard links the first one at iget time before populating
-the inode cache takes affect. (And never change the flag on the fly)
-(Just brain storming here)
-
-Or perhaps another API?
-
-Thanks Dave
-Boaz
