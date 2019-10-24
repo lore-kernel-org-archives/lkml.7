@@ -2,175 +2,540 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4086BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22494CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1424421655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:47:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fDWBIYHG"
+	by mail.kernel.org (Postfix) with ESMTP id E35C921655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439265AbfJXLrd (ORCPT
+        id S2439280AbfJXLri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:47:33 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45968 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfJXLrd (ORCPT
+        Thu, 24 Oct 2019 07:47:38 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35271 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfJXLri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:47:33 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OBlPvn023731;
-        Thu, 24 Oct 2019 06:47:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571917645;
-        bh=NDN9/CcUPcm809+gjIJlWOrYqiVSCH+PMHSuTHZryIg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fDWBIYHG2tRnJ/5LCmf/uZRExpFNzc0D0Z8iRsukJmX++tg0qqe+grBsYL7bjX6td
-         yM+g4A3Bhr4vP2Hv7sa8A82l7jHE9fJdeOyhJTguMPe8GqEbunjigkPBmfat2JpkYj
-         bh/mjNMkzVDjXyGQOyHMNulQEBYA4EdHvbg7Xm74=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9OBlP1Z129870
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Oct 2019 06:47:25 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
- Oct 2019 06:47:14 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 24 Oct 2019 06:47:14 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OBlIAK061379;
-        Thu, 24 Oct 2019 06:47:21 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>
-CC:     <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
-        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: usb: Add binding for the TI wrapper for Cadence USB3 controller
-Date:   Thu, 24 Oct 2019 14:47:16 +0300
-Message-ID: <20191024114717.30984-2-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024114717.30984-1-rogerq@ti.com>
-References: <20191024114717.30984-1-rogerq@ti.com>
+        Thu, 24 Oct 2019 07:47:38 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y6so12602757lfj.2;
+        Thu, 24 Oct 2019 04:47:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AhOzH/6LDNOCbTfkz4IBFmRVWPyMAIocr0VYbUrCmMk=;
+        b=C7uYKJ/hglOAm+sJ2caLWuX94Dfhtw5Rh6W3Stewb6sMdPrs2uVVMIPucM5k/z2G5I
+         0Pw7Zyk6aps/L41wXPMg74t6/twkzWFSEOm8XfkKfj8QKyiuz9zgbOqzicnRDDNlOrM9
+         rSaEt5aoz9VlFbjIw98LJvlhbdqMqd/BqeoPH382cYAv9290AByNjfBuIFEZbp7bbNuk
+         4E/6mpXoiP8+lAmQB+U4Cjj5kxJbMAQxIW452qdOo39XCJRSqsdyvE4MM1MUeaVIk/jq
+         71H8mHIs/gBTpqox5zw2Qh1VsV0/kZonUnu3FF1WoRmHSgQuwc8CSb8i4lQ7H+biDZhk
+         lpEg==
+X-Gm-Message-State: APjAAAVo1oc+g/3cxo4UJnsiSY2IgBF2ITAPQHIDlz1MatP+D5JXv1tE
+        DJowA1nlS2d1aikLKBomZBA=
+X-Google-Smtp-Source: APXvYqy6qQzYpA4U+oETrpOueNZ7x+NvuXjgV27VK/Afs4YRbz/LmtI2dJKH2caZ/+6uX56GNjafRw==
+X-Received: by 2002:a19:855:: with SMTP id 82mr25707266lfi.44.1571917653910;
+        Thu, 24 Oct 2019 04:47:33 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id u26sm11753113lfd.19.2019.10.24.04.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 04:47:33 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 14:47:20 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH v2 09/13] regulator: bd71828: enhanced run-level support
+Message-ID: <f308c4688b78a877d835223f37ee71a524f00f61.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TI platforms have a wrapper module around the Cadence USB3
-controller. Add binding information for that.
+Support changing run-level via I2C and add in-kernel API for allowing
+run time changes of run-level voltages.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- .../devicetree/bindings/usb/ti,j721e-usb.yaml | 86 +++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
-new file mode 100644
-index 000000000000..5f5264b2e9ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/ti,j721e-usb.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+No changes since v1
+
+ drivers/regulator/bd71828-regulator.c | 266 ++++++++++++++++++++++----
+ include/linux/mfd/rohm-bd71828.h      |   3 +
+ 2 files changed, 232 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
+index e82e94ecf747..d9e1381b5964 100644
+--- a/drivers/regulator/bd71828-regulator.c
++++ b/drivers/regulator/bd71828-regulator.c
+@@ -19,6 +19,12 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
+ 
++/* Drivers should not do this. But we provide this custom kernel interface
++ * for users to switch the run-level. Hence we need to get the rdev from
++ * struct regulator
++ */
++#include "internal.h"
 +
-+title: Bindings for the TI wrapper module for the Cadence USBSS-DRD controller
+ #define MAX_GPIO_DVS_BUCKS 4
+ #define DVS_RUN_LEVELS 4
+ 
+@@ -39,7 +45,10 @@ struct bd71828_regulator_data {
+ 	const struct reg_init *reg_inits;
+ 	int reg_init_amnt;
+ 	struct run_lvl_ctrl run_lvl[DVS_RUN_LEVELS];
++	struct mutex dvs_lock;
+ 	struct gpio_descs *gps;
++	struct regmap *regmap;
++	bool allow_runlvl;
+ };
+ 
+ static const struct reg_init buck1_inits[] = {
+@@ -225,7 +234,7 @@ static int set_runlevel_voltage(struct regmap *regmap,
+ 	return ret;
+ }
+ 
+-static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
++static int buck_set_runlvl_hw_dvs_levels(struct device_node *np,
+ 				       const struct regulator_desc *desc,
+ 				       struct regulator_config *cfg)
+ {
+@@ -245,11 +254,12 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
+ 
+ 	data = container_of(desc, struct bd71828_regulator_data, desc);
+ 
++	mutex_lock(&data->dvs_lock);
+ 	for (i = 0; i < DVS_RUN_LEVELS; i++) {
+ 		ret = of_property_read_u32(np, props[i], &uv);
+ 		if (ret) {
+ 			if (ret != -EINVAL)
+-				return ret;
++				goto unlock_out;
+ 			uv = 0;
+ 		}
+ 		if (uv) {
+@@ -259,7 +269,7 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
+ 			ret = set_runlevel_voltage(cfg->regmap, desc, uv, i);
+ 
+ 			if (ret)
+-				return ret;
++				goto unlock_out;
+ 
+ 			ret = regmap_update_bits(cfg->regmap, en_reg,
+ 						 en_masks[i], en_masks[i]);
+@@ -268,10 +278,15 @@ static int buck_set_gpio_hw_dvs_levels(struct device_node *np,
+ 						 en_masks[i], 0);
+ 		}
+ 		if (ret)
+-			return ret;
++			goto unlock_out;
+ 	}
+ 
+-	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
++	ret = rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
 +
-+maintainers:
-+  - Roger Quadros <rogerq@ti.com>
++unlock_out:
++	mutex_unlock(&data->dvs_lock);
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: ti,j721e-usb
++	return ret;
+ }
+ 
+ static int ldo6_parse_dt(struct device_node *np,
+@@ -324,11 +339,40 @@ static int bd71828_dvs_gpio_set_run_level(struct bd71828_regulator_data *rd,
+ 	return gpiod_set_array_value_cansleep(rd->gps->ndescs, rd->gps->desc,
+ 				     rd->gps->info, values);
+ }
 +
-+  reg:
-+    description: module registers
++/* Get current run level when RUN levels are controlled using I2C */
++static int bd71828_dvs_i2c_set_run_level(struct regmap *regmap,
++					 int lvl)
++{
++	unsigned int reg;
 +
-+  power-domains:
-+    description:
-+       PM domain provider node and an args specifier containing
-+       the USB device id value. See,
-+       Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
++	reg = lvl << (ffs(BD71828_MASK_RUN_LVL_CTRL) - 1);
 +
-+  clocks:
-+    description: Clock phandles to usb2_refclk and lpm_clk
-+    minItems: 2
-+    maxItems: 2
++	return regmap_update_bits(regmap, BD71828_REG_PS_CTRL_3,
++				  BD71828_MASK_RUN_LVL_CTRL, reg);
++}
++/* Get current run level when RUN levels are controlled using I2C */
++static int bd71828_dvs_i2c_get_run_level(struct regmap *regmap,
++					 struct bd71828_regulator_data *rd)
++{
++	int ret;
++	unsigned int val;
 +
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: lpm
++	ret = regmap_read(regmap, BD71828_REG_PS_CTRL_3, &val);
++	if (ret)
++		return ret;
 +
-+  ti,usb2-only:
-+    description:
-+      If present, it restricts the controller to USB2.0 mode of
-+      operation. Must be present if USB3 PHY is not available
-+      for USB.
-+    type: boolean
++	ret = (val & BD71828_MASK_RUN_LVL_CTRL);
++	ret >>= ffs(BD71828_MASK_RUN_LVL_CTRL) - 1;
 +
-+  ti,vbus-divider:
-+    description:
-+      Should be present if USB VBUS line is connected to the
-+      VBUS pin of the SoC via a 1/3 voltage divider.
-+    type: boolean
++	return ret;
++}
 +
-+required:
-+  - compatible
-+  - reg
-+  - power-domains
-+  - clocks
-+  - clock-names
++/* Get current RUN level when run levels are controlled by GPIO */
+ static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
+ {
+ 	int run_level;
+ 	int ret;
+-
+ 	DECLARE_BITMAP(values, 2);
+ 
+ 	values[0] = 0;
+@@ -346,47 +390,131 @@ static int bd71828_dvs_gpio_get_run_level(struct bd71828_regulator_data *rd)
+ 	return run_level;
+ }
+ 
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via I2C instead of GPIO
++ */
++static int bd71828_dvs_i2c_is_enabled(struct regulator_dev *rdev)
++{
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++	int ret;
 +
-+examples:
-+  - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    cdns_usb@4104000 {
-+          compatible = "ti,j721e-usb";
-+          reg = <0x00 0x4104000 0x00 0x100>;
-+          power-domains = <&k3_pds 288 TI_SCI_PD_EXCLUSIVE>;
-+          clocks = <&k3_clks 288 15>, <&k3_clks 288 3>;
-+          clock-names = "ref", "lpm";
-+          assigned-clocks = <&k3_clks 288 15>;	/* USB2_REFCLK */
-+          assigned-clock-parents = <&k3_clks 288 16>; /* HFOSC0 */
-+          #address-cells = <2>;
-+          #size-cells = <2>;
++	mutex_lock(&data->dvs_lock);
++	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
++	if (ret < 0)
++		goto unlock_out;
 +
-+          usb@6000000 {
-+                compatible = "cdns,usb3";
-+                reg = <0x00 0x6000000 0x00 0x10000>,
-+                      <0x00 0x6010000 0x00 0x10000>,
-+                      <0x00 0x6020000 0x00 0x10000>;
-+                reg-names = "otg", "xhci", "dev";
-+                interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,	/* irq.0 */
-+                             <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,	/* irq.6 */
-+                             <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;	/* otgirq.0 */
-+                interrupt-names = "host",
-+                                  "peripheral",
-+                                  "otg";
-+                maximum-speed = "super-speed";
-+                dr_mode = "otg";
-+        };
-+    };
++	ret = data->run_lvl[ret].enabled;
++
++unlock_out:
++	mutex_unlock(&data->dvs_lock);
++
++	return ret;
++}
++
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via GPIO
++ */
+ static int bd71828_dvs_gpio_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
+ 	int ret;
+ 
+-	// TODO: lock GPIO state (Is this needed)
++	mutex_lock(&data->dvs_lock);
+ 	ret = bd71828_dvs_gpio_get_run_level(data);
+-	if (ret < 0)
++	if (ret < 0 || ret >= DVS_RUN_LEVELS)
+ 		goto unlock_out;
+ 
+ 	ret = data->run_lvl[ret].enabled;
+ 
+ unlock_out:
+-	//TODO: unlock
++	mutex_unlock(&data->dvs_lock);
+ 
+ 	return ret;
+ }
+ 
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via I2C instead of GPIO
++ */
++static int bd71828_dvs_i2c_get_voltage(struct regulator_dev *rdev)
++{
++	int ret;
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++
++	mutex_lock(&data->dvs_lock);
++	ret = bd71828_dvs_i2c_get_run_level(rdev->regmap, data);
++	if (ret < 0)
++		goto unlock_out;
++
++	ret = data->run_lvl[ret].voltage;
++
++unlock_out:
++	mutex_unlock(&data->dvs_lock);
++
++	return ret;
++}
++
++/*
++ * To be used when BD71828 regulator is controlled by RUN levels
++ * via GPIO
++ */
+ static int bd71828_dvs_gpio_get_voltage(struct regulator_dev *rdev)
+ {
+ 	int ret;
+ 	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
+ 
+-	// TODO: lock GPIO state (Is this needed)
++	mutex_lock(&data->dvs_lock);
+ 	ret = bd71828_dvs_gpio_get_run_level(data);
+-	if (ret < 0)
++	if (ret < 0 || DVS_RUN_LEVELS <= ret)
+ 		goto unlock_out;
+ 
+ 	ret = data->run_lvl[ret].voltage;
+ 
+ unlock_out:
+-	//TODO: unlock
++	mutex_unlock(&data->dvs_lock);
++
++	return ret;
++}
++
++/**
++ * bd71828_set_runlevel_voltage - change run-level voltage
++ *
++ * @regulator:  pointer to regulator for which the run-level voltage is changed
++ * @uv:		New voltage for run-level in micro volts
++ * @level:	run-level for which the voltage is to be changed
++ *
++ * Changes the run-level voltage for given regulator
++ */
++int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
++				 unsigned int level)
++{
++	struct regulator_dev *rdev = regulator->rdev;
++	struct bd71828_regulator_data *data = rdev_get_drvdata(rdev);
++	int ret;
++
++	if (!data || !data->allow_runlvl)
++		return -EINVAL;
++
++	mutex_lock(&data->dvs_lock);
++	ret = set_runlevel_voltage(rdev->regmap, rdev->desc, uv, level);
++	mutex_unlock(&data->dvs_lock);
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL(bd71828_set_runlevel_voltage);
+ 
+ static const struct regulator_ops dvs_buck_gpio_ops = {
+ 	.is_enabled = bd71828_dvs_gpio_is_enabled,
+ 	.get_voltage = bd71828_dvs_gpio_get_voltage,
+ };
+ 
++static const struct regulator_ops dvs_buck_i2c_ops = {
++	.is_enabled = bd71828_dvs_i2c_is_enabled,
++	.get_voltage = bd71828_dvs_i2c_get_voltage,
++};
++
+ static const struct regulator_ops bd71828_buck_ops = {
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+@@ -972,17 +1100,72 @@ static const struct bd71828_regulator_data bd71828_rdata[] = {
+ };
+ 
+ struct bd71828_gpio_cfg {
+-	unsigned int gpiobucks;
++	bool use_gpio;
++	unsigned int runlvl;
+ 	struct gpio_descs *gps;
+ };
+ 
++static void mark_regulator_runlvl_controlled(struct device *dev,
++					     struct device_node *np,
++					     struct bd71828_gpio_cfg *g)
++{
++	int i;
++
++	for (i = 1; i <= ARRAY_SIZE(bd71828_rdata); i++) {
++		if (!of_node_name_eq(np, bd71828_rdata[i-1].desc.of_match))
++			continue;
++		switch (i) {
++		case 1:
++		case 2:
++		case 6:
++		case 7:
++			g->runlvl |= 1 << (i - 1);
++			dev_dbg(dev, "buck %d runlevel controlled\n", i);
++			break;
++		default:
++			dev_err(dev,
++				"Only bucks 1,2,6,7 support run-level dvs\n");
++			break;
++		}
++	}
++}
++
++static int get_runcontrolled_bucks_dt(struct device *dev,
++				      struct bd71828_gpio_cfg *g)
++{
++	struct device_node *np;
++	struct device_node *nproot = dev->of_node;
++	const char *prop = "rohm,dvs-runlvl-ctrl";
++
++	g->runlvl = 0;
++
++	nproot = of_get_child_by_name(nproot, "regulators");
++	if (!nproot) {
++		dev_err(dev, "failed to find regulators node\n");
++		return -ENODEV;
++	}
++	for_each_child_of_node(nproot, np)
++		if (of_property_read_bool(np, prop))
++			mark_regulator_runlvl_controlled(dev, np, g);
++
++	of_node_put(nproot);
++	return 0;
++}
++
+ static int check_dt_for_gpio_controls(struct device *d,
+ 				      struct bd71828_gpio_cfg *g)
+ {
+-	int ret, i;
+-	struct device_node *np = d->of_node;
+-	const char *prop = "rohm,dvs_gpio_bucks";
+-	uint32_t bucks[MAX_GPIO_DVS_BUCKS];
++	int ret;
++
++	ret = get_runcontrolled_bucks_dt(d, g);
++	if (ret)
++		return ret;
++
++	g->use_gpio = false;
++
++	/* If the run level control is not requested by any bucks we're done */
++	if (!g->runlvl)
++		return 0;
+ 
+ 	g->gps = devm_gpiod_get_array(d, "rohm,dvs-vsel", GPIOD_OUT_LOW);
+ 
+@@ -996,22 +1179,14 @@ static int check_dt_for_gpio_controls(struct device *d,
+ 	if (g->gps->ndescs != 2)
+ 		return -ENOENT;
+ 
+-	ret = of_property_read_variable_u32_array(np, prop, bucks, 0,
+-						  ARRAY_SIZE(bucks));
+-
+-	if (ret < 0) {
+-		if (ret == -EOVERFLOW)
+-			return -EINVAL;
+-	}
+-	for (i = 0; i < ret; i++)
+-		g->gpiobucks |= 1 << bucks[i];
++	g->use_gpio = true;
+ 
+ 	return 0;
+ }
+ 
+-static void set_buck_gpio_controlled(struct rohm_regmap_dev *bd71828,
+-				     struct bd71828_regulator_data *rd,
+-				     struct bd71828_gpio_cfg *g)
++static void set_buck_runlvl_controlled(struct rohm_regmap_dev *bd71828,
++				      struct bd71828_regulator_data *rd,
++				      struct bd71828_gpio_cfg *g)
+ {
+ 	switch (rd->desc.id) {
+ 	case BD71828_BUCK1:
+@@ -1033,9 +1208,16 @@ static void set_buck_gpio_controlled(struct rohm_regmap_dev *bd71828,
+ 	 * Disallow setters. Get voltages/enable states based
+ 	 * on current RUN level
+ 	 */
+-	rd->gps = g->gps;
+-	rd->desc.ops = &dvs_buck_gpio_ops;
+-	rd->desc.of_parse_cb = buck_set_gpio_hw_dvs_levels;
++
++	rd->allow_runlvl = true;
++
++	if (g->use_gpio) {
++		rd->gps = g->gps;
++		rd->desc.ops = &dvs_buck_gpio_ops;
++	} else {
++		rd->desc.ops = &dvs_buck_i2c_ops;
++	}
++	rd->desc.of_parse_cb = buck_set_runlvl_hw_dvs_levels;
+ }
+ 
+ static ssize_t show_runlevel(struct device *dev,
+@@ -1044,10 +1226,14 @@ static ssize_t show_runlevel(struct device *dev,
+ 	int runlevel;
+ 	struct bd71828_regulator_data *rd = dev_get_drvdata(dev);
+ 
+-	if (!rd || !rd->gps)
++	if (!rd)
+ 		return -ENOENT;
+ 
+-	runlevel = bd71828_dvs_gpio_get_run_level(rd);
++	if (!rd->gps)
++		runlevel = bd71828_dvs_i2c_get_run_level(rd->regmap, rd);
++	else
++		runlevel = bd71828_dvs_gpio_get_run_level(rd);
++
+ 	if (runlevel < 0)
+ 		return runlevel;
+ 
+@@ -1063,7 +1249,10 @@ static ssize_t set_runlevel(struct device *dev, struct device_attribute *attr,
+ 	if (kstrtol(buf, 0, &val) != 0)
+ 		return -EINVAL;
+ 
+-	val = bd71828_dvs_gpio_set_run_level(rd, val);
++	if (rd->gps)
++		val = bd71828_dvs_gpio_set_run_level(rd, val);
++	else
++		val = bd71828_dvs_i2c_set_run_level(rd->regmap, val);
+ 	if (val)
+ 		return val;
+ 
+@@ -1133,8 +1322,11 @@ static int bd71828_probe(struct platform_device *pdev)
+ 		/* Use bd71828_rdata as template */
+ 		rd[i] = bd71828_rdata[i];
+ 
+-		if (gcfg.gpiobucks & (1 << i))
+-			set_buck_gpio_controlled(bd71828, &rd[i], &gcfg);
++		mutex_init(&rd[i].dvs_lock);
++		if (gcfg.runlvl & (1 << i))
++			set_buck_runlvl_controlled(bd71828, &rd[i], &gcfg);
++
++		rd[i].regmap = bd71828->regmap;
+ 	}
+ 
+ 	config.regmap = bd71828->regmap;
+diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
+index eb0557eb5314..5f15c6a309e6 100644
+--- a/include/linux/mfd/rohm-bd71828.h
++++ b/include/linux/mfd/rohm-bd71828.h
+@@ -422,4 +422,7 @@ enum {
+ #define BD71828_OUT_TYPE_OPEN_DRAIN			0x0
+ #define BD71828_OUT_TYPE_CMOS				0x2
+ 
++int bd71828_set_runlevel_voltage(struct regulator *regulator, unsigned int uv,
++				 unsigned int level);
++
+ #endif /* __LINUX_MFD_BD71828_H__ */
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
