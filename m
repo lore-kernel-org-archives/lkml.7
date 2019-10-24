@@ -2,280 +2,151 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4739BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BA7CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A380205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:28:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKwUFGQk"
+	by mail.kernel.org (Postfix) with ESMTP id D009A20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571938153;
+	bh=B6riCdt2jxGuk5ud1GoRhVQu8Al3gYaYMl/M1wAyuwE=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=L5z7yZuaPRukWmSRlq8FkmU2KLMGzVE8FKk/Kad2yPTIvemfhOpDpNr4RSrk6fmL8
+	 u+qRXRR5QLLTOIGOByAc2Ez/R+SPOB/5fKKm5cpeY9uj9POC3kikaUXZTWIyb0VpSD
+	 B3Ob9MhzH2EgraaqrRwANiJr4RSbAFIp17UT20T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394028AbfJXR2V (ORCPT
+        id S2394042AbfJXR3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:28:21 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37760 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440047AbfJXR2U (ORCPT
+        Thu, 24 Oct 2019 13:29:12 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43738 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439987AbfJXR3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:28:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q130so3226226wme.2;
-        Thu, 24 Oct 2019 10:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zm62Wqaswjenn5y54IcQdgogQ2yNpEI/BY7greKk8IU=;
-        b=FKwUFGQkPVFyQlwHjnhytsVlKaTLDLKeUk50uucVop7wS1k7bGd2rCbXnWrtV8qidc
-         0kb6tTpVIDj8IAjYNy6XY1ipqpRoZ+KE2PsAEFUf3aAAUTCFmKGMyjOAzFiOBIumDl/V
-         qUhDB4+4CXP9mAn4teArtbNABs0PKNdjqH59nqL5+qZGLAY0Gxg1cxiIEKVeQwbclqIP
-         p2fnHTVyuYAe1amO0IgKlyCGFzMAORYvNilTvSSRN5TJvEc4Ho+HjH1rG6Db97CbNTrF
-         pX19oJ5SA8+hfXNlm16p/6h4TBE1JtjIEI8Xdy6nkPmxjLvQ2ticlb7/7oF9seil35K8
-         5IeA==
+        Thu, 24 Oct 2019 13:29:12 -0400
+Received: by mail-oi1-f195.google.com with SMTP id s5so5934237oie.10;
+        Thu, 24 Oct 2019 10:29:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zm62Wqaswjenn5y54IcQdgogQ2yNpEI/BY7greKk8IU=;
-        b=oK5bIQG/Wf8OgfW3pWSAeWQgjqFNXztB709bIMIjYw1cqxefvM2x/n7BN4QW31+acc
-         ncttk+QeQCKXtGwcWyFV70MG2jrIcKLeb3AkyoiroecCZDqR2J1thaScDlpNzN759OHo
-         XEP9JUUaJDe3HZdpK8RJO/RJodWYYiX0WHFHVBUJlK7QwxhJ5VliGlkGo3jJMKO9IZmO
-         hnMAD/WkuKFBC4Q8RvWZYCEE20297CcrHEDFSEKSajFtgYCy1klt4WzIQ6xRhKWcDWTS
-         WS42h0FaqWUAqRbBJcgVrVKk2Gj/InzzM6qnxBEOS9LgYtV3Q+b3LJs3AJqlAqSUuaCL
-         uPvQ==
-X-Gm-Message-State: APjAAAVIPhA7j7NCkKsEPI52/kLp0l7pxRfdOpHiqjeD0P1I6E9z6ujm
-        QWW9yjbCLDBv0SGnBqoOhSE=
-X-Google-Smtp-Source: APXvYqzWN3v4FpuSYIjXi+y8geENJPt7OcLK/VzZYmvYH4YxNvxho9FoDs7+lq9K8oOZhvyP+ReIFw==
-X-Received: by 2002:a1c:4e15:: with SMTP id g21mr5503175wmh.148.1571938097057;
-        Thu, 24 Oct 2019 10:28:17 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id 6sm3613445wmd.36.2019.10.24.10.28.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 10:28:14 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 19:28:13 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] drm/tegra: Fix 2d and 3d clients detaching from
- IOMMU domain
-Message-ID: <20191024172813.GA281291@ulmo>
-References: <20190623173743.24088-2-digetx@gmail.com>
- <20191024115804.GB2924027@ulmo>
- <45926d95-3e7a-c56b-402a-2b2c6475c5db@gmail.com>
- <20191024135018.GD2924027@ulmo>
- <38a67df0-2ede-e7fe-8eca-6c4491cdcc7b@gmail.com>
- <20191024155620.GG2924027@ulmo>
- <bfc6c17d-f2df-32d0-67d6-2f763c81d7fc@gmail.com>
- <7f7ecf90-531c-69ae-9011-684666ed8743@gmail.com>
- <ef2ccc90-be93-3cfb-6b8b-2a406dd8d362@gmail.com>
- <026bbeb0-1539-2b62-a447-60c1bc041f5a@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=n5/rr+7Iw1y1Xy/3+ehYuCjVxFwNY/p/xnADvXnbRFY=;
+        b=lm+1av40snF4o1Dg9GOrsscwEm9vWqOelQ9oiOTU2Eg8UhS1LTu579EjBSmHtA6MkT
+         iy0bO9EA4PioKW0qs9a5oZ4veyp/T7a6qxGMdEhGp0RwmYBrFZQr7HK9AbSQPHFEtx4u
+         Wzq84YYaCiWyjJaXxIJethv1VKF9nNL26jh1a6ht5dzFigrsv7qxukGEeDQXvLWSJCSw
+         YZh5WjClpE1HbF9RtZ7+JGpPGlWwjR99Vo2y8SCOC3f2dbUX92DO6eoJLtW083Apf/6Z
+         Utp9UWHG4P3WzQLrAGahS15CNIi2olpFNfvbkJpWQ5QLTFjnuQR6DZM/xGGyDceFq0l0
+         MgOA==
+X-Gm-Message-State: APjAAAW2Tq/+vYBRqSfajQ2i/jGOBOi5ZJG04kEpkMd6wQZvf6+c4aOC
+        9EXOQvnM76U2VUVilkOgaLMK8GVvQHpZBsj5FbGNJEG6
+X-Google-Smtp-Source: APXvYqz8XiDgEsBH3NsG0Lt5ZM8CfElOkevsns8Tg3fMEbRsL5nkTur+76lw9j2XQO1yTyx9DWZGsas3wYd0G717TKA=
+X-Received: by 2002:aca:d706:: with SMTP id o6mr5915677oig.57.1571938149356;
+ Thu, 24 Oct 2019 10:29:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Content-Disposition: inline
-In-Reply-To: <026bbeb0-1539-2b62-a447-60c1bc041f5a@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 24 Oct 2019 19:28:58 +0200
+Message-ID: <CAJZ5v0jJ_hWQKH0FNoTk+EtzLS=y3ovC4+pXPq+NWB1vPZU9pg@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.4-rc5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please pull from the tag
 
-On Thu, Oct 24, 2019 at 07:31:19PM +0300, Dmitry Osipenko wrote:
-> 24.10.2019 19:21, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > 24.10.2019 19:09, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >> 24.10.2019 18:57, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> 24.10.2019 18:56, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>> On Thu, Oct 24, 2019 at 06:47:23PM +0300, Dmitry Osipenko wrote:
-> >>>>> 24.10.2019 16:50, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>>> On Thu, Oct 24, 2019 at 04:28:41PM +0300, Dmitry Osipenko wrote:
-> >>>>>>> 24.10.2019 14:58, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>>>>> On Sun, Jun 23, 2019 at 08:37:42PM +0300, Dmitry Osipenko wrote:
-> >>>>>>>>> This should should fire up on the DRM's driver module re-loader=
- because
-> >>>>>>>>> there won't be enough available domains on older Tegra SoCs.
-> >>>>>>>>>
-> >>>>>>>>> Cc: stable <stable@vger.kernel.org>
-> >>>>>>>>> Fixes: 0c407de5ed1a ("drm/tegra: Refactor IOMMU attach/detach")
-> >>>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >>>>>>>>> ---
-> >>>>>>>>>  drivers/gpu/drm/tegra/dc.c   | 4 ++--
-> >>>>>>>>>  drivers/gpu/drm/tegra/drm.c  | 9 ++++++---
-> >>>>>>>>>  drivers/gpu/drm/tegra/drm.h  | 3 ++-
-> >>>>>>>>>  drivers/gpu/drm/tegra/gr2d.c | 4 ++--
-> >>>>>>>>>  drivers/gpu/drm/tegra/gr3d.c | 4 ++--
-> >>>>>>>>>  5 files changed, 14 insertions(+), 10 deletions(-)
-> >>>>>>>>
-> >>>>>>>> I think I understand what this is trying to do, but the commit m=
-essage
-> >>>>>>>> does not help at all. So what's really going on here is that we =
-need to
-> >>>>>>>> detach the device from the group regardless of whether we're sha=
-ring the
-> >>>>>>>> group or not, just like we attach groups to the shared domain wh=
-ether
-> >>>>>>>> they share the same group or not.
-> >>>>>>>
-> >>>>>>> Yes, the commit's message could be improved.
-> >>>>>>>
-> >>>>>>>> But in that case, I wonder if it's even worth splitting groups t=
-he way
-> >>>>>>>> we are right now. Wouldn't it be better to just put all the devi=
-ces into
-> >>>>>>>> the same group and be done with it?
-> >>>>>>>>
-> >>>>>>>> The current code gives me headaches every time I read it, so if =
-we can
-> >>>>>>>> just make it so that all the devices under the DRM device share =
-the same
-> >>>>>>>> group, this would become a lot easier to deal with. I'm not real=
-ly
-> >>>>>>>> convinced that it makes much sense to keep them on separate doma=
-ins,
-> >>>>>>>> especially given the constraints on the number of domains availa=
-ble on
-> >>>>>>>> earlier Tegra devices.
-> >>>>>>>>
-> >>>>>>>> Note that sharing a group will also make it much easier for thes=
-e to use
-> >>>>>>>> the DMA API if it is backed by an IOMMU.
-> >>>>>>>
-> >>>>>>> Probably I'm blanking on everything about IOMMU now.. could you p=
-lease
-> >>>>>>> remind me what "IOMMU group" is?
-> >>>>>>>
-> >>>>>>> Isn't it that each IOMMU group relates to the HW ID (SWGROUP)? Bu=
-t then
-> >>>>>>> each display controller has its own SWGROUP.. and thus that shari=
-ng just
-> >>>>>>> doesn't make any sense, hm.
-> >>>>>>
-> >>>>>> IOMMU groups are not directly related to SWGROUPs. But by default =
-the
-> >>>>>> IOMMU framework will share a domain between members of the same IO=
-MMU
-> >>>>>> group.
-> >>>>>
-> >>>>> Ah, I re-figured out that again. The memory controller drivers are
-> >>>>> defining a single "IOMMU group" for both of the display controllers.
-> >>>>>
-> >>>>>> Seems like that's really what we want here, so that when we do
-> >>>>>> use the DMA API, all the devices part of the DRM device get attach=
-ed to
-> >>>>>> the same IOMMU domain, yet if we don't want to use the DMA API we =
-only
-> >>>>>> need to detach the one group from the backing.
-> >>>>>
-> >>>>> Yes, it should be okay to put all DRM devices into the same group, =
-like
-> >>>>> it is done now for the displays. It also should resolve problem wit=
-h the
-> >>>>> domains shortage on T30 since now there are maximum 3 domains in us=
-e:
-> >>>>> host1x, drm and vde.
-> >>>>>
-> >>>>> I actually just checked that the original problem still exists
-> >>>>> and this change solves it as well:
-> >>>>>
-> >>>>> ---
-> >>>>> diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/=
-tegra30.c
-> >>>>> index 5a0f6e0a1643..e71096498436 100644
-> >>>>> --- a/drivers/memory/tegra/tegra30.c
-> >>>>> +++ b/drivers/memory/tegra/tegra30.c
-> >>>>> @@ -1021,6 +1021,9 @@ static const struct tegra_smmu_swgroup
-> >>>>> tegra30_swgroups[] =3D {
-> >>>>>  static const unsigned int tegra30_group_display[] =3D {
-> >>>>>  	TEGRA_SWGROUP_DC,
-> >>>>>  	TEGRA_SWGROUP_DCB,
-> >>>>> +	TEGRA_SWGROUP_G2,
-> >>>>> +	TEGRA_SWGROUP_NV,
-> >>>>> +	TEGRA_SWGROUP_NV2,
-> >>>>>  };
-> >>>>>
-> >>>>>  static const struct tegra_smmu_group_soc tegra30_groups[] =3D {
-> >>>>> ---
-> >>>>>
-> >>>>> Please let me know whether you're going to make a patch or if I sho=
-uld
-> >>>>> do it.
-> >>>>
-> >>>> I've been testing with a similar change and couldn't find any
-> >>>> regressions. I've also made the same modifications for Tegra114 and
-> >>>> Tegra124.
-> >>>>
-> >>>> Are you saying that none of these patches are needed anymore? Or do =
-we
-> >>>> still need a patch to fix detaching? I'm thinking that maybe we can
-> >>>> drastrically simplify the detachment now by dropping the shared
-> >>>> parameter altogether.
-> >>>>
-> >>>> Let me draft a patch and send out the whole set for testing.
-> >>>
-> >>> Seems it's still not ideal because I noticed this in KMSG:
-> >>>
-> >>> [    0.703185] Failed to attached device 54200000.dc to IOMMU_mapping
-> >>> [    0.710404] Failed to attached device 54240000.dc to IOMMU_mapping
-> >>> [    0.719347] Failed to attached device 54140000.gr2d to IOMMU_mappi=
-ng
-> >>> [    0.719569] Failed to attached device 54180000.gr3d to IOMMU_mappi=
-ng
-> >>>
-> >>> which comes from the implicit IOMMU backing.
-> >>
-> >> And the error comes from here:
-> >>
-> >> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/iommu/iommu.c=
-#L1655
-> >=20
-> > So the detaching still should be needed, but at the moment the ARM32
-> > DMA-mapping code is simply not suitable for the case of having multiple
-> > devices in the same group. I'm wondering whether there are any real
-> > users for the implicit IOMMU backing on ARM32 at all :/
-> >=20
->=20
-> Apparently the "Failed to attached device 54200000.dc" was always in the
-> log (I rarely testing the default multi-platform config), it's just the
-> message is a pr_warn that I wasn't paying attention because it is
-> colored like pr_info in dmesg :)
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.4-rc5
 
-Yeah, so the above isn't a complete solution. In order to actually use
-the DMA API backed by an IOMMU, some additional patches are needed. I
-have all of those in a local tree and I've already sent out a couple of
-them. It's taking a while because they all need to be applied in small
-iterations to make sure things don't break midway.
+with top-most commit 767d2d710e9066c47919a4e5f05a21e1ad40ddc4
 
-Thierry
+ Merge branches 'pm-cpuidle' and 'pm-opp'
 
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature; name="signature.asc"
+on top of commit 7d194c2100ad2a6dded545887d02754948ca5241
 
------BEGIN PGP SIGNATURE-----
+ Linux 5.4-rc4
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2x3ysACgkQ3SOs138+
-s6HX7w/+NcGyD7sUWbYVe3VStB4pZhCfdh06LafK9634Ipd2gr8xjYfQxk8EdE84
-W+1qMDS468vNru5AdRvpJYWDFUYeOUJ1F08Xw/1bzJh+V6W7KkKUQmgdwdYYYP1T
-amG9+ECR0xH2XJ+RW6GBzqYuG7NzkSYbU/gte+C3CKrGzoetdBjyOZJAhuWC4KAd
-yKUa5IjPsHlmyafXRH8D1j2vAHgj1Rpb8O7HElyZSR2KefTay87rAVqLFNPyKILX
-jahT0yOdvMqt3O89onJVipN1h0UOFWfKXm0V9OxaRwCdLzXPZ0J1f5dqxCc/K9XH
-SffKNedJPZpZOpXvJ2/ZLGuLaSVcGkbkN2agnRW3rh22FqPn3H7ylc4fZ1LS7Eol
-FnEl4pW/iO08icsEw3e27WnLOa93NiMc+/COjeHGrMA9+bQAnovcbZnOvARgjqJY
-XYkBqqGsw2xK5i9DxNAx7ygNCwyrQ0AUD3AFEqZHneE7emV6l4u/U+BnmTi5+N9C
-Sfc8xk60ng396y2lTrTfXSFZ8inKKFwzuPJWqTbI9o7gQMueQcDGvncw2sbFFbBj
-3f/j3yWZJ6MSTD4paBYKW2swyNqlZgdIXC6g3C3hm+e73sodiPX+076elJGq3c6h
-z1pG8QuRpIbXyTsnvE2iZK3Zkp6eg7vPDaRwpvEIHttc22v11CA=
-=GS+X
------END PGP SIGNATURE-----
+to receive power management fixes for 5.4-rc5.
 
---dDRMvlgZJXvWKvBx--
+These fix problems related to frequency limits management in
+cpufreq that were introduced during the 5.3 cycle (when PM QoS
+had started to be used for that), fix a few issues in the OPP
+(operating performance points) library code and fix up the
+recently added haltpoll cpuidle driver.
+
+The cpufreq changes are somewhat bigger that I would like them
+to be at this stage of the cycle, but the problems fixed by them
+include crashes on boot and shutdown in some cases (among other
+things) and in my view it is better to address the root of the
+issue right away.
+
+Specifics:
+
+ - Using device PM QoS of CPU devices for managing frequency limits
+   in cpufreq does not work, so introduce frequency QoS (based on the
+   original low-level PM QoS) for this purpose, switch cpufreq and
+   related code over to using it and fix a race involving deferred
+   updates of frequency limits on top of that (Rafael Wysocki, Sudeep
+   Holla).
+
+ - Avoid calling regulator_enable()/disable() from the OPP framework
+   to avoid side-effects on boot-enabled regulators that may change their
+   initial voltage due to performing initial voltage balancing without
+   all restrictions from the consumers (Marek Szyprowski).
+
+ - Avoid a kref management issue in the OPP library code and drop an
+   incorrectly added lockdep_assert_held() from it (Viresh Kumar).
+
+ - Make the recently added haltpoll cpuidle driver take the 'idle='
+   override into account as appropriate (Zhenzhong Duan).
+
+Thanks!
+
+
+---------------
+
+Marek Szyprowski (1):
+      opp: core: Revert "add regulators enable and disable"
+
+Rafael J. Wysocki (3):
+      PM: QoS: Introduce frequency QoS
+      cpufreq: Use per-policy frequency QoS
+      PM: QoS: Drop frequency QoS types from device PM QoS
+
+Sudeep Holla (1):
+      cpufreq: Cancel policy update work scheduled before freeing
+
+Viresh Kumar (2):
+      opp: of: drop incorrect lockdep_assert_held()
+      opp: Reinitialize the list_kref before adding the static OPPs again
+
+Zhenzhong Duan (1):
+      cpuidle: haltpoll: Take 'idle=' override into account
+
+---------------
+
+ drivers/acpi/processor_driver.c            |   9 +-
+ drivers/acpi/processor_perflib.c           |  18 +--
+ drivers/acpi/processor_thermal.c           |  18 +--
+ drivers/base/power/qos.c                   |  70 +--------
+ drivers/cpufreq/cpufreq.c                  |  62 ++++----
+ drivers/cpufreq/intel_pstate.c             |  30 ++--
+ drivers/cpufreq/ppc_cbe_cpufreq_pmi.c      |  15 +-
+ drivers/cpuidle/cpuidle-haltpoll.c         |   4 +
+ drivers/macintosh/windfarm_cpufreq_clamp.c |  38 +++--
+ drivers/opp/core.c                         |  16 +-
+ drivers/opp/of.c                           |   9 +-
+ drivers/thermal/cpu_cooling.c              |  14 +-
+ include/acpi/processor.h                   |  20 +--
+ include/linux/cpufreq.h                    |   7 +-
+ include/linux/pm_qos.h                     |  56 +++++--
+ kernel/power/qos.c                         | 240 +++++++++++++++++++++++++++++
+ 16 files changed, 417 insertions(+), 209 deletions(-)
