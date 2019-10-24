@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32457CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B02ECA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0928721928
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1EEF21D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="b3/XSJ+O"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ajFk24nn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733026AbfJXW6z (ORCPT
+        id S1733070AbfJXW7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:58:55 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39806 "EHLO
+        Thu, 24 Oct 2019 18:59:00 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45313 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732966AbfJXW6y (ORCPT
+        with ESMTP id S1732966AbfJXW65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:58:54 -0400
-Received: by mail-io1-f65.google.com with SMTP id y12so214023ioa.6
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:58:53 -0700 (PDT)
+        Thu, 24 Oct 2019 18:58:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id c25so177481iot.12
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:58:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zeQmt6u0IaAwxJA3Xr74ItciPuMbvDn1BaL/hvbUKXg=;
-        b=b3/XSJ+O5O2Gq9FzuNn0Uu/akEHr9eQLEYece+tdjHUli0bi76e6mlu+ecEXZFxiAp
-         Ljc0byqB0MIV/CHTl9B2bAoogNrlyv2uDqSL0iZo0tmNiB5NVzbVzYpyvUIptUanpWlc
-         z1q1gdmzwiadf0IqBYOkY9mgq1ei4hrlGza2QhKB4ND1IJVbO5jku2EL1Up8rgjGxcg+
-         8foDFH3Q4l2Zhp0C2CcIxj3XuApoxpJtHgcZNet0LrTPt+Km0qS1edVy81+DMeUEfJrL
-         +Fpok6BHiKFbB7czCXWxGcVrYI+4rXcyY83WEIM2h6jAdYBrJILWmr4qJZHPovdQUJad
-         WFfQ==
+        bh=hIAFt5NPNEcTJjheJJ7IFoP1QwOV2b47sLZxfo5ML0c=;
+        b=ajFk24nn7MaVF1UXN3SYe+082t8H3p1T+unPsMnYo5MLGiysAPhdHHBqSNcAs9Dj7g
+         M74uQnxp9Al/Ibh40zpDUgicdCCRj9a14WULDZzfwbbuBlhLHpalRhh86On02pJR1Lno
+         5laMI1GF6hgzE0EjAI5jdvSZPUvCIkt/U3/7CM6WgfCyE2PDQahhk4VyD31Bakaa/xiJ
+         z1KQ8VW73KY/7dvy6e166XjtiJvw0kaclFDfIhovqEoceOBWZjMTm5bVYD4i6NY0UTFL
+         IcHxyadIJOonendiqIAZd+vdeOwJNGA1jGCKzQFPCnFlel4TVKykHJTZxRFWJABXMup1
+         884A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zeQmt6u0IaAwxJA3Xr74ItciPuMbvDn1BaL/hvbUKXg=;
-        b=sBvzTP15BQ0MmKUbOhjUTgX4TusBHQBArPeqMShGmPajsmwyNsIbt12WtX/xTDHDna
-         IOTLPe7oxqmBvNj3FRaJ6LAnTTqsUWGyD67ptRk/dfwZLFbyF7reczUvMvwUI4E+CZIO
-         nhQtZejnuu/AdJlb2OvNM36mp7jYi34LIMIUA/9Mdo4bBL0mcuN8o/nJybDJDTQhfJDt
-         16+xRPTMsDcVAOSOYVlUL8FsrlWvnEnwPHYkLUBGFTiMD3c/9E8RayaxENgDVmHxP6fW
-         DeVamV8Dn/osIykGCc/vhxvdaKXovX9Z7UASO6AIn+Agri8IvSOPaaVFjk+eu0fC1rD2
-         fi3Q==
-X-Gm-Message-State: APjAAAWXWwz4SJ7lrnPXTLeE4kAySX2LV1b19iNQT/HvGqjZc9mkg1lg
-        r/rlFGU+2z7G+l+uhDAXuOgZBg==
-X-Google-Smtp-Source: APXvYqyFQvQ7ooZCu9FvinAHLoiUHRgF4BxNJh1ys5uNZfuLn4uFT7NwtQG/gV4UiS3gGJsl5Rb5ZQ==
-X-Received: by 2002:a5e:9e07:: with SMTP id i7mr649587ioq.42.1571957932920;
-        Thu, 24 Oct 2019 15:58:52 -0700 (PDT)
+        bh=hIAFt5NPNEcTJjheJJ7IFoP1QwOV2b47sLZxfo5ML0c=;
+        b=EYP70jtfJdnI+PlieLDNDDRQPGNILYRLEhajMldU5lYZlccUcaYsvi+h6NlPZGC7sj
+         N9kqtYWQ9Znb91/24GWPWsCegpO7SBgbwJVbsoFaYAo7UZk3VP2hkh4odMclptRJSQh/
+         dStYw8rs3hZ7rTkRr0wID+yqXlxez1dOQXUAkMglw37TfpYOL+Xk2k5GcY51yrcAPGnB
+         6co9wVs3F+4F3TDGZL8tY4+ufLk4rRMI3A4Goox9mDh1/uVzdTtPOdGs1DmuL9LuSUEk
+         rlIx0km+JrDTzptChTND+rWWAl0WsFhgjIGGmrmBr41rzYFK1hxkUsUWukwvZGCmUqtB
+         b1cQ==
+X-Gm-Message-State: APjAAAVKI+y6msaH/IsPPwxG+CJp1gwYOoB8GVRHHxFpcGEWaoDAOXrm
+        hTwDVy12igm5KghfdGKoYpBToA==
+X-Google-Smtp-Source: APXvYqxgOjI7iUMDkwHlJSHTab/FO1wxtN8dxivhZMVQwZy1W9sGjYGqLFcYhLtt3n3B+f8RWCC0bA==
+X-Received: by 2002:a02:950b:: with SMTP id y11mr808962jah.100.1571957934933;
+        Thu, 24 Oct 2019 15:58:54 -0700 (PDT)
 Received: from viisi.Home ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id b18sm58112ilo.70.2019.10.24.15.58.50
+        by smtp.gmail.com with ESMTPSA id b18sm58112ilo.70.2019.10.24.15.58.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 15:58:52 -0700 (PDT)
+        Thu, 24 Oct 2019 15:58:54 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 To:     linux-riscv@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, hch@lst.dev, greentime.hu@sifive.com,
-        luc.vanoostenryck@gmail.com, Christoph Hellwig <hch@lst.de>,
-        Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v4 2/6] riscv: init: merge split string literals in preprocessor directive
-Date:   Thu, 24 Oct 2019 15:58:34 -0700
-Message-Id: <20191024225838.27743-3-paul.walmsley@sifive.com>
+        luc.vanoostenryck@gmail.com, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v4 3/6] riscv: mark some code and data as file-static
+Date:   Thu, 24 Oct 2019 15:58:35 -0700
+Message-Id: <20191024225838.27743-4-paul.walmsley@sifive.com>
 X-Mailer: git-send-email 2.24.0.rc0
 In-Reply-To: <20191024225838.27743-1-paul.walmsley@sifive.com>
 References: <20191024225838.27743-1-paul.walmsley@sifive.com>
@@ -74,49 +73,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sparse complains loudly when string literals associated with
-preprocessor directives are split into multiple, separately quoted
-strings across different lines:
+Several functions and arrays which are only used in the files in which
+they are declared are missing "static" qualifiers.  Warnings for these
+symbols are reported by sparse:
 
-arch/riscv/mm/init.c:341:9: error: Expected ; at the end of type declaration
-arch/riscv/mm/init.c:341:9: error: got "not use absolute addressing."
-arch/riscv/mm/init.c:358:9: error: Trying to use reserved word 'do' as identifier
-arch/riscv/mm/init.c:358:9: error: Expected ; at end of declaration
-[ ... ]
+arch/riscv/kernel/vdso.c:28:18: warning: symbol 'vdso_data' was not declared. Should it be static?
+arch/riscv/mm/sifive_l2_cache.c:145:12: warning: symbol 'sifive_l2_init' was not declared. Should it be static?
 
-It turns out this doesn't compile.  The existing Linux practice for
-this situation is simply to use a single long line.  So, fix by
-concatenating the strings.
+Resolve these warnings by marking them as static.
 
-This patch should have no functional impact.
-
-This version incorporates changes based on feedback from Luc Van
-Oostenryck <luc.vanoostenryck@gmail.com>.
+This version incorporates feedback from Greentime Hu
+<greentime.hu@sifive.com>.
 
 Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Reviewed-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/linux-riscv/CAAhSdy2nX2LwEEAZuMtW_ByGTkHO6KaUEvVxRnba_ENEjmFayQ@mail.gmail.com/T/#mc1a58bc864f71278123d19a7abc083a9c8e37033
-Fixes: 387181dcdb6c1 ("RISC-V: Always compile mm/init.c with cmodel=medany and notrace")
-Cc: Anup Patel <anup.patel@wdc.com>
+Cc: Greentime Hu <greentime.hu@sifive.com>
 ---
- arch/riscv/mm/init.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/riscv/kernel/vdso.c        | 2 +-
+ arch/riscv/mm/sifive_l2_cache.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 07af7b1e4069..573463d1c799 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -339,8 +339,7 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
-  */
+diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
+index c9c21e0d5641..e24fccab8185 100644
+--- a/arch/riscv/kernel/vdso.c
++++ b/arch/riscv/kernel/vdso.c
+@@ -25,7 +25,7 @@ static union {
+ 	struct vdso_data	data;
+ 	u8			page[PAGE_SIZE];
+ } vdso_data_store __page_aligned_data;
+-struct vdso_data *vdso_data = &vdso_data_store.data;
++static struct vdso_data *vdso_data = &vdso_data_store.data;
  
- #ifndef __riscv_cmodel_medany
--#error "setup_vm() is called from head.S before relocate so it should "
--	"not use absolute addressing."
-+#error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
- #endif
+ static int __init vdso_init(void)
+ {
+diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
+index 2e637ad71c05..a9ffff3277c7 100644
+--- a/arch/riscv/mm/sifive_l2_cache.c
++++ b/arch/riscv/mm/sifive_l2_cache.c
+@@ -142,7 +142,7 @@ static irqreturn_t l2_int_handler(int irq, void *device)
+ 	return IRQ_HANDLED;
+ }
  
- asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+-int __init sifive_l2_init(void)
++static int __init sifive_l2_init(void)
+ {
+ 	struct device_node *np;
+ 	struct resource res;
 -- 
 2.24.0.rc0
 
