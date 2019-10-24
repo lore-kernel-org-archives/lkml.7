@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F67CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B143CCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0F92084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A152084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWxtxJU3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDc+x8O/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437114AbfJXCe5 (ORCPT
+        id S2408243AbfJXCes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 22:34:57 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38468 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408246AbfJXCey (ORCPT
+        Wed, 23 Oct 2019 22:34:48 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44927 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfJXCep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 22:34:54 -0400
-Received: by mail-qt1-f195.google.com with SMTP id o25so22104606qtr.5;
-        Wed, 23 Oct 2019 19:34:53 -0700 (PDT)
+        Wed, 23 Oct 2019 22:34:45 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u22so21930515qkk.11;
+        Wed, 23 Oct 2019 19:34:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Kpk3lLUqgGwLu+uXg2SWXaoH3Lz9YjBH7H2wUph1KgI=;
-        b=nWxtxJU3yLMrtDbaMEkPB29QLCMcQtyzX2+hbfzVWMRP3v+2pgmefyckvjP6h5n72d
-         I0PgUVUtiNoIpWg0rO8w8Vxtvwl4aTcTTGf9U7olB8sw05kA78KiHu+dJYCcrsn8kV5g
-         k2GoOT6orFcDnv38hj/dOQPkiS31f4qTF/d3b7RQM0XzIOvvzygynGDAJcQJPLyZMi57
-         vE0jheD1nyUxdYONNZc5/IZxFVud1ocKSoTZT+fUMu/QtYEAmwR7zkqY9cuR3ek2lQi+
-         biH1tqQ/UZjQZbuCoeJPj4LR4SSgYJtMXMAYjc5m+n7rREqCUlQmmat5aohDdJEWkq99
-         ZXzw==
+        bh=RnxLx4iMo75xJka0lIAwxQJug/9mvKAFWodrvAvQzVY=;
+        b=ZDc+x8O/msjsbqVuE0yiec7D0eZn8ze3gbThv12ReqVgPyUigwqgycMA+uIDdjia7x
+         7rbiRfCFkz/vQFCLuNNis0BwUH804+DqyWpmXpBSjZk99/57Ogb8pxeJxdHy/pLEmzjN
+         aVyezgp9av7RrjKjL2uEy5w6SfrGrzpnuHwRwZ2zZwlxvrNWaZbOgnyOUFWz6O/wRDLx
+         npiZQH0n3eC+r1vt5+P4Gws44JFnGY+R7Oh9U2AEL06YX2ir+1efHvdNPrn9mHRyK4Kz
+         FVY4H0j6EcwT0oNT4X3RhV51guUg5iz5tSz0dqvYp15yTULFQYpprM72b+h9CzgkYcos
+         WqBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Kpk3lLUqgGwLu+uXg2SWXaoH3Lz9YjBH7H2wUph1KgI=;
-        b=rZUEKQSnDYYIkL62nV3xltuEp3DdgOHuh2HSecpgf5b1yTwO0IJe8uKl16DHiOXdNz
-         36w3Ufy4wtXR+Qc2GkZzorrOgD7jNfAaCu36+kPI+QsfaV8gKLcOMCWhm8V57XMKwrB6
-         XUYnkTFc60l77f/FaRKoSpudUrx4mvaxRB9sjTBF+EbdUNY4ymlbY5u2+DbH2QlDbAQx
-         WN/+fSWe2XOfa4JJ7o3Y4gpbm/AKdw3higVE66iQT+OClq9UaHAIyBd6xuqWN/DNrM/t
-         o8bvuAkhMECwZR82M3rcHuvJa968v3vDSjDWi6nQ4875j99M5XBtqhIY/LDyCK9IF3hB
-         5qYQ==
-X-Gm-Message-State: APjAAAU6QEX08wUDFsJcuC+xewAr6Je1JMui/MASsU0dV20XPtu/LhBZ
-        K3sKFeHYXHdelWbtBux1SQKobvQH
-X-Google-Smtp-Source: APXvYqxAGw9VOw8bBlElMlkLouVTAjqYK4ikrAJTc3OBpJnPWW9l1JnFcB25s6S9Vnz0CKe01JbldA==
-X-Received: by 2002:a05:6214:803:: with SMTP id df3mr12589055qvb.215.1571884492658;
-        Wed, 23 Oct 2019 19:34:52 -0700 (PDT)
+        bh=RnxLx4iMo75xJka0lIAwxQJug/9mvKAFWodrvAvQzVY=;
+        b=Et0er9hvbyxu3nEsbtgznXCHWXzNbQExDpS1TMcobERU/lT5bR0dattATmZ1N1Pqc6
+         jxyeV/SjLKkHeqABSbh4BimpS7J2m01r/m+DYcOlFUBhUd+ddXoRaGwJJfmQj2H3jO0K
+         JyLhFBFcTj2EkUcet0bzwbY6fSfAzNhWUQwBSvbBR7/WGskix3cRGbaHMO4PcBrypsUy
+         +0hWeOu94R9vGh2UfMeYa8K9lsGw/3cwFaohB6ie8zpoeiKNG5PB0UouiDrWX5Kb3uHd
+         84cFuqZj141xJZn5lgpml03i7MQtFIJF+kZ5iW233gF9hnOoQE3e24bl9buqIFKFZqhs
+         xqgA==
+X-Gm-Message-State: APjAAAVP/bnFYFdiv64IFXvKkIhxSqBtesmfDVsb5XZ/3maAvdjOO2tE
+        kMHNg3exSyIAixGFySQyjBeZqDDP
+X-Google-Smtp-Source: APXvYqwJfJmS/60lUwsK1R1gGIGQOe7Pg/kcOo7BhftIJKBCy+uqnMMkuKdXRjZKV4+GRo8ky6GEaw==
+X-Received: by 2002:a05:620a:386:: with SMTP id q6mr8967893qkm.243.1571884483899;
+        Wed, 23 Oct 2019 19:34:43 -0700 (PDT)
 Received: from localhost.localdomain ([186.212.94.31])
-        by smtp.gmail.com with ESMTPSA id q16sm10252495qke.22.2019.10.23.19.34.50
+        by smtp.gmail.com with ESMTPSA id q16sm10252495qke.22.2019.10.23.19.34.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 19:34:52 -0700 (PDT)
+        Wed, 23 Oct 2019 19:34:43 -0700 (PDT)
 From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
         linux-btrfs@vger.kernel.org, mpdesouza@suse.com
-Subject: [PATCH 5/5] btrfs: ioctl: Call btrfs_vol_uevent on subvolume deletion
-Date:   Wed, 23 Oct 2019 23:36:36 -0300
-Message-Id: <20191024023636.21124-6-marcos.souza.org@gmail.com>
+Subject: [PATCH 2/5] btrfs: ioctl: Introduce btrfs_vol_uevent
+Date:   Wed, 23 Oct 2019 23:36:33 -0300
+Message-Id: <20191024023636.21124-3-marcos.souza.org@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191024023636.21124-1-marcos.souza.org@gmail.com>
 References: <20191024023636.21124-1-marcos.souza.org@gmail.com>
@@ -76,47 +76,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-Since the function btrfs_ioctl_snap_destroy is used for deleting both
-subvolumes and snapshots it was needed call btrfs_is_snapshot,
-which checks a giver btrfs_root and returns true if it's a snapshot.
-The current code is interested in subvolumes only.
+This new function will be used to send uevents when a subvolume is created
+or removed. Two environment variables are being exported:
 
-btrfs_vol_uevent will export two environment variables to udev:
-BTRFS_VOL_NAME: containing the name of the subvolume deleted
-BTRFS_VOL_DEL: will signalize that a volume is being deleted
-
-One can create a udev rule and check for BTRFS_VOL_DEL being set,
-these values one could detect whenever a subvolume is deleted, and
-take any action based on the subvolume name contained in BTRFS_VOL_NAME.
+BTRFS_VOL_NAME: contains the name of the volume being added/removed
+BTRFS_VOL_{ADD|DEL}: will signalize whether a subvolume is created/deleted
 
 Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 ---
- fs/btrfs/ioctl.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/ioctl.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index c538d3648195..173f2a258508 100644
+index de730e56d3f5..174cbe71d6be 100644
 --- a/fs/btrfs/ioctl.c
 +++ b/fs/btrfs/ioctl.c
-@@ -2869,6 +2869,7 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
- {
- 	struct dentry *parent = file->f_path.dentry;
- 	struct btrfs_fs_info *fs_info = btrfs_sb(parent->d_sb);
-+	struct block_device *bdev = fs_info->fs_devices->latest_bdev;
- 	struct dentry *dentry;
- 	struct inode *dir = d_inode(parent);
- 	struct inode *inode;
-@@ -2962,6 +2963,10 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
- 	err = btrfs_delete_subvolume(dir, dentry);
- 	inode_unlock(inode);
- 	if (!err) {
-+		/* send uevent only to subvolume deletion */
-+		if (!btrfs_is_snapshot(dest))
-+			btrfs_vol_uevent(bdev, false, vol_args->name);
+@@ -940,6 +940,33 @@ static inline int btrfs_may_create(struct inode *dir, struct dentry *child)
+ 	return inode_permission(dir, MAY_WRITE | MAY_EXEC);
+ }
+ 
++static inline int btrfs_vol_uevent(struct block_device *bdev, bool vol_added,
++				const char *name)
++{
++	char *envp[3];
++	int ret = -ENOMEM;
 +
- 		fsnotify_rmdir(dir, dentry);
- 		d_delete(dentry);
- 	}
++	envp[0] = kasprintf(GFP_KERNEL, "BTRFS_VOL_NAME=%s", name);
++	if (!envp[0])
++		return ret;
++
++	envp[1] = kasprintf(GFP_KERNEL, "BTRFS_VOL_%s=1",
++			vol_added ? "NEW" : "DEL");
++	if (!envp[1])
++		goto free;
++
++	envp[2] = NULL;
++
++	btrfs_kobject_uevent(bdev, KOBJ_CHANGE, envp);
++
++	ret = 0;
++
++	kfree(envp[1]);
++free:
++	kfree(envp[0]);
++	return ret;
++}
++
+ /*
+  * Create a new subvolume below @parent.  This is largely modeled after
+  * sys_mkdirat and vfs_mkdir, but we only do a single component lookup
 -- 
 2.23.0
 
