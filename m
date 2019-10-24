@@ -2,181 +2,120 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4616FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C6021D71
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E98321928
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6XNn9E+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sm0LVra1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfJXVip (ORCPT
+        id S1729709AbfJXVqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:38:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26683 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728976AbfJXVim (ORCPT
+        Thu, 24 Oct 2019 17:46:23 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46460 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfJXVqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:38:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571953121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T2lXcvf3NGx9wufR1ebxunRcF0UYoKhiuH8ZoVdeRXA=;
-        b=A6XNn9E+nLLxToSIlxa8556iGw23G5rVhlpm5AQqF5s2Y5jBzbBlj1m9AtyADC1fBE7d8t
-        Z8TE3czQkfobpQV/jzUaCLhKxcNSiSzO46T+e14iiFKIP60m7GPvKyf7TMJsQi5ExMerop
-        eHH5nGB1Fyj/VjJ4Lai8uGqT/yE/faY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-1AsDRJMHO8qigRg4GtuJ6Q-1; Thu, 24 Oct 2019 17:38:38 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D5136107AD31;
-        Thu, 24 Oct 2019 21:38:36 +0000 (UTC)
-Received: from shalem.localdomain.com (unknown [10.36.118.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DDAF5C1B5;
-        Thu, 24 Oct 2019 21:38:35 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] ACPI / PMIC: Add Cherry Trail Crystal Cove PMIC OpRegion driver
-Date:   Thu, 24 Oct 2019 23:38:26 +0200
-Message-Id: <20191024213827.144974-4-hdegoede@redhat.com>
-In-Reply-To: <20191024213827.144974-1-hdegoede@redhat.com>
-References: <20191024213827.144974-1-hdegoede@redhat.com>
+        Thu, 24 Oct 2019 17:46:23 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b25so98058pfi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:46:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ylg2MBhMeUrtylr2iEwM0Lf6LZuEbMgXeAE0LFqAQ+Q=;
+        b=sm0LVra1tGSu8lDc8RjcBwS4jsMsIQRLEy+UOc8Bg3ZjhPKVe9Pa7silK2byU4PHpX
+         KV6mANQF5auk1EgP0DEb536+AdYmDRucmgc5cVhYxgGLCWMXA7rd0nhuzi++nvRNMQ5r
+         knog15gmYqhWZ5lQ6WtsnpM/iR+6T5aMA0uE/AtRzquotRgqnq1bOOzkoS440sY3v8E8
+         6DleXQwoDUfNzLXmdN5YVRM/8ISifQOB7sXGq+hYP3QwkwVDwCblA+01Pw1jKJTkI7Ny
+         SzxFZNfraNN1fQbTcGiNgBQ65sA7syDlS5anm8XnlyF0lbG2W2S1BlPpMgzoStdTgrhN
+         ONtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ylg2MBhMeUrtylr2iEwM0Lf6LZuEbMgXeAE0LFqAQ+Q=;
+        b=bwTu6ocGXB3OxfQYBs6vIIkNfkVQemvMcK5ApVa66XiAqx9fi1pD7GMoQXnoIG46tq
+         xu+6xohrV4iFKEHjDkX+j1/Rp+w/VSx+yIAAZD+HS7sX2U/w2Lp7KARUi2vJH/F/FOHf
+         C7r4bsznjMfO2xjiItcWht8LKAWlMxOFvRRS4jYmllue9VUBxD8YxUCyXaPLihXimCGW
+         1jsB10UXgpKTRdivBgCqLy6XBS23Ox7rh4D6D2B7iAy9jUkVIdP3M5P54didJ2eYVGHf
+         +EDnKomTwfB5T6qnaHj+/FVbEzt7GmPyiT44MRHXtpbcvH4vQhwYnVVwnJTmHYCxGFh6
+         1BMg==
+X-Gm-Message-State: APjAAAUZVq6G5qzlWBOLMQJ0aFsgXLcLm5SrjqWB+PtGOG9dpObeS2ec
+        ftNqisEGw+6XtsTPCMY1tjfukJzuYohEbnZWvsOZ+g==
+X-Google-Smtp-Source: APXvYqwm1PMIf+mWSjmzR6zcrl6IRhfA7LoN6krcH8c8m4x2dfkIHyl7OijiD3mbk1iUnqEWOrmv1xaVDzusce8/oJQ=
+X-Received: by 2002:a17:90a:17e1:: with SMTP id q88mr9863054pja.134.1571953581844;
+ Thu, 24 Oct 2019 14:46:21 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 1AsDRJMHO8qigRg4GtuJ6Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <20191024202803.47613-1-natechancellor@gmail.com>
+In-Reply-To: <20191024202803.47613-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 24 Oct 2019 14:46:10 -0700
+Message-ID: <CAKwvOdmw+fSNfksLtiAKF8upAuQB+rOzWP010cC-ivF5z=XuYA@mail.gmail.com>
+Subject: Re: [PATCH] dm raid: Remove unnecessary negation of a shift in raid10_format_to_md_layout
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have no docs for the CHT Crystal Cove PMIC. The Asus Zenfone-2 kernel
-code has 2 Crystal Cove regulator drivers, one calls the PMIC a "Crystal
-Cove Plus" PMIC and talks about Cherry Trail, so presuambly that one
-could be used to get register info for the regulators if we need to
-implement regulator support in the future.
+On Thu, Oct 24, 2019 at 1:28 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> When building with Clang + -Wtautological-constant-compare:
+>
+>  drivers/md/dm-raid.c:619:8: warning: converting the result of '<<' to a
+>  boolean always evaluates to true [-Wtautological-constant-compare]
+>                  r = !RAID10_OFFSET;
+>                       ^
+>  drivers/md/dm-raid.c:517:28: note: expanded from macro 'RAID10_OFFSET'
+>  #define RAID10_OFFSET                   (1 << 16) /* stripes with data
+>  copies area adjacent on devices */
+>                                            ^
+>  1 warning generated.
+>
+> Negating a non-zero number will always make it zero, which is the
+> default value of r in this function so this statement is unnecessary;
 
-For now the sole purpose of this driver is to make
-intel_soc_pmic_exec_mipi_pmic_seq_element work on devices with a
-CHT Crystal Cove PMIC.
+Yep, thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+(algorithm should be an enum, and there's some code duplication
+between ALGORITHM_RAID10_OFFSET and ALGORITHM_RAID10_FAR cases, but
+this patch is good enough).
 
-Specifically this fixes the following MIPI PMIC sequence related errors
-on e.g. an Asus T100HA:
+> remove it so that clang no longer warns.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/753
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/md/dm-raid.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+> index b0aa595e4375..13fabc6779e5 100644
+> --- a/drivers/md/dm-raid.c
+> +++ b/drivers/md/dm-raid.c
+> @@ -616,7 +616,6 @@ static int raid10_format_to_md_layout(struct raid_set *rs,
+>
+>         } else if (algorithm == ALGORITHM_RAID10_FAR) {
+>                 f = copies;
+> -               r = !RAID10_OFFSET;
+>                 if (!test_bit(__CTR_FLAG_RAID10_USE_NEAR_SETS, &rs->ctr_flags))
+>                         r |= RAID10_USE_FAR_SETS;
+>
 
-[  178.211801] intel_soc_pmic_exec_mipi_pmic_seq_element: No PMIC registere=
-d
-[  178.211897] [drm:intel_dsi_dcs_init_backlight_funcs [i915]] *ERROR* mipi=
-_exec_pmic failed, error: -6
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/Kconfig                  |  7 +++++
- drivers/acpi/Makefile                 |  1 +
- drivers/acpi/pmic/intel_pmic_chtcrc.c | 44 +++++++++++++++++++++++++++
- 3 files changed, 52 insertions(+)
- create mode 100644 drivers/acpi/pmic/intel_pmic_chtcrc.c
-
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index 089f7f8e1be7..0f23d8b22c42 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -520,6 +520,13 @@ config BYTCRC_PMIC_OPREGION
- =09  This config adds ACPI operation region support for the Bay Trail
- =09  version of the Crystal Cove PMIC.
-=20
-+config CHTCRC_PMIC_OPREGION
-+=09bool "ACPI operation region support for Cherry Trail Crystal Cove PMIC"
-+=09depends on INTEL_SOC_PMIC
-+=09help
-+=09  This config adds ACPI operation region support for the Cherry Trail
-+=09  version of the Crystal Cove PMIC.
-+
- config XPOWER_PMIC_OPREGION
- =09bool "ACPI operation region support for XPower AXP288 PMIC"
- =09depends on MFD_AXP20X_I2C && IOSF_MBI=3Dy
-diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-index ee59b1db69a1..68853f23e901 100644
---- a/drivers/acpi/Makefile
-+++ b/drivers/acpi/Makefile
-@@ -110,6 +110,7 @@ obj-$(CONFIG_ACPI_EXTLOG)=09+=3D acpi_extlog.o
-=20
- obj-$(CONFIG_PMIC_OPREGION)=09+=3D pmic/intel_pmic.o
- obj-$(CONFIG_BYTCRC_PMIC_OPREGION) +=3D pmic/intel_pmic_bytcrc.o
-+obj-$(CONFIG_CHTCRC_PMIC_OPREGION) +=3D pmic/intel_pmic_chtcrc.o
- obj-$(CONFIG_XPOWER_PMIC_OPREGION) +=3D pmic/intel_pmic_xpower.o
- obj-$(CONFIG_BXT_WC_PMIC_OPREGION) +=3D pmic/intel_pmic_bxtwc.o
- obj-$(CONFIG_CHT_WC_PMIC_OPREGION) +=3D pmic/intel_pmic_chtwc.o
-diff --git a/drivers/acpi/pmic/intel_pmic_chtcrc.c b/drivers/acpi/pmic/inte=
-l_pmic_chtcrc.c
-new file mode 100644
-index 000000000000..ebf8d3187df1
---- /dev/null
-+++ b/drivers/acpi/pmic/intel_pmic_chtcrc.c
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Cherry Trail Crystal Cove PMIC operation region driver
-+ *
-+ * Copyright (C) 2019 Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/init.h>
-+#include <linux/mfd/intel_soc_pmic.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include "intel_pmic.h"
-+
-+/*
-+ * We have no docs for the CHT Crystal Cove PMIC. The Asus Zenfone-2 kerne=
-l
-+ * code has 2 Crystal Cove regulator drivers, one calls the PMIC a "Crysta=
-l
-+ * Cove Plus" PMIC and talks about Cherry Trail, so presuambly that one
-+ * could be used to get register info for the regulators if we need to
-+ * implement regulator support in the future.
-+ *
-+ * For now the sole purpose of this driver is to make
-+ * intel_soc_pmic_exec_mipi_pmic_seq_element work on devices with a
-+ * CHT Crystal Cove PMIC.
-+ */
-+static struct intel_pmic_opregion_data intel_chtcrc_pmic_opregion_data =3D=
- {
-+=09.pmic_i2c_address =3D 0x6e,
-+};
-+
-+static int intel_chtcrc_pmic_opregion_probe(struct platform_device *pdev)
-+{
-+=09struct intel_soc_pmic *pmic =3D dev_get_drvdata(pdev->dev.parent);
-+=09return intel_pmic_install_opregion_handler(&pdev->dev,
-+=09=09=09ACPI_HANDLE(pdev->dev.parent), pmic->regmap,
-+=09=09=09&intel_chtcrc_pmic_opregion_data);
-+}
-+
-+static struct platform_driver intel_chtcrc_pmic_opregion_driver =3D {
-+=09.probe =3D intel_chtcrc_pmic_opregion_probe,
-+=09.driver =3D {
-+=09=09.name =3D "cht_crystal_cove_pmic",
-+=09},
-+};
-+builtin_platform_driver(intel_chtcrc_pmic_opregion_driver);
---=20
-2.23.0
-
+-- 
+Thanks,
+~Nick Desaulniers
