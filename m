@@ -2,144 +2,105 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C8CCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F4E205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617222166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="dNMkj4Zs"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gClEFeCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438227AbfJXIc5 (ORCPT
+        id S2438238AbfJXIdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:32:57 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25440 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfJXIc5 (ORCPT
+        Thu, 24 Oct 2019 04:33:02 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35941 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbfJXIdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:32:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571905966; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=fuh9qei8RdUSfY5W0FLhIUYatGRLIOqxNwteNfbFB94MmNS6tS9OnmZlseSGPOGpeNlP4BZJq0/4oh8HBctW6+F8pNUkotmum/x/42DaE2MsbEA0fOpABCB3vlS4JwI2Z54vq3h1GIYWxB+sFScYoCbdO+0INkBjlYj5ZfmQztU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1571905966; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=6qjWp9fOyWXfySwwwbqXJ9MJYL8BpwYnEj4RnXxr3K0=; 
-        b=g6tP5B5WfnSbo7nK9MlX7ieHngqDxhkZwHQ+J4G4zqgtYSGJIEbJByBclIpqp6W80WTiHaAp8OpZkgm/txeUIPkBuxGEnS4o8JvWq+sviDiNr5KIGvjWBq2epNRj4GeCiq+k4uSITEBhwYjSxPTXPO+ciqx2t4XazmfARl+sJlA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=subject:to:references:cc:from:message-id:date:user-agent:mime-version:in-reply-to:content-type; 
-  b=en++J+n2joHAE3eJ8yZSg9AttC6X5AzJq1oawRX50ORH983ZZsk1Um/Bx7JuxaKLH2AtTFAtsW3U
-    SL1L8HyyrcNFd0v2MP7nYknMaTKf9oPdwO/JAdvi01XwAenHajDz  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571905966;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        l=1787; bh=6qjWp9fOyWXfySwwwbqXJ9MJYL8BpwYnEj4RnXxr3K0=;
-        b=dNMkj4Zsv4tqbI+z0VZv7QNXVAuBkCy15ENTYe6qiRhXHHnf0ssLJhp4/rUA1fZJ
-        e7jGdLKjE8ircJ+TUd5E5mKulQA6gKCSA/Gqwa6Hd3BZ8w17bMV7ecswFK0qK3sk30/
-        fVrHOsfP02VtnepJcqgDFggLyAZqhJ73kuS2SwcQ=
-Received: from [192.168.88.140] (182.148.156.27 [182.148.156.27]) by mx.zohomail.com
-        with SMTPS id 1571905962349714.4127332922549; Thu, 24 Oct 2019 01:32:42 -0700 (PDT)
-Subject: Re: [PATCH RESEND 2/2] dmaengine: JZ4780: Add support for the X1000.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
- <1571814137-46002-1-git-send-email-zhouyanjie@zoho.com>
- <1571814137-46002-3-git-send-email-zhouyanjie@zoho.com>
- <1571846901.3.0@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, vkoul@kernel.org,
-        mark.rutland@arm.com, Zubair.Kakakhel@imgtec.com,
-        dan.j.williams@intel.com
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-Message-ID: <5DB1619F.8080904@zoho.com>
-Date:   Thu, 24 Oct 2019 16:32:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Thu, 24 Oct 2019 04:33:01 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u16so18404301lfq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 01:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+75bXYmJLWTFE3320pYIpgc0DqJcYlwjBZB7EAmPS10=;
+        b=gClEFeCU+g0DoMciGkXeW9Z7OGI79blTyZ9lLfcjrBKqg5p80UlmyeFFLuXc5KT5hH
+         Q3wWVhydm7bwX2DiG3ftfR8cTTAs24mFH15R4Q4mAz2paRSJ//b3ENgS7RgbKaBPM+Ji
+         khtnY1Yt0+YLyd0ZBxlay/rj9Am64z/A1bYGg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+75bXYmJLWTFE3320pYIpgc0DqJcYlwjBZB7EAmPS10=;
+        b=Zl3kuPxqpC7v+ekDkY5LYj3ChGDZ75XnujbqSzqcD6gOa7FN43pQ69oOawQ6bnT6S4
+         OPwemo/N6WQJhsW1mtjvX7qXi6+2qxmr8rq/xLCTp+O9BIUevgkK0OE8N6TJimB/qNy5
+         jTYPX7X3Lx4uT1h2Aoz89sznudp2zR13IPJFinO41LN+r5kaxvMkXaNnoR13wV15Uziy
+         T649tS44qTnxrXzLGZNdNa2yaAedlxjtXCPw1EvleDYRFteZNyQ9xU3ISPGoEC+LhDTA
+         WOmRTJR+lUfFQPRncFqusdgXlP6Eaa/y+NDOfsGyuvZV/ZzndPgemTexttt3RPqaI4q3
+         ZQmg==
+X-Gm-Message-State: APjAAAVsp0eJ1VfeIXDglLtv6nHWYJWb5PldtmSqCqwa4G+scmKlZdKg
+        uBpLm2g0ekPz2XPKIdeHB4ToSiJnPstTv+Ds
+X-Google-Smtp-Source: APXvYqzGW/Z8ZcO24MLlZ7Q5TGMTH80egPpH3CSH8TEMirFgblCVOGKAPMvCu448esyNvmcxQil8nA==
+X-Received: by 2002:ac2:5f0a:: with SMTP id 10mr1989441lfq.57.1571905977834;
+        Thu, 24 Oct 2019 01:32:57 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id p18sm12995854lfh.24.2019.10.24.01.32.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 01:32:57 -0700 (PDT)
+Subject: Re: [PATCH 4/7] soc: fsl: qe: replace spin_event_timeout by
+ readx_poll_timeout_atomic
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191018125234.21825-5-linux@rasmusvillemoes.dk>
+ <20191018160852.GA13036@infradead.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <a11aaeaa-7075-4ad0-aa26-d8d7eafa72f5@rasmusvillemoes.dk>
+Date:   Thu, 24 Oct 2019 10:32:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1571846901.3.0@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+In-Reply-To: <20191018160852.GA13036@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 18/10/2019 18.08, Christoph Hellwig wrote:
+> On Fri, Oct 18, 2019 at 02:52:31PM +0200, Rasmus Villemoes wrote:
+>>  	/* wait for the QE_CR_FLG to clear */
+>> -	ret = spin_event_timeout((ioread32be(&qe_immr->cp.cecr) & QE_CR_FLG) == 0,
+>> -				 100, 0);
+>> -	/* On timeout (e.g. failure), the expression will be false (ret == 0),
+>> -	   otherwise it will be true (ret == 1). */
+>> +	ret = readx_poll_timeout_atomic(ioread32be, &qe_immr->cp.cecr, val, (val & QE_CR_FLG) == 0,
+> 
+> This creates an overly long line.
 
-Hi Paul,
+Yeah, readx_poll_timeout_atomic is a mouthful, and then one also has to
+put in the name of the accessor... I'll wrap it when I respin the
+series, thanks.
 
-On 2019=E5=B9=B410=E6=9C=8824=E6=97=A5 00:08, Paul Cercueil wrote:
-> Hi Zhou,
->
->
-> Le mer., oct. 23, 2019 at 15:02, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-> =C3=A9crit :
->> Add support for probing the dma-jz4780 driver on the X1000 Soc.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>  drivers/dma/dma-jz4780.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
->> index cafb1cc0..f809a6e 100644
->> --- a/drivers/dma/dma-jz4780.c
->> +++ b/drivers/dma/dma-jz4780.c
->> @@ -1019,11 +1019,18 @@ static const struct jz4780_dma_soc_data=20
->> jz4780_dma_soc_data =3D {
->>      .flags =3D JZ_SOC_DATA_ALLOW_LEGACY_DT |=20
->> JZ_SOC_DATA_PROGRAMMABLE_DMA,
->>  };
->>
->> +static const struct jz4780_dma_soc_data x1000_dma_soc_data =3D {
->> +    .nb_channels =3D 8,
->> +    .transfer_ord_max =3D 7,
->> +    .flags =3D JZ_SOC_DATA_ALLOW_LEGACY_DT |=20
->> JZ_SOC_DATA_PROGRAMMABLE_DMA,
->
-> Please don't use JZ_SOC_DATA_ALLOW_LEGACY_DT for new bindings.
->
-> With that flag removed:
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->
+> Btw, given how few users of spin_event_timeout we have it might be good
+> idea to just kill it entirely.
 
-I'll remove it in v2.
+Maybe. That's for the ppc folks to comment on; the iopoll.h helpers are
+not completely equivalent (because obviously they don't read tbl
+directly). Maybe the generic versions should be taught
+spin_begin/spin_end/spin_cpu_relax so at least that part would be
+drop-in replacement.
 
-Best regards!
-
->
->> +};
->> +
->>  static const struct of_device_id jz4780_dma_dt_match[] =3D {
->>      { .compatible =3D "ingenic,jz4740-dma", .data =3D=20
->> &jz4740_dma_soc_data },
->>      { .compatible =3D "ingenic,jz4725b-dma", .data =3D=20
->> &jz4725b_dma_soc_data },
->>      { .compatible =3D "ingenic,jz4770-dma", .data =3D=20
->> &jz4770_dma_soc_data },
->>      { .compatible =3D "ingenic,jz4780-dma", .data =3D=20
->> &jz4780_dma_soc_data },
->> +    { .compatible =3D "ingenic,x1000-dma", .data =3D &x1000_dma_soc_dat=
-a },
->>      {},
->>  };
->>  MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
->> --=20
->> 2.7.4
->>
->>
->
->
-
+Rasmus
 
 
