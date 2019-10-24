@@ -2,292 +2,988 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED3ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33715CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997612166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD44321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439167AbfJXLp4 (ORCPT
+        id S2439204AbfJXLqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:45:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49925 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfJXLp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:45:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 04:45:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
-   d="gz'50?scan'50,208,50";a="210139732"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Oct 2019 04:45:53 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iNbYv-0009g8-5b; Thu, 24 Oct 2019 19:45:53 +0800
-Date:   Thu, 24 Oct 2019 19:45:01 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Thomas Hellstrom <thellstrom@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH] mm: Fix a huge pud insertion race during faulting
-Message-ID: <201910241921.oi4h7o4m%lkp@intel.com>
-References: <20191022123003.37089-1-thomas_os@shipmail.org>
+        Thu, 24 Oct 2019 07:46:30 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41760 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727640AbfJXLqa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 07:46:30 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f5so24691220ljg.8;
+        Thu, 24 Oct 2019 04:46:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C6Z4hoBYYnSNpG53wl3HJ7RNqz8c3gdp/uDqn84O8nA=;
+        b=NwAy4EvWK6xQYN2gat+ljvJtc+yNcHu52tZWtsomRu+oNBgcboaAVvsGnpgfPQ3FUQ
+         81kFTr6LP33XP//guJ36bfsKVJK1ZJLPJHZhbeDnsTVUnAzRvL4uAPEIgQV6JcEW4M0H
+         u8H5AVVtX9mpBXHyWwsBpwwImuEuLrZU+l7M8dkHu9aDvtcCizsaJ23v070csNIy/cKk
+         /GbDyU2F756xSVyel1ip6EX91mPCOu8NKlj9cXFHCxoWpkdUEuUHA5/YK85Rbi0CZlTt
+         dr+23wrzy54gj4T2qQgCGSWII0jE7ROBjenEC8XuAt0uvtb2S+v3NWQa/0jpiUkmG9pa
+         I7OA==
+X-Gm-Message-State: APjAAAUCw/x+jyN3uV1O5UBQ7QGyZnylaL6HZcrOMiXRRx8bueyUx6aw
+        Id4kZN18LBnhWc5Fy4X/QwQ=
+X-Google-Smtp-Source: APXvYqwVJ/GJ8BJBOyaSEBIIWondQ7Jp3LwZ6y55LLEd7HAoWCzcDOzXQwBcWhhIEo1+M837SUFRNw==
+X-Received: by 2002:a2e:89da:: with SMTP id c26mr2081044ljk.202.1571917584216;
+        Thu, 24 Oct 2019 04:46:24 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id d24sm7770760lfl.65.2019.10.24.04.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 04:46:23 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 14:46:11 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RFC PATCH v2 07/13] regulator: bd71828: Basic support for ROHM
+ bd71828 PMIC regulators
+Message-ID: <227cf16ac7e2950d0cb5a1e32137270d0a32a8e7.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="enzjts7iy36i7xe4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191022123003.37089-1-thomas_os@shipmail.org>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. Bucks
+1,2,6 and 7 can be assigned to a regulator group controlled by run-levels.
+Eg. Voltages and enable/disable statuses for specific run-levels (run0 to
+run3) can be set via register interface and run level changes can then be
+done either via I2C or GPIO.
 
---enzjts7iy36i7xe4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This initial commit does not support assigning bucks to be controlled via
+run-levels but only allows them to be individually controlled.
 
-Hi "Thomas,
+LDO5 voltage can also be controlled by GPIO2 pin and register interfaces
+but this driver only supports the control via register.
 
-I love your patch! Yet something to improve:
-
-[auto build test ERROR on mmotm/master]
-
-url:    https://github.com/0day-ci/linux/commits/Thomas-Hellstr-m-VMware/mm-Fix-a-huge-pud-insertion-race-during-faulting/20191024-175905
-base:   git://git.cmpxchg.org/linux-mmotm.git master
-config: um-x86_64_defconfig (attached as .config)
-compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=um SUBARCH=x86_64
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/um/include/asm/pgtable.h:363:0,
-                    from include/linux/mm.h:99,
-                    from include/linux/memcontrol.h:20,
-                    from include/linux/swap.h:9,
-                    from include/linux/suspend.h:5,
-                    from init/do_mounts.c:7:
-   include/asm-generic/pgtable.h: In function 'pud_none_or_trans_huge_or_dev_or_clear_bad':
->> include/asm-generic/pgtable.h:920:52: error: implicit declaration of function 'pud_devmap'; did you mean 'put_device'? [-Werror=implicit-function-declaration]
-     if (pud_none(pudval) || pud_trans_huge(pudval) || pud_devmap(pudval))
-                                                       ^~~~~~~~~~
-                                                       put_device
-   In file included from include/linux/memcontrol.h:20:0,
-                    from include/linux/swap.h:9,
-                    from include/linux/suspend.h:5,
-                    from init/do_mounts.c:7:
-   include/linux/mm.h: At top level:
-   include/linux/mm.h:572:19: error: static declaration of 'pud_devmap' follows non-static declaration
-    static inline int pud_devmap(pud_t pud)
-                      ^~~~~~~~~~
-   In file included from arch/um/include/asm/pgtable.h:363:0,
-                    from include/linux/mm.h:99,
-                    from include/linux/memcontrol.h:20,
-                    from include/linux/swap.h:9,
-                    from include/linux/suspend.h:5,
-                    from init/do_mounts.c:7:
-   include/asm-generic/pgtable.h:920:52: note: previous implicit declaration of 'pud_devmap' was here
-     if (pud_none(pudval) || pud_trans_huge(pudval) || pud_devmap(pudval))
-                                                       ^~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-vim +920 include/asm-generic/pgtable.h
-
-   914	
-   915	/* See pmd_none_or_trans_huge_or_clear_bad for discussion. */
-   916	static inline int pud_none_or_trans_huge_or_dev_or_clear_bad(pud_t *pud)
-   917	{
-   918		pud_t pudval = READ_ONCE(*pud);
-   919	
- > 920		if (pud_none(pudval) || pud_trans_huge(pudval) || pud_devmap(pudval))
-   921			return 1;
-   922		if (unlikely(pud_bad(pudval))) {
-   923			pud_clear_bad(pud);
-   924			return 1;
-   925		}
-   926		return 0;
-   927	}
-   928	
-
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---enzjts7iy36i7xe4
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+Only MODULE_ALIAS added since v1
 
-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
-nZO0pRtdTO0n/wE8VjPOK4AAAA==
+ drivers/regulator/Kconfig             |  12 +
+ drivers/regulator/Makefile            |   1 +
+ drivers/regulator/bd71828-regulator.c | 833 ++++++++++++++++++++++++++
+ 3 files changed, 846 insertions(+)
+ create mode 100644 drivers/regulator/bd71828-regulator.c
 
---enzjts7iy36i7xe4--
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 74de76bf98d7..8c94a35d059a 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -193,6 +193,18 @@ config REGULATOR_BD70528
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called bd70528-regulator.
+ 
++config REGULATOR_BD71828
++	tristate "ROHM BD71828 Power Regulator"
++	depends on MFD_ROHM_BD71828
++	select REGULATOR_ROHM
++	help
++	  This driver supports voltage regulators on ROHM BD71828 PMIC.
++	  This will enable support for the software controllable buck
++	  and LDO regulators.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called bd71828-regulator.
++
+ config REGULATOR_BD718XX
+ 	tristate "ROHM BD71837 Power Regulator"
+ 	depends on MFD_ROHM_BD718XX
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 41e4055d2d66..b363b592a429 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
+ obj-$(CONFIG_REGULATOR_AXP20X) += axp20x-regulator.o
+ obj-$(CONFIG_REGULATOR_BCM590XX) += bcm590xx-regulator.o
+ obj-$(CONFIG_REGULATOR_BD70528) += bd70528-regulator.o
++obj-$(CONFIG_REGULATOR_BD71828) += bd71828-regulator.o
+ obj-$(CONFIG_REGULATOR_BD718XX) += bd718x7-regulator.o
+ obj-$(CONFIG_REGULATOR_BD9571MWV) += bd9571mwv-regulator.o
+ obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
+diff --git a/drivers/regulator/bd71828-regulator.c b/drivers/regulator/bd71828-regulator.c
+new file mode 100644
+index 000000000000..3f46658280be
+--- /dev/null
++++ b/drivers/regulator/bd71828-regulator.c
+@@ -0,0 +1,833 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2019 ROHM Semiconductors
++// bd71828-regulator.c ROHM BD71828GW-DS1 regulator driver
++//
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/mfd/rohm-bd71828.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++
++struct reg_init {
++	unsigned int reg;
++	unsigned int mask;
++	unsigned int val;
++};
++struct bd71828_regulator_data {
++	struct regulator_desc desc;
++	const struct rohm_dvs_config dvs;
++	const struct reg_init *reg_inits;
++	int reg_init_amnt;
++};
++
++static const struct reg_init buck1_inits[] = {
++	/*
++	 * DVS Buck voltages can be changed by register values or via GPIO.
++	 * Use register accesses by default.
++	 */
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK1_CTRL,
++		.val = BD71828_DVS_BUCK1_CTRL_I2C,
++	},
++};
++
++static const struct reg_init buck2_inits[] = {
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK2_CTRL,
++		.val = BD71828_DVS_BUCK2_CTRL_I2C,
++	},
++};
++
++static const struct reg_init buck6_inits[] = {
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK6_CTRL,
++		.val = BD71828_DVS_BUCK6_CTRL_I2C,
++	},
++};
++
++static const struct reg_init buck7_inits[] = {
++	{
++		.reg = BD71828_REG_PS_CTRL_1,
++		.mask = BD71828_MASK_DVS_BUCK7_CTRL,
++		.val = BD71828_DVS_BUCK7_CTRL_I2C,
++	},
++};
++
++static const struct regulator_linear_range bd71828_buck1267_volts[] = {
++	REGULATOR_LINEAR_RANGE(500000, 0x00, 0xef, 6250),
++	REGULATOR_LINEAR_RANGE(2000000, 0xf0, 0xff, 0),
++};
++
++static const struct regulator_linear_range bd71828_buck3_volts[] = {
++	REGULATOR_LINEAR_RANGE(1200000, 0x00, 0x0f, 50000),
++	REGULATOR_LINEAR_RANGE(2000000, 0x10, 0x1f, 0),
++};
++
++static const struct regulator_linear_range bd71828_buck4_volts[] = {
++	REGULATOR_LINEAR_RANGE(1000000, 0x00, 0x1f, 25000),
++	REGULATOR_LINEAR_RANGE(1800000, 0x20, 0x3f, 0),
++};
++
++static const struct regulator_linear_range bd71828_buck5_volts[] = {
++	REGULATOR_LINEAR_RANGE(2500000, 0x00, 0x0f, 50000),
++	REGULATOR_LINEAR_RANGE(3300000, 0x10, 0x1f, 0),
++};
++
++static const struct regulator_linear_range bd71828_ldo_volts[] = {
++	REGULATOR_LINEAR_RANGE(800000, 0x00, 0x31, 50000),
++	REGULATOR_LINEAR_RANGE(3300000, 0x32, 0x3f, 0),
++};
++
++static int ramp_delay_supported(struct regulator_dev *rdev)
++{
++	switch (rdev->desc->id) {
++	case BD71828_BUCK1:
++	case BD71828_BUCK2:
++	case BD71828_BUCK6:
++	case BD71828_BUCK7:
++		return 1;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static int bd71828_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
++{
++	unsigned int val;
++
++	if (!ramp_delay_supported(rdev)) {
++		dev_err(&rdev->dev, "%s: can't set ramp-delay\n",
++			rdev->desc->name);
++		return -EINVAL;
++	}
++
++	switch (ramp_delay) {
++	case 1 ... 2500:
++		val = 0;
++		break;
++	case 2501 ... 5000:
++		val = 1;
++		break;
++	case 5001 ... 10000:
++		val = 2;
++		break;
++	case 10001 ... 20000:
++		val = 3;
++		break;
++	default:
++		val = 3;
++		dev_err(&rdev->dev,
++			"ramp_delay: %d not supported, setting 20mV/uS",
++			 ramp_delay);
++	}
++
++	/*
++	 * On BD71828 the ramp delay level control reg is at offset +2 to
++	 * enable reg
++	 */
++	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg + 2,
++				  BD71828_MASK_RAMP_DELAY,
++				  val << (ffs(BD71828_MASK_RAMP_DELAY) - 1));
++
++}
++
++static int buck_set_hw_dvs_levels(struct device_node *np,
++				  const struct regulator_desc *desc,
++				  struct regulator_config *cfg)
++{
++	struct bd71828_regulator_data *data;
++
++	data = container_of(desc, struct bd71828_regulator_data, desc);
++
++	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
++}
++
++static int ldo6_parse_dt(struct device_node *np,
++			 const struct regulator_desc *desc,
++			 struct regulator_config *cfg)
++{
++	int ret, i;
++	uint32_t uv = 0;
++	unsigned int en;
++	struct regmap *regmap = cfg->regmap;
++	static const char * const props[] = { "rohm,dvs-run-voltage",
++					      "rohm,dvs-idle-voltage",
++					      "rohm,dvs-suspend-voltage",
++					      "rohm,dvs-lpsr-voltage" };
++	unsigned int mask[] = { BD71828_MASK_RUN_EN, BD71828_MASK_IDLE_EN,
++			       BD71828_MASK_SUSP_EN, BD71828_MASK_LPSR_EN };
++
++	for (i = 0; i < ARRAY_SIZE(props); i++) {
++		ret = of_property_read_u32(np, props[i], &uv);
++		if (ret) {
++			if (ret != -EINVAL)
++				return ret;
++			continue;
++		}
++		if (uv)
++			en = 0xffffffff;
++		else
++			en = 0;
++
++		ret = regmap_update_bits(regmap, desc->enable_reg, mask[i], en);
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++
++static const struct regulator_ops bd71828_buck_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++};
++
++static const struct regulator_ops bd71828_dvs_buck_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.set_ramp_delay = bd71828_set_ramp_delay,
++};
++
++static const struct regulator_ops bd71828_ldo_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++};
++
++static int bd71828_ldo6_get_voltage(struct regulator_dev *rdev)
++{
++	return BD71828_LDO_6_VOLTAGE;
++}
++
++static const struct regulator_ops bd71828_ldo6_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.get_voltage = bd71828_ldo6_get_voltage,
++	.is_enabled = regulator_is_enabled_regmap,
++};
++
++static const struct bd71828_regulator_data bd71828_rdata[] = {
++	{
++		.desc = {
++			.name = "buck1",
++			.of_match = of_match_ptr("BUCK1"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_BUCK1,
++			.ops = &bd71828_dvs_buck_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_buck1267_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_buck1267_volts),
++			.n_voltages = BD71828_BUCK1267_VOLTS,
++			.enable_reg = BD71828_REG_BUCK1_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_BUCK1_VOLT,
++			.vsel_mask = BD71828_MASK_BUCK1267_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_BUCK1_VOLT,
++			.run_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_reg = BD71828_REG_BUCK1_IDLE_VOLT,
++			.idle_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_reg = BD71828_REG_BUCK1_SUSP_VOLT,
++			.suspend_mask = BD71828_MASK_BUCK1267_VOLT,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++			/*
++			 * LPSR voltage is same as SUSPEND voltage. Allow
++			 * setting it so that regulator can be set enabled at
++			 * LPSR state
++			 */
++			.lpsr_reg = BD71828_REG_BUCK1_SUSP_VOLT,
++			.lpsr_mask = BD71828_MASK_BUCK1267_VOLT,
++		},
++		.reg_inits = buck1_inits,
++		.reg_init_amnt = ARRAY_SIZE(buck1_inits),
++	},
++	{
++		.desc = {
++			.name = "buck2",
++			.of_match = of_match_ptr("BUCK2"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_BUCK2,
++			.ops = &bd71828_dvs_buck_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_buck1267_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_buck1267_volts),
++			.n_voltages = BD71828_BUCK1267_VOLTS,
++			.enable_reg = BD71828_REG_BUCK2_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_BUCK2_VOLT,
++			.vsel_mask = BD71828_MASK_BUCK1267_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_BUCK2_VOLT,
++			.run_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_reg = BD71828_REG_BUCK2_IDLE_VOLT,
++			.idle_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_reg = BD71828_REG_BUCK2_SUSP_VOLT,
++			.suspend_mask = BD71828_MASK_BUCK1267_VOLT,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++			.lpsr_reg = BD71828_REG_BUCK2_SUSP_VOLT,
++			.lpsr_mask = BD71828_MASK_BUCK1267_VOLT,
++		},
++		.reg_inits = buck2_inits,
++		.reg_init_amnt = ARRAY_SIZE(buck2_inits),
++	},
++	{
++		.desc = {
++			.name = "buck3",
++			.of_match = of_match_ptr("BUCK3"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_BUCK3,
++			.ops = &bd71828_buck_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_buck3_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_buck3_volts),
++			.n_voltages = BD71828_BUCK3_VOLTS,
++			.enable_reg = BD71828_REG_BUCK3_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_BUCK3_VOLT,
++			.vsel_mask = BD71828_MASK_BUCK3_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * BUCK3 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_BUCK3_VOLT,
++			.idle_reg = BD71828_REG_BUCK3_VOLT,
++			.suspend_reg = BD71828_REG_BUCK3_VOLT,
++			.lpsr_reg = BD71828_REG_BUCK3_VOLT,
++			.run_mask = BD71828_MASK_BUCK3_VOLT,
++			.idle_mask = BD71828_MASK_BUCK3_VOLT,
++			.suspend_mask = BD71828_MASK_BUCK3_VOLT,
++			.lpsr_mask = BD71828_MASK_BUCK3_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++	},
++	{
++		.desc = {
++			.name = "buck4",
++			.of_match = of_match_ptr("BUCK4"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_BUCK4,
++			.ops = &bd71828_buck_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_buck4_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_buck4_volts),
++			.n_voltages = BD71828_BUCK4_VOLTS,
++			.enable_reg = BD71828_REG_BUCK4_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_BUCK4_VOLT,
++			.vsel_mask = BD71828_MASK_BUCK4_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * BUCK4 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_BUCK4_VOLT,
++			.idle_reg = BD71828_REG_BUCK4_VOLT,
++			.suspend_reg = BD71828_REG_BUCK4_VOLT,
++			.lpsr_reg = BD71828_REG_BUCK4_VOLT,
++			.run_mask = BD71828_MASK_BUCK4_VOLT,
++			.idle_mask = BD71828_MASK_BUCK4_VOLT,
++			.suspend_mask = BD71828_MASK_BUCK4_VOLT,
++			.lpsr_mask = BD71828_MASK_BUCK4_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++	},
++	{
++		.desc = {
++			.name = "buck5",
++			.of_match = of_match_ptr("BUCK5"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_BUCK5,
++			.ops = &bd71828_buck_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_buck5_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_buck5_volts),
++			.n_voltages = BD71828_BUCK5_VOLTS,
++			.enable_reg = BD71828_REG_BUCK5_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_BUCK5_VOLT,
++			.vsel_mask = BD71828_MASK_BUCK5_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * BUCK5 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_BUCK5_VOLT,
++			.idle_reg = BD71828_REG_BUCK5_VOLT,
++			.suspend_reg = BD71828_REG_BUCK5_VOLT,
++			.lpsr_reg = BD71828_REG_BUCK5_VOLT,
++			.run_mask = BD71828_MASK_BUCK5_VOLT,
++			.idle_mask = BD71828_MASK_BUCK5_VOLT,
++			.suspend_mask = BD71828_MASK_BUCK5_VOLT,
++			.lpsr_mask = BD71828_MASK_BUCK5_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++	},
++	{
++		.desc = {
++			.name = "buck6",
++			.of_match = of_match_ptr("BUCK6"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_BUCK6,
++			.ops = &bd71828_dvs_buck_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_buck1267_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_buck1267_volts),
++			.n_voltages = BD71828_BUCK1267_VOLTS,
++			.enable_reg = BD71828_REG_BUCK6_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_BUCK6_VOLT,
++			.vsel_mask = BD71828_MASK_BUCK1267_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_BUCK6_VOLT,
++			.run_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_reg = BD71828_REG_BUCK6_IDLE_VOLT,
++			.idle_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_reg = BD71828_REG_BUCK6_SUSP_VOLT,
++			.suspend_mask = BD71828_MASK_BUCK1267_VOLT,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++			.lpsr_reg = BD71828_REG_BUCK6_SUSP_VOLT,
++			.lpsr_mask = BD71828_MASK_BUCK1267_VOLT,
++		},
++		.reg_inits = buck6_inits,
++		.reg_init_amnt = ARRAY_SIZE(buck6_inits),
++	},
++	{
++		.desc = {
++			.name = "buck7",
++			.of_match = of_match_ptr("BUCK7"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_BUCK7,
++			.ops = &bd71828_dvs_buck_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_buck1267_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_buck1267_volts),
++			.n_voltages = BD71828_BUCK1267_VOLTS,
++			.enable_reg = BD71828_REG_BUCK7_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_BUCK7_VOLT,
++			.vsel_mask = BD71828_MASK_BUCK1267_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_BUCK7_VOLT,
++			.run_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_reg = BD71828_REG_BUCK7_IDLE_VOLT,
++			.idle_mask = BD71828_MASK_BUCK1267_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_reg = BD71828_REG_BUCK7_SUSP_VOLT,
++			.suspend_mask = BD71828_MASK_BUCK1267_VOLT,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++			.lpsr_reg = BD71828_REG_BUCK7_SUSP_VOLT,
++			.lpsr_mask = BD71828_MASK_BUCK1267_VOLT,
++		},
++		.reg_inits = buck7_inits,
++		.reg_init_amnt = ARRAY_SIZE(buck7_inits),
++	},
++	{
++		.desc = {
++			.name = "ldo1",
++			.of_match = of_match_ptr("LDO1"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_LDO1,
++			.ops = &bd71828_ldo_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_ldo_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_ldo_volts),
++			.n_voltages = BD71828_LDO_VOLTS,
++			.enable_reg = BD71828_REG_LDO1_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_LDO1_VOLT,
++			.vsel_mask = BD71828_MASK_LDO_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * LDO1 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_LDO1_VOLT,
++			.idle_reg = BD71828_REG_LDO1_VOLT,
++			.suspend_reg = BD71828_REG_LDO1_VOLT,
++			.lpsr_reg = BD71828_REG_LDO1_VOLT,
++			.run_mask = BD71828_MASK_LDO_VOLT,
++			.idle_mask = BD71828_MASK_LDO_VOLT,
++			.suspend_mask = BD71828_MASK_LDO_VOLT,
++			.lpsr_mask = BD71828_MASK_LDO_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++	}, {
++		.desc = {
++			.name = "ldo2",
++			.of_match = of_match_ptr("LDO2"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_LDO2,
++			.ops = &bd71828_ldo_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_ldo_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_ldo_volts),
++			.n_voltages = BD71828_LDO_VOLTS,
++			.enable_reg = BD71828_REG_LDO2_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_LDO2_VOLT,
++			.vsel_mask = BD71828_MASK_LDO_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * LDO2 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_LDO2_VOLT,
++			.idle_reg = BD71828_REG_LDO2_VOLT,
++			.suspend_reg = BD71828_REG_LDO2_VOLT,
++			.lpsr_reg = BD71828_REG_LDO2_VOLT,
++			.run_mask = BD71828_MASK_LDO_VOLT,
++			.idle_mask = BD71828_MASK_LDO_VOLT,
++			.suspend_mask = BD71828_MASK_LDO_VOLT,
++			.lpsr_mask = BD71828_MASK_LDO_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++	}, {
++		.desc = {
++			.name = "ldo3",
++			.of_match = of_match_ptr("LDO3"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_LDO3,
++			.ops = &bd71828_ldo_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_ldo_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_ldo_volts),
++			.n_voltages = BD71828_LDO_VOLTS,
++			.enable_reg = BD71828_REG_LDO3_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_LDO3_VOLT,
++			.vsel_mask = BD71828_MASK_LDO_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * LDO3 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_LDO3_VOLT,
++			.idle_reg = BD71828_REG_LDO3_VOLT,
++			.suspend_reg = BD71828_REG_LDO3_VOLT,
++			.lpsr_reg = BD71828_REG_LDO3_VOLT,
++			.run_mask = BD71828_MASK_LDO_VOLT,
++			.idle_mask = BD71828_MASK_LDO_VOLT,
++			.suspend_mask = BD71828_MASK_LDO_VOLT,
++			.lpsr_mask = BD71828_MASK_LDO_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++
++	}, {
++		.desc = {
++			.name = "ldo4",
++			.of_match = of_match_ptr("LDO4"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_LDO4,
++			.ops = &bd71828_ldo_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_ldo_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_ldo_volts),
++			.n_voltages = BD71828_LDO_VOLTS,
++			.enable_reg = BD71828_REG_LDO4_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_LDO4_VOLT,
++			.vsel_mask = BD71828_MASK_LDO_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * LDO1 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_LDO4_VOLT,
++			.idle_reg = BD71828_REG_LDO4_VOLT,
++			.suspend_reg = BD71828_REG_LDO4_VOLT,
++			.lpsr_reg = BD71828_REG_LDO4_VOLT,
++			.run_mask = BD71828_MASK_LDO_VOLT,
++			.idle_mask = BD71828_MASK_LDO_VOLT,
++			.suspend_mask = BD71828_MASK_LDO_VOLT,
++			.lpsr_mask = BD71828_MASK_LDO_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++	}, {
++		.desc = {
++			.name = "ldo5",
++			.of_match = of_match_ptr("LDO5"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_LDO5,
++			.ops = &bd71828_ldo_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_ldo_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_ldo_volts),
++			.n_voltages = BD71828_LDO_VOLTS,
++			.enable_reg = BD71828_REG_LDO5_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_LDO5_VOLT,
++			.vsel_mask = BD71828_MASK_LDO_VOLT,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++			.owner = THIS_MODULE,
++		},
++		/*
++		 * LDO5 is special. It can choose vsel settings to be configured
++		 * from 2 different registers (by GPIO).
++		 *
++		 * This driver supports only configuration where
++		 * BD71828_REG_LDO5_VOLT_L is used.
++		 */
++		.dvs = {
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_LDO5_VOLT,
++			.idle_reg = BD71828_REG_LDO5_VOLT,
++			.suspend_reg = BD71828_REG_LDO5_VOLT,
++			.lpsr_reg = BD71828_REG_LDO5_VOLT,
++			.run_mask = BD71828_MASK_LDO_VOLT,
++			.idle_mask = BD71828_MASK_LDO_VOLT,
++			.suspend_mask = BD71828_MASK_LDO_VOLT,
++			.lpsr_mask = BD71828_MASK_LDO_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++
++	}, {
++		.desc = {
++			.name = "ldo6",
++			.of_match = of_match_ptr("LDO6"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_LDO6,
++			.ops = &bd71828_ldo6_ops,
++			.type = REGULATOR_VOLTAGE,
++			.n_voltages = 1,
++			.enable_reg = BD71828_REG_LDO6_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.owner = THIS_MODULE,
++			/*
++			 * LDO6 only supports enable/disable for all states.
++			 * Voltage for LDO6 is fixed.
++			 */
++			.of_parse_cb = ldo6_parse_dt,
++		},
++	}, {
++		.desc = {
++			/* SNVS LDO in data-sheet */
++			.name = "ldo7",
++			.of_match = of_match_ptr("LDO7"),
++			.regulators_node = of_match_ptr("regulators"),
++			.id = BD71828_LDO_SNVS,
++			.ops = &bd71828_ldo_ops,
++			.type = REGULATOR_VOLTAGE,
++			.linear_ranges = bd71828_ldo_volts,
++			.n_linear_ranges = ARRAY_SIZE(bd71828_ldo_volts),
++			.n_voltages = BD71828_LDO_VOLTS,
++			.enable_reg = BD71828_REG_LDO7_EN,
++			.enable_mask = BD71828_MASK_RUN_EN,
++			.vsel_reg = BD71828_REG_LDO7_VOLT,
++			.vsel_mask = BD71828_MASK_LDO_VOLT,
++			.owner = THIS_MODULE,
++			.of_parse_cb = buck_set_hw_dvs_levels,
++		},
++		.dvs = {
++			/*
++			 * LDO7 only supports single voltage for all states.
++			 * voltage can be individually enabled for each state
++			 * though => allow setting all states to support
++			 * enabling power rail on different states.
++			 */
++			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
++				     ROHM_DVS_LEVEL_SUSPEND |
++				     ROHM_DVS_LEVEL_LPSR,
++			.run_reg = BD71828_REG_LDO7_VOLT,
++			.idle_reg = BD71828_REG_LDO7_VOLT,
++			.suspend_reg = BD71828_REG_LDO7_VOLT,
++			.lpsr_reg = BD71828_REG_LDO7_VOLT,
++			.run_mask = BD71828_MASK_LDO_VOLT,
++			.idle_mask = BD71828_MASK_LDO_VOLT,
++			.suspend_mask = BD71828_MASK_LDO_VOLT,
++			.lpsr_mask = BD71828_MASK_LDO_VOLT,
++			.idle_on_mask = BD71828_MASK_IDLE_EN,
++			.suspend_on_mask = BD71828_MASK_SUSP_EN,
++			.lpsr_on_mask = BD71828_MASK_LPSR_EN,
++		},
++
++	},
++};
++
++static int bd71828_probe(struct platform_device *pdev)
++{
++	struct rohm_regmap_dev *bd71828;
++	int i, j, ret;
++	struct regulator_config config = {
++		.dev = pdev->dev.parent,
++	};
++
++	bd71828 = dev_get_drvdata(pdev->dev.parent);
++	if (!bd71828) {
++		dev_err(&pdev->dev, "No MFD driver data\n");
++		return -EINVAL;
++	}
++
++	config.regmap = bd71828->regmap;
++
++	for (i = 0; i < ARRAY_SIZE(bd71828_rdata); i++) {
++		struct regulator_dev *rdev;
++		const struct bd71828_regulator_data *rd;
++
++		rd = &bd71828_rdata[i];
++		rdev = devm_regulator_register(&pdev->dev,
++					       &rd->desc, &config);
++		if (IS_ERR(rdev)) {
++			dev_err(&pdev->dev,
++				"failed to register %s regulator\n",
++				rd->desc.name);
++			return PTR_ERR(rdev);
++		}
++		for (j = 0; j < rd->reg_init_amnt; j++) {
++			ret = regmap_update_bits(bd71828->regmap,
++						 rd->reg_inits[j].reg,
++						 rd->reg_inits[j].mask,
++						 rd->reg_inits[j].val);
++			if (ret) {
++				dev_err(&pdev->dev,
++					"regulator %s init failed\n",
++					rd->desc.name);
++				return ret;
++			}
++		}
++	}
++	return 0;
++}
++
++static struct platform_driver bd71828_regulator = {
++	.driver = {
++		.name = "bd71828-pmic"
++	},
++	.probe = bd71828_probe,
++};
++
++module_platform_driver(bd71828_regulator);
++
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("BD71828 voltage regulator driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:bd71828-pmic");
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
