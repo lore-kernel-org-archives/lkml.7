@@ -2,73 +2,130 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980C5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B93CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC8221655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oXbbbanS"
+	by mail.kernel.org (Postfix) with ESMTP id CD41221655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502262AbfJXN65 (ORCPT
+        id S2404431AbfJXN7Z convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:58:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33580 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727811AbfJXN64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:58:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4h4g4xWUSzQkOzsFtj/+EUfueq7HCHgHxDUC8+NHICM=; b=oXbbbanSQTTccq/4q8hM8qratB
-        Zr3jaXlry1YfYCgEwaWqSMfdUZtp/MbIKwOBLIVi9ughnWdu8o7t0CZbpgAaTOEmAue2emWkloaZz
-        gJkh/VHsrp73SsoDKb7WngLvDrgUT5VhPTuO+E8B7q0LQ3KcmJZ4IRV2hIFLs+a6wgWQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iNddb-0003vD-1j; Thu, 24 Oct 2019 15:58:51 +0200
-Date:   Thu, 24 Oct 2019 15:58:51 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: dsa: qca8k: Initialize the switch with
- correct number of ports
-Message-ID: <20191024135851.GB30147@lunn.ch>
-References: <1571924818-27725-1-git-send-email-michal.vokac@ysoft.com>
+        Thu, 24 Oct 2019 09:59:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55310 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfJXN7Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:59:25 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iNde4-0008OD-KI; Thu, 24 Oct 2019 15:59:20 +0200
+Date:   Thu, 24 Oct 2019 15:59:20 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        tglx@linutronix.de, Paul Mackerras <paulus@samba.org>
+Subject: [PATCH 03/34 v2] powerpc: Use CONFIG_PREEMPTION
+Message-ID: <20191024135920.cp673ivbcomu2bgy@linutronix.de>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+ <20191015191821.11479-4-bigeasy@linutronix.de>
+ <156db456-af80-1f5e-6234-2e78283569b6@c-s.fr>
+ <87d0ext4q3.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1571924818-27725-1-git-send-email-michal.vokac@ysoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <87d0ext4q3.fsf@mpe.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 03:46:58PM +0200, Michal Vokáč wrote:
-> Since commit 0394a63acfe2 ("net: dsa: enable and disable all ports")
-> the dsa core disables all unused ports of a switch. In this case
-> disabling ports with numbers higher than QCA8K_NUM_PORTS causes that
-> some switch registers are overwritten with incorrect content.
-> 
-> To fix this, initialize the dsa_switch->num_ports with correct number
-> of ports.
-> 
-> Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-    Andrew
+Switch the entry code over to use CONFIG_PREEMPTION. Add PREEMPT_RT
+output in __die().
+
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bigeasy: +Kconfig]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v1…v2: Remove the changes to die.c
+
+ arch/powerpc/Kconfig           | 2 +-
+ arch/powerpc/kernel/entry_32.S | 4 ++--
+ arch/powerpc/kernel/entry_64.S | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 3e56c9c2f16ee..8ead8d6e1cbc8 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -106,7 +106,7 @@ config LOCKDEP_SUPPORT
+ config GENERIC_LOCKBREAK
+ 	bool
+ 	default y
+-	depends on SMP && PREEMPT
++	depends on SMP && PREEMPTION
+ 
+ config GENERIC_HWEIGHT
+ 	bool
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index d60908ea37fb9..e1a4c39b83b86 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -897,7 +897,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
+ 	bne-	0b
+ 1:
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	/* check current_thread_info->preempt_count */
+ 	lwz	r0,TI_PREEMPT(r2)
+ 	cmpwi	0,r0,0		/* if non-zero, just restore regs and return */
+@@ -921,7 +921,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
+ 	 */
+ 	bl	trace_hardirqs_on
+ #endif
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+ restore_kuap:
+ 	kuap_restore r1, r2, r9, r10, r0
+ 
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 6467bdab8d405..83733376533e8 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -840,7 +840,7 @@ _GLOBAL(ret_from_except_lite)
+ 	bne-	0b
+ 1:
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	/* Check if we need to preempt */
+ 	andi.	r0,r4,_TIF_NEED_RESCHED
+ 	beq+	restore
+@@ -871,7 +871,7 @@ _GLOBAL(ret_from_except_lite)
+ 	li	r10,MSR_RI
+ 	mtmsrd	r10,1		  /* Update machine state */
+ #endif /* CONFIG_PPC_BOOK3E */
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+ 
+ 	.globl	fast_exc_return_irq
+ fast_exc_return_irq:
+-- 
+2.23.0
+
