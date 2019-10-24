@@ -2,173 +2,94 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A9FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4ADCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F258420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811A020659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzPfneCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407932AbfJXQrN (ORCPT
+        id S2409913AbfJXQrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:47:13 -0400
-Received: from smtprelay0121.hostedemail.com ([216.40.44.121]:52636 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405516AbfJXQrM (ORCPT
+        Thu, 24 Oct 2019 12:47:20 -0400
+Received: from mail-qt1-f180.google.com ([209.85.160.180]:33246 "EHLO
+        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405516AbfJXQrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:47:12 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 17510182CED28;
-        Thu, 24 Oct 2019 16:47:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fan08_5b81e982d0758
-X-Filterd-Recvd-Size: 4755
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 24 Oct 2019 16:47:08 +0000 (UTC)
-Message-ID: <4a30de3c6bc3a304ff45f671832480c548c4d8f0.camel@perches.com>
-Subject: Re: [PATCH] x86/hyper-v: micro-optimize send_ipi_one case
-From:   Joe Perches <joe@perches.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Date:   Thu, 24 Oct 2019 09:47:07 -0700
-In-Reply-To: <20191024152152.25577-1-vkuznets@redhat.com>
-References: <20191024152152.25577-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 24 Oct 2019 12:47:20 -0400
+Received: by mail-qt1-f180.google.com with SMTP id r5so38882990qtd.0;
+        Thu, 24 Oct 2019 09:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=359J8YcwWQeShpxfO8aTvwah7AWM03igtl5dwiYjcyk=;
+        b=lzPfneCjKpvgn4WeodHOJmtYeQRF4MBzULU9yNEo+U8qML1FQ2MPOjzZlZitXz+kKR
+         9jHwdOXN5hezHYHeAOJAAlX9tlmTk2w1jyVjB7+Jvx/ihCU8RiYoeeNCETckWDlET2y7
+         Vv7toew5L8J9BCKkWEspZsZEmytS6DalGXLW9pgi1sz2RR172Y9AJMALvWP48DEpSjwp
+         beDylJ9w4F+vqYVRu4CuiY5zulIZaybrvM4CEekF9ZHChWKuyyZXG6s7UsdmhhuBrWak
+         gd3MC0MAdrQ19idhvoJjbqT1wvJwKyIovARFkb6VtnJ1IrQlYnxKml9/kqSgQ1dmIfFN
+         xRXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=359J8YcwWQeShpxfO8aTvwah7AWM03igtl5dwiYjcyk=;
+        b=KKkP63Vyg03sApTjPnj/jb3XPvzk03fTXnvvfTUa40GzOEeFgAN5Gi+e7h60LPYTLp
+         /wG1EABqNzncUld4EiRo40Zduqi7tsO+tglrL32OUYe3Wk4pUH16xlENCpun06wDiWc7
+         8t7QVIV0E+xOMyeAI5Dwn115pazqYOTX8n0u6qc+iCTjzpl/rkNlL5Fcly6pJ4VKSndm
+         anMDrh4CboI42IMlUOv6xCeC0Fgk9Kshr6s/KiqYWZzOF5N8QTPznDyKtemTmSf9OyIN
+         bkxHGTd1C6TOhQbEV3S6gf7nGa2WGoc4Bgz3eK0jSWvSY/rgqDLZ7l4CxaMRdZMM07Fo
+         I7bw==
+X-Gm-Message-State: APjAAAWwTWp98L6O7GjV3NohHEWpUqVIUOPf706vv6GS8004rS6n/G86
+        d7HZft0qhr3aAKLQz8L/988=
+X-Google-Smtp-Source: APXvYqyGJ1hmw6uReyM04ZrDuiA3HGt8Ad5AiBRp77uP+V1uiGSWdM9pcx/zTqK9LjZZn/+SydvSrw==
+X-Received: by 2002:ac8:290f:: with SMTP id y15mr5300194qty.181.1571935638557;
+        Thu, 24 Oct 2019 09:47:18 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id c18sm12080095qkk.17.2019.10.24.09.47.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 09:47:17 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 12:47:16 -0400
+Message-ID: <20191024124716.GB1210163@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: dsa: fix dereference on ds->dev before null
+ check error
+In-Reply-To: <20191024103218.2592-1-colin.king@canonical.com>
+References: <20191024103218.2592-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-10-24 at 17:21 +0200, Vitaly Kuznetsov wrote:
-> When sending an IPI to a single CPU there is no need to deal with cpumasks.
-> With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
-> cycles) improvement with smp_call_function_single() loop benchmark. The
-> optimization, however, is tiny and straitforward. Also, send_ipi_one() is
-> important for PV spinlock kick.
+On Thu, 24 Oct 2019 11:32:18 +0100, Colin King <colin.king@canonical.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> I was also wondering if it would make sense to switch to using regular
-> APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
-> cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
-> vector)).
+> Currently ds->dev is dereferenced on the assignments of pdata and
+> np before ds->dev is null checked, hence there is a potential null
+> pointer dereference on ds->dev.  Fix this by assigning pdata and
+> np after the ds->dev null pointer sanity check.
+> 
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-style trivia:
-
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-[]
-> @@ -194,10 +194,26 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
->  
->  static bool __send_ipi_one(int cpu, int vector)
->  {
-> -	struct cpumask mask = CPU_MASK_NONE;
-> +	int ret;
->  
-> -	cpumask_set_cpu(cpu, &mask);
-> -	return __send_ipi_mask(&mask, vector);
-> +	trace_hyperv_send_ipi_one(cpu, vector);
-> +
-> +	if (unlikely(!hv_hypercall_pg))
-> +		return false;
-> +
-> +	if (unlikely((vector < HV_IPI_LOW_VECTOR) ||
-> +		     (vector > HV_IPI_HIGH_VECTOR)))
-> +		return false;
-> +
-> +	if (cpu >= 64)
-> +		goto do_ex_hypercall;
-
-Pretty odd to have a separate single use goto
-to a single return statement.  Might be better
-using a direct return.
-
-> +
-> +	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
-> +				     BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
-> +	return ((ret == 0) ? true : false);
-> +
-> +do_ex_hypercall:
-> +	return __send_ipi_mask_ex(cpumask_of(cpu), vector);
->  }
-
-And the use of a automatic declaration of ret probably
-isn't useful either.
-
-Perhaps:
----
- arch/x86/hyperv/hv_apic.c           | 16 +++++++++++++---
- arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
- 2 files changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index e01078e9..16c65cd 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -194,10 +194,20 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 
- static bool __send_ipi_one(int cpu, int vector)
- {
--	struct cpumask mask = CPU_MASK_NONE;
-+	trace_hyperv_send_ipi_one(cpu, vector);
- 
--	cpumask_set_cpu(cpu, &mask);
--	return __send_ipi_mask(&mask, vector);
-+	if (unlikely(!hv_hypercall_pg))
-+		return false;
-+
-+	if (unlikely((vector < HV_IPI_LOW_VECTOR) ||
-+		     (vector > HV_IPI_HIGH_VECTOR)))
-+		return false;
-+
-+	if (cpu >= 64)
-+		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
-+
-+	return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
-+				       BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
- }
- 
- static void hv_send_ipi(int cpu, int vector)
-diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/trace/hyperv.h
-index ace464f..4d705cb 100644
---- a/arch/x86/include/asm/trace/hyperv.h
-+++ b/arch/x86/include/asm/trace/hyperv.h
-@@ -71,6 +71,21 @@ TRACE_EVENT(hyperv_send_ipi_mask,
- 		      __entry->ncpus, __entry->vector)
- 	);
- 
-+TRACE_EVENT(hyperv_send_ipi_one,
-+	    TP_PROTO(int cpu,
-+		     int vector),
-+	    TP_ARGS(cpu, vector),
-+	    TP_STRUCT__entry(
-+		    __field(int, cpu)
-+		    __field(int, vector)
-+		    ),
-+	    TP_fast_assign(__entry->cpu = cpu;
-+			   __entry->vector = vector;
-+		    ),
-+	    TP_printk("cpu %d vector %x",
-+		      __entry->cpu, __entry->vector)
-+	);
-+
- #endif /* CONFIG_HYPERV */
- 
- #undef TRACE_INCLUDE_PATH
-
-
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
