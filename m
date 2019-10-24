@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADB6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17206CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726732084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB48420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="RJqIvTxp"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="FCeCcZOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409194AbfJXKbs (ORCPT
+        id S2436703AbfJXKbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:31:48 -0400
-Received: from onstation.org ([52.200.56.107]:37222 "EHLO onstation.org"
+        Thu, 24 Oct 2019 06:31:51 -0400
+Received: from onstation.org ([52.200.56.107]:37250 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391490AbfJXKbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:31:45 -0400
+        id S2409181AbfJXKbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:31:47 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id A35873F234;
-        Thu, 24 Oct 2019 10:31:44 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id AD4D43F25C;
+        Thu, 24 Oct 2019 10:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1571913104;
-        bh=LJ77z04oPHnTQ196HzGAyUMjxpEEXbUu/j6tV9O9FFs=;
+        s=default; t=1571913105;
+        bh=TjnLS/ZuPQk+PIhxZ1NDe8tWtJ6hF+FLqMYRIzVX1Hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJqIvTxp+2Rl+TwcrLlHa0ns1XtBISRsjRB8RShqf9Z8RDuA0uwiFJMtjSuIjEQPQ
-         np/0OUrTeOh/374+mpmwx8j3FI6Shh88dLnMzslzvLVX8rWrGSmVOFggHsUA48yScw
-         QeYrcB/q/6XaBJ8gaAWoqhGn758xv3iKjDjZ/Fms=
+        b=FCeCcZORFMZTRNybTBNym4E1tuYUebZ+1dG3dJWW4yHeEzn4B4Tt/yfB9wK1iPB/S
+         aEcnXVnPfhiRSQKkhrhDuG9mfgxoRcoZSTIdhIy1fMpiDRHs7IUgHSWcqPEYsALnk6
+         PbKh1gKhmXJcs4787uvaFIjCu8x7orEBeHOP/yLc=
 From:   Brian Masney <masneyb@onstation.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         georgi.djakov@linaro.org
-Subject: [PATCH v2 1/4] ARM: qcom_defconfig: add msm8974 interconnect support
-Date:   Thu, 24 Oct 2019 06:31:37 -0400
-Message-Id: <20191024103140.10077-2-masneyb@onstation.org>
+Subject: [PATCH v2 4/4] ARM: dts: qcom: msm8974: add interconnect nodes
+Date:   Thu, 24 Oct 2019 06:31:40 -0400
+Message-Id: <20191024103140.10077-5-masneyb@onstation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191024103140.10077-1-masneyb@onstation.org>
 References: <20191024103140.10077-1-masneyb@onstation.org>
@@ -54,31 +54,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect support for msm8974-based SoCs in order to support the
-GPU on this platform.
+Add interconnect nodes that's needed to support bus scaling.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
 Changes since v1:
-- Set CONFIG_INTERCONNECT=y since its now a bool instead of a tristate
+- sort interconnect nodes by address
+- correct interconnect path for display:
+  MNOC_MAS_MDP_PORT0 -> BIMC_SLV_EBI_CH0
 
- arch/arm/configs/qcom_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 58 +++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index 9792dd0aae0c..cbe4e1d86f9a 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -252,6 +252,9 @@ CONFIG_PHY_QCOM_IPQ806X_SATA=y
- CONFIG_PHY_QCOM_USB_HS=y
- CONFIG_PHY_QCOM_USB_HSIC=y
- CONFIG_QCOM_QFPROM=y
-+CONFIG_INTERCONNECT=y
-+CONFIG_INTERCONNECT_QCOM=y
-+CONFIG_INTERCONNECT_QCOM_MSM8974=m
- CONFIG_EXT2_FS=y
- CONFIG_EXT2_FS_XATTR=y
- CONFIG_EXT3_FS=y
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index bdbde5125a56..c893c715f08c 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
++#include <dt-bindings/interconnect/qcom,msm8974.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8974.h>
+ #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+@@ -1106,6 +1107,60 @@
+ 			};
+ 		};
+ 
++		bimc: interconnect@fc380000 {
++			reg = <0xfc380000 0x6a000>;
++			compatible = "qcom,msm8974-bimc";
++			#interconnect-cells = <1>;
++			clock-names = "bus", "bus_a";
++			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
++			         <&rpmcc RPM_SMD_BIMC_A_CLK>;
++		};
++
++		snoc: interconnect@fc460000 {
++			reg = <0xfc460000 0x4000>;
++			compatible = "qcom,msm8974-snoc";
++			#interconnect-cells = <1>;
++			clock-names = "bus", "bus_a";
++			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
++			         <&rpmcc RPM_SMD_SNOC_A_CLK>;
++		};
++
++		pnoc: interconnect@fc468000 {
++			reg = <0xfc468000 0x4000>;
++			compatible = "qcom,msm8974-pnoc";
++			#interconnect-cells = <1>;
++			clock-names = "bus", "bus_a";
++			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
++			         <&rpmcc RPM_SMD_PNOC_A_CLK>;
++		};
++
++		ocmemnoc: interconnect@fc470000 {
++			reg = <0xfc470000 0x4000>;
++			compatible = "qcom,msm8974-ocmemnoc";
++			#interconnect-cells = <1>;
++			clock-names = "bus", "bus_a";
++			clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
++			         <&rpmcc RPM_SMD_OCMEMGX_A_CLK>;
++		};
++
++		mmssnoc: interconnect@fc478000 {
++			reg = <0xfc478000 0x4000>;
++			compatible = "qcom,msm8974-mmssnoc";
++			#interconnect-cells = <1>;
++			clock-names = "bus", "bus_a";
++			clocks = <&mmcc MMSS_S0_AXI_CLK>,
++			         <&mmcc MMSS_S0_AXI_CLK>;
++		};
++
++		cnoc: interconnect@fc480000 {
++			reg = <0xfc480000 0x4000>;
++			compatible = "qcom,msm8974-cnoc";
++			#interconnect-cells = <1>;
++			clock-names = "bus", "bus_a";
++			clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
++			         <&rpmcc RPM_SMD_CNOC_A_CLK>;
++		};
++
+ 		mdss: mdss@fd900000 {
+ 			status = "disabled";
+ 
+@@ -1152,6 +1207,9 @@
+ 				              "core",
+ 				              "vsync";
+ 
++				interconnects = <&mmssnoc MNOC_MAS_MDP_PORT0 &bimc BIMC_SLV_EBI_CH0>;
++				interconnect-names = "mdp0-mem";
++
+ 				ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
 -- 
 2.21.0
 
