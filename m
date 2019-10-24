@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C748CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F156DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A042084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45D621929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ghul3xFE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h7CmDroH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732413AbfJXWwJ (ORCPT
+        id S1732458AbfJXWwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:52:09 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:56025 "EHLO
+        Thu, 24 Oct 2019 18:52:13 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:51811 "EHLO
         mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732326AbfJXWwD (ORCPT
+        with ESMTP id S1732326AbfJXWwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:52:03 -0400
-Received: by mail-qk1-f202.google.com with SMTP id h18so336631qkj.22
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:03 -0700 (PDT)
+        Thu, 24 Oct 2019 18:52:11 -0400
+Received: by mail-qk1-f202.google.com with SMTP id h4so347748qkd.18
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+pC1wUGnAfIzdtPt9JYqx48tH0ZogjxIc75X2woCblw=;
-        b=Ghul3xFEQaQM5xzVBFQoG8U8HNwG42e7GeQtV27MTWSZRuGptIXTiXUGIjDHp/YIpT
-         hClIyJ8yLd1+EE9qsR9Oss13EFC0aEBed0i7vXbPLw7n7Cz1HrHzSiWsA4EcykXlitoW
-         K5h6f2Q+00V9aJmmUnI7P9/MLwLZ35DTumdhIT4mQ4ce7/IwgipCUWdP7+q+I8zT5OhO
-         a+NHytq0v/YolBdJAa7n+PY0/a9IGtPsdaAIdeA5LZmh6S0ZyAYyOYEOeyhxqrKOFMvM
-         QncsL/qfcrw8l2wQdAQW3JMAY3o7KpY74274D2H4sRGOglWCZipnGdOSYkKm6qs+y5EC
-         TkYQ==
+        bh=mYL9Vajfp90RBhmOr5x+royOTK5ijTSQrnKKnKdSwP8=;
+        b=h7CmDroHNc2GUxa+g8sWKLD1CcV9gP1uFZesaZzVHnU2a/VBAGDrWFnqCRU+m5Vbxp
+         eaGC73Zpw9RZWybSnsktpUOkuEDcpbZIwlHpDgN79dPEQKA6imXqfphOHV6fZIX1vhay
+         UCpiNG3JtiEVtrMytjk/nHqhnqy0gmdjuwm2NOkx0ncwhVH/+Zpkk8+VEcnFqvyBPvs2
+         m5wks6dUtk7GMFS4ou0w6XEB2b6UOzqqnC4RoG6rt3wfmnkP2N6JtRALXiO9ySr4Fq8U
+         CorUFaTzeYq9F1zwhAtdXHWC+48gHjKj20BQ918yQIZSbJoZWQzd8WGDJiFqjX+ZtINR
+         p1BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+pC1wUGnAfIzdtPt9JYqx48tH0ZogjxIc75X2woCblw=;
-        b=g9JQH6xyf8w722+dLo0FYFEJVV9yxv3CbCIhr0t/auoDZW3GgmfmVfWYOA90yg3I/N
-         sqO1GxsGBqnbGYsAA5XBS/0D61TbuaMqLiD/ma6iNxKGfyBe6NTzQL23vVgcPA7ZHgsP
-         y6Lcwiw/l0svaobH8VyiDg4NhxdjHC1wa78UsXmmN9HwvPahItW8z3ZUgEtV60Q2XKwX
-         VONSb/dEqITxsYxQrLqsCLyh/c1AzJOKcYwi7/3/hoahuEXdClcQXF3R+Rg6/t7GYVhH
-         uYbqd/hZpAMFHQsCMLRvPhT5+ni+RUCi8O395C56iZt90feMk5c6WUPo6IXxYqR8idoI
-         o4HQ==
-X-Gm-Message-State: APjAAAVTE5CdfvR65X0AB6+SBvrC5V7AkVu6dnlb4Z+HvRIIXONJyhDE
-        fQqio6HduqojgmU6RT1s1MIgg9so8s97b7Zl36s=
-X-Google-Smtp-Source: APXvYqzM3I26bKb3wrnFe0tgT6a7QNS7VGM2eEEUUuU2H4VKLgtcE0Bg1aj8IG0janwPGy/Kg+c3iOCkFYjR2Y2rhpw=
-X-Received: by 2002:a0c:e6e5:: with SMTP id m5mr375068qvn.170.1571957522490;
- Thu, 24 Oct 2019 15:52:02 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:51:22 -0700
+        bh=mYL9Vajfp90RBhmOr5x+royOTK5ijTSQrnKKnKdSwP8=;
+        b=KqFAaLOmgmlsDjjvIAqk+kd8HhCNcVVxPYxqjKMlq2tlpwsMWSxhChz1KDYm7THFOM
+         VhCnedBQ6o+39RUKqBi7VuCCiy7ULh/oNl+oAyb36OVWKUXQop3KRoM8ylaaaCvvJass
+         MpXlv7PmAHi1ENFo7ACsqFlsbcezNfRt3tUbH9q9WY7eIw/AU3MbvQTvuSbo4eyviuVk
+         vcD4h0VGzU6BbpbhuSxefxOHSQKGctV49cQm/2IBnL0twNFjuwJwCFHl5oveuy4Uc9Jl
+         mnRvESdzvMgNZB9zTzFdoc12S3Ee9/gKlxojHblgnKM7Vwcp7+xrZ7mAq/GJBl++MZmK
+         zP9A==
+X-Gm-Message-State: APjAAAUCafAK/UUngXTjGr5uyFkuKPNFw75LVBkZFclFQs0uvoRlZpvp
+        AHsd5661Rs0yH/P0cp3/ldFB7YJjNF4r71kJMOo=
+X-Google-Smtp-Source: APXvYqyjPZYDLgJTlGq99OGbhTAPtQvVAb9tamVCQRwQTsZBBJQIlLhZeafbs0GYaiDEFKiGX8NWZ+1DbuMz+1REocU=
+X-Received: by 2002:ae9:e885:: with SMTP id a127mr114159qkg.427.1571957529972;
+ Thu, 24 Oct 2019 15:52:09 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 15:51:24 -0700
 In-Reply-To: <20191024225132.13410-1-samitolvanen@google.com>
-Message-Id: <20191024225132.13410-8-samitolvanen@google.com>
+Message-Id: <20191024225132.13410-10-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191024225132.13410-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v2 07/17] scs: add support for stack usage debugging
+Subject: [PATCH v2 09/17] arm64: disable function graph tracing with SCS
 From:   samitolvanen@google.com
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -83,70 +83,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks.
+With CONFIG_FUNCTION_GRAPH_TRACER, function return addresses are
+modified in ftrace_graph_caller and prepare_ftrace_return to redirect
+control flow to ftrace_return_to_handler. This is incompatible with
+SCS.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- kernel/scs.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/arm64/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/scs.c b/kernel/scs.c
-index b9e6e225254f..a5bf7d12dc13 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -154,6 +154,44 @@ int scs_prepare(struct task_struct *tsk, int node)
- 	return 0;
- }
- 
-+#ifdef CONFIG_DEBUG_STACK_USAGE
-+static inline unsigned long scs_used(struct task_struct *tsk)
-+{
-+	unsigned long *p = __scs_base(tsk);
-+	unsigned long *end = scs_magic(tsk);
-+	uintptr_t s = (uintptr_t)p;
-+
-+	while (p < end && *p)
-+		p++;
-+
-+	return (uintptr_t)p - s;
-+}
-+
-+static void scs_check_usage(struct task_struct *tsk)
-+{
-+	static DEFINE_SPINLOCK(lock);
-+	static unsigned long highest;
-+	unsigned long used = scs_used(tsk);
-+
-+	if (used <= highest)
-+		return;
-+
-+	spin_lock(&lock);
-+
-+	if (used > highest) {
-+		pr_info("%s: highest shadow stack usage %lu bytes\n",
-+			__func__, used);
-+		highest = used;
-+	}
-+
-+	spin_unlock(&lock);
-+}
-+#else
-+static inline void scs_check_usage(struct task_struct *tsk)
-+{
-+}
-+#endif
-+
- bool scs_corrupted(struct task_struct *tsk)
- {
- 	return *scs_magic(tsk) != SCS_END_MAGIC;
-@@ -168,6 +206,7 @@ void scs_release(struct task_struct *tsk)
- 		return;
- 
- 	WARN_ON(scs_corrupted(tsk));
-+	scs_check_usage(tsk);
- 
- 	scs_account(tsk, -1);
- 	scs_task_init(tsk);
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 3f047afb982c..8cda176dad9a 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -148,7 +148,7 @@ config ARM64
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+-	select HAVE_FUNCTION_GRAPH_TRACER
++	select HAVE_FUNCTION_GRAPH_TRACER if !SHADOW_CALL_STACK
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+ 	select HAVE_IRQ_TIME_ACCOUNTING
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
