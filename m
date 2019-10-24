@@ -2,215 +2,174 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DAACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1293ACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5482166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30DA21906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:32:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ez00wIRE"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="cEdT/jIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393923AbfJXQbY (ORCPT
+        id S2393937AbfJXQcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:31:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37891 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391179AbfJXQbX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:31:23 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q28so16416885lfa.5;
-        Thu, 24 Oct 2019 09:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=na+oXNXNyUDNjWdJTcuVx69ApJOXtahZ0nvI2lP1fwc=;
-        b=Ez00wIREtTHgs9Iwnh3PyJ4tWnCNBIGJaey8DnYe3chYJdmtRD8sMhi47PUby1lDUf
-         4qPYLDm7SK+WL6jCuipkPqWP+760v3tSwnYoN65eZ8k838mmAzNenhwDZoCfm/Ke5/D2
-         kDILsOhm3RWYexG5P2pH7AAmQY98gvGArDBHX+fHKPc/jSl98QH8jmNuiDl/uznNIBxg
-         2v84Nfuj0UIJDK9e54zu+E5ocFBo+cEmMbXcsyj1hRfqae8CP+tG65mVSyeh9Z5B3c51
-         bbTUG4FNiWYZ/35G7JSSrgDd+hKC7merwfVeOFsvw43Ssh7FC8TS/+kKKkcoJgelugb+
-         a89w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=na+oXNXNyUDNjWdJTcuVx69ApJOXtahZ0nvI2lP1fwc=;
-        b=Gn/L0lfbBk+VoNyP0tLJcZG549R3eQKRKVqd4LI2KGH4xkMNif8qrhFI51zr6LWGI5
-         /7qj47zwgdmCrBA724AqDrBnHH6PIOZ1RlY2fviXgfit2MrrCiOG3HpyRuyHajrY7IWi
-         JvLFaG06dLiqq3xg2wWGcgOH/qXDK6RVHazEjlFg4JgAE/yzuIxrcxzrYraKn2ZXbIAM
-         h3vV+GGJk9snkzXJBbLgFqSGfE07+ZCP2qh7q9D4YUBpcDh8ZBUmoUKShVxiF8kwejmA
-         lak9AZDENh+na4ICYNHB49KLvWn5BVw76/AxMSJNpSlR88Lnbui9No7ZeADLIKyv4D7l
-         GC8Q==
-X-Gm-Message-State: APjAAAUS5P80j2ZXX+fj2asI1DzJRxFarenu8yKRAjcPKqIfx3Xw299c
-        RDMJH3PijblDOS3w2rvG66hWBHoy
-X-Google-Smtp-Source: APXvYqyDcsQqXLdNCUkKqDZBMjytxYXG/ewmWKyeitUd1x3wYEH391e0zGP7Yz354lfShGKbtmD41Q==
-X-Received: by 2002:a19:f707:: with SMTP id z7mr16558599lfe.0.1571934680637;
-        Thu, 24 Oct 2019 09:31:20 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id 10sm7066153lfy.57.2019.10.24.09.31.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 09:31:20 -0700 (PDT)
-Subject: Re: [PATCH v1 2/3] drm/tegra: Fix 2d and 3d clients detaching from
- IOMMU domain
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190623173743.24088-1-digetx@gmail.com>
- <20190623173743.24088-2-digetx@gmail.com> <20191024115804.GB2924027@ulmo>
- <45926d95-3e7a-c56b-402a-2b2c6475c5db@gmail.com>
- <20191024135018.GD2924027@ulmo>
- <38a67df0-2ede-e7fe-8eca-6c4491cdcc7b@gmail.com>
- <20191024155620.GG2924027@ulmo>
- <bfc6c17d-f2df-32d0-67d6-2f763c81d7fc@gmail.com>
- <7f7ecf90-531c-69ae-9011-684666ed8743@gmail.com>
- <ef2ccc90-be93-3cfb-6b8b-2a406dd8d362@gmail.com>
-Message-ID: <026bbeb0-1539-2b62-a447-60c1bc041f5a@gmail.com>
-Date:   Thu, 24 Oct 2019 19:31:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <ef2ccc90-be93-3cfb-6b8b-2a406dd8d362@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 24 Oct 2019 12:32:21 -0400
+Received: from mail-db3eur04hn2012.outbound.protection.outlook.com ([52.101.138.12]:42110
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389313AbfJXQcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:32:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f4yMr25Ohn+eGi2D/ngdXQh9Etu989gs7syCKCAnXdzc1Y7wPzAjby21OMS/ZwC8pgQN1pTJp+gxTJ+dEe7SM0j3XYOZlZw/dxfrwVH3boEio2wtIGKJdho8g+kYtkZhEFoCQ4f4MczXmimH/yycpddEAA5Aohp98iDBOfNFPZFPiAvEmCNQA7A+A8jDjdce27cX1Els6einHsDvqLx3c7VdPAnu00z94NHcAdfj+aWq24krU0jTKsM+svuInOQOCksDI7hVtt+MPEn3eznUVyNMmn+EgbG9bxr0cIaTzkP7HfpIMRDebpiTAxaZYS3md+cCP6hpK8Tr4jrxD7FWFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fawo5oN1s8a05mGnV6DWzrYYQpaf6Uj7iAa1CYWy5SU=;
+ b=EWWgZ8SkdDLuYgetyaWwEK/U/U/FkchTVEi1iV/JBvbPiYN7unRSLK617Bmsk1cFm8stofhhlUC9zn0Hg5wmiK71UycUjX7ne2NmmLLGdvXRjaHY00MokGKiiknqF55CMLeXTabgCUyoFvzAa0zbl6eqwFGgkCgh0r6e9QP+fyRGGnkbKRLTrVV+8EI/5BYyPIQx8sAtu0EBYlt90IGbdaE0qvpQtlKXMFG5mj/SemjU1uyWr2ExCLB30vk3+YtLkBP8H/kaIPEhpr5mrT1nx0CrFgGW+WqAvOfsrZbP5k0viphPgWnEmiYPuZAlRTyNcIkBK8hLwaMM8Lf0XsuLqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fawo5oN1s8a05mGnV6DWzrYYQpaf6Uj7iAa1CYWy5SU=;
+ b=cEdT/jIQL2Jni67qKnGqowNuBsszi9fHoIBV0a1g28Wx/6zR4EM/mEPO7BODhVddCofLGEJCDNexL7iCTxQDSd1oXCpSNFClfM1ik+4+zhBKMH9DICPvfE4sI/SAJPofRVALGjMeX8wuiS2fEZHpiqAJiOlsB8xEiCLcmqSaO/o=
+Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com (10.172.218.15) by
+ AM4PR0802MB2305.eurprd08.prod.outlook.com (10.172.218.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.18; Thu, 24 Oct 2019 16:32:07 +0000
+Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com
+ ([fe80::9c3e:dc5:e056:9f89]) by AM4PR0802MB2242.eurprd08.prod.outlook.com
+ ([fe80::9c3e:dc5:e056:9f89%12]) with mapi id 15.20.2387.023; Thu, 24 Oct 2019
+ 16:32:07 +0000
+From:   Roman Kagan <rkagan@virtuozzo.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] x86/hyper-v: micro-optimize send_ipi_one case
+Thread-Topic: [PATCH] x86/hyper-v: micro-optimize send_ipi_one case
+Thread-Index: AQHVioF8f6JnvYZ8LUKUUp53PHF9w6dp/CAA
+Date:   Thu, 24 Oct 2019 16:32:07 +0000
+Message-ID: <20191024163204.GA4673@rkaganb.sw.ru>
+References: <20191024152152.25577-1-vkuznets@redhat.com>
+In-Reply-To: <20191024152152.25577-1-vkuznets@redhat.com>
+Accept-Language: en-US, ru-RU
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.12.1 (2019-06-15)
+mail-followup-to: Roman Kagan <rkagan@virtuozzo.com>,   Vitaly Kuznetsov
+ <vkuznets@redhat.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  x86@kernel.org, "K. Y. Srinivasan"
+ <kys@microsoft.com>,   Haiyang Zhang <haiyangz@microsoft.com>, Stephen
+ Hemminger <sthemmin@microsoft.com>,    Sasha Levin <sashal@kernel.org>,        Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,       Michael Kelley
+ <mikelley@microsoft.com>
+x-originating-ip: [185.231.240.5]
+x-clientproxiedby: HE1P18901CA0020.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:3:8b::30) To AM4PR0802MB2242.eurprd08.prod.outlook.com
+ (2603:10a6:200:5f::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rkagan@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a944c21-b0e2-48f0-7f95-08d7589fb5ff
+x-ms-traffictypediagnostic: AM4PR0802MB2305:|AM4PR0802MB2305:|AM4PR0802MB2305:
+x-microsoft-antispam-prvs: <AM4PR0802MB2305344845E4DD6519CC55E7C96A0@AM4PR0802MB2305.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(39840400004)(366004)(376002)(136003)(346002)(396003)(189003)(199004)(229853002)(6486002)(9686003)(305945005)(2906002)(7736002)(76176011)(52116002)(4326008)(6246003)(33656002)(6512007)(1076003)(316002)(6436002)(256004)(14454004)(86362001)(186003)(66556008)(64756008)(66446008)(26005)(81156014)(8676002)(81166006)(8936002)(99286004)(66476007)(478600001)(66946007)(5660300002)(66066001)(54906003)(446003)(6116002)(36756003)(25786009)(58126008)(386003)(6506007)(11346002)(7416002)(6916009)(102836004)(486006)(476003)(71190400001)(71200400001)(3846002)(14444005)(30126002);DIR:OUT;SFP:1501;SCL:5;SRVR:AM4PR0802MB2305;H:AM4PR0802MB2242.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-transport-forked: True
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BHYxf4M9FHHHHkEw6B1P5t1K/5JgPzcHciYQa3hxJctZELaJl7UGO6DPK36Fz+NhGYG3lRZ5s0cayj/7AGuxgpNovQ9uX9ebIjgpy3nJS9ABihkvmYKyeBbmxwgKO9Cxg/FvtdK7jGsqEHzgEatqkUgN7/AThHm6TRtMdEJ+xnbavSsM2cPXTt1V5RpKBs5Sv8f1/LTXRFQSv+zLEx9n9M5gFO/12ZBFGFfBUAXRAmyYN6OtdXbKLKCCCAvVGDY6Q6ZsrSIdLVb5SyCyg8IhMzYJsC5j9qkDR2ehWsSuEW4riDoIqx2VNvCBxAkDFCG9ZGXakxW7dNGMlBnuZ7orLaCarRFvOTZGV4YgHRdfhEFG9nxTde+IUqm+YKXWJWGfjFWhTDQ2kY320cQs7s/u/kGG3tge1RaWkDvYc6Oc8RUZM2+hPA9iONEDWBScdC4pxp708ZrZFxwRS2vI6gHFB6zgFdZERMmmG/SunfjTZ55j3AE2o5qravlbaOoh1tq/IlHiKBl2G6wbfjweAawzow==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <03073080DC5DAE4AA941C4E9409541E0@eurprd08.prod.outlook.com>
+MIME-Version: 1.0
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a944c21-b0e2-48f0-7f95-08d7589fb5ff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 16:32:07.5388
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VRg6FX4h/YS9Af2t+BBdUbfhinXHpy+bvFI9uZxOxiO2VrtezmuIgJzZiWEMiYXLsPG6V4uVUTtF3df9TX4X5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2305
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.10.2019 19:21, Dmitry Osipenko пишет:
-> 24.10.2019 19:09, Dmitry Osipenko пишет:
->> 24.10.2019 18:57, Dmitry Osipenko пишет:
->>> 24.10.2019 18:56, Thierry Reding пишет:
->>>> On Thu, Oct 24, 2019 at 06:47:23PM +0300, Dmitry Osipenko wrote:
->>>>> 24.10.2019 16:50, Thierry Reding пишет:
->>>>>> On Thu, Oct 24, 2019 at 04:28:41PM +0300, Dmitry Osipenko wrote:
->>>>>>> 24.10.2019 14:58, Thierry Reding пишет:
->>>>>>>> On Sun, Jun 23, 2019 at 08:37:42PM +0300, Dmitry Osipenko wrote:
->>>>>>>>> This should should fire up on the DRM's driver module re-loader because
->>>>>>>>> there won't be enough available domains on older Tegra SoCs.
->>>>>>>>>
->>>>>>>>> Cc: stable <stable@vger.kernel.org>
->>>>>>>>> Fixes: 0c407de5ed1a ("drm/tegra: Refactor IOMMU attach/detach")
->>>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>> ---
->>>>>>>>>  drivers/gpu/drm/tegra/dc.c   | 4 ++--
->>>>>>>>>  drivers/gpu/drm/tegra/drm.c  | 9 ++++++---
->>>>>>>>>  drivers/gpu/drm/tegra/drm.h  | 3 ++-
->>>>>>>>>  drivers/gpu/drm/tegra/gr2d.c | 4 ++--
->>>>>>>>>  drivers/gpu/drm/tegra/gr3d.c | 4 ++--
->>>>>>>>>  5 files changed, 14 insertions(+), 10 deletions(-)
->>>>>>>>
->>>>>>>> I think I understand what this is trying to do, but the commit message
->>>>>>>> does not help at all. So what's really going on here is that we need to
->>>>>>>> detach the device from the group regardless of whether we're sharing the
->>>>>>>> group or not, just like we attach groups to the shared domain whether
->>>>>>>> they share the same group or not.
->>>>>>>
->>>>>>> Yes, the commit's message could be improved.
->>>>>>>
->>>>>>>> But in that case, I wonder if it's even worth splitting groups the way
->>>>>>>> we are right now. Wouldn't it be better to just put all the devices into
->>>>>>>> the same group and be done with it?
->>>>>>>>
->>>>>>>> The current code gives me headaches every time I read it, so if we can
->>>>>>>> just make it so that all the devices under the DRM device share the same
->>>>>>>> group, this would become a lot easier to deal with. I'm not really
->>>>>>>> convinced that it makes much sense to keep them on separate domains,
->>>>>>>> especially given the constraints on the number of domains available on
->>>>>>>> earlier Tegra devices.
->>>>>>>>
->>>>>>>> Note that sharing a group will also make it much easier for these to use
->>>>>>>> the DMA API if it is backed by an IOMMU.
->>>>>>>
->>>>>>> Probably I'm blanking on everything about IOMMU now.. could you please
->>>>>>> remind me what "IOMMU group" is?
->>>>>>>
->>>>>>> Isn't it that each IOMMU group relates to the HW ID (SWGROUP)? But then
->>>>>>> each display controller has its own SWGROUP.. and thus that sharing just
->>>>>>> doesn't make any sense, hm.
->>>>>>
->>>>>> IOMMU groups are not directly related to SWGROUPs. But by default the
->>>>>> IOMMU framework will share a domain between members of the same IOMMU
->>>>>> group.
->>>>>
->>>>> Ah, I re-figured out that again. The memory controller drivers are
->>>>> defining a single "IOMMU group" for both of the display controllers.
->>>>>
->>>>>> Seems like that's really what we want here, so that when we do
->>>>>> use the DMA API, all the devices part of the DRM device get attached to
->>>>>> the same IOMMU domain, yet if we don't want to use the DMA API we only
->>>>>> need to detach the one group from the backing.
->>>>>
->>>>> Yes, it should be okay to put all DRM devices into the same group, like
->>>>> it is done now for the displays. It also should resolve problem with the
->>>>> domains shortage on T30 since now there are maximum 3 domains in use:
->>>>> host1x, drm and vde.
->>>>>
->>>>> I actually just checked that the original problem still exists
->>>>> and this change solves it as well:
->>>>>
->>>>> ---
->>>>> diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
->>>>> index 5a0f6e0a1643..e71096498436 100644
->>>>> --- a/drivers/memory/tegra/tegra30.c
->>>>> +++ b/drivers/memory/tegra/tegra30.c
->>>>> @@ -1021,6 +1021,9 @@ static const struct tegra_smmu_swgroup
->>>>> tegra30_swgroups[] = {
->>>>>  static const unsigned int tegra30_group_display[] = {
->>>>>  	TEGRA_SWGROUP_DC,
->>>>>  	TEGRA_SWGROUP_DCB,
->>>>> +	TEGRA_SWGROUP_G2,
->>>>> +	TEGRA_SWGROUP_NV,
->>>>> +	TEGRA_SWGROUP_NV2,
->>>>>  };
->>>>>
->>>>>  static const struct tegra_smmu_group_soc tegra30_groups[] = {
->>>>> ---
->>>>>
->>>>> Please let me know whether you're going to make a patch or if I should
->>>>> do it.
->>>>
->>>> I've been testing with a similar change and couldn't find any
->>>> regressions. I've also made the same modifications for Tegra114 and
->>>> Tegra124.
->>>>
->>>> Are you saying that none of these patches are needed anymore? Or do we
->>>> still need a patch to fix detaching? I'm thinking that maybe we can
->>>> drastrically simplify the detachment now by dropping the shared
->>>> parameter altogether.
->>>>
->>>> Let me draft a patch and send out the whole set for testing.
->>>
->>> Seems it's still not ideal because I noticed this in KMSG:
->>>
->>> [    0.703185] Failed to attached device 54200000.dc to IOMMU_mapping
->>> [    0.710404] Failed to attached device 54240000.dc to IOMMU_mapping
->>> [    0.719347] Failed to attached device 54140000.gr2d to IOMMU_mapping
->>> [    0.719569] Failed to attached device 54180000.gr3d to IOMMU_mapping
->>>
->>> which comes from the implicit IOMMU backing.
->>
->> And the error comes from here:
->>
->> https://elixir.bootlin.com/linux/v5.4-rc2/source/drivers/iommu/iommu.c#L1655
+On Thu, Oct 24, 2019 at 05:21:52PM +0200, Vitaly Kuznetsov wrote:
+> When sending an IPI to a single CPU there is no need to deal with cpumasks.
+> With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+> cycles) improvement with smp_call_function_single() loop benchmark. The
+> optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+> important for PV spinlock kick.
 > 
-> So the detaching still should be needed, but at the moment the ARM32
-> DMA-mapping code is simply not suitable for the case of having multiple
-> devices in the same group. I'm wondering whether there are any real
-> users for the implicit IOMMU backing on ARM32 at all :/
-> 
+> I was also wondering if it would make sense to switch to using regular
+> APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
+> cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+> vector)).
 
-Apparently the "Failed to attached device 54200000.dc" was always in the
-log (I rarely testing the default multi-platform config), it's just the
-message is a pr_warn that I wasn't paying attention because it is
-colored like pr_info in dmesg :)
+Is it with APICv or emulated apic?
+
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/hyperv/hv_apic.c           | 22 +++++++++++++++++++---
+>  arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
+>  2 files changed, 34 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index e01078e93dd3..847f9d0328fe 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -194,10 +194,26 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
+>  
+>  static bool __send_ipi_one(int cpu, int vector)
+>  {
+> -	struct cpumask mask = CPU_MASK_NONE;
+> +	int ret;
+>  
+> -	cpumask_set_cpu(cpu, &mask);
+> -	return __send_ipi_mask(&mask, vector);
+> +	trace_hyperv_send_ipi_one(cpu, vector);
+> +
+> +	if (unlikely(!hv_hypercall_pg))
+> +		return false;
+> +
+> +	if (unlikely((vector < HV_IPI_LOW_VECTOR) ||
+> +		     (vector > HV_IPI_HIGH_VECTOR)))
+> +		return false;
+
+I guess 'ulikely' is unnecessary in these cases.
+
+> +
+> +	if (cpu >= 64)
+> +		goto do_ex_hypercall;
+> +
+> +	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
+> +				     BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
+> +	return ((ret == 0) ? true : false);
+
+D'oh.  Isn't "return ret == 0;" or just "return ret;" good enough?
+
+These tiny nitpicks are no reason to hold the patch though, so
+
+Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
