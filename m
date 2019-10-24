@@ -2,246 +2,115 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B03CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71858CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE25221928
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D8C21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUSnFExk"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="n367ZZoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfJXVCq (ORCPT
+        id S1728916AbfJXVHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:02:46 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55702 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfJXVCq (ORCPT
+        Thu, 24 Oct 2019 17:07:41 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59944 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727790AbfJXVHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:02:46 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g24so4304413wmh.5;
-        Thu, 24 Oct 2019 14:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4aaqqb8YAfEVIim4bL+IVR5t1H8LDPcY2mjMsspokUw=;
-        b=GUSnFExkql3TQkUBz5Egd4rqGwiwfMoiatOHhJCrNZ3rtBL1jagnNhdUL/gpRYAaJ4
-         hGlyWUw/162oWoPT04Z6PH3YJd0WnoX/m6jk3oRh+ReOLnLl2SvsXtxXd+mS4R8blw+Q
-         KJJXsHeGw7IJUHGe1/N08YOPwHVBtIPJ44bwtEeAob0UODrMwvq6KZPLA74jCMWBEFxl
-         C9eub+FV8BgkCcYfu/kK+cuv58JRSDd6ve1QosNljsak/9MWt5yQ+XM3LUe5TMHAcpAa
-         B10F76P0DZ+23vPCz0jAeSpOkipz0gU1EFQrshBxypzckT8XQRpF8DCWidYnUMuVwAHN
-         e1AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4aaqqb8YAfEVIim4bL+IVR5t1H8LDPcY2mjMsspokUw=;
-        b=BGIkqncpAsQ30V7orh24hpNb10FxhnDFsnAqq1STGTtuqs2hIRzbXsFiaI1q9CZrAB
-         GzKgnQzLXbHEj353evz62VY1fsbT61arKSbG5b9R1O7wmftR+ZQsCCmgpZlR2Cst1Hso
-         x6lZOoWHiAoECiYxQ04fWQKh8aSnYoTiddYTspfqNA5LiOayECiDhTS5iECX+oqXNCG8
-         O9xGYSKO/ub7I9M1s8c06dNdHKaEG4+gfkvDjbZwT09eXOhdLtTMxilSdki34lhKYPPb
-         ZV0M0XrIFediu2zmfY4pwJhxjzDugxA6hJ7F6OQgYI7RDSUKwlR7D78zd7AVVrwq3LXh
-         si3Q==
-X-Gm-Message-State: APjAAAWnE0psIEGlzR4ih9koPDA4rcebEP7dhjiWcMs/3emCy9BGhnWU
-        jVhkw9pWYgFo/UfFMQe4wdFcGZqC
-X-Google-Smtp-Source: APXvYqyT69Wz/5qvqJ5BjNxyWNDSTMogbR3Yn37Dd51VlEsyM9CQQa8Cazg0LoWqfLnXffxApy35Vg==
-X-Received: by 2002:a1c:a848:: with SMTP id r69mr254343wme.83.1571950962650;
-        Thu, 24 Oct 2019 14:02:42 -0700 (PDT)
-Received: from [192.168.1.19] (chm166.neoplus.adsl.tpnet.pl. [83.31.10.166])
-        by smtp.gmail.com with ESMTPSA id f204sm2944227wmf.32.2019.10.24.14.02.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 14:02:42 -0700 (PDT)
-Subject: Re: [PATCH v14 13/19] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191018122521.6757-1-dmurphy@ti.com>
- <20191018122521.6757-14-dmurphy@ti.com>
- <a24832d9-1c3d-b3ea-4326-2ef4937d5a59@gmail.com>
- <44796209-104e-66f1-e1e0-2f3dfe3d7cd7@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <0bdb9d2c-601f-9b5e-5ca2-6bd97ffacde5@gmail.com>
-Date:   Thu, 24 Oct 2019 23:02:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <44796209-104e-66f1-e1e0-2f3dfe3d7cd7@ti.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 24 Oct 2019 17:07:41 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F33CB891AA;
+        Fri, 25 Oct 2019 10:07:38 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1571951258;
+        bh=nLYWZmfo2EArkYJRQdLZy6LtWfpZT42k7cHcj+sN/Ak=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=n367ZZoHK10Ei/cdFPk5IiOHOvfUv1paEcPxEffwwsKPbVZjv7p59Yh+bHXNajJab
+         FjzcLZ/mDa7nhHu5bIeaV7s1jxTjmFC64FZHWRZl7I8J9LF8oVSEx+S9IUF1qZOAmI
+         f4A8z8D98g3NaswuyqRPtb4T1vm27tKGwdF7nkwH/IqkO8m4h1TC5bktuG8cl4scQI
+         drfVQRDvGTi5Lcj3+ahw1ykaeRGG1Sn3hEWM/uJil7/oKwZO5fL/5hO6rL4mTwCcyA
+         jJ6b/I8v21VlkjG4SAwsyh1r0HHinfECSW1yursZy/aPtvdHxDOAmgSG6zRn4zJuPW
+         k1g2D2UdZHdAQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5db212990000>; Fri, 25 Oct 2019 10:07:37 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Fri, 25 Oct 2019 10:07:37 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Fri, 25 Oct 2019 10:07:37 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "corbet@lwn.net" <corbet@lwn.net>
+CC:     "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v3 2/3] docs/core-api: memory-allocation: remove uses of
+ c:func:
+Thread-Topic: [PATCH v3 2/3] docs/core-api: memory-allocation: remove uses of
+ c:func:
+Thread-Index: AQHViqRDYXn+aypHWkCn7i9MADN5nKdpZCEAgAAGP4CAAAGgAIAAAugA
+Date:   Thu, 24 Oct 2019 21:07:36 +0000
+Message-ID: <1ab8d0451f29ba9b72dc758f7c1fc1ba0657ac61.camel@alliedtelesis.co.nz>
+References: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
+         <20191024195016.11054-3-chris.packham@alliedtelesis.co.nz>
+         <20191024142902.6bd413f6@lwn.net>
+         <1ddbd3045d6a989b32065c0bd5b3a3c0ef525953.camel@alliedtelesis.co.nz>
+         <20191024145712.165556c1@lwn.net>
+In-Reply-To: <20191024145712.165556c1@lwn.net>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:254c:490a:57ec:fd27]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73A395BDD4D643419016DDD4AD748637@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
-
-On 10/23/19 2:22 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 10/18/19 4:48 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 10/18/19 2:25 PM, Dan Murphy wrote:
->>> Add multicolor framework support for the lp55xx family.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>   drivers/leds/Kconfig                      |   1 +
->>>   drivers/leds/leds-lp55xx-common.c         | 185 +++++++++++++++++++---
->>>   drivers/leds/leds-lp55xx-common.h         |   9 ++
->>>   include/linux/platform_data/leds-lp55xx.h |   7 +
->>>   4 files changed, 179 insertions(+), 23 deletions(-)
->>>
->>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>> index fb614a6b9afa..5706bf8d8bd1 100644
->>> --- a/drivers/leds/Kconfig
->>> +++ b/drivers/leds/Kconfig
->>> @@ -377,6 +377,7 @@ config LEDS_LP50XX
->>>   config LEDS_LP55XX_COMMON
->>>       tristate "Common Driver for TI/National
->>> LP5521/5523/55231/5562/8501"
->>>       depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 ||
->>> LEDS_LP8501
->>> +    depends on OF
->>>       select FW_LOADER
->>>       select FW_LOADER_USER_HELPER
->>>       help
->>> diff --git a/drivers/leds/leds-lp55xx-common.c
->>> b/drivers/leds/leds-lp55xx-common.c
->>> index 882ef39e4965..197b87ca5ca2 100644
->>> --- a/drivers/leds/leds-lp55xx-common.c
->>> +++ b/drivers/leds/leds-lp55xx-common.c
->>> @@ -131,14 +131,62 @@ static struct attribute *lp55xx_led_attrs[] = {
->>>   };
->>>   ATTRIBUTE_GROUPS(lp55xx_led);
->>>   +#if IS_ENABLED(CONFIG_LEDS_CLASS_MULTI_COLOR)
->>> +static int lp55xx_map_channel(struct lp55xx_led *led, int color_id,
->>> +                  enum led_brightness brightness)
->> If you changed the type of the first parameter to
->> struct led_mc_color_conversion* then you could make this function local
->> in LED mc class and call it in led_mc_calc_color_components() after
->> calculating brightness components.
-> 
-> I prefer to leave this here and if this code is ever integrated we can
-> see if there is a common need for the MC class to expose a mapping API.
-> 
->>
->>> +{
->>> +    int i;
->>> +
->>> +    for (i = 0; i < led->mc_cdev.num_leds; i++) {
->>> +        if (led->color_components[i].color_id == color_id) {
->>> +            led->color_components[i].brightness = brightness;
->>> +            return 0;
->>> +        }
->>> +    }
->>> +
->>> +    return -EINVAL;
->>> +}
->>> +#endif
->>> +
->>> +static int lp55xx_set_mc_brightness(struct lp55xx_led *led,
->>> +                    struct lp55xx_device_config *cfg,
->>> +                     enum led_brightness brightness)
->>> +{
->>> +    int ret = -EINVAL;
->>> +#if IS_ENABLED(CONFIG_LEDS_CLASS_MULTI_COLOR)
->>> +    struct led_mc_color_conversion
->>> color_components[LP55XX_MAX_GROUPED_CHAN];
->> You wouldn't need this local variable then.
-> 
->>> +    int i;
->>> +
->>> +    if (!cfg->multicolor_brightness_fn)
->>> +        return -EINVAL;
->>> +
->>> +    led_mc_calc_color_components(&led->mc_cdev, brightness,
->>> +                     color_components);
->> Because you could pass what you already have in the struct lp55xx_led:
->>
->> led_mc_calc_color_components(&led->mc_cdev, brightness,
->>                               led->color_components);
-> 
-> Well that is not entirely accurate the led->color_components is the data
-> that we have from the DT that should not be changed. Passing this into
-> the MC calc function would mean that the framework would have to map the
-> output to the color_id.  As I indicated above for now I don't think the
-> MC class should do any mapping of color_id to the output.
-
-I proposed to use color_components because it is already there
-and has required data in place. You could always copy
-that data to some other local structure but it would be unnecessary
-overhead.
-
-Anyway, all what I proposed here are just nice-to-have details,
-that can be covered in the future.
-
--- 
-Best regards,
-Jacek Anaszewski
+T24gVGh1LCAyMDE5LTEwLTI0IGF0IDE0OjU3IC0wNjAwLCBKb25hdGhhbiBDb3JiZXQgd3JvdGU6
+DQo+IE9uIFRodSwgMjQgT2N0IDIwMTkgMjA6NTE6MjMgKzAwMDANCj4gQ2hyaXMgUGFja2hhbSA8
+Q2hyaXMuUGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4gDQo+ID4gV2hlbiBJ
+IGRvIGFjdHVhbGx5IGdldCBhIHNlcmllcyB0aGF0IGFwcGxpZXMgdG8gZG9jcy1uZXh0IGl0J2xs
+DQo+ID4gY29uZmxpY3Qgd2l0aCA1OWJiNDc5ODVjMWQgKCJtbSwgc2xbYW91XWI6IGd1YXJhbnRl
+ZQ0KPiA+IG5hdHVyYWwgYWxpZ25tZW50IGZvciBrbWFsbG9jKHBvd2VyLW9mLXR3bykiKSBpbiBM
+aW51cydzIHRyZWUuDQo+IA0KPiBBbHRlcm5hdGl2ZWx5LCBpZiBJIHN5bmMgdXAgdG8gLXJjNCwg
+ZG9lcyB0aGUgcHJvYmxlbSBnbyBhd2F5PyAgSSBzaG91bGQNCj4gYmUgYWJsZSB0byBleHBsYWlu
+IHRoYXQgdG8gTGludXMgd2l0aG91dCB0b28gbXVjaCB0cm91YmxlLi4uDQo+IA0KDQpZZXMgdGhl
+IHNlcmllcyBhcHBsaWVzIGNsZWFubHkgb25jZSBkb2NzLW5leHQgaXMgbWVyZ2VkIHdpdGggdjUu
+NC1yYzQuDQoNClRoZXJlIGlzIGEgbWVyZ2UgY29uZmxpY3QgYmV0d2VlbiA2ZWUwZmFjMTk5ZTEg
+KCJkb2NzOiBmaXggbWVtb3J5Lmxvdw0KZGVzY3JpcHRpb24gaW4gY2dyb3VwLXYyLnJzdCIpIGlu
+IHlvdXIgdHJlZSBhbmQgOTc4M2FhOTkxN2Y4ICgibW0sDQptZW1jZzogcHJvcG9ydGlvbmFsIG1l
+bW9yeS57bG93LG1pbn0gcmVjbGFpbSIpIGluIExpbnVzJ3MgdHJlZS4gSGVyZSdzDQp0aGUgcmVz
+b2x1dGlvbiBJIGNhbWUgdXAgd2l0aCBpbiBteSB0ZXN0IG1lcmdlDQoNCmRpZmYgLS1jYyBEb2N1
+bWVudGF0aW9uL2FkbWluLWd1aWRlL2Nncm91cC12Mi5yc3QNCmluZGV4IDI2ZDFjZGU2YjM0YSw1
+MzYxZWJlYzMzNjEuLjUxNWMyZDllZWY4NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlk
+ZS9jZ3JvdXAtdjIucnN0DQorKysgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2Nncm91cC12
+Mi5yc3QNCkBAQCAtMTExNyw4IC0xMTIwLDExICsxMTIwLDExIEBAQCBQQUdFX1NJWkUgbXVsdGlw
+bGUgd2hlbiByZWFkIGJhY2sNCiAgDQogICAgICAgIEJlc3QtZWZmb3J0IG1lbW9yeSBwcm90ZWN0
+aW9uLiAgSWYgdGhlIG1lbW9yeSB1c2FnZSBvZiBhDQogICAgICAgIGNncm91cCBpcyB3aXRoaW4g
+aXRzIGVmZmVjdGl2ZSBsb3cgYm91bmRhcnksIHRoZSBjZ3JvdXAncw0KIC0gICAgICBtZW1vcnkg
+d29uJ3QgYmUgcmVjbGFpbWVkIHVubGVzcyBtZW1vcnkgY2FuIGJlIHJlY2xhaW1lZA0KICsgICAg
+ICBtZW1vcnkgd29uJ3QgYmUgcmVjbGFpbWVkIHVubGVzcyB0aGVyZSBpcyBubyByZWNsYWltYWJs
+ZQ0KLSAgICAgICBtZW1vcnkgYXZhaWxhYmxlIGluIHVucHJvdGVjdGVkIGNncm91cHMuDQorICAg
+ICAgIGZyb20gdW5wcm90ZWN0ZWQgY2dyb3Vwcy4gIEFib3ZlIHRoZSBlZmZlY3RpdmUgbG93IGJv
+dW5kYXJ5IChvcg0KKyAgICAgICBlZmZlY3RpdmUgbWluIGJvdW5kYXJ5IGlmIGl0IGlzIGhpZ2hl
+ciksIHBhZ2VzIGFyZSByZWNsYWltZWQNCisgICAgICAgcHJvcG9ydGlvbmFsbHkgdG8gdGhlIG92
+ZXJhZ2UsIHJlZHVjaW5nIHJlY2xhaW0gcHJlc3N1cmUgZm9yDQorICAgICAgIHNtYWxsZXIgb3Zl
+cmFnZXMuDQogIA0KICAgICAgICBFZmZlY3RpdmUgbG93IGJvdW5kYXJ5IGlzIGxpbWl0ZWQgYnkg
+bWVtb3J5LmxvdyB2YWx1ZXMgb2YNCiAgICAgICAgYWxsIGFuY2VzdG9yIGNncm91cHMuIElmIHRo
+ZXJlIGlzIG1lbW9yeS5sb3cgb3ZlcmNvbW1pdG1lbnQNCg0K
