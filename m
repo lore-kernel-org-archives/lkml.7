@@ -2,219 +2,156 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AA0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C397CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B882166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HWbN10vy"
+	by mail.kernel.org (Postfix) with ESMTP id 66D2D21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408819AbfJXH6m (ORCPT
+        id S2408828AbfJXH7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:58:42 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39251 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408809AbfJXH6l (ORCPT
+        Thu, 24 Oct 2019 03:59:37 -0400
+Received: from wp051.webpack.hosteurope.de ([80.237.132.58]:35610 "EHLO
+        wp051.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405209AbfJXH7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:58:41 -0400
-Received: by mail-il1-f195.google.com with SMTP id i12so10979700ils.6
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 00:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/iwX4UjOQjn2lNb7lRka6gT7CCeFZoS1/ylA6WSmhrA=;
-        b=HWbN10vyE4qOXGOmTtdtAb1M6RjfxZ/QZpix5Ndgxwxa8hADczts4OYkxPzWo5HulL
-         1+8AvnBsivuTtDCQO9POwAdEU7Ku2B41ssTUuRiobwGOFCZRniblrUwfFTUpiTf5ESQg
-         pykuGl3iM0Z15cmp/J/fsbu6gwfPv1waz1d4s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/iwX4UjOQjn2lNb7lRka6gT7CCeFZoS1/ylA6WSmhrA=;
-        b=hqBTAHICuzkuHFB5xJ5MZJxRv7eGbCbs8mdPpM8lq0uMX7Gd711P19T7gCEjkBL8w1
-         /zEZy6UmNAHh0tCHAcnQx3hQqttrVYY3lSiuhpFdEnaeQy+K5ep74SoyOMDdv3r0EK7I
-         fO2gEN5xnsrmmD7ZD8kqeMT6jR4QWSUJjzrETJIC4UW4bq1NU3xB/GxYtkeu2ax/34Hj
-         YVSAl68YQpTdrwsPTGzEFLC9+qxMR48MGf2JGbKdUIaunI8KTT/UMhRvpvCBxpI5V7f9
-         5bJl4CC/YjjQa15l+Iav+/YP7y12SZPBhLtoFZ/6srJBz245/YqlY/M73aKrZYXPkpR0
-         sCPQ==
-X-Gm-Message-State: APjAAAWzjGVi1AxAHvulBKHP5kZ3PCJoV3Iqt8N42r3a8RIfo2uXfqqM
-        3+pZTvt4yLt3uy6clRZFzUC5/Pu2ZGujyKc3retUZg==
-X-Google-Smtp-Source: APXvYqwOnD4ookxu9fpEx7h0rJ1trgaJEt/X4F/4abU6xodrQ4R1ekY6BSv7j2O++aWyan6hxZmdqNNdkkAvzgJdwjE=
-X-Received: by 2002:a92:5d8f:: with SMTP id e15mr10504428ilg.173.1571903919957;
- Thu, 24 Oct 2019 00:58:39 -0700 (PDT)
+        Thu, 24 Oct 2019 03:59:36 -0400
+X-Greylist: delayed 1378 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 03:59:36 EDT
+Received: from p200300cd5f0509008cc3eaf0bbac9dd5.dip0.t-ipconnect.de ([2003:cd:5f05:900:8cc3:eaf0:bbac:9dd5]); authenticated
+        by wp051.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1iNXfh-0002uw-UO; Thu, 24 Oct 2019 09:36:37 +0200
+To:     linux-kernel@vger.kernel.org
+From:   Robert Stupp <snazy@snazy.de>
+Subject: mlockall(MCL_CURRENT) blocking infinitely
+Message-ID: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
+Date:   Thu, 24 Oct 2019 09:36:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
- <20191005141913.22020-6-jagan@amarulasolutions.com> <20191007105708.raxavxk4n7bvxh7x@gilmour>
- <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
- <20191016080306.44pmo3rfmtnkgosq@gilmour> <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
- <20191017095225.ntx647ivegaldlyf@gilmour>
-In-Reply-To: <20191017095225.ntx647ivegaldlyf@gilmour>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 24 Oct 2019 13:28:28 +0530
-Message-ID: <CAMty3ZAvqRLh16vFd-63h4+SzQkNydGfNKX_pByqFD-hZfncpQ@mail.gmail.com>
-Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-bounce-key: webpack.hosteurope.de;snazy@snazy.de;1571903976;f6e34a93;
+X-HE-SMSGID: 1iNXfh-0002uw-UO
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 17, 2019 at 3:22 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
-> > On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
-> > > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > >
-> > > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
-> > > > > > Add MIPI DSI pipeline for Allwinner A64.
-> > > > > >
-> > > > > > - dsi node, with A64 compatible since it doesn't support
-> > > > > >   DSI_SCLK gating unlike A33
-> > > > > > - dphy node, with A64 compatible with A33 fallback since
-> > > > > >   DPHY on A64 and A33 is similar
-> > > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
-> > > > > >
-> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-> > > > > > ---
-> > > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
-> > > > > >  1 file changed, 38 insertions(+)
-> > > > > >
-> > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > index 69128a6dfc46..ad4170b8aee0 100644
-> > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > > > > > @@ -382,6 +382,12 @@
-> > > > > >                                       #address-cells = <1>;
-> > > > > >                                       #size-cells = <0>;
-> > > > > >                                       reg = <1>;
-> > > > > > +
-> > > > > > +                                     tcon0_out_dsi: endpoint@1 {
-> > > > > > +                                             reg = <1>;
-> > > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
-> > > > > > +                                             allwinner,tcon-channel = <1>;
-> > > > > > +                                     };
-> > > > > >                               };
-> > > > > >                       };
-> > > > > >               };
-> > > > > > @@ -1003,6 +1009,38 @@
-> > > > > >                       status = "disabled";
-> > > > > >               };
-> > > > > >
-> > > > > > +             dsi: dsi@1ca0000 {
-> > > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
-> > > > > > +                     reg = <0x01ca0000 0x1000>;
-> > > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
-> > > > > > +                     clock-names = "bus";
-> > > > >
-> > > > > This won't validate with the bindings you have either here, since it
-> > > > > still expects bus and mod.
-> > > > >
-> > > > > I guess in that cas, we can just drop clock-names, which will require
-> > > > > a bit of work on the driver side as well.
-> > > >
-> > > > Okay.
-> > > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
-> > > > patch. Adjust the clock-names: on dt-bindings would make sense here,
-> > > > what do you think?
-> > >
-> > > I'm confused, what are you suggesting?
-> >
-> > Sorry for the confusion.
-> >
-> > The mod clock is not required for A64 and we have a patch for handling
-> > mod clock using has_mod_clk quirk(on the series), indeed the mod clock
-> > is available in A31 and not needed for A64. So, to satisfy this
-> > requirement the clock-names on dt-bindings can update to make mod
-> > clock-name is optional and bus clock is required.
->
-> No, the bus clock name is not needed if there's only one clock.
+Hi guys,
 
-Okay, is it because the same clock handle it on PHY side?
+I've got an issue with `mlockall(MCL_CURRENT)` after upgrading Ubuntu 
+19.04 to 19.10 - i.e. kernel version change from 5.0.x to 5.3.x.
 
->
-> > I'm not exactly sure, this is correct but trying to understand if it
-> > is possible or not? something like
-> >
-> >    clocks:
-> >       minItems: 1
-> >       maxItems: 2
-> >      items:
-> >        - description: Bus Clock
-> >        - description: Module Clock
->
-> That's correct.
->
-> >    clock-names:
-> >       minItems: 1
-> >       maxItems: 2
-> >      items:
-> >        - const: bus
-> >        - const: mod
->
-> Here, just keep the current clock-names definition, and make it
-> required only for SoCs that are not the A64
+The following simple program hangs forever with one CPU running at 100% 
+(kernel):
 
-Okay, please have a look here I have pasted the diff for comments.
+#include <stdio.h>
+#include <sys/mman.h>
+int main(char** argv) {
+   printf("Before mlockall(MCL_CURRENT)\n");
+   // works in 5.0
+   // hangs forever w/ 5.1 and newer
+   mlockall(MCL_CURRENT);
+   printf("After mlockall(MCL_CURRENT)\n");
+}
 
-   clocks:
-+    minItems: 2
-     items:
-       - description: Bus Clock
-       - description: Module Clock
-@@ -64,14 +65,26 @@ required:
-   - compatible
-   - reg
-   - interrupts
--  - clocks
--  - clock-names
-   - phys
-   - phy-names
-   - resets
-   - vcc-dsi-supply
-   - port
+All kernel versions since 5.1 (tried 5.1.0, 5.1.21, 5.2.21, 5.3.0-19, 
+5.3.7, 5.4-rc4) show the same symptom (hanging in mlockall(MCL_CURRENT) 
+with 100% kernel-CPU). 5.0 kernel versions (5.0.21) are fine.
 
-+allOf:
-+  - if:
-+      properties:
-+         compatible:
-+           contains:
-+             const: allwinner,sun6i-a31-mipi-dsi
-+      then:
-+        properties:
-+          clocks:
-+            minItems: 2
-+        required:
-+          - clocks
-+          - clock-names
-+
- additionalProperties: false
+First, I thought, that it's something generic, so I tried the above 
+program in a fresh install of Ubuntu eoan (5.3.x) in a VM in virtualbox, 
+but it works fine there. So I suspect, that it has to do with something 
+that's specific to my machine.
 
-I have marked minItems: 2 on clocks since we need to use minimum of 2
-clocks like both bus and mod not mod clock alone.
+My first suspicion was that some library "hijacks" mlockall(), but 
+calling the test program with `LD_DEBUG=all` shows that glibc gets 
+called directly:
+      12248:    symbol=mlockall;  lookup in file=./test [0]
+      12248:    symbol=mlockall;  lookup in 
+file=/lib/x86_64-linux-gnu/libc.so.6 [0]
+      12248:    binding file ./test [0] to 
+/lib/x86_64-linux-gnu/libc.so.6 [0]: normal symbol `mlockall' [GLIBC_2.2.5]
+An `strace` doesn't show anything meaningful (beside that mlockall's 
+been called but never returns). dmesg and syslog don't show anything 
+obvious (to me) as well.
 
-Please let me know your comments.
+Some information about the machine:
+- Intel(R) Core(TM) i7-6900K, Intel X99 chipset
+- NVMe 1.1b
+- 64GB RAM (4x 16GB)
 
-Jagan.
+I've also reverted all changes for sysctl and ld.conf and checked for 
+other suspicious software without any luck.
+
+I also tried a bunch of variations of the above program, but only 
+`mlockall(MCL_CURRENT)` or `mlockall(MCL_FUTURE | MCL_CURRENT)` hang.
+
+A `git diff v5.0..v5.1 mm/` doesn't show anything obvious (to me).
+
+It seems, there's no debug/trace information that would help to find out 
+what exactly it's doing.
+
+I'm kinda lost at the moment.
+
+
+PS: Variations of the above test program:
+
+#include <stdio.h>
+#include <sys/mman.h>
+char foo[65536];
+int main(char** argv) {
+   printf("Before mlock()\n");
+   int e = mlock(foo, 8192); // works in 5.0, 5.1, 5.2, 5.3, 5.4
+   printf("After mlock()=%d\n", e);
+}
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+int main(char** argv) {
+   printf("Before mlockall(MCL_FUTURE)\n");
+   int e = mlockall(MCL_FUTURE); // works in 5.0, 5.1, 5.2, 5.3, 5.4
+   printf("After mlockall(MCL_FUTURE) = %d\n", e);
+   void* mem = malloc(1024 * 1024 * 1024);
+   printf("After malloc()\n");
+   mem = malloc(1024 * 1024 * 1024);
+   printf("After malloc()\n");
+   mem = malloc(1024 * 1024 * 1024);
+   printf("After malloc()\n");
+   // works in 5.0, 5.1, 5.2, 5.3, 5.4
+}
+
+
+#include <stdio.h>
+#include <sys/mman.h>
+int main(char** argv) {
+   printf("Before munlockall()\n");
+   int e = munlockall(); // works in 5.0, 5.1, 5.2, 5.3, 5.4
+   printf("After munlockall() = %d\n", e);
+}
+
+
+#include <stdio.h>
+#include <sys/mman.h>
+int main(char** argv) {
+   printf("Before mlockall(MCL_CURRENT|MCL_FUTURE)\n");
+   // works in 5.0
+   // hangs forever w/ 5.1 and newer
+   int e = mlockall(MCL_CURRENT|MCL_FUTURE);
+   printf("After mlockall(MCL_CURRENT|MCL_FUTURE) = %d\n", e);
+}
+
+PPS: Kernel version images installed from 
+https://kernel.ubuntu.com/~kernel-ppa/mainline/?C=N;O=D
+
+-- 
+Robert Stupp
+@snazy
+
