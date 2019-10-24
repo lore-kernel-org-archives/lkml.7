@@ -2,154 +2,113 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A713FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7818DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7976F20650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570BC20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439878AbfJXQZ2 (ORCPT
+        id S2409769AbfJXQ16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:25:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:55846 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439858AbfJXQZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:25:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBE51328;
-        Thu, 24 Oct 2019 09:25:11 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A4993F71F;
-        Thu, 24 Oct 2019 09:25:10 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Erico Nunes <nunes.erico@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Steven Price <steven.price@arm.com>
-Subject: [RESEND PATCH v4] drm: Don't free jobs in wait_event_interruptible()
-Date:   Thu, 24 Oct 2019 17:24:24 +0100
-Message-Id: <20191024162424.38548-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 24 Oct 2019 12:27:58 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:56946 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405586AbfJXQ15 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:27:57 -0400
+Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9OGRuTc029169
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:27:56 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9OGRpdZ003156
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:27:56 -0400
+Received: by mail-qk1-f199.google.com with SMTP id k67so24048105qkc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:27:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=bsN59ZY0yNzgZCIBp0VQtgU1UUq95H4MJw3f/UhzjmQ=;
+        b=NIVmaXkqomzUuTOn9azDCcJnh4ZwX5ZzkyuOai3B+zXT9j/tcGDMpibMixIPSrs3ee
+         HUCaVHY1df6J6nRkY1z31cdsWdVJGS0R6/eogAYJVtsC+KZr/0dIamXjhB5nzDKQsZdg
+         A9DA0o+Y8/So4mU1MjPxPw1qTsTXMGvx7lor4sFF+/wnjEKWSOB9OqfGsclbff9tTrIn
+         2Owyu7yOTbi1Y97IUOrwLoA5i6ZI90BtyIjEFvAEwXKA2GOuT3EyUH05d00juNaUVVqO
+         FvtyDXmBbeWuWe603Q0RYlveZlE/nqnniXgCFx8cmppPkOyUgTxpXcvPXj92i+Ebd1QH
+         OZcw==
+X-Gm-Message-State: APjAAAVnXqwVT+yipscWLecXgu/esayVrk0Wy71UOGzEZ4ZVlNRBZbxC
+        nauUy9sLzfQorGYX10e/u3Mx7Ujs5wcDGjMHcTgUTe13MPsa63zbkgZjJzU4waiO5Mj5dPDCVQ/
+        8FP/d65ztiSxSt1Bqs6SOffx9S5C1SK4W0ds=
+X-Received: by 2002:a0c:92dc:: with SMTP id c28mr15714534qvc.26.1571934470701;
+        Thu, 24 Oct 2019 09:27:50 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzkQAmcVf+6706DClmV4SjT0O16B06ZuqsaMrMGTqHXVbTS3u02dKBqi7McVkGiv/fbSgjmkQ==
+X-Received: by 2002:a0c:92dc:: with SMTP id c28mr15714469qvc.26.1571934470085;
+        Thu, 24 Oct 2019 09:27:50 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id d126sm10733461qkc.93.2019.10.24.09.27.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 09:27:48 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/15] staging: exfat: Clean up return codes - FFS_PERMISSIONERR
+In-Reply-To: <915cd2a3ee58222b63c14f9f1819a0aa0b379a4f.camel@perches.com>
+References: <20191024155327.1095907-1-Valdis.Kletnieks@vt.edu> <20191024155327.1095907-5-Valdis.Kletnieks@vt.edu>
+ <915cd2a3ee58222b63c14f9f1819a0aa0b379a4f.camel@perches.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1571934467_59326P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 24 Oct 2019 12:27:47 -0400
+Message-ID: <1107916.1571934467@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_sched_cleanup_jobs() attempts to free finished jobs, however because
-it is called as the condition of wait_event_interruptible() it must not
-sleep. Unfortuantly some free callbacks (notibly for Panfrost) do sleep.
+--==_Exmh_1571934467_59326P
+Content-Type: text/plain; charset=us-ascii
 
-Instead let's rename drm_sched_cleanup_jobs() to
-drm_sched_get_cleanup_job() and simply return a job for processing if
-there is one. The caller can then call the free_job() callback outside
-the wait_event_interruptible() where sleeping is possible before
-re-checking and returning to sleep if necessary.
+On Thu, 24 Oct 2019 09:23:33 -0700, Joe Perches said:
+> On Thu, 2019-10-24 at 11:53 -0400, Valdis Kletnieks wrote:
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
-Previous posting: https://lore.kernel.org/lkml/20190926141630.14258-1-steven.price@arm.com/
+> >  	if (err) {
+> > -		if (err == FFS_PERMISSIONERR)
+> > +		if (err == -EPERM)
+> >  			err = -EPERM;
+> >  		else if (err == FFS_INVALIDPATH)
+> >  			err = -EINVAL;
+>
+> These test and assign to same value blocks look kinda silly.
 
- drivers/gpu/drm/scheduler/sched_main.c | 45 +++++++++++++++-----------
- 1 file changed, 26 insertions(+), 19 deletions(-)
+One patch, one thing.  Those are getting cleaned up in a subsequent patch.:)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 9a0ee74d82dc..148468447ba9 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
- }
- 
- /**
-- * drm_sched_cleanup_jobs - destroy finished jobs
-+ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
-  *
-  * @sched: scheduler instance
-  *
-- * Remove all finished jobs from the mirror list and destroy them.
-+ * Returns the next finished job from the mirror list (if there is one)
-+ * ready for it to be destroyed.
-  */
--static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
-+static struct drm_sched_job *
-+drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
- {
-+	struct drm_sched_job *job = NULL;
- 	unsigned long flags;
- 
- 	/* Don't destroy jobs while the timeout worker is running */
- 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr))
--		return;
--
-+		return NULL;
- 
--	while (!list_empty(&sched->ring_mirror_list)) {
--		struct drm_sched_job *job;
-+	spin_lock_irqsave(&sched->job_list_lock, flags);
- 
--		job = list_first_entry(&sched->ring_mirror_list,
-+	job = list_first_entry_or_null(&sched->ring_mirror_list,
- 				       struct drm_sched_job, node);
--		if (!dma_fence_is_signaled(&job->s_fence->finished))
--			break;
- 
--		spin_lock_irqsave(&sched->job_list_lock, flags);
-+	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
- 		/* remove job from ring_mirror_list */
- 		list_del_init(&job->node);
--		spin_unlock_irqrestore(&sched->job_list_lock, flags);
--
--		sched->ops->free_job(job);
-+	} else {
-+		job = NULL;
-+		/* queue timeout for next job */
-+		drm_sched_start_timeout(sched);
- 	}
- 
--	/* queue timeout for next job */
--	spin_lock_irqsave(&sched->job_list_lock, flags);
--	drm_sched_start_timeout(sched);
- 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
- 
-+	return job;
- }
- 
- /**
-@@ -698,12 +696,21 @@ static int drm_sched_main(void *param)
- 		struct drm_sched_fence *s_fence;
- 		struct drm_sched_job *sched_job;
- 		struct dma_fence *fence;
-+		struct drm_sched_job *cleanup_job = NULL;
- 
- 		wait_event_interruptible(sched->wake_up_worker,
--					 (drm_sched_cleanup_jobs(sched),
-+					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
- 					 (!drm_sched_blocked(sched) &&
- 					  (entity = drm_sched_select_entity(sched))) ||
--					 kthread_should_stop()));
-+					 kthread_should_stop());
-+
-+		while (cleanup_job) {
-+			sched->ops->free_job(cleanup_job);
-+			/* queue timeout for next job */
-+			drm_sched_start_timeout(sched);
-+
-+			cleanup_job = drm_sched_get_cleanup_job(sched);
-+		}
- 
- 		if (!entity)
- 			continue;
--- 
-2.20.1
+--==_Exmh_1571934467_59326P
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXbHRAgdmEQWDXROgAQLonRAAgmgi1IyWgKM8Z+fUANqetKRbDPtKzie3
+y57H8MYZukD2LXLVrzSbZAZxEZzOr5/UXll3daYEWN6FH2nmXBpmMZO9La7jFEll
+m7wEEG0ET6g03Kke3ZYyEFntLjnFEhmYxk2lWy03zFpJQ292BU+TmH0AFob8S5Xg
+M665oOaEB6Biv+4jJ5+cgBGDyiDgxED6G6qLStbLC2lbERJ3jfoDuR2WegOA6zu5
+ZTGY2/fWCJ/ejYfVF5rM7mTlg0FQD+9xYHgNRZdRg2YsNDhk5Osnisols8OVk3im
+H0Y5xsBgzhtZljIlwk1PI/IlWIGn/f3dgNH9LTdsXxm4aKE76VUFnZAk1/y2wMRP
+ZXieXPr8D9VvSLD5YpINE1hkBRNb/fVbm0zpiSnWN/U4jNtvAYAeFrEfhOiDc+Dn
+VCKBiOmUrrb0AkaZJt5D6+BgEZFnYaO1hHUqkL83R8QAK6d+azSTgVVvHDNc4Fif
+iTt/pKW7kN6YP+M6pi07uZI7uEzGsGwSrigiJXE+nOv0xe/BbeDGSDMO4Env3Wym
+laF62431/LAMsQxv7SJ1+i64AI1vLcOIw11avtsgIGnbNyAF0INfQs+GPTlGOQvA
+j3cNLGrfw6bDIKloyLfUA7+P8iCTBaTX2tpO+FyX2Sg9N0nfPFH6yqPLvqhznwPi
+Dt+U26hCtuM=
+=Ofym
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1571934467_59326P--
