@@ -2,364 +2,151 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A011CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F747CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5257521655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5809121655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="e4AupsV9"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="G9ubtSSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391083AbfJXHFy (ORCPT
+        id S2392482AbfJXHHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:05:54 -0400
-Received: from mail-eopbgr700071.outbound.protection.outlook.com ([40.107.70.71]:15427
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727635AbfJXHFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:05:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EbVA8L7QX97TNVMqRi9V2koKGEcop8CpYBES1e5ytjd9rYm5CuDzNOZbKWzz0htGta3Su1Wb/TrhhHW/WcpAd5Wf8PR5twxSwGC2Rh3NmaUL0mjCpnv9bX70FdYhNQVXw7WAJm5vPh1DgaGYQNUqPrR7961rqQCsOpXYxy/0aTO8tKvXylKCg/pkj0v4CJ4lNlB1SjjDwjV7mJ/Srv1aiVH9pObynp2pKA9132ef53XWk/16Yksgt+rrIJxOR3KKnpTVvuN9DLik5tcHLtQwo6RPIk6+Pwg4wlnM0soVbV0Sg4pzp8+FF/2199n4IpXCja/0tR7pB2/xQmwcDbPLmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rG1wUMBVPW92nYsel+P+8ourbEMrkn6wxCSuS9+YOwE=;
- b=CbOKOEj64BZ3JAAGYDmM9amoFMvzXxvmfZnpv+QnRn6rIDy2VIgdYDg0QY3V/zC2bXeasJrcl0M8+tuVoTOz7qXdrLCPca/kSWCdzV/wiXUTMEYJ3NtnHsQR6irce0sB2+3ProtzDH58uCsVx7F2qznj6o1SqYAX8Wj87/uatvlQhgfnTZORmxvgEvWmYbEjhdz3IwWwgfAVA+ZqSQvpmC5tna1gQsQOjplx3+e9YYRJeGEkqe0OktVhCnuDhJDvDszm4l1buFmqPeLyVyq0nhqSFpVNLvikHE4z/8IP/p0Skdns8F1/ifmmvoI+iQpN4lky3JMimSNz4xOjL8eLSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rG1wUMBVPW92nYsel+P+8ourbEMrkn6wxCSuS9+YOwE=;
- b=e4AupsV9wW2UEkvStlFbnBzQ4EsV4v/hRUR1y5KHo8yQGksQcY/8N+PtA3qkFeHjEMjoOs+ZtKZxDeDuBq7b5i1RVg+hIolKfOd71YSRpFzJ+dFOSr3WhV8gePL92Iw+KTrO5102rOnXw/vRNYCPJDXc0fskmSOiBa6TaSjKRtI=
-Received: from MWHPR02CA0043.namprd02.prod.outlook.com (2603:10b6:301:60::32)
- by DM5PR02MB2380.namprd02.prod.outlook.com (2603:10b6:3:56::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.22; Thu, 24 Oct
- 2019 07:05:45 +0000
-Received: from SN1NAM02FT027.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by MWHPR02CA0043.outlook.office365.com
- (2603:10b6:301:60::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.21 via Frontend
- Transport; Thu, 24 Oct 2019 07:05:45 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT027.mail.protection.outlook.com (10.152.72.99) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
- via Frontend Transport; Thu, 24 Oct 2019 07:05:44 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iNXBo-0002SS-4O; Thu, 24 Oct 2019 00:05:44 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1iNXBj-0001bb-1O; Thu, 24 Oct 2019 00:05:39 -0700
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9O75WMa007727;
-        Thu, 24 Oct 2019 00:05:32 -0700
-Received: from [172.30.17.123]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1iNXBc-0001VL-4J; Thu, 24 Oct 2019 00:05:32 -0700
-Subject: Re: [PATCH] ARM: dts: zynq: enablement of coresight topology
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Zumeng Chen <zumeng.chen@windriver.com>,
-        Quanyang Wang <quanyang.wang@windriver.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Crosthwaite <peter.crosthwaite@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robherring2@gmail.com>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        u-boot@lists.denx.de
-References: <a38ab93d870a3b1b341a5c0da14fc7f3d4056684.1570630040.git.michal.simek@xilinx.com>
- <CANLsYkzkk9yPezSyU50TmWjDAZ-5D2Hmo0YztQzm+mnyZf1Www@mail.gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <5100bc31-66b4-f892-7916-d049e6e5d668@xilinx.com>
-Date:   Thu, 24 Oct 2019 09:05:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 03:07:09 -0400
+Received: from mout.web.de ([217.72.192.78]:49737 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727635AbfJXHHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 03:07:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1571900801;
+        bh=TpHiSzxCEIcAvar3A4yeKF3u8As5hzD8I+DOTDKwT5o=;
+        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
+        b=G9ubtSSlv9b8l/CVhirUvglEu7nB3uh6Ntn6a3TKtjfTBHtcmnTaDEHA9ePh6hmhB
+         JRrusH8GjF6nnvuH7Ui8xOSgtVEmdM5GaPlxGzLekXoN9I1l5euaxdwh+bsgfaGE5T
+         NihT8/lHEny15gbZbo0dan5e40Sf76k7fXHz4BCA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.110.199]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0McWj6-1if45Y0KrQ-00Hiba; Thu, 24
+ Oct 2019 09:06:40 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>
+References: <1571897060-32374-1-git-send-email-zhong.shiqi@zte.com.cn>
+Subject: Re: [PATCH v2] coccicheck: support $COCCI being defined as a
+ directory
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Zhong Shiqi <zhong.shiqi@zte.com.cn>, cocci@systeme.lip6.fr
+Message-ID: <5762844f-2c39-2106-21fa-65e8297d4235@web.de>
+Date:   Thu, 24 Oct 2019 09:06:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkzkk9yPezSyU50TmWjDAZ-5D2Hmo0YztQzm+mnyZf1Www@mail.gmail.com>
+In-Reply-To: <1571897060-32374-1-git-send-email-zhong.shiqi@zte.com.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(136003)(396003)(376002)(346002)(189003)(199004)(6246003)(76176011)(336012)(426003)(23676004)(2486003)(58126008)(356004)(6666004)(26005)(31696002)(126002)(230700001)(305945005)(31686004)(486006)(186003)(446003)(11346002)(2906002)(2616005)(476003)(106002)(5660300002)(70586007)(70206006)(36756003)(7416002)(36386004)(65806001)(4326008)(81156014)(65956001)(81166006)(478600001)(47776003)(9786002)(8676002)(8936002)(110136005)(316002)(54906003)(50466002)(44832011)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB2380;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: aa110766-7f84-417b-7e1c-08d7585096d5
-X-MS-TrafficTypeDiagnostic: DM5PR02MB2380:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR02MB238010104C54938E6A357075C66A0@DM5PR02MB2380.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0200DDA8BE
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zkKDO5RY7hTLDdilU5pnW8FcX4o3A4zsaw4S/GOikdodM0X9tIhNZ8EVtlUMG4FU4oKQlf9IEs4++TIhiUp8g2LqutXPePHP89nYPyOUlpmwRfxx+RdASc4YC9ogdcNyLwl9CS9Jp2htnM2DrAtHO4oVS3m5WAYUIO2jZIBB4myGwf9ec3JrVdbFgfBiMkjY3jDYmKOYYuUG9zHikoHSPahIa3skS0bnxGaOtWAHMlAH1YxVJSaflQ3Vnbo6fyPhy+8wvCacEnee6juFYDsuxYo+We1zjQOV6VS5a6Ne4Iqp+S0rb1XJuImWFx+KYKOZ9QTDTmrMS3sVFJus2tB+hTBcJj9KqXKk+D1cEVnVjyC1ES1oTcHTWkygR4q142z1t2XO6Tf6g5r/zXqBNI6R5sgACMDJR0fMUpc7XsakHtDp25EFbiVLOmqDfSpcRTg/
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2019 07:05:44.5574
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa110766-7f84-417b-7e1c-08d7585096d5
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2380
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:z5Cz3dlOtdVoGDAFiUwZTRszL4aVafnN1BRC72MSMqg9BTm1Kxg
+ oYTIg9Nx2K7tlbFzocCpcp9gX8rwdfr/rujQgGUFdYZi1QOpR7ygZtanIEdZqVBNyVsL+Gn
+ VBoFyWOtUH2bzvEmal0je9Ok4W6dLmg4ZTvacptDp3IV7hGFLqhWjbLjah0Uj8d5/b9/Ued
+ QpFatQvVNVTAaw5+tOz/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8fmZgCwGmRU=:49cATmb4XR3EEFi3d4Ng9W
+ S1IsFp9q4xdL6cbzsLNzq1HOaZJ+jpK+BhcOOBRoKwHvSBXhE9VD0ME7ehP5F1pRBq6XJQA+g
+ 0wXJgMhX+guQ0UnamUla/6XyvQOUsPveOcs1VN4wrhhQwcaFQgdOyRj6OHLF9MyHsEyRaf4s7
+ asfAMjLlY0KvtUj6vxt3VegyaLqJZPsGVs1tM7qJJOYva+RjhSz3JpogTAgRHTC6QMtgunU3r
+ IUt+5lywGnLj6zKcLjUsvRkwVLuh8CIor+wqe9eAHhH6jk1cLRyBD7NHet6fjmnx4rDxftLsg
+ gy+Qhx5iwdP4FNPyVsiwd0C5XMBalG6C7tf4uHnp/iMYMNmRDSwU5r05WEmZvmszMuqgpy7No
+ t8R119enSu8pPqA3pw+fNPc4HkEEZ+ox2R+yJubBhUzfivb67c78wdWERJe4CR5obQoqpXLA+
+ 4/lome3/Phi7MyVMengrUB72q4ZaXEOov0nd20Ztwa9jNm0KdKyhjd96HI+nEjSmOiewhxV/3
+ W0cnKipuEg52vcmoExU3xARIup3j8ugKI0dOdPqbZTXHrstUa5NPinNkOjAlmk1HoPN4Djdnx
+ /cgZ9fSaW+bnq9nZC1f36AcvyN0bXBg2euv2zfoHdMRZx+miBNZdBMkRpSFl+4cIEWI3bXZKv
+ 7QxGu5WkQQMzjwK5vPDmkouarqPfTe8n3UB6d7QDO/gUps4hkPvgI5fC6ot7BriYi0BTqvy0M
+ ipYH7n7Olq3PK9qPgPdYQicxqRz3IIirQpeCGg3iEbD8i8wPWkK8bbhACyRpFAGCoSNbh+LQf
+ Gg/BnvKOolMvFi7s0pfKo4LRaozralXerkUOxr7KblhMMmO43ZsD03dYjR1kG8+S9wiQIw2pc
+ NxfqXd7QCfc5HrUWvK6Mk8fviX7f1a5sssf3HYxHGr4rZXRPWcQgdpcIWdweAUoXz8aZ19UiL
+ MdYPQ/OU4/WWvfvTYNhuP/IfWW6gTgNS3JeG0PXo6lNBYiF2RVDA5Q8eBLf9UrS10XKW/vuDX
+ 2nEXtjfcVlgp4617tnGxgzG5ctwWYnsEnqKU4vZraNLcp18L1wn2EP8u0uEOG+GlkNrpBfTwl
+ wGTK1ZVE59FE0uSP5pnuyt8M+5JcADY3jEIj9P/l5cjU7+kvLq4wTzHPI9Ja9GoZbcz33rTDZ
+ 14+BBwBuH3mf6PVVwDitNKZM2Dr8z7puJbmH8FY+/F3dEOJ4cNVZa58PgMwOpwLHyN6wfz1xg
+ 9uIPFAcN0kvkAxdz8BT04CJKnH4SK3c+uTVZTr5pIB5V0n3emonA5rX2q3MM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
-
-On 23. 10. 19 19:32, Mathieu Poirier wrote:
-> Hi Michal,
-> 
-> I was not CC'ed on the original post so I just noticed this today,
-> hence the late reply.  I don't know if you were looking for feedback
-> or already picked up the patch but here it is anyway.
-
-I haven't put the patch to my zynq/dt branch yet. And definitely any
-feedback on this is welcome.
+I find that the commit message should still be considerably improved.
+How do you think about to use the subject =E2=80=9C[PATCH] coccicheck:
+Support search for SmPL scripts within selected directory hierarchy=E2=80=
+=9D?
 
 
-> 
-> On Wed, 9 Oct 2019 at 08:07, Michal Simek <michal.simek@xilinx.com> wrote:
->>
->> From: Zumeng Chen <zumeng.chen@windriver.com>
->>
->> This patch is to build the coresight topology structure of zynq-7000
->> series according to the docs of coresight and userguide of zynq-7000.
->>
->> Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
->> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->>  arch/arm/boot/dts/zynq-7000.dtsi | 158 +++++++++++++++++++++++++++++++
->>  1 file changed, 158 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
->> index ca6425ad794c..86430ad76fee 100644
->> --- a/arch/arm/boot/dts/zynq-7000.dtsi
->> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
->> @@ -59,6 +59,40 @@
->>                 regulator-always-on;
->>         };
->>
->> +       replicator {
->> +               compatible = "arm,coresight-static-replicator";
->> +               clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
->> +               clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
->> +
->> +               out-ports {
->> +                       #address-cells = <1>;
->> +                       #size-cells = <0>;
->> +
->> +                       /* replicator output ports */
->> +                       port@0 {
->> +                               reg = <0>;
->> +                               replicator_out_port0: endpoint {
->> +                                       remote-endpoint = <&tpiu_in_port>;
->> +                               };
->> +                       };
->> +                       port@1 {
->> +                               reg = <1>;
->> +                               replicator_out_port1: endpoint {
->> +                                       remote-endpoint = <&etb_in_port>;
->> +                               };
->> +                       };
->> +               };
->> +               in-ports {
->> +                       /* replicator input port */
->> +                       port {
->> +                               replicator_in_port0: endpoint {
->> +                                       slave-mode;
-> 
-> The slave-mode property is no longer required and probably an
-> oversight since it doesn't appear elsewhere in this patch.
+> Put a modification in scripts/coccicheck which supports users in
+> configuring COCCI parameter as a directory to traverse files in
+> directory whose next level directory contains rule files with Suffix of =
+cocci.
 
-likely yes. I will remove it.
+* Please avoid a typo in this change description.
 
-> 
->> +                                       remote-endpoint = <&funnel_out_port>;
->> +                               };
->> +                       };
->> +               };
->> +       };
->> +
->>         amba: amba {
->>                 compatible = "simple-bus";
->>                 #address-cells = <1>;
->> @@ -365,5 +399,129 @@
->>                         reg = <0xf8005000 0x1000>;
->>                         timeout-sec = <10>;
->>                 };
->> +
->> +               etb@f8801000 {
->> +                       compatible = "arm,coresight-etb10", "arm,primecell";
->> +                       reg = <0xf8801000 0x1000>;
->> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
->> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
->> +                       in-ports {
->> +                               port {
->> +                                       etb_in_port: endpoint {
->> +                                               remote-endpoint = <&replicator_out_port1>;
->> +                                       };
->> +                               };
->> +                       };
->> +               };
->> +
->> +               tpiu@f8803000 {
->> +                       compatible = "arm,coresight-tpiu", "arm,primecell";
->> +                       reg = <0xf8803000 0x1000>;
->> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
->> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
->> +                       in-ports {
->> +                               port {
->> +                                       tpiu_in_port: endpoint {
->> +                                               remote-endpoint = <&replicator_out_port0>;
->> +                                       };
->> +                               };
->> +                       };
->> +               };
->> +
->> +               funnel@f8804000 {
->> +                       compatible = "arm,coresight-static-funnel", "arm,primecell";
->> +                       reg = <0xf8804000 0x1000>;
->> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
->> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
->> +
->> +                       /* funnel output ports */
->> +                       out-ports {
->> +                               port {
->> +                                       funnel_out_port: endpoint {
->> +                                               remote-endpoint =
->> +                                                       <&replicator_in_port0>;
->> +                                       };
->> +                               };
->> +                       };
->> +
->> +                       in-ports {
->> +                               #address-cells = <1>;
->> +                               #size-cells = <0>;
->> +
->> +                               /* funnel input ports */
->> +                               port@0 {
->> +                                       reg = <0>;
->> +                                       funnel0_in_port0: endpoint {
->> +                                               remote-endpoint = <&ptm0_out_port>;
->> +                                       };
->> +                               };
->> +
->> +                               port@1 {
->> +                                       reg = <1>;
->> +                                       funnel0_in_port1: endpoint {
->> +                                               remote-endpoint = <&ptm1_out_port>;
->> +                                       };
->> +                               };
->> +
->> +                               port@2 {
->> +                                       reg = <2>;
->> +                                       funnel0_in_port2: endpoint {
->> +                                       };
->> +                               };
->> +
->> +                               port@3 {
->> +                                       reg = <3>;
->> +                                       funnel0_in_port3: endpoint {
->> +                                               remote-endpoint = <&itm_out_port>;
->> +                                       };
->> +                               };
->> +                               /* The other input ports are not connect to anything */
->> +                       };
->> +               };
->> +
->> +               /* ITM is not supported by kernel, only leave device node here */
->> +               itm@f8805000 {
->> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
-> 
-> If I remember correctly ITM and ETMv3 are quite different - please
-> remove entirely.
+* Would you like to integrate a wording approach like the following?
 
-This was commented already. Definitely "arm,coresight-etm3x" should be
-removed. arm,primecell could stay there.
-
-Do you think that make sense to remove it completely because I expect
-that connection to funnel should be aligned with others.
-
-> 
->> +                       reg = <0xf8805000 0x1000>;
->> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
->> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
->> +                       out-ports {
->> +                               port {
->> +                                       itm_out_port: endpoint {
->> +                                               remote-endpoint = <&funnel0_in_port3>;
->> +                                       };
->> +                               };
->> +                       };
->> +               };
->> +
->> +               ptm@f889c000 {
->> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
->> +                       reg = <0xf889c000 0x1000>;
->> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
->> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
->> +                       cpu = <&cpu0>;
->> +                       out-ports {
->> +                               port {
->> +                                       ptm0_out_port: endpoint {
->> +                                               remote-endpoint = <&funnel0_in_port0>;
->> +                                       };
->> +                               };
->> +                       };
->> +               };
->> +
->> +               ptm@f889d000 {
->> +                       compatible = "arm,coresight-etm3x", "arm,primecell";
->> +                       reg = <0xf889d000 0x1000>;
->> +                       clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
->> +                       clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
->> +                       cpu = <&cpu1>;
->> +                       out-ports {
->> +                               port {
->> +                                       ptm1_out_port: endpoint {
->> +                                               remote-endpoint = <&funnel0_in_port1>;
->> +                                       };
->> +                               };
->> +                       };
->> +               };
-> 
-> With the above:
-> 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+  A search can be performed for SmPL scripts within a directory hierarchy.
+  Start a corresponding file determination if the environment variable =E2=
+=80=9CCOCCI=E2=80=9D
+  contains an acceptable path.
 
 
-Let's discuss that ITM part first and definitely thanks for review.
-
-Thanks,
-Michal
+Regards,
+Markus
