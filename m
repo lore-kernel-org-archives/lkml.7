@@ -2,203 +2,133 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A4CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33EFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312E32084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571957595;
-	bh=Y1oucRG4hSr47h5aFopNwsmqhPOE/ZaQNZFiaGjg8Zs=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=D12viEO2w2zKOIzJT8rsSroXOG5u4h7CMRHMC2VTw8t7aUM68mS7kbQ06QIaNvOMC
-	 oLyWB1B/pQuhGp4GtWr0m9u163AnKgZYQ8lfvZ1fjEoSKhUADKMI/pftGgEmtG80zk
-	 J23zzNci0hMYZk4depVIFv59miIHB0OJmYBkpmwM=
+	by mail.kernel.org (Postfix) with ESMTP id BF53521928
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="IEZZ4Tea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732917AbfJXWxN (ORCPT
+        id S1732948AbfJXW6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:53:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732652AbfJXWxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:53:12 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 600642084C;
-        Thu, 24 Oct 2019 22:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571957590;
-        bh=Y1oucRG4hSr47h5aFopNwsmqhPOE/ZaQNZFiaGjg8Zs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S1DISRYo+DwP3KzQdR7xYMVH+Obb8narWXAeF7V+pS16BtzDS2+uWO2HHIKoYs+n/
-         GQmxWmIS8Q4Hfg8mkuviTsZhNbREHQ74OduAyfSkgwDCXBOnoJewM7h/kI/KspFvHD
-         BHwAYjvm/ULYvW0KPN8MkfvaKDqfVn896lMpqYHU=
-Subject: Re: drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error:
- uninitialized symbol 'nents'.
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Suwan Kim <suwan.kim027@gmail.com>
-Cc:     kbuild@lists.01.org, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191022092839.GD10833@kadam>
- <20191023071120.GA3061@localhost.localdomain> <20191024194500.GD23523@kadam>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ce76c90b-3431-9342-8b75-882d582c6366@kernel.org>
-Date:   Thu, 24 Oct 2019 16:52:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 18:58:51 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43285 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730384AbfJXW6v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 18:58:51 -0400
+Received: by mail-io1-f66.google.com with SMTP id c11so189318iom.10
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LUBTpk9ooV35xQmJoHGn2mN1fpHGsBmiJOBvpI0fOq4=;
+        b=IEZZ4TeaPYu9KusTwoj7WfdPn1cK9KTxR4CsgVIUWzNM7sVDrk3QIl2JqN9AP1q0fD
+         mQXxqZpLv+F4Ydq+wQp+MJN/9hawT5YJAt+K9tIz6QieiXo0WvRn8I3QJPxmkUA/T0hn
+         cpV5d5m4J3wPcN2XdvKbdGsqTagFTIPB8b/3uzjMERWxapHtaBLtmCNwGpnmZdsLLejh
+         FhVD6WbH5LS1wKsH4UWrLuZQ27dBPSyLar0UMkbAufifbBJb9MamMy0Jjn3rcFBLSNp8
+         ZhWEIPwBzFvS5cxxxuHtZWn7eq8Y7pAtrgiUUXBzQ66D4OswlcQgnNug4JdMNlAxil2E
+         aWSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LUBTpk9ooV35xQmJoHGn2mN1fpHGsBmiJOBvpI0fOq4=;
+        b=nNdi/dAYX2NXt1vMjw7YhyAd+oH+Dt5aqiwrwjVrxqBvSO6tH4YmYyscKTH2n/3KOx
+         vY13dXfq9X3MVZzxuWJb5FKDNVnALrRH721qbUgbGD6Epm615NHEjRdXiHs+mhJpgpfX
+         hjCjWx3EauUS2R1LtqulufXXhYVZxEdV4kY7UbTYn2Rz9rjHEzn5OHLp/zHRW0EBZCAb
+         tq4vwSOS/lphnIn1NuWBL63n1tyWQwpW1OrRC0vLcD13A2JAii79dMldOTUptNPPdMoH
+         D1a5JZueOGNGP4AbBzJSsHy9kVgmF7pEdIVtX88mR1BLABpffWw8wqZjtKIhj+5/RR4D
+         UQ8A==
+X-Gm-Message-State: APjAAAUAD3HYCotWNFPS0ENzgiTKXiTuhQW4FPw8iifyNjxBxCzVkP5C
+        KrPcuzOgm0Noi1hjxz8mnwHqcw==
+X-Google-Smtp-Source: APXvYqxalK2YIo83Fu+BbBhgGuXezPvIjtKCSmn+b8821E2LzS3kdbtWvqRZW1DApkW9NtiE75wsTw==
+X-Received: by 2002:a5d:8d0e:: with SMTP id p14mr637597ioj.4.1571957928395;
+        Thu, 24 Oct 2019 15:58:48 -0700 (PDT)
+Received: from viisi.Home ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id b18sm58112ilo.70.2019.10.24.15.58.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 15:58:47 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+To:     linux-riscv@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, hch@lst.dev, greentime.hu@sifive.com,
+        luc.vanoostenryck@gmail.com
+Subject: [PATCH v4 0/8] riscv: resolve most warnings from sparse
+Date:   Thu, 24 Oct 2019 15:58:32 -0700
+Message-Id: <20191024225838.27743-1-paul.walmsley@sifive.com>
+X-Mailer: git-send-email 2.24.0.rc0
 MIME-Version: 1.0
-In-Reply-To: <20191024194500.GD23523@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 1:45 PM, Dan Carpenter wrote:
-> On Wed, Oct 23, 2019 at 04:11:20PM +0900, Suwan Kim wrote:
->> On Tue, Oct 22, 2019 at 12:28:39PM +0300, Dan Carpenter wrote:
->>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>> head:   7d194c2100ad2a6dded545887d02754948ca5241
->>> commit: ea44d190764b4422af4d1c29eaeb9e69e353b406 usbip: Implement SG support to vhci-hcd and stub driver
->>> date:   7 weeks ago
->>>
->>> If you fix the issue, kindly add following tag
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->>>
->>> New smatch warnings:
->>> drivers/usb/usbip/stub_rx.c:505 stub_recv_cmd_submit() error: uninitialized symbol 'nents'.
->>>
->>> Old smatch warnings:
->>> drivers/usb/usbip/stub_rx.c:450 stub_recv_xbuff() error: uninitialized symbol 'ret'.
->>>
->>> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ea44d190764b4422af4d1c29eaeb9e69e353b406
->>> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->>> git remote update linus
->>> git checkout ea44d190764b4422af4d1c29eaeb9e69e353b406
->>> vim +/nents +505 drivers/usb/usbip/stub_rx.c
->>>
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  453  static void stub_recv_cmd_submit(struct stub_device *sdev,
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  454  				 struct usbip_header *pdu)
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  455  {
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  456  	struct stub_priv *priv;
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  457  	struct usbip_device *ud = &sdev->ud;
->>> 2d8f4595d1f275 drivers/staging/usbip/stub_rx.c Max Vozeler        2011-01-12  458  	struct usb_device *udev = sdev->udev;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  459  	struct scatterlist *sgl = NULL, *sg;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  460  	void *buffer = NULL;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  461  	unsigned long long buf_len;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  462  	int nents;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  463  	int num_urbs = 1;
->>> c6688ef9f29762 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  464  	int pipe = get_pipe(sdev, pdu);
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  465  	int use_sg = pdu->u.cmd_submit.transfer_flags & URB_DMA_MAP_SG;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  466  	int support_sg = 1;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  467  	int np = 0;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  468  	int ret, i;
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  469
->>> 635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  470  	if (pipe == -1)
->>> 635f545a7e8be7 drivers/usb/usbip/stub_rx.c     Shuah Khan         2017-12-07  471  		return;
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  472
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  473  	priv = stub_priv_alloc(sdev, pdu);
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  474  	if (!priv)
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  475  		return;
->>> 4d7b5c7f8ad49b drivers/staging/usbip/stub_rx.c Takahiro Hirofuchi 2008-07-09  476
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  477  	buf_len = (unsigned long long)pdu->u.cmd_submit.transfer_buffer_length;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  478
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  479  	/* allocate urb transfer buffer, if needed */
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  480  	if (buf_len) {
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  481  		if (use_sg) {
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  482  			sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  483  			if (!sgl)
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  484  				goto err_malloc;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  485  		} else {
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  486  			buffer = kzalloc(buf_len, GFP_KERNEL);
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  487  			if (!buffer)
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  488  				goto err_malloc;
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  489  		}
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  490  	}
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  491
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  492  	/* Check if the server's HCD supports SG */
->>> ea44d190764b44 drivers/usb/usbip/stub_rx.c     Suwan Kim          2019-08-28  493  	if (use_sg && !udev->bus->sg_tablesize) {
->>>
->>> Smatch thinks "use_sg" can be true when "buf_len" is zero.  It's hard
->>> to tell if Smatch is right or wrong without more context...
->>
->> This is a bit strange. The meaning of "use_sg" is that client will
->> use scatter-gather and client's urb->num_sgs is not zero. And buffer
->> length should not be zero.
->>
->> usb_sg and buf_len are both client-dependent variables, so I think
->> if they have wrong value in the server side, the client must have
->> sent use_sg and buf_len with incorrect values.
->>
->> Did this error occur when compiling?
-> 
-> Smatch is doing static analysis, yes.
-> 
->> If then, Did Smatch also consider vhci tx side?
-> 
-> I'm not really sure...  I can't reproduce the warning because on my
-> system Smatch doesn't parse usbip_recv() correctly so it ends up
-> silencing that warning.  :/
-> 
+Resolve most warnings from the 'sparse' static analysis tool for the
+arch/riscv codebase.  This makes life easier for us as maintainers,
+and makes it easier for developers to use static analysis tools on
+their own changes.
 
-Hi Suwan,
+This fourth version drops some patches that were in the previous
+versions, and restructures some of what was left.  Much of this was
+based on feedback from Christoph Hellwig <hch@lst.de>, Luc Van
+Oostenryck <luc.vanoostenryck@gmail.com>, and Greentime Hu
+<greentime.hu@sifive.com>.
 
-This is a problem that needs fixing. nents
-
-        /* allocate urb transfer buffer, if needed */
-         if (buf_len) {
-                 if (use_sg) {
-                         sgl = sgl_alloc(buf_len, GFP_KERNEL, &nents);
-
-nents gets initialized here by sgl_alloc()
-
-                         if (!sgl)
-                                 goto err_malloc;
-                 } else {
-                         buffer = kzalloc(buf_len, GFP_KERNEL);
-                         if (!buffer)
-                                 goto err_malloc;
-                 }
-         }
-
-         /* Check if the server's HCD supports SG */
-         if (use_sg && !udev->bus->sg_tablesize) {
-                 /*
-                  * If the server's HCD doesn't support SG, break a 
-single SG
-                  * request into several URBs and map each SG list entry to
-                  * corresponding URB buffer. The previously allocated SG
-                  * list is stored in priv->sgl (If the server's HCD 
-support SG,
-                  * SG list is stored only in urb->sg) and it is used as an
-                  * indicator that the server split single SG request into
-                  * several URBs. Later, priv->sgl is used by 
-stub_complete() and
-                  * stub_send_ret_submit() to reassemble the divied URBs.
-                  */
-                 support_sg = 0;
-                 num_urbs = nents;
-
-I think nents will be valid here. Is there need for this additional
-check here? You can fold this into the previous use_sg check, right
-after the sg_alloc() success, I would think.
-
-                 priv->completed_urbs = 0;
-                 pdu->u.cmd_submit.transfer_flags &= ~URB_DMA_MAP_SG;
-         }
+Applies on the current riscv fixes branch, which itself is based on
+v5.4-rc5.  Tested on RV32 QEMU, RV64 QEMU, and the SiFive HiFive
+Unleashed board.
 
 
-thanks,
--- Shuah
+- Paul
+
+
+Paul Walmsley (6):
+  riscv: add prototypes for assembly language functions from head.S
+  riscv: init: merge split string literals in preprocessor directive
+  riscv: mark some code and data as file-static
+  riscv: add missing header file includes
+  riscv: fp: add missing __user pointer annotations
+  riscv: for C functions called only from assembly, mark with __visible
+
+Kernel object size difference:
+   text	   data	    bss	    dec	    hex	filename
+6662533	2136168	 312608	9111309	 8b070d	vmlinux.rv64.orig
+6662537	2136160	 312608	9111305	 8b0709	vmlinux.rv64.patched
+6443041	1792976	 255184	8491201	 8190c1	vmlinux.rv32.orig
+6443021	1792968	 255184	8491173	 8190a5	vmlinux.rv32.patched
+
+ arch/riscv/include/asm/irq.h        |  3 +++
+ arch/riscv/include/asm/switch_to.h  |  1 +
+ arch/riscv/kernel/cpufeature.c      |  1 +
+ arch/riscv/kernel/head.h            | 21 +++++++++++++++++++++
+ arch/riscv/kernel/irq.c             |  2 +-
+ arch/riscv/kernel/module-sections.c |  1 +
+ arch/riscv/kernel/process.c         |  2 ++
+ arch/riscv/kernel/ptrace.c          |  4 ++--
+ arch/riscv/kernel/reset.c           |  1 +
+ arch/riscv/kernel/setup.c           |  2 ++
+ arch/riscv/kernel/signal.c          |  8 ++++----
+ arch/riscv/kernel/smp.c             |  2 ++
+ arch/riscv/kernel/smpboot.c         |  5 ++++-
+ arch/riscv/kernel/syscall_table.c   |  1 +
+ arch/riscv/kernel/time.c            |  1 +
+ arch/riscv/kernel/traps.c           |  5 +++--
+ arch/riscv/kernel/vdso.c            |  3 ++-
+ arch/riscv/mm/context.c             |  1 +
+ arch/riscv/mm/fault.c               |  2 ++
+ arch/riscv/mm/init.c                |  5 +++--
+ arch/riscv/mm/sifive_l2_cache.c     |  2 +-
+ 21 files changed, 59 insertions(+), 14 deletions(-)
+ create mode 100644 arch/riscv/kernel/head.h
+
+-- 
+2.24.0.rc0
 
