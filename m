@@ -2,134 +2,105 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EDACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A8DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D055820856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571908380;
-	bh=WpaFv6ptX98DGoonOl6ONLPRjLrKbffTyfsnO9niVsk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohXGYQyRHcYc1qan90oQkUZ5QfOn5OVN9F0tEtXFWmrjR1HCgXYxsYcZQG+WLtra/
-	 SPp8613jpYypRjSR+RALWnJGzpTos+mPpvAjIpBaSe9sWyWv7QFfzjnX+PMFUPODrI
-	 CUVbnUpqXN4ZpAsyEUQVpdBI5rsF+WAAXLhUQIrY=
+	by mail.kernel.org (Postfix) with ESMTP id 07E2920856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:13:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393000AbfJXJM7 (ORCPT
+        id S2393011AbfJXJNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389110AbfJXJM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:12:58 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A048B20856;
-        Thu, 24 Oct 2019 09:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571908377;
-        bh=WpaFv6ptX98DGoonOl6ONLPRjLrKbffTyfsnO9niVsk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQH+3n0cmyUVIX0LdWipuWHsUyhRxs9rAiXK2rDb9qtI0G39yTsfwdzXVny8dA7tH
-         cANKPfovoVjr6WCBi8EoxQ0f32an6xtNCQK042GgF4jjqFvscTOQJFrRc3hO18ZzGB
-         v9G5c2ElWJkomfb55hk/G2fSmX4lB6DOhkoFws0w=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [BUGFIX PATCH 3/3] perf/probe: Fix to show function entry line as probe-able
-Date:   Thu, 24 Oct 2019 18:12:54 +0900
-Message-Id: <157190837419.1859.4619125803596816752.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157190834681.1859.7399361844806238387.stgit@devnote2>
-References: <157190834681.1859.7399361844806238387.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Thu, 24 Oct 2019 05:13:05 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4756 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727653AbfJXJNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:13:05 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3BF70C2EBFE337937027;
+        Thu, 24 Oct 2019 17:13:03 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 24 Oct
+ 2019 17:12:59 +0800
+Subject: =?UTF-8?Q?Re:_[f2fs-dev]_[bug_report]_compiler_warning:_fs/f2fs/nod?=
+ =?UTF-8?B?ZS5jOiBJbiBmdW5jdGlvbiDigJhfX3NldF9uYXRfY2FjaGVfZGlydHnigJk6IA==?=
+ =?UTF-8?Q?=e2=80=98head=e2=80=99_may_be_used_uninitialized?=
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>
+References: <fc71f3b73116115f78bcee2753e7bb3d5331731e.camel@analog.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <e815981a-50ef-0f49-cab6-e510ea44ddc0@huawei.com>
+Date:   Thu, 24 Oct 2019 17:12:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <fc71f3b73116115f78bcee2753e7bb3d5331731e.camel@analog.com>
 Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix die_walk_lines() to list the function entry line correctly.
-Since the dwarf_entrypc() does not return the entry pc if the DIE
-has only range attribute, __die_walk_funclines() fails to list
-the declaration line (entry line) in that case.
+On 2019/10/23 22:02, Ardelean, Alexandru wrote:
+> Seems to have been introduced via:
+> 
+> ----------------------------------------------------------------
+> 
+> commit 780de47cf6cb5f524cd98ec8ffbffc3da5696e17
+> Author: Chao Yu <yuchao0@huawei.com>
+> Date:   Tue Mar 20 23:08:30 2018 +0800
+> 
+>     f2fs: don't track new nat entry in nat set
+>     
+>     Nat entry set is used only in checkpoint(), and during checkpoint() we
+>     won't flush new nat entry with unallocated address, so we don't need to
+>     add new nat entry into nat set, then nat_entry_set::entry_cnt can
+>     indicate actual entry count we need to flush in checkpoint().
+>     
+>     Signed-off-by: Yunlei He <heyunlei@huawei.com>
+>     Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>     Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ----------------------------------------------------------------
+> 
+> Compiler warning is:
+> ----------------------------------------------------------------
+> 
+>   CC      fs/f2fs/node.o
+> In file included from ./include/linux/wait.h:7:0,
+>                  from ./include/linux/wait_bit.h:8,
+>                  from ./include/linux/fs.h:6,
+>                  from fs/f2fs/node.c:11:
+> fs/f2fs/node.c: In function ‘__set_nat_cache_dirty’:
+> ./include/linux/list.h:63:13: error: ‘head’ may be used uninitialized in
+> this function [-Werror=maybe-uninitialized]
+>   next->prev = new;
+>              ^
+> fs/f2fs/node.c:238:24: note: ‘head’ was declared here
+>   struct nat_entry_set *head;
 
-To solve this issue, this introduces die_entrypc() which correctly
-returns the entry PC (the first address range) even if the DIE has
-only range attribute. With this fix die_walk_lines() shows the
-function entry line is able to probe correctly.
+That's not correct, @head will only be assigned and used if new_ne equals NULL.
 
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/perf/util/dwarf-aux.c |   24 +++++++++++++++++++++++-
- tools/perf/util/dwarf-aux.h |    3 +++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 929b7c0567f4..063f71da6b63 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -307,6 +307,28 @@ bool die_is_func_def(Dwarf_Die *dw_die)
- 		dwarf_attr(dw_die, DW_AT_declaration, &attr) == NULL);
- }
- 
-+/**
-+ * die_entrypc - Returns entry PC (the lowest address) of a DIE
-+ * @dw_die: a DIE
-+ * @addr: where to store entry PC
-+ *
-+ * Since dwarf_entrypc() does not return entry PC if the DIE has only address
-+ * range, we have to use this to retrieve the lowest address from the address
-+ * range attribute.
-+ */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
-+{
-+	Dwarf_Addr base, end;
-+
-+	if (!addr)
-+		return -EINVAL;
-+
-+	if (dwarf_entrypc(dw_die, addr) == 0)
-+		return 0;
-+
-+	return dwarf_ranges(dw_die, 0, &base, addr, &end) < 0 ? -ENOENT : 0;
-+}
-+
- /**
-  * die_is_func_instance - Ensure that this DIE is an instance of a subprogram
-  * @dw_die: a DIE
-@@ -713,7 +735,7 @@ static int __die_walk_funclines(Dwarf_Die *sp_die, bool recursive,
- 	/* Handle function declaration line */
- 	fname = dwarf_decl_file(sp_die);
- 	if (fname && dwarf_decl_line(sp_die, &lineno) == 0 &&
--	    dwarf_entrypc(sp_die, &addr) == 0) {
-+	    die_entrypc(sp_die, &addr) == 0) {
- 		lw.retval = callback(fname, lineno, addr, data);
- 		if (lw.retval != 0)
- 			goto done;
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index f204e5892403..506006e0cf66 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -29,6 +29,9 @@ int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
- /* Get DW_AT_linkage_name (should be NULL for C binary) */
- const char *die_get_linkage_name(Dwarf_Die *dw_die);
- 
-+/* Get the lowest PC in DIE (including range list) */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr);
-+
- /* Ensure that this DIE is a subprogram and definition (not declaration) */
- bool die_is_func_def(Dwarf_Die *dw_die);
- 
-
+>                         ^
+> cc1: all warnings being treated as errors
+> ----------------------------------------------------------------
+> 
+> Thanks
+> Alex
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> 
