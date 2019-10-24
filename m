@@ -3,106 +3,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2D3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FEECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C7121872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC2320663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406917AbfJXKLR (ORCPT
+        id S2409003AbfJXKLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:11:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56916 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390611AbfJXKLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:11:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 89A03B68C;
-        Thu, 24 Oct 2019 10:11:14 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 12:11:12 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     linux-scsi@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] scsi: sr: workaround VMware ESXi cdrom emulation
- bug
-Message-ID: <20191024101112.GK938@kitsune.suse.cz>
-References: <cover.1571834862.git.msuchanek@suse.de>
- <abf81ec4f8b6139fffc609df519856ff8dc01d0d.1571834862.git.msuchanek@suse.de>
- <08f1e291-0196-2402-1947-c0cdaaf534da@suse.de>
- <20191023162313.GE938@kitsune.suse.cz>
- <2bc50e71-6129-a482-00bd-0425b486ce07@suse.de>
- <20191024085631.GJ938@kitsune.suse.cz>
- <15c972ea-5b3a-487f-7be5-a62d780896da@suse.de>
+        Thu, 24 Oct 2019 06:11:24 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:6279 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390611AbfJXKLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:11:24 -0400
+X-UUID: 9173b47a2d724de1bfdac633ec9fdf30-20191024
+X-UUID: 9173b47a2d724de1bfdac633ec9fdf30-20191024
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <luhua.xu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 9312433; Thu, 24 Oct 2019 18:11:12 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 24 Oct 2019 18:11:09 +0800
+Received: from [10.15.20.246] (10.15.20.246) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 24 Oct 2019 18:11:08 +0800
+Message-ID: <1571911880.4955.11.camel@mbjsdccf07>
+Subject: Re: [PATCH 1/1] spi: mediatek: add power control when set_cs
+From:   luhua xu <luhua.xu@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <luhua.xu@mediatek.com>
+Date:   Thu, 24 Oct 2019 18:11:20 +0800
+In-Reply-To: <1571898319.4311.3.camel@mbjsdccf07>
+References: <1571834322-1121-1-git-send-email-luhua.xu@mediatek.com>
+         <1571834322-1121-2-git-send-email-luhua.xu@mediatek.com>
+         <20191023151121.GC5723@sirena.co.uk> <1571898319.4311.3.camel@mbjsdccf07>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <15c972ea-5b3a-487f-7be5-a62d780896da@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 11:41:38AM +0200, Hannes Reinecke wrote:
-> On 10/24/19 10:56 AM, Michal Suchánek wrote:
-> > On Thu, Oct 24, 2019 at 07:46:57AM +0200, Hannes Reinecke wrote:
-> >> On 10/23/19 6:23 PM, Michal Suchánek wrote:
-> >>> On Wed, Oct 23, 2019 at 04:13:15PM +0200, Hannes Reinecke wrote:
-> [ .. ]>>>> This looks something which should be handled via a blacklist
-> flag, not
-> >>>> some inline hack which everyone forgets about it...
-> >>>
-> >>> AFAIK we used to have a blacklist but don't have anymore. So either it
-> >>> has to be resurrected for this one flag or an inline hack should be good
-> >>> enough.
-> >>>
-> >> But we do have one for generic scsi; cf drivers/scsi/scsi_devinfo.c.
-> >> And this pretty much falls into the category of SCSI quirks, so I'd
-> >> prefer have it hooked into that.
+On Thu, 2019-10-24 at 14:25 +0800, luhua xu wrote:
+> On Wed, 2019-10-23 at 16:11 +0100, Mark Brown wrote:
+> > On Wed, Oct 23, 2019 at 08:38:42AM -0400, Luhua Xu wrote:
+> > > From: "luhua.xu" <luhua.xu@mediatek.com>
 > > 
-> > But generic scsi does not know about cdrom trays, does it?
+> > > Use runtime PM to power spi when set_cs
+> > > As set_cs may be called from interrupt context,
+> > > set runtime PM IRQ safe for spi.
 > > 
-> No, just about 'flags'. What you _do_ with those flags is up to you.
-> Or, rather, the driver.
-> Just define a 'tray detection broken' flag, and evaluate it in sr.c.
+> > Why might we be trying to set the chip select state while the device is
+> > runtime idle?  It seems like whatever is trying to set the chip select
+> > should be dealing with this, not the chip select operation itself since
+> > that's unlikely to be happening in isolation.
 > 
-> Where is the problem with that?
+> Hi Mark,
+> Spi framework provideds  spi_setup() to modify spi settings for spi
+> device (maybe spi is runtime idle now), and this will call
+> spi_controller->set_cs() accessing registers.
+> Other spi_controller callbacks that need to access hardware registers,
+> are triggered by spi transfer. Spi framework will get and put runtime
+> power in __spi_pump_message().
 
-And how do you set the flag?
+hi Mark,
+      If the spi slaver  who wants to set cs  need to  power spi
+itself , this means we need to provide spi power on/off APIs  while spi
+controller is runtime PM device.
+      And spi slaver  needs to power spi itself when it wants to set cs,
+and don't need to do so when do spi data transfer.
 
-The blacklist lists exact manufacturer and model while this rule only
-depends on model because manufacturer is bogus. Also the blacklist
-itself is deprecated:
+      I see  several case of spi driver with power control:
+      (1)No clk control  in set_cs,  such as spi-cadence.c
+      (2)Enable spi clk  in probe before the first time hitting reg,
+and never power down. Such as  spi-sifive.c  spi-armada-3700.c
+      (3)Enable spi clk  in  controller->set_cs  callback,  such as
+spi-geni-qcom.c.    
+      My patch works the same as (3).For mtk platform, without this
+patch, if user do spi_setup(), cs setting cannot take effect, and reg
+access violation occurs.
+                
 
-/*
- * scsi_static_device_list: deprecated list of devices that require
- * settings that differ from the default, includes black-listed (broken)
- * devices. The entries here are added to the tail of scsi_dev_info_list
- * via scsi_dev_info_list_init.
- *
- * Do not add to this list, use the command line or proc interface to add
- * to the scsi_dev_info_list. This table will eventually go away.
- */
+        
 
-Thanks
-
-Michal
