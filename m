@@ -2,167 +2,114 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B921ECA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47631CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC882084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:22:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="So9FD3Ia"
+	by mail.kernel.org (Postfix) with ESMTP id 18C9420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571916244;
+	bh=g+R7dOXwcKElWRvz7nfCK0CoS/QqY5FvmWjQtXYXq/A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CF/1wcg+aHQ96L+csXMWqF5quF2VAw+ypsuaVtt9l/Zvz6D3qcvLUIrwFeN6tiZh2
+	 wferxBn9kjZeR34a9lou51q01NJdqXaXC+W6gMz6Aecewq7yQ2hZ+M0sF5wu2B6QgT
+	 EMw1W+pD6pmsCo6M+EgSKM0ydyKcur8tXnUUL74w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438926AbfJXLWf (ORCPT
+        id S2438940AbfJXLYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:22:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44346 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392847AbfJXLWf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:22:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Eoxo5siLBEjeHmhSrah95Nyw/+aG2YokJoEiTaV0+fg=; b=So9FD3Iaz619Ul2HS5Pan3icl
-        NcW4kkYKOEEpYlaZXRKwtwbshbs6jyYpdsySgnRja8aBG6axaYVQ3f1RR1MoIO3GrWpuiTmzCy4yN
-        DFGcpEXfAl5prVGQwYxq//wAtqy1ZGkmUOfGJIfx0wbT1DMKRDOZWlEje6pryte+xfefVeNd1dSNa
-        w/6VHLuhTBqZy12PZtaEO7h5nPMyWio+3s7xosjIpFqZ/msIOgx1HzC929gzWOeKdT2gSC52VnKt7
-        pA1OQ3qOhsu4cjgv9IJTFbvO3rckvjfRxVMQZAmxdLmcA/lch6jDFU44CTcSJd+/QCsZ1QO3BD5c/
-        drY+Vo0bQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNbCL-0007oz-0U; Thu, 24 Oct 2019 11:22:33 +0000
-Date:   Thu, 24 Oct 2019 04:22:32 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Xiang Zheng <zhengxiang9@huawei.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, alex.williamson@redhat.com,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        Guoheyi <guoheyi@huawei.com>,
-        yebiaoxiang <yebiaoxiang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
-Message-ID: <20191024112232.GD2963@bombadil.infradead.org>
-References: <20191023163851.GA2963@bombadil.infradead.org>
- <20191023204638.GA8868@google.com>
+        Thu, 24 Oct 2019 07:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436501AbfJXLYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 07:24:02 -0400
+Received: from localhost (unknown [122.181.210.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE2152084C;
+        Thu, 24 Oct 2019 11:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571916241;
+        bh=g+R7dOXwcKElWRvz7nfCK0CoS/QqY5FvmWjQtXYXq/A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v/diBaZcHhDWIo+d+S3cwC1M/W56n2/OKrdFxsOE29WIddOrDJOiJE939fYB6f+wr
+         ODZud7Q8KKyseuJi4mAQmDp58BR7ZJLemuOE7wiIq5XXXpa78RfGKwxczTO//LyzZ0
+         JJwSN3501O/+N/dCEA6sXvX2WxPHxRLcNGf5NhfM=
+Date:   Thu, 24 Oct 2019 16:53:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH] soundwire: intel: fix PDI/stream mapping for Bulk
+Message-ID: <20191024112356.GA2620@vkoul-mobl>
+References: <20191022232948.17156-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023204638.GA8868@google.com>
+In-Reply-To: <20191022232948.17156-1-pierre-louis.bossart@linux.intel.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 03:46:38PM -0500, Bjorn Helgaas wrote:
-> [+cc Thomas, Rafael, beginning of thread at
-> https://lore.kernel.org/r/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com]
+On 22-10-19, 18:29, Pierre-Louis Bossart wrote:
+> The previous formula is incorrect for PDI0/1, the mapping is not
+> linear but has a discontinuity between PDI1 and PDI2.
 > 
-> On Wed, Oct 23, 2019 at 09:38:51AM -0700, Matthew Wilcox wrote:
-> > On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
-> > > I don't like being one of a handful of callers of __add_wait_queue(),
-> > > so I like that solution from that point of view.
-> > > 
-> > > The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
-> > > device") commit log suggests that using __add_wait_queue() is a
-> > > significant optimization, but I don't know how important that is in
-> > > practical terms.  Config accesses are never a performance path anyway,
-> > > so I'd be inclined to use add_wait_queue() unless somebody complains.
-> > 
-> > Wow, this has got pretty messy in the umpteen years since I last looked
-> > at it.
-> > 
-> > Some problems I see:
-> > 
-> > 1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
-> > 
-> >     x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
-> >     
-> >     All x86 PCI configuration space accessors have either their own
-> >     serialization or can operate completely lockless (ECAM).
-> >     
-> >     Disable the global lock in the generic PCI configuration space accessors.
-> > 
-> > The concept behind this patch is broken.  We still need to lock out
-> > config space accesses when devices are undergoing D-state transitions.
-> > I would suggest that for the contention case that tglx is concerned about,
-> > we should have a pci_bus_read_config_unlocked_##size set of functions
-> > which can be used for devices we know never go into D states.
+> This change has no effect on PCM PDIs (same mapping).
 > 
-> Host bridges that can't do config accesses atomically, e.g., they have
-> something like the 0xcf8/0xcfc addr/data ports, need serialization.
-> CONFIG_PCI_LOCKLESS_CONFIG removes the use of pci_lock for that, and I
-> think that part makes sense regardless of whether devices can enter D
-> states.
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/intel.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index b403ccc832b6..c984261fcc33 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -480,7 +480,10 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+>  	unsigned int link_id = sdw->instance;
+>  	int pdi_conf = 0;
+>  
+> -	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
+> +	/* the Bulk and PCM streams are not contiguous */
+> +	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
+> +	if (pdi->num >= 2)
+> +		pdi->intel_alh_id += 2;
+>  
+>  	/*
+>  	 * Program stream parameters to stream SHIM register
+> @@ -509,7 +512,10 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+>  	unsigned int link_id = sdw->instance;
+>  	unsigned int conf;
+>  
+> -	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
+> +	/* the Bulk and PCM streams are not contiguous */
+> +	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
+> +	if (pdi->num >= 2)
+> +		pdi->intel_alh_id += 2;
 
-I disagree.  If a device is in D state, we need to block the access.
-Maybe there needs to be a different mechanism for doing it that's not
-a machine-wide lock, but it needs to happen.
+The change is repeated so how about:
 
-> We *should* prevent config accesses during D-state transitions (per
-> PCIe r5.0, sec 5.9), but I don't think pci_lock ever did that.
+        intel_pdi_update_alh() or similar which does this rather than
+repeat the pattern
 
-It used to set block_ucfg_access.  Maybe that's been lost; I see
-there are still calls to pci_dev_lock() in pci_reset_function(),
-for example.
+>  
+>  	/* Program Stream config ALH register */
+>  	conf = intel_readl(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id));
+> -- 
+> 2.20.1
 
-> pci_raw_set_power_state() contains delays, but that only prevents
-> accesses from the caller, not from other threads or from userspace.
-> I suppose we should also prevent accesses by other threads during
-> transitions done by ACPI, e.g., _PS0, _PS1, _PS2, _PS3.  AFAICT we
-> don't do any of that.
-> 
-> It looks like pci_lock currently:
-> 
->   - Serializes all kernel config accesses system-wide in
->     pci_bus_read_config_##size() (unless CONFIG_PCI_LOCKLESS_CONFIG=y).
-> 
->   - Serializes all userspace config accesses system-wide in
->     pci_user_read_config_##size() (this seems unnecessary when
->     CONFIG_PCI_LOCKLESS_CONFIG=y).
-> 
->   - Serializes userspace config accesses with resets of the device via
->     the dev->block_cfg_access bit and waitqueue mechanism.
-> 
->   - Serializes kernel and userspace config accesses with bus->ops
->     changes in pci_bus_set_ops() (except that we don't serialize
->     kernel config accesses if CONFIG_PCI_LOCKLESS_CONFIG=y, which is
->     probably a problem).  But pci_bus_set_ops() is hardly used and I'm
->     not sure it's worth keeping it.
-> 
-> > 2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
-> >    exports pci_lock.  I think this is a mistake; at best there should be
-> >    accessors for the pci_lock.  But I don't understand why it needs to
-> >    exclude PCI config space changes throughout pci_check_and_set_intx_mask().
-> >    Why can it not do:
-> > 
-> > -	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
-> > +	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
-> > 
-> > 3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
-> >    changed pci_lock to be a raw spinlock.  The patch description
-> >    essentially says "We need it for RT" which isn't terribly helpful.
-> > 
-> > 4. Finally, getting back to the original problem report here, I wouldn't
-> >    write this code this way today.  There's no reason not to use the
-> >    regular add_wait_queue etc.  BUT!  Why are we using this custom locking
-> >    mechanism?  It pretty much screams to me of an rwsem (reads/writes
-> >    of config space take it for read; changes to config space accesses
-> >    (disabling and changing of accessor methods) take it for write.
-> 
-> So maybe the immediate thing is to just convert to add_wait_queue()?
-
-Isn't that going to run foul of the lock inversion you fixed in
-cdcb33f9824429a926b971bf041a6cec238f91ff ?
-
-> There's a lot we could clean up here, but I think it would take a fair
-> bit of untangling before we actually solve this panic.
-
-Yes, the mess has spread over many years ;-)
+-- 
+~Vinod
