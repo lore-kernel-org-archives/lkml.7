@@ -2,134 +2,94 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FEACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBAFCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DDA2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5A12084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GVTdJblk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392346AbfJXBWq (ORCPT
+        id S2392367AbfJXBYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 21:22:46 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46317 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbfJXBWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 21:22:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 18:22:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
-   d="scan'208";a="228325784"
-Received: from fyin-dev.sh.intel.com (HELO [10.239.143.122]) ([10.239.143.122])
-  by fmsmga002.fm.intel.com with ESMTP; 23 Oct 2019 18:22:44 -0700
-Subject: Re: [PATCH v3] ACPI/processor_idle: Remove dummy wait if kernel is in
- guest mode
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        David Laight <David.Laight@aculab.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>
-References: <20191023074945.17016-1-fengwei.yin@intel.com>
- <30ee0a348f624698801691f65eeecd87@AcuMS.aculab.com>
- <CAJZ5v0jizy95pVh1gek5rmaVvGeZUMkVdKJUdesZeXGbj=mwRw@mail.gmail.com>
-From:   Yin Fengwei <fengwei.yin@intel.com>
-Message-ID: <07760c4a-b3f0-83a3-ed1b-6df45f8deb35@intel.com>
-Date:   Thu, 24 Oct 2019 09:22:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0jizy95pVh1gek5rmaVvGeZUMkVdKJUdesZeXGbj=mwRw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 23 Oct 2019 21:24:00 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:57235 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390315AbfJXBYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 21:24:00 -0400
+Received: by mail-pf1-f201.google.com with SMTP id b17so17591091pfo.23
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 18:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=Q/IgTcyWpllq9cHFnznuYs6JbwLGBHOeL0Smj+J7ca0=;
+        b=GVTdJblkvvjClYZLs2bPvvMBuk5g/tKBRxCD5d8zrFawK/dUnVTzn3mLelDR1LljIf
+         WaPj34fR/p/NSXU5aWa6UCp4wqu1QC+CpeOwH5SunJ8fTwmdg4R0p3g1LrKiwjCP85vw
+         aA3z1MQcgTWZ75eQ6nUP5jpZTEVkC9ZoxPk1/ofFb3267KglmdU5Xk6/2/B3P3NZN79G
+         YYVZpv2wYExaSdQPW1qKK7+TqSnD1mNb+T6zS2MZ+027vXm5q409SxCtaLizMDnXvyLp
+         gpcCvMtjFDWZKF9wDsLW1ghOzLE4/kWrTLT9aTpgJ6Q8+t3t39xEaT/vGRsb1pmn41U5
+         l+LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=Q/IgTcyWpllq9cHFnznuYs6JbwLGBHOeL0Smj+J7ca0=;
+        b=mYcCpZMT1Beu/2GqE4/9Ko/kN1/W6xaiEQDA3J2d9MGa+oAv2B1uPlLH5XScT3M/kR
+         40qt22ul24Xg2baDzprVeCBB+IiCi64ubPRefv/D8lAJvbR6tGUxt6es+PZ5ftCWOx6T
+         Hl1DkmVNCLuwdAsKNmbiZaH7sGqnG0Wk72PuGaAGfwa3v9FulVOK6RA5JlK4ogFZxUxV
+         o6CDv+zD6psk6sjurK8/Z+zjyOr9Ik5VX3a8iX+mU8PmLxhhSnkE93zJ9UMZ/dOOuaE3
+         mkQx2ycRpMBHlO277ftC3wq0atutlWs1il5UBYaxOGPCiqzNB80OsPdLpRQXpP6tuiG3
+         7eaQ==
+X-Gm-Message-State: APjAAAW1eM+E0JL6YqGGAiih7ttWtII2ZpJGgHk8KdLg7YTE3ik1Ec2W
+        Ru5V6jYzCYmBijtA/6SdtQ4m5BPuE5o=
+X-Google-Smtp-Source: APXvYqwxTYWRsvyLKEC+CppJbx1Z24G5t2QVXsJ5xsbKJwDJeCg0MJIZxzpQyX/Vs6LO+ZNkmUnI1gw1ZkM=
+X-Received: by 2002:a63:e055:: with SMTP id n21mr13369058pgj.411.1571880239317;
+ Wed, 23 Oct 2019 18:23:59 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 10:23:54 +0900
+In-Reply-To: <20191018010846.186484-1-pliard@google.com>
+Message-Id: <20191024012354.105261-1-pliard@google.com>
+Mime-Version: 1.0
+References: <20191018010846.186484-1-pliard@google.com>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: Re: [PATCH] squashfs: Migrate from ll_rw_block usage to BIO
+From:   Philippe Liard <pliard@google.com>
+To:     phillip@squashfs.org.uk
+Cc:     linux-kernel@vger.kernel.org, groeck@chromium.org,
+        pliard@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Cristoph for taking a look. I like the idea of simplifying this if
+possible. I think I understand your suggestion in principle but I'm not
+seeing a way to apply it here. Would it be possible for you to be a little
+more specific? Let me try to explain this below.
 
+My admittedly=C2=A0limited understanding is that using BIO indirectly requi=
+res
+buffer_head or an alternative including some synchronization mechanism at
+least.
+It's true that the bio_{alloc,add_page,submit}() functions don't require
+passing a buffer_head. However because bio_submit() is asynchronous AFAICT
+the client needs to use a synchronization mechanism to wait for and notify
+the completion of the request which buffer heads provide. This is achieved
+respectively by wait_on_buffer() and {set,clear}_buffer_uptodate().
 
-On 2019/10/23 下午5:03, Rafael J. Wysocki wrote:
-> On Wed, Oct 23, 2019 at 10:45 AM David Laight <David.Laight@aculab.com> wrote:
->>
->> From: Yin Fengwei
->>> Sent: 23 October 2019 08:50
->>
->>
->>> In function acpi_idle_do_entry(), an ioport access is used for dummy
->>> wait to guarantee hardware behavior. But it could trigger unnecessary
->>> vmexit if kernel is running as guest in virtualization environtment.
->>>
->>> If it's in virtualization environment, the deeper C state enter
->>> operation (inb()) will trap to hyervisor. It's not needed to do
->>> dummy wait after the inb() call. So we remove the dummy io port
->>> access to avoid unnecessary VMexit.
->>>
->>> We keep dummy io port access to maintain timing for native environment.
->>>
->>> Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
->>> ---
->>> ChangeLog:
->>> v2 -> v3:
->>>   - Remove dummy io port access totally for virtualization env.
->>>
->>> v1 -> v2:
->>>   - Use ndelay instead of dead loop for dummy delay.
->>>
->>>   drivers/acpi/processor_idle.c | 36 ++++++++++++++++++++++++++++++++---
->>>   1 file changed, 33 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
->>> index ed56c6d20b08..0c4a97dd6917 100644
->>> --- a/drivers/acpi/processor_idle.c
->>> +++ b/drivers/acpi/processor_idle.c
->>> @@ -58,6 +58,17 @@ struct cpuidle_driver acpi_idle_driver = {
->>>   static
->>>   DEFINE_PER_CPU(struct acpi_processor_cx * [CPUIDLE_STATE_MAX], acpi_cstate);
->>>
->>> +static void (*dummy_wait)(u64 address);
->>> +
->>> +static void default_dummy_wait(u64 address)
->>> +{
->>> +     inl(address);
->>> +}
->>> +
->>> +static void default_noop_wait(u64 address)
->>> +{
->>> +}
->>> +
->>
->> Overengineered...
->> Just add:
->>
->> static void wait_for_freeze(void)
->> {
->> #ifdef  CONFIG_X86
->>          /* No delay is needed if we are a guest */
->>          if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
->>                  return;
->> #endif
->>
->>          /* Dummy wait op - must do something useless after P_LVL2 read
->>             because chipsets cannot guarantee that STPCLK# signal
->>             gets asserted in time to freeze execution properly. */
->>          inl(acpi_gbl_FADT.xpm_timer_block.address);
->> }
->>
->> and use it to replace the inl().
-> 
-> I was about to make a similar comment.
-OK. Will send v4 soon.
+Another dependency on buffer heads is the fact that squashfs_read_data()
+calls into other squashfs functions operating on buffer heads outside this
+file. For example squashfs_decompress() operates on a buffer_head array.
 
-Regards
-Yin, Fengwei
-
-> 
+Given that bio_submit() is asynchronous I'm also not seeing how the
+squashfs_bio_request allocation can be removed? There can be multiple BIO
+requests in flight each needing to carry some context used on completion
+of the request.
