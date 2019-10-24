@@ -2,98 +2,160 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F258CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51723CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99632166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:35:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Bm83GnaI"
+	by mail.kernel.org (Postfix) with ESMTP id 1E5DB21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571895348;
+	bh=HtXRJiY7E2WBnhLRCrWIVwj9zwzEbWwIp+kCGNGU0Vg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Agbdlc70lwEbmEf7XJVJrgypvexEpdemkJOX2RLxe2Zq5VzZ2vNiOlKQZ4jDYaVEf
+	 axDCBJFkLeqCtVpF+wvET50UBeinRUwhgm9nOF492YAQL+3O5xcU4GfHs9v0sZwfzE
+	 BkuvA/6fsMFJkeMeBjVThrH/EoFaGviJfSYWSKns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408444AbfJXFfX (ORCPT
+        id S2408455AbfJXFfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 01:35:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51803 "EHLO ozlabs.org"
+        Thu, 24 Oct 2019 01:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404022AbfJXFfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 01:35:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2390377AbfJXFfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 01:35:46 -0400
+Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46zGD871RQz9sPL;
-        Thu, 24 Oct 2019 16:35:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571895321;
-        bh=+XW0WbvkHDCjGqc+rwLOj4r6xESyf5Ddvi1gE6TTqcQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Bm83GnaIY9Uf0Y3zs9IxA7xL483ZJZM2pqH1JSiKgu4Ivz3FT2wTvkLwWKgJWCkmQ
-         FzdOo1fB5dNuou+yqeCbMn/2l8gnUVQD74azr4Pd0pstLCwTbtZMpj6LydC0AJyeMp
-         x0uXcTswuuogubht9qfbx0xRFa58CTFcFsyeohA6zy5DJkHoxrUAfACsTpWEtHHxcc
-         jst1T70qwxUpPkvOuka5MAQGGX8OKol16+SnMb0oogQAFcaqJU3cWZXBKsvb9c97e9
-         FOYhEAArS0ob6lWBteZlEF+GRG7PfUytisC1G5pDDhWZuPTouE+jx7Yr2El/TlMIYA
-         P0TSSIXZeLGbg==
-Date:   Thu, 24 Oct 2019 16:35:15 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Valdis =?UTF-8?B?S2zEk3RuaWVrcw==?=" <valdis.kletnieks@vt.edu>
-Cc:     Mark Salyzyn <salyzyn@android.com>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: linux-next - sparse warnings after prefered/preferred patch.
-Message-ID: <20191024163404.46045abb@canb.auug.org.au>
-In-Reply-To: <822877.1571890784@turing-police>
-References: <822877.1571890784@turing-police>
+        by mail.kernel.org (Postfix) with ESMTPSA id B28CB21655;
+        Thu, 24 Oct 2019 05:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571895345;
+        bh=HtXRJiY7E2WBnhLRCrWIVwj9zwzEbWwIp+kCGNGU0Vg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tpPSOqsLnoWaoVDB4h50UjvklrLgrRrHwG3rkhRndGIgW8V6sc9hNTf4UN34hFwxd
+         EDlIQgRgR2JO3vRsExo5akPfc8ur10rMzq+eFhkh9/wE3wVVi86wgylxz9wN3JsIOW
+         jZczc3/Wgo5n0bXYOQjP4NRTDpq4bC2/PUFWinU8=
+Date:   Thu, 24 Oct 2019 08:35:34 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH 04/12] m68k: nommu: use pgtable-nopud instead of
+ 4level-fixup
+Message-ID: <20191024053533.GA12281@rapoport-lnx>
+References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+ <1571822941-29776-5-git-send-email-rppt@kernel.org>
+ <de03a882-fb1a-455c-7c60-84ab0c4f9674@linux-m68k.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uiDp8dD83pH_Sh0akJ=XC=S";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <de03a882-fb1a-455c-7c60-84ab0c4f9674@linux-m68k.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uiDp8dD83pH_Sh0akJ=XC=S
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Greg,
 
-Hi Valdis,
+On Thu, Oct 24, 2019 at 02:09:01PM +1000, Greg Ungerer wrote:
+> Hi Mike,
+> 
+> On 23/10/19 7:28 pm, Mike Rapoport wrote:
+> >From: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> >The generic nommu implementation of page table manipulation takes care of
+> >folding of the upper levels and does not require fixups.
+> >
+> >Simply replace of include/asm-generic/4level-fixup.h with
+> >include/asm-generic/pgtable-nopud.h.
+> >
+> >Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> >---
+> >  arch/m68k/include/asm/pgtable_no.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/arch/m68k/include/asm/pgtable_no.h b/arch/m68k/include/asm/pgtable_no.h
+> >index c18165b..ccc4568 100644
+> >--- a/arch/m68k/include/asm/pgtable_no.h
+> >+++ b/arch/m68k/include/asm/pgtable_no.h
+> >@@ -2,7 +2,7 @@
+> >  #ifndef _M68KNOMMU_PGTABLE_H
+> >  #define _M68KNOMMU_PGTABLE_H
+> >-#include <asm-generic/4level-fixup.h>
+> >+#include <asm-generic/pgtable-nopud.h>
+> >  /*
+> >   * (C) Copyright 2000-2002, Greg Ungerer <gerg@snapgear.com>
+> 
+> This fails to compile for me (targeting m5208evb_defconfig):
+> 
+>   CC      init/main.o
+> In file included from ./arch/m68k/include/asm/pgtable_no.h:56:0,
+>                  from ./arch/m68k/include/asm/pgtable.h:3,
+>                  from ./include/linux/mm.h:99,
+>                  from ./include/linux/ring_buffer.h:5,
+>                  from ./include/linux/trace_events.h:6,
+>                  from ./include/trace/syscall.h:7,
+>                  from ./include/linux/syscalls.h:85,
+>                  from init/main.c:21:
+> ./include/asm-generic/pgtable.h:738:34: error: unknown type name ‘pmd_t’
+>  static inline int pmd_soft_dirty(pmd_t pmd)
+>                                   ^
 
-On Thu, 24 Oct 2019 00:19:44 -0400 "Valdis Kl=C4=93tnieks" <valdis.kletniek=
-s@vt.edu> wrote:
->
-> Building with C=3D1 W=3D1.  After this commit:
->=20
-> commit 79f0cf35dccb1df27436c11b1a928b7a46152211
-> Author: Mark Salyzyn <salyzyn@android.com>
-> Date:   Wed Oct 23 11:25:16 2019 +1100
->=20
->     treewide: cleanup: replace prefered with preferred
->=20
-> sparse throws messages on every single .c that includes sysctl.h:
+...
 
-This patch has been removed for today's linux-next after other reports
-or errors.
+> scripts/Makefile.build:265: recipe for target 'init/main.o' failed
+> make[1]: *** [init/main.o] Error 1
+> Makefile:1649: recipe for target 'init' failed
+> make: *** [init] Error 2
 
---=20
-Cheers,
-Stephen Rothwell
+The hunk below fixes the build.
 
---Sig_/uiDp8dD83pH_Sh0akJ=XC=S
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+diff --git a/arch/m68k/include/asm/page.h b/arch/m68k/include/asm/page.h
+index c00b67a..05e1e1e 100644
+--- a/arch/m68k/include/asm/page.h
++++ b/arch/m68k/include/asm/page.h
+@@ -21,7 +21,7 @@
+ /*
+  * These are used to make use of C type-checking..
+  */
+-#if CONFIG_PGTABLE_LEVELS == 3
++#if !defined(CONFIG_MMU) || CONFIG_PGTABLE_LEVELS == 3
+ typedef struct { unsigned long pmd[16]; } pmd_t;
+ #define pmd_val(x)	((&x)->pmd[0])
+ #define __pmd(x)	((pmd_t) { { (x) }, })
+ 
+> Regards
+> Greg
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2xOBMACgkQAVBC80lX
-0Gy3eAf/fW1MkxoN6EwsDFPhJanN1mCf7w0vMCuRqHxfRjra3Adhd0kNIirkV3IX
-5Kly6cEXhRiDF1w2RcnaH1+5GN4yNHUhEbdASHozt8w9DoGbcRoVhHC36nZjJhdB
-Oj8uPeozgSTNpttzgEbkp+266fOu9DIk+sFbAb+ugjKoJJjguSkcxY46jnH6vMro
-TSXattBm7cBX6u1WZSB4vXgdXI1XG0OR5KU3efjFCK+KNLCil8tiOoSmP0Ms1xp9
-t+0+gBKrphh7JejyWF0DcyNfk63fIG4biU4moHKWyRMQsyTtWOFG+MYsDy+Ksq4H
-1Pa074cCAsgHI2bNmero3e6lV8dgqw==
-=9IEz
------END PGP SIGNATURE-----
-
---Sig_/uiDp8dD83pH_Sh0akJ=XC=S--
+-- 
+Sincerely yours,
+Mike.
