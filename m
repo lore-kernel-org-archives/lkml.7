@@ -2,184 +2,404 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC91CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C59CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272A420650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C6E20650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410033AbfJXRCM (ORCPT
+        id S2410043AbfJXRDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:02:12 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:35554 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730622AbfJXRCL (ORCPT
+        Thu, 24 Oct 2019 13:03:18 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54862 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730622AbfJXRDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:02:11 -0400
-Received: by mail-il1-f200.google.com with SMTP id o12so16220105ilf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:02:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gnBVB/MCcAJVEx5kLX5YbPi7DcmZ/XW3gOmdfm/l+IA=;
-        b=dQoVpL6Lo/Wjx4Gh/Iabd04ZccQ71C82JfOi3r+KFw4VDBuvvMVqdmSJ9NgeQ2oHtE
-         0Zb2pE5MnIDRscSHHqdXukf+MkkJUk5csOKZ1p8GEctDngwSRG/L08g/QnbB0sgQu0tR
-         Z8JsyzW0fJ9uukZ4MDV0wU/UfUDj2CLHzQnXYa/nXqQjyeOaNrOmAV5fvuXHZR5hs6Wc
-         agayhRXIj7sfzcdQDaa1Io79pZn01zSw7ZXKs4HqWIOomFsOsUQucnUA2CavD/ozKISm
-         XH24nvbC6LUyKvv8s3JhOOsIg9YoTGRM/34kCPuiZgrDZI32Fe43KSAqoxG7A+c/MI06
-         l1mA==
-X-Gm-Message-State: APjAAAURzXH2nU3QnSJXKJLSwKajzKdlu1YIyAw2m41HPRwU5r7zE4C6
-        oTQ4Hw8IAs7AJZ9xSIgI7l+32b+sEuGEljzY7cOccbv9/1Bj
-X-Google-Smtp-Source: APXvYqwLrzXvLYspWxVGMVkDRKKtVf4XeXPJuGmcakuCAHepWXmGZfBZv+K8zdKynEexb7HeYziOoQZhYu/LXY4PeumEjm9NEvkP
+        Thu, 24 Oct 2019 13:03:17 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 79FD8286063
+Subject: Re: [PATCH v2 01/18] platform: chrome: Put docs with the code
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Cc:     briannorris@chromium.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, lee.jones@linaro.org, bleung@chromium.org,
+        dianders@chromium.org, groeck@chromium.org,
+        fabien.lahoudere@collabora.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+References: <20191021055403.67849-1-gwendal@chromium.org>
+ <20191021055403.67849-2-gwendal@chromium.org>
+ <20191021163134.6d121b1e@archlinux>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <50b45b37-d02e-df9a-1ce5-54cea23debb6@collabora.com>
+Date:   Thu, 24 Oct 2019 19:03:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:9a54:: with SMTP id t81mr44665340ili.147.1571936528622;
- Thu, 24 Oct 2019 10:02:08 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 10:02:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000065ef5f0595aafe71@google.com>
-Subject: KMSAN: uninit-value in aes_encrypt (2)
-From:   syzbot <syzbot+9e3b178624a8a2f8fa28@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191021163134.6d121b1e@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    3c8ca708 test_kmsan.c: fix SPDX comment
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14129497600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c07a3d4f8a59e198
-dashboard link: https://syzkaller.appspot.com/bug?extid=9e3b178624a8a2f8fa28
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11331128e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140b47ef600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9e3b178624a8a2f8fa28@syzkaller.appspotmail.com
-
-IPv6: ADDRCONF(NETDEV_CHANGE): hsr0: link becomes ready
-8021q: adding VLAN 0 to HW filter on device batadv0
-=====================================================
-BUG: KMSAN: uninit-value in subshift lib/crypto/aes.c:149 [inline]
-BUG: KMSAN: uninit-value in aes_encrypt+0x12d5/0x1bd0 lib/crypto/aes.c:282
-CPU: 0 PID: 12200 Comm: syz-executor134 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x14a/0x2f0 mm/kmsan/kmsan_report.c:110
-  __msan_warning+0x73/0xf0 mm/kmsan/kmsan_instr.c:245
-  subshift lib/crypto/aes.c:149 [inline]
-  aes_encrypt+0x12d5/0x1bd0 lib/crypto/aes.c:282
-  aesti_encrypt+0xe8/0x130 crypto/aes_ti.c:31
-  crypto_cipher_encrypt_one include/linux/crypto.h:1763 [inline]
-  crypto_cbcmac_digest_update+0x3cf/0x550 crypto/ccm.c:871
-  crypto_shash_update crypto/shash.c:107 [inline]
-  shash_ahash_finup+0x659/0xb20 crypto/shash.c:276
-  shash_async_finup+0xbb/0x110 crypto/shash.c:291
-  crypto_ahash_op+0x1cd/0x6e0 crypto/ahash.c:368
-  crypto_ahash_finup+0x8c/0xb0 crypto/ahash.c:393
-  crypto_ccm_auth+0x14b2/0x1570 crypto/ccm.c:230
-  crypto_ccm_encrypt+0x283/0x840 crypto/ccm.c:309
-  crypto_aead_encrypt+0xf2/0x180 crypto/aead.c:99
-  tls_do_encryption net/tls/tls_sw.c:521 [inline]
-  tls_push_record+0x341e/0x4e50 net/tls/tls_sw.c:730
-  bpf_exec_tx_verdict+0x1454/0x1c80 net/tls/tls_sw.c:770
-  tls_sw_sendmsg+0x158d/0x2710 net/tls/tls_sw.c:1033
-  inet6_sendmsg+0x2d8/0x2e0 net/ipv6/af_inet6.c:576
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  __sys_sendto+0x8fc/0xc70 net/socket.c:1952
-  __do_sys_sendto net/socket.c:1964 [inline]
-  __se_sys_sendto+0x107/0x130 net/socket.c:1960
-  __x64_sys_sendto+0x6e/0x90 net/socket.c:1960
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x441cf9
-Code: 43 02 00 85 c0 b8 00 00 00 00 48 0f 44 c3 5b c3 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 0b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00000000007eff08 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441cf9
-RDX: fffffffffffffee0 RSI: 00000000200005c0 RDI: 0000000000000003
-RBP: 00000000007eff30 R08: 0000000000000000 R09: 00000000000000b6
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000403490
-R13: 0000000000403520 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was stored to memory at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:151 [inline]
-  kmsan_internal_chain_origin+0xbd/0x170 mm/kmsan/kmsan.c:319
-  __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:179
-  __crypto_xor+0x1e8/0x1470 crypto/algapi.c:992
-  crypto_xor include/crypto/algapi.h:213 [inline]
-  crypto_cbcmac_digest_update+0x2ba/0x550 crypto/ccm.c:865
-  crypto_shash_update crypto/shash.c:107 [inline]
-  shash_ahash_finup+0x659/0xb20 crypto/shash.c:276
-  shash_async_finup+0xbb/0x110 crypto/shash.c:291
-  crypto_ahash_op+0x1cd/0x6e0 crypto/ahash.c:368
-  crypto_ahash_finup+0x8c/0xb0 crypto/ahash.c:393
-  crypto_ccm_auth+0x14b2/0x1570 crypto/ccm.c:230
-  crypto_ccm_encrypt+0x283/0x840 crypto/ccm.c:309
-  crypto_aead_encrypt+0xf2/0x180 crypto/aead.c:99
-  tls_do_encryption net/tls/tls_sw.c:521 [inline]
-  tls_push_record+0x341e/0x4e50 net/tls/tls_sw.c:730
-  bpf_exec_tx_verdict+0x1454/0x1c80 net/tls/tls_sw.c:770
-  tls_sw_sendmsg+0x158d/0x2710 net/tls/tls_sw.c:1033
-  inet6_sendmsg+0x2d8/0x2e0 net/ipv6/af_inet6.c:576
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  __sys_sendto+0x8fc/0xc70 net/socket.c:1952
-  __do_sys_sendto net/socket.c:1964 [inline]
-  __se_sys_sendto+0x107/0x130 net/socket.c:1960
-  __x64_sys_sendto+0x6e/0x90 net/socket.c:1960
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-
-Uninit was created at:
-  kmsan_save_stack_with_flags+0x3f/0x90 mm/kmsan/kmsan.c:151
-  kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:362 [inline]
-  kmsan_alloc_page+0x153/0x370 mm/kmsan/kmsan_shadow.c:391
-  __alloc_pages_nodemask+0x149d/0x60c0 mm/page_alloc.c:4794
-  alloc_pages_current+0x68d/0x9a0 mm/mempolicy.c:2188
-  alloc_pages include/linux/gfp.h:511 [inline]
-  skb_page_frag_refill+0x2b0/0x580 net/core/sock.c:2372
-  sk_page_frag_refill+0xa4/0x330 net/core/sock.c:2392
-  sk_msg_alloc+0x203/0x1050 net/core/skmsg.c:37
-  tls_alloc_encrypted_msg net/tls/tls_sw.c:284 [inline]
-  tls_sw_sendmsg+0xb56/0x2710 net/tls/tls_sw.c:953
-  inet6_sendmsg+0x2d8/0x2e0 net/ipv6/af_inet6.c:576
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
-  __sys_sendto+0x8fc/0xc70 net/socket.c:1952
-  __do_sys_sendto net/socket.c:1964 [inline]
-  __se_sys_sendto+0x107/0x130 net/socket.c:1960
-  __x64_sys_sendto+0x6e/0x90 net/socket.c:1960
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-=====================================================
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 21/10/19 17:31, Jonathan Cameron wrote:
+> On Sun, 20 Oct 2019 22:53:46 -0700
+> Gwendal Grignou <gwendal@chromium.org> wrote:
+> 
+>> To avoid doc rot, put function documentations with code, not header.
+>> Use kernel-doc style comments for exported functions.
+>>
+>> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> Looks good to me.
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+applied for 5.5, thanks.
+
+
+>> ---
+>> New in v2.
+>>
+>>  drivers/platform/chrome/cros_ec.c           |  33 +++++++
+>>  drivers/platform/chrome/cros_ec_proto.c     |  70 +++++++++++++
+>>  include/linux/platform_data/cros_ec_proto.h | 103 --------------------
+>>  3 files changed, 103 insertions(+), 103 deletions(-)
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+>> index fd77e6fa74c2c..9b2d07422e175 100644
+>> --- a/drivers/platform/chrome/cros_ec.c
+>> +++ b/drivers/platform/chrome/cros_ec.c
+>> @@ -104,6 +104,15 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+>>  	return ret;
+>>  }
+>>  
+>> +/**
+>> + * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+>> + * @ec_dev: Device to register.
+>> + *
+>> + * Before calling this, allocate a pointer to a new device and then fill
+>> + * in all the fields up to the --private-- marker.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_register(struct cros_ec_device *ec_dev)
+>>  {
+>>  	struct device *dev = ec_dev->dev;
+>> @@ -198,6 +207,14 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
+>>  }
+>>  EXPORT_SYMBOL(cros_ec_register);
+>>  
+>> +/**
+>> + * cros_ec_unregister() - Remove a ChromeOS EC.
+>> + * @ec_dev: Device to unregister.
+>> + *
+>> + * Call this to deregister a ChromeOS EC, then clean up any private data.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_unregister(struct cros_ec_device *ec_dev)
+>>  {
+>>  	if (ec_dev->pd)
+>> @@ -209,6 +226,14 @@ int cros_ec_unregister(struct cros_ec_device *ec_dev)
+>>  EXPORT_SYMBOL(cros_ec_unregister);
+>>  
+>>  #ifdef CONFIG_PM_SLEEP
+>> +/**
+>> + * cros_ec_suspend() - Handle a suspend operation for the ChromeOS EC device.
+>> + * @ec_dev: Device to suspend.
+>> + *
+>> + * This can be called by drivers to handle a suspend event.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_suspend(struct cros_ec_device *ec_dev)
+>>  {
+>>  	struct device *dev = ec_dev->dev;
+>> @@ -243,6 +268,14 @@ static void cros_ec_report_events_during_suspend(struct cros_ec_device *ec_dev)
+>>  					     1, ec_dev);
+>>  }
+>>  
+>> +/**
+>> + * cros_ec_resume() - Handle a resume operation for the ChromeOS EC device.
+>> + * @ec_dev: Device to resume.
+>> + *
+>> + * This can be called by drivers to handle a resume event.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_resume(struct cros_ec_device *ec_dev)
+>>  {
+>>  	int ret;
+>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+>> index f659f96bda128..7db58771ec77c 100644
+>> --- a/drivers/platform/chrome/cros_ec_proto.c
+>> +++ b/drivers/platform/chrome/cros_ec_proto.c
+>> @@ -117,6 +117,17 @@ static int send_command(struct cros_ec_device *ec_dev,
+>>  	return ret;
+>>  }
+>>  
+>> +/**
+>> + * cros_ec_prepare_tx() - Prepare an outgoing message in the output buffer.
+>> + * @ec_dev: Device to register.
+>> + * @msg: Message to write.
+>> + *
+>> + * This is intended to be used by all ChromeOS EC drivers, but at present
+>> + * only SPI uses it. Once LPC uses the same protocol it can start using it.
+>> + * I2C could use it now, with a refactor of the existing code.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
+>>  		       struct cros_ec_command *msg)
+>>  {
+>> @@ -141,6 +152,16 @@ int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
+>>  }
+>>  EXPORT_SYMBOL(cros_ec_prepare_tx);
+>>  
+>> +/**
+>> + * cros_ec_check_result() - Check ec_msg->result.
+>> + * @ec_dev: EC device.
+>> + * @msg: Message to check.
+>> + *
+>> + * This is used by ChromeOS EC drivers to check the ec_msg->result for
+>> + * errors and to warn about them.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_check_result(struct cros_ec_device *ec_dev,
+>>  			 struct cros_ec_command *msg)
+>>  {
+>> @@ -326,6 +347,13 @@ static int cros_ec_get_host_command_version_mask(struct cros_ec_device *ec_dev,
+>>  	return ret;
+>>  }
+>>  
+>> +/**
+>> + * cros_ec_query_all() -  Query the protocol version supported by the
+>> + *         ChromeOS EC.
+>> + * @ec_dev: Device to register.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_query_all(struct cros_ec_device *ec_dev)
+>>  {
+>>  	struct device *dev = ec_dev->dev;
+>> @@ -453,6 +481,16 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
+>>  }
+>>  EXPORT_SYMBOL(cros_ec_query_all);
+>>  
+>> +/**
+>> + * cros_ec_cmd_xfer() - Send a command to the ChromeOS EC.
+>> + * @ec_dev: EC device.
+>> + * @msg: Message to write.
+>> + *
+>> + * Call this to send a command to the ChromeOS EC.  This should be used
+>> + * instead of calling the EC's cmd_xfer() callback directly.
+>> + *
+>> + * Return: 0 on success or negative error code.
+>> + */
+>>  int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>>  		     struct cros_ec_command *msg)
+>>  {
+>> @@ -500,6 +538,18 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>>  }
+>>  EXPORT_SYMBOL(cros_ec_cmd_xfer);
+>>  
+>> +/**
+>> + * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+>> + * @ec_dev: EC device.
+>> + * @msg: Message to write.
+>> + *
+>> + * This function is identical to cros_ec_cmd_xfer, except it returns success
+>> + * status only if both the command was transmitted successfully and the EC
+>> + * replied with success status. It's not necessary to check msg->result when
+>> + * using this function.
+>> + *
+>> + * Return: The number of bytes transferred on success or negative error code.
+>> + */
+>>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>>  			    struct cros_ec_command *msg)
+>>  {
+>> @@ -584,6 +634,16 @@ static int get_keyboard_state_event(struct cros_ec_device *ec_dev)
+>>  	return ec_dev->event_size;
+>>  }
+>>  
+>> +/**
+>> + * cros_ec_get_next_event() - Fetch next event from the ChromeOS EC.
+>> + * @ec_dev: Device to fetch event from.
+>> + * @wake_event: Pointer to a bool set to true upon return if the event might be
+>> + *              treated as a wake event. Ignored if null.
+>> + *
+>> + * Return: negative error code on errors; 0 for no data; or else number of
+>> + * bytes received (i.e., an event was retrieved successfully). Event types are
+>> + * written out to @ec_dev->event_data.event_type on success.
+>> + */
+>>  int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
+>>  {
+>>  	u8 event_type;
+>> @@ -628,6 +688,16 @@ int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event)
+>>  }
+>>  EXPORT_SYMBOL(cros_ec_get_next_event);
+>>  
+>> +/**
+>> + * cros_ec_get_host_event() - Return a mask of event set by the ChromeOS EC.
+>> + * @ec_dev: Device to fetch event from.
+>> + *
+>> + * When MKBP is supported, when the EC raises an interrupt, we collect the
+>> + * events raised and call the functions in the ec notifier. This function
+>> + * is a helper to know which events are raised.
+>> + *
+>> + * Return: 0 on error or non-zero bitmask of one or more EC_HOST_EVENT_*.
+>> + */
+>>  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev)
+>>  {
+>>  	u32 host_event;
+>> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+>> index eab7036cda090..0d4e4aaed37af 100644
+>> --- a/include/linux/platform_data/cros_ec_proto.h
+>> +++ b/include/linux/platform_data/cros_ec_proto.h
+>> @@ -187,133 +187,30 @@ struct cros_ec_platform {
+>>  	u16 cmd_offset;
+>>  };
+>>  
+>> -/**
+>> - * cros_ec_suspend() - Handle a suspend operation for the ChromeOS EC device.
+>> - * @ec_dev: Device to suspend.
+>> - *
+>> - * This can be called by drivers to handle a suspend event.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_suspend(struct cros_ec_device *ec_dev);
+>>  
+>> -/**
+>> - * cros_ec_resume() - Handle a resume operation for the ChromeOS EC device.
+>> - * @ec_dev: Device to resume.
+>> - *
+>> - * This can be called by drivers to handle a resume event.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_resume(struct cros_ec_device *ec_dev);
+>>  
+>> -/**
+>> - * cros_ec_prepare_tx() - Prepare an outgoing message in the output buffer.
+>> - * @ec_dev: Device to register.
+>> - * @msg: Message to write.
+>> - *
+>> - * This is intended to be used by all ChromeOS EC drivers, but at present
+>> - * only SPI uses it. Once LPC uses the same protocol it can start using it.
+>> - * I2C could use it now, with a refactor of the existing code.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
+>>  		       struct cros_ec_command *msg);
+>>  
+>> -/**
+>> - * cros_ec_check_result() - Check ec_msg->result.
+>> - * @ec_dev: EC device.
+>> - * @msg: Message to check.
+>> - *
+>> - * This is used by ChromeOS EC drivers to check the ec_msg->result for
+>> - * errors and to warn about them.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_check_result(struct cros_ec_device *ec_dev,
+>>  			 struct cros_ec_command *msg);
+>>  
+>> -/**
+>> - * cros_ec_cmd_xfer() - Send a command to the ChromeOS EC.
+>> - * @ec_dev: EC device.
+>> - * @msg: Message to write.
+>> - *
+>> - * Call this to send a command to the ChromeOS EC.  This should be used
+>> - * instead of calling the EC's cmd_xfer() callback directly.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>>  		     struct cros_ec_command *msg);
+>>  
+>> -/**
+>> - * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+>> - * @ec_dev: EC device.
+>> - * @msg: Message to write.
+>> - *
+>> - * This function is identical to cros_ec_cmd_xfer, except it returns success
+>> - * status only if both the command was transmitted successfully and the EC
+>> - * replied with success status. It's not necessary to check msg->result when
+>> - * using this function.
+>> - *
+>> - * Return: The number of bytes transferred on success or negative error code.
+>> - */
+>>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>>  			    struct cros_ec_command *msg);
+>>  
+>> -/**
+>> - * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
+>> - * @ec_dev: Device to register.
+>> - *
+>> - * Before calling this, allocate a pointer to a new device and then fill
+>> - * in all the fields up to the --private-- marker.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_register(struct cros_ec_device *ec_dev);
+>>  
+>> -/**
+>> - * cros_ec_unregister() - Remove a ChromeOS EC.
+>> - * @ec_dev: Device to unregister.
+>> - *
+>> - * Call this to deregister a ChromeOS EC, then clean up any private data.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_unregister(struct cros_ec_device *ec_dev);
+>>  
+>> -/**
+>> - * cros_ec_query_all() -  Query the protocol version supported by the
+>> - *         ChromeOS EC.
+>> - * @ec_dev: Device to register.
+>> - *
+>> - * Return: 0 on success or negative error code.
+>> - */
+>>  int cros_ec_query_all(struct cros_ec_device *ec_dev);
+>>  
+>> -/**
+>> - * cros_ec_get_next_event() - Fetch next event from the ChromeOS EC.
+>> - * @ec_dev: Device to fetch event from.
+>> - * @wake_event: Pointer to a bool set to true upon return if the event might be
+>> - *              treated as a wake event. Ignored if null.
+>> - *
+>> - * Return: negative error code on errors; 0 for no data; or else number of
+>> - * bytes received (i.e., an event was retrieved successfully). Event types are
+>> - * written out to @ec_dev->event_data.event_type on success.
+>> - */
+>>  int cros_ec_get_next_event(struct cros_ec_device *ec_dev, bool *wake_event);
+>>  
+>> -/**
+>> - * cros_ec_get_host_event() - Return a mask of event set by the ChromeOS EC.
+>> - * @ec_dev: Device to fetch event from.
+>> - *
+>> - * When MKBP is supported, when the EC raises an interrupt, we collect the
+>> - * events raised and call the functions in the ec notifier. This function
+>> - * is a helper to know which events are raised.
+>> - *
+>> - * Return: 0 on error or non-zero bitmask of one or more EC_HOST_EVENT_*.
+>> - */
+>>  u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
+>>  
+>>  #endif /* __LINUX_CROS_EC_PROTO_H */
+> 
