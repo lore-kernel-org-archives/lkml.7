@@ -2,121 +2,140 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C809CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBF2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E448D21925
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA6821929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="gmYZ0ZzX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fwQs8Hts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504183AbfJXSz5 (ORCPT
+        id S2504200AbfJXS4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:55:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35669 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504162AbfJXSz5 (ORCPT
+        Thu, 24 Oct 2019 14:56:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46021 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504187AbfJXS4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:55:57 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c8so9961601pgb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 11:55:56 -0700 (PDT)
+        Thu, 24 Oct 2019 14:56:00 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r1so14759560pgj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 11:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=skkWOjQAG2SIq7AkesQ7N9Msme6HEgCnl64zvN/Bfgc=;
-        b=gmYZ0ZzXFAhIzSn0RsC3E5IY9lO/5YCbqiPHNi32xz8spoK5ic6ykYwFs1FYgYuyey
-         gcSBD2gT0zJ1ONk5m3kGX9BkihBtmDZR4zhv5qJiFZj1KzesHfIkvdeP6G307k4UHrXQ
-         qBwTje3AIyhk8WyJSj1jfRQe9piFiiOHMYH+CHsV7T6zT9HkiC4oXZ/kz7QrHnTjlfhE
-         AnkKJRz+42vz1bkIJy3aohf+CuTT4SvjlNPEv/xMgRLUoRapXBcEzKpinlezFcT//pBX
-         L6NJoY5ibeSgSWkaZteYUoq7L0OCQAxdzPbYdrfXI6doMjJ1z8oxwrf4TYsG08t6/nte
-         qLFA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zIsOYlF+Hfsx0uQ6HDxs/ZLm/Efmg1cPtI+tKoRa+Ng=;
+        b=fwQs8HtsbJC9TUXndyJvvRCSoM3v6KN1oAJTDP4jM6iDp7RiEChmUmkSfgcD9hrL32
+         dx4RALPc8vlvE5fZ/IQbv0hnM6XhYSw01JxzCQbLwgA0U4VbrnHk7p1AmgcsbwUweSnT
+         FIjrOwiJF5IE7d1++6ArnJN3EZAH9wAePU20+J7wEZYcQUvvMQJPZX/t/m1/TWMAKDoX
+         jvFHVfTgM5DBQG2eLVTWNpVQX4tJoaIP29Oapbf6H3Q+ogUaYIdWv8KQ/loM6fGpi6kt
+         ERDAVhC7vZAsJ+NLuPJFLEkDkdKn0boNcGRQ5CpiNLbMVUBSG7stG68qLSb1aevbFfYI
+         tkrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=skkWOjQAG2SIq7AkesQ7N9Msme6HEgCnl64zvN/Bfgc=;
-        b=KMClt0K8z3FV23+0jnar0VxGaXqB1nIIf7uNGlnPw6vHpJQCJR5quB60rSwKswQ7+3
-         RJYOHlmosqvCa8NgAuwM9i+J13lVQ4thMDrknDd1Hb62FW49c09Zi7zZFve5QiN43mbi
-         cD826VBWJl7InpCtqJ4zus+9/xHZy8QVZd6fKDcEoL4dJeJ+GFjDu+Zq7xF9rPT1lk+d
-         U4fXYIFRSGweKfc1wq0qmVkGAprSXtitUWVh+MrIKf2/6rNPCwp7vbTUNX8Lq2oiKkwv
-         IL2nVmAjQ+bAOhV9moYMbDc9Rw4HdSPtTv0mH4kWdMn1JcA3uOUQBjVSaT1ld6NXA47Y
-         Ribw==
-X-Gm-Message-State: APjAAAVYIM2yLssxc/gtL6fY/IX7CjvJtYjb3I08RUwFfJ3pSr9g2Ku+
-        usyxxmJkN0R0CqWCgyDZl006cw==
-X-Google-Smtp-Source: APXvYqxkPjWyobL7PL4g3GBnG5LW/qPP3xnmD7I0AhT6krKXNPb0Dyo+2MgK0FL0VIAnXgtEOx6Xsg==
-X-Received: by 2002:a63:9208:: with SMTP id o8mr18075167pgd.256.1571943356385;
-        Thu, 24 Oct 2019 11:55:56 -0700 (PDT)
-Received: from cakuba.hsd1.ca.comcast.net (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id f25sm9448405pfk.10.2019.10.24.11.55.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 11:55:56 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 11:55:53 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Cc:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vikas Gupta <vikas.gupta@broadcom.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH V3 3/3] bnxt_en: Add support to collect crash dump via
- ethtool
-Message-ID: <20191024115553.11a6f4be@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <1571895161-26487-4-git-send-email-sheetal.tigadoli@broadcom.com>
-References: <1571895161-26487-1-git-send-email-sheetal.tigadoli@broadcom.com>
-        <1571895161-26487-4-git-send-email-sheetal.tigadoli@broadcom.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zIsOYlF+Hfsx0uQ6HDxs/ZLm/Efmg1cPtI+tKoRa+Ng=;
+        b=V6kJCvicRCZaXBFKgzFxsbwc6CM826JjEh1LIg0ybRWHK/QWWx1I0wkWBf74jvF0RM
+         SUixIi0PejUtQtn/dRioyuYKLN3JiHO9V/E4Mggqc/O8Nq9kvmTWmqI4Il8iVGKNTbBN
+         awREPxoAvvLbfYacItuxp3hxdgMoqYLJZTUWr6glKs70vHnuPO0caTJ3bo99sfTmHiLZ
+         Cap1/u6W4whuO6c1MLP3OqlGOAcrU1a6FAzYVmYjDmB+k7IVg2ETfbJ9VC7UopBkosrJ
+         68k319OaS23N2r6e1E7HTlgG/NQfJVzudpGz4txmN8VwhTHVoxJWBZIlYtlh/GGwEQFO
+         wf6Q==
+X-Gm-Message-State: APjAAAXYT+kwx+K8OIcEBUrltKQJ43gYhMz5GZ8AyKThfYBWmJWQ7fES
+        DBuVahah+MbBYAre6TiH1NrJp9ONOjCoKvi0La7TCA==
+X-Google-Smtp-Source: APXvYqwaOT3FEr+3qKwPmfNbI0gl2kNtUMfI82LNX1yvphFCTA/cRn6O4jDY8NzKyj6NhNKToKL6mL0jsxkmXM0wkH8=
+X-Received: by 2002:a63:541e:: with SMTP id i30mr18286107pgb.130.1571943359247;
+ Thu, 24 Oct 2019 11:55:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAAeHK+xHTtkSRkMv5kV1hKcR3mhTPkyfUparka3oRBSs6U8yLQ@mail.gmail.com>
+ <Pine.LNX.4.44L0.1910241336130.1318-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1910241336130.1318-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 24 Oct 2019 20:55:48 +0200
+Message-ID: <CAAeHK+yu2MYmh86wJ_DxYoUEU-vp9R+jXRVMh_SpsSNFdHVO7g@mail.gmail.com>
+Subject: Re: divide error in dummy_timer
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com>,
+        "Jacky . Cao @ sony . com" <Jacky.Cao@sony.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019 11:02:41 +0530, Sheetal Tigadoli wrote:
-> From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-> 
-> Driver supports 2 types of core dumps.
-> 
-> 1. Live dump - Firmware dump when system is up and running.
-> 2. Crash dump - Dump which is collected during firmware crash
->                 that can be retrieved after recovery.
-> Crash dump is currently supported only on specific 58800 chips
-> which can be retrieved using OP-TEE API only, as firmware cannot
-> access this region directly.
-> 
-> User needs to set the dump flag using following command before
-> initiating the dump collection:
-> 
->     $ ethtool -W|--set-dump eth0 N
-> 
-> Where N is "0" for live dump and "1" for crash dump
-> 
-> Command to collect the dump after setting the flag:
-> 
->     $ ethtool -w eth0 data Filename
-> 
-> v3: Modify set_dump to support even when CONFIG_TEE_BNXT_FW=n.
-> Also change log message to netdev_info().
-> 
-> Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Cc: Michael Chan <michael.chan@broadcom.com>
-> Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+On Thu, Oct 24, 2019 at 7:57 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Thu, 24 Oct 2019, Andrey Konovalov wrote:
+>
+> > > Is this really the sort of thing we need to catch?  It isn't a bug in
+> > > any existing kernel code, as far as I know.  Maybe only gadgetfs and
+> > > configfs need to worry about it.
+> >
+> > Hi Alan,
+> >
+> > Do you mean that the gadget driver must ensure that the max packet
+> > size in the endpoint descriptor is not zero? Do HCDs rely on that? I
+> > can add this check into the driver we use for USB fuzzing.
+>
+> Well, if there are any gadget drivers in the kernel which do set an
+> endpoint's maxpacket size to 0, they should be fixed.  I'm not aware of
+> any.
+>
+> Of course, gadget drivers in userspace are always suspect.  That's why
+> I suggested having gadgetfs and configfs perform this check.  Even so
+> it's not really a _security_ risk, because only the superuser is
+> allowed to run a userspace gadget driver.  (Although obviously it is
+> better to have a clean failure than to crash the system when a buggy
+> program runs with superuser privileges.)
+>
+> Yes, HCDs do depend on endpoints having reasonable maxpacket values.  I
+> suppose the core should check for this.  Currently we check for values
+> that are too large or invalid in other ways (like high-speed bulk
+> endpoints with maxpacket != 512), but we don't check for 0.
 
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Oh, I think I've confused the terms here. I meant to ask about UDCs.
+The question is whether it's OK to try and emulate a gadget with
+maxpacket = 0 on a board with a hardware UDC? Or can it cause issues?
+The fact that HCDs must ensure correct maxpacket values of course
+makes sense.
+
+>
+> In fact, that sounds like a much better solution to the problem
+> overall.  Let's see if this patch fixes the bug...
+>
+> Alan Stern
+>
+> #syz test: https://github.com/google/kasan.git 22be26f7
+>
+>  drivers/usb/core/config.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> Index: usb-devel/drivers/usb/core/config.c
+> ===================================================================
+> --- usb-devel.orig/drivers/usb/core/config.c
+> +++ usb-devel/drivers/usb/core/config.c
+> @@ -348,6 +348,11 @@ static int usb_parse_endpoint(struct dev
+>
+>         /* Validate the wMaxPacketSize field */
+>         maxp = usb_endpoint_maxp(&endpoint->desc);
+> +       if (maxp == 0) {
+> +               dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
+> +                   cfgno, inum, asnum, d->bEndpointAddress);
+> +               goto skip_to_next_endpoint_or_interface_descriptor;
+> +       }
+>
+>         /* Find the highest legal maxpacket size for this endpoint */
+>         i = 0;          /* additional transactions per microframe */
+>
