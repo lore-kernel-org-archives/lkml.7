@@ -2,171 +2,188 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B978CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DADECA9EBD
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF8B2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED99C20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eVdV8WPD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pGCCfSCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392441AbfJXTfo (ORCPT
+        id S2392835AbfJXThD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:35:44 -0400
-Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:18243
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391088AbfJXTfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:35:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cN9Q/7Wyowfv2msZJyTTlngHiMa7teIamQqDci3Uy8AoV8LQJz+shT+jCSQf/oIkzfKD5kk46SBvy1pIWW/mAOfa8yLeXwLeMQjGzsGTCfqx7BSELb25/TUg/lo9vuKPQssY5uRbjaYaW32QqgjjHjfK7XhqjmoDcyNLqES6I5cANk6wFQmM14j05D+2zXoRQejMIoo73isym/ko86xRVenK/eUHhW4YypPcjnTqu2ep/REi9AW0xpv+XOUPkw/ND0RXVCTQtXV6dtGQzujO0fJSjqgEsXzQcUI0NSChk7Or9hYqCBkDipIUxaZA1wT0cH7n7nskKto15AGqAsjb4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YXImPREJvpn4T1Ft0gtPPdk6aLME9Ww4vx2zVcbnFPI=;
- b=hgNQbdZb7HPJjgQOyRvSNIlYEkXiXU7S9UjSK2lUmJsNXbJka0qKGnR38gkn+i6ZFXzEW0E+BezfWrg0Owa6QSpFOsbfvUW37V+26wb5e0trIbFTtfFgBzvJ8qgpYY8YJVXkisK31M0U4nlft6dPISsDmF/S66Z8moE1T51FpN4GUwSDyO59B+2hsbqHuK4kK+ApeS3a8Jzb1KGuJqgxEnmR5r/b4YpsP5sx4Vf/K9p9taLodflqby4+orvnZt9zIEjEhiQ1rU1iOd4ch4kpa0htcyWZuzpMZOmGsbvbqgXyK9QmdcYHs7vHug4imC12sP+6IaeflKdWVxtG4MmsXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YXImPREJvpn4T1Ft0gtPPdk6aLME9Ww4vx2zVcbnFPI=;
- b=eVdV8WPDpMmJDGev7uZE6tNbORoA/A7pccDEljRLGutvEpM8nc4hTNJz07aaH4hMKJXtwnQMP9ABJ6mpGEeVTjBNFNAGFj4dbrAjcUwVurx2UqzdH4cU6BaaUtnXviAHB6OcLozYW3rhB6w/H4ZrEVdF1qLtK9cBLsk6DIonc+0=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB6061.eurprd04.prod.outlook.com (20.179.25.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.20; Thu, 24 Oct 2019 19:34:59 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::24fb:fb99:b1c6:ba1f]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::24fb:fb99:b1c6:ba1f%4]) with mapi id 15.20.2387.021; Thu, 24 Oct 2019
- 19:34:59 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-CC:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
-Thread-Topic: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
-Thread-Index: AQHVhA83pBLldkQGO0OkZWmZhR1Vyw==
-Date:   Thu, 24 Oct 2019 19:34:59 +0000
-Message-ID: <VI1PR04MB70234EB305F60855491EBFDDEE6A0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <2811202.iOFZ6YHztY@kreacher> <4551555.oysnf1Sd0E@kreacher>
- <VI1PR04MB7023ECFFD42193CF864524ACEE6A0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c6efb7da-5afb-4dc2-ac8b-08d758b94208
-x-ms-traffictypediagnostic: VI1PR04MB6061:
-x-microsoft-antispam-prvs: <VI1PR04MB60611DE784B381334A88B71AEE6A0@VI1PR04MB6061.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0200DDA8BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(396003)(366004)(376002)(189003)(199004)(25786009)(14444005)(26005)(6506007)(99286004)(76176011)(7696005)(53546011)(102836004)(4326008)(71200400001)(91956017)(6246003)(76116006)(110136005)(14454004)(316002)(54906003)(186003)(33656002)(66476007)(64756008)(66446008)(66556008)(2906002)(44832011)(486006)(446003)(66946007)(9686003)(256004)(476003)(55016002)(305945005)(7736002)(3846002)(6116002)(5660300002)(74316002)(86362001)(52536014)(229853002)(81166006)(6436002)(81156014)(8676002)(478600001)(8936002)(66066001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6061;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qPqVS3OWlRiG0uOYGUE1jHR5GGLwj5QR62lF5Oc+EqSsVp3Js2rTIgttu0KJX6bH7AXWcOl+IqKQE92T0pyvigdmTFTrFbTHkxsAss8HUPjW4Qhwukb3MFz41VBnBTwdtaz1PocbglmoQZcvY0GYn+XLGmnYUp2DX90jSVEkg7SZFhRb46JofVmYApkH+uV2eTcxPLWSVsIGKBPhrLJBsUbfhiCinbzcoZGKjXGmVRzvgVIXIZUtWwe+ePQkwIJZymsot3daBbFMYmd9xkhfPoaj38JQhYQKkU8YXPOePEFT+0ExlTgIjSW1uODLFDusT8kL8M4KIgLNv3CSeIeWfb6DPWiydQJvBaZxrdLDdjesHBCN1jsNk1dpKUmvi9GH26q7QLJrhzd6/wLWlE119DouUloyspWrlZ1tI5Z8YvCHHs/DylbW5yRJkqKH1F8Z
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 24 Oct 2019 15:37:03 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35182 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387655AbfJXThC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:37:02 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9OJaQQx073777;
+        Thu, 24 Oct 2019 14:36:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571945786;
+        bh=symP3nQ06Xja5LwACedkvVAeNJcUuk64vlBk/0LFjbg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pGCCfSCyTyLtfEAX1MsLzI3D0/naW1DqahP/VqAozdsMqZ3SJHRg8CdxTpMPEibb1
+         esAuZTSuslj6sh/GzqneEsaGj09v7RYNxLSH+08j6W0+Fwdo1A8Ufw0DV4hyCrf93X
+         rrQWMZtiMwIe9O2Q/NAeyL3YmeMEOUGihJURqBVY=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OJaQYG067924;
+        Thu, 24 Oct 2019 14:36:26 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
+ Oct 2019 14:36:15 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 24 Oct 2019 14:36:15 -0500
+Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9OJaP4P016308;
+        Thu, 24 Oct 2019 14:36:25 -0500
+Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828
+ bindings
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        <mazziesaccount@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-rtc@vger.kernel.org>
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com>
+Date:   Thu, 24 Oct 2019 14:35:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6efb7da-5afb-4dc2-ac8b-08d758b94208
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 19:34:59.5765
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KdCTBZJfWmrP0PkF5mKuwWIAC7FW7T6LaKqkgPuuiV/NklpmFSikUTq9csnzyrJViVaWLeel/AOioOt9iY0Trw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6061
+In-Reply-To: <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.10.2019 22:01, Leonard Crestez wrote:=0A=
-> On 16.10.2019 13:48, Rafael J. Wysocki wrote:=0A=
->> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>=0A=
->>=0A=
->> Introduce frequency QoS, based on the "raw" low-level PM QoS, to=0A=
->> represent min and max frequency requests and aggregate constraints.=0A=
->>=0A=
->> The min and max frequency requests are to be represented by=0A=
->> struct freq_qos_request objects and the aggregate constraints are to=0A=
->> be represented by struct freq_constraints objects.  The latter are=0A=
->> expected to be initialized with the help of freq_constraints_init().=0A=
->>=0A=
->> The freq_qos_read_value() helper is defined to retrieve the aggregate=0A=
->> constraints values from a given struct freq_constraints object and=0A=
->> there are the freq_qos_add_request(), freq_qos_update_request() and=0A=
->> freq_qos_remove_request() helpers to manipulate the min and max=0A=
->> frequency requests.  It is assumed that the the helpers will not=0A=
->> run concurrently with each other for the same struct freq_qos_request=0A=
->> object, so if that may be the case, their uses must ensure proper=0A=
->> synchronization between them (e.g. through locking).=0A=
->>=0A=
->> In addition, freq_qos_add_notifier() and freq_qos_remove_notifier()=0A=
->> are provided to add and remove notifiers that will trigger on aggregate=
-=0A=
->> constraint changes to and from a given struct freq_constraints object,=
-=0A=
->> respectively.=0A=
->>=0A=
->> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>=0A=
->> ---=0A=
->>    include/linux/pm_qos.h |   44 ++++++++=0A=
->>    kernel/power/qos.c     |  240 +++++++++++++++++++++++++++++++++++++++=
-++++++++++=0A=
->>    2 files changed, 284 insertions(+)=0A=
->>=0A=
->> Index: linux-pm/include/linux/pm_qos.h=0A=
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
->> --- linux-pm.orig/include/linux/pm_qos.h=0A=
->> +++ linux-pm/include/linux/pm_qos.h=0A=
->> @@ -267,4 +267,48 @@ static inline s32 dev_pm_qos_raw_resume_=0A=
->>    }=0A=
->>    #endif=0A=
->>    =0A=
->> +#define FREQ_QOS_MIN_DEFAULT_VALUE	0=0A=
->> +#define FREQ_QOS_MAX_DEFAULT_VALUE	(-1)=0A=
->> +=0A=
->> +enum freq_qos_req_type {=0A=
->> +	FREQ_QOS_MIN =3D 1,=0A=
->> +	FREQ_QOS_MAX,=0A=
->> +};=0A=
->> +=0A=
->> +struct freq_constraints {=0A=
->> +	struct pm_qos_constraints min_freq;=0A=
->> +	struct blocking_notifier_head min_freq_notifiers;=0A=
->> +	struct pm_qos_constraints max_freq;=0A=
->> +	struct blocking_notifier_head max_freq_notifiers;=0A=
-> =0A=
-> These min/max_freq_notifiers fields seem unused? They're initialized but=
-=0A=
-> the freq_qos_add/remove_notifier calls use min/max_freq.notifiers directl=
-y.=0A=
-> =0A=
-> Should probably just be dropped.=0A=
-=0A=
-Never mind, I see now that pm_qos_constraints.notifiers is actually a =0A=
-pointer to notifier block provided by somebody else.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+Matti
+
+On 10/24/19 6:41 AM, Matti Vaittinen wrote:
+> ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
+> a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
+> and a 32.768 kHz clock gate.
+>
+> Document the dt bindings drivers are using.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>
+> No changes since v1
+>
+>   .../bindings/mfd/rohm,bd71828-pmic.txt        | 180 ++++++++++++++++++
+>   1 file changed, 180 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+
+I will let maintainers weigh in here but if this is new this should 
+probably be in the yaml format to avoid conversion in the future
+
+
+> diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+> new file mode 100644
+> index 000000000000..125efa9f3de0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.txt
+> @@ -0,0 +1,180 @@
+> +* ROHM BD71828 Power Management Integrated Circuit bindings
+> +
+> +BD71828GW is a single-chip power management IC for battery-powered portable
+> +devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA single-cell
+> +linear charger. Also included is a Coulomb counter, a real-time clock (RTC),
+> +and a 32.768 kHz clock gate.
+> +
+> +Required properties:
+> + - compatible			: Should be "rohm,bd71828".
+> + - reg				: I2C slave address.
+> + - interrupt-parent		: Phandle to the parent interrupt controller.
+> + - interrupts			: The interrupt line the device is connected to.
+> + - clocks			: The parent clock connected to PMIC.
+> + - #clock-cells			: Should be 0.
+> + - regulators			: List of child nodes that specify the
+> +				  regulators. Please see
+> +				  ../regulator/rohm,bd71828-regulator.txt
+> + - gpio-controller		: To indicate BD71828 acts as a GPIO controller.
+> + - #gpio-cells			: Should be 2. The first cell is the pin number
+> +				  and the second cell is used to specify flags.
+> +				  See ../gpio/gpio.txt for more information.
+> +
+> +The BD71828 RUN state is divided into 4 configurable run-levels named RUN0,
+> +RUN1, RUN2 and RUN3. Bucks 1, 2, 6 and 7 can be either controlled individually
+> +via I2C, or some/all of them can be bound to run-levels and controlled as a
+> +group. If bucks are controlled individually these run-levels are ignored. See
+> +../regulator/rohm,bd71828-regulator.txt for how to define regulator voltages
+The rohm,bd71828-regulator.txt should be yaml if the maintainers want it 
+that way.
+> +for run-levels. Run-levels can be changed by I2C or GPIO depending on PMIC's OTP
+> +configuration.
+> +
+> +Optional properties:
+> +- clock-output-names		: Should contain name for output clock.
+> +- rohm,dvs-vsel-gpios		: GPIOs used to control PMIC run-levels. Should
+> +				  describe two GPIOs. (See run-level control in
+> +				  data-sheet). If this property is omitted but
+> +				  some bucks are marked to be controlled by
+> +				  run-levels - then OTP option allowing
+> +				  run-level control via I2C is assumed.
+> +- gpio-reserved-ranges		: Usage of GPIO pins can be changed via OTP.
+> +				  This property can be used to mark the pins
+> +				  which should not be configured for GPIO.
+> +				  Please see the ../gpio/gpio.txt for more
+> +				  information.
+> +
+> +Example:
+> +
+
+This example does not look right.
+
+I see that I2C is referenced above so the example could look like this
+
+osc: oscillator {
+                 compatible = "fixed-clock";
+                 #clock-cells = <1>;
+                 clock-frequency  = <32768>;
+                 clock-output-names = "osc";
+         };
+
+This is an external oscillator and is not really part of the pmic 
+itself.  I am not sure you even need to define that since it is not part 
+of the pmic.
+
+i2c {
+
+         pmic@4b {
+
+                 [...]
+
+         };
+
+};
+
+Dan
