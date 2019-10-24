@@ -2,134 +2,93 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F377CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616EDCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E79420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355EA20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qF+v9F05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393077AbfJXJjf (ORCPT
+        id S2393117AbfJXJjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:39:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4757 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388539AbfJXJjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:39:35 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4D269938E1B8B66A7C0E;
-        Thu, 24 Oct 2019 17:39:32 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 24 Oct 2019
- 17:39:31 +0800
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhocko@kernel.org>, <peterz@infradead.org>,
-        <robin.murphy@arm.com>, <geert@linux-m68k.org>,
-        <gregkh@linuxfoundation.org>, <paul.burton@mips.com>
-References: <20191023171039.GA173290@google.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <eb14d1ae-4077-0ce0-d64e-7c25f5aebbb6@huawei.com>
-Date:   Thu, 24 Oct 2019 17:39:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Thu, 24 Oct 2019 05:39:39 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37544 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388539AbfJXJjh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:39:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id e11so16572226wrv.4;
+        Thu, 24 Oct 2019 02:39:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=t1B4Upx5L3UHH8ve1wWiItXwI5Up+GeBea3yXsTkPvA=;
+        b=qF+v9F05QVKtv5B5gUoCVvNSfVME4kV5eTlt2R1uArWbs575qU2tMEj2bC2IaydZSp
+         L+xXvY2U4N9O6aOClEUC0qNZj2j9jwynyZCtnqAketOka7U2rfE0y/5usgqx98ATvYwR
+         0jizZVABaW71ijapZ6X42ho9LaJn9w0r0bfwYppe76OZKCsMQP61ZUkNOKvyaNBCWr1f
+         KXpgoEQEgsr+/ik185kGem5+Zvx2EqR17W2fLWpLVEPnMr8a8JLP/IvhP/RXpFAvB220
+         o37oNycOIMzVRhS8d3AJRWPy37F1+QWHlCTwQPTAoN+RunGyQxliN1pMsn4Ho/2nXR4Q
+         5zgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=t1B4Upx5L3UHH8ve1wWiItXwI5Up+GeBea3yXsTkPvA=;
+        b=tEgdzuMk1NNz+p62h3s9O/qx+1mZH2e2Msao3CD+YEm1IeKG68+A6fhRjT7PNWe6Do
+         s+TPX6EI60HbAZYRChINL9FPMWbT7UbFbUlx6ccVdQABlyammRS6307ZFjNSusZbi+dP
+         b5ulkSPeLRRCEAlU7gP2inzoz370ktS6Sskz75cpn5AC6TjrFRQAoE1Td+VxBswCAFu6
+         +k6pOAY874tARUfICJLw6gt4s7YXIWa/Yz+JdiN+K9+07OVqHxSVI/KBYjmTh//45bSr
+         LqizryDy2OxxSWHEcjJllLkuKrlDiHHsa+6WNccQ8hAo+W+kayf5PkWztWBz1yW9gWsU
+         jvSw==
+X-Gm-Message-State: APjAAAXMO1ziSE1NI0+HZ2d880lMGqAmshtwyp6KVDo1AdpqBuof3q8t
+        AW80G3vwoluSGPG9dMM4/70=
+X-Google-Smtp-Source: APXvYqyhpkr8qJ3hxhJsygaSaVXu6ia/0VFGb7Guafugca9uJFHThI8Q89EQtjL/gKMhrtk5Nt1QYQ==
+X-Received: by 2002:a5d:464f:: with SMTP id j15mr2945291wrs.366.1571909976233;
+        Thu, 24 Oct 2019 02:39:36 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id q22sm1895115wmj.5.2019.10.24.02.39.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 24 Oct 2019 02:39:35 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 11:39:33 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to staging
+Message-ID: <20191024093933.zocacmhle3cuq7ld@pali>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20191023171039.GA173290@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/24 1:10, Bjorn Helgaas wrote:
-> On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
->> On 2019/10/23 5:04, Bjorn Helgaas wrote:
->>> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
->> And it seems a pci device's parent will always set to the bridge
->> device in pci_setup_device(), and device_add() which will set the
->> node to its parent's when the child device' node is NUMA_NO_NODE,
->> maybe we can add the bridge device' node checking to make sure
->> the pci device really does not have a node assigned, as below:
->>
->> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE &&
->>     dev_to_node(bus->bridge) == NUMA_NO_NODE)
->> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
-> 
-> Anyway, would the attached patch work for you?  I have it tentatively
-> queued up on pci/enumeration for v5.5.
-> 
+On Wednesday 28 August 2019 18:08:17 Greg Kroah-Hartman wrote:
+> The full specification of the filesystem can be found at:
+>   https://docs.microsoft.com/en-us/windows/win32/fileio/exfat-specification
 
-Yes, thanks for making the change when applying.
+FYI, it looks like that this released specification is just copy+paste
+from exFAT patent https://patents.google.com/patent/US20150370821 which
+was there publicly available for a while. And similar/same? copy was
+available on the following site https://www.ntfs.com/exfat-overview.htm
 
->>>
->>>
->>>> [1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
->>>>
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>>> ---
->>>>  drivers/pci/probe.c | 3 +++
->>>>  1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->>>> index 3d5271a..22be96a 100644
->>>> --- a/drivers/pci/probe.c
->>>> +++ b/drivers/pci/probe.c
->>>> @@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->>>>  	list_add_tail(&bus->node, &pci_root_buses);
->>>>  	up_write(&pci_bus_sem);
->>>>  
->>>> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
->>>> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
->>>> +
->>>>  	return 0;
->>>>  
->>>>  unregister:
-> 
-> commit 8f8cf239c4f1
-> Author: Yunsheng Lin <linyunsheng@huawei.com>
-> Date:   Sat Oct 19 14:45:43 2019 +0800
-> 
->     PCI: Warn if no host bridge NUMA node info
->     
->     In pci_call_probe(), we try to run driver probe functions on the node where
->     the device is attached.  If we don't know which node the device is attached
->     to, the driver will likely run on the wrong node.  This will still work,
->     but performance will not be as good as it could be.
->     
->     On NUMA systems, warn if we don't know which node a PCI host bridge is
->     attached to.  This is likely an indication that ACPI didn't supply a _PXM
->     method or the DT didn't supply a "numa-node-id" property.
->     
->     [bhelgaas: commit log, check bus node]
->     Link: https://lore.kernel.org/r/1571467543-26125-1-git-send-email-linyunsheng@huawei.com
->     Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 3d5271a7a849..40259c38d66a 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -897,6 +897,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  	else
->  		pr_info("PCI host bridge to bus %s\n", name);
->  
-> +	if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
-> +		dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
-> +
->  	/* Add initial resources to the bus */
->  	resource_list_for_each_entry_safe(window, n, &resources) {
->  		list_move_tail(&window->node, &bridge->windows);
-> 
-> .
-> 
-
+-- 
+Pali Rohár
+pali.rohar@gmail.com
