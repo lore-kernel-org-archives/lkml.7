@@ -2,160 +2,171 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D311CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992AECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E7521D71
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6327D21D71
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7WkmfL0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJqtir2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503667AbfJXQj2 (ORCPT
+        id S2503685AbfJXQjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:39:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51960 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503520AbfJXQin (ORCPT
+        Thu, 24 Oct 2019 12:39:33 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41476 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503520AbfJXQjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:38:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q70so3589954wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:38:42 -0700 (PDT)
+        Thu, 24 Oct 2019 12:39:32 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a21so2117968edj.8;
+        Thu, 24 Oct 2019 09:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=e4HNR/0VM5m4e7dMrNKrSD8efxMPd+5rZb481ikFf74=;
-        b=M7WkmfL0zrA5DnctlcBxlGdxMtMvI7tb2Et+EcJD17XeKNEcanCAnSlnnFtfrQBuM3
-         sDhf5LBd626wET1CuSWyl/rNSMkVh7OT3aDCOds4shDrMV1BOqn/YQFAjcw5wHDP541P
-         1/KOQc4D2Q7cPOFKXNBlEJmLOHeUPfL218/n4FP/xi+GZncaONIbCHbY3wj8Ui4KD2w1
-         efGgPXWk+q/VIFUq9zoDrdj/MKBbzRWvdbAMOHU8q6g3mk2yO4zDLW0HKVtQslGanI6m
-         yJaTeQurgB38QyJxOF/EQuEb5uHiE/GtD2I2MEEBn+DHfT1q9WyC8IMLjupNUcM8DF8w
-         2oAg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pRqAgw8aUktyBYgNnb2aGpfKrZwvconn64RNMt6pvOk=;
+        b=CJqtir2sSTj7bmYkAv7LfJhtDFH0PyQr+c2dGu7uxe7p2oSLY6KDCbiIvsZc7UvCWc
+         pRoxXUcoX2N7GgUpG3PuBVr12awPFjQiuPqJL2wGyx2GO7ldejs2EC+miqPLB6VreAFr
+         bG69RFepiS3uHdpDbPPEHkscdalyEJ9DI+57De7g0XOYmjC14tIa/RieQj3oWMNvPMl6
+         NwfvxxUOvJyGa6Zm4lKkhrNEJlVuyYJefpcgqaMo1FqVnQRES9YoiGQ9yXIUL0fV6TGO
+         w5oxucMiUJEjGm+3SgBuTkKrqekrziijN38GKgDfUQNRhQOrUAlKiooYLa/9Xdsy0J6y
+         xL7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=e4HNR/0VM5m4e7dMrNKrSD8efxMPd+5rZb481ikFf74=;
-        b=ZuHEpBUcryN4uCaO0e36tgjqH0Aew0Nv65WyUqvUggZgWyxOffiN+Gt2/Y1bOsEMMr
-         UuqIHY26h+ytf/F+ncVarq+o+G1DdMlg3C22gKmt1d7mVdFRvIBZujuUeMBdKi9KsQWw
-         IBJ8/14Ixy5Obc0B0c6nQhfA4nMEKUU1/b82ODxELFQtb4yML1GWe2BHBfQPniKl5+sM
-         IMY2VBRr4WoAVv0FgX2yVKc1Rcs+BY8Nser60qD4+R2zXo7VMjv+gZaVklbAJm8IMBkM
-         tZjbCMiDFdn2mgCZZu5tLMQ8JTnOC+8fCLHgVguSJ4QlTtFXWh5SbbmeaRL0pm3w3l+L
-         LjiA==
-X-Gm-Message-State: APjAAAXACZ68wpe5hBE0UzQI3UWKTBQT09ueeE7/sSOIjUt9KAhtBW0P
-        IVls2KxbMo4lqqE6QO3Gohh6PQ==
-X-Google-Smtp-Source: APXvYqxEHli1uD77KL/ELWWxWiIIpMJMsjHrKFyV9fTmvffZSzc7lJEAUYH66gJFBm49CiohcZ1L0Q==
-X-Received: by 2002:a1c:2884:: with SMTP id o126mr6171815wmo.153.1571935121495;
-        Thu, 24 Oct 2019 09:38:41 -0700 (PDT)
-Received: from localhost.localdomain ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id 6sm3446175wmd.36.2019.10.24.09.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 09:38:40 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     daniel.thompson@linaro.org, arnd@arndb.de, broonie@kernel.org,
-        linus.walleij@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        baohua@kernel.org, stephan@gerhold.net,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 05/10] mfd: mfd-core: Remove mfd_clone_cell()
-Date:   Thu, 24 Oct 2019 17:38:27 +0100
-Message-Id: <20191024163832.31326-6-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024163832.31326-1-lee.jones@linaro.org>
-References: <20191024163832.31326-1-lee.jones@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pRqAgw8aUktyBYgNnb2aGpfKrZwvconn64RNMt6pvOk=;
+        b=OFIcBktxumP3C/a5tBFmAGCaYfztnoWCxZ8RE/BaBJYMfBjvw6H8I5BXeBcNR7NC/s
+         rsekTIKiv3KZSfHcQChz4xIIlBnKISllJY8HG4D8OzFoLhvPt0TMncfcz6AZ1V+TMws3
+         AMbRhxMswdbwShnzLJ84KZ031HePVSXr1HRf0kEiujOc5q/d218A3pqTG1/DyEipjmcS
+         ppU/a5/HK9lgLSokvz9cRQ4oDg8bOQNLoKwJgfNjRKL+zqwxK8T6JTJ89xQ/wDce+t91
+         lPAtFP/+l63kus3q0sJ9/rgAB/Eacq2NozeIVo6z0PjKyB0ZriZvCqZfpOVn5x3ABG7j
+         HI7Q==
+X-Gm-Message-State: APjAAAWkFQ201avclfdKQuUS6nf0nNbA8gbp2D8a5fHijPuWBnFmuGP9
+        agfQvbwF8DPZrq8kJfR13POHpJwP
+X-Google-Smtp-Source: APXvYqyvM662DlxSAfisSvgKvUn1O7EE4ce1G8d6ykXQTVf3YfAUbnCH9Fumzu4j2S+SaGhGh6x+7Q==
+X-Received: by 2002:a17:906:1c87:: with SMTP id g7mr31650421ejh.189.1571934809400;
+        Thu, 24 Oct 2019 09:33:29 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id f8sm941401eds.71.2019.10.24.09.33.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 09:33:28 -0700 (PDT)
+Subject: Re: [PATCH net-next] net: dsa: qca8k: Initialize the switch with
+ correct number of ports
+To:     Andrew Lunn <andrew@lunn.ch>,
+        =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1571924818-27725-1-git-send-email-michal.vokac@ysoft.com>
+ <20191024141211.GC30147@lunn.ch>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
+ X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
+ HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
+ YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
+ PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
+ UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
+ iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
+ WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
+ UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
+ sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
+ KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
+ t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
+ AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
+ RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
+ e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
+ UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
+ 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
+ V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
+ xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
+ dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
+ pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
+ caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
+ 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <a6e8b1cb-4c32-34ba-2a10-d736a953c108@gmail.com>
+Date:   Thu, 24 Oct 2019 09:33:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191024141211.GC30147@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Providing a subsystem-level API helper seems over-kill just to save a
-few lines of C-code.  Previous commits saw us convert mfd_clone_cell()'s
-only user over to use a more traditional style of MFD child-device
-registration.  Now we can remove the superfluous helper from the MFD API.
+On 10/24/19 7:12 AM, Andrew Lunn wrote:
+> On Thu, Oct 24, 2019 at 03:46:58PM +0200, Michal Vokáč wrote:
+>> Since commit 0394a63acfe2 ("net: dsa: enable and disable all ports")
+>> the dsa core disables all unused ports of a switch. In this case
+>> disabling ports with numbers higher than QCA8K_NUM_PORTS causes that
+>> some switch registers are overwritten with incorrect content.
+> 
+> Humm.
+> 
+> The same problem might exist in other drivers:
+> 
+> linux/drivers/net/dsa$ grep -r "ds->num_ports = DSA_MAX_PORTS"
+> qca8k.c:	priv->ds->num_ports = DSA_MAX_PORTS;
+> b53/b53_common.c:	ds->num_ports = DSA_MAX_PORTS;
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- drivers/mfd/mfd-core.c   | 33 ---------------------------------
- include/linux/mfd/core.h | 18 ------------------
- 2 files changed, 51 deletions(-)
+Not for b53 because this later gets clamped with dev->num_ports in
+b53_setup().
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 23276a80e3b4..8126665bb2d8 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -382,38 +382,5 @@ int devm_mfd_add_devices(struct device *dev, int id,
- }
- EXPORT_SYMBOL(devm_mfd_add_devices);
- 
--int mfd_clone_cell(const char *cell, const char **clones, size_t n_clones)
--{
--	struct mfd_cell cell_entry;
--	struct device *dev;
--	struct platform_device *pdev;
--	int i;
--
--	/* fetch the parent cell's device (should already be registered!) */
--	dev = bus_find_device_by_name(&platform_bus_type, NULL, cell);
--	if (!dev) {
--		printk(KERN_ERR "failed to find device for cell %s\n", cell);
--		return -ENODEV;
--	}
--	pdev = to_platform_device(dev);
--	memcpy(&cell_entry, mfd_get_cell(pdev), sizeof(cell_entry));
--
--	WARN_ON(!cell_entry.enable);
--
--	for (i = 0; i < n_clones; i++) {
--		cell_entry.name = clones[i];
--		/* don't give up if a single call fails; just report error */
--		if (mfd_add_device(pdev->dev.parent, -1, &cell_entry,
--				   cell_entry.usage_count, NULL, 0, NULL))
--			dev_err(dev, "failed to create platform device '%s'\n",
--					clones[i]);
--	}
--
--	put_device(dev);
--
--	return 0;
--}
--EXPORT_SYMBOL(mfd_clone_cell);
--
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Ian Molton, Dmitry Baryshkov");
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index b43fc5773ad7..bd8c0e089164 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -86,24 +86,6 @@ struct mfd_cell {
- extern int mfd_cell_enable(struct platform_device *pdev);
- extern int mfd_cell_disable(struct platform_device *pdev);
- 
--/*
-- * "Clone" multiple platform devices for a single cell. This is to be used
-- * for devices that have multiple users of a cell.  For example, if an mfd
-- * driver wants the cell "foo" to be used by a GPIO driver, an MTD driver,
-- * and a platform driver, the following bit of code would be use after first
-- * calling mfd_add_devices():
-- *
-- * const char *fclones[] = { "foo-gpio", "foo-mtd" };
-- * err = mfd_clone_cells("foo", fclones, ARRAY_SIZE(fclones));
-- *
-- * Each driver (MTD, GPIO, and platform driver) would then register
-- * platform_drivers for "foo-mtd", "foo-gpio", and "foo", respectively.
-- * The cell's .enable/.disable hooks should be used to deal with hardware
-- * resource contention.
-- */
--extern int mfd_clone_cell(const char *cell, const char **clones,
--		size_t n_clones);
--
- /*
-  * Given a platform device that's been created by mfd_add_devices(), fetch
-  * the mfd_cell that created it.
+> mt7530.c:	priv->ds->num_ports = DSA_MAX_PORTS;
+> microchip/ksz_common.c:	ds->num_ports = DSA_MAX_PORTS;
+> dsa_loop.c:	ds->num_ports = DSA_MAX_PORTS;
+> 
+> dsa_loop.c looks O.K, it does support DSA_MAX_PORTS ports.
+> 
+> But the others?
+> 
+>     Andrew
+> 
+
+
 -- 
-2.17.1
-
+Florian
