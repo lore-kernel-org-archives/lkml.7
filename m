@@ -2,384 +2,129 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72149CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03807CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4FC205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7BAA2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 03:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392880AbfJXDQr (ORCPT
+        id S2392893AbfJXDWa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 23:16:47 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:46162 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390629AbfJXDQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 23:16:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tg1.gBE_1571886966;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tg1.gBE_1571886966)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 24 Oct 2019 11:16:06 +0800
-Subject: Re: [PATCH] sched/numa: advanced per-cgroup numa statistic
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org, mkoutny@suse.com
-References: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
-Message-ID: <dbaab94e-88d8-7207-8a4e-ebff3aba9089@linux.alibaba.com>
-Date:   Thu, 24 Oct 2019 11:16:06 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Wed, 23 Oct 2019 23:22:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32822 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390629AbfJXDWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 23:22:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 891EEB1D3;
+        Thu, 24 Oct 2019 03:22:27 +0000 (UTC)
+Date:   Wed, 23 Oct 2019 20:21:05 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: WARNING: at net/sched/sch_generic.c:448
+Message-ID: <20191024032105.xmewznsphltnrido@linux-p48b>
 MIME-Version: 1.0
-In-Reply-To: <46b0fd25-7b73-aa80-372a-9fcd025154cb@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, Michal
+Hi,
 
-The statistic has been proved practically useful on detecting numa
-issues, especially for the box running with complex mixing workloads.
+I'm hitting the following in linux-next, and as far back as v5.2, ring any bells?
 
-Also enabled for cgroup-v2 now :-)
+[  478.588144] NETDEV WATCHDOG: eth0 (igb): transmit queue 0 timed out
+[  478.601994] WARNING: CPU: 10 PID: 74 at net/sched/sch_generic.c:448 dev_watchdog+0x253/0x260
+[  478.620613] Modules linked in: ebtable_filter(E) ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) ip_tables(E) x_tables(E) bpfilter(E) scsi_transport_iscsi(E) af_packet(E) iscsi_ibft(E) iscsi_boot_sysfs(E) ext4(E) intel_rapl_msr(E) intel_rapl_common(E) crc16(E) mbcache(E) jbd2(E) sb_edac(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) coretemp(E) kvm_intel(E) kvm(E) irqbypass(E) crc32_pclmul(E) iTCO_wdt(E) ghash_clmulni_intel(E) iTCO_vendor_support(E) aesni_intel(E) crypto_simd(E) cryptd(E) glue_helper(E) ipmi_si(E) igb(E) ioatdma(E) pcspkr(E) ipmi_devintf(E) mei_me(E) lpc_ich(E) mfd_core(E) ipmi_msghandler(E) joydev(E) i2c_i801(E) mei(E) dca(E) button(E) btrfs(E) libcrc32c(E) xor(E) raid6_pq(E) hid_generic(E) usbhid(E) sd_mod(E) mgag200(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) sysimgblt(E) fb_sys_fops(E) i2c_algo_bit(E) isci(E) ehci_pci(E) drm_vram_helper(E) ahci(E) ehci_hcd(E) libsas(E) crc32c_intel(E) ttm(E) libahci(E) scsi_transport_sas(E) drm(E) usbcore
+ (E)
+[  478.620658]  libata(E) wmi(E) sg(E) dm_multipath(E) dm_mod(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) scsi_mod(E)
+[  478.837008] CPU: 10 PID: 74 Comm: ksoftirqd/10 Kdump: loaded Tainted: G            E     5.4.0-rc4-2-default+ #2
+[  478.859457] Hardware name: Intel Corporation LH Pass/SVRBD-ROW_P, BIOS SE5C600.86B.02.01.SP04.112220131546 11/22/2013
+[  478.882867] RIP: 0010:dev_watchdog+0x253/0x260
+[  478.892658] Code: 48 85 c0 75 e4 eb 9d 4c 89 ef c6 05 07 28 e8 00 01 e8 d1 fb fa ff 89 d9 48 89 c2 4c 89 ee 48 c7 c7 88 11 f8 b8 e8 fd dc 93 ff <0f> 0b e9 7c ff ff ff 66 0f 1f 44 00 00 0f 1f 44 00 00 41 57 41 56
+[  478.934095] RSP: 0018:ffffb8e08cc17d88 EFLAGS: 00010286
+[  478.945600] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[  478.961337] RDX: ffff8b485f0a9780 RSI: ffff8b485f099898 RDI: ffff8b485f099898
+[  478.977071] RBP: ffff8b40514a845c R08: 00000000000004bf R09: 000000000000000a
+[  478.992808] R10: ffffb8e08cc17e08 R11: ffffb8e08cc17c20 R12: ffff8b405e220940
+[  479.008543] R13: ffff8b40514a8000 R14: ffff8b40514a8480 R15: 0000000000000008
+[  479.024280] FS:  0000000000000000(0000) GS:ffff8b485f080000(0000) knlGS:0000000000000000
+[  479.042127] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  479.054795] CR2: 00007ff510ca6860 CR3: 000000081e5ba004 CR4: 00000000001606e0
+[  479.070533] Call Trace:
+[  479.075922]  ? pfifo_fast_reset+0x110/0x110
+[  479.085138]  ? pfifo_fast_reset+0x110/0x110
+[  479.094363]  call_timer_fn+0x2d/0x130
+[  479.102438]  ? pfifo_fast_reset+0x110/0x110
+[  479.111656]  run_timer_softirq+0x43b/0x470
+[  479.120697]  ? __switch_to_asm+0x34/0x70
+[  479.129338]  ? __switch_to_asm+0x40/0x70
+[  479.137980]  ? __switch_to_asm+0x34/0x70
+[  479.146622]  ? __switch_to_asm+0x40/0x70
+[  479.155263]  ? __switch_to_asm+0x34/0x70
+[  479.163919]  ? sort_range+0x20/0x20
+[  479.171604]  __do_softirq+0x115/0x32e
+[  479.179671]  ? sort_range+0x20/0x20
+[  479.187354]  run_ksoftirqd+0x30/0x50
+[  479.195242]  smpboot_thread_fn+0xef/0x160
+[  479.204086]  kthread+0x113/0x130
+[  479.211196]  ? kthread_park+0x90/0x90
+[  479.219263]  ret_from_fork+0x3a/0x50
 
-Regards,
-Michael Wang
+I'm also seeing workqueue lockups:
 
-On 2019/10/24 上午11:08, 王贇 wrote:
-> Currently there are no good approach to monitoring the per-cgroup
-> numa efficiency, this could be a trouble especially when groups
-> are sharing CPUs, it's impossible to tell which one caused the
-> remote-memory access by reading hardware counter since multiple
-> workloads could sharing the same CPU, which make it painful when
-> one want to find out the root cause and fix the issue.
-> 
-> In order to address this, we introduced new per-cgroup statistic
-> for numa:
->   * the numa locality to imply the numa balancing efficiency
->   * the numa execution time on each node
-> 
-> The task locality is the local page accessing ratio traced on numa
-> balancing PF, and the group locality is the topology of task execution
-> time, sectioned by the locality into 8 regions.
-> 
-> For example the new entry 'cpu.numa_stat' show:
->   locality 15393 21259 13023 44461 21247 17012 28496 145402
->   exectime 311900 407166
-> 
-> Here we know the workloads executed 311900ms on node_0 and 407166ms
-> on node_1, tasks with locality around 0~12% executed for 15393 ms, and
-> tasks with locality around 88~100% executed for 145402 ms, which imply
-> most of the memory access is local access, for the workloads of this
-> group.
-> 
-> By monitoring the new statistic, we will be able to know the numa
-> efficiency of each per-cgroup workloads on machine, whatever they
-> sharing the CPUs or not, we will be able to find out which one
-> introduced the remote access mostly.
-> 
-> Besides, per-node memory topology from 'memory.numa_stat' become
-> more useful when we have the per-node execution time, workloads
-> always executing on node_0 while it's memory is all on node_1 is
-> usually a bad case.
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> ---
->  include/linux/sched.h |  8 ++++++-
->  kernel/sched/core.c   | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  kernel/sched/debug.c  |  7 ++++++
->  kernel/sched/fair.c   | 51 ++++++++++++++++++++++++++++++++++++++++++++
->  kernel/sched/sched.h  | 29 +++++++++++++++++++++++++
->  5 files changed, 153 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 263cf089d1b3..46995be622c1 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1114,8 +1114,14 @@ struct task_struct {
->  	 * scan window were remote/local or failed to migrate. The task scan
->  	 * period is adapted based on the locality of the faults with different
->  	 * weights depending on whether they were shared or private faults
-> +	 *
-> +	 * 0 -- remote faults
-> +	 * 1 -- local faults
-> +	 * 2 -- page migration failure
-> +	 * 3 -- remote page accessing
-> +	 * 4 -- local page accessing
->  	 */
-> -	unsigned long			numa_faults_locality[3];
-> +	unsigned long			numa_faults_locality[5];
-> 
->  	unsigned long			numa_pages_migrated;
->  #endif /* CONFIG_NUMA_BALANCING */
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index eb42b71faab9..4364da279f04 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -6544,6 +6544,10 @@ static struct kmem_cache *task_group_cache __read_mostly;
->  DECLARE_PER_CPU(cpumask_var_t, load_balance_mask);
->  DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
-> 
-> +#ifdef CONFIG_NUMA_BALANCING
-> +DECLARE_PER_CPU(struct numa_stat, root_numa_stat);
-> +#endif
-> +
->  void __init sched_init(void)
->  {
->  	unsigned long ptr = 0;
-> @@ -6593,6 +6597,10 @@ void __init sched_init(void)
->  	init_defrootdomain();
->  #endif
-> 
-> +#ifdef CONFIG_NUMA_BALANCING
-> +	root_task_group.numa_stat = &root_numa_stat;
-> +#endif
-> +
->  #ifdef CONFIG_RT_GROUP_SCHED
->  	init_rt_bandwidth(&root_task_group.rt_bandwidth,
->  			global_rt_period(), global_rt_runtime());
-> @@ -6918,6 +6926,7 @@ static inline void alloc_uclamp_sched_group(struct task_group *tg,
-> 
->  static void sched_free_group(struct task_group *tg)
->  {
-> +	free_tg_numa_stat(tg);
->  	free_fair_sched_group(tg);
->  	free_rt_sched_group(tg);
->  	autogroup_free(tg);
-> @@ -6933,6 +6942,9 @@ struct task_group *sched_create_group(struct task_group *parent)
->  	if (!tg)
->  		return ERR_PTR(-ENOMEM);
-> 
-> +	if (!alloc_tg_numa_stat(tg))
-> +		goto err;
-> +
->  	if (!alloc_fair_sched_group(tg, parent))
->  		goto err;
-> 
-> @@ -7638,6 +7650,40 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
->  }
->  #endif /* CONFIG_RT_GROUP_SCHED */
-> 
-> +#ifdef CONFIG_NUMA_BALANCING
-> +static int cpu_numa_stat_show(struct seq_file *sf, void *v)
-> +{
-> +	int nr;
-> +	struct task_group *tg = css_tg(seq_css(sf));
-> +
-> +	seq_puts(sf, "locality");
-> +	for (nr = 0; nr < NR_NL_INTERVAL; nr++) {
-> +		int cpu;
-> +		u64 sum = 0;
-> +
-> +		for_each_possible_cpu(cpu)
-> +			sum += per_cpu(tg->numa_stat->locality[nr], cpu);
-> +
-> +		seq_printf(sf, " %u", jiffies_to_msecs(sum));
-> +	}
-> +	seq_putc(sf, '\n');
-> +
-> +	seq_puts(sf, "exectime");
-> +	for_each_online_node(nr) {
-> +		int cpu;
-> +		u64 sum = 0;
-> +
-> +		for_each_cpu(cpu, cpumask_of_node(nr))
-> +			sum += per_cpu(tg->numa_stat->jiffies, cpu);
-> +
-> +		seq_printf(sf, " %u", jiffies_to_msecs(sum));
-> +	}
-> +	seq_putc(sf, '\n');
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static struct cftype cpu_legacy_files[] = {
->  #ifdef CONFIG_FAIR_GROUP_SCHED
->  	{
-> @@ -7687,6 +7733,12 @@ static struct cftype cpu_legacy_files[] = {
->  		.seq_show = cpu_uclamp_max_show,
->  		.write = cpu_uclamp_max_write,
->  	},
-> +#endif
-> +#ifdef CONFIG_NUMA_BALANCING
-> +	{
-> +		.name = "numa_stat",
-> +		.seq_show = cpu_numa_stat_show,
-> +	},
->  #endif
->  	{ }	/* Terminate */
->  };
-> @@ -7868,6 +7920,13 @@ static struct cftype cpu_files[] = {
->  		.seq_show = cpu_uclamp_max_show,
->  		.write = cpu_uclamp_max_write,
->  	},
-> +#endif
-> +#ifdef CONFIG_NUMA_BALANCING
-> +	{
-> +		.name = "numa_stat",
-> +		.flags = CFTYPE_NOT_ON_ROOT,
-> +		.seq_show = cpu_numa_stat_show,
-> +	},
->  #endif
->  	{ }	/* terminate */
->  };
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index f7e4579e746c..a22b2a62aee2 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -848,6 +848,13 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
->  	P(total_numa_faults);
->  	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
->  			task_node(p), task_numa_group_id(p));
-> +	SEQ_printf(m, "faults_locality local=%lu remote=%lu failed=%lu ",
-> +			p->numa_faults_locality[1],
-> +			p->numa_faults_locality[0],
-> +			p->numa_faults_locality[2]);
-> +	SEQ_printf(m, "lhit=%lu rhit=%lu\n",
-> +			p->numa_faults_locality[4],
-> +			p->numa_faults_locality[3]);
->  	show_numa_stats(p, m);
->  	mpol_put(pol);
->  #endif
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index a81c36472822..4ba3a41cdca3 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -2466,6 +2466,12 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
->  	p->numa_faults[task_faults_idx(NUMA_MEMBUF, mem_node, priv)] += pages;
->  	p->numa_faults[task_faults_idx(NUMA_CPUBUF, cpu_node, priv)] += pages;
->  	p->numa_faults_locality[local] += pages;
-> +	/*
-> +	 * We want to have the real local/remote page access statistic
-> +	 * here, so use 'mem_node' which is the real residential node of
-> +	 * page after migrate_misplaced_page().
-> +	 */
-> +	p->numa_faults_locality[3 + !!(mem_node == numa_node_id())] += pages;
->  }
-> 
->  static void reset_ptenuma_scan(struct task_struct *p)
-> @@ -2672,6 +2678,49 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
->  	}
->  }
-> 
-> +DEFINE_PER_CPU(struct numa_stat, root_numa_stat);
-> +
-> +int alloc_tg_numa_stat(struct task_group *tg)
-> +{
-> +	tg->numa_stat = alloc_percpu(struct numa_stat);
-> +	if (!tg->numa_stat)
-> +		return 0;
-> +
-> +	return 1;
-> +}
-> +
-> +void free_tg_numa_stat(struct task_group *tg)
-> +{
-> +	free_percpu(tg->numa_stat);
-> +}
-> +
-> +static void update_tg_numa_stat(struct task_struct *p)
-> +{
-> +	struct task_group *tg;
-> +	unsigned long remote = p->numa_faults_locality[3];
-> +	unsigned long local = p->numa_faults_locality[4];
-> +	int idx = -1;
-> +
-> +	/* Tobe scaled? */
-> +	if (remote || local)
-> +		idx = NR_NL_INTERVAL * local / (remote + local + 1);
-> +
-> +	rcu_read_lock();
-> +
-> +	tg = task_group(p);
-> +	while (tg) {
-> +		/* skip account when there are no faults records */
-> +		if (idx != -1)
-> +			this_cpu_inc(tg->numa_stat->locality[idx]);
-> +
-> +		this_cpu_inc(tg->numa_stat->jiffies);
-> +
-> +		tg = tg->parent;
-> +	}
-> +
-> +	rcu_read_unlock();
-> +}
-> +
->  /*
->   * Drive the periodic memory faults..
->   */
-> @@ -2686,6 +2735,8 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
->  	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
->  		return;
-> 
-> +	update_tg_numa_stat(curr);
-> +
->  	/*
->  	 * Using runtime rather than walltime has the dual advantage that
->  	 * we (mostly) drive the selection from busy threads and that the
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 0db2c1b3361e..fd1ea597e349 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -351,6 +351,18 @@ struct cfs_bandwidth {
->  #endif
->  };
-> 
-> +#ifdef CONFIG_NUMA_BALANCING
-> +
-> +/* NUMA Locality Interval, 8 bucket for cache align */
-> +#define NR_NL_INTERVAL	8
-> +
-> +struct numa_stat {
-> +	u64 locality[NR_NL_INTERVAL];
-> +	u64 jiffies;
-> +};
-> +
-> +#endif
-> +
->  /* Task group related information */
->  struct task_group {
->  	struct cgroup_subsys_state css;
-> @@ -401,8 +413,25 @@ struct task_group {
->  	struct uclamp_se	uclamp[UCLAMP_CNT];
->  #endif
-> 
-> +#ifdef CONFIG_NUMA_BALANCING
-> +	struct numa_stat __percpu *numa_stat;
-> +#endif
->  };
-> 
-> +#ifdef CONFIG_NUMA_BALANCING
-> +int alloc_tg_numa_stat(struct task_group *tg);
-> +void free_tg_numa_stat(struct task_group *tg);
-> +#else
-> +static int alloc_tg_numa_stat(struct task_group *tg)
-> +{
-> +	return 1;
-> +}
-> +
-> +static void free_tg_numa_stat(struct task_group *tg)
-> +{
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_FAIR_GROUP_SCHED
->  #define ROOT_TASK_GROUP_LOAD	NICE_0_LOAD
-> 
+[  373.711360] BUG: workqueue lockup - pool cpus=1 node=0 flags=0x0 nice=0 stuck for 34s!
+[  373.728861] Showing busy workqueues and worker pools:
+[  373.740011] workqueue events: flags=0x0
+[  373.748484]   pwq 24: cpus=12 node=1 flags=0x0 nice=0 active=1/256
+[  373.762112]     in-flight: 120:free_work
+[  373.770769]   pwq 20: cpus=10 node=1 flags=0x0 nice=0 active=3/256
+[  373.784401]     in-flight: 486:igb_watchdog_task [igb]
+[  373.795736]     pending: free_work, igb_watchdog_task [igb]
+[  373.808008]   pwq 6: cpus=3 node=0 flags=0x0 nice=0 active=1/256
+[  373.821252]     in-flight: 240:cec_work_fn
+[  373.830429] workqueue mm_percpu_wq: flags=0x8
+[  373.840048]   pwq 30: cpus=15 node=1 flags=0x0 nice=0 active=2/256
+[  373.853674]     in-flight: 122:vmstat_update
+[  373.863085]     pending: vmstat_update
+[  373.871345]   pwq 28: cpus=14 node=1 flags=0x0 nice=0 active=2/256
+[  373.884975]     in-flight: 121:vmstat_update
+[  373.894386]     pending: vmstat_update
+[  373.902648]   pwq 26: cpus=13 node=1 flags=0x0 nice=0 active=1/256
+[  373.916281]     in-flight: 118:vmstat_update
+[  373.925689]   pwq 24: cpus=12 node=1 flags=0x0 nice=0 active=1/256
+[  373.939302]     pending: vmstat_update
+[  373.947559]   pwq 22: cpus=11 node=1 flags=0x0 nice=0 active=1/256
+[  373.961186]     in-flight: 123:vmstat_update
+[  373.970596]   pwq 20: cpus=10 node=1 flags=0x0 nice=0 active=1/256
+[  373.984228]     pending: vmstat_update
+[  373.992487]   pwq 18: cpus=9 node=1 flags=0x0 nice=0 active=1/256
+[  374.005922]     pending: vmstat_update
+[  374.014181]   pwq 16: cpus=8 node=1 flags=0x0 nice=0 active=1/256
+[  374.027618]     pending: vmstat_update
+[  374.035877]   pwq 10: cpus=5 node=0 flags=0x0 nice=0 active=1/256
+[  374.049313]     pending: vmstat_update
+[  374.057572]   pwq 8: cpus=4 node=0 flags=0x0 nice=0 active=1/256
+[  374.070815]     pending: vmstat_update
+[  374.079075]   pwq 2: cpus=1 node=0 flags=0x0 nice=0 active=1/256
+[  374.092318]     pending: vmstat_update
+[  374.100853] pool 6: cpus=3 node=0 flags=0x0 nice=0 hung=2s workers=2 idle: 124
+[  374.116782] pool 20: cpus=10 node=1 flags=0x0 nice=0 hung=20s workers=2 idle: 117
+[  374.133288] pool 22: cpus=11 node=1 flags=0x0 nice=0 hung=1s workers=2 idle: 1014
+[  374.149791] pool 24: cpus=12 node=1 flags=0x0 nice=0 hung=10s workers=2 idle: 550
+[  374.166296] pool 26: cpus=13 node=1 flags=0x0 nice=0 hung=5s workers=2 idle: 618
+[  374.182619] pool 28: cpus=14 node=1 flags=0x0 nice=0 hung=12s workers=2 idle: 431
+[  374.199124] pool 30: cpus=15 node=1 flags=0x0 nice=0 hung=0s workers=2 idle: 105
+
+Thanks,
+Davidlohr
