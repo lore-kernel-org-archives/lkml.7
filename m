@@ -2,226 +2,208 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B900DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B88CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9A920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:02:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B/DRKA86"
+	by mail.kernel.org (Postfix) with ESMTP id 2B5BF20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392958AbfJXJC4 (ORCPT
+        id S2392975AbfJXJDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:02:56 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46831 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387741AbfJXJCz (ORCPT
+        Thu, 24 Oct 2019 05:03:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40764 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388674AbfJXJDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:02:55 -0400
-Received: by mail-il1-f193.google.com with SMTP id m16so15254213iln.13
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 02:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Shf6R99Mq/i6rKVdmQjchCTfPEMVnKeGQOrlMCCw8ng=;
-        b=B/DRKA866HSovygatg9KkAg1y0TgfZdkYdE+6n9uttwiItcgZIboqxBPbgT/zvTU4g
-         SYjSWdKnRhMH2okbMN2D6gHouUNMqa13oiXDPDnyVoML2szIYG0QeU+dSklzIk6hsTnM
-         MDhzZ4YI/TmiQsKWi+tkrDaYBpKs6CvxvRmE8ikoKOfUOsMdveuzcmCzqskzRzrNEBM0
-         rHHZDYEMKuZGtVSNoZ5MsRv7aZBgT+SDpjGWLUskWGiY/BqwbXvXGx0lm/gAPSUi4cO0
-         W+3yi7qry+lVjlMD0qpqfbP/U6WCy4PeX39HGVlxMnECP1xdSO+0KXBr8NIh/geS/dDW
-         ioXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Shf6R99Mq/i6rKVdmQjchCTfPEMVnKeGQOrlMCCw8ng=;
-        b=ILDTqMLsBE0PoMlq9JWQriixgv5xt/Hy/xh80CEKxI9DO5rVlaitmAC68JgaH79j1i
-         I9bqpoqap17gWIrnPR5OJn24ZUILymZ4miNvq6WV43HMTlMHU/+gsCjEE7+ddZhku87S
-         G2wzu+/hK+ENTNfAcYuLHXT7I7Mof6JQ/M0OLTHuNhF57FcfFZrcbutYyPGjy5I+TndK
-         0eiKjr82jg9WlreV665U032IKtNqM8jLgjLBYBUPsSYEp6DFsLo7NHFrHbxkQOa0ap8t
-         PRwcZzSRYFyAh4tZpuB4VUGmnzjRdM8QHtlaQxbHITj9lp9h2CfiI/ZTMG7v6bJXauTM
-         mVFA==
-X-Gm-Message-State: APjAAAXZOsChToaF5DgO7pFtCBddQRiWIrgGX3Lri+Iyr9fgrlruBDUz
-        p00K63B920gryi1tnq5A1ZyRodWSMhyz2B67hRXEjejtco+Suw==
-X-Google-Smtp-Source: APXvYqyLEUaVof2ujdEi4OEB+nWP81XWCGM4dE5QJmOUS0gJDvfBOFu/gujfa9CKDGOOJYVz7WhVKs54g7CF+tZHVvM=
-X-Received: by 2002:a92:aa48:: with SMTP id j69mr25244745ili.162.1571907774269;
- Thu, 24 Oct 2019 02:02:54 -0700 (PDT)
+        Thu, 24 Oct 2019 05:03:13 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9O92cPF002710
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 05:03:12 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vu6m5w8nd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 05:03:11 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 24 Oct 2019 10:03:07 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 24 Oct 2019 10:03:03 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9O932Ow50790540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Oct 2019 09:03:02 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BC8A11C058;
+        Thu, 24 Oct 2019 09:03:02 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E46811C064;
+        Thu, 24 Oct 2019 09:03:01 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.59])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 24 Oct 2019 09:03:00 +0000 (GMT)
+Date:   Thu, 24 Oct 2019 12:02:59 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Jann Horn <jannh@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
+References: <20191012191602.45649-1-dancol@google.com>
+ <20191012191602.45649-4-dancol@google.com>
+ <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
+ <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
+ <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+ <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
+ <20191023190959.GA9902@redhat.com>
 MIME-Version: 1.0
-References: <20191022085924.92783-1-pumahsu@google.com> <20191023083221.GB8828@kuha.fi.intel.com>
- <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net> <20191023142900.GA15396@kuha.fi.intel.com>
- <20191023150126.GA16612@roeck-us.net> <20191023155757.GB15396@kuha.fi.intel.com>
-In-Reply-To: <20191023155757.GB15396@kuha.fi.intel.com>
-From:   Puma Hsu <pumahsu@google.com>
-Date:   Thu, 24 Oct 2019 17:02:18 +0800
-Message-ID: <CAGCq0LZGz04JCTEJXrBqs4ENybQih6zKWTacq9T9DKPNOQAfMw@mail.gmail.com>
-Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector orientation
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Kyle Tso <kyletso@google.com>,
-        Albert Wang <albertccwang@google.com>,
-        Chien Kun Niu <rickyniu@google.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023190959.GA9902@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19102409-0028-0000-0000-000003AEABD9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102409-0029-0000-0000-00002470DD31
+Message-Id: <20191024090258.GA9802@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-24_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910240088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes, generally this might be purely informational or be a dynamically
-debuggable
-mechanism for end user as I mentioned in previous discussion
-thread(https://lkml.org/lkml/2019/10/22/198).
-Could I know if it is not suitable that we expose a file for
-informational usage?
+On Wed, Oct 23, 2019 at 03:09:59PM -0400, Andrea Arcangeli wrote:
+> Hello,
+> 
+> On Sat, Oct 12, 2019 at 06:14:23PM -0700, Andy Lutomirski wrote:
+> > [adding more people because this is going to be an ABI break, sigh]
+> 
+> That wouldn't break the ABI, no more than when if you boot a kernel
+> built with CONFIG_USERFAULTFD=n.
+> 
+> All non-cooperative features can be removed any time in a backwards
+> compatible way, the only precaution is to mark their feature bits as
+> reserved so they can't be reused for something else later.
+> 
+> > least severely restricted.  A .read implementation MUST NOT ACT ON THE
+> > CALLING TASK.  Ever.  Just imagine the effect of passing a userfaultfd
+> > as stdin to a setuid program.
+> 
+> With UFFD_EVENT_FORK, the newly created uffd that controls the child,
+> is not passed to the parent nor to the child. Instead it's passed to
+> the CRIU monitor only, which has to be already running as root and is
+> fully trusted and acts a hypervisor (despite there is no hypervisor).
+> 
+> By the time execve runs and any suid bit in the execve'd inode becomes
+> relevant, well before the new userland executable code can run, the
+> kernel throws away the "old_mm" controlled by any uffd and all
+> attached uffds are released as well.
+> 
+> All I found is your "A .read implementation MUST NOT ACT ON THE
+> CALLING TASK" as an explanation that something is broken but I need
+> further clarification.
+> 
+> Of course I can see you can always open a uffd and pass it to any task
+> you are going to execve on, but that simply means the suid program
+> will be able to control you, not the other way around. If you don't
+> want to be controlled by the next task, no matter if suid or not, just
+> don't that. What I don't see is how you're going to control the suid
+> binary from the outside, the suid binary at most will block in the
+> poll, read and write syscalls and get garbage or write some garbage
+> and get an error, it won't get signals and it cannot block in any page
+> fault either, it's not immediately clear what's out of ordinary.
+> 
+> On Mon, Oct 14, 2019 at 06:04:22PM +0200, Jann Horn wrote:
+> > FWIW, <https://codesearch.debian.net/search?q=UFFD_FEATURE_EVENT_FORK&literal=1>
+> > just shows the kernel, kernel selftests, and strace code for decoding
+> > syscall arguments. CRIU uses it though (probably for postcopy live
+> > migration / lazy migration?), I guess that code isn't in debian for
+> > some reason.
+> 
+> https://criu.org/Userfaultfd#Limitations
 
+That's no the reason that UFFD_FEATURE_EVENT_FORK does not show up in
+Debian code search, CRIU simply is not there. Debian packages CRIU only in
+experimental and I believe that's not indexed by the code search.
 
-If everyone agreed above, about the definition of =E2=80=9Cunknown=E2=80=9D=
- and the condition
-=E2=80=9Cdon=E2=80=99t know the orientation=E2=80=9D, what about adding add=
-itional return value?
-  1. For original =E2=80=9Cunknown=E2=80=9D, it is a generic unknown state =
-which can
-indicate no
-      matter connector is disconnected, cannot specify which cc side
-is configured(such as Ra-Ra),
-      or even driver can not know the orientation.
-  2. New additional value =E2=80=9Cunavailable=E2=80=9D, it can be used to
-specifically explicate that
-      driver can not know the orientation.
-Take UCSI as example, it can use generic =E2=80=9Cunknown=E2=80=9D or =E2=
-=80=9Cunavailable=E2=80=9D if
-it wants.
-But if it exposes =E2=80=9Cunavailable=E2=80=9D, then application in user s=
-pace can
-know that this attribute is not useful.
+As for the limitations, the races were fixed, I just forgot to update the
+wiki. As for the supported memory types and COW pages, these only affect
+efficiency of post-copy, but not the correctness.
+ 
+> The CRIU developers did a truly amazing job by making container post
+> copy live migration work great for a subset of apps, that alone was an
+> amazing achievement. Is that achievement enough to use post copy live
+> migration of bare metal containers in production? Unfortunately
+> probably not and not just in debian.
+ 
+I don't know if anybody is using post-copy migration of containers in
+production, but I don't think that the reason for that would be technical.
+IMHO it's more about prevailing perception that there is no need to migrate
+containers at all, not only with post-copy, and, as the result, slow rate
+of adoption of container migration in general.
 
+> If you're wrong and UFFDIO_EVENT_FORK isn't currently buggy and in
+> turn it isn't causing further maintenance burden, there is no hurry of
+> removing them, but in the long term, if none of the non-cooperative
+> features find its way in production (like it was reasonable to expect
+> initially), they must be removed from the kernel anyway, not just
+> UFFD_EVEN_FORK but all non-cooperative features associated with it.
 
+... 
+ 
+> On my side, instead of trying to fix whatever issue in
+> UFFD_EVENT_FORK, I'd prefer to spend my time reviewing the uffd-wp
+> feature from Peter and the page fault enhancement patchset that Peter
+> and Linus were discussing. uffd-wp has the potential to drop fork()
+> from all apps calling fork() only to do an atomic snapshot of their
+> memory. Replacing fork() also means the uffd manager thread can decide
+> how much memory to reserve to the snapshot and it can start throttling
+> waiting for I/O completion if the threshold is exceeded, while fork
+> COWs cannot throttle and all apps using fork() risk to hit on x2
+> memory usage which can become oom-killer material if the memory size
+> of the process is huge. The side benefit is also that the way
+> userfaultfd works the fault granularity is entirely in control of
+> userland (because it's always userland that resolves the fault), it
+> could decide to use 8k or 16k even if that doesn't match the hardware
+> page size. That will allow to keep THP on without risking to hit on 2M
+> cows during the snapshot. Being able to keep THP enabled in nosql db
+> without hitting on slow 2M COW copies during snapshot, should allow a
+> further overall performance improvement when the snapshot is not
+> running than what it is possible today. In a completely different use
+> case, uffd-wp will also avoid JITs to set a dirty bit every time they
+> modify any data in memory. It should also be possible to provide the
+> same soft-dirty information in O(1) instead of O(N).
 
-I summarize the proposal definition below:
- - unknown (generic unknown. driver don=E2=80=99t or can=E2=80=99t know the=
- polarity,
-                      e.g. disconnected, both cc1 and cc2 are the same, )
- - normal (configured in cc1 side)
- - reversed (configured in cc2 side)
- - unavailable (not support the polarity detection)
+If I remember correctly, there was an intention to deprecate soft-dirty in
+favor of uffd-wp, which brings us back to the necessity to have
+non-cooperative uffd because otherwise even pre-copy in CRIU will be broken
+and that *is* used in production.
+ 
+> Thanks,
+> Andrea
+> 
 
+-- 
+Sincerely yours,
+Mike.
 
-Thanks in advance.
-Puma Hsu
-
-
-On Wed, Oct 23, 2019 at 11:58 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Wed, Oct 23, 2019 at 08:01:26AM -0700, Guenter Roeck wrote:
-> > On Wed, Oct 23, 2019 at 05:29:00PM +0300, Heikki Krogerus wrote:
-> > > On Wed, Oct 23, 2019 at 06:44:39AM -0700, Guenter Roeck wrote:
-> > > > On 10/23/19 1:32 AM, Heikki Krogerus wrote:
-> > > > > +Guenter
-> > > > >
-> > > > > On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
-> > > > > > Export the Type-C connector orientation so that user space
-> > > > > > can get this information.
-> > > > > >
-> > > > > > Signed-off-by: Puma Hsu <pumahsu@google.com>
-> > > > > > ---
-> > > > > >   Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
-> > > > > >   drivers/usb/typec/class.c                   | 18 ++++++++++++=
-++++++
-> > > > > >   2 files changed, 29 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Docu=
-mentation/ABI/testing/sysfs-class-typec
-> > > > > > index d7647b258c3c..b22f71801671 100644
-> > > > > > --- a/Documentation/ABI/testing/sysfs-class-typec
-> > > > > > +++ b/Documentation/ABI/testing/sysfs-class-typec
-> > > > > > @@ -108,6 +108,17 @@ Contact: Heikki Krogerus <heikki.krogerus@=
-linux.intel.com>
-> > > > > >   Description:
-> > > > > >               Revision number of the supported USB Type-C speci=
-fication.
-> > > > > > +What:                /sys/class/typec/<port>/connector_orienta=
-tion
-> > > > > > +Date:                October 2019
-> > > > > > +Contact:     Puma Hsu <pumahsu@google.com>
-> > > > > > +Description:
-> > > > > > +             Indicates which typec connector orientation is co=
-nfigured now.
-> > > > > > +             cc1 is defined as "normal" and cc2 is defined as =
-"reversed".
-> > > > > > +
-> > > > > > +             Valid value:
-> > > > > > +             - unknown (nothing configured)
-> > > > >
-> > > > > "unknown" means we do not know the orientation.
-> > > > >
-> > > > > > +             - normal (configured in cc1 side)
-> > > > > > +             - reversed (configured in cc2 side)
-> > > > >
-> > > > > Guenter, do you think "connector_orientation" OK. I proposed it, =
-but
-> > > > > I'm now wondering if something like "polarity" would be better?
-> > > > >
-> > > >
-> > > > Yes, or just "orientation". I don't see the value in the "connector=
-_" prefix.
-> > > > I also wonder if "unknown" is really correct. Is it really unknown,=
- or
-> > > > does it mean that the port is disconnected ?
-> > >
-> > > Unknown means we don't know the orientation. We don't always have tha=
-t
-> > > information available to us. With UCSI we simply do not know it.
-> > >
-> > > I think this file needs to be hidden after all if we don't know the
-> > > cable plug orientation.
-> > >
-> > Making the attribute appear and disappear may cause difficulties for
-> > userspace.
-> >
-> > > How about empty string instead of "unknown"?
-> > >
-> > An empty string might also be challenging for userspace.
-> >
-> > "unknown" is fine if it is really unknown.
->
-> That's what I was thinking, but I realised that since the value may be
-> "unknown" even when the driver is able to tell the cable plug
-> orientation, there is no way for the userspace to know is the driver
-> able to supply the information or not. That is why I say the attribute
-> has to be hidden in cases where the driver really does not know the
-> orientation (like UCSI).
->
-> I'm really not a big fan of hidden attribute files, as they do make
-> things unpredictable for the userspace, but with information like
-> this, either we simply do not provide it to the userspace at all -
-> option that I'm all for if there is no real need for this - or we
-> hide the file with drivers that can not supply the information.
->
-> > With that in mind, I wonder what value that attribute has for
-> > userspace, but presumably there must be some use case. I assume it
-> > is purely informational.
->
-> Puma actually already answered to this one:
-> https://lkml.org/lkml/2019/10/22/198
->
-> If I understood correctly, it would be purely informational. Puma,
-> please correct me if I'm wrong!
->
-> But if that is the case, and it is purely informational, then I don't
-> think we should add this attribute at all.
->
->
-> thanks,
->
-> --
-> heikki
