@@ -2,333 +2,134 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16892CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926D8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86FE2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571903331;
-	bh=EZiLfvPLIkNqKLlERVgWdhgZyGMBwAdHnHWnnmkVgD4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zpS1BZJO4OodzQ7Na/h+7VAors47XeP77D7YukIEOOov3yEXXk7KIlhhPXbOgVEM0
-	 a5BSGZez4vdyjK2JsQblSud06kIhCvRmPAJTL7cOawZ4M9tC7q/fDLc7NMZdnLZ58/
-	 gDTZejVWybG7SOK08grrii3awn8xsfA0fNwDsBNE=
+	by mail.kernel.org (Postfix) with ESMTP id 5AE872084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hucKS8iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437967AbfJXHsu (ORCPT
+        id S2437982AbfJXHtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404701AbfJXHst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:48:49 -0400
-Received: from localhost.localdomain (unknown [122.181.210.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6E72166E;
-        Thu, 24 Oct 2019 07:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571903328;
-        bh=EZiLfvPLIkNqKLlERVgWdhgZyGMBwAdHnHWnnmkVgD4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCXdt7uIxjhsm4jDqw4rt7MSZNISDxVCfS1qW9Q8RBOBIoD/f0qVMeQaafvL3ee4+
-         t8Pp0dN08lFKHWUqx8DPlAr89ZJFpD8ExRWYRn1iwBPuTRFNtUKAS5Hv4Wf6D/S0EL
-         yQZrlaaYXkcaxk8t82g+Vp8c4muH6QYo223pEdUw=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v3 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
-Date:   Thu, 24 Oct 2019 13:18:02 +0530
-Message-Id: <20191024074802.26526-4-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191024074802.26526-1-vkoul@kernel.org>
-References: <20191024074802.26526-1-vkoul@kernel.org>
+        Thu, 24 Oct 2019 03:49:08 -0400
+Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:28229
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437969AbfJXHtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 03:49:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gUXpUnKvbfC+wZqBAVh5yFP84zLRapg8t5PsFUqDI3PrhdYIiY4P5W/EGhhuYId83/Jl4lNiYp2KKNzPgqvTLFblizTzKf02sFm/3X1HxfC7g1rntpN6Ys5fXzcsWBW0OxE10IE+zNvw+aNl6LPuSON9OJZ7GH3OGkBIMcVN3UzuEqI6yCkfSkHKIZyOe3zTih5JoEWXpu2idSOZWZ997MW8wcHA+dEIhpsZ0gU3ZdUnRnfQh3OuwLQZNm/VrxJPF6w9fAcSYuKnz5CGlF0+r9GhTW50X3NPq9lEze1mi/eTbSeJENMXxRkSaYGlwipwNwqY1C0Gc7nKddWHVC6Nvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tQ5MH9mEysUW4bL432qsECcRaRrIC0mqKe8cZSnzaf0=;
+ b=GgOHdxHs25kztN4DE/KA+qJFNXeISLfqNliFi8g/xN1C7SHw+b5eqSgIVs5U4tRK1gx1Ukl1SJtw4SvKcJGx273rTy0XK3fTIyxRX2jbQiu3O9xEC4SeZb/ECe4Qjb7eQCgTQyIvmko7tiV+HveTf51ix8YxvvoYylM27oDAxIW4/BkjLqdKyApcAEtDzcnbf42rQjuh2y0lcHjTUwhgKOdUj0MgLWb7ZmjDERdBXqz0yIeslsOr6z2vd9moCmecoHWAcsXP/pi/48r2dxJr4cx3ESURyNkYLz3y9kc5MYqTo1j3cUydzEdTa33Qo9ZCFFeQui+P8d7UpEGT41NhKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tQ5MH9mEysUW4bL432qsECcRaRrIC0mqKe8cZSnzaf0=;
+ b=hucKS8iuMJbMIpEML8XcuAln7JcM8dQeaAVWJQj1H8u5XaGy+YXGti9s6lNfKQVT/Gs9PboWxtaO7W1NkN2snaSHVXsIIzwctcaa6ZFy61CKHER3qW4dJbLeNNpunQxqhRRijGCyZnEpoJPyMvosbkZ3r3OOVoyk1N7IuJUdJYU=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
+ VI1PR04MB4912.eurprd04.prod.outlook.com (20.177.50.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Thu, 24 Oct 2019 07:49:03 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::10f0:af2c:76ac:dfb%7]) with mapi id 15.20.2347.030; Thu, 24 Oct 2019
+ 07:49:03 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     "hch@lst.de" <hch@lst.de>
+CC:     Robin Murphy <robin.murphy@arm.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>
+Subject: Re: [RFC PATCH 1/3] dma-mapping: introduce a new dma api
+ dma_addr_to_phys_addr()
+Thread-Topic: [RFC PATCH 1/3] dma-mapping: introduce a new dma api
+ dma_addr_to_phys_addr()
+Thread-Index: AQHVig771lgo9fKx8UCeiOjKFT5WdadpauGA
+Date:   Thu, 24 Oct 2019 07:49:03 +0000
+Message-ID: <ebbf742e-4d1f-ba90-0ed8-93ea445d0200@nxp.com>
+References: <20191022125502.12495-1-laurentiu.tudor@nxp.com>
+ <20191022125502.12495-2-laurentiu.tudor@nxp.com>
+ <62561dca-cdd7-fe01-a0c3-7b5971c96e7e@arm.com>
+ <50a42575-02b2-c558-0609-90e2ad3f515b@nxp.com> <20191024020140.GA6057@lst.de>
+In-Reply-To: <20191024020140.GA6057@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 566b47aa-28e5-43f4-a5d4-08d75856a3c1
+x-ms-traffictypediagnostic: VI1PR04MB4912:|VI1PR04MB4912:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB49125CA14F9CC1B4326A0F68EC6A0@VI1PR04MB4912.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(39860400002)(346002)(366004)(52314003)(199004)(189003)(14454004)(6916009)(31696002)(71200400001)(6246003)(8936002)(71190400001)(76116006)(91956017)(4326008)(561944003)(229853002)(6512007)(1730700003)(81156014)(81166006)(66066001)(8676002)(6486002)(66556008)(5640700003)(64756008)(66446008)(478600001)(66476007)(66946007)(6436002)(316002)(6506007)(53546011)(2351001)(2906002)(54906003)(6116002)(186003)(3846002)(305945005)(7736002)(26005)(31686004)(25786009)(86362001)(76176011)(102836004)(99286004)(2616005)(2501003)(11346002)(446003)(44832011)(486006)(476003)(36756003)(5660300002)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4912;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fFvD6/irDk36MlUmhZiGirNVQX+1Fw8ol8y9qJ6zFLcYLW0ToTca3ATXxjtOJx+tXMqqrjrCAgnX6qMI1ynze0Zi2/BNFOr2TeEtRNTogUyx0qPInUn1aw5mdZ2lixCf5BA1fx1V2rD+BOh2dwlZXhmrv4/fG3YMPbHGKTBBuBOg2bnIxybi8EVhu13jEtVujd/iStieVagQstld4twNzB8rG/c8XALEqkbDSJhQM4fxBem7FUrqnwvlPhJZcRGQv6VCblMw+k7SFf8J1mOjyq2K8rFSqIUc+PMzTY0SjP1RH1nOn4Rb1/TSAUz4MK5KQcBwDpgKB8B3qXgTAPST+F1HY3g/HIGZf2Sc4EWvdB9ULsdVqvSvX527xbZQA4+dt4iGuK5Or/kP/ibCPDrvJdB1L7i91d8zEvImdS8G07yTfOV9oRxqebPcHrpk2T1J
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <975444B2A0E5ED48B1C92BF5D9BCD6C0@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 566b47aa-28e5-43f4-a5d4-08d75856a3c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 07:49:03.2174
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RJWJQ0W9lCl3zNMbuy+H80YzerbvQfd2U/uTC6I1gFdTF2N672LMrr1SFLEaMfty3LfCzgCyGBGU/bvetBMIUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4912
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
-defines and support for SM8150 QMP UFS PHY.
-
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 120 ++++++++++++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.h |  96 ++++++++++++++++++++++
- 2 files changed, 216 insertions(+)
-
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 39e8deb8001e..091e20303a14 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -165,6 +165,11 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
- 	[QPHY_PCS_READY_STATUS]		= 0x160,
- };
- 
-+static const unsigned int sm8150_ufsphy_regs_layout[] = {
-+	[QPHY_START_CTRL]		= 0x00,
-+	[QPHY_PCS_READY_STATUS]		= 0x180,
-+};
-+
- static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
- 	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
-@@ -879,6 +884,93 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
- };
- 
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x11),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP_EN, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_MAP, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_IVCO, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_INITVAL2, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL, 0x11),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE0, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE0, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE0, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE0, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE0, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE0, 0x0c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0xac),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE1, 0x98),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE1, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE1, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE1, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE1, 0x32),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE1, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0xdd),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x23),
-+
-+	/* Rate B */
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_MAP, 0x06),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_tx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_2_DIVIDER_BAND0_1, 0x03),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_3_DIVIDER_BAND0_1, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_4_DIVIDER_BAND0_1, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_LANE_MODE_1, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_TRAN_DRVR_EMP_EN, 0x0c),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_rx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_LVL, 0x24),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_CNTRL, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_BAND, 0x18),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CONTROLS, 0xf1),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CTRL2, 0x80),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FO_GAIN, 0x0c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_GAIN, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_TERM_BW, 0x1b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4, 0x1d),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_MEASURE_TIME, 0x10),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW, 0xc0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_LOW, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH2, 0xf6),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH3, 0x3b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH4, 0x3d),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_LOW, 0xe0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH2, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH3, 0x3b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH4, 0xb1),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_LOW, 0xe0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH2, 0xc8),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH3, 0x3b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH4, 0xb1),
-+
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_ufsphy_pcs_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V4_RX_SIGDET_CTRL2, 0x6d),
-+	QMP_PHY_INIT_CFG(QPHY_V4_TX_LARGE_AMP_DRV_LVL, 0x0a),
-+	QMP_PHY_INIT_CFG(QPHY_V4_TX_SMALL_AMP_DRV_LVL, 0x02),
-+	QMP_PHY_INIT_CFG(QPHY_V4_TX_MID_TERM_CTRL1, 0x43),
-+	QMP_PHY_INIT_CFG(QPHY_V4_DEBUG_BUS_CLKSEL, 0x1f),
-+	QMP_PHY_INIT_CFG(QPHY_V4_RX_MIN_HIBERN8_TIME, 0xff),
-+	QMP_PHY_INIT_CFG(QPHY_V4_MULTI_LANE_CTRL1, 0x02),
-+};
- 
- /* struct qmp_phy_cfg - per-PHY initialization config */
- struct qmp_phy_cfg {
-@@ -1276,6 +1368,31 @@ static const struct qmp_phy_cfg msm8998_usb3phy_cfg = {
- 	.is_dual_lane_phy       = true,
- };
- 
-+static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
-+	.type			= PHY_TYPE_UFS,
-+	.nlanes			= 2,
-+
-+	.serdes_tbl		= sm8150_ufsphy_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_serdes_tbl),
-+	.tx_tbl			= sm8150_ufsphy_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_tx_tbl),
-+	.rx_tbl			= sm8150_ufsphy_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_rx_tbl),
-+	.pcs_tbl		= sm8150_ufsphy_pcs_tbl,
-+	.pcs_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_pcs_tbl),
-+	.clk_list		= sdm845_ufs_phy_clk_l,
-+	.num_clks		= ARRAY_SIZE(sdm845_ufs_phy_clk_l),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.regs			= sm8150_ufsphy_regs_layout,
-+
-+	.start_ctrl		= SERDES_START,
-+	.pwrdn_ctrl		= SW_PWRDN,
-+
-+	.is_dual_lane_phy	= true,
-+	.no_pcs_sw_reset	= true,
-+};
-+
- static void qcom_qmp_phy_configure(void __iomem *base,
- 				   const unsigned int *regs,
- 				   const struct qmp_phy_init_tbl tbl[],
-@@ -1998,6 +2115,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,msm8998-qmp-usb3-phy",
- 		.data = &msm8998_usb3phy_cfg,
-+	}, {
-+		.compatible = "qcom,sm8150-qmp-ufs-phy",
-+		.data = &sm8150_ufsphy_cfg,
- 	},
- 	{ },
- };
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-index 335ea5d7ef40..ab6ff9b45a32 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-@@ -313,4 +313,100 @@
- #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
- #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
- 
-+/* Only for QMP V4 PHY - QSERDES COM registers */
-+#define QSERDES_V4_COM_PLL_IVCO				0x058
-+#define QSERDES_V4_COM_CMN_IPTRIM			0x060
-+#define QSERDES_V4_COM_CP_CTRL_MODE0			0x074
-+#define QSERDES_V4_COM_CP_CTRL_MODE1			0x078
-+#define QSERDES_V4_COM_PLL_RCTRL_MODE0			0x07c
-+#define QSERDES_V4_COM_PLL_RCTRL_MODE1			0x080
-+#define QSERDES_V4_COM_PLL_CCTRL_MODE0			0x084
-+#define QSERDES_V4_COM_PLL_CCTRL_MODE1			0x088
-+#define QSERDES_V4_COM_SYSCLK_EN_SEL			0x094
-+#define QSERDES_V4_COM_LOCK_CMP_EN			0x0a4
-+#define QSERDES_V4_COM_LOCK_CMP1_MODE0			0x0ac
-+#define QSERDES_V4_COM_LOCK_CMP2_MODE0			0x0b0
-+#define QSERDES_V4_COM_LOCK_CMP1_MODE1			0x0b4
-+#define QSERDES_V4_COM_DEC_START_MODE0			0x0bc
-+#define QSERDES_V4_COM_LOCK_CMP2_MODE1			0x0b8
-+#define QSERDES_V4_COM_DEC_START_MODE1			0x0c4
-+#define QSERDES_V4_COM_VCO_TUNE_MAP			0x10c
-+#define QSERDES_V4_COM_VCO_TUNE_INITVAL2		0x124
-+#define QSERDES_V4_COM_HSCLK_SEL			0x158
-+#define QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL		0x15c
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0	0x1ac
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0	0x1b0
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1	0x1b4
-+#define QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL		0x1bc
-+#define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1	0x1b8
-+
-+/* Only for QMP V4 PHY - TX registers */
-+#define QSERDES_V4_TX_LANE_MODE_1			0x84
-+#define QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1	0xd8
-+#define QSERDES_V4_TX_PWM_GEAR_2_DIVIDER_BAND0_1	0xdC
-+#define QSERDES_V4_TX_PWM_GEAR_3_DIVIDER_BAND0_1	0xe0
-+#define QSERDES_V4_TX_PWM_GEAR_4_DIVIDER_BAND0_1	0xe4
-+#define QSERDES_V4_TX_TRAN_DRVR_EMP_EN			0xb8
-+
-+/* Only for QMP V4 PHY - RX registers */
-+#define QSERDES_V4_RX_UCDR_FO_GAIN			0x008
-+#define QSERDES_V4_RX_UCDR_SO_GAIN			0x014
-+#define QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN		0x030
-+#define QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE	0x034
-+#define QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW		0x03c
-+#define QSERDES_V4_RX_UCDR_PI_CONTROLS			0x044
-+#define QSERDES_V4_RX_UCDR_PI_CTRL2			0x048
-+#define QSERDES_V4_RX_AC_JTAG_ENABLE			0x068
-+#define QSERDES_V4_RX_AC_JTAG_MODE			0x078
-+#define QSERDES_V4_RX_RX_TERM_BW			0x080
-+#define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2		0x0ec
-+#define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3		0x0f0
-+#define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4		0x0f4
-+#define QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW		0x0f8
-+#define QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH		0x0fc
-+#define QSERDES_V4_RX_RX_IDAC_MEASURE_TIME		0x100
-+#define QSERDES_V4_RX_RX_OFFSET_ADAPTOR_CNTRL2		0x114
-+#define QSERDES_V4_RX_SIGDET_CNTRL			0x11c
-+#define QSERDES_V4_RX_SIGDET_LVL			0x120
-+#define QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL		0x124
-+#define QSERDES_V4_RX_RX_BAND				0x128
-+#define QSERDES_V4_RX_RX_MODE_00_LOW			0x170
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH			0x174
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH2			0x178
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH3			0x17c
-+#define QSERDES_V4_RX_RX_MODE_00_HIGH4			0x180
-+#define QSERDES_V4_RX_RX_MODE_01_LOW			0x184
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH			0x188
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH2			0x18c
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH3			0x190
-+#define QSERDES_V4_RX_RX_MODE_01_HIGH4			0x194
-+#define QSERDES_V4_RX_RX_MODE_10_LOW			0x198
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH			0x19c
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH2			0x1a0
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH3			0x1a4
-+#define QSERDES_V4_RX_RX_MODE_10_HIGH4			0x1a8
-+#define QSERDES_V4_RX_DCC_CTRL1				0x1bc
-+
-+/* Only for QMP V4 PHY - PCS registers */
-+#define QPHY_V4_PHY_START				0x000
-+#define QPHY_V4_POWER_DOWN_CONTROL			0x004
-+#define QPHY_V4_SW_RESET				0x008
-+#define QPHY_V4_TIMER_20US_CORECLK_STEPS_MSB		0x00c
-+#define QPHY_V4_TIMER_20US_CORECLK_STEPS_LSB		0x010
-+#define QPHY_V4_PLL_CNTL				0x02c
-+#define QPHY_V4_TX_LARGE_AMP_DRV_LVL			0x030
-+#define QPHY_V4_TX_SMALL_AMP_DRV_LVL			0x038
-+#define QPHY_V4_BIST_FIXED_PAT_CTRL			0x060
-+#define QPHY_V4_TX_HSGEAR_CAPABILITY			0x074
-+#define QPHY_V4_RX_HSGEAR_CAPABILITY			0x0b4
-+#define QPHY_V4_DEBUG_BUS_CLKSEL			0x124
-+#define QPHY_V4_LINECFG_DISABLE				0x148
-+#define QPHY_V4_RX_MIN_HIBERN8_TIME			0x150
-+#define QPHY_V4_RX_SIGDET_CTRL2				0x158
-+#define QPHY_V4_TX_PWM_GEAR_BAND			0x160
-+#define QPHY_V4_TX_HS_GEAR_BAND				0x168
-+#define QPHY_V4_PCS_READY_STATUS			0x180
-+#define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
-+#define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
-+
- #endif
--- 
-2.20.1
-
+DQoNCk9uIDI0LjEwLjIwMTkgMDU6MDEsIGhjaEBsc3QuZGUgd3JvdGU6DQo+IE9uIFdlZCwgT2N0
+IDIzLCAyMDE5IGF0IDExOjUzOjQxQU0gKzAwMDAsIExhdXJlbnRpdSBUdWRvciB3cm90ZToNCj4+
+IFdlIGhhZCBhbiBpbnRlcm5hbCBkaXNjdXNzaW9uIG92ZXIgdGhlc2UgcG9pbnRzIHlvdSBhcmUg
+cmFpc2luZyBhbmQNCj4+IE1hZGFsaW4gKGNjLWVkKSBjYW1lIHVwIHdpdGggYW5vdGhlciBpZGVh
+OiBpbnN0ZWFkIG9mIGFkZGluZyB0aGlzIHByb25lDQo+PiB0byBtaXN1c2UgYXBpIGhvdyBhYm91
+dCBleHBlcmltZW50aW5nIHdpdGggYSBuZXcgZG1hIHVubWFwIGFuZCBkbWEgc3luYw0KPj4gdmFy
+aWFudHMgdGhhdCB3b3VsZCByZXR1cm4gdGhlIHBoeXNpY2FsIGFkZHJlc3MgYnkgY2FsbGluZyB0
+aGUgbmV3bHkNCj4+IGludHJvZHVjZWQgZG1hIG1hcCBvcC4gU29tZXRoaW5nIGFsb25nIHRoZXNl
+IGxpbmVzOg0KPj4gICAgKiBwaHlzX2FkZHJfdCBkbWFfdW5tYXBfcGFnZV9yZXRfcGh5cyguLi4p
+DQo+PiAgICAqIHBoeXNfYWRkcl90IGRtYV91bm1hcF9zaW5nbGVfcmV0X3BoeXMoLi4uKQ0KPj4g
+ICAgKiBwaHlzX2FkZHJfdCBkbWFfc3luY19zaW5nbGVfZm9yX2NwdV9yZXRfcGh5cyguLi4pDQo+
+PiBJJ20gdGhpbmtpbmcgdGhhdCB0aGlzIHByb3Bvc2FsIHNob3VsZCByZWR1Y2UgdGhlIHJpc2tz
+IG9wZW5lZCBieSB0aGUNCj4+IGluaXRpYWwgdmFyaWFudC4NCj4+IFBsZWFzZSBsZXQgbWUga25v
+dyB3aGF0IHlvdSB0aGluay4NCj4gDQo+IEknbSBub3Qgc3VyZSB3aGF0IHRoZSByZXQgaXMgc3Vw
+cG9zZWQgdG8gbWVhbiwgYnV0IEkgZ2VuZXJhbGx5IGxpa2UNCj4gdGhhdCBpZGVhIGJldHRlci4g
+IA0KDQpJdCB3YXMgc3VwcG9zZWQgdG8gYmUgc2hvcnQgZm9yICJyZXR1cm4iIGJ1dCBnaXZlbiB0
+aGF0IEknbSBub3QgZ29vZCBhdCANCm5hbWluZyBzdHVmZiBJJ2xsIGp1c3QgZHJvcCBpdC4NCg0K
+PiBXZSBhbHNvIG5lZWQgdG8gbWFrZSBzdXJlIHRoZXJlIGlzIGFuIGVhc3kgd2F5DQo+IHRvIGZp
+Z3VyZSBvdXQgaWYgdGhlc2UgQVBJcyBhcmUgYXZhaWxhYmxlLCBhcyB0aGV5IGdlbmVyYWxseSBh
+cmVuJ3QNCj4gZm9yIGFueSBub24tSU9NTVUgQVBJIElPTU1VIGRyaXZlcnMuDQoNCkkgd2FzIHJl
+YWxseSBob3BpbmcgdG8gbWFuYWdlIG1ha2luZyB0aGVtIGFzIGdlbmVyaWMgYXMgcG9zc2libGUg
+YnV0IA0KYW55d2F5LCBJJ2xsIHN0YXJ0IHdvcmtpbmcgb24gYSBQb0MgYW5kIHNlZSBob3cgaXQg
+dHVybnMgb3V0LiBUaGlzIHdpbGwgDQpwcm9iYWJseSBoYXBwZW4gc29tZXRpbWUgbmV4dCBuZXh0
+IHdlZWsgYXMgdGhlIGZvbGxvd2luZyB3ZWVrIEknbGwgYmUgDQp0cmF2ZWxpbmcgdG8gYSBjb25m
+ZXJlbmNlLg0KDQotLS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1
