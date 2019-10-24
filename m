@@ -2,208 +2,246 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05E8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B03CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D5321929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE25221928
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L9YrzbzJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUSnFExk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbfJXVAf (ORCPT
+        id S1728903AbfJXVCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:00:35 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57443 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728843AbfJXVAf (ORCPT
+        Thu, 24 Oct 2019 17:02:46 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55702 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfJXVCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571950833;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GgY+L++T6fpJSopTrMw0dsTEhyeu/WpiaitEu4tmWhw=;
-        b=L9YrzbzJhrgcvdali+72T7UI0QY7923kSZwlmNd+Yvxqi7tGenbJdsIKZsEMSuhrp2ntN1
-        aLTgI3aIvqSc4VRu+nDfSyKjMe3XazmeWqED7NNwenSwiy4IBLEPqQ9DWhbFwhCrNpxiz9
-        zywik8YF7Y3Pdw2kb1+dZVz4pMTXnrg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-qDsje3gUNTiPfjVo7yiuHA-1; Thu, 24 Oct 2019 17:00:29 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA51880183E;
-        Thu, 24 Oct 2019 21:00:27 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F67D6012E;
-        Thu, 24 Oct 2019 21:00:13 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 17:00:10 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 20/21] audit: add capcontid to set contid
- outside init_user_ns
-Message-ID: <20191024210010.owwgc3bqbvtdsqws@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <214163d11a75126f610bcedfad67a4d89575dc77.1568834525.git.rgb@redhat.com>
- <20191019013904.uevmrzbmztsbhpnh@madcap2.tricolour.ca>
- <CAHC9VhRPygA=LsHLUqv+K=ouAiPFJ6fb2_As=OT-_zB7kGc_aQ@mail.gmail.com>
- <20191021213824.6zti5ndxu7sqs772@madcap2.tricolour.ca>
- <CAHC9VhRdNXsY4neJpSoNyJoAVEoiEc2oW5kSscF99tjmoQAxFA@mail.gmail.com>
- <20191021235734.mgcjotdqoe73e4ha@madcap2.tricolour.ca>
- <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
+        Thu, 24 Oct 2019 17:02:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g24so4304413wmh.5;
+        Thu, 24 Oct 2019 14:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4aaqqb8YAfEVIim4bL+IVR5t1H8LDPcY2mjMsspokUw=;
+        b=GUSnFExkql3TQkUBz5Egd4rqGwiwfMoiatOHhJCrNZ3rtBL1jagnNhdUL/gpRYAaJ4
+         hGlyWUw/162oWoPT04Z6PH3YJd0WnoX/m6jk3oRh+ReOLnLl2SvsXtxXd+mS4R8blw+Q
+         KJJXsHeGw7IJUHGe1/N08YOPwHVBtIPJ44bwtEeAob0UODrMwvq6KZPLA74jCMWBEFxl
+         C9eub+FV8BgkCcYfu/kK+cuv58JRSDd6ve1QosNljsak/9MWt5yQ+XM3LUe5TMHAcpAa
+         B10F76P0DZ+23vPCz0jAeSpOkipz0gU1EFQrshBxypzckT8XQRpF8DCWidYnUMuVwAHN
+         e1AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4aaqqb8YAfEVIim4bL+IVR5t1H8LDPcY2mjMsspokUw=;
+        b=BGIkqncpAsQ30V7orh24hpNb10FxhnDFsnAqq1STGTtuqs2hIRzbXsFiaI1q9CZrAB
+         GzKgnQzLXbHEj353evz62VY1fsbT61arKSbG5b9R1O7wmftR+ZQsCCmgpZlR2Cst1Hso
+         x6lZOoWHiAoECiYxQ04fWQKh8aSnYoTiddYTspfqNA5LiOayECiDhTS5iECX+oqXNCG8
+         O9xGYSKO/ub7I9M1s8c06dNdHKaEG4+gfkvDjbZwT09eXOhdLtTMxilSdki34lhKYPPb
+         ZV0M0XrIFediu2zmfY4pwJhxjzDugxA6hJ7F6OQgYI7RDSUKwlR7D78zd7AVVrwq3LXh
+         si3Q==
+X-Gm-Message-State: APjAAAWnE0psIEGlzR4ih9koPDA4rcebEP7dhjiWcMs/3emCy9BGhnWU
+        jVhkw9pWYgFo/UfFMQe4wdFcGZqC
+X-Google-Smtp-Source: APXvYqyT69Wz/5qvqJ5BjNxyWNDSTMogbR3Yn37Dd51VlEsyM9CQQa8Cazg0LoWqfLnXffxApy35Vg==
+X-Received: by 2002:a1c:a848:: with SMTP id r69mr254343wme.83.1571950962650;
+        Thu, 24 Oct 2019 14:02:42 -0700 (PDT)
+Received: from [192.168.1.19] (chm166.neoplus.adsl.tpnet.pl. [83.31.10.166])
+        by smtp.gmail.com with ESMTPSA id f204sm2944227wmf.32.2019.10.24.14.02.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 14:02:42 -0700 (PDT)
+Subject: Re: [PATCH v14 13/19] leds: lp55xx: Add multicolor framework support
+ to lp55xx
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191018122521.6757-1-dmurphy@ti.com>
+ <20191018122521.6757-14-dmurphy@ti.com>
+ <a24832d9-1c3d-b3ea-4326-2ef4937d5a59@gmail.com>
+ <44796209-104e-66f1-e1e0-2f3dfe3d7cd7@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0bdb9d2c-601f-9b5e-5ca2-6bd97ffacde5@gmail.com>
+Date:   Thu, 24 Oct 2019 23:02:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhSiwnY-+2awxvGeO4a0NgfVkOPd8fzzBVujp=HtjskTuQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: qDsje3gUNTiPfjVo7yiuHA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <44796209-104e-66f1-e1e0-2f3dfe3d7cd7@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-21 20:31, Paul Moore wrote:
-> On Mon, Oct 21, 2019 at 7:58 PM Richard Guy Briggs <rgb@redhat.com> wrote=
-:
-> > On 2019-10-21 17:43, Paul Moore wrote:
-> > > On Mon, Oct 21, 2019 at 5:38 PM Richard Guy Briggs <rgb@redhat.com> w=
-rote:
-> > > > On 2019-10-21 15:53, Paul Moore wrote:
-> > > > > On Fri, Oct 18, 2019 at 9:39 PM Richard Guy Briggs <rgb@redhat.co=
-m> wrote:
-> > > > > > On 2019-09-18 21:22, Richard Guy Briggs wrote:
-> > > > > > > Provide a mechanism similar to CAP_AUDIT_CONTROL to explicitl=
-y give a
-> > > > > > > process in a non-init user namespace the capability to set au=
-dit
-> > > > > > > container identifiers.
-> > > > > > >
-> > > > > > > Use audit netlink message types AUDIT_GET_CAPCONTID 1027 and
-> > > > > > > AUDIT_SET_CAPCONTID 1028.  The message format includes the da=
-ta
-> > > > > > > structure:
-> > > > > > > struct audit_capcontid_status {
-> > > > > > >         pid_t   pid;
-> > > > > > >         u32     enable;
-> > > > > > > };
-> > > > > >
-> > > > > > Paul, can I get a review of the general idea here to see if you=
-'re ok
-> > > > > > with this way of effectively extending CAP_AUDIT_CONTROL for th=
-e sake of
-> > > > > > setting contid from beyond the init user namespace where capabl=
-e() can't
-> > > > > > reach and ns_capable() is meaningless for these purposes?
-> > > > >
-> > > > > I think my previous comment about having both the procfs and netl=
-ink
-> > > > > interfaces apply here.  I don't see why we need two different API=
-s at
-> > > > > the start; explain to me why procfs isn't sufficient.  If the arg=
-ument
-> > > > > is simply the desire to avoid mounting procfs in the container, h=
-ow
-> > > > > many container orchestrators can function today without a valid /=
-proc?
-> > > >
-> > > > Ok, sorry, I meant to address that question from a previous patch
-> > > > comment at the same time.
-> > > >
-> > > > It was raised by Eric Biederman that the proc filesystem interface =
-for
-> > > > audit had its limitations and he had suggested an audit netlink
-> > > > interface made more sense.
-> > >
-> > > I'm sure you've got it handy, so I'm going to be lazy and ask: archiv=
-e
-> > > pointer to Eric's comments?  Just a heads-up, I'm really *not* a fan
-> > > of using the netlink interface for this, so unless Eric presents a
-> > > super compelling reason for why we shouldn't use procfs I'm inclined
-> > > to stick with /proc.
-> >
-> > It was actually a video call with Eric and Steve where that was
-> > recommended, so I can't provide you with any first-hand communication
-> > about it.  I'll get more details...
->=20
-> Yeah, that sort of information really needs to be on the list.
+Dan,
 
-Here's the note I had from that meeting:
+On 10/23/19 2:22 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 10/18/19 4:48 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 10/18/19 2:25 PM, Dan Murphy wrote:
+>>> Add multicolor framework support for the lp55xx family.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>   drivers/leds/Kconfig                      |   1 +
+>>>   drivers/leds/leds-lp55xx-common.c         | 185 +++++++++++++++++++---
+>>>   drivers/leds/leds-lp55xx-common.h         |   9 ++
+>>>   include/linux/platform_data/leds-lp55xx.h |   7 +
+>>>   4 files changed, 179 insertions(+), 23 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>> index fb614a6b9afa..5706bf8d8bd1 100644
+>>> --- a/drivers/leds/Kconfig
+>>> +++ b/drivers/leds/Kconfig
+>>> @@ -377,6 +377,7 @@ config LEDS_LP50XX
+>>>   config LEDS_LP55XX_COMMON
+>>>       tristate "Common Driver for TI/National
+>>> LP5521/5523/55231/5562/8501"
+>>>       depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 ||
+>>> LEDS_LP8501
+>>> +    depends on OF
+>>>       select FW_LOADER
+>>>       select FW_LOADER_USER_HELPER
+>>>       help
+>>> diff --git a/drivers/leds/leds-lp55xx-common.c
+>>> b/drivers/leds/leds-lp55xx-common.c
+>>> index 882ef39e4965..197b87ca5ca2 100644
+>>> --- a/drivers/leds/leds-lp55xx-common.c
+>>> +++ b/drivers/leds/leds-lp55xx-common.c
+>>> @@ -131,14 +131,62 @@ static struct attribute *lp55xx_led_attrs[] = {
+>>>   };
+>>>   ATTRIBUTE_GROUPS(lp55xx_led);
+>>>   +#if IS_ENABLED(CONFIG_LEDS_CLASS_MULTI_COLOR)
+>>> +static int lp55xx_map_channel(struct lp55xx_led *led, int color_id,
+>>> +                  enum led_brightness brightness)
+>> If you changed the type of the first parameter to
+>> struct led_mc_color_conversion* then you could make this function local
+>> in LED mc class and call it in led_mc_calc_color_components() after
+>> calculating brightness components.
+> 
+> I prefer to leave this here and if this code is ever integrated we can
+> see if there is a common need for the MC class to expose a mapping API.
+> 
+>>
+>>> +{
+>>> +    int i;
+>>> +
+>>> +    for (i = 0; i < led->mc_cdev.num_leds; i++) {
+>>> +        if (led->color_components[i].color_id == color_id) {
+>>> +            led->color_components[i].brightness = brightness;
+>>> +            return 0;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    return -EINVAL;
+>>> +}
+>>> +#endif
+>>> +
+>>> +static int lp55xx_set_mc_brightness(struct lp55xx_led *led,
+>>> +                    struct lp55xx_device_config *cfg,
+>>> +                     enum led_brightness brightness)
+>>> +{
+>>> +    int ret = -EINVAL;
+>>> +#if IS_ENABLED(CONFIG_LEDS_CLASS_MULTI_COLOR)
+>>> +    struct led_mc_color_conversion
+>>> color_components[LP55XX_MAX_GROUPED_CHAN];
+>> You wouldn't need this local variable then.
+> 
+>>> +    int i;
+>>> +
+>>> +    if (!cfg->multicolor_brightness_fn)
+>>> +        return -EINVAL;
+>>> +
+>>> +    led_mc_calc_color_components(&led->mc_cdev, brightness,
+>>> +                     color_components);
+>> Because you could pass what you already have in the struct lp55xx_led:
+>>
+>> led_mc_calc_color_components(&led->mc_cdev, brightness,
+>>                               led->color_components);
+> 
+> Well that is not entirely accurate the led->color_components is the data
+> that we have from the DT that should not be changed. Passing this into
+> the MC calc function would mean that the framework would have to map the
+> output to the color_id.  As I indicated above for now I don't think the
+> MC class should do any mapping of color_id to the output.
 
-- Eric raised the issue that using /proc is likely to get more and more
-  hoary due to mount namespaces and suggested that we use a netlink
-audit message (or a new syscall) to set the audit container identifier
-and since the loginuid is a similar type of operation, that it should be
-migrated over to a similar mechanism to get it away from /proc.  Get
-could be done with a netlink audit message that triggers an audit log
-message to deliver the information.  I'm reluctant to further pollute
-the syscall space if we can find another method.  The netlink audit
-message makes sense since any audit-enabled service is likely to already
-have an audit socket open.
+I proposed to use color_components because it is already there
+and has required data in place. You could always copy
+that data to some other local structure but it would be unnecessary
+overhead.
 
-I don't have more detailed notes about what Eric said specifically.
+Anyway, all what I proposed here are just nice-to-have details,
+that can be covered in the future.
 
-> > So, with that out of the way, could you please comment on the general
-> > idea of what was intended to be the central idea of this mechanism to b=
-e
-> > able to nest containers beyond the initial user namespace (knowing that
-> > a /proc interface is available and the audit netlink interface isn't
-> > necessary for it to work and the latter can be easily removed)?
->=20
-> I'm not entirely clear what you are asking about, are you asking why I
-> care about nesting container orchestrators?  Simply put, it is not
-> uncommon for the LXC/LXD folks to see nested container orchestrators,
-> so I felt it was important to support that use case.  When we
-> originally started this effort we probably should have done a better
-> job reaching out to the LXC/LXD folks, we may have caught this
-> earlier.  Regardless, we caught it, and it looks like we are on our
-> way to supporting it (that's good).
->=20
-> Are you asking why I prefer the procfs approach to setting/getting the
-> audit container ID?  For one, it makes it easier for a LSM to enforce
-> the audit container ID operations independent of the other audit
-> control APIs.  It also provides a simpler interface for container
-> orchestrators.  Both seem like desirable traits as far as I'm
-> concerned.
->=20
-> > > > The intent was to switch to the audit netlink interface for contid,
-> > > > capcontid and to add the audit netlink interface for loginuid and
-> > > > sessionid while deprecating the proc interface for loginuid and
-> > > > sessionid.  This was alluded to in the cover letter, but not very c=
-lear,
-> > > > I'm afraid.  I have patches to remove the contid and loginuid/sessi=
-onid
-> > > > interfaces in another tree which is why I had forgotten to outline =
-that
-> > > > plan more explicitly in the cover letter.
->=20
-> --=20
-> paul moore
-> www.paul-moore.com
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+-- 
+Best regards,
+Jacek Anaszewski
