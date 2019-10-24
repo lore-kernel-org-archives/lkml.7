@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D0ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F33CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E792084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DDC2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FRnJsusz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H0V1Hbvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392384AbfJXB2v (ORCPT
+        id S2392553AbfJXBaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 21:28:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54770 "EHLO
+        Wed, 23 Oct 2019 21:30:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54802 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbfJXB2v (ORCPT
+        with ESMTP id S1726925AbfJXBaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 21:28:51 -0400
+        Wed, 23 Oct 2019 21:30:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jD3ajuwfKZdk4JSIR8vGZp1pzv/W899TJw8TAPz4bwc=; b=FRnJsusz6bSIUrtKJ6Rs+PrZV
-        Rc9FtFgXZBhIBEkKenmtYBEcir5YrbubUFQYHHfE9g3/FDpXB9kOL6/1Qi8+G01C/rQSE9aNme4yY
-        MMUmUSJI9YGor3UtogZ2VQcLoi4/y5H1P5oNsd1xDjt91IesmvUN7ADATTlrxwp1MnQEiafDwsv/F
-        LNFly8yS18xzdzOqDRwRCYir98guFp+/o/79TgnadysBMIB1udT59a6QXxt800zUNNA2746hL0T3H
-        zlkrcgr/f2f6i3eHFi9uPvDkQD/xlBuvSX6NWogmJNaCUZQqy6hFOUK7QAqJowy+BBJYut9znFEQU
-        jrUOn0UQA==;
+         bh=4Z7ZCJGwnZqvSqKFTwP6utocG5I1evhvOjHrEG4uqfs=; b=H0V1HbvolB8u0MRm0bkksA4ZF
+        xR7OaEFPqYFcLmJKQfLuS2eetOR0oSHm2bGbaEkcK2Hlff5GOxeZDSDuUpiQ1Xpz8isL50Tu+nZqJ
+        XpyTOeR6aMq61FfG+FqKZ+MlncyrxaS9HyvIxAuDhl+jM3OUudVrGilEYuDOgcq/+phYKgEOw+KwB
+        UOG9vLIwNmnEmRBAZsRybNDYs2OP67bV+GRjRDezsDeDQRcWdgBqLfSFHhL0z99Fra694vCO7DiLe
+        dyNN6q1l1CCC4rulWz442mcrfts+nGkXXMPTYyKKizq8nHWAO6Co7MbE409oNTKf02Ypz0b7NQGHd
+        dA0KzLhfg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNRvl-0000AW-1o; Thu, 24 Oct 2019 01:28:49 +0000
-Date:   Wed, 23 Oct 2019 18:28:49 -0700
+        id 1iNRxD-0001Xn-Co; Thu, 24 Oct 2019 01:30:19 +0000
+Date:   Wed, 23 Oct 2019 18:30:19 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Omer Shpigelman <oshpigelman@habana.ai>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] habanalabs: support kernel memory mapping
-Message-ID: <20191024012849.GB32358@infradead.org>
-References: <20191022063028.9030-1-oshpigelman@habana.ai>
- <20191023092035.GA12222@infradead.org>
- <AM6PR0202MB3382B554A4C7F0F677A804D7B86B0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>, alan.mikhak@sifive.com,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] irqchip: Skip contexts other supervisor in plic_init()
+Message-ID: <20191024013019.GA675@infradead.org>
+References: <alpine.DEB.2.21.9999.1910231152580.16536@viisi.sifive.com>
+ <mhng-aefb3209-29c4-46db-8cf2-e12db46d9a6e@palmer-si-x1c4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM6PR0202MB3382B554A4C7F0F677A804D7B86B0@AM6PR0202MB3382.eurprd02.prod.outlook.com>
+In-Reply-To: <mhng-aefb3209-29c4-46db-8cf2-e12db46d9a6e@palmer-si-x1c4>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,9 +58,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 01:39:41PM +0000, Omer Shpigelman wrote:
-> I'm not sure I understand. Can you please pin point the problematic line?
+On Wed, Oct 23, 2019 at 03:07:10PM -0700, Palmer Dabbelt wrote:
+> > > +		/* skip contexts other than supervisor external interrupt */
+> > > +		if (parent.args[0] != IRQ_S_EXT)
+> > >  			continue;
+> > 
+> > Will this need to change for RISC-V M-mode Linux support?
+> > 
+> > https://lore.kernel.org/linux-riscv/20191017173743.5430-1-hch@lst.de/
+> 
+> Yes.
 
-Every line you touch addr field basically.  If you have a kernel
-address please store it in an actual C pointer type, not in a u64
-to ensure that the compiler can do proper type checking.
+For M-mode we'll want to check IRQ_M_EXT above.  So we should just
+merge this patch ASAP and then for my rebased M-mode series I'll
+fix the check to do that for the M-Mode case, which is much cleaner
+than my hack.
