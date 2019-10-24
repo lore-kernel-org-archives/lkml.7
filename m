@@ -2,298 +2,98 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65F7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F678CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5B420679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07AA20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="JTeq6/j9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406589AbfJXEVH (ORCPT
+        id S2406720AbfJXEeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 00:21:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62354 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbfJXEVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 00:21:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 21:21:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,223,1569308400"; 
-   d="scan'208";a="192060620"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by orsmga008.jf.intel.com with ESMTP; 23 Oct 2019 21:21:03 -0700
-Date:   Thu, 24 Oct 2019 12:21:55 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
-Message-ID: <20191024042155.GA21090@___>
-References: <20191022095230.2514-1-tiwei.bie@intel.com>
- <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
- <20191023030253.GA15401@___>
- <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
- <20191023070747.GA30533@___>
- <106834b5-dae5-82b2-0f97-16951709d075@redhat.com>
- <20191023101135.GA6367@___>
- <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 24 Oct 2019 00:34:44 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43917 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfJXEeo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 00:34:44 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t20so35884689qtr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 21:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=K52zhMqxC6yVYBZkde9mx251XL6jpmIx/bNnXAEuuVc=;
+        b=JTeq6/j9aKIMQfD8FP44xb0xiEDiaX/r/Asr+PmNFQStjb+noF8IPswVgPsUlH23Pf
+         20D259GfcqlKRe9KicirfQEIPpND7r9A02x6drUUTMlPDUfW94z4lFnsxmeru6nUWLl9
+         aLrQ5U97lNnGanbnE/KEMAkA8cj2opSkN6YEbpYe5kdPcxwNWo10+9puwHk0uLRVqMGQ
+         Wv2sHbfOtu7nJD/LmmD7C9Os61ee6qVv7loUQ1NWSlYiZsrFsEoGi/wI9jOsNa0BiYQ6
+         x/wEUWqiseSgrbUibTSwX6xs7R4jxbarZFp8OHM9WevMt2bknEctfgxUf1Rkb4nNUSfm
+         kMqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=K52zhMqxC6yVYBZkde9mx251XL6jpmIx/bNnXAEuuVc=;
+        b=MQDfs8WXe58bdNj7Ea+rZgtLypIJCUOROMUhrwQZD9YNo36Txk5ynNrc6Q4T6aFHUj
+         9IpUdj8MIz2pNGFEoT3okIZFe06x60y6ZwoNqsU6R4Koo7ODuUhE+oiMS/OUr2nme8iG
+         D8ypmjHPm8LcmvYHeHBUMLrWYT77VbKAMWKmJumKCTyLed3VS3R8cf0pP489QBEfef1U
+         BKe9TbAmW3BkIQYtHLO3pJvcv8mDrE75uwslQI6NByz9lLZmADXG8Yvjpcq4i4XBRBE0
+         jtsYGf0oyN/J2KINQqFHQxviveU2ETwSHzooBXASb4qrmvjJ1WBE3VjvVKzrb2mRVdWq
+         CzcQ==
+X-Gm-Message-State: APjAAAUJNX/+3CDdYoWsnkUWcWLHPyFA0pTI2Robp3etwR6+D7MbkF+z
+        kau6eB4JkSOWLJSaEiMXBLNgOA==
+X-Google-Smtp-Source: APXvYqyA5SwfEszriIyG6grRFtST4lt9blokF465jTDQhWJWxl+UIPmqkcc/xPIboZHr8ZYeXI0v7Q==
+X-Received: by 2002:ac8:45d0:: with SMTP id e16mr2144235qto.8.1571891683443;
+        Wed, 23 Oct 2019 21:34:43 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q8sm8754411qta.31.2019.10.23.21.34.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2019 21:34:42 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/vmstat: Reduce zone lock hold time when reading /proc/pagetypeinfo
+Date:   Thu, 24 Oct 2019 00:34:41 -0400
+Message-Id: <15BA6C88-21C1-4BF3-BB10-2A207AEBB401@lca.pw>
+References: <20191024033313.GA42124@shbuild999.sh.intel.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>
+In-Reply-To: <20191024033313.GA42124@shbuild999.sh.intel.com>
+To:     Feng Tang <feng.tang@intel.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 06:29:21PM +0800, Jason Wang wrote:
-> On 2019/10/23 下午6:11, Tiwei Bie wrote:
-> > On Wed, Oct 23, 2019 at 03:25:00PM +0800, Jason Wang wrote:
-> > > On 2019/10/23 下午3:07, Tiwei Bie wrote:
-> > > > On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
-> > > > > On 2019/10/23 上午11:02, Tiwei Bie wrote:
-> > > > > > On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
-> > > > > > > On 2019/10/22 下午5:52, Tiwei Bie wrote:
-> > > > > > > > This patch introduces a mdev based hardware vhost backend.
-> > > > > > > > This backend is built on top of the same abstraction used
-> > > > > > > > in virtio-mdev and provides a generic vhost interface for
-> > > > > > > > userspace to accelerate the virtio devices in guest.
-> > > > > > > > 
-> > > > > > > > This backend is implemented as a mdev device driver on top
-> > > > > > > > of the same mdev device ops used in virtio-mdev but using
-> > > > > > > > a different mdev class id, and it will register the device
-> > > > > > > > as a VFIO device for userspace to use. Userspace can setup
-> > > > > > > > the IOMMU with the existing VFIO container/group APIs and
-> > > > > > > > then get the device fd with the device name. After getting
-> > > > > > > > the device fd of this device, userspace can use vhost ioctls
-> > > > > > > > to setup the backend.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-> > > > > > > > ---
-> > > > > > > > This patch depends on below series:
-> > > > > > > > https://lkml.org/lkml/2019/10/17/286
-> > > > > > > > 
-> > > > > > > > v1 -> v2:
-> > > > > > > > - Replace _SET_STATE with _SET_STATUS (MST);
-> > > > > > > > - Check status bits at each step (MST);
-> > > > > > > > - Report the max ring size and max number of queues (MST);
-> > > > > > > > - Add missing MODULE_DEVICE_TABLE (Jason);
-> > > > > > > > - Only support the network backend w/o multiqueue for now;
-> > > > > > > Any idea on how to extend it to support devices other than net? I think we
-> > > > > > > want a generic API or an API that could be made generic in the future.
-> > > > > > > 
-> > > > > > > Do we want to e.g having a generic vhost mdev for all kinds of devices or
-> > > > > > > introducing e.g vhost-net-mdev and vhost-scsi-mdev?
-> > > > > > One possible way is to do what vhost-user does. I.e. Apart from
-> > > > > > the generic ring, features, ... related ioctls, we also introduce
-> > > > > > device specific ioctls when we need them. As vhost-mdev just needs
-> > > > > > to forward configs between parent and userspace and even won't
-> > > > > > cache any info when possible,
-> > > > > So it looks to me this is only possible if we expose e.g set_config and
-> > > > > get_config to userspace.
-> > > > The set_config and get_config interface isn't really everything
-> > > > of device specific settings. We also have ctrlq in virtio-net.
-> > > 
-> > > Yes, but it could be processed by the exist API. Isn't it? Just set ctrl vq
-> > > address and let parent to deal with that.
-> > I mean how to expose ctrlq related settings to userspace?
-> 
-> 
-> I think it works like:
-> 
-> 1) userspace find ctrl_vq is supported
-> 
-> 2) then it can allocate memory for ctrl vq and set its address through
-> vhost-mdev
-> 
-> 3) userspace can populate ctrl vq itself
 
-I see. That is to say, userspace e.g. QEMU will program the
-ctrl vq with the existing VHOST_*_VRING_* ioctls, and parent
-drivers should know that the addresses used in ctrl vq are
-host virtual addresses in vhost-mdev's case.
 
-> 
-> 
-> > 
-> > > 
-> > > > > > I think it might be better to do
-> > > > > > this in one generic vhost-mdev module.
-> > > > > Looking at definitions of VhostUserRequest in qemu, it mixed generic API
-> > > > > with device specific API. If we want go this ways (a generic vhost-mdev),
-> > > > > more questions needs to be answered:
-> > > > > 
-> > > > > 1) How could userspace know which type of vhost it would use? Do we need to
-> > > > > expose virtio subsystem device in for userspace this case?
-> > > > > 
-> > > > > 2) That generic vhost-mdev module still need to filter out unsupported
-> > > > > ioctls for a specific type. E.g if it probes a net device, it should refuse
-> > > > > API for other type. This in fact a vhost-mdev-net but just not modularize it
-> > > > > on top of vhost-mdev.
-> > > > > 
-> > > > > 
-> > > > > > > > - Some minor fixes and improvements;
-> > > > > > > > - Rebase on top of virtio-mdev series v4;
-> > > > [...]
-> > > > > > > > +
-> > > > > > > > +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __user *featurep)
-> > > > > > > > +{
-> > > > > > > > +	if (copy_to_user(featurep, &m->features, sizeof(m->features)))
-> > > > > > > > +		return -EFAULT;
-> > > > > > > As discussed in previous version do we need to filter out MQ feature here?
-> > > > > > I think it's more straightforward to let the parent drivers to
-> > > > > > filter out the unsupported features. Otherwise it would be tricky
-> > > > > > when we want to add more features in vhost-mdev module,
-> > > > > It's as simple as remove the feature from blacklist?
-> > > > It's not really that easy. It may break the old drivers.
-> > > 
-> > > I'm not sure I understand here, we do feature negotiation anyhow. For old
-> > > drivers do you mean the guest drivers without MQ?
-> > For old drivers I mean old parent drivers. It's possible
-> > to compile old drivers on new kernels.
-> 
-> 
-> Yes, but if old parent driver itself can not support MQ it should just not
-> advertise that feature.
-> 
-> 
-> > 
-> > I'm not quite sure how will we implement MQ support in
-> > vhost-mdev.
-> 
-> 
-> Yes, that's why I ask here. I think we want the vhost-mdev to be generic
-> which means it's better not let vhost-mdev to know anything which is device
-> specific. So this is a question that should be considered.
+> On Oct 23, 2019, at 11:33 PM, Feng Tang <feng.tang@intel.com> wrote:
+>=20
+> We have been using the /proc/pagetypeinfo for debugging, mainly for
+> client platforms like phones/tablets. We met problems like very slow
+> system response or OOM things, and many of them could be related with
+> memory pressure or fragmentation issues, where monitoring /proc/pagetypein=
+fo
+> will be very useful for debugging.
 
-+1
-
-> 
-> 
-> > If we need to introduce new virtio_mdev_device_ops
-> > callbacks and an old driver exposed the MQ feature,
-> > then the new vhost-mdev will see this old driver expose
-> > MQ feature but not provide corresponding callbacks.ean
-> 
-> 
-> That's exact the issue which current API can not handle, so that's why I
-> suggest to filter MQ out for vhost-mdev.
-> 
-> And in the future, we can:
-> 
-> 1) invent new ioctls and convert them to config access or
-> 
-> 2) just exposing config for userspace to access (then vhost-mdev work much
-> more similar to virtio-mdev).
-> 
-> 
-> > 
-> > > 
-> > > > > > i.e. if
-> > > > > > the parent drivers may expose unsupported features and relay on
-> > > > > > vhost-mdev to filter them out, these features will be exposed
-> > > > > > to userspace automatically when they are enabled in vhost-mdev
-> > > > > > in the future.
-> > > > > The issue is, it's only that vhost-mdev knows its own limitation. E.g in
-> > > > > this patch, vhost-mdev only implements a subset of transport API, but parent
-> > > > > doesn't know about that.
-> > > > > 
-> > > > > Still MQ as an example, there's no way (or no need) for parent to know that
-> > > > > vhost-mdev does not support MQ.
-> > > > The mdev is a MDEV_CLASS_ID_VHOST mdev device. When the parent
-> > > > is being developed, it should know the currently supported features
-> > > > of vhost-mdev.
-> > > 
-> > > How can parent know MQ is not supported by vhost-mdev?
-> > Good point. I agree vhost-mdev should filter out the unsupported
-> > features. But in the meantime, I think drivers also shouldn't
-> > expose unsupported features.
-> 
-> 
-> Exactly. But there's a case in the middle, e.g parent drivers support MQ and
-> virtio-mdev can do that but not vhost-mdev.
-
-As we have different mdev class IDs between virtio-mdev and
-vhost-mdev, maybe parent can leverage it to return different
-sets of supported features for virtio-mdev and vhost-mdev
-respectively.
-
-> 
-> 
-> > 
-> > > 
-> > > > > And this allows old kenrel to work with new
-> > > > > parent drivers.
-> > > > The new drivers should provide things like VIRTIO_MDEV_F_VERSION_1
-> > > > to be compatible with the old kernels. When VIRTIO_MDEV_F_VERSION_1
-> > > > is provided/negotiated, the behaviours should be consistent.
-> > > 
-> > > To be clear, I didn't mean a change in virtio-mdev API, I meant:
-> > > 
-> > > 1) old vhost-mdev kernel driver that filters out MQ
-> > > 
-> > > 2) new parent driver that support MQ
-> > > 
-> > > 
-> > > > > So basically we have three choices here:
-> > > > > 
-> > > > > 1) Implement what vhost-user did and implement a generic vhost-mdev (but may
-> > > > > still have lots of device specific code). To support advanced feature which
-> > > > > requires the access to config, still lots of API that needs to be added.
-> > > > > 
-> > > > > 2) Implement what vhost-kernel did, have a generic vhost-mdev driver and a
-> > > > > vhost bus on top for match a device specific API e.g vhost-mdev-net. We
-> > > > > still have device specific API but limit them only to device specific
-> > > > > module. Still require new ioctls for advanced feature like MQ.
-> > > > > 
-> > > > > 3) Simply expose all virtio-mdev transport to userspace.
-> > > > Currently, virtio-mdev transport is a set of function callbacks
-> > > > defined in kernel. How to simply expose virtio-mdev transport to
-> > > > userspace?
-> > > 
-> > > The most straightforward way is to have an 1:1 mapping between ioctl and
-> > > virito_mdev_device_ops.
-> > Seems we are already trying to do 1:1 mapping between ioctl
-> > and virtio_mdev_device_ops in vhost-mdev now (the major piece
-> > missing is get_device_id/get_config/set_config).
-> 
-> 
-> Yes, with this we can have a device independent API. Do you think this is
-> better?
-
-Yeah, I agree.
-
-Thanks,
-Tiwei
-
-> 
-> Thanks
-> 
-> 
-> > 
-> > 
-> > > Thanks
-> > > 
-> > > 
-> > > > 
-> > > > > A generic module
-> > > > > without any type specific code (like virtio-mdev). No need dedicated API for
-> > > > > e.g MQ. But then the API will look much different than current vhost did.
-> > > > > 
-> > > > > Consider the limitation of 1) I tend to choose 2 or 3. What's you opinion?
-> > > > > 
-> > > > > 
-> 
+This description of use case is rather vague. Which part of the information i=
+n that file is critical to debug an OOM or slow system that is not readily a=
+vailable in places like /proc/zoneinfo, /proc/buddyinfo, sysrq-m, or OOM tra=
+ce etc?=
