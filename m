@@ -4,68 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3550CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186BBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BECF420650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAEE320650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503270AbfJXPa7 (ORCPT
+        id S2503274AbfJXPbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:30:59 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:43628 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503043AbfJXP27 (ORCPT
+        Thu, 24 Oct 2019 11:31:35 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:37828 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503043AbfJXPbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:28:59 -0400
+        Thu, 24 Oct 2019 11:31:35 -0400
 Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id HTUx2100K5USYZQ06TUxvK; Thu, 24 Oct 2019 17:28:58 +0200
+        by andre.telenet-ops.be with bizsmtp
+        id HTXX210015USYZQ01TXXHk; Thu, 24 Oct 2019 17:31:33 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNf2n-00078T-LC; Thu, 24 Oct 2019 17:28:57 +0200
+        id 1iNf5G-00078z-UO; Thu, 24 Oct 2019 17:31:30 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNf2n-00081J-Jb; Thu, 24 Oct 2019 17:28:57 +0200
+        id 1iNf5G-000863-Ss; Thu, 24 Oct 2019 17:31:30 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Jiri Kosina <trivial@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial] watchdog: wdat_wdt: Spelling s/configrable/configurable/
-Date:   Thu, 24 Oct 2019 17:28:56 +0200
-Message-Id: <20191024152856.30788-1-geert+renesas@glider.be>
+Subject: [PATCH trivial] ASoC: pxa: poodle: Spelling s/enpoints/endpoints/, s/connetion/connection/
+Date:   Thu, 24 Oct 2019 17:31:30 +0200
+Message-Id: <20191024153130.31082-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix misspelling of "configurable".
+Fix misspelling of "endpoints" and "connection".
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/watchdog/wdat_wdt.c | 2 +-
+ sound/soc/pxa/poodle.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/wdat_wdt.c b/drivers/watchdog/wdat_wdt.c
-index e7cf41aa26c3bbfc..b069349b52f55f92 100644
---- a/drivers/watchdog/wdat_wdt.c
-+++ b/drivers/watchdog/wdat_wdt.c
-@@ -202,7 +202,7 @@ static int wdat_wdt_enable_reboot(struct wdat_wdt *wdat)
- 	 * WDAT specification says that the watchdog is required to reboot
- 	 * the system when it fires. However, it also states that it is
- 	 * recommeded to make it configurable through hardware register. We
--	 * enable reboot now if it is configrable, just in case.
-+	 * enable reboot now if it is configurable, just in case.
- 	 */
- 	ret = wdat_wdt_run_action(wdat, ACPI_WDAT_SET_REBOOT, 0, NULL);
- 	if (ret && ret != -EOPNOTSUPP) {
+diff --git a/sound/soc/pxa/poodle.c b/sound/soc/pxa/poodle.c
+index 48d5c2252b10081d..59ef04d0467a622d 100644
+--- a/sound/soc/pxa/poodle.c
++++ b/sound/soc/pxa/poodle.c
+@@ -56,7 +56,7 @@ static void poodle_ext_control(struct snd_soc_dapm_context *dapm)
+ 		snd_soc_dapm_disable_pin(dapm, "Headphone Jack");
+ 	}
+ 
+-	/* set the enpoints to their new connetion states */
++	/* set the endpoints to their new connection states */
+ 	if (poodle_spk_func == POODLE_SPK_ON)
+ 		snd_soc_dapm_enable_pin(dapm, "Ext Spk");
+ 	else
 -- 
 2.17.1
 
