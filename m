@@ -2,64 +2,63 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28896CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23049CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F213821929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7B021A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TyshMG/W"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uLf+lw77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732722AbfJXWwj (ORCPT
+        id S1732752AbfJXWwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:52:39 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:38422 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732602AbfJXWwa (ORCPT
+        Thu, 24 Oct 2019 18:52:41 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:43823 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732598AbfJXWw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:52:30 -0400
-Received: by mail-pf1-f201.google.com with SMTP id d126so340408pfd.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:30 -0700 (PDT)
+        Thu, 24 Oct 2019 18:52:28 -0400
+Received: by mail-ua1-f74.google.com with SMTP id b12so117780uan.10
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=hi8Cu8vAZVRE/aapAAyha6S0ojR+GJofj/wY0IAnOZ0=;
-        b=TyshMG/WpQRZO3yfd1Jd7A98WjzJgZlz5cgBusE72nESHGI4zkJTacl+id0OgkmE7h
-         AxB+37xlQQGbvIrPLJi6GGLKffKR50gyLvpF58DcjcVhAty/qStODXS2I8KW40lpQKKM
-         9wmdN/xJ2SVmeGa9TxRYExC5/DHlRCQ172Z/37iBv0lPikJlYqyLfQHNi9002+g83EcF
-         QnIjvisbAv9L9w1EDMmGJaW060fxbyUE3ijTJ/94kINWjZTBB+Ox25zv9w+isMZbiwl1
-         KW/zlOW4yuPxJVvvypFUcVHmJ7bcxVD/QaQo/xACVHNXgM04mDK3oI8qkDfcIz4+KeCX
-         PBJg==
+        bh=+uiLq+iUoKYbKnLFQDjwDIIzqGudQy8o1UFEOkmkrHU=;
+        b=uLf+lw77gVEoxfyZjVffG8N9AkGSFT6SZ7rKTY6igTbvtmj5tkgs6S87yKXapR9kBD
+         NfJzX9FsM1QPF/BRZh7tuTNd9Bft+wBmoGpSgAiFGgU/eFojwHMx3hY/jiQo5OXG88H+
+         n+2/sETYJSjx1UwcF1JDwNNf9o+ndIsqNQGNcfRmpV1CBEoxTmXgI879l/WxjZMkcbmb
+         kFXbiNvmWzULL9yr6G9yxYiRMJuYM6XDRrKUuDcJ0X91UFc9CGS/3Wg/GkwQsbD/KzdG
+         KcYEc9VsXZBk/vRUd/5xFUU2jMu6PAXVjvl8vJIQVZYzQ1oFFfyD8naEYVJQbR65Robs
+         mdBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=hi8Cu8vAZVRE/aapAAyha6S0ojR+GJofj/wY0IAnOZ0=;
-        b=U4us9grnLvHk+DDqqFNNmB2ZoZ1B42uvY24llsOeOtb3JKD6tZT55/OMwvwBvGjKsR
-         YIGOR/djJwtYZYxiFwzmcP4roG+DTnO5ylawP0IsnaJU1qQVNK0d4h8+wJICECKrlrtW
-         BKeURArN2OzYq+QMWRJQ/8lC457WgHns4EAB73FywdYO68GoABsNq3XZOF/EGx9X5jmS
-         a11ti+fXthxXfAOUHLYqLgc8LYgl6LjuQiCl3lHdw4gGVFWQ2B+kncquHziTkG6xBM+4
-         PzDNUBMry6yt4SZDXrg6fO2pKC34Mhx7ItBb5ZeJ7Skv1BAeRmtIdBeP7CJUl5zsnOjR
-         BcTw==
-X-Gm-Message-State: APjAAAXPkBOQJLUMUSzhF7f/HnhvBattBzVANk0OLbFb+6V5WZFhHke+
-        A98URLkITC057mxdEVzPPs32JjmMw8Y5wYaX+XE=
-X-Google-Smtp-Source: APXvYqzPFNEl9K3cGuhwxqWJUP7eMbcPYG43NyYUFqf8p2L94x9ufyqifykLbDRReVEDkpgIxS1uIAG4CEwVu64w5Yg=
-X-Received: by 2002:a63:e156:: with SMTP id h22mr510399pgk.266.1571957549407;
- Thu, 24 Oct 2019 15:52:29 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:51:29 -0700
+        bh=+uiLq+iUoKYbKnLFQDjwDIIzqGudQy8o1UFEOkmkrHU=;
+        b=rUGj0eWV2JM2r9c6zcVGf3mQq83CGs07WGnJAqpRgTg6gFbUgjmi3mB4NISHd+7ho+
+         RcOHfy/GY81rRVgSOlWTWoGj/nkGy3/rOnEpWChN8sQVUgPJxw3890+SM1O1soGI1n16
+         stmpdDuw6Uphhw8ccnaOCooDBVu+BmDXoi95iGTW+jxg+2M31e7VenbuGOqk+/i+tZnN
+         Li/YZmxIAlOw6M8L9ynKQv1MFCMl/H7HBkW644HRRx402087TkVBWS/j9sQLEEMrTzFG
+         f2sPGW+x2CJr3sCqPGeMFAQ7gKd4P1Wz6v8L/pTyEXccHz/JPIVokRJbm7z+DclF8K2G
+         XWew==
+X-Gm-Message-State: APjAAAWFKZjulMmlKNOYf1ghf8mUGE0M5tyL2HR2ssDrPRaV57zYK7R6
+        e/9TDUsNKDLVxfxBSUhFdYG4FD+llFvUlTxmE3s=
+X-Google-Smtp-Source: APXvYqzRSdeSSRgGBGnoZCPWuY69NwMrQK4NIj2mmmt3agCQs8uemlrog/B126rrh1wmew1IPRee+I1rJJkV4cdOR3k=
+X-Received: by 2002:a9f:2271:: with SMTP id 104mr36427uad.127.1571957546730;
+ Thu, 24 Oct 2019 15:52:26 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 15:51:28 -0700
 In-Reply-To: <20191024225132.13410-1-samitolvanen@google.com>
-Message-Id: <20191024225132.13410-15-samitolvanen@google.com>
+Message-Id: <20191024225132.13410-14-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191024225132.13410-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v2 14/17] arm64: vdso: disable Shadow Call Stack
+Subject: [PATCH v2 13/17] arm64: efi: restore x18 if it was corrupted
 From:   samitolvanen@google.com
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -84,24 +83,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If we detect a corrupted x18 and SCS is enabled, restore the register
+before jumping back to instrumented code. This is safe, because the
+wrapper is called with preemption disabled and a separate shadow stack
+is used for interrupt handling.
+
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/kernel/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/efi-rt-wrapper.S | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-index dd2514bb1511..a87a4f11724e 100644
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -25,7 +25,7 @@ ccflags-y += -DDISABLE_BRANCH_PROFILING
- 
- VDSO_LDFLAGS := -Bsymbolic
- 
--CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os
-+CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS)
- KBUILD_CFLAGS			+= $(DISABLE_LTO)
- KASAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
+diff --git a/arch/arm64/kernel/efi-rt-wrapper.S b/arch/arm64/kernel/efi-rt-wrapper.S
+index 3fc71106cb2b..945744f16086 100644
+--- a/arch/arm64/kernel/efi-rt-wrapper.S
++++ b/arch/arm64/kernel/efi-rt-wrapper.S
+@@ -34,5 +34,10 @@ ENTRY(__efi_rt_asm_wrapper)
+ 	ldp	x29, x30, [sp], #32
+ 	b.ne	0f
+ 	ret
+-0:	b	efi_handle_corrupted_x18	// tail call
++0:
++#ifdef CONFIG_SHADOW_CALL_STACK
++	/* Restore x18 before returning to instrumented code. */
++	mov	x18, x2
++#endif
++	b	efi_handle_corrupted_x18	// tail call
+ ENDPROC(__efi_rt_asm_wrapper)
 -- 
 2.24.0.rc0.303.g954a862665-goog
 
