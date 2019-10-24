@@ -2,155 +2,227 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7EDCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EB8CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C268F21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD6F2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ii2r79Jr"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bIdD/WgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394182AbfJXTAD (ORCPT
+        id S2504216AbfJXTBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:00:03 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46433 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390493AbfJXTAD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:00:03 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k25so21543546oiw.13
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:00:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cZrSMPu/e6BXUdEIOUcOkTaeF4a2vUNu+HOk7EqusHk=;
-        b=ii2r79JrxO4W/+AltDDnipA6v8AYCjoTvxzErHC4fsMuwU9OX/JQYyCiHpt2/aWzSW
-         JqTLXdd4d91DoApvs//Rxbn3y/lQW11BG4rQHthZ6CgoJ3HD6Ny5gvIuqafYl3TmKfpX
-         x47weENDi9qMN3t+NcCkzsW8SkH31pCCwYZf1gFKNCeF1nYYRXtTp7KUyQaR+Tz8qNi+
-         TRyeJjuzd2NCwhqqQJYRb45ngpf7IyVkjfNCPzkz1elc96gSPmVvm1N0yj8QijdaO14W
-         amMnewlPycMv50LUh8nLAzeRNbK56XkDiD1fUImaIYbxv84SykH1djPoBcvZYysxFp26
-         7Z2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cZrSMPu/e6BXUdEIOUcOkTaeF4a2vUNu+HOk7EqusHk=;
-        b=rMOaF+OgVbVMrkjN6zJNXJPRWsIGP/uHPzwKzL+zeuCquAy+BdP8ROjbf3qOGSUCOz
-         jROw1upvb4KZdqgkAaOa0Xd9HwbtIarHVy+Vzt57daSqO9xw7BgoDeUp7KSYjlirab65
-         x0FYQwCWeHRI/33oGpew8hgRSVGyyJpTrHgBF/xnkfYWgsRl98VIc//prWG1ro90epBx
-         PnBQerlxAupixFkyPACvGoNUgcVDW3ymqmGk2zCvlWcW6pUf28eQPUGNkK0DNG3Y69dk
-         ev8XC6xFqxNLSK4jj+02vBRdK7XhjpHYbD/4ZQZCUkWkFEqnX2AaKcSd7BpaEEIuOo0N
-         BgLg==
-X-Gm-Message-State: APjAAAUaCmIxMh2Ozmlao4cg8+rfvUwBj1aVrlLpajvXB7gnsfez+zh/
-        Pxz7pBTY6P5SIJ4LsIN43igsHi08YJTBztBIRZR5AA==
-X-Google-Smtp-Source: APXvYqy7KOpcCjwUn9hCaZeF/eWIhLGxf+u8iFlSSssAFUwD03cvY4TKXfNKw9riL/HBNgMdRAtT/hNFxf2TGV7d7NA=
-X-Received: by 2002:aca:f17:: with SMTP id 23mr5693390oip.155.1571943601922;
- Thu, 24 Oct 2019 12:00:01 -0700 (PDT)
+        Thu, 24 Oct 2019 15:01:13 -0400
+Received: from mail-eopbgr50046.outbound.protection.outlook.com ([40.107.5.46]:37602
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390493AbfJXTBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:01:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VaLtFPqzdBsGS1JDWvH4l0EYMtL36HWnBv3E0j3KuZMJ6Y1vElj8prQVXD77x7G65cC57iOiGCzxMGcWyQ/N0NBzWPHfubj+inEzLLijoCthpmpyhcvUsESlCfiu/Zc590mmXXM8no+Joud0av8FJPSJwvkujvZ8yqXZVAtRprrspfsmxIWkxeQmWK9C2OvYvDlhHn97Hoo5L4ACI937jsRjUz8TdW3qCZoLTB/pUBOQTJnyxRR9NSEkN3tJ/Ag5sq6BUIf2f7iWykaWGUWZw3xFZNS2sxb0oMfDUgvoaTwIvxZNw5rwDlrVm9qATaK4MDPufr52KqMAEJmrIR2gZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zv83pBhhvhC/AE3+V0PGUH8Tbea2jtn3KS1w9lHeYj4=;
+ b=K+yQkb7GNFpZLUDCCEEZkrU4RtIz4PZfywuoU7A3aO0psR7Jx0ij90ChsonHTUMWW6wkhpiJ2pABkz39UlC/beXwNprPqwnCSI6NY/75KMOHcvvIzapjOyMXJbup+Gv4FGFv/vgcTTmJeQwwRhs0ijt3twgbwXWd86FnIiZNDmUobny09o13fnYM2XpmuA2pVKeZVSl9V2/aqSMZHe8cgeN6tFj+I3NySnSp1JQ+/HTtKl6lqtYt6qv53Hse/Hzdwclai/AAjvBcl1BlIKZKjz29HUmq+nqJo0fQZq4P0rwkgAT139mNCm9eH14wp8KQCIWcq+VpMDjVX0GxJHaDRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zv83pBhhvhC/AE3+V0PGUH8Tbea2jtn3KS1w9lHeYj4=;
+ b=bIdD/WgHKI/U5KPeZVM/ThWlvw3+frIwO0vOkLDEZXssk1xjzIr2qyUtwPLmX4i/kDV5KPjV5yR2hnNxuUa29tniRXLRQr1f+z+XaFSBT+G5ctU+kBolv1x1DZodBiY0etSkaLRGOowitD3aTiOLWn87aKpfb1XgCcStsqk30Lc=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB3966.eurprd04.prod.outlook.com (10.171.183.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.20; Thu, 24 Oct 2019 19:01:07 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::24fb:fb99:b1c6:ba1f]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::24fb:fb99:b1c6:ba1f%4]) with mapi id 15.20.2387.021; Thu, 24 Oct 2019
+ 19:01:07 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Thread-Topic: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Thread-Index: AQHVhA83pBLldkQGO0OkZWmZhR1Vyw==
+Date:   Thu, 24 Oct 2019 19:01:06 +0000
+Message-ID: <VI1PR04MB7023ECFFD42193CF864524ACEE6A0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <2811202.iOFZ6YHztY@kreacher> <4551555.oysnf1Sd0E@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b3682192-cbc4-41a9-4740-08d758b48681
+x-ms-traffictypediagnostic: VI1PR04MB3966:
+x-microsoft-antispam-prvs: <VI1PR04MB3966E9EA5AD955B0E2FF16A4EE6A0@VI1PR04MB3966.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(76176011)(52536014)(5660300002)(186003)(102836004)(86362001)(99286004)(6246003)(26005)(7696005)(71200400001)(71190400001)(53546011)(6506007)(14444005)(256004)(66066001)(6436002)(14454004)(6116002)(3846002)(74316002)(446003)(76116006)(476003)(55016002)(66946007)(66556008)(66476007)(64756008)(66446008)(2906002)(91956017)(7736002)(54906003)(110136005)(305945005)(8936002)(8676002)(81156014)(4326008)(81166006)(498600001)(33656002)(9686003)(229853002)(25786009)(44832011)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3966;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pZCKViUryeBYAKXKBT+EbpqqXeTfGzDWkheqoWBSs28r9RbB7dPuFtE44SYY5ms9gxHIuy33JJxRy8YwgQrBU0ek1qLCN2U1WWIxeHLBb/Uqu2IXm1FvbyY24gQpJfQkI1Q0d9G9vPURA69DXkyJAgIReCcYGacX6PXrQBQo944UjIeK7GWlyJOEv8FnpM+xnXNRdKxBBJifa5GKwjVngphulVss5AJE7KqfGgB6scLoyOW65FZ+ZPDDmZcs+HX1exjoNT2MjnWAfA2N+VvCLe8pruog4xk1ELgF0dnTIqsQrSZpjCupqpxN+qn7NI7pCDFJLctUvRMThX1LsfPFpFiqltAITBC+EQThyqpy2iG2/OO8d4OdyOCJ2r9oC0+MxB2H22Rn2narzAON8AI8UbOFGvvb4Q4dtgH9egaoawWEMELNCrz4SbIBhU2f+8Vr
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <000000000000b49e190595aa39fe@google.com> <20191024162432.GA4097@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191024162432.GA4097@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 24 Oct 2019 20:59:50 +0200
-Message-ID: <CANpmjNPfTeMsdwghPiocjQDg6e0c_6Ks+jfKqh1Rqb4vm6edeA@mail.gmail.com>
-Subject: Re: KCSAN: data-race in __rb_rotate_set_parents / vm_area_dup
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     syzbot <syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
-        christian@brauner.io, cyphar@cyphar.com, elena.reshetova@intel.com,
-        guro@fb.com, Kees Cook <keescook@chromium.org>, ldv@altlinux.org,
-        LKML <linux-kernel@vger.kernel.org>, luto@amacapital.net,
-        mhocko@suse.com, Ingo Molnar <mingo@kernel.org>,
-        syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3682192-cbc4-41a9-4740-08d758b48681
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 19:01:06.9255
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gNB78dI+iCl2XNUK1nBxYnc3Djf5OrZRfUkyXwOYyWrWfPA8/5P6TQ5J73KfvCrofCbNrk1CHKG98kMrNTj6zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3966
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019 at 18:25, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Oct 24, 2019 at 09:07:08AM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-> > git tree:       https://github.com/google/ktsan.git kcsan
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1060c47b600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=c034966b0b02f94f7f34
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+c034966b0b02f94f7f34@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: data-race in __rb_rotate_set_parents / vm_area_dup
-> >
-> > read to 0xffff88811eef53e8 of 200 bytes by task 7738 on cpu 0:
-> >  vm_area_dup+0x70/0xf0 kernel/fork.c:359
-> >  __split_vma+0x88/0x350 mm/mmap.c:2678
-> >  __do_munmap+0xb02/0xb60 mm/mmap.c:2803
-> >  do_munmap mm/mmap.c:2856 [inline]
-> >  mmap_region+0x165/0xd50 mm/mmap.c:1749
-> >  do_mmap+0x6d4/0xba0 mm/mmap.c:1577
-> >  do_mmap_pgoff include/linux/mm.h:2353 [inline]
-> >  vm_mmap_pgoff+0x12d/0x190 mm/util.c:496
-> >  ksys_mmap_pgoff+0x2d8/0x420 mm/mmap.c:1629
-> >  __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
-> >  __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
-> >  __x64_sys_mmap+0x91/0xc0 arch/x86/kernel/sys_x86_64.c:91
-> >  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > write to 0xffff88811eef5440 of 8 bytes by task 7737 on cpu 1:
-> >  __rb_rotate_set_parents+0x4d/0xf0 lib/rbtree.c:79
-> >  __rb_insert lib/rbtree.c:215 [inline]
-> >  __rb_insert_augmented+0x109/0x370 lib/rbtree.c:459
-> >  rb_insert_augmented include/linux/rbtree_augmented.h:50 [inline]
-> >  rb_insert_augmented_cached include/linux/rbtree_augmented.h:60 [inline]
-> >  vma_interval_tree_insert+0x196/0x230 mm/interval_tree.c:23
-> >  __vma_link_file+0xd9/0x110 mm/mmap.c:634
-> >  __vma_adjust+0x1ac/0x12a0 mm/mmap.c:842
-> >  vma_adjust include/linux/mm.h:2276 [inline]
-> >  __split_vma+0x208/0x350 mm/mmap.c:2707
-> >  split_vma+0x73/0xa0 mm/mmap.c:2736
-> >  mprotect_fixup+0x43f/0x510 mm/mprotect.c:413
-> >  do_mprotect_pkey+0x3eb/0x660 mm/mprotect.c:553
-> >  __do_sys_mprotect mm/mprotect.c:578 [inline]
-> >  __se_sys_mprotect mm/mprotect.c:575 [inline]
-> >  __x64_sys_mprotect+0x51/0x70 mm/mprotect.c:575
-> >  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> What is this thing trying to tell me? That the copy on alloc is racy,
-> because at that point the object isn't exposed yet.
-
-In vm_area_dup, *orig is being concurrently modified while being
-copied into *new.
-
-> How do you tell it to shut up?
-
-We wanted to get feedback on what is happening here, as it didn't seem
-straightforward to dismiss on our side.
-
-Is it correct to assume that, the parts of the *orig struct that are
-being modified while being copied, will subsequently be re-initialized
-for *new?
-
-If no explicit markings are useful (READ_ONCE would suppress it, but
-seems strange if the above assumption is true), I will think of a way
-to suppress these for now and no further action is needed here.
-
-Many thanks,
--- Marco
+On 16.10.2019 13:48, Rafael J. Wysocki wrote:=0A=
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>=0A=
+> =0A=
+> Introduce frequency QoS, based on the "raw" low-level PM QoS, to=0A=
+> represent min and max frequency requests and aggregate constraints.=0A=
+> =0A=
+> The min and max frequency requests are to be represented by=0A=
+> struct freq_qos_request objects and the aggregate constraints are to=0A=
+> be represented by struct freq_constraints objects.  The latter are=0A=
+> expected to be initialized with the help of freq_constraints_init().=0A=
+> =0A=
+> The freq_qos_read_value() helper is defined to retrieve the aggregate=0A=
+> constraints values from a given struct freq_constraints object and=0A=
+> there are the freq_qos_add_request(), freq_qos_update_request() and=0A=
+> freq_qos_remove_request() helpers to manipulate the min and max=0A=
+> frequency requests.  It is assumed that the the helpers will not=0A=
+> run concurrently with each other for the same struct freq_qos_request=0A=
+> object, so if that may be the case, their uses must ensure proper=0A=
+> synchronization between them (e.g. through locking).=0A=
+> =0A=
+> In addition, freq_qos_add_notifier() and freq_qos_remove_notifier()=0A=
+> are provided to add and remove notifiers that will trigger on aggregate=
+=0A=
+> constraint changes to and from a given struct freq_constraints object,=0A=
+> respectively.=0A=
+> =0A=
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>=0A=
+> ---=0A=
+>   include/linux/pm_qos.h |   44 ++++++++=0A=
+>   kernel/power/qos.c     |  240 +++++++++++++++++++++++++++++++++++++++++=
+++++++++=0A=
+>   2 files changed, 284 insertions(+)=0A=
+> =0A=
+> Index: linux-pm/include/linux/pm_qos.h=0A=
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+> --- linux-pm.orig/include/linux/pm_qos.h=0A=
+> +++ linux-pm/include/linux/pm_qos.h=0A=
+> @@ -267,4 +267,48 @@ static inline s32 dev_pm_qos_raw_resume_=0A=
+>   }=0A=
+>   #endif=0A=
+>   =0A=
+> +#define FREQ_QOS_MIN_DEFAULT_VALUE	0=0A=
+> +#define FREQ_QOS_MAX_DEFAULT_VALUE	(-1)=0A=
+> +=0A=
+> +enum freq_qos_req_type {=0A=
+> +	FREQ_QOS_MIN =3D 1,=0A=
+> +	FREQ_QOS_MAX,=0A=
+> +};=0A=
+> +=0A=
+> +struct freq_constraints {=0A=
+> +	struct pm_qos_constraints min_freq;=0A=
+> +	struct blocking_notifier_head min_freq_notifiers;=0A=
+> +	struct pm_qos_constraints max_freq;=0A=
+> +	struct blocking_notifier_head max_freq_notifiers;=0A=
+=0A=
+These min/max_freq_notifiers fields seem unused? They're initialized but =
+=0A=
+the freq_qos_add/remove_notifier calls use min/max_freq.notifiers directly.=
+=0A=
+=0A=
+Should probably just be dropped.=0A=
+=0A=
+> +/**=0A=
+> + * freq_qos_add_notifier - Add frequency QoS change notifier.=0A=
+> + * @qos: List of requests to add the notifier to.=0A=
+> + * @type: Request type.=0A=
+> + * @notifier: Notifier block to add.=0A=
+> + */=0A=
+> +int freq_qos_add_notifier(struct freq_constraints *qos,=0A=
+> +			  enum freq_qos_req_type type,=0A=
+> +			  struct notifier_block *notifier)=0A=
+> +{=0A=
+> +	int ret;=0A=
+> +=0A=
+> +	if (IS_ERR_OR_NULL(qos) || !notifier)=0A=
+> +		return -EINVAL;=0A=
+> +=0A=
+> +	switch (type) {=0A=
+> +	case FREQ_QOS_MIN:=0A=
+> +		ret =3D blocking_notifier_chain_register(qos->min_freq.notifiers,=0A=
+> +						       notifier);=0A=
+> +		break;=0A=
+> +	case FREQ_QOS_MAX:=0A=
+> +		ret =3D blocking_notifier_chain_register(qos->max_freq.notifiers,=0A=
+> +						       notifier);=0A=
+> +		break;=0A=
+> +	default:=0A=
+> +		WARN_ON(1);=0A=
+> +		ret =3D -EINVAL;=0A=
+> +	}=0A=
+> +=0A=
+> +	return ret;=0A=
+> +}=0A=
+> +EXPORT_SYMBOL_GPL(freq_qos_add_notifier);=0A=
+> +=0A=
+> +/**=0A=
+> + * freq_qos_remove_notifier - Remove frequency QoS change notifier.=0A=
+> + * @qos: List of requests to remove the notifier from.=0A=
+> + * @type: Request type.=0A=
+> + * @notifier: Notifier block to remove.=0A=
+> + */=0A=
+> +int freq_qos_remove_notifier(struct freq_constraints *qos,=0A=
+> +			     enum freq_qos_req_type type,=0A=
+> +			     struct notifier_block *notifier)=0A=
+> +{=0A=
+> +	int ret;=0A=
+> +=0A=
+> +	if (IS_ERR_OR_NULL(qos) || !notifier)=0A=
+> +		return -EINVAL;=0A=
+> +=0A=
+> +	switch (type) {=0A=
+> +	case FREQ_QOS_MIN:=0A=
+> +		ret =3D blocking_notifier_chain_unregister(qos->min_freq.notifiers,=0A=
+> +							 notifier);=0A=
+> +		break;=0A=
+> +	case FREQ_QOS_MAX:=0A=
+> +		ret =3D blocking_notifier_chain_unregister(qos->max_freq.notifiers,=0A=
+> +							 notifier);=0A=
+> +		break;=0A=
+> +	default:=0A=
+> +		WARN_ON(1);=0A=
+> +		ret =3D -EINVAL;=0A=
+> +	}=0A=
+> +=0A=
+> +	return ret;=0A=
+> +}=0A=
+> +EXPORT_SYMBOL_GPL(freq_qos_remove_notifier);=0A=
