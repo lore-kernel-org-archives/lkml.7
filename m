@@ -2,251 +2,145 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8735CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E472CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9D420856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571905637;
-	bh=3/0NJxWLDuGRa0pi/Aw8SPuVDgpBexipgnIiNiKI0io=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=USprk2Dd61e8IlNEYOyTfbhRCsKduz9ZEQhqyIJL88x5aTfaNTZp9LEnKle1VzenY
-	 v+LBHOSMySlQ450HyKPy60AyDXW5Bc7Ubse0JSz9C346xxv/WqXZaXHpgShSllauk4
-	 TJQfaXrOFQjECYVu3FyvuJR+ixsyoZvpLoQH7LCc=
+	by mail.kernel.org (Postfix) with ESMTP id 1CC4B20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:27:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FM2nQuhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438195AbfJXI1Q (ORCPT
+        id S2438207AbfJXI1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:27:16 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:55749 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726325AbfJXI1Q (ORCPT
+        Thu, 24 Oct 2019 04:27:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34732 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfJXI1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:27:16 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iNYSb-0003IV-AU; Thu, 24 Oct 2019 10:27:09 +0200
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH RFC 2/2] irqchip/gic: Allow the use of SGI interrupts
-X-PHP-Originating-Script: 0:main.inc
+        Thu, 24 Oct 2019 04:27:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t16so19869001wrr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 01:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=mm17BkOc25h13Mby6hFCXW3PUeV4hyrd6orfDcJCo64=;
+        b=FM2nQuhqEHC5AtVx/Atcs/KmjN9GidOdQUdWc0fquAJ4AIkE9OhBpZfBhwmt+L62d9
+         5kjVegAA6W3iU7uZJd+XQIh/YNIWVenayIvbvVgMUiybaDvLhFEtgQgNpWbnTDnGuNkN
+         jhVNzvREJ+tiPEfyTyDF2GiVdv3xk4jKbp4v+l3o8oAPvEnOzrOisaO+pPFQM9FsXOSS
+         BKs58eHhZv11IhkDZQx2wQ974lIf8sPQOUb/Rj2XMR6C7c6taCX9tJ7tmib8KNplJy+a
+         yvNBUtxCN8e74fS6UOFPdIlmAHdVLU80gWta+FQx77WAqsCaJihm96bstIRVHOzm5COF
+         yjgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mm17BkOc25h13Mby6hFCXW3PUeV4hyrd6orfDcJCo64=;
+        b=XUnyPn9bknC/N6VYzjrrVW3l38dfSKv3wbyd6lyW82hf7SdlXz9EcfkWobWnhAdt/U
+         S8s/iVFh/0gUx4VK/4filxJLB+ANZO+XEb4Qk8LSPa+iWig4+ddh7VCZW02eurHuFrrp
+         HJJDmq3pA2g/HPjd3Wn2rT1Ccj81i2YCeOzk6dI0kaWMo2VLR/sRWtqHQKnV0ur3md5i
+         FSAGrf61Bvr2VqZxhCpEzhH+T3+NorsaEqI5BqscO4MiIb7f7uesPDCiuivMt/P3mUtE
+         CbZBRVYQlxj3rqCZDpVKYvmA0a4jcTKAW5A1m/ulKD/kA1udn2XKClT92S1YMaaV8dtZ
+         T4cA==
+X-Gm-Message-State: APjAAAXTGTw93qpg/D3YyWnb0+idOjk06b+G0Dh/ckha2UbrgjTFiTBe
+        wD/zYBcJJSIb7vEVr4avZqGbow==
+X-Google-Smtp-Source: APXvYqxJjkvfXJJpszKYABlj+Cxk0Xu169hSNKRrK3KCT1UvqEPCoE4AIymOmMJ+q88rM3pV+SFBJw==
+X-Received: by 2002:a5d:464f:: with SMTP id j15mr2639402wrs.366.1571905641248;
+        Thu, 24 Oct 2019 01:27:21 -0700 (PDT)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id u187sm704735wme.15.2019.10.24.01.27.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 01:27:20 -0700 (PDT)
+Subject: Re: [PATCH 5/5] ARM: dts: qcom: msm8974: add interconnect nodes
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        freedreno@lists.freedesktop.org
+References: <20191013080804.10231-1-masneyb@onstation.org>
+ <20191013080804.10231-6-masneyb@onstation.org>
+ <d154b0c6-fc39-bebc-d1b5-cc179fb6055d@linaro.org>
+ <20191023124753.GA14218@onstation.org>
+ <c26159f5-e6fe-07f1-51b3-50b72b258846@linaro.org>
+ <20191024070730.GA19974@onstation.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Message-ID: <5e1149ae-9539-ec8b-6371-50c87575057a@linaro.org>
+Date:   Thu, 24 Oct 2019 11:27:18 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <20191024070730.GA19974@onstation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Date:   Thu, 24 Oct 2019 09:27:08 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Thanu Rangarajan <thanu.rangarajan@arm.com>
-In-Reply-To: <fdb77138-3df8-ef51-6519-e630b6228eb0@gmail.com>
-References: <20191023000547.7831-1-f.fainelli@gmail.com>
- <20191023000547.7831-3-f.fainelli@gmail.com>
- <112a725164b7fe321f27357fd4cd772f@www.loen.fr>
- <fdb77138-3df8-ef51-6519-e630b6228eb0@gmail.com>
-Message-ID: <4a17f340ca1687e55855e34058d084b8@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: f.fainelli@gmail.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, souvik.chakravarty@arm.com, james.quinlan@broadcom.com, sudeep.holla@arm.com, thanu.rangarajan@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-23 18:02, Florian Fainelli wrote:
-> Hello marc,
->
-> On 10/23/19 6:22 AM, Marc Zyngier wrote:
->> Hi Florian,
->>
->> Needless to say, I mostly have questions...
->>
->> On 2019-10-23 01:05, Florian Fainelli wrote:
->>> SGI interrupts are a convenient way for trusted firmware to target 
->>> a
->>> specific set of CPUs. Update the ARM GIC code to allow the 
->>> translation
->>> and mapping of SGI interrupts.
+On 24.10.19 г. 10:07 ч., Brian Masney wrote:
+> On Wed, Oct 23, 2019 at 04:39:21PM +0300, Georgi Djakov wrote:
+>> On 23.10.19 г. 15:47 ч., Brian Masney wrote:
+>>> On Wed, Oct 23, 2019 at 02:50:19PM +0300, Georgi Djakov wrote:
+>>>> On 13.10.19 г. 11:08 ч., Brian Masney wrote:
+>>>>> Add interconnect nodes that's needed to support bus scaling.
+>>>>>
+>>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 60 +++++++++++++++++++++++++++++
+>>>>>  1 file changed, 60 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>>>>> @@ -1152,6 +1207,11 @@
+>>>>>  				              "core",
+>>>>>  				              "vsync";
+>>>>>  
+>>>>> +				interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
+>>>>> +				                <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
+>>>>
+>>>> Who will be the requesting bandwidth to DDR and ocmem? Is it the display or GPU
+>>>> or both? The above seem like GPU-related interconnects, so maybe these
+>>>> properties should be in the GPU DT node.
 >>>
->>> Since the kernel already uses SGIs for various inter-processor 
->>> interrupt
->>> activities, we specifically make sure that we do not let users of 
->>> the
->>> IRQ API to even try to map those.
->>>
->>> Internal IPIs remain dispatched through handle_IPI() while public 
->>> SGIs
->>> get promoted to a normal interrupt flow management.
->>>
->>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>> ---
->>>  drivers/irqchip/irq-gic.c | 41 
->>> +++++++++++++++++++++++++++------------
->>>  1 file changed, 29 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
->>> index 30ab623343d3..dcfdbaacdd64 100644
->>> --- a/drivers/irqchip/irq-gic.c
->>> +++ b/drivers/irqchip/irq-gic.c
->>> @@ -385,7 +385,10 @@ static void __exception_irq_entry
->>> gic_handle_irq(struct pt_regs *regs)
->>>               * Pairs with the write barrier in gic_raise_softirq
->>>               */
->>>              smp_rmb();
->>> -            handle_IPI(irqnr, regs);
->>> +            if (irqnr < NR_IPI)
->>> +                handle_IPI(irqnr, regs);
->>> +            else
->>> +                handle_domain_irq(gic->domain, irqnr, regs);
+>>> The display is what currently requests the interconnect path,
+>>> specifically mdp5_setup_interconnect() in
+>>> drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c. The Freedreno GPU bindings
+>>> currently don't have interconnect support. Maybe this is something that
+>>> I should add to that driver as well?
 >>
->> Double EOI, UNPREDICTABLE territory, your state machine is now dead.
->
-> Oh yes, the interrupt flow now also goes through ->irq_eoi (that's 
-> the
-> whole point), meh.
+>> The "mdp0-mem" and "mdp1-mem" paths mentioned in the mdp5_kms.c are the two
+>> interconnects between the display and DDR memory.
+> 
+> OK, I see. Most of the interconnect paths in the downstream MSM 3.4
+> sources are configured in device tree using the
+> qcom,msm-bus,vectors-KBps property, which is what I was only looking at
+> before. The interconnect path for the display is configured directly in
+> code (drivers/video/msm/mdss/mdss_mdp.c) to setup a path between
+> MSM_BUS_MASTER_MDP_PORT0 and MSM_BUS_SLAVE_EBI_CH0.
 
-Indeed. But to be honest, we should probably consider moving all the 
-SGI
-handling to normal interrupts. There's hardly any reason why we should 
-keep
-SGIs out of the normal interrupt model, other than maybe performance 
-(and
-that's pretty dubious).
+Correct!
 
->
->>
->>>  #endif
->>>              continue;
->>>          }
->>> @@ -1005,20 +1008,34 @@ static int gic_irq_domain_translate(struct
->>> irq_domain *d,
->>>          if (fwspec->param_count < 3)
->>>              return -EINVAL;
->>>
->>> -        /* Get the interrupt number and add 16 to skip over SGIs 
->>> */
->>> -        *hwirq = fwspec->param[1] + 16;
->>> -
->>> -        /*
->>> -         * For SPIs, we need to add 16 more to get the GIC irq
->>> -         * ID number
->>> -         */
->>> -        if (!fwspec->param[0])
->>> +        *hwirq = fwspec->param[1];
->>> +        switch (fwspec->param[0]) {
->>> +        case 0:
->>> +            /*
->>> +             * For SPIs, we need to add 16 more to get the GIC irq
->>> +             * ID number
->>> +             */
->>> +            *hwirq += 16;
->>> +            /* fall through */
->>> +        case 1:
->>> +            /* Add 16 to skip over SGIs */
->>>              *hwirq += 16;
->>> +            *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
->>>
->>> -        *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
->>> +            /* Make it clear that broken DTs are... broken */
->>> +            WARN_ON(*type == IRQ_TYPE_NONE);
->>> +            break;
->>> +        case 2:
->>> +            /* Refuse to map internal IPIs */
->>> +            if (*hwirq < NR_IPI)
->>
->> So depending on how the kernel uses SGIs, you can or cannot use 
->> these SGIs.
->> That looks like a good way to corner ourselves into not being to 
->> change
->> much.
->
-> arch/arm/kernel/smp.c has a forward looking statement about SGI 
-> numbering:
->
->         /*
->          * SGI8-15 can be reserved by secure firmware, and thus may
->          * not be usable by the kernel. Please keep the above limited
->          * to at most 8 entries.
->          */
->
-> is this something that can be used as an universal and unbreakable 
-> rule
-> for the ARM64 kernel as well in order to ensure SGIs 8-15 can be 
-> usable
-> through the IRQ API or is this simply not a guarantee at all?
+> 
+> In the upstream kernel, it looks like I'll need to
+> 
+>   1) add support for an optional second interconnect path for ocmem to
+>      drivers/gpu/drm/msm/adreno/adreno_gpu.c.
 
-There is no guarantee whatsoever. There's an ARM recommendation about 
-the
-above split, but that's it. Hardly something that can be enforced.
+Yes, just check if there is a "gpu-ocmem" path in DT and scale it when needed.
 
-Now, your firmware is the one that gives you the DT, so if it is 
-inconsistent
-in configuring the interrupt and presenting it to the kernel, tough 
-luck.
+> 
+>   2) add implementations of gpu_get_freq and gpu_get_freq to the
+>      adreno_gpu_funcs struct in drivers/gpu/drm/msm/adreno/a3xx_gpu.c.
+> 
 
->> Also, do you expect this to work for both Group-0 and Group-1 
->> interrupts
->> (since you imply that this works as a communication medium with the 
->> secure
->> side)? Given that the kernel running in NS has no way to 
->> enable/disable
->> Group-0 interrupts, this looks terminally flawed. Or is that Group-1 
->> only?
->
-> That would be Group-1 interrupts only, are you suggesting there is an
-> additional check being done that such SGIs are actually part of 
-> Group-1?
-
-You can try and change the configuration of that interrupt (priority, 
-for
-example), and see if that sticks. If it doesn't, you're in trouble (and
-nothing you can do about it).
-
->>
->> How do we describe which SGIs are guaranteed to be available to 
->> Linux?
->
-> In our case, the Device Tree mailbox node gets populated its 
-> interrupts
-> property with the SGI number(s), and that same number is also passed 
-> as
-> a configuration parameter to the trusted firmware. Or are you echoing
-> back to your earlier comment about the fact that if the kernel 
-> changes
-> its own definition of NR_IPI then we suddenly start breaking IRQ API
-> uses of SGIs in a certain range?
-
-That's indeed my worry. There is also the fact that the kernel itself 
-will
-never expose such reservation in DT, so we'd have to tread carefully 
-here.
-We probably need to specify that *only* SGI8-15 are allowed to be 
-described
-as such.
-
-Another thing: why don't you use a PPI? If you use a GICv2, you're also 
-using
-ancient cores, and they have PPIs to spare. Or do you rely on being 
-able to
-inject interrupts from one core to another?
+Maybe, i am not very familiar with adreno stuff. It might be good to CC the
+freedreno guys.
 
 Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Georgi
