@@ -2,205 +2,143 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBA5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13530CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C8921906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C5E205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LErg4eJH"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="T8csUtbZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408865AbfJXJYB (ORCPT
+        id S2408857AbfJXJY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:24:01 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40131 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393061AbfJXJYB (ORCPT
+        Thu, 24 Oct 2019 05:24:27 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:22758 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389413AbfJXJY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:24:01 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p59so9673865edp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 02:23:59 -0700 (PDT)
+        Thu, 24 Oct 2019 05:24:27 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9O9Mngm021691;
+        Thu, 24 Oct 2019 05:24:14 -0400
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2052.outbound.protection.outlook.com [104.47.36.52])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2vt9t25vss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 24 Oct 2019 05:24:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EWJPAduIL+yQ0Qv+JWqT6QPkVIm05Bx4JdxAbNrv3VcY6OmOlLpTZHdKBI9SAhTlrLg7j6G4f3VgTRiXOOyMP0QumADnOd/drzYcmgCTR+r1uvcn+vcyzlDaE0iH6UrRE0msFhLpkXtra9G2lcIDtBjua8FQ+ZZ7RQhlO13ZyXFWbaLOz0PlQ57SRhF5Qu4v3rSxXoO6ZUHzIHLNwUNx52MYVo1RiJxpwhter2s3pyDOLnmAP+heBthzJdG9odRf/5miAuU4azlwg6CsTl5SkqlwKuy6RVQTmRtsOzr06qR8BEH23WibjZmyhgaGpMPcPRnTATypwunhiDKoHZwA4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H79tMLkA9q8wQla9C65sDt7MDu2/MlTC/HIybxCS2a4=;
+ b=dy058UBETGR5Ne9oZEI0oH313NQoWRbddImYiTinm9uGP5R5aH38m+7vM2A6a1v798JRhO84Tqk+S0LV12E6cP3VRiH6v2yCD5ulX5Tu5EHWNhEDbj7cjw4wnOotvEM351pYsgam6tAlUJT1+mHkulh0pI6+gX968JO1mwZzpNjkU4usmGSX5YpqMDR+eIKE6+0/o0T9KP0k5sQIqpY9t17wivpSUpBfxe+gxhbpj9KYe2FJRqrN1bJDqwjDn/HtMJWQ2fYbdcphveFYlKlX/cLmbId3WnZcDV2d83NmNDbF9wVqOgt3yNT74z8QGrgU0RAVupwzhGifFfGaYr44Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2Fg4OORdS56GYlEdlxxKyHlR08HjtyPW5mXDJkHAU3c=;
-        b=LErg4eJHixvsMHo3T4UdsdOcjyo5lbO9XudSeZq6rpgNnkVpGr/b0G90t4XOSP66/E
-         yPiEP9VtvxDCkUlH7d1janZhA4XnWhbkjvm/cOE2ToCJXuDoxd+uba3V89MU7eceWGgo
-         3dPD97YPgwTyy5neIrYaAT8SNNB8krsO2ClP8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2Fg4OORdS56GYlEdlxxKyHlR08HjtyPW5mXDJkHAU3c=;
-        b=gr+QAlo5VzN4dduBfhFSSxLXOi03cTy/V06FvIm4vlHOzZFCQZgA10etsRAQu6aLx9
-         xXy6glPh7OzxBSDoz5OL5i8i+UdtatJHQdS5bgZp9+jmQ4tHdHIHXiF6BOGMvSlTCJqx
-         uVAVJhK0q7rr9j1TrzYxGsHmqbb1eI89j7wFzp+J2nY61CEzFA9LYhXGCSv0JnywkOr4
-         ZtMJoxHsH3loq7Ng/vm2fF3RAge3t91ecFNKL9i2zWL6FTgKPlvLRl64U+6cpalaKLrF
-         5sWOxNCQ3gAK5CfKL2a3UhKhFzI46iVoLoGB7UpZEVjowKPZ52zEKcexNpZlZkh+3DQj
-         PNPA==
-X-Gm-Message-State: APjAAAXzc99P+XkS9Ek/OOwi7cRKSaYgESL9AUIptgxXPNYQhvi7IsMb
-        xB+c0s0tHl5N5Wecz7BZhscZ+6va86VygA==
-X-Google-Smtp-Source: APXvYqw3txxyJiEko6MOc1GOa9NGSdJTMjS4hTdHYvm5LQ50wTRHehrl8Ad85o5/OO1BerKp363zMg==
-X-Received: by 2002:a17:906:7094:: with SMTP id b20mr37286315ejk.134.1571909038413;
-        Thu, 24 Oct 2019 02:23:58 -0700 (PDT)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id l49sm434653edb.3.2019.10.24.02.23.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 02:23:56 -0700 (PDT)
-Received: by mail-wr1-f54.google.com with SMTP id t16so20076735wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 02:23:55 -0700 (PDT)
-X-Received: by 2002:a5d:6a42:: with SMTP id t2mr2809593wrw.155.1571909035112;
- Thu, 24 Oct 2019 02:23:55 -0700 (PDT)
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H79tMLkA9q8wQla9C65sDt7MDu2/MlTC/HIybxCS2a4=;
+ b=T8csUtbZQ+id1B3z8Vx9eAihnvDWbe/sciNtI09PIC2ckn/vGZHbpQ5PHKCbBvXJGxyRTqH3EfElnKmbz8wn51KT39TZjXAtsMLa26BCW62FGELRRjqAxsj8mmb/w+pzF8eUDWoe2vl+QtNPhyrNjJZtWMRtUEP8VlK0OGTp25k=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5367.namprd03.prod.outlook.com (20.180.15.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Thu, 24 Oct 2019 09:24:12 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::99:71f2:a588:977c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::99:71f2:a588:977c%3]) with mapi id 15.20.2387.023; Thu, 24 Oct 2019
+ 09:24:12 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH][RESEND] input: adp5589: Make keypad support optional
+Thread-Topic: [PATCH][RESEND] input: adp5589: Make keypad support optional
+Thread-Index: AQHVdTB/9bT079D2QUiejuyXt5dvjadn9i6AgAEKiYCAAK6hAA==
+Date:   Thu, 24 Oct 2019 09:24:11 +0000
+Message-ID: <7d18d2b4f7bbb151072032013352104c426cce04.camel@analog.com>
+References: <20190927123836.28047-1-alexandru.ardelean@analog.com>
+         <20191023070541.13940-1-alexandru.ardelean@analog.com>
+         <20191023225939.GA35946@dtor-ws>
+In-Reply-To: <20191023225939.GA35946@dtor-ws>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9987d719-b748-4709-369b-08d75863ee6a
+x-ms-traffictypediagnostic: CH2PR03MB5367:
+x-microsoft-antispam-prvs: <CH2PR03MB5367E0D8BF65E02243EEF39BF96A0@CH2PR03MB5367.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0200DDA8BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(366004)(39860400002)(199004)(189003)(14454004)(6486002)(6116002)(6246003)(3846002)(102836004)(76176011)(256004)(2351001)(71200400001)(71190400001)(6506007)(26005)(118296001)(7736002)(305945005)(486006)(186003)(446003)(11346002)(86362001)(2906002)(99286004)(2616005)(476003)(229853002)(91956017)(66946007)(5660300002)(66446008)(64756008)(66556008)(66476007)(36756003)(6436002)(6916009)(76116006)(5640700003)(66066001)(4326008)(1361003)(81166006)(81156014)(8676002)(478600001)(25786009)(8936002)(316002)(54906003)(6512007)(2501003)(4001150100001)(334744003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5367;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yEf1Ojv83VFKhp3SWmixfOAyHvMWBvFpt5GXOYsP2av7TOhKPCT4TXNYGCcViWwEWFy4jCZRwZ//YBGP4e3j470cyyxfRpxWjjzjdFVxuO/Yot1ekirzrX5H4vnzePzFpTymDr1fD0e0jj9w9XGSeUeTW19ssR+1zpi7XpD5PTUg21Rm6J0/rf3QjTJb/EK8Qmyp4uxRbDpISTFgpUXrv3fv/yS/D19NtR8JdRJTdfKAXNkzKgZ/IMTBm2+ACeSlOpIn+Fd7kPa7OO+epMPkZ14qTKnGerjYQ9fsml7ChUcWARrdvr/GfRqq9Wz8IX3fsHn8zZ5HSndMC5YLVrBqI4uyhLI9nHU4cclXgpsUqM3NmY98vheOwjpp7xrLWnfw6YjrDib56cjsCgCHGewxmK9TuIhn5fmxkWf9+pt8/T2mwqMA5BVtQ0fe7/a8ijVv
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <23420C449811BD4AAB0ED75610205465@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191017084033.28299-1-xia.jiang@mediatek.com>
- <20191017084033.28299-6-xia.jiang@mediatek.com> <20191023103945.GA41089@chromium.org>
- <1571906317.6254.64.camel@mhfsdcap03>
-In-Reply-To: <1571906317.6254.64.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Thu, 24 Oct 2019 18:23:43 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
-Message-ID: <CAAFQd5DUF90daBAe96Vu46z9HD43AYG+9rK-_r_aWYey8GxpmQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9987d719-b748-4709-369b-08d75863ee6a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 09:24:11.8162
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VTOAzNaHmwpcPiDp35+qPPoh9MREzjfK7gqBhRV4Uuz//44R+HA43fqjhHhuA5Ml28iVmksCDCmT6ZzVQuIkXUDnFijeAwCGvLmKXyMiSYk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5367
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-24_06:2019-10-23,2019-10-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=958 phishscore=0
+ impostorscore=0 clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910240092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 5:38 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> On Wed, 2019-10-23 at 19:39 +0900, Tomasz Figa wrote:
-> > Hi Xia,
-> >
-> > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
-> > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jp=
-eg
-> > > decode and encode have great similarities with function operation.
-> > >
-> > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> > > ---
-> > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder=
-,
-> > >     one for decoder.
-> > >     split mtk_jpeg_set_default_params() to two functions, one for
-> > >     encoder, one for decoder.
-> > >     add cropping support for encoder in g/s_selection ioctls.
-> > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
-> > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 b=
-y
-> > >     specification.
-> > >     move width shifting operation behind aligning operation in
-> > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
-> > >     fix user abuseing data_offset issue for DMABUF in
-> > >     mtk_jpeg_set_enc_src().
-> > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGH=
-T
-> > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH fro=
-m
-> > >                         'int' type to 'unsigned int' type.
-> > >                         fix msleadingly indented of 'else'.
-> > >
-> > > v3: delete Change-Id.
-> > >     only test once handler->error after the last v4l2_ctrl_new_std().
-> > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch=
-.
-> > >
-> > > v2: fix compliance test fail, check created buffer size in driver.
-> > > ---
-> > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++-=
---
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
-> > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
-> > >  7 files changed, 1004 insertions(+), 146 deletions(-)
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.=
-h
-> > >
-> >
-> > First of all, thanks for the patch!
-> >
-> > Please check my comments below.
-> >
-> > My general feeling about this code is that the encoder hardware block i=
-s
-> > completely orthogonal from the decoder block and there is very little c=
-ode
-> > reuse from the original decoder driver.
-> >
-> > Moreover, a lot of existing code now needs if (decoder) { ... } else {.=
-.. }
-> > segments, which complicates the code.
-> >
-> > Would it perhaps make sense to instead create a separate mtk-jpeg-enc
-> > driver?
-> >
-> Dear Tomasz,
->
-> Thanks for your comments.
->
-> My reasons about the architecture of jpeg enc driver are as follows:
->
-> The first internal design and realization of jpeg enc driver was a
-> separate driver, but found that mtk_jpeg_core.c and mtk_jpeg_enc_core.c
-> have lots of reuse.Because that  the core.c mainly contains realization
-> of v4L2 ioctl functions and some logic which are high similarity between
-> encoder and decoder.
->
-> The jpeg encoder and decoder are two independent hardwares exactly, so
-> the code about hardware specification(register setting) are
-> separated(mtk_jpeg_enc_hw.c and mtk_jpeg_dec_hw.c).
->
-> As for 17 existing code segments contain if(decoder){} else {}, they are
-> not complicated IMHO.The complicated(multilayer nested) functions are
-> separated in V4 version as Hans recommendation.
->
-> By the way,the upstreamed module s5p-jpeg
-> (https://elixir.bootlin.com/linux/latest/source/drivers/media/platform/s5=
-p-jpeg/jpeg-core.c#L1998) also use encoder and decoder mode in the common c=
-ore.c, but their encoder and decoder are the same hardware.Maybe our jpeg e=
-nc and dec are designed into one hardware in the future.In that case the cu=
-rrent architecture is more compatible.
->
-> So I prefer the current design.
->
-
-Would you be able to give some numbers to show the code reuse to
-justify using the same driver? From my observation, a new driver would
-result in a significantly cleaner code. If there is a further hardware
-architecture change, that would likely require another driver, because
-it wouldn't be compatible with existing programming model anyway.
-
-Regardless of that, if we end up with reusing the same driver, I'd
-like you to fix the issues existing in the current base before adding
-the encoder functionality.
-
-Best regards,
-Tomasz
+T24gV2VkLCAyMDE5LTEwLTIzIGF0IDE1OjU5IC0wNzAwLCBEbWl0cnkgVG9yb2tob3Ygd3JvdGU6
+DQo+IFtFeHRlcm5hbF0NCj4gDQo+IEhpIEFsZXhhbmRydSwNCj4gDQo+IE9uIFdlZCwgT2N0IDIz
+LCAyMDE5IGF0IDEwOjA1OjQxQU0gKzAzMDAsIEFsZXhhbmRydSBBcmRlbGVhbiB3cm90ZToNCj4g
+PiBGcm9tOiBMYXJzLVBldGVyIENsYXVzZW4gPGxhcnNAbWV0YWZvby5kZT4NCj4gPiANCj4gPiBP
+biBzb21lIHBsYXRmb3JtcyB0aGUgYWRwNTU4OSBpcyB1c2VkIGluIEdQSU8gb25seSBtb2RlLiBP
+biB0aGVzZQ0KPiA+IHBsYXRmb3Jtcw0KPiA+IHdlIGRvIG5vdCB3YW50IHRvIHJlZ2lzdGVyIGEg
+aW5wdXQgZGV2aWNlLCBzbyBtYWtlIHRoYXQgb3B0aW9uYWwgYW5kDQo+ID4gb25seQ0KPiA+IGNy
+ZWF0ZSB0aGUgaW5wdXQgZGV2aWNlIGlmIGEga2V5bWFwIGlzIHN1cHBsaWVkLg0KPiA+IA0KPiA+
+IFNpZ25lZC1vZmYtYnk6IExhcnMtUGV0ZXIgQ2xhdXNlbiA8bGFyc0BtZXRhZm9vLmRlPg0KPiA+
+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFu
+YWxvZy5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvYWRwNTU4OS1r
+ZXlzLmMgfCAxOTcgKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDExMSBpbnNlcnRpb25zKCspLCA4NiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9hZHA1NTg5LWtleXMuYw0KPiA+IGIvZHJpdmVy
+cy9pbnB1dC9rZXlib2FyZC9hZHA1NTg5LWtleXMuYw0KPiA+IGluZGV4IDRmOTZhNGE5OWU1Yi4u
+MDhiZmE4YjIxM2U4IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaW5wdXQva2V5Ym9hcmQvYWRw
+NTU4OS1rZXlzLmMNCj4gPiArKysgYi9kcml2ZXJzL2lucHV0L2tleWJvYXJkL2FkcDU1ODkta2V5
+cy5jDQo+ID4gQEAgLTQ5NSwxMCArNDk1LDEwIEBAIHN0YXRpYyBpbnQgYWRwNTU4OV9idWlsZF9n
+cGlvbWFwKHN0cnVjdA0KPiA+IGFkcDU1ODlfa3BhZCAqa3BhZCwNCj4gPiAgCXJldHVybiBuX3Vu
+dXNlZDsNCj4gPiAgfQ0KPiA+ICANCj4gPiAtc3RhdGljIGludCBhZHA1NTg5X2dwaW9fYWRkKHN0
+cnVjdCBhZHA1NTg5X2twYWQgKmtwYWQpDQo+ID4gK3N0YXRpYyBpbnQgYWRwNTU4OV9ncGlvX2Fk
+ZChzdHJ1Y3QgYWRwNTU4OV9rcGFkICprcGFkLA0KPiA+ICsJY29uc3Qgc3RydWN0IGFkcDU1ODlf
+a3BhZF9wbGF0Zm9ybV9kYXRhICpwZGF0YSkNCj4gPiAgew0KPiA+ICAJc3RydWN0IGRldmljZSAq
+ZGV2ID0gJmtwYWQtPmNsaWVudC0+ZGV2Ow0KPiA+IC0JY29uc3Qgc3RydWN0IGFkcDU1ODlfa3Bh
+ZF9wbGF0Zm9ybV9kYXRhICpwZGF0YSA9DQo+ID4gZGV2X2dldF9wbGF0ZGF0YShkZXYpOw0KPiA+
+ICAJY29uc3Qgc3RydWN0IGFkcDU1ODlfZ3Bpb19wbGF0Zm9ybV9kYXRhICpncGlvX2RhdGEgPSBw
+ZGF0YS0NCj4gPiA+Z3Bpb19kYXRhOw0KPiA+ICAJaW50IGksIGVycm9yOw0KPiA+ICANCj4gDQo+
+IEFsbCB0aGVzZSBjaGFuZ2VzIHBhc3NpbmcgcGRhdGEgdG8gdmFyaW91cyBmdW5jdGlvbnMgYXJl
+IG5vdCByZWFsbHkNCj4gbmVlZGVkIGZvciB0aGlzIHBhdGNoLiBJIGRyb3BwZWQgdGhlbSBhbmQg
+YXBwbGllZC4NCg0KQWNrLg0KVGhhbmsgeW91Lg0KDQo+IA0KPiBTb3JyeSBmb3IgdGhlIGRlbGF5
+Lg0KDQpObyB3b3JyaWVzICYgdGhhbmsgeW91IGFnYWluIDopDQo+IA0K
