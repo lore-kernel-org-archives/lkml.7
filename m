@@ -2,190 +2,106 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7EBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EA5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE47521655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E5F21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 05:41:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="jm3cX1F0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437479AbfJXFlI (ORCPT
+        id S2437568AbfJXFlb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 01:41:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40244 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390377AbfJXFlI (ORCPT
+        Thu, 24 Oct 2019 01:41:31 -0400
+Received: from sonic315-8.consmr.mail.gq1.yahoo.com ([98.137.65.32]:36089 "EHLO
+        sonic315-8.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406827AbfJXFlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 01:41:08 -0400
-Received: by mail-io1-f69.google.com with SMTP id 125so9948719iou.7
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 22:41:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=qTVxFo3HdO6z5TZWXw04u3dfnIn/I3qJHsYWtua5niA=;
-        b=fVYu9rondkMSbUe2nEuY6PTmsASkJJqzhFi4uJpgzAy7Gp8z/cm/L88HSQDcNL+a7W
-         vDKSymqKsI2rMQxQTjwqVlJRPxsAM4ltUPyoXTRR7dU8LUfMCkOnshlMo7jk12kLwCyl
-         xNIKEk9fp6QpsobuTqasOqik/spyGv0FgjLUD6YIqbezdcCXzrHEk9aI58tbYrozTLR2
-         hIJ+ZJGKC6zlvpOWKNdf4ya7RkynTYztiXoaWZqIwjcHOcegJjXXancIlf7j0Y2y6iBx
-         b4KisD3XFOjIWNGmkl59FiCEuQqJTeJu4z+lbebJM2fXvvb3//sKpzY0+xgxVvGBpLrK
-         P4KQ==
-X-Gm-Message-State: APjAAAUh3pXoR1j8LSINGflytZIockGVF02lONtGcrG7fvU2D6o7t1C1
-        2u0lBlizJCN7fF3IFNNMj8AFGfIqpQl0qGUCD2bj67dWz/Le
-X-Google-Smtp-Source: APXvYqxIitDkoL/+XE9OagriX+lVJtdpL/L4jMmuCArawskq6JXSx2y80ga0/MGcZ0DkpUwvpk2az4jKKier8V13JnGRACA5nxzF
+        Thu, 24 Oct 2019 01:41:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1571895689; bh=5GQIr7IaB9RS8gJWjgXdB8tkau2TC16X6XzdFwNy+0E=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=jm3cX1F0hc5Qml2Eo44Ez0Yv29dHn2TRDUz/y7KNAACNYyppbcyujYjk3xIR9ZCp5LjBBu6jEudMee+PMFJiu4FteQo/f1XYVE238l75Q8EtW9BR28PuyTu1OTBAz1RqOyTPPGSQB7dBzm1kQ65cQQu2/iLtYNdaqpGQsGNVlqXx/tXmwn3/ShAoYPtodo4LWEZF2PkZGgEomBDC2sgQSiQHsyAPD8yp+9wWsEfrZI0fCzkftH8ZgijMiOqxB3X9mu4HNUZ+8muCWFw1hiXylG1Wm1sFab9mT1mkJDI57B70m+U/EoZwbiRXIVLMhEuahN29H4vywKyZoDjRDc0eMg==
+X-YMail-OSG: qDz6UgoVM1kExkeJ3_eGo6meNt8jjE1oBPJvNEOv24ds8CrF0wEfJLWdptO1q71
+ FKDpLOOusTuXGgHuwRsG3JBFvce6zxKLxDb9sk6UPs5ux2f8stoHrTIV0ffI9YlFAbLk8s3QvExp
+ ci6reBga0vsOsSYllpAQIenqJzi58dd9Xf_kdPUrL1D3xGmBa6CK5ZQUZzJ_dfZza0sZ7KOGFbAo
+ IOaEN3tnOAbI4GDl2sOgRdXZgpasITyXenAYXCJR0eIWqNBE_iarximrfT_sYvp0ovnFbDcdX71n
+ agmsO42vF86d.jDrCvLVvcsu6Hs3MiIvwn83pdnRqCsFp4vVPOCi.QxFaB5baGuFZ_.7nZJTWGEu
+ 0Mr64k.V3XQphIm0hXQcYLxOAVvkkyEw7mq0ICpYWb3mb4dI3h0.0YJgymOuCe7EzsDf8B_VkN_0
+ li6XJG0orebZx.YHoqtOdSxfGuqfFdCNBzGG5JalGFvoMIuZmWDwiBMOEJ1zqA5wWlCkMjS5IL2H
+ be1uX8K1HUrgwUD.hbDfWeY2yxpB.jeeOXR.vPwmtj0ONvAep6lcV9UoGwxU_.8Ip3Q5dWJDuAHw
+ 9.Yx.825bJ6fWArm_pkB.F0xZoWTXZFATjuscZwLk7yzskDSIqIBBzHDVTocGNnKZI1njj4NDFc3
+ 8.lEPEoG.Hy5kwjYCgYG2e87cWisbpS26GKJnVxrqi3_17NAY4Bkh5zDNzEpvvxbohHZ.HeiAP0P
+ IshxkZAbKMBcaJ9wREYtGHRzQ9HdGP2CK4YTJVvM9DhtGHgMGIn9dLACw57dBUX1aQINi.TMTM1D
+ JdV83TQQ6_lrZdpBM1SXdSzC17sEcNNAWxvVCQKXdiZbr7e6JwwcIS1QQXEAX8eZGLFogHm3fwdh
+ l4FdX3UE0k7GDl5eouJ.uXP8j17g7OaWyOn_Sr38YA0JAZzgHbirLjPU6amZ06LbfSeI3yxU7RlB
+ mwkaJ_40CXTi4CPNS0TOKImGGACtQCH31mlZqI1C4zeiLPZFANNO52bJEUhTAH04uGO1z2mMzsL6
+ 3aDPzP_cbly2_CRWjXZ4K_8higo5YDs3BXQlwit9Mp2AvHxpLQHqzx_6GxcSF_ppKrABm6H4xOvo
+ e.Ko218thoKcLivXkuAYkgXvSbBUKKXtYokNyEfxKN6PhfhcksqJs9_1a_j4ST_SW8XPatmiMXvw
+ r_rVQ9MzoQD2.k6vKeZvKTuU5CQNHrBjq_RBBCc6phAz8AGNCX8FOBonR1Rzvs2UUOXJTszWFOSJ
+ vm_l.uOSrbPug_DIVLL1XBN1SUjiffDzfWpv0VgdVgQHGu2M3DCtvsPK_Z1AOyrWb8hXyMd1VEXH
+ 7YyCWsuaH9dOhTNhHuf_weBbxX2lVS17BQiSZb9Z6
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 24 Oct 2019 05:41:29 +0000
+Received: by smtp417.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 58468a67fe640e75d17c6286566093fa;
+          Thu, 24 Oct 2019 05:41:25 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 13:41:15 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Philippe Liard <pliard@google.com>
+Cc:     phillip@squashfs.org.uk, linux-kernel@vger.kernel.org,
+        groeck@chromium.org
+Subject: Re: [PATCH] squashfs: Migrate from ll_rw_block usage to BIO
+Message-ID: <20191024054112.GA1998@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191018010846.186484-1-pliard@google.com>
+ <20191024012354.105261-1-pliard@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:b619:: with SMTP id h25mr13146316jam.40.1571895667272;
- Wed, 23 Oct 2019 22:41:07 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 22:41:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000df373f0595a17a83@google.com>
-Subject: KASAN: use-after-free Read in cma_cancel_listens
-From:   syzbot <syzbot+57a3b121df74c4eccbc7@syzkaller.appspotmail.com>
-To:     bvanassche@acm.org, danitg@mellanox.com, dledford@redhat.com,
-        jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, mhjungk@gmail.com, parav@mellanox.com,
-        shamir.rabinovitch@oracle.com, swise@opengridcomputing.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191024012354.105261-1-pliard@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Oct 24, 2019 at 10:23:54AM +0900, Philippe Liard wrote:
+> Thanks Cristoph for taking a look. I like the idea of simplifying this if
+> possible. I think I understand your suggestion in principle but I'm not
+> seeing a way to apply it here. Would it be possible for you to be a little
+> more specific? Let me try to explain this below.
+> 
+> My admittedly?limited understanding is that using BIO indirectly requires
+> buffer_head or an alternative including some synchronization mechanism at
+> least.
+> It's true that the bio_{alloc,add_page,submit}() functions don't require
+> passing a buffer_head. However because bio_submit() is asynchronous AFAICT
+> the client needs to use a synchronization mechanism to wait for and notify
+> the completion of the request which buffer heads provide. This is achieved
+> respectively by wait_on_buffer() and {set,clear}_buffer_uptodate().
+> 
+> Another dependency on buffer heads is the fact that squashfs_read_data()
+> calls into other squashfs functions operating on buffer heads outside this
+> file. For example squashfs_decompress() operates on a buffer_head array.
+> 
+> Given that bio_submit() is asynchronous I'm also not seeing how the
+> squashfs_bio_request allocation can be removed? There can be multiple BIO
+> requests in flight each needing to carry some context used on completion
+> of the request.
 
-syzbot found the following crash on:
+Personally speaking, just for Android related use cases, I'd suggest latest
+EROFS if you care more about system overall performance more than compression
+ratio, even https://lkml.org/lkml/2017/9/22/814 is applied (you can do
+benchmark), we did much efforts 3 years ago.
 
-HEAD commit:    3b7c59a1 Merge tag 'pinctrl-v5.4-2' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b639ff600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6c03e4d33fa96d51
-dashboard link: https://syzkaller.appspot.com/bug?extid=57a3b121df74c4eccbc7
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
+And that is not only performance but noticable memory overhead (a lot of
+extra memory allocations) and heavy page cache thrashing in low memory
+scenarios (it's very common [1].)
 
-Unfortunately, I don't have any reproducer for this crash yet.
+[1] https://linuxplumbersconf.org/event/4/contributions/404/attachments/326/550/Handling_memory_pressure_on_Android.pdf
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+57a3b121df74c4eccbc7@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in __list_del_entry_valid+0x9c/0x100  
-lib/list_debug.c:54
-Read of size 8 at addr ffff888097eda1e8 by task syz-executor.2/15086
-
-CPU: 1 PID: 15086 Comm: syz-executor.2 Not tainted 5.4.0-rc4+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
-  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
-  kasan_report+0x26/0x50 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __list_del_entry_valid+0x9c/0x100 lib/list_debug.c:54
-  __list_del_entry include/linux/list.h:131 [inline]
-  list_del include/linux/list.h:139 [inline]
-  cma_cancel_listens+0x40/0x390 drivers/infiniband/core/cma.c:1750
-  cma_cancel_operation drivers/infiniband/core/cma.c:1778 [inline]
-  rdma_destroy_id+0x44f/0x1080 drivers/infiniband/core/cma.c:1842
-  ucma_close+0x1eb/0x2c0 drivers/infiniband/core/ucma.c:1762
-  __fput+0x2e4/0x740 fs/file_table.c:280
-  ____fput+0x15/0x20 fs/file_table.c:313
-  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x5e8/0x2190 kernel/exit.c:817
-  do_group_exit+0x15c/0x2b0 kernel/exit.c:921
-  get_signal+0x4ac/0x1d60 kernel/signal.c:2734
-  do_signal+0x37/0x640 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop arch/x86/entry/common.c:159 [inline]
-  prepare_exit_to_usermode+0x303/0x580 arch/x86/entry/common.c:194
-  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
-  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459ef9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007faedb0c5cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 000000000075bf28 RCX: 0000000000459ef9
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 000000000075bf28
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000075bf2c
-R13: 00007ffe74d4703f R14: 00007faedb0c69c0 R15: 000000000075bf2c
-
-Allocated by task 15089:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3550
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  __rdma_create_id+0x66/0x480 drivers/infiniband/core/cma.c:882
-  ucma_create_id+0x250/0x540 drivers/infiniband/core/ucma.c:501
-  ucma_write+0x2da/0x360 drivers/infiniband/core/ucma.c:1684
-  __vfs_write+0xb8/0x740 fs/read_write.c:494
-  vfs_write+0x275/0x590 fs/read_write.c:558
-  ksys_write+0x117/0x220 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 15272:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x115/0x200 mm/slab.c:3756
-  rdma_destroy_id+0xea2/0x1080 drivers/infiniband/core/cma.c:1877
-  ucma_close+0x1eb/0x2c0 drivers/infiniband/core/ucma.c:1762
-  __fput+0x2e4/0x740 fs/file_table.c:280
-  ____fput+0x15/0x20 fs/file_table.c:313
-  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
-  get_signal+0x1ca8/0x1d60 kernel/signal.c:2528
-  do_signal+0x37/0x640 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop arch/x86/entry/common.c:159 [inline]
-  prepare_exit_to_usermode+0x303/0x580 arch/x86/entry/common.c:194
-  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
-  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff888097eda000
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 488 bytes inside of
-  2048-byte region [ffff888097eda000, ffff888097eda800)
-The buggy address belongs to the page:
-page:ffffea00025fb680 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea0002982a08 ffffea0002561a48 ffff8880aa400e00
-raw: 0000000000000000 ffff888097eda000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888097eda080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888097eda100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff888097eda180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                           ^
-  ffff888097eda200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888097eda280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Thanks,
+Gao Xiang
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
