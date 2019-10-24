@@ -2,101 +2,89 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309D6CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F0ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 021A420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE0621872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jUiDsdpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394115AbfJXR5f (ORCPT
+        id S2503943AbfJXR7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:57:35 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:59670 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2388218AbfJXR5e (ORCPT
+        Thu, 24 Oct 2019 13:59:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41112 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440060AbfJXR7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:57:34 -0400
-Received: (qmail 2715 invoked by uid 2102); 24 Oct 2019 13:57:33 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 24 Oct 2019 13:57:33 -0400
-Date:   Thu, 24 Oct 2019 13:57:33 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     syzbot <syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com>,
-        "Jacky . Cao @ sony . com" <Jacky.Cao@sony.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: divide error in dummy_timer
-In-Reply-To: <CAAeHK+xHTtkSRkMv5kV1hKcR3mhTPkyfUparka3oRBSs6U8yLQ@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1910241336130.1318-100000@iolanthe.rowland.org>
+        Thu, 24 Oct 2019 13:59:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XXoiVULwbVHZ4C9SPQpLAtO+Mzv6GYYY1WvuCs2Jy8E=; b=jUiDsdppdJg5v14jhaVtXgiyf
+        PglYCH7r0mepZfnaakQ3M4FWuhZ6fTB+lG2MkhcuNp82YpNODyqk58sqERAi+NgvX8+zOCEKBl7yN
+        Dksd0Z8U0vQVJe1OPM3Ce2SrQdsPOXJqNXY712WOYwiORv23iwUbrgFZ65jOAbV3nILBruIBDQjpB
+        mchSiddIpwMOYlCtvoQmEQ+RTaFlKm5Xl5sE1oReW5VCJHjlmSb5Wv0AaviQKRYMMMHwkeQfzNFMm
+        GcRSKnQQCf5BEAlC4yp2LW2pJTDYYigvv77MYOpTUWhVVQ202S1mcsUneziL5+IUyCdncJJWHLsDA
+        C21xd55AA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNhO4-0000Qh-So; Thu, 24 Oct 2019 17:59:04 +0000
+Date:   Thu, 24 Oct 2019 10:59:04 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/15] staging: exfat: Clean up return codes - FFS_FULL
+Message-ID: <20191024175904.GJ2963@bombadil.infradead.org>
+References: <20191024155327.1095907-1-Valdis.Kletnieks@vt.edu>
+ <20191024155327.1095907-2-Valdis.Kletnieks@vt.edu>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024155327.1095907-2-Valdis.Kletnieks@vt.edu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019, Andrey Konovalov wrote:
+On Thu, Oct 24, 2019 at 11:53:12AM -0400, Valdis Kletnieks wrote:
+> Start cleaning up the odd scheme of return codes, starting with FFS_FULL
 
-> > Is this really the sort of thing we need to catch?  It isn't a bug in
-> > any existing kernel code, as far as I know.  Maybe only gadgetfs and
-> > configfs need to worry about it.
-> 
-> Hi Alan,
-> 
-> Do you mean that the gadget driver must ensure that the max packet
-> size in the endpoint descriptor is not zero? Do HCDs rely on that? I
-> can add this check into the driver we use for USB fuzzing.
+> +++ b/drivers/staging/exfat/exfat.h
+> @@ -221,7 +221,6 @@ static inline u16 get_row_index(u16 i)
+>  #define FFS_PERMISSIONERR       11
+>  #define FFS_NOTOPENED           12
+>  #define FFS_MAXOPENED           13
+> -#define FFS_FULL                14
+>  #define FFS_EOF                 15
+>  #define FFS_DIRBUSY             16
+>  #define FFS_MEMORYERR           17
 
-Well, if there are any gadget drivers in the kernel which do set an
-endpoint's maxpacket size to 0, they should be fixed.  I'm not aware of
-any.
+Wouldn't it be better to do this as:
 
-Of course, gadget drivers in userspace are always suspect.  That's why
-I suggested having gadgetfs and configfs perform this check.  Even so
-it's not really a _security_ risk, because only the superuser is
-allowed to run a userspace gadget driver.  (Although obviously it is 
-better to have a clean failure than to crash the system when a buggy 
-program runs with superuser privileges.)
+Patch 1: Change all these defines to -Exxx and remove the stupid errno-changing
+blocks like this:
 
-Yes, HCDs do depend on endpoints having reasonable maxpacket values.  I 
-suppose the core should check for this.  Currently we check for values 
-that are too large or invalid in other ways (like high-speed bulk 
-endpoints with maxpacket != 512), but we don't check for 0.
+> @@ -2360,7 +2360,7 @@ static int exfat_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+>  			err = -EINVAL;
+>  		else if (err == FFS_FILEEXIST)
+>  			err = -EEXIST;
+> -		else if (err == FFS_FULL)
+> +		else if (err == -ENOSPC)
+>  			err = -ENOSPC;
+>  		else if (err == FFS_NAMETOOLONG)
+>  			err = -ENAMETOOLONG;
 
-In fact, that sounds like a much better solution to the problem
-overall.  Let's see if this patch fixes the bug...
+then patches 2-n remove individual FFS error codes.
 
-Alan Stern
-
-#syz test: https://github.com/google/kasan.git 22be26f7
-
- drivers/usb/core/config.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
-Index: usb-devel/drivers/usb/core/config.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/config.c
-+++ usb-devel/drivers/usb/core/config.c
-@@ -348,6 +348,11 @@ static int usb_parse_endpoint(struct dev
- 
- 	/* Validate the wMaxPacketSize field */
- 	maxp = usb_endpoint_maxp(&endpoint->desc);
-+	if (maxp == 0) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
-+		    cfgno, inum, asnum, d->bEndpointAddress);
-+		goto skip_to_next_endpoint_or_interface_descriptor;
-+	}
- 
- 	/* Find the highest legal maxpacket size for this endpoint */
- 	i = 0;		/* additional transactions per microframe */
-
+That way nobody actually needs to review patches 2-n; all of the changes
+are done in patch 1.
