@@ -2,115 +2,115 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71858CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A2ECA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8C21928
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B3D222CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:21:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="n367ZZoH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cr/AzgsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfJXVHl (ORCPT
+        id S1728974AbfJXVVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:07:41 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59944 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbfJXVHl (ORCPT
+        Thu, 24 Oct 2019 17:21:13 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:32874 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbfJXVVN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:07:41 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        Thu, 24 Oct 2019 17:21:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZtBs1/l6mBDyZtFIn5CV1kjtXQutizfGl/4BYEKqk5s=; b=cr/AzgsUHzuuLdrtAYldm3B0z
+        ZUT3crSYPW7skGAja72go1Gn3JmrRIDYXYdAUYoSdD/Fqwht/8/D4FplLIjNFbb341N9xhlYauKBj
+        26VLTellYCz1U3ReG+1izW9JrXvkY7GtBtMhPfIao8PAe/C+n6ln+abjjL0JTC+no/chVBJHI2GKJ
+        EdYED71cXcjq6cyQuENIqBbIDxGS6qx2anCLbGdOdqHPcpR0Aislg6PTUeVnhoCLa8KsBvukT5Cml
+        sKXcryyI5fnDIBdHtpcUkzJ+OvZWWtTTqnuoCzObmdqXNiqlfKWwbiQJEcchp/6jEkNsKyyCOygUe
+        z+AGtug8w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNkXb-0004gG-3p; Thu, 24 Oct 2019 21:21:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F33CB891AA;
-        Fri, 25 Oct 2019 10:07:38 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571951258;
-        bh=nLYWZmfo2EArkYJRQdLZy6LtWfpZT42k7cHcj+sN/Ak=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=n367ZZoHK10Ei/cdFPk5IiOHOvfUv1paEcPxEffwwsKPbVZjv7p59Yh+bHXNajJab
-         FjzcLZ/mDa7nhHu5bIeaV7s1jxTjmFC64FZHWRZl7I8J9LF8oVSEx+S9IUF1qZOAmI
-         f4A8z8D98g3NaswuyqRPtb4T1vm27tKGwdF7nkwH/IqkO8m4h1TC5bktuG8cl4scQI
-         drfVQRDvGTi5Lcj3+ahw1ykaeRGG1Sn3hEWM/uJil7/oKwZO5fL/5hO6rL4mTwCcyA
-         jJ6b/I8v21VlkjG4SAwsyh1r0HHinfECSW1yursZy/aPtvdHxDOAmgSG6zRn4zJuPW
-         k1g2D2UdZHdAQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5db212990000>; Fri, 25 Oct 2019 10:07:37 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Fri, 25 Oct 2019 10:07:37 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 25 Oct 2019 10:07:37 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "corbet@lwn.net" <corbet@lwn.net>
-CC:     "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] docs/core-api: memory-allocation: remove uses of
- c:func:
-Thread-Topic: [PATCH v3 2/3] docs/core-api: memory-allocation: remove uses of
- c:func:
-Thread-Index: AQHViqRDYXn+aypHWkCn7i9MADN5nKdpZCEAgAAGP4CAAAGgAIAAAugA
-Date:   Thu, 24 Oct 2019 21:07:36 +0000
-Message-ID: <1ab8d0451f29ba9b72dc758f7c1fc1ba0657ac61.camel@alliedtelesis.co.nz>
-References: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
-         <20191024195016.11054-3-chris.packham@alliedtelesis.co.nz>
-         <20191024142902.6bd413f6@lwn.net>
-         <1ddbd3045d6a989b32065c0bd5b3a3c0ef525953.camel@alliedtelesis.co.nz>
-         <20191024145712.165556c1@lwn.net>
-In-Reply-To: <20191024145712.165556c1@lwn.net>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:254c:490a:57ec:fd27]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <73A395BDD4D643419016DDD4AD748637@atlnz.lc>
-Content-Transfer-Encoding: base64
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CE337300EBF;
+        Thu, 24 Oct 2019 23:20:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 719D02100B87C; Thu, 24 Oct 2019 23:21:05 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 23:21:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt disable
+Message-ID: <20191024212105.GY4114@hirez.programming.kicks-ass.net>
+References: <20191023122705.198339581@linutronix.de>
+ <20191023123118.296135499@linutronix.de>
+ <20191023220618.qsmog2k5oaagj27v@treble>
+ <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de>
+ <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com>
+ <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEwLTI0IGF0IDE0OjU3IC0wNjAwLCBKb25hdGhhbiBDb3JiZXQgd3JvdGU6
-DQo+IE9uIFRodSwgMjQgT2N0IDIwMTkgMjA6NTE6MjMgKzAwMDANCj4gQ2hyaXMgUGFja2hhbSA8
-Q2hyaXMuUGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4gDQo+ID4gV2hlbiBJ
-IGRvIGFjdHVhbGx5IGdldCBhIHNlcmllcyB0aGF0IGFwcGxpZXMgdG8gZG9jcy1uZXh0IGl0J2xs
-DQo+ID4gY29uZmxpY3Qgd2l0aCA1OWJiNDc5ODVjMWQgKCJtbSwgc2xbYW91XWI6IGd1YXJhbnRl
-ZQ0KPiA+IG5hdHVyYWwgYWxpZ25tZW50IGZvciBrbWFsbG9jKHBvd2VyLW9mLXR3bykiKSBpbiBM
-aW51cydzIHRyZWUuDQo+IA0KPiBBbHRlcm5hdGl2ZWx5LCBpZiBJIHN5bmMgdXAgdG8gLXJjNCwg
-ZG9lcyB0aGUgcHJvYmxlbSBnbyBhd2F5PyAgSSBzaG91bGQNCj4gYmUgYWJsZSB0byBleHBsYWlu
-IHRoYXQgdG8gTGludXMgd2l0aG91dCB0b28gbXVjaCB0cm91YmxlLi4uDQo+IA0KDQpZZXMgdGhl
-IHNlcmllcyBhcHBsaWVzIGNsZWFubHkgb25jZSBkb2NzLW5leHQgaXMgbWVyZ2VkIHdpdGggdjUu
-NC1yYzQuDQoNClRoZXJlIGlzIGEgbWVyZ2UgY29uZmxpY3QgYmV0d2VlbiA2ZWUwZmFjMTk5ZTEg
-KCJkb2NzOiBmaXggbWVtb3J5Lmxvdw0KZGVzY3JpcHRpb24gaW4gY2dyb3VwLXYyLnJzdCIpIGlu
-IHlvdXIgdHJlZSBhbmQgOTc4M2FhOTkxN2Y4ICgibW0sDQptZW1jZzogcHJvcG9ydGlvbmFsIG1l
-bW9yeS57bG93LG1pbn0gcmVjbGFpbSIpIGluIExpbnVzJ3MgdHJlZS4gSGVyZSdzDQp0aGUgcmVz
-b2x1dGlvbiBJIGNhbWUgdXAgd2l0aCBpbiBteSB0ZXN0IG1lcmdlDQoNCmRpZmYgLS1jYyBEb2N1
-bWVudGF0aW9uL2FkbWluLWd1aWRlL2Nncm91cC12Mi5yc3QNCmluZGV4IDI2ZDFjZGU2YjM0YSw1
-MzYxZWJlYzMzNjEuLjUxNWMyZDllZWY4NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlk
-ZS9jZ3JvdXAtdjIucnN0DQorKysgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2Nncm91cC12
-Mi5yc3QNCkBAQCAtMTExNyw4IC0xMTIwLDExICsxMTIwLDExIEBAQCBQQUdFX1NJWkUgbXVsdGlw
-bGUgd2hlbiByZWFkIGJhY2sNCiAgDQogICAgICAgIEJlc3QtZWZmb3J0IG1lbW9yeSBwcm90ZWN0
-aW9uLiAgSWYgdGhlIG1lbW9yeSB1c2FnZSBvZiBhDQogICAgICAgIGNncm91cCBpcyB3aXRoaW4g
-aXRzIGVmZmVjdGl2ZSBsb3cgYm91bmRhcnksIHRoZSBjZ3JvdXAncw0KIC0gICAgICBtZW1vcnkg
-d29uJ3QgYmUgcmVjbGFpbWVkIHVubGVzcyBtZW1vcnkgY2FuIGJlIHJlY2xhaW1lZA0KICsgICAg
-ICBtZW1vcnkgd29uJ3QgYmUgcmVjbGFpbWVkIHVubGVzcyB0aGVyZSBpcyBubyByZWNsYWltYWJs
-ZQ0KLSAgICAgICBtZW1vcnkgYXZhaWxhYmxlIGluIHVucHJvdGVjdGVkIGNncm91cHMuDQorICAg
-ICAgIGZyb20gdW5wcm90ZWN0ZWQgY2dyb3Vwcy4gIEFib3ZlIHRoZSBlZmZlY3RpdmUgbG93IGJv
-dW5kYXJ5IChvcg0KKyAgICAgICBlZmZlY3RpdmUgbWluIGJvdW5kYXJ5IGlmIGl0IGlzIGhpZ2hl
-ciksIHBhZ2VzIGFyZSByZWNsYWltZWQNCisgICAgICAgcHJvcG9ydGlvbmFsbHkgdG8gdGhlIG92
-ZXJhZ2UsIHJlZHVjaW5nIHJlY2xhaW0gcHJlc3N1cmUgZm9yDQorICAgICAgIHNtYWxsZXIgb3Zl
-cmFnZXMuDQogIA0KICAgICAgICBFZmZlY3RpdmUgbG93IGJvdW5kYXJ5IGlzIGxpbWl0ZWQgYnkg
-bWVtb3J5LmxvdyB2YWx1ZXMgb2YNCiAgICAgICAgYWxsIGFuY2VzdG9yIGNncm91cHMuIElmIHRo
-ZXJlIGlzIG1lbW9yeS5sb3cgb3ZlcmNvbW1pdG1lbnQNCg0K
+On Thu, Oct 24, 2019 at 10:52:59PM +0200, Thomas Gleixner wrote:
+> is just undefined behaviour and I personally consider it to be a plain bug.
+
+I concur.
+
+> Just for the record: This results in running a resulting or even completely
+> unrelated signal handler with interrupts disabled as well.
+> 
+> Whatever we decide it is, leaving it completely inconsistent is not a
+> solution at all. The options are:
+> 
+>   1)  Always do conditional tracing depending on the user_regs->eflags.IF
+>       state.
+> 
+>   2)  #1 + warn once when syscalls and exceptions (except NMI/MCE) happen
+>       and user_regs->eflags.IF is cleared.
+> 
+>   3a) #2 + enforce signal handling to run with interrupts enabled.
+> 
+>   3b) #2 + set regs->eflags.IF. So the state is always correct from the
+>       kernel POV. Of course that changes existing behaviour, but its
+>       changing undefined and inconsistent behaviour.
+>   
+>   4) Let iopl(level) return -EPERM if level == 3.
+> 
+>      Yeah, I know it's not possible due to regressions (DPKD uses iopl(3)),
+>      but TBH that'd be the sanest option of all.
+> 
+>      Of course the infinite wisdom of hardware designers tied IN, INS, OUT,
+>      OUTS and CLI/STI together on IOPL so we cannot even distangle them in
+>      any way.
+> 
+>      The only way out would be to actually use a full 8K sized I/O bitmap,
+>      but that's a massive pain as it has to be copied on every context
+>      switch. 
+> 
+> Really pretty options to chose from ...
+
+If 4 is out (and I'm afraid it might be), then I'm on record for liking
+3b.
