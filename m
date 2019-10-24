@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC6BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0239BCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB24521A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8DC222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 23:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387459AbfJXXHt (ORCPT
+        id S2387667AbfJXXHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 19:07:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:23481 "EHLO mga18.intel.com"
+        Thu, 24 Oct 2019 19:07:55 -0400
+Received: from mga18.intel.com ([134.134.136.126]:23485 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732359AbfJXXHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 19:07:47 -0400
+        id S2387582AbfJXXHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 19:07:53 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 16:07:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,226,1569308400"; 
-   d="scan'208";a="202445831"
+   d="scan'208";a="202445868"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 24 Oct 2019 16:07:45 -0700
+  by orsmga006.jf.intel.com with ESMTP; 24 Oct 2019 16:07:46 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     James Hogan <jhogan@kernel.org>,
         Paul Mackerras <paulus@ozlabs.org>,
@@ -50,9 +50,9 @@ Cc:     David Hildenbrand <david@redhat.com>,
         kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH v3 01/15] KVM: Reinstall old memslots if arch preparation fails
-Date:   Thu, 24 Oct 2019 16:07:30 -0700
-Message-Id: <20191024230744.14543-2-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 13/15] KVM: Ensure validity of memslot with respect to kvm_get_dirty_log()
+Date:   Thu, 24 Oct 2019 16:07:42 -0700
+Message-Id: <20191024230744.14543-14-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20191024230744.14543-1-sean.j.christopherson@intel.com>
 References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
@@ -63,82 +63,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reinstall the old memslots if preparing the new memory region fails
-after invalidating a to-be-{re}moved memslot.
+Rework kvm_get_dirty_log() so that it "returns" the associated memslot
+on success.  A future patch will rework memslot handling such that
+id_to_memslot() can return NULL, returning the memslot makes it more
+obvious that the validity of the memslot has been verified, i.e.
+precludes the need to add validity checks in the arch code that are
+technically unnecessary.
 
-Remove the superfluous 'old_memslots' variable so that it's somewhat
-clear that the error handling path needs to free the unused memslots,
-not simply the 'old' memslots.
-
-Fixes: bc6678a33d9b9 ("KVM: introduce kvm->srcu and convert kvm_set_memory_region to SRCU update")
-Reviewed-by: Christoffer Dall <christoffer.dall@arm.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- virt/kvm/kvm_main.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ arch/powerpc/kvm/book3s_pr.c |  6 +-----
+ arch/s390/kvm/kvm-s390.c     | 12 ++----------
+ include/linux/kvm_host.h     |  2 +-
+ virt/kvm/kvm_main.c          | 27 +++++++++++++++++++--------
+ 4 files changed, 23 insertions(+), 24 deletions(-)
 
+diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+index 5368a5dbac22..f41a136d247f 100644
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -1860,7 +1860,6 @@ static int kvmppc_vcpu_run_pr(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
+ static int kvm_vm_ioctl_get_dirty_log_pr(struct kvm *kvm,
+ 					 struct kvm_dirty_log *log)
+ {
+-	struct kvm_memslots *slots;
+ 	struct kvm_memory_slot *memslot;
+ 	struct kvm_vcpu *vcpu;
+ 	ulong ga, ga_end;
+@@ -1870,15 +1869,12 @@ static int kvm_vm_ioctl_get_dirty_log_pr(struct kvm *kvm,
+ 
+ 	mutex_lock(&kvm->slots_lock);
+ 
+-	r = kvm_get_dirty_log(kvm, log, &is_dirty);
++	r = kvm_get_dirty_log(kvm, log, &is_dirty, &memslot);
+ 	if (r)
+ 		goto out;
+ 
+ 	/* If nothing is dirty, don't bother messing with page tables. */
+ 	if (is_dirty) {
+-		slots = kvm_memslots(kvm);
+-		memslot = id_to_memslot(slots, log->slot);
+-
+ 		ga = memslot->base_gfn << PAGE_SHIFT;
+ 		ga_end = ga + (memslot->npages << PAGE_SHIFT);
+ 
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index c0e9929bdb34..a66eb2b9bf71 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -613,9 +613,8 @@ int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm,
+ {
+ 	int r;
+ 	unsigned long n;
+-	struct kvm_memslots *slots;
+ 	struct kvm_memory_slot *memslot;
+-	int is_dirty = 0;
++	int is_dirty;
+ 
+ 	if (kvm_is_ucontrol(kvm))
+ 		return -EINVAL;
+@@ -626,14 +625,7 @@ int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm,
+ 	if (log->slot >= KVM_USER_MEM_SLOTS)
+ 		goto out;
+ 
+-	slots = kvm_memslots(kvm);
+-	memslot = id_to_memslot(slots, log->slot);
+-	r = -ENOENT;
+-	if (!memslot->dirty_bitmap)
+-		goto out;
+-
+-	kvm_arch_sync_dirty_log(kvm, memslot);
+-	r = kvm_get_dirty_log(kvm, log, &is_dirty);
++	r = kvm_get_dirty_log(kvm, log, &is_dirty, &memslot);
+ 	if (r)
+ 		goto out;
+ 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index cd204b7d2513..a19807a4a5ad 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -809,7 +809,7 @@ void kvm_arch_dirty_log_tlb_flush(struct kvm *kvm,
+ #else /* !CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT */
+ int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log);
+ int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
+-		      int *is_dirty);
++		      int *is_dirty, struct kvm_memory_slot **memslot);
+ #endif
+ 
+ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index b8534c6b8cf6..52deb5621501 100644
+index 9da9c801a237..0192dccfcec1 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -936,7 +936,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 	unsigned long npages;
- 	struct kvm_memory_slot *slot;
- 	struct kvm_memory_slot old, new;
--	struct kvm_memslots *slots = NULL, *old_memslots;
-+	struct kvm_memslots *slots;
- 	int as_id, id;
- 	enum kvm_mr_change change;
+@@ -1136,31 +1136,42 @@ static int kvm_vm_ioctl_set_memory_region(struct kvm *kvm,
+ }
  
-@@ -1044,7 +1044,13 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 		slot = id_to_memslot(slots, id);
- 		slot->flags |= KVM_MEMSLOT_INVALID;
+ #ifndef CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT
+-int kvm_get_dirty_log(struct kvm *kvm,
+-			struct kvm_dirty_log *log, int *is_dirty)
++/**
++ * kvm_get_dirty_log - get a snapshot of dirty pages
++ * @kvm:	pointer to kvm instance
++ * @log:	slot id and address to which we copy the log
++ * @is_dirty:	set to '1' if any dirty pages were found
++ * @memslot:	set to the associated memslot, always valid on success
++ */
++int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
++		      int *is_dirty, struct kvm_memory_slot **memslot)
+ {
+ 	struct kvm_memslots *slots;
+-	struct kvm_memory_slot *memslot;
+ 	int i, as_id, id;
+ 	unsigned long n;
+ 	unsigned long any = 0;
  
--		old_memslots = install_new_memslots(kvm, as_id, slots);
-+		/*
-+		 * We can re-use the old memslots, the only difference from the
-+		 * newly installed memslots is the invalid flag, which will get
-+		 * dropped by update_memslots anyway.  We'll also revert to the
-+		 * old memslots if preparing the new memory region fails.
-+		 */
-+		slots = install_new_memslots(kvm, as_id, slots);
++	*memslot = NULL;
++	*is_dirty = 0;
++
+ 	as_id = log->slot >> 16;
+ 	id = (u16)log->slot;
+ 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+ 		return -EINVAL;
  
- 		/* From this point no new shadow pages pointing to a deleted,
- 		 * or moved, memslot will be created.
-@@ -1054,13 +1060,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 		 *	- kvm_is_visible_gfn (mmu_check_roots)
- 		 */
- 		kvm_arch_flush_shadow_memslot(kvm, slot);
--
--		/*
--		 * We can re-use the old_memslots from above, the only difference
--		 * from the currently installed memslots is the invalid flag.  This
--		 * will get overwritten by update_memslots anyway.
--		 */
--		slots = old_memslots;
- 	}
+ 	slots = __kvm_memslots(kvm, as_id);
+-	memslot = id_to_memslot(slots, id);
+-	if (!memslot->dirty_bitmap)
++	*memslot = id_to_memslot(slots, id);
++	if (!(*memslot)->dirty_bitmap)
+ 		return -ENOENT;
  
- 	r = kvm_arch_prepare_memory_region(kvm, &new, mem, change);
-@@ -1074,15 +1073,17 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 	}
+-	n = kvm_dirty_bitmap_bytes(memslot);
++	kvm_arch_sync_dirty_log(kvm, *memslot);
++
++	n = kvm_dirty_bitmap_bytes(*memslot);
  
- 	update_memslots(slots, &new, change);
--	old_memslots = install_new_memslots(kvm, as_id, slots);
-+	slots = install_new_memslots(kvm, as_id, slots);
+ 	for (i = 0; !any && i < n/sizeof(long); ++i)
+-		any = memslot->dirty_bitmap[i];
++		any = (*memslot)->dirty_bitmap[i];
  
- 	kvm_arch_commit_memory_region(kvm, mem, &old, &new, change);
+-	if (copy_to_user(log->dirty_bitmap, memslot->dirty_bitmap, n))
++	if (copy_to_user(log->dirty_bitmap, (*memslot)->dirty_bitmap, n))
+ 		return -EFAULT;
  
- 	kvm_free_memslot(kvm, &old, &new);
--	kvfree(old_memslots);
-+	kvfree(slots);
- 	return 0;
- 
- out_slots:
-+	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE)
-+		slots = install_new_memslots(kvm, as_id, slots);
- 	kvfree(slots);
- out_free:
- 	kvm_free_memslot(kvm, &new, &old);
+ 	if (any)
 -- 
 2.22.0
 
