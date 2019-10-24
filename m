@@ -2,85 +2,115 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BD1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4BECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B436020856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X77JQu2M"
+	by mail.kernel.org (Postfix) with ESMTP id 4BF0D2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439573AbfJXMEr (ORCPT
+        id S2439578AbfJXMGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:04:47 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38659 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438979AbfJXMEr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 08:04:47 -0400
-Received: by mail-vs1-f65.google.com with SMTP id b123so16015760vsb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 05:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sK0pWvTCky33QCYiFA2nfCFulsVEzPP8ouWQMoNEYbQ=;
-        b=X77JQu2M74j32zRnCvWFx0hX8hm5QE9BLD7tdFlihPqR5QsbcspBUaPz9+ocTDD3Xk
-         CaMVHrQioNbYE5wdY85fJgXy51TlkFVvpkjMkS0J2osnWORTeIKW4AHxz1wLR+lqiYbr
-         2qWoPxAm9njrO/Se9XRbowj8pJ0UjCx0gmpmyS5rq3pAiyKm66fDpurQV1l8Q/XOq7CE
-         gMEsEgIe33ihcHLvqE3a4UCQk0UodbnovvCttQb6FlDk8QzrESZTd3cHxmfMl7ZlhBmm
-         ZStu/9Y36ikZ0TlP2kr3enmD087wd1WAokylvvKRtK8acsp/kLwLQ2KUHgTopIhDtv7k
-         qI8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sK0pWvTCky33QCYiFA2nfCFulsVEzPP8ouWQMoNEYbQ=;
-        b=nlue5WLbmkuufoSNGtyTu/S1VoJem3NrEHQ7kGMXB0k0YBnq0iAOcJ2vm4DrTyZA5P
-         qRoMazhA16pD4ho3z0WwA3mSi7qmNnbD0d9UxEYunAOHauXdBI8RSwjnuHJXsorwjFON
-         48iXO9+iScxlm0BkM6MhIpLek1b8tyaSJgsN3sNaukkg7UtEaG3PmLPRoBHmnVXvRDD+
-         JWJ6NjwOIicgUGVeyv963YoPv5FVObzAH303UzR//VFUk5HpPxFVsSn/qORR/QukItbg
-         2sZUo+0dh/baTrEaPGcelnwNxtgCbDho4+CKDb7uA+k9bO9kycqr+pBPx956rU05CAgX
-         Oczg==
-X-Gm-Message-State: APjAAAWZVboHl+E3IEdXgiqPCOJohNVf0SotzPsBreQYOS3B8cao9fNc
-        7SGuLILbzVq+8jibEq1dllcwGOc7oDXhIFEKFhmykg==
-X-Google-Smtp-Source: APXvYqzfB6++WoSRmQXkMK1uRnAw/CGlvAz3yUOrxP/5OG3nCHbkCQk9VVZg71JFiCROWtuW1HxxnC7HzkTd4MEDx2s=
-X-Received: by 2002:a67:fe42:: with SMTP id m2mr8848686vsr.67.1571918684479;
- Thu, 24 Oct 2019 05:04:44 -0700 (PDT)
+        Thu, 24 Oct 2019 08:06:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:19192 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733180AbfJXMGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 08:06:32 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 05:06:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
+   d="scan'208";a="210143295"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 24 Oct 2019 05:06:29 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 24 Oct 2019 15:06:28 +0300
+Date:   Thu, 24 Oct 2019 15:06:28 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Puma Hsu <pumahsu@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Kyle Tso <kyletso@google.com>,
+        Albert Wang <albertccwang@google.com>,
+        Chien Kun Niu <rickyniu@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector
+ orientation
+Message-ID: <20191024120346.GC15396@kuha.fi.intel.com>
+References: <20191022085924.92783-1-pumahsu@google.com>
+ <20191023083221.GB8828@kuha.fi.intel.com>
+ <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net>
+ <20191023142900.GA15396@kuha.fi.intel.com>
+ <20191023150126.GA16612@roeck-us.net>
+ <20191023155757.GB15396@kuha.fi.intel.com>
+ <CAGCq0LZGz04JCTEJXrBqs4ENybQih6zKWTacq9T9DKPNOQAfMw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191016141217.21520-1-yuehaibing@huawei.com>
-In-Reply-To: <20191016141217.21520-1-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 24 Oct 2019 14:04:33 +0200
-Message-ID: <CACRpkdYhVExyh2L9A7Fm7y7khCV9wrneKhtMsntWL5DFAaGrug@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: mvebu: use devm_platform_ioremap_resource()
- to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGCq0LZGz04JCTEJXrBqs4ENybQih6zKWTacq9T9DKPNOQAfMw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 4:13 PM YueHaibing <yuehaibing@huawei.com> wrote:
+Hi,
 
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Thu, Oct 24, 2019 at 05:02:18PM +0800, Puma Hsu wrote:
+> Yes, generally this might be purely informational or be a dynamically
+> debuggable
+> mechanism for end user as I mentioned in previous discussion
+> thread(https://lkml.org/lkml/2019/10/22/198).
+> Could I know if it is not suitable that we expose a file for
+> informational usage?
+> 
+> If everyone agreed above, about the definition of “unknown” and the condition
+> “don’t know the orientation”, what about adding additional return value?
+>   1. For original “unknown”, it is a generic unknown state which can
+> indicate no
+>       matter connector is disconnected, cannot specify which cc side
+> is configured(such as Ra-Ra),
+>       or even driver can not know the orientation.
+>   2. New additional value “unavailable”, it can be used to
+> specifically explicate that
+>       driver can not know the orientation.
+> Take UCSI as example, it can use generic “unknown” or “unavailable” if
+> it wants.
+> But if it exposes “unavailable”, then application in user space can
+> know that this attribute is not useful.
+> 
+> I summarize the proposal definition below:
+>  - unknown (generic unknown. driver don’t or can’t know the polarity,
+>                       e.g. disconnected, both cc1 and cc2 are the same, )
+>  - normal (configured in cc1 side)
+>  - reversed (configured in cc2 side)
+>  - unavailable (not support the polarity detection)
 
-Patch applied.
+Now the attribute would be supplying two types of information:
 
-Yours,
-Linus Walleij
+        1) Does the driver know the orientation
+        2) The current orientation
+
+Let's not do that! If you really need this, then just implement the
+".is_visible" callback with it. You just need to add a flag to the
+struct typec_capability that tells does the driver know the
+orientation or not. Something like:
+
+        unsigned int orientation_aware:1;
+
+We already "hide" the identity information if the underlying driver
+is unable to supply it. By making this attribute optional as well (by
+hiding it when it's not known), the style of exposing the information
+is kept the same throughout the class.
+
+thanks,
+
+-- 
+heikki
