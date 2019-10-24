@@ -2,127 +2,156 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1664CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E194ECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751D920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DjwKgdzI"
+	by mail.kernel.org (Postfix) with ESMTP id BFB1621925
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439622AbfJXMMk (ORCPT
+        id S2436560AbfJXMNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 08:12:40 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40719 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436560AbfJXMMk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 08:12:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o28so25788913wro.7
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 05:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fc53k7B5F6NLESUV742hYt2msCMxd7JzKfAjx90Oa0A=;
-        b=DjwKgdzIp56RgNcD65/nmLFKaNV7MqWG0ZJMX0u8Sh/CqLeGAPEsZKygrx9XDDwz0v
-         9BlKYvuRacw322e0u4tDq3lT6nmgdzgBNktPjnTyfvxIyjoutcLqGnFfQMWd8eaHbE2z
-         jxkLCbNetvnHJ7Ein19DIR7Hp2l7N1S5cyd3c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=fc53k7B5F6NLESUV742hYt2msCMxd7JzKfAjx90Oa0A=;
-        b=cQEoNwR+8/fro7UPyhJnh1AxgjW7kJ0ovIOtUMAn9fDdLzhuNvBse48RjXGNuxN7fe
-         Z/vNdN+EFegTXX7+W7KyUiO5CLYmTl69JeuIJ8sl6IV/hVgV3sbKjD6ArPGXHtt1vhsu
-         8+0WbjfaK7TjI1oKiUvzryNraFoQahJKrI04aa22VhY1rx8Dc5LuvgkwO/SS5H56UQc1
-         nqeEl+nxCJuvU5kZVb80QOsyZANa7Shvhz5SWaRytf55wi/puS7u9PrZxdEM+jaB/4lO
-         bYZSM4+Np2mWtrGmnpEe+93SYmd+s3Xil2j2B+DZmj8tbsIPDPSfMXRyhEDWocRoiViZ
-         f1vA==
-X-Gm-Message-State: APjAAAUwyRqQx0glgM0xxOn0rvjfR6p5VaGnCPi/BSoP68QSpcvsC739
-        5SlbvgtaH99ApZEgwUgY/F8ZYw==
-X-Google-Smtp-Source: APXvYqyInOM2B8sEpcOlgWCcHvh8/lrRHJhKiTZfomB/Eaa8D0QdEDVAJw76ekONB1Yy6OlI8NMz0w==
-X-Received: by 2002:adf:fe81:: with SMTP id l1mr3468437wrr.165.1571919158048;
-        Thu, 24 Oct 2019 05:12:38 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id h17sm3521290wme.6.2019.10.24.05.12.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 05:12:37 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 14:12:35 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        daniel@ffwll.ch
-Subject: Re: [Outreachy][PATCH] drm/mediatek: remove cast to pointers passed
- to kfree
-Message-ID: <20191024121235.GC11828@phenom.ffwll.local>
-Mail-Followup-To: Wambui Karuga <wambui.karugax@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie
-References: <20191023111107.9972-1-wambui.karugax@gmail.com>
+        Thu, 24 Oct 2019 08:13:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38612 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726338AbfJXMNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 08:13:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2B60EB3D0;
+        Thu, 24 Oct 2019 12:13:45 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 14:13:44 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] livepatch: Allow to distinguish different version
+ of system state changes
+Message-ID: <20191024121344.rieej3qckp5xirq6@pathway.suse.cz>
+References: <20191003090137.6874-1-pmladek@suse.com>
+ <20191003090137.6874-4-pmladek@suse.com>
+ <20191023211528.nfstzbuzzxsyffqh@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023111107.9972-1-wambui.karugax@gmail.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191023211528.nfstzbuzzxsyffqh@treble>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 02:11:07PM +0300, Wambui Karuga wrote:
-> Remove unnecessary casts to pointer types passed to kfree.
-> Issue detected by coccinelle:
-> @@
-> type t1;
-> expression *e;
-> @@
+On Wed 2019-10-23 16:15:28, Josh Poimboeuf wrote:
+> Hi Petr,
 > 
-> -kfree((t1 *)e);
-> +kfree(e);
+> Sorry for taking so long...
 > 
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> On Thu, Oct 03, 2019 at 11:01:35AM +0200, Petr Mladek wrote:
+> > diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> > index 726947338fd5..42907c4a0ce8 100644
+> > --- a/include/linux/livepatch.h
+> > +++ b/include/linux/livepatch.h
+> > @@ -133,10 +133,12 @@ struct klp_object {
+> >  /**
+> >   * struct klp_state - state of the system modified by the livepatch
+> >   * @id:		system state identifier (non-zero)
+> > + * @version:	version of the change (non-zero)
+> 
+> Is it necessary to assume that 'version' is non-zero?  It would be easy
+> for a user to not realize that and start with version 0.  Then the patch
+> state would be silently ignored.
+> 
+> I have the same concern about 'id', but I guess at least one of them has
+> to be non-zero to differentiate valid entries from the array terminator.
 
-Applied to drm-misc-next, thanks for your patch.
--Daniel
+Exactly. At least one struct member must be non-zero to differentiate
+the array terminator.
 
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_gem.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> index ca672f1d140d..b04a3c2b111e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> @@ -271,7 +271,7 @@ void *mtk_drm_gem_prime_vmap(struct drm_gem_object *obj)
->  			       pgprot_writecombine(PAGE_KERNEL));
->  
->  out:
-> -	kfree((void *)sgt);
-> +	kfree(sgt);
->  
->  	return mtk_gem->kvaddr;
->  }
-> @@ -285,5 +285,5 @@ void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj, void *vaddr)
->  
->  	vunmap(vaddr);
->  	mtk_gem->kvaddr = 0;
-> -	kfree((void *)mtk_gem->pages);
-> +	kfree(mtk_gem->pages);
->  }
-> -- 
-> 2.23.0
-> 
+I do not mind to allow zero version. Will do so in v4.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+
+> > +/* Check if the patch is able to deal with the given system state. */
+> > +static bool klp_is_state_compatible(struct klp_patch *patch,
+> > +				    struct klp_state *state)
+> > +{
+> > +	struct klp_state *new_state;
+> > +
+> > +	new_state = klp_get_state(patch, state->id);
+> > +
+> > +	if (new_state)
+> > +		return new_state->version >= state->version;
+> > +
+> > +	/* Cumulative livepatch must handle all already modified states. */
+> > +	return !patch->replace;
+> > +}
+> 
+> >From my perspective I view '!new_state' as an error condition.  I'd find
+> it easier to read if the ordering were changed to check for the error
+> first:
+> 
+> 	if (!new_state) {
+> 		/*
+> 		 * A cumulative livepatch must handle all already
+> 		 * modified states.
+> 		 */
+> 		return !patch->replace;
+> 	}
+> 
+> 	return new_state->version >= state->version;
+
+-> v4
+
+
+> > +
+> > +/*
+> > + * Check that the new livepatch will not break the existing system states.
+> > + * Cumulative patches must handle all already modified states.
+> > + * Non-cumulative patches can touch already modified states.
+> > + */
+> > +bool klp_is_patch_compatible(struct klp_patch *patch)
+> > +{
+> > +	struct klp_patch *old_patch;
+> > +	struct klp_state *state;
+> > +
+> > +
+> > +	klp_for_each_patch(old_patch) {
+> 
+> Extra newline above.
+> 
+> > +		klp_for_each_state(old_patch, state) {
+> > +			if (!klp_is_state_compatible(patch, state))
+> > +				return false;
+> > +		}
+> > +	}
+> 
+> I think renaming 'state' to 'old_state' would make the intention a
+> little clearer, and would be consistent with 'old_patch'.
+
+Makes sense. I'll make the names consistent also in klp_is_state_compatible():
+
+
+/* Check if the patch is able to deal with the given system state. */
+static bool klp_is_state_compatible(struct klp_patch *patch,
+				    struct klp_state *old_state)
+{
+	struct klp_state *state = klp_get_state(patch, state->id);
+
+	if (!state) {
+		/*
+		 * A cumulative livepatch must handle all already
+		 * modified states.
+		 */
+		return !patch->replace;
+	}
+
+	return state->version >= old_state->version;
+}
+
+Best Regards,
+Petr
