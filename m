@@ -2,73 +2,102 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52ACDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0BDCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F582070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC34C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:50:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gFfI4mK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437385AbfJXTtA convert rfc822-to-8bit (ORCPT
+        id S2437404AbfJXTuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:49:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:59469 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437273AbfJXTs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:48:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 12:48:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
-   d="scan'208";a="399879464"
-Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.82])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Oct 2019 12:48:59 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: WARNING: at net/sched/sch_generic.c:448
-In-Reply-To: <20191024032105.xmewznsphltnrido@linux-p48b>
-References: <20191024032105.xmewznsphltnrido@linux-p48b>
-Date:   Thu, 24 Oct 2019 12:50:11 -0700
-Message-ID: <87mudpylcc.fsf@linux.intel.com>
+        Thu, 24 Oct 2019 15:50:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41720 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437127AbfJXTt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:49:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qOGOspI8Yp77UR3I2ZyXpP3n8duCcwhHM+XycuF+ITA=; b=gFfI4mK3vxFR5+ZE+1FRgfWgS
+        FH1exvuK7nhQwFyEXoIp3RvDO13yc8MYshtgiNUVBi2K6H7oDhq7OmT+DFhFITrtOjoKVxI3gF2ri
+        +NuOOVBlSKc7uozcSq13/kqJjdytV3VAEFl34iQsnuNWlpGTPJQn0zM0sna1HhFspZRgIbGLgV9A3
+        aKhvWgkdxFvKje4zG5YnSzV0YX420w27S2tfduEVgcL0OeSp7hmMDUuua5dlT6FD/nsuUSRA3Qc3n
+        rFValBFSHIEX80Mq0QfnAUIPG6lsAq3vaC6sMggXQXdVQvImi+si+ziv/UHqhoL9POO66D6+/KDD7
+        6IdUawPNA==;
+Received: from [2601:1c0:6280:3f0::9ef4]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNj7O-0006Sb-49; Thu, 24 Oct 2019 19:49:58 +0000
+Subject: Re: [PATCH v2 1/2] docs/core-api: memory-allocation: remove uses of
+ c:func:
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "corbet@lwn.net" <corbet@lwn.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+References: <20191022211438.3938-1-chris.packham@alliedtelesis.co.nz>
+ <20191022211438.3938-2-chris.packham@alliedtelesis.co.nz>
+ <20191024120227.0bd1ae92@lwn.net>
+ <d053a8dc8e08b5b3ff4f2f4ff5b7c6ce4c3e773f.camel@alliedtelesis.co.nz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d5c282bd-42b7-7019-9964-30dc21ed0282@infradead.org>
+Date:   Thu, 24 Oct 2019 12:49:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <d053a8dc8e08b5b3ff4f2f4ff5b7c6ce4c3e773f.camel@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 10/24/19 12:39 PM, Chris Packham wrote:
+> Hi Jon,
+> 
+> On Thu, 2019-10-24 at 12:02 -0600, Jonathan Corbet wrote:
+>> On Wed, 23 Oct 2019 10:14:37 +1300
+>> Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
+>>
+>>> These are no longer needed as the documentation build will automatically
+>>> add the cross references.
+>>>
+>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>> ---
+>>>
+>>>  Documentation/core-api/memory-allocation.rst | 49 +++++++++-----------
+>>>  1 file changed, 23 insertions(+), 26 deletions(-)
+>>
+>> So I can't get this patch to apply, and I can't even figure out why.  If
+>> you take the patch from the list, can you apply it to a docs-next (or
+>> mainline) branch?
+>>
+> 
+> I think it might be dependent on my other typo fix patch[1]. I'll
+> rebase to v5.4-rc4 and send as a series of 3. Sorry for the hassle.
+> 
+> --
+> [1] 
+> https://lore.kernel.org/lkml/20191021003833.15704-1-chris.packham@alliedtelesis.co.nz/
+> 
+> 
+>> Thanks,
+>>
+>> jon
 
-Davidlohr Bueso <dave@stgolabs.net> writes:
+patch tells me:
+patch: **** malformed patch at line 84: -:c:func:`kmem_cache_destroy`.
 
-> Hi,
->
-> I'm hitting the following in linux-next, and as far back as v5.2, ring any bells?
->
-> [  478.588144] NETDEV WATCHDOG: eth0 (igb): transmit queue 0 timed out
-> [  478.601994] WARNING: CPU: 10 PID: 74 at net/sched/sch_generic.c:448 dev_watchdog+0x253/0x260
-> [  478.620613] Modules linked in: ebtable_filter(E) ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) ip_tables(E) x_tables(E) bpfilter(E) scsi_transport_iscsi(E) af_packet(E) iscsi_ibft(E) iscsi_boot_sysfs(E) ext4(E) intel_rapl_msr(E) intel_rapl_common(E) crc16(E) mbcache(E) jbd2(E) sb_edac(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) coretemp(E) kvm_intel(E) kvm(E) irqbypass(E) crc32_pclmul(E) iTCO_wdt(E) ghash_clmulni_intel(E) iTCO_vendor_support(E) aesni_intel(E) crypto_simd(E) cryptd(E) glue_helper(E) ipmi_si(E) igb(E) ioatdma(E) pcspkr(E) ipmi_devintf(E) mei_me(E) lpc_ich(E) mfd_core(E) ipmi_msghandler(E) joydev(E) i2c_i801(E) mei(E) dca(E) button(E) btrfs(E) libcrc32c(E) xor(E) raid6_pq(E) hid_generic(E) usbhid(E) sd_mod(E) mgag200(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) sysimgblt(E) fb_sys_fops(E) i2c_algo_bit(E) isci(E) ehci_pci(E) drm_vram_helper(E) ahci(E) ehci_hcd(E) libsas(E) crc32c_intel(E) ttm(E) libahci(E) scsi_transport_sas(E) drm(E) usbco
- re(E)
-> [  478.620658]  libata(E) wmi(E) sg(E) dm_multipath(E) dm_mod(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) scsi_mod(E)
-> [  478.837008] CPU: 10 PID: 74 Comm: ksoftirqd/10 Kdump: loaded Tainted: G            E     5.4.0-rc4-2-default+ #2
-> [  478.859457] Hardware name: Intel Corporation LH Pass/SVRBD-ROW_P, BIOS SE5C600.86B.02.01.SP04.112220131546 11/22/2013
-> [  478.882867] RIP: 0010:dev_watchdog+0x253/0x260
+-- 
+~Randy
 
-Not ringing any bells, but if this timeout is happening, you should also
-be seeing some igb "TX Hang" warnings. Usually this warning happens when
-some packet is stuck (for whatever reason) in the transmission queue.
-
-Can you share more details about what you are running? specially the
-kind of configuration (if any) you are doing to the controller.
-
-
-Cheers,
---
-Vinicius
