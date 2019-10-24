@@ -2,96 +2,79 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C3CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363F0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A769020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:26:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OSCT2Wjd"
+	by mail.kernel.org (Postfix) with ESMTP id 1089F20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394014AbfJXR0b (ORCPT
+        id S2440045AbfJXR2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:26:31 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:54710 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389384AbfJXR0b (ORCPT
+        Thu, 24 Oct 2019 13:28:16 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:32805 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2394016AbfJXR2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:26:31 -0400
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3B2552007698;
-        Thu, 24 Oct 2019 10:26:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B2552007698
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1571937990;
-        bh=5R3b8oxPvTR6qGGx7vVi+OuiVSZNkllUsHU4qd/a/nE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OSCT2WjdmQ1xniyUn2/peoWgE9ycpc8Wc2ZzDicCH9kewV38vZAm5RmcKcKk8JDul
-         vNhWVweVtxUsfZF4xhG/qHuI8Rd7EwsQ+Nok8m5DqU4EetWGl4pOiPxKH5SORqCBkb
-         rOGzLTADWSqaGBt2UxTEU3rZBd/6AnlKTOr8YOeI=
-Subject: Re: [PATCH v9 1/8] powerpc: detect the secure boot mode of the system
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
- <20191024034717.70552-2-nayna@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <b0282ef2-f75c-a139-9991-01eba15adb22@linux.microsoft.com>
-Date:   Thu, 24 Oct 2019 10:26:47 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20191024034717.70552-2-nayna@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 24 Oct 2019 13:28:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tg58mS4_1571938066;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tg58mS4_1571938066)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 25 Oct 2019 01:27:53 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     hughd@google.com, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: thp: clear PageDoubleMap flag when the last PMD map gone
+Date:   Fri, 25 Oct 2019 01:27:46 +0800
+Message-Id: <1571938066-29031-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/2019 8:47 PM, Nayna Jain wrote:
-> This patch defines a function to detect the secure boot state of a
-> PowerNV system.
+File THP sets PageDoubleMap flag when the first it gets PTE mapped, but
+the flag is never cleared until the THP is freed.  This result in
+unbalanced state although it is not a big deal. 
 
-> +bool is_ppc_secureboot_enabled(void)
-> +{
-> +	struct device_node *node;
-> +	bool enabled = false;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "ibm,secvar-v1");
-> +	if (!of_device_is_available(node)) {
-> +		pr_err("Cannot find secure variable node in device tree; failing to secure state\n");
-> +		goto out;
+Clear the flag when the last compound_mapcount is gone.  It should be
+cleared when all the PTE maps are gone (become PMD mapped only) as well,
+but this needs check all subpage's _mapcount every time any subpage's
+rmap is removed, the overhead may be not worth.  The anonymous THP also
+just clears PageDoubleMap flag when the last PMD map is gone.
 
-Related to "goto out;" above:
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+Hugh thought it is unnecessary to fix it completely due to the overhead
+(https://lkml.org/lkml/2019/10/22/1011), but it sounds simple to achieve
+the similar balance as anonymous THP.
 
-Would of_find_compatible_node return NULL if the given node is not found?
+ mm/rmap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If of_device_is_available returns false (say, because node is NULL or it 
-does not find the specified node) would it be correct to call of_node_put?
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 0c7b2a9..d17cbf3 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1236,6 +1236,9 @@ static void page_remove_file_rmap(struct page *page, bool compound)
+ 			__dec_node_page_state(page, NR_SHMEM_PMDMAPPED);
+ 		else
+ 			__dec_node_page_state(page, NR_FILE_PMDMAPPED);
++
++		/* The last PMD map is gone */
++		ClearPageDoubleMap(compound_head(page));
+ 	} else {
+ 		if (!atomic_add_negative(-1, &page->_mapcount))
+ 			goto out;
+-- 
+1.8.3.1
 
-> +
-> +out:
-> +	of_node_put(node);
-
-  -lakshmi
