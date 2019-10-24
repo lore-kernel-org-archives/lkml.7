@@ -2,134 +2,153 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926D8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CEACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE872084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D9E2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hucKS8iu"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RPHIAGcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437982AbfJXHtI (ORCPT
+        id S2408757AbfJXHzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:49:08 -0400
-Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:28229
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437969AbfJXHtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:49:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gUXpUnKvbfC+wZqBAVh5yFP84zLRapg8t5PsFUqDI3PrhdYIiY4P5W/EGhhuYId83/Jl4lNiYp2KKNzPgqvTLFblizTzKf02sFm/3X1HxfC7g1rntpN6Ys5fXzcsWBW0OxE10IE+zNvw+aNl6LPuSON9OJZ7GH3OGkBIMcVN3UzuEqI6yCkfSkHKIZyOe3zTih5JoEWXpu2idSOZWZ997MW8wcHA+dEIhpsZ0gU3ZdUnRnfQh3OuwLQZNm/VrxJPF6w9fAcSYuKnz5CGlF0+r9GhTW50X3NPq9lEze1mi/eTbSeJENMXxRkSaYGlwipwNwqY1C0Gc7nKddWHVC6Nvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tQ5MH9mEysUW4bL432qsECcRaRrIC0mqKe8cZSnzaf0=;
- b=GgOHdxHs25kztN4DE/KA+qJFNXeISLfqNliFi8g/xN1C7SHw+b5eqSgIVs5U4tRK1gx1Ukl1SJtw4SvKcJGx273rTy0XK3fTIyxRX2jbQiu3O9xEC4SeZb/ECe4Qjb7eQCgTQyIvmko7tiV+HveTf51ix8YxvvoYylM27oDAxIW4/BkjLqdKyApcAEtDzcnbf42rQjuh2y0lcHjTUwhgKOdUj0MgLWb7ZmjDERdBXqz0yIeslsOr6z2vd9moCmecoHWAcsXP/pi/48r2dxJr4cx3ESURyNkYLz3y9kc5MYqTo1j3cUydzEdTa33Qo9ZCFFeQui+P8d7UpEGT41NhKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tQ5MH9mEysUW4bL432qsECcRaRrIC0mqKe8cZSnzaf0=;
- b=hucKS8iuMJbMIpEML8XcuAln7JcM8dQeaAVWJQj1H8u5XaGy+YXGti9s6lNfKQVT/Gs9PboWxtaO7W1NkN2snaSHVXsIIzwctcaa6ZFy61CKHER3qW4dJbLeNNpunQxqhRRijGCyZnEpoJPyMvosbkZ3r3OOVoyk1N7IuJUdJYU=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.51.208) by
- VI1PR04MB4912.eurprd04.prod.outlook.com (20.177.50.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Thu, 24 Oct 2019 07:49:03 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::10f0:af2c:76ac:dfb]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::10f0:af2c:76ac:dfb%7]) with mapi id 15.20.2347.030; Thu, 24 Oct 2019
- 07:49:03 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     "hch@lst.de" <hch@lst.de>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>
-Subject: Re: [RFC PATCH 1/3] dma-mapping: introduce a new dma api
- dma_addr_to_phys_addr()
-Thread-Topic: [RFC PATCH 1/3] dma-mapping: introduce a new dma api
- dma_addr_to_phys_addr()
-Thread-Index: AQHVig771lgo9fKx8UCeiOjKFT5WdadpauGA
-Date:   Thu, 24 Oct 2019 07:49:03 +0000
-Message-ID: <ebbf742e-4d1f-ba90-0ed8-93ea445d0200@nxp.com>
-References: <20191022125502.12495-1-laurentiu.tudor@nxp.com>
- <20191022125502.12495-2-laurentiu.tudor@nxp.com>
- <62561dca-cdd7-fe01-a0c3-7b5971c96e7e@arm.com>
- <50a42575-02b2-c558-0609-90e2ad3f515b@nxp.com> <20191024020140.GA6057@lst.de>
-In-Reply-To: <20191024020140.GA6057@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 566b47aa-28e5-43f4-a5d4-08d75856a3c1
-x-ms-traffictypediagnostic: VI1PR04MB4912:|VI1PR04MB4912:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB49125CA14F9CC1B4326A0F68EC6A0@VI1PR04MB4912.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0200DDA8BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(39860400002)(346002)(366004)(52314003)(199004)(189003)(14454004)(6916009)(31696002)(71200400001)(6246003)(8936002)(71190400001)(76116006)(91956017)(4326008)(561944003)(229853002)(6512007)(1730700003)(81156014)(81166006)(66066001)(8676002)(6486002)(66556008)(5640700003)(64756008)(66446008)(478600001)(66476007)(66946007)(6436002)(316002)(6506007)(53546011)(2351001)(2906002)(54906003)(6116002)(186003)(3846002)(305945005)(7736002)(26005)(31686004)(25786009)(86362001)(76176011)(102836004)(99286004)(2616005)(2501003)(11346002)(446003)(44832011)(486006)(476003)(36756003)(5660300002)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4912;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fFvD6/irDk36MlUmhZiGirNVQX+1Fw8ol8y9qJ6zFLcYLW0ToTca3ATXxjtOJx+tXMqqrjrCAgnX6qMI1ynze0Zi2/BNFOr2TeEtRNTogUyx0qPInUn1aw5mdZ2lixCf5BA1fx1V2rD+BOh2dwlZXhmrv4/fG3YMPbHGKTBBuBOg2bnIxybi8EVhu13jEtVujd/iStieVagQstld4twNzB8rG/c8XALEqkbDSJhQM4fxBem7FUrqnwvlPhJZcRGQv6VCblMw+k7SFf8J1mOjyq2K8rFSqIUc+PMzTY0SjP1RH1nOn4Rb1/TSAUz4MK5KQcBwDpgKB8B3qXgTAPST+F1HY3g/HIGZf2Sc4EWvdB9ULsdVqvSvX527xbZQA4+dt4iGuK5Or/kP/ibCPDrvJdB1L7i91d8zEvImdS8G07yTfOV9oRxqebPcHrpk2T1J
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <975444B2A0E5ED48B1C92BF5D9BCD6C0@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 24 Oct 2019 03:55:54 -0400
+Received: from mout.web.de ([212.227.17.12]:45255 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733188AbfJXHzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 03:55:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1571903738;
+        bh=UNnIzf/ltfSLiUOFsj1CvrPkRnY3Y2FSP+wrE2VuWIo=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=RPHIAGcM84CLVk0uOn/n1CnlC0HydePX2L8bY2x6i6xR30RbVLCMDXvjQ3f3RdJLa
+         IqidaDWI0RLsKxhbz/Z9eobm86iRUzk5ImxHVOWtTC01Y7BT2GCfd66UBeHSe+oKsD
+         7t3WJgOJkTqjN2lZ7EKix2IisJvx9vqxh+hPJ3eE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.110.199]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lc8c5-1hgYEm3WY1-00jaIj; Thu, 24
+ Oct 2019 09:55:37 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Zhong Shiqi <zhong.shiqi@zte.com.cn>
+References: <alpine.DEB.2.21.1910240816040.2771@hadrien>
+Subject: Re: [PATCH v2] coccicheck: support $COCCI being defined as a
+ directory
+To:     Julia Lawall <julia.lawall@lip6.fr>, cocci@systeme.lip6.fr
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <37ad0bcd-941d-e02e-ae99-e89f2ce98ff0@web.de>
+Date:   Thu, 24 Oct 2019 09:55:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 566b47aa-28e5-43f4-a5d4-08d75856a3c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 07:49:03.2174
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RJWJQ0W9lCl3zNMbuy+H80YzerbvQfd2U/uTC6I1gFdTF2N672LMrr1SFLEaMfty3LfCzgCyGBGU/bvetBMIUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4912
+In-Reply-To: <alpine.DEB.2.21.1910240816040.2771@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZolS6zwkpF+4aKEe96dbsBuAYIh+Otb7VlxxcraA79fGrm+QamX
+ W+zsbVHeGvlAtWQznFK+SvO3dbHp5vhq8hLAcooYIncmmIIjVqKE9sFicEb5DXbiwAUyJed
+ 22rEjVhQaSloYgqs7Y0ieCTZeF8ksbUR0Vj1DafIF6Djz6uSvDWHpmeDBu2DuzkakyPF2FG
+ 1S0o+oBipZwt6VSbB3MlA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7EUnImWhkE8=:AJyNbj8ZXvISOqgDREIltj
+ PIJOpXPdOv/qADDj/FlWhGmNSK80VgnDsyZJWk89nzUfrZLpmbIwlpyb/IFA/SMlB1Idp8n+g
+ 1tRd367wrWJf7mYdN35/GHZIXACSqtnL6U2WQDApYT//Y9MWkQSf4qgm27IY/LyolnaMtq6kA
+ 84gYq9TrQ2bXWJZWXt4zKt9Ag/cv95dKDGnx7tAU7hYJZ4BlrD4fsMKqLCEDzPO2VARMy0C3k
+ TN+ZzPtEjMRfQJHl6mqQg1XcfFvJtbWy4PmsEPJwpPLktUDBnnd5/yro2FTtZ8B6/vUDtiwNS
+ ftgv85e99jQqxIF114u0levL2gvcUK/tkOefgWRRC9/5fJkuFjTOvifLFuN/W3gQulZnwef7r
+ 2x6jUBiRkxddVnyfA9UVqgvcFmQIBA9Wv2J7IV0qJpmQrzmT8n87vr+l3LTJeHRbOhcIZuuph
+ bJXDOEnRT4UweupR/v6UaxuEiOtYBFMLSj9Xrzoa2IkH1oD4RdwXeE6o0ySD+AcZN0Ll6g1yi
+ HoOEH512dOsBY0U/bWdQekO+6+y+u+qCkuowed0VtNPDczhLfcXJoup9nbU8Mwb31brq4ikdV
+ vKpfv4wOl4IqzGeS0qBy8pwzivrgT4kr2mGPFc4L9k7uouxmWqjTGWGsdppgFVbbbvDjfHB6B
+ hQs3uSHvjDUoPr1ySRAHbF1ec6PuCrlFZiwbNxTHGSAU6CHZc3o82oC/54IKZpQeoYUUedhKv
+ bl/1QeecdGBvGFxdYY0MaynXXxBZhT61BgEjyu8FB/eVpIutgQz3+FN1wEb1cYJ3maRFnkctA
+ gBCZP0vP5uzzTyVMOQa/h50xeh83ebYkzoWy8yHgAsCcF+0AdgC7M2lTZi4QAD66o87jM9B+N
+ Gkm3ndN4YBwwGD9FZWvhh0kyXE+qm2GWBte9Ojs42ExK6cdn3egFhwSo6XWs/5W7d9ecBvTw6
+ 1VKze28qWQgM+t4adQcYm1nfc4y8KBDptywNf+CoktmjcCqBWkyn8TVLY6wdBUgggte5rJhnt
+ dA5fWLxVkDnbfSY+m372Vti+lRahJ9lccm2hG1ANyz137A8E9qoKOLhuZPOq5HXsaS3k48LWh
+ 66D3M2uxXJzUnG4NEM0QjFnXEuMnfF+6O8cVMQltkHrg6BxbwVznmkx8gFcvgaFAY+/CS0Qxs
+ 2lNtNDbRcdMzenCNmeq7jAKIwz4wAKzSYR71Kft3VRppILCtcwD0cLyhRTwGTT+R7+Cn/uTUJ
+ yLe7ESOVVJd9EoCcfSN4CS3gLLHJ0y8IfrDq390a9rvtD8Kxi66W6tFqBPYs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDI0LjEwLjIwMTkgMDU6MDEsIGhjaEBsc3QuZGUgd3JvdGU6DQo+IE9uIFdlZCwgT2N0
-IDIzLCAyMDE5IGF0IDExOjUzOjQxQU0gKzAwMDAsIExhdXJlbnRpdSBUdWRvciB3cm90ZToNCj4+
-IFdlIGhhZCBhbiBpbnRlcm5hbCBkaXNjdXNzaW9uIG92ZXIgdGhlc2UgcG9pbnRzIHlvdSBhcmUg
-cmFpc2luZyBhbmQNCj4+IE1hZGFsaW4gKGNjLWVkKSBjYW1lIHVwIHdpdGggYW5vdGhlciBpZGVh
-OiBpbnN0ZWFkIG9mIGFkZGluZyB0aGlzIHByb25lDQo+PiB0byBtaXN1c2UgYXBpIGhvdyBhYm91
-dCBleHBlcmltZW50aW5nIHdpdGggYSBuZXcgZG1hIHVubWFwIGFuZCBkbWEgc3luYw0KPj4gdmFy
-aWFudHMgdGhhdCB3b3VsZCByZXR1cm4gdGhlIHBoeXNpY2FsIGFkZHJlc3MgYnkgY2FsbGluZyB0
-aGUgbmV3bHkNCj4+IGludHJvZHVjZWQgZG1hIG1hcCBvcC4gU29tZXRoaW5nIGFsb25nIHRoZXNl
-IGxpbmVzOg0KPj4gICAgKiBwaHlzX2FkZHJfdCBkbWFfdW5tYXBfcGFnZV9yZXRfcGh5cyguLi4p
-DQo+PiAgICAqIHBoeXNfYWRkcl90IGRtYV91bm1hcF9zaW5nbGVfcmV0X3BoeXMoLi4uKQ0KPj4g
-ICAgKiBwaHlzX2FkZHJfdCBkbWFfc3luY19zaW5nbGVfZm9yX2NwdV9yZXRfcGh5cyguLi4pDQo+
-PiBJJ20gdGhpbmtpbmcgdGhhdCB0aGlzIHByb3Bvc2FsIHNob3VsZCByZWR1Y2UgdGhlIHJpc2tz
-IG9wZW5lZCBieSB0aGUNCj4+IGluaXRpYWwgdmFyaWFudC4NCj4+IFBsZWFzZSBsZXQgbWUga25v
-dyB3aGF0IHlvdSB0aGluay4NCj4gDQo+IEknbSBub3Qgc3VyZSB3aGF0IHRoZSByZXQgaXMgc3Vw
-cG9zZWQgdG8gbWVhbiwgYnV0IEkgZ2VuZXJhbGx5IGxpa2UNCj4gdGhhdCBpZGVhIGJldHRlci4g
-IA0KDQpJdCB3YXMgc3VwcG9zZWQgdG8gYmUgc2hvcnQgZm9yICJyZXR1cm4iIGJ1dCBnaXZlbiB0
-aGF0IEknbSBub3QgZ29vZCBhdCANCm5hbWluZyBzdHVmZiBJJ2xsIGp1c3QgZHJvcCBpdC4NCg0K
-PiBXZSBhbHNvIG5lZWQgdG8gbWFrZSBzdXJlIHRoZXJlIGlzIGFuIGVhc3kgd2F5DQo+IHRvIGZp
-Z3VyZSBvdXQgaWYgdGhlc2UgQVBJcyBhcmUgYXZhaWxhYmxlLCBhcyB0aGV5IGdlbmVyYWxseSBh
-cmVuJ3QNCj4gZm9yIGFueSBub24tSU9NTVUgQVBJIElPTU1VIGRyaXZlcnMuDQoNCkkgd2FzIHJl
-YWxseSBob3BpbmcgdG8gbWFuYWdlIG1ha2luZyB0aGVtIGFzIGdlbmVyaWMgYXMgcG9zc2libGUg
-YnV0IA0KYW55d2F5LCBJJ2xsIHN0YXJ0IHdvcmtpbmcgb24gYSBQb0MgYW5kIHNlZSBob3cgaXQg
-dHVybnMgb3V0LiBUaGlzIHdpbGwgDQpwcm9iYWJseSBoYXBwZW4gc29tZXRpbWUgbmV4dCBuZXh0
-IHdlZWsgYXMgdGhlIGZvbGxvd2luZyB3ZWVrIEknbGwgYmUgDQp0cmF2ZWxpbmcgdG8gYSBjb25m
-ZXJlbmNlLg0KDQotLS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1
+> Second the commit log could be more concise as:
+
+I like your desire for choosing a more appropriate commit message.
+
+
+> Allow defining COCCI as a directory that contains .cocci files.
+
+I would prefer to concentrate the patch subject on other information.
+
+
+> In general, at least in simple cases, it is not necessary to mention the
+> name of the file you are modifying in the comit log, because one can see
+> that just below from looking at the diffstat and the patch.
+
+This view can be reasonable. - How does it fit to the usual requirement
+for the specification of a =E2=80=9Csubsystem=E2=80=9D (or =E2=80=9Cprefix=
+=E2=80=9D) according to the
+canonical patch format?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D13b86bc4cd648eae69fdcf3d04=
+b2750c76350053#n656
+
+Regards,
+Markus
