@@ -2,89 +2,133 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F0ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAC2C47E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE0621872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF06221906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jUiDsdpp"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="YgbVjsF1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503943AbfJXR7H (ORCPT
+        id S2503953AbfJXSBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:59:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41112 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440060AbfJXR7H (ORCPT
+        Thu, 24 Oct 2019 14:01:13 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:28248 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389845AbfJXSBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:59:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XXoiVULwbVHZ4C9SPQpLAtO+Mzv6GYYY1WvuCs2Jy8E=; b=jUiDsdppdJg5v14jhaVtXgiyf
-        PglYCH7r0mepZfnaakQ3M4FWuhZ6fTB+lG2MkhcuNp82YpNODyqk58sqERAi+NgvX8+zOCEKBl7yN
-        Dksd0Z8U0vQVJe1OPM3Ce2SrQdsPOXJqNXY712WOYwiORv23iwUbrgFZ65jOAbV3nILBruIBDQjpB
-        mchSiddIpwMOYlCtvoQmEQ+RTaFlKm5Xl5sE1oReW5VCJHjlmSb5Wv0AaviQKRYMMMHwkeQfzNFMm
-        GcRSKnQQCf5BEAlC4yp2LW2pJTDYYigvv77MYOpTUWhVVQ202S1mcsUneziL5+IUyCdncJJWHLsDA
-        C21xd55AA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNhO4-0000Qh-So; Thu, 24 Oct 2019 17:59:04 +0000
-Date:   Thu, 24 Oct 2019 10:59:04 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/15] staging: exfat: Clean up return codes - FFS_FULL
-Message-ID: <20191024175904.GJ2963@bombadil.infradead.org>
-References: <20191024155327.1095907-1-Valdis.Kletnieks@vt.edu>
- <20191024155327.1095907-2-Valdis.Kletnieks@vt.edu>
+        Thu, 24 Oct 2019 14:01:13 -0400
+Received: from pps.filterd (m0122331.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9OHvB7M009551;
+        Thu, 24 Oct 2019 18:59:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=jan2016.eng;
+ bh=Nd36wEoqHAG6QPKAc3M8Ts/MzRoQ2UKtTIaLD+uF+Y8=;
+ b=YgbVjsF1MIz+7tq80n5NnCkqhj7v4D6QN6TWhcO90fkEbBgIjb+LMIhHvDpBFjB3+tfv
+ wsBknJGmExoNMgjDsagV/eJ8igQBpn13FHur3e/9WvUbRqyW4A8dXDn4vsOIgIj0yn6q
+ jn2zssWsKQzlZcpOoCxJPfM1XQgnIoJgFCbQFUQrwRfwSY1kj1Yx4hdL5RRe1RqnDaqr
+ wpX6ULjDFoajjHO9LucE1oiJOW16aWMK2fJY57WI48Nhv8MGZPOha5M9z3B+vAj6Dui1
+ K1sp5FFA6XGQuP139k/QwSo1UqTyoBqJTp3QKtvV+q60hBEJjzLpY9ppFJucbWpvaWZd Aw== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 2vssv83859-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 24 Oct 2019 18:59:56 +0100
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x9OHlCxY002926;
+        Thu, 24 Oct 2019 13:59:55 -0400
+Received: from email.msg.corp.akamai.com ([172.27.123.57])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 2vqwtwqnq4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 24 Oct 2019 13:59:55 -0400
+Received: from USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) by
+ usma1ex-dag3mb4.msg.corp.akamai.com (172.27.123.56) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Thu, 24 Oct 2019 13:59:54 -0400
+Received: from bos-lpii8.kendall.corp.akamai.com (172.29.171.127) by
+ USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) with Microsoft SMTP Server
+ id 15.0.1473.3 via Frontend Transport; Thu, 24 Oct 2019 13:59:54 -0400
+Received: by bos-lpii8.kendall.corp.akamai.com (Postfix, from userid 42339)
+        id BDDB317F639; Thu, 24 Oct 2019 13:59:54 -0400 (EDT)
+From:   Michael Zhivich <mzhivich@akamai.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <rafael.j.wysocki@intel.com>,
+        Michael Zhivich <mzhivich@akamai.com>
+Subject: [PATCH v2] clocksource: tsc: respect tsc bootparam for clocksource_tsc_early
+Date:   Thu, 24 Oct 2019 13:59:45 -0400
+Message-ID: <20191024175945.14338-1-mzhivich@akamai.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024155327.1095907-2-Valdis.Kletnieks@vt.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-24_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=866
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910240167
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-24_10:2019-10-23,2019-10-24 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 adultscore=0 suspectscore=1
+ phishscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=852 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1910240169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 11:53:12AM -0400, Valdis Kletnieks wrote:
-> Start cleaning up the odd scheme of return codes, starting with FFS_FULL
+Introduction of clocksource_tsc_early broke functionality of "tsc=reliable"
+and "tsc=nowatchdog" bootparams, since clocksource_tsc_early is *always*
+registered with CLOCK_SOURCE_MUST_VERIFY and thus put on the watchdog list.
 
-> +++ b/drivers/staging/exfat/exfat.h
-> @@ -221,7 +221,6 @@ static inline u16 get_row_index(u16 i)
->  #define FFS_PERMISSIONERR       11
->  #define FFS_NOTOPENED           12
->  #define FFS_MAXOPENED           13
-> -#define FFS_FULL                14
->  #define FFS_EOF                 15
->  #define FFS_DIRBUSY             16
->  #define FFS_MEMORYERR           17
+This frequently causes TSC to be declared unstable during boot:
 
-Wouldn't it be better to do this as:
+  clocksource: timekeeping watchdog on CPU0: Marking clocksource
+               'tsc-early' as unstable because the skew is too large:
+  clocksource: 'refined-jiffies' wd_now: fffb7018 wd_last: fffb6e9d 
+               mask: ffffffff
+  clocksource: 'tsc-early' cs_now: 68a6a7070f6a0 cs_last: 68a69ab6f74d6 
+               mask: ffffffffffffffff
+  tsc: Marking TSC unstable due to clocksource watchdog
 
-Patch 1: Change all these defines to -Exxx and remove the stupid errno-changing
-blocks like this:
+The corresponding elapsed times are cs_nsec=1224152026 and wd_nsec=378942392, so
+watchdog differs from TSC by 0.84 seconds.  Since jiffies is not guaranteed
+to provide reliable timekeeping due to possibility of missing timer
+interrupts, this is a false positive.
 
-> @@ -2360,7 +2360,7 @@ static int exfat_create(struct inode *dir, struct dentry *dentry, umode_t mode,
->  			err = -EINVAL;
->  		else if (err == FFS_FILEEXIST)
->  			err = -EEXIST;
-> -		else if (err == FFS_FULL)
-> +		else if (err == -ENOSPC)
->  			err = -ENOSPC;
->  		else if (err == FFS_NAMETOOLONG)
->  			err = -ENAMETOOLONG;
+This issue affects machines running with HPET disabled; otherwise, HPET would
+be the watchdog for tsc-early clocksource, and this situation would be avoided. 
 
-then patches 2-n remove individual FFS error codes.
+Restore previous behavior by respecting "tsc=reliable" and "tsc=nowatchdog"
+boot params when registering clocksource_tsc_early.
 
-That way nobody actually needs to review patches 2-n; all of the changes
-are done in patch 1.
+Fixes: aa83c45762a24 ("x86/tsc: Introduce early tsc clocksource")
+Signed-off-by: Michael Zhivich <mzhivich@akamai.com>
+---
+ arch/x86/kernel/tsc.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+ Changes from v1: updated commit message, added "Fixes" tag.
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index c59454c382fd..7e322e2daaf5 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -1505,6 +1505,9 @@ void __init tsc_init(void)
+ 		return;
+ 	}
+ 
++	if (tsc_clocksource_reliable || no_tsc_watchdog)
++		clocksource_tsc_early.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
++
+ 	clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
+ 	detect_art();
+ }
+-- 
+2.17.1
+
