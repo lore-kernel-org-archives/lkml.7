@@ -2,150 +2,59 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E37BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB0FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0A4205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5322166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438300AbfJXJ0s (ORCPT
+        id S2438442AbfJXJ0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:26:48 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52978 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408872AbfJXJ0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:26:46 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ACF15200874;
-        Thu, 24 Oct 2019 11:26:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0325320086D;
-        Thu, 24 Oct 2019 11:26:37 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B4780402C4;
-        Thu, 24 Oct 2019 17:26:28 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>, Huang Anson <anson.huang@nxp.com>
-Cc:     Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v10 2/3] Documentation: dt: binding: fsl: Add 'little-endian' and update Chassis define
-Date:   Thu, 24 Oct 2019 17:26:43 +0800
-Message-Id: <20191024092644.26583-2-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024092644.26583-1-ran.wang_1@nxp.com>
-References: <20191024092644.26583-1-ran.wang_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 24 Oct 2019 05:26:51 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47368 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2438325AbfJXJ0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:26:49 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 807416339BB4C677DB81;
+        Thu, 24 Oct 2019 17:26:47 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 24 Oct
+ 2019 17:26:42 +0800
+Subject: Re: [PATCH 2/2] f2fs: Add f2fs stats to sysfs
+To:     Hridya Valsaraju <hridya@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+CC:     <kernel-team@android.com>
+References: <20191023214821.107615-1-hridya@google.com>
+ <20191023214821.107615-2-hridya@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <e61510b8-c8d7-349f-b297-9df367c26a9f@huawei.com>
+Date:   Thu, 24 Oct 2019 17:26:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191023214821.107615-2-hridya@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default, QorIQ SoC's RCPM register block is Big Endian. But
-there are some exceptions, such as LS1088A and LS2088A, are
-Little Endian. So add this optional property to help identify
-them.
+On 2019/10/24 5:48, Hridya Valsaraju wrote:
+> Currently f2fs stats are only available from /d/f2fs/status. This patch
+> adds some of the f2fs stats to sysfs so that they are accessible even
+> when debugfs is not mounted.
 
-Actually LS2021A and other Layerscapes won't totally follow Chassis
-2.1, so separate them from powerpc SoC.
+Why don't we mount debugfs first?
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Change in v10:
-	- None
-
-Change in v9:
-	- None
-
-Change in v8:
-	- None.
-
-Change in v7:
-	- None.
-
-Change in v6:
-	- None.
-
-Change in v5:
-	- Add 'Reviewed-by: Rob Herring <robh@kernel.org>' to commit message.
-	- Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-cells'.
-	please see https://lore.kernel.org/patchwork/patch/1101022/
-
-Change in v4:
-	- Adjust indectation of 'ls1021a, ls1012a, ls1043a, ls1046a'.
-
-Change in v3:
-	- None.
-
-Change in v2:
-	- None.
-
- Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index e284e4e..5a33619 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -5,7 +5,7 @@ and power management.
- 
- Required properites:
-   - reg : Offset and length of the register set of the RCPM block.
--  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
-+  - #fsl,rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
- 	fsl,rcpm-wakeup property.
-   - compatible : Must contain a chip-specific RCPM block compatible string
- 	and (if applicable) may contain a chassis-version RCPM compatible
-@@ -20,6 +20,7 @@ Required properites:
- 	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
- 	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
- 	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-+	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
- 
- All references to "1.0" and "2.0" refer to the QorIQ chassis version to
- which the chip complies.
-@@ -27,14 +28,19 @@ Chassis Version		Example Chips
- ---------------		-------------------------------
- 1.0				p4080, p5020, p5040, p2041, p3041
- 2.0				t4240, b4860, b4420
--2.1				t1040, ls1021
-+2.1				t1040,
-+2.1+				ls1021a, ls1012a, ls1043a, ls1046a
-+
-+Optional properties:
-+ - little-endian : RCPM register block is Little Endian. Without it RCPM
-+   will be Big Endian (default case).
- 
- Example:
- The RCPM node for T4240:
- 	rcpm: global-utilities@e2000 {
- 		compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
- 		reg = <0xe2000 0x1000>;
--		fsl,#rcpm-wakeup-cells = <2>;
-+		#fsl,rcpm-wakeup-cells = <2>;
- 	};
- 
- * Freescale RCPM Wakeup Source Device Tree Bindings
-@@ -44,7 +50,7 @@ can be used as a wakeup source.
- 
-   - fsl,rcpm-wakeup: Consists of a phandle to the rcpm node and the IPPDEXPCR
- 	register cells. The number of IPPDEXPCR register cells is defined in
--	"fsl,#rcpm-wakeup-cells" in the rcpm node. The first register cell is
-+	"#fsl,rcpm-wakeup-cells" in the rcpm node. The first register cell is
- 	the bit mask that should be set in IPPDEXPCR0, and the second register
- 	cell is for IPPDEXPCR1, and so on.
- 
--- 
-2.7.4
-
+Thanks,
