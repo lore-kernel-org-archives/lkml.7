@@ -2,198 +2,237 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB4DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9173ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379F52166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533EF20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afCooXJO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UsqP464/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391256AbfJXNtE (ORCPT
+        id S2393859AbfJXNtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:49:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38276 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732240AbfJXNtD (ORCPT
+        Thu, 24 Oct 2019 09:49:07 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46590 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393838AbfJXNtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:49:03 -0400
-Received: by mail-qt1-f195.google.com with SMTP id o25so24545521qtr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:49:02 -0700 (PDT)
+        Thu, 24 Oct 2019 09:49:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e15so14270683pgu.13
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:49:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vBgdRFvyWR+zBWshZROh6GlWfRoQ4jqVQ5N1n5QJhXg=;
-        b=afCooXJODDM2HvU+zFctJfl2NbKFym2rAe+NpIjApP/ZjLNa2qmOt96I57kVgP1H36
-         craU2rpfdHBARcmnj39LniNNlmH5ocvyiznXCvMt21dzV3L28V/0FwCg8oJGjNa5CWoz
-         0066xWx/qD0B7taVbxvv1aBiH/bhOl9M9banOmEz6ZHy2/vzgWlOKML/VWFxLK2tah9b
-         X+xJ0Vqt3iQXBlKQaehRVU1UTox49kHYXGJLXPp7aZhn6pEsZBKk3EQ4I3FYQxramaWH
-         dlQZhd7356glgnrPnO5Bae+7QiZqLxX6CIpc7RV+JwHNd04m28NOF2nsPba7p/lSf6ES
-         gV0A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rL9YpRyTuHk70/QoA0F/U1TMIayhb73ZwaCrSIsUGq0=;
+        b=UsqP464/4ZYI6OWZL4XHYBwL9bycMfpKQ5++JhEVtMKo0dG3NjwPEiX9R2NsXXWc4M
+         XowBM8KWPOdtXCdYW5OEa81lXuS4k5IZ1px4o4beFuuF1DvWAR84tc2Xu7RehMxglk/f
+         j57YzsaO+CJsTz5T6lDe0dFrntlZwRoWXvd9SuG5IF/DuV/cOQneovTMeo4ec3ZrMiw5
+         dSCC+cdQLxBc8gur4COhlz3olcHe/hzc845romh421NdfIM9+XJzPTaSSWY0LqHlEAUE
+         he48zkk61qfDW1TdbCe17vGExz/XLebfCtHWRXDHAMv+YIOqDbUc2tHVyprOiP7DFlMv
+         1m6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vBgdRFvyWR+zBWshZROh6GlWfRoQ4jqVQ5N1n5QJhXg=;
-        b=FtNx4JGCQ7gDHc380kBaroxJXOE5VVxQ8Z/r/c/+F5g3NoMrr/6+jKrazScekY6jgJ
-         w2rjg78kcfLRBZEF9e9z9PdPhTM594j+rKkrlFAalMA6wTiuv95rur1b8NE74Gw6BgF2
-         lKA07s11TZ4WwTAzvaCAzdtMeJeEaGSfh17ru8/bt8rNRfFo6FtfsnPet6eROxLbNlQ+
-         7hn/zWV+KXijXTxCAs99V1LLRMsuL1AVfL8pDBKkBVPx6PTDQNxIshUSv3K8KzSrpr11
-         I+oFY+TyuX4B1WOEa2YELK62noCmdLhWXj6FCuKtljbZERIhM9ochCX+NT/5fTbookLE
-         LwIA==
-X-Gm-Message-State: APjAAAVzGzNfBtneX9FkrkretItUopIn91hYQ7gH8wvkkbDrHmxCiL6Q
-        D6ncutlFo+JTW3YVBd7GMuQ=
-X-Google-Smtp-Source: APXvYqyzJUC5/goC8sShMyMthpjrhZosMNEwZ32KjRySFCjJJQEJn+u7kbnd6g8YBSoGrmHjIyspJQ==
-X-Received: by 2002:ad4:568d:: with SMTP id bc13mr14906293qvb.102.1571924942256;
-        Thu, 24 Oct 2019 06:49:02 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id 14sm12494775qtb.54.2019.10.24.06.49.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 06:49:00 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CAF744DDC9; Thu, 24 Oct 2019 10:48:58 -0300 (-03)
-Date:   Thu, 24 Oct 2019 10:48:58 -0300
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, john.garry@huawei.com, ak@linux.intel.com,
-        lukemujica@google.com, kan.liang@linux.intel.com,
-        yuzenghui@huawei.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        hushiyuan@huawei.com, linfeilong@huawei.com
-Subject: Re: [PATCH v2] perf jevents: Fix resource leak in process_mapfile()
- and main()
-Message-ID: <20191024134858.GB1666@kernel.org>
-References: <d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com>
- <20191016142536.GH22835@kernel.org>
- <b4aea0a8-f0a5-d439-e8c9-1b88841300be@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rL9YpRyTuHk70/QoA0F/U1TMIayhb73ZwaCrSIsUGq0=;
+        b=V/HwqcmAOBUPAQdw0Z21/8IWGXb8CNakkHSoXbZvVyQsjucNkuUfeYa8yxp2OZwN+I
+         q6A0tp3xtmC1x42clbkfHgC8Ixke1cTEk6uwIfSa9AzBw40OWySUuVueHwe5Ok+43Y5M
+         Egp7cYUjnyv0mPKUg3Ts3OcaT0MkH1H9tLsbrL9YJXKTWUh/+A8VRQaJ71dql8Oky8Uw
+         hmwK8W6Iu+U5xvBLKKJEdWbl/OCjwDt6t0HiSBve53+l2imKc7s5oAn8UFOPFNBBmU4u
+         7ggUtCC1zADdrN5O3h9veBnwf9OxSpr3EPkpbUXCWozBB5GV0MCOYq2B4oqu0OvbWyuF
+         wbqA==
+X-Gm-Message-State: APjAAAWYNS81qvkx3nhzJ6GooDLk1GXRW1rKP9e5nX57dKrC8c6OyYZp
+        2RkSUgXDLDeHqQJvJNk6poJHGs/mlrSer6fCu7/qlA==
+X-Google-Smtp-Source: APXvYqzl/ZdSWSJ6mWUTfcNmk43PKaG+hCJrqHP/SB40ZEQLszeBwep9Yue5+aKI7eAEuVPxWq1LOM2ITfL5h6qRWgc=
+X-Received: by 2002:a62:5503:: with SMTP id j3mr17488831pfb.93.1571924943211;
+ Thu, 24 Oct 2019 06:49:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4aea0a8-f0a5-d439-e8c9-1b88841300be@huawei.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <00000000000001b0a40595a84593@google.com>
+In-Reply-To: <00000000000001b0a40595a84593@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 24 Oct 2019 15:48:52 +0200
+Message-ID: <CAAeHK+yM9+69_au5oZzqmRuFuh_SQr3nFCWGCcGueDrvsxyFgA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in parse_term_proc_unit
+To:     syzbot <syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com>
+Cc:     Allison Randal <allison@lohutok.net>, alsa-devel@alsa-project.org,
+        =?UTF-8?B?5b2t6L6J?= <benquike@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, g@b4.vu,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Takashi Iwai <tiwai@suse.com>, wang6495@umn.edu,
+        yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Oct 23, 2019 at 04:22:25PM +0800, Yunfeng Ye escreveu:
-> 
-> 
-> On 2019/10/16 22:25, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Oct 16, 2019 at 09:50:17PM +0800, Yunfeng Ye escreveu:
-> >> There are memory leaks and file descriptor resource leaks in
-> >> process_mapfile() and main().
-> >>
-> >> Fix this by adding free(), fclose() and free_arch_std_events()
-> >> on the error paths.
-> >>
-> >> Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-> >> Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
-> >> Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
-> > 
-> > Nice, thanks for adding the fixes line, I looked at those three patches
-> > and indeed they were leaky, thanks for the fixes, we shouldn't have
-> > those leaks even if that, for now, makes the tool to end anyway.
-> > 
-> The other 3 patchs have been applied, is this patch applied ? thanks.
+On Thu, Oct 24, 2019 at 3:47 PM syzbot
+<syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13a38628e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=97e24236f1e2918ad968
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12184764e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1432ae28e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+97e24236f1e2918ad968@syzkaller.appspotmail.com
+>
+> usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> usb 1-1: Product: syz
+> usb 1-1: Manufacturer: syz
+> usb 1-1: SerialNumber: syz
+> ==================================================================
+> BUG: KASAN: use-after-free in uac_processing_unit_iProcessing
+> include/uapi/linux/usb/audio.h:429 [inline]
+> BUG: KASAN: use-after-free in parse_term_proc_unit+0x57a/0x5e0
+> sound/usb/mixer.c:896
+> Read of size 1 at addr ffff8881d5346d0e by task kworker/1:2/83
+>
+> CPU: 1 PID: 83 Comm: kworker/1:2 Not tainted 5.4.0-rc3+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+>   kasan_report+0xe/0x20 mm/kasan/common.c:634
+>   uac_processing_unit_iProcessing include/uapi/linux/usb/audio.h:429 [inline]
+>   parse_term_proc_unit+0x57a/0x5e0 sound/usb/mixer.c:896
+>   __check_input_term+0xc32/0x13f0 sound/usb/mixer.c:984
+>   parse_audio_feature_unit sound/usb/mixer.c:1875 [inline]
+>   parse_audio_unit+0x101d/0x36f0 sound/usb/mixer.c:2753
+>   snd_usb_mixer_controls+0x715/0xb90 sound/usb/mixer.c:3095
+>   snd_usb_create_mixer+0x2b5/0x1890 sound/usb/mixer.c:3445
+>   usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2201
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2201
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+>   port_event drivers/usb/core/hub.c:5469 [inline]
+>   hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Allocated by task 83:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:510 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
+>   kmalloc include/linux/slab.h:561 [inline]
+>   usb_alloc_urb+0x65/0xb0 drivers/usb/core/urb.c:73
+>   usb_internal_control_msg drivers/usb/core/message.c:94 [inline]
+>   usb_control_msg+0x1c9/0x4a0 drivers/usb/core/message.c:152
+>   usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
+>   usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
+>   usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
+>   usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
+>   hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+>   port_event drivers/usb/core/hub.c:5469 [inline]
+>   hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 83:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   kasan_set_free_info mm/kasan/common.c:332 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
+>   slab_free_hook mm/slub.c:1424 [inline]
+>   slab_free_freelist_hook mm/slub.c:1475 [inline]
+>   slab_free mm/slub.c:3018 [inline]
+>   kfree+0xe4/0x320 mm/slub.c:3967
+>   urb_destroy drivers/usb/core/urb.c:26 [inline]
+>   kref_put include/linux/kref.h:65 [inline]
+>   usb_free_urb.part.0+0x7a/0xc0 drivers/usb/core/urb.c:95
+>   usb_free_urb+0x1b/0x30 drivers/usb/core/urb.c:94
+>   usb_start_wait_urb+0x1e5/0x2b0 drivers/usb/core/message.c:79
+>   usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
+>   usb_control_msg+0x31c/0x4a0 drivers/usb/core/message.c:152
+>   usb_get_descriptor+0xc1/0x1b0 drivers/usb/core/message.c:647
+>   usb_get_configuration+0x28e/0x3050 drivers/usb/core/config.c:836
+>   usb_enumerate_device drivers/usb/core/hub.c:2369 [inline]
+>   usb_new_device+0xd3/0x160 drivers/usb/core/hub.c:2505
+>   hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+>   port_event drivers/usb/core/hub.c:5469 [inline]
+>   hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881d5346d00
+>   which belongs to the cache kmalloc-192 of size 192
+> The buggy address is located 14 bytes inside of
+>   192-byte region [ffff8881d5346d00, ffff8881d5346dc0)
+> The buggy address belongs to the page:
+> page:ffffea000754d180 refcount:1 mapcount:0 mapping:ffff8881da002a00
+> index:0x0
+> flags: 0x200000000000200(slab)
+> raw: 0200000000000200 ffffea0007548ac0 0000000900000009 ffff8881da002a00
+> raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d5346c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>   ffff8881d5346c80: 00 00 00 00 05 fc fc fc fc fc fc fc fc fc fc fc
+> > ffff8881d5346d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                        ^
+>   ffff8881d5346d80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>   ffff8881d5346e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-Applied now, thanks for the reminder,
-
-- Arnaldo
- 
-> > - Arnaldo
-> > 
-> >> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> >> ---
-> >> v1 -> v2:
-> >>  - add free(eventsfp) to fix eventsfp resource leaks
-> >>  - add free_arch_std_events() on the error path
-> >>
-> >>  tools/perf/pmu-events/jevents.c | 13 +++++++++++--
-> >>  1 file changed, 11 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> >> index e2837260ca4d..99e3fd04a5cb 100644
-> >> --- a/tools/perf/pmu-events/jevents.c
-> >> +++ b/tools/perf/pmu-events/jevents.c
-> >> @@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
-> >>  	char *line, *p;
-> >>  	int line_num;
-> >>  	char *tblname;
-> >> +	int ret = 0;
-> >>
-> >>  	pr_info("%s: Processing mapfile %s\n", prog, fpath);
-> >>
-> >> @@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
-> >>  	if (!mapfp) {
-> >>  		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
-> >>  				fpath);
-> >> +		free(line);
-> >>  		return -1;
-> >>  	}
-> >>
-> >> @@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
-> >>  			/* TODO Deal with lines longer than 16K */
-> >>  			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
-> >>  					prog, fpath, line_num);
-> >> -			return -1;
-> >> +			ret = -1;
-> >> +			goto out;
-> >>  		}
-> >>  		line[strlen(line)-1] = '\0';
-> >>
-> >> @@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
-> >>
-> >>  out:
-> >>  	print_mapping_table_suffix(outfp);
-> >> -	return 0;
-> >> +	fclose(mapfp);
-> >> +	free(line);
-> >> +	return ret;
-> >>  }
-> >>
-> >>  /*
-> >> @@ -1122,6 +1127,7 @@ int main(int argc, char *argv[])
-> >>  		goto empty_map;
-> >>  	} else if (rc < 0) {
-> >>  		/* Make build fail */
-> >> +		fclose(eventsfp);
-> >>  		free_arch_std_events();
-> >>  		return 1;
-> >>  	} else if (rc) {
-> >> @@ -1134,6 +1140,7 @@ int main(int argc, char *argv[])
-> >>  		goto empty_map;
-> >>  	} else if (rc < 0) {
-> >>  		/* Make build fail */
-> >> +		fclose(eventsfp);
-> >>  		free_arch_std_events();
-> >>  		return 1;
-> >>  	} else if (rc) {
-> >> @@ -1151,6 +1158,8 @@ int main(int argc, char *argv[])
-> >>  	if (process_mapfile(eventsfp, mapfile)) {
-> >>  		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
-> >>  		/* Make build fail */
-> >> +		fclose(eventsfp);
-> >> +		free_arch_std_events();
-> >>  		return 1;
-> >>  	}
-> >>
-> >> -- 
-> >> 2.7.4.3
-> > 
-
--- 
-
-- Arnaldo
+#syz dup: KASAN: slab-out-of-bounds Read in build_audio_procunit
