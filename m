@@ -2,213 +2,232 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58F1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB3ECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B0F20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEEnD9zd"
+	by mail.kernel.org (Postfix) with ESMTP id 92DA92166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437688AbfJXGNR (ORCPT
+        id S2437701AbfJXGN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 02:13:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46371 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404173AbfJXGNR (ORCPT
+        Thu, 24 Oct 2019 02:13:58 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:60414 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404173AbfJXGN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 02:13:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b25so392263pfi.13;
-        Wed, 23 Oct 2019 23:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EofdUoQrs85PBjjnb/AuG4A4pyzR0R8swOkdIz7JRmY=;
-        b=UEEnD9zdltpC7dsv2JkW5q8VBHt24sRtjYqKvhaflNkSIpR3vyG+Jt4ojL1XuDIk84
-         JmgdLm91dTbhdSB4MEpXanEX3vO80e3f3rJ/C4xnffB3CGqKMww/Z2zf2VfsfafLxXgw
-         b8MsBrU4VeBbu8tdICNuqanVniFkScDJBHm47RToFCuYqK/Kl/AX/44iMl4nPof9pqC6
-         h5+MsrYkbmh/Joxh4YOzqOzU4YYwG5GXEyVepYbj/Bd4LMT/hLA8atET5D/yMy1w7x8x
-         oRAkAsnx+EXwXyHbasGNpLaFnM+yqdWBtYzfezmbDh4C5oU8WT/im3fFR46pg2pSnvpJ
-         Aiww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EofdUoQrs85PBjjnb/AuG4A4pyzR0R8swOkdIz7JRmY=;
-        b=XYu8TEgt921m/8x3vfy+W6YP6NO0lDRmqyOlYVzik6GY8ZXdu/kYYQr+iowuFF9fRp
-         FWhi/TIiEa+bIUVKIWZfDA8zZslfotf7NiaGEyUKiEOSfQtANLpqGKIE/18M19jlFqpF
-         KgdByaKPTwS8LaZ1+Uo3nymyNt9v+ZT0VyClYian765mqvX9GsPzbanuLPYklSLqtTsT
-         8aFs7ePNsoz0je2GlyzQ3We74n7VPkaEUXheGCZzml9Pd91u0wkYzKZY7qQrEsu+Rwb0
-         3iQyGhPaf7IIur855zdMUlJGxtMfwcaeyhT2VLnGe5qEI3B4h0BuweutFMuB0aBFEvIR
-         RRlA==
-X-Gm-Message-State: APjAAAUBSl+agRUEjtlzumKUDM5frg8TLIYq/e2pO2Lk9tZha//+EvWx
-        p5nqoEYysEuhOUKnCN2FXE4=
-X-Google-Smtp-Source: APXvYqzUiw+VJdNr6xBvgwrgYwjzfVGVSd4+DNEu1IcRixOkVetVtm5HgL9fQ3UgrnhqDPlrTcgX5A==
-X-Received: by 2002:a62:5284:: with SMTP id g126mr15380962pfb.95.1571897595495;
-        Wed, 23 Oct 2019 23:13:15 -0700 (PDT)
-Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id e4sm24802948pff.22.2019.10.23.23.13.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 23:13:14 -0700 (PDT)
-Date:   Wed, 23 Oct 2019 23:13:11 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv7 18/33] lib/vdso: Add unlikely() hint into
- vdso_read_begin()
-Message-ID: <20191024061311.GA4541@gmail.com>
-References: <20191011012341.846266-1-dima@arista.com>
- <20191011012341.846266-19-dima@arista.com>
- <100f6921-9081-7eb0-7acc-f10cfb647c21@arm.com>
+        Thu, 24 Oct 2019 02:13:58 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 36D56634C87;
+        Thu, 24 Oct 2019 09:13:35 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1iNWNK-0000pH-4K; Thu, 24 Oct 2019 09:13:34 +0300
+Date:   Thu, 24 Oct 2019 09:13:34 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch 19/19] dt-bindings: media: cal: convert binding to yaml
+Message-ID: <20191024061334.GA2867@valkosipuli.retiisi.org.uk>
+References: <20191018153437.20614-1-bparrot@ti.com>
+ <20191018153437.20614-20-bparrot@ti.com>
+ <20191022074623.GE864@valkosipuli.retiisi.org.uk>
+ <20191023161844.hgrxeo244krq26lz@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="xHFwDpU9dbj6ez1V"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <100f6921-9081-7eb0-7acc-f10cfb647c21@arm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191023161844.hgrxeo244krq26lz@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Benoit,
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-
-On Wed, Oct 16, 2019 at 12:24:14PM +0100, Vincenzo Frascino wrote:
-> On 10/11/19 2:23 AM, Dmitry Safonov wrote:
-> > From: Andrei Vagin <avagin@gmail.com>
+On Wed, Oct 23, 2019 at 11:18:45AM -0500, Benoit Parrot wrote:
+> Sakari Ailus <sakari.ailus@iki.fi> wrote on Tue [2019-Oct-22 10:46:23 +0300]:
+> > Hi Benoit,
 > > 
-> > Place the branch with no concurrent write before contended case.
+> > Thanks for the patch.
 > > 
-> > Performance numbers for Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
-> > (more clock_gettime() cycles - the better):
-> >         | before    | after
-> > -----------------------------------
-> >         | 150252214 | 153242367
-> >         | 150301112 | 153324800
-> >         | 150392773 | 153125401
-> >         | 150373957 | 153399355
-> >         | 150303157 | 153489417
-> >         | 150365237 | 153494270
-> > -----------------------------------
-> > avg     | 150331408 | 153345935
-> > diff %  | 2	    | 0
-> > -----------------------------------
-> > stdev % | 0.3	    | 0.1
+> > On Fri, Oct 18, 2019 at 10:34:37AM -0500, Benoit Parrot wrote:
+> > > Convert ti-cal.txt to ti,cal.yaml.
+> > > 
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  .../devicetree/bindings/media/ti,cal.yaml     | 186 ++++++++++++++++++
+> > >  .../devicetree/bindings/media/ti-cal.txt      |  82 --------
+> > >  2 files changed, 186 insertions(+), 82 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/ti,cal.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/media/ti-cal.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/ti,cal.yaml b/Documentation/devicetree/bindings/media/ti,cal.yaml
+> > > new file mode 100644
+> > > index 000000000000..c3fbb22b4571
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/ti,cal.yaml
+> > > @@ -0,0 +1,186 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/ti,cal.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Texas Instruments DRA72x CAMERA ADAPTATION LAYER (CAL) Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Benoit Parrot <bparrot@ti.com>
+> > > +
+> > > +description: |-
+> > > +  The Camera Adaptation Layer (CAL) is a key component for image capture
+> > > +  applications. The capture module provides the system interface and the
+> > > +  processing capability to connect CSI2 image-sensor modules to the
+> > > +  DRA72x device.
+> > > +
+> > > +  CAL supports 2 camera port nodes on MIPI bus. Each CSI2 camera port nodes
+> > > +  should contain a 'port' child node with child 'endpoint' node. Please
+> > > +  refer to the bindings defined in
+> > > +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > +
+> > > +  compatible should be
+> > > +     "ti,dra72-cal", for DRA72 controllers
+> > > +     "ti,dra72-pre-es2-cal", for DRA72 controllers pre ES2.0
+> > > +     "ti,dra76-cal", for DRA76 controllers
+> > > +     "ti,am654-cal", for AM654 controllers
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +      items:
+> > > +        - enum:
+> > > +            - ti,dra72-cal
+> > > +            - ti,dra72-pre-es2-cal
+> > > +            - ti,dra76-cal
+> > > +            - ti,am654-cal
+> > > +
+> > > +  reg:
+> > > +    minItems: 2
+> > > +    items:
+> > > +      - description: The CAL main register region
+> > > +      - description: The RX Core0 (DPHY0) register region
+> > > +      - description: The RX Core1 (DPHY1) register region
+> > > +
+> > > +  reg-names:
+> > > +    minItems: 2
+> > > +    items:
+> > > +      - const: cal_top
+> > > +      - const: cal_rx_core0
+> > > +      - const: cal_rx_core1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  syscon-camerrx:
+> > > +    maxItems: 1
+> > > +    items:
+> > > +      - description:
+> > > +           phandle to the device control module and offset to the
+> > > +           control_camerarx_core register
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +    description: functional clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: fck
+> > > +
+> > > +  power-domains:
+> > > +    description:
+> > > +      List of phandle and PM domain specifier as documented in
+> > > +      Documentation/devicetree/bindings/power/power_domain.txt
+> > > +    maxItems: 1
+> > > +
+> > > +  # See ./video-interfaces.txt for details
+> > > +  ports:
+> > > +    maxItems: 1
+> > > +    type: object
+> > > +    additionalProperties: false
+> > > +
+> > > +    properties:
+> > > +      "#address-cells":
+> > > +        const: 1
+> > > +
+> > > +      "#size-cells":
+> > > +        const: 0
+> > > +
+> > > +    patternProperties:
+> > > +      '^port@[0-9a-fA-F]+$':
+> > > +        minItems: 1
+> > > +        maxItems: 2
 > > 
-> > Signed-off-by: Andrei Vagin <avagin@gmail.com>
-> > Co-developed-by: Dmitry Safonov <dima@arista.com>
-> > Signed-off-by: Dmitry Safonov <dima@arista.com>
+> > Obviously you need a port node to connect a sensor. But can the device do
+> > something useful without one? I guess it may be a matter of taste whether
+> > you require one.
 > 
-> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Tested-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> In an ideal world all of these would be covered by a video-interfaces.yaml
+> file I would just need to include... :)
+> 
+> But I'll try and add some more "required" and see how much trouble it gets
+> me.
+> > 
+> > > +        type: object
+> > > +        additionalProperties: false
+> > > +
+> > > +        properties:
+> > > +          reg:
+> > > +            minItems: 1
+> > > +            items:
+> > > +              - description: The port id
+> > > +
+> > > +        patternProperties:
+> > > +          '^endpoint@[0-9a-fA-F]+$':
+> > > +            minItems: 1
+> > 
+> > The graph bindings allows for no endpoints.
+> 
+> Maybe but then it is not much use.
 
-Hello Vincenzo,
+I guess you can require the endpoint in device bindings still. But the
+question is: do you need to?
 
-Could you test the attached patch on aarch64? On x86, it gives about 9%
-performance improvement for CLOCK_MONOTONIC and CLOCK_BOOTTIME.
+> > 
+> > > +            type: object
+> > > +            additionalProperties: false
+> > > +
+> > > +            properties:
+> > > +              clock-lanes:
+> > > +                maxItems: 1
+> > 
+> > Does the device support lane reordering? If not, you could omit the
+> > clock-lanes property. It wasn't documented earlier either albeit the
+> > example had it for some reason.
+> 
+> Not sure what you mean by lane re-ordering here, but this IP needs to know
+> which lanes are used for data and which lane is the clock lane.
+> 
+> I cannot just assume that clock lane is always lane 0, I have a sensor
+> where the clock lane is #2 for instance and the data lanes are 0, 1, 3, 4.
+> 
+> But at any rate before it was not specifically documented because I thought
+> it was covered by the "see
+> Documentation/devicetree/bindings/media/video-interfaces.txt" or de we need
+> to duplicate that in every binding?
 
-Here is my test:
-https://github.com/avagin/vdso-perf
+Then you should indeed have clock-lanes here as you need to know the
+position of the clock lane. Most devices either just can make use of the
+number of lanes or the order of the lanes is freely configurable (e.g. OMAP
+3 ISP). The former group just needs data-lanes.
 
-It is calling clock_gettime() in a loop for three seconds and then
-reports a number of iterations.
-
-Thanks,
-Andrei
-
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: attachment;
-	filename="0001-lib-vdso-make-do_hres-and-do_coarse-as-__always_inli.patch"
-
-From 5252093fec4c74802e5ef501b9f1db3369430c80 Mon Sep 17 00:00:00 2001
-From: Andrei Vagin <avagin@gmail.com>
-Date: Tue, 22 Oct 2019 18:23:17 -0700
-Subject: [PATCH] lib/vdso: make do_hres and do_coarse as __always_inline
-
-Performance numbers for Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
-(more clock_gettime() cycles - the better):
-
-clock            | before     | after      | diff
-----------------------------------------------------------
-monotonic        |  153222105 |  166775025 | 8.8%
-monotonic-coarse |  671557054 |  691513017 | 3.0%
-monotonic-raw    |  147116067 |  161057395 | 9.5%
-boottime         |  153446224 |  166962668 | 9.1%
-
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
----
- lib/vdso/gettimeofday.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index e630e7ff57f1..b4f7f0f246af 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -38,7 +38,7 @@ u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
- }
- #endif
- 
--static int do_hres(const struct vdso_data *vd, clockid_t clk,
-+static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		   struct __kernel_timespec *ts)
- {
- 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
-@@ -68,7 +68,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
- 	return 0;
- }
- 
--static void do_coarse(const struct vdso_data *vd, clockid_t clk,
-+static __always_inline void do_coarse(const struct vdso_data *vd, clockid_t clk,
- 		      struct __kernel_timespec *ts)
- {
- 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
-@@ -97,12 +97,16 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
- 	 */
- 	msk = 1U << clock;
- 	if (likely(msk & VDSO_HRES)) {
--		return do_hres(&vd[CS_HRES_COARSE], clock, ts);
-+		vd = &vd[CS_HRES_COARSE];
-+out_hres:
-+		return do_hres(vd, clock, ts);
- 	} else if (msk & VDSO_COARSE) {
- 		do_coarse(&vd[CS_HRES_COARSE], clock, ts);
- 		return 0;
- 	} else if (msk & VDSO_RAW) {
--		return do_hres(&vd[CS_RAW], clock, ts);
-+		vd = &vd[CS_RAW];
-+		/* goto allows to avoid extra inlining of do_hres. */
-+		goto out_hres;
- 	}
- 	return -1;
- }
 -- 
-2.21.0
+Regards,
 
-
---xHFwDpU9dbj6ez1V--
+Sakari Ailus
