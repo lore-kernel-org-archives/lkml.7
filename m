@@ -2,134 +2,97 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84873CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC88CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A5C20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571933529;
-	bh=BLLHDwROAf93/5MRoMht9A1lnkPiEcUf5wYfxbtqWxA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Eu1Ce56sGfhVhYpcSgTwLyoT6DDebWrMFzELhqZooKriTQKeJl9GznRGPv9eOFcY9
-	 elCIcvT9PLVLo9CnXOfmlkTxfS1OmhD//uZf2Ngs16iqhmWHavadAbdkI21dlzU7qD
-	 k60hiyDGvfAs3eDDeTzpKhlhMR3dSR27PG5Iczf4=
+	by mail.kernel.org (Postfix) with ESMTP id 8EBCC2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:14:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hrWNeIkT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q5EX7o8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439742AbfJXQMI (ORCPT
+        id S2407893AbfJXQOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439732AbfJXQMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:12:07 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        Thu, 24 Oct 2019 12:14:50 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43050 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405661AbfJXQOu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:14:50 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BBF3960A0A; Thu, 24 Oct 2019 16:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571933688;
+        bh=5LYj+S7mUQpRFG78UNWcpu0TFawfTdvqUpL+Kysi69w=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=hrWNeIkToNDdVRdtpTlshKMIp37BiUqtnBsa0inqk3kgJbBJYuZoYulc+KvAIf9rc
+         rWGXjdWX/Knm99607FydhcAcuincgwTM7Pnx0psbG2wP+dZDm2eJ32bhWSkDZr6XBe
+         MzJkSv+DIrzri8haYWstUQ9nxRAfdcUYvPCFdFG8=
+Received: from potku.adurom.net (unknown [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5AA121A4C
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 16:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571933526;
-        bh=BLLHDwROAf93/5MRoMht9A1lnkPiEcUf5wYfxbtqWxA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UjxlRqauqd1oPrLF6wvfCI5vlf/DbwgbzgAYwey/swEIg/Rfr34fBH2cSP+PmeuIf
-         z6iEn1sirtCTIQESDvvm2jLkaitv4Ve6PXu2PtCzugch8oVQumox5H6z1aPgaku1aF
-         Yz8Kopr2w9TnVbZTqYbnLd0ajio/aI2mxHDFKwWA=
-Received: by mail-wr1-f50.google.com with SMTP id o28so26728200wro.7
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:12:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAXERCkfbR4VNQKMo6bVwGxPSyuV9MN80QgoOsvos8at3NikUq9R
-        pLmMMdR6Vjo3zyrdG1OScXTPlSH07Dn8PmrKJ+iv1g==
-X-Google-Smtp-Source: APXvYqwWZ1XyZeseylBIXNV03ODFkP+QjhC4uOR0zXgYX/4Z31HQ+LXWD4NhDb2q68L752kFVGb0TQYpK1h9egr5uLk=
-X-Received: by 2002:a5d:4d0f:: with SMTP id z15mr4378059wrt.195.1571933525027;
- Thu, 24 Oct 2019 09:12:05 -0700 (PDT)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3BAAB60A0A;
+        Thu, 24 Oct 2019 16:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571933686;
+        bh=5LYj+S7mUQpRFG78UNWcpu0TFawfTdvqUpL+Kysi69w=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Q5EX7o8UOEsIEmJ98Y9SLgS044IficfMRDPf7VvWOvqSxHiA5pviytY7GK2fFtU6P
+         4AVgW+dQ+9swtwtQu+Or3dfKYeL+kmq4IOwxYNfd28CUUSZBI37hYfJT+BXMyo0wlG
+         ji+kcrlTq3lRLDp+MT7ApIpA416QkGjJkqsVkDN4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3BAAB60A0A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Jiri Kosina <trivial@kernel.org>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH trivial] net: Fix various misspellings of "connect"
+References: <20191024152323.29987-1-geert+renesas@glider.be>
+Date:   Thu, 24 Oct 2019 19:14:39 +0300
+In-Reply-To: <20191024152323.29987-1-geert+renesas@glider.be> (Geert
+        Uytterhoeven's message of "Thu, 24 Oct 2019 17:23:23 +0200")
+Message-ID: <874kzyqfww.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <ef1c9381-dfc7-7150-feca-581f4d798513@suse.com>
-In-Reply-To: <ef1c9381-dfc7-7150-feca-581f4d798513@suse.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 24 Oct 2019 09:11:53 -0700
-X-Gmail-Original-Message-ID: <CALCETrWAALF7EgxHGs-rtZwk1Fxttr56QKXeB6QssXbyXDs+kA@mail.gmail.com>
-Message-ID: <CALCETrWAALF7EgxHGs-rtZwk1Fxttr56QKXeB6QssXbyXDs+kA@mail.gmail.com>
-Subject: Re: [PATCH] x86/stackframe/32: repair 32-bit Xen PV
-To:     Jan Beulich <jbeulich@suse.com>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        X86 ML <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 3:41 AM Jan Beulich <jbeulich@suse.com> wrote:
+Geert Uytterhoeven <geert+renesas@glider.be> writes:
+
+> Fix misspellings of "disconnect", "disconnecting", "connections", and
+> "disconnected".
 >
-> Once again RPL checks have been introduced which don't account for a
-> 32-bit kernel living in ring 1 when running in a PV Xen domain. The
-> case in FIXUP_FRAME has been preventing boot; adjust BUG_IF_WRONG_CR3
-> as well just in case.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/net/wimax/i2400m/usb.c                      | 2 +-
+>  drivers/net/wireless/realtek/rtlwifi/rtl8192se/hw.c | 4 ++--
+>  include/net/cfg80211.h                              | 2 +-
+>  net/netfilter/ipvs/ip_vs_ovf.c                      | 2 +-
+>  net/wireless/reg.h                                  | 2 +-
+>  5 files changed, 6 insertions(+), 6 deletions(-)
 
-I'm okay with the generated code, but IMO the macro is too indirect
-for something that's trivial.
+For the wireless:
 
->
-> Fixes: 3c88c692c287 ("x86/stackframe/32: Provide consistent pt_regs")
-> Signed-off-by: Jan Beulich <jbeulich@suse.com>
->
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -48,6 +48,17 @@
->
->  #include "calling.h"
->
-> +#ifndef CONFIG_XEN_PV
-> +# define USER_SEGMENT_RPL_MASK SEGMENT_RPL_MASK
-> +#else
-> +/*
-> + * When running paravirtualized on Xen the kernel runs in ring 1, and hence
-> + * simple mask based tests (i.e. ones not comparing against USER_RPL) have to
-> + * ignore bit 0. See also the C-level get_kernel_rpl().
-> + */
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
-How about:
-
-/*
- * When running on Xen PV, the actual %cs register in the kernel is 1, not 0.
- * If we need to distinguish between a %cs from kernel mode and a %cs from
- * user mode, we can do test $2 instead of test $3.
- */
-#define USER_SEGMENT_RPL_MASK 2
-
-but...
-
-> +# define USER_SEGMENT_RPL_MASK (SEGMENT_RPL_MASK & ~1)
-> +#endif
-> +
->         .section .entry.text, "ax"
->
->  /*
-> @@ -172,7 +183,7 @@
->         ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_PTI
->         .if \no_user_check == 0
->         /* coming from usermode? */
-> -       testl   $SEGMENT_RPL_MASK, PT_CS(%esp)
-> +       testl   $USER_SEGMENT_RPL_MASK, PT_CS(%esp)
-
-Shouldn't PT_CS(%esp) be 0 if we came from the kernel?  I'm guessing
-the actual bug is in whatever code put 1 in here in the first place.
-
-In other words, I'm having trouble understanding why there is any
-context in which some value would be 3 for user mode and 1 for kernel
-mode.  Obviously if we're manually IRETing to kernel mode, we need to
-set CS to 1, but if we're filling in our own PT_CS, we should just
-write 0.
-
-The supposedly offending commit (""x86/stackframe/32: Provide
-consistent pt_regs") looks correct to me, so I suspect that the
-problem is elsewhere.  Or is it intentional that Xen PV's asm
-(arch/x86/xen/whatever) sticks 1 into the CS field on the stack?
-
-Also, why are we supporting 32-bit Linux PV guests at all?  Can we
-just delete this code instead?
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
