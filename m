@@ -2,199 +2,203 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2E2CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD98020684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571912137;
-	bh=ykuhvQfu/VEVWx1RZHP9jfoG51/2VUniR+juAvfcWEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fuCl300PqjK9dPppr3twwlOvb4Yb21JOAVM3Xhm43vZRTiVMpPbqkqyIBTsxNrn5V
-	 spi8YDzWsaBBM6/TSGU9CFkhyglZLKFm/7FeuXuJzhsyU4zlaSCOl5lFqgESj077SH
-	 STxZopK9Rs5Yt6Wq52v1bJP1je7MavXm8ebcwwpU=
+	by mail.kernel.org (Postfix) with ESMTP id 6F16C20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392629AbfJXKPg (ORCPT
+        id S2393235AbfJXKRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:15:36 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33947 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391807AbfJXKPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:15:33 -0400
-Received: by mail-qt1-f196.google.com with SMTP id e14so17265623qto.1;
-        Thu, 24 Oct 2019 03:15:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Jg0HC2V0TUACAR0qAG1JtmCPUTiqlxxEMeEIEXx1r8=;
-        b=ewwQeIZJ7evve1w34HVzCkmXfpYvvm8figi2RlLP9K1LypO3IE+6UbWvbmBjLcrFiL
-         6kuZ6tjw5v6zBA7i+ANnqEgWaBvafufHq4h103rpDGnxcGOs47cfCkShBQRdBd3srqLv
-         UilmcNwTsYrJ2veKGosp0LrFh1pVOj4CUcMbIsgfuaZxElIyM3d0kXNVo+Tdmj24vCuf
-         hBAXzti4fAdNBbc6pXO9PrHHnnvUotPtAFebRMb60FsreyI+5id3yX1XuQcy/SC+8mbZ
-         3VwWLaaW9b/D9dL7H0aoKNSzJRzQsstllmFdBSqaJYe8wbJ2u5kPHIgAjTr8WkNAHPu4
-         Ghjw==
-X-Gm-Message-State: APjAAAWhX8eVKjiqy3KV91YLKguL9OlD9L04DX3dzDTqYGxGEZZeg9Os
-        mQhtEsy6JqUrKI6JmGdG1U4=
-X-Google-Smtp-Source: APXvYqwl1B9XBw0idLxLI//GAYXh+9vvmuxm/t9cdkKcX3KSrJE8Z2wYTpUkvL+buzZUu9VpYYjuAg==
-X-Received: by 2002:ac8:4750:: with SMTP id k16mr3189652qtp.288.1571912132146;
-        Thu, 24 Oct 2019 03:15:32 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id v4sm12508055qkj.28.2019.10.24.03.15.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 03:15:31 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C6A2A40244; Thu, 24 Oct 2019 10:15:29 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 10:15:29 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Matthias Maennich <maennich@google.com>,
-        shuah <shuah@kernel.org>,
-        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
-        serge@hallyn.com, Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        David Gow <davidgow@google.com>, Theodore Ts'o <tytso@mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Mike Salvatore <mike.salvatore@canonical.com>
-Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
- tests for policy unpack
-Message-ID: <20191024101529.GK11244@42.do-not-panic.com>
-References: <20191018001816.94460-1-brendanhiggins@google.com>
- <20191018122949.GD11244@42.do-not-panic.com>
- <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
- <CAFd5g46aO4jwyo32DSz4L8GdhP6t38+Qb9NB+3fev3u4G6sg4w@mail.gmail.com>
+        Thu, 24 Oct 2019 06:17:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:46106 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392611AbfJXKRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:17:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1D85B42;
+        Thu, 24 Oct 2019 03:17:01 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6A6B3F71F;
+        Thu, 24 Oct 2019 03:16:59 -0700 (PDT)
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@kernel.org, peterz@infradead.org, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, paul.burton@mips.com
+References: <20191023171039.GA173290@google.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a33e01bd-3054-a2c4-c206-f893e7373e65@arm.com>
+Date:   Thu, 24 Oct 2019 11:16:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g46aO4jwyo32DSz4L8GdhP6t38+Qb9NB+3fev3u4G6sg4w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191023171039.GA173290@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 05:42:18PM -0700, Brendan Higgins wrote:
-> On Sat, Oct 19, 2019 at 5:56 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> >
-> > On Fri, 18 Oct 2019, Luis Chamberlain wrote:
-> >
-> > > On Thu, Oct 17, 2019 at 05:18:16PM -0700, Brendan Higgins wrote:
-> > > > From: Mike Salvatore <mike.salvatore@canonical.com>
-> > > >
-> > > > In order to write the tests against the policy unpacking code, some
-> > > > static functions needed to be exposed for testing purposes. One of the
-> > > > goals of this patch is to establish a pattern for which testing these
-> > > > kinds of functions should be done in the future.
-> > >
-> > > And you'd run into the same situation expressed elsewhere with kunit of
-> > > an issue of the kunit test as built-in working but if built as a module
-> > > then it would not work, given the lack of exports. Symbols namespaces
-> > > should resolve this [0], and we'd be careful where a driver imports this
-> > > namespace.
-> > >
-> > > [0] https://lwn.net/Articles/798254/
+On 2019-10-23 6:10 pm, Bjorn Helgaas wrote:
+> On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
+>> On 2019/10/23 5:04, Bjorn Helgaas wrote:
+>>> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
 > 
-> Maybe I am not understanding how the symbol namespaces work, but it
-> seems that it doesn't actually solve our problem, at least not all of
-> it.
+>>> I think the underlying problem you're addressing is that:
+>>>
+>>>    - NUMA_NO_NODE == -1,
+>>>    - dev_to_node(dev) may return NUMA_NO_NODE,
+>>>    - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
+>>>    - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
+>>>
+>>> For example, on arm64, mips loongson, s390, and x86,
+>>> cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
+>>> an invalid array index.
+>>
+>> The invalid array index of -1 is the underlying problem here when
+>> cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
+>> is not NUMA_NO_NODE aware yet.
+>>
+>> In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
+>> disscusion, it is requested that it is better to warn about the pcie
+>> device without a node assigned by the firmware before making the
+>> cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
+>> devices of "NUMA_NO_NODE" node can be fixed by their vendor.
+>>
+>> See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
 > 
-> First off this doesn't solve the problem for when a piece of code is
-> included as a module; it also does not address the problem for symbols
-> that would not normally be exported.
-
-The suggestion is that since exporting certain symbols may not be wise,
-exporting them for say a test namespace may make more sense. Then
-the hacks don't need to be used for the lookup, therefore decreasing
-test / complexity time. This would only make sense if there really is
-no performance penalty known for having the symbol be exported.
-
-> > WRT adding tests, I think what we're aiming at is a set of best practices
-> > to advise test developers using KUnit, while attempting to minimize
-> > side-effects of any changes we need to make to support testability.
-> >
-> > One aspect of this we probably have to consider is inlining of code. For
-> > cases like this where the functions are small and are called in a small
-> > number of cases, any testability changes we make may push a
-> > previously-inlined function to not be inlined, with potential performance
-> > side-effects for the subsystem.  In such cases, I wonder if the right
-> > answer would be to suggest actually defining the functions as
-> > inline in the header file? That way the compiler still gets to decide (as
-> > opposed to __always_inline), and we don't perturb performance too much.
+> Right.  We should warn if the NUMA node number would help us but DT or
+> the firmware didn't give us one.
 > 
-> That's a really good point. Okay, so it seems that making the symbols
-> public when not testing is probably not okay on its own. If we are
-> going to do that, we probably need to do something like what you are
-> suggesting.
-
-If namespaces were to be used, and a consideration is that certain
-symbols should not be public as otherwise there would be a real
-perfomance hit, having a macro which only exports the namespace
-if a build option is enabled would suffice as well. That is, a
-no-op if the test feature is disabled, exported into a namespace
-otherwise. But if a new build option were to be considered to help build
-a different test kernel it begs the question if we just want or not a
-full sweaping -fno-inline could be considered on the top level
-Makefile when testing. The cost is a bloat the kernel, and it may
-also produce slightly different runtimes. With a test specific
-symbol namespace thing, we'd only export to a namespace those
-symbols being tested.
-
-FWIW we currently only enable -fno-inline-functions-called-once when we
-have CONFIG_DEBUG_SECTION_MISMATCH enabled.
-
-Your suggestion below with __visible_for_testing aligns with the gcc
-flags I mentioned.
-
-> With that, I think the best solution in this case will be the
-> "__visible_for_testing" route. It has no overhead when testing is
-> turned off (in fact it is no different in anyway when testing is
-> turned off). The downsides I see are:
+> But we can do that independently of any cpumask_of_node() changes.
+> There's no need to do one patch before the other.  Even if you make
+> cpumask_of_node() tolerate NUMA_NO_NODE, we'll still get the warning
+> because we're not actually changing any node assignments.
 > 
-> 1) You may not be able to test non-module code not compiled for
-> testing later with the test modules that Alan is working on (But the
-> only way I think that will work is by preventing the symbol from being
-> inlined, right?).
+>> So maybe change the warning to below:
+>>
+>> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
+>> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
 > 
-> 2) I think "__visible_for_testing" will be prone to abuse. Here, I
-> think there are reasons why we might want to expose these symbols for
-> testing, but not otherwise. Nevertheless, I think most symbols that
-> should be tested should probably be made visible by default. Since you
-> usually only want to test your public interfaces. I could very well
-> see this getting used as a kludge that gets used far too frequently.
-
-There are two parts to your statement on 2):
-
-  a) possible abuse of say __visible_for_testing
-  b) you typically only want to test your public interfaces
-
-For a) I think a proper module testing namespace thing would less
-likely be prone to abuse over somethingmore generic. It has the
-penalty of always being enabled (unless you kconfig it to allow
-you to disable it).
-
-While I don't fully agree with b) I think for the most part it remains
-true. But I'd agree more with this:
-
-  Most functions you want to test likely don't have a performance
-  criteria to be kept inline
-
-And for those situations I think a wrapper kconfig to convert a
-subsystem specific namespace call to be a nop would make sense.
-
-  Luis
-
-> Nevertheless, based on Alan's point, I suspect it, for this case at
-> least, will likely be the least painful.
+> I think this is perfect and I don't see the need for the refinement
+> below:
 > 
-> How do people feel about that?
+>> And it seems a pci device's parent will always set to the bridge
+>> device in pci_setup_device(), and device_add() which will set the
+>> node to its parent's when the child device' node is NUMA_NO_NODE,
+>> maybe we can add the bridge device' node checking to make sure
+>> the pci device really does not have a node assigned, as below:
+>>
+>> if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE &&
+>>      dev_to_node(bus->bridge) == NUMA_NO_NODE)
+>> 	dev_err(&bus->dev, FW_BUG "No node assigned on NUMA capable HW. Please contact your vendor for updates.\n");
+> 
+> Anyway, would the attached patch work for you?  I have it tentatively
+> queued up on pci/enumeration for v5.5.
+> 
+>>>> It is possible to
+>>>> have a PCI bridge shared between two nodes, such that the PCI
+>>>> devices have equidistance. But the moment you scale this out, you
+>>>> either get devices that are 'local' to a package while having
+>>>> multiple packages, or if you maintain a single bridge in a big
+>>>> system, things become so slow it all doesn't matter anyway.
+>>>> Assigning a node (one of the shared) is, in the generic ase of
+>>>> multiple packages, the better solution over assigning all nodes.
+>>>>
+>>>> As pci_device_add() will assign the pci device' node according to
+>>>> the bus the device is on, which is decided by pcibus_to_node().
+>>>> Currently different arch may implement the pcibus_to_node() based
+>>>> on bus->sysdata or bus device' node, which has the same node as
+>>>> the bridge device.
+>>>>
+>>>> And for devices behind another bridge case, the child bus device
+>>>> is setup with proper parent bus device and inherit its parent'
+>>>> sysdata in pci_alloc_child_bus(), so the pcie device under the
+>>>> child bus should have the same node as the parent bridge when
+>>>> device_add() is called, which will set the node to its parent's
+>>>> node when the child device' node is NUMA_NO_NODE.
+>>>>
+>>>> So this patch only warns about the case when a host bridge device
+>>>> is registered with a node of NO_NODE in pci_register_host_bridge().
+>>>> And it only warns about that when there are more than one numa
+>>>> nodes in the system.
+>>>
+>>>
+>>>> [1] https://lore.kernel.org/lkml/1568724534-146242-1-git-send-email-linyunsheng@huawei.com/
+>>>>
+>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>>> ---
+>>>>   drivers/pci/probe.c | 3 +++
+>>>>   1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>>>> index 3d5271a..22be96a 100644
+>>>> --- a/drivers/pci/probe.c
+>>>> +++ b/drivers/pci/probe.c
+>>>> @@ -927,6 +927,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>>>>   	list_add_tail(&bus->node, &pci_root_buses);
+>>>>   	up_write(&pci_bus_sem);
+>>>>   
+>>>> +	if (nr_node_ids > 1 && dev_to_node(bus->bridge) == NUMA_NO_NODE)
+>>>> +		dev_err(bus->bridge, FW_BUG "No node assigned on NUMA capable HW by BIOS. Please contact your vendor for updates.\n");
+>>>> +
+>>>>   	return 0;
+>>>>   
+>>>>   unregister:
+> 
+> commit 8f8cf239c4f1
+> Author: Yunsheng Lin <linyunsheng@huawei.com>
+> Date:   Sat Oct 19 14:45:43 2019 +0800
+> 
+>      PCI: Warn if no host bridge NUMA node info
+>      
+>      In pci_call_probe(), we try to run driver probe functions on the node where
+>      the device is attached.  If we don't know which node the device is attached
+>      to, the driver will likely run on the wrong node.  This will still work,
+>      but performance will not be as good as it could be.
+
+Is it guaranteed to be purely a performance issue? In other words, is 
+there definitely no way a physical node could be disabled via 
+idle/hotplug/etc. such that unattributed devices can silently disappear 
+while still in use?
+
+>      
+>      On NUMA systems, warn if we don't know which node a PCI host bridge is
+>      attached to.  This is likely an indication that ACPI didn't supply a _PXM
+>      method or the DT didn't supply a "numa-node-id" property.
+>      
+>      [bhelgaas: commit log, check bus node]
+>      Link: https://lore.kernel.org/r/1571467543-26125-1-git-send-email-linyunsheng@huawei.com
+>      Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 3d5271a7a849..40259c38d66a 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -897,6 +897,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>   	else
+>   		pr_info("PCI host bridge to bus %s\n", name);
+>   
+> +	if (nr_node_ids > 1 && pcibus_to_node(bus) == NUMA_NO_NODE)
+> +		dev_warn(&bus->dev, "Unknown NUMA node; performance will be reduced\n");
+
+I think this still deserves the FW_BUG prefix.
+
+Robin.
+
+> +
+>   	/* Add initial resources to the bus */
+>   	resource_list_for_each_entry_safe(window, n, &resources) {
+>   		list_move_tail(&window->node, &bridge->windows);
+> 
