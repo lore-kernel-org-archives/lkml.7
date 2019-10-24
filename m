@@ -2,99 +2,77 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EFFCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF842CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C7120659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHGKBeKv"
+	by mail.kernel.org (Postfix) with ESMTP id B64F920650
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439752AbfJXQQq (ORCPT
+        id S2439767AbfJXQRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:16:46 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53847 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436642AbfJXQQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:16:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571933805;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WrXRA91ehMR0EzuxH1to9rpY9XdaZv5EaEIpkHE/k+E=;
-        b=BHGKBeKvEFcueCgTCabNqJHKHhYnM/wFHerReqCnDnDpCfEABJXsSCP/6VwIBGL/VBRv5J
-        Z8hL4aPSBNwljgvrTr38+2F44ySOTwJexghUFPR/AmKgVStcGAmoN/uQrVzg9NT2NRxot3
-        wMxrhRRfFWmQoOt7u5qxJq+4QFzc76w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-71-XIdfVkwhOSmqJ6Ejx3r1Tw-1; Thu, 24 Oct 2019 12:16:41 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B520800D5A;
-        Thu, 24 Oct 2019 16:16:39 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-125-205.rdu2.redhat.com [10.10.125.205])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CE85452B;
-        Thu, 24 Oct 2019 16:16:34 +0000 (UTC)
-Subject: Re: [RFC PATCH 0/2] mm/vmstat: Reduce zone lock hold time when
- reading /proc/pagetypeinfo
-To:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191023095607.GE3016@techsingularity.net>
- <20191023102737.32274-1-mhocko@kernel.org>
- <20191024082042.GS17610@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <55c08581-a9c8-27cc-9710-b2bfe1934c8e@redhat.com>
-Date:   Thu, 24 Oct 2019 12:16:34 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20191024082042.GS17610@dhcp22.suse.cz>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: XIdfVkwhOSmqJ6Ejx3r1Tw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 24 Oct 2019 12:17:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:56592 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436642AbfJXQRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 12:17:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 09:17:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
+   d="scan'208";a="223613972"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Oct 2019 09:17:46 -0700
+Message-ID: <bce400a8a2ab1a2ddfc1d270fdff2172884696eb.camel@linux.intel.com>
+Subject: Re: [PATCH trivial] HID: intel-ish-hid: Spelling
+ s/diconnect/disconnect/
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 24 Oct 2019 09:17:46 -0700
+In-Reply-To: <20191024151837.29421-1-geert+renesas@glider.be>
+References: <20191024151837.29421-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 4:20 AM, Michal Hocko wrote:
-> On Wed 23-10-19 12:27:35, Michal Hocko wrote:
-> [...]
->> I went with a bound to the pages iteratred over in the free_list. See
->> patch 2.
-> I will fold http://lkml.kernel.org/r/20191023180121.GN17610@dhcp22.suse.c=
-z
-> to patch 2 unless there are any objections. If there are no further
-> comments I will send the two patches without an RFC tomorrow.
->
-> Thanks for all the feedback.
+On Thu, 2019-10-24 at 17:18 +0200, Geert Uytterhoeven wrote:
+> Fix misspelling of "disconnect".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-I am fine with your change. My concern is to make sure that there is a
-reasonable bound to the worst case scenario. With that change, the upper
-bound is iterating 100,000 list entries. I think Andrew suggested
-lowering it to 1024. That I think may be too low, but I don't mind if it
-is lowered somewhat from the current value.
-
-Cheers,
-Longman
+> ---
+>  drivers/hid/intel-ish-hid/ishtp/hbm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/intel-ish-hid/ishtp/hbm.c
+> b/drivers/hid/intel-ish-hid/ishtp/hbm.c
+> index c6c9ac09dac3a377..30a91d068306a000 100644
+> --- a/drivers/hid/intel-ish-hid/ishtp/hbm.c
+> +++ b/drivers/hid/intel-ish-hid/ishtp/hbm.c
+> @@ -402,7 +402,7 @@ static void ishtp_hbm_cl_connect_res(struct
+> ishtp_device *dev,
+>   * @dev: ISHTP device instance
+>   * @disconnect_req: disconnect request structure
+>   *
+> - * Disconnect request bus message from the fw. Send diconnect
+> response.
+> + * Disconnect request bus message from the fw. Send disconnect
+> response.
+>   */
+>  static void ishtp_hbm_fw_disconnect_req(struct ishtp_device *dev,
+>  	struct hbm_client_connect_request *disconnect_req)
 
