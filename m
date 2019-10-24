@@ -2,134 +2,94 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DAFCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FF7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A77C12084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3401620663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jL+YtCn7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u1/fHDmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbfJXWOR (ORCPT
+        id S1730385AbfJXWRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:14:17 -0400
-Received: from ozlabs.org ([203.11.71.1]:55243 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730134AbfJXWOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:14:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46zhNj0zrRz9sPV;
-        Fri, 25 Oct 2019 09:14:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571955253;
-        bh=unMoINuP9v74vy+zeCf+u6//zhJz+EsUW+VXvnn9j44=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jL+YtCn7vFbKW40IkKjQ5pJUNsDmB28mBlIn/BS2hqjXw6uBeP9KvtYAA1ipgLUax
-         5UxAJsC3pRi6xHVDbt5k6jtjRV+NDJtDvDMUxXxrBBK9zzTDJ+nKD0apy1RX3lsr/x
-         fhYdJxWAkFClAIy35Xz6mS3OX1SoRhhucnTinffRxdS//P0uWEg5qaLjyGHIIQusaY
-         yqWOAloEyO+Rp0nNanQfAlYGdFgGG6e6+hjdvhhf7OldnT8AM7MtijS68RxtPCrefH
-         X8jjJlUV8+ZW1F0SGEMsJ5Mv+pMDXszKARGDhe8PpESYbdGVZanBZMD0deTRN0vxtC
-         rYf98VpKOi6DQ==
-Date:   Fri, 25 Oct 2019 09:14:12 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Daniel =?UTF-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        lkft-triage@lists.linaro.org
-Subject: linux-next: bad merge resolution in the tip tree (Was: Linux-next:
- 20191022: perf: bpf_helpers_doc.py: not found)
-Message-ID: <20191025091412.77bea416@canb.auug.org.au>
-In-Reply-To: <CAEUSe79P0z4N=3TnF9ytWfemX8NqY1Mr_zt6PDgMAZQb=4ChpA@mail.gmail.com>
-References: <CA+G9fYvWdkmmkrq7hvADZ-1qnUNEwRULoTPfOQDnu1aZW8cDEA@mail.gmail.com>
-        <20191023024149.GA29009@leoy-ThinkPad-X240s>
-        <CAEUSe79P0z4N=3TnF9ytWfemX8NqY1Mr_zt6PDgMAZQb=4ChpA@mail.gmail.com>
+        Thu, 24 Oct 2019 18:17:23 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:42507 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730134AbfJXWRW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 18:17:22 -0400
+Received: by mail-vs1-f68.google.com with SMTP id m22so117901vsl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qHNXsthwregcyrL2BKVfLqYllW87y6QVnA+Lbr5Rgec=;
+        b=u1/fHDmx2F03gUdsJoRaJfl7aP6BcoOTQj7WuOKplTSdf6uXX1E0Rf1hGTjZ93euSU
+         NJGI0hMli675V4W1F5aGYPIB6vXEndENuc9l4uQvSvWlXKnpA/Q0fOf41lKCkzVymcMj
+         vSAvJbnieQzBs39rOqmCk2ja2JZ+n2tLqqkQvWScrAsxpi7g4yEkQAJHTgbS1XIOEKGc
+         ZIEUfghKoKXuOS8kPtcMk4jtp/voE4nzOI5nX/zgK6dajQqfV49v6nb1hfQWLq1Yey8y
+         KbnrEILxVOYi9Z6E2nmjX/uSwH9bskxev0otzP5fbZ4T6AZwWHNu+W94Q+UntLXVb7q4
+         mXtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qHNXsthwregcyrL2BKVfLqYllW87y6QVnA+Lbr5Rgec=;
+        b=tb8St/Y4d59bC7Mcc79kSO2BGuzRDkRWJVi9SCC8GO7pPYPHQJl1DbjjbuP4mU4Gur
+         nenAgViiTQOpvXSDwEOxP9aV4n4wkWv1TIfWHMjrLST3hzhK5PgKjOSffJXVV72ev/8o
+         LiopuaXj2gHAvbPAE/R7a0l70wIPDOrq1YXHaqYjBl6MYgWFIXacn0m7307VZExDS96Q
+         b5XQ33C4Ib9wNJH1FOd30RzjKDyq/uv+1Wovh7t9A0UWdqtiO8rmMzSi+EMBKMq2UIFt
+         XeuwIb/zBkZSyAXxXbsWSdGoLH6RG+z07xWCZtX5u5J27/jkzyEkFSAPrF433kJOtd4t
+         qVFg==
+X-Gm-Message-State: APjAAAUU0zZ0U7xYSqTKlTwv/ElTxyGx+ZNpDofI8cVM8QD2Ec1e/vgl
+        90CEyc1B/Sis5WNbTxVcLffSvi5lJmuT/xuyAcUfOQ==
+X-Google-Smtp-Source: APXvYqyC5R+J94HY0QZwShcMklCS8zj2eZiTO4Hh3KIgdjFp8g8gOvA8xc0s1anKvCDkBcvEQB2MlCQ7jEx4vRyMG+k=
+X-Received: by 2002:a05:6102:36a:: with SMTP id f10mr324969vsa.44.1571955439473;
+ Thu, 24 Oct 2019 15:17:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rQjFlvQ/A_Sb7.IYHqDhM55";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191018161033.261971-7-samitolvanen@google.com> <20191022162826.GC699@lakrids.cambridge.arm.com>
+ <CABCJKudsD6jghk4i8Tp4aJg0d7skt6sU=gQ3JXqW8sjkUuX7vA@mail.gmail.com> <20191024080418.35423b36@gandalf.local.home>
+In-Reply-To: <20191024080418.35423b36@gandalf.local.home>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 24 Oct 2019 15:17:08 -0700
+Message-ID: <CABCJKueb=xZzXBegc58aWRqPq6eCOpBf7uyyzVyNMujDSHhm1g@mail.gmail.com>
+Subject: Re: [PATCH 06/18] add support for Clang's Shadow Call Stack (SCS)
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rQjFlvQ/A_Sb7.IYHqDhM55
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Ingo,
-
-On Thu, 24 Oct 2019 13:05:54 -0500 Daniel D=C3=ADaz <daniel.diaz@linaro.org=
-> wrote:
+On Thu, Oct 24, 2019 at 5:04 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> You can remove a CFLAGS for a whole directory. lib, kernel/trace and
+> others do this. Look at kernel/trace/Makefile, we have:
 >
-> By the way, while looking at this, we found this unresolved conflict
-> in the tree:
-> -----8<----------8<----------8<-----
->   $ git show 2b5d5b1927a8c
->   commit 2b5d5b1927a8c17bf3ce5b4f781c6ba11e02cadd
->   Merge: c1e45431c592 ae79d5588a04
->   Author: Ingo Molnar <mingo@kernel.org>
->   Date:   Mon Oct 21 07:13:15 2019 +0200
->=20
->       Merge branch 'perf/core'
->=20
->       Conflicts:
->               tools/perf/check-headers.sh
->=20
->   diff --cc tools/perf/check-headers.sh
->   index 499235a41162,93c46d38024e..1f73e6f7438c
->   --- a/tools/perf/check-headers.sh
->   +++ b/tools/perf/check-headers.sh
->   @@@ -28,7 -28,7 +28,11 @@@ arch/x86/include/asm/disabled-features.
->     arch/x86/include/asm/required-features.h
->     arch/x86/include/asm/cpufeatures.h
->     arch/x86/include/asm/inat_types.h
->   ++<<<<<<< HEAD
->    +arch/x86/include/asm/emulate_prefix.h
->   ++=3D=3D=3D=3D=3D=3D=3D
->   + arch/x86/include/asm/msr-index.h
->   ++>>>>>>> perf/core =20
->     arch/x86/include/uapi/asm/prctl.h
->     arch/x86/lib/x86-opcode-map.txt
->     arch/x86/tools/gen-insn-attr-x86.awk
-> ----->8---------->8---------->8----- =20
->=20
-> That's still on next-20191024.
->=20
-> Greetings!
->=20
-> Daniel D=C3=ADaz
-> daniel.diaz@linaro.org
+> ORIG_CFLAGS := $(KBUILD_CFLAGS)
+> KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
 
---=20
-Cheers,
-Stephen Rothwell
+That definitely looks less invasive in this case than adding
+ccflags-remove-y, since we only really need this for one directory.
+I'll use this in v2. Thanks, Steven.
 
---Sig_/rQjFlvQ/A_Sb7.IYHqDhM55
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2yIjQACgkQAVBC80lX
-0GxC5gf/anJx6HndU8+qLPUfGyZwQH0nsqze2ppYHbaiovBAxrUPZ3F6AFLCihdc
-cakYc0X887BZNddUDPvFdF+zCQhWBnXXub1UzDZhecq7RbJWTjFD9yW/Rs1yRzYJ
-O/vYDRNDtYK/qJELnpExsHmInlA630gwWifiOFInhiMJksRRpeNlCOnk1dWD5U5G
-z84dLfIHJxw+ZEAGUr0DsTeFinzb8CxXzx95kz/Ggb+TWoPioq1doExBzBSDji++
-QUoKKZ9+3UbTzQwCk7CdIbPmhGXfKKZoMmvLeIpcfXnybWADDZam1VyRMgss7O5O
-R8CpVoRYm93iHoD/jHEcouzq5R8n1Q==
-=YiY5
------END PGP SIGNATURE-----
-
---Sig_/rQjFlvQ/A_Sb7.IYHqDhM55--
+Sami
