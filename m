@@ -2,185 +2,194 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E7CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD52CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0657721D71
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B227321929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OT4cDmsU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQ2ciQU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503706AbfJXQjf (ORCPT
+        id S2409897AbfJXQju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:39:35 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54658 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503686AbfJXQje (ORCPT
+        Thu, 24 Oct 2019 12:39:50 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35854 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389313AbfJXQjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:39:34 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g7so3573440wmk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:39:33 -0700 (PDT)
+        Thu, 24 Oct 2019 12:39:49 -0400
+Received: by mail-ed1-f66.google.com with SMTP id bm15so1619695edb.3;
+        Thu, 24 Oct 2019 09:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=6airdfmWbPo+9H8q8yF8Fow5EQ+bKYy5OYJZbu/8klg=;
-        b=OT4cDmsUunbscfxvhDw+rIVX2AsuGIv9mDVd9Lz1JmIYVvwuXSxmr+inrLJOCkaPlp
-         Z57x8PvO+vWADTq1pOJQK78YuP5oUWFPIpmVNDmTi+yAc0QbSG2tr9ojk+PQ6S98bUxo
-         egLtniHBPwO+5iTboWMsWoM/TMqXQFup6d2H4=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nz4Ahqnj2dy/cr0Qex8zpeP269zytvoyihmwQ17jMbk=;
+        b=DQ2ciQU2G23I7tfEAh1BM6Frguvwi74ck9odD/iL1GTLn0VZSBW2dccGzqXjglA1un
+         n5qqWxRCMnMvGTToIqj8gL8f0CaURGS5S/aB9pGikuSkMFsrsaYlbRnNQHdcMF1QDqMp
+         k3NapY7DEM/cK757e2qHX29nXWmNGMNZyPvyw81S7G5Wk10FCxQt1RyOAxc2rF5K26+O
+         dMyXJ3RGXWQ+faxupZeScRQIR9vYW/xap1Y9+m4NlRabIXMhmCTryPNyrmWPbJSJCoCX
+         lq8TsPKTROuIDT9iT4jQVDFug8kQEXX15Z8FR3i+DyOy8r0vM5GaShP05D2KEF+ETdRr
+         o01A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=6airdfmWbPo+9H8q8yF8Fow5EQ+bKYy5OYJZbu/8klg=;
-        b=RnQd7p7uurChpbyg2lz3QPRNA89bGGlQ6rxqCwdAvHLn8RJWOb2SzgYHB7mC66xNHC
-         jumWXAv012Zs7u0mLRKXYYZaRU4lYQjAwnGmmTTKBrBS9rQj0VclKhmDPNhnnsOndpkR
-         Hpt91QGtraSXE0irZdeEo4qNhXgsbCjt79waAAEJ5v654spr0e6FO38a+IwxU695MCpe
-         4lnvmkR5DfBifNe07MIBrOL5Z2IemBR72ykmJJoMio6FzdzyDyunA59whIvfwMz4qTfg
-         NJD1xn4qJZ4JZpoHPmv3RU9PN5VJKoA4JgVrluXv056gf4kXHoaO9YUwRtdBAofLVCRS
-         c6uQ==
-X-Gm-Message-State: APjAAAVcAOVgeHw8OYBWsVjPd+E9MEBp0+eqVF8mb2zuaVYT68dFNZhZ
-        OJX0pZeicqHUulVmDuxu0tKppECoHeSynYosz4n1Ic2vLT3oKub4RGfhj7+Zd1f7nCrgvujf8Xo
-        7v8hrlTD4S5PG9p5wZOvUX9AyouY7cQ4zVVxNA333LYWhq6h00Cxqbtu/izGy61z8ZgvHAjGedv
-        R2M5mdHwh9+3I=
-X-Google-Smtp-Source: APXvYqz3vCdn5X+pVSPFYILymZ7NnZuRiPFSO7yPCexT8xbKvyQr1f9rcrSOfkcoYmxikGkdR5xgng==
-X-Received: by 2002:a1c:48c4:: with SMTP id v187mr5904648wma.27.1571935172517;
-        Thu, 24 Oct 2019 09:39:32 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x7sm37064980wrg.63.2019.10.24.09.39.29
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nz4Ahqnj2dy/cr0Qex8zpeP269zytvoyihmwQ17jMbk=;
+        b=mtEwNLo+RZFgRLddUqGrNqdgjfevWfsYrtqKAGBR/kFWD2AhCkuYTwrsSd0u02IYpT
+         kYcmThQIuzFFh1WP5tVySkuEDF40WD10vVcsdGRmLIYipvmN+Ks56aiRJQwPLxrop8LY
+         dGRYyypDGucB/wjzkhjxE6ZOslC9JAGDO8TbHTNUtaMLsfoLTWk0ETMmPYY0+5yJdpAR
+         u/yoFmOPW+BcrGwx/tdw3NfDJOc5MST8mG8dgVqeszyl2+1lmw0i5Rw8MMdFqfjEhinT
+         fvY0GV1QkBIeBpAtYhZMj1ypPrFQNBwMEfqd+RHnsz3uiphRMOS4rUqf3NxOQsp7gHOx
+         5R1w==
+X-Gm-Message-State: APjAAAVGtP6/t6cDQegEYEjgl+w/Bra25NX8lZ3jZU3/3iqi8UDBg0dv
+        BpXgG7HeEtoHP4tGcTipURsaXr31
+X-Google-Smtp-Source: APXvYqyCBDqu1LaE8kc05NWXdNEmJG8sJSg8TPe9s3iuzoFoB7f26vNujWm/6lLNcXlghiN7lw8TIw==
+X-Received: by 2002:a17:906:5399:: with SMTP id g25mr23646066ejo.125.1571935186248;
+        Thu, 24 Oct 2019 09:39:46 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id e5sm973287edl.8.2019.10.24.09.39.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 09:39:31 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: brcm: Add bindings for
- xgs-iproc
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191024004816.5539-1-chris.packham@alliedtelesis.co.nz>
- <20191024004816.5539-2-chris.packham@alliedtelesis.co.nz>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <db6d6cc7-6844-7079-7115-da1eb9c1feac@broadcom.com>
-Date:   Thu, 24 Oct 2019 09:39:27 -0700
+        Thu, 24 Oct 2019 09:39:45 -0700 (PDT)
+Subject: Re: [PATCH][next] net: dsa: fix dereference on ds->dev before null
+ check error
+To:     Colin King <colin.king@canonical.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191024103218.2592-1-colin.king@canonical.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <8caa0034-5cec-0032-2edf-409e4b112f5b@gmail.com>
+Date:   Thu, 24 Oct 2019 09:39:39 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191024004816.5539-2-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191024103218.2592-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+On 10/24/19 3:32 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently ds->dev is dereferenced on the assignments of pdata and
+> np before ds->dev is null checked, hence there is a potential null
+> pointer dereference on ds->dev.  Fix this by assigning pdata and
+> np after the ds->dev null pointer sanity check.
+> 
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-On 2019-10-23 5:48 p.m., Chris Packham wrote:
-> This GPIO controller is present on a number of Broadcom switch ASICs
-> with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-> blocks but different enough to require a separate driver.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+and while we are at it:
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+[linux-next:master 5983/6376] net/dsa/dsa2.c:849 dsa_switch_probe()
+warn: variable dereferenced before check 'ds->dev' (see line 845)
+
 > ---
->
-> Notes:
->      Changes in v3:
->      - incorporate review comments from Rob and Bart
->      
->      Changes in v2:
->      - Document as DT schema
->      - Include ngpios, #gpio-cells and gpio-controller properties
->
->   .../bindings/gpio/brcm,xgs-iproc.yaml         | 70 +++++++++++++++++++
->   1 file changed, 70 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-> new file mode 100644
-> index 000000000000..ec1fd3a64aa2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.yaml
-This doc needs to have gpio in the name to make all other gpio binding 
-documents.
-ie.
-brcm,xgs-iproc-gpio.yaml.
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/brcm,xgs-iproc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  net/dsa/dsa2.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+> index 1e3ac9b56c89..214dd703b0cc 100644
+> --- a/net/dsa/dsa2.c
+> +++ b/net/dsa/dsa2.c
+> @@ -842,13 +842,16 @@ static int dsa_switch_add(struct dsa_switch *ds)
+>  
+>  static int dsa_switch_probe(struct dsa_switch *ds)
+>  {
+> -	struct dsa_chip_data *pdata = ds->dev->platform_data;
+> -	struct device_node *np = ds->dev->of_node;
+> +	struct dsa_chip_data *pdata;
+> +	struct device_node *np;
+>  	int err;
+>  
+>  	if (!ds->dev)
+>  		return -ENODEV;
+>  
+> +	pdata = ds->dev->platform_data;
+> +	np = ds->dev->of_node;
 > +
-> +title: Broadcom XGS iProc GPIO controller
-> +
-> +maintainers:
-> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
-> +
-> +description: |
-> +  This controller is the Chip Common A GPIO present on a number of Broadcom
-> +  switch ASICs with integrated SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,iproc-gpio-cca
-> +
-> +  reg:
-> +    items:
-> +      - description: the I/O address containing the GPIO controller
-> +                     registers.
-> +      - description: the I/O address containing the Chip Common A interrupt
-> +                     registers.
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +      const: 2
-> +
-> +  ngpios:
-> +    minimum: 0
-> +    maximum: 32
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +dependencies:
-> +  interrupt-controller: [ interrupts ]
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    gpio@18000060 {
-> +        compatible = "brcm,iproc-gpio-cca";
-> +        #gpio-cells = <2>;
-> +        reg = <0x18000060 0x50>,
-> +              <0x18000000 0x50>;
-> +        ngpios = <12>;
-> +        gpio-controller;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +
-> +...
+>  	if (!ds->num_ports)
+>  		return -EINVAL;
+>  
+> 
 
+
+-- 
+Florian
