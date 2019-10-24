@@ -2,121 +2,101 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263CFCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135B8CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBAA205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC77B205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DvTRy4gk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TQNWdZPw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ad96iQEM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436702AbfJXQKb (ORCPT
+        id S2439723AbfJXQLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:10:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58844 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2436636AbfJXQKb (ORCPT
+        Thu, 24 Oct 2019 12:11:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40368 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436655AbfJXQLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:10:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571933425;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e36bYgYxzu96VpgkIyu2LKZbHdlezcwFd45XXmtDKSI=;
-        b=DvTRy4gkWuC8ctfrEHAKv/ZHn6K+4FWcH2mgs/6cYA+MxiOBH8wHI55peeFvmPMoacoTtm
-        BHW3EigsnNjXd3xSnUy++wZOmSa6WcmKtuWhF0UrbQrUWBMkSoxoiU6k50C4lqNgkdbLsA
-        FehICbKhJdtEGqpr5KwWbl7L8nIzKXY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-2bYyW6FmPjS3LyUzS1ee5w-1; Thu, 24 Oct 2019 12:10:11 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 24 Oct 2019 12:11:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D22F5611AD; Thu, 24 Oct 2019 16:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571933484;
+        bh=6BQeRd1YE343V3Pyn6bXhu7AVvclx5LyH+xiYk/mmsQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=TQNWdZPw1VNshMmWaBQj1Njknz4thr4uOvbL1s7+gUpZ2/S4Z6UPbwd/i0UR/Pl7b
+         Sp4caPzRIbVyjzYY/jo54suzPij6UtrkvF+XsYDXl1bDXeAvgT6m7F8e19ZDERebd7
+         vU/FhgsI3fyJCWKzlLamjK3sITo8j5Zub6XmHcBw=
+Received: from potku.adurom.net (unknown [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9DC691005528;
-        Thu, 24 Oct 2019 16:10:10 +0000 (UTC)
-Received: from [10.36.116.202] (ovpn-116-202.ams2.redhat.com [10.36.116.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B900117F85;
-        Thu, 24 Oct 2019 16:10:09 +0000 (UTC)
-Subject: Re: [PATCH v2] mm: gup: fix comment of __get_user_pages()
-To:     Liu Xiang <liuxiang_1999@126.com>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, jhubbard@nvidia.com
-References: <1571929472-3091-1-git-send-email-liuxiang_1999@126.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <0839edc8-c876-1713-c753-f12e70e5a653@redhat.com>
-Date:   Thu, 24 Oct 2019 18:10:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CE9586110A;
+        Thu, 24 Oct 2019 16:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1571933480;
+        bh=6BQeRd1YE343V3Pyn6bXhu7AVvclx5LyH+xiYk/mmsQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=ad96iQEMymUX4ygi/5GDCdgFnmUhXDrCv64tNVhd3dPGHxI4cDyjZzfjbCwrwUedx
+         /jnhJJswJ5dPo4LKE68u2uv2H7SAvEKEbExn15lSHN9CohgbLdjqfa6M8ApqgrEYzy
+         NJ7yZ41/UYNotjEG+4ToTSevM23sPyCLz9KkbYLk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CE9586110A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jiri Kosina <trivial@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] [trivial] net: Fix misspellings of "configure" and "configuration"
+References: <20191024152201.29868-1-geert+renesas@glider.be>
+Date:   Thu, 24 Oct 2019 19:11:15 +0300
+In-Reply-To: <20191024152201.29868-1-geert+renesas@glider.be> (Geert
+        Uytterhoeven's message of "Thu, 24 Oct 2019 17:22:01 +0200")
+Message-ID: <878spaqg2k.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1571929472-3091-1-git-send-email-liuxiang_1999@126.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 2bYyW6FmPjS3LyUzS1ee5w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.10.19 17:04, Liu Xiang wrote:
-> Fix comment of __get_user_pages() and make it more clear.
->=20
-> Suggested-by: John Hubbard <jhubbard@nvidia.com>
-> Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+Geert Uytterhoeven <geert+renesas@glider.be> writes:
+
+> Fix various misspellings of "configuration" and "configure".
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->=20
-> Changes in v2:
->   as suggested by John, rewrite the comment about return value.
->=20
->   mm/gup.c | 16 +++++++++++-----
->   1 file changed, 11 insertions(+), 5 deletions(-)
->=20
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8f236a3..bc6a254 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -734,11 +734,17 @@ static int check_vma_flags(struct vm_area_struct *v=
-ma, unsigned long gup_flags)
->    *=09=09Or NULL if the caller does not require them.
->    * @nonblocking: whether waiting for disk IO or mmap_sem contention
->    *
-> - * Returns number of pages pinned. This may be fewer than the number
-> - * requested. If nr_pages is 0 or negative, returns 0. If no pages
-> - * were pinned, returns -errno. Each page returned must be released
-> - * with a put_page() call when it is finished with. vmas will only
-> - * remain valid while mmap_sem is held.
-> + * Returns either number of pages pinned (which may be less than the
-> + * number requested), or an error. Details about the return value:
-> + *
-> + * -- If nr_pages is 0, returns 0.
-> + * -- If nr_pages is >0, but no pages were pinned, returns -errno.
-> + * -- If nr_pages is >0, and some pages were pinned, returns the number =
-of
-> + *    pages pinned. Again, this may be less than nr_pages.
-> + *
-> + * The caller is responsible for releasing returned @pages, via put_page=
-().
-> + *
-> + * @vmas are valid only as long as mmap_sem is held.
->    *
->    * Must be called with mmap_sem held.  It may be released.  See below.
->    *
->=20
+> v2:
+>   - Merge
+>     [trivial] net/mlx5e: Spelling s/configuraiton/configuration/
+>     [trivial] qed: Spelling s/configuraiton/configuration/
+>   - Fix typo in subject,
+>   - Extend with various other similar misspellings.
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c | 2 +-
+>  drivers/net/ethernet/qlogic/qed/qed_int.h                | 4 ++--
+>  drivers/net/ethernet/qlogic/qed/qed_sriov.h              | 2 +-
+>  drivers/net/ethernet/qlogic/qede/qede_filter.c           | 2 +-
+>  drivers/net/wireless/ath/ath9k/ar9003_hw.c               | 2 +-
+>  drivers/net/wireless/intel/iwlwifi/iwl-fh.h              | 2 +-
+>  drivers/net/wireless/ti/wlcore/spi.c                     | 2 +-
+>  include/uapi/linux/dcbnl.h                               | 2 +-
+>  8 files changed, 9 insertions(+), 9 deletions(-)
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+I hope this goes to net-next? Easier to handle possible conflicts that
+way.
 
---=20
+For the wireless part:
 
-Thanks,
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
-David / dhildenb
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
