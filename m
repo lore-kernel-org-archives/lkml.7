@@ -2,130 +2,85 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF57CCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DC7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAA72084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3549C2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OQCC9fos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502511AbfJXNVo (ORCPT
+        id S2502534AbfJXNXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:21:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38776 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbfJXNVo (ORCPT
+        Thu, 24 Oct 2019 09:23:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46586 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502515AbfJXNXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:21:44 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iNd3Z-0002J4-Se; Thu, 24 Oct 2019 13:21:37 +0000
-Date:   Thu, 24 Oct 2019 15:21:37 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        stable <stable@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH v6] taskstats: fix data-race
-Message-ID: <20191024132136.jknzt7rgjssgv5b6@wittgenstein>
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com>
- <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
- <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
- <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
- <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
- <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
- <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
+        Thu, 24 Oct 2019 09:23:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gcU9exE6Bvro/lea/dgeXKEnFVXdIrFpf/E5Hgk7fI4=; b=OQCC9foswnxnaiFBJw3Vkn25h
+        EYAPQY1qAspChDW7b9MiGr3xvZzEnkoJFlItmOqqQMuKR/ZYbKaWpl0U9RQ6lloZL7osMS1qn6Ow6
+        aWk1g63FvYQPN6aNWq8gvaLOVZyaCumFoludpul3tgKhob/nbDJjq4uR8cgUloPmSKzZOdRHtfHyc
+        1UEDbFuUYEkAqqinWPFaWz9z9C38x6reQS3b0Xysu8mwc3wpIZ2RSFOLNGZBxKZ2r2GPE5LpIDBIU
+        vujiXu4n4Pz9PYh+gTk9i8t8xxMcbqb4UwrxGsXaSU391MPAxVU6XeAr3dY8/2Ul4JmJa15oFEhnX
+        0/GSrw+7Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNd58-0000Lv-KB; Thu, 24 Oct 2019 13:23:14 +0000
+Date:   Thu, 24 Oct 2019 06:23:14 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Michal Suchanek <msuchanek@suse.de>, linux-scsi@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] cdrom: factor out common open_for_* code
+Message-ID: <20191024132314.GG2963@bombadil.infradead.org>
+References: <cover.1571834862.git.msuchanek@suse.de>
+ <da032629db4a770a5f98ff400b91b44873cbdf46.1571834862.git.msuchanek@suse.de>
+ <20191024021958.GA11485@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191024021958.GA11485@infradead.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 03:13:48PM +0200, Dmitry Vyukov wrote:
-> On Thu, Oct 24, 2019 at 3:05 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> >
-> > On Thu, Oct 24, 2019 at 01:51:20PM +0200, Dmitry Vyukov wrote:
-> > > On Thu, Oct 24, 2019 at 1:32 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> > > >
-> > > > > How these later loads can be completely independent of the pointer
-> > > > > value? They need to obtain the pointer value from somewhere. And this
-> > > > > can only be done by loaded it. And if a thread loads a pointer and
-> > > > > then dereferences that pointer, that's a data/address dependency and
-> > > > > we assume this is now covered by READ_ONCE.
-> > > >
-> > > > The "dependency" I was considering here is a dependency _between the
-> > > > load of sig->stats in taskstats_tgid_alloc() and the (program-order)
-> > > > later loads of *(sig->stats) in taskstats_exit().  Roughly speaking,
-> > > > such a dependency should correspond to a dependency chain at the asm
-> > > > or registers level from the first load to the later loads; e.g., in:
-> > > >
-> > > >   Thread [register r0 contains the address of sig->stats]
-> > > >
-> > > >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
-> > > >      ...
-> > > >   B: LOAD r2,[r0]       // LOAD *(sig->stats)
-> > > >   C: LOAD r3,[r2]
-> > > >
-> > > > there would be no such dependency from A to C.  Compare, e.g., with:
-> > > >
-> > > >   Thread [register r0 contains the address of sig->stats]
-> > > >
-> > > >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
-> > > >      ...
-> > > >   C: LOAD r3,[r1]       // LOAD *(sig->stats)
-> > > >
-> > > > AFAICT, there's no guarantee that the compilers will generate such a
-> > > > dependency from the code under discussion.
-> > >
-> > > Fixing this by making A ACQUIRE looks like somewhat weird code pattern
-> > > to me (though correct). B is what loads the address used to read
-> > > indirect data, so B ought to be ACQUIRE (or LOAD-DEPENDS which we get
-> > > from READ_ONCE).
-> > >
-> > > What you are suggesting is:
-> > >
-> > > addr = ptr.load(memory_order_acquire);
-> > > if (addr) {
-> > >   addr = ptr.load(memory_order_relaxed);
-> > >   data = *addr;
-> > > }
-> > >
-> > > whereas the canonical/non-convoluted form of this pattern is:
-> > >
-> > > addr = ptr.load(memory_order_consume);
-> > > if (addr)
-> > >   data = *addr;
-> >
-> > No, I'd rather be suggesting:
-> >
-> >   addr = ptr.load(memory_order_acquire);
-> >   if (addr)
-> >     data = *addr;
-> >
-> > since I'd not expect any form of encouragement to rely on "consume" or
-> > on "READ_ONCE() + true-address-dependency" from myself.  ;-)
+On Wed, Oct 23, 2019 at 07:19:58PM -0700, Christoph Hellwig wrote:
+> >  static
+> > -int open_for_data(struct cdrom_device_info *cdi)
+> > +int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
 > 
-> But why? I think kernel contains lots of such cases and it seems to be
-> officially documented by the LKMM:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt
-> address dependencies and ppo
+> Please fix the coding style.  static never should be on a line of its
+> own..
 
-You mean this section:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt#n955
-and specifically:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt#n982
-?
+It's OK to have the static on a line by itself; it's having 'static int'
+on a line by itself that Linus gets unhappy about because he can't use
+grep to see the return type.
+
+But there's no need for it to be on a line by itself here, it all fits fine
+in 80 columns.
+
