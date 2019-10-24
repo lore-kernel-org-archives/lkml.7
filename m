@@ -2,132 +2,153 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C714ECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF2A20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="cTWe2LNo"
+	by mail.kernel.org (Postfix) with ESMTP id A70F920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392044AbfJXKNW (ORCPT
+        id S2405704AbfJXKNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:13:22 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37283 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391823AbfJXKNU (ORCPT
+        Thu, 24 Oct 2019 06:13:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53290 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391927AbfJXKNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:13:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e11so16696347wrv.4
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 03:13:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=4e4CMe8f6py1Yt2lWLrn331C7GRW8uLQcBzyGRI9nf4=;
-        b=cTWe2LNoVh1mOyCENVn7zpGv3Jprre8rDXIaPx76j+yvm1hAVwpu6ypxuWj/UlDG97
-         I2oGLcNkL8BrxO7xHx2/ggo3DF85rMITBcd3ReMP4P9wlSe/Km4gkC2pZ+KiWQRbD1Ub
-         oUOBZe7O6NpUfMuls2FITbvA/QIqoL2gGBGoTs3Sn6F5kl9WU1rliddwVhPBlkqkn9m1
-         Lphmv7GnryVkgYA2cAn/Us7kHpjQ0Omkljg9UkRBs0ezBVER1StVBdwBnkO4Pzx7gs//
-         2BwDWL51kb6jgX/pMfJ4olGJpU45RWhG1faxx4yo1ZoMybOydnuSGIvh54WChKjDxe8h
-         lKFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=4e4CMe8f6py1Yt2lWLrn331C7GRW8uLQcBzyGRI9nf4=;
-        b=G5MUdGso2/Hdu48gNCMFCBAVX14rnxJoKpOmPPIORxgZ3jRfl+VFjcYlfucJH6YLMt
-         TFyUoKKWaP3Nm0mWqJZzZc9rGsHT85H4xygmBGejKdr0uKRI3JRrgs7pwWZznj+zA0Rn
-         ubSvGbUP3QuRJbOOEwbOyN0xCpQLcrEuy9Iz4gUWopyFOZ3UGPzYiR2YFOcAmZfbPVK4
-         l75vjhK2+VVS5o+U04VWhgEAIaPURu6e5XbsbuWl0di/xXWrr+A+4lDPm2dNILNd9NBx
-         qLM+n1HMfuDxV0L/Drw0i3Y3XJxU09WlVXwFY6IRNS169oGYZaUu+oykhljyGM1ziauR
-         X9MA==
-X-Gm-Message-State: APjAAAVScA5EoUNFhdlIXxUkNxmYIx7uUZX7nhM6tC2Nuj2m3kYgkRdL
-        gOJeWv0BXh+zAjnqmvOT/mcWOuFWANwnOxba
-X-Google-Smtp-Source: APXvYqwcFnA4ofb/Q4g7Tcra8udIzZaJReC4T76gGILoFLWpLp7LWZeYpE1c6/ZFH9jYdiQyaQs7MQ==
-X-Received: by 2002:adf:92a5:: with SMTP id 34mr2881720wrn.337.1571911998458;
-        Thu, 24 Oct 2019 03:13:18 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id i3sm20429658wrw.69.2019.10.24.03.13.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 24 Oct 2019 03:13:17 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com, palmer@sifive.com,
-        hch@infradead.org, longman@redhat.com, helgaas@kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Firoz Khan <firoz.khan@linaro.org>, sparclinux@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        James Hogan <jhogan@kernel.org>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-snps-arc@lists.infradead.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 0/2] Enabling MSI for Microblaze
-Date:   Thu, 24 Oct 2019 12:13:10 +0200
-Message-Id: <cover.1571911976.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 24 Oct 2019 06:13:23 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iNa7E-0002oh-6Z; Thu, 24 Oct 2019 12:13:12 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B9EF21C0087;
+        Thu, 24 Oct 2019 12:13:11 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 10:13:11 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/apic] x86/ioapic: Rename misnamed functions
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191017101938.412489856@linutronix.de>
+References: <20191017101938.412489856@linutronix.de>
+MIME-Version: 1.0
+Message-ID: <157191199146.29376.13205140020620411699.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the x86/apic branch of tip:
 
-these two patches come from discussion with Christoph, Bjorn, Palmer and
-Waiman. The first patch was suggestion by Christoph here
-https://lore.kernel.org/linux-riscv/20191008154604.GA7903@infradead.org/
-The second part was discussed
-https://lore.kernel.org/linux-pci/mhng-5d9bcb53-225e-441f-86cc-b335624b3e7c@palmer-si-x1e/
-and
-https://lore.kernel.org/linux-pci/20191017181937.7004-1-palmer@sifive.com/
+Commit-ID:     2579a4eefc04d1c23eef8f3f0db3309f955e5792
+Gitweb:        https://git.kernel.org/tip/2579a4eefc04d1c23eef8f3f0db3309f955e5792
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 17 Oct 2019 12:19:02 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 24 Oct 2019 12:09:21 +02:00
 
-Thanks,
-Michal
+x86/ioapic: Rename misnamed functions
 
+ioapic_irqd_[un]mask() are misnomers as both functions do way more than
+masking and unmasking the interrupt line. Both deal with the moving the
+affinity of the interrupt within interrupt context. The mask/unmask is just
+a tiny part of the functionality.
 
-Michal Simek (1):
-  asm-generic: Make msi.h a mandatory include/asm header
+Rename them to ioapic_prepare/finish_move(), fixup the call sites and
+rename the related variables in the code to reflect what this is about.
 
-Palmer Dabbelt (1):
-  pci: Default to PCI_MSI_IRQ_DOMAIN
+No functional change.
 
- arch/arc/include/asm/Kbuild     | 1 -
- arch/arm/include/asm/Kbuild     | 1 -
- arch/arm64/include/asm/Kbuild   | 1 -
- arch/mips/include/asm/Kbuild    | 1 -
- arch/powerpc/include/asm/Kbuild | 1 -
- arch/riscv/include/asm/Kbuild   | 1 -
- arch/sparc/include/asm/Kbuild   | 1 -
- drivers/pci/Kconfig             | 2 +-
- include/asm-generic/Kbuild      | 1 +
- 9 files changed, 2 insertions(+), 8 deletions(-)
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Link: https://lkml.kernel.org/r/20191017101938.412489856@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/apic/io_apic.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
--- 
-2.17.1
-
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index f0262cb..913c886 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1725,7 +1725,7 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
+ 	return false;
+ }
+ 
+-static inline bool ioapic_irqd_mask(struct irq_data *data)
++static inline bool ioapic_prepare_move(struct irq_data *data)
+ {
+ 	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+@@ -1736,9 +1736,9 @@ static inline bool ioapic_irqd_mask(struct irq_data *data)
+ 	return false;
+ }
+ 
+-static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
++static inline void ioapic_finish_move(struct irq_data *data, bool moveit)
+ {
+-	if (unlikely(masked)) {
++	if (unlikely(moveit)) {
+ 		/* Only migrate the irq if the ack has been received.
+ 		 *
+ 		 * On rare occasions the broadcast level triggered ack gets
+@@ -1773,11 +1773,11 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 	}
+ }
+ #else
+-static inline bool ioapic_irqd_mask(struct irq_data *data)
++static inline bool ioapic_prepare_move(struct irq_data *data)
+ {
+ 	return false;
+ }
+-static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
++static inline void ioapic_finish_move(struct irq_data *data, bool moveit)
+ {
+ }
+ #endif
+@@ -1786,11 +1786,11 @@ static void ioapic_ack_level(struct irq_data *irq_data)
+ {
+ 	struct irq_cfg *cfg = irqd_cfg(irq_data);
+ 	unsigned long v;
+-	bool masked;
++	bool moveit;
+ 	int i;
+ 
+ 	irq_complete_move(cfg);
+-	masked = ioapic_irqd_mask(irq_data);
++	moveit = ioapic_prepare_move(irq_data);
+ 
+ 	/*
+ 	 * It appears there is an erratum which affects at least version 0x11
+@@ -1845,7 +1845,7 @@ static void ioapic_ack_level(struct irq_data *irq_data)
+ 		eoi_ioapic_pin(cfg->vector, irq_data->chip_data);
+ 	}
+ 
+-	ioapic_irqd_unmask(irq_data, masked);
++	ioapic_finish_move(irq_data, moveit);
+ }
+ 
+ static void ioapic_ir_ack_level(struct irq_data *irq_data)
