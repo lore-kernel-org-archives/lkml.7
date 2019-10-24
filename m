@@ -2,88 +2,84 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAE3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B38CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A676D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC27120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437682AbfJXGCZ convert rfc822-to-8bit (ORCPT
+        id S2408478AbfJXGE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 02:02:25 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:32482 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404173AbfJXGCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 02:02:22 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 5D6A011FAB000689523C;
-        Thu, 24 Oct 2019 14:02:20 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x9O627fR064659;
-        Thu, 24 Oct 2019 14:02:07 +0800 (GMT-8)
-        (envelope-from zhong.shiqi@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019102414023406-106879 ;
-          Thu, 24 Oct 2019 14:02:34 +0800 
-From:   zhongshiqi <zhong.shiqi@zte.com.cn>
-To:     Julia.Lawall@lip6.fr
-Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
-        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
-        zhongshiqi <zhong.shiqi@zte.com.cn>
-Subject: [PATCH v2] coccicheck:support $COCCI being defined as a directory
-Date:   Thu, 24 Oct 2019 14:04:20 +0800
-Message-Id: <1571897060-32374-1-git-send-email-zhong.shiqi@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 24 Oct 2019 02:04:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46462 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404173AbfJXGE6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 02:04:58 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C115128F789;
+        Thu, 24 Oct 2019 07:04:56 +0100 (BST)
+Date:   Thu, 24 Oct 2019 08:04:52 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
+        <geert+renesas@glider.be>, <andrew@aj.id.au>, <richard@nod.at>,
+        <linux-kernel@vger.kernel.org>, <vz@mleia.com>,
+        <marek.vasut@gmail.com>, <jonas@norrbonn.se>,
+        <linux-mtd@lists.infradead.org>, <joel@jms.id.au>,
+        <miquel.raynal@bootlin.com>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <computersforpeace@gmail.com>, <dwmw2@infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>
+Subject: Re: [PATCH v2 08/22] mtd: spi-nor: Rework write_enable/disable()
+Message-ID: <20191024080452.522b6447@collabora.com>
+In-Reply-To: <34fbb0d7-ee8f-a6d7-4a3e-d64f2f8555ff@microchip.com>
+References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
+        <20190924074533.6618-9-tudor.ambarus@microchip.com>
+        <20191010092117.4c5018a8@dhcp-172-31-174-146.wireless.concordia.ca>
+        <34fbb0d7-ee8f-a6d7-4a3e-d64f2f8555ff@microchip.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-10-24 14:02:34,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-10-24 14:02:11
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-MAIL: mse-fl2.zte.com.cn x9O627fR064659
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put a modification in scripts/coccicheck which supports users in
-configuring COCCI parameter as a directory to traverse files in
-directory whose next level directory contains rule files with Suffix of
-cocci.
+On Wed, 23 Oct 2019 23:39:31 +0000
+<Tudor.Ambarus@microchip.com> wrote:
 
-Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
----
-Changes in v2:
-        1.fix patch subject according to the reply by Markus
-        <Markus.Elfring@web.de>
-        2.change description in “imperative mood”
+> On 10/10/2019 10:21 AM, Boris Brezillon wrote:
+> > External E-Mail
+> > 
+> > 
+> > On Tue, 24 Sep 2019 07:46:18 +0000
+> > <Tudor.Ambarus@microchip.com> wrote:
+> >   
+> >> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> >>
+> >> static int write_enable(struct spi_nor *nor)
+> >> static int write_disable(struct spi_nor *nor)
+> >> become
+> >> static int spi_nor_write_enable(struct spi_nor *nor)
+> >> static int spi_nor_write_disable(struct spi_nor *nor)
+> >>
+> >> Check for errors after each call to them. Move them up in the
+> >> file as the first SPI NOR Register Operations, to avoid further
+> >> forward declarations.  
+> > 
+> > Same here, split that in 3 patches please.  
 
- scripts/coccicheck | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/scripts/coccicheck b/scripts/coccicheck
-index e04d328..a1c4197 100755
---- a/scripts/coccicheck
-+++ b/scripts/coccicheck
-@@ -257,6 +257,10 @@ if [ "$COCCI" = "" ] ; then
-     for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f | sort`; do
- 	coccinelle $f
-     done
-+elif [ -d "$COCCI" ] ; then
-+    for f in `find $COCCI/ -name '*.cocci' -type f | sort`; do
-+	coccinelle $f
-+    done
- else
-     coccinelle $COCCI
- fi
--- 
-2.9.5
-
+In order to keep the number of patch in this series small, I'd
+recommend doing all spi_nor_ prefixing in a patch, all function
+moves in another one and all error checking in a third patch, instead of
+splitting it per-function.
