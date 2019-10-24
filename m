@@ -2,133 +2,171 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101A3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A3CCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC9420856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rctbzubu"
+	by mail.kernel.org (Postfix) with ESMTP id 639712166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438092AbfJXIT1 (ORCPT
+        id S2438103AbfJXITt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:19:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38379 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfJXIT1 (ORCPT
+        Thu, 24 Oct 2019 04:19:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38192 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726713AbfJXITs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:19:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v9so13703998wrq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 01:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bwpDjxlqC/mR626oiSg3Rt01CrIhV7qqzUguEfa254s=;
-        b=rctbzubuNGhdxVH1cHUWtH6wBzi8gxCG7yptBsEwlS4gWYi5kvsNmT5BF4Sx07qp03
-         58+QCW2JdBBoM9MZBOrilx3qjwt1pb3RAsdbjhrSXDYYFb4wml6EVX3Bs/aywQ4UNhG8
-         g19cVHb9HkAZ9rUULh4jSiUc2yNbtPugmpoip64TkSO4UIAAG18+IJE9hjxcq2qm8KJL
-         e2ayVuB/OBKuH/SKnTWW1287Id3pdrM8Kq8mS6QRWQ+9KMQAWQLgo0JsGf2XDVB07rnm
-         ovkLyNEZQ+K3iQzF/ep2WCT0oIDVsJbkvCmePPccdB22nf8flh0RBaX0s5BG6ckHuscZ
-         9Gug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=bwpDjxlqC/mR626oiSg3Rt01CrIhV7qqzUguEfa254s=;
-        b=pOJdhzA3MU90yz8kTTc7fdMeGmydDcQX2HTSha508KztEduCfBL6NTSTTUNDblThHJ
-         bTvEMNTMARCGI78iD1XXW7C3FPVPIVvokbK7Bmmb8QQIFDuRAgojDcrpw2i581ekAEPA
-         I5C7tcnGTq2L3ZjFY6Xx93eum4hKXZs1tHibqZLFo8HLCroEkayJ36oiwRXe/4CuvHKa
-         ppwriSjV/FUT6GwGeUvoKvGCB7Fu1yhn3TP8GCaAPZsdMk9J8lIxQY5SPngRH7olL+rF
-         b3G88wPdzcWhd8QSCDq+8KfPqP4PNlGMYVSnd08QqqgMZUUDWJLz2bVtW1QVkzB5/qav
-         osyg==
-X-Gm-Message-State: APjAAAUWYycDiXgSKYp58zBZjkdjfPqU6dqeh31i4XZ5wsAEs9LHUbyi
-        W/bQmXkXIBKXnarhSvCWZ9InPg==
-X-Google-Smtp-Source: APXvYqzeWDHSLcoAOmOaHrCuIDnceXDiEw2PFxiRUtr8YD5A9NrQvgKoaJB8J6nksskgcWcq450hBA==
-X-Received: by 2002:adf:c448:: with SMTP id a8mr2657636wrg.233.1571905165370;
-        Thu, 24 Oct 2019 01:19:25 -0700 (PDT)
-Received: from dell ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id u1sm35262518wru.90.2019.10.24.01.19.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 24 Oct 2019 01:19:24 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 09:19:23 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tianping Fang <tianping.fang@mediatek.com>
-Subject: [GIT PULL] Immutable branch between MFD, Power and RTC due for the
- v5.5 merge window
-Message-ID: <20191024081923.GJ15843@dell>
-References: <20190910070446.639-1-frank-w@public-files.de>
+        Thu, 24 Oct 2019 04:19:48 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9O8GhBt008076
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 04:19:47 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vu5qtnbj1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 04:19:47 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Thu, 24 Oct 2019 09:19:45 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 24 Oct 2019 09:19:40 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9O8Jdef23134452
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Oct 2019 08:19:39 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1962E4C04A;
+        Thu, 24 Oct 2019 08:19:39 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85EA54C04E;
+        Thu, 24 Oct 2019 08:19:35 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.94])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 24 Oct 2019 08:19:35 +0000 (GMT)
+Subject: Re: [Discussion v2] Usecases for the per-task latency-nice attribute
+From:   Parth Shah <parth@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, patrick.bellasi@matbug.net,
+        tim.c.chen@linux.intel.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com, linux-pm@vger.kernel.org
+Cc:     peterz@infradead.org, vincent.guittot@linaro.org, pavel@ucw.cz,
+        David.Laight@ACULAB.COM, mingo@redhat.com,
+        morten.rasmussen@arm.com, pjt@google.com, dietmar.eggemann@arm.com,
+        tj@kernel.org, rafael.j.wysocki@intel.com,
+        daniel.lezcano@linaro.org, dhaval.giani@oracle.com,
+        qperret@qperret.net, ggherdovich@suse.cz, viresh.kumar@linaro.org,
+        Doug Smythies <dsmythies@telus.net>
+References: <2bd46086-43ff-f130-8720-8eec694eb55b@linux.ibm.com>
+Date:   Thu, 24 Oct 2019 13:49:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <2bd46086-43ff-f130-8720-8eec694eb55b@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102408-0020-0000-0000-0000037DADA7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102408-0021-0000-0000-000021D3F2E8
+Message-Id: <376e1a37-8f7d-3cbc-9d9d-dd349afb9b3b@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-24_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=838 adultscore=3 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910240079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+On 9/30/19 4:13 PM, Parth Shah wrote:
+> Hello everyone,
+> 
+> This is the v2 of the discussion started for introducing per-task
+> latency-nice attribute for providing scheduler hints.
+> 
+> v1: https://lkml.org/lkml/2019/9/18/555
+> 
+> In brief, we face two challenges with the introduction of such attr.
+> 
+> 1. Name:
+> ==============
+> ( Should be relevant to all the possible usecases, not confuse end-user and
+> reflect the functionality it provides to the scheduler behaviour )
+> 
+> Curated list of proposed names:
+> 
+> 1. latency-nice:
+>    should have a better understanding based on pre-existing concepts
+> 
+> - But poses two interpretation ambiguity
+>   a) -20 (least nice to latency, i.e. sacrifice latency for throughput)
+>      +19 (most nice to latency, i.e. sacrifice throughput for latency)
+>   b) -20 (least nice to other task in terms of sacrificing latency, i.e.
+> 	  latency-sensitive)
+>      +19 (most nice to other tasks in terms of sacrificing latency, i.e.
+> 	  latency-forgoing)
+> 
+> 2. latency-tolerant:
+>    decouples a bit its meaning from the niceness thus giving maybe a bit
+>    more freedom in its complete definition and perhaps avoid any
+>    possible interpretation confusion
+> 
+> 3. latency-nasty
+> 
+> 4. latency-sensible
 
-are available in the Git repository at:
++ 5. temper
+     -20 (short temper, angry tasks, i.e., requires least latency)
+     +19 (calm tasks, i.e., sacrifice latency for throughput)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-power-rtc-v5.5
+> 
+> 
+> 
+> 2. Value(s):
+> ==============
+> ( Boolean/Ternary, Range of values, profile tagging )
+> 
+> - Recent discussion plots the range of [-20, 19] to be the most agreed upon.
+> 
+> 1. Range:
+> - [-20, 19]:
+>     Which has similarities with the niceness concept and gives a minimal
+>     continuous range. This can be on hand for things like scaling the
+>     vruntime normalization [3]
+> 
+> 2. Profile tagging:
+> - Can be used just like a flag attribute
+>   e.g., Background, foreground, latency-sensible, reduce-idle-search, etc.
+> 
+> 3. Binary:
+> - 0 for: Latency sensitive/sensible/in-tolerant/hungry...
+> - 1 for Latency insensitive/insensible/tolerant/nice-to-others/...
+> 
+>   Ternary:
+> -  0: no effect
+> - -1: require least latency
+> - +1: no restrictions in terms of lower/higher latency
+> 
+> [...]
 
-for you to fetch changes up to 9d0863baff497880c1427d3ea7b89b303ace9675:
+I guess the latency-tolerant name seems to be more relevant and the range
+[-20,19] will suit all the discussed usecases.
+( ( ( tomatoes target here ) ) )
 
-  MAINTAINERS: add Mediatek shutdown drivers (2019-10-24 09:04:00 +0100)
+If this seems alright then I am thinking of writing out some patches to
+introduce p->latency-tolerant with the use of "sched_setattr" syscall.
 
-----------------------------------------------------------------
-Immutable branch between MFD, Power and RTC due for the v5.5 merge window
 
-----------------------------------------------------------------
-Josef Friedl (6):
-      dt-bindings: rtc: mediatek: add missing mt6397 rtc
-      rtc: mt6397: move some common definitions into rtc.h
-      rtc: mt6397: improvements of rtc driver
-      rtc: mt6397: add compatible for mt6323
-      power: reset: add driver for mt6323 poweroff
-      MAINTAINERS: add Mediatek shutdown drivers
+Thanks,
+Parth
 
- .../devicetree/bindings/rtc/rtc-mt6397.txt         |  29 ++++++
- MAINTAINERS                                        |   7 ++
- drivers/power/reset/Kconfig                        |  10 ++
- drivers/power/reset/Makefile                       |   1 +
- drivers/power/reset/mt6323-poweroff.c              |  97 +++++++++++++++++++
- drivers/rtc/rtc-mt6397.c                           | 107 ++++-----------------
- include/linux/mfd/mt6397/rtc.h                     |  71 ++++++++++++++
- 7 files changed, 236 insertions(+), 86 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- create mode 100644 drivers/power/reset/mt6323-poweroff.c
- create mode 100644 include/linux/mfd/mt6397/rtc.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
