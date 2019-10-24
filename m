@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD56CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DFFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BD621A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BD820684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdI9CBo+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/1pSz37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfJXUOe (ORCPT
+        id S1727173AbfJXUOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:14:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54319 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfJXUOc (ORCPT
+        Thu, 24 Oct 2019 16:14:37 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33113 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbfJXUOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:14:32 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g7so4186338wmk.4;
-        Thu, 24 Oct 2019 13:14:30 -0700 (PDT)
+        Thu, 24 Oct 2019 16:14:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 6so2746914wmf.0;
+        Thu, 24 Oct 2019 13:14:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MxFvyutT3TeFv9tuYgjWUXMmMJVTn8dALM+g0eVelPM=;
-        b=QdI9CBo+X3LUGiOOarfRIMRoq2d0UEbzIKkPRidHPHuATjOrDAp1Cc9P59zxqPyVk1
-         +uHrHz5C2konAMC6RmntdYQbCDGcmhyFNO9uNYMqb7BEIKujCGrH1wQ8JnzXHISjPa82
-         EBwczDq6hUEypGCchTG7LNMJcRJ1GCYqc8A3A2W5RqtY2nz4PU1tdwIKxZWP5JMQtm/K
-         HpqR31IFn1yEozVoKLek4XlZ9MDUYqW+ji+VKDw7zK9uyChTHYixNMlag88At4Mr3GAE
-         VRPiMPy5UBz4Vehksda8NyfBxIc+H4bANFvsoDVDSppATcfOOQPi19wvxgKHDzhx8ugr
-         XEEA==
+        bh=71EpT05RPGfdV2MRDW2h3g+re/Vo/U/4wOhVseH1/1o=;
+        b=t/1pSz37TaDlYsdlTF+jQPUSyX9Hu+JvBp9tLXFbPZWlXf6IO3fwDWBqPOLS/SgrJC
+         HnJ6JmIXE82CJmwzA1cQ+4JfTzNCebkwbcJMz6UgNqQr0nhLd7gb0+enDztDGjd4Op20
+         cc6j9VR8besuhXe/xghQ3CGvA2wZT9Bw7Nj+6G0geLLSdDrIdXp8jyWlwjfZDgmMeGwn
+         h7gYmba3AL8JtCz89AJxEv2qaapQ17kOuInpMh6rn0kK2y+UR10GKkCdja5KaL4HbiBY
+         fZ637k+f3sPbI29SwJ7dtFzyja2jiCkvOEbA+qXCaVJiF/jU7+qOgpm22xhmXCorpFBG
+         vFkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MxFvyutT3TeFv9tuYgjWUXMmMJVTn8dALM+g0eVelPM=;
-        b=QhpiCojcXaJorR23SDt0nD1azk22Rfzu3rwsokGxtKdCYtxDKSNUxnALzWihnpY2mq
-         UnT4g33pn7HFLsl03u5A7CPaU35bYfjdMVI3qADopacBU06EiJvzFFxX86Gxr6g4Cqkb
-         GHqh0w0FeHPJRyIcflH+W4RHjbeq3JOdVwnG6qewxQ0UP0CyreY8qVtvL3zv8EK+HKqn
-         FThrAQMyIApkXquKcSQaPQIaznBhIkxx9KNNZb5Y2GXds4iHGTW9UeWQH05lX2lEifb1
-         5HvksLTJZiUHlmzE/ByRkqrbGlkzj3kIKpXWgL8vC3lMBVyMc6PHlavzv3jLhUHPlV2f
-         JozQ==
-X-Gm-Message-State: APjAAAUyQ2PZzG+fEtvShkduZ26m/l5I92HJQzWPPYb8IKlbCaBYCv86
-        yT2uWiYaUPqqxM50U0ze/S4CpNKg
-X-Google-Smtp-Source: APXvYqyhSCLxWJYmS/l2UlSbZ8O72LLkwjqVf7Bxc6RIqRSE5mZrgfoLL9O4u9579TOgwUabK+FJ+A==
-X-Received: by 2002:a7b:c186:: with SMTP id y6mr137363wmi.67.1571948069688;
-        Thu, 24 Oct 2019 13:14:29 -0700 (PDT)
+        bh=71EpT05RPGfdV2MRDW2h3g+re/Vo/U/4wOhVseH1/1o=;
+        b=cxC0DxkK6BE/WSPdxghhjQGhZgh8IV69HBoSEq4sm5lolJpXY85cpyHanFmXFstNPo
+         Se3gW57EjnFscC/vcSX8hAoFB+VEESEbONFl2gpNfGt5aZPOucLWmGmNZ58+enkFL78P
+         ZzBDtzBM2Oj6EYTCziKnGrgaxnIqn4IAFmC+e0b6pkBWmGuCrxsBp2xoM+ITjTnrROZm
+         CE4EGDV5QovjpVtHxbmw/LhW9rLzTQoI5sTTwd8e7fEoZPMcZ9LVidWuuhSMVS1GYI+s
+         x/efRegRLmjTdGWVcXUG2tV7Ka14IWYEH10AxVLkLVLjo4P09onO9FxrJpzIDGPGM2ga
+         CB9Q==
+X-Gm-Message-State: APjAAAUWYFkS7lMHalQI+kIEj/HS3iDXCniwOphaIjrx2qM3q8s3pPbc
+        +nXry8QrDkt7qJVYi7xuWxt965Db
+X-Google-Smtp-Source: APXvYqxIGWOBea0c+/zjuLO8hKzNVktbp9/3uDIdKy+vVTY7pD8lVAM4eP/sywlQ4ma8JdPxyiqtUw==
+X-Received: by 2002:a1c:2d49:: with SMTP id t70mr119405wmt.131.1571948072447;
+        Thu, 24 Oct 2019 13:14:32 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u21sm4788536wmu.27.2019.10.24.13.14.27
+        by smtp.gmail.com with ESMTPSA id u21sm4788536wmu.27.2019.10.24.13.14.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 13:14:29 -0700 (PDT)
+        Thu, 24 Oct 2019 13:14:31 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         DEVICE TREE BINDINGS),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2835
         ARM ARCHITECTURE)
-Subject: [PATCH v3 2/5] dt-bindings: Document brcm,irq-can-wake for brcm,bcm7038-l1-intc.txt
-Date:   Thu, 24 Oct 2019 13:14:12 -0700
-Message-Id: <20191024201415.23454-3-f.fainelli@gmail.com>
+Subject: [PATCH v3 3/5] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
+Date:   Thu, 24 Oct 2019 13:14:13 -0700
+Message-Id: <20191024201415.23454-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191024201415.23454-1-f.fainelli@gmail.com>
 References: <20191024201415.23454-1-f.fainelli@gmail.com>
@@ -81,32 +81,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
-controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
-which has been "standardized" across Broadcom interrupt controllers.
+If the 'brcm,irq-can-wake' property is specified, make sure we also
+enable the corresponding parent interrupt we are attached to.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-index 2117d4ac1ae5..4eb043270f5b 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-@@ -31,6 +31,11 @@ Required properties:
- - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
-   node; valid values depend on the type of parent interrupt controller
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index 689e487be80c..45879e59e58b 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -286,6 +286,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 		pr_err("failed to map parent interrupt %d\n", parent_irq);
+ 		return -EINVAL;
+ 	}
++
++	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
++		enable_irq_wake(parent_irq);
++
+ 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
+ 					 intc);
  
-+Optional properties:
-+
-+- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
-+  wakeup source for system suspend/resume.
-+
- If multiple reg ranges and interrupt-parent entries are present on an SMP
- system, the driver will allow IRQ SMP affinity to be set up through the
- /proc/irq/ interface.  In the simplest possible configuration, only one
 -- 
 2.17.1
 
