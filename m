@@ -2,129 +2,142 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77769CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553A2CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8372084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF332084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P0sNyB9z";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jXYYdZMV"
+	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="rWfKpJmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437064AbfJXCbF (ORCPT
+        id S2437078AbfJXCbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 22:31:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41716 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437045AbfJXCbC (ORCPT
+        Wed, 23 Oct 2019 22:31:18 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38724 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437066AbfJXCbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 22:31:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CEBE561068; Thu, 24 Oct 2019 02:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571884260;
-        bh=9/HyGx8k6OZA11usgkO3f0IPDOmioYN0Pq3Ym6dXEsA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=P0sNyB9znt9SvVsporJy7QUt6imvMg2AyomQnEcEV6znvzIAQ3SdBP/Bxl8LwMRLc
-         lR6UJS4DBlo3Htffb1p3pBqWaGrD296ZNDV8TSdBnfpI+G70cblAtANLFgPkhdIWSK
-         OOfxvU8H2kAiQ8QUU07Pr4Ykn5GHtEFCtpa2u8/w=
-Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0C8660FF9;
-        Thu, 24 Oct 2019 02:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571884259;
-        bh=9/HyGx8k6OZA11usgkO3f0IPDOmioYN0Pq3Ym6dXEsA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jXYYdZMVdiR5wVf0WCY+2dpxl07S0Q1gxKQwuNi3iJMP8ua4C5eZC9OwBG8+FrB5x
-         ps0zlSbu2wCddbnODtiai+33mQl4UkVuGZ2sebiJZIF73DWGBokY8LUuQOf8TblTwH
-         aPjMfpJJZsmVjPVZKL/nSMOgkieEy2oU3P6v4U60=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0C8660FF9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3 05/11] arm64: dts: qcom: sc7180: Add cmd_db reserved
- area
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-6-rnayak@codeaurora.org>
- <5bb4acef7f11af9e9c4016743d668f57@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <8d361445-d764-1653-76a3-05df25339c0c@codeaurora.org>
-Date:   Thu, 24 Oct 2019 08:00:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 23 Oct 2019 22:31:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id y8so5073250edu.5
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 19:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gnpimtDmP0lqthi2a9dQUIzsbuDYbXbk8lwy1rA6ZU4=;
+        b=rWfKpJmH4ifuIAc04embim+n/JBDGLFT0Hj+ihXkCmiMhnOlUJ7dovXsW/rUmYCG6F
+         NxvohT6iNXBI6t174vtu7YcDkT26RFlgZNkwGZix5mNkPhEVfaQJud2KWOstCgH42cLL
+         C6TMjBSQEmYIn9WfT37PSeJ/iFVaR6bQjE0zyQcvJKF2mvrqFmnCmfG0685/oCLWd2D/
+         kj3C67iakdIgJwUCaU7RXbrXgjL50UBwhAsUqAr4lASSx5NA4IH+9zeFS8WnF3708s4S
+         VD43nmX5iXHmxRFB4FSaXMMTYJZZ+KuoOiJB3j+OaIRifCMquB5u1LE663zK8s24CJAE
+         4+WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gnpimtDmP0lqthi2a9dQUIzsbuDYbXbk8lwy1rA6ZU4=;
+        b=nawRc9G295eYg2r/t0HeGqjgJORv305G+kklOT5QPC2IjOzDYtYMZdeaECxAeNlGel
+         anZz08mWdSKul+wpOLS1mQNWtQ03yepK7T3rI4OoMBy6aN3zvoBfKzrqMUEjGHDCsOyq
+         5PdEgRcuqA9wnfHPr8c6qiVLv+BGn7nLW6NKVv/np0xeNEfPyE5GiMw4sfxYUsbXwarX
+         mXjFkX7k9H8TUXdgMrvw+x8LvW4Q59tQfzVAsdccXQ3DR1Y3WzPx3CyWdw4KAnT0uAGW
+         pFlSq2Ovdk1TE2bdodHnEMzGREADoAbuGPH9Sul1YvjfjUdKLaOmI5+MB/pio1KtOnGb
+         UHVA==
+X-Gm-Message-State: APjAAAVJO3Ijwp2nh2VMucXyKY1jQ8axgkG2dt5mdmTnJjyfDdEhzWDu
+        8HdPLoo7Eff7ghQHrMGkmDjcqg==
+X-Google-Smtp-Source: APXvYqy84bemiVw55n7fco+FbX1+KuwznFlI0XsqhDfwNJccDH40WXATcHh+QUP1GE+pY3XO2S2c9A==
+X-Received: by 2002:a17:906:780e:: with SMTP id u14mr26591750ejm.97.1571884275784;
+        Wed, 23 Oct 2019 19:31:15 -0700 (PDT)
+Received: from [10.68.217.182] ([217.70.210.43])
+        by smtp.googlemail.com with ESMTPSA id x23sm430555eda.83.2019.10.23.19.31.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Oct 2019 19:31:15 -0700 (PDT)
+Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
+ <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
+ <20191023221332.GE2044@dread.disaster.area>
+From:   Boaz Harrosh <boaz@plexistor.com>
+Message-ID: <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
+Date:   Thu, 24 Oct 2019 05:31:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <5bb4acef7f11af9e9c4016743d668f57@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191023221332.GE2044@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/23/2019 5:46 PM, Sibi Sankar wrote:
-> On 2019-10-23 14:32, Rajendra Nayak wrote:
->> From: Maulik Shah <mkshah@codeaurora.org>
->>
->> Command_db provides mapping for resource key and address managed
->> by remote processor. Add cmd_db reserved memory area.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index f17684148595..dfa49ef2bce0 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -32,6 +32,18 @@
->>          };
->>      };
->>
->> +    reserved_memory: reserved-memory {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +        ranges;
->> +
->> +        cmd_db: reserved-memory@80820000 {
+On 24/10/2019 01:13, Dave Chinner wrote:
+> On Wed, Oct 23, 2019 at 04:09:50PM +0300, Boaz Harrosh wrote:
+>> On 22/10/2019 14:21, Boaz Harrosh wrote:
+>>> On 20/10/2019 18:59, ira.weiny@intel.com wrote:
+>> Please explain the use case behind your model?
 > 
-> aop_cmd_db_mem: memory@80820000 {
-> please use ^^ instead
-
-right, I thought I looked up sm8150.dtsi to make sure
-the labeling for various things is consistent, but
-maybe i didn't. Will fix. Thanks.
-
+> No application changes needed to control whether they use DAX or
+> not. It allows the admin to control the application behaviour
+> completely, so they can turn off DAX if necessary. Applications are
+> unaware of constraints that may prevent DAX from being used, and so
+> admins need a mechanism to prevent DAX aware application from
+> actually using DAX if the capability is present.
 > 
->> +            reg = <0x0 0x80820000 0x0 0x20000>;
->> +            compatible = "qcom,cmd-db";
->> +            no-map;
->> +        };
->> +    };
->> +
->>      cpus {
->>          #address-cells = <2>;
->>          #size-cells = <0>;
+> e.g. given how slow some PMEM devices are when it comes to writing
+> data, especially under extremely high concurrency, DAX is not
+> necessarily a performance win for every application. Admins need a
+> guaranteed method of turning off DAX in these situations - apps may
+> not provide such a knob, or even be aware of a thing called DAX...
 > 
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thank you Dave for explaining. Forgive my slowness. I now understand
+your intention.
+
+But if so please address my first concern. That in the submitted implementation
+you must set the flag-bit after the create of the file but before the write.
+So exactly the above slow writes must always be DAX if I ever want the file
+to be DAX accessed in the future.
+
+In fact I do not see how you do this without changing the application because
+most applications create thier own files, so you do not have a chance to set
+the DAX-flag before the write happens. So the only effective fixture is the
+inheritance from the parent directory.
+But then again how do you separate from the slow writes that we would like
+none-DAX to the DAX reads that are fast and save so much resources and latency.
+
+What if, say in XFS when setting the DAX-bit we take all the three write-locks
+same as a truncate. Then we check that there are no active page-cache mappings
+ie. a single opener. Then allow to set the bit. Else return EBUISY. (file is in use)
+
+> e.g. the data set being accessed by the application is mapped and
+> modified by RDMA applications, so those files must not be accessed
+> using DAX by any application because DAX+RDMA are currently
+> incompatible. Hence you can have RDMA on pmem devices co-exist
+> within the same filesystem as other applications using DAX to access
+> the pmem...
+> 
+
+I actually like the lastest patchset that takes a lease on the file.
+But yes an outside admin tool to set different needs.
+
+> Cheers,
+> Dave.
+> 
+
+Yes, thanks
+Boaz
