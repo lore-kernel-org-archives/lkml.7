@@ -2,111 +2,212 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EE6CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B03CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D821721929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571956398;
-	bh=zv/+Cg7FqzWfk4zoUYYas2gkXufxYiBgGui3pLf7Im0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eFshDMTjqI76w70wLHDGQpwzOd60Kqr1xBfSa18l+wmd1VrElLXcFYyejlvm7RHwq
-	 iu3BsXeyjPztzUaTSrRRnAbaI4kSsh7tTSASwlgyQI383UC1hiyO+UFxbo5rEytBJU
-	 ng+M3gSm6QJlbrfiH00eU/+ndF5Air6kV7fDL8PY=
+	by mail.kernel.org (Postfix) with ESMTP id 4757D21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbfJXWdR (ORCPT
+        id S1731810AbfJXWeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:33:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfJXWdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:33:17 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F45221D71;
-        Thu, 24 Oct 2019 22:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571956396;
-        bh=zv/+Cg7FqzWfk4zoUYYas2gkXufxYiBgGui3pLf7Im0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bhedDmGWQVxjj/0LqpYmP4rIMIPZ4nUxgoeLK1IdNfMq7BlRbprrfMVQ//KlzTzQ1
-         JYU5Zx2YujkbWZVeF5x4X0jAZe9sDHIBPMVs7AitGNDIuEvsAOgXQEfdjyrVE1hs1p
-         jz6LMrYnBCKaFNffzUhzsHM7ihKu0plvzWu9zkoc=
-Received: by mail-qt1-f179.google.com with SMTP id m15so380045qtq.2;
-        Thu, 24 Oct 2019 15:33:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAVsUSwMX4zXM24FnGJ3+DiLOr5d8aZWGJ6CYY7ihQ1uhhgM8MvY
-        HMKw9ZLyCTdDVs8h2CJl7ZAEdpbfPMvS/oF9Hw==
-X-Google-Smtp-Source: APXvYqzpZiq+VxT8v6OnoJFomiqo/yUa7OZtDUCbwhGR9BMysDk7zHRDlulknPdgAbB0q10WoWnbr5qfzCNc76cK/Yk=
-X-Received: by 2002:ac8:741a:: with SMTP id p26mr40504qtq.143.1571956395662;
- Thu, 24 Oct 2019 15:33:15 -0700 (PDT)
+        Thu, 24 Oct 2019 18:34:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:34266 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731152AbfJXWeI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 18:34:08 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iNlg2-0002Uv-3P; Fri, 25 Oct 2019 00:33:55 +0200
+Date:   Fri, 25 Oct 2019 00:33:52 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt
+ disable
+In-Reply-To: <CALCETrXyhnMwwOyWQ-FtsNFAsrcG41-pPrAp8Wj2vc0N9JzP-Q@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1910242353330.1783@nanos.tec.linutronix.de>
+References: <20191023122705.198339581@linutronix.de> <20191023123118.296135499@linutronix.de> <20191023220618.qsmog2k5oaagj27v@treble> <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de> <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com>
+ <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de> <CALCETrXyhnMwwOyWQ-FtsNFAsrcG41-pPrAp8Wj2vc0N9JzP-Q@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
- <20191021033220.GG4500@tuxbook-pro> <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
- <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
-In-Reply-To: <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 24 Oct 2019 17:33:04 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Rob,
->
-> On 2019-10-24 01:19, Rob Herring wrote:
-> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> >>
-> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
-> >>
-> >> > LLCC behaviour is controlled by the configuration data set
-> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
-> >> > Also convert the existing bindings to json-schema and add
-> >> > the compatible for SC7180 SoC.
-> >> >
-> >>
-> >> Thanks for the patches and thanks for the review Stephen. Series
-> >> applied
+On Thu, 24 Oct 2019, Andy Lutomirski wrote:
+> On Thu, Oct 24, 2019 at 1:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > I spent quite some time digging deeper into this. Finding all corner cases
+> > which eventually enable interrupts from an exception handler is not as
+> > trivial as it looked in the first place. Especially the fault handler is a
+> > nightmare. Also PeterZ's approach of doing
 > >
-> > And they break dt_binding_check. Please fix.
+> >            if (regs->eflags & IF)
+> >                 local_irq_disable();
 > >
->
-> I did check this and think that the error log from dt_binding_check is
-> not valid because it says cache-level is a required property [1], but
-> there is no such property in LLCC bindings.
+> > is doomed due to sys_iopl(). See below.
+> 
+> I missed something in the discussion.  What breaks?
 
-Then you should point out the issue and not just submit stuff ignoring
-it. It has to be resolved one way or another.
+Assume user space has issued CLI then the above check is giving the wrong
+answer because it assumes that all faults in user mode have IF set.
 
-If you refer to the DT spec[1], cache-level is required. The schema is
-just enforcing that now. It's keying off the node name of
-'cache-controller'.
+> Can you check user_mode(regs) too?
 
-Rob
+Yes, but I still hate it with a passion :)
 
-[1] https://github.com/devicetree-org/devicetree-specification/blob/master/source/devicenodes.rst#multi-level-and-shared-cache-nodes-cpuscpul-cache
+> > What's your plan with cr2? Stash it in pt_regs or something else?
+> 
+> Just read it from CR2.  I added a new idtentry macro arg called
+> "entry_work", and setting it to 0 causes the enter_from_user_mode to
+> be skipped.  Then C code calls enter_from_user_mode() after reading
+> CR2 (and DR7).  WIP code is here:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=x86/idtentry
+> 
+> The idea is that, if everything is converted, then we get rid of the
+> entry_work=1 case, which is easier if there's a macro.
+> 
+> So my suggestion is to use a macro for the 2-arg version and open-code
+> all the 3-arg cases.  Then, when the dust settles, we get rid of the
+> third arg and they can use the macro.
+
+I'll have a look tomorrow with brain awake.
+ 
+> > The interesting bells and whistels result from sys_iopl(). If user space
+> > has been granted iopl(level = 3) it gains cli/sti priviledges. When the
+> > application has interrupts disabled in userspace:
+> >
+> >   - invocation of a syscall
+> >
+> >   - any exception (aside of NMI/MCE) which conditionally enables interrupts
+> >     depending on user_mode(regs) and therefor can be preempted and
+> >     schedule
+> >
+> > is just undefined behaviour and I personally consider it to be a plain bug.
+> >
+> > Just for the record: This results in running a resulting or even completely
+> > unrelated signal handler with interrupts disabled as well.
+> 
+> I am seriously tempted to say that the solution is to remove iopl(),
+> at least on 64-bit kernels.  Doing STI in user mode is BS :)
+
+STI would be halfways sane. CLI is the problem. And yes I agree it's BS :)
+
+> Otherwise we need to give it semantics, no?  I personally have no
+> actual problem with the fact that an NMI can cause scheduling to
+> happen.  Big fscking deal.
+
+Right, I don't care either. I do neither care that any exception/syscall
+which hits a user space CLI region might schedule. It's been that way
+forever.
+
+But giving this semantics is insanely hard at least if you want sensible,
+useful, consistent and understandable semantics. I know that's overrated.
+
+> > Whatever we decide it is, leaving it completely inconsistent is not a
+> > solution at all. The options are:
+> >
+> >   1)  Always do conditional tracing depending on the user_regs->eflags.IF
+> >       state.
+> 
+> I'm okay with always tracing like user mode means IRQs on or doing it
+> "correctly".  I consider the former to be simpler and therefore quite
+> possibly better.
+> 
+> >
+> >   2)  #1 + warn once when syscalls and exceptions (except NMI/MCE) happen
+> >       and user_regs->eflags.IF is cleared.
+> >
+> >   3a) #2 + enforce signal handling to run with interrupts enabled.
+> >
+> >   3b) #2 + set regs->eflags.IF. So the state is always correct from the
+> >       kernel POV. Of course that changes existing behaviour, but its
+> >       changing undefined and inconsistent behaviour.
+> >
+> >   4) Let iopl(level) return -EPERM if level == 3.
+> >
+> >      Yeah, I know it's not possible due to regressions (DPKD uses iopl(3)),
+> >      but TBH that'd be the sanest option of all.
+> >
+> >      Of course the infinite wisdom of hardware designers tied IN, INS, OUT,
+> >      OUTS and CLI/STI together on IOPL so we cannot even distangle them in
+> >      any way.
+> 
+> >
+> >      The only way out would be to actually use a full 8K sized I/O bitmap,
+> >      but that's a massive pain as it has to be copied on every context
+> >      switch.
+> 
+> Hmm.  This actually doesn't seem that bad.  We already have a TIF_
+> flag to optimize this.  So basically iopl() would effectively become
+> ioperm(everything on).
+
+Yes, and the insane user space would:
+
+     1) Pay the latency price for copying 8K bitmap on every context switch
+     	IN
+
+     2) Inflict latency on the next task due to requiring memset of 8K
+     	bitmap on every context switch OUT
+
+     3) #GP when issuing CLI/STI
+
+I personally have no problem with that. #1 and #3 are sane and as iopl()
+requires CAP_RAW_IO it's not available to Joe User, so the sysadmin is
+responsible for eventual issues resulting from #2.
+
+Though the no-regression hammer might pound on #3 as it breaks random
+engineering trainwrecks from hell.
+
+#1/#2 could be easily mitigated though.
+
+      struct tss_struct {
+      	struct x86_hw_tss       x86_tss;
+	unsigned long           io_bitmap[IO_BITMAP_LONGS + 1];
+      };
+
+and x86_tss has
+
+    u16	io_bitmap_base;
+
+which is either set to
+
+  INVALID_IO_BITMAP_OFFSET ( 0x8000 )
+
+or
+
+  IO_BITMAP_OFFSET
+    (offsetof(struct tss_struct, io_bitmap) - offsetof(struct tss_struct, x86_tss))
+
+So we could add
+
+	unsigned long           io_bitmap_all[IO_BITMAP_LONGS + 1];
+
+and just set the base to this one.
+
+But that involves also upping __KERNEL_TSS_LIMIT. Too tired to think about
+the implications of that right now.
+
+Thanks,
+
+	tglx
