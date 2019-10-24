@@ -2,123 +2,185 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23061CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1D3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CBA2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2CC2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jwX9fOuI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DFyau+12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392912AbfJXTwA (ORCPT
+        id S2408321AbfJXTzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:52:00 -0400
-Received: from ozlabs.org ([203.11.71.1]:47283 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390431AbfJXTwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:52:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 24 Oct 2019 15:55:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35729 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2392895AbfJXTzB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:55:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571946900;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=46JWhWsVeq/tB0Aj5YNxoiRSmrwdl+Kq9BaeK3ujO0U=;
+        b=DFyau+12Pf776Ra8ToZbfReIJM3hr50lO1EqlGKpxMWpK9hKxLtlHi8EfiH8kRtmVZdQoy
+        JpVJ1IDyNc/Pr/+n55GZM09pcm0m0bUta4d7Y+ih7FqD71L+yAQS45IKjw0MPpLgdzHqOs
+        uuu/uL7ZxjoMq54T7hQLBG/3061NeOg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-rQGSdyFqNNOUITf7Nv_epw-1; Thu, 24 Oct 2019 15:54:58 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46zdDP46YWz9sPV;
-        Fri, 25 Oct 2019 06:51:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571946716;
-        bh=UWyXQ1Iw+UMZYj2SA6HBAw1NT5T7pfbx2QffwK989yU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jwX9fOuI11zIRK3ojPaBk/qXRXsPsMVeh2/gaacyvzQwL+V0aiYZkAhFPheFd9k0J
-         et2FGYEubuOkFNq4vzQyFgqNJo6wcYfVP2HuSgPzo9JP9B04IjIQFB2GD4D2CW362S
-         RmoMZ2HHnMqnEWbvmOCnSeko+OCrRH1U/t2yVj6g9O1O9Phf3fr5j/9TUDRDTGgSJv
-         JJpGFSBVqVfJyPLUxl37q7A5t/3+kLWuHell801boDx4L5/SwSZLopVdtrSgKgmUHR
-         HlyXd1W/5Q1x4JDtE6HM/ZlzOkwAZigTbqsjCBQeJGumdnSd+iDpplh2FiQA0aDLTr
-         R1fjqzpS8AefQ==
-Date:   Fri, 25 Oct 2019 06:51:35 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Sean Paul <sean@poorly.run>,
-        Maxime Ripard <mripard@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Iago Toral Quiroga <itoral@igalia.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] drm/v3d: fix double free of bin
-Message-ID: <20191025065135.09175b37@canb.auug.org.au>
-In-Reply-To: <CAKMK7uGbMx21+g2kQyGu5H-L7N-guKJhsZ6b1ROnz5+kDRt3LA@mail.gmail.com>
-References: <20191024104801.3122-1-colin.king@canonical.com>
-        <20191024123853.GH11828@phenom.ffwll.local>
-        <821f0799-1f37-c853-d2c6-dd95883e02d8@canonical.com>
-        <CAKMK7uGbMx21+g2kQyGu5H-L7N-guKJhsZ6b1ROnz5+kDRt3LA@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85A4947B;
+        Thu, 24 Oct 2019 19:54:54 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EB675D9D5;
+        Thu, 24 Oct 2019 19:54:42 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 13:54:41 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V5 2/6] modpost: add support for mdev class id
+Message-ID: <20191024135441.160daa56@x1.home>
+In-Reply-To: <555a101e-0ed1-2e9d-c1a4-e3b37d76bd18@redhat.com>
+References: <20191023130752.18980-1-jasowang@redhat.com>
+        <20191023130752.18980-3-jasowang@redhat.com>
+        <20191023154245.32e4fa49@x1.home>
+        <555a101e-0ed1-2e9d-c1a4-e3b37d76bd18@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xwrizZz4UyloQa1ZZxKFEFk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: rQGSdyFqNNOUITf7Nv_epw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xwrizZz4UyloQa1ZZxKFEFk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 24 Oct 2019 11:31:04 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Hi all,
-
-On Thu, 24 Oct 2019 14:49:36 +0200 Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> Ok adding Stephen. There's a merge conflict between drm-misc-fixes and
-> drm-next (I think) and the merge double-added the kfree(bin). See
-> above for the relevant sha1. Dave is already on here as a heads-up,
-> but also adding drm-misc maintainers.
+> On 2019/10/24 =E4=B8=8A=E5=8D=885:42, Alex Williamson wrote:
+> > On Wed, 23 Oct 2019 21:07:48 +0800
+> > Jason Wang <jasowang@redhat.com> wrote:
+> > =20
+> >> Add support to parse mdev class id table.
+> >>
+> >> Reviewed-by: Parav Pandit <parav@mellanox.com>
+> >> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> >> ---
+> >>   drivers/vfio/mdev/vfio_mdev.c     |  2 ++
+> >>   scripts/mod/devicetable-offsets.c |  3 +++
+> >>   scripts/mod/file2alias.c          | 10 ++++++++++
+> >>   3 files changed, 15 insertions(+)
+> >>
+> >> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_md=
+ev.c
+> >> index 7b24ee9cb8dd..cb701cd646f0 100644
+> >> --- a/drivers/vfio/mdev/vfio_mdev.c
+> >> +++ b/drivers/vfio/mdev/vfio_mdev.c
+> >> @@ -125,6 +125,8 @@ static const struct mdev_class_id id_table[] =3D {
+> >>   =09{ 0 },
+> >>   };
+> >>  =20
+> >> +MODULE_DEVICE_TABLE(mdev, id_table);
+> >> + =20
+> > Two questions, first we have:
+> >
+> > #define MODULE_DEVICE_TABLE(type, name)                                =
+ \
+> > extern typeof(name) __mod_##type##__##name##_device_table              =
+ \
+> >    __attribute__ ((unused, alias(__stringify(name))))
+> >
+> > Therefore we're defining __mod_mdev__id_table_device_table with alias
+> > id_table.  When the virtio mdev bus driver is added in 5/6 it uses the
+> > same name value.  I see virtio types all register this way (virtio,
+> > id_table), so I assume there's no conflict, but pci types mostly (not
+> > entirely) seem to use unique names.  Is there a preference to one way
+> > or the other or it simply doesn't matter? =20
 >=20
-> > >> ---
-> > >>  drivers/gpu/drm/v3d/v3d_gem.c | 1 -
-> > >>  1 file changed, 1 deletion(-)
-> > >>
-> > >> diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d=
-_gem.c
-> > >> index 549dde83408b..37515e47b47e 100644
-> > >> --- a/drivers/gpu/drm/v3d/v3d_gem.c
-> > >> +++ b/drivers/gpu/drm/v3d/v3d_gem.c
-> > >> @@ -568,7 +568,6 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void=
- *data,
-> > >>              ret =3D v3d_job_init(v3d, file_priv, &bin->base,
-> > >>                                 v3d_job_free, args->in_sync_bcl);
-> > >>              if (ret) {
-> > >> -                    kfree(bin);
-> > >>                      v3d_job_put(&render->base);
-> > >>                      kfree(bin);
-> > >>                      return ret;
+>=20
+> It looks to me that those symbol were local, so it doesn't matter. But=20
+> if you wish I can switch to use unique name.
 
-I will add this as a merge fixup until drm-misc-fixes is merged into
-the drm tree.
+I don't have a strong opinion, I'm just trying to make sure we're not
+doing something obviously broken.
 
---=20
-Cheers,
-Stephen Rothwell
+> >>   static struct mdev_driver vfio_mdev_driver =3D {
+> >>   =09.name=09=3D "vfio_mdev",
+> >>   =09.probe=09=3D vfio_mdev_probe,
+> >> diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetab=
+le-offsets.c
+> >> index 054405b90ba4..6cbb1062488a 100644
+> >> --- a/scripts/mod/devicetable-offsets.c
+> >> +++ b/scripts/mod/devicetable-offsets.c
+> >> @@ -231,5 +231,8 @@ int main(void)
+> >>   =09DEVID(wmi_device_id);
+> >>   =09DEVID_FIELD(wmi_device_id, guid_string);
+> >>  =20
+> >> +=09DEVID(mdev_class_id);
+> >> +=09DEVID_FIELD(mdev_class_id, id);
+> >> +
+> >>   =09return 0;
+> >>   }
+> >> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+> >> index c91eba751804..d365dfe7c718 100644
+> >> --- a/scripts/mod/file2alias.c
+> >> +++ b/scripts/mod/file2alias.c
+> >> @@ -1335,6 +1335,15 @@ static int do_wmi_entry(const char *filename, v=
+oid *symval, char *alias)
+> >>   =09return 1;
+> >>   }
+> >>  =20
+> >> +/* looks like: "mdev:cN" */
+> >> +static int do_mdev_entry(const char *filename, void *symval, char *al=
+ias)
+> >> +{
+> >> +=09DEF_FIELD(symval, mdev_class_id, id);
+> >> +
+> >> +=09sprintf(alias, "mdev:c%02X", id); =20
+> > A lot of entries call add_wildcard() here, should we?  Sorry for the
+> > basic questions, I haven't played in this code.  Thanks, =20
+>=20
+>=20
+> It's really good question. My understanding is we won't have a module=20
+> that can deal with all kinds of classes like CLASS_ID_ANY. So there's=20
+> probably no need for the wildcard.
 
---Sig_/xwrizZz4UyloQa1ZZxKFEFk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+The comment for add_wildcard() indicates future extension, so it's hard
+to know what we might need in the future until we do need it.  The
+majority of modules.alias entries on my laptop (even if I exclude pci
+aliases) end with a wildcard.  Thanks,
 
------BEGIN PGP SIGNATURE-----
+Alex
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2yAMcACgkQAVBC80lX
-0Gy2ZggAiZaoH9RPu5iXGznPgZhzyg1plQKDAAPWiIwMq1c3Bivg6umaIroB14qg
-LGpurXf9YO+Vj8S06ukixB/b1vAycWSWXfauEZPhe6lF1YGykeZUVDeKCcIoR/oU
-we0+KgwxN1r854mdr4+OlzjC9VssQ8c3HiGztCldR0PnenNt/BP7m+4mQtmB2gdL
-H+cQREBnDZFHYKVNiDoIybIlyg34/MXC0nt2JGsY/A/UsBIFoLKEePnMc6j7Jh3O
-4mkIfZb2SYcUVz0a6Ds0XuqAOVb9IRKiTHMdE1v59cnSS+AcyNog821sMAgtwAYR
-lLyleGdyeEodrJ5AFmvnpCvc4bGZ9w==
-=RhRC
------END PGP SIGNATURE-----
-
---Sig_/xwrizZz4UyloQa1ZZxKFEFk--
