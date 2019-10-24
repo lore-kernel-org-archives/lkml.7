@@ -2,131 +2,112 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B332CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E956ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F16620684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D13205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504062AbfJXSTo (ORCPT
+        id S2392338AbfJXSaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:19:44 -0400
-Received: from ms.lwn.net ([45.79.88.28]:42668 "EHLO ms.lwn.net"
+        Thu, 24 Oct 2019 14:30:39 -0400
+Received: from sauhun.de ([88.99.104.3]:43626 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504042AbfJXSTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:19:43 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B4C682F5;
-        Thu, 24 Oct 2019 18:19:41 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 12:19:40 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        Matthew Wilcox <willy@infradead.org>,
-        jani.nikula@linux.intel.com,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
- 'functions' to 'identifiers'
-Message-ID: <20191024121940.1d6a64df@lwn.net>
-In-Reply-To: <20191020131717.28990-1-changbin.du@gmail.com>
-References: <20191020131717.28990-1-changbin.du@gmail.com>
-Organization: LWN.net
+        id S1726155AbfJXSai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 14:30:38 -0400
+Received: from localhost (x4d0bc9de.dyn.telefonica.de [77.11.201.222])
+        by pokefinder.org (Postfix) with ESMTPSA id 5D3C52C011D;
+        Thu, 24 Oct 2019 20:30:36 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 20:30:35 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Eugen.Hristev@microchip.com
+Cc:     peda@axentia.se, mark.rutland@arm.com,
+        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org, Nicolas.Ferre@microchip.com
+Subject: Re: [PATCH v5 0/9] i2c: add support for filters
+Message-ID: <20191024183035.GA1870@kunai>
+References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+Content-Disposition: inline
+In-Reply-To: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019 21:17:17 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
 
-> The 'functions' directive is not only for functions, but also works for
-> structs/unions. So the name is misleading. This patch renames it to
-> 'identifiers', which specific the functions/types to be included in
-> documentation. We keep the old name as an alias of the new one before
-> all documentation are updated.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So I think this is basically OK, but I have one more request...
+On Wed, Sep 11, 2019 at 08:24:14AM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+>=20
+> Hello,
+>=20
+> This series adds support for analog and digital filters for i2c controlle=
+rs
+>=20
+> This series is based on the series:
+> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+> and later
+> [PATCH v4 0/9] i2c: add support for filters
+> and enhanced to add the bindings for all controllers plus an extra bindin=
+gs
+> for the width of the spikes in nanoseconds (digital filters) and cut-off
+> frequency (analog filters)
+>=20
+> First, bindings are created for
+> 'i2c-analog-filter'
+> 'i2c-digital-filter'
+> 'i2c-digital-filter-width-ns'
+> 'i2c-analog-filter-cutoff-frequency'
+>=20
+> The support is added in the i2c core to retrieve filter width/cutoff freq=
+uency
+> and add it to the timings structure.
+> Next, the at91 driver is enhanced for supporting digital filter, advanced
+> digital filter (with selectable spike width) and the analog filter.
+>=20
+> Finally the device tree for two boards are modified to make use of the
+> new properties.
+>=20
+> This series is the result of the comments on the ML in the direction
+> requested: to make the bindings globally available for i2c drivers.
 
-[...]
+Applied patches 1-7 to for-next (patch 3 is v6). Thanks for your
+patience and thanks to Ludovic and Peter for the review! Patches 8-9
+should go via the at91 tree.
 
-> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-> index 1159405cb920..0689f9c37f1e 100644
-> --- a/Documentation/sphinx/kerneldoc.py
-> +++ b/Documentation/sphinx/kerneldoc.py
-> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
->      optional_arguments = 4
->      option_spec = {
->          'doc': directives.unchanged_required,
-> -        'functions': directives.unchanged,
->          'export': directives.unchanged,
->          'internal': directives.unchanged,
-> +        'identifiers': directives.unchanged,
-> +        'functions': directives.unchanged,  # alias of 'identifiers'
->      }
->      has_content = False
->  
-> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
->  
->          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
->          export_file_patterns = []
-> +        identifiers = None
->  
->          # Tell sphinx of the dependency
->          env.note_dependency(os.path.abspath(filename))
-> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
->              export_file_patterns = str(self.options.get('internal')).split()
->          elif 'doc' in self.options:
->              cmd += ['-function', str(self.options.get('doc'))]
-> +        elif 'identifiers' in self.options:
-> +            identifiers = self.options.get('identifiers').split()
->          elif 'functions' in self.options:
-> -            functions = self.options.get('functions').split()
-> -            if functions:
-> -                for f in functions:
-> -                    cmd += ['-function', f]
-> -            else:
-> -                cmd += ['-no-doc-sections']
-> +            identifiers = self.options.get('functions').split()
 
-Rather than do this, can you just change the elif line to read:
+--+QahgC5+KEYLbs62
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    elif ('identifiers' in self.options) or ('functions' in self.options):
+-----BEGIN PGP SIGNATURE-----
 
-...then leave the rest of the code intact?  It keeps the logic together,
-and avoids the confusing distinction between identifiers=='' and
-identifiers==None .
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2x7ccACgkQFA3kzBSg
+Kba+Dg//cHsbTuGv5z7zSiIUbnmUbVpJKyL+PUx03ES4RnXIjjdVJRM/sgyTocpE
+zkokcnhPi9H4kv7O7CFo8VGVsQ1v1aBOgLSF9sRvdGB0kdEwRDJGypFLdmYFPpSE
+fwxxDvhwCtKkxBtKwxCAmx7aP5wemaNemm1l2dTkC0dLZsfSce/HZQ7Q11MK5V7Y
+I7gJMneVuUIw98wcLnut83YULvXC5HJNyKyhmRRivqE5+TZoJTwVIhxiFswjCTNO
+Br6JoVz0ODQBmGUOCH4dFkI5X5CsBSRwRNC4V4x0ygr2iIjR/Rd/TU422wqylJk2
+91d7wRXozOk/4f//UCxt3nlTeCXhgSUsO+7j6ljkjCHFxY3ONXdJ05lTMPZXJUAc
+m0qVQjU73ZMl08RAItQOwcaQi1qiGcNHXJN40aJu3/z7dLjLgCPCKAUjnQTDWrrz
+rwZejgvmHmTOd+zM3mmweCFu5v9qkuEeL7UCqLrGYyUHQPF3ycm5N96FkMbgbVnX
+lROYUlXXOXp3QBSzqZ/EavNT26siD6joTXpKZMPml5u4VgmJ9MJ1AW7iTHwPZyYk
+vqubo6pR02wJ95b9vyEr7OohP5sewbrNpHsk+8Tzyp4AlbcmdoIqMPgVb/77mpKN
+frMOQ5tiehviyqrYqbv1IbJANmRg3UQD7RzDRX0lMIMW/BMyHxw=
+=u9NZ
+-----END PGP SIGNATURE-----
 
-Thanks,
-
-jon
-
->          for pattern in export_file_patterns:
->              for f in glob.glob(env.config.kerneldoc_srctree + '/' + pattern):
->                  env.note_dependency(os.path.abspath(f))
->                  cmd += ['-export-file', f]
->  
-> +        if identifiers:
-> +            for i in identifiers:
-> +                cmd += ['-function', i]
-> +        elif identifiers is not None:
-> +            cmd += ['-no-doc-sections']
-> +
->          cmd += [filename]
->  
->          try:
+--+QahgC5+KEYLbs62--
