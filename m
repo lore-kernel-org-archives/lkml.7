@@ -2,133 +2,104 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BBDCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65E4CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5FC21906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE0B205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:34:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XiIsTe0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503815AbfJXRbN (ORCPT
+        id S2503839AbfJXRet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:31:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33122 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729458AbfJXRbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:31:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 10:31:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
-   d="scan'208";a="282008162"
-Received: from nesterov-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.8.153])
-  by orsmga001.jf.intel.com with ESMTP; 24 Oct 2019 10:30:52 -0700
-Date:   Thu, 24 Oct 2019 20:30:51 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Alexander Aring <alex.aring@gmail.com>,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        hersen wu <hersenxs.wu@amd.com>, Roman Li <Roman.Li@amd.com>,
-        Maxim Martynov <maxim@arista.com>,
-        David Ahern <dsahern@gmail.com>,
-        Francesco Ruggeri <fruggeri@arista.com>,
-        Linus =?iso-8859-1?Q?L=FCssing?= <linus.luessing@c0d3.blue>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Feng Tang <feng.tang@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rafael Aquini <aquini@redhat.com>, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org
-Subject: Re: [PATCH] Cleanup: replace prefered with preferred
-Message-ID: <20191024173051.GB7948@linux.intel.com>
-References: <20191022214208.211448-1-salyzyn@android.com>
- <20191023115637.GA23733@linux.intel.com>
- <fa12cb96-7a93-bf85-214d-a7bfaf8b8b0a@android.com>
+        Thu, 24 Oct 2019 13:34:49 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:32973 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503819AbfJXRes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 13:34:48 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y8so3686972plk.0;
+        Thu, 24 Oct 2019 10:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4xAH5O7ZmGTGh/7bz/H2A/raubLFZFEOmbd1GQrCgUg=;
+        b=XiIsTe0NN2X+NUlLdwWwmfzTywIeIZOpqjqet92yDH0L1tvipqmrxvMcpAakVniyIr
+         vhSBR+w7W3qHfRxWD1nWUGgfCGAulGqtbVmxo66PSToWXkCOXzLJbJwyNULRMcwXOvJP
+         PERyVI0dmTNcfBNhY0azGglCG/0+byVVCwLQ1QOHXH/cygX5SWzpGwYRYiYDP38A14xn
+         keZ1PDpIE5ijMvNeMY+UrG0ILxXieladffE9iQsS9y3r+ngmBxobIdVJ1aGtrfpU3lbe
+         TAitqoWC4v8YpEFWSL5bHMSj9S3B7S6EmOWCDQfGpKv3VDNbDuqYWtRT2q7isjuOr8Mg
+         iNxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4xAH5O7ZmGTGh/7bz/H2A/raubLFZFEOmbd1GQrCgUg=;
+        b=rZT2amhe2eTTPBV0FBTYdd3VwP3uMR7ZwT9nTqPPyoeqFB4g8fUgAj+Vpvt7pBg4NS
+         8u//k2mem1dBDXqLKKMt3NJfsyNTo2sTg6aIb/8C4aY9STqGXm4OdESSh1ibBRXT4t86
+         ljtj7Pe+9082R21Ju0mKpEvvfGxRBYhSN2PdFOgTt5oaWdqTnfirPF+A3yP4LxTiher3
+         dOohW2ZvDPf0MTUre+4WulxHA8IkeY/oLp8lQIAoHhiavO5yfArrayvRKDEbhH/gbo6j
+         cG3gx4IWrPAeV4Ww2hj08/GCJO9TDf96YI2NnT+bjA++xk7GSNqGCrUOPFrfBOhEYKtJ
+         D6vQ==
+X-Gm-Message-State: APjAAAUoPw+/KSatUEbXdPHKrHWqNC8qbyTDCj8z2u5DAlSPg+eFDNrZ
+        Ls/Yp7/LRoG1b/6wiAsKN98l+p9w
+X-Google-Smtp-Source: APXvYqwugV0LLLMtrWu8L2CZrijCdJYYJeNq2E9wIJSg50BwD9FkI1TfNcFoy2Vmlh3NS+Lg8t7nwA==
+X-Received: by 2002:a17:902:7c03:: with SMTP id x3mr17367584pll.171.1571938486568;
+        Thu, 24 Oct 2019 10:34:46 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s3sm2704619pjq.32.2019.10.24.10.34.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 24 Oct 2019 10:34:45 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 10:34:44 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH trivial] watchdog: wdat_wdt: Spelling
+ s/configrable/configurable/
+Message-ID: <20191024173444.GA27754@roeck-us.net>
+References: <20191024152856.30788-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa12cb96-7a93-bf85-214d-a7bfaf8b8b0a@android.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191024152856.30788-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 08:40:59AM -0700, Mark Salyzyn wrote:
-> On 10/23/19 4:56 AM, Jarkko Sakkinen wrote:
-> > On Tue, Oct 22, 2019 at 02:41:45PM -0700, Mark Salyzyn wrote:
-> > > Replace all occurrences of prefered with preferred to make future
-> > > checkpatch.pl's happy.  A few places the incorrect spelling is
-> > > matched with the correct spelling to preserve existing user space API.
-> > > 
-> > > Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-> > I'd fix such things when the code is otherwise change and scope this
-> > patch only to Documentation/. There is no pragmatic benefit of doing
-> > this for the code.
-> > 
-> > /Jarkko
+On Thu, Oct 24, 2019 at 05:28:56PM +0200, Geert Uytterhoeven wrote:
+> Fix misspelling of "configurable".
 > 
-> The pragmatic benefit comes with the use of an ABI/API checker (which is a
-> 'distro' thing, not a top of tree kernel thing) produces its map which is
-> typically required to be co-located in the same tree as the kernel
-> repository. Quite a few ABI/API update checkins result in a checkpatch.pl
-> complaint about the misspelled elements being (re-)recorded due to
-> proximity. We have a separate task to improve how it is tracked in Android
-> to reduce milepost marker changes that result in sweeping changes to the
-> database which would reduce the occurrences.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/wdat_wdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I will split this between pure and inert documentation/comments for now,
-> with a followup later for the code portion which understandably is more
-> controversial.
+> diff --git a/drivers/watchdog/wdat_wdt.c b/drivers/watchdog/wdat_wdt.c
+> index e7cf41aa26c3bbfc..b069349b52f55f92 100644
+> --- a/drivers/watchdog/wdat_wdt.c
+> +++ b/drivers/watchdog/wdat_wdt.c
+> @@ -202,7 +202,7 @@ static int wdat_wdt_enable_reboot(struct wdat_wdt *wdat)
+>  	 * WDAT specification says that the watchdog is required to reboot
+>  	 * the system when it fires. However, it also states that it is
+>  	 * recommeded to make it configurable through hardware register. We
+> -	 * enable reboot now if it is configrable, just in case.
+> +	 * enable reboot now if it is configurable, just in case.
+>  	 */
+>  	ret = wdat_wdt_run_action(wdat, ACPI_WDAT_SET_REBOOT, 0, NULL);
+>  	if (ret && ret != -EOPNOTSUPP) {
+> -- 
+> 2.17.1
 > 
-> Cleanup is the least appreciated part of kernel maintenance ;-}.
-> 
-> Sincerely -- Mark Salyzyn
-
-I'm a strong believer of "evolutionary" approach. Patch sets for the
-most part (everything in the end has to be considered case by case, not
-a strict rule) should have some functional changes involved.
-
-What I do require for the parts that I maintain is that any new change
-will result cleaner code base than the one that existed before that
-change was applied. Again, there are some exceptions to this e.g.
-circulating a firmware bug but this is my driving guideline as a
-maintainer.
-
-Doing cleanups just for cleanups can sometimes add unnecessary merge
-conflicts when backporting patches to stable kernels. Thus, if you are
-doing just a cleanup you should have extremely good reasons to do so.
-
-/Jarkko
