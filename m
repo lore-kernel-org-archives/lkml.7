@@ -2,206 +2,184 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FA2CA9EAF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD22FCA9EBC
 	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D44E20856
+	by mail.kernel.org (Postfix) with ESMTP id B32282166E
 	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 06:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="whQQndDh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SO7SqUbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437769AbfJXGqE (ORCPT
+        id S2437782AbfJXGrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 02:46:04 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37089 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbfJXGqD (ORCPT
+        Thu, 24 Oct 2019 02:47:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46028 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437772AbfJXGrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 02:46:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p1so13632365pgi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:46:03 -0700 (PDT)
+        Thu, 24 Oct 2019 02:47:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q13so19693980wrs.12
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Oct 2019 23:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NgFTobKzYLIoybimGSOXWg5eOtygrhwDEBEYyn3XxEY=;
-        b=whQQndDhmoaZK9OecPknNrAyqb6J4Qy15F9F+r54pyj8/muqFAkT4vfgH6jCOH6K/l
-         brQ6bB7gE1MNTawZQCct3jWf0VaVfXaLzHESz7uVzlgPu/2dmuAC7IvO61y/BG5iVWWT
-         RZflyRHfwYYxJDDUkJqdwZDsZJlSFQ2DyAlkDAC3We5tIANqzQNu3D66tVwu2PZLr8gF
-         zxVWntqQuoZSIcT8PcD0u5vdpHQh7LHNOLj82mWDmFV5oIjI3l4e10lQrgvhSWvocGV+
-         A1xqlQhfAsc336vPQaN5B7P5L41ZUy4bNPnSkYCH6R/1TR/G1XiPkgDOp6hY/qkTv3yO
-         KmVA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UclEmd8YX++NCf8kPKkA+46Pa3LHuXqjjWzo9Z3XdYM=;
+        b=SO7SqUbR2Vy59Qq6nC05Ir/m4UFWccS9Wg42Qz+tm9gLjOJBtQVpbadit9ajsImgB8
+         c8fISobck8KfXDkvhVEAnmQQnj/ONNNXGGRdnlPWFSRZNoHaRE7yF/P0cfwLmTpjqdj/
+         o5OntZbUc+OPgDWBm113VxzXeoq8Q1/qkHgFnq10DL28gdpjzZWxSDUC/Yj86kvQO/ty
+         kIU+AlVHw0avbfCfFkY02yWNr9dkyKePz29U7S/ucuVeQxt4fC7HtLggOu4eqCEw+pZo
+         jrazNHTw0zilOZKo4xWqKHCeWWdeLZLc51W7hWl1BXY5W8cXvNGqmOH+TqBFnCufB1qz
+         ViCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NgFTobKzYLIoybimGSOXWg5eOtygrhwDEBEYyn3XxEY=;
-        b=thWbVwsAJnR5SYPF6QiMwL4dcw4Zmyg050SMhMOvkhMl+r4LAAsIr2xbBGXGMZQ2qW
-         NdAG8tvfZiUVSmKHetmZR/Rewtkh5khU2x2ABQDAyEHhbe8ZJlXs7RMm4hnUwii4007a
-         6nSa88WDYT+22oX7OSz3GBW1RXYx9fEYIjg0Ha6YB7lgA5J0ZFroce+BgcfbVk2hs3qS
-         rmDDE9QENQiiguzvbD/q4n5aPwIbI74UnmVGODUGWQ5v7iP9IIEgWcIy4Q5g3oXDXQmm
-         JQlH05a60kGpqgqUQpR9wu7PseqG4MYH+t6HVpdsqiedui5kuSDmigWkn2MaqMKFhiIA
-         Tfjw==
-X-Gm-Message-State: APjAAAU3RggDDMMz95F5K/iZwP1j31aeZMLSjaqFefadJgsMuwizeLAM
-        MX7oitCOMhK0fl6qcubZUY6ZTw==
-X-Google-Smtp-Source: APXvYqxjztcFISdvUxpx1aE88ZJTxLK90schhsrtICBont1kx2A2OOF1Dxai5vgrM1pndnCrIb5a1w==
-X-Received: by 2002:a63:4553:: with SMTP id u19mr14508400pgk.436.1571899562379;
-        Wed, 23 Oct 2019 23:46:02 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id l72sm2536946pjb.7.2019.10.23.23.46.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 23 Oct 2019 23:46:01 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/fair: Make sched-idle cpu selection consistent throughout
-Date:   Thu, 24 Oct 2019 12:15:27 +0530
-Message-Id: <5eba2fb4af9ebc7396101bb9bd6c8aa9c8af0710.1571899508.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UclEmd8YX++NCf8kPKkA+46Pa3LHuXqjjWzo9Z3XdYM=;
+        b=EMEnabvMvyPmRZ7YqsIj1E2uZNWmKIpHvSIjha+cI8Ul3rhpzgw+EdaQZfAWz/G/2X
+         pJD4t7iU4ZPsAS6Ofb+bckC5w1X4zxpeSONxXxWGB7S/aKNxF/0reJKqn/3vnmDGzpnc
+         72xZ0bRPbQ10DuiTFTTvKmhPFag5BxZVgW+YDZE+JD65vhXOTSE+o7gkesQ/a663y6Sl
+         HXa2eUIiVvpGItTSa1aTbvW4//24y0nVMd4s87wxzQINT0xnd6sSeD120F0lEph//bA9
+         HjOs8Qb5PkefL9ZEBVzmIPSHMHvRHkkoopdYaa7CikBgi9AL+L33hxfwq/wvoUmCZwdz
+         JFZQ==
+X-Gm-Message-State: APjAAAUL/01bNN6a8T71rvCzcqJJrWiDWT61ZYjplmVs9/2Yx4OqrKR2
+        N67eNAUfiSoOgzwz+UNbrVp8+w==
+X-Google-Smtp-Source: APXvYqypA7QDjMUQSuSTEtC5xtMr2uR+W7rMNaXx381pXfKuL3lSrfZeffkl8xEc2dweA8MOowi2LA==
+X-Received: by 2002:adf:e34b:: with SMTP id n11mr2183760wrj.250.1571899648399;
+        Wed, 23 Oct 2019 23:47:28 -0700 (PDT)
+Received: from dell ([95.149.164.99])
+        by smtp.gmail.com with ESMTPSA id q11sm1694268wmq.21.2019.10.23.23.47.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 23 Oct 2019 23:47:27 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 07:47:26 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v7 0/9] backlight: gpio: simplify the driver
+Message-ID: <20191024064726.GB15843@dell>
+References: <20191022083630.28175-1-brgl@bgdev.pl>
+ <CAMRc=MeyrDZgmHJ+2SMipP7y9NggxiVfkAh4kCLePFWvUku9aQ@mail.gmail.com>
+ <20191023155941.q563d3cfizre4zvt@holly.lan>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191023155941.q563d3cfizre4zvt@holly.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are instances where we keep searching for an idle CPU despite
-having a sched-idle cpu already (in find_idlest_group_cpu(),
-select_idle_smt() and select_idle_cpu() and then there are places where
-we don't necessarily do that and return a sched-idle cpu as soon as we
-find one (in select_idle_sibling()). This looks a bit inconsistent and
-it may be worth having the same policy everywhere.
+On Wed, 23 Oct 2019, Daniel Thompson wrote:
 
-On the other hand, choosing a sched-idle cpu over a idle one shall be
-beneficial from performance point of view as well, as we don't need to
-get the cpu online from a deep idle state which is quite a time
-consuming process and delays the scheduling of the newly wakeup task.
+> On Tue, Oct 22, 2019 at 11:29:54AM +0200, Bartosz Golaszewski wrote:
+> > wt., 22 paź 2019 o 10:36 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+> > >
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > While working on my other series related to gpio-backlight[1] I noticed
+> > > that we could simplify the driver if we made the only user of platform
+> > > data use GPIO lookups and device properties. This series tries to do
+> > > that.
+> > >
+> > > First two patches contain minor fixes. Third patch makes the driver
+> > > explicitly drive the GPIO line. Fourth patch adds all necessary data
+> > > structures to ecovec24. Patch 5/9 unifies much of the code for both
+> > > pdata and non-pdata cases. Patches 6-7/9 remove unused platform data
+> > > fields. Last two patches contain additional improvements for the GPIO
+> > > backlight driver while we're already modifying it.
+> > >
+> > > I don't have access to this HW but hopefully this works. Only compile
+> > > tested.
+> > >
+> > > [1] https://lkml.org/lkml/2019/6/25/900
+> > >
+> > > v1 -> v2:
+> > > - rebased on top of v5.3-rc1 and adjusted to the recent changes from Andy
+> > > - added additional two patches with minor improvements
+> > >
+> > > v2 -> v3:
+> > > - in patch 7/7: used initializers to set values for pdata and dev local vars
+> > >
+> > > v3 -> v4:
+> > > - rebased on top of v5.4-rc1
+> > > - removed changes that are no longer relevant after commit ec665b756e6f
+> > >   ("backlight: gpio-backlight: Correct initial power state handling")
+> > > - added patch 7/7
+> > >
+> > > v4 -> v5:
+> > > - in patch 7/7: added a comment replacing the name of the function being
+> > >   pulled into probe()
+> > >
+> > > v5 -> v6:
+> > > - added a patch making the driver explicitly set the direction of the GPIO
+> > >   to output
+> > > - added a patch removing a redundant newline
+> > >
+> > > v6 -> v7:
+> > > - renamed the function calculating the new GPIO value for status update
+> > > - collected more tags
+> > >
+> > > Bartosz Golaszewski (9):
+> > >   backlight: gpio: remove unneeded include
+> > >   backlight: gpio: remove stray newline
+> > >   backlight: gpio: explicitly set the direction of the GPIO
+> > >   sh: ecovec24: add additional properties to the backlight device
+> > >   backlight: gpio: simplify the platform data handling
+> > >   sh: ecovec24: don't set unused fields in platform data
+> > >   backlight: gpio: remove unused fields from platform data
+> > >   backlight: gpio: use a helper variable for &pdev->dev
+> > >   backlight: gpio: pull gpio_backlight_initial_power_state() into probe
+> > >
+> > >  arch/sh/boards/mach-ecovec24/setup.c         |  33 +++--
+> > >  drivers/video/backlight/gpio_backlight.c     | 128 +++++++------------
+> > >  include/linux/platform_data/gpio_backlight.h |   3 -
+> > >  3 files changed, 69 insertions(+), 95 deletions(-)
+> > >
+> > >
+> > 
+> > Lee, Daniel, Jingoo,
+> > 
+> > Jacopo is travelling until November 1st and won't be able to test this
+> > again before this date. Do you think you can pick it up and in case
+> > anything's broken on SH, we can fix it after v5.5-rc1, so that it
+> > doesn't miss another merge window?
 
-This patch tries to simplify code around sched-idle cpu selection and
-make it consistent throughout.
+November 1st (-rc6) will be fine.
 
-FWIW, tests were done with the help of rt-app (8 SCHED_OTHER and 5
-SCHED_IDLE tasks, not bound to any cpu) on ARM platform (octa-core), and
-no significant difference in scheduling latency of SCHED_OTHER tasks was
-found.
+I'd rather apply it late-tested than early-non-tested.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- kernel/sched/fair.c | 34 ++++++++++++----------------------
- 1 file changed, 12 insertions(+), 22 deletions(-)
+Hopefully Jacopo can prioritise testing this on Thursday or Friday,
+since Monday will be -rc7 which is really cutting it fine.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a81c36472822..bb367f48c1ef 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5545,7 +5545,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 	unsigned int min_exit_latency = UINT_MAX;
- 	u64 latest_idle_timestamp = 0;
- 	int least_loaded_cpu = this_cpu;
--	int shallowest_idle_cpu = -1, si_cpu = -1;
-+	int shallowest_idle_cpu = -1;
- 	int i;
- 
- 	/* Check if we have any choice: */
-@@ -5554,6 +5554,9 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 
- 	/* Traverse only the allowed CPUs */
- 	for_each_cpu_and(i, sched_group_span(group), p->cpus_ptr) {
-+		if (sched_idle_cpu(i))
-+			return i;
-+
- 		if (available_idle_cpu(i)) {
- 			struct rq *rq = cpu_rq(i);
- 			struct cpuidle_state *idle = idle_get_state(rq);
-@@ -5576,12 +5579,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 				latest_idle_timestamp = rq->idle_stamp;
- 				shallowest_idle_cpu = i;
- 			}
--		} else if (shallowest_idle_cpu == -1 && si_cpu == -1) {
--			if (sched_idle_cpu(i)) {
--				si_cpu = i;
--				continue;
--			}
--
-+		} else if (shallowest_idle_cpu == -1) {
- 			load = cpu_load(cpu_rq(i));
- 			if (load < min_load) {
- 				min_load = load;
-@@ -5590,11 +5588,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 		}
- 	}
- 
--	if (shallowest_idle_cpu != -1)
--		return shallowest_idle_cpu;
--	if (si_cpu != -1)
--		return si_cpu;
--	return least_loaded_cpu;
-+	return shallowest_idle_cpu != -1 ? shallowest_idle_cpu : least_loaded_cpu;
- }
- 
- static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p,
-@@ -5747,7 +5741,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
-  */
- static int select_idle_smt(struct task_struct *p, int target)
- {
--	int cpu, si_cpu = -1;
-+	int cpu;
- 
- 	if (!static_branch_likely(&sched_smt_present))
- 		return -1;
-@@ -5755,13 +5749,11 @@ static int select_idle_smt(struct task_struct *p, int target)
- 	for_each_cpu(cpu, cpu_smt_mask(target)) {
- 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 			continue;
--		if (available_idle_cpu(cpu))
-+		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			return cpu;
--		if (si_cpu == -1 && sched_idle_cpu(cpu))
--			si_cpu = cpu;
- 	}
- 
--	return si_cpu;
-+	return -1;
- }
- 
- #else /* CONFIG_SCHED_SMT */
-@@ -5790,7 +5782,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	u64 time, cost;
- 	s64 delta;
- 	int this = smp_processor_id();
--	int cpu, nr = INT_MAX, si_cpu = -1;
-+	int cpu, nr = INT_MAX;
- 
- 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
- 	if (!this_sd)
-@@ -5818,13 +5810,11 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 
- 	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
- 		if (!--nr)
--			return si_cpu;
-+			return -1;
- 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 			continue;
--		if (available_idle_cpu(cpu))
-+		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			break;
--		if (si_cpu == -1 && sched_idle_cpu(cpu))
--			si_cpu = cpu;
- 	}
- 
- 	time = cpu_clock(this) - time;
+> Outside of holidays and other emergencies Lee usually collects up the
+> patches for backlight. I'm not sure when he plans to close things for
+> v5.5.
+
+In special cases such as these I can remain flexible.
+
 -- 
-2.21.0.rc0.269.g1a574e7a288b
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
