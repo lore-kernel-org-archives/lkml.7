@@ -2,117 +2,75 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26517CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97D4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA6B205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cFmQQmfl"
+	by mail.kernel.org (Postfix) with ESMTP id A988921872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440067AbfJXSPg (ORCPT
+        id S2504040AbfJXSRf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:15:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36026 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404839AbfJXSPf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:15:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w18so26597716wrt.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 11:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=J2ir4XLA19BNjmSyUtsG7BoFC3h+5yshsn0Pcu0yv9s=;
-        b=cFmQQmflpmhWqyGTh8Xwv4h3dqDANp/ERbzTV8iFVRmpZnjl2ZfcmBXbDFpSEKLcuj
-         7Kao2lLXFHNA/kztMlJghYNUCGzKUwW0AqH/BCf1aWkFxJOhSa/tRMwGjYS7ydpgm70R
-         23CAgIZgW7kH4aZR00iqNWeD9ICZ7uXD5IeWc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=J2ir4XLA19BNjmSyUtsG7BoFC3h+5yshsn0Pcu0yv9s=;
-        b=IpaZEnviy0UNlL7Jlp6Y/T6F2ILmUidkC1SAUBLAej7bgmGFts9uRgZv4XlX7VXvdo
-         BXEbwg/MXuH1Mmck4Qn1mr+Msw1og03LbP1HFzgEjV4uOy6Jyo1bDfwTYyyPl9q4zKVU
-         8BI+KbQL4cBov623k/zDhRxjEFu/F6xM8pBJyt6ja3mBArRRF3GkevHwZta/iOJsS3or
-         PLhrOUUqYIqUvi/UVATguTpUxya03x0aDTkANGJEu2dd51I3eafG2fnGm/yTHsTVwjlB
-         bNDgz2dsI8z4HKuMBL9DPaeGK2mBqDMqRknhQpdZtHtkhf/pSC3MFME/PNQQfmxcEY6b
-         2lZA==
-X-Gm-Message-State: APjAAAVJUHgBftlrDeOLtIaHh3JRZ+e9UOdT3PfAj3ecxsvQ4k/JLYnU
-        R3uLm2/C53xkLBOSobhOt9kt9Co2S/Q=
-X-Google-Smtp-Source: APXvYqxbtmW8aM8LOaqQPAafbInsxvQYZGbhtuk5G4fyhXOLOuM665cIJOMPyoQgbh/yOLZBwxOwnw==
-X-Received: by 2002:adf:f54c:: with SMTP id j12mr4255462wrp.182.1571940933431;
-        Thu, 24 Oct 2019 11:15:33 -0700 (PDT)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d199sm3602260wmd.35.2019.10.24.11.15.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 11:15:32 -0700 (PDT)
-Subject: Re: [PATCH] scsi: lpfc: lpfc_nvmet.c: Fix Use plain integer as NULL
- pointer
-To:     Saurav Girepunje <saurav.girepunje@gmail.com>,
-        dick.kennedy@broadcom.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     saurav.girepunje@hotmail.com
-References: <20191024030857.GA12097@saurav>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <c08db818-8c35-e4a0-2ff3-53820075d859@broadcom.com>
-Date:   Thu, 24 Oct 2019 11:15:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 14:17:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404839AbfJXSRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 14:17:35 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A204D20684;
+        Thu, 24 Oct 2019 18:17:33 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 14:17:31 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com, jeyu@kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191024141731.5c7c414c@gandalf.local.home>
+In-Reply-To: <20191024164320.GD4131@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+        <20191018074634.801435443@infradead.org>
+        <20191021222110.49044eb5@oasis.local.home>
+        <20191022202401.GO1817@hirez.programming.kicks-ass.net>
+        <20191023145245.53c75d70@gandalf.local.home>
+        <20191024101609.GA4131@hirez.programming.kicks-ass.net>
+        <20191024110024.324a9435@gandalf.local.home>
+        <20191024164320.GD4131@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191024030857.GA12097@saurav>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 24 Oct 2019 18:43:20 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
+> > 
+> >   CC [M]  drivers/gpu/drm/i915/gem/i915_gem_context.o
+> > /work/git/linux-trace.git/kernel/trace/trace_events_hist.c: In function ‘register_synth_event’:
+> > /work/git/linux-trace.git/kernel/trace/trace_events_hist.c:1157:15: error: ‘struct trace_event_class’ has no member named ‘define_fields’; did you mean ‘get_fields’?
+> >   call->class->define_fields = synth_event_define_fields;
+> >                ^~~~~~~~~~~~~
+> >                get_fields
+> > make[3]: *** [/work/git/linux-trace.git/scripts/Makefile.build:265: kernel/trace/trace_events_hist.o] Error 1
+> > make[3]: *** Waiting for unfinished jobs....  
+> 
+> allmodconfig clean
+> 
+> (omg, so much __field(); fail)
 
-On 10/23/2019 8:09 PM, Saurav Girepunje wrote:
-> Replace assignment of 0 to pointer with NULL assignment.
->
-> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
-> ---
->   drivers/scsi/lpfc/lpfc_nvmet.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-> index faa596f9e861..f6ebfe05224c 100644
-> --- a/drivers/scsi/lpfc/lpfc_nvmet.c
-> +++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-> @@ -3364,7 +3364,7 @@ lpfc_nvmet_sol_fcp_issue_abort(struct lpfc_hba *phba,
->   	/* ABTS WQE must go to the same WQ as the WQE to be aborted */
->   	abts_wqeq->hba_wqidx = ctxp->wqeq->hba_wqidx;
->   	abts_wqeq->wqe_cmpl = lpfc_nvmet_sol_fcp_abort_cmp;
-> -	abts_wqeq->iocb_cmpl = 0;
-> +	abts_wqeq->iocb_cmpl = NULL;
->   	abts_wqeq->iocb_flag |= LPFC_IO_NVME;
->   	abts_wqeq->context2 = ctxp;
->   	abts_wqeq->vport = phba->pport;
-> @@ -3499,7 +3499,7 @@ lpfc_nvmet_unsol_ls_issue_abort(struct lpfc_hba *phba,
->   
->   	spin_lock_irqsave(&phba->hbalock, flags);
->   	abts_wqeq->wqe_cmpl = lpfc_nvmet_xmt_ls_abort_cmp;
-> -	abts_wqeq->iocb_cmpl = 0;
-> +	abts_wqeq->iocb_cmpl = NULL;
->   	abts_wqeq->iocb_flag |=  LPFC_IO_NVME_LS;
->   	rc = lpfc_sli4_issue_wqe(phba, ctxp->hdwq, abts_wqeq);
->   	spin_unlock_irqrestore(&phba->hbalock, flags);
+Well it built without warnings and passed the ftrace selftests.
 
-Thanks
+I haven't ran it through the full suite, but that can wait for the v5.
 
-Reviewed-by: James Smart <james.smart@broadcom.com>
-
--- james
-
+-- Steve
