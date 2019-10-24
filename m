@@ -2,134 +2,182 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4D8CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50871CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F3521655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1916D20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 12:02:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFJf8rPV"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="arp4N/Fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409285AbfJXL75 (ORCPT
+        id S2439536AbfJXMCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:59:57 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:45192 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404689AbfJXL74 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:59:56 -0400
-Received: by mail-ua1-f67.google.com with SMTP id j5so7041550uak.12
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 04:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HQknb1r4LbQcuicy72xSu/tgsIIaO3/jaqndS1RuQsc=;
-        b=VFJf8rPVcfBhCVGRiyWkFLZVnbUFpTifhzTj5iKAGigKUYb2mx6ocPrzDzt6IJChrs
-         oOOO15Q/mhQIUzQPhtxvo0TNjytFVHYbU7kRUIRJ9vEQB3hX1ULsEXYVSfyrc3EpN7hf
-         Cw1B4hyYPGiCX+Bqb+qgxl3inKrOU8PJRNFNQSNXyp/nBjSq0ew9NnWXz5IocrCkXRwB
-         hA4KZF1HTMR2ym6jT85fQiHJ5AgYmgXz7ELPcVkznCESu75Xrol0sfEGsse5mdY1+LaR
-         MHx7VEOcg9hUEPRqPuC7CXOjt/MOtoiaAjdLsFOHYcr33rEJl1usNxI1z5roeADziwwk
-         dH/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HQknb1r4LbQcuicy72xSu/tgsIIaO3/jaqndS1RuQsc=;
-        b=dWkOV91uVj9uiM+PSHmtaq9xjkdlp3hvBAS3NLiq9cXwaeUsdVKKQa/iYRHW0tRhP0
-         piTa3QShcb5iO4PDflPG9ez7mJ/OanuXzzt7EsOnLAVb9j8cIk+A6cg+XL7WbP9VIIzi
-         0H83en7d7ZyDMHI42QzY1E2v3aY3qLQg1Z5pHTsuE1V654MsWmm6wFtgcoL9p1tz+aRp
-         D9EUUJYMdj5pfPuwxCGtvmpqc4x8bvRfNxQcuChKsorkdsdj+BjFOlYcHiZkZiT+FFEW
-         x9K3KdCwbegoaS8fz2lbOBny+rvtFQMZepFzLz1YvRvJFWSnOvChH+JT+Ao/CbysvVXU
-         m9Iw==
-X-Gm-Message-State: APjAAAWpDkZreJ2yqedUHPFzZaeidBszK9afz8voLdAk+Za43m7O/f4s
-        8fr+a9ojvJ+LFMDIWIw8LBQcVFgrgaOsxFqi+DXBPw==
-X-Google-Smtp-Source: APXvYqx8rjUk6KPqTIkjXHT1x3MUAIDpq7Im00SmJqvx96HxmfrRAzRMzoQEKZ+wnRhBT8VyGXo59Y1YR0OaexZHsWY=
-X-Received: by 2002:ab0:7043:: with SMTP id v3mr8397635ual.84.1571918395846;
- Thu, 24 Oct 2019 04:59:55 -0700 (PDT)
+        Thu, 24 Oct 2019 08:02:31 -0400
+Received: from mout.gmx.net ([212.227.15.19]:42985 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfJXMCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 08:02:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1571918532;
+        bh=BtPN5byu76jvQFbrBcOcxvBymOTJxo5DdTxvJCjqupU=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=arp4N/FbyrbbrWU2bD10SeR2AHU/OtThpy/vmPEoLp4mB3hmt6/tLqAjj9MLN4FME
+         ZJg28B8TRDhkXFzuy/9wvgf33CaVYEmHYHbzyvCrkb0i3EIteFJYqzfToSFaYMCCKN
+         kAFJV20xpM53FPOnRslQhkGZSALUVtoyN+494HMw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.166.174]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPGRz-1idtks3oVh-00PdKv; Thu, 24
+ Oct 2019 14:02:11 +0200
+Date:   Thu, 24 Oct 2019 14:02:08 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Mike Rapoport <rppt@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
+Message-ID: <20191024120208.GA17545@ls3530.fritz.box>
+References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+ <1571822941-29776-9-git-send-email-rppt@kernel.org>
 MIME-Version: 1.0
-References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com> <9b53139b7043572b3846a214694dbf8fe1f56f50.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <9b53139b7043572b3846a214694dbf8fe1f56f50.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 24 Oct 2019 13:59:44 +0200
-Message-ID: <CACRpkdZ5CC4mtNYrurx_2M_3BN6Tu7rQ=d4-y-HOsDbRteKjjA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 12/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571822941-29776-9-git-send-email-rppt@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Provags-ID: V03:K1:r1gv/v0lqEe+bOB9wfxWZhIMST35qEY+LNwPO498vtsnue1RXl2
+ lWQDLVWd80Z6a4Lj04aLo5FkmTg3OVUbn4v8jLwYceC1cgAZYOhiEAmkfk0R2eWIIxUv9gA
+ cbubaamfTzFraEZ3mzmS2EFn24YRuV495qnagXRfvZoqh4K9b3N6jXYf5O3VWfod+/MTcmQ
+ CN76kMYrHU87gXf/G1QHw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iFOcPc+fCqA=:5hjzE9MtPU6n/6E7zSmXXU
+ vJmjNuJ/0EYDqaUyH3HGtsNlpH2mXkPbwvmlQ/LFEeqrTQSy2gH7lTHRbwLirGOvXSU6IpWfR
+ GcgI/eUOsdbtk2G2xIwPCY2SxPcFVIh1HNmpxqzBAPug89a0mNEsepSDEM7GFKhfdGtI2bltZ
+ dPO9/usBAc4ROUDTvAHnWWWcuEu2TfV2Z8WMgaPtIjTN9qc78oZaoaEfEKzcB5j0GVrPLpDm9
+ vzxGDbCHguHfr4FfBvl1Zy7kyr6Q5GZG8rg3edQmKQWDtFTvo4F3rjoqiyNzhII+XR8x6w6pk
+ +94THkXKOVwumBi7Cu06zOiJEaNHnhqaERR6yduGtadCSxtUdT/TRrilO+JLRq/npk8PZ4N4/
+ pXtCpT8/KkJxOKXRwZfdMNLqPHsIO/+2lRexjES0xnRxTZOpZZupplQGoNe2mxfxfHze/vxdL
+ wW2zFmJsU0WWKxED5IOgZnkt9g0K7urfcqCCYtIrDGlCMc+4kxVNCdux0w4RGN6HGRtaP0ugo
+ NWjE06Nkj+M3XWf8u4//ZXABix1FEnyvFrhDL3+IWmSoz0PpC439uEkks/RSEQFz3nSCM8nZ0
+ bKDTtptootL7Ivacj6vh3lnCdjgfiX9ri59UfUu8nyAxVtWeC87EIyz4EHpxKbD4rpBA6T3O2
+ /9sG0pYVSVoF037pbGXgZ+Sf9JxCVQ76ejH9vb2AnD5g01YfQG5mstre90Uj+Iatfj0FqnGBL
+ 6XTfyj/54bhXh5HNAlyqjiwyPCCZgCZboVw3UrKQzDfx2X7JM9tqUtJme8Yse0NjT8mz+msY1
+ /OQP+JDsrDfz3AtxOtk2LbkF81bYt9Qx9VjswluvAudCxy746DoM+hkXqbUZzk4e/QZog1Do4
+ 99TIsrrTZbKZmuup4qGj9LV6Xq5T7EbkrayAKfA2RhepIRLTY6y71d1srK++gVTY8gXKNFF5J
+ sXUNH0UNpNa8u91Vf4Vi225DOl0ImcQRAKC2I2Q/pC/3BaplwliJmRXLKkhjD9T5yzQPnRAJU
+ 8hhtbAyFiFTvLCVzGhyeW5MBrwD5S/fHQwIxeo+EAS/8lIGh2y1+zz9B6yWpHPKFSZSknipza
+ WjXDZ1g292htA5hXnYrC01xRvRNxbaucQvWvcTXaBgPP5VFmmWRzSEI41jssIWVNaajaN4Gr0
+ AVmO9BbOR9bEqpJ2yFFjuiaRVm35NNM15DcuyvVFi/ZuHa2GFUEzco6ahuaamUyU3EMSxPy3i
+ CDPXCle0+T3MuFUtNsbbdAOd7DvUtNynrNcAMRw==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matti,
-
-Thanks for your patch!
-
-On Thu, Oct 24, 2019 at 1:51 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
-
-> ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
-> to be used for general purposes. First 3 can be used as outputs
-> and 4.th pin can be used as input. Allow them to be controlled
-> via GPIO framework.
+* Mike Rapoport <rppt@kernel.org>:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 >
-> The driver assumes all of the pins are configured as GPIOs and
-> trusts that the reserved pins in other OTP configurations are
-> excluded from control using "gpio-reserved-ranges" device tree
-> property (or left untouched by GPIO users).
+> parisc has two or three levels of page tables and can use appropriate
+> pgtable-nopXd and folding of the upper layers.
 >
-> Typical use for 4.th pin (input) is to use it as HALL sensor
-> input so that this pin state is toggled when HALL sensor detects
-> LID position change (from close to open or open to close). PMIC
-> HW implements some extra logic which allows PMIC to power-up the
-> system when this pin is toggled. Please see the data sheet for
-> details of GPIO options which can be selcted by OTP settings.
+> Replace usage of include/asm-generic/4level-fixup.h and explicit
+> definitions of __PAGETABLE_PxD_FOLDED in parisc with
+> include/asm-generic/pgtable-nopmd.h for two-level configurations and wit=
+h
+> include/asm-generic/pgtable-nopmd.h for three-lelve configurations and
+> adjust page table manipulation macros and functions accordingly.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/parisc/include/asm/page.h    | 30 +++++++++++++---------
+>  arch/parisc/include/asm/pgalloc.h | 41 +++++++++++-------------------
+>  arch/parisc/include/asm/pgtable.h | 52 +++++++++++++++++++-------------=
+-------
+>  arch/parisc/include/asm/tlb.h     |  2 ++
+>  arch/parisc/kernel/cache.c        | 13 ++++++----
+>  arch/parisc/kernel/pci-dma.c      |  9 +++++--
+>  arch/parisc/mm/fixmap.c           | 10 +++++---
+>  7 files changed, 81 insertions(+), 76 deletions(-)
 
-spelling of selected
+Mike, thanks for this clean-up!
 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Your patch is functional OK. I successfully tested it with a 32-bit
+kernel in qemu, and with a 64-bit kernel on a physical box.
+For 64-bit you missed to adapt the parisc hugetlb code, so maybe you
+can add the patch below to your series?
 
-Overall looks very good.
+Other than that (and the lexical corrections which other already mentioned=
+):
+Acked-by: Helge Deller <deller@gmx.de>
 
-> +// SPDX-License-Identifier: GPL-2.0
+Thanks!
+Helge
 
-I think they want you to use GPL-2.0-only these days.
+=2D---------------
+parisc/hugetlb: use pgtable-nopXd instead of 4level-fixup
 
-> +#define BD71828_OUT 0
-> +#define BD71828_IN 1
+Signed-off-by: Helge Deller <deller@gmx.de>
 
-These have nothing to do with BD71828, just skip these defines
-and hardcode 0/1 in the code called from gpiolib. If we want defines
-for this they should be generically named and put in
-<linux/gpio/driver.h>
+diff --git a/arch/parisc/mm/hugetlbpage.c b/arch/parisc/mm/hugetlbpage.c
+index d578809e55cf..0e1e212f1c96 100644
+=2D-- a/arch/parisc/mm/hugetlbpage.c
++++ b/arch/parisc/mm/hugetlbpage.c
+@@ -49,6 +49,7 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
+ 			unsigned long addr, unsigned long sz)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte =3D NULL;
+@@ -61,7 +62,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
+ 	addr &=3D HPAGE_MASK;
 
-Nice use of the config API!
+ 	pgd =3D pgd_offset(mm, addr);
+-	pud =3D pud_alloc(mm, pgd, addr);
++	p4d =3D p4d_offset(pgd, addr);
++	pud =3D pud_alloc(mm, p4d, addr);
+ 	if (pud) {
+ 		pmd =3D pmd_alloc(mm, pud, addr);
+ 		if (pmd)
+@@ -74,6 +76,7 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ 		       unsigned long addr, unsigned long sz)
+ {
+ 	pgd_t *pgd;
++	p4d_t *p4d;
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte =3D NULL;
+@@ -82,11 +85,14 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
 
-Yours,
-Linus Walleij
+ 	pgd =3D pgd_offset(mm, addr);
+ 	if (!pgd_none(*pgd)) {
+-		pud =3D pud_offset(pgd, addr);
+-		if (!pud_none(*pud)) {
+-			pmd =3D pmd_offset(pud, addr);
+-			if (!pmd_none(*pmd))
+-				pte =3D pte_offset_map(pmd, addr);
++		p4d =3D p4d_offset(pgd, addr);
++		if (!p4d_none(*p4d)) {
++			pud =3D pud_offset(p4d, addr);
++			if (!pud_none(*pud)) {
++				pmd =3D pmd_offset(pud, addr);
++				if (!pmd_none(*pmd))
++					pte =3D pte_offset_map(pmd, addr);
++			}
+ 		}
+ 	}
+ 	return pte;
+
+
+
+
+
