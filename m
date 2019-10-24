@@ -6,100 +6,88 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE193CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87573CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E2720684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C56420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407705AbfJXLGP (ORCPT
+        id S2407880AbfJXLGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:06:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39108 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390184AbfJXLGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:06:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EF395B360;
-        Thu, 24 Oct 2019 11:06:12 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 13:06:10 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for interrupt
- handling
-Message-ID: <20191024110610.lwwy75dkgwjdxml6@beryllium.lan>
-References: <20191018082817.111480-1-dwagner@suse.de>
- <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
- <20191022101747.001b6d06@cakuba.netronome.com>
- <20191023074719.gcov5xfrcvns5tlg@beryllium.lan>
- <20191023080640.zcw2f2v7fpanoewm@beryllium.lan>
- <20191024104317.32bp32krrjmfb36p@linutronix.de>
+        Thu, 24 Oct 2019 07:06:49 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60864 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390184AbfJXLGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 07:06:48 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id A11C58022A; Thu, 24 Oct 2019 13:06:30 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 13:06:46 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
+        <jose.souza@intel.com>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        gregkh@linuxfoundation.org, mathewk@google.com,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
+        jsbarnes@google.com, rajatxjain@gmail.com
+Subject: Re: [PATCH] drm: Add support for integrated privacy screens
+Message-ID: <20191024110646.GA3419@amd>
+References: <20191023001206.15741-1-rajatja@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
 Content-Disposition: inline
-In-Reply-To: <20191024104317.32bp32krrjmfb36p@linutronix.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191023001206.15741-1-rajatja@google.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:43:17PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-10-23 10:06:40 [+0200], Daniel Wagner wrote:
-> 
-> Since this does not improve the situation as a whole it might be best to
-> remove the code as suggested by Daniel.
 
-I have tried to fix the above issue. It looks like the interrupt
-handler doesn't work at all. Below is the log with all debug prints
-enabled. I just see one PHY interrupt. Don't know if that is okay or
-not.
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue 2019-10-22 17:12:06, Rajat Jain wrote:
+> Certain laptops now come with panels that have integrated privacy
+> screens on them. This patch adds support for such panels by adding
+> a privacy-screen property to the drm_connector for the panel, that
+> the userspace can then use to control and check the status. The idea
+> was discussed here:
 
-[    3.719647] lan78xx 1-1.1.1:1.0 (unnamed net_device) (uninitialized): deferred multicast write 0x00007ca0
-[    3.861125] lan78xx 1-1.1.1:1.0 (unnamed net_device) (uninitialized): No External EEPROM. Setting MAC Speed
-[    3.872500] libphy: lan78xx-mdiobus: probed
-[    3.883927] lan78xx 1-1.1.1:1.0 (unnamed net_device) (uninitialized): registered mdiobus bus usb-001:004
-[    3.893600] lan78xx 1-1.1.1:1.0 (unnamed net_device) (uninitialized): phydev->irq = 79
-[    4.274367] random: crng init done
-[    4.929478] lan78xx 1-1.1.1:1.0 eth0: receive multicast hash filter
-[    4.935922] lan78xx 1-1.1.1:1.0 eth0: deferred multicast write 0x00007ca2
-[    6.537962] lan78xx 1-1.1.1:1.0 eth0: PHY INTR: 0x00020000
-[    6.549129] lan78xx 1-1.1.1:1.0 eth0: speed: 1000 duplex: 1 anadv: 0x05e1 anlpa: 0xc1e1
-[    6.557293] lan78xx 1-1.1.1:1.0 eth0: rx pause disabled, tx pause disabled
-[    6.572581] Sending DHCP requests ..., OK
-[   12.200693] IP-Config: Got DHCP answer from 192.168.19.2, my address is 192.168.19.53
-[   12.208654] IP-Config: Complete:
-[   12.211929]      device=eth0, hwaddr=b8:27:eb:85:c7:c9, ipaddr=192.168.19.53, mask=255.255.255.0, gw=192.168.19.1
-[   12.222350]      host=192.168.19.53, domain=, nis-domain=(none)
-[   12.228364]      bootserver=192.168.19.2, rootserver=192.168.19.2, rootpath=
-[   12.228369]      nameserver0=192.168.19.2
-[   12.239812] ALSA device list:
-[   12.242839]   No soundcards found.
-[   12.256896] VFS: Mounted root (nfs filesystem) on device 0:19.
-[   12.263501] devtmpfs: mounted
-[   12.273037] Freeing unused kernel memory: 5504K
-[   12.277769] Run /sbin/init as init process
+Much better than separate /sys interface, thanks!
+								Pavel
+							=09
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-and after this the NFS timeouts appear. I tried to figure out how the
-PHY works [1] and played a bit around with fiddling with a few bits in
-the registers. But now success at all.
+iEYEARECAAYFAl2xhcYACgkQMOfwapXb+vIjEwCfZNt9uNWn1cpGqm52zi2jnmLS
+FSgAn2E8jnEY2ASQyMChHIEUwyWX5mIJ
+=yjtg
+-----END PGP SIGNATURE-----
 
-I agree with Sebastian, with the revert the driver works at least.
-
-Thanks,
-Daniel
-
-[1] http://ww1.microchip.com/downloads/en/DeviceDoc/LAN7800-Data-Sheet-DS00001992G.pdf
+--cNdxnHkX5QqsyA0e--
