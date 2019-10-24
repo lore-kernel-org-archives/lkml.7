@@ -2,269 +2,226 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F77CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B900DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0221520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9A920856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:02:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B/DRKA86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387653AbfJXI5Q (ORCPT
+        id S2392958AbfJXJC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:57:16 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:36447 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727079AbfJXI5P (ORCPT
+        Thu, 24 Oct 2019 05:02:56 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46831 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387741AbfJXJCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:57:15 -0400
-X-UUID: fcd8404f8dd847e583cfd21705ce994d-20191024
-X-UUID: fcd8404f8dd847e583cfd21705ce994d-20191024
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1577409883; Thu, 24 Oct 2019 16:57:09 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 24 Oct 2019 16:57:05 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 24 Oct 2019 16:57:05 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH v3 1/2] kasan: detect negative size in memory operation function
-Date:   Thu, 24 Oct 2019 16:57:06 +0800
-Message-ID: <20191024085706.12844-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 24 Oct 2019 05:02:55 -0400
+Received: by mail-il1-f193.google.com with SMTP id m16so15254213iln.13
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 02:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Shf6R99Mq/i6rKVdmQjchCTfPEMVnKeGQOrlMCCw8ng=;
+        b=B/DRKA866HSovygatg9KkAg1y0TgfZdkYdE+6n9uttwiItcgZIboqxBPbgT/zvTU4g
+         SYjSWdKnRhMH2okbMN2D6gHouUNMqa13oiXDPDnyVoML2szIYG0QeU+dSklzIk6hsTnM
+         MDhzZ4YI/TmiQsKWi+tkrDaYBpKs6CvxvRmE8ikoKOfUOsMdveuzcmCzqskzRzrNEBM0
+         rHHZDYEMKuZGtVSNoZ5MsRv7aZBgT+SDpjGWLUskWGiY/BqwbXvXGx0lm/gAPSUi4cO0
+         W+3yi7qry+lVjlMD0qpqfbP/U6WCy4PeX39HGVlxMnECP1xdSO+0KXBr8NIh/geS/dDW
+         ioXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Shf6R99Mq/i6rKVdmQjchCTfPEMVnKeGQOrlMCCw8ng=;
+        b=ILDTqMLsBE0PoMlq9JWQriixgv5xt/Hy/xh80CEKxI9DO5rVlaitmAC68JgaH79j1i
+         I9bqpoqap17gWIrnPR5OJn24ZUILymZ4miNvq6WV43HMTlMHU/+gsCjEE7+ddZhku87S
+         G2wzu+/hK+ENTNfAcYuLHXT7I7Mof6JQ/M0OLTHuNhF57FcfFZrcbutYyPGjy5I+TndK
+         0eiKjr82jg9WlreV665U032IKtNqM8jLgjLBYBUPsSYEp6DFsLo7NHFrHbxkQOa0ap8t
+         PRwcZzSRYFyAh4tZpuB4VUGmnzjRdM8QHtlaQxbHITj9lp9h2CfiI/ZTMG7v6bJXauTM
+         mVFA==
+X-Gm-Message-State: APjAAAXZOsChToaF5DgO7pFtCBddQRiWIrgGX3Lri+Iyr9fgrlruBDUz
+        p00K63B920gryi1tnq5A1ZyRodWSMhyz2B67hRXEjejtco+Suw==
+X-Google-Smtp-Source: APXvYqyLEUaVof2ujdEi4OEB+nWP81XWCGM4dE5QJmOUS0gJDvfBOFu/gujfa9CKDGOOJYVz7WhVKs54g7CF+tZHVvM=
+X-Received: by 2002:a92:aa48:: with SMTP id j69mr25244745ili.162.1571907774269;
+ Thu, 24 Oct 2019 02:02:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20191022085924.92783-1-pumahsu@google.com> <20191023083221.GB8828@kuha.fi.intel.com>
+ <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net> <20191023142900.GA15396@kuha.fi.intel.com>
+ <20191023150126.GA16612@roeck-us.net> <20191023155757.GB15396@kuha.fi.intel.com>
+In-Reply-To: <20191023155757.GB15396@kuha.fi.intel.com>
+From:   Puma Hsu <pumahsu@google.com>
+Date:   Thu, 24 Oct 2019 17:02:18 +0800
+Message-ID: <CAGCq0LZGz04JCTEJXrBqs4ENybQih6zKWTacq9T9DKPNOQAfMw@mail.gmail.com>
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector orientation
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Kyle Tso <kyletso@google.com>,
+        Albert Wang <albertccwang@google.com>,
+        Chien Kun Niu <rickyniu@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN missed detecting size is negative numbers in memset(), memcpy(),
-and memmove(), it will cause out-of-bounds bug, so needs to be detected
-by KASAN.
+Yes, generally this might be purely informational or be a dynamically
+debuggable
+mechanism for end user as I mentioned in previous discussion
+thread(https://lkml.org/lkml/2019/10/22/198).
+Could I know if it is not suitable that we expose a file for
+informational usage?
 
-If size is negative numbers, then it has three reasons to be
-defined as heap-out-of-bounds bug type.
-1) Casting negative numbers to size_t would indeed turn up as
-   a large size_t and its value will be larger than ULONG_MAX/2,
-   so that this can qualify as out-of-bounds.
-2) If KASAN has new bug type and user-space passes negative size,
-   then there are duplicate reports. So don't produce new bug type
-   in order to prevent duplicate reports by some systems (e.g. syzbot)
-   to report the same bug twice.
-3) When size is negative numbers, it may be passed from user-space.
-   So we always print heap-out-of-bounds in order to prevent that
-   kernel-space and user-space have the same bug but have duplicate
-   reports.
 
-KASAN report:
+If everyone agreed above, about the definition of =E2=80=9Cunknown=E2=80=9D=
+ and the condition
+=E2=80=9Cdon=E2=80=99t know the orientation=E2=80=9D, what about adding add=
+itional return value?
+  1. For original =E2=80=9Cunknown=E2=80=9D, it is a generic unknown state =
+which can
+indicate no
+      matter connector is disconnected, cannot specify which cc side
+is configured(such as Ra-Ra),
+      or even driver can not know the orientation.
+  2. New additional value =E2=80=9Cunavailable=E2=80=9D, it can be used to
+specifically explicate that
+      driver can not know the orientation.
+Take UCSI as example, it can use generic =E2=80=9Cunknown=E2=80=9D or =E2=
+=80=9Cunavailable=E2=80=9D if
+it wants.
+But if it exposes =E2=80=9Cunavailable=E2=80=9D, then application in user s=
+pace can
+know that this attribute is not useful.
 
- BUG: KASAN: heap-out-of-bounds in kmalloc_memmove_invalid_size+0x70/0xa0
- Read of size 18446744073709551608 at addr ffffff8069660904 by task cat/72
 
- CPU: 2 PID: 72 Comm: cat Not tainted 5.4.0-rc1-next-20191004ajb-00001-gdb8af2f372b2-dirty #1
- Hardware name: linux,dummy-virt (DT)
- Call trace:
-  dump_backtrace+0x0/0x288
-  show_stack+0x14/0x20
-  dump_stack+0x10c/0x164
-  print_address_description.isra.9+0x68/0x378
-  __kasan_report+0x164/0x1a0
-  kasan_report+0xc/0x18
-  check_memory_region+0x174/0x1d0
-  memmove+0x34/0x88
-  kmalloc_memmove_invalid_size+0x70/0xa0
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+I summarize the proposal definition below:
+ - unknown (generic unknown. driver don=E2=80=99t or can=E2=80=99t know the=
+ polarity,
+                      e.g. disconnected, both cc1 and cc2 are the same, )
+ - normal (configured in cc1 side)
+ - reversed (configured in cc2 side)
+ - unavailable (not support the polarity detection)
 
-Changes in v2:
-Fix the indentation bug, thanks for the reminder Matthew.
 
-Changes in v3:
-Add a confition for memory operation function, need to
-avoid the false alarm when KASAN un-initialized.
+Thanks in advance.
+Puma Hsu
 
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Reported-by: kernel test robot <lkp@intel.com>
----
- mm/kasan/common.c         | 18 +++++++++++++-----
- mm/kasan/generic.c        |  5 +++++
- mm/kasan/generic_report.c | 18 ++++++++++++++++++
- mm/kasan/report.c         |  2 +-
- mm/kasan/tags.c           |  5 +++++
- mm/kasan/tags_report.c    | 18 ++++++++++++++++++
- 6 files changed, 60 insertions(+), 6 deletions(-)
 
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 6814d6d6a023..4ff67e2fd2db 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -99,10 +99,14 @@ bool __kasan_check_write(const volatile void *p, unsigned int size)
- }
- EXPORT_SYMBOL(__kasan_check_write);
- 
-+extern bool report_enabled(void);
-+
- #undef memset
- void *memset(void *addr, int c, size_t len)
- {
--	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
-+	if (report_enabled() &&
-+	    !check_memory_region((unsigned long)addr, len, true, _RET_IP_))
-+		return NULL;
- 
- 	return __memset(addr, c, len);
- }
-@@ -110,8 +114,10 @@ void *memset(void *addr, int c, size_t len)
- #undef memmove
- void *memmove(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (report_enabled() &&
-+	   (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_)))
-+		return NULL;
- 
- 	return __memmove(dest, src, len);
- }
-@@ -119,8 +125,10 @@ void *memmove(void *dest, const void *src, size_t len)
- #undef memcpy
- void *memcpy(void *dest, const void *src, size_t len)
- {
--	check_memory_region((unsigned long)src, len, false, _RET_IP_);
--	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
-+	if (report_enabled() &&
-+	   (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
-+	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_)))
-+		return NULL;
- 
- 	return __memcpy(dest, src, len);
- }
-diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-index 616f9dd82d12..02148a317d27 100644
---- a/mm/kasan/generic.c
-+++ b/mm/kasan/generic.c
-@@ -173,6 +173,11 @@ static __always_inline bool check_memory_region_inline(unsigned long addr,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	if (unlikely((void *)addr <
- 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) {
- 		kasan_report(addr, size, write, ret_ip);
-diff --git a/mm/kasan/generic_report.c b/mm/kasan/generic_report.c
-index 36c645939bc9..52a92c7db697 100644
---- a/mm/kasan/generic_report.c
-+++ b/mm/kasan/generic_report.c
-@@ -107,6 +107,24 @@ static const char *get_wild_bug_type(struct kasan_access_info *info)
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- 	if (addr_has_shadow(info->access_addr))
- 		return get_shadow_bug_type(info);
- 	return get_wild_bug_type(info);
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 621782100eaa..c79e28814e8f 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -446,7 +446,7 @@ static void print_shadow_for_address(const void *addr)
- 	}
- }
- 
--static bool report_enabled(void)
-+bool report_enabled(void)
- {
- 	if (current->kasan_depth)
- 		return false;
-diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-index 0e987c9ca052..b829535a3ad7 100644
---- a/mm/kasan/tags.c
-+++ b/mm/kasan/tags.c
-@@ -86,6 +86,11 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
- 	if (unlikely(size == 0))
- 		return true;
- 
-+	if (unlikely((long)size < 0)) {
-+		kasan_report(addr, size, write, ret_ip);
-+		return false;
-+	}
-+
- 	tag = get_tag((const void *)addr);
- 
- 	/*
-diff --git a/mm/kasan/tags_report.c b/mm/kasan/tags_report.c
-index 969ae08f59d7..f7ae474aef3a 100644
---- a/mm/kasan/tags_report.c
-+++ b/mm/kasan/tags_report.c
-@@ -36,6 +36,24 @@
- 
- const char *get_bug_type(struct kasan_access_info *info)
- {
-+	/*
-+	 * If access_size is negative numbers, then it has three reasons
-+	 * to be defined as heap-out-of-bounds bug type.
-+	 * 1) Casting negative numbers to size_t would indeed turn up as
-+	 *    a large size_t and its value will be larger than ULONG_MAX/2,
-+	 *    so that this can qualify as out-of-bounds.
-+	 * 2) If KASAN has new bug type and user-space passes negative size,
-+	 *    then there are duplicate reports. So don't produce new bug type
-+	 *    in order to prevent duplicate reports by some systems
-+	 *    (e.g. syzbot) to report the same bug twice.
-+	 * 3) When size is negative numbers, it may be passed from user-space.
-+	 *    So we always print heap-out-of-bounds in order to prevent that
-+	 *    kernel-space and user-space have the same bug but have duplicate
-+	 *    reports.
-+	 */
-+	if ((long)info->access_size < 0)
-+		return "heap-out-of-bounds";
-+
- #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
- 	struct kasan_alloc_meta *alloc_meta;
- 	struct kmem_cache *cache;
--- 
-2.18.0
-
+On Wed, Oct 23, 2019 at 11:58 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> On Wed, Oct 23, 2019 at 08:01:26AM -0700, Guenter Roeck wrote:
+> > On Wed, Oct 23, 2019 at 05:29:00PM +0300, Heikki Krogerus wrote:
+> > > On Wed, Oct 23, 2019 at 06:44:39AM -0700, Guenter Roeck wrote:
+> > > > On 10/23/19 1:32 AM, Heikki Krogerus wrote:
+> > > > > +Guenter
+> > > > >
+> > > > > On Tue, Oct 22, 2019 at 04:59:24PM +0800, Puma Hsu wrote:
+> > > > > > Export the Type-C connector orientation so that user space
+> > > > > > can get this information.
+> > > > > >
+> > > > > > Signed-off-by: Puma Hsu <pumahsu@google.com>
+> > > > > > ---
+> > > > > >   Documentation/ABI/testing/sysfs-class-typec | 11 +++++++++++
+> > > > > >   drivers/usb/typec/class.c                   | 18 ++++++++++++=
+++++++
+> > > > > >   2 files changed, 29 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Docu=
+mentation/ABI/testing/sysfs-class-typec
+> > > > > > index d7647b258c3c..b22f71801671 100644
+> > > > > > --- a/Documentation/ABI/testing/sysfs-class-typec
+> > > > > > +++ b/Documentation/ABI/testing/sysfs-class-typec
+> > > > > > @@ -108,6 +108,17 @@ Contact: Heikki Krogerus <heikki.krogerus@=
+linux.intel.com>
+> > > > > >   Description:
+> > > > > >               Revision number of the supported USB Type-C speci=
+fication.
+> > > > > > +What:                /sys/class/typec/<port>/connector_orienta=
+tion
+> > > > > > +Date:                October 2019
+> > > > > > +Contact:     Puma Hsu <pumahsu@google.com>
+> > > > > > +Description:
+> > > > > > +             Indicates which typec connector orientation is co=
+nfigured now.
+> > > > > > +             cc1 is defined as "normal" and cc2 is defined as =
+"reversed".
+> > > > > > +
+> > > > > > +             Valid value:
+> > > > > > +             - unknown (nothing configured)
+> > > > >
+> > > > > "unknown" means we do not know the orientation.
+> > > > >
+> > > > > > +             - normal (configured in cc1 side)
+> > > > > > +             - reversed (configured in cc2 side)
+> > > > >
+> > > > > Guenter, do you think "connector_orientation" OK. I proposed it, =
+but
+> > > > > I'm now wondering if something like "polarity" would be better?
+> > > > >
+> > > >
+> > > > Yes, or just "orientation". I don't see the value in the "connector=
+_" prefix.
+> > > > I also wonder if "unknown" is really correct. Is it really unknown,=
+ or
+> > > > does it mean that the port is disconnected ?
+> > >
+> > > Unknown means we don't know the orientation. We don't always have tha=
+t
+> > > information available to us. With UCSI we simply do not know it.
+> > >
+> > > I think this file needs to be hidden after all if we don't know the
+> > > cable plug orientation.
+> > >
+> > Making the attribute appear and disappear may cause difficulties for
+> > userspace.
+> >
+> > > How about empty string instead of "unknown"?
+> > >
+> > An empty string might also be challenging for userspace.
+> >
+> > "unknown" is fine if it is really unknown.
+>
+> That's what I was thinking, but I realised that since the value may be
+> "unknown" even when the driver is able to tell the cable plug
+> orientation, there is no way for the userspace to know is the driver
+> able to supply the information or not. That is why I say the attribute
+> has to be hidden in cases where the driver really does not know the
+> orientation (like UCSI).
+>
+> I'm really not a big fan of hidden attribute files, as they do make
+> things unpredictable for the userspace, but with information like
+> this, either we simply do not provide it to the userspace at all -
+> option that I'm all for if there is no real need for this - or we
+> hide the file with drivers that can not supply the information.
+>
+> > With that in mind, I wonder what value that attribute has for
+> > userspace, but presumably there must be some use case. I assume it
+> > is purely informational.
+>
+> Puma actually already answered to this one:
+> https://lkml.org/lkml/2019/10/22/198
+>
+> If I understood correctly, it would be purely informational. Puma,
+> please correct me if I'm wrong!
+>
+> But if that is the case, and it is purely informational, then I don't
+> think we should add this attribute at all.
+>
+>
+> thanks,
+>
+> --
+> heikki
