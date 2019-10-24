@@ -2,124 +2,128 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7A0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0942ECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3904C20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44A420679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Wsq8rdKb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcUTD+ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502786AbfJXOjH (ORCPT
+        id S2502864AbfJXOk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:39:07 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:33840 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732293AbfJXOjH (ORCPT
+        Thu, 24 Oct 2019 10:40:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35077 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502826AbfJXOk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:39:07 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x9OEcivT007337
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 23:38:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x9OEcivT007337
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571927925;
-        bh=5VDOJqWr1P/8RpUKJUiUUgzqRYMuViQTbISV22/DfcM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Wsq8rdKbjufD8xDQo9TYn/vVPfLqU8CWHsul4oOcXL2+aXPYpencUJWWwSK3e35D2
-         r1rM9S/WmrTYaz2BZmvK3Q++Ya6W+X/E7doaUDPGpJqtcrfyTmXmvYas9LC6dtz7c6
-         +Wp7bga0LwmkjxC7bnK3lfeIWZErlsOVJtEDo2V3S2VPEdRk6duBPk4lRsrsWbDSL/
-         STw5curdVNiU7mM8M4A4aCs4z+NHeoPxk0Ve0g/XI+teLFDGPSgtiQYnJpzl/UW1DT
-         /q3CPziyC8B8u7V6ef2AEzLzPC2Ud+TpShsgQS4VnFZCerdl+NYBUp2z94XzY4M3Fp
-         7AXuq/dNyMwFA==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id q21so934695vsg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 07:38:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAXWjnnYAfrRem5ZiGuhB4sFJKorKK5BEE1p2VYSXr5xrN75GMGH
-        616MgmXexlvfYDTxngO4MvVKGJo0jFM/C3pJN34=
-X-Google-Smtp-Source: APXvYqzTx9f4+sdDvCmM/G0tcS16/98SXXq+GzkLjkICnXwW7kaMiC+gdVtM0Mg1KgO8XJEVHwsWres9Ec0jaj70OCs=
-X-Received: by 2002:a67:e290:: with SMTP id g16mr6201871vsf.54.1571927924100;
- Thu, 24 Oct 2019 07:38:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191018161033.261971-7-samitolvanen@google.com> <20191022162826.GC699@lakrids.cambridge.arm.com>
- <CABCJKudxvS9Eehr0dEFUR4H44K-PUULbjrh0i=pP_r5MGrKptA@mail.gmail.com> <20191024132832.GG4300@lakrids.cambridge.arm.com>
-In-Reply-To: <20191024132832.GG4300@lakrids.cambridge.arm.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 24 Oct 2019 23:38:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQWjq0DoTD6LkQfRSMz6sS6_SFapd5YzKjz2U1ZmFEm9w@mail.gmail.com>
-Message-ID: <CAK7LNAQWjq0DoTD6LkQfRSMz6sS6_SFapd5YzKjz2U1ZmFEm9w@mail.gmail.com>
-Subject: Re: [PATCH 06/18] add support for Clang's Shadow Call Stack (SCS)
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Thu, 24 Oct 2019 10:40:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l10so25964785wrb.2;
+        Thu, 24 Oct 2019 07:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HESF/d6OH5Aw6sJWEIGxgkKbyHNgcjcLHfFi7kk0g9A=;
+        b=TcUTD+agNlBhc1hjm88GbLWqbU6tMfgjgHRDWLRNfaJ4hc36Tb9ML4aCHvpyxtPTEn
+         C2E5Ewp7E6OTopg9A/Di347itIL2MdoqhpP4ZZjw5IJ7qLG0TzJvqUXDenxz7YMnEy6v
+         l6zGfh6br2lRtFYR43Lk4U+bJoxH9+GT1LISiSL9zM1Np0ofboXkUMs6bZnwEWxybRw1
+         JdpELAxqwKgYbFXBggEFPWSTRbrhhmGFoyiyJzXAtLRf+WOyEqMFyKWvRlguOMPrD6TR
+         QAOtAcx9am6QXkUKVLlsfd0JVcZbrIi83kS6v0lTep3b8TA80z8Fr9GHh52lINsSQT4V
+         8AfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HESF/d6OH5Aw6sJWEIGxgkKbyHNgcjcLHfFi7kk0g9A=;
+        b=PkKkxQn5KHkzS11QS5PzOGTBpkSZH8hKJsr5chBxosfa8cbCZV6XIrEIdKHZqztUBo
+         suuPXAE9+4/iLYUkYuGkK0wTuxVdPEHzYxwyDrvZXQtc/6R4/CXDTfMjZl24nC9FqpG/
+         9/0H36I+wozOH/HCKtv0ww8bVQ38Pgy83QYecYage8CYHjZh13/dsbOeeZnFibkdsib9
+         MCsvTrbvvkkl/6eh8D2gx76EGX1Tb66y3H0cfaT1Jm1SkmQbijcPyiKPpTmhNtxeovF5
+         gbjn2kJ3hOmXuLkH/aDYKvSkVe8SpDagnwLLRmDGHonAe/kYYsfzqHTZKFZytpxO6Pwv
+         i1PA==
+X-Gm-Message-State: APjAAAXSYKZF4ROBDHUMWoi84HAyzCx4gO1sIH4LfwzcvmkxRCcuo1Ej
+        MGrCMEFFgNPp2F7AxurvLTs=
+X-Google-Smtp-Source: APXvYqwBuY8frNbFlrrd+MU0T1iMVeSexigCZJNzWTb2sAaAERi4UQ+ZR6IEtM7ZTeW1Z9d6m7DAYA==
+X-Received: by 2002:adf:e381:: with SMTP id e1mr3927570wrm.94.1571928057005;
+        Thu, 24 Oct 2019 07:40:57 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:e187:86b0:69d4:5ba5])
+        by smtp.gmail.com with ESMTPSA id u1sm2289665wmc.38.2019.10.24.07.40.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 07:40:56 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 16:40:49 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
         Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        stable <stable@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191024144049.GA13747@andrea.guest.corp.microsoft.com>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
+ <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
+ <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
+ <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
+ <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
+ <20191024134319.GA12693@andrea.guest.corp.microsoft.com>
+ <CACT4Y+ZXQyqgBvwgb6cy7NP5FTBbktq5j4ZyySp7jrbcJwFUTA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZXQyqgBvwgb6cy7NP5FTBbktq5j4ZyySp7jrbcJwFUTA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:28 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Tue, Oct 22, 2019 at 12:26:02PM -0700, Sami Tolvanen wrote:
-> > On Tue, Oct 22, 2019 at 9:28 AM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> > > > +config SHADOW_CALL_STACK
-> > > > +     bool "Clang Shadow Call Stack"
-> > > > +     depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
-> > > > +     depends on CC_IS_CLANG && CLANG_VERSION >= 70000
-> > >
-> > > Is there a reason for an explicit version check rather than a
-> > > CC_HAS_<feature> check? e.g. was this available but broken in prior
-> > > versions of clang?
+On Thu, Oct 24, 2019 at 03:58:40PM +0200, Dmitry Vyukov wrote:
+> On Thu, Oct 24, 2019 at 3:43 PM Andrea Parri <parri.andrea@gmail.com> wrote:
 > >
-> > No, this feature was added in Clang 7. However,
-> > -fsanitize=shadow-call-stack might require architecture-specific
-> > flags, so a simple $(cc-option, -fsanitize=shadow-call-stack) in
-> > arch/Kconfig is not going to work. I could add something like this to
-> > arch/arm64/Kconfig though:
+> > > But why? I think kernel contains lots of such cases and it seems to be
+> > > officially documented by the LKMM:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt
+> > > address dependencies and ppo
 > >
-> > select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
-> > ...
-> > config CC_HAVE_SHADOW_CALL_STACK
-> >        def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
-> >
-> > And then drop CC_IS_CLANG and version check entirely. Thoughts?
->
-> That sounds good to me, yes!
->
-> Thanks,
-> Mark.
+> > Well, that same documentation also alerts about some of the pitfalls
+> > developers can incur while relying on dependencies.  I'm sure you're
+> > more than aware of some of the debate surrounding these issues.
+> 
+> I thought that LKMM is finally supposed to stop all these
+> centi-threads around subtle details of ordering. And not we finally
+> have it. And it says that using address-dependencies is legal. And you
+> are one of the authors. And now you are arguing here that we better
+> not use it :) Can we have some black/white yes/no for code correctness
+> reflected in LKMM please :) If we are banning address dependencies,
+> don't we need to fix all of rcu uses?
 
+Current limitations of the LKMM are listed in tools/memory-model/README
+(and I myself discussed a number of them at LPC recently); the relevant
+point here seems to be:
 
-If you use cc-option, please add a comment like
+1.	Compiler optimizations are not accurately modeled.  Of course,
+	the use of READ_ONCE() and WRITE_ONCE() limits the compiler's
+	ability to optimize, but under some circumstances it is possible
+	for the compiler to undermine the memory model.  [...]
 
-    # supported by Clang 7 or later.
+	Note that this limitation in turn limits LKMM's ability to
+	accurately model address, control, and data dependencies.
 
+A less elegant, but hopefully more effective, way to phrase such point
+is maybe "feel free to rely on dependencies, but then do not blame the
+LKMM authors please".  ;-)
 
-I do not know the minimal supported clang version.
-When we bump the minimal version to clang 7,
-we can drop the cc-option test entirely.
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+Thanks,
+  Andrea
