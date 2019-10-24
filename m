@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163C3CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9839FCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D624D21906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C0920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoticqkn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n5TAheGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393508AbfJXNGk (ORCPT
+        id S2393522AbfJXNHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:06:40 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43278 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfJXNGk (ORCPT
+        Thu, 24 Oct 2019 09:07:09 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36783 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfJXNHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:06:40 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 21so10154505lft.10
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:06:38 -0700 (PDT)
+        Thu, 24 Oct 2019 09:07:09 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so24977510ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=HDI1nMpN8cFss4OwSUFkCMchIJFxmoHYUy+Ih0fewHU=;
-        b=aoticqknGS4hVpEf8tkwGg+bleUukTVXvfVLJTxI90RUTbPJ5Q9xNJ+xkQm55yZvxI
-         AOVRhD7HbgRi29Elo40E9ltluUbz0DeUsPAPogsGTEXbd6oet2qBNt+nN3CQhC5uVS3H
-         faS8ugVOL5fySQFEZzZg5GHg+4N385CqIGUtW6tVcOokhfwfISQBj+DTCT71YV1N6xIO
-         aBqBs36ywc8f6oD7pyyDtADBbRq+K3uGxhtrXYK4516KviInn2P9IwU3OkMZQflcNJmp
-         NZljDflPC2r+EIcKv8uk0ccx4WHEnniJkQtThEDf5Wey4GrTJDeY4Iv+RJZhfM6jHLYN
-         piUA==
+        bh=tkk6G5aHv6FVuWM741oKE389BRFXRaj6IbXbEW6yA1Y=;
+        b=n5TAheGlAHyqwUFch1gDhnr7YjBFCO1Wk56bpymnySGUNJ3WfCvdDHuboiKcMLQb03
+         exkAUP0/TUfc1Jl1ZJCgn3dDFQ1DhlaF3mDeu/CLPPluUcMVLAyNVCpeNyrzBpsO4vF/
+         cVUkbHTKHKfV2Bv+s14y50GtUjXSCwmI8wz5pxmcBb8eYC3ur8o5dIgFlf2ZPkzw532K
+         Kep1ZzfRHm3cY/zfGx2nIBzyUjOPHKZ5oZg7ZkcA3pAr9Sl12cV03Y1cupWc1fwDsvTu
+         L7g8XjIgybiySuSzD7LZXc+Bc7zrDeL+gBhlkrcxCtrsVtq5TkpYqDETZLk77gNl5CXS
+         FLMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HDI1nMpN8cFss4OwSUFkCMchIJFxmoHYUy+Ih0fewHU=;
-        b=DevP6QgZGcQZASuteH+/oIQWYHiLEdEKj1Q5/uM/eUEhDsTeNLx7p0N6w7YmZQWGxd
-         sgK9pEkafdQyTG2n+18pR+oCgLO0RNLArBVbhzw6pBQhM0O8rzsUTEMR+eAYzHpHqsM6
-         uM7BGDGarahKLe7h1B7BXy5RB4qvhnsxizil4FVJbTE8BXeBvo0HXWNrAKUKxxYK1Gk4
-         q0Ue6pA3lPaKfUyfuHRFKA3JjXb/l59fuj2tRTm/duE2VsmtmukRQSxj/j6XXHT2JqeJ
-         Hs9jG54Nqg+v3NvsRs4UBGfwJqBZX8KSscwuNgW4n75FsBATRgMODaLeCqVy6+/2C+bm
-         Xxug==
-X-Gm-Message-State: APjAAAUtuHupw60SVWbTTcBO8gsyAUUrvSWEl99El6dvSzNemluXrx27
-        ga+ymlC5uxlmc0EHNzYfbWaNalqfSkoJoL3eiLk=
-X-Google-Smtp-Source: APXvYqx8YXIxrwmTEpKXWITnQbu1h5M4d0TVoM9rBpsl5zJVo47ouTa6cTDmUbarEsDlDPx7JrS89w2MervyEJbX/28=
-X-Received: by 2002:a19:40cf:: with SMTP id n198mr19674953lfa.189.1571922397191;
- Thu, 24 Oct 2019 06:06:37 -0700 (PDT)
+        bh=tkk6G5aHv6FVuWM741oKE389BRFXRaj6IbXbEW6yA1Y=;
+        b=ms2Jqp033AfLNnYIUb9TJvbil1Apa8wvmvbCzByIgCESlRuEtQx5A1ryda0485vj3Z
+         h91EbGs6WzD4AmOd/HBXdSFd8Bxe67SS6mOzE8MWK4mMON9+F1XXA3n4sOZumKL4fq5q
+         uHX0T4uGDlzifkW8AjZN7eSsocEIzBCv/BMD5yD0KLCHmCQgG4F1yrs0lSv/kKpSHSSV
+         xoUwRsHMYfB3TiDQNREmN9dcn1wkSd/yUqXnzugm3haoVvHqIyCCbFiiQIkFJeQKIKpu
+         XAd8sTIS8SD123YZdomHMIp1BkGKs4CAJzIknW4Wq8JvWJXNzhAwZWpoCbwrZKoeIYes
+         T4WA==
+X-Gm-Message-State: APjAAAWEdf8rtbfNC5laS6ckQs3eOjHiJdvWpHJq3EwWJqGF7THJV24d
+        AZTRdDOYLi+0I2tt16y//1nzIWMhaBEtvjp+fZ0=
+X-Google-Smtp-Source: APXvYqwKbGmB3fZE31Be7iKOqtLOx2kBt/iIU4EzatUeJ/XuUjsrMJXzEx7sWNPPbTCPFOfdQZVsoTbIcyjaEJ7/0eo=
+X-Received: by 2002:a2e:970b:: with SMTP id r11mr9317177lji.56.1571922426444;
+ Thu, 24 Oct 2019 06:07:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191018101248.33727-1-steven.price@arm.com> <20191018101248.33727-14-steven.price@arm.com>
-In-Reply-To: <20191018101248.33727-14-steven.price@arm.com>
+References: <20191018101248.33727-1-steven.price@arm.com> <20191018101248.33727-12-steven.price@arm.com>
+In-Reply-To: <20191018101248.33727-12-steven.price@arm.com>
 From:   Zong Li <zongbox@gmail.com>
-Date:   Thu, 24 Oct 2019 21:06:25 +0800
-Message-ID: <CA+ZOyahE7Z8jw60iu__wE5eeBSvmE57eAY8XY4q3fDdJb6gDrQ@mail.gmail.com>
-Subject: Re: [PATCH v12 13/22] mm: pagewalk: Add test_p?d callbacks
+Date:   Thu, 24 Oct 2019 21:06:55 +0800
+Message-ID: <CA+ZOyahf-G6Mzr0eF9YA0=HTtKPk+vJpSr3wFtKf_VZHbb-HRg@mail.gmail.com>
+Subject: Re: [PATCH v12 11/22] mm: pagewalk: Add p4d_entry() and pgd_entry()
 To:     Steven Price <steven.price@arm.com>
 Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
@@ -86,107 +86,137 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Steven Price <steven.price@arm.com> =E6=96=BC 2019=E5=B9=B410=E6=9C=8819=E6=
-=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=884:12=E5=AF=AB=E9=81=93=EF=BC=9A
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=884:14=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> It is useful to be able to skip parts of the page table tree even when
-> walking without VMAs. Add test_p?d callbacks similar to test_walk but
-> which are called just before a table at that level is walked. If the
-> callback returns non-zero then the entire table is skipped.
+> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+> no users. We're about to add users so reintroduce them, along with
+> p4d_entry() as we now have 5 levels of tables.
+>
+> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+> PUD-sized transparent hugepages") already re-added pud_entry() but with
+> different semantics to the other callbacks. Since there have never
+> been upstream users of this, revert the semantics back to match the
+> other callbacks. This means pud_entry() is called for all entries, not
+> just transparent huge pages.
 >
 > Signed-off-by: Steven Price <steven.price@arm.com>
 > ---
->  include/linux/pagewalk.h | 11 +++++++++++
->  mm/pagewalk.c            | 24 ++++++++++++++++++++++++
->  2 files changed, 35 insertions(+)
+>  include/linux/pagewalk.h | 19 +++++++++++++------
+>  mm/pagewalk.c            | 27 ++++++++++++++++-----------
+>  2 files changed, 29 insertions(+), 17 deletions(-)
 >
 > diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
-> index 12004b097eae..df424197a25a 100644
+> index bddd9759bab9..12004b097eae 100644
 > --- a/include/linux/pagewalk.h
 > +++ b/include/linux/pagewalk.h
-> @@ -24,6 +24,11 @@ struct mm_walk;
+> @@ -8,15 +8,15 @@ struct mm_walk;
+>
+>  /**
+>   * mm_walk_ops - callbacks for walk_page_range
+> - * @pud_entry:         if set, called for each non-empty PUD (2nd-level)=
+ entry
+> - *                     this handler should only handle pud_trans_huge() =
+puds.
+> - *                     the pmd_entry or pte_entry callbacks will be used=
+ for
+> - *                     regular PUDs.
+> - * @pmd_entry:         if set, called for each non-empty PMD (3rd-level)=
+ entry
+> + * @pgd_entry:         if set, called for each non-empty PGD (top-level)=
+ entry
+> + * @p4d_entry:         if set, called for each non-empty P4D entry
+> + * @pud_entry:         if set, called for each non-empty PUD entry
+> + * @pmd_entry:         if set, called for each non-empty PMD entry
+>   *                     this handler is required to be able to handle
+>   *                     pmd_trans_huge() pmds.  They may simply choose to
+>   *                     split_huge_page() instead of handling it explicit=
+ly.
+> - * @pte_entry:         if set, called for each non-empty PTE (4th-level)=
+ entry
+> + * @pte_entry:         if set, called for each non-empty PTE (lowest-lev=
+el)
+> + *                     entry
+>   * @pte_hole:          if set, called for each hole at all levels
+>   * @hugetlb_entry:     if set, called for each hugetlb entry
+>   * @test_walk:         caller specific callback function to determine wh=
+ether
+> @@ -24,8 +24,15 @@ struct mm_walk;
 >   *                     "do page table walk over the current vma", return=
 ing
 >   *                     a negative value means "abort current page table =
 walk
 >   *                     right now" and returning 1 means "skip the curren=
 t vma"
-> + * @test_pmd:          similar to test_walk(), but called for every pmd.
-> + * @test_pud:          similar to test_walk(), but called for every pud.
-> + * @test_p4d:          similar to test_walk(), but called for every p4d.
-> + *                     Returning 0 means walk this part of the page tabl=
-es,
-> + *                     returning 1 means to skip this range.
->   *
->   * p?d_entry callbacks are called even if those levels are folded on a
->   * particular architecture/configuration.
-> @@ -46,6 +51,12 @@ struct mm_walk_ops {
->                              struct mm_walk *walk);
->         int (*test_walk)(unsigned long addr, unsigned long next,
->                         struct mm_walk *walk);
-> +       int (*test_pmd)(unsigned long addr, unsigned long next,
-> +                       pmd_t *pmd_start, struct mm_walk *walk);
-> +       int (*test_pud)(unsigned long addr, unsigned long next,
-> +                       pud_t *pud_start, struct mm_walk *walk);
-> +       int (*test_p4d)(unsigned long addr, unsigned long next,
-> +                       p4d_t *p4d_start, struct mm_walk *walk);
->  };
->
->  /**
+> + *
+> + * p?d_entry callbacks are called even if those levels are folded on a
+> + * particular architecture/configuration.
+>   */
+>  struct mm_walk_ops {
+> +       int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
+> +                        unsigned long next, struct mm_walk *walk);
+> +       int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
+> +                        unsigned long next, struct mm_walk *walk);
+>         int (*pud_entry)(pud_t *pud, unsigned long addr,
+>                          unsigned long next, struct mm_walk *walk);
+>         int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
 > diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-> index 4139e9163aee..43acffefd43f 100644
+> index d48c2a986ea3..fc4d98a3a5a0 100644
 > --- a/mm/pagewalk.c
 > +++ b/mm/pagewalk.c
-> @@ -34,6 +34,14 @@ static int walk_pmd_range(pud_t *pud, unsigned long ad=
+> @@ -93,15 +93,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned long ad=
 dr, unsigned long end,
->         const struct mm_walk_ops *ops =3D walk->ops;
->         int err =3D 0;
+>                 }
 >
-> +       if (ops->test_pmd) {
-> +               err =3D ops->test_pmd(addr, end, pmd_offset(pud, 0UL), wa=
-lk);
-> +               if (err < 0)
-> +                       return err;
-> +               if (err > 0)
-> +                       return 0;
-> +       }
-> +
->         pmd =3D pmd_offset(pud, addr);
->         do {
->  again:
-> @@ -85,6 +93,14 @@ static int walk_pud_range(p4d_t *p4d, unsigned long ad=
-dr, unsigned long end,
->         const struct mm_walk_ops *ops =3D walk->ops;
->         int err =3D 0;
+>                 if (ops->pud_entry) {
+> -                       spinlock_t *ptl =3D pud_trans_huge_lock(pud, walk=
+->vma);
+> -
+> -                       if (ptl) {
+> -                               err =3D ops->pud_entry(pud, addr, next, w=
+alk);
+> -                               spin_unlock(ptl);
+> -                               if (err)
+> -                                       break;
+> -                               continue;
+> -                       }
+> +                       err =3D ops->pud_entry(pud, addr, next, walk);
+> +                       if (err)
+> +                               break;
+>                 }
 >
-> +       if (ops->test_pud) {
-> +               err =3D ops->test_pud(addr, end, pud_offset(p4d, 0UL), wa=
-lk);
-> +               if (err < 0)
-> +                       return err;
-> +               if (err > 0)
-> +                       return 0;
-> +       }
-> +
->         pud =3D pud_offset(p4d, addr);
->         do {
->   again:
-> @@ -128,6 +144,14 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long =
+>                 split_huge_pud(walk->vma, pud, addr);
+> @@ -135,7 +129,12 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long =
 addr, unsigned long end,
->         const struct mm_walk_ops *ops =3D walk->ops;
->         int err =3D 0;
->
-> +       if (ops->test_p4d) {
-> +               err =3D ops->test_p4d(addr, end, p4d_offset(pgd, 0UL), wa=
-lk);
-> +               if (err < 0)
-> +                       return err;
-> +               if (err > 0)
-> +                       return 0;
-> +       }
-> +
->         p4d =3D p4d_offset(pgd, addr);
->         do {
->                 next =3D p4d_addr_end(addr, end);
+>                                 break;
+>                         continue;
+>                 }
+> -               if (ops->pmd_entry || ops->pte_entry)
+> +               if (ops->p4d_entry) {
+> +                       err =3D ops->p4d_entry(p4d, addr, next, walk);
+> +                       if (err)
+> +                               break;
+> +               }
+> +               if (ops->pud_entry || ops->pmd_entry || ops->pte_entry)
+>                         err =3D walk_pud_range(p4d, addr, next, walk);
+>                 if (err)
+>                         break;
+> @@ -162,7 +161,13 @@ static int walk_pgd_range(unsigned long addr, unsign=
+ed long end,
+>                                 break;
+>                         continue;
+>                 }
+> -               if (ops->pmd_entry || ops->pte_entry)
+> +               if (ops->pgd_entry) {
+> +                       err =3D ops->pgd_entry(pgd, addr, next, walk);
+> +                       if (err)
+> +                               break;
+> +               }
+> +               if (ops->p4d_entry || ops->pud_entry || ops->pmd_entry ||
+> +                   ops->pte_entry)
+>                         err =3D walk_p4d_range(pgd, addr, next, walk);
+>                 if (err)
+>                         break;
 > --
 > 2.20.1
 >
