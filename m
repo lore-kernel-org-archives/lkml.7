@@ -2,162 +2,252 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AC0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F731CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D254721A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:24:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bmWL0fM9"
+	by mail.kernel.org (Postfix) with ESMTP id 5E7B321A4C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571952262;
+	bh=7M6g3d23nu+as4txKP7qhtwdggKIeiqbAUCLIQNX5tE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uCDLnE/WzSN4hIaA6QW5y/cfJVvOs5Lru05kuY/GUjUCVMtxY0CEtUrQD6LTwsAsJ
+	 5K2T3qrkmCDlBbcQ8zPyEso7BYRZF1ukY+nKdMqPUtenhwtqJqvYIucOUy4Z5wgiFh
+	 6p+ZCXiDZ5iRuPvXlR2RT+G/vC7SUXyRQm3lbp0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbfJXVYA (ORCPT
+        id S1729067AbfJXVYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:24:00 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52332 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727838AbfJXVX7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:23:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571952237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FrgDI2gW2aiugtgpqG1ZL6sF4tooWRGmsSjSW32gsYw=;
-        b=bmWL0fM9TfiU0L3s6Q7hPUVkQwlrUGJa7P7YCgHqiFrezv/LfumiMZFk9ogXYOr7L12VZr
-        j62BKLaDzYK+Kk8WOPP33//lis/5sGUTiBb6ukG/u0AUCaDtmmHO+dqYb2jDoTMfub+svE
-        o5CcXu7NAAXja6niON+bYvy4SSe/1iM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-PWtRXmUyOIOZMecadsE0tQ-1; Thu, 24 Oct 2019 17:23:53 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 24 Oct 2019 17:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728991AbfJXVYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 17:24:20 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C68E7476;
-        Thu, 24 Oct 2019 21:23:51 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 13D9D600C6;
-        Thu, 24 Oct 2019 21:23:37 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 17:23:35 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Neil Horman <nhorman@tuxdriver.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        Dan Walsh <dwalsh@redhat.com>, mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 06/21] audit: contid limit of 32k imposed to
- avoid DoS
-Message-ID: <20191024212335.y4ou7g4tsxnotvnk@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <230e91cd3e50a3d8015daac135c24c4c58cf0a21.1568834524.git.rgb@redhat.com>
- <20190927125142.GA25764@hmswarspite.think-freely.org>
- <CAHC9VhRbSUCB0OZorC4+y+5uJDR5uMXdRn2LOTYGu2gcFJSrcA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 381BF21D81
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 21:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571952259;
+        bh=7M6g3d23nu+as4txKP7qhtwdggKIeiqbAUCLIQNX5tE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=D+Ji1qCqi6wEDbkfRtaHJsGTQoMB0ku3AvlncPFcTTOO+gps42gk8JAMqP6Dxlivh
+         GbcD6qM6Ux1ae6fDJULM7ykx3x/P68vMI61pp/B2KVYXsVEvHVHCB3ttK+RmRiwWot
+         aTTdsg7B/kRi624k4I9BS04MJMCYUZogTxFq+irk=
+Received: by mail-wm1-f48.google.com with SMTP id 11so890477wmk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:24:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAWxVHnOC0T+6auF1ntlG2nF0iZHkha9QebJB9XyscPnL1yzs6Vl
+        htrFV/ELaPMeASdCua9HwwKjFNVYkqra/i5bxX65kg==
+X-Google-Smtp-Source: APXvYqx3YbuVjjW90sEqQPfhPCRz3d4DpXfSdJJFWHTpqYg0Brg2oBFw6/G/nbDEGNRgrJMOsQbez2v6JlMOebzuFyY=
+X-Received: by 2002:a1c:20d8:: with SMTP id g207mr323194wmg.79.1571952257553;
+ Thu, 24 Oct 2019 14:24:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhRbSUCB0OZorC4+y+5uJDR5uMXdRn2LOTYGu2gcFJSrcA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: PWtRXmUyOIOZMecadsE0tQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191023122705.198339581@linutronix.de> <20191023123118.296135499@linutronix.de>
+ <20191023220618.qsmog2k5oaagj27v@treble> <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de>
+ <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com> <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 24 Oct 2019 14:24:06 -0700
+X-Gmail-Original-Message-ID: <CALCETrXyhnMwwOyWQ-FtsNFAsrcG41-pPrAp8Wj2vc0N9JzP-Q@mail.gmail.com>
+Message-ID: <CALCETrXyhnMwwOyWQ-FtsNFAsrcG41-pPrAp8Wj2vc0N9JzP-Q@mail.gmail.com>
+Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt disable
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-10 20:38, Paul Moore wrote:
-> On Fri, Sep 27, 2019 at 8:52 AM Neil Horman <nhorman@tuxdriver.com> wrote=
-:
-> > On Wed, Sep 18, 2019 at 09:22:23PM -0400, Richard Guy Briggs wrote:
-> > > Set an arbitrary limit on the number of audit container identifiers t=
-o
-> > > limit abuse.
+On Thu, Oct 24, 2019 at 1:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Thu, 24 Oct 2019, Andy Lutomirski wrote:
+> > On Wed, Oct 23, 2019 at 4:52 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
+> > > > What happens if somebody accidentally leaves irqs enabled?  How do we
+> > > > know you found all the leaks?
 > > >
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > ---
-> > >  kernel/audit.c | 8 ++++++++
-> > >  kernel/audit.h | 4 ++++
-> > >  2 files changed, 12 insertions(+)
+> > > For the DO_ERROR() ones that's trivial:
 > > >
-> > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > index 53d13d638c63..329916534dd2 100644
-> > > --- a/kernel/audit.c
-> > > +++ b/kernel/audit.c
->=20
-> ...
->=20
-> > > @@ -2465,6 +2472,7 @@ int audit_set_contid(struct task_struct *task, =
-u64 contid)
-> > >                               newcont->owner =3D current;
-> > >                               refcount_set(&newcont->refcount, 1);
-> > >                               list_add_rcu(&newcont->list, &audit_con=
-tid_hash[h]);
-> > > +                             audit_contid_count++;
-> > >                       } else {
-> > >                               rc =3D -ENOMEM;
-> > >                               goto conterror;
-> > > diff --git a/kernel/audit.h b/kernel/audit.h
-> > > index 162de8366b32..543f1334ba47 100644
-> > > --- a/kernel/audit.h
-> > > +++ b/kernel/audit.h
-> > > @@ -219,6 +219,10 @@ static inline int audit_hash_contid(u64 contid)
-> > >       return (contid & (AUDIT_CONTID_BUCKETS-1));
+> > >  #define DO_ERROR(trapnr, signr, sicode, addr, str, name)                  \
+> > >  dotraplinkage void do_##name(struct pt_regs *regs, long error_code)       \
+> > >  {                                                                         \
+> > >         do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
+> > > +       lockdep_assert_irqs_disabled();                                    \
 > > >  }
 > > >
-> > > +extern int audit_contid_count;
-> > > +
-> > > +#define AUDIT_CONTID_COUNT   1 << 16
-> > > +
+> > >  DO_ERROR(X86_TRAP_DE,     SIGFPE,  FPE_INTDIV,   IP, "divide error",        divide_error)
+> > >
+> > > Now for the rest we surely could do:
+> > >
+> > > dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+> > > {
+> > >         __do_bounds(regs, error_code);
+> > >         lockdep_assert_irqs_disabled();
+> > > }
+> > >
+> > > and move the existing body into a static function so independent of any
+> > > (future) return path there the lockdep assert will be invoked.
+> > >
 > >
-> > Just to ask the question, since it wasn't clear in the changelog, what
-> > abuse are you avoiding here?  Ostensibly you should be able to create a=
-s
-> > many container ids as you have space for, and the simple creation of
-> > container ids doesn't seem like the resource strain I would be concerne=
-d
-> > about here, given that an orchestrator can still create as many
-> > containers as the system will otherwise allow, which will consume
-> > significantly more ram/disk/etc.
->=20
-> I've got a similar question.  Up to this point in the patchset, there
-> is a potential issue of hash bucket chain lengths and traversing them
-> with a spinlock held, but it seems like we shouldn't be putting an
-> arbitrary limit on audit container IDs unless we have a good reason
-> for it.  If for some reason we do want to enforce a limit, it should
-> probably be a tunable value like a sysctl, or similar.
+> > If we do this, can we macro-ize it:
+> >
+> > DEFINE_IDTENTRY_HANDLER(do_bounds)
+> > {
+> >  ...
+> > }
+> >
+> > If you do this, please don't worry about the weird ones that take cr2
+> > as a third argument.  Once your series lands, I will send a follow-up
+> > to get rid of it.  It's 2/3 written already.
+>
+> I spent quite some time digging deeper into this. Finding all corner cases
+> which eventually enable interrupts from an exception handler is not as
+> trivial as it looked in the first place. Especially the fault handler is a
+> nightmare. Also PeterZ's approach of doing
+>
+>            if (regs->eflags & IF)
+>                 local_irq_disable();
+>
+> is doomed due to sys_iopl(). See below.
 
-Can you separate and clarify the concerns here?
+I missed something in the discussion.  What breaks?  Can you check
+user_mode(regs) too?
 
-I plan to move this patch to the end of the patchset and make it
-optional, possibly adding a tuning mechanism.  Like the migration from
-/proc to netlink for loginuid/sessionid/contid/capcontid, this was Eric
-Biederman's concern and suggested mitigation.
+>
+> I'm tempted to do pretty much the same thing as the syscall rework did
+> as a first step:
+>
+>   - Move the actual handler invocation to C
+>
+>   - Do the irq tracing on entry in C
+>
+>   - Move irq disable before return to ASM
+>
+> Peter gave me some half finished patches which pretty much do that by
+> copying half of the linux/syscalls.h macro maze into the entry code. That's
+> one possible solution, but TBH it sucks big times.
+>
+> We have the following variants:
+>
+> do_divide_error(struct pt_regs *regs, long error_code);
+> do_debug(struct pt_regs *regs, long error_code);
+> do_nmi(struct pt_regs *regs, long error_code);
+> do_int3(struct pt_regs *regs, long error_code);
+> do_overflow(struct pt_regs *regs, long error_code);
+> do_bounds(struct pt_regs *regs, long error_code);
+> do_invalid_op(struct pt_regs *regs, long error_code);
+> do_device_not_available(struct pt_regs *regs, long error_code);
+> do_coprocessor_segment_overrun(struct pt_regs *regs, long error_code);
+> do_invalid_TSS(struct pt_regs *regs, long error_code);
+> do_segment_not_present(struct pt_regs *regs, long error_code);
+> do_stack_segment(struct pt_regs *regs, long error_code);
+> do_general_protection(struct pt_regs *regs, long error_code);
+> do_spurious_interrupt_bug(struct pt_regs *regs, long error_code);
+> do_coprocessor_error(struct pt_regs *regs, long error_code);
+> do_alignment_check(struct pt_regs *regs, long error_code);
+> do_machine_check(struct pt_regs *regs, long error_code);
+> do_simd_coprocessor_error(struct pt_regs *regs, long error_code);
+> do_iret_error(struct pt_regs *regs, long error_code);
+> do_mce(struct pt_regs *regs, long error_code);
+>
+> do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+> do_double_fault(struct pt_regs *regs, long error_code, unsigned long address);
+> do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+>
+> So if we can remove the third argument then we can spare most of the macro
+> maze and just have one common function without bells and whistels. The
+> other option would be to extend all handlers to have three arguments,
+> i.e. add 'long unused', which is not pretty either.
+>
+> What's your plan with cr2? Stash it in pt_regs or something else?
 
-As for the first issue of the bucket chain length traversal while
-holding the list spin-lock, would you prefer to use the rcu lock to
-traverse the list and then only hold the spin-lock when modifying the
-list, and possibly even make the spin-lock more fine-grained per list?
+Just read it from CR2.  I added a new idtentry macro arg called
+"entry_work", and setting it to 0 causes the enter_from_user_mode to
+be skipped.  Then C code calls enter_from_user_mode() after reading
+CR2 (and DR7).  WIP code is here:
 
-> paul moore
+https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=x86/idtentry
 
-- RGB
+The idea is that, if everything is converted, then we get rid of the
+entry_work=1 case, which is easier if there's a macro.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+So my suggestion is to use a macro for the 2-arg version and open-code
+all the 3-arg cases.  Then, when the dust settles, we get rid of the
+third arg and they can use the macro.
 
+>
+> The interesting bells and whistels result from sys_iopl(). If user space
+> has been granted iopl(level = 3) it gains cli/sti priviledges. When the
+> application has interrupts disabled in userspace:
+>
+>   - invocation of a syscall
+>
+>   - any exception (aside of NMI/MCE) which conditionally enables interrupts
+>     depending on user_mode(regs) and therefor can be preempted and
+>     schedule
+>
+> is just undefined behaviour and I personally consider it to be a plain bug.
+>
+> Just for the record: This results in running a resulting or even completely
+> unrelated signal handler with interrupts disabled as well.
+
+I am seriously tempted to say that the solution is to remove iopl(),
+at least on 64-bit kernels.  Doing STI in user mode is BS :)
+
+Otherwise we need to give it semantics, no?  I personally have no
+actual problem with the fact that an NMI can cause scheduling to
+happen.  Big fscking deal.
+
+>
+> Whatever we decide it is, leaving it completely inconsistent is not a
+> solution at all. The options are:
+>
+>   1)  Always do conditional tracing depending on the user_regs->eflags.IF
+>       state.
+
+I'm okay with always tracing like user mode means IRQs on or doing it
+"correctly".  I consider the former to be simpler and therefore quite
+possibly better.
+
+>
+>   2)  #1 + warn once when syscalls and exceptions (except NMI/MCE) happen
+>       and user_regs->eflags.IF is cleared.
+>
+>   3a) #2 + enforce signal handling to run with interrupts enabled.
+>
+>   3b) #2 + set regs->eflags.IF. So the state is always correct from the
+>       kernel POV. Of course that changes existing behaviour, but its
+>       changing undefined and inconsistent behaviour.
+>
+>   4) Let iopl(level) return -EPERM if level == 3.
+>
+>      Yeah, I know it's not possible due to regressions (DPKD uses iopl(3)),
+>      but TBH that'd be the sanest option of all.
+>
+>      Of course the infinite wisdom of hardware designers tied IN, INS, OUT,
+>      OUTS and CLI/STI together on IOPL so we cannot even distangle them in
+>      any way.
+
+>
+>      The only way out would be to actually use a full 8K sized I/O bitmap,
+>      but that's a massive pain as it has to be copied on every context
+>      switch.
+
+Hmm.  This actually doesn't seem that bad.  We already have a TIF_
+flag to optimize this.  So basically iopl() would effectively become
+ioperm(everything on).
