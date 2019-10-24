@@ -1,96 +1,146 @@
-Return-Path: <SRS0=OaAC=YQ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1E3CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 23:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B6DCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 00:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D912F2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 23 Oct 2019 23:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1A120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 00:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ArXQQ69q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392805AbfJWXwk (ORCPT
+        id S2436812AbfJXABT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 19:52:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51360 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389801AbfJWXwk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 19:52:40 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iNQQc-0002uz-NX; Thu, 24 Oct 2019 01:52:34 +0200
-Date:   Thu, 24 Oct 2019 01:52:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt
- disable
-In-Reply-To: <20191023220618.qsmog2k5oaagj27v@treble>
-Message-ID: <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de>
-References: <20191023122705.198339581@linutronix.de> <20191023123118.296135499@linutronix.de> <20191023220618.qsmog2k5oaagj27v@treble>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 23 Oct 2019 20:01:19 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33951 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404828AbfJXABT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 20:01:19 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46z6pg6Mpsz9sP6;
+        Thu, 24 Oct 2019 11:01:15 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1571875275;
+        bh=AzhZLQSetQN0rf5vu6s7SbL4XgPbFvJd4l9qkITAAcg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ArXQQ69q+ZWTHgfH1om+tcmtf/qeQXcO5GMxn5ZT0fjyUfF15fR7UnMdeAEA44iCo
+         UWCjOYRsUOfw28/rrt4O6s2iQo/PJqlM333Ro0BCiI8TM91amiKgaKbKdk9IcCqXG+
+         uM7VVzWks7EzKbsg6fZyKw+CjR52tVIT9oLSuHbtEnEEaMbngyEp9zBn5kmnrWfHjl
+         lwKWpiAe9U9YiZ3wp0UQ4Al1FzFdn4TOFo8C461drQ3mVHwbqtYWRzCIBELrYhLFYp
+         IYJbPLdfueGHEsttdmEiE8jLmhSy6YxVAWYGzpnMGjoBQdKH+1wEitCUalzE+eYKay
+         x3MD3CAWvSSWQ==
+Date:   Thu, 24 Oct 2019 11:01:15 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Erez Alfasi <ereza@mellanox.com>
+Subject: linux-next: manual merge of the rdma tree with Linus' tree
+Message-ID: <20191024110115.7cc32b99@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/ZtTwSu_tCskPtoE/6sXRUoO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
+--Sig_/ZtTwSu_tCskPtoE/6sXRUoO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Oct 23, 2019 at 02:27:12PM +0200, Thomas Gleixner wrote:
-> > Now that the trap handlers return with interrupts disabled, the
-> > unconditional disabling of interrupts in the low level entry code can be
-> > removed along with the trace calls.
-> > 
-> > Add debug checks where appropriate.
-> 
-> This seems a little scary.  Does anybody other than Andy actually run
-> with CONFIG_DEBUG_ENTRY?
+Hi all,
 
-I do.
+Today's linux-next merge of the rdma tree got a conflict in:
 
-> What happens if somebody accidentally leaves irqs enabled?  How do we
-> know you found all the leaks?
+  drivers/infiniband/hw/mlx5/odp.c
 
-For the DO_ERROR() ones that's trivial:
+between commit:
 
- #define DO_ERROR(trapnr, signr, sicode, addr, str, name)                  \
- dotraplinkage void do_##name(struct pt_regs *regs, long error_code)	   \
- {									   \
- 	do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
-+	lockdep_assert_irqs_disabled();					   \
- }
- 
- DO_ERROR(X86_TRAP_DE,     SIGFPE,  FPE_INTDIV,   IP, "divide error",        divide_error)
+  9dc775e7f550 ("RDMA/odp: Lift umem_mutex out of ib_umem_odp_unmap_dma_pag=
+es()")
 
-Now for the rest we surely could do:
+from Linus' tree and commit:
 
-dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
-{
-	__do_bounds(regs, error_code);
-	lockdep_assert_irqs_disabled();
-}
+  a3de94e3d61e ("IB/mlx5: Introduce ODP diagnostic counters")
 
-and move the existing body into a static function so independent of any
-(future) return path there the lockdep assert will be invoked.
+from the rdma tree.
 
-Thanks,
+I fixed it up (see below - but maybe the mlx5_update_odp_stats()
+also needs to move after the moved mutex_unlock()?) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
 
-	tglx
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc drivers/infiniband/hw/mlx5/odp.c
+index 3f9478d19376,2ab6e44aeaae..000000000000
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@@ -308,6 -282,10 +312,9 @@@ void mlx5_ib_invalidate_range(struct ib
+  				   idx - blk_start_idx + 1, 0,
+  				   MLX5_IB_UPD_XLT_ZAP |
+  				   MLX5_IB_UPD_XLT_ATOMIC);
+ -	mutex_unlock(&umem_odp->umem_mutex);
++=20
++ 	mlx5_update_odp_stats(mr, invalidations, invalidations);
++=20
+  	/*
+  	 * We are now sure that the device will not access the
+  	 * memory. We can safely unmap it, and mark it as dirty if
+@@@ -316,10 -294,10 +323,11 @@@
+ =20
+  	ib_umem_odp_unmap_dma_pages(umem_odp, start, end);
+ =20
++=20
+  	if (unlikely(!umem_odp->npages && mr->parent &&
+  		     !umem_odp->dying)) {
+ -		WRITE_ONCE(umem_odp->dying, 1);
+ +		WRITE_ONCE(mr->live, 0);
+ +		umem_odp->dying =3D 1;
+  		atomic_inc(&mr->parent->num_leaf_free);
+  		schedule_work(&umem_odp->work);
+  	}
+@@@ -567,8 -542,9 +573,10 @@@ struct mlx5_ib_mr *mlx5_ib_alloc_implic
+  	init_waitqueue_head(&imr->q_leaf_free);
+  	atomic_set(&imr->num_leaf_free, 0);
+  	atomic_set(&imr->num_pending_prefetch, 0);
+ +	smp_store_release(&imr->live, 1);
+ =20
++ 	imr->is_odp_implicit =3D true;
++=20
+  	return imr;
+  }
+ =20
+
+--Sig_/ZtTwSu_tCskPtoE/6sXRUoO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2w6csACgkQAVBC80lX
+0GxpDgf+PSGmQbkIDo3M6g/6jrDS2YCGmY2YZXs7TE30vUUS9ntCbRGq88NPSJtO
+BL/hqFkYx4ZPGsNrxZvOLwlLHIUGKrpJcWjrmktOs/5E+zqmgf3MIdZi4uxaQld9
+demKIVHxvD/Ii2Ni5wg48oOW4VOlDw0f4yn3tYbh6BejwRznk+KipIyV3q7YHNlC
+dBI1l9dk0vDNj/0Fnt8UUGvjyY8pxAbOUyiTlmPdjGx3vOk9zfnE2Fe4wpY+S6Ql
+pDtj30xFeut0xXGDeMSkbixYDQNxxWMw4yXDbUUsHeFF1vqMwF1eXJw4uhm/JDkz
+Lj7ginyBIew0PAV6osr4vCKu/tAwuQ==
+=FkRr
+-----END PGP SIGNATURE-----
+
+--Sig_/ZtTwSu_tCskPtoE/6sXRUoO--
