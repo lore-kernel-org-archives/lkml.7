@@ -2,109 +2,162 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8C3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF38CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2BD20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60BD21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 04:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOfQByyS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+iU1lVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408358AbfJXEn5 (ORCPT
+        id S2408381AbfJXE5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 00:43:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39975 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390452AbfJXEn4 (ORCPT
+        Thu, 24 Oct 2019 00:57:17 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41658 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfJXE5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 00:43:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x127so14305018pfb.7;
-        Wed, 23 Oct 2019 21:43:56 -0700 (PDT)
+        Thu, 24 Oct 2019 00:57:16 -0400
+Received: by mail-yw1-f68.google.com with SMTP id o195so3404768ywd.8;
+        Wed, 23 Oct 2019 21:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DGvsutXz3Va8MZNR1BWYtmUMeqR2Mgk81F6e8jFyn/0=;
-        b=nOfQByySorFjQbh+5XHg4z1JE9rR8h0M8SSTlVPR/zghBnVyu72YPX8wJRhTZRxxpr
-         H/RNFGKcUMUu7c+eRPCiFJN2EN4pmF7PNL+S4Dn01if5myQ1PREqCl+1Fdlt/8+h953W
-         1+ExVi8jfHpU6zlcX7/qxt9/F7BDVq+ztye0UYRGYDTr2RuBCiquQW8kPzzA8Ty9X6WJ
-         GCjkkj+R3BByaQ6JNb0+sQTmtH4nCagRiaKKtA3ZXmcQAFGJbozjBtwuZYyKaQQpTNKi
-         KkJUcNZPLH13JIrRR0MjJxmUMIFodZpheDdCHoZ3zH/rju5gAP3aCVcNEuUD0Sf44gS8
-         5UpA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qp4ylpFjT2NK5D3YlCPCDZfnUsSpfLeB6JcWlmTT8JE=;
+        b=f+iU1lVJ+8MXE0YjXhbzT4Z+QZTKEVbpSj7I64WEMcxAgcUOKckEALuDnxjfop1KDz
+         /GEuxtdqM/gAmg/8rUQcbM54P8ZvUqXo23LCox8OZKBVBlVoDn1p5gmEXxfQnAWBfBHW
+         uZZaGVOWsT//cwHGlbqENLvAYitmYf5NxnxRGYapcBJVSV1rP+NlFCXZHqVZ6fsYCVwo
+         HiL1fAZTVAeLbnNXS5YnMp44jrRgVnpRxhkGyVWlHqmqFFsCMZbuTBKjna3CheOTh8v8
+         hD6hfXAtyLGGlQqfHMdlsFiQ1XgpXWIL5nune/Pgn/JF3P1WqL13u+LVKHRsnQpi/3uP
+         Pzow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DGvsutXz3Va8MZNR1BWYtmUMeqR2Mgk81F6e8jFyn/0=;
-        b=o1tYSr3vaCM3fo/erWvbYrwxHjFc6oXzh8I+QV+QYO/Goam9lX83C9N58I0YDdyB1F
-         MyeSKW7VI3I5R4hzKF4t6MqFn05vWwBZjTl2hvMDGb0Do6H+583CWd7ZpoERbUL7E2Lq
-         uS2Rwr6T6DmDqNDipMzngXGLi5cIcuA1+BSrFH42eKhJ0QXxfFotjRZiSbZmJvwhdBtp
-         g4YyhCELlKt1Mrk7vA+nR/vYgWD8ATwX6jU2W88tAp+Ig0nsF0Wfz3/+73tXQF5a6LUE
-         VjeivljFA6r5n9dmZcke388HKGHYpzPFJzSJ4zNxQU9dv2iBUwdYZV0Wn+tDRjH4fvxa
-         /ZYg==
-X-Gm-Message-State: APjAAAUAkQr/XSFE069RTzHYCi7IPyH31sjmRY4Uv65YTTqkB5uFeSUQ
-        BJDSCHPol5IF8Bjd0XjdhNY=
-X-Google-Smtp-Source: APXvYqx2nGeXw6VcyQoFHX/I2YmFJtdNkule4SJatnqCVY9Vbw31cONtoNPkW8QbG7QvD2DDir0s2A==
-X-Received: by 2002:aa7:9295:: with SMTP id j21mr14876195pfa.87.1571892235729;
-        Wed, 23 Oct 2019 21:43:55 -0700 (PDT)
-Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.60])
-        by smtp.gmail.com with ESMTPSA id m9sm1064593pjf.11.2019.10.23.21.43.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 21:43:54 -0700 (PDT)
-From:   Satendra Singh Thakur <sst2005@gmail.com>
-Cc:     Satendra Singh Thakur <sst2005@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dma/mediatek-hs/probe: Fixed a memory leak when devm_request_irq fails
-Date:   Thu, 24 Oct 2019 10:13:19 +0530
-Message-Id: <20191024044320.1097-1-sst2005@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qp4ylpFjT2NK5D3YlCPCDZfnUsSpfLeB6JcWlmTT8JE=;
+        b=t2MGTIc8mTc7xW5/p/CK16Ve9OEKmiR3Bt1eoB5Z7AoMwDnIldppJFs4AQlRg5rSTa
+         q12+rvFQWnsBdLRSERRYnp2UD56h9Ed7dygSLlsN0K+KpagF9fNJEIyKLAZLanO3WOPf
+         xM/lf7xUbla/jk3vlTj9s1KC4BPrPrpH5tFKq9eB/9V+W/lhbBMXJOZIyvrB5aDeJJ6t
+         C+eN3/HhTt2oLPFy4NmgSsOa9Izgi1LmAXlmxlOybOx4Ju3ogFv6LeWPgiB0NsBh1iZd
+         fM7e68NeYec1KF3EY1ABYuene9koRVfxcXINUYEd59XIU70IQZHgjxsu/Ak2dZoAh9dB
+         jjbg==
+X-Gm-Message-State: APjAAAX2taqOZp6Wh4uI+eNoiHVcayhSQURKPdVWJQhiiAase5zce9Le
+        cDp9IVjonZ/SxmlpoPcPLJDkSfLsNotmk4dR8To=
+X-Google-Smtp-Source: APXvYqzpUv8fnfcjV1KksbDdhWbx31x/A6CcO3wQjALxaBgCfUkMkcsChuqQOOuA9702g94fFIVsWA6cYWlyk5yi/8s=
+X-Received: by 2002:a81:6c58:: with SMTP id h85mr5010753ywc.88.1571893034732;
+ Wed, 23 Oct 2019 21:57:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191022204453.97058-1-salyzyn@android.com> <20191022204453.97058-2-salyzyn@android.com>
+ <8CE5B6E8-DCB7-4F0B-91C1-48030947F585@dilger.ca>
+In-Reply-To: <8CE5B6E8-DCB7-4F0B-91C1-48030947F585@dilger.ca>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 24 Oct 2019 07:57:03 +0300
+Message-ID: <CAOQ4uxis-oQSjKrtBDi-8BQ2M3ve3w8o-YVGRwWLnq+5JLUttA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/5] Add flags option to get xattr method paired to __vfs_getxattr
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Mark Salyzyn <salyzyn@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, CIFS <linux-cifs@vger.kernel.org>,
+        kernel-team@android.com, selinux@vger.kernel.org,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        ecryptfs@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When devm_request_irq fails, currently, the function
-dma_async_device_unregister gets called. This doesn't free
-the resources allocated by of_dma_controller_register.
-Therefore, we have called of_dma_controller_free for this purpose.
+[excessive CC list reduced]
 
-Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
----
- drivers/dma/mediatek/mtk-hsdma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Wed, Oct 23, 2019 at 11:07 AM Andreas Dilger via samba-technical
+<samba-technical@lists.samba.org> wrote:
+>
+>
+> On Oct 22, 2019, at 2:44 PM, Mark Salyzyn <salyzyn@android.com> wrote:
+> >
+> > Replace arguments for get and set xattr methods, and __vfs_getxattr
+> > and __vfs_setaxtr functions with a reference to the following now
+> > common argument structure:
+> >
+> > struct xattr_gs_args {
+> >       struct dentry *dentry;
+> >       struct inode *inode;
+> >       const char *name;
+> >       union {
+> >               void *buffer;
+> >               const void *value;
+> >       };
+> >       size_t size;
+> >       int flags;
+> > };
+>
 
-diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
-index 1a2028e1c29e..4c58da742143 100644
---- a/drivers/dma/mediatek/mtk-hsdma.c
-+++ b/drivers/dma/mediatek/mtk-hsdma.c
-@@ -997,7 +997,7 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 	if (err) {
- 		dev_err(&pdev->dev,
- 			"request_irq failed with err %d\n", err);
--		goto err_unregister;
-+		goto err_free;
- 	}
- 
- 	platform_set_drvdata(pdev, hsdma);
-@@ -1006,6 +1006,8 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+err_free:
-+	of_dma_controller_free(pdev->dev.of_node);
- err_unregister:
- 	dma_async_device_unregister(dd);
- 
--- 
-2.17.1
+> > Mark,
+> >
+> > I do not see the first patch on fsdevel
+> > and I am confused from all the suggested APIs
+> > I recall Christoph's comment on v8 for not using xattr_gs_args
+> > and just adding flags to existing get() method.
+> > I agree to that comment.
+>
+> As already responded, third (?) patch version was like that,
 
+The problem is that because of the waaay too long CC list, most revisions
+of the patch and discussion were bounced from fsdevel, most emails
+I did not get and cannot find in archives, so the discussion around
+them is not productive.
+
+Please resend patch to fsdevel discarding the auto added CC list
+of all fs maintainers.
+
+> gregkh@
+> said it passed the limit for number of arguments, is looking a bit silly
+
+Well, you just matched get() to set() args list, so this is not a strong
+argument IMO.
+
+> (my paraphrase), and that it should be passed as a structure. Two others
+> agreed. We gained because both set and get use the same structure after
+> this change (this allows a simplified read-modify-write cycle).
+
+That sounds like a nice benefit if this was user API, but are there any
+kernel users that intend to make use of that read-modify-write cycle?
+I don't think so.
+
+>
+> We will need a quorum on this, 3 (structure) to 2 (flag) now (but really
+> basically between Greg and Christoph?). Coding style issue: Add a flag,
+> or switch to a common xattr argument  structure?
+>
+
+IIRC, Christoph was asking why the silly struct and not simply add flags
+(as did I). He probably did not see Greg's comments due to the list bounce
+issue. If I read your second hand description of Greg's reaction correctly,
+it doesn't sound so strong opinionated as well.
+Me, I can live with flags or struct - I don't care, but...
+
+Be prepared that if you are going ahead with struct you are going to
+suffer from bike shedding, which has already started and you will be
+instructed (just now) to also fix all the relevant and missing Documentation.
+If, on the other hand, you can get Greg and the rest to concede to adding
+flags arg and match get() arg list to set() arg list, you will have a much
+easier job and the patch line count, especially in fs code will be *much*
+smaller - just saying.
+
+Thanks,
+Amir.
