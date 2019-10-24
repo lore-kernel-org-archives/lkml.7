@@ -2,81 +2,86 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC35CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA11CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177BF2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="XC8/tAz0"
+	by mail.kernel.org (Postfix) with ESMTP id D2B7C2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438817AbfJXKcB (ORCPT
+        id S2438837AbfJXKcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:32:01 -0400
-Received: from onstation.org ([52.200.56.107]:37234 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392028AbfJXKbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:31:46 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 000893F258;
-        Thu, 24 Oct 2019 10:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1571913105;
-        bh=X+o/+gZJ7tbddpfuCjGXfdjthE9GU4Cf3bwhWFhHdXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XC8/tAz05HuiLteA9Unahct2cfMt785ocNxvjGPFF1uURmJ7vsU6osnnZhBzfwz5E
-         YUciog6ia9Pou4VUUTrNfBVDQR8lgEyrfsaOArsL9WyuY3UPZiA+ribLbnFWl5jgAl
-         ZwBbec0iNki1uvpJ3KMXPNnHQ0ARGVmObYi5H3X0=
-From:   Brian Masney <masneyb@onstation.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH v2 2/4] ARM: qcom_defconfig: add anx78xx HDMI bridge support
-Date:   Thu, 24 Oct 2019 06:31:38 -0400
-Message-Id: <20191024103140.10077-3-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191024103140.10077-1-masneyb@onstation.org>
-References: <20191024103140.10077-1-masneyb@onstation.org>
+        Thu, 24 Oct 2019 06:32:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34487 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438820AbfJXKcY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 06:32:24 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iNaPj-0007Cl-6A; Thu, 24 Oct 2019 10:32:19 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net: dsa: fix dereference on ds->dev before null check error
+Date:   Thu, 24 Oct 2019 11:32:18 +0100
+Message-Id: <20191024103218.2592-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Analogix anx78xx driver so that the external display over HDMI
-can be used on Nexus 5 phones.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
+Currently ds->dev is dereferenced on the assignments of pdata and
+np before ds->dev is null checked, hence there is a potential null
+pointer dereference on ds->dev.  Fix this by assigning pdata and
+np after the ds->dev null pointer sanity check.
+
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-Changes since v1:
-- None
+ net/dsa/dsa2.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
- arch/arm/configs/qcom_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index cbe4e1d86f9a..201e20bc6189 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -149,6 +149,7 @@ CONFIG_MEDIA_SUPPORT=y
- CONFIG_DRM=y
- CONFIG_DRM_MSM=m
- CONFIG_DRM_PANEL_SIMPLE=y
-+CONFIG_DRM_ANALOGIX_ANX78XX=m
- CONFIG_FB=y
- CONFIG_FRAMEBUFFER_CONSOLE=y
- # CONFIG_LCD_CLASS_DEVICE is not set
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index 1e3ac9b56c89..214dd703b0cc 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -842,13 +842,16 @@ static int dsa_switch_add(struct dsa_switch *ds)
+ 
+ static int dsa_switch_probe(struct dsa_switch *ds)
+ {
+-	struct dsa_chip_data *pdata = ds->dev->platform_data;
+-	struct device_node *np = ds->dev->of_node;
++	struct dsa_chip_data *pdata;
++	struct device_node *np;
+ 	int err;
+ 
+ 	if (!ds->dev)
+ 		return -ENODEV;
+ 
++	pdata = ds->dev->platform_data;
++	np = ds->dev->of_node;
++
+ 	if (!ds->num_ports)
+ 		return -EINVAL;
+ 
 -- 
-2.21.0
+2.20.1
 
