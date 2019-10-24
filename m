@@ -2,109 +2,93 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC8FCA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B67CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDEF2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571910669;
-	bh=/+Ql7TLHSuqRBTRatle/8UuavLp8M4wg90FkQYvX1ZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KmDIF/j3eYS+FPkgWt0nghl+ZYtLy8/5vztFoQnzI1uRes3x6en2swBuWMCDtL55x
-	 ucFupkF/CeZIt4y/PwWemm7f1Q3j2vWtLyLNE7bum9AkDVEYC6v+T2sPqPuaGudW6m
-	 +8u+ln79VeTyZV6kKGSJsHLnVyttHXDHJBm5vRtk=
+	by mail.kernel.org (Postfix) with ESMTP id E4EA320856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391500AbfJXJvI (ORCPT
+        id S2393092AbfJXJyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfJXJvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:51:07 -0400
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A218C20856;
-        Thu, 24 Oct 2019 09:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571910666;
-        bh=/+Ql7TLHSuqRBTRatle/8UuavLp8M4wg90FkQYvX1ZA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fHWraPApPelpUnhz80IdJ6qZ3Jw5R++RrLd4l7PfuOCafzao2ErCM/1ApQ91lUK7E
-         0uYS2e9f/H3CF0FLyqr+11wZLk0ellanlE4rDMkvpBd62/g9WmtWFtWw6GDYvxb0sb
-         DxnPSUgn8n7OenmDPbNDDb0vZF9lfVpAL0VLc18U=
-Date:   Thu, 24 Oct 2019 12:50:54 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "deanbo422@gmail.com" <deanbo422@gmail.com>,
-        "deller@gmx.de" <deller@gmx.de>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "gerg@linux-m68k.org" <gerg@linux-m68k.org>,
-        "green.hu@gmail.com" <green.hu@gmail.com>,
-        "jdike@addtoit.com" <jdike@addtoit.com>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "mattst88@gmail.com" <mattst88@gmail.com>,
-        "monstr@monstr.eu" <monstr@monstr.eu>,
-        "msalter@redhat.com" <msalter@redhat.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "sammy@sammy.net" <sammy@sammy.net>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 08/12] parisc: use pgtable-nopXd instead of 4level-fixup
-Message-ID: <20191024095053.GC12281@rapoport-lnx>
-References: <1571822941-29776-9-git-send-email-rppt@kernel.org>
- <20191024093451.15161-1-peda@axentia.se>
+        Thu, 24 Oct 2019 05:54:08 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2052 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfJXJyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:54:08 -0400
+Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id CB95F723A76FB3298309;
+        Thu, 24 Oct 2019 10:54:05 +0100 (IST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 24 Oct 2019 10:54:05 +0100
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 24 Oct
+ 2019 10:54:05 +0100
+Subject: Re: [PATCH 05/18] scsi: hisi_sas: Add timestamp for a debugfs dump
+To:     kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>, <jejb@linux.vnet.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
+        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        Luo Jiaxing <luojiaxing@huawei.com>
+References: <1571674935-108326-6-git-send-email-john.garry@huawei.com>
+ <201910241732.D736Hdxm%lkp@intel.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <8ffe7e01-d955-8dd5-bbc5-d66c31716667@huawei.com>
+Date:   Thu, 24 Oct 2019 10:54:03 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024093451.15161-1-peda@axentia.se>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <201910241732.D736Hdxm%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 09:35:12AM +0000, Peter Rosin wrote:
-> On 2019-10-23 12:28, Mike Rapoport <rppt@kernel.org> wrote:
-> > parisc has two or three levels of page tables and can use appropriate
-> > pgtable-nopXd and folding of the upper layers.
-> >
-> > Replace usage of include/asm-generic/4level-fixup.h and explicit
-> > definitions of __PAGETABLE_PxD_FOLDED in parisc with
-> > include/asm-generic/pgtable-nopmd.h for two-level configurations and with
-> > include/asm-generic/pgtable-nopmd.h for three-lelve configurations and
+On 24/10/2019 10:20, kbuild test robot wrote:
+> Hi John,
 > 
-> I think you mean .../pgtable-nopud.h in the latter case.
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on mkp-scsi/for-next]
+> [cannot apply to v5.4-rc4 next-20191023]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/John-Garry/hisi_sas-Misc-patches-mostly-debugfs/20191024-130727
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git for-next
+> config: i386-allmodconfig (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
+> reproduce:
+>          # save the attached .config to linux build tree
+>          make ARCH=i386
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> ERROR: "__udivdi3" [drivers/scsi/hisi_sas/hisi_sas_main.ko] undefined!
+> 
 
-Right, thanks!
- 
-> Cheers,
-> Peter
+I'll send v2...
 
--- 
-Sincerely yours,
-Mike.
+john
+
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+
