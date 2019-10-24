@@ -2,107 +2,124 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A97CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDECCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5115F20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A70120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408639AbfJXHcz (ORCPT
+        id S2408650AbfJXHe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:32:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:37333 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404582AbfJXHcy (ORCPT
+        Thu, 24 Oct 2019 03:34:57 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:42322 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727635AbfJXHe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:32:54 -0400
-Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MC2k1-1iHoRV3KKT-00CNHc; Thu, 24 Oct 2019 09:32:53 +0200
-Received: by mail-qt1-f169.google.com with SMTP id o49so28651062qta.7;
-        Thu, 24 Oct 2019 00:32:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGINaDe8ol/UwyTv9HgKMFja1GIduS6vsReq+qnlVD+/WVKLhW
-        GuCBDKj+V4k+iQH+eRuaieaFX7hDZ19QHNEReX8=
-X-Google-Smtp-Source: APXvYqx1cA8lBd//hr4TKLK7AQtBX96tkofnWY9zBPmAYj1KZ565pVhrlW2ugtviYRug2qZGIpWMC0k0qlMq7Tgu76s=
-X-Received: by 2002:ac8:6956:: with SMTP id n22mr2674085qtr.7.1571902371561;
- Thu, 24 Oct 2019 00:32:51 -0700 (PDT)
+        Thu, 24 Oct 2019 03:34:56 -0400
+Received: from dread.disaster.area (pa49-181-161-154.pa.nsw.optusnet.com.au [49.181.161.154])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7528843E54F;
+        Thu, 24 Oct 2019 18:34:48 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iNXdu-0001Nj-RS; Thu, 24 Oct 2019 18:34:46 +1100
+Date:   Thu, 24 Oct 2019 18:34:46 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Boaz Harrosh <boaz@plexistor.com>
+Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
+Message-ID: <20191024073446.GA4614@dread.disaster.area>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
+ <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
+ <20191023221332.GE2044@dread.disaster.area>
+ <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
 MIME-Version: 1.0
-References: <20191023150311.844123-1-arnd@arndb.de> <20191023184616.GA17078@agluck-desk2.amr.corp.intel.com>
- <20191023200135.GT3125@piout.net> <3908561D78D1C84285E8C5FCA982C28F7F4AD7F7@ORSMSX115.amr.corp.intel.com>
- <20191023232004.GV3125@piout.net>
-In-Reply-To: <20191023232004.GV3125@piout.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 24 Oct 2019 09:32:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2=9dw2YN-sc7yxwwnRi-6Bos32==523qPaqW=avLs60Q@mail.gmail.com>
-Message-ID: <CAK8P3a2=9dw2YN-sc7yxwwnRi-6Bos32==523qPaqW=avLs60Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] rtc/ia64: remove legacy efirtc driver
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:4eXsFs4CIvbbc7uKuyIn8zaZjVfgTi4fUEVkFFVzJhTl+N9P8w8
- H6zNpanw4PjjxXbPT5TskFJYr4EFNBR7LtkjZ9W9I4dhzg7Okh4vq6Q18OBmgng/NMLbCSt
- HAIRs0EiSZYefTW1i5BX6mkBHgfbnbBRY8BARYI58bvnaTUK0oRTkCZ8ue8AtXex6BKn56y
- uDWWp4T49PKfF57+KezoA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KbBrZDxhHZs=:lPmtFM8GM8bl1A1w51t65C
- Uc+Cxlzn6+BGbsZf2DXfxe3FGASK3VVeRB4IRrGD/IY/Lt2vq7EdlVIpBB4ZSCAhHGKIphBq/
- Moqvx7mm5Bj+YcnIUZBjVEGR/wU85ceXAoo9R9nq5x18QGxoSrv4EM7KzA9L/jFyMUBMoA7+h
- +pcjO23sw43psO0pZx64P1554BYcrn1oTzUp+m78vPosWtAxzWchSSTNsU2w7I26+A/v5hhar
- DyrsOsCqEvAWb/Z1twEtMaSkwzROZ7gQ4qAJDNeJ8BVMLejtqaOFLK7y+FcII7ymLTT5sCjiZ
- fC75qLwKxK+w5UszLgQzSikKo01BEUJnOxR8fyl0xBRZEXg3nFYVWY80X8VRG+E7vK8YERcHC
- 5nvmb40sMec08i/HFdMWtcqjmOBBnyu9qGhI8PmTbaKYhj+276y544np9m1SkArnBYaLfUWp0
- LW2fQaI+LExIz+5M9D0o0CKUcJ8TzCHK4pDJI79j0bCtnTxobjtUXbxzcR5OQ0+1ZAYRAK1vR
- a8WjKG3DTsmmPDpAKqdZgM2gAp9iy6/jLGS0luW87XBvkL79CBJJayJT/4d3Yl4Ad5nUiOQ9C
- RjqDuAxh7/7IvRHv2Mv0hCWIhR4OuJeFpHDMhzkvX7Q1tWDzmLowm7H6JHe//o25NEW2/YUm9
- ZJ367aveqldjWA8tby7WQGkmbeEJK3K2RA/R3MrxPAFOn7enC1nkXR+sQ/VQv120H+QuU1weA
- gfRRqX+VS/FJnFYY11NTjMS08teMMU7XrBHtkl+K+OjlkmUphoYBrL7f1vbwxxyacaQ2RvSDx
- 8zDOLZEsilojlfH3sdOIOIbmU4ghgmkck6qozkuFRUysD9SjrYysBXvgYgy6+dDfZP/Wb0162
- p//VsAppEmHrByIc7CDA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
+        a=l3vQdJ1SkhDHY1nke8Lmag==:117 a=l3vQdJ1SkhDHY1nke8Lmag==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=Tfe4Wh1HrYWVbsmHChwA:9
+        a=eAQsJKfVFY_lWVYV:21 a=XZNTOILeClruhaqN:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 1:20 AM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 23/10/2019 21:30:29+0000, Luck, Tony wrote:
-> > >> rtc-efi rtc-efi: setting system clock to 2019-10-23T18:30:23 UTC (1571855423)
-> >
-> > > You can remove CONFIG_RTC_HCTOSYS, this line will disappear, systemd
-> > > will not like that but efirtc was not setting the system time anyway so
-> > > this shouldn't change the behaviour.
-> >
-> >
-> > Wait ... that message says "setting system clock"
-> >
-> > but then you say " efirtc was not setting the system time anyway".
-> >
-> > So did the time get set, or not?
-> >
-> > If it wasn't set, why does the message say that it was set?
-> >
->
-> What I meant was that drivers/char/efirtc.c was not setting the system
-> time but when using drivers/rtc/rtc-efi.c with CONFIG_RTC_HCTOSYS, the
-> kernel will use the rtc to set the system time.
+On Thu, Oct 24, 2019 at 05:31:13AM +0300, Boaz Harrosh wrote:
+> On 24/10/2019 01:13, Dave Chinner wrote:
+> > On Wed, Oct 23, 2019 at 04:09:50PM +0300, Boaz Harrosh wrote:
+> >> On 22/10/2019 14:21, Boaz Harrosh wrote:
+> >>> On 20/10/2019 18:59, ira.weiny@intel.com wrote:
+> >> Please explain the use case behind your model?
+> > 
+> > No application changes needed to control whether they use DAX or
+> > not. It allows the admin to control the application behaviour
+> > completely, so they can turn off DAX if necessary. Applications are
+> > unaware of constraints that may prevent DAX from being used, and so
+> > admins need a mechanism to prevent DAX aware application from
+> > actually using DAX if the capability is present.
+> > 
+> > e.g. given how slow some PMEM devices are when it comes to writing
+> > data, especially under extremely high concurrency, DAX is not
+> > necessarily a performance win for every application. Admins need a
+> > guaranteed method of turning off DAX in these situations - apps may
+> > not provide such a knob, or even be aware of a thing called DAX...
+> > 
+> 
+> Thank you Dave for explaining. Forgive my slowness. I now understand
+> your intention.
+> 
+> But if so please address my first concern. That in the submitted implementation
+> you must set the flag-bit after the create of the file but before the write.
+> So exactly the above slow writes must always be DAX if I ever want the file
+> to be DAX accessed in the future.
 
-arch/ia64 has a read_persistent_clock64() function, so it ends up reading
-the system time regardless of the RTC driver or CONFIG_RTC_HCTOSYS.
+The on disk DAX flag is inherited from the parent directory at
+create time. Hence an admin only need to set it on the data
+directory of the application when first configuring it, and
+everything the app creates will be configured for DAX access
+automatically.
 
-As ia64 sets neither ARCH_HIBERNATION_POSSIBLE nor
-ARCH_SUSPEND_POSSIBLE, so we could just remove the
-read_persistent_clock64() and efi_gettimeofday(), relying instead
-on user space (/sbin/hwclock) or CONFIG_RTC_HCTOSYS.
+Or, alternatively, mkfs sets the flag on the root dir so that
+everything in the filesystem uses DAX by default (through
+inheritance) unless the admin turns off the flag on a directory
+before it starts to be used or on a set of files after they have
+been created (because DAX causes problems)...
 
-         Arnd
+So, yeah, there's another problem with the basic assertion that we
+only need to allow the on disk flag to be changed on zero length
+files: we actually want to be able to -clear- the DAX flag when the
+file has data attached to it, not just when it is an empty file...
+
+> What if, say in XFS when setting the DAX-bit we take all the three write-locks
+> same as a truncate. Then we check that there are no active page-cache mappings
+> ie. a single opener. Then allow to set the bit. Else return EBUISY. (file is in use)
+
+DAX doesn't have page cache mappings, so anything that relies on
+checking page cache state isn't going to work reliably. I also seem
+to recall that there was a need to take some vm level lock to really
+prevent page fault races, and that we can't safely take that in a
+safe combination with all the filesystem locks we need.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
