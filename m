@@ -2,81 +2,85 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F12CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B37CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEED2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419BD2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409571AbfJXPE5 (ORCPT
+        id S2409585AbfJXPHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:04:57 -0400
-Received: from out28-53.mail.aliyun.com ([115.124.28.53]:47984 "EHLO
-        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407327AbfJXPE5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:04:57 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1422553|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.217482-0.0138334-0.768685;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03291;MF=liu.xiang@zlingsmart.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.FppA4zP_1571929478;
-Received: from localhost(mailfrom:liu.xiang@zlingsmart.com fp:SMTPD_---.FppA4zP_1571929478)
-          by smtp.aliyun-inc.com(10.194.97.171);
-          Thu, 24 Oct 2019 23:04:38 +0800
-From:   Liu Xiang <liuxiang_1999@126.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, jhubbard@nvidia.com,
-        liuxiang_1999@126.com
-Subject: [PATCH v2] mm: gup: fix comment of __get_user_pages()
-Date:   Thu, 24 Oct 2019 23:04:32 +0800
-Message-Id: <1571929472-3091-1-git-send-email-liuxiang_1999@126.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 24 Oct 2019 11:07:30 -0400
+Received: from sauhun.de ([88.99.104.3]:41692 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407327AbfJXPHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 11:07:30 -0400
+Received: from localhost (x4d0d4399.dyn.telefonica.de [77.13.67.153])
+        by pokefinder.org (Postfix) with ESMTPSA id AB61C2C011D;
+        Thu, 24 Oct 2019 17:07:27 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 17:07:26 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin.Ciubotariu@microchip.com
+Cc:     kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
+        thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+Message-ID: <20191024150726.GA1120@kunai>
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+ <20191021202044.GB3607@kunai>
+ <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Content-Disposition: inline
+In-Reply-To: <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix comment of __get_user_pages() and make it more clear.
 
-Suggested-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
----
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
- as suggested by John, rewrite the comment about return value.
 
- mm/gup.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+> So at the beginning of a new transfer, we should check if SDA (or SCL?)=
+=20
+> is low and, if it's true, only then we should try recover the bus.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 8f236a3..bc6a254 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -734,11 +734,17 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-  *		Or NULL if the caller does not require them.
-  * @nonblocking: whether waiting for disk IO or mmap_sem contention
-  *
-- * Returns number of pages pinned. This may be fewer than the number
-- * requested. If nr_pages is 0 or negative, returns 0. If no pages
-- * were pinned, returns -errno. Each page returned must be released
-- * with a put_page() call when it is finished with. vmas will only
-- * remain valid while mmap_sem is held.
-+ * Returns either number of pages pinned (which may be less than the
-+ * number requested), or an error. Details about the return value:
-+ *
-+ * -- If nr_pages is 0, returns 0.
-+ * -- If nr_pages is >0, but no pages were pinned, returns -errno.
-+ * -- If nr_pages is >0, and some pages were pinned, returns the number of
-+ *    pages pinned. Again, this may be less than nr_pages.
-+ *
-+ * The caller is responsible for releasing returned @pages, via put_page().
-+ *
-+ * @vmas are valid only as long as mmap_sem is held.
-  *
-  * Must be called with mmap_sem held.  It may be released.  See below.
-  *
--- 
-1.9.1
+Yes, this is the proper time to do it. Remember, I2C does not define a
+timeout.
 
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2xvikACgkQFA3kzBSg
+KbY2xw/9FIdBm3lKLqDZpmKjcsD3wcKioeBhtRCD82gnXZgkMqSlbbQQRf8y8ZKe
+KAun1rTcj+rHtvzH20i+alDXQzChwwJAS9ZxORyWPurh0sRTwGDH5z8Bl1Sm8kUp
+6dMDTGNrWwFGV0iQmHzF17n545X7ho/QHlTmpQi23SxS0sOJGPz5D8drDlWS0eBq
+MFrDt9jqeCRV2u68gntAWoMoTHUr5klUizS+p8Jrt3yMIfriH1uPc3VGa5xuuLVI
+al5YrR9bB0zgYZatgoxnZ6Q5KkInb1DkZIZNRmJP+4QoTMo97HHW+ZrsNJUD9mw5
+Uuoh2NTgVGkbuCXRDzVsDOoEEMVM1qmmZxNfeXPtIO6jWbZID8ZaWbsgAfV4SXnQ
+eeeZkH8ZuO19KhSeS6/El283JSMuvl89njtXd7l6/hcY41ndFOkjtjEDs/7Ed7RJ
+SB0dnavo3zYhzyMJ1IjhtIEIc3+cRZRy7HmBxgovyuEYYCF+re6I8HLjvo2/aYuC
++s7J45zgY/9lqcnJRMz6iL7yIAFyoptYVVq5V065QWCyeKDNmVNBg3XP24ETd879
+060Xp1xPeZQU/Pe6D+j7fzfYDyg94Hi9a7P7TT4ZwatTm8LCObi5g7FCCuq5OQPM
+eY9Z7YHvo7yo4rYM1tqbAoYA0ZUxXj9IxGI8uIr0L3lBjLIJAI0=
+=cVZT
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
