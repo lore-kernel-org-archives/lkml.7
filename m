@@ -2,172 +2,167 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77D7CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B921ECA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67E320856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC882084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 11:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="So9FD3Ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393442AbfJXLW0 (ORCPT
+        id S2438926AbfJXLWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 07:22:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:48200 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393360AbfJXLW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:22:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85B66B57;
-        Thu, 24 Oct 2019 04:22:10 -0700 (PDT)
-Received: from [10.1.194.43] (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7790D3F71A;
-        Thu, 24 Oct 2019 04:22:09 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH] KVM: arm64: Select SCHED_INFO before SCHEDSTATS
-To:     Marc Zyngier <maz@kernel.org>, Mao Wenan <maowenan@huawei.com>
-Cc:     catalin.marinas@arm.com, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, will@kernel.org,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-References: <20191023032254.159510-1-maowenan@huawei.com>
- <26ee413334937b9530bc8f033fe378ec@www.loen.fr>
-Message-ID: <6d037fa1-5e8b-38cd-e947-7547c1e8dd15@arm.com>
-Date:   Thu, 24 Oct 2019 12:22:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 24 Oct 2019 07:22:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44346 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392847AbfJXLWf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 07:22:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Eoxo5siLBEjeHmhSrah95Nyw/+aG2YokJoEiTaV0+fg=; b=So9FD3Iaz619Ul2HS5Pan3icl
+        NcW4kkYKOEEpYlaZXRKwtwbshbs6jyYpdsySgnRja8aBG6axaYVQ3f1RR1MoIO3GrWpuiTmzCy4yN
+        DFGcpEXfAl5prVGQwYxq//wAtqy1ZGkmUOfGJIfx0wbT1DMKRDOZWlEje6pryte+xfefVeNd1dSNa
+        w/6VHLuhTBqZy12PZtaEO7h5nPMyWio+3s7xosjIpFqZ/msIOgx1HzC929gzWOeKdT2gSC52VnKt7
+        pA1OQ3qOhsu4cjgv9IJTFbvO3rckvjfRxVMQZAmxdLmcA/lch6jDFU44CTcSJd+/QCsZ1QO3BD5c/
+        drY+Vo0bQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNbCL-0007oz-0U; Thu, 24 Oct 2019 11:22:33 +0000
+Date:   Thu, 24 Oct 2019 04:22:32 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Xiang Zheng <zhengxiang9@huawei.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, alex.williamson@redhat.com,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
+Message-ID: <20191024112232.GD2963@bombadil.infradead.org>
+References: <20191023163851.GA2963@bombadil.infradead.org>
+ <20191023204638.GA8868@google.com>
 MIME-Version: 1.0
-In-Reply-To: <26ee413334937b9530bc8f033fe378ec@www.loen.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023204638.GA8868@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/10/2019 17:51, Marc Zyngier wrote:
-> On 2019-10-23 04:22, Mao Wenan wrote:
->> If KVM=y, it will select SCHEDSTATS, below erros can
->> be seen:
->> kernel/sched/stats.h: In function rq_sched_info_arrive:
->> kernel/sched/stats.h:12:20: error: struct sched_info
->> has no member named run_delay
->>    rq->rq_sched_info.run_delay += delta;
->>                     ^
->> kernel/sched/stats.h:13:20: error: struct sched_info
->> has no member named pcount
->>    rq->rq_sched_info.pcount++;
->>                     ^
->> kernel/sched/stats.h: In function rq_sched_info_dequeued:
->> kernel/sched/stats.h:31:20: error: struct sched_info has
->> no member named run_delay
->>    rq->rq_sched_info.run_delay += delta;
->>
->> These are because CONFIG_SCHED_INFO is not set, This patch
->> is to select SCHED_INFO before SCHEDSTATS.
->>
->> Fixes: 8564d6372a7d ("KVM: arm64: Support stolen time reporting via
->> shared structure")
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  arch/arm64/kvm/Kconfig | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
->> index d8b88e4..3c46eac 100644
->> --- a/arch/arm64/kvm/Kconfig
->> +++ b/arch/arm64/kvm/Kconfig
->> @@ -39,6 +39,7 @@ config KVM
->>      select IRQ_BYPASS_MANAGER
->>      select HAVE_KVM_IRQ_BYPASS
->>      select HAVE_KVM_VCPU_RUN_PID_CHANGE
->> +    select SCHED_INFO
->>      select SCHEDSTATS
->>      ---help---
->>        Support hosting virtualized guest machines.
+On Wed, Oct 23, 2019 at 03:46:38PM -0500, Bjorn Helgaas wrote:
+> [+cc Thomas, Rafael, beginning of thread at
+> https://lore.kernel.org/r/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com]
 > 
-> SCHEDSTATS is really an odd choice. Here's what I get after disabling
-> DEBUG_KERNEL (from defconfig):
+> On Wed, Oct 23, 2019 at 09:38:51AM -0700, Matthew Wilcox wrote:
+> > On Wed, Oct 23, 2019 at 10:15:40AM -0500, Bjorn Helgaas wrote:
+> > > I don't like being one of a handful of callers of __add_wait_queue(),
+> > > so I like that solution from that point of view.
+> > > 
+> > > The 7ea7e98fd8d0 ("PCI: Block on access to temporarily unavailable pci
+> > > device") commit log suggests that using __add_wait_queue() is a
+> > > significant optimization, but I don't know how important that is in
+> > > practical terms.  Config accesses are never a performance path anyway,
+> > > so I'd be inclined to use add_wait_queue() unless somebody complains.
+> > 
+> > Wow, this has got pretty messy in the umpteen years since I last looked
+> > at it.
+> > 
+> > Some problems I see:
+> > 
+> > 1. Commit df65c1bcd9b7b639177a5a15da1b8dc3bee4f5fa (tglx) says:
+> > 
+> >     x86/PCI: Select CONFIG_PCI_LOCKLESS_CONFIG
+> >     
+> >     All x86 PCI configuration space accessors have either their own
+> >     serialization or can operate completely lockless (ECAM).
+> >     
+> >     Disable the global lock in the generic PCI configuration space accessors.
+> > 
+> > The concept behind this patch is broken.  We still need to lock out
+> > config space accesses when devices are undergoing D-state transitions.
+> > I would suggest that for the contention case that tglx is concerned about,
+> > we should have a pci_bus_read_config_unlocked_##size set of functions
+> > which can be used for devices we know never go into D states.
 > 
-> WARNING: unmet direct dependencies detected for SCHEDSTATS
->   Depends on [n]: DEBUG_KERNEL [=n] && PROC_FS [=y]
->   Selected by [y]:
->   - KVM [=y] && VIRTUALIZATION [=y] && OF [=y]
+> Host bridges that can't do config accesses atomically, e.g., they have
+> something like the 0xcf8/0xcfc addr/data ports, need serialization.
+> CONFIG_PCI_LOCKLESS_CONFIG removes the use of pci_lock for that, and I
+> think that part makes sense regardless of whether devices can enter D
+> states.
+
+I disagree.  If a device is in D state, we need to block the access.
+Maybe there needs to be a different mechanism for doing it that's not
+a machine-wide lock, but it needs to happen.
+
+> We *should* prevent config accesses during D-state transitions (per
+> PCIe r5.0, sec 5.9), but I don't think pci_lock ever did that.
+
+It used to set block_ucfg_access.  Maybe that's been lost; I see
+there are still calls to pci_dev_lock() in pci_reset_function(),
+for example.
+
+> pci_raw_set_power_state() contains delays, but that only prevents
+> accesses from the caller, not from other threads or from userspace.
+> I suppose we should also prevent accesses by other threads during
+> transitions done by ACPI, e.g., _PS0, _PS1, _PS2, _PS3.  AFAICT we
+> don't do any of that.
 > 
-> WARNING: unmet direct dependencies detected for SCHEDSTATS
->   Depends on [n]: DEBUG_KERNEL [=n] && PROC_FS [=y]
->   Selected by [y]:
->   - KVM [=y] && VIRTUALIZATION [=y] && OF [=y]
+> It looks like pci_lock currently:
 > 
-> WARNING: unmet direct dependencies detected for SCHEDSTATS
->   Depends on [n]: DEBUG_KERNEL [=n] && PROC_FS [=y]
->   Selected by [y]:
->   - KVM [=y] && VIRTUALIZATION [=y] && OF [=y]
+>   - Serializes all kernel config accesses system-wide in
+>     pci_bus_read_config_##size() (unless CONFIG_PCI_LOCKLESS_CONFIG=y).
 > 
-> So clearly SCHEDSTATS isn't meant to be selected on its own.
+>   - Serializes all userspace config accesses system-wide in
+>     pci_user_read_config_##size() (this seems unnecessary when
+>     CONFIG_PCI_LOCKLESS_CONFIG=y).
 > 
-> We can either just select SCHED_INFO (which *nobody else does*), or go
-> the full x86 way which selects TASK_DELAY_ACCT (and thus depends on
-> NET && MULTIUSER). My gut feeling is that we shouldn't deviate too much
-> from x86...
+>   - Serializes userspace config accesses with resets of the device via
+>     the dev->block_cfg_access bit and waitqueue mechanism.
 > 
-> Thoughts?
+>   - Serializes kernel and userspace config accesses with bus->ops
+>     changes in pci_bus_set_ops() (except that we don't serialize
+>     kernel config accesses if CONFIG_PCI_LOCKLESS_CONFIG=y, which is
+>     probably a problem).  But pci_bus_set_ops() is hardly used and I'm
+>     not sure it's worth keeping it.
+> 
+> > 2. Commit a2e27787f893621c5a6b865acf6b7766f8671328 (jan kiszka)
+> >    exports pci_lock.  I think this is a mistake; at best there should be
+> >    accessors for the pci_lock.  But I don't understand why it needs to
+> >    exclude PCI config space changes throughout pci_check_and_set_intx_mask().
+> >    Why can it not do:
+> > 
+> > -	bus->ops->read(bus, dev->devfn, PCI_COMMAND, 4, &cmd_status_dword);
+> > +	pci_read_config_dword(dev, PCI_COMMAND, &cmd_status_dword);
+> > 
+> > 3. I don't understand why 511dd98ce8cf6dc4f8f2cb32a8af31ce9f4ba4a1
+> >    changed pci_lock to be a raw spinlock.  The patch description
+> >    essentially says "We need it for RT" which isn't terribly helpful.
+> > 
+> > 4. Finally, getting back to the original problem report here, I wouldn't
+> >    write this code this way today.  There's no reason not to use the
+> >    regular add_wait_queue etc.  BUT!  Why are we using this custom locking
+> >    mechanism?  It pretty much screams to me of an rwsem (reads/writes
+> >    of config space take it for read; changes to config space accesses
+> >    (disabling and changing of accessor methods) take it for write.
+> 
+> So maybe the immediate thing is to just convert to add_wait_queue()?
 
-I suspect you're right - TASK_DELAY_ACCT seems to be the closest to what
-we need. SCHEDSTATS has the "advantage" of forcing sched_info_on() to
-return true - preventing it from being disabled. But we clearly don't
-want to require CONFIG_DEBUG_KERNEL for CONFIG_KVM.
+Isn't that going to run foul of the lock inversion you fixed in
+cdcb33f9824429a926b971bf041a6cec238f91ff ?
 
-The next best is CONFIG_TASK_DELAY_ACCT which enables sched_info_on()
-unless "nodelayacct" is specified on the cmdline. It seems reasonable
-that the cmdline option might break stolen time.
+> There's a lot we could clean up here, but I think it would take a fair
+> bit of untangling before we actually solve this panic.
 
-So let's just copy x86:
-
------8<-----
-From 915893f5c57241cc29d90769b3f720a6135277d7 Mon Sep 17 00:00:00 2001
-From: Steven Price <steven.price@arm.com>
-Date: Thu, 24 Oct 2019 12:14:36 +0100
-Subject: [PATCH] KVM: arm64: Select TASK_DELAY_ACCT rather than SCHEDSTATS
-
-SCHEDSTATS requires DEBUG_KERNEL (and PROC_FS) and therefore isn't a
-good choice for enabling the scheduling statistics required for stolen
-time.
-
-Instead match the x86 configuration and select TASK_DELAY_ACCT. This
-adds the dependencies of NET && MULTIUSER for arm64 KVM.
-
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Fixes: 8564d6372a7d ("KVM: arm64: Support stolen time reporting via shared structure")
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/arm64/kvm/Kconfig | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index d8b88e40d223..1ffb300e2d92 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -21,6 +21,8 @@ if VIRTUALIZATION
- config KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
- 	depends on OF
-+	# for TASKSTATS/TASK_DELAY_ACCT:
-+	depends on NET && MULTIUSER
- 	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
-@@ -39,7 +41,7 @@ config KVM
- 	select IRQ_BYPASS_MANAGER
- 	select HAVE_KVM_IRQ_BYPASS
- 	select HAVE_KVM_VCPU_RUN_PID_CHANGE
--	select SCHEDSTATS
-+	select TASK_DELAY_ACCT
- 	---help---
- 	  Support hosting virtualized guest machines.
- 	  We don't support KVM with 16K page tables yet, due to the multiple
--- 
-2.20.1
-
+Yes, the mess has spread over many years ;-)
