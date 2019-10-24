@@ -2,156 +2,120 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C397CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89C4CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D2D21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFB7205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:59:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u/xwwGQ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408828AbfJXH7h (ORCPT
+        id S2408839AbfJXH7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:59:37 -0400
-Received: from wp051.webpack.hosteurope.de ([80.237.132.58]:35610 "EHLO
-        wp051.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405209AbfJXH7g (ORCPT
+        Thu, 24 Oct 2019 03:59:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39470 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404701AbfJXH7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:59:36 -0400
-X-Greylist: delayed 1378 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Oct 2019 03:59:36 EDT
-Received: from p200300cd5f0509008cc3eaf0bbac9dd5.dip0.t-ipconnect.de ([2003:cd:5f05:900:8cc3:eaf0:bbac:9dd5]); authenticated
-        by wp051.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1iNXfh-0002uw-UO; Thu, 24 Oct 2019 09:36:37 +0200
-To:     linux-kernel@vger.kernel.org
-From:   Robert Stupp <snazy@snazy.de>
-Subject: mlockall(MCL_CURRENT) blocking infinitely
-Message-ID: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
-Date:   Thu, 24 Oct 2019 09:36:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 24 Oct 2019 03:59:54 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9O7xpKB066748;
+        Thu, 24 Oct 2019 02:59:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571903991;
+        bh=+IUED6wuPtdFzwetdXLMK4dsNj7i3Pf25koVr6ceON8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=u/xwwGQ+I3WW3uguQVeK3bzwHYzzz5PMJetrrqu/u552Yzuo4i2ulMhDzKB3TFdVT
+         +pIFGA5kZLiYwjONdqEG68vnQFqwzNuPRUfWToKn0kPY3ecAAQE4+HnSc/RS8cH+1B
+         Kwg8G7zmiUCkv6waemSF4KNy6XPmnJpV5bMQYdUo=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9O7xpeq046214;
+        Thu, 24 Oct 2019 02:59:51 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 24
+ Oct 2019 02:59:39 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 24 Oct 2019 02:59:49 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9O7xlgJ040749;
+        Thu, 24 Oct 2019 02:59:48 -0500
+Subject: Re: [PATCH v2] clk: ti: dra7-atl-clock: Remove ti_clk_add_alias call
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <mturquette@baylibre.com>
+CC:     <sboyd@kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191002083436.10194-1-peter.ujfalusi@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <0770a061-c731-dfee-0de7-c16dcf87454e@ti.com>
+Date:   Thu, 24 Oct 2019 10:59:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191002083436.10194-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-bounce-key: webpack.hosteurope.de;snazy@snazy.de;1571903976;f6e34a93;
-X-HE-SMSGID: 1iNXfh-0002uw-UO
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+On 02/10/2019 11:34, Peter Ujfalusi wrote:
+> ti_clk_register() calls it already so the driver should not create
+> duplicated alias.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi,
+> 
+> changes since v1:
+> - removed unused ret variable
+> 
 
-I've got an issue with `mlockall(MCL_CURRENT)` after upgrading Ubuntu 
-19.04 to 19.10 - i.e. kernel version change from 5.0.x to 5.3.x.
+Queued up for 5.4 fixes, thanks.
 
-The following simple program hangs forever with one CPU running at 100% 
-(kernel):
-
-#include <stdio.h>
-#include <sys/mman.h>
-int main(char** argv) {
-   printf("Before mlockall(MCL_CURRENT)\n");
-   // works in 5.0
-   // hangs forever w/ 5.1 and newer
-   mlockall(MCL_CURRENT);
-   printf("After mlockall(MCL_CURRENT)\n");
-}
-
-All kernel versions since 5.1 (tried 5.1.0, 5.1.21, 5.2.21, 5.3.0-19, 
-5.3.7, 5.4-rc4) show the same symptom (hanging in mlockall(MCL_CURRENT) 
-with 100% kernel-CPU). 5.0 kernel versions (5.0.21) are fine.
-
-First, I thought, that it's something generic, so I tried the above 
-program in a fresh install of Ubuntu eoan (5.3.x) in a VM in virtualbox, 
-but it works fine there. So I suspect, that it has to do with something 
-that's specific to my machine.
-
-My first suspicion was that some library "hijacks" mlockall(), but 
-calling the test program with `LD_DEBUG=all` shows that glibc gets 
-called directly:
-      12248:    symbol=mlockall;  lookup in file=./test [0]
-      12248:    symbol=mlockall;  lookup in 
-file=/lib/x86_64-linux-gnu/libc.so.6 [0]
-      12248:    binding file ./test [0] to 
-/lib/x86_64-linux-gnu/libc.so.6 [0]: normal symbol `mlockall' [GLIBC_2.2.5]
-An `strace` doesn't show anything meaningful (beside that mlockall's 
-been called but never returns). dmesg and syslog don't show anything 
-obvious (to me) as well.
-
-Some information about the machine:
-- Intel(R) Core(TM) i7-6900K, Intel X99 chipset
-- NVMe 1.1b
-- 64GB RAM (4x 16GB)
-
-I've also reverted all changes for sysctl and ld.conf and checked for 
-other suspicious software without any luck.
-
-I also tried a bunch of variations of the above program, but only 
-`mlockall(MCL_CURRENT)` or `mlockall(MCL_FUTURE | MCL_CURRENT)` hang.
-
-A `git diff v5.0..v5.1 mm/` doesn't show anything obvious (to me).
-
-It seems, there's no debug/trace information that would help to find out 
-what exactly it's doing.
-
-I'm kinda lost at the moment.
+-Tero
 
 
-PS: Variations of the above test program:
+> Regards,
+> Peter
+> 
+>   drivers/clk/ti/clk-dra7-atl.c | 6 ------
+>   1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/clk/ti/clk-dra7-atl.c b/drivers/clk/ti/clk-dra7-atl.c
+> index a01ca9395179..f65e16c4f3c4 100644
+> --- a/drivers/clk/ti/clk-dra7-atl.c
+> +++ b/drivers/clk/ti/clk-dra7-atl.c
+> @@ -174,7 +174,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
+>   	struct clk_init_data init = { NULL };
+>   	const char **parent_names = NULL;
+>   	struct clk *clk;
+> -	int ret;
+>   
+>   	clk_hw = kzalloc(sizeof(*clk_hw), GFP_KERNEL);
+>   	if (!clk_hw) {
+> @@ -207,11 +206,6 @@ static void __init of_dra7_atl_clock_setup(struct device_node *node)
+>   	clk = ti_clk_register(NULL, &clk_hw->hw, node->name);
+>   
+>   	if (!IS_ERR(clk)) {
+> -		ret = ti_clk_add_alias(NULL, clk, node->name);
+> -		if (ret) {
+> -			clk_unregister(clk);
+> -			goto cleanup;
+> -		}
+>   		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+>   		kfree(parent_names);
+>   		return;
+> 
 
-#include <stdio.h>
-#include <sys/mman.h>
-char foo[65536];
-int main(char** argv) {
-   printf("Before mlock()\n");
-   int e = mlock(foo, 8192); // works in 5.0, 5.1, 5.2, 5.3, 5.4
-   printf("After mlock()=%d\n", e);
-}
-
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-int main(char** argv) {
-   printf("Before mlockall(MCL_FUTURE)\n");
-   int e = mlockall(MCL_FUTURE); // works in 5.0, 5.1, 5.2, 5.3, 5.4
-   printf("After mlockall(MCL_FUTURE) = %d\n", e);
-   void* mem = malloc(1024 * 1024 * 1024);
-   printf("After malloc()\n");
-   mem = malloc(1024 * 1024 * 1024);
-   printf("After malloc()\n");
-   mem = malloc(1024 * 1024 * 1024);
-   printf("After malloc()\n");
-   // works in 5.0, 5.1, 5.2, 5.3, 5.4
-}
-
-
-#include <stdio.h>
-#include <sys/mman.h>
-int main(char** argv) {
-   printf("Before munlockall()\n");
-   int e = munlockall(); // works in 5.0, 5.1, 5.2, 5.3, 5.4
-   printf("After munlockall() = %d\n", e);
-}
-
-
-#include <stdio.h>
-#include <sys/mman.h>
-int main(char** argv) {
-   printf("Before mlockall(MCL_CURRENT|MCL_FUTURE)\n");
-   // works in 5.0
-   // hangs forever w/ 5.1 and newer
-   int e = mlockall(MCL_CURRENT|MCL_FUTURE);
-   printf("After mlockall(MCL_CURRENT|MCL_FUTURE) = %d\n", e);
-}
-
-PPS: Kernel version images installed from 
-https://kernel.ubuntu.com/~kernel-ppa/mainline/?C=N;O=D
-
--- 
-Robert Stupp
-@snazy
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
