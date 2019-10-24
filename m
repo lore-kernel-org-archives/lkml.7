@@ -2,93 +2,102 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C7ACA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681DBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA682070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FFC21928
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="GVDICoRF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EWkROy1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfJXUbR (ORCPT
+        id S1728164AbfJXUdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:31:17 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35466 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfJXUbQ (ORCPT
+        Thu, 24 Oct 2019 16:33:19 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60874 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbfJXUdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:31:16 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z6so194577otb.2;
-        Thu, 24 Oct 2019 13:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jYJ6gEo/hVCrgbEGD/uQo09XTKvuC2XPns9+x2EIVbg=;
-        b=GVDICoRF34YVDIHmRFO4I+Wlb/tsKac3U+PmDGHaeRGtbS50fObSEzXliC15S6sI+i
-         8+te4hcVOCbpsZenjzCnwsax9RPCIN05p89Q6fRbz5/TRzRW/3HnqANany4Nlav6qRkF
-         Uizv+7Wn3eaftNRYlmrOSoqeCT3xzPTydmapcVGVZ/jsYjdULUqs0jWylKI/F/Xou3Wk
-         nOZIRUh4BuW6Cj0i1bvOp0d71SQhG6e/w91Jm5B9BnSMfppk8N2q85dqOtSBPlMjeHxa
-         ysqfUvVKYByS4NaL9l+qWNNMwtO8bolyANgemhkwBwGOrT/zeCahChIEDopEGv6LG7Ma
-         DJaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jYJ6gEo/hVCrgbEGD/uQo09XTKvuC2XPns9+x2EIVbg=;
-        b=bqPaZc+XyIekQE8iVlUfm0Mg/nhK+Qm5wsyAMYkyq4OimmxwhgFgOU9qxp9bT7P6a3
-         BBwl76sWGrNbgxdc4slUzcvNPiCa9of6MY+AmbXa/3JtfGR7w35fndH6ntHUUPSWdFuj
-         sQ3yaSDulDLUaTkggONqs0kJHUeNaGW2KLxVJYJEu+SvZGXSSfgqra8hvuaSqoc1Y3Y4
-         abEiAv1epXjmHMdpToxzFZKYH5K1gyi3p+OrKhvJgaSa4GCmxMOhJ4uAymcMtUsYjVhJ
-         eET+GleUyKVf3OjsnjQDMlLjkjhpM0VmZILCVuiZvi76f4ELuuW38lRwf/cMTDHtlaDi
-         +YSQ==
-X-Gm-Message-State: APjAAAXllYKbP1N1Lzqzmut/fDK/+4Ww6yvlNawurOYwuWKZCQo6e11L
-        oUVIZuH81QWrzIEG5J990+GifTXfEdOCst6YMUw=
-X-Google-Smtp-Source: APXvYqzsF73bxdUO6gmL8WJ5PmKfZDJ2dxPE35TqJ6sVlfXtsgi5lFQ5zxTJW6X9dWfcPzjLwEj/q4rf2XmMsA4UXvo=
-X-Received: by 2002:a9d:6043:: with SMTP id v3mr11975067otj.6.1571949075624;
- Thu, 24 Oct 2019 13:31:15 -0700 (PDT)
+        Thu, 24 Oct 2019 16:33:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GVODDosAz0KEwdHpAoHPZ1mcsfz+QIahQyGZ0FFdveI=; b=EWkROy1UNPTh1cenqdA4Lbg0U
+        SFH3/12wnub2nQFPEEaf4U/aYASqjMm0xqUrLVylowlgDwWhLiVA6jRnBfYgdrvpv99RFEk4H6rwa
+        6KyCw7Pk8KQ2sg8lPMEMyxiQgwTJxRSFGdvONnPWbzu3ieGxWjg/x+ZaRABi4tcFlFx+vxgdqFjin
+        RbXncK9O1MEWFeqi9pntFjmWvn6dAB9CNLVqNeWDyZmQCXSRLyPTzZG+hEyppPqpPJofUCFOMbtuu
+        mOFqtBPJhcfTLtkBx4RpxKD/YohtclX4KYsxwHBGrkKQwyTBHMnftmraNMMiR1JT93Jm6rtiSbeuu
+        Ywv5jGfrw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNjn9-0004Is-K2; Thu, 24 Oct 2019 20:33:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8D53B300EBF;
+        Thu, 24 Oct 2019 22:32:07 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 28BA6201A6638; Thu, 24 Oct 2019 22:33:06 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 22:33:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191024203306.GL4114@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+ <20191023151654.GF19358@hirez.programming.kicks-ass.net>
+ <20191023171514.7hkhtvfcj5vluwcg@treble>
+ <20191024105904.GB4131@hirez.programming.kicks-ass.net>
+ <20191024183115.jomddpijq5u453qc@treble>
 MIME-Version: 1.0
-References: <cover.1571638827.git.eswara.kota@linux.intel.com> <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
-In-Reply-To: <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 24 Oct 2019 22:31:04 +0200
-Message-ID: <CAFBinCCSX_kVB=W3O-WXDMD2_2_Rnv+kiehf37xDkjL8+QoyHQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024183115.jomddpijq5u453qc@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dilip,
+On Thu, Oct 24, 2019 at 01:31:15PM -0500, Josh Poimboeuf wrote:
 
-thank you for the update
-two nit-picks below, apart from those it looks good to me
+> How about something like this?  Completely untested, but if you agree
+> with this approach I could hack up kpatch-build to test it properly.
+> 
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index ab4a4606d19b..597bf32bc591 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -239,6 +239,17 @@ static int klp_resolve_symbols(Elf_Shdr *relasec, struct module *pmod)
+>  		if (ret)
+>  			return ret;
+>  
+> +		/*
+> +		 * Prevent module patches from using livepatch relas for
+> +		 * vmlinux symbols.  Presumably such symbols are exported and
+> +		 * normal relas can instead be used at patch module loading
+> +		 * time.
+> +		 */
+> +		if (!vmlinux && core_kernel_text(addr)) {
+> +			pr_err("unsupported livepatch symbol\n");
+> +			return -EINVAL;
+> +		}
+> +
+>  		sym->st_value = addr;
+>  	}
 
-On Mon, Oct 21, 2019 at 8:39 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-[...]
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-why no space between pcie10 and pcie@d0e00000?
-
-[...]
-> +      status = "okay";
-examples should not use the status property, see commit 4da722ca19f30f
-("dt-bindings: Remove "status" from examples")
-
-
-Martin
+If that works, this is much simpler and therefore preferred.
