@@ -2,118 +2,167 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDEECA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93963CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249A621929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RZGqh51Q"
+	by mail.kernel.org (Postfix) with ESMTP id 71D3221A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 19:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504353AbfJXTCf (ORCPT
+        id S2504377AbfJXTCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 15:02:35 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:38563 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504322AbfJXTC3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 15:02:29 -0400
-Received: by mail-pf1-f202.google.com with SMTP id d126so19770684pfd.5
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 12:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=gqjRA7utK84t0hFtqZlJ+wiNMJ2M/V0XD0ZpglWruVc=;
-        b=RZGqh51Qr/eWD2Ooq6wVLu6f0biQN82V1VKy9W2BZxH4mFtmaGguwbDzL6ASOr8xT0
-         kpm5dGrgpSbAXJyHi2AK5dsT2RSUZvNBpUHeQfE0p65tbNO9YLAAthglkEhNgGUmwS3D
-         ajS+ObEUqHGU1UTuFVrEvLz/C0UQa5KTomDJLGzXtQHLQwjaZdAZIzWO5HXjVSTu2cbO
-         uuOHwmfy7tyuyVcFImLp6DdgiihTUu/PRU515Fltr2E5ZOLmzZeElnNcoQfCtuoAEaR/
-         D1gBF9eJKZ3ghG8Qp0mtzRiHfRVJs3srLMA4tfGXmIFKDSqnTUGcItXvVqB47SMwvzFF
-         laaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=gqjRA7utK84t0hFtqZlJ+wiNMJ2M/V0XD0ZpglWruVc=;
-        b=r1MngIEQ7MkspB/LctXjy49+KNWNFaybQpUTYMQAcpT6F68EO6wbW3tN31iXrk7YxM
-         XwhNB1BMaV7qQ1mr8AZKOZsi+oysMzg3KVMs2MYUmHYUOtL7t0i43HY9G3T2qmQpkLFt
-         NG1OoKCyPzzyPa6UgHqYQhZnR1crdwYCwsQAJ4H2L7ztZq7f5xIxNpR6MTGyb0jG3CCE
-         PYVZlz14URcQsuAmuakaTDOsJeGTZsBUxonMlHke3Ii3PX/uHPbnwv5LpONeFxFExZg2
-         a5VQOuoUESztAhpQQToBOuuieRDmLyVL4DlU3DvrJlQ5+v34gqtYJ10sFDRKccfrnFOp
-         lqGg==
-X-Gm-Message-State: APjAAAUPzmUMZhZ8JJtqDJFGnXyqHg7BCUoMkOmxUc56woY6QqiMnAd0
-        8ucwB2C5eJ5GwvSzGYUTTZ3u2F6i5cFZ
-X-Google-Smtp-Source: APXvYqzeLxsYQVas8b+zU1CkaGEpstfT3CvicPP4VxCdhsprBo7j8Yyn0uInHBBGQhogEKKbU4FZn9lMfk+k
-X-Received: by 2002:a65:498c:: with SMTP id r12mr16268812pgs.280.1571943748421;
- Thu, 24 Oct 2019 12:02:28 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 12:02:01 -0700
-In-Reply-To: <20191024190202.109403-1-irogers@google.com>
-Message-Id: <20191024190202.109403-9-irogers@google.com>
-Mime-Version: 1.0
-References: <20191023005337.196160-1-irogers@google.com> <20191024190202.109403-1-irogers@google.com>
-X-Mailer: git-send-email 2.23.0.866.gb869b98d4c-goog
-Subject: [PATCH v3 8/9] perf tools: if pmu configuration fails free terms
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 24 Oct 2019 15:02:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:7222 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2504337AbfJXTCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 15:02:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 12:02:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,225,1569308400"; 
+   d="scan'208";a="399868603"
+Received: from nesterov-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.8.153])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Oct 2019 12:02:35 -0700
+Date:   Thu, 24 Oct 2019 22:02:34 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     ivan.lazeev@gmail.com, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Message-ID: <20191024190217.GA7002@linux.intel.com>
+References: <20191016182814.18350-1-ivan.lazeev@gmail.com>
+ <20191021155735.GA7387@linux.intel.com>
+ <20191023115151.GF21973@linux.intel.com>
+ <20191023232035.ir7hmed4m3emovyx@cantor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023232035.ir7hmed4m3emovyx@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid a memory leak when the configuration fails.
+On Wed, Oct 23, 2019 at 04:20:35PM -0700, Jerry Snitselaar wrote:
+> On Wed Oct 23 19, Jarkko Sakkinen wrote:
+> > On Mon, Oct 21, 2019 at 06:57:35PM +0300, Jarkko Sakkinen wrote:
+> > > Almost tested this today. Unfortunately the USB stick at hand was
+> > > broken.  I'll retry tomorrow or Wed depending on which day I visit at
+> > > the office and which day I WFH.
+> > > 
+> > > At least the AMI BIOS had all the TPM stuff in it. The hardware I'll be
+> > > using is Udoo Bolt V8 (thanks Jerry for pointing me out this device)
+> > > with AMD Ryzen Embedded V1605B [1]
+> > > 
+> > > Thanks for the patience with your patch.
+> > > 
+> > > [1] https://en.wikichip.org/wiki/amd/ryzen_embedded/v1605b
+> > 
+> > Jerry, are you confident to give this tested-by?
+> > 
+> > I'm still in process of finding what I should put to .config in order
+> > to get USB keyboard working with UDOO BOLT.
+> > 
+> > /Jarkko
+> 
+> I ran it through the tpm2 kselftests and it passed:
+> 
+> TAP version 13
+> 1..2
+> # selftests: tpm2: test_smoke.sh
+> # test_read_partial_overwrite (tpm2_tests.SmokeTest) ... ok
+> # test_read_partial_resp (tpm2_tests.SmokeTest) ... ok
+> # test_seal_with_auth (tpm2_tests.SmokeTest) ... ok
+> # test_seal_with_policy (tpm2_tests.SmokeTest) ... ok
+> # test_seal_with_too_long_auth (tpm2_tests.SmokeTest) ... ok
+> # test_send_two_cmds (tpm2_tests.SmokeTest) ... ok
+> # test_too_short_cmd (tpm2_tests.SmokeTest) ... ok
+> # test_unseal_with_wrong_auth (tpm2_tests.SmokeTest) ... ok
+> # test_unseal_with_wrong_policy (tpm2_tests.SmokeTest) ... ok
+> #
+> # ----------------------------------------------------------------------
+> # Ran 9 tests in 12.305s
+> #
+> # OK
+> ok 1 selftests: tpm2: test_smoke.sh
+> # selftests: tpm2: test_space.sh
+> # test_flush_context (tpm2_tests.SpaceTest) ... ok
+> # test_get_handles (tpm2_tests.SpaceTest) ... ok
+> # test_invalid_cc (tpm2_tests.SpaceTest) ... ok
+> # test_make_two_spaces (tpm2_tests.SpaceTest) ... ok
+> #
+> # ----------------------------------------------------------------------
+> # Ran 4 tests in 11.355s
+> #
+> # OK
+> ok 2 selftests: tpm2: test_space.sh
+> 
+> 
+> I also did some other testing of tpm2-tools commands, creating a
+> trusted key and encrypted key, and running rngtest against /dev/random
+> with the current hwrng being tpm-rng-0.
+> 
+> I ran the selftests on an intel nuc as well:
+> 
+> TAP version 13
+> 1..2
+> # selftests: tpm2: test_smoke.sh
+> # test_read_partial_overwrite (tpm2_tests.SmokeTest) ... ok
+> # test_read_partial_resp (tpm2_tests.SmokeTest) ... ok
+> # test_seal_with_auth (tpm2_tests.SmokeTest) ... ok
+> # test_seal_with_policy (tpm2_tests.SmokeTest) ... ok
+> # test_seal_with_too_long_auth (tpm2_tests.SmokeTest) ... ok
+> # test_send_two_cmds (tpm2_tests.SmokeTest) ... ok
+> # test_too_short_cmd (tpm2_tests.SmokeTest) ... ok
+> # test_unseal_with_wrong_auth (tpm2_tests.SmokeTest) ... ok
+> # test_unseal_with_wrong_policy (tpm2_tests.SmokeTest) ... ok
+> # # ----------------------------------------------------------------------
+> # Ran 9 tests in 29.620s
+> # # OK
+> ok 1 selftests: tpm2: test_smoke.sh
+> # selftests: tpm2: test_space.sh
+> # test_flush_context (tpm2_tests.SpaceTest) ... ok
+> # test_get_handles (tpm2_tests.SpaceTest) ... ok
+> # test_invalid_cc (tpm2_tests.SpaceTest) ... ok
+> # test_make_two_spaces (tpm2_tests.SpaceTest) ... ok
+> # # ----------------------------------------------------------------------
+> # Ran 4 tests in 26.337s
+> # # OK
+> ok 2 selftests: tpm2: test_space.sh
+> 
+> 
+> So,
+> 
+> Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> 
+> 
+> 
+> One thing I've noticed on the bolt and the nuc:
+> 
+> [    0.808935] tpm_tis MSFT0101:00: IRQ index 0 not found
+> 
+> I'm guessing this is Stefan's patches causing this?
+> 
+> 1ea32c83c699 | 2019-09-02 | tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts (Stefan Berger)
+> 5b359c7c4372 | 2019-09-02 | tpm_tis_core: Turn on the TPM before probing IRQ's (Stefan Berger)
+> 
+> I've never noticed tpm_tis messages before on a tpm_crb system, and doublechecked that I don't see it with 5.3.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+I'd guess it is related to:
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index dc5862a663b5..999ea7378969 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1406,8 +1406,15 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	if (get_config_terms(head_config, &config_terms))
- 		return -ENOMEM;
- 
--	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error))
-+	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
-+		struct perf_evsel_config_term *pos, *tmp;
-+
-+		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
-+			list_del_init(&pos->list);
-+			free(pos);
-+		}
- 		return -EINVAL;
-+	}
- 
- 	evsel = __add_event(list, &parse_state->idx, &attr,
- 			    get_config_name(head_config), pmu,
--- 
-2.23.0.866.gb869b98d4c-goog
+https://patchwork.kernel.org/patch/11200049/
 
+Thank you for the tested-by. I pushed this now. I'll try to get also
+my tested-by before sending the PR (still fighting to find correct
+kernel config to enable USB keyboard with UDOO BOLT).
+
+/Jarkko
