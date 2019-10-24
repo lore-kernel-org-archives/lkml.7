@@ -2,105 +2,171 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86FACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617222166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCB7205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gClEFeCU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AOlZgQZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438238AbfJXIdC (ORCPT
+        id S2438258AbfJXIdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:33:02 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35941 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbfJXIdB (ORCPT
+        Thu, 24 Oct 2019 04:33:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40220 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2438241AbfJXIdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:33:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u16so18404301lfq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 01:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+75bXYmJLWTFE3320pYIpgc0DqJcYlwjBZB7EAmPS10=;
-        b=gClEFeCU+g0DoMciGkXeW9Z7OGI79blTyZ9lLfcjrBKqg5p80UlmyeFFLuXc5KT5hH
-         Q3wWVhydm7bwX2DiG3ftfR8cTTAs24mFH15R4Q4mAz2paRSJ//b3ENgS7RgbKaBPM+Ji
-         khtnY1Yt0+YLyd0ZBxlay/rj9Am64z/A1bYGg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+75bXYmJLWTFE3320pYIpgc0DqJcYlwjBZB7EAmPS10=;
-        b=Zl3kuPxqpC7v+ekDkY5LYj3ChGDZ75XnujbqSzqcD6gOa7FN43pQ69oOawQ6bnT6S4
-         OPwemo/N6WQJhsW1mtjvX7qXi6+2qxmr8rq/xLCTp+O9BIUevgkK0OE8N6TJimB/qNy5
-         jTYPX7X3Lx4uT1h2Aoz89sznudp2zR13IPJFinO41LN+r5kaxvMkXaNnoR13wV15Uziy
-         T649tS44qTnxrXzLGZNdNa2yaAedlxjtXCPw1EvleDYRFteZNyQ9xU3ISPGoEC+LhDTA
-         WOmRTJR+lUfFQPRncFqusdgXlP6Eaa/y+NDOfsGyuvZV/ZzndPgemTexttt3RPqaI4q3
-         ZQmg==
-X-Gm-Message-State: APjAAAVsp0eJ1VfeIXDglLtv6nHWYJWb5PldtmSqCqwa4G+scmKlZdKg
-        uBpLm2g0ekPz2XPKIdeHB4ToSiJnPstTv+Ds
-X-Google-Smtp-Source: APXvYqzGW/Z8ZcO24MLlZ7Q5TGMTH80egPpH3CSH8TEMirFgblCVOGKAPMvCu448esyNvmcxQil8nA==
-X-Received: by 2002:ac2:5f0a:: with SMTP id 10mr1989441lfq.57.1571905977834;
-        Thu, 24 Oct 2019 01:32:57 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id p18sm12995854lfh.24.2019.10.24.01.32.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 24 Oct 2019 01:32:57 -0700 (PDT)
-Subject: Re: [PATCH 4/7] soc: fsl: qe: replace spin_event_timeout by
- readx_poll_timeout_atomic
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191018125234.21825-5-linux@rasmusvillemoes.dk>
- <20191018160852.GA13036@infradead.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <a11aaeaa-7075-4ad0-aa26-d8d7eafa72f5@rasmusvillemoes.dk>
-Date:   Thu, 24 Oct 2019 10:32:56 +0200
+        Thu, 24 Oct 2019 04:33:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571905985;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GP6qD2J1CBmhiVD+sbR/nBuazK8LU9m7yhlITTEQS64=;
+        b=AOlZgQZOV2vsGc3u91nDFVabCURQZD0C6/X53vifylKMPYENkQwKEiDql68+dxKTLUyj/u
+        62wNz2SOtwZuyW1uAhWhfx9fKtMKBrnaPeVZCmDU4ELRdrNcovLpzn1lVTpIvlA7AoXpUH
+        bjrD/K/9iWYY79k6M7rGZB/pYIqfMq4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-zHllE4ZJP_6HPNgUQkm_IQ-1; Thu, 24 Oct 2019 04:33:02 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B751A800D5A;
+        Thu, 24 Oct 2019 08:33:00 +0000 (UTC)
+Received: from [10.72.13.32] (ovpn-13-32.pek2.redhat.com [10.72.13.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A93A5D717;
+        Thu, 24 Oct 2019 08:32:43 +0000 (UTC)
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+From:   Jason Wang <jasowang@redhat.com>
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <20191022095230.2514-1-tiwei.bie@intel.com>
+ <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
+ <20191023030253.GA15401@___>
+ <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
+ <20191023070747.GA30533@___>
+ <106834b5-dae5-82b2-0f97-16951709d075@redhat.com> <20191023101135.GA6367@___>
+ <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
+ <20191024042155.GA21090@___>
+ <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
+Message-ID: <d4cc4f4e-2635-4041-2f68-cd043a97f25a@redhat.com>
+Date:   Thu, 24 Oct 2019 16:32:42 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191018160852.GA13036@infradead.org>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: zHllE4ZJP_6HPNgUQkm_IQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/10/2019 18.08, Christoph Hellwig wrote:
-> On Fri, Oct 18, 2019 at 02:52:31PM +0200, Rasmus Villemoes wrote:
->>  	/* wait for the QE_CR_FLG to clear */
->> -	ret = spin_event_timeout((ioread32be(&qe_immr->cp.cecr) & QE_CR_FLG) == 0,
->> -				 100, 0);
->> -	/* On timeout (e.g. failure), the expression will be false (ret == 0),
->> -	   otherwise it will be true (ret == 1). */
->> +	ret = readx_poll_timeout_atomic(ioread32be, &qe_immr->cp.cecr, val, (val & QE_CR_FLG) == 0,
-> 
-> This creates an overly long line.
 
-Yeah, readx_poll_timeout_atomic is a mouthful, and then one also has to
-put in the name of the accessor... I'll wrap it when I respin the
-series, thanks.
+On 2019/10/24 =E4=B8=8B=E5=8D=884:03, Jason Wang wrote:
+>
+> On 2019/10/24 =E4=B8=8B=E5=8D=8812:21, Tiwei Bie wrote:
+>> On Wed, Oct 23, 2019 at 06:29:21PM +0800, Jason Wang wrote:
+>>> On 2019/10/23 =E4=B8=8B=E5=8D=886:11, Tiwei Bie wrote:
+>>>> On Wed, Oct 23, 2019 at 03:25:00PM +0800, Jason Wang wrote:
+>>>>> On 2019/10/23 =E4=B8=8B=E5=8D=883:07, Tiwei Bie wrote:
+>>>>>> On Wed, Oct 23, 2019 at 01:46:23PM +0800, Jason Wang wrote:
+>>>>>>> On 2019/10/23 =E4=B8=8A=E5=8D=8811:02, Tiwei Bie wrote:
+>>>>>>>> On Tue, Oct 22, 2019 at 09:30:16PM +0800, Jason Wang wrote:
+>>>>>>>>> On 2019/10/22 =E4=B8=8B=E5=8D=885:52, Tiwei Bie wrote:
+>>>>>>>>>> This patch introduces a mdev based hardware vhost backend.
+>>>>>>>>>> This backend is built on top of the same abstraction used
+>>>>>>>>>> in virtio-mdev and provides a generic vhost interface for
+>>>>>>>>>> userspace to accelerate the virtio devices in guest.
+>>>>>>>>>>
+>>>>>>>>>> This backend is implemented as a mdev device driver on top
+>>>>>>>>>> of the same mdev device ops used in virtio-mdev but using
+>>>>>>>>>> a different mdev class id, and it will register the device
+>>>>>>>>>> as a VFIO device for userspace to use. Userspace can setup
+>>>>>>>>>> the IOMMU with the existing VFIO container/group APIs and
+>>>>>>>>>> then get the device fd with the device name. After getting
+>>>>>>>>>> the device fd of this device, userspace can use vhost ioctls
+>>>>>>>>>> to setup the backend.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+>>>>>>>>>> ---
+>>>>>>>>>> This patch depends on below series:
+>>>>>>>>>> https://lkml.org/lkml/2019/10/17/286
+>>>>>>>>>>
+>>>>>>>>>> v1 -> v2:
+>>>>>>>>>> - Replace _SET_STATE with _SET_STATUS (MST);
+>>>>>>>>>> - Check status bits at each step (MST);
+>>>>>>>>>> - Report the max ring size and max number of queues (MST);
+>>>>>>>>>> - Add missing MODULE_DEVICE_TABLE (Jason);
+>>>>>>>>>> - Only support the network backend w/o multiqueue for now;
+>>>>>>>>> Any idea on how to extend it to support devices other than=20
+>>>>>>>>> net? I think we
+>>>>>>>>> want a generic API or an API that could be made generic in the=20
+>>>>>>>>> future.
+>>>>>>>>>
+>>>>>>>>> Do we want to e.g having a generic vhost mdev for all kinds of=20
+>>>>>>>>> devices or
+>>>>>>>>> introducing e.g vhost-net-mdev and vhost-scsi-mdev?
+>>>>>>>> One possible way is to do what vhost-user does. I.e. Apart from
+>>>>>>>> the generic ring, features, ... related ioctls, we also introduce
+>>>>>>>> device specific ioctls when we need them. As vhost-mdev just needs
+>>>>>>>> to forward configs between parent and userspace and even won't
+>>>>>>>> cache any info when possible,
+>>>>>>> So it looks to me this is only possible if we expose e.g=20
+>>>>>>> set_config and
+>>>>>>> get_config to userspace.
+>>>>>> The set_config and get_config interface isn't really everything
+>>>>>> of device specific settings. We also have ctrlq in virtio-net.
+>>>>> Yes, but it could be processed by the exist API. Isn't it? Just=20
+>>>>> set ctrl vq
+>>>>> address and let parent to deal with that.
+>>>> I mean how to expose ctrlq related settings to userspace?
+>>>
+>>> I think it works like:
+>>>
+>>> 1) userspace find ctrl_vq is supported
+>>>
+>>> 2) then it can allocate memory for ctrl vq and set its address through
+>>> vhost-mdev
+>>>
+>>> 3) userspace can populate ctrl vq itself
+>> I see. That is to say, userspace e.g. QEMU will program the
+>> ctrl vq with the existing VHOST_*_VRING_* ioctls, and parent
+>> drivers should know that the addresses used in ctrl vq are
+>> host virtual addresses in vhost-mdev's case.
+>
+>
+> That's really good point. And that means parent needs to differ vhost=20
+> from virtio. It should work.=20
 
-> Btw, given how few users of spin_event_timeout we have it might be good
-> idea to just kill it entirely.
 
-Maybe. That's for the ppc folks to comment on; the iopoll.h helpers are
-not completely equivalent (because obviously they don't read tbl
-directly). Maybe the generic versions should be taught
-spin_begin/spin_end/spin_cpu_relax so at least that part would be
-drop-in replacement.
+HVA may only work when we have something similar to VHOST_SET_OWNER=20
+which can reuse MM of its owner.
 
-Rasmus
 
+> But is there any chance to use DMA address? I'm asking since the API=20
+> then tends to be device specific.=20
+
+
+I wonder whether we can introduce MAP IOMMU notifier and get DMA=20
+mappings from that.
+
+Thanks
 
