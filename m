@@ -2,231 +2,161 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5256DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10013CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D75921929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF14B2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SqRnrqQv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hZV5ThvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbfJXWIj (ORCPT
+        id S1730212AbfJXWI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:08:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42760 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730159AbfJXWIh (ORCPT
+        Thu, 24 Oct 2019 18:08:59 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42751 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730139AbfJXWI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:08:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571954916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lt0ui2Zn4GJJ+6SRnh8DuJwgMxQuUYdZDUgODW613/I=;
-        b=SqRnrqQvoHTpOjdUQViRW+ADOrpzF2REeez/q+EUPxZJcVCXXD72OkmNDcw40baEVI/p78
-        bUWcJNl+lUVqHXdaHGUNZVMex4Fht4Lc5/9/ii1azxQE23uSvfF+IoHsE++AkBd+Jds8w+
-        Oasb58dyd1pMAOwCheV5JlQStrLpi+4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-Zc6GJbPyNASsY8gcpckuSQ-1; Thu, 24 Oct 2019 18:08:31 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48AFF47B;
-        Thu, 24 Oct 2019 22:08:29 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 961B05C1B5;
-        Thu, 24 Oct 2019 22:08:17 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 18:08:14 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 14/21] audit: contid check descendancy and
- nesting
-Message-ID: <20191024220814.pid5ql6kvyr4ianb@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <16abf1b2aafeb5f1b8dae20b9a4836e54f959ca5.1568834524.git.rgb@redhat.com>
- <CAHC9VhSRmn46DcazH4Q35vOSxVoEu8PsX79aurkHkFymRoMwag@mail.gmail.com>
+        Thu, 24 Oct 2019 18:08:59 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c16so113547plz.9
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7wPBWsyoRhhryb3J0bD0S+K3mPGWRQAeLMgGyEAh8NA=;
+        b=hZV5ThvEMUe1+H05W87KipW9wh8W8qyemLiokSK/yWiGkKnR/ch3kMUXgljY2w7zvW
+         /Ipbf87Yb3kijE0T/t66H8q1lyMED+KuoZVVkIu8AfIue0j3r1w3INIvCHuyClmQZ5qJ
+         L5yoYY48V7XqsWggkovSZkM4/DzpOMEyr2Q4PTDLkvIsHvpRpGGzYvQnho9QSFySXs95
+         VYbtizX1cePFwi4McJi5HaVzUpTEt/ComD7KFvZXiO8HRrPPaZAB855XykN4NaXJiAcv
+         r9Ev5jxZak+jKKW4lYvE0WZA/72DJ5Fmz3n3K3BXGaCsXeW4xlijy41BM1lXyl3ttbJD
+         Kimw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7wPBWsyoRhhryb3J0bD0S+K3mPGWRQAeLMgGyEAh8NA=;
+        b=VyiI0YxQRgDpvJvyantgEnovhvsax5ubuabT5M8wfNLXgquv2MhGYyX3d1Uk2ud1+L
+         rhr6XTtL4sEMCn5x3LptAsXjW8c+oAoEjmmHse7CeMJM77purgZyJ1LbgPthl6pK0d++
+         Oj9aXYT2vfqcwwz1PgWxLquoLPwCb7eRwmVafAOEdDvn6HxXw54dzMGvXyMpqZjWeaPQ
+         IXu8H8c64en7/OmYQoSx+Ja0JGaq6GlPEt4rH3SQ3IAC9LS4Fpz/DFdeUbAChriMjtVb
+         iBia7U2zaJKuSIa3HDJiflc+s7I0mfXeqd9b/wTj9fkXYsQlRqG9taYikpVm/rtZdMZs
+         dWXA==
+X-Gm-Message-State: APjAAAX2amL0jVglS6ME/fHQOaEarPDQ5tccoKbWMtr2Ltf9QzZ8hpb9
+        f/9VrUdCt75mftzUG442Fo8s5kzFOlRE6QK4dk8NdQ==
+X-Google-Smtp-Source: APXvYqzMMqI2/Ki1cf7/37Wuw+l9BTH1Xi6VyQPxUeoQt6GTWlVjj1sr7Smw/haUnuNf40UudnwnXjn6LWFu59enO2A=
+X-Received: by 2002:a17:902:9b83:: with SMTP id y3mr40405plp.179.1571954937563;
+ Thu, 24 Oct 2019 15:08:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhSRmn46DcazH4Q35vOSxVoEu8PsX79aurkHkFymRoMwag@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: Zc6GJbPyNASsY8gcpckuSQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191016230209.39663-1-ndesaulniers@google.com>
+In-Reply-To: <20191016230209.39663-1-ndesaulniers@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 24 Oct 2019 15:08:44 -0700
+Message-ID: <CAKwvOdkDCeNCg7N0jyjo9oQmVX6seOXjSv06DvQDCDz_7qSo=Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] drm/amdgpu: fix stack alignment ABI mismatch
+To:     Harry Wentland <harry.wentland@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        yshuiv7@gmail.com, "S, Shirish" <shirish.s@amd.com>
+Cc:     andrew.cooper3@citrix.com, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Matthias Kaehlcke <mka@google.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Koenig, Christian" <christian.koenig@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-10 20:40, Paul Moore wrote:
-> On Wed, Sep 18, 2019 at 9:26 PM Richard Guy Briggs <rgb@redhat.com> wrote=
-:
-> > ?fixup! audit: convert to contid list to check for orch/engine ownershi=
-p
->=20
-> ?
->=20
-> > Require the target task to be a descendant of the container
-> > orchestrator/engine.
-> >
-> > You would only change the audit container ID from one set or inherited
-> > value to another if you were nesting containers.
-> >
-> > If changing the contid, the container orchestrator/engine must be a
-> > descendant and not same orchestrator as the one that set it so it is no=
-t
-> > possible to change the contid of another orchestrator's container.
->=20
-> Did you mean to say that the container orchestrator must be an
-> ancestor of the target, and the same orchestrator as the one that set
-> the target process' audit container ID?
+On Wed, Oct 16, 2019 at 4:02 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> The x86 kernel is compiled with an 8B stack alignment via
+> `-mpreferred-stack-boundary=3` for GCC since 3.6-rc1 via
+> commit d9b0cde91c60 ("x86-64, gcc: Use -mpreferred-stack-boundary=3 if supported")
+> or `-mstack-alignment=8` for Clang. Parts of the AMDGPU driver are
+> compiled with 16B stack alignment.
+>
+> Generally, the stack alignment is part of the ABI. Linking together two
+> different translation units with differing stack alignment is dangerous,
+> particularly when the translation unit with the smaller stack alignment
+> makes calls into the translation unit with the larger stack alignment.
+> While 8B aligned stacks are sometimes also 16B aligned, they are not
+> always.
+>
+> Multiple users have reported General Protection Faults (GPF) when using
+> the AMDGPU driver compiled with Clang. Clang is placing objects in stack
+> slots assuming the stack is 16B aligned, and selecting instructions that
+> require 16B aligned memory operands.
+>
+> At runtime, syscall handlers with 8B aligned stack call into code that
+> assumes 16B stack alignment.  When the stack is a multiple of 8B but not
+> 16B, these instructions result in a GPF.
+>
+> Remove the code that added compatibility between the differing compiler
+> flags, as it will result in runtime GPFs when built with Clang.
+>
+> The series is broken into 3 patches, the first is an important fix for
+> Clang for ChromeOS. The rest are attempted cleanups for GCC, but require
+> additional boot testing. The first patch is critical, the rest are nice
+> to have. I've compile tested the series with ToT Clang, GCC 4.9, and GCC
+> 8.3 **but** I do not have hardware to test on, so I need folks with the
+> above compilers and relevant hardware to help test the series.
+>
+> The first patch is a functional change for Clang only. It does not
+> change anything for any version of GCC. Yuxuan boot tested a previous
+> incarnation on hardware, but I've changed it enough that I think it made
+> sense to drop the previous tested by tag.
 
-Not quite, the first half yes, but the second half: if it was already
-set by that orchestrator, it can't be set again.  If it is a different
-orchestrator that is a descendant of the orchestrator that set it, then
-allow the action.
+Thanks for testing the first patch Shirish. Are you or Yuxuan able to
+test the rest of the series with any combination of {clang|gcc < 7.1|
+gcc >= 7.1} on hardware and report your findings?
 
-> Or maybe I'm missing something about what you are trying to do?
+>
+> The second patch is a functional change for GCC 7.1+ only. It does not
+> affect older versions of GCC or Clang (though if someone wanted to
+> double check with pre-GCC 7.1 it wouldn't hurt).  It should be boot
+> tested on GCC 7.1+ on the relevant hardware.
+>
+> The final patch is also a functional change for GCC 7.1+ only. It does
+> not affect older versions of GCC or Clang. It should be boot tested on
+> GCC 7.1+ on the relevant hardware. Theoretically, there may be an issue
+> with it, and it's ok to drop it. The series was intentional broken into
+> 3 in order to allow them to be incrementally tested and accepted. It's
+> ok to take earlier patches without the later patches.
+>
+> And finally, I do not condone linking object files of differing stack
+> alignments.  Idealistically, we'd mark the driver broken for pre-GCC
+> 7.1.  Pragmatically, "if it ain't broke, don't fix it."
 
-Does that help clarify it?
+Harry, Alex,
+Thoughts on the series? Has AMD been able to stress test these more internally?
 
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  kernel/audit.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++=
-+-------
-> >  1 file changed, 62 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 9ce7a1ec7a92..69fe1e9af7cb 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -2560,6 +2560,39 @@ static struct task_struct *audit_cont_owner(stru=
-ct task_struct *tsk)
-> >  }
-> >
-> >  /*
-> > + * task_is_descendant - walk up a process family tree looking for a ma=
-tch
-> > + * @parent: the process to compare against while walking up from child
-> > + * @child: the process to start from while looking upwards for parent
-> > + *
-> > + * Returns 1 if child is a descendant of parent, 0 if not.
-> > + */
-> > +static int task_is_descendant(struct task_struct *parent,
-> > +                             struct task_struct *child)
-> > +{
-> > +       int rc =3D 0;
-> > +       struct task_struct *walker =3D child;
-> > +
-> > +       if (!parent || !child)
-> > +               return 0;
-> > +
-> > +       rcu_read_lock();
-> > +       if (!thread_group_leader(parent))
-> > +               parent =3D rcu_dereference(parent->group_leader);
-> > +       while (walker->pid > 0) {
-> > +               if (!thread_group_leader(walker))
-> > +                       walker =3D rcu_dereference(walker->group_leader=
-);
-> > +               if (walker =3D=3D parent) {
-> > +                       rc =3D 1;
-> > +                       break;
-> > +               }
-> > +               walker =3D rcu_dereference(walker->real_parent);
-> > +       }
-> > +       rcu_read_unlock();
-> > +
-> > +       return rc;
-> > +}
-> > +
-> > +/*
-> >   * audit_set_contid - set current task's audit contid
-> >   * @task: target task
-> >   * @contid: contid value
-> > @@ -2587,22 +2620,43 @@ int audit_set_contid(struct task_struct *task, =
-u64 contid)
-> >         oldcontid =3D audit_get_contid(task);
-> >         read_lock(&tasklist_lock);
-> >         /* Don't allow the contid to be unset */
-> > -       if (!audit_contid_valid(contid))
-> > +       if (!audit_contid_valid(contid)) {
-> >                 rc =3D -EINVAL;
-> > +               goto unlock;
-> > +       }
-> >         /* Don't allow the contid to be set to the same value again */
-> > -       else if (contid =3D=3D oldcontid) {
-> > +       if (contid =3D=3D oldcontid) {
-> >                 rc =3D -EADDRINUSE;
-> > +               goto unlock;
-> > +       }
-> >         /* if we don't have caps, reject */
-> > -       else if (!capable(CAP_AUDIT_CONTROL))
-> > +       if (!capable(CAP_AUDIT_CONTROL)) {
-> >                 rc =3D -EPERM;
-> > -       /* if task has children or is not single-threaded, deny */
-> > -       else if (!list_empty(&task->children))
-> > +               goto unlock;
-> > +       }
-> > +       /* if task has children, deny */
-> > +       if (!list_empty(&task->children)) {
-> >                 rc =3D -EBUSY;
-> > -       else if (!(thread_group_leader(task) && thread_group_empty(task=
-)))
-> > +               goto unlock;
-> > +       }
-> > +       /* if task is not single-threaded, deny */
-> > +       if (!(thread_group_leader(task) && thread_group_empty(task))) {
-> >                 rc =3D -EALREADY;
-> > -       /* if contid is already set, deny */
-> > -       else if (audit_contid_set(task))
-> > +               goto unlock;
-> > +       }
-> > +       /* if task is not descendant, block */
-> > +       if (task =3D=3D current) {
-> > +               rc =3D -EBADSLT;
-> > +               goto unlock;
-> > +       }
-> > +       if (!task_is_descendant(current, task)) {
-> > +               rc =3D -EXDEV;
-> > +               goto unlock;
-> > +       }
-> > +       /* only allow contid setting again if nesting */
-> > +       if (audit_contid_set(task) && current =3D=3D audit_cont_owner(t=
-ask))
-> >                 rc =3D -ECHILD;
-> > +unlock:
-> >         read_unlock(&tasklist_lock);
-> >         if (!rc) {
-> >                 struct audit_cont *oldcont =3D audit_cont(task);
->=20
+>
+> Nick Desaulniers (3):
+>   drm/amdgpu: fix stack alignment ABI mismatch for Clang
+>   drm/amdgpu: fix stack alignment ABI mismatch for GCC 7.1+
+>   drm/amdgpu: enable -msse2 for GCC 7.1+ users
+>
+>  drivers/gpu/drm/amd/display/dc/calcs/Makefile | 19 ++++++++++++-------
+>  drivers/gpu/drm/amd/display/dc/dcn20/Makefile | 19 ++++++++++++-------
+>  drivers/gpu/drm/amd/display/dc/dcn21/Makefile | 19 ++++++++++++-------
+>  drivers/gpu/drm/amd/display/dc/dml/Makefile   | 19 ++++++++++++-------
+>  drivers/gpu/drm/amd/display/dc/dsc/Makefile   | 19 ++++++++++++-------
+>  5 files changed, 60 insertions(+), 35 deletions(-)
+>
 > --
-> paul moore
-> www.paul-moore.com
+> 2.23.0.700.g56cf767bdb-goog
+>
 
-- RGB
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+-- 
+Thanks,
+~Nick Desaulniers
