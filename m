@@ -2,63 +2,149 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8FDCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963CACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9B22084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765022084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 01:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392242AbfJXBRr (ORCPT
+        id S2392296AbfJXBWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 21:17:47 -0400
-Received: from verein.lst.de ([213.95.11.211]:43070 "EHLO verein.lst.de"
+        Wed, 23 Oct 2019 21:22:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:42223 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbfJXBRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 21:17:47 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 281F768BE1; Thu, 24 Oct 2019 03:17:44 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 03:17:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH 3/7] nvmet: Introduce common execute function for
- get_log_page and identify
-Message-ID: <20191024011743.GC5190@lst.de>
-References: <20191023163545.4193-1-logang@deltatee.com> <20191023163545.4193-4-logang@deltatee.com>
+        id S1726925AbfJXBWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 23 Oct 2019 21:22:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Oct 2019 18:22:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,222,1569308400"; 
+   d="scan'208";a="228325727"
+Received: from fyin-dev.sh.intel.com (HELO [10.239.143.122]) ([10.239.143.122])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Oct 2019 18:22:19 -0700
+Subject: Re: [PATCH v3] ACPI/processor_idle: Remove dummy wait if kernel is in
+ guest mode
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>
+References: <20191023074945.17016-1-fengwei.yin@intel.com>
+ <30ee0a348f624698801691f65eeecd87@AcuMS.aculab.com>
+From:   Yin Fengwei <fengwei.yin@intel.com>
+Message-ID: <9bb3baef-b23e-a383-d50f-f795033c0c02@intel.com>
+Date:   Thu, 24 Oct 2019 09:22:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023163545.4193-4-logang@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <30ee0a348f624698801691f65eeecd87@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 10:35:41AM -0600, Logan Gunthorpe wrote:
-> Instead of picking the sub-command handler to execute in a nested
-> switch statement introduce a landing functions that calls out
-> to the appropriate sub-command handler.
-> 
-> This will allow us to have a common place in the handler to check
-> the transfer length in a future patch.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> [logang@deltatee.com: separated out of a larger draft patch from hch]
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 
-First signoff needs to be the From line picked up by git.  I don't really
-care if you keep my attribution or not, but if you do it needs From
-line for me as the first theing in the mail body, and if not it
-should drop by signoff and just say based on a patch from me.
 
-Otherwise the series looks fine.
+On 2019/10/23 下午4:45, David Laight wrote:
+> From: Yin Fengwei
+>> Sent: 23 October 2019 08:50
+> 
+> 
+>> In function acpi_idle_do_entry(), an ioport access is used for dummy
+>> wait to guarantee hardware behavior. But it could trigger unnecessary
+>> vmexit if kernel is running as guest in virtualization environtment.
+>>
+>> If it's in virtualization environment, the deeper C state enter
+>> operation (inb()) will trap to hyervisor. It's not needed to do
+>> dummy wait after the inb() call. So we remove the dummy io port
+>> access to avoid unnecessary VMexit.
+>>
+>> We keep dummy io port access to maintain timing for native environment.
+>>
+>> Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
+>> ---
+>> ChangeLog:
+>> v2 -> v3:
+>>   - Remove dummy io port access totally for virtualization env.
+>>
+>> v1 -> v2:
+>>   - Use ndelay instead of dead loop for dummy delay.
+>>
+>>   drivers/acpi/processor_idle.c | 36 ++++++++++++++++++++++++++++++++---
+>>   1 file changed, 33 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+>> index ed56c6d20b08..0c4a97dd6917 100644
+>> --- a/drivers/acpi/processor_idle.c
+>> +++ b/drivers/acpi/processor_idle.c
+>> @@ -58,6 +58,17 @@ struct cpuidle_driver acpi_idle_driver = {
+>>   static
+>>   DEFINE_PER_CPU(struct acpi_processor_cx * [CPUIDLE_STATE_MAX], acpi_cstate);
+>>
+>> +static void (*dummy_wait)(u64 address);
+>> +
+>> +static void default_dummy_wait(u64 address)
+>> +{
+>> +	inl(address);
+>> +}
+>> +
+>> +static void default_noop_wait(u64 address)
+>> +{
+>> +}
+>> +
+> 
+> Overengineered...
+> Just add:
+> 
+> static void wait_for_freeze(void)
+> {
+> #ifdef	CONFIG_X86
+> 	/* No delay is needed if we are a guest */
+> 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> 		return;
+> #endif
+> 	/* Dummy wait op - must do something useless after P_LVL2 read
+> 	   because chipsets cannot guarantee that STPCLK# signal
+> 	   gets asserted in time to freeze execution properly. */
+> 	inl(acpi_gbl_FADT.xpm_timer_block.address);
+> }
+> 
+> and use it to replace the inl().
+OK. I was trying to avoid any impact to native case.
+
+> 
+> ...
+>> +#ifdef	CONFIG_X86
+>> +	/* For x86, if we are running in guest, we don't need extra
+>> +	 * access ioport as dummy wait.
+>> +	 */
+>> +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+>> +		pr_err("We are in virtual env");
+>> +		dummy_wait = default_noop_wait;
+>> +	} else {
+>> +		pr_err("We are not in virtual env");
+>> +	}
+>> +#endif
+> 
+> WTF are the pr_err() for???
+Sorry. Didn't remove my debug code...
+
+Regards
+Yin, Fengwei
+
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
