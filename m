@@ -2,100 +2,93 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A43CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8B9CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E95A20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:45:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aE7hfwSN"
+	by mail.kernel.org (Postfix) with ESMTP id 27EB621906
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571903317;
+	bh=uUZce6/FCDh1pSBIkqEXf1IfLeAbB0U9mXEnQTe/hY4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WhwH322DKWFwJkmqUZ7GkydHA1lDY1s8+p6wg2KqGldRd1qXJcgy92EN7WZV2p++K
+	 rZ4aWXjlbuEoSF6CvMGqZuK0BSSDGFpmnmAXg298+KP6Sgw+lmBNbzHdgvRlwKq+wF
+	 wOf2VZsIVWs7TuGqm/h4+qhwkTfQ/RU5HmfV2yO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408708AbfJXHpb (ORCPT
+        id S2408683AbfJXHsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:45:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36663 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408698AbfJXHpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:45:31 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w18so24320324wrt.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 00:45:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XeNvbPkWOZzbOUeoTn9qzFs3Ekfhx4QcmYynZhqkS6c=;
-        b=aE7hfwSN5qbqGx9cg9oWctzYcbpadJEcGj/Y6e+1I12ZiqXxSKJgWSzZgXuM+lGIU9
-         J54vZ2RJr8My/bj32YKiI6ycNNeDIc1IQKRrYRGrfBKA6YNq9gOhRe7icjpdaTVV9vW7
-         EXtzRMx+CALsGS7n9lx5Org+Pli09q8JNsGmZrOxjEpBuBwGGo6qi3kMW9RFKNsxaunX
-         q7ifR7P8MjeOqrUgKdK1XdrnSAmhTDSH6Ukba9Sj/08aQonYXUTCx9+ZG2ADaDr1eiWR
-         jLBFNIq2H8SvjKcGDzawl4DaSSEv2CFrF69MTex82AuooxzQoxjS5AKRB83Xphg+FqK/
-         VZ5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XeNvbPkWOZzbOUeoTn9qzFs3Ekfhx4QcmYynZhqkS6c=;
-        b=g6CzaD1FchtPbfggHgoFtYw603Ie9idy+L4wVLVQpSzQROtlfzMSZEjnf0KCpsy7gO
-         BvkG5gNi2mpP2pKpLVbce64NAb80GR0t2b2HJBNRelptZbNCse0XktgCYEnV06VFaFAz
-         YGs/jF58JWlhlbrWdCaCnIJEmdizTO6JMM43OSfCaAb1VH6W08trzJWRgR2SoWJLJqm2
-         fRaZQaADEgLSEisyZ/aUJdwM6MxaidF4l5qRWYTWl9A9egIKnLrWDAIEhpcXWyqiD6CE
-         7gvOmiLomXevNU4KANjuwVar0du0w4rvxuxTRLuibmyNZZB2q5Mscel9WIC4eUitwcUf
-         BgDg==
-X-Gm-Message-State: APjAAAWcooAaw1OYD5TxNyUGWrS0TmLgAHx88NZ12AE6nboZukqmkRCs
-        qJThSZQxRLnag+ZTbaO4/2ou3g==
-X-Google-Smtp-Source: APXvYqznigT9eru6tguPuqwJKeKRdwVt7FNUpgUJwZ36Vk8rkh9HVEwSgcFxkrQjfbCI0eva3bkGoA==
-X-Received: by 2002:a5d:4803:: with SMTP id l3mr2454204wrq.381.1571903128929;
-        Thu, 24 Oct 2019 00:45:28 -0700 (PDT)
-Received: from dell ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id v128sm2817524wmb.14.2019.10.24.00.45.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 24 Oct 2019 00:45:28 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 08:45:27 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH RESEND v4 3/3] mfd: madera: Add support for requesting
- the supply clocks
-Message-ID: <20191024074527.GG15843@dell>
-References: <20191021135813.13571-1-ckeepax@opensource.cirrus.com>
- <20191021135813.13571-3-ckeepax@opensource.cirrus.com>
+        Thu, 24 Oct 2019 03:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404701AbfJXHsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 03:48:36 -0400
+Received: from localhost.localdomain (unknown [122.181.210.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A30892084C;
+        Thu, 24 Oct 2019 07:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571903315;
+        bh=uUZce6/FCDh1pSBIkqEXf1IfLeAbB0U9mXEnQTe/hY4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V8Hgu+nhJ8AN8PnF3M3BP3eV0vuhUr207/GinigFFb3p1P3Zryq8haGK0RFN7WsnH
+         ncfcm/n3PS62TMFFLSQOOXh3CJ0/BiOwW4DjRfspqwJjA8Jxc2zcbjQ0SOg2q/lLDe
+         0tGKgOCRJ0/7HG7BixB/7Nd+wDpA0T5hV5ibYiLo=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Can Guo <cang@codeaurora.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v3 0/3] UFS: Add support for SM8150 UFS
+Date:   Thu, 24 Oct 2019 13:17:59 +0530
+Message-Id: <20191024074802.26526-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191021135813.13571-3-ckeepax@opensource.cirrus.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019, Charles Keepax wrote:
+This series adds compatible strings for ufs hc and ufs qmp phy found in
+Qualcomm SM8150 SoC. Also update the qmp phy driver with version 4 and
+support for ufs phy.
 
-> Add the ability to get the clock for each clock input pin of the chip
-> and enable MCLK2 since that is expected to be a permanently enabled
-> 32kHz clock.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  drivers/mfd/madera-core.c       | 27 ++++++++++++++++++++++++++-
->  include/linux/mfd/madera/core.h | 11 +++++++++++
->  2 files changed, 37 insertions(+), 1 deletion(-)
+Changes since V2:
+ - add review tags received
+ - rename registers to QSERDES_V4_COM* and sort them and make these lower
+   hex
+ - reuse sdm845_ufs_phy_clk_l as it is same
 
-Applied, thanks.
+Changes since v1:
+ - make the numbers a lower case hex
+ - add review tags received
+
+Vinod Koul (3):
+  dt-bindings: ufs: Add sm8150 compatible string
+  dt-bindings: phy-qcom-qmp: Add sm8150 UFS phy compatible string
+  phy: qcom-qmp: Add SM8150 QMP UFS PHY support
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   7 +-
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c           | 120 ++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h           |  96 ++++++++++++++
+ 4 files changed, 223 insertions(+), 1 deletion(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
