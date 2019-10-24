@@ -2,126 +2,134 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C19CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FBFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160D921906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7869621925
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 18:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440088AbfJXSjY (ORCPT
+        id S2440099AbfJXSj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 14:39:24 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:53596 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2437068AbfJXSjX (ORCPT
+        Thu, 24 Oct 2019 14:39:26 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:44299
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2440077AbfJXSjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 14:39:23 -0400
-Received: from mr2.cc.vt.edu (mail.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x9OIdMkE006203
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:39:22 -0400
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x9OIdH9d027299
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 14:39:22 -0400
-Received: by mail-qk1-f199.google.com with SMTP id c13so10939850qko.8
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 11:39:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=FwSLNB4gLqTCUzGzpu5ntWSTbDDl547fVQ4GSLs4ks8=;
-        b=ft0MrPRm7DJ0+Ts0FED24QOMF8ZdJTGKx9a8ylq/VMy+QX5ID/dzsqAaknhAo2uWRn
-         M1h/qBSOM2M88bNS08U5bEw5q8/GnAxPQRqtNdGhfIWa+VCurInR6O62dbqb7CJeEy6O
-         emrRFQ8C+OwENJSGbhiCCMa7bhhYyvsxItseAwJluO5NCLmivJbZoBYcGEg6/f2tXMBt
-         PKDjFp1lRjg3P/BvlHT6QEl29h4fJijSbP+IOG9SdiFA0eK4QWkB/vSZmswQ0HlTntBT
-         f80YCFkDSi8v0gBSvQEvNZM3GvNGK9PN3KapQwDOgzDSZhZpOa1QwVK67ETFw1LZjoBS
-         tb6w==
-X-Gm-Message-State: APjAAAWxkkY9Du3/1V5tlWxQfXxd5sFYk7395VXWsOL6qCxLsd8GpQ7T
-        ZhQljlAlhVDDQWuRQQ1iQVsQneOovc72dM639unv1bcC7NnCBanYJtLecpzFG4xDkDOtbrrRbDh
-        8fHPbZvvNrV89RU7rqQUeQdtnhDffj6Cllmo=
-X-Received: by 2002:a0c:d4ba:: with SMTP id u55mr16209189qvh.40.1571942356776;
-        Thu, 24 Oct 2019 11:39:16 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyXDYkTW4zAzjxM5nh076WARz6SYTqVuTNsGoolXc3NM51DWiHwaLHa8oSr9nSyJwxvndpB2g==
-X-Received: by 2002:a0c:d4ba:: with SMTP id u55mr16209157qvh.40.1571942356375;
-        Thu, 24 Oct 2019 11:39:16 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id x26sm13565645qto.21.2019.10.24.11.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 11:39:14 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/15] staging: exfat: Clean up return codes - FFS_FULL
-In-Reply-To: <20191024175904.GJ2963@bombadil.infradead.org>
-References: <20191024155327.1095907-1-Valdis.Kletnieks@vt.edu> <20191024155327.1095907-2-Valdis.Kletnieks@vt.edu>
- <20191024175904.GJ2963@bombadil.infradead.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1571942353_59326P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 24 Oct 2019 14:39:13 -0400
-Message-ID: <1151252.1571942353@turing-police>
+        Thu, 24 Oct 2019 14:39:24 -0400
+X-IronPort-AV: E=Sophos;i="5.68,225,1569276000"; 
+   d="scan'208";a="324184383"
+Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 20:39:22 +0200
+Date:   Thu, 24 Oct 2019 20:39:21 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+cc:     John Johansen <john.johansen@canonical.com>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>
+Subject: Re: [PATCH] apparmor: fix odd_ptr_err.cocci warnings (fwd)
+In-Reply-To: <CAEkB2ER5TOviwk4teTVLJO=jFEbi_NWVqjMEg2jYzL7x4027gg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1910242038540.2621@hadrien>
+References: <alpine.DEB.2.21.1910241326470.9562@hadrien> <CAEkB2ER5TOviwk4teTVLJO=jFEbi_NWVqjMEg2jYzL7x4027gg@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1571942353_59326P
-Content-Type: text/plain; charset=us-ascii
 
-On Thu, 24 Oct 2019 10:59:04 -0700, Matthew Wilcox said:
-> Wouldn't it be better to do this as:
 
-> Patch 1: Change all these defines to -Exxx and remove the stupid errno-changing
-> blocks like this:
+On Thu, 24 Oct 2019, Navid Emamdoost wrote:
 
-Well, except for the fact that the one for FFS_MEDIAERR required splitting the
-uses into -ENODEV, -EIO, and -ENOENT.
+> Hello,
+>
+> I added Tyler to this conversation.
+> I believe v3 of the patch addresses this issue:
+> https://lore.kernel.org/patchwork/patch/1142523/
 
-Also, "and remover the stupid blocks" would be a second change, and I *thought*
-the rule was "one thing, one patch".
+It looks ok like that, thanks.
 
-> That way nobody actually needs to review patches 2-n; all of the changes
-> are done in patch 1.
+Please don't top post.
 
-Reviewing a patch where you know that exactly one thing is supposed to happen
-means scrolling through 14 occurrences of the pattern
+julia
 
- 	if (num_alloced == 0)
--		ret = FFS_FULL;
-+		ret = -ENOSPC;
-
-goes *really* fast, and those comprise most of the bulk of the patchset.
-
-And as I already mentioned, the "stupid looking blocks" will be removed in
-a future patch.
-
---==_Exmh_1571942353_59326P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXbHv0AdmEQWDXROgAQJ3yhAAtPnqjyl/CmQXoECKh6OtFS+Frw5/Z/Ot
-/uz5YmEsw+WOOflm68fgDRmCOb1YPExXZs9nf5vTrG5EhykkSnI0pewk+6ab5luY
-Icrn0rhpdka013hfEGlzAyrYv2xorZbhX8u5pvtaFlTC+WJg6du8hiCdzts7RwFJ
-jZ5q/pZmjEXlfXK49VAzIgXNeIc7JpFPiWT3gE6HnUqkDK/x/0qIeI+SnJ2cqOql
-t1ASkFLjad5yvbmThpQFilhOKuRtS7TL+uIL7xhNsaqh8v5gMvrxSU27CfDj1HPG
-cPbgpPgfzp6cGUSMIXFa7OkDAY+vf+1LCV1ohjJhzRoPpM8s1gyj2pJz3NF84MYp
-pLc5+IZrYlCddeDnLknFyhtx4NRa+tmMrrjYae7b46al4tApHN/BOkawrsGAFSgw
-nsL2g3KbYhdej467kznJcdXB0iU4tQDzc8+q3Hnl9l1DnwTosnxkDJknRZIcHApd
-0+LOvvI8fMZYAKMNSUcFOo/rLgyixvtTf5CxUxHWpEIlDGT3WHQoCdFnS5yfBwaO
-iYlTysIci+Axye2QsthLuy6LunI6tASyjYGsq3TXnJrDM2c/f59gSWXx7AQtera9
-4XpiLeADB66KeiR87teZWBWDh+8j8i0Lq6oSJykj2GAWhk/j23V7gGYDrZfOKgUf
-UrkbxjOmVUo=
-=1sgu
------END PGP SIGNATURE-----
-
---==_Exmh_1571942353_59326P--
+>
+>
+> On Thu, Oct 24, 2019 at 6:28 AM Julia Lawall <julia.lawall@lip6.fr> wrote:
+> >
+> > Hello,
+> >
+> > The change suggested by Coccinelle is not correct, but the original code
+> > is not correct either because the argument to PTR_ERR should be a pointer,
+> > not an integer.
+> >
+> > julia
+> >
+> > ---------- Forwarded message ----------
+> > Date: Thu, 24 Oct 2019 18:21:57 +0800
+> > From: kbuild test robot <lkp@intel.com>
+> > To: kbuild@lists.01.org
+> > Cc: Julia Lawall <julia.lawall@lip6.fr>
+> > Subject: [PATCH] apparmor: fix odd_ptr_err.cocci warnings
+> >
+> > CC: kbuild-all@lists.01.org
+> > In-Reply-To: <20191021152348.3906-1-navid.emamdoost@gmail.com>
+> > References: <20191021152348.3906-1-navid.emamdoost@gmail.com>
+> > TO: Navid Emamdoost <navid.emamdoost@gmail.com>
+> >
+> > From: kbuild test robot <lkp@intel.com>
+> >
+> > security/apparmor/audit.c:199:5-11: inconsistent IS_ERR and PTR_ERR on line 202.
+> >
+> >  PTR_ERR should access the value just tested by IS_ERR
+> >
+> > Semantic patch information:
+> >  There can be false positives in the patch case, where it is the call to
+> >  IS_ERR that is wrong.
+> >
+> > Generated by: scripts/coccinelle/tests/odd_ptr_err.cocci
+> >
+> > Fixes: 6f939f24599c ("apparmor: Fix use-after-free in aa_audit_rule_init")
+> > CC: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > Signed-off-by: kbuild test robot <lkp@intel.com>
+> > ---
+> >
+> > url:    https://github.com/0day-ci/linux/commits/Navid-Emamdoost/apparmor-Fix-use-after-free-in-aa_audit_rule_init/20191024-123239
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-testing
+> > :::::: branch date: 6 hours ago
+> > :::::: commit date: 6 hours ago
+> >
+> > Please take the patch only if it's a positive warning. Thanks!
+> >
+> >  audit.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > --- a/security/apparmor/audit.c
+> > +++ b/security/apparmor/audit.c
+> > @@ -199,7 +199,7 @@ int aa_audit_rule_init(u32 field, u32 op
+> >         if (IS_ERR(rule->label)) {
+> >                 int err = rule->label;
+> >                 aa_audit_rule_free(rule);
+> > -               return PTR_ERR(err);
+> > +               return PTR_ERR(rule->label);
+> >         }
+> >
+> >         *vrule = rule;
+>
+>
+>
+> --
+> Navid.
+>
