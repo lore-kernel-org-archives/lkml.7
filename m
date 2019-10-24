@@ -3,127 +3,203 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B748ACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39F4CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B79C20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B2B20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sB2Jn2rl"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="TprQQJMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409942AbfJXQwA (ORCPT
+        id S2409969AbfJXQ4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:52:00 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36388 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409930AbfJXQv7 (ORCPT
+        Thu, 24 Oct 2019 12:56:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38139 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409921AbfJXQ4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:51:59 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d17so24245735qto.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:51:59 -0700 (PDT)
+        Thu, 24 Oct 2019 12:56:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v9so15619188wrq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=MD1pbzPN74Cooi+p6oJbLof2wiDKOMhFaRekjLXUrZs=;
-        b=sB2Jn2rl37IzEiSgyk42DahVjDex25NdgPPfI1R0zFA09tT7ZrEMPasarAoAIcvKxN
-         +n+x+G/+I18JPbiGrp5t2JZcqhYPVeiElEGSvhaL9nzJ8Ww77rBhXEczirB9UWDjC+HR
-         FGu6S9JSyxY5ETieOFNYQcEvWt2BfiJWwkUuEuoDsJvJztOWzJQGE+BFr2DaG5QlopyQ
-         ABJd/lChwAngBkE3q9AXNi+BbvxqNkFBoPMDPmKsYKQMDx8sAaTnfM/AZCbzTa94uXWS
-         F+ZruUfTIm9SwZJdBHY7xPH/3MaUjJC8g0ITbr2z/pLULsaIH5B4UY62/g4sqHyx5zRc
-         ID7Q==
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LWnsh1VnfR4T7qI+mFbdH+FaPSq3tYzKSOhcVJg7pFE=;
+        b=TprQQJMSs5c2EL0ZtRmgUgoFteZMc6kk8z8q99t3AMCnEpXsLnu4G28yTZWdF0WKXo
+         AsSMBmk/91zBhpayKuZIuJkBlm3dserOh1K+z62dIVoFAeAsKg+rGv1I60HSmN99HsIP
+         C01PDZELGOOHq9mtM7LDhTxymhHtAY+UnR7GpQVS3waz9aihcgyQQzIz0k4CzgQ/csQ5
+         h7spT8IUuo+YF0ffSlAZS1CXC+VoH3L4/dEqvfZ/rWzaVJuGH4nSNhg/X1NB+xy7ivaZ
+         g7jYMBnHFJwaAWbzYFwXIZuzK2WEK+yLAWNeI/qTQCD/bms90CFHP07zBRErDkc2SugI
+         kzzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=MD1pbzPN74Cooi+p6oJbLof2wiDKOMhFaRekjLXUrZs=;
-        b=esEEVWDxlObNwEH8Z0sADSlVmm+YksQhZ9rfvxmtGYlAi01atpUaBfKPP+I+Jwkym/
-         3wx37Ie5ZRvwBe2oRn1erdhax1WgL38q56byMgoV0CDx4FNMvPDDmOSBrqajpfy+XQ/Y
-         1oyYwUHMG1NkzCjwcSDR0rJRFSxVflSqxr1ex3PRDT+m4ggPQyLO0qbwAImd6+e6shnd
-         DW4HtDZHRNnngPnkp2QbuVUUpbkVEtcqBHZEg28wbRrx0tEZPKcUxVOiqu01crdr2qOr
-         BprHIgkQuBcJ3EZUOvp8GvjuWaAZGiY7+66ZdXKAmKQPatADYSLcsfLaa3qkTbbc+l2O
-         JBEw==
-X-Gm-Message-State: APjAAAW2WenKcqxrUie4ptYM15tl5By5Aarlyt3sxE1nNeNdg7pV9JEk
-        BV9PVRTzrs+RFrFLOhnFBvd7nA==
-X-Google-Smtp-Source: APXvYqxQOBVx3ITKJVFCZM4JTBqxBQ++B+FV+OPeFAZHzhypJMMzaZu2sZwLWN1gjap9nOuKNtEYxQ==
-X-Received: by 2002:ac8:1b45:: with SMTP id p5mr1975446qtk.330.1571935918881;
-        Thu, 24 Oct 2019 09:51:58 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u9sm1610352qkk.34.2019.10.24.09.51.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 09:51:58 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH V7] mm/debug: Add tests validating architecture page table helpers
-Date:   Thu, 24 Oct 2019 12:51:57 -0400
-Message-Id: <FCAFFD72-3781-4474-8393-A4E40264473A@lca.pw>
-References: <1571625739-29943-1-git-send-email-anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <1571625739-29943-1-git-send-email-anshuman.khandual@arm.com>
-To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
-X-Mailer: iPhone Mail (17A878)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LWnsh1VnfR4T7qI+mFbdH+FaPSq3tYzKSOhcVJg7pFE=;
+        b=DXZ7fRFEmWR20e+KivFB62ImoYRVC+dnePuyKN+u2PNOHrVHxBmBG8jcUeEd/ymWD/
+         oHF/bAYrLVGOeId+3GqrvAmi69uEFFDjMBAKNS1CZM51WgMMW1koV/b6GyLc5H6Y27iC
+         u1gKPy5A05Q5Lpq8aG0uC3ByP7p3wfqf91osCCtz0POHkZN9V8tcT9V7b4dX67pdTEpf
+         xhOfCIoYuqTLTtborWzSnQBGg+64Eh+Uzq8fTxaiopjuS54/2XsPizibNTXYJRMfbRn+
+         1sSlztmIpjKJXi+tYG+WLImIUfX+gKEOSeSRuIGASEVyCTRm8u8bvuoXCHjR5toM17Ov
+         cYDA==
+X-Gm-Message-State: APjAAAXLFhheo1gpBjtsQI5mzdR9edObQ67mYxonjN6oLvvMbenQByWa
+        QukY2SvPS6ss9zLihhK9q3UjBAYTNzObJl9oMHBMVQ==
+X-Google-Smtp-Source: APXvYqz61t1rsPsZIoz2r/3DSS4dQctwFYskEA1EgxIFmFai2Df9wr1NPInU9NDLzWDpQnQ/tmFt/Js31wfFhnIQmPc=
+X-Received: by 2002:adf:92e7:: with SMTP id 94mr5061277wrn.199.1571936202863;
+ Thu, 24 Oct 2019 09:56:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190301192017.39770-1-dianders@chromium.org> <CAJ+vNU0Ma5nG9_ThLO4cdO+=ivf7rmXiHZonF0HY0xx6X3R6Hw@mail.gmail.com>
+ <5dce2964-8761-e7d0-8963-f0f5cb2feb02@arm.com> <CAJ+vNU0Q1-d7YDbAAEMqEcWnniqo6jLdKBbcUTar5=hJ+AC8vQ@mail.gmail.com>
+ <1f6f7eb0-e1dc-d5a8-fb38-44c5bd839894@arm.com> <CAJ+vNU1Nd2p-ot2Qkj6vD9yD6gcYM-vm+snNWyt0ChgSqe4tBg@mail.gmail.com>
+ <5cf9ec03-f6fb-8227-4ec5-62445038f283@arm.com> <CAJ+vNU28LrroW-XC4X2g3bdN171j0ieZenhYE1TrEM8yvKi=cQ@mail.gmail.com>
+ <cb6392ff-fac6-300b-2e04-b34df8c42f28@arm.com> <CAJ+vNU0kDseyqAMKAv+9+aw6wVKjBQcHcGD_8XgCy_KzZTM4Gg@mail.gmail.com>
+ <4824ef05-7f57-9aab-cdbd-34b3f857b32b@arm.com>
+In-Reply-To: <4824ef05-7f57-9aab-cdbd-34b3f857b32b@arm.com>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Thu, 24 Oct 2019 09:56:30 -0700
+Message-ID: <CAJ+vNU0Ls9RpMwZz+kUu=0nE9eSsz7MBPQGqR_U3u=s+Tq_YGw@mail.gmail.com>
+Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
+ bypass by default
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Jan Glauber <jglauber@cavium.com>,
+        Kulkarni Ganapatrao <Ganapatrao.Kulkarni@cavium.com>,
+        Robert Richter <rrichter@cavium.com>,
+        Aleksey Makarov <aleksey.makarov@cavium.com>,
+        "Goutham, Sunil" <Sunil.Goutham@cavium.com>,
+        David Daney <ddaney@caviumnetworks.com>
+Cc:     Tirumalesh Chalamarla <tchalamarla@caviumnetworks.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-msm@vger.kernel.org, evgreen@chromium.org,
+        tfiga@chromium.org, Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 4, 2019 at 4:27 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2019-10-04 9:37 pm, Tim Harvey wrote:
+> > On Fri, Oct 4, 2019 at 11:34 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >>
+> >> On 04/10/2019 18:13, Tim Harvey wrote:
+> >> [...]
+> >>>>> No difference... still need 'arm-smmu.disable_bypass=n' to boot. Are
+> >>>>> all four iommu-map props above supposed to be the same? Seems to me
+> >>>>> they all point to the same thing which looks wrong.
+> >>>>
+> >>>> Hmm... :/
+> >>>>
+> >>>> Those mappings just set Stream ID == PCI RID (strictly each one should
+> >>>> only need to cover the bus range assigned to that bridge, but it's not
+> >>>> crucial) which is the same thing the driver assumes for the mmu-masters
+> >>>> property, so either that's wrong and never could have worked anyway -
+> >>>> have you tried VFIO on this platform? - or there are other devices also
+> >>>> mastering through the SMMU that aren't described at all. Are you able to
+> >>>> capture a boot log? The SMMU faults do encode information about the
+> >>>> offending ID, and you can typically correlate their appearance
+> >>>> reasonably well with endpoint drivers probing.
+> >>>>
+> >>>
+> >>> Robin,
+> >>>
+> >>> VFIO is enabled in the kernel but I don't know anything about how to
+> >>> test/use it:
+> >>> $ grep VFIO .config
+> >>> CONFIG_KVM_VFIO=y
+> >>> CONFIG_VFIO_IOMMU_TYPE1=y
+> >>> CONFIG_VFIO_VIRQFD=y
+> >>> CONFIG_VFIO=y
+> >>> # CONFIG_VFIO_NOIOMMU is not set
+> >>> CONFIG_VFIO_PCI=y
+> >>> CONFIG_VFIO_PCI_MMAP=y
+> >>> CONFIG_VFIO_PCI_INTX=y
+> >>> # CONFIG_VFIO_PLATFORM is not set
+> >>> # CONFIG_VFIO_MDEV is not set
+> >>
+> >> No worries - since it's a networking-focused SoC I figured there was a
+> >> chance you might be using DPDK or similar userspace drivers with the NIC
+> >> VFs, but I was just casting around for a quick and easy baseline of
+> >> whether the SMMU works at all (another way would be using Qemu to run a
+> >> VM with one or more PCI devices assigned).
+> >>
+> >>> I do have a boot console yet I'm not seeing any smmu faults at all.
+> >>> Perhaps I've mis-diagnosed the issue completely. To be clear when I
+> >>> boot with arm-smmu.disable_bypass=y the serial console appears to not
+> >>> accept input in userspace and with arm-smmu.disable_bypass=n I'm fine.
+> >>> I'm using a buildroot initramfs rootfs for simplicity. The system
+> >>> isn't hung as I originally expected as the LED heartbeat trigger
+> >>> continues blinking... I just can't get console to accept input.
+> >>
+> >> Curiouser and curiouser... I'm inclined to suspect that the interrupt
+> >> configuration might also be messed up, such that the SMMU is blocking
+> >> traffic and jammed up due to pending faults, but you're not getting the
+> >> IRQ delivered to find out. Does this patch help reveal anything?
+> >>
+> >> http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=29ac3648b580920692c9b417b2fc606995826517
+> >>
+> >> (untested, but it's a direct port of the one I've used for SMMUv3 to
+> >> diagnose something similar)
+> >
+> > This shows:
+>
+> Yay (ish)!
+>
+> [ and the tangential challenge would be to find out what the real global
+> fault interrupt is, 'cause apparently it's not SPI 68... ]
+>
+> > arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> > arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> > GFSYNR1 0x00000140, GFSYNR2 0x00000000
+>
+> If that stream ID were a PCI RID, it would be 01:08.0
+>
+> > arm-smmu 830000000000.smmu0: Unexpected global fault, this could be serious
+> > arm-smmu 830000000000.smmu0:     GFSR 0x80000002, GFSYNR0 0x00000002,
+> > GFSYNR1 0x00000010, GFSYNR2 0x00000000
+>
+> And this guy would be 00:02.0
+>
+> So it seems that either the stream ID mapping is non-trivial (and
+> "mmu-masters" couldn't have worked), or there are secret magic endpoints
+> writing to memory during boot. Either way it probably needs some input
+> from Cavium/Marvell to get straight. In the meantime, unless just
+> disabling and ignoring the SMMU altogether is a viable option, I guess
+> we have to resign to this being one of those "non-good" reasons for
+> needing global bypass :(
+>
+> Robin.
+>
+> (note to self: it would probably be useful if we dump GFAR in these logs
+> too. These are all writes, so it's possible they could be MSI attempts
+> targeting the ITS rather than DMA as such)
+
+Robin,
+
+Thanks for the help here!
+
+I opened up a support issue with Marvell but have not gotten anything
+from them in the 2 weeks since (horrible support since Marvell
+acquired them) thus I'm adding in some Marvell/Cavium folk active in
+other areas of kernel development as a cry for help as OcteonTX iommu
+is completely broken in mainline and I think this is the cause of
+mainline stability issues I've seen since the 4.14 kernel.
+
+Marvell/Cavium devs... can you please chime in here regarding iommu
+configuration issues for CN80xx/CN81XX OcteonTX?
+
+Thanks,
+
+Tim
 
 
-> On Oct 24, 2019, at 10:50 AM, Anshuman Khandual <Anshuman.Khandual@arm.com=
-> wrote:
->=20
-> Changes in V7:
->=20
-> - Memory allocation and free routines for mapped pages have been droped
-> - Mapped pfns are derived from standard kernel text symbol per Matthew
-> - Moved debug_vm_pgtaable() after page_alloc_init_late() per Michal and Qi=
-an=20
-> - Updated the commit message per Michal
-> - Updated W=3D1 GCC warning problem on x86 per Qian Cai
-
-It would be interesting to know if you actually tested  out to see if the wa=
-rning went away. As far I can tell, the GCC is quite stubborn there, so I am=
- not going to insist.=
+Tim
