@@ -2,97 +2,99 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC88CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EFFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBCC2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C7120659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:16:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hrWNeIkT";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q5EX7o8U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHGKBeKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407893AbfJXQOu (ORCPT
+        id S2439752AbfJXQQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:14:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43050 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405661AbfJXQOu (ORCPT
+        Thu, 24 Oct 2019 12:16:46 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53847 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436642AbfJXQQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:14:50 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BBF3960A0A; Thu, 24 Oct 2019 16:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571933688;
-        bh=5LYj+S7mUQpRFG78UNWcpu0TFawfTdvqUpL+Kysi69w=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=hrWNeIkToNDdVRdtpTlshKMIp37BiUqtnBsa0inqk3kgJbBJYuZoYulc+KvAIf9rc
-         rWGXjdWX/Knm99607FydhcAcuincgwTM7Pnx0psbG2wP+dZDm2eJ32bhWSkDZr6XBe
-         MzJkSv+DIrzri8haYWstUQ9nxRAfdcUYvPCFdFG8=
-Received: from potku.adurom.net (unknown [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 24 Oct 2019 12:16:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571933805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WrXRA91ehMR0EzuxH1to9rpY9XdaZv5EaEIpkHE/k+E=;
+        b=BHGKBeKvEFcueCgTCabNqJHKHhYnM/wFHerReqCnDnDpCfEABJXsSCP/6VwIBGL/VBRv5J
+        Z8hL4aPSBNwljgvrTr38+2F44ySOTwJexghUFPR/AmKgVStcGAmoN/uQrVzg9NT2NRxot3
+        wMxrhRRfFWmQoOt7u5qxJq+4QFzc76w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-71-XIdfVkwhOSmqJ6Ejx3r1Tw-1; Thu, 24 Oct 2019 12:16:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3BAAB60A0A;
-        Thu, 24 Oct 2019 16:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571933686;
-        bh=5LYj+S7mUQpRFG78UNWcpu0TFawfTdvqUpL+Kysi69w=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Q5EX7o8UOEsIEmJ98Y9SLgS044IficfMRDPf7VvWOvqSxHiA5pviytY7GK2fFtU6P
-         4AVgW+dQ+9swtwtQu+Or3dfKYeL+kmq4IOwxYNfd28CUUSZBI37hYfJT+BXMyo0wlG
-         ji+kcrlTq3lRLDp+MT7ApIpA416QkGjJkqsVkDN4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3BAAB60A0A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Jiri Kosina <trivial@kernel.org>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH trivial] net: Fix various misspellings of "connect"
-References: <20191024152323.29987-1-geert+renesas@glider.be>
-Date:   Thu, 24 Oct 2019 19:14:39 +0300
-In-Reply-To: <20191024152323.29987-1-geert+renesas@glider.be> (Geert
-        Uytterhoeven's message of "Thu, 24 Oct 2019 17:23:23 +0200")
-Message-ID: <874kzyqfww.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B520800D5A;
+        Thu, 24 Oct 2019 16:16:39 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-125-205.rdu2.redhat.com [10.10.125.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CE85452B;
+        Thu, 24 Oct 2019 16:16:34 +0000 (UTC)
+Subject: Re: [RFC PATCH 0/2] mm/vmstat: Reduce zone lock hold time when
+ reading /proc/pagetypeinfo
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191023095607.GE3016@techsingularity.net>
+ <20191023102737.32274-1-mhocko@kernel.org>
+ <20191024082042.GS17610@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <55c08581-a9c8-27cc-9710-b2bfe1934c8e@redhat.com>
+Date:   Thu, 24 Oct 2019 12:16:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191024082042.GS17610@dhcp22.suse.cz>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: XIdfVkwhOSmqJ6Ejx3r1Tw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert+renesas@glider.be> writes:
-
-> Fix misspellings of "disconnect", "disconnecting", "connections", and
-> "disconnected".
+On 10/24/19 4:20 AM, Michal Hocko wrote:
+> On Wed 23-10-19 12:27:35, Michal Hocko wrote:
+> [...]
+>> I went with a bound to the pages iteratred over in the free_list. See
+>> patch 2.
+> I will fold http://lkml.kernel.org/r/20191023180121.GN17610@dhcp22.suse.c=
+z
+> to patch 2 unless there are any objections. If there are no further
+> comments I will send the two patches without an RFC tomorrow.
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/net/wimax/i2400m/usb.c                      | 2 +-
->  drivers/net/wireless/realtek/rtlwifi/rtl8192se/hw.c | 4 ++--
->  include/net/cfg80211.h                              | 2 +-
->  net/netfilter/ipvs/ip_vs_ovf.c                      | 2 +-
->  net/wireless/reg.h                                  | 2 +-
->  5 files changed, 6 insertions(+), 6 deletions(-)
+> Thanks for all the feedback.
 
-For the wireless:
+I am fine with your change. My concern is to make sure that there is a
+reasonable bound to the worst case scenario. With that change, the upper
+bound is iterating 100,000 list entries. I think Andrew suggested
+lowering it to 1024. That I think may be too low, but I don't mind if it
+is lowered somewhat from the current value.
 
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
+Cheers,
+Longman
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
