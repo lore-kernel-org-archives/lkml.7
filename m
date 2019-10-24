@@ -2,111 +2,143 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FF2CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63801CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E373020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3476B21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NmpVP5wJ"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="ItcTVGWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394049AbfJXRsD (ORCPT
+        id S2394068AbfJXRvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:48:03 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34088 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391933AbfJXRsC (ORCPT
+        Thu, 24 Oct 2019 13:51:55 -0400
+Received: from mail-pl1-f182.google.com ([209.85.214.182]:44343 "EHLO
+        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394057AbfJXRvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:48:02 -0400
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id BDA842007698;
-        Thu, 24 Oct 2019 10:48:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BDA842007698
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1571939281;
-        bh=3ZUalX6KkoUAF5B6PB7Omcj6z9c3JtgzJCEvYAwd0VY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NmpVP5wJwINzCT0SPLjmqinpkGdSwyezoHpWRuvlMuBoj9iE7RB28lUD40Bbxfjey
-         ekY0mojRGuFy3P8GrrjWA9dKAcBB4rHMFXuK7nh/PpQdPkp4tcss7tqrIo+VXeYYry
-         tOfu2KguYoTByJZvD24zDoXytbjBV/MhtxKq9PlQ=
-Subject: Re: [PATCH v9 7/8] ima: check against blacklisted hashes for files
- with modsig
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
- <20191024034717.70552-8-nayna@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <8e6dde58-17c2-a834-9ec3-1271b4ffd3a8@linux.microsoft.com>
-Date:   Thu, 24 Oct 2019 10:48:19 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20191024034717.70552-8-nayna@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 24 Oct 2019 13:51:54 -0400
+Received: by mail-pl1-f182.google.com with SMTP id q15so12214561pll.11
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=tF/2SELAonCjUta1zWhD10pXJwE2qHwIT91x2FMVMcU=;
+        b=ItcTVGWcgUBL7MH8dVFfdUkhXO0Z0i5PPWM/g8sKszgo8cLrwFQNCQ3A4dnQsb2TE1
+         LUOdjP21CWEkS247RR26lBtQyX1H18zZRj/ImqY0cYa7GkMxGB3Ant1YrT6e6dZ33W2V
+         88YByfanT0NuQLkjmn7eIX+8E521sNaBCBhz96gORCFhs0DDDdVQDzLASxSoYc5Qk5Jg
+         Un6MjocSvGg9L8ILwpIHVmaBdeZpVfSA/46ukWobRZ9OjHLnwA5b2C9FLKXhwir/Fn3m
+         OY5TaaxCypa9cJeip8fSeYtKgX7UZAy0EL0MQCs+73WNolOjA1aEZHcSYiPB8Vrv3VuH
+         EbCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=tF/2SELAonCjUta1zWhD10pXJwE2qHwIT91x2FMVMcU=;
+        b=t8No3oWRffRdn/UEI65d05NfyGPrwvB7IguAzmxgg//yde4EKxaAWLEVy4UebOvSFL
+         XgPfsuGIvlexjNOJuG/iaf76mj+XHVZlEbsXH6t0Uin+o7o+5SD/kpUSicsfXOx2y1TP
+         yN1frSaNZv/yWI6G8S52/64ju3uc8cKfdZUiCYmhn93BEgrXTvo1cjaIUW8ZN8hnnb3V
+         zP4KmxXTjjJCv2G1B0cHzR9fRj2eha8XkyZbWFGFNsj944xn+mrCrMC+4tKi77PghZ11
+         bTYBbtf+PiCvXuYnDU4JiLCJhnCxIejiHVOaH8iqC0Emw7TQe7agaKg+NJJ38Ay6bhhO
+         Oziw==
+X-Gm-Message-State: APjAAAWktmUQ6MO5ni2+9izyVsDdj5FWOgVQ8dW7av8c1enIzVMMUlfy
+        Mwf8UsocDfn0S0tKq8XDUGmWXWLpHAQ=
+X-Google-Smtp-Source: APXvYqxEeiS8Do8r+HAuQAZh96z/nEPdQmOdhWd+IVg9M6wNaQvIpVjKYpFMoL00QXvKV1g32bqB7Q==
+X-Received: by 2002:a17:902:8606:: with SMTP id f6mr851241plo.226.1571939514002;
+        Thu, 24 Oct 2019 10:51:54 -0700 (PDT)
+Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id z7sm10546493pfr.165.2019.10.24.10.51.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 10:51:52 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <2794A217-0A93-44C1-B0A2-A67504A711F0@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: File system for scratch space (in HPC cluster)
+Date:   Thu, 24 Oct 2019 11:51:51 -0600
+In-Reply-To: <e143071a-b1dc-56a4-a82e-865bae4c60c1@molgen.mpg.de>
+Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Donald Buczek <buczek@molgen.mpg.de>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+References: <e143071a-b1dc-56a4-a82e-865bae4c60c1@molgen.mpg.de>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/23/2019 8:47 PM, Nayna Jain wrote:
 
-> +/*
-> + * ima_check_blacklist - determine if the binary is blacklisted.
-> + *
-> + * Add the hash of the blacklisted binary to the measurement list, based
-> + * on policy.
-> + *
-> + * Returns -EPERM if the hash is blacklisted.
-> + */
-> +int ima_check_blacklist(struct integrity_iint_cache *iint,
-> +			const struct modsig *modsig, int pcr)
-> +{
-> +	enum hash_algo hash_algo;
-> +	const u8 *digest = NULL;
-> +	u32 digestsize = 0;
-> +	int rc = 0;
-> +
-> +	if (!(iint->flags & IMA_CHECK_BLACKLIST))
-> +		return 0;
-> +
-> +	if (iint->flags & IMA_MODSIG_ALLOWED && modsig) {
-> +		ima_get_modsig_digest(modsig, &hash_algo, &digest, &digestsize);
-> +
-> +		rc = is_binary_blacklisted(digest, digestsize);
-> +		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
-> +			process_buffer_measurement(digest, digestsize,
-> +						   "blacklisted-hash", NONE,
-> +						   pcr);
-> +	}
+--Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
-The enum value "NONE" is being passed to process_buffer_measurement to 
-indicate that the check for required action based on ima policy is 
-already done by ima_check_blacklist. Not sure, but this can cause 
-confusion in the future when someone updates process_buffer_measurement.
+On Oct 24, 2019, at 4:43 AM, Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>=20
+> Dear Linux folks,
+>=20
+>=20
+> In our cluster, we offer scratch space for temporary files. As
+> these files are temporary, we do not need any safety
+> requirements =E2=80=93 especially not those when the system crashes or
+> shuts down. So no `sync` is for example needed.
+>=20
+> Are there file systems catering to this need? I couldn=E2=80=99t find
+> any? Maybe I missed some options for existing file systems.
 
-Would it instead be better to add another parameter to 
-process_buffer_measurement to indicate the above condition?
+How big do you need the scratch filesystem to be?  Is it local
+to the node or does it need to be shared between nodes?  If it
+needs to be large and shared between nodes then Lustre is typically
+used for this.  If it is local and relatively small you could
+consider using tmpfs backed by swab on an NVMe flash device
+(M.2 or U.2, Optane if you can afford it) inside the node.
 
-  -lakshmi
+That way you get RAM-like performance for many files, with a
+larger capacity than RAM when needed (tmpfs can use swap).
+
+You might consider to mount a new tmpfs filesystem per job (no
+formatting is needed for tmpfs), and then unmount it when the job
+is done, so that the old files are automatically cleaned up.
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl2x5LcACgkQcqXauRfM
+H+AO/BAAhhassljSPZNXP7jy6M2GM78gdwO+QEkZxI8+iC2Qh8ObAQt26DhtP7QA
+A0RimYBaT4yeKy5Fg5n+WVVgpUzos1s9Jb9hHSQyb49RIgSnDppfojTcfXrr5xeL
+yVzFqXsvAxDiDF15jTYyq9k8FG0BUuUgmV0BmtXUsCoRd+dQQqMW2r8QPxfKvKrI
+ue588jhz+inlYVzQM3V5GZdV+h/Dk+ztqYsCp6f/OIRuQ41gxs3+XmZm9+Vj/yaO
+3X9uOVM9uLqe8H31DDGdiRI0InDc08AlXYOhu2N9ioJrk54LYFSX4Tfo/Z1hvuPC
+CmrakEBt1y4NRiB9vOUJBhBbxx8jGXf+uqy5RYIkWuwxF5r/jeqUDl7rAR65I5MX
+SWz8AS37fubkc712L7JZoFQn/CN0U/1xoWTGH/8J5D9QeoeFl2TvK/ArLae6pC2u
+2CsmpIhVcHeSAawb4wLFYa/u6S/APiyqMY1towyWfLpDZO0ohMT5IjNE7YwIugP5
+IrtNUJEAMri58Anvrceaf8Fy2ZHeuQLRJ8uSSbkccEkSMGq6GIRXS3JkkbUJ6lsO
+9bwsJRiBmKT1yu5x1iemJlu3zJ9P0z1J+J8XMmc5mISkw1ZmR5sUY+LB3O/2zfa6
+9XVbxMVcqXAbOiTr3J/jycaBHFUtRjx9sAYeajJEoEp83osYyf4=
+=LytI
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_6B12323D-80C7-4522-AF86-AF0E0F6C2E2D--
