@@ -2,103 +2,95 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9BDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5018CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1656021A4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:52:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KnquzFop"
+	by mail.kernel.org (Postfix) with ESMTP id 7040E2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 22:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571957586;
+	bh=wyfXZxk9trX2y7WC3iiIC87CnGaUr347Mg6ChWCha1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kpq8N5718LVIu/uiE3H0ew3oXwTdDx0f8OMYcq4J0VRISv87zy5OFK+haK7Lotw2f
+	 qZY4w3aqRNnj8x6DRnMitsKUVAonh7fEKKwCZDZLBAix459Bj+4kiUHxg3Qd6hKnod
+	 eNPILSeqbMDKvs31Z47ZYRNJeOL+sK4Hwdzm19iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbfJXWwu (ORCPT
+        id S1732881AbfJXWxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 18:52:50 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:49174 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732652AbfJXWwh (ORCPT
+        Thu, 24 Oct 2019 18:53:05 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40605 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732652AbfJXWxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 18:52:37 -0400
-Received: by mail-pf1-f202.google.com with SMTP id r187so322986pfc.16
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 15:52:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=1o2AK/x7KnetiIYq4sD6lyk+Z1PFoM7PTIwarlqCwx8=;
-        b=KnquzFopxhgUh+yJfoei8gVVx1UFevR3Wi9RJ0Dct5s/wjoLo0UIULHJ52iyDlFB6P
-         94/Io21URIBdRGDxFS0tbpT8pf9wFw8CXp+hb35OeyzhyhJZzuNbeeXwAhpUtwNbkNqL
-         edchxQirUe1MwQD/Bh4qSgXOeqnChy0v7mDVdemPsERGoJorUBOTSCiz1vXHX3iTQXqK
-         L/AQoYVVPSbkYTN+kSNfz4S5Cfd9VFTM/5mH+ilYFDv/qrO8wemOh+JMQ//CnpweWdoe
-         mgXlVK8nsRV8k399Qz5bXX+5b7BlTlHNqA1J8uDhWD+EG7ALlgdLoLxjV63C4rvVMaoN
-         Kpyw==
+        Thu, 24 Oct 2019 18:53:04 -0400
+Received: by mail-oi1-f196.google.com with SMTP id b25so87094oib.7;
+        Thu, 24 Oct 2019 15:53:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=1o2AK/x7KnetiIYq4sD6lyk+Z1PFoM7PTIwarlqCwx8=;
-        b=gI0RnjbPKCHThLwOTK3kvdSyraGBK/fJ2MQvil9fUsf9TazTwOXxwqDh+GkNhxi8Uz
-         0qiwV4jWWrW/UHuhbO9oYNZRYl24VMo7TQcT8LqYtvyaWkvr29AbuVqSoNvh0J5q1YCX
-         od6wqfDaBKEKO17O8SlmRttCaTtiaocREv9Ho9y6MeHcyiEYIKZuT1/FbK1YFxppi0uA
-         7YBxBTb33sBNy3FeqW7fWV0T9pKzqPSpnFrMmFhIkX0PWHnckpatxvk/0cvKnRwyBi2a
-         LkPlw2qP2HtlIRz/M+GkqSs3wBU2peDcyqHKTesES77qruf9GqeF/agGnBusCl64ZSwq
-         7C7w==
-X-Gm-Message-State: APjAAAXY5+YTnhR9evu0CaMG5lXEtaaJ4/2rJXCrFw7rdfvx1YSm4DzH
-        qES2yaRDS6GtaSd4qVVRSLIq+YVsEkdeD8tciGY=
-X-Google-Smtp-Source: APXvYqxqUYVuoLyhOB6Va7uYpgm1rgX3n1dq9Gi5p5wkBMwq0WVn5KMyKDwxuEEfjT/w/yrqMmcBrDqFtfNYzjT3hHU=
-X-Received: by 2002:a63:3c19:: with SMTP id j25mr558800pga.12.1571957554655;
- Thu, 24 Oct 2019 15:52:34 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 15:51:31 -0700
-In-Reply-To: <20191024225132.13410-1-samitolvanen@google.com>
-Message-Id: <20191024225132.13410-17-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20191024225132.13410-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v2 16/17] arm64: disable SCS for hypervisor code
-From:   samitolvanen@google.com
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PHAlgjyftB77apGb+aIDH/iUEr5YTnjZAyjURTt+1ek=;
+        b=Tms2Cy2WtxcWsa1MSb2MP35EKpoYwCsSzUWqm2g4AE2MbHMjGoFG35jdGeRZu/6lvS
+         jPIeTgNu4HOo5AmbGNiV51SjAWgN1uB7dXrVPiiLiUkTM67QQATxU0J+Jt9YwxSbpbZz
+         p47iQ3p6t7RvVYXmEu7qqOZEcfa9USI22Kh7eTKKW5zwBDUKwzv0m8NlfTxEuJyhlnDM
+         ioYChsLOG2VJmqXLMahJWjHvYGP5Ni9yt0knSl+azmJ26RArBLkjh4Xz5sSHz6hm/d4Y
+         SEl/Rvr2H+dwuMwegC+OKaUNER3ZdQJdr0Vre2Ey+4T+R9/lVNewmUbEAVwvnk4Ea8aC
+         JBmA==
+X-Gm-Message-State: APjAAAW3aT4yHzDRcTcywOnO2JDedq7cLPFrAZ7IZ4jBNoHaax0DXYOa
+        2nL5v8Os7516rLwqpg1w4Q==
+X-Google-Smtp-Source: APXvYqxLLOybpoUQdqUi4zwyI739/mCOO6k17Sx+gGPlyn2e7YB8PCSksprbWMBJjSIZSr3Fq4+K0g==
+X-Received: by 2002:aca:100e:: with SMTP id 14mr411171oiq.20.1571957583265;
+        Thu, 24 Oct 2019 15:53:03 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y6sm35386oiy.45.2019.10.24.15.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 15:53:02 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 17:53:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: Re: [v5,1/3] dt-bindings: i2c: support property idle-state
+Message-ID: <20191024225302.GA16606@bogus>
+References: <20191022041152.3663-1-biwen.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022041152.3663-1-biwen.li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/arm64/kvm/hyp/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+On Tue, 22 Oct 2019 12:11:50 +0800, Biwen Li wrote:
+> This supports property idle-state
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- none
+> 
+> Change in v4:
+> 	- none
+> 
+> Change in v3:
+> 	- update subject and description
+> 	- add some information for property idle-state
+> 
+> Change in v2:
+> 	- update subject and description
+> 	- add property idle-state
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-index ea710f674cb6..8289ea086e5e 100644
---- a/arch/arm64/kvm/hyp/Makefile
-+++ b/arch/arm64/kvm/hyp/Makefile
-@@ -28,3 +28,6 @@ GCOV_PROFILE	:= n
- KASAN_SANITIZE	:= n
- UBSAN_SANITIZE	:= n
- KCOV_INSTRUMENT	:= n
-+
-+ORIG_CFLAGS := $(KBUILD_CFLAGS)
-+KBUILD_CFLAGS = $(subst $(CC_FLAGS_SCS),,$(ORIG_CFLAGS))
--- 
-2.24.0.rc0.303.g954a862665-goog
-
+Reviewed-by: Rob Herring <robh@kernel.org>
