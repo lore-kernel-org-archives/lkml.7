@@ -2,146 +2,144 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C07ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C2FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B21A20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571924638;
-	bh=caSJPvAyaGnacOClomQ1HCfNRqauq+PIcyVlnhrA6XI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XZqhz9tk9l+slmRdgKxnCzgt9CcOaptOAr72fAyJ2YcbfSulqLJUgVjuXo4PEf23P
-	 zwTmV5CpXhK7zmGk7nKLXGgD6yigvPilGeoDmXWMOrV9d2MdMtFo4WLVWqIwEc6m/h
-	 uIyZ8NMev/7NvUe4stX+O5y0cU3fMOZNJ7zN3Zdg=
+	by mail.kernel.org (Postfix) with ESMTP id 9C7A420659
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="COChlb5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393726AbfJXNn5 (ORCPT
+        id S2393738AbfJXNpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:43:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390977AbfJXNn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:43:57 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E1CA21872;
-        Thu, 24 Oct 2019 13:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571924635;
-        bh=caSJPvAyaGnacOClomQ1HCfNRqauq+PIcyVlnhrA6XI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tUa0Pg2Mn3DvNc6g2InTIhVUe2oTAODOSrgEYn+XRxvy6ZmrAOrFKaQOst92uuLBv
-         S2JT3ThsRk5QEXP4sUlFhdnwyxQAIQXUoiMBgk9TbC2MUBCIOlXv7xk/OclQPV869c
-         Avr220gPzM4n7H/1UF9mH9zBRsWClxGquhMFZEl8=
-Received: by mail-lj1-f176.google.com with SMTP id u22so7091590lji.7;
-        Thu, 24 Oct 2019 06:43:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAW843DnVNtoMEx79QiMR3E1dU9Oiqr/aj0hf60mEYzNUMRnDF/n
-        7K19WZNNJnkU7jyZG8djqumYIknGcjjnUPo+z6o=
-X-Google-Smtp-Source: APXvYqzONfnyNEwRsWpMnM9gNIgiRSukkKKMwEXSa9QMdk8AsXyfGNhvzssWnDDRpo2MxLwilM9jDntvj1Q+BKD6ips=
-X-Received: by 2002:a2e:9848:: with SMTP id e8mr7727758ljj.148.1571924633210;
- Thu, 24 Oct 2019 06:43:53 -0700 (PDT)
+        Thu, 24 Oct 2019 09:45:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34639 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393632AbfJXNpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:45:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id j19so25113536lja.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/fWYhCmJ93NQhT0I63wTXutn+dxi511+rgvXvN58Juw=;
+        b=COChlb5Mp2PZWd2gN4YbVP4ENvRu9Tw+0i1E65YlR/n6dbdc00DDRL9BlVyRNiMzYo
+         6Yi2HjsraB7heDkJ5SbI744uW2oJLsgjAAcCh0u5XHnKl7UmZWz07cVo9m2hjofK+R8K
+         Xat1zC5Pb9+DssUbOVRAaNt8qxC53pcGyoGTg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/fWYhCmJ93NQhT0I63wTXutn+dxi511+rgvXvN58Juw=;
+        b=mhG4zrtrqGmNSSML8b94UuL00PnkxEDIMUJKT5nZJMVL5Q0u29DCXqDlsTjBDYZZ9+
+         RqtySC7UvAo9N/icWmbZKG2vXeIlTBAT60U2cjQBlapryfYVg0iv+bALkyJAtGOFdJor
+         e4oN1/ozOG6T1LnRkf2A+/pzGRO5/IvGX495278+HaTK5onlAhTIayyMfICByBZG7UOz
+         lvS0Hw9wPriVvGHl6EZX57pltsbd9kG6sf7rhs0BfPRXiGraKHdfseSBagOELbf5+M2S
+         +SNPoIdW1QaG82Abe2jwbJYYb0l4WuU+xsKfE1wGyn2mXUS8RGK/fb524dvJa8UT3N27
+         FHdw==
+X-Gm-Message-State: APjAAAWmXY2oGALK+zWvWc4SDUtuvF59PtZXeux6zpNqTKzl9Lg39Xnn
+        d3af2b4pwy67hp6qpfHussikfw==
+X-Google-Smtp-Source: APXvYqy2DBWkOtEXsuzhsqwJjpCTQz3sNvep3L9L8lQliUGX0tAat3ID5dEFH7aEnbHO+0vQecjBwA==
+X-Received: by 2002:a2e:b4e8:: with SMTP id s8mr7270549ljm.73.1571924722093;
+        Thu, 24 Oct 2019 06:45:22 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id o196sm10069411lff.59.2019.10.24.06.45.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 06:45:21 -0700 (PDT)
+Subject: Re: [RFC PATCH 3/3] decompress/keepalive.h: add config option for
+ toggling a set of bits
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Gao Xiang <xiang@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+References: <20191017114906.30302-1-linux@rasmusvillemoes.dk>
+ <20191017114906.30302-4-linux@rasmusvillemoes.dk>
+ <CACRpkdYpnX0JMT9tG8AYhRQiXo90GJoF_J8c6f+KoWKvZmyj-g@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <23b46dec-30f5-29a1-7bca-99d3af10c98e@rasmusvillemoes.dk>
+Date:   Thu, 24 Oct 2019 15:45:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191024123526.4778-1-ribalda@kernel.org> <20191024133333.GE3966@mara.localdomain>
-In-Reply-To: <20191024133333.GE3966@mara.localdomain>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Thu, 24 Oct 2019 15:43:36 +0200
-X-Gmail-Original-Message-ID: <CAPybu_2hdvq_M-8X0_-MVxSjaJ8H0x+zDRaa4Cf=b0PQtVnzmQ@mail.gmail.com>
-Message-ID: <CAPybu_2hdvq_M-8X0_-MVxSjaJ8H0x+zDRaa4Cf=b0PQtVnzmQ@mail.gmail.com>
-Subject: Re: [PATCH v2] Documentation: media: *_DEFAULT targets for subdevs
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkdYpnX0JMT9tG8AYhRQiXo90GJoF_J8c6f+KoWKvZmyj-g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari
-
-Lets say the user wants to select the active pixels. He needs to set
-the crop and the compose.
-
-1) he gets V4L2_SEL_TGT_CROP_DEFAULT
-
-2) he sets V4L2_SEL_TGT_CROP
-
-How does he knows which compose to use? What if the compose starts at
-(0,0) instead of (32,32)....?
-
-I think it is easier if
-
-3) he gets V4L2_SEL_TGT_COMPOSE_DEFAULT
-
-4) he sets V4L2_SEL_TGT_COMPOSE
-
-This is similar as how we do it today with a v4l2_device. What if we
-simply replicate that behaviour?
-
-
-Best regards
-
-On Thu, Oct 24, 2019 at 3:32 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
+On 24/10/2019 14.17, Linus Walleij wrote:
+> On Thu, Oct 17, 2019 at 1:49 PM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+> 
+>> +config DECOMPRESS_KEEPALIVE_TOGGLE_REG
+>> +       hex "Address of register to modify while decompressing"
+>> +       help
+>> +         Set this to a physical address of a 32-bit memory word to
+>> +         modify while decompressing.
+>> +
+>> +config DECOMPRESS_KEEPALIVE_TOGGLE_MASK
+>> +       hex "Bit mask to toggle while decompressing"
+>> +       help
+>> +         The register selected above will periodically be xor'ed with
+>> +         this value during decompression.
+> 
+> I would not allow users to store these vital hex values in their
+> defconfig and other unsafe places. Instead follow the pattern from
+> arch/arm/Kconfig.debug for storing the DEBUG_UART_PHYS:
+> 
+> config DEBUG_UART_PHYS
+>         hex "Physical base address of debug UART"
+>         default 0x01c20000 if DEBUG_DAVINCI_DMx_UART0
+>         default 0x01c28000 if DEBUG_SUNXI_UART0
+>         default 0x01c28400 if DEBUG_SUNXI_UART1
+> ....
+> i.e. make sure to provide the right default values. We probably
+> need at least one example for others to follow.
 >
-> Hi Ricardo,
->
-> On Thu, Oct 24, 2019 at 02:35:25PM +0200, Ricardo Ribalda Delgado wrote:
-> > Some sensors have optical blanking areas, this is, pixels that are
-> > painted and do not account for light, only noise.
-> >
-> > These special pixels are very useful for calibrating the sensor, but
-> > should not be displayed on a DEFAULT target.
-> >
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >
-> > v2: Changes by Sakari Ailus <sakari.ailus@linux.intel.com>
-> >
-> > Only change CROP_DEFAULT
-> >
-> >  Documentation/media/uapi/v4l/v4l2-selection-targets.rst | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
-> > index f74f239b0510..41c6674ec283 100644
-> > --- a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
-> > +++ b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
-> > @@ -38,8 +38,10 @@ of the two interfaces they are used.
-> >      * - ``V4L2_SEL_TGT_CROP_DEFAULT``
-> >        - 0x0001
-> >        - Suggested cropping rectangle that covers the "whole picture".
-> > +        This includes only active pixels and excludes other non-active
-> > +        pixels such as black pixels.
-> > +      - Yes
-> >        - Yes
-> > -      - No
-> >      * - ``V4L2_SEL_TGT_CROP_BOUNDS``
-> >        - 0x0002
-> >        - Bounds of the crop rectangle. All valid crop rectangles fit inside
-> > @@ -61,7 +63,7 @@ of the two interfaces they are used.
-> >        - 0x0101
-> >        - Suggested composition rectangle that covers the "whole picture".
-> >        - Yes
-> > -      - No
-> > +      - Yes
->
-> This is COMPOSE_DEFAULT that wasn't meant to be changed. So with this chunk
-> dropped,
->
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->
-> >      * - ``V4L2_SEL_TGT_COMPOSE_BOUNDS``
-> >        - 0x0102
-> >        - Bounds of the compose rectangle. All valid compose rectangles fit
->
-> --
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
+> Maybe this is your plan, I don't know, wanted to point it out
+> anyways.
+
+The thing is, there is no proper default value for the use cases I have
+in mind: Custom hardware based on some SOC, where the designer has wired
+on an external gpio-triggered watchdog. That could be gpio 25 of gpio
+bank 0, or gpio 2 of gpio bank 3, or ... so I don't see how there could
+possibly be any sane default value - the kernel certainly shouldn't grow
+a config option for every single custom board out there.
+
+That's why this is different from the previously existing
+arch_decomp_wdog - that was (AFAICT) about feeding the SOC's builtin
+watchdog.
+
+I realize this is rather specific, and the current implementation for
+example won't work if the gpio value cannot be toggled in such a simple
+way (perhaps there are separate "set" and "clear" registers or whatnot)
+- but as I said, it is sufficient for the many different cases I've seen
+so far (and something like my patches have been used for years on those
+boards).
+
+An alternative is to simply provide a complete implementation of
+decompress_keepalive() (or arch_decomp_wdog if we want to keep that
+name) in an external .o/.c/.S file, and do something like
+
+OBJS += $(CONFIG_DECOMP_WDOG:"%"=%)
+
+in arch/foo/boot/compressed/Makefile. Then the physical address etc. do
+not get written in Kconfig, and it should work for all cases, including
+the ones that need to write 0x55, 0xaa, 0x12 in order to some
+SOC-specific register.
+
+Rasmus
