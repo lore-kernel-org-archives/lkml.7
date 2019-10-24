@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECC2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70114CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10DD2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468612084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 02:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOaQy1e/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cv7pU5xf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408227AbfJXCen (ORCPT
+        id S2437092AbfJXCet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 23 Oct 2019 22:34:43 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46202 "EHLO
+        Wed, 23 Oct 2019 22:34:49 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38438 "EHLO
         mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfJXCem (ORCPT
+        with ESMTP id S2406435AbfJXCes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 23 Oct 2019 22:34:42 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u22so35440803qtq.13;
-        Wed, 23 Oct 2019 19:34:41 -0700 (PDT)
+        Wed, 23 Oct 2019 22:34:48 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o25so22104149qtr.5;
+        Wed, 23 Oct 2019 19:34:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xn5B/vWX4/5/L633ZiUXRAOXf5Sfp3irsNXPi/hnTvY=;
-        b=HOaQy1e/F3vF9ZWEaNhz8sCI0vRcsUXdW7RONBuzVK00TZUTAKWZH8MkD3KfuuStzp
-         Uz95XSOBtaiN68JEtliuneain+XrpA81jZbOaATHZFRjqeFzVgCnFYHV06tjjKgMr1wh
-         8nDK44TY0Gs4eWdg4h1mIMxoIUE4Yu5FvulkH/9aqfIG3N/Z759rknSez0n6uRVqj1Up
-         QiXdTqYlNgYrMoqL1NlWIpZ4MwZ9bUfIZJkGoU1tVvyrj2+mfHZk1dOwIzUZuR2SNV3+
-         xCuCEfHYi5w9FDXICUBxxCPvcMa9K7hkyIJuH0EsUPE8rHbW/9rfoPz8Vg2RlOv4lh+f
-         oHww==
+        bh=1L1UVsmiwS+xpUQ80FyogftbcKebcBOXiHqKTRmdfys=;
+        b=Cv7pU5xfEyazZq4rtFmyhGGV/JDnvLrY5ZBPrdMhsThU1kW9tVd+q3mo0j39/Ax6xX
+         BsHDoKUkFTuKg7YJsROonKRghvjq9hcDBFeUpuZrRdUkoftuTskGF2kP3gaXLyrTdeRv
+         RShH24YqW7QtFKTd7AKK2HHAzUNlhKrSeSKc10vS069uz1zuzcWMjElHaigApnob23Za
+         j7ZU1eTqEfvEL+kaSoPnZhivG+92r+CqODYn1gL6Qu77SG2N7+4vXwBQ1pWDGGgjrB8P
+         /2E/+KcFUFOmGSaF8b0UNPeoAEuHmjBlPvc2dob6t58rql52IRMkszhpQChgoyAd341A
+         54MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xn5B/vWX4/5/L633ZiUXRAOXf5Sfp3irsNXPi/hnTvY=;
-        b=IbrsgI0u0BUzesWifVoWtrQIEUlUbB4+kOKD+cNcdVr0r1G7qCuL30FSBf4SZ4vI01
-         mzoPkYsgSEsnTIUKkYaIh2QUQ1kk6C1mNxGJUTsKiSSJNLwY9M345O+JiCeqhhXusWO6
-         VHOv5tYGxK8adYq4q3DjgTiHD7wf2Y3DNpUtIQy5mqwi+4yXtt6buXsVL/El8aXhFESu
-         JbsqktcDKgYXyxGJWEnwnQDEurhMwXML/z1M6crxiaT3Naks4K5cYl/JO57WWioQfKdk
-         l9AJruhBlN4Zd0qmagthOCnxp4XlBgHeLfuT8KI9FT/EFUcJngXpFmNAsB2QORwoJChg
-         0Mkw==
-X-Gm-Message-State: APjAAAV7qozmpsYIzZvnThK3niEzP7P1slBBd9LMWmw/3yV25eYby9YN
-        Pez+2tj/dbSkUnFXORLXlTiQKSk2
-X-Google-Smtp-Source: APXvYqyNhJNo3RvCu1gy5NnJCBx/ex4BCCEqhW4R3CurPNNM6c120p8qNKcvY2Peu6iiPMSuGqSQ1Q==
-X-Received: by 2002:aed:2088:: with SMTP id 8mr1948861qtb.295.1571884481019;
-        Wed, 23 Oct 2019 19:34:41 -0700 (PDT)
+        bh=1L1UVsmiwS+xpUQ80FyogftbcKebcBOXiHqKTRmdfys=;
+        b=AM2FK77I1hobN/wi1x7Xv4Z3XmNsWfwmH9xCDleY3JdGMPTv7sBQIzVCkvQjhYpzsv
+         j8sGt3Qu5sFXlmMb5IEzSaHtDZf9l80OR0aoW60+gcD91ZvfTsMC7OVqJke/oSkW+tKJ
+         c+ih1bP6cW9D+l4xcl3J8oIjnkhLTzFwoATUeS2fXVdUH3zWDKQxxqG0Mw34ms8Jrph2
+         KM/2N+GWm4tlH+lz5XZJoMCmZz0ovw+kj82h40TNNs8DRLZKoEM1/+HVylu8tGYJaaun
+         C3v9IKpadZj+BAF/MMIeTilzgfEVs51gRJdn73p0wP81ASnTpvKAeuCIIXdZVmXRcoNt
+         uB6w==
+X-Gm-Message-State: APjAAAUj08aFkT5xpvEOWfEfsBZrCL9oSvqYwshRoyIAMkeONefFZNns
+        WGIph4Do4RZJWtmEfC196oW/Z0Xv
+X-Google-Smtp-Source: APXvYqyGh3Q3xNuyJhPQoKMQuBcsiCj7m78zlKwZgmxWt0su0O9TT06hf1G6ahDkhxleUjCVXLNTTA==
+X-Received: by 2002:ac8:768e:: with SMTP id g14mr1939571qtr.378.1571884486842;
+        Wed, 23 Oct 2019 19:34:46 -0700 (PDT)
 Received: from localhost.localdomain ([186.212.94.31])
-        by smtp.gmail.com with ESMTPSA id q16sm10252495qke.22.2019.10.23.19.34.38
+        by smtp.gmail.com with ESMTPSA id q16sm10252495qke.22.2019.10.23.19.34.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2019 19:34:40 -0700 (PDT)
+        Wed, 23 Oct 2019 19:34:46 -0700 (PDT)
 From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
         linux-btrfs@vger.kernel.org, mpdesouza@suse.com
-Subject: [PATCH 1/5] btrfs: sysfs: Add envp argument to btrfs_kobject_uevent
-Date:   Wed, 23 Oct 2019 23:36:32 -0300
-Message-Id: <20191024023636.21124-2-marcos.souza.org@gmail.com>
+Subject: [PATCH 3/5] btrfs: ioctl: Call btrfs_vol_uevent on subvol creation
+Date:   Wed, 23 Oct 2019 23:36:34 -0300
+Message-Id: <20191024023636.21124-4-marcos.souza.org@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191024023636.21124-1-marcos.souza.org@gmail.com>
 References: <20191024023636.21124-1-marcos.souza.org@gmail.com>
@@ -76,66 +76,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-This new argument will be used by the next patches for sending uevents
-related to subvolumes being added/removed. These uevents will contain
-environment data that will be sent to userspace, making it possible to
-take actions once these events arrive.
+btrfs_vol_uevent will export two environment variables to udev:
+BTRFS_VOL_NAME: containing the name of the volume being created
+BTRFS_VOL_ADD: will signalize that a subvol was created
+
+One can create a udev rule and check for BTRFS_VOL_ADD being sent,
+these values one could detect whenever a subvolume is created, and
+take any action based on the subvolume name contained in BTRFS_VOL_NAME.
 
 Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 ---
- fs/btrfs/sysfs.c   | 7 +++++--
- fs/btrfs/sysfs.h   | 3 ++-
- fs/btrfs/volumes.c | 2 +-
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ fs/btrfs/ioctl.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index f6d3c80f2e28..93a8ed9e4fe8 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -998,11 +998,14 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
- 	return error;
- }
- 
--void btrfs_kobject_uevent(struct block_device *bdev, enum kobject_action action)
-+void btrfs_kobject_uevent(struct block_device *bdev,
-+				enum kobject_action action,
-+				char *envp[])
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 174cbe71d6be..c538d3648195 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -980,6 +980,7 @@ static noinline int btrfs_mksubvol(const struct path *parent,
  {
- 	int ret;
+ 	struct inode *dir = d_inode(parent->dentry);
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(dir->i_sb);
++	struct block_device *bdev = fs_info->fs_devices->latest_bdev;
+ 	struct dentry *dentry;
+ 	int error;
  
--	ret = kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, action);
-+	ret = kobject_uevent_env(&disk_to_dev(bdev->bd_disk)->kobj,
-+				action, envp);
- 	if (ret)
- 		pr_warn("BTRFS: Sending event '%d' to kobject: '%s' (%p): failed\n",
- 			action, kobject_name(&disk_to_dev(bdev->bd_disk)->kobj),
-diff --git a/fs/btrfs/sysfs.h b/fs/btrfs/sysfs.h
-index 610e9c36a94c..5be3953074ad 100644
---- a/fs/btrfs/sysfs.h
-+++ b/fs/btrfs/sysfs.h
-@@ -26,7 +26,8 @@ void btrfs_sysfs_update_sprout_fsid(struct btrfs_fs_devices *fs_devices,
- 				    const u8 *fsid);
- void btrfs_sysfs_feature_update(struct btrfs_fs_info *fs_info,
- 		u64 bit, enum btrfs_feature_set set);
--void btrfs_kobject_uevent(struct block_device *bdev, enum kobject_action action);
-+void btrfs_kobject_uevent(struct block_device *bdev,
-+			enum kobject_action action, char *env[]);
- 
- int __init btrfs_init_sysfs(void);
- void __cold btrfs_exit_sysfs(void);
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index bdfe4493e43a..7a7a9cae9b80 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7580,7 +7580,7 @@ void btrfs_scratch_superblocks(struct block_device *bdev, const char *device_pat
+@@ -1018,8 +1019,12 @@ static noinline int btrfs_mksubvol(const struct path *parent,
+ 		error = create_subvol(dir, dentry, name, namelen,
+ 				      async_transid, inherit);
  	}
- 
- 	/* Notify udev that device has changed */
--	btrfs_kobject_uevent(bdev, KOBJ_CHANGE);
-+	btrfs_kobject_uevent(bdev, KOBJ_CHANGE, NULL);
- 
- 	/* Update ctime/mtime for device path for libblkid */
- 	update_dev_time(device_path);
+-	if (!error)
++	if (!error) {
++		if (!snap_src)
++			btrfs_vol_uevent(bdev, true, name);
++
+ 		fsnotify_mkdir(dir, dentry);
++	}
+ out_up_read:
+ 	up_read(&fs_info->subvol_sem);
+ out_dput:
 -- 
 2.23.0
 
