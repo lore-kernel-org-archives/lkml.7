@@ -2,178 +2,134 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FC0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE37CCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEE320684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7F520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407060AbfJXHVk (ORCPT
+        id S2407113AbfJXHWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:21:40 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:45002 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404734AbfJXHVk (ORCPT
+        Thu, 24 Oct 2019 03:22:45 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:29526 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390502AbfJXHWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:21:40 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9O7KK2a031046, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9O7KK2a031046
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 24 Oct 2019 15:20:20 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Thu, 24 Oct 2019 15:20:19 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 24 Oct 2019 15:20:19 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::6d88:58e2:6d4b:ff7c]) by
- RTEXMB01.realtek.com.tw ([fe80::6d88:58e2:6d4b:ff7c%13]) with mapi id
- 15.01.1779.005; Thu, 24 Oct 2019 15:20:19 +0800
-From:   Kailang <kailang@realtek.com>
-To:     Aaron Ma <aaron.ma@canonical.com>, Takashi Iwai <tiwai@suse.de>
-CC:     "perex@perex.cz" <perex@perex.cz>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
-Thread-Topic: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
-Thread-Index: AQHViO7vxXHEn3Xl7Ee6N1/g4hdxKqdmTdyAgAGbrzD//5F4gIAB6clQ
-Date:   Thu, 24 Oct 2019 07:20:19 +0000
-Message-ID: <ed97b6a8bd9445ecb48bc763d9aaba7a@realtek.com>
-References: <20191022153855.14368-1-aaron.ma@canonical.com>
- <s5hpniodaq4.wl-tiwai@suse.de> <848ebd7fd86e4c05936e70f500f718e9@realtek.com>
- <892889ae-0ce1-fbf6-d19f-50a5686e84c2@canonical.com>
-In-Reply-To: <892889ae-0ce1-fbf6-d19f-50a5686e84c2@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.105.211]
-Content-Type: multipart/mixed;
-        boundary="_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_"
+        Thu, 24 Oct 2019 03:22:44 -0400
+X-UUID: c00efe6b6a6b490a8ec249bb5f663775-20191024
+X-UUID: c00efe6b6a6b490a8ec249bb5f663775-20191024
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 222561763; Thu, 24 Oct 2019 15:22:33 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Oct
+ 2019 15:22:31 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 24 Oct 2019 15:22:30 +0800
+Message-ID: <1571901752.19130.135.camel@mhfsdcap03>
+Subject: Re: [PATCH v4 3/7] iommu/mediatek: Use gather to achieve the tlb
+ range flush
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Will Deacon <will@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
+        <chao.hao@mediatek.com>, <edison.hsieh@mediatek.com>
+Date:   Thu, 24 Oct 2019 15:22:32 +0800
+In-Reply-To: <20191023165543.GB27471@willie-the-truck>
+References: <1571196792-12382-1-git-send-email-yong.wu@mediatek.com>
+         <1571196792-12382-4-git-send-email-yong.wu@mediatek.com>
+         <20191023165543.GB27471@willie-the-truck>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: B3428B34711F9D4340351C5FBF71C7D9A7707DD264962EFF9A5C5A10E427B3F82000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+On Wed, 2019-10-23 at 17:55 +0100, Will Deacon wrote:
+> On Wed, Oct 16, 2019 at 11:33:08AM +0800, Yong Wu wrote:
+> > Use the iommu_gather mechanism to achieve the tlb range flush.
+> > Gather the iova range in the "tlb_add_page", then flush the merged iova
+> > range in iotlb_sync.
+> > 
+> > Suggested-by: Tomasz Figa <tfiga@chromium.org>
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > ---
+> >  drivers/iommu/mtk_iommu.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > index c2f6c78..81ac95f 100644
+> > --- a/drivers/iommu/mtk_iommu.c
+> > +++ b/drivers/iommu/mtk_iommu.c
+> > @@ -245,11 +245,9 @@ static void mtk_iommu_tlb_flush_page_nosync(struct iommu_iotlb_gather *gather,
+> >  					    void *cookie)
+> >  {
+> >  	struct mtk_iommu_data *data = cookie;
+> > -	unsigned long flags;
+> > +	struct iommu_domain *domain = &data->m4u_dom->domain;
+> >  
+> > -	spin_lock_irqsave(&data->tlb_lock, flags);
+> > -	mtk_iommu_tlb_add_flush_nosync(iova, granule, granule, true, cookie);
+> > -	spin_unlock_irqrestore(&data->tlb_lock, flags);
+> > +	iommu_iotlb_gather_add_page(domain, gather, iova, granule);
+> 
+> You need to be careful here, because iommu_iotlb_gather_add_page() can
+> call iommu_tlb_sync() in some situations and you don't hold the lock.
 
-SGkgVGFrYXNoaSwNCg0KQXR0YWNoIHBhdGNoIHdhcyBzdXBwb3J0IEFMQzYyMy4NCg0KQlIsDQpL
-YWlsYW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWFyb24gTWEg
-PGFhcm9uLm1hQGNhbm9uaWNhbC5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyMywg
-MjAxOSA2OjA2IFBNDQo+IFRvOiBLYWlsYW5nIDxrYWlsYW5nQHJlYWx0ZWsuY29tPjsgVGFrYXNo
-aSBJd2FpIDx0aXdhaUBzdXNlLmRlPg0KPiBDYzogcGVyZXhAcGVyZXguY3o7IGh1aS53YW5nQGNh
-bm9uaWNhbC5jb207IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZzsNCj4gbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBTFNBOiBoZGEvcmVhbHRl
-ayAtIEZpeCAyIGZyb250IG1pY3Mgb2YgY29kZWMgMHg2MjMNCj4gDQo+IE9uIDEwLzIzLzE5IDQ6
-NDQgUE0sIEthaWxhbmcgd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiA+PiBGcm9tOiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuZGU+DQo+ID4+IFNl
-bnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyMywgMjAxOSAxMjowOCBBTQ0KPiA+PiBUbzogQWFyb24g
-TWEgPGFhcm9uLm1hQGNhbm9uaWNhbC5jb20+DQo+ID4+IENjOiBwZXJleEBwZXJleC5jejsgS2Fp
-bGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT47DQo+ID4+IGh1aS53YW5nQGNhbm9uaWNhbC5jb207
-IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZzsNCj4gPj4gbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBBTFNBOiBoZGEvcmVhbHRlayAtIEZp
-eCAyIGZyb250IG1pY3Mgb2YgY29kZWMNCj4gPj4gMHg2MjMNCj4gPj4NCj4gPj4gT24gVHVlLCAy
-MiBPY3QgMjAxOSAxNzozODo1NSArMDIwMCwNCj4gPj4gQWFyb24gTWEgd3JvdGU6DQo+ID4+Pg0K
-PiA+Pj4gVGhlc2UgMiBUaGlua0NlbnRyZXMgaW5zdGFsbGVkIGEgbmV3IHJlYWx0ZWsgY29kZWMg
-SUQgMHg2MjMsIGl0IGhhcw0KPiA+Pj4gMiBmcm9udCBtaWNzIHdpdGggdGhlIHNhbWUgbG9jYXRp
-b24gb24gcGluIDB4MTggYW5kIDB4MTkuDQo+ID4+Pg0KPiA+Pj4gQXBwbHkgZml4dXAgQUxDMjgz
-X0ZJWFVQX0hFQURTRVRfTUlDIHRvIGNoYW5nZSAxIGZyb250IG1pYyBsb2NhdGlvbg0KPiA+Pj4g
-dG8gcmlnaHQsIHRoZW4gcHVsc2VhdWRpbyBjYW4gaGFuZGxlIHRoZW0uDQo+ID4+PiBPbmUgIkZy
-b250IE1pYyIgYW5kIG9uZSAiTWljIiB3aWxsIGJlIHNob3duLCBhbmQgYXVkaW8gb3V0cHV0IHdv
-cmtzDQo+ID4+PiBmaW5lLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IEFhcm9uIE1hIDxh
-YXJvbi5tYUBjYW5vbmljYWwuY29tPg0KPiA+Pg0KPiA+PiBJJ2QgbGlrZSB0byBoYXZlIEthaWxh
-bmcncyByZXZpZXcgYWJvdXQgdGhlIG5ldyBjb2RlYyBiZWZvcmUgYXBwbHlpbmcuDQo+ID4+DQo+
-ID4+IEthaWxhbmcsIGNvdWxkIHlvdSB0YWtlIGEgbG9vaz8NCj4gPiBPSy4NCj4gPiBJIHdpbGwg
-cG9zdCB5b3UgdGhlIHBhdGNoIGZvciBBTEM2MjMgY29kZWMgdG9tb3Jyb3cuDQo+ID4gVGhhbmtz
-Lg0KPiANCj4gQ2MgbWUgdG9vLg0KPiANCj4gVGhhbmsgeW91Lg0KPiBBYXJvbg0KPiANCj4gPg0K
-PiA+Pg0KPiA+Pg0KPiA+PiB0aGFua3MsDQo+ID4+DQo+ID4+IFRha2FzaGkNCj4gPj4NCj4gPj4+
-IC0tLQ0KPiA+Pj4gIHNvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jIHwgMyArKysNCj4gPj4+
-ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdp
-dCBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jDQo+ID4+PiBiL3NvdW5kL3BjaS9oZGEv
-cGF0Y2hfcmVhbHRlay5jIGluZGV4IGIwMDBiMzZhYzNjNi4uYzM0ZDhiNDM1ZjU4DQo+ID4+PiAx
-MDA2NDQNCj4gPj4+IC0tLSBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jDQo+ID4+PiAr
-KysgYi9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYw0KPiA+Pj4gQEAgLTcxODYsNiArNzE4
-Niw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3BjaV9xdWlyaw0KPiA+Pj4gYWxjMjY5X2Zp
-eHVwX3RibFtdDQo+ID4+ID0gew0KPiA+Pj4gIAlTTkRfUENJX1FVSVJLKDB4MTdhYSwgMHgzMTJm
-LCAiVGhpbmtDZW50cmUgU3RhdGlvbiIsDQo+ID4+IEFMQzI5NF9GSVhVUF9MRU5PVk9fTUlDX0xP
-Q0FUSU9OKSwNCj4gPj4+ICAJU05EX1BDSV9RVUlSSygweDE3YWEsIDB4MzEzYywgIlRoaW5rQ2Vu
-dHJlIFN0YXRpb24iLA0KPiA+PiBBTEMyOTRfRklYVVBfTEVOT1ZPX01JQ19MT0NBVElPTiksDQo+
-ID4+PiAgCVNORF9QQ0lfUVVJUksoMHgxN2FhLCAweDMxNTEsICJUaGlua0NlbnRyZSBTdGF0aW9u
-IiwNCj4gPj4+IEFMQzI4M19GSVhVUF9IRUFEU0VUX01JQyksDQo+ID4+PiArCVNORF9QQ0lfUVVJ
-UksoMHgxN2FhLCAweDMxNzgsICJUaGlua0NlbnRyZSBTdGF0aW9uIiwNCj4gPj4gQUxDMjgzX0ZJ
-WFVQX0hFQURTRVRfTUlDKSwNCj4gPj4+ICsJU05EX1BDSV9RVUlSSygweDE3YWEsIDB4MzE3Niwg
-IlRoaW5rQ2VudHJlIFN0YXRpb24iLA0KPiA+Pj4gK0FMQzI4M19GSVhVUF9IRUFEU0VUX01JQyks
-DQo+ID4+PiAgCVNORF9QQ0lfUVVJUksoMHgxN2FhLCAweDM5MDIsICJMZW5vdm8gRTUwLTgwIiwN
-Cj4gPj4gQUxDMjY5X0ZJWFVQX0RNSUNfVEhJTktQQURfQUNQSSksDQo+ID4+PiAgCVNORF9QQ0lf
-UVVJUksoMHgxN2FhLCAweDM5NzcsICJJZGVhUGFkIFMyMTAiLA0KPiA+PiBBTEMyODNfRklYVVBf
-SU5UX01JQyksDQo+ID4+PiAgCVNORF9QQ0lfUVVJUksoMHgxN2FhLCAweDM5NzgsICJMZW5vdm8g
-QjUwLTcwIiwNCj4gPj4+IEFMQzI2OV9GSVhVUF9ETUlDX1RISU5LUEFEX0FDUEkpLCBAQCAtOTE4
-Nyw2ICs5MTg5LDcgQEAgc3RhdGljDQo+ID4+IGNvbnN0IHN0cnVjdCBoZGFfZGV2aWNlX2lkIHNu
-ZF9oZGFfaWRfcmVhbHRla1tdID0gew0KPiA+Pj4gIAlIREFfQ09ERUNfRU5UUlkoMHgxMGVjMDI5
-OCwgIkFMQzI5OCIsIHBhdGNoX2FsYzI2OSksDQo+ID4+PiAgCUhEQV9DT0RFQ19FTlRSWSgweDEw
-ZWMwMjk5LCAiQUxDMjk5IiwgcGF0Y2hfYWxjMjY5KSwNCj4gPj4+ICAJSERBX0NPREVDX0VOVFJZ
-KDB4MTBlYzAzMDAsICJBTEMzMDAiLCBwYXRjaF9hbGMyNjkpLA0KPiA+Pj4gKwlIREFfQ09ERUNf
-RU5UUlkoMHgxMGVjMDYyMywgIkFMQzYyMyIsIHBhdGNoX2FsYzI2OSksDQo+ID4+PiAgCUhEQV9D
-T0RFQ19SRVZfRU5UUlkoMHgxMGVjMDg2MSwgMHgxMDAzNDAsICJBTEM2NjAiLA0KPiA+PiBwYXRj
-aF9hbGM4NjEpLA0KPiA+Pj4gIAlIREFfQ09ERUNfRU5UUlkoMHgxMGVjMDY2MCwgIkFMQzY2MC1W
-RCIsIHBhdGNoX2FsYzg2MXZkKSwNCj4gPj4+ICAJSERBX0NPREVDX0VOVFJZKDB4MTBlYzA4NjEs
-ICJBTEM4NjEiLCBwYXRjaF9hbGM4NjEpLA0KPiA+Pj4gLS0NCj4gPj4+IDIuMTcuMQ0KPiA+Pj4N
-Cj4gPj4NCj4gPj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUg
-cHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
+The mtk_iommu_iotlb_sync below already has the lock in it, so I delete
+the lock here.
 
---_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_
-Content-Type: application/octet-stream; name="0000-add-support-alc623.patch"
-Content-Description: 0000-add-support-alc623.patch
-Content-Disposition: attachment; filename="0000-add-support-alc623.patch";
-	size=1990; creation-date="Thu, 24 Oct 2019 07:18:58 GMT";
-	modification-date="Thu, 24 Oct 2019 07:18:35 GMT"
-Content-Transfer-Encoding: base64
+> 
+> >  static const struct iommu_flush_ops mtk_iommu_flush_ops = {
+> > @@ -469,9 +467,15 @@ static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
+> >  				 struct iommu_iotlb_gather *gather)
+> >  {
+> >  	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
+> > +	size_t length = gather->end - gather->start;
+> >  	unsigned long flags;
+> >  
+> > +	if (gather->start == ULONG_MAX)
+> > +		return;
+> > +
+> >  	spin_lock_irqsave(&data->tlb_lock, flags);
+> > +	mtk_iommu_tlb_add_flush_nosync(gather->start, length, gather->pgsize,
+> > +				       false, data);
+> >  	mtk_iommu_tlb_sync(data);
+> >  	spin_unlock_irqrestore(&data->tlb_lock, flags);
+> 
+> Modulo my comment above, this fixes my previous comment. Given that mainline
+> is already broken, I guess the runtime bisectability isn't a problem.
 
-RnJvbSAzMTAzZjY2ODMwOTNlNDczNjhkODc2NzFmMzcyNmYxYTExZjllZjI4IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBLYWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CkRh
-dGU6IFRodSwgMjQgT2N0IDIwMTkgMTU6MTM6MzIgKzA4MDAKU3ViamVjdDogW1BBVENIXSBBTFNB
-OiBoZGEvcmVhbHRlayAtIEFkZCBzdXBwb3J0IGZvciBBTEM2MjMKClN1cHBvcnQgbmV3IGNvZGVj
-IEFMQzYyMy4KClNpZ25lZC1vZmYtYnk6IEthaWxhbmcgWWFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNv
-bT4KCmRpZmYgLS1naXQgYS9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYyBiL3NvdW5kL3Bj
-aS9oZGEvcGF0Y2hfcmVhbHRlay5jCmluZGV4IDA4NWEyZjk1ZTA3Ni4uYTBjMjM3Y2MxM2Q0IDEw
-MDY0NAotLS0gYS9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYworKysgYi9zb3VuZC9wY2kv
-aGRhL3BhdGNoX3JlYWx0ZWsuYwpAQCAtNDA5LDYgKzQwOSw5IEBAIHN0YXRpYyB2b2lkIGFsY19m
-aWxsX2VhcGRfY29lZihzdHJ1Y3QgaGRhX2NvZGVjICpjb2RlYykKIAljYXNlIDB4MTBlYzA2NzI6
-CiAJCWFsY191cGRhdGVfY29lZl9pZHgoY29kZWMsIDB4ZCwgMCwgMTw8MTQpOyAvKiBFQVBEIEN0
-cmwgKi8KIAkJYnJlYWs7CisJY2FzZSAweDEwZWMwNjIzOgorCQlhbGNfdXBkYXRlX2NvZWZfaWR4
-KGNvZGVjLCAweDE5LCAxPDwxMywgMCk7CisJCWJyZWFrOwogCWNhc2UgMHgxMGVjMDY2ODoKIAkJ
-YWxjX3VwZGF0ZV9jb2VmX2lkeChjb2RlYywgMHg3LCAzPDwxMywgMCk7CiAJCWJyZWFrOwpAQCAt
-MjkyMCw2ICsyOTIzLDcgQEAgZW51bSB7CiAJQUxDMjY5X1RZUEVfQUxDMjI1LAogCUFMQzI2OV9U
-WVBFX0FMQzI5NCwKIAlBTEMyNjlfVFlQRV9BTEMzMDAsCisJQUxDMjY5X1RZUEVfQUxDNjIzLAog
-CUFMQzI2OV9UWVBFX0FMQzcwMCwKIH07CiAKQEAgLTI5NTUsNiArMjk1OSw3IEBAIHN0YXRpYyBp
-bnQgYWxjMjY5X3BhcnNlX2F1dG9fY29uZmlnKHN0cnVjdCBoZGFfY29kZWMgKmNvZGVjKQogCWNh
-c2UgQUxDMjY5X1RZUEVfQUxDMjI1OgogCWNhc2UgQUxDMjY5X1RZUEVfQUxDMjk0OgogCWNhc2Ug
-QUxDMjY5X1RZUEVfQUxDMzAwOgorCWNhc2UgQUxDMjY5X1RZUEVfQUxDNjIzOgogCWNhc2UgQUxD
-MjY5X1RZUEVfQUxDNzAwOgogCQlzc2lkcyA9IGFsYzI2OV9zc2lkczsKIAkJYnJlYWs7CkBAIC04
-MDE3LDYgKzgwMjIsOSBAQCBzdGF0aWMgaW50IHBhdGNoX2FsYzI2OShzdHJ1Y3QgaGRhX2NvZGVj
-ICpjb2RlYykKIAkJc3BlYy0+Y29kZWNfdmFyaWFudCA9IEFMQzI2OV9UWVBFX0FMQzMwMDsKIAkJ
-c3BlYy0+Z2VuLm1peGVyX25pZCA9IDA7IC8qIG5vIGxvb3BiYWNrIG9uIEFMQzMwMCAqLwogCQli
-cmVhazsKKwljYXNlIDB4MTBlYzA2MjM6CisJCXNwZWMtPmNvZGVjX3ZhcmlhbnQgPSBBTEMyNjlf
-VFlQRV9BTEM2MjM7CisJCWJyZWFrOwogCWNhc2UgMHgxMGVjMDcwMDoKIAljYXNlIDB4MTBlYzA3
-MDE6CiAJY2FzZSAweDEwZWMwNzAzOgpAQCAtOTIxOCw2ICs5MjI2LDcgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBoZGFfZGV2aWNlX2lkIHNuZF9oZGFfaWRfcmVhbHRla1tdID0gewogCUhEQV9DT0RF
-Q19FTlRSWSgweDEwZWMwMjk4LCAiQUxDMjk4IiwgcGF0Y2hfYWxjMjY5KSwKIAlIREFfQ09ERUNf
-RU5UUlkoMHgxMGVjMDI5OSwgIkFMQzI5OSIsIHBhdGNoX2FsYzI2OSksCiAJSERBX0NPREVDX0VO
-VFJZKDB4MTBlYzAzMDAsICJBTEMzMDAiLCBwYXRjaF9hbGMyNjkpLAorCUhEQV9DT0RFQ19FTlRS
-WSgweDEwZWMwNjIzLCAiQUxDNjIzIiwgcGF0Y2hfYWxjMjY5KSwKIAlIREFfQ09ERUNfUkVWX0VO
-VFJZKDB4MTBlYzA4NjEsIDB4MTAwMzQwLCAiQUxDNjYwIiwgcGF0Y2hfYWxjODYxKSwKIAlIREFf
-Q09ERUNfRU5UUlkoMHgxMGVjMDY2MCwgIkFMQzY2MC1WRCIsIHBhdGNoX2FsYzg2MXZkKSwKIAlI
-REFfQ09ERUNfRU5UUlkoMHgxMGVjMDg2MSwgIkFMQzg2MSIsIHBhdGNoX2FsYzg2MSksCg==
+As the reply in [2/7]. the mainline is not broken after [2/7], it only
+go to the previous status before commit(4d689b619445).
 
---_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_--
+After using the iommu_gather, the iova will be the merged range in this
+iotlb_sync, it is just fit to do the tlb-flush/tlb-sync. then it fixes
+our potential issue(No tlb-sync for the previous tlb-flush range).
+
+> 
+> Will
+
+
