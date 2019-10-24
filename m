@@ -2,220 +2,178 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3259BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FC0CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037252166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEE320684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437959AbfJXHPk (ORCPT
+        id S2407060AbfJXHVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:15:40 -0400
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:11570 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437940AbfJXHPh (ORCPT
+        Thu, 24 Oct 2019 03:21:40 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:45002 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404734AbfJXHVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:15:37 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 46zJFS55d2zKmhs;
-        Thu, 24 Oct 2019 09:06:36 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id DAIjq9oYK49d; Thu, 24 Oct 2019 09:06:30 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 18:06:04 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v14 2/6] namei: LOOKUP_IN_ROOT: chroot-like path
- resolution
-Message-ID: <20191024070604.howuh6x6qrzd5jsm@yavin.dot.cyphar.com>
-References: <20191010054140.8483-1-cyphar@cyphar.com>
- <20191010054140.8483-3-cyphar@cyphar.com>
- <CAHk-=wh8L50f31vW8BwRUXhLiq3eoCQ3tg8ER4Yp2dzuU1w5rQ@mail.gmail.com>
- <20191012040815.gnc43cfmo5mnv67u@yavin.dot.cyphar.com>
- <20191012041541.milbmfbjpj5bcl5a@yavin.dot.cyphar.com>
+        Thu, 24 Oct 2019 03:21:40 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x9O7KK2a031046, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x9O7KK2a031046
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 24 Oct 2019 15:20:20 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Thu, 24 Oct 2019 15:20:19 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 24 Oct 2019 15:20:19 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::6d88:58e2:6d4b:ff7c]) by
+ RTEXMB01.realtek.com.tw ([fe80::6d88:58e2:6d4b:ff7c%13]) with mapi id
+ 15.01.1779.005; Thu, 24 Oct 2019 15:20:19 +0800
+From:   Kailang <kailang@realtek.com>
+To:     Aaron Ma <aaron.ma@canonical.com>, Takashi Iwai <tiwai@suse.de>
+CC:     "perex@perex.cz" <perex@perex.cz>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
+Thread-Topic: [PATCH] ALSA: hda/realtek - Fix 2 front mics of codec 0x623
+Thread-Index: AQHViO7vxXHEn3Xl7Ee6N1/g4hdxKqdmTdyAgAGbrzD//5F4gIAB6clQ
+Date:   Thu, 24 Oct 2019 07:20:19 +0000
+Message-ID: <ed97b6a8bd9445ecb48bc763d9aaba7a@realtek.com>
+References: <20191022153855.14368-1-aaron.ma@canonical.com>
+ <s5hpniodaq4.wl-tiwai@suse.de> <848ebd7fd86e4c05936e70f500f718e9@realtek.com>
+ <892889ae-0ce1-fbf6-d19f-50a5686e84c2@canonical.com>
+In-Reply-To: <892889ae-0ce1-fbf6-d19f-50a5686e84c2@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.105.211]
+Content-Type: multipart/mixed;
+        boundary="_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i56sxfhksaspu3tw"
-Content-Disposition: inline
-In-Reply-To: <20191012041541.milbmfbjpj5bcl5a@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
---i56sxfhksaspu3tw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+SGkgVGFrYXNoaSwNCg0KQXR0YWNoIHBhdGNoIHdhcyBzdXBwb3J0IEFMQzYyMy4NCg0KQlIsDQpL
+YWlsYW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWFyb24gTWEg
+PGFhcm9uLm1hQGNhbm9uaWNhbC5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyMywg
+MjAxOSA2OjA2IFBNDQo+IFRvOiBLYWlsYW5nIDxrYWlsYW5nQHJlYWx0ZWsuY29tPjsgVGFrYXNo
+aSBJd2FpIDx0aXdhaUBzdXNlLmRlPg0KPiBDYzogcGVyZXhAcGVyZXguY3o7IGh1aS53YW5nQGNh
+bm9uaWNhbC5jb207IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZzsNCj4gbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBTFNBOiBoZGEvcmVhbHRl
+ayAtIEZpeCAyIGZyb250IG1pY3Mgb2YgY29kZWMgMHg2MjMNCj4gDQo+IE9uIDEwLzIzLzE5IDQ6
+NDQgUE0sIEthaWxhbmcgd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiA+PiBGcm9tOiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuZGU+DQo+ID4+IFNl
+bnQ6IFdlZG5lc2RheSwgT2N0b2JlciAyMywgMjAxOSAxMjowOCBBTQ0KPiA+PiBUbzogQWFyb24g
+TWEgPGFhcm9uLm1hQGNhbm9uaWNhbC5jb20+DQo+ID4+IENjOiBwZXJleEBwZXJleC5jejsgS2Fp
+bGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT47DQo+ID4+IGh1aS53YW5nQGNhbm9uaWNhbC5jb207
+IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZzsNCj4gPj4gbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBBTFNBOiBoZGEvcmVhbHRlayAtIEZp
+eCAyIGZyb250IG1pY3Mgb2YgY29kZWMNCj4gPj4gMHg2MjMNCj4gPj4NCj4gPj4gT24gVHVlLCAy
+MiBPY3QgMjAxOSAxNzozODo1NSArMDIwMCwNCj4gPj4gQWFyb24gTWEgd3JvdGU6DQo+ID4+Pg0K
+PiA+Pj4gVGhlc2UgMiBUaGlua0NlbnRyZXMgaW5zdGFsbGVkIGEgbmV3IHJlYWx0ZWsgY29kZWMg
+SUQgMHg2MjMsIGl0IGhhcw0KPiA+Pj4gMiBmcm9udCBtaWNzIHdpdGggdGhlIHNhbWUgbG9jYXRp
+b24gb24gcGluIDB4MTggYW5kIDB4MTkuDQo+ID4+Pg0KPiA+Pj4gQXBwbHkgZml4dXAgQUxDMjgz
+X0ZJWFVQX0hFQURTRVRfTUlDIHRvIGNoYW5nZSAxIGZyb250IG1pYyBsb2NhdGlvbg0KPiA+Pj4g
+dG8gcmlnaHQsIHRoZW4gcHVsc2VhdWRpbyBjYW4gaGFuZGxlIHRoZW0uDQo+ID4+PiBPbmUgIkZy
+b250IE1pYyIgYW5kIG9uZSAiTWljIiB3aWxsIGJlIHNob3duLCBhbmQgYXVkaW8gb3V0cHV0IHdv
+cmtzDQo+ID4+PiBmaW5lLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IEFhcm9uIE1hIDxh
+YXJvbi5tYUBjYW5vbmljYWwuY29tPg0KPiA+Pg0KPiA+PiBJJ2QgbGlrZSB0byBoYXZlIEthaWxh
+bmcncyByZXZpZXcgYWJvdXQgdGhlIG5ldyBjb2RlYyBiZWZvcmUgYXBwbHlpbmcuDQo+ID4+DQo+
+ID4+IEthaWxhbmcsIGNvdWxkIHlvdSB0YWtlIGEgbG9vaz8NCj4gPiBPSy4NCj4gPiBJIHdpbGwg
+cG9zdCB5b3UgdGhlIHBhdGNoIGZvciBBTEM2MjMgY29kZWMgdG9tb3Jyb3cuDQo+ID4gVGhhbmtz
+Lg0KPiANCj4gQ2MgbWUgdG9vLg0KPiANCj4gVGhhbmsgeW91Lg0KPiBBYXJvbg0KPiANCj4gPg0K
+PiA+Pg0KPiA+Pg0KPiA+PiB0aGFua3MsDQo+ID4+DQo+ID4+IFRha2FzaGkNCj4gPj4NCj4gPj4+
+IC0tLQ0KPiA+Pj4gIHNvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jIHwgMyArKysNCj4gPj4+
+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdp
+dCBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jDQo+ID4+PiBiL3NvdW5kL3BjaS9oZGEv
+cGF0Y2hfcmVhbHRlay5jIGluZGV4IGIwMDBiMzZhYzNjNi4uYzM0ZDhiNDM1ZjU4DQo+ID4+PiAx
+MDA2NDQNCj4gPj4+IC0tLSBhL3NvdW5kL3BjaS9oZGEvcGF0Y2hfcmVhbHRlay5jDQo+ID4+PiAr
+KysgYi9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYw0KPiA+Pj4gQEAgLTcxODYsNiArNzE4
+Niw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3BjaV9xdWlyaw0KPiA+Pj4gYWxjMjY5X2Zp
+eHVwX3RibFtdDQo+ID4+ID0gew0KPiA+Pj4gIAlTTkRfUENJX1FVSVJLKDB4MTdhYSwgMHgzMTJm
+LCAiVGhpbmtDZW50cmUgU3RhdGlvbiIsDQo+ID4+IEFMQzI5NF9GSVhVUF9MRU5PVk9fTUlDX0xP
+Q0FUSU9OKSwNCj4gPj4+ICAJU05EX1BDSV9RVUlSSygweDE3YWEsIDB4MzEzYywgIlRoaW5rQ2Vu
+dHJlIFN0YXRpb24iLA0KPiA+PiBBTEMyOTRfRklYVVBfTEVOT1ZPX01JQ19MT0NBVElPTiksDQo+
+ID4+PiAgCVNORF9QQ0lfUVVJUksoMHgxN2FhLCAweDMxNTEsICJUaGlua0NlbnRyZSBTdGF0aW9u
+IiwNCj4gPj4+IEFMQzI4M19GSVhVUF9IRUFEU0VUX01JQyksDQo+ID4+PiArCVNORF9QQ0lfUVVJ
+UksoMHgxN2FhLCAweDMxNzgsICJUaGlua0NlbnRyZSBTdGF0aW9uIiwNCj4gPj4gQUxDMjgzX0ZJ
+WFVQX0hFQURTRVRfTUlDKSwNCj4gPj4+ICsJU05EX1BDSV9RVUlSSygweDE3YWEsIDB4MzE3Niwg
+IlRoaW5rQ2VudHJlIFN0YXRpb24iLA0KPiA+Pj4gK0FMQzI4M19GSVhVUF9IRUFEU0VUX01JQyks
+DQo+ID4+PiAgCVNORF9QQ0lfUVVJUksoMHgxN2FhLCAweDM5MDIsICJMZW5vdm8gRTUwLTgwIiwN
+Cj4gPj4gQUxDMjY5X0ZJWFVQX0RNSUNfVEhJTktQQURfQUNQSSksDQo+ID4+PiAgCVNORF9QQ0lf
+UVVJUksoMHgxN2FhLCAweDM5NzcsICJJZGVhUGFkIFMyMTAiLA0KPiA+PiBBTEMyODNfRklYVVBf
+SU5UX01JQyksDQo+ID4+PiAgCVNORF9QQ0lfUVVJUksoMHgxN2FhLCAweDM5NzgsICJMZW5vdm8g
+QjUwLTcwIiwNCj4gPj4+IEFMQzI2OV9GSVhVUF9ETUlDX1RISU5LUEFEX0FDUEkpLCBAQCAtOTE4
+Nyw2ICs5MTg5LDcgQEAgc3RhdGljDQo+ID4+IGNvbnN0IHN0cnVjdCBoZGFfZGV2aWNlX2lkIHNu
+ZF9oZGFfaWRfcmVhbHRla1tdID0gew0KPiA+Pj4gIAlIREFfQ09ERUNfRU5UUlkoMHgxMGVjMDI5
+OCwgIkFMQzI5OCIsIHBhdGNoX2FsYzI2OSksDQo+ID4+PiAgCUhEQV9DT0RFQ19FTlRSWSgweDEw
+ZWMwMjk5LCAiQUxDMjk5IiwgcGF0Y2hfYWxjMjY5KSwNCj4gPj4+ICAJSERBX0NPREVDX0VOVFJZ
+KDB4MTBlYzAzMDAsICJBTEMzMDAiLCBwYXRjaF9hbGMyNjkpLA0KPiA+Pj4gKwlIREFfQ09ERUNf
+RU5UUlkoMHgxMGVjMDYyMywgIkFMQzYyMyIsIHBhdGNoX2FsYzI2OSksDQo+ID4+PiAgCUhEQV9D
+T0RFQ19SRVZfRU5UUlkoMHgxMGVjMDg2MSwgMHgxMDAzNDAsICJBTEM2NjAiLA0KPiA+PiBwYXRj
+aF9hbGM4NjEpLA0KPiA+Pj4gIAlIREFfQ09ERUNfRU5UUlkoMHgxMGVjMDY2MCwgIkFMQzY2MC1W
+RCIsIHBhdGNoX2FsYzg2MXZkKSwNCj4gPj4+ICAJSERBX0NPREVDX0VOVFJZKDB4MTBlYzA4NjEs
+ICJBTEM4NjEiLCBwYXRjaF9hbGM4NjEpLA0KPiA+Pj4gLS0NCj4gPj4+IDIuMTcuMQ0KPiA+Pj4N
+Cj4gPj4NCj4gPj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUg
+cHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
 
-On 2019-10-12, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2019-10-12, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > On 2019-10-10, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > > On Wed, Oct 9, 2019 at 10:42 PM Aleksa Sarai <cyphar@cyphar.com> wrot=
-e:
-> > > >
-> > > > --- a/fs/namei.c
-> > > > +++ b/fs/namei.c
-> > > > @@ -2277,6 +2277,11 @@ static const char *path_init(struct nameidat=
-a *nd, unsigned flags)
-> > > >
-> > > >         nd->m_seq =3D read_seqbegin(&mount_lock);
-> > > >
-> > > > +       /* LOOKUP_IN_ROOT treats absolute paths as being relative-t=
-o-dirfd. */
-> > > > +       if (flags & LOOKUP_IN_ROOT)
-> > > > +               while (*s =3D=3D '/')
-> > > > +                       s++;
-> > > > +
-> > > >         /* Figure out the starting path and root (if needed). */
-> > > >         if (*s =3D=3D '/') {
-> > > >                 error =3D nd_jump_root(nd);
-> > >=20
-> > > Hmm. Wouldn't this make more sense all inside the if (*s =3D- '/') te=
-st?
-> > > That way if would be where we check for "should we start at the root",
-> > > which seems to make more sense conceptually.
-> >=20
-> > I don't really agree (though I do think that both options are pretty
-> > ugly). Doing it before the block makes it clear that absolute paths are
-> > just treated relative-to-dirfd -- doing it inside the block makes it
-> > look more like "/" is a special-case for nd_jump_root(). And while that
->=20
-> Sorry, I meant "special-case for LOOKUP_IN_ROOT".
->=20
-> > is somewhat true, this is just a side-effect of making the code more
-> > clean -- my earlier versions reworked the dirfd handling to always grab
-> > nd->root first if LOOKUP_IS_SCOPED. I switched to this method based on
-> > Al's review.
-> >=20
-> > In fairness, I do agree that the lonely while loop looks ugly.
->=20
-> And with the old way I did it (where we grabbed nd->root first) the
-> semantics were slightly more clear -- stripping leading "/"s doesn't
-> really look as "clearly obvious" as grabbing nd->root beforehand and
-> treating "/"s normally. But the code was also needlessly more complex.
->=20
-> > > That test for '/' currently has a "} else if (..)", but that's
-> > > pointless since it ends with a "return" anyway. So the "else" logic is
-> > > just noise.
-> >=20
-> > This depends on the fact that LOOKUP_BENEATH always triggers -EXDEV for
-> > nd_jump_root() -- if we ever add another "scoped lookup" flag then the
-> > logic will have to be further reworked.
-> >=20
-> > (It should be noted that the new version doesn't always end with a
-> > "return", but you could change it to act that way given the above
-> > assumption.)
-> >=20
-> > > And if you get rid of the unnecessary else, moving the LOOKUP_IN_ROOT
-> > > inside the if-statement works fine.
-> > >=20
-> > > So this could be something like
-> > >=20
-> > >     --- a/fs/namei.c
-> > >     +++ b/fs/namei.c
-> > >     @@ -2194,11 +2196,19 @@ static const char *path_init(struct
-> > > nameidata *nd, unsigned flags)
-> > >=20
-> > >         nd->m_seq =3D read_seqbegin(&mount_lock);
-> > >         if (*s =3D=3D '/') {
-> > >     -           set_root(nd);
-> > >     -           if (likely(!nd_jump_root(nd)))
-> > >     -                   return s;
-> > >     -           return ERR_PTR(-ECHILD);
-> > >     -   } else if (nd->dfd =3D=3D AT_FDCWD) {
-> > >     +           /* LOOKUP_IN_ROOT treats absolute paths as being
-> > > relative-to-dirfd. */
-> > >     +           if (!(flags & LOOKUP_IN_ROOT)) {
-> > >     +                   set_root(nd);
-> > >     +                   if (likely(!nd_jump_root(nd)))
-> > >     +                           return s;
-> > >     +                   return ERR_PTR(-ECHILD);
-> > >     +           }
-> > >     +
-> > >     +           /* Skip initial '/' for LOOKUP_IN_ROOT */
-> > >     +           do { s++; } while (*s =3D=3D '/');
-> > >     +   }
-> > >     +
-> > >     +   if (nd->dfd =3D=3D AT_FDCWD) {
-> > >                 if (flags & LOOKUP_RCU) {
-> > >                         struct fs_struct *fs =3D current->fs;
-> > >                         unsigned seq;
-> > >=20
-> > > instead. The patch ends up slightly bigger (due to the re-indentation)
-> > > but now it handles all the "start at root" in the same place. Doesn't
-> > > that make sense?
-> >=20
-> > It is correct (though I'd need to clean it up a bit to handle
-> > nd_jump_root() correctly), and if you really would like me to change it
-> > I will -- but I just don't agree that it's cleaner.
+--_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_
+Content-Type: application/octet-stream; name="0000-add-support-alc623.patch"
+Content-Description: 0000-add-support-alc623.patch
+Content-Disposition: attachment; filename="0000-add-support-alc623.patch";
+	size=1990; creation-date="Thu, 24 Oct 2019 07:18:58 GMT";
+	modification-date="Thu, 24 Oct 2019 07:18:35 GMT"
+Content-Transfer-Encoding: base64
 
-Linus, did you still want me to make your proposed change?
+RnJvbSAzMTAzZjY2ODMwOTNlNDczNjhkODc2NzFmMzcyNmYxYTExZjllZjI4IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBLYWlsYW5nIFlhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+CkRh
+dGU6IFRodSwgMjQgT2N0IDIwMTkgMTU6MTM6MzIgKzA4MDAKU3ViamVjdDogW1BBVENIXSBBTFNB
+OiBoZGEvcmVhbHRlayAtIEFkZCBzdXBwb3J0IGZvciBBTEM2MjMKClN1cHBvcnQgbmV3IGNvZGVj
+IEFMQzYyMy4KClNpZ25lZC1vZmYtYnk6IEthaWxhbmcgWWFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNv
+bT4KCmRpZmYgLS1naXQgYS9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYyBiL3NvdW5kL3Bj
+aS9oZGEvcGF0Y2hfcmVhbHRlay5jCmluZGV4IDA4NWEyZjk1ZTA3Ni4uYTBjMjM3Y2MxM2Q0IDEw
+MDY0NAotLS0gYS9zb3VuZC9wY2kvaGRhL3BhdGNoX3JlYWx0ZWsuYworKysgYi9zb3VuZC9wY2kv
+aGRhL3BhdGNoX3JlYWx0ZWsuYwpAQCAtNDA5LDYgKzQwOSw5IEBAIHN0YXRpYyB2b2lkIGFsY19m
+aWxsX2VhcGRfY29lZihzdHJ1Y3QgaGRhX2NvZGVjICpjb2RlYykKIAljYXNlIDB4MTBlYzA2NzI6
+CiAJCWFsY191cGRhdGVfY29lZl9pZHgoY29kZWMsIDB4ZCwgMCwgMTw8MTQpOyAvKiBFQVBEIEN0
+cmwgKi8KIAkJYnJlYWs7CisJY2FzZSAweDEwZWMwNjIzOgorCQlhbGNfdXBkYXRlX2NvZWZfaWR4
+KGNvZGVjLCAweDE5LCAxPDwxMywgMCk7CisJCWJyZWFrOwogCWNhc2UgMHgxMGVjMDY2ODoKIAkJ
+YWxjX3VwZGF0ZV9jb2VmX2lkeChjb2RlYywgMHg3LCAzPDwxMywgMCk7CiAJCWJyZWFrOwpAQCAt
+MjkyMCw2ICsyOTIzLDcgQEAgZW51bSB7CiAJQUxDMjY5X1RZUEVfQUxDMjI1LAogCUFMQzI2OV9U
+WVBFX0FMQzI5NCwKIAlBTEMyNjlfVFlQRV9BTEMzMDAsCisJQUxDMjY5X1RZUEVfQUxDNjIzLAog
+CUFMQzI2OV9UWVBFX0FMQzcwMCwKIH07CiAKQEAgLTI5NTUsNiArMjk1OSw3IEBAIHN0YXRpYyBp
+bnQgYWxjMjY5X3BhcnNlX2F1dG9fY29uZmlnKHN0cnVjdCBoZGFfY29kZWMgKmNvZGVjKQogCWNh
+c2UgQUxDMjY5X1RZUEVfQUxDMjI1OgogCWNhc2UgQUxDMjY5X1RZUEVfQUxDMjk0OgogCWNhc2Ug
+QUxDMjY5X1RZUEVfQUxDMzAwOgorCWNhc2UgQUxDMjY5X1RZUEVfQUxDNjIzOgogCWNhc2UgQUxD
+MjY5X1RZUEVfQUxDNzAwOgogCQlzc2lkcyA9IGFsYzI2OV9zc2lkczsKIAkJYnJlYWs7CkBAIC04
+MDE3LDYgKzgwMjIsOSBAQCBzdGF0aWMgaW50IHBhdGNoX2FsYzI2OShzdHJ1Y3QgaGRhX2NvZGVj
+ICpjb2RlYykKIAkJc3BlYy0+Y29kZWNfdmFyaWFudCA9IEFMQzI2OV9UWVBFX0FMQzMwMDsKIAkJ
+c3BlYy0+Z2VuLm1peGVyX25pZCA9IDA7IC8qIG5vIGxvb3BiYWNrIG9uIEFMQzMwMCAqLwogCQli
+cmVhazsKKwljYXNlIDB4MTBlYzA2MjM6CisJCXNwZWMtPmNvZGVjX3ZhcmlhbnQgPSBBTEMyNjlf
+VFlQRV9BTEM2MjM7CisJCWJyZWFrOwogCWNhc2UgMHgxMGVjMDcwMDoKIAljYXNlIDB4MTBlYzA3
+MDE6CiAJY2FzZSAweDEwZWMwNzAzOgpAQCAtOTIxOCw2ICs5MjI2LDcgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBoZGFfZGV2aWNlX2lkIHNuZF9oZGFfaWRfcmVhbHRla1tdID0gewogCUhEQV9DT0RF
+Q19FTlRSWSgweDEwZWMwMjk4LCAiQUxDMjk4IiwgcGF0Y2hfYWxjMjY5KSwKIAlIREFfQ09ERUNf
+RU5UUlkoMHgxMGVjMDI5OSwgIkFMQzI5OSIsIHBhdGNoX2FsYzI2OSksCiAJSERBX0NPREVDX0VO
+VFJZKDB4MTBlYzAzMDAsICJBTEMzMDAiLCBwYXRjaF9hbGMyNjkpLAorCUhEQV9DT0RFQ19FTlRS
+WSgweDEwZWMwNjIzLCAiQUxDNjIzIiwgcGF0Y2hfYWxjMjY5KSwKIAlIREFfQ09ERUNfUkVWX0VO
+VFJZKDB4MTBlYzA4NjEsIDB4MTAwMzQwLCAiQUxDNjYwIiwgcGF0Y2hfYWxjODYxKSwKIAlIREFf
+Q09ERUNfRU5UUlkoMHgxMGVjMDY2MCwgIkFMQzY2MC1WRCIsIHBhdGNoX2FsYzg2MXZkKSwKIAlI
+REFfQ09ERUNfRU5UUlkoMHgxMGVjMDg2MSwgIkFMQzg2MSIsIHBhdGNoX2FsYzg2MSksCg==
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---i56sxfhksaspu3tw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXbFNWQAKCRCdlLljIbnQ
-Ert5AP0aC5CrGCVvHOpelKBjUDOS5duq76VaVyiiUWcy3eeeFwD/aQEQPqkGREqr
-5Lo0df+nvE9H+89b7vJGbcaEZNxkTQc=
-=rtfF
------END PGP SIGNATURE-----
-
---i56sxfhksaspu3tw--
+--_002_ed97b6a8bd9445ecb48bc763d9aaba7arealtekcom_--
