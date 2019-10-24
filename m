@@ -2,121 +2,179 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A58FCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D2DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F2820684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D0C20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 07:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408606AbfJXHaH (ORCPT
+        id S2408623AbfJXHc3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 03:30:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54350 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404332AbfJXHaH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 03:30:07 -0400
-Received: by mail-io1-f72.google.com with SMTP id d11so10122145ioc.21
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 00:30:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bG9AfwGQyHCYq71fTKJXTFrNumlZlH8tez4WRY0shAM=;
-        b=gRyqy3JqvAjz2UGHeKMF/xJyaJqWl1OmEpPNbSgpD2eir8tI92CWwD8J71PvdJa/1t
-         gSzLgeSydfvbddXMbiT8TU6W45Mc/iBm/jF8mV7xVdl6YWQfURT4iq59xiHel8FR7PfL
-         eaEXYk6d964hdO5vXsn0GqXLzrkI/BhkJk5gnhWTIAb58RDYKlawwNV1LUtRACWMrTV0
-         iFwAv0qL7RES1e39CBs52iIdcz1Zq4iye718xUcg1N54wMiV3k0b9/xL5sCwMstMXIsk
-         XCS5woM71kOPrdhgxDKXesHQaOb8oHOkAjTZjay1Il8NnZRHIprtX5QfZUmmVrNhDYPB
-         jpRg==
-X-Gm-Message-State: APjAAAUmv+9soOHIEMUa2IUUDRAag0mfZkpNpkYA6Zgl+Qu5UiOLrsJG
-        pFz12juzBN7v6SHBgIUU/KMteaC9HQqzaVOPMX3kTAlGUYh3
-X-Google-Smtp-Source: APXvYqwsfIGrEWu10ZmmgfjvCeOiGt6WOq+be5EYAmWm5Asd9EHCWoejSzEj21h8XYtEDFWQrHZZH5mbW5mxthpsq7lUTb1qGXH3
+        Thu, 24 Oct 2019 03:32:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60448 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404582AbfJXHc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 03:32:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 00:32:28 -0700
+X-IronPort-AV: E=Sophos;i="5.68,223,1569308400"; 
+   d="scan'208";a="192102228"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 00:32:23 -0700
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v4] string-choice: add yesno(), onoff(), enableddisabled(), plural() helpers
+In-Reply-To: <20191023155619.43e0013f0c8c673a5c508c1e@linux-foundation.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191023131308.9420-1-jani.nikula@intel.com> <20191023155619.43e0013f0c8c673a5c508c1e@linux-foundation.org>
+Date:   Thu, 24 Oct 2019 10:32:20 +0300
+Message-ID: <877e4uegzf.fsf@intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7a04:: with SMTP id h4mr7488106iom.210.1571902206601;
- Thu, 24 Oct 2019 00:30:06 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 00:30:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a5727f0595a30026@google.com>
-Subject: KCSAN: data-race in common_perm_cond / task_dump_owner
-From:   syzbot <syzbot+109584edb0b8511d7dad@syzkaller.appspotmail.com>
-To:     elver@google.com, jmorris@namei.org, john.johansen@canonical.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 23 Oct 2019, Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Wed, 23 Oct 2019 16:13:08 +0300 Jani Nikula <jani.nikula@intel.com> wrote:
+>
+>> The kernel has plenty of ternary operators to choose between constant
+>> strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
+>> "s":
+>> 
+>> $ git grep '? "yes" : "no"' | wc -l
+>> 258
+>> $ git grep '? "on" : "off"' | wc -l
+>> 204
+>> $ git grep '? "enabled" : "disabled"' | wc -l
+>> 196
+>> $ git grep '? "" : "s"' | wc -l
+>> 25
+>> 
+>> Additionally, there are some occurences of the same in reverse order,
+>> split to multiple lines, or otherwise not caught by the simple grep.
+>> 
+>> Add helpers to return the constant strings. Remove existing equivalent
+>> and conflicting functions in i915, cxgb4, and USB core. Further
+>> conversion can be done incrementally.
+>> 
+>> The main goal here is to abstract recurring patterns, and slightly clean
+>> up the code base by not open coding the ternary operators.
+>
+> Fair enough.
+>
+>> --- /dev/null
+>> +++ b/include/linux/string-choice.h
+>> @@ -0,0 +1,31 @@
+>> +/* SPDX-License-Identifier: MIT */
+>> +/*
+>> + * Copyright © 2019 Intel Corporation
+>> + */
+>> +
+>> +#ifndef __STRING_CHOICE_H__
+>> +#define __STRING_CHOICE_H__
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +static inline const char *yesno(bool v)
+>> +{
+>> +	return v ? "yes" : "no";
+>> +}
+>> +
+>> +static inline const char *onoff(bool v)
+>> +{
+>> +	return v ? "on" : "off";
+>> +}
+>> +
+>> +static inline const char *enableddisabled(bool v)
+>> +{
+>> +	return v ? "enabled" : "disabled";
+>> +}
+>> +
+>> +static inline const char *plural(long v)
+>> +{
+>> +	return v == 1 ? "" : "s";
+>> +}
+>> +
+>> +#endif /* __STRING_CHOICE_H__ */
+>
+> These aren't very good function names.  Better to create a kernel-style
+> namespace such as "choice_" and then add the expected underscores:
+>
+> choice_yes_no()
+> choice_enabled_disabled()
+> choice_plural()
 
-syzbot found the following crash on:
+I was merely using existing function names used in several drivers in
+the kernel. But I can rename no problem.
 
-HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=155db950e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=109584edb0b8511d7dad
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Are your suggestions the names we can settle on now, or should I expect
+to receive more opinions, but only after I send v5?
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> (Example: note that slabinfo.c already has an "onoff()").
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+109584edb0b8511d7dad@syzkaller.appspotmail.com
+Under tools/ though? I did mean to address all conflicts in this patch.
 
-==================================================================
-BUG: KCSAN: data-race in common_perm_cond / task_dump_owner
+> Also, I worry that making these functions inline means that each .o
+> file will contain its own copy of the strings ("yes", "no", "enabled",
+> etc) if the .c file calls the relevant helper.  I'm not sure if the
+> linker is smart enough (yet) to fix this up.  If not, we will end up
+> with a smaller kernel by uninlining these functions. 
+> lib/string-choice.c would suit.
+>
+> And doing this will cause additional savings: calling a single-arg
+> out-of-line function generates less .text than calling yesno().  When I
+> did this: 
+>
+> --- a/include/linux/string-choice.h~string-choice-add-yesno-onoff-enableddisabled-plural-helpers-fix
+> +++ a/include/linux/string-choice.h
+> @@ -8,10 +8,7 @@
+>  
+>  #include <linux/types.h>
+>  
+> -static inline const char *yesno(bool v)
+> -{
+> -	return v ? "yes" : "no";
+> -}
+> +const char *yesno(bool v);
+>  
+>  static inline const char *onoff(bool v)
+>  {
+>
+> The text segment of drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.o
+> (78 callsites) shrunk by 118 bytes.
 
-read to 0xffff888124ca931c of 4 bytes by task 7605 on cpu 0:
-  common_perm_cond+0x65/0x110 security/apparmor/lsm.c:217
-  apparmor_inode_getattr+0x2b/0x40 security/apparmor/lsm.c:389
-  security_inode_getattr+0x9b/0xd0 security/security.c:1222
-  vfs_getattr+0x2e/0x70 fs/stat.c:115
-  vfs_statx+0x102/0x190 fs/stat.c:191
-  vfs_stat include/linux/fs.h:3242 [inline]
-  __do_sys_newstat+0x51/0xb0 fs/stat.c:341
-  __se_sys_newstat fs/stat.c:337 [inline]
-  __x64_sys_newstat+0x3a/0x50 fs/stat.c:337
-  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+So we've already been back and forth on that particular topic in the
+history of this patch. v2 had lib/string-choice.c and no inlines [1].
 
-write to 0xffff888124ca931c of 4 bytes by task 7608 on cpu 1:
-  task_dump_owner+0xd8/0x260 fs/proc/base.c:1742
-  pid_update_inode+0x3c/0x70 fs/proc/base.c:1818
-  pid_revalidate+0x91/0xd0 fs/proc/base.c:1841
-  d_revalidate fs/namei.c:758 [inline]
-  d_revalidate fs/namei.c:755 [inline]
-  lookup_fast+0x6f2/0x700 fs/namei.c:1607
-  walk_component+0x6d/0xe80 fs/namei.c:1796
-  link_path_walk.part.0+0x5d3/0xa90 fs/namei.c:2131
-  link_path_walk fs/namei.c:2062 [inline]
-  path_openat+0x14f/0x36e0 fs/namei.c:3524
-  do_filp_open+0x11e/0x1b0 fs/namei.c:3555
-  do_sys_open+0x3b3/0x4f0 fs/open.c:1097
-  __do_sys_open fs/open.c:1115 [inline]
-  __se_sys_open fs/open.c:1110 [inline]
-  __x64_sys_open+0x55/0x70 fs/open.c:1110
-  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+In the end, starting to use functions, inline or not, will let us rework
+the implementation as we see fit, without touching the callers.
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 7608 Comm: ps Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-==================================================================
+Again, it's no problem to go back to lib/string-choice.c, *once* more,
+and the effort is trivial, but the ping-pong is getting old.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+BR,
+Jani.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+[1] http://lore.kernel.org/r/20190930141842.15075-1-jani.nikula@intel.com
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
