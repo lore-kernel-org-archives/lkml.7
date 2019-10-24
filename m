@@ -2,477 +2,157 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5B5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E206CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6087D2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BFD2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f0ryRBHj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exxfDv/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393465AbfJXNCq (ORCPT
+        id S2393480AbfJXNFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:02:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34281 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730267AbfJXNCp (ORCPT
+        Thu, 24 Oct 2019 09:05:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51158 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730937AbfJXNFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:02:45 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k7so11857116pll.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 06:02:44 -0700 (PDT)
+        Thu, 24 Oct 2019 09:05:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q13so2769170wmj.0;
+        Thu, 24 Oct 2019 06:05:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=zxcQQpLGST8DneMyruDForj/PfYh/236qxDtuBFhRzA=;
-        b=f0ryRBHjO5mpGpUEVFM2cf61xo+xUMkRlSTIfFn5U2+dIXwh+JU5Yxyh21rQbNzTtd
-         cXuoSr5N8RW8RdP0RQmPBSDlOUNcYQA8+4objIi/g7Ub4cHFvYESPAm8LFR1HbOjPR5G
-         sHpmWZXLSfD+KL0+O75vpjziulRqSDQBLGjSBgOZrkfSAVflNyc81WtqDYCWygJ1zUgG
-         pFdp3rgfNihCM+xjyF1jgHxYmeHLBXF6smTtopDBPwseLgwSWR+YmW0POqQ1tR8x0xNz
-         8Ym/SE1cX1h9As9/5Ab4pKdWYSXD3w5UjLFVqWpe/zP3/cLKOMySInNjQhU9cAF9paRo
-         k+4g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sc0yPCVfEQ0pK0/NGjx6W8CYcehYA6aagiijMrOtEy4=;
+        b=exxfDv/km68V7c4r9FPU52WfWb76KUvX5zkVz2NErtmjm6rlB8EFH1DOXat1A4mcph
+         QrQmRA39YPKwmyIv9FZY5HvuzdDxYgN2hKhNVeKGcwF6sEGHcJmRAfxUIZ0Waw1vNTwa
+         UhWNW9PZxwPi7HkiK0tkHEyAgl3vBf5FAIoDIXcgnI2fEA6Ypkkn+gu6+HTb46pm7kdP
+         k+mgG2U9QwyI4Irzp6ZrLwwSoSarNb2IOVMc3OrAnkqz92JXiUW+SGV0z9VYnKXCw9dc
+         4v/iWnH2NAA0ZSFqcmZ75TVo4toh5rl2X7Z4NXLep/HXAz/QDySZBThD4Nfzj1Bvl30t
+         TbkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=zxcQQpLGST8DneMyruDForj/PfYh/236qxDtuBFhRzA=;
-        b=e4vzYjWruZWkhT1MRNSE9iLFsugQLKqd6oDt13U18p3+P816xp5k/C7v4QG203ebUA
-         CBrFdBH8nWV6u8jg+3IkotnGpEUt+NFajopDaXCCj2IKKXN/aNI/fFM+eZfKtOeXPINR
-         cedxw8uS4QMkWW0VeA4dIYpagA7ehRhrqFQ/eV2DFql59FTEG3QzEC1U0eudp6tBe04O
-         Wac6ocB8LZsWSqDAdDkN6c+TmQLXhIynTTaUSkjC286MFeOrO0Pg2fgxAWqc3rBvrdNk
-         3ROVwVY0pH5sRFJUtiklKjPppYEdOJIl9t7aq/NwVxYM5y0md1xd/1aENqxFw6phxpd4
-         3KGA==
-X-Gm-Message-State: APjAAAUUs9e8gcsyXG1JDQSYZ8Oq/ElCUTGHRr36xFuWgCbAUNVhKRvc
-        cFIHOF8Gp8JwD6WKwuhjTSBAigaIsyLoow==
-X-Google-Smtp-Source: APXvYqyRGF5pkLAAG8f1EnPKEOqssLvHuMdR5MW8vDsoIyRxRpl86FB1Wo2NAKA0Ml0MLtfi75PWZQ==
-X-Received: by 2002:a17:902:8507:: with SMTP id bj7mr14972505plb.73.1571922163662;
-        Thu, 24 Oct 2019 06:02:43 -0700 (PDT)
-Received: from gamma07.internal.sifive.com ([64.62.193.194])
-        by smtp.gmail.com with ESMTPSA id z4sm2308775pjt.17.2019.10.24.06.02.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 24 Oct 2019 06:02:42 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        paul.walmsley@sifive.com, palmer@sifive.com, steven.price@arm.com
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH 1/1] riscv: Add support to dump the kernel page tables
-Date:   Thu, 24 Oct 2019 06:02:18 -0700
-Message-Id: <87a7b40428c94b57b9037108715bca60d72c1b94.1571920862.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1571920862.git.zong.li@sifive.com>
-References: <cover.1571920862.git.zong.li@sifive.com>
-In-Reply-To: <cover.1571920862.git.zong.li@sifive.com>
-References: <cover.1571920862.git.zong.li@sifive.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sc0yPCVfEQ0pK0/NGjx6W8CYcehYA6aagiijMrOtEy4=;
+        b=WU3uHJa8bbMFOap5m3Dp3myLlz3hOpeORlOeLp9F2xxa/SgPXctLI2cSrCa36nxYDu
+         adi/0L8oBWxq45gL+p12h6SWXbj/cm2mNmoSmJ4jIwogl/0V+rabvXBbk7Tr8eSC3cYV
+         KnOzR6jCscMe6LXiQwcYqLyFfDlKLqQTc9Bsd5oA4+bpjqiA1pWPKJBB62Duqj879Sgr
+         wMR6XGdNyczWVTuNWbu3y3UFZ4NzraGFStDN2tw5xosQmgvR/Uby65LnUuTRphaHrbct
+         7FSFPQ4iybuKnhYHXv62K9DCl6epgT8vrcskCMk9XOhdHmi6v02IR7+Qk6b1MbGG1HOo
+         tI/Q==
+X-Gm-Message-State: APjAAAX9s3XOavZ5EgGsL4PMw15mueT1EtXMXueQ0PcORhrUDUdOLxq5
+        CAgdmwLxSmQZsuabp2ODOSU=
+X-Google-Smtp-Source: APXvYqy3mBItBc7WBTEJWCzdSzT7R8VrpWyTlH9x1LISMYKss+/Eg/CcOUqTfkhwDq/TtrKFIpfAwg==
+X-Received: by 2002:a7b:cb05:: with SMTP id u5mr4534526wmj.36.1571922308834;
+        Thu, 24 Oct 2019 06:05:08 -0700 (PDT)
+Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:e187:86b0:69d4:5ba5])
+        by smtp.gmail.com with ESMTPSA id l14sm10298010wrr.37.2019.10.24.06.05.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 06:05:07 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 15:05:02 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
+        Marco Elver <elver@google.com>,
+        stable <stable@vger.kernel.org>,
+        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH v6] taskstats: fix data-race
+Message-ID: <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
+References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
+ <20191021113327.22365-1-christian.brauner@ubuntu.com>
+ <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
+ <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
+ <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a similar manner to arm64, x86, powerpc, etc., it can traverse all
-page tables, and dump the page table layout with the memory types and
-permissions.
+On Thu, Oct 24, 2019 at 01:51:20PM +0200, Dmitry Vyukov wrote:
+> On Thu, Oct 24, 2019 at 1:32 PM Andrea Parri <parri.andrea@gmail.com> wrote:
+> >
+> > > How these later loads can be completely independent of the pointer
+> > > value? They need to obtain the pointer value from somewhere. And this
+> > > can only be done by loaded it. And if a thread loads a pointer and
+> > > then dereferences that pointer, that's a data/address dependency and
+> > > we assume this is now covered by READ_ONCE.
+> >
+> > The "dependency" I was considering here is a dependency _between the
+> > load of sig->stats in taskstats_tgid_alloc() and the (program-order)
+> > later loads of *(sig->stats) in taskstats_exit().  Roughly speaking,
+> > such a dependency should correspond to a dependency chain at the asm
+> > or registers level from the first load to the later loads; e.g., in:
+> >
+> >   Thread [register r0 contains the address of sig->stats]
+> >
+> >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
+> >      ...
+> >   B: LOAD r2,[r0]       // LOAD *(sig->stats)
+> >   C: LOAD r3,[r2]
+> >
+> > there would be no such dependency from A to C.  Compare, e.g., with:
+> >
+> >   Thread [register r0 contains the address of sig->stats]
+> >
+> >   A: LOAD r1,[r0]       // LOAD_ACQUIRE sig->stats
+> >      ...
+> >   C: LOAD r3,[r1]       // LOAD *(sig->stats)
+> >
+> > AFAICT, there's no guarantee that the compilers will generate such a
+> > dependency from the code under discussion.
+> 
+> Fixing this by making A ACQUIRE looks like somewhat weird code pattern
+> to me (though correct). B is what loads the address used to read
+> indirect data, so B ought to be ACQUIRE (or LOAD-DEPENDS which we get
+> from READ_ONCE).
+> 
+> What you are suggesting is:
+> 
+> addr = ptr.load(memory_order_acquire);
+> if (addr) {
+>   addr = ptr.load(memory_order_relaxed);
+>   data = *addr;
+> }
+> 
+> whereas the canonical/non-convoluted form of this pattern is:
+> 
+> addr = ptr.load(memory_order_consume);
+> if (addr)
+>   data = *addr;
 
-Add a debugfs file at /sys/kernel/debug/kernel_page_tables to export
-the page table layout to userspace.
+No, I'd rather be suggesting:
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- arch/riscv/Kconfig               |   1 +
- arch/riscv/include/asm/pgtable.h |  10 ++
- arch/riscv/include/asm/ptdump.h  |  19 +++
- arch/riscv/mm/Makefile           |   1 +
- arch/riscv/mm/ptdump.c           | 309 +++++++++++++++++++++++++++++++++++++++
- 5 files changed, 340 insertions(+)
- create mode 100644 arch/riscv/include/asm/ptdump.h
- create mode 100644 arch/riscv/mm/ptdump.c
+  addr = ptr.load(memory_order_acquire);
+  if (addr)
+    data = *addr;
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index bc7598f..053cb7a 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -25,6 +25,7 @@ config RISCV
- 	select GENERIC_CPU_DEVICES
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_PCI_IOMAP
-+	select GENERIC_PTDUMP
- 	select GENERIC_SCHED_CLOCK
- 	select GENERIC_STRNCPY_FROM_USER
- 	select GENERIC_STRNLEN_USER
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index df6522d..be93e59 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -444,6 +444,16 @@ extern void setup_bootmem(void);
- extern void paging_init(void);
- 
- /*
-+ * In the RV64 Linux scheme, we give the user half of the virtual-address space
-+ * and give the kernel the other (upper) half.
-+ */
-+#ifdef CONFIG_64BIT
-+#define KERN_VIRT_START	(-(BIT(CONFIG_VA_BITS)) + TASK_SIZE)
-+#else
-+#define KERN_VIRT_START	FIXADDR_START
-+#endif
-+
-+/*
-  * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
-  * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
-  */
-diff --git a/arch/riscv/include/asm/ptdump.h b/arch/riscv/include/asm/ptdump.h
-new file mode 100644
-index 0000000..26d9221
---- /dev/null
-+++ b/arch/riscv/include/asm/ptdump.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2019 SiFive
-+ */
-+
-+#ifndef _ASM_RISCV_PTDUMP_H
-+#define _ASM_RISCV_PTDUMP_H
-+
-+#ifdef CONFIG_PTDUMP_CORE
-+void ptdump_check_wx(void);
-+#endif /* CONFIG_PTDUMP_CORE */
-+
-+#ifdef CONFIG_DEBUG_WX
-+#define debug_checkwx() ptdump_check_wx()
-+#else
-+#define debug_checkwx() do { } while (0)
-+#endif
-+
-+#endif /* _ASM_RISCV_PTDUMP_H */
-diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-index 9d9a173..d6132f8 100644
---- a/arch/riscv/mm/Makefile
-+++ b/arch/riscv/mm/Makefile
-@@ -17,3 +17,4 @@ ifeq ($(CONFIG_MMU),y)
- obj-$(CONFIG_SMP) += tlbflush.o
- endif
- obj-$(CONFIG_HUGETLB_PAGE) += hugetlbpage.o
-+obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
-diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
-new file mode 100644
-index 0000000..60c8af1
---- /dev/null
-+++ b/arch/riscv/mm/ptdump.c
-@@ -0,0 +1,309 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019 SiFive
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/debugfs.h>
-+#include <linux/seq_file.h>
-+#include <linux/ptdump.h>
-+
-+#include <asm/ptdump.h>
-+#include <asm/pgtable.h>
-+
-+#define pt_dump_seq_printf(m, fmt, args...)	\
-+({						\
-+	if (m)					\
-+		seq_printf(m, fmt, ##args);	\
-+})
-+
-+#define pt_dump_seq_puts(m, fmt)	\
-+({					\
-+	if (m)				\
-+		seq_printf(m, fmt);	\
-+})
-+
-+/*
-+ * The page dumper groups page table entries of the same type into a single
-+ * description. It uses pg_state to track the range information while
-+ * iterating over the pte entries. When the continuity is broken it then
-+ * dumps out a description of the range.
-+ */
-+struct pg_state {
-+	struct ptdump_state ptdump;
-+	struct seq_file *seq;
-+	const struct addr_marker *marker;
-+	unsigned long start_address;
-+	unsigned long start_pa;
-+	unsigned long last_pa;
-+	int level;
-+	u64 current_prot;
-+	bool check_wx;
-+	unsigned long wx_pages;
-+};
-+
-+/* Address marker */
-+struct addr_marker {
-+	unsigned long start_address;
-+	const char *name;
-+};
-+
-+static struct addr_marker address_markers[] = {
-+	{FIXADDR_START,		"Fixmap start"},
-+	{FIXADDR_TOP,		"Fixmap end"},
-+#ifdef CONFIG_SPARSEMEM_VMEMMAP
-+	{VMEMMAP_START,		"vmemmap start"},
-+	{VMEMMAP_END,		"vmemmap end"},
-+#endif
-+	{VMALLOC_START,		"vmalloc() area"},
-+	{VMALLOC_END,		"vmalloc() end"},
-+	{PAGE_OFFSET,		"Linear mapping"},
-+	{-1, NULL},
-+};
-+
-+/* Page Table Entry */
-+struct prot_bits {
-+	u64 mask;
-+	u64 val;
-+	const char *set;
-+	const char *clear;
-+};
-+
-+static const struct prot_bits pte_bits[] = {
-+	{
-+		.mask = _PAGE_SOFT,
-+		.val = _PAGE_SOFT,
-+		.set = "RSW",
-+		.clear = "   ",
-+	 }, {
-+		.mask = _PAGE_DIRTY,
-+		.val = _PAGE_DIRTY,
-+		.set = "D",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_ACCESSED,
-+		.val = _PAGE_ACCESSED,
-+		.set = "A",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_GLOBAL,
-+		.val = _PAGE_GLOBAL,
-+		.set = "G",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_USER,
-+		.val = _PAGE_USER,
-+		.set = "U",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_EXEC,
-+		.val = _PAGE_EXEC,
-+		.set = "X",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_WRITE,
-+		.val = _PAGE_WRITE,
-+		.set = "W",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_READ,
-+		.val = _PAGE_READ,
-+		.set = "R",
-+		.clear = ".",
-+	}, {
-+		.mask = _PAGE_PRESENT,
-+		.val = _PAGE_PRESENT,
-+		.set = "V",
-+		.clear = ".",
-+	}
-+};
-+
-+/* Page Level */
-+struct pg_level {
-+	const char *name;
-+	u64 mask;
-+};
-+
-+static struct pg_level pg_level[] = {
-+	{
-+	}, { /* pgd */
-+		.name = "PGD",
-+	}, { /* p4d */
-+		.name = (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
-+	}, { /* pud */
-+		.name = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
-+	}, { /* pmd */
-+		.name = (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
-+	}, { /* pte */
-+		.name = "PTE",
-+	},
-+};
-+
-+static void dump_prot(struct pg_state *st)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pte_bits); i++) {
-+		const char *s;
-+
-+		if ((st->current_prot & pte_bits[i].mask) == pte_bits[i].val)
-+			s = pte_bits[i].set;
-+		else
-+			s = pte_bits[i].clear;
-+
-+		if (s)
-+			pt_dump_seq_printf(st->seq, " %s", s);
-+	}
-+}
-+
-+#ifdef CONFIG_64BIT
-+#define ADDR_FORMAT	"0x%016lx"
-+#else
-+#define ADDR_FORMAT	"0x%08lx"
-+#endif
-+static void dump_addr(struct pg_state *st, unsigned long addr)
-+{
-+	static const char units[] = "KMGTPE";
-+	const char *unit = units;
-+	unsigned long delta;
-+
-+	pt_dump_seq_printf(st->seq, ADDR_FORMAT "-" ADDR_FORMAT "   ",
-+			   st->start_address, addr);
-+
-+	pt_dump_seq_printf(st->seq, " " ADDR_FORMAT " ", st->start_pa);
-+	delta = (addr - st->start_address) >> 10;
-+
-+	while (!(delta & 1023) && unit[1]) {
-+		delta >>= 10;
-+		unit++;
-+	}
-+
-+	pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
-+			   pg_level[st->level].name);
-+}
-+
-+static void note_prot_wx(struct pg_state *st, unsigned long addr)
-+{
-+	if (!st->check_wx)
-+		return;
-+
-+	if ((st->current_prot & (_PAGE_WRITE | _PAGE_EXEC)) !=
-+	    (_PAGE_WRITE | _PAGE_EXEC))
-+		return;
-+
-+	WARN_ONCE(1, "riscv/mm: Found insecure W+X mapping at address %p/%pS\n",
-+		  (void *)st->start_address, (void *)st->start_address);
-+
-+	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
-+}
-+
-+static void note_page(struct ptdump_state *pt_st, unsigned long addr,
-+		      int level, unsigned long val)
-+{
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-+	u64 pa = PFN_PHYS(pte_pfn(__pte(val)));
-+	u64 prot = 0;
-+
-+	if (level >= 0)
-+		prot = val & pg_level[level].mask;
-+
-+	if (!st->level) {
-+		st->level = level;
-+		st->current_prot = prot;
-+		st->start_address = addr;
-+		st->start_pa = pa;
-+		st->last_pa = pa;
-+		pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker->name);
-+	} else if (prot != st->current_prot ||
-+		   level != st->level || addr >= st->marker[1].start_address) {
-+		if (st->current_prot) {
-+			note_prot_wx(st, addr);
-+			dump_addr(st, addr);
-+			dump_prot(st);
-+			pt_dump_seq_puts(st->seq, "\n");
-+		}
-+
-+		while (addr >= st->marker[1].start_address) {
-+			st->marker++;
-+			pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
-+					   st->marker->name);
-+		}
-+
-+		st->start_address = addr;
-+		st->start_pa = pa;
-+		st->last_pa = pa;
-+		st->current_prot = prot;
-+		st->level = level;
-+	} else {
-+		st->last_pa = pa;
-+	}
-+}
-+
-+static void ptdump_walk(struct seq_file *s)
-+{
-+	struct pg_state st = {
-+		.seq = s,
-+		.marker = address_markers,
-+		.ptdump = {
-+			.note_page = note_page,
-+			.range = (struct ptdump_range[]) {
-+				{KERN_VIRT_START, ULONG_MAX},
-+				{0, 0}
-+			}
-+		}
-+	};
-+
-+	ptdump_walk_pgd(&st.ptdump, &init_mm);
-+}
-+
-+void ptdump_check_wx(void)
-+{
-+	struct pg_state st = {
-+		.seq = NULL,
-+		.marker = (struct addr_marker[]) {
-+			{0, NULL},
-+			{-1, NULL},
-+		},
-+		.check_wx = true,
-+		.ptdump = {
-+			.note_page = note_page,
-+			.range = (struct ptdump_range[]) {
-+				{KERN_VIRT_START, ULONG_MAX},
-+				{0, 0}
-+			}
-+		}
-+	};
-+
-+	ptdump_walk_pgd(&st.ptdump, &init_mm);
-+
-+	if (st.wx_pages)
-+		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found\n",
-+			st.wx_pages);
-+	else
-+		pr_info("Checked W+X mappings: passed, no W+X pages found\n");
-+}
-+
-+static int ptdump_show(struct seq_file *m, void *v)
-+{
-+	ptdump_walk(m);
-+
-+	return 0;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(ptdump);
-+
-+static int ptdump_init(void)
-+{
-+	unsigned int i, j;
-+
-+	for (i = 0; i < ARRAY_SIZE(pg_level); i++)
-+		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
-+			pg_level[i].mask |= pte_bits[j].mask;
-+
-+	debugfs_create_file("kernel_page_tables", 0400, NULL, NULL,
-+			    &ptdump_fops);
-+
-+	return 0;
-+}
-+
-+device_initcall(ptdump_init);
--- 
-2.7.4
+since I'd not expect any form of encouragement to rely on "consume" or
+on "READ_ONCE() + true-address-dependency" from myself.  ;-)
 
+IAC, v6 looks more like:
+
+  addr = ptr.load(memory_order_consume);
+  if (!!addr)
+    *ptr = 1;
+  data = *ptr;
+
+to me (hence my comments/questions ...).
+
+Thanks,
+  Andrea
