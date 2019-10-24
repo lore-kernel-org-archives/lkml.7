@@ -6,97 +6,79 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A499CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF576CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A4F21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07822166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:56:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N6vNRt71"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HuuA52as"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393702AbfJXNz4 (ORCPT
+        id S2393813AbfJXN4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:55:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46838 "EHLO
+        Thu, 24 Oct 2019 09:56:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46862 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbfJXNz4 (ORCPT
+        with ESMTP id S1727811AbfJXN4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:55:56 -0400
+        Thu, 24 Oct 2019 09:56:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kg4p9QmhdYnEgh5fEIpCK0L9e+qEFrZicmEw63GMdL4=; b=N6vNRt713Eoqm74U78+NNGSdn
-        Ca5QDmEc0clEfBPYdPqUqLA/TFXSOfH0EUVQQMLN9RE6Cda7w+xR5hOmrB8BQ1xpsys6G6mydq2RY
-        SBIRFhAWG1MmBtv8JPiuxCVKNWEWL3IC77HhcOnD/reExSF7qr3aOw5P7I2OHGfUALECXl0+c9K4K
-        aA6+Z1QFehO7Ng/YR55OIHKDvPsXeGQ1QbcDZXqc//4SWbkjFslRgbpkX5NFAFS95UsSfxPhKoroe
-        O13CVMb0FKJ5EK1CcwogvlT/ZwY+SRXoBEPHIkbzvxdnU4EDnhvBUN73MN/OXoVYnJeMdNEF2DAiO
-        6n3r8rgdw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNdad-0005C2-Dp; Thu, 24 Oct 2019 13:55:47 +0000
-Date:   Thu, 24 Oct 2019 06:55:47 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     hughd@google.com, aarcange@redhat.com,
-        kirill.shutemov@linux.intel.com, gavin.dg@linux.alibaba.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v4 PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-Message-ID: <20191024135547.GH2963@bombadil.infradead.org>
-References: <1571865575-42913-1-git-send-email-yang.shi@linux.alibaba.com>
+         bh=iQ+k/uiUU600gmmhxvDERL2mX3uxFYBS+kLNWX3h6ss=; b=HuuA52asl1NLA1grn9gyUMS2w
+        61Z7jgUgnCXyjTZF/Gvsxy3TuIQh6N8k8SW9jV32up4gLUp/4sZ/j7T5aG11Mum4hK2SPrx+xX+/H
+        c5Nks8VeUHKB4+Lr00NwYP1yQUC3uqAqnw3ub0KZopHY64CbByprC+EmITLCZEALkNrKhBrGtB9V+
+        fsQBg5eopG6FImHakzh9Dnja6n1mnD6U20MHxNtpeTqqyqrQtsqTO5o+Z99YQbTaKiIiR8MXh8eCm
+        opMUkfPhHupjJQNpukQ7JL09woWsIFXxEzi63OyEhWrTYZoL3uG3p7SJe62FEDAp3RGe63luyGlWI
+        aEZjp0qtA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNdbN-0005Hr-Vf; Thu, 24 Oct 2019 13:56:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CFDB03056C0;
+        Thu, 24 Oct 2019 15:55:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4EA812B1D7CA2; Thu, 24 Oct 2019 15:56:32 +0200 (CEST)
+Date:   Thu, 24 Oct 2019 15:56:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, mark.rutland@arm.com
+Subject: Re: [PATCH v2 4/4] perf/x86/intel/pt: Opportunistically use single
+ range output mode
+Message-ID: <20191024135632.GE4114@hirez.programming.kicks-ass.net>
+References: <20191022095812.67071-1-alexander.shishkin@linux.intel.com>
+ <20191022095812.67071-5-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571865575-42913-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191022095812.67071-5-alexander.shishkin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 05:19:35AM +0800, Yang Shi wrote:
-> We have usecase to use tmpfs as QEMU memory backend and we would like to
-> take the advantage of THP as well.  But, our test shows the EPT is not
-> PMD mapped even though the underlying THP are PMD mapped on host.
-> The number showed by /sys/kernel/debug/kvm/largepage is much less than
-> the number of PMD mapped shmem pages as the below:
+On Tue, Oct 22, 2019 at 12:58:12PM +0300, Alexander Shishkin wrote:
+> Most of PT implementations support Single Range Output mode, which is
+> an alternative to ToPA that can be used for a single contiguous buffer
+> and if we don't require an interrupt, that is, in AUX snapshot mode.
 > 
-> 7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
-> Size:            4194304 kB
-> [snip]
-> AnonHugePages:         0 kB
-> ShmemPmdMapped:   579584 kB
-> [snip]
-> Locked:                0 kB
+> Now that perf core will use high order allocations for the AUX buffer,
+> in many cases the first condition will also be satisfied.
 > 
-> cat /sys/kernel/debug/kvm/largepages
-> 12
+> The two most obvious benefits of the Single Range Output mode over the
+> ToPA are:
+>  * not having to allocate the ToPA table(s),
+>  * not using the ToPA walk hardware.
 > 
-> And some benchmarks do worse than with anonymous THPs.
-> 
-> By digging into the code we figured out that commit 127393fbe597 ("mm:
-> thp: kvm: fix memory corruption in KVM with THP enabled") checks if
-> there is a single PTE mapping on the page for anonymous THP when
-> setting up EPT map.  But, the _mapcount < 0 check doesn't fit to page
-> cache THP since every subpage of page cache THP would get _mapcount
-> inc'ed once it is PMD mapped, so PageTransCompoundMap() always returns
-> false for page cache THP.  This would prevent KVM from setting up PMD
-> mapped EPT entry.
-> 
-> So we need handle page cache THP correctly.  However, when page cache
-> THP's PMD gets split, kernel just remove the map instead of setting up
-> PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
-> the subpages may get PTE mapped even though it is still a THP since the
-> page cache THP may be mapped by other processes at the mean time.
-> 
-> Checking its _mapcount and whether the THP has PTE mapped or not.
-> Although this may report some false negative cases (PTE mapped by other
-> processes), it looks not trivial to make this accurate.
+> Make use of this functionality where available and appropriate.
 
-I don't understand why you care how it's mapped into userspace.  If there
-is a PMD-sized page in the page cache, then you can use a PMD mapping
-in the EPT tables to map it.  Why would another process having a PTE
-mapping on the page cause you to not use a PMD mapping?
+This seems independent of the snapshot stuff, right?
