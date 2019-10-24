@@ -2,91 +2,105 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3CACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82446CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D234E20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6097F20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393608AbfJXNbj (ORCPT
+        id S2393619AbfJXNc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:31:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:51516 "EHLO foss.arm.com"
+        Thu, 24 Oct 2019 09:32:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:45669 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388827AbfJXNbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:31:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17A06C8F;
-        Thu, 24 Oct 2019 06:31:24 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2C493F71A;
-        Thu, 24 Oct 2019 06:31:22 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     catalin.marinas@arm.com, kernel-janitors@vger.kernel.org,
-        Mao Wenan <maowenan@huawei.com>, linux-kernel@vger.kernel.org,
-        will@kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH v2] KVM: arm64: Select TASK_DELAY_ACCT+TASKSTATS rather than SCHEDSTATS
-Date:   Thu, 24 Oct 2019 14:31:11 +0100
-Message-Id: <20191024133111.27758-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <3abfc893613caf529b0f6a933e74068d@www.loen.fr>
-References: <3abfc893613caf529b0f6a933e74068d@www.loen.fr>
+        id S2388422AbfJXNc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:32:26 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 06:32:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,224,1569308400"; 
+   d="scan'208";a="197115947"
+Received: from jjackiew-mobl1.ger.corp.intel.com (HELO mara.localdomain) ([10.249.148.206])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Oct 2019 06:32:24 -0700
+Received: from sailus by mara.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1iNdF8-00014F-2N; Thu, 24 Oct 2019 16:33:35 +0300
+Date:   Thu, 24 Oct 2019 16:33:33 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: media: *_DEFAULT targets for subdevs
+Message-ID: <20191024133333.GE3966@mara.localdomain>
+References: <20191024123526.4778-1-ribalda@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024123526.4778-1-ribalda@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SCHEDSTATS requires DEBUG_KERNEL (and PROC_FS) and therefore isn't a
-good choice for enabling the scheduling statistics required for stolen
-time.
+Hi Ricardo,
 
-Instead match the x86 configuration and select TASK_DELAY_ACCT and
-TASKSTATS. This adds the dependencies of NET && MULTIUSER for arm64 KVM.
+On Thu, Oct 24, 2019 at 02:35:25PM +0200, Ricardo Ribalda Delgado wrote:
+> Some sensors have optical blanking areas, this is, pixels that are
+> painted and do not account for light, only noise.
+> 
+> These special pixels are very useful for calibrating the sensor, but
+> should not be displayed on a DEFAULT target.
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+> 
+> v2: Changes by Sakari Ailus <sakari.ailus@linux.intel.com>
+> 
+> Only change CROP_DEFAULT
+> 
+>  Documentation/media/uapi/v4l/v4l2-selection-targets.rst | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> index f74f239b0510..41c6674ec283 100644
+> --- a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> +++ b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> @@ -38,8 +38,10 @@ of the two interfaces they are used.
+>      * - ``V4L2_SEL_TGT_CROP_DEFAULT``
+>        - 0x0001
+>        - Suggested cropping rectangle that covers the "whole picture".
+> +        This includes only active pixels and excludes other non-active
+> +        pixels such as black pixels.
+> +      - Yes
+>        - Yes
+> -      - No
+>      * - ``V4L2_SEL_TGT_CROP_BOUNDS``
+>        - 0x0002
+>        - Bounds of the crop rectangle. All valid crop rectangles fit inside
+> @@ -61,7 +63,7 @@ of the two interfaces they are used.
+>        - 0x0101
+>        - Suggested composition rectangle that covers the "whole picture".
+>        - Yes
+> -      - No
+> +      - Yes
 
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Fixes: 8564d6372a7d ("KVM: arm64: Support stolen time reporting via shared structure")
-Signed-off-by: Steven Price <steven.price@arm.com>
----
+This is COMPOSE_DEFAULT that wasn't meant to be changed. So with this chunk
+dropped,
 
-Let's try again! Somehow I'd got it into my head that TASK_DELAY_ACCT
-selected TASKSTATS not depended on. Even though I'd managed to get it
-right in the comment!
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
- arch/arm64/kvm/Kconfig | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+>      * - ``V4L2_SEL_TGT_COMPOSE_BOUNDS``
+>        - 0x0102
+>        - Bounds of the compose rectangle. All valid compose rectangles fit
 
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index d8b88e40d223..a475c68cbfec 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -21,6 +21,8 @@ if VIRTUALIZATION
- config KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
- 	depends on OF
-+	# for TASKSTATS/TASK_DELAY_ACCT:
-+	depends on NET && MULTIUSER
- 	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
-@@ -39,7 +41,8 @@ config KVM
- 	select IRQ_BYPASS_MANAGER
- 	select HAVE_KVM_IRQ_BYPASS
- 	select HAVE_KVM_VCPU_RUN_PID_CHANGE
--	select SCHEDSTATS
-+	select TASKSTATS
-+	select TASK_DELAY_ACCT
- 	---help---
- 	  Support hosting virtualized guest machines.
- 	  We don't support KVM with 16K page tables yet, due to the multiple
 -- 
-2.20.1
-
+Sakari Ailus
+sakari.ailus@linux.intel.com
