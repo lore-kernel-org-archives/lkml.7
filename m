@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA446CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7142CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903EA21906
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7C2205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 16:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TocT4wWJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iFgTncfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503565AbfJXQit (ORCPT
+        id S2503575AbfJXQiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 12:38:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41382 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503532AbfJXQip (ORCPT
+        Thu, 24 Oct 2019 12:38:50 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33597 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503537AbfJXQip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 24 Oct 2019 12:38:45 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p4so26845255wrm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:38:43 -0700 (PDT)
+Received: by mail-wm1-f66.google.com with SMTP id 6so2385268wmf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 09:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=J8DxW1d6v2NWJpBGtpmglXzzbNqCWfH+E3Y1OAoSPDQ=;
-        b=TocT4wWJl8/oyox28PzGdGFVTCR25Etd7BhP7Qc2cT5lzmEIZQi4tVOoNnf+I+jzVG
-         jH7I9TaqB1wIT4XzmJhJOBEWcNaJ5ICg+n0N50/AVxig+aa7g/rFuKqHScLtkHqD1DAp
-         eh/o1FgmMvGXskWwY+tBnjWvoGtX5TFg3g4wy3Nm/0yL0A2lDLBM7gWPHzm7PYmnZEeB
-         e/QOnIvS51dRheVYG+4wU+2vpucvGzRotxn7/Ub5aur/FiB+/VYXGyqTEAV2Gql4ncro
-         faX5qcVVEkPX+IqaJDgtdfJVRys2rkt+pKna51QOy+7bQEu5rfElCk68o3c1diDOkQen
-         hv1g==
+        bh=Y4M/TuR9ElWDWsgab2CwXLXvo0XVpR3zUX6nx046dNY=;
+        b=iFgTncfo27OyY3xOrjVf8k+LrQj/b3xCRYWuPYLMMo5ZBf6rQyO+w4OQN+tMw+qOb8
+         PU/JI8owfgoVR8WZdCHfhQykvjBV7dSBMopw/8M8qWvolQzu0JP/iCuPwpVmK4ZXMMNx
+         6rpHxMtmQGBEKg6By4WPJsLUgEwX95klixjUL2NWyK3JS17vlPYsCntul6yu4PvaKzVK
+         1Ea79lATIqchM99hH4HVvRPqSwRUVxm9CkiO+n2uYIGICjFuOxhL1T0nQ5WKqpgSlSDN
+         2i830iOga6S8ecjkM/isy9KN4zRSak1bEDGy/KVXxdytiyMJxx4SCpfrQyeXNDBDXg4j
+         5I8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=J8DxW1d6v2NWJpBGtpmglXzzbNqCWfH+E3Y1OAoSPDQ=;
-        b=d4hbNYkApd7XQMRxEhFl5ES4gf23cMaKQSyQBdXyyUE9dbMgfBL4m2fRiXf5HgAJCC
-         DfQkWW2umsSc4hN89RaCav9+SueFWb+g0fAeI+21s5R7efGooN38lSkvljSbDNoNwLPX
-         u6Re5cZ07Nd8LnmwCKf2svHULoVYrdx/AQfcuSfZckic4o0HbLSotvhjUDHNS+dzaZBj
-         jsuJrcrbX1NvSMEWebOKaeqI4kxFFz8UciQt8FhjR6ay6T0mYhAcC6TMXQUHXWAV0yup
-         zOifkUNXz4uoxkbVaN98L7WG8v6RdqJazkTXSggu565jj2V65AIgbfWMWSPrg4nIAWD4
-         aDMg==
-X-Gm-Message-State: APjAAAU8vEl/kwrS6qlL/jPQ1ihQqG6WYGu9l+Va49le8a+Rsi80SaAa
-        YHdCl+qON5MO2OBy5CNZDxgqxA==
-X-Google-Smtp-Source: APXvYqzqEEkHDBCb4DZUQVidIpkiui9GSpU76/wGElNi8aPtzMHnP5x265jbONW6aIDcRe7IUqFl4A==
-X-Received: by 2002:adf:8103:: with SMTP id 3mr5023528wrm.194.1571935122686;
-        Thu, 24 Oct 2019 09:38:42 -0700 (PDT)
+        bh=Y4M/TuR9ElWDWsgab2CwXLXvo0XVpR3zUX6nx046dNY=;
+        b=imVtsc60cdZkdt9HyTSqxOXrKw6NfpwbCjuhbWxpk/81aKqk85P8nHy28ts85/ctFV
+         1ZRFlCX/4WLLx7sYslZWpTrC+/k7yoce5aV4NaoboZwSWplnDFLucjnltdGgXTRitnnS
+         n4cEsUkOeg3uqBFKPrK3eDZ0fune7aticNpp32D1memcIQb6ODQN0img6PqISDD23cIl
+         yKWqPw8a1a+4WnuvzuHRL/pFvmDfpQzEhdYzW6SVYl3yYmDM+aTekoRrL3n3JfxDdmYE
+         Tmb3gzcWXAtvK8H8QPtPF59JGvyeqFS3VdNb8AKBrPrnkIhDPuoUOJvwVGEGnEKtfbs/
+         KkPw==
+X-Gm-Message-State: APjAAAUUvZDBlOtVjzmcloWKhIxo71S9XPkfQPzjafGEArDmGMwiIZ/0
+        YbZxyGdfaqnDDVhkzOjX5bg3qw==
+X-Google-Smtp-Source: APXvYqwyF86LO61G6Q/GTjGzQT35oPobFvCsp4KPMM+/nA54QMVhrVGQaJNdT23BlB1qxuMfJ7LVCQ==
+X-Received: by 2002:a7b:cc6a:: with SMTP id n10mr5998222wmj.94.1571935123733;
+        Thu, 24 Oct 2019 09:38:43 -0700 (PDT)
 Received: from localhost.localdomain ([95.149.164.99])
-        by smtp.gmail.com with ESMTPSA id 6sm3446175wmd.36.2019.10.24.09.38.41
+        by smtp.gmail.com with ESMTPSA id 6sm3446175wmd.36.2019.10.24.09.38.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 09:38:41 -0700 (PDT)
+        Thu, 24 Oct 2019 09:38:43 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     daniel.thompson@linaro.org, arnd@arndb.de, broonie@kernel.org,
         linus.walleij@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         baohua@kernel.org, stephan@gerhold.net,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v3 06/10] x86: olpc-xo1-pm: Remove invocation of MFD's .enable()/.disable() call-backs
-Date:   Thu, 24 Oct 2019 17:38:28 +0100
-Message-Id: <20191024163832.31326-7-lee.jones@linaro.org>
+Subject: [PATCH v3 07/10] x86: olpc-xo1-sci: Remove invocation of MFD's .enable()/.disable() call-backs
+Date:   Thu, 24 Oct 2019 17:38:29 +0100
+Message-Id: <20191024163832.31326-8-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191024163832.31326-1-lee.jones@linaro.org>
 References: <20191024163832.31326-1-lee.jones@linaro.org>
@@ -76,47 +76,40 @@ IO regions are now requested and released by this device's parent.
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/x86/platform/olpc/olpc-xo1-pm.c | 8 --------
- 1 file changed, 8 deletions(-)
+ arch/x86/platform/olpc/olpc-xo1-sci.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/x86/platform/olpc/olpc-xo1-pm.c b/arch/x86/platform/olpc/olpc-xo1-pm.c
-index e1a32062a375..f067ac780ba7 100644
---- a/arch/x86/platform/olpc/olpc-xo1-pm.c
-+++ b/arch/x86/platform/olpc/olpc-xo1-pm.c
-@@ -12,7 +12,6 @@
+diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
+index 99a28ce2244c..933dd4fe3a97 100644
+--- a/arch/x86/platform/olpc/olpc-xo1-sci.c
++++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
+@@ -15,7 +15,6 @@
  #include <linux/platform_device.h>
- #include <linux/export.h>
  #include <linux/pm.h>
+ #include <linux/pm_wakeup.h>
 -#include <linux/mfd/core.h>
+ #include <linux/power_supply.h>
  #include <linux/suspend.h>
- #include <linux/olpc-ec.h>
- 
-@@ -120,16 +119,11 @@ static const struct platform_suspend_ops xo1_suspend_ops = {
- static int xo1_pm_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
--	int err;
- 
- 	/* don't run on non-XOs */
+ #include <linux/workqueue.h>
+@@ -537,10 +536,6 @@ static int xo1_sci_probe(struct platform_device *pdev)
  	if (!machine_is_olpc())
  		return -ENODEV;
  
--	err = mfd_cell_enable(pdev);
--	if (err)
--		return err;
+-	r = mfd_cell_enable(pdev);
+-	if (r)
+-		return r;
 -
  	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
  	if (!res) {
  		dev_err(&pdev->dev, "can't fetch device resource info\n");
-@@ -152,8 +146,6 @@ static int xo1_pm_probe(struct platform_device *pdev)
+@@ -605,7 +600,6 @@ static int xo1_sci_probe(struct platform_device *pdev)
  
- static int xo1_pm_remove(struct platform_device *pdev)
+ static int xo1_sci_remove(struct platform_device *pdev)
  {
 -	mfd_cell_disable(pdev);
--
- 	if (strcmp(pdev->name, "cs5535-pms") == 0)
- 		pms_base = 0;
- 	else if (strcmp(pdev->name, "olpc-xo1-pm-acpi") == 0)
+ 	free_irq(sci_irq, pdev);
+ 	cancel_work_sync(&sci_work);
+ 	free_ec_sci();
 -- 
 2.17.1
 
