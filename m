@@ -2,193 +2,309 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7A8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4BECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4433B21872
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B523F20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CcowxEp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfJXUNu (ORCPT
+        id S1727012AbfJXUN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:13:50 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:38743 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfJXUNc (ORCPT
+        Thu, 24 Oct 2019 16:13:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43938 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726832AbfJXUN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:13:32 -0400
-Received: from localhost (unknown [78.193.40.249])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 41AD6240005;
-        Thu, 24 Oct 2019 20:13:30 +0000 (UTC)
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH v2 3/5] i2c: at91: implement i2c bus recovery
-Date:   Thu, 24 Oct 2019 22:13:00 +0200
-Message-Id: <20191024201302.23376-4-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
-References: <20191024201302.23376-1-kamel.bouhara@bootlin.com>
+        Thu, 24 Oct 2019 16:13:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571948034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4okx/0WuIUvMfg3eEWnxYk0ixrLOf5XkOoO4HYGvUSc=;
+        b=CcowxEp76u4o2+LJHaVkifTvVhXq9l0etw3ahWCmEA57nC2nJELvMsGLK3SsIGVpOVe14R
+        MgqF7eG9YjwxX037i8AjdI58wBXOomVwBFu3iAGee3x+zQUWPhjHA8NpPNx1jeNkmUDO/A
+        DbAwMeRqj5OqWuD4Y6kDKMZ8VQ2CjG0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-5KVeD95sOy2OSN9aLjwQqQ-1; Thu, 24 Oct 2019 16:13:53 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D4CA1800DC7;
+        Thu, 24 Oct 2019 20:13:49 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 971AE4530;
+        Thu, 24 Oct 2019 20:13:31 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 14:13:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V5 1/6] mdev: class id support
+Message-ID: <20191024141330.017a6480@x1.home>
+In-Reply-To: <20191024134636.253131c5@x1.home>
+References: <20191023130752.18980-1-jasowang@redhat.com>
+        <20191023130752.18980-2-jasowang@redhat.com>
+        <20191023154204.31d74866@x1.home>
+        <38bdf762-524a-e0f1-6e9a-1102adfe8fb1@redhat.com>
+        <20191024134636.253131c5@x1.home>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 5KVeD95sOy2OSN9aLjwQqQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement i2c bus recovery when slaves devices might hold SDA low.
-In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
-until the slave release SDA.
+On Thu, 24 Oct 2019 13:46:36 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
----
-Changes in v2:
-==============
-	- Add missing call to i2c_bus_recover() when a i2c transfer
-	  timeout.
+> On Thu, 24 Oct 2019 11:27:36 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>=20
+> > On 2019/10/24 =E4=B8=8A=E5=8D=885:42, Alex Williamson wrote: =20
+> > > On Wed, 23 Oct 2019 21:07:47 +0800
+> > > Jason Wang <jasowang@redhat.com> wrote:
+> > >   =20
+> > >> Mdev bus only supports vfio driver right now, so it doesn't implemen=
+t
+> > >> match method. But in the future, we may add drivers other than vfio,
+> > >> the first driver could be virtio-mdev. This means we need to add
+> > >> device class id support in bus match method to pair the mdev device
+> > >> and mdev driver correctly.
+> > >>
+> > >> So this patch adds id_table to mdev_driver and class_id for mdev
+> > >> device with the match method for mdev bus.
+> > >>
+> > >> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > >> ---
+> > >>   .../driver-api/vfio-mediated-device.rst       |  5 +++++
+> > >>   drivers/gpu/drm/i915/gvt/kvmgt.c              |  1 +
+> > >>   drivers/s390/cio/vfio_ccw_ops.c               |  1 +
+> > >>   drivers/s390/crypto/vfio_ap_ops.c             |  1 +
+> > >>   drivers/vfio/mdev/mdev_core.c                 | 18 +++++++++++++++
+> > >>   drivers/vfio/mdev/mdev_driver.c               | 22 +++++++++++++++=
+++++
+> > >>   drivers/vfio/mdev/mdev_private.h              |  1 +
+> > >>   drivers/vfio/mdev/vfio_mdev.c                 |  6 +++++
+> > >>   include/linux/mdev.h                          |  8 +++++++
+> > >>   include/linux/mod_devicetable.h               |  8 +++++++
+> > >>   samples/vfio-mdev/mbochs.c                    |  1 +
+> > >>   samples/vfio-mdev/mdpy.c                      |  1 +
+> > >>   samples/vfio-mdev/mtty.c                      |  1 +
+> > >>   13 files changed, 74 insertions(+)
+> > >>
+> > >> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Doc=
+umentation/driver-api/vfio-mediated-device.rst
+> > >> index 25eb7d5b834b..6709413bee29 100644
+> > >> --- a/Documentation/driver-api/vfio-mediated-device.rst
+> > >> +++ b/Documentation/driver-api/vfio-mediated-device.rst
+> > >> @@ -102,12 +102,14 @@ structure to represent a mediated device's dri=
+ver::
+> > >>         * @probe: called when new device created
+> > >>         * @remove: called when device removed
+> > >>         * @driver: device driver structure
+> > >> +      * @id_table: the ids serviced by this driver
+> > >>         */
+> > >>        struct mdev_driver {
+> > >>   =09     const char *name;
+> > >>   =09     int  (*probe)  (struct device *dev);
+> > >>   =09     void (*remove) (struct device *dev);
+> > >>   =09     struct device_driver    driver;
+> > >> +=09     const struct mdev_class_id *id_table;
+> > >>        };
+> > >>  =20
+> > >>   A mediated bus driver for mdev should use this structure in the fu=
+nction calls
+> > >> @@ -170,6 +172,9 @@ that a driver should use to unregister itself wi=
+th the mdev core driver::
+> > >>  =20
+> > >>   =09extern void mdev_unregister_device(struct device *dev);
+> > >>  =20
+> > >> +It is also required to specify the class_id in create() callback th=
+rough::
+> > >> +
+> > >> +=09int mdev_set_class(struct mdev_device *mdev, u16 id);
+> > >>  =20
+> > >>   Mediated Device Management Interface Through sysfs
+> > >>   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > >> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915=
+/gvt/kvmgt.c
+> > >> index 343d79c1cb7e..6420f0dbd31b 100644
+> > >> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > >> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > >> @@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kob=
+j, struct mdev_device *mdev)
+> > >>   =09=09     dev_name(mdev_dev(mdev)));
+> > >>   =09ret =3D 0;
+> > >>  =20
+> > >> +=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+> > >>   out:
+> > >>   =09return ret;
+> > >>   }
+> > >> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio=
+_ccw_ops.c
+> > >> index f0d71ab77c50..cf2c013ae32f 100644
+> > >> --- a/drivers/s390/cio/vfio_ccw_ops.c
+> > >> +++ b/drivers/s390/cio/vfio_ccw_ops.c
+> > >> @@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject *=
+kobj, struct mdev_device *mdev)
+> > >>   =09=09=09   private->sch->schid.ssid,
+> > >>   =09=09=09   private->sch->schid.sch_no);
+> > >>  =20
+> > >> +=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+> > >>   =09return 0;
+> > >>   }
+> > >>  =20
+> > >> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto=
+/vfio_ap_ops.c
+> > >> index 5c0f53c6dde7..07c31070afeb 100644
+> > >> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> > >> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> > >> @@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *k=
+obj, struct mdev_device *mdev)
+> > >>   =09list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
+> > >>   =09mutex_unlock(&matrix_dev->lock);
+> > >>  =20
+> > >> +=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+> > >>   =09return 0;
+> > >>   }
+> > >>  =20
+> > >> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_=
+core.c
+> > >> index b558d4cfd082..3a9c52d71b4e 100644
+> > >> --- a/drivers/vfio/mdev/mdev_core.c
+> > >> +++ b/drivers/vfio/mdev/mdev_core.c
+> > >> @@ -45,6 +45,16 @@ void mdev_set_drvdata(struct mdev_device *mdev, v=
+oid *data)
+> > >>   }
+> > >>   EXPORT_SYMBOL(mdev_set_drvdata);
+> > >>  =20
+> > >> +/* Specify the class for the mdev device, this must be called durin=
+g
+> > >> + * create() callback.
+> > >> + */
+> > >> +void mdev_set_class(struct mdev_device *mdev, u16 id)
+> > >> +{
+> > >> +=09WARN_ON(mdev->class_id);
+> > >> +=09mdev->class_id =3D id;
+> > >> +}
+> > >> +EXPORT_SYMBOL(mdev_set_class);
+> > >> +
+> > >>   struct device *mdev_dev(struct mdev_device *mdev)
+> > >>   {
+> > >>   =09return &mdev->dev;
+> > >> @@ -135,6 +145,7 @@ static int mdev_device_remove_cb(struct device *=
+dev, void *data)
+> > >>    * mdev_register_device : Register a device
+> > >>    * @dev: device structure representing parent device.
+> > >>    * @ops: Parent device operation structure to be registered.
+> > >> + * @id: class id.
+> > >>    *
+> > >>    * Add device to list of registered parent devices.
+> > >>    * Returns a negative value on error, otherwise 0.
+> > >> @@ -324,6 +335,13 @@ int mdev_device_create(struct kobject *kobj,
+> > >>   =09if (ret)
+> > >>   =09=09goto ops_create_fail;
+> > >>  =20
+> > >> +=09if (!mdev->class_id) {
+> > >> +=09=09ret =3D -EINVAL;
+> > >> +=09=09WARN(1, "class id must be specified for device %s\n",
+> > >> +=09=09     dev_name(dev));   =20
+> > > Nit, dev_warn(dev, "mdev vendor driver failed to specify device class=
+\n");   =20
+> >=20
+> >=20
+> > Will fix.
+> >=20
+> >  =20
+> > >   =20
+> > >> +=09=09goto add_fail;
+> > >> +=09}
+> > >> +
+> > >>   =09ret =3D device_add(&mdev->dev);
+> > >>   =09if (ret)
+> > >>   =09=09goto add_fail;
+> > >> diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mde=
+v_driver.c
+> > >> index 0d3223aee20b..319d886ffaf7 100644
+> > >> --- a/drivers/vfio/mdev/mdev_driver.c
+> > >> +++ b/drivers/vfio/mdev/mdev_driver.c
+> > >> @@ -69,8 +69,30 @@ static int mdev_remove(struct device *dev)
+> > >>   =09return 0;
+> > >>   }
+> > >>  =20
+> > >> +static int mdev_match(struct device *dev, struct device_driver *drv=
+)
+> > >> +{
+> > >> +=09unsigned int i;
+> > >> +=09struct mdev_device *mdev =3D to_mdev_device(dev);
+> > >> +=09struct mdev_driver *mdrv =3D to_mdev_driver(drv);
+> > >> +=09const struct mdev_class_id *ids =3D mdrv->id_table;
+> > >> +   =20
+> > > Nit, as we start to allow new mdev bus drivers, mdev-core might want =
+to
+> > > protect itself from a NULL id_table, by either failing the
+> > > mdev_register_driver() or failing the match here.  I think such a
+> > > condition would segfault as written here, but clearly we don't have
+> > > such external drivers yet.  Thanks,   =20
+> >=20
+> >=20
+> > I'm not sure I get the point here. My understanding is that mdev-core=
+=20
+> > won't try to be matched here since it was not a complete mdev device. =
+=20
+>=20
+> The parent driver failing to set a type vs the parent driver failing to
 
- drivers/i2c/busses/i2c-at91-master.c | 64 ++++++++++++++++++++++++++++
- drivers/i2c/busses/i2c-at91.h        |  8 ++++
- 2 files changed, 72 insertions(+)
+Correction, the second half of this should be in reference to the mdev
+bus driver.
 
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index 12d4fa946a82..8116f3cd373b 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -18,11 +18,13 @@
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/dma-atmel.h>
- #include <linux/pm_runtime.h>
-@@ -555,6 +557,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
- 	if (time_left == 0) {
- 		dev->transfer_status |= at91_twi_read(dev, AT91_TWI_SR);
- 		dev_err(dev->dev, "controller timed out\n");
-+		i2c_recover_bus(&dev->adapter);
- 		at91_init_twi_bus(dev);
- 		ret = -ETIMEDOUT;
- 		goto error;
-@@ -790,6 +793,63 @@ static int at91_twi_configure_dma(struct at91_twi_dev *dev, u32 phy_addr)
- 	return ret;
- }
+> register with a struct mdev_driver where id_table is not null are
+> different issues.  I agree that if a vendor driver was not updated for
+> this series that they'd never successfully create a device because the
+> mdev-core would reject it for not setting a class, but mdev_match() is
+> called for devices that might be created by other vendor drivers, so
+> loading a parent driver with a null id_table potentially breaks
+> matching for everyone.  Thanks,
 
-+static void at91_prepare_twi_recovery(struct i2c_adapter *adap)
-+{
-+	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
-+}
-+
-+static void at91_unprepare_twi_recovery(struct i2c_adapter *adap)
-+{
-+	struct at91_twi_dev *dev = i2c_get_adapdata(adap);
-+
-+	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
-+}
-+
-+static int at91_init_twi_recovery_info(struct platform_device *pdev,
-+				       struct at91_twi_dev *dev)
-+{
-+	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-+
-+	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (!dev->pinctrl || IS_ERR(dev->pinctrl)) {
-+		dev_info(dev->dev, "can't get pinctrl, bus recovery not supported\n");
-+		return PTR_ERR(dev->pinctrl);
-+	}
-+
-+	dev->pinctrl_pins_default = pinctrl_lookup_state(dev->pinctrl,
-+							 PINCTRL_STATE_DEFAULT);
-+	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
-+						      "gpio");
-+	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
-+	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	rinfo->scl_gpiod = devm_gpiod_get(&pdev->dev, "scl",
-+					  GPIOD_OUT_HIGH_OPEN_DRAIN);
-+	if (PTR_ERR(rinfo->scl_gpiod) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (IS_ERR(rinfo->sda_gpiod) ||
-+	    IS_ERR(rinfo->scl_gpiod) ||
-+	    IS_ERR(dev->pinctrl_pins_default) ||
-+	    IS_ERR(dev->pinctrl_pins_gpio)) {
-+		dev_info(&pdev->dev, "recovery information incomplete\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_info(&pdev->dev, "using scl%s for recovery\n",
-+		 rinfo->sda_gpiod ? ",sda" : "");
-+
-+	rinfo->prepare_recovery = at91_prepare_twi_recovery;
-+	rinfo->unprepare_recovery = at91_unprepare_twi_recovery;
-+	rinfo->recover_bus = i2c_generic_scl_recovery;
-+	dev->adapter.bus_recovery_info = rinfo;
-+
-+	return 0;
-+}
-+
- int at91_twi_probe_master(struct platform_device *pdev,
- 			  u32 phy_addr, struct at91_twi_dev *dev)
- {
-@@ -817,6 +877,10 @@ int at91_twi_probe_master(struct platform_device *pdev,
+The point is still valid though, for example if vfio-mdev registered
+with a null id_table it would break matching for virtio-mdev depending
+on the order we iterate through drivers as we call mdev_match().
+Thanks,
 
- 	at91_calc_twi_clock(dev);
-
-+	rc = at91_init_twi_recovery_info(pdev, dev);
-+	if (rc == -EPROBE_DEFER)
-+		return rc;
-+
- 	dev->adapter.algo = &at91_twi_algorithm;
- 	dev->adapter.quirks = &at91_twi_quirks;
-
-diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index 0827c28a84db..167be7aa8e67 100644
---- a/drivers/i2c/busses/i2c-at91.h
-+++ b/drivers/i2c/busses/i2c-at91.h
-@@ -146,6 +146,10 @@ struct at91_twi_dev {
- 	u32 fifo_size;
- 	struct at91_twi_dma dma;
- 	bool slave_detected;
-+	struct i2c_bus_recovery_info rinfo;
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pinctrl_pins_default;
-+	struct pinctrl_state *pinctrl_pins_gpio;
- #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
- 	unsigned smr;
- 	struct i2c_client *slave;
-@@ -163,6 +167,10 @@ void at91_init_twi_bus_master(struct at91_twi_dev *dev);
- int at91_twi_probe_master(struct platform_device *pdev, u32 phy_addr,
- 			  struct at91_twi_dev *dev);
-
-+void at91_twi_prepare_recovery(struct i2c_adapter *adap);
-+void at91_twi_unprepare_recovery(struct i2c_adapter *adap);
-+void at91_twi_init_recovery_info(struct at91_twi_dev *dev);
-+
- #ifdef CONFIG_I2C_AT91_SLAVE_EXPERIMENTAL
- void at91_init_twi_bus_slave(struct at91_twi_dev *dev);
- int at91_twi_probe_slave(struct platform_device *pdev, u32 phy_addr,
---
-2.23.0
+Alex
 
