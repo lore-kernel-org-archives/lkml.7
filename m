@@ -2,135 +2,165 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0443FCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A76DCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D558821929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6538421929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 21:37:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zTEfMP4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbfJXVfQ (ORCPT
+        id S1729591AbfJXVg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 17:35:16 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45749 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726386AbfJXVfQ (ORCPT
+        Thu, 24 Oct 2019 17:36:59 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60012 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729552AbfJXVg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 17:35:16 -0400
-Received: from dread.disaster.area (pa49-181-161-154.pa.nsw.optusnet.com.au [49.181.161.154])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7386F43F07B;
-        Fri, 25 Oct 2019 08:35:09 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1iNklA-0006Nu-K4; Fri, 25 Oct 2019 08:35:08 +1100
-Date:   Fri, 25 Oct 2019 08:35:08 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Boaz Harrosh <boaz@plexistor.com>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-Message-ID: <20191024213508.GB4614@dread.disaster.area>
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
- <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
- <20191023221332.GE2044@dread.disaster.area>
- <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
- <20191024073446.GA4614@dread.disaster.area>
- <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
+        Thu, 24 Oct 2019 17:36:57 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 26CCA891A9;
+        Fri, 25 Oct 2019 10:36:55 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1571953015;
+        bh=ORxhwEJ9gRBpr0JBIptG2U2pQaqdGpfhtNuFcfek5AU=;
+        h=From:To:Cc:Subject:Date;
+        b=zTEfMP4bfWP16xDZmgfTngjMzVJrENoiky94CunRzhG52m15zrJnzMyZCEjvizkeW
+         3Y0Okuq0OQ7cOzDZnyz3KFQbdTLBaqabOY+bwDliTwJH4DgUpzpyiVrNxwJQNiLTVA
+         n5RVESI3drXgxbgyKO+yrcvkYZZzaGXbNW68Juru2Sg7U0OupsYlIiQM1WDnvrx0LK
+         ZsWVEd28RFNh7VfNjmeaG+8cvqRefg5Iw0X5gUmWx0dYuW7nn/Z0nZaqULUSN1X0zg
+         u8i20VZUAcTdr+WaYhnY5r37sjVYiTzAwGRhBiyoEMy/8ViW6+2t7IHlD7I/81Tdxi
+         PG2zB1tfO1p/g==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5db219750000>; Fri, 25 Oct 2019 10:36:53 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 0CD7213EEEB;
+        Fri, 25 Oct 2019 10:36:59 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id CA83F28005C; Fri, 25 Oct 2019 10:36:54 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     johannes@sipsolutions.net, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        trivial@kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mac80211: typo fixes in kerneldoc comments
+Date:   Fri, 25 Oct 2019 10:36:47 +1300
+Message-Id: <20191024213647.5507-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=G6BsK5s5 c=1 sm=1 tr=0
-        a=l3vQdJ1SkhDHY1nke8Lmag==:117 a=l3vQdJ1SkhDHY1nke8Lmag==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
-        a=7-415B0cAAAA:8 a=Qt9MKOuts2txuSNu_AQA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 05:05:45PM +0300, Boaz Harrosh wrote:
-> On 24/10/2019 10:34, Dave Chinner wrote:
-> > On Thu, Oct 24, 2019 at 05:31:13AM +0300, Boaz Harrosh wrote:
-> <>
-> > 
-> > The on disk DAX flag is inherited from the parent directory at
-> > create time. Hence an admin only need to set it on the data
-> > directory of the application when first configuring it, and
-> > everything the app creates will be configured for DAX access
-> > automatically.
-> > 
-> 
-> Yes I said that as well.
+Correct some trivial typos in kerneldoc comments.
 
-You said "it must be set between creation and first write",
-stating the requirement for an on-disk flag to work. I'm
-decribing how that requirement is actually implemented. i.e. what
-you are stating is something we actually implemented years ago...
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
 
-> > I also seem
-> > to recall that there was a need to take some vm level lock to really
-> > prevent page fault races, and that we can't safely take that in a
-> > safe combination with all the filesystem locks we need.
-> > 
-> 
-> We do not really care with page fault races in the Kernel as long
+Notes:
+    Changes in v2:
+    - one more reasurement -> measurement
 
-Oh yes we do. A write fault is a 2-part operation - a read fault to
-populate the pte and mapping, then a write fault (->page_mkwrite) to 
-do all the filesystem work needed to dirty the page and pte.
+ include/net/mac80211.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-The read fault sets up the state for the write fault, and if we
-change the aops between these two operations, then the
-->page_mkwrite implementation goes kaboom.
+diff --git a/include/net/mac80211.h b/include/net/mac80211.h
+index 523c6a09e1c8..46f28c6620b9 100644
+--- a/include/net/mac80211.h
++++ b/include/net/mac80211.h
+@@ -312,7 +312,7 @@ struct ieee80211_vif_chanctx_switch {
+  * @BSS_CHANGED_KEEP_ALIVE: keep alive options (idle period or protected
+  *	keep alive) changed.
+  * @BSS_CHANGED_MCAST_RATE: Multicast Rate setting changed for this inte=
+rface
+- * @BSS_CHANGED_FTM_RESPONDER: fime timing reasurement request responder
++ * @BSS_CHANGED_FTM_RESPONDER: fine timing measurement request responder
+  *	functionality changed for this BSS (AP mode).
+  * @BSS_CHANGED_TWT: TWT status changed
+  * @BSS_CHANGED_HE_OBSS_PD: OBSS Packet Detection status changed.
+@@ -1059,7 +1059,7 @@ struct ieee80211_tx_info {
+ };
+=20
+ /**
+- * struct ieee80211_tx_status - extended tx staus info for rate control
++ * struct ieee80211_tx_status - extended tx status info for rate control
+  *
+  * @sta: Station that the packet was transmitted for
+  * @info: Basic tx status information
+@@ -1702,7 +1702,7 @@ struct wireless_dev *ieee80211_vif_to_wdev(struct i=
+eee80211_vif *vif);
+  *	%IEEE80211_KEY_FLAG_SW_MGMT_TX flag to encrypt such frames in SW.
+  * @IEEE80211_KEY_FLAG_GENERATE_IV_MGMT: This flag should be set by the
+  *	driver for a CCMP/GCMP key to indicate that is requires IV generation
+- *	only for managment frames (MFP).
++ *	only for management frames (MFP).
+  * @IEEE80211_KEY_FLAG_RESERVE_TAILROOM: This flag should be set by the
+  *	driver for a key to indicate that sufficient tailroom must always
+  *	be reserved for ICV or MIC, even when HW encryption is enabled.
+@@ -1998,7 +1998,7 @@ struct ieee80211_sta {
+ 	 *
+ 	 * * If the skb is transmitted as part of a BA agreement, the
+ 	 *   A-MSDU maximal size is min(max_amsdu_len, 4065) bytes.
+-	 * * If the skb is not part of a BA aggreement, the A-MSDU maximal
++	 * * If the skb is not part of a BA agreement, the A-MSDU maximal
+ 	 *   size is min(max_amsdu_len, 7935) bytes.
+ 	 *
+ 	 * Both additional HT limits must be enforced by the low level
+@@ -3183,13 +3183,13 @@ enum ieee80211_rate_control_changed {
+  *
+  * With the support for multi channel contexts and multi channel operati=
+ons,
+  * remain on channel operations might be limited/deferred/aborted by oth=
+er
+- * flows/operations which have higher priority (and vise versa).
++ * flows/operations which have higher priority (and vice versa).
+  * Specifying the ROC type can be used by devices to prioritize the ROC
+  * operations compared to other operations/flows.
+  *
+  * @IEEE80211_ROC_TYPE_NORMAL: There are no special requirements for thi=
+s ROC.
+  * @IEEE80211_ROC_TYPE_MGMT_TX: The remain on channel request is require=
+d
+- *	for sending managment frames offchannel.
++ *	for sending management frames offchannel.
+  */
+ enum ieee80211_roc_type {
+ 	IEEE80211_ROC_TYPE_NORMAL =3D 0,
+@@ -5609,7 +5609,7 @@ void ieee80211_iter_keys_rcu(struct ieee80211_hw *h=
+w,
+=20
+ /**
+  * ieee80211_iter_chan_contexts_atomic - iterate channel contexts
+- * @hw: pointre obtained from ieee80211_alloc_hw().
++ * @hw: pointer obtained from ieee80211_alloc_hw().
+  * @iter: iterator function
+  * @iter_data: data passed to iterator function
+  *
+@@ -6357,7 +6357,7 @@ ieee80211_return_txq(struct ieee80211_hw *hw, struc=
+t ieee80211_txq *txq,
+  * again.
+  *
+  * The API ieee80211_txq_may_transmit() also ensures that TXQ list will =
+be
+- * aligned aginst driver's own round-robin scheduler list. i.e it rotate=
+s
++ * aligned against driver's own round-robin scheduler list. i.e it rotat=
+es
+  * the TXQ list till it makes the requested node becomes the first entry
+  * in TXQ list. Thus both the TXQ list and driver's list are in sync. If=
+ this
+  * function returns %true, the driver is expected to schedule packets
+--=20
+2.23.0
 
-This isn't a theoretical problem - this is exactly the race
-condition that lead us to disabling the flag in the first place.
-There is no serialisation between the read and write parts of the
-page fault iand the filesystem changing the DAX flag and ops vector,
-and so fixing this problem requires hold yet more locks in the
-filesystem path to completely lock out page fault processing on the
-inode's mapping.
-
-> as I protect the xarray access and these are protected well if we
-> take truncate locking. But we have a bigger problem that you pointed
-> out with the change of the operations vector pointer.
-> 
-> I was thinking about this last night. One way to do this is with
-> file-exclusive-lock. Correct me if I'm wrong:
-> file-exclusive-readwrite-lock means any other openers will fail and
-> if there are openers already the lock will fail. Which is what we want
-> no?
-
-The filesystem ioctls and page faults have no visibility of file
-locks.  They don't know and can't find out in a sane manner that an
-inode has a single -user- reference.
-
-And it introduces a new problem for any application using the
-fssetxattr() ioctl - accidentally not setting the S_DAX flag to be
-unmodified will now fail, and that means such a change breaks
-existing applications. Sure, you can say they are "buggy
-applications", but the fact is this user API change breaks them.
-
-Hence I don't think we can change the user API for setting/clearing
-this flag like this.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
