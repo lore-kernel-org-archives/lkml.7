@@ -2,93 +2,125 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B51CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E59CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F98520650
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BD521655
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 15:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rfrmgTXY"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="J7JzzEq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409714AbfJXPld (ORCPT
+        id S2409728AbfJXPlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 11:41:33 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3204 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2409615AbfJXPlb (ORCPT
+        Thu, 24 Oct 2019 11:41:50 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:51443 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409615AbfJXPlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 11:41:31 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9OFeiOd016236;
-        Thu, 24 Oct 2019 17:41:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=5GqthLgqhaAzShH8zaBmjjPSD+4duGM3kB0LVJm2wdM=;
- b=rfrmgTXYSKrNqGmBMBo2Ndrn3pWz45+X8NieyZZEei24nzJU0TzAtOoaf2jQx9RhxS9K
- ITc0oW8vh+l1O/Rp9etoBmcL+SehcgsDWRvLONBVDlsj0Wmyv97SDctWu/Nfpeoar7CZ
- HF2OnMe4AHe7bTb1XdKUhmZhM4FTN7VOK425id0LYPqIBZbPDdR2R22igdbx78PwTyMB
- KkDunPSmGe2ecVaVjXij6q16Kz3vLeTzNSJy7nC4T3svZO5nQgLc1ADksGzmMvDtoVK5
- PqU0vgEQWk/kWE75wIkVYkwbVXBinzK/Ug+GnjJwx5jPAdNRXcDgV8WKUNuIpbaMj1m8 zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vt9s1tp5e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 24 Oct 2019 17:41:26 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC59110002A;
-        Thu, 24 Oct 2019 17:41:25 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B16C92C6E5F;
-        Thu, 24 Oct 2019 17:41:25 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 24 Oct 2019 17:41:24
- +0200
-From:   Pascal Paillet <p.paillet@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <p.paillet@st.com>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 1/1] regulator: stm32_pwr: Enable driver for stm32mp157
-Date:   Thu, 24 Oct 2019 17:41:21 +0200
-Message-ID: <20191024154121.8503-2-p.paillet@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191024154121.8503-1-p.paillet@st.com>
-References: <20191024154121.8503-1-p.paillet@st.com>
+        Thu, 24 Oct 2019 11:41:49 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x9OFfT9D030417;
+        Fri, 25 Oct 2019 00:41:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x9OFfT9D030417
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1571931690;
+        bh=l4I3j33otfIQZSfw7zL4nNKREYId00X6FYw//AMabaE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J7JzzEq9jjLw/A4o0vktjGoZM/o7nOPyZ8FJ0n8aolcVy3rE56fx7QD8thRLNPdul
+         mnDh+esLCS0XIygkfjxyVUEmrfI67Ks/JVCIIjjR9J9dhTRAAIdAWj7a0m5mWJ255Y
+         W76ZVDt21NQ5YpFO9usnpk7YY/YERETFjeDQ8DWSpGQbROFdWil1E1vKtBCrh+JLQU
+         E4GkkVdSdsoaCkWHzMWamdBpvGD2t65EVEaeiJdH+oRM/Zf7rgSUAgE9ZzpniLbdn3
+         Aby5i/iYIdpGmZEbLsmF0l5JBAGizqtLGrTlzsgvNSsWaOatg/Kmb0a24xTyXnDE1a
+         Cox9VvptnGKUg==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id 70so5405055vkz.8;
+        Thu, 24 Oct 2019 08:41:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAXNjydu3jidSu95JZarNCINHp/QuAJm2bx+Q3zTqU7VmPi3Wt8l
+        wWw+Ru0gS3qo1gUa2PpZ+hlkltsK1hY3CeAfhjk=
+X-Google-Smtp-Source: APXvYqzECnMU+WoRoqmpGp2qCaUvuGA+5Jc8kg37Z+KgqZpCHvCQICZwcWI/5OzGByPm5gI//L5m5unfHNDIvbYQnaM=
+X-Received: by 2002:a1f:a349:: with SMTP id m70mr9104948vke.26.1571931688982;
+ Thu, 24 Oct 2019 08:41:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-24_09:2019-10-23,2019-10-24 signatures=0
+References: <e895d04ef5a282b5b48fcb21cbc175d2@www.loen.fr> <693a3b68-a0f1-81fe-40ce-2b6ba189450c@web.de>
+ <868spgzcti.wl-maz@kernel.org> <c8816d85b696cb96318e17b7010b84f09bc67bf7.camel@perches.com>
+In-Reply-To: <c8816d85b696cb96318e17b7010b84f09bc67bf7.camel@perches.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 25 Oct 2019 00:40:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQqSThGRM_wRGR2ou3B+Oqpr0nF9Fg4rhSR4Hvnxwnj3g@mail.gmail.com>
+Message-ID: <CAK7LNAQqSThGRM_wRGR2ou3B+Oqpr0nF9Fg4rhSR4Hvnxwnj3g@mail.gmail.com>
+Subject: Re: coccinelle: api/devm_platform_ioremap_resource: remove useless script
+To:     Joe Perches <joe@perches.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        kernel-janitors@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable stm32 pwr regulators for stm32mp157 machine.
+On Sun, Oct 20, 2019 at 7:13 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Sat, 2019-10-19 at 21:43 +0100, Marc Zyngier wrote:
+> > Providing Coccinelle scripts that scream about perfectly valid code is
+> > pointless, and the result is actively harmful.
+>
+> Doubtful.
+>
+> If the new code is smaller object code and correct
+> than the conversion is worthwhile.
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
- drivers/regulator/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I agree.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 3ee63531f6d5..ed10f4f46fdf 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -875,6 +875,7 @@ config REGULATOR_STM32_VREFBUF
- config REGULATOR_STM32_PWR
- 	bool "STMicroelectronics STM32 PWR"
- 	depends on ARCH_STM32 || COMPILE_TEST
-+	default MACH_STM32MP157
- 	help
- 	  This driver supports internal regulators (1V1, 1V8, 3V3) in the
- 	  STMicroelectronics STM32 chips.
+We use multi-platform defconfig.
+I always appreciate the code refactoring
+that reduces the object size.
+
+
+
+> fyi:
+>
+> There are already ~450 uses of this function and maybe
+> ~800 possible additional conversions.
+>
+> > If said script was providing a correct semantic patch instead of being
+> > an incentive for people to churn untested patches that span the whole
+> > tree, that'd be a different story.
+>
+> Right.
+>
+>
+
+
+Alexandre Belloni used
+https://lore.kernel.org/lkml/9bbcce19c777583815c92ce3c2ff2586@www.loen.fr/
+as a reference, but this is not the output from coccicheck.
+The patch author just created a wrong patch by hand.
+
+The deleted semantic patch supports MODE=patch,
+which creates a correct patch, and is useful.
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
