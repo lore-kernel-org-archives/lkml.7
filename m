@@ -6,94 +6,125 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4F8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB96CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EB020684
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512B220684
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 10:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571912634;
-	bh=X/MjXXE18ioM3dTnXf83rj8j4ABh3wZTJn/qBIhEoQs=;
+	s=default; t=1571912669;
+	bh=osUITaokagi0GaIVYUe6pigtxua6Y4GJShC8n+9O4Z8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c3wpU6zs5Dt2HzNZFhb18pZyPrvp/4HisL08WkOa9Uy0KX/OUJTrDc0qU5LAhPouX
-	 ydWc7BBWvlsjvTbuVn6HueFxFSy427vc2nPtxFnrfCYUTf1xxcBxKirChyYlvrgDyG
-	 I+2ZzBi47HQN62jQ6xfbDod6wPp3Zh7mgHc5z+E8=
+	b=VV614+FDSq/A7JANKvnIbCVKhakO34Nsiw5QLKO0ZwDwoQZIGurS/1693nHv8AR7s
+	 X4lto286UmoaNH+qPsxd5+fk1dWQ1ZlSMUW927VdWx6JGCc/hpal70dEBK5YE+9pRo
+	 Zx1lNtSK59QXE5LVMwzUT5fTJLnx+kftpQmZ6Em0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409049AbfJXKXx (ORCPT
+        id S2409059AbfJXKY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 06:23:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36720 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407344AbfJXKXx (ORCPT
+        Thu, 24 Oct 2019 06:24:28 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35476 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407344AbfJXKY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 06:23:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8n+XLVyUobbc+/UmO7NjLUyrQevv80urDK3GZxqpQ8E=; b=c4+X8gj4RYEx2KngkvDNoMu8B
-        Qjg8qvJqJ3godFzdWeP6qKmKU+4+ZXMinY7nH0VPiUWYYsybJmHa79Yv8qBIA4h0mUODNGCSWskBX
-        D9pHA2GDiVOGL+wQfolwtQX6/P6W3bTxSSiGofTNVMneqBFVInRgAx3OVY5YQ9vS1h7WQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNaHT-0003IF-Ey; Thu, 24 Oct 2019 10:23:47 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id C583027428E5; Thu, 24 Oct 2019 11:23:46 +0100 (BST)
-Date:   Thu, 24 Oct 2019 11:23:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     luhua xu <luhua.xu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH 1/1] spi: mediatek: add power control when set_cs
-Message-ID: <20191024102346.GB5207@sirena.co.uk>
-References: <1571834322-1121-1-git-send-email-luhua.xu@mediatek.com>
- <1571834322-1121-2-git-send-email-luhua.xu@mediatek.com>
- <20191023151121.GC5723@sirena.co.uk>
- <1571898319.4311.3.camel@mbjsdccf07>
+        Thu, 24 Oct 2019 06:24:27 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m15so37165751qtq.2;
+        Thu, 24 Oct 2019 03:24:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fvdFMXu4f/m9PNa/Dm+FLyMw/J1lwnGj00apTLD33aE=;
+        b=jj17DnwxtQSTsS8Aqm6J87x8ZMQKgyoe+PPlvInJPDc/in657kBaLmylCZPcltooLI
+         m3o+Ja4jNmS5Zah7ao/RcStG80ckiJvrLHPmEPG3vZdEYEmPWb/e0f048g/9fD+1K6jp
+         57m6U4LcwqKjrMy8vkHir+v/+ns0OoXNRksMpUsddvVRbWyqp4VKJXIQFQujaIyo6S2o
+         5IeOIN3AyesFfUGmLWCgEuMGIYXN/3agvs8FtsuaQqoJmaPSeCJ8Wlwm+nHAXXozalO3
+         11YfG3G+qUvZniJal/N0ln31Nsb1nBlam5p+IIfO3Yuch9HGfKd+lBGvARRg1h464ejO
+         KsQQ==
+X-Gm-Message-State: APjAAAV/zVcPd7ot4Y2NKAkmcA19n4G3NRIFcTtzSTJSefNL58zulKh+
+        LYXvhZHH+Corslv15Q6enrI=
+X-Google-Smtp-Source: APXvYqzKoWrUiSADuSEdAg9zu1c7XQk5ezth585fij3Jr03nhQ482j5PevCmM6xYiLnjLI6ua4Vphg==
+X-Received: by 2002:a05:6214:10e3:: with SMTP id q3mr11486283qvt.63.1571912666564;
+        Thu, 24 Oct 2019 03:24:26 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id m186sm12257080qkd.119.2019.10.24.03.24.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2019 03:24:25 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 60DBD40244; Thu, 24 Oct 2019 10:24:24 +0000 (UTC)
+Date:   Thu, 24 Oct 2019 10:24:24 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Martijn Coenen <maco@android.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Shaun Ruffell <sruffell@sruffell.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-modules@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] export/modpost: avoid renaming __ksymtab entries
+ for symbol namespaces
+Message-ID: <20191024102424.GL11244@42.do-not-panic.com>
+References: <20191010151443.7399-1-maennich@google.com>
+ <20191018093143.15997-1-maennich@google.com>
+ <20191023122222.GA27861@42.do-not-panic.com>
+ <20191024093546.GB199239@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571898319.4311.3.camel@mbjsdccf07>
-X-Cookie: What foods these morsels be!
+In-Reply-To: <20191024093546.GB199239@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 24, 2019 at 10:35:46AM +0100, Matthias Maennich wrote:
+> On Wed, Oct 23, 2019 at 12:22:22PM +0000, Luis Chamberlain wrote:
+> > On Fri, Oct 18, 2019 at 10:31:39AM +0100, Matthias Maennich wrote:
+> > > The introduction of the symbol namespace patches changed the way symbols are
+> > > named in the ksymtab entries. That caused userland tools to fail (such as
+> > > kmod's depmod). As depmod is used as part of the kernel build it was worth
+> > > having another look whether this name change can be avoided.
+> > 
+> > Why have this as a default feature? What about having an option to
+> > disable this feature? The benefit being that without a full swing of
+> > tests to avoid regressions its not clear what other issues may creep
+> > up. With this as optional, those wanting the mechanism can enable it
+> > and happilly find the issues for those more conservative.
+> 
+> The strongest argument against that is, that the 'conservative' people
+> would constantly break things for the more 'adventurous' ones. They
+> would introduce namespace requirements by just using symbols without
+> correctly adjusting the imports.
+> 
+> Second, vmlinux and modules would have to be compiled in the same
+> configuration. Otherwise they are incompatible and we would likely have
+> to maintain code in the module loader to catch issues caused by that.
+> In general, I think for the adoption of this feature and one of its
+> purposes - making unexpected use of symbols across the tree visible
+> already at review time - we should not make this an optional one.
+> Enforcing the imports at module load time is optional (there is an
+> option).
+> 
+> And finally, having that code configurable for both options introduces
+> quite some complexity in kernel/module.c, modpost and
+> include/linux/export.h that would make the code hard to maintain and
+> complex to test. Hence that would likely introduce more issues.
+> 
+> I know the feature came with some rough edges. Sorry about that. I
+> think, we got most of them worked out pretty well (big thanks to
+> Masahiro and Jessica and others helping with that). Now the actual
+> change to the surface exposed to userland tools is much smaller and the
+> feature itself less intrusive.
 
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This logic makes sense, the complexity over module loading is already
+high and supporting yet another division would be a burden for review
+and maintenace.
 
-On Thu, Oct 24, 2019 at 02:25:19PM +0800, luhua xu wrote:
+However I'd feel much more inclined to support such decisions when and if
+we had a series of test cases to prevent possible regressions. Since
+effort with testing will move forward, I'm happy with the status quo.
 
-> Spi framework provideds  spi_setup() to modify spi settings for spi
-> device (maybe spi is runtime idle now), and this will call
-> spi_controller->set_cs() accessing registers.
-
-OK, so fix that so it takes the power at the setup() level then.
-
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2xe7EACgkQJNaLcl1U
-h9BupAf/enXFS1bm5HhfceiQntahs4gT3FPXaEDsQ+rJ2S90V4JwcUbi1oSpDvWj
-w2OeywscDvkZdcEaQtre4ZASwvSefR01VajXmtigEOPry80kECDHAKGiSKVXBSJ/
-9V9Qf/dFBi0ej5+/Nw+3wEGXN75TgQ472XrOoHykyWerqXI4qjnUWyCXTQXO7Asn
-hzr9BF9bL/1BGCUG+eK86VPC7sG9bCaQL8pvn3VFHiTgiSfCdMlIIK24LfAMjS7x
-/NfY0ARLNoF1MvvTbBHHGHbG1d1pp+FeqEo+Yj+5CgIvo390+KgCjSqhzTv+PQ4Z
-RglXSQMhEAM9OExTQLMO86LCuoiC+Q==
-=Qdg5
------END PGP SIGNATURE-----
-
---tsOsTdHNUZQcU9Ye--
+  Luis
