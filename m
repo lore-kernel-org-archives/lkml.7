@@ -2,158 +2,207 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2934CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5B1CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F342166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571928679;
-	bh=MEaP5IL/IqooQRDNdNUcu8iypLi1gD3g0148DaXxsOA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zSVwTo/Vh7EMEN/4C9Yz8puIZR8U6MK5l8oTX7E0TLAo7lYXnQLGtyRW677qkqiJE
-	 E9zxQoT7NlJklhFylRx3yEYfPyYMTAE+pekNh6aarNRMdN8W85OvUaIwBbwkmhgu63
-	 YbNbE/om9zUiI7hbZX+LC7tfXFtMlvx0pB80X/fA=
+	by mail.kernel.org (Postfix) with ESMTP id 0DC39205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="Nw1GQz9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409508AbfJXOvS (ORCPT
+        id S2409540AbfJXOxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409497AbfJXOvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:51:18 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3597205F4;
-        Thu, 24 Oct 2019 14:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571928676;
-        bh=MEaP5IL/IqooQRDNdNUcu8iypLi1gD3g0148DaXxsOA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AhLTlEblswmwrWUsuXYU6je5kiKbSEAz/M0zJZKKJ0DIQ60EIdRbWyrk5REfexOGm
-         Oe4Ph5iPBlOcnF2uQ0YfG5vcfCeB+jCFaTgmE7IuBNtSLI7D7+S483zv39vG/VvGE/
-         YHxedsM80fsfFCj4chEONOo9lXEDwHlLnhWbiK70=
-Received: by mail-qt1-f181.google.com with SMTP id m15so38352940qtq.2;
-        Thu, 24 Oct 2019 07:51:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAXTuaOrKY8k7tl0wIDwXyQaCMwBhzyLj7F6xornI5ysT4P6BTqe
-        SYH84T/DVBWUE0RR7FdLhR1mcEjHRUP+5tJYLQ==
-X-Google-Smtp-Source: APXvYqyXI1R6tgkLf27Se2dMkBgfCAIms6JME3RgcEqcC6jce5AGFooEv86GX0hr06greCwOgnLCH683ZJIx8hx7MRM=
-X-Received: by 2002:a0c:f792:: with SMTP id s18mr14841198qvn.20.1571928675962;
- Thu, 24 Oct 2019 07:51:15 -0700 (PDT)
+        Thu, 24 Oct 2019 10:53:21 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:33798 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409522AbfJXOxU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 10:53:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1571928798;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=0mp4UnfMmFBuAFZUwVWAjKo0HN743MLM5cwfxhfpVk0=;
+        b=Nw1GQz9jiGSQNi7TAYWR/0CCpMMHrmYhxmQU73QOYACcGXLJMNX7tPevrIjR1OWxvY
+        S5IA2By8AOpBD32oqnrPbU+nvOFl49lcGjlFmiFjt1o0vKfT8ikdoQdPGB2K+VS6JIFh
+        SpUzxbzN8mFb0qjdQ4g0sU8gMp8R88uS86YDIUH9pGDWn22OPfVeoBmgOCLv6r9yqO4P
+        obOpc0VTWZB/Ldp2hqbBEJXceDOPPB8QKhdIWz+JJW3CgMTV4E6bfgcWL00I+yeU3P4m
+        2+CCEiP5yR5ApO84NJp6c3ox3+0G5Phr5WRkbdQm4WTspYkhX4VjqsvklJDKGON2aDrn
+        m8Yg==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuz7MdiQehTvc3KJf+T+odQ=="
+X-RZG-CLASS-ID: mo00
+Received: from sender
+        by smtp.strato.de (RZmta 44.28.1 DYNA|AUTH)
+        with ESMTPSA id e01a77v9OEoBcWQ
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 24 Oct 2019 16:50:11 +0200 (CEST)
+From:   Olaf Hering <olaf@aepfle.de>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Olaf Hering <olaf@aepfle.de>
+Subject: [PATCH v1] tools/hv: async name resolution in kvp_daemon
+Date:   Thu, 24 Oct 2019 16:49:43 +0200
+Message-Id: <20191024144943.26199-1-olaf@aepfle.de>
+X-Mailer: git-send-email 2.16.4
 MIME-Version: 1.0
-References: <20191024142211.GA29467@arm.com>
-In-Reply-To: <20191024142211.GA29467@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 24 Oct 2019 09:51:04 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJSSYdRyy=Hw4H613fWVyXM3ivFj8mgO6iwvXZQOr=9pA@mail.gmail.com>
-Message-ID: <CAL_JsqJSSYdRyy=Hw4H613fWVyXM3ivFj8mgO6iwvXZQOr=9pA@mail.gmail.com>
-Subject: Re: Question regarding "reserved-memory"
-To:     Ayan Halder <Ayan.Halder@arm.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 9:22 AM Ayan Halder <Ayan.Halder@arm.com> wrote:
->
->
-> Hi Folks,
->
-> I have a question regarding "reserved-memory". I am using an Arm Juno
-> platform which has a chunk of ram in its fpga. I intend to make this
-> memory as reserved so that it can be shared between various devices
-> for passing framebuffer.
->
-> My dts looks like the following:-
->
-> / {
->         .... // some nodes
->
->         tlx@60000000 {
->                 compatible = "simple-bus";
->                 ...
->
->                 juno_wrapper {
->
->                         ... /* here we have all the nodes */
->                             /* corresponding to the devices in the fpga */
->
->                         memory@d000000 {
->                                device_type = "memory";
->                                reg = <0x00 0x60000000 0x00 0x8000000>;
->                         };
->
->                         reserved-memory {
->                                #address-cells = <0x01>;
->                                #size-cells = <0x01>;
->                                ranges;
->
->                                framebuffer@d000000 {
->                                         compatible = "shared-dma-pool";
->                                         linux,cma-default;
->                                         reusable;
->                                         reg = <0x00 0x60000000 0x00 0x8000000>;
->                                         phandle = <0x44>;
->                                 };
->                         };
->                         ...
->                 }
->         }
-> ...
-> }
->
-> Note that the depth of the "reserved-memory" node is 3.
->
-> Refer __fdt_scan_reserved_mem() :-
->
->         if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
->
->                 if (__reserved_mem_check_root(node) != 0) {
->                         pr_err("Reserved memory: unsupported node
-> format, ignoring\n");
->                         /* break scan */
->                         return 1;
->                 }
->                 found = 1;
->
->                 /* scan next node */
->                 return 0;
->         }
->
-> It expects the "reserved-memory" node to be at depth == 1 and so it
-> does not probe it in our case.
->
-> Niether from the
-> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->  nor from commit - e8d9d1f5485b52ec3c4d7af839e6914438f6c285,
-> I could understand the reason for such restriction.
->
-> So, I seek the community's advice as to whether I should fix up
-> __fdt_scan_reserved_mem() so as to do away with the restriction or
-> put the "reserved-memory" node outside of 'tlx@60000000' (which looks
->  logically incorrect as the memory is on the fpga platform).
+The hostname is resolved just once since commit 58125210ab3b ("Tools:
+hv: cache FQDN in kvp_daemon to avoid timeouts") to make sure the VM
+responds within the timeout limits to requests from the host.
 
-For now, I'm going to say it must be at the root level. I'd guess the
-memory@d000000 node is also just ignored (wrong unit-address BTW).
+If for some reason getaddrinfo fails, the string returned by the
+"FullyQualifiedDomainName" request contains some error string, which is
+then used by tools on the host side.
 
-I think you're also forgetting the later unflattened parsing of
-/reserved-memory. The other complication IIRC is booting with UEFI
-does it's own reserved memory table which often uses the DT table as
-its source.
+Adjust the code to resolve the current hostname in a separate thread.
+This thread loops until getaddrinfo returns success. During this time
+all "FullyQualifiedDomainName" requests will be answered with an empty
+string.
 
-Rob
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+---
+ tools/hv/Makefile        |  2 ++
+ tools/hv/hv_kvp_daemon.c | 69 ++++++++++++++++++++++++++++++++----------------
+ 2 files changed, 48 insertions(+), 23 deletions(-)
+
+diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+index b57143d9459c..3b5481015a84 100644
+--- a/tools/hv/Makefile
++++ b/tools/hv/Makefile
+@@ -22,6 +22,8 @@ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 
+ ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
+ 
++$(OUTPUT)hv_kvp_daemon: LDFLAGS += -lpthread
++
+ all: $(ALL_PROGRAMS)
+ 
+ export srctree OUTPUT CC LD CFLAGS
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index e9ef4ca6a655..22cf1c4dbf5c 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -41,6 +41,7 @@
+ #include <net/if.h>
+ #include <limits.h>
+ #include <getopt.h>
++#include <pthread.h>
+ 
+ /*
+  * KVP protocol: The user mode component first registers with the
+@@ -85,7 +86,7 @@ static char *processor_arch;
+ static char *os_build;
+ static char *os_version;
+ static char *lic_version = "Unknown version";
+-static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
++static char *full_domain_name;
+ static struct utsname uts_buf;
+ 
+ /*
+@@ -1327,27 +1328,53 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 	return error;
+ }
+ 
+-
+-static void
+-kvp_get_domain_name(char *buffer, int length)
++/*
++ * Async retrival of Fully Qualified Domain Name because getaddrinfo takes an
++ * unpredictable amount of time to finish.
++ */
++static void *kvp_getaddrinfo(void *p)
+ {
+-	struct addrinfo	hints, *info ;
+-	int error = 0;
++	char *tmp, **str_ptr = (char **)p;
++	char hostname[HOST_NAME_MAX + 1];
++	struct addrinfo	*info, hints = {
++		.ai_family = AF_INET, /* Get only ipv4 addrinfo. */
++		.ai_socktype = SOCK_STREAM,
++		.ai_flags = AI_CANONNAME,
++	};
++	int ret;
++
++	if (gethostname(hostname, sizeof(hostname) - 1) < 0)
++		goto out;
++
++	do {
++		ret = getaddrinfo(hostname, NULL, &hints, &info);
++		if (ret)
++			sleep(1);
++	} while (ret);
++
++	ret = asprintf(&tmp, "%s", info->ai_canonname);
++	freeaddrinfo(info);
++	if (ret <= 0)
++		goto out;
++
++	if (ret > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)
++		tmp[HV_KVP_EXCHANGE_MAX_VALUE_SIZE - 1] = '\0';
++	*str_ptr = tmp;
+ 
+-	gethostname(buffer, length);
+-	memset(&hints, 0, sizeof(hints));
+-	hints.ai_family = AF_INET; /*Get only ipv4 addrinfo. */
+-	hints.ai_socktype = SOCK_STREAM;
+-	hints.ai_flags = AI_CANONNAME;
++out:
++	pthread_exit(NULL);
++}
++
++static void kvp_obtain_domain_name(char **str_ptr)
++{
++	pthread_t t;
+ 
+-	error = getaddrinfo(buffer, NULL, &hints, &info);
+-	if (error != 0) {
+-		snprintf(buffer, length, "getaddrinfo failed: 0x%x %s",
+-			error, gai_strerror(error));
++	if (pthread_create(&t, NULL, kvp_getaddrinfo, str_ptr)) {
++		syslog(LOG_ERR, "pthread_create failed; error: %d %s",
++			errno, strerror(errno));
+ 		return;
+ 	}
+-	snprintf(buffer, length, "%s", info->ai_canonname);
+-	freeaddrinfo(info);
++	pthread_detach(t);
+ }
+ 
+ void print_usage(char *argv[])
+@@ -1412,11 +1439,7 @@ int main(int argc, char *argv[])
+ 	 * Retrieve OS release information.
+ 	 */
+ 	kvp_get_os_info();
+-	/*
+-	 * Cache Fully Qualified Domain Name because getaddrinfo takes an
+-	 * unpredictable amount of time to finish.
+-	 */
+-	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
++	kvp_obtain_domain_name(&full_domain_name);
+ 
+ 	if (kvp_file_init()) {
+ 		syslog(LOG_ERR, "Failed to initialize the pools");
+@@ -1571,7 +1594,7 @@ int main(int argc, char *argv[])
+ 
+ 		switch (hv_msg->body.kvp_enum_data.index) {
+ 		case FullyQualifiedDomainName:
+-			strcpy(key_value, full_domain_name);
++			strcpy(key_value, full_domain_name ? : "");
+ 			strcpy(key_name, "FullyQualifiedDomainName");
+ 			break;
+ 		case IntegrationServicesVersion:
