@@ -2,99 +2,125 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC847CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCF1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52CA205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:40:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PJZB6Tpz"
+	by mail.kernel.org (Postfix) with ESMTP id A3F7F20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 17:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571939079;
+	bh=OO63RqKkht3BLVyDlWq5U6uOSJRIpbb+WGgeqPArPpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HF9ykH4zseyNEFQsFHkcxYc7hkM+fwC80TaAGiNLIeyPYceiIzQHQXGYMTmPKfnlg
+	 sMGcqls0XWW7+wfyYHZ4T/+66FuoV+pGnMmxhQvBH5OMSxx8FX0EP3+UjOOTSVRFh5
+	 dJsBLt3sXCKlitWqYz4D4msTwBDp5xKn1sduVDPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503932AbfJXRkw (ORCPT
+        id S2392144AbfJXRoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 13:40:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38946 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729458AbfJXRku (ORCPT
+        Thu, 24 Oct 2019 13:44:38 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41587 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729458AbfJXRoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 13:40:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sTRjbq+OPzLWUvcUX+QGFONGylrzn8uKiZz+7VSqigI=; b=PJZB6Tpzh5Aa/T8Oj7iXr+SiH
-        KSLUJzsBbcu4Wt4VQZOV0+q7a0ezabFIdj/GsokzzbOMRdXkAt6K64HUq8HjMEU1wzyLmJYtQGw/A
-        MTR1caxgCqtx4M2Kyu2JFRZfyrBYKseRn9ZWlgsbj6uOp90nQsuQTAEVQfjQhAdwH5RYJdgwzBbFH
-        mZvimTAcQ08s6HinxaD/LnZ1R6Ko/ig1ePM2YFjXRXyWgynIuuHGqrxWKjRcEvpSL0FujLqfbS6W5
-        lmSrLuaG+XME4tOyCKf6znNZ8DHEkwM7z39DBmkRxWrz4foFJiK5BoqbdgRTxDvO7R1zuzwjhkr8q
-        jM8puMTDQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNh6M-0003eN-T2; Thu, 24 Oct 2019 17:40:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C5F5C306CF9;
-        Thu, 24 Oct 2019 19:39:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6109A2B1D8927; Thu, 24 Oct 2019 19:40:44 +0200 (CEST)
-Date:   Thu, 24 Oct 2019 19:40:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [patch V2 08/17] x86/entry: Move syscall irq tracing to C code
-Message-ID: <20191024174044.GJ4114@hirez.programming.kicks-ass.net>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123118.386844979@linutronix.de>
- <CALCETrWLk9LKV4+_mrOKDc3GUvXbCjqA5R6cdpqq02xoRCBOHw@mail.gmail.com>
- <CALCETrV79pw7-nisp4VdEkQ4=fr2nfJFOMCtyKmWZR6PG3=oWg@mail.gmail.com>
+        Thu, 24 Oct 2019 13:44:38 -0400
+Received: by mail-qt1-f196.google.com with SMTP id c17so36098869qtn.8
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 10:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y0zG26oxPMQJHKD7Mb6mmVZPWuqohBI8HCHAJ+PDX1w=;
+        b=C50kV1wdlY3IFSWsf3R1J/0rmNlG8S/D4INw4MS4bXQhezmO1HghTBPUq0na+lXdyc
+         VlnlgE9xhes3v5Ea1kXTm23DLrlLsvd2VyzzxhUoj9dB4JweiXpOZZrwlbuQqy571pZY
+         yRyGinUVKGBoyTJm6lbfujHhvw5klIPv3nOHmkEf8R7AvMX2Si7SiOahmzeNhldkIzDz
+         rygzXWysSTOzHFO12j082oPBv6vyVwhcBYA3Hz5BRmIKKZsJ6s8Wle+xoQg6VQrQq8zy
+         +lODsW4YWcVXJQKkQPrIBRup+7kRkJ0U0bS1Q5LEXLBwkdrDxuRS//20+WULTwMBNGxA
+         HFbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y0zG26oxPMQJHKD7Mb6mmVZPWuqohBI8HCHAJ+PDX1w=;
+        b=WNBcEB96415fWI2Eo6RXqia1RhpzTbtTjhNFpCGYXxO0VdfU3xj7KvXl+0sXWwFL8n
+         VOgbB0oKDcaH0wCoHolrTAroSZe5C/VfbNlnm/wF7lYyla5IL7u2LfQDyhxUmX91+Rf3
+         QI7SLu00/auq6WrEM8WuXMMjWSR6B4/wyM/9ZWj6qMsRBIY282aTttUBg0utXorO3kEH
+         L0+D06GW/hu8+l99+sK7g/Ok1IDUvm5q+en0YLTUWFL3nGSadIRufr/+P7tJUd+8A+Fe
+         WfHFm3/xoaY/hCGh53zqANYRAhyaSFMC7ZewGnPX0DPfY0CkFmMo7mN6sqympvoX+GeU
+         yFqg==
+X-Gm-Message-State: APjAAAUp+QZnGHDSkjIuU1/qQlCN6ifL4kf0zs7/cwZPj8O/jq5aWBgM
+        1Y2MCL71clyvHnAyk5SgzFI=
+X-Google-Smtp-Source: APXvYqyWr4EtLhA+is5CwIapWHxX16bKOxbWVYwKcqpmmunCD3QXeyKFdIHuwD/zNsiU8klPmk+hKg==
+X-Received: by 2002:ac8:22b6:: with SMTP id f51mr5339688qta.210.1571939076995;
+        Thu, 24 Oct 2019 10:44:36 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:b2e])
+        by smtp.gmail.com with ESMTPSA id x38sm10740184qtc.64.2019.10.24.10.44.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 24 Oct 2019 10:44:35 -0700 (PDT)
+Date:   Thu, 24 Oct 2019 10:44:33 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Song Liu <liu.song.a23@gmail.com>
+Subject: Re: [PATCH 1/2] cgroup: Add generation number with cgroup id
+Message-ID: <20191024174433.GA3622521@devbig004.ftw2.facebook.com>
+References: <20191016125019.157144-1-namhyung@kernel.org>
+ <20191016125019.157144-2-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrV79pw7-nisp4VdEkQ4=fr2nfJFOMCtyKmWZR6PG3=oWg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191016125019.157144-2-namhyung@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 09:24:13AM -0700, Andy Lutomirski wrote:
-> On Wed, Oct 23, 2019 at 2:30 PM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > On Wed, Oct 23, 2019 at 5:31 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > Interrupt state tracing can be safely done in C code. The few stack
-> > > operations in assembly do not need to be covered.
-> > >
-> > > Remove the now pointless indirection via .Lsyscall_32_done and jump to
-> > > swapgs_restore_regs_and_return_to_usermode directly.
-> >
-> > This doesn't look right.
-> 
-> Well, I feel a bit silly.  I read this:
-> 
-> >
-> > >  #define SYSCALL_EXIT_WORK_FLAGS                                \
-> > > @@ -279,6 +282,9 @@ static void syscall_slow_exit_work(struc
-> 
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> and I applied the diff in my head to the wrong function, and I didn't
-> notice that it didn't really apply there.  Oddly, gitweb gets this
+Hello,
 
-I had the same when reviewing these patches; I was almost going to ask
-tglx about it on IRC when the penny dropped.
+First of all, thanks a lot for working on this.
+
+On Wed, Oct 16, 2019 at 09:50:18PM +0900, Namhyung Kim wrote:
+> Current cgroup id is 32-bit and might be recycled while system is
+> running.  To support unique id, add generation number (gen) to catch
+> recycling and make 64 bit number.  This number will be used as kernfs
+> id and inode number (and file handle).
+> 
+> Also introduced cgroup_idr struct to keep the idr and generation
+> together.  The related functions are little bit modified as well and I
+> made some change to cgroup_idr_alloc() to use cyclic allocator.
+> 
+> Later 64 bit system can have a simpler implementation with a single 64
+> bit sequence number and a RB tree.  But it'll need to grab a spinlock
+> during lookup.  I'm not entirely sure it's ok, so I left it as is.
+
+Any chance I can persuade you into making this conversion?  idr is
+exactly the wrong data structure to use for cyclic allocations.  We've
+been doing it mostly for historical reasons but I really hope we can
+move away from it.  These lookups aren't in super hot paths and doing
+locked lookups should be fine.
+
+>  /*
+>   * A cgroup_root represents the root of a cgroup hierarchy, and may be
+>   * associated with a kernfs_root to form an active hierarchy.  This is
+> @@ -521,7 +529,7 @@ struct cgroup_root {
+>  	unsigned int flags;
+>  
+>  	/* IDs for cgroups in this hierarchy */
+> -	struct idr cgroup_idr;
+> +	struct cgroup_idr cgroup_idr;
+
+Given that there's cgroup->self css, can we get rid of the above?
+Also, can we make css->id a 64bit value too?
+
+Thanks.
+
+-- 
+tejun
