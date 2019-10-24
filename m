@@ -2,103 +2,211 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB090CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F31CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9992D21929
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ayudw2I3"
+	by mail.kernel.org (Postfix) with ESMTP id 1337621929
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 20:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfJXUvb (ORCPT
+        id S1728609AbfJXUxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 16:51:31 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59866 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbfJXUvb (ORCPT
+        Thu, 24 Oct 2019 16:53:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33733 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfJXUxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 16:51:31 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 80251891AA;
-        Fri, 25 Oct 2019 09:51:29 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1571950289;
-        bh=36dRwa4A3dXnVtv62AMlqKd/AOZMMynqclVnGxr8isw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=ayudw2I37bEQw727kRHvKBEMERS0Gpo/z2IDf2lqxKK872dXJq79qp/GWr4TOWG4T
-         vECIIFEGpNjNNxr1ZyLNnKbDj1pTuGElFLBf34ft44FnxVWBHdylGs+Yqe8jIfKOUA
-         hQ/krNJzEI4d065TdFh24oxmea/h1+TJMeoKxcvis8S52GJNxlzTdkTaR2AdSKei2i
-         zGjDoarL2LBo82JUXeKrRAY3GP0yd/lPYiDdUgzhwxSq88ugkpVTQlhOz6T5YPH/NB
-         ReWVmJMcDRVSclliVWvhdX2wnQ+IwwlQPswL3Hg4pzR2B8lLejC376YN2InDM+JXXr
-         H+HBJxxSei5TA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5db20ed00000>; Fri, 25 Oct 2019 09:51:28 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Fri, 25 Oct 2019 09:51:24 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 25 Oct 2019 09:51:24 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "corbet@lwn.net" <corbet@lwn.net>
-CC:     "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] docs/core-api: memory-allocation: remove uses of
- c:func:
-Thread-Topic: [PATCH v3 2/3] docs/core-api: memory-allocation: remove uses of
- c:func:
-Thread-Index: AQHViqRDYXn+aypHWkCn7i9MADN5nKdpZCEAgAAGP4A=
-Date:   Thu, 24 Oct 2019 20:51:23 +0000
-Message-ID: <1ddbd3045d6a989b32065c0bd5b3a3c0ef525953.camel@alliedtelesis.co.nz>
-References: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
-         <20191024195016.11054-3-chris.packham@alliedtelesis.co.nz>
-         <20191024142902.6bd413f6@lwn.net>
-In-Reply-To: <20191024142902.6bd413f6@lwn.net>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:254c:490a:57ec:fd27]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <45AC7B2AB981C24CB2FEE40DD3AF56B2@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Thu, 24 Oct 2019 16:53:14 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iNk6T-0001J9-E7; Thu, 24 Oct 2019 22:53:05 +0200
+Date:   Thu, 24 Oct 2019 22:52:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [patch V2 07/17] x86/entry/64: Remove redundant interrupt
+ disable
+In-Reply-To: <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1910242032080.1783@nanos.tec.linutronix.de>
+References: <20191023122705.198339581@linutronix.de> <20191023123118.296135499@linutronix.de> <20191023220618.qsmog2k5oaagj27v@treble> <alpine.DEB.2.21.1910240146200.1852@nanos.tec.linutronix.de>
+ <CALCETrX+N_cR-HAmQyHxqUo0LPCk4GmqbzizXk-gq9qp00-RdA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9uLA0KDQpPbiBUaHUsIDIwMTktMTAtMjQgYXQgMTQ6MjkgLTA2MDAsIEpvbmF0aGFuIENv
-cmJldCB3cm90ZToNCj4gT24gRnJpLCAyNSBPY3QgMjAxOSAwODo1MDoxNSArMTMwMA0KPiBDaHJp
-cyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiAN
-Cj4gPiBUaGVzZSBhcmUgbm8gbG9uZ2VyIG5lZWRlZCBhcyB0aGUgZG9jdW1lbnRhdGlvbiBidWls
-ZCB3aWxsIGF1dG9tYXRpY2FsbHkNCj4gPiBhZGQgdGhlIGNyb3NzIHJlZmVyZW5jZXMuDQo+ID4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0
-ZWxlc2lzLmNvLm56Pg0KPiA+IC0tLQ0KPiA+IA0KPiA+IE5vdGVzOg0KPiA+ICAgICBJdCBzaG91
-bGQgYmUgbm90ZWQgdGhhdCBrdm1hbGxvYygpIGFuZCBrbWVtX2NhY2hlX2Rlc3Ryb3koKSBsYWNr
-IGENCj4gPiAgICAga2VybmVsZG9jIGhlYWRlciwgYSBzaWRlLWVmZmVjdCBvZiB0aGlzIGNoYW5n
-ZSBpcyB0aGF0IHRoZSA6YzpmdW5jOg0KPiA+ICAgICBmYWxsYmFjayBvZiBtYWtpbmcgdGhlbSBi
-b2xkIGlzIGxvc3QuIFRoaXMgaXMgcHJvYmFibHkgYmVzdCBmaXhlZCBieQ0KPiA+ICAgICBhZGRp
-bmcgYSBrZXJuZWxkb2MgaGVhZGVyIHRvIHRoZWlyIHNvdXJjZS4NCj4gPiAgICAgDQo+ID4gICAg
-IENoYW5nZXMgaW4gdjI6DQo+ID4gICAgIC0gbmV3DQo+ID4gDQo+ID4gIERvY3VtZW50YXRpb24v
-Y29yZS1hcGkvbWVtb3J5LWFsbG9jYXRpb24ucnN0IHwgNDkgKysrKysrKysrLS0tLS0tLS0tLS0N
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQ0K
-PiANCj4gVGhpcyBvbmUgc3RpbGwgZG9lc24ndCBhcHBseTsgaGF2ZSB5b3UgdmVyaWZpZWQgdGhh
-dCB5b3UgY2FuIGFwcGx5IHRoZQ0KPiB3aG9sZSBzZXJpZXMgdG8gZG9jcy1uZXh0Pw0KDQpJIGNh
-biBzZWUgdGhlIHByb2JsZW0uIEknbGwgcmViYXNlIGFnYWluc3QgZG9jcy1uZXh0IGFuZCBzZW5k
-IGEgdjQuDQoNCldoZW4gSSBkbyBhY3R1YWxseSBnZXQgYSBzZXJpZXMgdGhhdCBhcHBsaWVzIHRv
-IGRvY3MtbmV4dCBpdCdsbA0KY29uZmxpY3Qgd2l0aCA1OWJiNDc5ODVjMWQgKCJtbSwgc2xbYW91
-XWI6IGd1YXJhbnRlZQ0KbmF0dXJhbCBhbGlnbm1lbnQgZm9yIGttYWxsb2MocG93ZXItb2YtdHdv
-KSIpIGluIExpbnVzJ3MgdHJlZS4NCg0KDQoNCj4gDQo+IFRoYW5rcywNCj4gDQo+IGpvbg0K
+On Thu, 24 Oct 2019, Andy Lutomirski wrote:
+> On Wed, Oct 23, 2019 at 4:52 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Wed, 23 Oct 2019, Josh Poimboeuf wrote:
+> > > What happens if somebody accidentally leaves irqs enabled?  How do we
+> > > know you found all the leaks?
+> >
+> > For the DO_ERROR() ones that's trivial:
+> >
+> >  #define DO_ERROR(trapnr, signr, sicode, addr, str, name)                  \
+> >  dotraplinkage void do_##name(struct pt_regs *regs, long error_code)       \
+> >  {                                                                         \
+> >         do_error_trap(regs, error_code, str, trapnr, signr, sicode, addr); \
+> > +       lockdep_assert_irqs_disabled();                                    \
+> >  }
+> >
+> >  DO_ERROR(X86_TRAP_DE,     SIGFPE,  FPE_INTDIV,   IP, "divide error",        divide_error)
+> >
+> > Now for the rest we surely could do:
+> >
+> > dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+> > {
+> >         __do_bounds(regs, error_code);
+> >         lockdep_assert_irqs_disabled();
+> > }
+> >
+> > and move the existing body into a static function so independent of any
+> > (future) return path there the lockdep assert will be invoked.
+> >
+> 
+> If we do this, can we macro-ize it:
+> 
+> DEFINE_IDTENTRY_HANDLER(do_bounds)
+> {
+>  ...
+> }
+>  
+> If you do this, please don't worry about the weird ones that take cr2
+> as a third argument.  Once your series lands, I will send a follow-up
+> to get rid of it.  It's 2/3 written already.
+
+I spent quite some time digging deeper into this. Finding all corner cases
+which eventually enable interrupts from an exception handler is not as
+trivial as it looked in the first place. Especially the fault handler is a
+nightmare. Also PeterZ's approach of doing
+
+	   if (regs->eflags & IF)
+	   	local_irq_disable();
+
+is doomed due to sys_iopl(). See below.
+
+I'm tempted to do pretty much the same thing as the syscall rework did
+as a first step:
+
+  - Move the actual handler invocation to C
+
+  - Do the irq tracing on entry in C
+
+  - Move irq disable before return to ASM
+
+Peter gave me some half finished patches which pretty much do that by
+copying half of the linux/syscalls.h macro maze into the entry code. That's
+one possible solution, but TBH it sucks big times.
+
+We have the following variants:
+
+do_divide_error(struct pt_regs *regs, long error_code);
+do_debug(struct pt_regs *regs, long error_code);
+do_nmi(struct pt_regs *regs, long error_code);
+do_int3(struct pt_regs *regs, long error_code);
+do_overflow(struct pt_regs *regs, long error_code);
+do_bounds(struct pt_regs *regs, long error_code);
+do_invalid_op(struct pt_regs *regs, long error_code);
+do_device_not_available(struct pt_regs *regs, long error_code);
+do_coprocessor_segment_overrun(struct pt_regs *regs, long error_code);
+do_invalid_TSS(struct pt_regs *regs, long error_code);
+do_segment_not_present(struct pt_regs *regs, long error_code);
+do_stack_segment(struct pt_regs *regs, long error_code);
+do_general_protection(struct pt_regs *regs, long error_code);
+do_spurious_interrupt_bug(struct pt_regs *regs, long error_code);
+do_coprocessor_error(struct pt_regs *regs, long error_code);
+do_alignment_check(struct pt_regs *regs, long error_code);
+do_machine_check(struct pt_regs *regs, long error_code);
+do_simd_coprocessor_error(struct pt_regs *regs, long error_code);
+do_iret_error(struct pt_regs *regs, long error_code);
+do_mce(struct pt_regs *regs, long error_code);
+
+do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+do_double_fault(struct pt_regs *regs, long error_code, unsigned long address);
+do_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address);
+
+So if we can remove the third argument then we can spare most of the macro
+maze and just have one common function without bells and whistels. The
+other option would be to extend all handlers to have three arguments,
+i.e. add 'long unused', which is not pretty either.
+
+What's your plan with cr2? Stash it in pt_regs or something else?
+
+Once we have the interesting parts in C then we can revisit the elimination
+of the unconditional irq disable because in C it's way simpler to do
+diagnostics, but I'm not entirely sure whether it's worth it.
+
+A related issue is the inconsistency of the irq disabled tracing in the
+return to user path. As I pointed out in the other mail, the various
+syscall implementations do that differently. The exception handlers do it
+always conditional, regular interrupts as well. For regular interrupts that
+does not make sense as they can by all means never return to an interrupt
+disabled context.
+
+The interesting bells and whistels result from sys_iopl(). If user space
+has been granted iopl(level = 3) it gains cli/sti priviledges. When the
+application has interrupts disabled in userspace:
+
+  - invocation of a syscall
+
+  - any exception (aside of NMI/MCE) which conditionally enables interrupts
+    depending on user_mode(regs) and therefor can be preempted and
+    schedule
+
+is just undefined behaviour and I personally consider it to be a plain bug.
+
+Just for the record: This results in running a resulting or even completely
+unrelated signal handler with interrupts disabled as well.
+
+Whatever we decide it is, leaving it completely inconsistent is not a
+solution at all. The options are:
+
+  1)  Always do conditional tracing depending on the user_regs->eflags.IF
+      state.
+
+  2)  #1 + warn once when syscalls and exceptions (except NMI/MCE) happen
+      and user_regs->eflags.IF is cleared.
+
+  3a) #2 + enforce signal handling to run with interrupts enabled.
+
+  3b) #2 + set regs->eflags.IF. So the state is always correct from the
+      kernel POV. Of course that changes existing behaviour, but its
+      changing undefined and inconsistent behaviour.
+  
+  4) Let iopl(level) return -EPERM if level == 3.
+
+     Yeah, I know it's not possible due to regressions (DPKD uses iopl(3)),
+     but TBH that'd be the sanest option of all.
+
+     Of course the infinite wisdom of hardware designers tied IN, INS, OUT,
+     OUTS and CLI/STI together on IOPL so we cannot even distangle them in
+     any way.
+
+     The only way out would be to actually use a full 8K sized I/O bitmap,
+     but that's a massive pain as it has to be copied on every context
+     switch. 
+
+Really pretty options to chose from ...
+
+Thanks,
+
+	tglx
