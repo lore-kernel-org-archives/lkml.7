@@ -2,125 +2,77 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96B3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C66FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5AF20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571905490;
-	bh=1OCCE/EnTtaxEnTbzMZwiRgOVXpdUhGrOGqXcZr6tqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KqQITXGKLoeX3U+A0tTvpDsJ5uIdEay6Qa7kh1WnSDdWrdJ4iIMhNVsR2nfXLM5hw
-	 3v5aXdGrjBtBxaanYItIG5mJ/XI8JuMK9QBXu9Ka389FL+O/561kRI6+haUwgTU1bV
-	 qjKH9Fgzfd/YJBsvhBQgj4hWA/gWu1GRAp21I2iA=
+	by mail.kernel.org (Postfix) with ESMTP id 6ECF420856
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 08:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438161AbfJXIYt (ORCPT
+        id S2438173AbfJXIZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 04:24:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:32832 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725947AbfJXIYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 04:24:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2F6C6B2AC;
-        Thu, 24 Oct 2019 08:24:41 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 10:24:40 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 2/2] mm: memcontrol: try harder to set a new memory.high
-Message-ID: <20191024082440.GT17610@dhcp22.suse.cz>
-References: <20191022201518.341216-1-hannes@cmpxchg.org>
- <20191022201518.341216-2-hannes@cmpxchg.org>
- <20191023065949.GD754@dhcp22.suse.cz>
- <20191023175724.GD366316@cmpxchg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023175724.GD366316@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 24 Oct 2019 04:25:59 -0400
+Received: from lilium.sigma-star.at ([109.75.188.150]:32868 "EHLO
+        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfJXIZ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 04:25:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lilium.sigma-star.at (Postfix) with ESMTP id B0B9A18108D3A;
+        Thu, 24 Oct 2019 10:25:56 +0200 (CEST)
+Received: from lilium.sigma-star.at ([127.0.0.1])
+        by localhost (lilium.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 6mNXa_C_RHjG; Thu, 24 Oct 2019 10:25:55 +0200 (CEST)
+Received: from lilium.sigma-star.at ([127.0.0.1])
+        by localhost (lilium.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4GDjBp6oxDFB; Thu, 24 Oct 2019 10:25:55 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-mtd@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Wenwen Wang <wenwen@cs.uga.edu>
+Subject: [PATCH] Revert "ubifs: Fix memory leak bug in alloc_ubifs_info() error path"
+Date:   Thu, 24 Oct 2019 10:25:35 +0200
+Message-Id: <20191024082535.1022-1-richard@nod.at>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 23-10-19 13:57:24, Johannes Weiner wrote:
-> On Wed, Oct 23, 2019 at 08:59:49AM +0200, Michal Hocko wrote:
-> > On Tue 22-10-19 16:15:18, Johannes Weiner wrote:
-> > > Setting a memory.high limit below the usage makes almost no effort to
-> > > shrink the cgroup to the new target size.
-> > > 
-> > > While memory.high is a "soft" limit that isn't supposed to cause OOM
-> > > situations, we should still try harder to meet a user request through
-> > > persistent reclaim.
-> > > 
-> > > For example, after setting a 10M memory.high on an 800M cgroup full of
-> > > file cache, the usage shrinks to about 350M:
-> > > 
-> > > + cat /cgroup/workingset/memory.current
-> > > 841568256
-> > > + echo 10M
-> > > + cat /cgroup/workingset/memory.current
-> > > 355729408
-> > > 
-> > > This isn't exactly what the user would expect to happen. Setting the
-> > > value a few more times eventually whittles the usage down to what we
-> > > are asking for:
-> > > 
-> > > + echo 10M
-> > > + cat /cgroup/workingset/memory.current
-> > > 104181760
-> > > + echo 10M
-> > > + cat /cgroup/workingset/memory.current
-> > > 31801344
-> > > + echo 10M
-> > > + cat /cgroup/workingset/memory.current
-> > > 10440704
-> > > 
-> > > To improve this, add reclaim retry loops to the memory.high write()
-> > > callback, similar to what we do for memory.max, to make a reasonable
-> > > effort that the usage meets the requested size after the call returns.
-> > 
-> > That suggests that the reclaim couldn't meet the given reclaim target
-> > but later attempts just made it through. Is this due to amount of dirty
-> > pages or what prevented the reclaim to do its job?
-> > 
-> > While I am not against the reclaim retry loop I would like to understand
-> > the underlying issue. Because if this is really about dirty memory then
-> > we should probably be more pro-active in flushing it. Otherwise the
-> > retry might not be of any help.
-> 
-> All the pages in my test case are clean cache. But they are active,
-> and they need to go through the inactive list before reclaiming. The
-> inactive list size is designed to pre-age just enough pages for
-> regular reclaim targets, i.e. pages in the SWAP_CLUSTER_MAX ballpark,
-> In this case, the reclaim goal for a single invocation is 790M and the
-> inactive list is a small funnel to put all that through, and we need
-> several iterations to accomplish that.
+This reverts commit 9163e0184bd7d5f779934d34581843f699ad2ffd.
 
-Thanks for the clarification.
+At the point when ubifs_fill_super() runs, we have already a reference
+to the super block. So upon deactivate_locked_super() c will get
+free()'ed via ->kill_sb().
 
-> But 790M is not a reasonable reclaim target to ask of a single reclaim
-> invocation. And it wouldn't be reasonable to optimize the reclaim code
-> for it. So asking for the full size but retrying is not a bad choice
-> here: we express our intent, and benefit if reclaim becomes better at
-> handling larger requests, but we also acknowledge that some of the
-> deltas we can encounter in memory_high_write() are just too
-> ridiculously big for a single reclaim invocation to manage.
+Cc: Wenwen Wang <wenwen@cs.uga.edu>
+Fixes: 9163e0184bd7 ("ubifs: Fix memory leak bug in alloc_ubifs_info() error path")
+Reported-by: https://twitter.com/grsecurity/status/1180609139359277056
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ fs/ubifs/super.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Yes that makes sense and I think it should be a part of the changelog.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-Thanks!
+diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
+index 7d4547e5202d..5e1e8ec0589e 100644
+--- a/fs/ubifs/super.c
++++ b/fs/ubifs/super.c
+@@ -2267,10 +2267,8 @@ static struct dentry *ubifs_mount(struct file_system_type *fs_type, int flags,
+ 		}
+ 	} else {
+ 		err = ubifs_fill_super(sb, data, flags & SB_SILENT ? 1 : 0);
+-		if (err) {
+-			kfree(c);
++		if (err)
+ 			goto out_deact;
+-		}
+ 		/* We do not support atime */
+ 		sb->s_flags |= SB_ACTIVE;
+ 		if (IS_ENABLED(CONFIG_UBIFS_ATIME_SUPPORT))
 -- 
-Michal Hocko
-SUSE Labs
+2.16.4
+
