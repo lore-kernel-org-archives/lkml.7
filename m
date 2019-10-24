@@ -2,139 +2,148 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487F4C47E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB70FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186E4205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDC8205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 09:23:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="fpAp9ltE"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VTNuagiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393055AbfJXJWo (ORCPT
+        id S2408756AbfJXJXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 05:22:44 -0400
-Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:20743
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390366AbfJXJWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 05:22:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FgCMlrM6Ecti4Hd9hTdHLzS/83+wmxsfPYThGVe6xHaw0kR0se7lSjccTpL/MDsWA35AHEHykXua1tL1kE1reW07Q1Z3KdiCFl3iFjr+Tvw79YOGvYwQTgjU0flFqbbnuTiRPy5bykl/MAkypdk/qCuyEcsaTes3W8Z+9HJ0gHUWtneY/hqN6d+UC898qjXq8vuzRKFAPs75uf2HKc8VGTzoV4tQxaYc/eewN5sQhAfDpsqa6OKb/5hETUkU40nAQcUfzjhCu2nyfQ49ZoOhPLIjXt97pMHzipuwWpWu4CWHuiNT7UOf3Q7MxcCx9T/YG8GC5KoLAbSp8SmhYMQS/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hp2/tszh1uV2uZFTm/3yFBy1aiyTRNcA5omq7eB7/78=;
- b=HIaSukiw0/+D4J+z2mdviPSrdlR0RZkAvPdRkXTQ2+j+nel0I1/6iL45BYoG2ycvvKgw3ppLAXHRE15pv0Eynbeswwvm8q0Qa280qFwozpDnd7YIUSP6RSBWkPe4LYr25cQjfsIThXXPTXqyKJCwItp6NbtO1amNRKazr6yRMLOkjlVzUrkxQp4BK0rMWAZlcXLWI/NtUvr3lKfoY4FkEOyqoV8J/Bfd0i6LDbWzLjb3q1rEf9cZd4+QI1Cjz7YDOcXidB3WD78f9ZL3Q3JlO4ZZDXXvmq5I3GW2xifd7m4nwOQQcSiJWCP6eebXh7bZuDmp6KJPa+GI1tNrG8hFbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kococonnector.com; dmarc=pass action=none
- header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hp2/tszh1uV2uZFTm/3yFBy1aiyTRNcA5omq7eB7/78=;
- b=fpAp9ltEqCfX52I7g2nf6FuwVbYzgkfy2QOnaP8qIAB/1Cz4hZgdcarJ1fKOmETua+aimYkzAPetHdPEWtXyntQ+Slr5vxUhAA3ZzILSiMUWYFoCn/CkGJ34/yJTmJO1nycbVqyB0AzhQQOOde/Sw4dQno/8Q9mHzJi4aoyItpM=
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com (10.170.212.23) by
- DB6PR0902MB1797.eurprd09.prod.outlook.com (10.171.76.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Thu, 24 Oct 2019 09:22:38 +0000
-Received: from DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74]) by DB6PR0902MB2072.eurprd09.prod.outlook.com
- ([fe80::b1b2:ecb1:9c98:6b74%6]) with mapi id 15.20.2367.025; Thu, 24 Oct 2019
- 09:22:38 +0000
-From:   Oliver Graute <oliver.graute@kococonnector.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        =?iso-8859-1?Q?S=E9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
- devicetree
-Thread-Topic: [PATCH v1] dt-bindings: arm: fsl: Document Variscite i.MX6q
- devicetree
-Thread-Index: AQHVikyT2KF91MXB10mxyuBdtabWTw==
-Date:   Thu, 24 Oct 2019 09:22:37 +0000
-Message-ID: <20191024092019.4020-1-oliver.graute@kococonnector.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4PR0101CA0048.eurprd01.prod.exchangelabs.com
- (2603:10a6:200:41::16) To DB6PR0902MB2072.eurprd09.prod.outlook.com
- (2603:10a6:6:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oliver.graute@kococonnector.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-patchwork-bot: notify
-x-originating-ip: [193.47.161.132]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e15ed6d-1f7c-4ba2-4f0b-08d75863b601
-x-ms-traffictypediagnostic: DB6PR0902MB1797:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0902MB17970E6E870CE4DE6A2EB5E0EB6A0@DB6PR0902MB1797.eurprd09.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:510;
-x-forefront-prvs: 0200DDA8BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(39830400003)(136003)(199004)(189003)(26005)(2351001)(508600001)(36756003)(2906002)(6486002)(99286004)(102836004)(8676002)(14454004)(1730700003)(316002)(50226002)(52116002)(6512007)(25786009)(44832011)(6436002)(81166006)(5640700003)(66556008)(64756008)(66446008)(66476007)(386003)(6506007)(8936002)(66946007)(66066001)(4326008)(256004)(4744005)(476003)(5660300002)(1076003)(305945005)(2616005)(7416002)(71190400001)(7736002)(486006)(54906003)(6916009)(86362001)(71200400001)(6116002)(186003)(2501003)(3846002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0902MB1797;H:DB6PR0902MB2072.eurprd09.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: kococonnector.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q9K0UAVaEfYD4N7AriQr5s4cKZ5MpEaepEB4/2KRt9gr4MpYoFcu7+CayrOnmmmz6y0UWSnm2Dccv7fioRbJlKWGJyN0ljc8IwoQbXc1RjooCza0ElB8ZvobDB5CCmq7Lq+yK6WM1eFnE3p6tn6ndMMmm4BH+322PqwzsbjR6267YEyj8mT3VfIZXnWnJ/z/7zFOFLY6vEoKQavZ4G0TD83m2UNgGyqjDB+ZPIuynLCNqrOU+QzyknBuSQv68bjW4a1fRHDi5rYjlJBCqbgsrB0KCMbrujgHYyrszQ/M6qDoRRpq0+5JofFbHKvIm27zQhhdpqGbROzusf0HfjWzl9cvOraTsIkGmHk7YjWL7lFAP2BfFrKkS6oWt7UH5E/O9iJWBameKvfrsPR8P4Ob6P9fXT7EgVwC3V/WBR6DXc/UOLWP/Pa/n6rvsc1gjQPl
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 24 Oct 2019 05:23:31 -0400
+Received: from mout.web.de ([212.227.17.12]:45921 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390225AbfJXJXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 05:23:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1571908987;
+        bh=7gUO4Ode5qDL0gPzRYNre9m20djDeahRlXBA5ywUrYg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=VTNuagiSAFXsk1RB2b9Y5go91qOkdA5Yu4qeYStjitzLJBYxaE1Q8lS0PXPBo18x0
+         pkrUOkm+SjKJU1RtlkpC22Hg34PLokE4mMPcBf85mURGZ5hin0XwBSXdVQa1Gy65da
+         kaKqUoriVQtk+jMvAj8XLWIlRKASutIAhsXVoBKM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.110.199]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lc8c5-1hgUk22cfl-00jaMb; Thu, 24
+ Oct 2019 11:23:07 +0200
+Subject: Re: [v2] coccicheck: support $COCCI being defined as adirectory
+To:     Zhong Shiqi <zhong.shiqi@zte.com.cn>, cocci@systeme.lip6.fr
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>
+References: <201910241603217396927@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9303864d-0feb-5be2-9639-bb4f6f574cb5@web.de>
+Date:   Thu, 24 Oct 2019 11:23:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-OriginatorOrg: kococonnector.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e15ed6d-1f7c-4ba2-4f0b-08d75863b601
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Oct 2019 09:22:37.7558
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 59845429-0644-4099-bd7e-17fba65a2f2b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 21/8QaNnwz/woFKN3tPNPQTMaL081MuyCj/c88kkhb9FE2RSgefr+955etu91GIM53Vby0YyRfhR6r539t2WS/B5TtiYKtWwkTQaYTEF4Xk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0902MB1797
+In-Reply-To: <201910241603217396927@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vcHdXHr2creOBtm4hW2jhZMTZLApTCofX1g+vb306R2kJS/W4kL
+ 1wDA+qZT7T+IzOtzgjVXBSifwjpU21iwII1sbOmeP1P6fbdilm6NlfP41VIyKuTeB+9wTPh
+ BaPj3r31CwNJwJokCY6gF4Ju1ugNXnDqC7Tg1DdIBFkHTsvXtqGV6T+y6lQMj49rAk53dBv
+ cP5VLV+Mlmq3V2F8sezhw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HaxlO9WmgHI=:9rx4kTJdw7/ZOxkTYNnyYH
+ 8ktjyuTxQgg2QROwghJWPE9jM3u9AW7g4ko2iyRO+IECqN2M+mD2JAFUJ+0LAf5TVvPvDf3VH
+ j1kBnIbJlS0FQn6sRmYnxySwkGgDohjX6lWfBMlddN15Wa695abAhfSwd6RZRfpc1JbkAL6wP
+ ojDi3EcsFeabUntPL3bLnaG7iYQf+YAo0IRPlTkHU/+cj7OpZWc6FkJrDeFkkJihtRQqJzntM
+ 3H7ORIGLPte+sRPzRf2M9MsFyN7KAVn6RkhTy7rmtUr+r0G/M/uyAQfj+Q76DmpCT5fI5z9sg
+ LI0/v4qnFqRfgNUwCxfPMF/rK3+uYBOMPH+YXY5+esJcOecrcXLJLmu0zkYMUoRT2H4VJthoi
+ e+dRTx2SOZycdzn4T5pL63bHxGbfbrgHb2fLFT4siyMBLPM2mjR+pJFg+DizOcLr50IsKhXug
+ RjwrAe3SmIxCkzvU1zrV7S+6VsP4q6vMzJt4VS23M1xeymot+HC5YoEhBCiR5q1vlrAlyaies
+ XaD1qEyo90gazp99Fn6+0gXIhpe8UkDjSZeWwmsHsM8/Nh+bKKF7RyXHfUqzWAUTgnQbtz5mP
+ QO/6eKgs5HqP0C9enVASa0Fc+7bVM/mbz5SH78JtA+V+TXPp5hqLOjn/s5sW37TMXLyIheeQi
+ mQoXbtRuSBL9lp6gwyxbZZKdakkgh9zG/uArpk8hBgrDcJ45ApG0YCxjAsCYHSA2NlnnBBIz0
+ FD9ogz26ptt+okdxcAqI3uDATLNK+3nt/b58GAjyEdHMwF/D6R01RpTUaUVFyrca5Dgx4hc/J
+ QBPAeh7pNs4HLpj02K+NyerOP3Km2kY/0eNgqiQgoTbHfWFztUiw3Jb+S2ldKUDRu17acdcSG
+ Tp679EnTMc14Q5UQmkFHGGlx993OHm0fd0k6TdRbXVGF51x9f3NkFdfm39sG2T4OgYoSn4sKN
+ NYQ+M6P9z1ZoJWkiIypohSGMRafZHnogTJnq/ejJ1vI2veLza6vBRlMidJSQBOMwWtb/ZuQyQ
+ v5lJ22neFp0/DyOordl64sN/1w5pX6SS8ULjYxN4Z4eJ8N/WCeavaSvUfxgLDRRJNZINPB5eD
+ W3DBbV/I3ooMYQxWTSLlD51rP/i7EQzqvYhD4hzb6OWHYCqHQaeT1ADpwCU9yTcviD8U4OOt5
+ zZiGiaajLjk/Q1PhHUbji7qTS7L3a3cEI5l/i6KfLR+CEdjcRcT4uu1A1pelyv26wcGKaYmtN
+ 86PfSc+495go/cjfCiE5Qod3w5zzIdqPfXeAJx0L61FPxgcV4NY6EvXQ+QXs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the Variscite i.MX6qdl board devicetree binding
-already supported:
+>> How do you think about to use the subject =E2=80=9C[PATCH] coccicheck:
+>> Support search for SmPL scripts within selected directory hierarchy=E2=
+=80=9D?
+>
+> I would like to use subject as you said.
 
-- variscite,dt6customboard
+Thanks for your positive feedback.
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation=
-/devicetree/bindings/arm/fsl.yaml
-index 41db01d77c23..f0ddebfcf1a1 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -121,6 +121,7 @@ properties:
-               - fsl,imx6q-sabresd
-               - technologic,imx6q-ts4900
-               - technologic,imx6q-ts7970
-+              - variscite,dt6customboard
-           - const: fsl,imx6q
-=20
-       - description: i.MX6QP based Boards
---=20
-2.17.1
+> But it seems a little bit long,
 
+I hope that this suggestion is still appropriate.
+
+
+> does it matter?
+
+Do you know an approach which can express almost the same information
+with a shorter wording (besides using an other language) at this place?
+
+Regards,
+Markus
