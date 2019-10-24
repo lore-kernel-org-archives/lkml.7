@@ -2,80 +2,122 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82055CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D414CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9E02084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7070F2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 13:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571923156;
+	bh=Iq3tIW/M4EU3kskk8A3JDdCS8uVIwkhKDQO89M+kMDk=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=l1YmmWws2Qc6OpQuy9zqxrfGVDyaTOG9GUp9PtsUCFgLB5qtfcgRTY+TCJOK6xtKx
+	 TdMZcfix5QTGRNIS2NiI+jo5CV+mM9r4hEvtGqJWkUo/041hS9mhAknZJ5ql+BoU96
+	 AuAoic2WzTsn+ApZUu2IhWibg3JgTyAPHrsKldBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502489AbfJXNTK (ORCPT
+        id S2502502AbfJXNTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 09:19:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34614 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730061AbfJXNTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 09:19:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A9A3DB7FD;
-        Thu, 24 Oct 2019 13:19:07 +0000 (UTC)
-Date:   Thu, 24 Oct 2019 15:19:05 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 6/8] bdev: add open_finish.
-Message-ID: <20191024131905.GM938@kitsune.suse.cz>
-References: <cover.1571834862.git.msuchanek@suse.de>
- <ea2652294651cbc8549736728c650d16d2fe1808.1571834862.git.msuchanek@suse.de>
- <20191024022232.GB11485@infradead.org>
- <20191024085514.GI938@kitsune.suse.cz>
- <20191024131254.GE2963@bombadil.infradead.org>
+        Thu, 24 Oct 2019 09:19:15 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39373 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730061AbfJXNTO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 09:19:14 -0400
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iNd1A-0000Sw-Ge; Thu, 24 Oct 2019 15:19:08 +0200
+To:     Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH] KVM: arm64: Select =?UTF-8?Q?SCHED=5FINFO=20before=20?=  =?UTF-8?Q?SCHEDSTATS?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191024131254.GE2963@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 24 Oct 2019 14:19:08 +0100
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>, <catalin.marinas@arm.com>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <6d037fa1-5e8b-38cd-e947-7547c1e8dd15@arm.com>
+References: <20191023032254.159510-1-maowenan@huawei.com>
+ <26ee413334937b9530bc8f033fe378ec@www.loen.fr>
+ <6d037fa1-5e8b-38cd-e947-7547c1e8dd15@arm.com>
+Message-ID: <3abfc893613caf529b0f6a933e74068d@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: steven.price@arm.com, maowenan@huawei.com, catalin.marinas@arm.com, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 06:12:54AM -0700, Matthew Wilcox wrote:
-> On Thu, Oct 24, 2019 at 10:55:14AM +0200, Michal Suchánek wrote:
-> > On Wed, Oct 23, 2019 at 07:22:32PM -0700, Christoph Hellwig wrote:
-> > > On Wed, Oct 23, 2019 at 02:52:45PM +0200, Michal Suchanek wrote:
-> > > > Opening a block device may require a long operation such as waiting for
-> > > > the cdrom tray to close. Performing this operation with locks held locks
-> > > > out other attempts to open the device. These processes waiting to open
-> > > > the device are not killable.
-> 
-> You can use mutex_lock_killable() to fix that.
-> 
+On 2019-10-24 12:22, Steven Price wrote:
 
-That solves only half of the problem.
+[...]
 
-It still does not give access to the device to processes that open with
-O_NONBLOCK.
+> From 915893f5c57241cc29d90769b3f720a6135277d7 Mon Sep 17 00:00:00 
+> 2001
+> From: Steven Price <steven.price@arm.com>
+> Date: Thu, 24 Oct 2019 12:14:36 +0100
+> Subject: [PATCH] KVM: arm64: Select TASK_DELAY_ACCT rather than 
+> SCHEDSTATS
+>
+> SCHEDSTATS requires DEBUG_KERNEL (and PROC_FS) and therefore isn't a
+> good choice for enabling the scheduling statistics required for 
+> stolen
+> time.
+>
+> Instead match the x86 configuration and select TASK_DELAY_ACCT. This
+> adds the dependencies of NET && MULTIUSER for arm64 KVM.
+>
+> Suggested-by: Marc Zyngier <maz@kernel.org>
+> Fixes: 8564d6372a7d ("KVM: arm64: Support stolen time reporting via
+> shared structure")
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  arch/arm64/kvm/Kconfig | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+> index d8b88e40d223..1ffb300e2d92 100644
+> --- a/arch/arm64/kvm/Kconfig
+> +++ b/arch/arm64/kvm/Kconfig
+> @@ -21,6 +21,8 @@ if VIRTUALIZATION
+>  config KVM
+>  	bool "Kernel-based Virtual Machine (KVM) support"
+>  	depends on OF
+> +	# for TASKSTATS/TASK_DELAY_ACCT:
+> +	depends on NET && MULTIUSER
+>  	select MMU_NOTIFIER
+>  	select PREEMPT_NOTIFIERS
+>  	select HAVE_KVM_CPU_RELAX_INTERCEPT
+> @@ -39,7 +41,7 @@ config KVM
+>  	select IRQ_BYPASS_MANAGER
+>  	select HAVE_KVM_IRQ_BYPASS
+>  	select HAVE_KVM_VCPU_RUN_PID_CHANGE
+> -	select SCHEDSTATS
+> +	select TASK_DELAY_ACCT
+>  	---help---
+>  	  Support hosting virtualized guest machines.
+>  	  We don't support KVM with 16K page tables yet, due to the 
+> multiple
 
-Thanks
+Same issue as before: you have an implicit config symbol selection.
+TASK_DELAY_ACCT depends on TASKSTATS (which is why you have this NET &&
+MULTIUSER constraint).
 
-Michal
+You need to select both TASK_DELAY_ACCT and TASKSTATS, as the comment 
+you
+add suggests.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
