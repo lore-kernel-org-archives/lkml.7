@@ -2,128 +2,112 @@ Return-Path: <SRS0=Yun1=YR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0942ECA9EBC
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF65CA9EBB
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D44A420679
-	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8808D20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 24 Oct 2019 14:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcUTD+ag"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h6komROc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502864AbfJXOk7 (ORCPT
+        id S2502882AbfJXOm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 10:40:59 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35077 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502826AbfJXOk7 (ORCPT
+        Thu, 24 Oct 2019 10:42:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38943 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502826AbfJXOm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 10:40:59 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l10so25964785wrb.2;
-        Thu, 24 Oct 2019 07:40:58 -0700 (PDT)
+        Thu, 24 Oct 2019 10:42:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id v4so15294407pff.6
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 07:42:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HESF/d6OH5Aw6sJWEIGxgkKbyHNgcjcLHfFi7kk0g9A=;
-        b=TcUTD+agNlBhc1hjm88GbLWqbU6tMfgjgHRDWLRNfaJ4hc36Tb9ML4aCHvpyxtPTEn
-         C2E5Ewp7E6OTopg9A/Di347itIL2MdoqhpP4ZZjw5IJ7qLG0TzJvqUXDenxz7YMnEy6v
-         l6zGfh6br2lRtFYR43Lk4U+bJoxH9+GT1LISiSL9zM1Np0ofboXkUMs6bZnwEWxybRw1
-         JdpELAxqwKgYbFXBggEFPWSTRbrhhmGFoyiyJzXAtLRf+WOyEqMFyKWvRlguOMPrD6TR
-         QAOtAcx9am6QXkUKVLlsfd0JVcZbrIi83kS6v0lTep3b8TA80z8Fr9GHh52lINsSQT4V
-         8AfQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=NOOJOsxqHyn9AIr6ypTkEVIyD6HHzZy3a7yfdgUD6yA=;
+        b=h6komROc6h8RGeYYNYnFEouCCElzVFdunOny/OFPlTSBbE5B9R5V8n3vP3rMEXKNLh
+         HcgLDIcHgnpiHBDdMc49NZVTwIrypxTd91Vbx2VC3XfN5emIFzMByQfhxcXi1CjlHxKI
+         gp9XINyTt2x2EhOqnng6aYHiOy1L6GIIUySNMpQzQpujU+WCaZbBz2tEAcblutRs3jfR
+         R/YEQWcd6ifqfLES2J7fhvU1g+ShU07BNi6dOyUe0u4wdzNg+p2T2eQQbdAbOi0fwobS
+         10oIsmYkgKrqi4mnE33LkzRtAqfOhvSQLmj/aAqHwvoz7yGXbTFTZWyJred3CsaGL5if
+         gFsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HESF/d6OH5Aw6sJWEIGxgkKbyHNgcjcLHfFi7kk0g9A=;
-        b=PkKkxQn5KHkzS11QS5PzOGTBpkSZH8hKJsr5chBxosfa8cbCZV6XIrEIdKHZqztUBo
-         suuPXAE9+4/iLYUkYuGkK0wTuxVdPEHzYxwyDrvZXQtc/6R4/CXDTfMjZl24nC9FqpG/
-         9/0H36I+wozOH/HCKtv0ww8bVQ38Pgy83QYecYage8CYHjZh13/dsbOeeZnFibkdsib9
-         MCsvTrbvvkkl/6eh8D2gx76EGX1Tb66y3H0cfaT1Jm1SkmQbijcPyiKPpTmhNtxeovF5
-         gbjn2kJ3hOmXuLkH/aDYKvSkVe8SpDagnwLLRmDGHonAe/kYYsfzqHTZKFZytpxO6Pwv
-         i1PA==
-X-Gm-Message-State: APjAAAXSYKZF4ROBDHUMWoi84HAyzCx4gO1sIH4LfwzcvmkxRCcuo1Ej
-        MGrCMEFFgNPp2F7AxurvLTs=
-X-Google-Smtp-Source: APXvYqwBuY8frNbFlrrd+MU0T1iMVeSexigCZJNzWTb2sAaAERi4UQ+ZR6IEtM7ZTeW1Z9d6m7DAYA==
-X-Received: by 2002:adf:e381:: with SMTP id e1mr3927570wrm.94.1571928057005;
-        Thu, 24 Oct 2019 07:40:57 -0700 (PDT)
-Received: from andrea.guest.corp.microsoft.com ([2a01:110:8012:1010:e187:86b0:69d4:5ba5])
-        by smtp.gmail.com with ESMTPSA id u1sm2289665wmc.38.2019.10.24.07.40.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NOOJOsxqHyn9AIr6ypTkEVIyD6HHzZy3a7yfdgUD6yA=;
+        b=sE6mSO4jdmGAwGDv0/HHti51im0qCQEpwDRlJJyA4flDCQqrP35ntYKu+JD6nj9I22
+         oi0F1GwMJ3rPruUJoOGF5SnEVP2yxJWoBdj7LWwwnrMWd/2g8FgUboaHDhxw70Xj6qWm
+         bk5w1nlLT9TFuhuZav2Dw9QBIpfZM0+9lFx73fTADjLYJ2lnjnNC0MLV+qufBdG6cH6Y
+         XQKFysPG+b8uPlLrX3PhIzzCRn+uBHv7aXS1NxvgZd2Ah3wCb6XEiN5981K35d3iJVKX
+         yPgwUCc7ppjwB/RUbwvb3pLVuS+e/uXcRF3xxiqA5u9Dqpfwuno8AqWt5RSRyzWslrfL
+         YEJg==
+X-Gm-Message-State: APjAAAUCUi6R/Reycl0s5HdMvEiFtP+pVH26NVHKfZ4iza7HavjGX/XC
+        xzWkEsprgGj8fzKGZ1Ygc28W
+X-Google-Smtp-Source: APXvYqz/X3rMwuLvNMllP5jTvRzrOorlDB389gW90QS3BAVNtJFKjwn6dyAElAfQ6shN3bCZKMLEAA==
+X-Received: by 2002:a17:90a:c306:: with SMTP id g6mr7494628pjt.38.1571928175650;
+        Thu, 24 Oct 2019 07:42:55 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:997:a0de:81a:ea25:468a:5918])
+        by smtp.gmail.com with ESMTPSA id 193sm29059810pfc.59.2019.10.24.07.42.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 07:40:56 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 16:40:49 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bsingharora@gmail.com,
-        Marco Elver <elver@google.com>,
-        stable <stable@vger.kernel.org>,
-        syzbot <syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH v6] taskstats: fix data-race
-Message-ID: <20191024144049.GA13747@andrea.guest.corp.microsoft.com>
-References: <20191009114809.8643-1-christian.brauner@ubuntu.com>
- <20191021113327.22365-1-christian.brauner@ubuntu.com>
- <20191023121603.GA16344@andrea.guest.corp.microsoft.com>
- <CACT4Y+Y86HFnQGHyxv+f32tKDJXnRxmL7jQ3tGxVcksvtK3L7Q@mail.gmail.com>
- <20191024113155.GA7406@andrea.guest.corp.microsoft.com>
- <CACT4Y+Z2-mm6Qk0cecJdiA5B_VsQ1v8k2z+RWrDQv6dTNFXFog@mail.gmail.com>
- <20191024130502.GA11335@andrea.guest.corp.microsoft.com>
- <CACT4Y+ahUr11pQQ7=dw80Abj5owUPnPdufbMYvsKLM6iDg5QQg@mail.gmail.com>
- <20191024134319.GA12693@andrea.guest.corp.microsoft.com>
- <CACT4Y+ZXQyqgBvwgb6cy7NP5FTBbktq5j4ZyySp7jrbcJwFUTA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZXQyqgBvwgb6cy7NP5FTBbktq5j4ZyySp7jrbcJwFUTA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 24 Oct 2019 07:42:55 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        darshak.patel@einfochips.com, prajose.john@einfochips.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/3] Add support for Thor96 board
+Date:   Thu, 24 Oct 2019 20:12:32 +0530
+Message-Id: <20191024144235.3182-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 03:58:40PM +0200, Dmitry Vyukov wrote:
-> On Thu, Oct 24, 2019 at 3:43 PM Andrea Parri <parri.andrea@gmail.com> wrote:
-> >
-> > > But why? I think kernel contains lots of such cases and it seems to be
-> > > officially documented by the LKMM:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt
-> > > address dependencies and ppo
-> >
-> > Well, that same documentation also alerts about some of the pitfalls
-> > developers can incur while relying on dependencies.  I'm sure you're
-> > more than aware of some of the debate surrounding these issues.
-> 
-> I thought that LKMM is finally supposed to stop all these
-> centi-threads around subtle details of ordering. And not we finally
-> have it. And it says that using address-dependencies is legal. And you
-> are one of the authors. And now you are arguing here that we better
-> not use it :) Can we have some black/white yes/no for code correctness
-> reflected in LKMM please :) If we are banning address dependencies,
-> don't we need to fix all of rcu uses?
+Hello,
 
-Current limitations of the LKMM are listed in tools/memory-model/README
-(and I myself discussed a number of them at LPC recently); the relevant
-point here seems to be:
+This patchset adds support for Thor96 board from Einfochips. This board is
+one of the 96Boards Consumer Edition platform powered by the NXP i.MX8MQ
+SoC.
 
-1.	Compiler optimizations are not accurately modeled.  Of course,
-	the use of READ_ONCE() and WRITE_ONCE() limits the compiler's
-	ability to optimize, but under some circumstances it is possible
-	for the compiler to undermine the memory model.  [...]
+Following are the features supported currently:
 
-	Note that this limitation in turn limits LKMM's ability to
-	accurately model address, control, and data dependencies.
+1. uSD
+2. WiFi/BT
+3. Ethernet
+4. EEPROM (M24256)
+5. NOR Flash (W25Q256JW)
+6. 2xUSB3.0 ports and 1xUSB2.0 port at HS expansion
 
-A less elegant, but hopefully more effective, way to phrase such point
-is maybe "feel free to rely on dependencies, but then do not blame the
-LKMM authors please".  ;-)
+More information about this board can be found in Arrow website:
+https://www.arrow.com/en/products/i.imx8-thor96/arrow-development-tools
+
+Link to 96Boards CE Specification: https://linaro.co/ce-specification
+
+Expecting patch 3 to go through MTD tree and 1,2 to go through freescale
+tree.
 
 Thanks,
-  Andrea
+Mani
+
+Manivannan Sadhasivam (3):
+  dt-bindings: arm: Add devicetree binding for Thor96 Board
+  arm64: dts: freescale: Add devicetree support for Thor96 board
+  mtd: spi-nor: Add support for w25q256jw
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8mq-thor96.dts      | 581 ++++++++++++++++++
+ drivers/mtd/spi-nor/spi-nor.c                 |   2 +
+ 4 files changed, 585 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-thor96.dts
+
+-- 
+2.17.1
+
