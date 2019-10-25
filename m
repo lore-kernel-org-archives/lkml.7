@@ -2,111 +2,178 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1F5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD31CA9EBE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7278F21D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572014763;
-	bh=c0TJ1mKs2s0GUD/wp9Pell6cGrl9NXu0zGJCItAHu+0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EJuFUY11d+E4eojg2jPQpD1D7Ukst8gdMTzbqkFCvLrKHxzauLgaYSlHnH+8cqQcO
-	 pugMg4LMk7CBC3GwK8H7i5Ngt5bAOv9k7QPZF9OaKzOcSlcqNPwu1kwMtlr7Wmxk9+
-	 GywzfftrBTcShjLe6mqAapKcE21Jdpn3UliMT498=
+	by mail.kernel.org (Postfix) with ESMTP id C524E21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:48:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ReQEnplZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395028AbfJYOqC (ORCPT
+        id S2502546AbfJYOsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390195AbfJYOqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:46:02 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B5DA21E6F
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 14:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572014761;
-        bh=c0TJ1mKs2s0GUD/wp9Pell6cGrl9NXu0zGJCItAHu+0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hkMaQ42BA+w+biTpZI2C7IZ7RMwTnWX4vcDPoqxZHjjbESTSKSYzawpMytL0ntVGa
-         i9vII2WX5+UXdGA3Il7bt/ALNrsVari4gzY8bHMHwSelBbrDXh+vSMDZSBKaeJefT3
-         4jurLclJrpH+k2u/5euOwanrgR9VvrrxOWSpfYxo=
-Received: by mail-wm1-f41.google.com with SMTP id g7so2430915wmk.4
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:46:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAWdxx475QHNYU5YQP0YPIRddVUEGXXNewSPt16E/TXT86CWhE/g
-        oGHqQPbMMLbF/PslQL6+Ey5d1PVW9D+iUbGH8PPcaQ==
-X-Google-Smtp-Source: APXvYqySxeWX+EY+FBP3Gs6CKKYYkYGhBHt4AIRaXekHZ3n0SMLgmO7fY8ACrIziZjSJN87UsKzOKeQYLu0KvRLu1xI=
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr3616761wmk.173.1572014759511;
- Fri, 25 Oct 2019 07:45:59 -0700 (PDT)
+        Fri, 25 Oct 2019 10:48:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:47056 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394082AbfJYOsJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:48:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n15so2619858wrw.13;
+        Fri, 25 Oct 2019 07:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
+        b=ReQEnplZs6d9r7FMszuAt1KQpVhgBAK8HrNTFjUqY3S/9APV1+HGvrsZ9waq7e63YU
+         qE3MBI4hqWqVJcX+VWmtAW85YKN71otDbfGbheixnIP6tSrWow7JIdFnGpXtiV+mVJW2
+         1p2ctbskyMZMfpkAuSXvh/NwSIRIncEVf4MMrb16d505nLujE9HTPHxu4LuAIaDSZ+Jc
+         KyD8GrKirgOQpcezDEDjZuvpDgE4yTBKNJS+69u7yUoDohsPtX/u+wyEaGIbvTZHormM
+         1LsppGHi80Arm2rQS0fl8o4nF9UjLZIsJPeKNNAtOJQk0Dc1AvH/QKIDvuZYoU6aXOrF
+         VoIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
+        b=WhjmwmWapfeXRhBFDu8d/qB3iUL7FMy4Wmydi93rBjYhG76MuJzdhD1YBvnFpqn+FT
+         dnX1SPbAXdowQVjjLZ+PqE9XjWUTj7cBZ2C9J0A893jqHyFjK92Qe13U96MLx1G1pOwG
+         PBQSyMyHBmFHa2yDun/xTUbO+NGzQrr3GRrjcmsuSpz2sL25yvVbnZqYtNqwM7Be2yYH
+         OCDASejiZWOiX9FKPv8Tiks7hJ01jRkXje/Q8dos2EmV2bmNZQNZ5/tG40AH/3rL9J2t
+         u9erg18cDwkQEn4r8M0SikS0zulAneJ7JtYvOZ9qCwlNq4lcWi2VsKBEtXRAGqNNtYAG
+         +6AQ==
+X-Gm-Message-State: APjAAAWZNH4H1w0uNfv5R1aM2gEXSdL2eSET9aaMn/otQwKNyejaYNI8
+        8TKPgpP8f+WA/IbQ274TcbI=
+X-Google-Smtp-Source: APXvYqxsX3C8tseMrdTDPvXw+m20Jy/sW7m38w3vpts8ZabQ38lGcQ4VQLB8VI+iJPUaxLQS52CZqA==
+X-Received: by 2002:a5d:4847:: with SMTP id n7mr3349140wrs.398.1572014885771;
+        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
+Received: from mail.google.com ([104.238.174.53])
+        by smtp.gmail.com with ESMTPSA id 26sm2126489wmf.20.2019.10.25.07.48.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 14:48:03 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Changbin Du <changbin.du@gmail.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
+ 'functions' to 'identifiers'
+Message-ID: <20191025144802.uixg2crhw6h7gghq@mail.google.com>
+References: <20191020131717.28990-1-changbin.du@gmail.com>
+ <20191024121940.1d6a64df@lwn.net>
+ <87woctb9cj.fsf@intel.com>
 MIME-Version: 1.0
-References: <CALCETrVepdYd4uN8jrG8i6iaixWp+N3MdGv5WhjOdCr9sLRK1w@mail.gmail.com>
- <20191025064225.GA22917@1wt.eu>
-In-Reply-To: <20191025064225.GA22917@1wt.eu>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 25 Oct 2019 07:45:47 -0700
-X-Gmail-Original-Message-ID: <CALCETrXtKBtMx3gf2BysCeYEzDFN_wjiKCGh_onCdA=7TbBxZw@mail.gmail.com>
-Message-ID: <CALCETrXtKBtMx3gf2BysCeYEzDFN_wjiKCGh_onCdA=7TbBxZw@mail.gmail.com>
-Subject: Re: Please stop using iopl() in DPDK
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Andy Lutomirski <luto@kernel.org>, dev@dpdk.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87woctb9cj.fsf@intel.com>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 11:42 PM Willy Tarreau <w@1wt.eu> wrote:
->
-> Hi Andy,
->
-> On Thu, Oct 24, 2019 at 09:45:56PM -0700, Andy Lutomirski wrote:
-> > Hi all-
+On Fri, Oct 25, 2019 at 09:57:48AM +0300, Jani Nikula wrote:
+> On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
+> > On Sun, 20 Oct 2019 21:17:17 +0800
+> > Changbin Du <changbin.du@gmail.com> wrote:
 > >
-> > Supporting iopl() in the Linux kernel is becoming a maintainability
-> > problem.  As far as I know, DPDK is the only major modern user of
-> > iopl().
+> >> The 'functions' directive is not only for functions, but also works for
+> >> structs/unions. So the name is misleading. This patch renames it to
+> >> 'identifiers', which specific the functions/types to be included in
+> >> documentation. We keep the old name as an alias of the new one before
+> >> all documentation are updated.
+> >> 
+> >> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > >
-> > After doing some research, DPDK uses direct io port access for only a
-> > single purpose: accessing legacy virtio configuration structures.
-> > These structures are mapped in IO space in BAR 0 on legacy virtio
-> > devices.
+> > So I think this is basically OK, but I have one more request...
 > >
-> > There are at least three ways you could avoid using iopl().  Here they
-> > are in rough order of quality in my opinion:
-> (...)
->
-> I'm just wondering, why wouldn't we introduce a sys_ioport() syscall
-> to perform I/Os in the kernel without having to play at all with iopl()/
-> ioperm() ? That would alleviate the need for these large port maps.
-> Applications that use outb/inb() usually don't need extreme speeds.
-> Each time I had to use them, it was to access a watchdog, a sensor, a
-> fan, control a front panel LED, or read/write to NVRAM. Some userland
-> drivers possibly don't need much more, and very likely run with
-> privileges turned on all the time, so replacing their inb()/outb() calls
-> would mostly be a matter of redefining them using a macro to use the
-> syscall instead.
->
-> I'd see an API more or less like this :
->
->   int ioport(int op, u16 port, long val, long *ret);
+> > [...]
+> >
+> >> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+> >> index 1159405cb920..0689f9c37f1e 100644
+> >> --- a/Documentation/sphinx/kerneldoc.py
+> >> +++ b/Documentation/sphinx/kerneldoc.py
+> >> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
+> >>      optional_arguments = 4
+> >>      option_spec = {
+> >>          'doc': directives.unchanged_required,
+> >> -        'functions': directives.unchanged,
+> >>          'export': directives.unchanged,
+> >>          'internal': directives.unchanged,
+> >> +        'identifiers': directives.unchanged,
+> >> +        'functions': directives.unchanged,  # alias of 'identifiers'
+> >>      }
+> >>      has_content = False
+> >>  
+> >> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
+> >>  
+> >>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
+> >>          export_file_patterns = []
+> >> +        identifiers = None
+> >>  
+> >>          # Tell sphinx of the dependency
+> >>          env.note_dependency(os.path.abspath(filename))
+> >> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
+> >>              export_file_patterns = str(self.options.get('internal')).split()
+> >>          elif 'doc' in self.options:
+> >>              cmd += ['-function', str(self.options.get('doc'))]
+> >> +        elif 'identifiers' in self.options:
+> >> +            identifiers = self.options.get('identifiers').split()
+> >>          elif 'functions' in self.options:
+> >> -            functions = self.options.get('functions').split()
+> >> -            if functions:
+> >> -                for f in functions:
+> >> -                    cmd += ['-function', f]
+> >> -            else:
+> >> -                cmd += ['-no-doc-sections']
+> >> +            identifiers = self.options.get('functions').split()
+> >
+> > Rather than do this, can you just change the elif line to read:
+> >
+> >     elif ('identifiers' in self.options) or ('functions' in self.options):
+> >
+> > ...then leave the rest of the code intact?  It keeps the logic together,
+> > and avoids the confusing distinction between identifiers=='' and
+> > identifiers==None .
+> 
+> I think the problem is you still need to distinguish between the two for
+> the get('functions') part.
+> 
+> One option is to rename 'functions' to 'identifiers' in the above block,
+> and put something like this above the whole if ladder (untested):
+> 
+>         # backward compat
+>         if 'functions' in self.options:
+>             if 'identifiers' in self.options:
+>                 kernellog.warn(env.app, "fail")
+This will miss the content of 'functions' directive if both exist in
+same doc.
 
-Hmm.  I have some memory of a /dev/ioport or similar, but now I can't
-find it.  It does seem quite reasonable.
+>             else:
+>                 self.options.set('identifiers', self.options.get('functions'))
+> 
+> BR,
+> Jani.
+>
+After comparing, I still perfer my original code which is simpler. :)
 
-But, for uses like DPDK, /sys/.../resource0 seems like a *far* better
-API, since it actually uses the kernel's concept of which io range
-corresponds to which device instead of hoping that the mappings don't
-change out from under user code.  And it has the added benefit that
-it's restricted to a single device.
+> 
+> -- 
+> Jani Nikula, Intel Open Source Graphics Center
 
---Andy
+-- 
+Cheers,
+Changbin Du
