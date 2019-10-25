@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF1FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF97CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBC521D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FF620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012193;
-	bh=pMRvbdDCb4dImnhTz2eaL8s9Wnfeqq0pbrx6tQqzFUM=;
+	s=default; t=1572012206;
+	bh=g/QzXkpelRohVoA9TbFBU+j5cdJmtMOB7gFX5ycua60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M27YnEsAD+SKdK60aU9aimGt7aZbW3kIU1GZ3xruLEK1c5iQtrymUqgu0z4SB6jeY
-	 G7He6m9YBzooLvEiqt9U22PZJ8rGIMsuUp79kJqB03I34ZFZjWDPEQnFb1hY88RIl8
-	 jeNJP5UaBfse3T2hJXax5KUavKRB0Fz115YTE5+c=
+	b=VcSlO1Ry205Cpb4bOp1cPxRkEIkQ6ABj+gYBIxFzU+CxL6AZy5YxVfuqr8sgHej/C
+	 ZjZN8+E+9Fq896Sd5+UadlLMxRBPWZSxpZHVD6VZUie2iW9WsA08uHXGb8wai2ItUd
+	 Gt6kD3nHwuUsYRKb8K681ZDQmiUrwlkJfpbEBVQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395108AbfJYODM (ORCPT
+        id S2394794AbfJYN5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:03:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505299AbfJYN5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:21 -0400
+        id S2394770AbfJYN5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D683B222C2;
-        Fri, 25 Oct 2019 13:57:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AEF621E6F;
+        Fri, 25 Oct 2019 13:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011840;
-        bh=pMRvbdDCb4dImnhTz2eaL8s9Wnfeqq0pbrx6tQqzFUM=;
+        s=default; t=1572011821;
+        bh=g/QzXkpelRohVoA9TbFBU+j5cdJmtMOB7gFX5ycua60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KYxq7FbYJzgNwykN05TYZbuR6U6qLWn4FWGYyJuSWxzeHgzeNgXY7mxGKN4zsltTf
-         lIFZbpFJu1k7w4za9P7TETw7QwT+v8VeeyHsxVxYFcpOMRdC26w9rKTQD0/S19asp/
-         vcS1luzUlbWZuASp06+alZ6xGPmWvZbO2J0NrLxE=
+        b=yV/7dNl17fENaeixxp6k9UjlrQ/uV07ZupP55X2yE/vI8XpoX1zRL4DGnGjHTMmrA
+         Cdr5L41YvEYKBdAOi4+oF3t6cIWeJzcUbdQr/agP65i4mnS7ehfgJoVidW9aP6nja8
+         HueVN14IUGcfZobLvuAw49A2gkag1B7mESKPftLg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/25] ACPI: video: Use vendor backlight on Sony VPCEH3U1E
-Date:   Fri, 25 Oct 2019 09:56:51 -0400
-Message-Id: <20191025135715.25468-3-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 32/37] Btrfs: fix inode cache block reserve leak on failure to allocate data space
+Date:   Fri, 25 Oct 2019 09:55:56 -0400
+Message-Id: <20191025135603.25093-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191025135715.25468-1-sashal@kernel.org>
-References: <20191025135715.25468-1-sashal@kernel.org>
+In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
+References: <20191025135603.25093-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,40 +58,234 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Rui <rui.zhang@intel.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit aefa763b18a220f5fc1d5ab02af09158b6cc36ea ]
+[ Upstream commit 29d47d00e0ae61668ee0c5d90bef2893c8abbafa ]
 
-On Sony Vaio VPCEH3U1E, ACPI backlight control does not work, and native
-backlight works. Thus force use vendor backlight control on this system.
+If we failed to allocate the data extent(s) for the inode space cache, we
+were bailing out without releasing the previously reserved metadata. This
+was triggering the following warnings when unmounting a filesystem:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202401
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  $ cat -n fs/btrfs/inode.c
+  (...)
+  9268  void btrfs_destroy_inode(struct inode *inode)
+  9269  {
+  (...)
+  9276          WARN_ON(BTRFS_I(inode)->block_rsv.reserved);
+  9277          WARN_ON(BTRFS_I(inode)->block_rsv.size);
+  (...)
+  9281          WARN_ON(BTRFS_I(inode)->csum_bytes);
+  9282          WARN_ON(BTRFS_I(inode)->defrag_bytes);
+  (...)
+
+Several fstests test cases triggered this often, such as generic/083,
+generic/102, generic/172, generic/269 and generic/300 at least, producing
+stack traces like the following in dmesg/syslog:
+
+  [82039.079546] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9276 btrfs_destroy_inode+0x203/0x270 [btrfs]
+  (...)
+  [82039.081543] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
+  [82039.081912] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+  [82039.082673] RIP: 0010:btrfs_destroy_inode+0x203/0x270 [btrfs]
+  (...)
+  [82039.083913] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010206
+  [82039.084320] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
+  [82039.084736] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8dde29b34660
+  [82039.085156] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
+  [82039.085578] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
+  [82039.086000] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
+  [82039.086416] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
+  [82039.086837] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [82039.087253] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
+  [82039.087672] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [82039.088089] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [82039.088504] Call Trace:
+  [82039.088918]  destroy_inode+0x3b/0x70
+  [82039.089340]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
+  [82039.089768]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
+  [82039.090183]  ? wait_for_completion+0x65/0x1a0
+  [82039.090607]  close_ctree+0x172/0x370 [btrfs]
+  [82039.091021]  generic_shutdown_super+0x6c/0x110
+  [82039.091427]  kill_anon_super+0xe/0x30
+  [82039.091832]  btrfs_kill_super+0x12/0xa0 [btrfs]
+  [82039.092233]  deactivate_locked_super+0x3a/0x70
+  [82039.092636]  cleanup_mnt+0x3b/0x80
+  [82039.093039]  task_work_run+0x93/0xc0
+  [82039.093457]  exit_to_usermode_loop+0xfa/0x100
+  [82039.093856]  do_syscall_64+0x162/0x1d0
+  [82039.094244]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [82039.094634] RIP: 0033:0x7f8db8fbab37
+  (...)
+  [82039.095876] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+  [82039.096290] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
+  [82039.096700] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
+  [82039.097110] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
+  [82039.097522] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
+  [82039.097937] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
+  [82039.098350] irq event stamp: 0
+  [82039.098750] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  [82039.099150] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.099545] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.099925] softirqs last disabled at (0): [<0000000000000000>] 0x0
+  [82039.100292] ---[ end trace f2521afa616ddccc ]---
+  [82039.100707] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9277 btrfs_destroy_inode+0x1ac/0x270 [btrfs]
+  (...)
+  [82039.103050] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
+  [82039.103428] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+  [82039.104203] RIP: 0010:btrfs_destroy_inode+0x1ac/0x270 [btrfs]
+  (...)
+  [82039.105461] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010206
+  [82039.105866] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
+  [82039.106270] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8dde29b34660
+  [82039.106673] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
+  [82039.107078] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
+  [82039.107487] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
+  [82039.107894] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
+  [82039.108309] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [82039.108723] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
+  [82039.109146] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [82039.109567] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [82039.109989] Call Trace:
+  [82039.110405]  destroy_inode+0x3b/0x70
+  [82039.110830]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
+  [82039.111257]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
+  [82039.111675]  ? wait_for_completion+0x65/0x1a0
+  [82039.112101]  close_ctree+0x172/0x370 [btrfs]
+  [82039.112519]  generic_shutdown_super+0x6c/0x110
+  [82039.112988]  kill_anon_super+0xe/0x30
+  [82039.113439]  btrfs_kill_super+0x12/0xa0 [btrfs]
+  [82039.113861]  deactivate_locked_super+0x3a/0x70
+  [82039.114278]  cleanup_mnt+0x3b/0x80
+  [82039.114685]  task_work_run+0x93/0xc0
+  [82039.115083]  exit_to_usermode_loop+0xfa/0x100
+  [82039.115476]  do_syscall_64+0x162/0x1d0
+  [82039.115863]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [82039.116254] RIP: 0033:0x7f8db8fbab37
+  (...)
+  [82039.117463] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+  [82039.117882] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
+  [82039.118330] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
+  [82039.118743] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
+  [82039.119159] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
+  [82039.119574] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
+  [82039.119987] irq event stamp: 0
+  [82039.120387] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  [82039.120787] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.121182] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.121563] softirqs last disabled at (0): [<0000000000000000>] 0x0
+  [82039.121933] ---[ end trace f2521afa616ddccd ]---
+  [82039.122353] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9278 btrfs_destroy_inode+0x1bc/0x270 [btrfs]
+  (...)
+  [82039.124606] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
+  [82039.125008] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+  [82039.125801] RIP: 0010:btrfs_destroy_inode+0x1bc/0x270 [btrfs]
+  (...)
+  [82039.126998] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010202
+  [82039.127399] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
+  [82039.127803] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff8dde29b34660
+  [82039.128206] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
+  [82039.128611] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
+  [82039.129020] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
+  [82039.129428] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
+  [82039.129846] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [82039.130261] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
+  [82039.130684] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [82039.131142] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [82039.131561] Call Trace:
+  [82039.131990]  destroy_inode+0x3b/0x70
+  [82039.132417]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
+  [82039.132844]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
+  [82039.133262]  ? wait_for_completion+0x65/0x1a0
+  [82039.133688]  close_ctree+0x172/0x370 [btrfs]
+  [82039.134157]  generic_shutdown_super+0x6c/0x110
+  [82039.134575]  kill_anon_super+0xe/0x30
+  [82039.134997]  btrfs_kill_super+0x12/0xa0 [btrfs]
+  [82039.135415]  deactivate_locked_super+0x3a/0x70
+  [82039.135832]  cleanup_mnt+0x3b/0x80
+  [82039.136239]  task_work_run+0x93/0xc0
+  [82039.136637]  exit_to_usermode_loop+0xfa/0x100
+  [82039.137029]  do_syscall_64+0x162/0x1d0
+  [82039.137418]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [82039.137812] RIP: 0033:0x7f8db8fbab37
+  (...)
+  [82039.139059] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+  [82039.139475] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
+  [82039.139890] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
+  [82039.140302] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
+  [82039.140719] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
+  [82039.141138] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
+  [82039.141597] irq event stamp: 0
+  [82039.142043] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  [82039.142443] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.142839] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.143220] softirqs last disabled at (0): [<0000000000000000>] 0x0
+  [82039.143588] ---[ end trace f2521afa616ddcce ]---
+  [82039.167472] WARNING: CPU: 3 PID: 13167 at fs/btrfs/extent-tree.c:10120 btrfs_free_block_groups+0x30d/0x460 [btrfs]
+  (...)
+  [82039.173800] CPU: 3 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
+  [82039.174847] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
+  [82039.177031] RIP: 0010:btrfs_free_block_groups+0x30d/0x460 [btrfs]
+  (...)
+  [82039.180397] RSP: 0018:ffffac0b426a7dd8 EFLAGS: 00010206
+  [82039.181574] RAX: ffff8de010a1db40 RBX: ffff8de010a1db40 RCX: 0000000000170014
+  [82039.182711] RDX: ffff8ddff4380040 RSI: ffff8de010a1da58 RDI: 0000000000000246
+  [82039.183817] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
+  [82039.184925] R10: ffff8de036404380 R11: ffffffffb8a5ea00 R12: ffff8de010a1b2b8
+  [82039.186090] R13: ffff8de010a1b2b8 R14: 0000000000000000 R15: dead000000000100
+  [82039.187208] FS:  00007f8db96d12c0(0000) GS:ffff8de036b80000(0000) knlGS:0000000000000000
+  [82039.188345] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [82039.189481] CR2: 00007fb044005170 CR3: 00000002315cc006 CR4: 00000000003606e0
+  [82039.190674] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [82039.191829] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [82039.192978] Call Trace:
+  [82039.194160]  close_ctree+0x19a/0x370 [btrfs]
+  [82039.195315]  generic_shutdown_super+0x6c/0x110
+  [82039.196486]  kill_anon_super+0xe/0x30
+  [82039.197645]  btrfs_kill_super+0x12/0xa0 [btrfs]
+  [82039.198696]  deactivate_locked_super+0x3a/0x70
+  [82039.199619]  cleanup_mnt+0x3b/0x80
+  [82039.200559]  task_work_run+0x93/0xc0
+  [82039.201505]  exit_to_usermode_loop+0xfa/0x100
+  [82039.202436]  do_syscall_64+0x162/0x1d0
+  [82039.203339]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [82039.204091] RIP: 0033:0x7f8db8fbab37
+  (...)
+  [82039.206360] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+  [82039.207132] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
+  [82039.207906] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
+  [82039.208621] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
+  [82039.209285] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
+  [82039.209984] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
+  [82039.210642] irq event stamp: 0
+  [82039.211306] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  [82039.211971] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.212643] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
+  [82039.213304] softirqs last disabled at (0): [<0000000000000000>] 0x0
+  [82039.213875] ---[ end trace f2521afa616ddccf ]---
+
+Fix this by releasing the reserved metadata on failure to allocate data
+extent(s) for the inode cache.
+
+Fixes: 69fe2d75dd91d0 ("btrfs: make the delalloc block rsv per inode")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/video_detect.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/inode-map.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 43587ac680e47..0e0a3929e34e2 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -141,6 +141,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "UL30A"),
- 		},
- 	},
-+	{
-+	.callback = video_detect_force_vendor,
-+	.ident = "Sony VPCEH3U1E",
-+	.matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Sony Corporation"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "VPCEH3U1E"),
-+		},
-+	},
+diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
+index 4a5882665f8a6..b210e8929c28e 100644
+--- a/fs/btrfs/inode-map.c
++++ b/fs/btrfs/inode-map.c
+@@ -485,6 +485,7 @@ int btrfs_save_ino_cache(struct btrfs_root *root,
+ 					      prealloc, prealloc, &alloc_hint);
+ 	if (ret) {
+ 		btrfs_delalloc_release_extents(BTRFS_I(inode), prealloc, true);
++		btrfs_delalloc_release_metadata(BTRFS_I(inode), prealloc, true);
+ 		goto out_put;
+ 	}
  
- 	/*
- 	 * These models have a working acpi_video backlight control, and using
 -- 
 2.20.1
 
