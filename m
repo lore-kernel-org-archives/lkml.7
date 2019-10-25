@@ -2,81 +2,95 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4F8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E87CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 117BD21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6730021D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571994550;
+	bh=uFG1cMRD5Tz8/465n9rsEA7W+2TvFw3woGFuCUmq66c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dcjk5/POZBlF8mkCWMkUs/TDgpI2z8dlGy+wRRhxDTPrxCQx2bfFjciwm9NO/GDuh
+	 dileqccEOOLbH7/+9JBR6PL2s2b2AiWOoTNn3qCRWwxTiYQAXQKJfiOLwrU/gGBfOU
+	 Igj80h9diq5NpyAPJrCdb6xLEx4qMwjxZUZbmOLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408706AbfJYJIG (ORCPT
+        id S2393324AbfJYJJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:08:06 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53102 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408378AbfJYJIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:08:05 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 718267F90D984722DF34;
-        Fri, 25 Oct 2019 17:08:03 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 17:07:55 +0800
-Subject: Re: [PATCH v2] irqchip/gic-v3-its: Use the exact ITSList for VMOVP
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <kvmarm@lists.cs.columbia.edu>,
+        Fri, 25 Oct 2019 05:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391119AbfJYJJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:09:09 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68E1E21929;
+        Fri, 25 Oct 2019 09:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571994549;
+        bh=uFG1cMRD5Tz8/465n9rsEA7W+2TvFw3woGFuCUmq66c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sS4E7jSY86V/QEQRf2wcBiJnK740L0brYSrWpZYZfwXbiStuc+EE/veFVPSj5vqWW
+         hI5yIV06HrfwU9JKBs4BhFpwG/76VnGpAt2wycyZiUWOUxfjk1fUc+NSJ9HqWN1RNL
+         8nrpiNxTSa47S8GZoUDtcQzD3mYQj0Q+98sHgfGU=
+Date:   Fri, 25 Oct 2019 17:08:52 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <wanghaibin.wang@huawei.com>, <jiayanlei@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1571802386-2680-1-git-send-email-yuzenghui@huawei.com>
- <0f99f6a4ea567f53d38fb3bc0e6f59e4@www.loen.fr>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <6bc4a648-4308-3ff8-8e73-d90040e74c99@huawei.com>
-Date:   Fri, 25 Oct 2019 17:06:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 1/3] clk: imx: imx8mm: mark sys_pll1/2 as fixed clock
+Message-ID: <20191025090850.GK3208@dragon>
+References: <1570614940-17239-1-git-send-email-peng.fan@nxp.com>
+ <20191025060847.GD3208@dragon>
+ <AM0PR04MB4481FA56EFA3C34193241D3D88650@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <0f99f6a4ea567f53d38fb3bc0e6f59e4@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4481FA56EFA3C34193241D3D88650@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/25 16:24, Marc Zyngier wrote:
-> On 2019-10-23 04:46, Zenghui Yu wrote:
->> On a system without Single VMOVP support (say GITS_TYPER.VMOVP == 0),
->> we will map vPEs only on ITSs that will actually control interrupts
->> for the given VM.  And when moving a vPE, the VMOVP command will be
->> issued only for those ITSs.
->>
->> But when issuing VMOVPs we seemed fail to present the exact ITSList
->> to ITSs who are actually included in the synchronization operation.
->> The its_list_map we're currently using includes all ITSs in the system,
->> even though some of them don't have the corresponding vPE mapping at all.
->>
->> Introduce get_its_list() to get the per-VM its_list_map, to indicate
->> which ITSs have vPE mappings for the given VM, and use this map as
->> the expected ITSList when building VMOVP. This is hopefully a performance
->> gain not to do some synchronization with those unsuspecting ITSs.
->> And initialize the whole command descriptor to zero at beginning, since
->> the seq_num and its_list should be RES0 when GITS_TYPER.VMOVP == 1.
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+On Fri, Oct 25, 2019 at 06:14:21AM +0000, Peng Fan wrote:
+> Hi Shawn,
 > 
-> I've applied this as a fix for 5.4. In the future, please cc LKML on all
-> IRQ-related patches (as documented in MAINTAINERS).
+> > Subject: Re: [PATCH 1/3] clk: imx: imx8mm: mark sys_pll1/2 as fixed clock
+> > 
+> > On Wed, Oct 09, 2019 at 09:58:14AM +0000, Peng Fan wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > According Architecture definition guide, SYS_PLL1 is fixed at 800MHz,
+> > > SYS_PLL2 is fixed at 1000MHz, so let's use imx_clk_fixed to register
+> > > the clocks and drop code that could change the rate.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > 
+> > Applied all, thanks.
+> 
+> I have a v2 https://patchwork.kernel.org/cover/11208131/ patch 
+> based on Lenoard's v3 
+> https://patchwork.kernel.org/patch/11193189/ to avoid conflicts
+> when you apply Lenoard's v3 patch.
 
-I got it, thanks.
+Okay, I replaced it with your v2 series.  Thanks!
 
-
-Zenghui
-
+Shawn
