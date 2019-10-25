@@ -6,113 +6,68 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6225CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CD2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A071821929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B77E2206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407554AbfJYIDA (ORCPT
+        id S2407563AbfJYIEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:03:00 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:50108 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405453AbfJYIC7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:02:59 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: Wk5VDaxaa04ZpXepyN7l+LRq4sXtuTcFje32+veLdWTvipsU7orBg/qzpAw5tsHiYqYKnknM47
- 7l628LyAVaxgt7OMBt0qLjo4vAeR1r6cyBsTyiw0Ibfcxuk5gSqoMlLvaPXYX8vqsFB9rMurJ8
- nigqOiPfbg0pUv3a2cjVxsGrl2n0mtaCDVb8JbWAmde4/QomptLuqogolaiZLxj/hkRGEqZ5Ks
- Qn7D2KSC4iL6xT1CFLYSoskg2GXbbuNMaXZYwttycp8iHAolMc5RWF4lAxG3fdW+zXOAfAOwpt
- k0A=
-X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="52935735"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2019 01:02:58 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 25 Oct 2019 01:02:49 -0700
-Received: from M43218.corp.atmel.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 25 Oct 2019 01:02:47 -0700
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <nicolas.ferre@microchip.com>,
-        <adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <claudiu.beznea@microchip.com>, <Eugen.Hristev@microchip.com>,
-        <alexandre.belloni@bootlin.com>,
-        "Ludovic Desroches" <ludovic.desroches@microchip.com>
-Subject: [PATCH v3 3/3] ARM: dts: at91: sama5d2: set the sdmmc gclk frequency
-Date:   Fri, 25 Oct 2019 10:03:44 +0200
-Message-ID: <20191025080344.15492-3-ludovic.desroches@microchip.com>
-X-Mailer: git-send-email 2.24.0.rc0
-In-Reply-To: <20191025080344.15492-1-ludovic.desroches@microchip.com>
-References: <20191025080344.15492-1-ludovic.desroches@microchip.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+        Fri, 25 Oct 2019 04:04:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51598 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405453AbfJYIEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:04:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7E26BB92D;
+        Fri, 25 Oct 2019 08:04:05 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] xen: issue deprecation warning for 32-bit pv guest
+Date:   Fri, 25 Oct 2019 09:38:58 +0200
+Message-Id: <20191025073858.15081-1-jgross@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the frequency of the generated clock used by sdmmc devices in order
-to not rely on the configuration done by previous components.
+Support for the kernel as Xen 32-bit PV guest will soon be removed.
+Issue a warning when booted as such.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 ---
+ arch/x86/xen/enlighten_pv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Changes:
-- v3: none
-- v2: none
-
- arch/arm/boot/dts/sama5d2.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index fa3b9c30a63a..f013c3562724 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -300,6 +300,8 @@ sdmmc0: sdio-host@a0000000 {
- 			interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 31>, <&pmc PMC_TYPE_GCK 31>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 31>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 58f79ab32358..5bfea374a160 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -117,6 +117,14 @@ static void __init xen_banner(void)
+ 	printk(KERN_INFO "Xen version: %d.%d%s%s\n",
+ 	       version >> 16, version & 0xffff, extra.extraversion,
+ 	       xen_feature(XENFEAT_mmu_pt_update_preserve_ad) ? " (preserve-AD)" : "");
++
++#ifdef CONFIG_X86_32
++	pr_warn("WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!\n"
++		"Support for running as 32-bit PV-guest under Xen will soon be removed\n"
++		"from the Linux kernel!\n"
++		"Please use either a 64-bit kernel or switch to HVM or PVH mode!\n"
++		"WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!\n");
++#endif
+ }
  
-@@ -309,6 +311,8 @@ sdmmc1: sdio-host@b0000000 {
- 			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 32>, <&pmc PMC_TYPE_GCK 32>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 32>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
- 
+ static void __init xen_pv_init_platform(void)
 -- 
-2.24.0.rc0
+2.16.4
 
