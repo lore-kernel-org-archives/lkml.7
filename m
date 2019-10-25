@@ -2,377 +2,187 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1882CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86F2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F16A21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C08221929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuS9QpWt"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3TCAbCgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394411AbfJYJso (ORCPT
+        id S2439156AbfJYJtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:48:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34443 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391988AbfJYJso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:48:44 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v3so3876885wmh.1;
-        Fri, 25 Oct 2019 02:48:41 -0700 (PDT)
+        Fri, 25 Oct 2019 05:49:13 -0400
+Received: from mail-eopbgr760085.outbound.protection.outlook.com ([40.107.76.85]:23969
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393456AbfJYJtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:49:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=biZ2nG7ZBXtlRQfrdR8P4f8Z+KUEOcDHkBOSJUt2QnNgdGwA2aMzFY4xiEPIEqKcpnK2mbv2b2FVujsGJ7u5fs3+r7y/7aQKdkHNq1oPyolp78lwahSRDn0XL7Yv8BPreoGpfDhXh2oVBnrs23ovEGSydEHHXqUOCrD2L14MOS84utrShdk9J+RlaZJgufAx0xIWlcLkrBPuz4Qx2bhqyM9o92kJNa0duNtEDA6Z3hhCuzv0O+XLpBTh7qOKRtoJWEEVccyMAF4icY9ORM1I51Rs9J66P+jgmfn0NTjbBUkfuU1KjXHxI3OJ7bhGlfTA+vZlkdV0bj3q7rHSjVjm+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aatj2bPrZ7Dh+1zoBwuwoD2k6QqC5Xa1z2IExk5suc4=;
+ b=ZDC8tAAAvkykxKP0aqNDrZAMlA1nvL7GEv3O5nZd2ibZkoEfw1C7emAdXaxyo7NJkqTY9YHSY3VfIz6NdGuEAZ6y4xQCQNI2xU1XVyI81QPVg5NkQwBqNitnv/RuovZ2eMy3Qdg6epI4p06YA6iNFamVAWrKZDN7KkdQOHPdqu+zuLUxMmnVDoGheQj38hBBYpzSN1VS5bnB6I7aEc8qQ5FI0M3vxLAd2jV8z45tLNX1j7P57RXdJ+l5neXFOdymgFxmWXwKyM+x3kpm+t9FxVAHELH/lc7x7oOR2LKAyJWOQJC8PecaIeRN+T+sWjobV1iQGMBFa4ozWxy9VWsnyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PbZJjJkcDbRa2jyiqXRye8Uft6NF4gJ4dI1yRNucC5g=;
-        b=XuS9QpWt54AiMiADRoUMWu/nk1TqL/V8Fa04f9OcNcWQyl64sMQ2Vh3VQ2EKrDRUh3
-         5jsyB6DcCsIzUryN8LxiVThvCaHWvPuC7U27FOTqgZsc5IdYky3dw2iOICg4Ww7Zto4g
-         U4abpkhkl/lCfazbRVNDACcEKmSkBGBxVSFDiT+yQK5zSLn2TsJMx6Dw+xFmjZpTolcT
-         6iOQaCT8Hkoeyto8C0tXzDB8J/dvyPlo1B8I93b58eexbt70bLH6j0ecfalN8BD61Y4W
-         KpZ+NbJGnnYv68NAS5EvPZnvy4gXWHo/n4EzuVWXvx8umc1cwrfH/PMep2GTCvfbyYq7
-         xsgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PbZJjJkcDbRa2jyiqXRye8Uft6NF4gJ4dI1yRNucC5g=;
-        b=HIF4X0bINPxvP4UjyfYJDyhkQEItOX1FDVpGGbcvYM+uUmuX9golKO71WZS+JPMXnF
-         3BnpLREw2nUoZDlL/mf3vNfgMZImpZpVWXtoUAiUg0ZlPdB+Idf1vj9uk6/2pdpv9vmO
-         /3a9wvhPwfzc+Byao6XlEL60Gd4eSEDF0bY0A2i4TXVpZpsUbCrsaGi8gU2vgt6LvR69
-         fWuWnuTnnwHHgKa6yIyFUFNjBND8g96kNWS6bQPkKdRmErnkGfjciZvGQzzJUsTbRIyj
-         7YSGbdc5wkQwWBSK0dEJ02gGXL6jYH0EMXCv71WCsoFQRnUu+eClt2YE5ODH7tW3+GaN
-         TSaw==
-X-Gm-Message-State: APjAAAUrWPxHx6VpbAfhG0T4aCyJMQy+aE37smovT/Waj+xDsgNr93HW
-        wAx6bb8UOX20lfu5sbdHgdM=
-X-Google-Smtp-Source: APXvYqxmHc3b2X2s9OqWhaR0GvGvllUHGzTh/nr7k1j4PGKoDGZNZEQGZzgS882JzOeDyGjNyjesig==
-X-Received: by 2002:a1c:9d13:: with SMTP id g19mr1640770wme.159.1571996920893;
-        Fri, 25 Oct 2019 02:48:40 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.132.16])
-        by smtp.gmail.com with ESMTPSA id j14sm2018659wrj.35.2019.10.25.02.48.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 02:48:40 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH liburing 1/1] test/defer: Test deferring with drain and links
-Date:   Fri, 25 Oct 2019 12:48:30 +0300
-Message-Id: <b9509294fde6425b000d71613bd352059334c60d.1571995330.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.23.0
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aatj2bPrZ7Dh+1zoBwuwoD2k6QqC5Xa1z2IExk5suc4=;
+ b=3TCAbCgMYvqr1jgK/vp3uhYuwSpYG0PQNVJArs+Em2/XNFxlmRLlkLUXo0dT8vzdpbLHZZ+s86WJ7bxN1hdMttXRZdzAzHCB8iDPuNBYl+fg0Hb5QiDwbmGimewvB1XcbjSIn1CJWeZznefL5T0uhmprDPAZk5UmaTLjLrZZ0pw=
+Received: from BN6PR12MB1699.namprd12.prod.outlook.com (10.175.97.148) by
+ BN6PR12MB1618.namprd12.prod.outlook.com (10.172.21.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2347.17; Fri, 25 Oct 2019 09:49:06 +0000
+Received: from BN6PR12MB1699.namprd12.prod.outlook.com
+ ([fe80::bde7:9044:dcdb:4b67]) by BN6PR12MB1699.namprd12.prod.outlook.com
+ ([fe80::bde7:9044:dcdb:4b67%7]) with mapi id 15.20.2347.029; Fri, 25 Oct 2019
+ 09:49:06 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Steven Price <steven.price@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        Erico Nunes <nunes.erico@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: Re: [RESEND PATCH v4] drm: Don't free jobs in
+ wait_event_interruptible()
+Thread-Topic: [RESEND PATCH v4] drm: Don't free jobs in
+ wait_event_interruptible()
+Thread-Index: AQHVioeeWUPlfPdq20eM0BhRAkUxUKdrHcsA
+Date:   Fri, 25 Oct 2019 09:49:06 +0000
+Message-ID: <02be6c7e-eda9-2a5b-f553-8d82fcd84b47@amd.com>
+References: <20191024162424.38548-1-steven.price@arm.com>
+In-Reply-To: <20191024162424.38548-1-steven.price@arm.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: AM3PR07CA0126.eurprd07.prod.outlook.com
+ (2603:10a6:207:8::12) To BN6PR12MB1699.namprd12.prod.outlook.com
+ (2603:10b6:404:ff::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 45b65520-3bd4-4a38-e582-08d75930933a
+x-ms-traffictypediagnostic: BN6PR12MB1618:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR12MB16188209677E582AB554672D83650@BN6PR12MB1618.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(189003)(199004)(99286004)(102836004)(81166006)(81156014)(76176011)(8676002)(386003)(36756003)(6506007)(52116002)(4326008)(71190400001)(71200400001)(256004)(14444005)(6306002)(6512007)(6486002)(6436002)(11346002)(6246003)(46003)(446003)(8936002)(486006)(476003)(2616005)(110136005)(58126008)(316002)(54906003)(5660300002)(65806001)(65956001)(966005)(186003)(31686004)(25786009)(14454004)(86362001)(305945005)(7736002)(478600001)(66476007)(66556008)(64756008)(66446008)(66946007)(2906002)(6116002)(31696002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR12MB1618;H:BN6PR12MB1699.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZGBJP6x/juvXiqFxyIxR9sP3CvH4Ktf0rrKdfP9ouRw0mmu+1xw+yrOnAZkygKHDvoGLm+Ys8OnmWLqk+ZoaDaiPBS04VySPeVlFkIFI650WZQyTPnbyHosZi0HpJ64uebFmLpXosj/gRG1FFKoZHKhjc3oXdZEKsxdEyc2BG8/lFP8Pw75NdCny8decYfpA0fiXWymUlXzI0vR19httxFb4oXw87EH8XJQG3DbKsUwjZTd4ooW1JuR5DXkuEZYJXRcTKPVVMM1d23OOdDZD6A4u3K4SMnzow2DDvWLPDm31yHTfId80HyjyVmbQivvCZmrf4U0oTfwb/+P792FmFOMsDt5arIxhMPsNcvwtN4Lu5NmbbAwc95HLuwO0Up4kq3yxzNThmtsS3HBXW09RPJ3tXSuyao0VzADKe+TSjkFp6cq80kJ1gNwhaIjoCmUBHPn5CPwFbRolTOUVFkoes7oL+6oAzdxnOJ6t6cTf7Yk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <289044DF0303D74097CD3478214BF3D1@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45b65520-3bd4-4a38-e582-08d75930933a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 09:49:06.3465
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: stdNCgKpG8XpHRR32+XQNEquVjtYb6JlMLyLlHiy2//nGnC/8iQFPNuvAPRohYht
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1618
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
-
-1. test user_data integrity with cancelled links
-2. test the whole link is cancelled by sq_thread
-3. hunging io_uring based on koverflow and kdropped
-
-Be aware, that this test may leave unkillable user process, or
-unstopped actively polling kthread.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- test/Makefile |   4 +-
- test/defer.c  | 257 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 259 insertions(+), 2 deletions(-)
- create mode 100644 test/defer.c
-
-diff --git a/test/Makefile b/test/Makefile
-index 3ab5f81..250fb0f 100644
---- a/test/Makefile
-+++ b/test/Makefile
-@@ -7,7 +7,7 @@ all_targets += poll poll-cancel ring-leak fsync io_uring_setup io_uring_register
- 		917257daa0fe-test b19062a56726-test eeed8b54e0df-test link \
- 		send_recvmsg a4c0b3decb33-test 500f9fbadef8-test timeout \
- 		sq-space_left stdout cq-ready cq-peek-batch file-register \
--		cq-size 8a9973408177-test a0908ae19763-test
-+		cq-size 8a9973408177-test a0908ae19763-test defer
- 
- include ../Makefile.quiet
- 
-@@ -22,7 +22,7 @@ test_srcs := poll.c poll-cancel.c ring-leak.c fsync.c io_uring_setup.c \
- 	eeed8b54e0df-test.c link.c send_recvmsg.c a4c0b3decb33-test.c \
- 	500f9fbadef8-test.c timeout.c sq-space_left.c stdout.c cq-ready.c\
- 	cq-peek-batch.c file-register.c cq-size.c 8a9973408177-test.c \
--	a0908ae19763-test.c
-+	a0908ae19763-test.c defer.c
- 
- test_objs := $(patsubst %.c,%.ol,$(test_srcs))
- 
-diff --git a/test/defer.c b/test/defer.c
-new file mode 100644
-index 0000000..db0d904
---- /dev/null
-+++ b/test/defer.c
-@@ -0,0 +1,257 @@
-+#include <errno.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <fcntl.h>
-+#include <sys/uio.h>
-+#include <stdbool.h>
-+
-+#include "liburing.h"
-+
-+struct test_context {
-+	struct io_uring *ring;
-+	struct io_uring_sqe **sqes;
-+	struct io_uring_cqe *cqes;
-+	int nr;
-+};
-+
-+static void free_context(struct test_context *ctx)
-+{
-+	free(ctx->sqes);
-+	free(ctx->cqes);
-+	memset(ctx, 0, sizeof(*ctx));
-+}
-+
-+static int init_context(struct test_context *ctx, struct io_uring *ring, int nr)
-+{
-+	struct io_uring_sqe *sqe;
-+	int i;
-+
-+	memset(ctx, 0, sizeof(*ctx));
-+	ctx->nr = nr;
-+	ctx->ring = ring;
-+	ctx->sqes = malloc(nr * sizeof(*ctx->sqes));
-+	ctx->cqes = malloc(nr * sizeof(*ctx->cqes));
-+
-+	if (!ctx->sqes || !ctx->cqes)
-+		goto err;
-+
-+	for (i = 0; i < nr; i++) {
-+		sqe = io_uring_get_sqe(ring);
-+		if (!sqe)
-+			goto err;
-+		io_uring_prep_nop(sqe);
-+		sqe->user_data = i;
-+		ctx->sqes[i] = sqe;
-+	}
-+
-+	return 0;
-+err:
-+	free_context(ctx);
-+	printf("init context failed\n");
-+	return 1;
-+}
-+
-+static int wait_cqes(struct test_context *ctx)
-+{
-+	int ret, i;
-+	struct io_uring_cqe *cqe;
-+
-+	for (i = 0; i < ctx->nr; i++) {
-+		ret = io_uring_wait_cqe(ctx->ring, &cqe);
-+
-+		if (ret < 0) {
-+			printf("wait_cqes: wait completion %d\n", ret);
-+			return 1;
-+		}
-+		memcpy(&ctx->cqes[i], cqe, sizeof(*cqe));
-+		io_uring_cqe_seen(ctx->ring, cqe);
-+	}
-+
-+	return 0;
-+}
-+
-+static int test_cancelled_userdata(struct io_uring *ring)
-+{
-+	struct test_context ctx;
-+	int ret, i, nr = 100;
-+
-+	if (init_context(&ctx, ring, nr))
-+		return 1;
-+
-+	for (i = 0; i < nr; i++)
-+		ctx.sqes[i]->flags |= IOSQE_IO_LINK;
-+
-+	ret = io_uring_submit(ring);
-+	if (ret <= 0) {
-+		printf("sqe submit failed: %d\n", ret);
-+		goto err;
-+	}
-+
-+	if (wait_cqes(&ctx))
-+		goto err;
-+
-+	for (int i = 0; i < nr; i++) {
-+		if (i != ctx.cqes[i].user_data) {
-+			printf("invalid user data\n");
-+			goto err;
-+		}
-+	}
-+
-+	free_context(&ctx);
-+	return 0;
-+err:
-+	free_context(&ctx);
-+	return 1;
-+}
-+
-+static int test_thread_link_cancel(struct io_uring *ring)
-+{
-+	struct test_context ctx;
-+	int ret, i, nr = 100;
-+
-+	if (init_context(&ctx, ring, nr))
-+		return 1;
-+
-+	for (i = 0; i < nr; i++)
-+		ctx.sqes[i]->flags |= IOSQE_IO_LINK;
-+
-+	ret = io_uring_submit(ring);
-+	if (ret <= 0) {
-+		printf("sqe submit failed: %d\n", ret);
-+		goto err;
-+	}
-+
-+	if (wait_cqes(&ctx))
-+		goto err;
-+
-+	for (int i = 0; i < nr; i++) {
-+		bool fail = false;
-+
-+		if (i == 0)
-+			fail = (ctx.cqes[i].res != -EINVAL);
-+		else
-+			fail = (ctx.cqes[i].res != -ECANCELED);
-+
-+		if (fail) {
-+			printf("invalid status\n");
-+			goto err;
-+		}
-+	}
-+
-+	free_context(&ctx);
-+	return 0;
-+err:
-+	free_context(&ctx);
-+	return 1;
-+}
-+
-+static int run_drained(struct io_uring *ring, int nr)
-+{
-+	struct test_context ctx;
-+	int ret, i;
-+
-+	if (init_context(&ctx, ring, nr))
-+		return 1;
-+
-+	for (i = 0; i < nr; i++)
-+		ctx.sqes[i]->flags |= IOSQE_IO_DRAIN;
-+
-+	ret = io_uring_submit(ring);
-+	if (ret <= 0) {
-+		printf("sqe submit failed: %d\n", ret);
-+		goto err;
-+	}
-+
-+	if (wait_cqes(&ctx))
-+		goto err;
-+
-+	free_context(&ctx);
-+	return 0;
-+err:
-+	free_context(&ctx);
-+	return 1;
-+}
-+
-+static int test_overflow_hung(struct io_uring *ring)
-+{
-+	struct io_uring_sqe *sqe;
-+	int ret, nr = 10;
-+
-+	while (*ring->cq.koverflow !=  1000) {
-+		sqe = io_uring_get_sqe(ring);
-+		if (!sqe) {
-+			printf("get sqe failed\n");
-+			return 1;
-+		}
-+
-+		io_uring_prep_nop(sqe);
-+		ret = io_uring_submit(ring);
-+		if (ret <= 0) {
-+			printf("sqe submit failed: %d\n", ret);
-+			return 1;
-+		}
-+	}
-+
-+	return run_drained(ring, nr);
-+}
-+
-+static int test_dropped_hung(struct io_uring *ring)
-+{
-+	int nr = 10;
-+
-+	*ring->sq.kdropped = 1000;
-+	return run_drained(ring, nr);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct io_uring ring, poll_ring, sqthread_ring;
-+	int ret;
-+
-+	ret = io_uring_queue_init(1000, &ring, 0);
-+	if (ret) {
-+		printf("ring setup failed\n");
-+		return 1;
-+	}
-+
-+	ret = io_uring_queue_init(1000, &poll_ring, IORING_SETUP_IOPOLL);
-+	if (ret) {
-+		printf("poll_ring setup failed\n");
-+		return 1;
-+	}
-+
-+	ret = io_uring_queue_init(1000, &sqthread_ring,
-+				IORING_SETUP_SQPOLL | IORING_SETUP_IOPOLL);
-+	if (ret) {
-+		printf("poll_ring setup failed\n");
-+		return 1;
-+	}
-+
-+	ret = test_cancelled_userdata(&poll_ring);
-+	if (ret) {
-+		printf("test_cancelled_userdata failed\n");
-+		return ret;
-+	}
-+
-+	ret = test_thread_link_cancel(&sqthread_ring);
-+	if (ret) {
-+		printf("test_thread_link_cancel failed\n");
-+		return ret;
-+	}
-+
-+	ret = test_overflow_hung(&ring);
-+	if (ret) {
-+		printf("test_overflow_hung failed\n");
-+		return ret;
-+	}
-+
-+	ret = test_dropped_hung(&ring);
-+	if (ret) {
-+		printf("test_dropped_hung failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
--- 
-2.23.0
-
+QW0gMjQuMTAuMTkgdW0gMTg6MjQgc2NocmllYiBTdGV2ZW4gUHJpY2U6DQo+IGRybV9zY2hlZF9j
+bGVhbnVwX2pvYnMoKSBhdHRlbXB0cyB0byBmcmVlIGZpbmlzaGVkIGpvYnMsIGhvd2V2ZXIgYmVj
+YXVzZQ0KPiBpdCBpcyBjYWxsZWQgYXMgdGhlIGNvbmRpdGlvbiBvZiB3YWl0X2V2ZW50X2ludGVy
+cnVwdGlibGUoKSBpdCBtdXN0IG5vdA0KPiBzbGVlcC4gVW5mb3J0dWFudGx5IHNvbWUgZnJlZSBj
+YWxsYmFja3MgKG5vdGlibHkgZm9yIFBhbmZyb3N0KSBkbyBzbGVlcC4NCj4NCj4gSW5zdGVhZCBs
+ZXQncyByZW5hbWUgZHJtX3NjaGVkX2NsZWFudXBfam9icygpIHRvDQo+IGRybV9zY2hlZF9nZXRf
+Y2xlYW51cF9qb2IoKSBhbmQgc2ltcGx5IHJldHVybiBhIGpvYiBmb3IgcHJvY2Vzc2luZyBpZg0K
+PiB0aGVyZSBpcyBvbmUuIFRoZSBjYWxsZXIgY2FuIHRoZW4gY2FsbCB0aGUgZnJlZV9qb2IoKSBj
+YWxsYmFjayBvdXRzaWRlDQo+IHRoZSB3YWl0X2V2ZW50X2ludGVycnVwdGlibGUoKSB3aGVyZSBz
+bGVlcGluZyBpcyBwb3NzaWJsZSBiZWZvcmUNCj4gcmUtY2hlY2tpbmcgYW5kIHJldHVybmluZyB0
+byBzbGVlcCBpZiBuZWNlc3NhcnkuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFN0ZXZlbiBQcmljZSA8
+c3RldmVuLnByaWNlQGFybS5jb20+DQo+IC0tLQ0KPiBQcmV2aW91cyBwb3N0aW5nOiBodHRwczov
+L2xvcmUua2VybmVsLm9yZy9sa21sLzIwMTkwOTI2MTQxNjMwLjE0MjU4LTEtc3RldmVuLnByaWNl
+QGFybS5jb20vDQo+DQo+ICAgZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMg
+fCA0NSArKysrKysrKysrKysrKystLS0tLS0tLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyNiBp
+bnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5jIGIvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxl
+ci9zY2hlZF9tYWluLmMNCj4gaW5kZXggOWEwZWU3NGQ4MmRjLi4xNDg0Njg0NDdiYTkgMTAwNjQ0
+DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5jDQo+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5jDQo+IEBAIC02MjIsNDMgKzYy
+Miw0MSBAQCBzdGF0aWMgdm9pZCBkcm1fc2NoZWRfcHJvY2Vzc19qb2Ioc3RydWN0IGRtYV9mZW5j
+ZSAqZiwgc3RydWN0IGRtYV9mZW5jZV9jYiAqY2IpDQo+ICAgfQ0KPiAgIA0KPiAgIC8qKg0KPiAt
+ICogZHJtX3NjaGVkX2NsZWFudXBfam9icyAtIGRlc3Ryb3kgZmluaXNoZWQgam9icw0KPiArICog
+ZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYiAtIGZldGNoIHRoZSBuZXh0IGZpbmlzaGVkIGpvYiB0
+byBiZSBkZXN0cm95ZWQNCj4gICAgKg0KPiAgICAqIEBzY2hlZDogc2NoZWR1bGVyIGluc3RhbmNl
+DQo+ICAgICoNCj4gLSAqIFJlbW92ZSBhbGwgZmluaXNoZWQgam9icyBmcm9tIHRoZSBtaXJyb3Ig
+bGlzdCBhbmQgZGVzdHJveSB0aGVtLg0KPiArICogUmV0dXJucyB0aGUgbmV4dCBmaW5pc2hlZCBq
+b2IgZnJvbSB0aGUgbWlycm9yIGxpc3QgKGlmIHRoZXJlIGlzIG9uZSkNCj4gKyAqIHJlYWR5IGZv
+ciBpdCB0byBiZSBkZXN0cm95ZWQuDQo+ICAgICovDQo+IC1zdGF0aWMgdm9pZCBkcm1fc2NoZWRf
+Y2xlYW51cF9qb2JzKHN0cnVjdCBkcm1fZ3B1X3NjaGVkdWxlciAqc2NoZWQpDQo+ICtzdGF0aWMg
+c3RydWN0IGRybV9zY2hlZF9qb2IgKg0KPiArZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYihzdHJ1
+Y3QgZHJtX2dwdV9zY2hlZHVsZXIgKnNjaGVkKQ0KPiAgIHsNCj4gKwlzdHJ1Y3QgZHJtX3NjaGVk
+X2pvYiAqam9iID0gTlVMTDsNCg0KUGxlYXNlIGRvbid0IGluaXRpYWxpemUgam9iIGhlcmUuDQoN
+Cj4gICAJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gICANCj4gICAJLyogRG9uJ3QgZGVzdHJveSBq
+b2JzIHdoaWxlIHRoZSB0aW1lb3V0IHdvcmtlciBpcyBydW5uaW5nICovDQo+ICAgCWlmIChzY2hl
+ZC0+dGltZW91dCAhPSBNQVhfU0NIRURVTEVfVElNRU9VVCAmJg0KPiAgIAkgICAgIWNhbmNlbF9k
+ZWxheWVkX3dvcmsoJnNjaGVkLT53b3JrX3RkcikpDQo+IC0JCXJldHVybjsNCj4gLQ0KPiArCQly
+ZXR1cm4gTlVMTDsNCj4gICANCj4gLQl3aGlsZSAoIWxpc3RfZW1wdHkoJnNjaGVkLT5yaW5nX21p
+cnJvcl9saXN0KSkgew0KPiAtCQlzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqam9iOw0KPiArCXNwaW5f
+bG9ja19pcnFzYXZlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPiAgIA0KPiAtCQlq
+b2IgPSBsaXN0X2ZpcnN0X2VudHJ5KCZzY2hlZC0+cmluZ19taXJyb3JfbGlzdCwNCj4gKwlqb2Ig
+PSBsaXN0X2ZpcnN0X2VudHJ5X29yX251bGwoJnNjaGVkLT5yaW5nX21pcnJvcl9saXN0LA0KPiAg
+IAkJCQkgICAgICAgc3RydWN0IGRybV9zY2hlZF9qb2IsIG5vZGUpOw0KPiAtCQlpZiAoIWRtYV9m
+ZW5jZV9pc19zaWduYWxlZCgmam9iLT5zX2ZlbmNlLT5maW5pc2hlZCkpDQo+IC0JCQlicmVhazsN
+Cj4gICANCj4gLQkJc3Bpbl9sb2NrX2lycXNhdmUoJnNjaGVkLT5qb2JfbGlzdF9sb2NrLCBmbGFn
+cyk7DQo+ICsJaWYgKGpvYiAmJiBkbWFfZmVuY2VfaXNfc2lnbmFsZWQoJmpvYi0+c19mZW5jZS0+
+ZmluaXNoZWQpKSB7DQo+ICAgCQkvKiByZW1vdmUgam9iIGZyb20gcmluZ19taXJyb3JfbGlzdCAq
+Lw0KPiAgIAkJbGlzdF9kZWxfaW5pdCgmam9iLT5ub2RlKTsNCj4gLQkJc3Bpbl91bmxvY2tfaXJx
+cmVzdG9yZSgmc2NoZWQtPmpvYl9saXN0X2xvY2ssIGZsYWdzKTsNCj4gLQ0KPiAtCQlzY2hlZC0+
+b3BzLT5mcmVlX2pvYihqb2IpOw0KPiArCX0gZWxzZSB7DQo+ICsJCWpvYiA9IE5VTEw7DQo+ICsJ
+CS8qIHF1ZXVlIHRpbWVvdXQgZm9yIG5leHQgam9iICovDQo+ICsJCWRybV9zY2hlZF9zdGFydF90
+aW1lb3V0KHNjaGVkKTsNCj4gICAJfQ0KPiAgIA0KPiAtCS8qIHF1ZXVlIHRpbWVvdXQgZm9yIG5l
+eHQgam9iICovDQo+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJnNjaGVkLT5qb2JfbGlzdF9sb2NrLCBm
+bGFncyk7DQo+IC0JZHJtX3NjaGVkX3N0YXJ0X3RpbWVvdXQoc2NoZWQpOw0KPiAgIAlzcGluX3Vu
+bG9ja19pcnFyZXN0b3JlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPiAgIA0KPiAr
+CXJldHVybiBqb2I7DQo+ICAgfQ0KPiAgIA0KPiAgIC8qKg0KPiBAQCAtNjk4LDEyICs2OTYsMjEg
+QEAgc3RhdGljIGludCBkcm1fc2NoZWRfbWFpbih2b2lkICpwYXJhbSkNCj4gICAJCXN0cnVjdCBk
+cm1fc2NoZWRfZmVuY2UgKnNfZmVuY2U7DQo+ICAgCQlzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqc2No
+ZWRfam9iOw0KPiAgIAkJc3RydWN0IGRtYV9mZW5jZSAqZmVuY2U7DQo+ICsJCXN0cnVjdCBkcm1f
+c2NoZWRfam9iICpjbGVhbnVwX2pvYiA9IE5VTEw7DQo+ICAgDQo+ICAgCQl3YWl0X2V2ZW50X2lu
+dGVycnVwdGlibGUoc2NoZWQtPndha2VfdXBfd29ya2VyLA0KPiAtCQkJCQkgKGRybV9zY2hlZF9j
+bGVhbnVwX2pvYnMoc2NoZWQpLA0KPiArCQkJCQkgKGNsZWFudXBfam9iID0gZHJtX3NjaGVkX2dl
+dF9jbGVhbnVwX2pvYihzY2hlZCkpIHx8DQo+ICAgCQkJCQkgKCFkcm1fc2NoZWRfYmxvY2tlZChz
+Y2hlZCkgJiYNCj4gICAJCQkJCSAgKGVudGl0eSA9IGRybV9zY2hlZF9zZWxlY3RfZW50aXR5KHNj
+aGVkKSkpIHx8DQo+IC0JCQkJCSBrdGhyZWFkX3Nob3VsZF9zdG9wKCkpKTsNCj4gKwkJCQkJIGt0
+aHJlYWRfc2hvdWxkX3N0b3AoKSk7DQo+ICsNCj4gKwkJd2hpbGUgKGNsZWFudXBfam9iKSB7DQoN
+CkJldHRlciBtYWtlIHRoaXMganVzdCAiaWYgKGNsZWFudXBfam9iKSIuLi4gdG8gbWFrZSBzdXJl
+IHRoYXQgd2Ugc3RvcCANCmltbWVkaWF0ZWx5IHdoZW4gdGhlIHRocmVhZCBzaG91bGQgc3RvcC4N
+Cg0KQXBhcnQgZnJvbSB0aGF0IGxvb2tzIGdvb2QgdG8gbWUgbm93LA0KQ2hyaXN0aWFuLg0KDQo+
+ICsJCQlzY2hlZC0+b3BzLT5mcmVlX2pvYihjbGVhbnVwX2pvYik7DQo+ICsJCQkvKiBxdWV1ZSB0
+aW1lb3V0IGZvciBuZXh0IGpvYiAqLw0KPiArCQkJZHJtX3NjaGVkX3N0YXJ0X3RpbWVvdXQoc2No
+ZWQpOw0KPiArDQo+ICsJCQljbGVhbnVwX2pvYiA9IGRybV9zY2hlZF9nZXRfY2xlYW51cF9qb2Io
+c2NoZWQpOw0KPiArCQl9DQo+ICAgDQo+ICAgCQlpZiAoIWVudGl0eSkNCj4gICAJCQljb250aW51
+ZTsNCg0K
