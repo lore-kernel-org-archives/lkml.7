@@ -2,109 +2,136 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CB8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33923CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD70222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dTbh5kRF"
+	by mail.kernel.org (Postfix) with ESMTP id 0B763222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572012079;
+	bh=V6p2ZFYASsMYXQIbfwsTnhMbsU+Dr9PVlcOitH9Yxc8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K8IQ+j2FO3GAPC8biKe1Gl+KAJ0ryKgY8ATlBeiNSYYwk3kH/tgukR03dsr/R2I3C
+	 yBM8eJJTC5qb4pm3r/3y0sfmK+RaLMYNkpSCszHqy/S1qsyOY8GOUtea1uxNxZBiIS
+	 RoCRT8ydFot7labKmfb/R9bZ0Rf3DZJZqXz0O6FI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394938AbfJYOBJ (ORCPT
+        id S2394986AbfJYOBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:01:09 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36189 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394907AbfJYOBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:01:02 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u16so1864833lfq.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=e7m0bUbtXBnv2hG0jP20Z7UVOAvXLu5pS/p16iFFTtw=;
-        b=dTbh5kRFKAeUJ02fzEg55m56Or2mkpSYde3jDq4pzWcZwd6/SrI4odBoyFcvBrKJad
-         MhcMpgr3O0oAZZi3DXy8C0rzsg1+6LGICBjQjKU9L00oBicm1Z89mTIIXksUId9S1nrk
-         f0ixzXz/Y1sx/3389MQyaVOt7o0opef11dj2UdvvbBPYnplJrsC/0VDqJ6NTQNo3L0iu
-         t7yKps03RIs8WKtfmgDnJx//L7LHMLWvUXeEMbDR3ZWw4zmUjuz8pdCI0eiPyMU/zoQq
-         fgvKgJJAa95yE98rAMyuhS+Swp+ffMkPcZ3ANDoHaotRv6M0wyQfAxr7PL7oQu8sazyp
-         QDcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=e7m0bUbtXBnv2hG0jP20Z7UVOAvXLu5pS/p16iFFTtw=;
-        b=gkYOQfhV0Yt1abgtpO46woh2gyyQQ5qc/9bJDXeERBXiYy+RL/jgPOsze57xEWavM4
-         a2ze8HNbI8NsMyGFpImjZ48XBkxrnpEq889WxlN/Bebp8twhOhA/IUhEmfUcyMXJDaCu
-         IDgJAPVnkQMgdZu7aVWHD85+75/Lq/Akk5izDTrzMiy0Bp+S430RVtNsGjzFa4N7gcU1
-         PkqyCwKyCLh6hP4NkKY9Xx03AJ3IOYXq91zkGUzHXEsY1D5EMFxxwNFP7nw5oSP5k7zq
-         P1pBID/lHeUrAYHUtMuwgx90qKTUGvuzXMTQuV5h0BUtObITuH48d/9rf5dVA7J5CfSZ
-         haoQ==
-X-Gm-Message-State: APjAAAWhAz05zlzkyvGVnp6WxEFCNwmqXlcuOfVSj7+/8NOlsyDDhk8h
-        JtW0gvHNq9Sf5jNpwMNmB0WwQQ==
-X-Google-Smtp-Source: APXvYqzUu4gv63DpUe1KdnUYahz+kl9nNDKPV19VnKiZ/1tr8k6IFuBIcP79aFsZaoepqv8RnWLI1Q==
-X-Received: by 2002:ac2:5108:: with SMTP id q8mr2996751lfb.150.1572012059852;
-        Fri, 25 Oct 2019 07:00:59 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id x17sm811970lji.62.2019.10.25.07.00.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 07:00:59 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v5.4-rc5
-Date:   Fri, 25 Oct 2019 16:00:58 +0200
-Message-Id: <20191025140058.10668-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 25 Oct 2019 10:01:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505567AbfJYN61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57D8D222C9;
+        Fri, 25 Oct 2019 13:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572011906;
+        bh=V6p2ZFYASsMYXQIbfwsTnhMbsU+Dr9PVlcOitH9Yxc8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oByYEYysNCtDlH2NQJkRd1+eFuXJRPUWBT7PTWjrSkWjR3hqmU0SEwYxAEod+c1c7
+         +TEVWCneFR+i9Esp6MW7vH1L756XIRT//Ecmkf/FND1P170ca8TcAk6DdVPYOYYTSB
+         nzcaMUFXmtfcI/Xu7/MdxDS7VLaL6tNahnwwocok=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Mahesh Bandewar <maheshb@google.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/20] bonding: fix potential NULL deref in bond_update_slave_arr
+Date:   Fri, 25 Oct 2019 09:57:52 -0400
+Message-Id: <20191025135801.25739-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
+References: <20191025135801.25739-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Eric Dumazet <edumazet@google.com>
 
-Here's a PR with a couple of MMC fixes intended for v5.4-rc5. Details about the
-highlights are as usual found in the signed tag.
+[ Upstream commit a7137534b597b7c303203e6bc3ed87e87a273bb8 ]
 
-Please pull this in!
+syzbot got a NULL dereference in bond_update_slave_arr() [1],
+happening after a failure to allocate bond->slave_arr
 
-Kind regards
-Ulf Hansson
+A workqueue (bond_slave_arr_handler) is supposed to retry
+the allocation later, but if the slave is removed before
+the workqueue had a chance to complete, bond->slave_arr
+can still be NULL.
 
+[1]
 
-The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
+Failed to build slave-array.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+Modules linked in:
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:bond_update_slave_arr.cold+0xc6/0x198 drivers/net/bonding/bond_main.c:4039
+RSP: 0018:ffff88018fe33678 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000290b000
+RDX: 0000000000000000 RSI: ffffffff82b63037 RDI: ffff88019745ea20
+RBP: ffff88018fe33760 R08: ffff880170754280 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88019745ea00 R14: 0000000000000000 R15: ffff88018fe338b0
+FS:  00007febd837d700(0000) GS:ffff8801dad00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004540a0 CR3: 00000001c242e005 CR4: 00000000001626f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ [<ffffffff82b5b45e>] __bond_release_one+0x43e/0x500 drivers/net/bonding/bond_main.c:1923
+ [<ffffffff82b5b966>] bond_release drivers/net/bonding/bond_main.c:2039 [inline]
+ [<ffffffff82b5b966>] bond_do_ioctl+0x416/0x870 drivers/net/bonding/bond_main.c:3562
+ [<ffffffff83ae25f4>] dev_ifsioc+0x6f4/0x940 net/core/dev_ioctl.c:328
+ [<ffffffff83ae2e58>] dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:495
+ [<ffffffff83995ffd>] sock_do_ioctl+0x1bd/0x300 net/socket.c:1088
+ [<ffffffff83996a80>] sock_ioctl+0x300/0x5d0 net/socket.c:1196
+ [<ffffffff81b124db>] vfs_ioctl fs/ioctl.c:47 [inline]
+ [<ffffffff81b124db>] file_ioctl fs/ioctl.c:501 [inline]
+ [<ffffffff81b124db>] do_vfs_ioctl+0xacb/0x1300 fs/ioctl.c:688
+ [<ffffffff81b12dc6>] SYSC_ioctl fs/ioctl.c:705 [inline]
+ [<ffffffff81b12dc6>] SyS_ioctl+0xb6/0xe0 fs/ioctl.c:696
+ [<ffffffff8101ccc8>] do_syscall_64+0x528/0x770 arch/x86/entry/common.c:305
+ [<ffffffff84400091>] entry_SYSCALL_64_after_hwframe+0x42/0xb7
 
-  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
+Fixes: ee6377147409 ("bonding: Simplify the xmit function for modes that use xmit_hash")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Mahesh Bandewar <maheshb@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/bonding/bond_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the Git repository at:
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 8820fb1aec5b4..c1971bca62fb1 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3963,7 +3963,7 @@ int bond_update_slave_arr(struct bonding *bond, struct slave *skipslave)
+ 		 * this to-be-skipped slave to send a packet out.
+ 		 */
+ 		old_arr = rtnl_dereference(bond->slave_arr);
+-		for (idx = 0; idx < old_arr->count; idx++) {
++		for (idx = 0; old_arr != NULL && idx < old_arr->count; idx++) {
+ 			if (skipslave == old_arr->arr[idx]) {
+ 				old_arr->arr[idx] =
+ 				    old_arr->arr[old_arr->count-1];
+-- 
+2.20.1
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.4-rc4
-
-for you to fetch changes up to 2bb9f7566ba7ab3c2154964461e37b52cdc6b91b:
-
-  mmc: mxs: fix flags passed to dmaengine_prep_slave_sg (2019-10-21 16:16:38 +0200)
-
-----------------------------------------------------------------
-MMC host:
- - mxs: Fix flags passed to dmaengine_prep_slave_sg
- - cqhci: Add a missing memory barrier
- - sdhci-omap: Fix tuning procedure for temperatures < -20C
-
-----------------------------------------------------------------
-Faiz Abbas (2):
-      mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
-      mmc: cqhci: Commit descriptors before setting the doorbell
-
-Sascha Hauer (1):
-      mmc: mxs: fix flags passed to dmaengine_prep_slave_sg
-
- drivers/mmc/host/cqhci.c      | 3 ++-
- drivers/mmc/host/mxs-mmc.c    | 7 ++++---
- drivers/mmc/host/sdhci-omap.c | 2 +-
- 3 files changed, 7 insertions(+), 5 deletions(-)
