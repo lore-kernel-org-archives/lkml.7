@@ -2,74 +2,148 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA33CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355BFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E6321D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A0321929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439251AbfJYJtm (ORCPT
+        id S2408872AbfJYJuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:49:42 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:43828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439160AbfJYJtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:49:41 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 09E827E0A4A560F52CB7;
-        Fri, 25 Oct 2019 17:49:33 +0800 (CST)
-Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 25 Oct 2019 17:49:32 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 25 Oct 2019 17:49:31 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Fri, 25 Oct 2019 17:49:31 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: avoid unnecessary bitmap clear ops
-Thread-Topic: [PATCH] KVM: avoid unnecessary bitmap clear ops
-Thread-Index: AdWLGPUbWU4zWQBTHE+yWMGIt2B/2Q==
-Date:   Fri, 25 Oct 2019 09:49:31 +0000
-Message-ID: <5a9c7a85a5b14542ab773d5a5e454286@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 25 Oct 2019 05:50:12 -0400
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:53530 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407918AbfJYJuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:50:11 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 46zzqj258lzKmZ4;
+        Fri, 25 Oct 2019 11:50:09 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id TLtJwWbBoCxd; Fri, 25 Oct 2019 11:50:05 +0200 (CEST)
+Date:   Fri, 25 Oct 2019 20:49:56 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: clone3() example code
+Message-ID: <20191025094956.hvr44v2lbfxf7dfs@yavin.dot.cyphar.com>
+References: <CAKgNAkgKX1Z6Uns3pAvXe-JMSmWqo2PrqeoS65aEriZsV35QmA@mail.gmail.com>
+ <20191025084142.jpwypkyczehylhgv@wittgenstein>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qfxueoggiia3z6jh"
+Content-Disposition: inline
+In-Reply-To: <20191025084142.jpwypkyczehylhgv@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAyNS8xMC8xOSAxNzo0MywgUGFvbG8gd3JvdGU6DQo+IE9uIDI1LzEwLzE5IDA0OjI0LCBN
-aWFvaGUgTGluIHdyb3RlOg0KPj4gV2hlbiBzZXQgb25lIGJpdCBpbiBiaXRtYXAsIHRoZXJlIGlz
-IG5vIG5lZWQgdG8gY2xlYXIgaXQgYmVmb3JlLg0KPg0KPkhpLA0KPg0KPmluIGdlbmVyYWwgdGhl
-IExpbnV4IGNvZGluZyBzdHlsZSBwcmVmZXJzOg0KPg0KPglhID0geDsNCj4JaWYgKC4uLik7DQo+
-CQlhID0geTsNCj4NCj50bw0KPg0KPglpZiAoLi4uKQ0KPgkJYSA9IHk7DQo+CWVsc2UNCj4JCWEg
-PSB4Ow0KPg0KPndoaWNoIGlzIHdoeSB0aGVzZSBsaW5lcyB3ZXJlIHdyaXR0ZW4gdGhpcyB3YXku
-DQoNCk1hbnkgdGhhbmtzIGZvciB5b3VyIGV4cGxhbmF0aW9uLiBJIHNlZS4NCkhhdmUgYSBuaWNl
-IGRheS4NCg0KPg0KPlRoYW5rcywNCj4NCj5QYW9sbw0KPg0K
+
+--qfxueoggiia3z6jh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019-10-25, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
+>=20
+> int main(int argc, char *argv[])
+> {
+> 	int pidfd =3D -1;
+> 	pid_t parent_tid =3D -1, pid =3D -1;
+> 	struct clone_args args =3D {0};
+>=20
+> 	args.parent_tid =3D ptr_to_u64(&parent_tid); /* CLONE_PARENT_SETTID */
+> 	args.pidfd =3D ptr_to_u64(&pidfd); /* CLONE_PIDFD */
+> 	args.flags =3D CLONE_PIDFD | CLONE_PARENT_SETTID;
+> 	args.exit_signal =3D SIGCHLD;
+>=20
+> 	pid =3D sys_clone3(&args);
+
+I'd suggest that
+
+	struct clone_args args =3D {
+		.flags =3D CLONE_PIDFD | CLONE_PARENT_SETTID,
+		.parent_tid =3D ptr_to_u64(&parent_tid), /* CLONE_PARENT_SETTID */
+		.pidfd =3D ptr_to_u64(&pidfd),           /* CLONE_PIDFD */
+		.exit_signal =3D SIGCHLD,
+	};
+
+or alternatively
+
+	pid =3D sys_clone3(&(struct clone_args) {
+		.flags =3D CLONE_PIDFD | CLONE_PARENT_SETTID,
+		.parent_tid =3D ptr_to_u64(&parent_tid), /* CLONE_PARENT_SETTID */
+		.pidfd =3D ptr_to_u64(&pidfd),           /* CLONE_PIDFD */
+		.exit_signal =3D SIGCHLD,
+	});
+
+are easier to read.
+
+> 	if (pid < 0) {
+> 		fprintf(stderr, "%s - Failed to create new process\n", strerror(errno));
+> 		exit(EXIT_FAILURE);
+> 	}
+>=20
+> 	if (pid =3D=3D 0) {
+> 		printf("Child process with pid %d\n", getpid());
+> 		exit(EXIT_SUCCESS);
+> 	}
+>=20
+> 	printf("Parent process received child's pid %d as return value\n", pid);
+> 	printf("Parent process received child's pidfd %d\n", *(int *)args.pidfd);
+> 	printf("Parent process received child's pid %d as return argument\n",
+> 	       *(pid_t *)args.parent_tid);
+>=20
+> 	if (0) {
+> 		if (waitid(P_ALL, pid, NULL, 0) =3D=3D 0) {
+> 			fprintf(stderr, "Managed to wait on CLONE_NO_WAITALL process with wait=
+id(P_ALL)\n");
+> 			exit(EXIT_FAILURE);
+> 		}
+> 		printf("Child process %d requested CLONE_NO_WAITALL\n", pid);
+> 	} else {
+> 		printf("Child process %d did not request CLONE_NO_WAITALL\n", pid);
+> 	}
+>=20
+> 	if (wait_for_pid(pid))
+> 		exit(EXIT_FAILURE);
+>=20
+> 	if (pid !=3D *(pid_t *)args.parent_tid)
+> 		exit(EXIT_FAILURE);
+>=20
+> 	close(pidfd);
+>=20
+> 	return 0;
+> }
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--qfxueoggiia3z6jh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXbLFQAAKCRCdlLljIbnQ
+El81AP0Zq9hqMvdLZ606cwcrvwrlF1Dz1SNfa3Qr2ixC8xKfigD+OBZQIMDUhECt
+fIXlzzzhuKElKrMxiI6ydgtkfRPGJgA=
+=Ka/u
+-----END PGP SIGNATURE-----
+
+--qfxueoggiia3z6jh--
