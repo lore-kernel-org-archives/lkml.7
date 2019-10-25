@@ -2,106 +2,121 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0D6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED86ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A6021D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:52:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LMXmfIOE"
+	by mail.kernel.org (Postfix) with ESMTP id BC752222D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502440AbfJYPwi (ORCPT
+        id S2503065AbfJYPwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:52:38 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45862 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2502310AbfJYPwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:52:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572018756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F7ozuvXk8tbWjQzLtj2DAtfKZtAxllZ50ZDGOJC1UMA=;
-        b=LMXmfIOEXDNypkNKKjtmUnCA4AMtml8tRbiROZ6IELmaqR6Y/enwUTxK7Mymn8HI+kflYY
-        hIxjPm+azEj4P9q5nM8BUy8fjF3nIqLCMI4UTvLbFfYh23UAAIdb3dqhlJWRVpAj37GRw+
-        fVOpXf95DOcWfHmI3IdcbWjyqDCNPsM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-pvYGhxm8PWuIUKDEovirTg-1; Fri, 25 Oct 2019 11:52:33 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6E3E1005500;
-        Fri, 25 Oct 2019 15:52:30 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1D99F60852;
-        Fri, 25 Oct 2019 15:52:26 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 25 Oct 2019 17:52:29 +0200 (CEST)
-Date:   Fri, 25 Oct 2019 17:52:25 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Tejun Heo <tj@kernel.org>, dvyukov@google.com,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        akpm@linux-foundation.org, arnd@arndb.de, deepa.kernel@gmail.com,
-        ebiederm@xmission.com, elver@google.com, guro@fb.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        cgroups@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH cgroup/for-5.5] cgroup: remove
- cgroup_enable_task_cg_lists() optimization
-Message-ID: <20191025155224.GC6020@redhat.com>
-References: <0000000000003b1e8005956939f1@google.com>
- <20191021142111.GB1339@redhat.com>
- <20191024190351.GD3622521@devbig004.ftw2.facebook.com>
- <20191025125606.GI3622521@devbig004.ftw2.facebook.com>
- <20191025133358.pxpzxkhqc3mboi5x@wittgenstein>
- <20191025141325.GB6020@redhat.com>
- <20191025143224.wtwkkimqq4644iqq@wittgenstein>
+        Fri, 25 Oct 2019 11:52:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:40031 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502309AbfJYPwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:52:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 08:52:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
+   d="scan'208";a="282292991"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga001.jf.intel.com with ESMTP; 25 Oct 2019 08:52:41 -0700
+Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 25 Oct 2019 08:52:41 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 25 Oct 2019 08:52:41 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.166]) by
+ SHSMSX153.ccr.corp.intel.com ([10.239.6.53]) with mapi id 14.03.0439.000;
+ Fri, 25 Oct 2019 23:52:39 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Jonathan Cameron" <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: RE: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
+Thread-Topic: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
+Thread-Index: AQHViqRVDFt/7gHf3E+EfuPtxXQ8nKdqHQYAgAAk/YCAAKNMUIAAA0iAgACaPUA=
+Date:   Fri, 25 Oct 2019 15:52:39 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D5D0FF0@SHSMSX104.ccr.corp.intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
+ <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
+ <20191024214311.43d76a5c@jacob-builder>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC60@SHSMSX104.ccr.corp.intel.com>
+ <e950cde8-8cd9-6089-c833-23d2ffb539d1@linux.intel.com>
+In-Reply-To: <e950cde8-8cd9-6089-c833-23d2ffb539d1@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmFmZjZmYjctOTM0NC00NDg5LWIxMzMtMDRmYjJmZTY1OTA4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibTRTM1RTWTlRN20zYmtjSDI0OStFVnFUNnkzNW5ucU83YUxoUGlzM05CbWgwdEtsc0J1UkR1SnJlSkkreXNBRCJ9
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191025143224.wtwkkimqq4644iqq@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: pvYGhxm8PWuIUKDEovirTg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25, Christian Brauner wrote:
->
-> On Fri, Oct 25, 2019 at 04:13:25PM +0200, Oleg Nesterov wrote:
-> > Almost every usage of task->flags (load or sore) can be reported as "da=
-ta race".
-> >=20
-> > Say, you do
-> >=20
-> > =09if (task->flags & PF_KTHREAD)
-> >=20
-> > while this task does
-> >=20
-> > =09current->flags |=3D PF_FREEZER_SKIP;
-> > =09schedule().
-> >=20
-> > this is data race.
->=20
-> Right, but I thought we agreed on WONTFIX in those scenarios?
-> The alternative is to READ_ONCE()/WRITE_ONCE() all of these.
-
-Well, in my opinion this is WONTFIX, but I won't argue if someone
-adds _ONCE to all of these. Same for task->state, exit_state, and
-more.
-
-Oleg.
-
+PiBGcm9tOiBMdSBCYW9sdSBbbWFpbHRvOmJhb2x1Lmx1QGxpbnV4LmludGVsLmNvbV0NCj4gU2Vu
+dDogRnJpZGF5LCBPY3RvYmVyIDI1LCAyMDE5IDEwOjM5IFBNDQo+IA0KPiBIaSwNCj4gDQo+IE9u
+IDEwLzI1LzE5IDI6NDAgUE0sIFRpYW4sIEtldmluIHdyb3RlOg0KPiA+Pj4+IGlvYXNpZF9yZWdp
+c3Rlcl9hbGxvY2F0b3IoJmlvbW11LT5wYXNpZF9hbGxvY2F0b3IpOw0KPiA+Pj4+ICsJCQlpZiAo
+cmV0KSB7DQo+ID4+Pj4gKwkJCQlwcl93YXJuKCJDdXN0b20gUEFTSUQgYWxsb2NhdG9yDQo+ID4+
+Pj4gcmVnaXN0ZXJhdGlvbiBmYWlsZWRcbiIpOw0KPiA+Pj4+ICsJCQkJLyoNCj4gPj4+PiArCQkJ
+CSAqIERpc2FibGUgc2NhbGFibGUgbW9kZSBvbiB0aGlzDQo+ID4+Pj4gSU9NTVUgaWYgdGhlcmUN
+Cj4gPj4+PiArCQkJCSAqIGlzIG5vIGN1c3RvbSBhbGxvY2F0b3IuIE1peGluZw0KPiA+Pj4+IFNN
+IGNhcGFibGUgdklPTU1VDQo+ID4+Pj4gKwkJCQkgKiBhbmQgbm9uLVNNIHZJT01NVSBhcmUgbm90
+DQo+ID4+Pj4gc3VwcG9ydGVkLg0KPiA+Pj4+ICsJCQkJICovDQo+ID4+Pj4gKwkJCQlpbnRlbF9p
+b21tdV9zbSA9IDA7DQo+ID4+PiBJdCdzIGluc3VmZmljaWVudCB0byBkaXNhYmxlIHNjYWxhYmxl
+IG1vZGUgYnkgb25seSBjbGVhcmluZw0KPiA+Pj4gaW50ZWxfaW9tbXVfc20uIFRoZSBETUFfUlRB
+RERSX1NNVCBiaXQgaW4gcm9vdCBlbnRyeSBoYXMgYWxyZWFkeQ0KPiA+PiBiZWVuDQo+ID4+PiBz
+ZXQuIFByb2JhYmx5LCB5b3UgbmVlZCB0bw0KPiA+Pj4NCj4gPj4+IGZvciBlYWNoIGlvbW11DQo+
+ID4+PiAJY2xlYXIgRE1BX1JUQUREUl9TTVQgaW4gcm9vdCBlbnRyeQ0KPiA+Pj4NCj4gPj4+IEFs
+dGVybmF0aXZlbHksIHNpbmNlIHZTVkEgaXMgdGhlIG9ubHkgY3VzdG9tZXIgb2YgdGhpcyBjdXN0
+b20gUEFTSUQNCj4gPj4+IGFsbG9jYXRvciwgaXMgaXQgcG9zc2libGUgdG8gb25seSBkaXNhYmxl
+IFNWQSBoZXJlPw0KPiA+Pj4NCj4gPj4gWWVhaCwgSSB0aGluayBkaXNhYmxlIFNWQSBpcyBiZXR0
+ZXIuIFdlIGNhbiBzdGlsbCBkbyBnSU9WQSBpbiBTTS4gSQ0KPiA+PiBndWVzcyB3ZSBuZWVkIHRv
+IGludHJvZHVjZSBhIGZsYWcgZm9yIHN2YV9lbmFibGVkLg0KPiA+IEknbSBub3Qgc3VyZSB3aGV0
+aGVyIHR5aW5nIGFib3ZlIGxvZ2ljIHRvIFNWQSBpcyB0aGUgcmlnaHQgYXBwcm9hY2guDQo+ID4g
+SWYgdmNtZCBpbnRlcmZhY2UgZG9lc24ndCB3b3JrLCB0aGUgd2hvbGUgU00gbW9kZSBkb2Vzbid0
+IG1ha2UNCj4gPiBzZW5zZSB3aGljaCBpcyBiYXNlZCBvbiBQQVNJRC1ncmFudWxhciBwcm90ZWN0
+aW9uIChTVkEgaXMgb25seSBvbmUNCj4gPiB1c2FnZSBhdG9wKS4gSWYgdGhlIG9ubHkgcmVtYWlu
+aW5nIHVzYWdlIG9mIFNNIGlzIHRvIG1hcCBnSU9WQSB1c2luZw0KPiA+IHJlc2VydmVkIFBBU0lE
+IzAsIHRoZW4gd2h5IG5vdCBkaXNhYmxpbmcgU00gYW5kIGp1c3QgZmFsbGJhY2sgdG8NCj4gPiBs
+ZWdhY3kgbW9kZT8NCj4gPg0KPiA+IEJhc2VkIG9uIHRoYXQgSSBwcmVmZXIgdG8gZGlzYWJsaW5n
+IHRoZSBTTSBtb2RlIGNvbXBsZXRlbHkgKGJldHRlcg0KPiA+IHRocm91Z2ggYW4gaW50ZXJmYWNl
+KSwgYW5kIG1vdmUgdGhlIGxvZ2ljIG91dCBvZiBDT05GSUdfSU5URUxfDQo+ID4gSU9NTVVfU1ZN
+DQo+ID4NCj4gDQo+IFVuZm9ydHVuYXRlbHksIGl0IGlzIGRhbmdlcm91cyB0byBkaXNhYmxlIFNN
+IGFmdGVyIGJvb3QuIFNNIHVzZXMNCj4gZGlmZmVyZW50IHJvb3QvZGV2aWNlIGNvbnRleHRzIGFu
+ZCBwYXNpZCB0YWJsZSBmb3JtYXRzLiBEaXNhYmxpbmcgU00NCj4gYWZ0ZXIgYm9vdCByZXF1aXJl
+cyBjaGFuZ2luZyBhYm92ZSBmcm9tIFNNIGZvcm1hdCBpbnRvIGxlZ2FjeSBmb3JtYXQuDQoNCllv
+dSBhcmUgY29ycmVjdC4NCg0KPiANCj4gU2luY2UgaW9hc2lkIHJlZ2lzdHJhdGlvbiBmYWlsdXJl
+IGlzIGEgcmFyZSBjYXNlLiBIb3cgYWJvdXQgbW92aW5nIHRoaXMNCj4gcGFydCBvZiBjb2RlIHVw
+IHRvIHRoZSBlYXJseSBzdGFnZSBvZiBpbnRlbF9pb21tdV9pbml0KCkgYW5kIHJldHVybmluZw0K
+PiBlcnJvciBpZiBoYXJkd2FyZSBwcmVzZW50IHZjbWQgY2FwYWJpbGl0eSBidXQgc29mdHdhcmUg
+ZmFpbHMgdG8gcmVnaXN0ZXINCj4gYSBjdXN0b20gaW9hc2lkIGFsbG9jYXRvcj8NCj4gDQoNCkl0
+IG1ha2VzIHNlbnNlIHRvIG1lLg0KDQpUaGFua3MNCktldmluDQo=
