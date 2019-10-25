@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E44CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACE2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDDD20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E09320679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504830AbfJYNl4 (ORCPT
+        id S2504841AbfJYNmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:41:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:40840 "EHLO foss.arm.com"
+        Fri, 25 Oct 2019 09:42:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:40856 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502142AbfJYNlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:41:55 -0400
+        id S2504824AbfJYNl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:41:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7DB8492;
-        Fri, 25 Oct 2019 06:41:54 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DE42337;
+        Fri, 25 Oct 2019 06:41:56 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C5CC3F71A;
-        Fri, 25 Oct 2019 06:41:53 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB1F23F71A;
+        Fri, 25 Oct 2019 06:41:54 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
         Rob Herring <robh@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
         Mark Brown <broonie@kernel.org>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] drm/panfrost: Use generic code for devfreq
-Date:   Fri, 25 Oct 2019 14:41:42 +0100
-Message-Id: <20191025134143.14324-2-steven.price@arm.com>
+Subject: [PATCH v2 2/2] drm/panfrost: Simplify devfreq utilisation tracking
+Date:   Fri, 25 Oct 2019 14:41:43 +0100
+Message-Id: <20191025134143.14324-3-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025134143.14324-1-steven.price@arm.com>
 References: <20191025134143.14324-1-steven.price@arm.com>
@@ -46,138 +46,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use dev_pm_opp_set_rate() instead of open coding the devfreq
-integration, simplifying the code.
+Instead of tracking per-slot utilisation track a single value for the
+entire GPU. Ultimately it doesn't matter if the GPU is busy with only
+vertex or a combination of vertex and fragment processing - if it's busy
+then it's busy and devfreq should be scaling appropriately.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+This also makes way for being able to submit multiple jobs per slot
+which requires more values than the original boolean per slot.
+
 Reviewed-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Acked-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 60 ++++-----------------
- drivers/gpu/drm/panfrost/panfrost_device.h  |  2 -
- 2 files changed, 10 insertions(+), 52 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c | 64 ++++++++-------------
+ drivers/gpu/drm/panfrost/panfrost_devfreq.h |  3 +-
+ drivers/gpu/drm/panfrost/panfrost_device.h  | 12 ++--
+ drivers/gpu/drm/panfrost/panfrost_job.c     | 15 +++--
+ 4 files changed, 38 insertions(+), 56 deletions(-)
 
 diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index 12ff77dacc95..7ded282a5ca8 100644
+index 7ded282a5ca8..4c4e8a30a1ac 100644
 --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
 +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -18,55 +18,14 @@ static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev, i
+@@ -13,7 +13,7 @@
+ #include "panfrost_gpu.h"
+ #include "panfrost_regs.h"
+ 
+-static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev, int slot);
++static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev);
+ 
  static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
  				   u32 flags)
+@@ -32,37 +32,23 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
+ 
+ static void panfrost_devfreq_reset(struct panfrost_device *pfdev)
  {
--	struct panfrost_device *pfdev = platform_get_drvdata(to_platform_device(dev));
--	struct dev_pm_opp *opp;
--	unsigned long old_clk_rate = pfdev->devfreq.cur_freq;
--	unsigned long target_volt, target_rate;
-+	struct panfrost_device *pfdev = dev_get_drvdata(dev);
- 	int err;
- 
--	opp = devfreq_recommended_opp(dev, freq, flags);
--	if (IS_ERR(opp))
--		return PTR_ERR(opp);
+-	ktime_t now = ktime_get();
+-	int i;
 -
--	target_rate = dev_pm_opp_get_freq(opp);
--	target_volt = dev_pm_opp_get_voltage(opp);
--	dev_pm_opp_put(opp);
--
--	if (old_clk_rate == target_rate)
--		return 0;
--
--	/*
--	 * If frequency scaling from low to high, adjust voltage first.
--	 * If frequency scaling from high to low, adjust frequency first.
--	 */
--	if (old_clk_rate < target_rate) {
--		err = regulator_set_voltage(pfdev->regulator, target_volt,
--					    target_volt);
--		if (err) {
--			dev_err(dev, "Cannot set voltage %lu uV\n",
--				target_volt);
--			return err;
--		}
+-	for (i = 0; i < NUM_JOB_SLOTS; i++) {
+-		pfdev->devfreq.slot[i].busy_time = 0;
+-		pfdev->devfreq.slot[i].idle_time = 0;
+-		pfdev->devfreq.slot[i].time_last_update = now;
 -	}
--
--	err = clk_set_rate(pfdev->clock, target_rate);
--	if (err) {
--		dev_err(dev, "Cannot set frequency %lu (%d)\n", target_rate,
--			err);
--		regulator_set_voltage(pfdev->regulator, pfdev->devfreq.cur_volt,
--				      pfdev->devfreq.cur_volt);
-+	err = dev_pm_opp_set_rate(dev, *freq);
-+	if (err)
- 		return err;
--	}
- 
--	if (old_clk_rate > target_rate) {
--		err = regulator_set_voltage(pfdev->regulator, target_volt,
--					    target_volt);
--		if (err)
--			dev_err(dev, "Cannot set voltage %lu uV\n", target_volt);
--	}
--
--	pfdev->devfreq.cur_freq = target_rate;
--	pfdev->devfreq.cur_volt = target_volt;
-+	*freq = clk_get_rate(pfdev->clock);
- 
- 	return 0;
++	pfdev->devfreq.busy_time = 0;
++	pfdev->devfreq.idle_time = 0;
++	pfdev->devfreq.time_last_update = ktime_get();
  }
-@@ -86,7 +45,7 @@ static void panfrost_devfreq_reset(struct panfrost_device *pfdev)
+ 
  static int panfrost_devfreq_get_dev_status(struct device *dev,
  					   struct devfreq_dev_status *status)
  {
--	struct panfrost_device *pfdev = platform_get_drvdata(to_platform_device(dev));
-+	struct panfrost_device *pfdev = dev_get_drvdata(dev);
- 	int i;
+ 	struct panfrost_device *pfdev = dev_get_drvdata(dev);
+-	int i;
  
- 	for (i = 0; i < NUM_JOB_SLOTS; i++) {
-@@ -119,7 +78,7 @@ static int panfrost_devfreq_get_cur_freq(struct device *dev, unsigned long *freq
- {
- 	struct panfrost_device *pfdev = platform_get_drvdata(to_platform_device(dev));
+-	for (i = 0; i < NUM_JOB_SLOTS; i++) {
+-		panfrost_devfreq_update_utilization(pfdev, i);
+-	}
++	panfrost_devfreq_update_utilization(pfdev);
  
--	*freq = pfdev->devfreq.cur_freq;
-+	*freq = clk_get_rate(pfdev->clock);
+ 	status->current_frequency = clk_get_rate(pfdev->clock);
+-	status->total_time = ktime_to_ns(ktime_add(pfdev->devfreq.slot[0].busy_time,
+-						   pfdev->devfreq.slot[0].idle_time));
+-
+-	status->busy_time = 0;
+-	for (i = 0; i < NUM_JOB_SLOTS; i++) {
+-		status->busy_time += ktime_to_ns(pfdev->devfreq.slot[i].busy_time);
+-	}
++	status->total_time = ktime_to_ns(ktime_add(pfdev->devfreq.busy_time,
++						   pfdev->devfreq.idle_time));
  
- 	return 0;
- }
-@@ -135,6 +94,7 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- {
- 	int ret;
- 	struct dev_pm_opp *opp;
-+	unsigned long cur_freq;
- 
- 	ret = dev_pm_opp_of_add_table(&pfdev->pdev->dev);
- 	if (ret == -ENODEV) /* Optional, continue without devfreq */
-@@ -144,13 +104,13 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
+-	/* We're scheduling only to one core atm, so don't divide for now */
+-	/* status->busy_time /= NUM_JOB_SLOTS; */
++	status->busy_time = ktime_to_ns(pfdev->devfreq.busy_time);
  
  	panfrost_devfreq_reset(pfdev);
  
--	pfdev->devfreq.cur_freq = clk_get_rate(pfdev->clock);
-+	cur_freq = clk_get_rate(pfdev->clock);
+@@ -134,14 +120,10 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
  
--	opp = devfreq_recommended_opp(&pfdev->pdev->dev, &pfdev->devfreq.cur_freq, 0);
-+	opp = devfreq_recommended_opp(&pfdev->pdev->dev, &cur_freq, 0);
- 	if (IS_ERR(opp))
- 		return PTR_ERR(opp);
+ void panfrost_devfreq_resume(struct panfrost_device *pfdev)
+ {
+-	int i;
+-
+ 	if (!pfdev->devfreq.devfreq)
+ 		return;
  
--	panfrost_devfreq_profile.initial_freq = pfdev->devfreq.cur_freq;
-+	panfrost_devfreq_profile.initial_freq = cur_freq;
- 	dev_pm_opp_put(opp);
+ 	panfrost_devfreq_reset(pfdev);
+-	for (i = 0; i < NUM_JOB_SLOTS; i++)
+-		pfdev->devfreq.slot[i].busy = false;
  
- 	pfdev->devfreq.devfreq = devm_devfreq_add_device(&pfdev->pdev->dev,
+ 	devfreq_resume_device(pfdev->devfreq.devfreq);
+ }
+@@ -154,9 +136,8 @@ void panfrost_devfreq_suspend(struct panfrost_device *pfdev)
+ 	devfreq_suspend_device(pfdev->devfreq.devfreq);
+ }
+ 
+-static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev, int slot)
++static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev)
+ {
+-	struct panfrost_devfreq_slot *devfreq_slot = &pfdev->devfreq.slot[slot];
+ 	ktime_t now;
+ 	ktime_t last;
+ 
+@@ -164,22 +145,27 @@ static void panfrost_devfreq_update_utilization(struct panfrost_device *pfdev, i
+ 		return;
+ 
+ 	now = ktime_get();
+-	last = pfdev->devfreq.slot[slot].time_last_update;
++	last = pfdev->devfreq.time_last_update;
+ 
+-	/* If we last recorded a transition to busy, we have been idle since */
+-	if (devfreq_slot->busy)
+-		pfdev->devfreq.slot[slot].busy_time += ktime_sub(now, last);
++	if (atomic_read(&pfdev->devfreq.busy_count) > 0)
++		pfdev->devfreq.busy_time += ktime_sub(now, last);
+ 	else
+-		pfdev->devfreq.slot[slot].idle_time += ktime_sub(now, last);
++		pfdev->devfreq.idle_time += ktime_sub(now, last);
++
++	pfdev->devfreq.time_last_update = now;
++}
+ 
+-	pfdev->devfreq.slot[slot].time_last_update = now;
++void panfrost_devfreq_record_busy(struct panfrost_device *pfdev)
++{
++	panfrost_devfreq_update_utilization(pfdev);
++	atomic_inc(&pfdev->devfreq.busy_count);
+ }
+ 
+-/* The job scheduler is expected to call this at every transition busy <-> idle */
+-void panfrost_devfreq_record_transition(struct panfrost_device *pfdev, int slot)
++void panfrost_devfreq_record_idle(struct panfrost_device *pfdev)
+ {
+-	struct panfrost_devfreq_slot *devfreq_slot = &pfdev->devfreq.slot[slot];
++	int count;
+ 
+-	panfrost_devfreq_update_utilization(pfdev, slot);
+-	devfreq_slot->busy = !devfreq_slot->busy;
++	panfrost_devfreq_update_utilization(pfdev);
++	count = atomic_dec_if_positive(&pfdev->devfreq.busy_count);
++	WARN_ON(count < 0);
+ }
+diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.h b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+index e3bc63e82843..0611beffc8d0 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_devfreq.h
++++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.h
+@@ -10,6 +10,7 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev);
+ void panfrost_devfreq_resume(struct panfrost_device *pfdev);
+ void panfrost_devfreq_suspend(struct panfrost_device *pfdev);
+ 
+-void panfrost_devfreq_record_transition(struct panfrost_device *pfdev, int slot);
++void panfrost_devfreq_record_busy(struct panfrost_device *pfdev);
++void panfrost_devfreq_record_idle(struct panfrost_device *pfdev);
+ 
+ #endif /* __PANFROST_DEVFREQ_H__ */
 diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 9c39b9794811..72628f055197 100644
+index 72628f055197..06713811b92c 100644
 --- a/drivers/gpu/drm/panfrost/panfrost_device.h
 +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -93,8 +93,6 @@ struct panfrost_device {
+@@ -51,13 +51,6 @@ struct panfrost_features {
+ 	unsigned long hw_issues[64 / BITS_PER_LONG];
+ };
+ 
+-struct panfrost_devfreq_slot {
+-	ktime_t busy_time;
+-	ktime_t idle_time;
+-	ktime_t time_last_update;
+-	bool busy;
+-};
+-
+ struct panfrost_device {
+ 	struct device *dev;
+ 	struct drm_device *ddev;
+@@ -93,7 +86,10 @@ struct panfrost_device {
  	struct {
  		struct devfreq *devfreq;
  		struct thermal_cooling_device *cooling;
--		unsigned long cur_freq;
--		unsigned long cur_volt;
- 		struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
+-		struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
++		ktime_t busy_time;
++		ktime_t idle_time;
++		ktime_t time_last_update;
++		atomic_t busy_count;
  	} devfreq;
  };
+ 
+diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
+index 33bf25ba506e..d411eb6c8eb9 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_job.c
++++ b/drivers/gpu/drm/panfrost/panfrost_job.c
+@@ -155,8 +155,7 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
+ 	}
+ 
+ 	cfg = panfrost_mmu_as_get(pfdev, &job->file_priv->mmu);
+-
+-	panfrost_devfreq_record_transition(pfdev, js);
++	panfrost_devfreq_record_busy(pfdev);
+ 
+ 	job_write(pfdev, JS_HEAD_NEXT_LO(js), jc_head & 0xFFFFFFFF);
+ 	job_write(pfdev, JS_HEAD_NEXT_HI(js), jc_head >> 32);
+@@ -404,7 +403,7 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
+ 	}
+ 	spin_unlock_irqrestore(&pfdev->js->job_lock, flags);
+ 
+-	panfrost_devfreq_record_transition(pfdev, js);
++	panfrost_devfreq_record_idle(pfdev);
+ 	panfrost_device_reset(pfdev);
+ 
+ 	for (i = 0; i < NUM_JOB_SLOTS; i++)
+@@ -467,7 +466,7 @@ static irqreturn_t panfrost_job_irq_handler(int irq, void *data)
+ 				pfdev->jobs[j] = NULL;
+ 
+ 				panfrost_mmu_as_put(pfdev, &job->file_priv->mmu);
+-				panfrost_devfreq_record_transition(pfdev, j);
++				panfrost_devfreq_record_idle(pfdev);
+ 
+ 				dma_fence_signal_locked(job->done_fence);
+ 				pm_runtime_put_autosuspend(pfdev->dev);
+@@ -568,14 +567,14 @@ int panfrost_job_is_idle(struct panfrost_device *pfdev)
+ 	struct panfrost_job_slot *js = pfdev->js;
+ 	int i;
+ 
++	/* Check whether the hardware is idle */
++	if (atomic_read(&pfdev->devfreq.busy_count))
++		return false;
++
+ 	for (i = 0; i < NUM_JOB_SLOTS; i++) {
+ 		/* If there are any jobs in the HW queue, we're not idle */
+ 		if (atomic_read(&js->queue[i].sched.hw_rq_count))
+ 			return false;
+-
+-		/* Check whether the hardware is idle */
+-		if (pfdev->devfreq.slot[i].busy)
+-			return false;
+ 	}
+ 
+ 	return true;
 -- 
 2.20.1
 
