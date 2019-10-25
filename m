@@ -2,102 +2,108 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760E5CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0817CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD5221872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ws9PLaNt"
+	by mail.kernel.org (Postfix) with ESMTP id 77D9120663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572021046;
+	bh=XN3xAz+czdXLsyki4/WdZ/IMk5xWphsk8nyvZO1GUu0=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=cYpbXRS8vEo8t9bx2UQILRgaQDDNBdAWGK7YaStzOLNJ3JXLw/cMVHLMODAIOTD+U
+	 0zo7kzOxy7IXOHOWTm29Fxrm9tg+HLigPa8XvRN714wR7ZOieoN3j3w9KT0HaykeC+
+	 Sp/+e/HXBAHdpUdM6Kv/dgIzmDs8wyZLMlyqAU6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633039AbfJYQ14 (ORCPT
+        id S2633065AbfJYQap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 12:27:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36351 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505728AbfJYQ1z (ORCPT
+        Fri, 25 Oct 2019 12:30:45 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:42492 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733010AbfJYQao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:27:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id c16so3099336ioc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 09:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=RaDvY6LWZ/yZX1Gor0UyKnQkPXm7WlGMpaKJhq/jVms=;
-        b=ws9PLaNtS2Vs7N+gwq3wuxTl8ddkUm0eF3zqwKbupfigCYPVUJ7sr18qgftp+jHQ+K
-         jqgvoYgNUAz5GX8mRS0pqloApfqLkovP9aOKBJ8EcuSiXrJkhBhexauQ3F9AQ4ZKkZ66
-         BklMZXpMSe/W6VzpEo8cB7e5DL7NZihYMIouBZTtcsK8sw5iw/K19iYL7p2wHbXLiT9p
-         c4HmcEJwGWawKaWQQn6wOpmaAw557J5FMFeC6u1SSTN6enmBRUbhq0QeirxDcLKdwfvM
-         JCVZMzFILX+VtlmMIP5QpC2Qjrr89v9KM/hlwCEEg633WsTyF12Vbdu/I8itDWIY56Nf
-         Texw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RaDvY6LWZ/yZX1Gor0UyKnQkPXm7WlGMpaKJhq/jVms=;
-        b=Asf+lluyooKlRW7UgqfMowpOWHCSFge9R2kfFOI1ju7DEWLxO1PShdxMndNV78DjWF
-         rP3GFMAK4VvkoQ/HR7yUVA7iEsA7YyVJkQJO35QjQWsUr4jJxq8qfsDeeKL5nXkjN/up
-         9bkPvizn78XGKXkrd1ML4gKo/hWlnzHPAuR4G4R2jt670P1qPmAwS02P1Lk4PTQAopEs
-         SICyfyAL4X9IpNuWX3IbRdv3WGb6VIwDvZ5VVOeBzoVs72Yed1wWK1q/ehk19upcoGum
-         YyJtqVc13rSu26CskAPKqXXufugU6HZMUJfLEiTxyTc3vDXA6M4UTupRIjHXFoM1q3TG
-         Me4w==
-X-Gm-Message-State: APjAAAUJjzwLGwA0ILllp0URj5r2xaqNSvrKQ80Bo1r63+csaajD8iPf
-        5+nQIBS22vLA6AHtuvZyuMAwABKINoj8TQ==
-X-Google-Smtp-Source: APXvYqxXSmEHcQy85qGn/KxnpvoMemzTN/kWJyZmSFui3ekTNgy4YIHRWXy1SYpaWRsDxeahPYAK6A==
-X-Received: by 2002:a6b:c98e:: with SMTP id z136mr4182029iof.15.1572020872810;
-        Fri, 25 Oct 2019 09:27:52 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id p5sm364983ils.32.2019.10.25.09.27.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 09:27:51 -0700 (PDT)
-Subject: Re: [BUG] io_uring: defer logic based on shared data
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
- <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
- <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
-Date:   Fri, 25 Oct 2019 10:27:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 12:30:44 -0400
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iO2Tk-0008W8-Nd; Fri, 25 Oct 2019 18:30:20 +0200
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v3 00/15] KVM: Dynamically size memslot arrays
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 25 Oct 2019 17:30:20 +0100
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?Q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <linux-mips@vger.kernel.org>, <kvm-ppc@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Christoffer Dall <christoffer.dall@arm.com>
+In-Reply-To: <20191024230744.14543-1-sean.j.christopherson@intel.com>
+References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
+Message-ID: <2fc05685467a01c2f1c2afeacefb2f68@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: sean.j.christopherson@intel.com, jhogan@kernel.org, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, pbonzini@redhat.com, rkrcmar@redhat.com, david@redhat.com, cohuck@redhat.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, christoffer.dall@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 10:21 AM, Pavel Begunkov wrote:
-> On 25/10/2019 19:03, Jens Axboe wrote:
->> On 10/25/19 3:55 AM, Pavel Begunkov wrote:
->>> I found 2 problems with __io_sequence_defer().
->>>
->>> 1. it uses @sq_dropped, but doesn't consider @cq_overflow
->>> 2. @sq_dropped and @cq_overflow are write-shared with userspace, so
->>> it can be maliciously changed.
->>>
->>> see sent liburing test (test/defer *_hung()), which left an unkillable
->>> process for me
->>
->> OK, how about the below. I'll split this in two, as it's really two
->> separate fixes.
-> cached_sq_dropped is good, but I was concerned about cached_cq_overflow.
-> io_cqring_fill_event() can be called in async, so shouldn't we do some
-> synchronisation then?
+On 2019-10-25 00:07, Sean Christopherson wrote:
+> The end goal of this series is to dynamically size the memslot array 
+> so
+> that KVM allocates memory based on the number of memslots in use, as
+> opposed to unconditionally allocating memory for the maximum number 
+> of
+> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 
+> address
+> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
+> E.g. given a VM that uses a total of 30 memslots, dynamic sizing 
+> reduces
+> the memory footprint from 90k to ~2.6k bytes.
+>
+> The changes required to support dynamic sizing are relatively small,
+> e.g. are essentially contained in patches 14/15 and 15/15.  Patches 
+> 1-13
+> clean up the memslot code, which has gotten quite crusty, especially
+> __kvm_set_memory_region().  The clean up is likely not strictly 
+> necessary
+> to switch to dynamic sizing, but I didn't have a remotely reasonable
+> level of confidence in the correctness of the dynamic sizing without 
+> first
+> doing the clean up.
 
-We should probably make it an atomic just to be on the safe side, I'll
-update the series.
+I've finally found time to test this on a garden variety of arm64 
+boxes,
+and nothing caught fire. It surely must be doing something right!
 
+FWIW:
+
+Tested-by: Marc Zyngier <maz@kernel.org>
+
+         M.
 -- 
-Jens Axboe
-
+Jazz is not dead. It just smells funny...
