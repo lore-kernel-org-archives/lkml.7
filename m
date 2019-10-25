@@ -2,104 +2,114 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EFFCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461B0CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7DE21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0B621D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OYLGm1XB"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lD93IP13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfJYTre (ORCPT
+        id S1727629AbfJYTt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:47:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35055 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbfJYTrd (ORCPT
+        Fri, 25 Oct 2019 15:49:28 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38732 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfJYTt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:47:33 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c8so2216715pgb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:47:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ATnBH+fO0d5E9Wqzzop3u/f1RSiDw9WOqJk8YOk0Z1k=;
-        b=OYLGm1XBbcR3zvW7QsuaUyvVFB/8ILldOsqj73bWK/5SfxXveRwd2hAtJeeKAr2U97
-         cKmZQZ2JX9MsrOF6zRB6TUaxs4bq4Wb1h7JjBoCGodVfKxxYcAZfnTCjLuHkIZd1VIM5
-         Iaj6OmGmBNPPjVXWoGoNIzA60tQuRhEhkPUhA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ATnBH+fO0d5E9Wqzzop3u/f1RSiDw9WOqJk8YOk0Z1k=;
-        b=EpRBOZr3XRVRpT0f0RK0J/ZBtbORPJmhS75iHO0+Z5mqyTnakMExeCKCYE4WwH2rD/
-         LUFo+LrSiS/56pTi7q5XHZIhwgRvX6E2gH9/1TeYgJGrFs+RM7GmvHeEIOqWuvlZGwFB
-         7q3uaSCN/DbamWpPcUhzgo7rfsOFKcEwZpJC0Hr4tuOrUhDUTH6ZWBNmhJ/ZWAItTmJE
-         VfTfJgeNTVnBuUj5cZ/cvH2KPoE1c9x8yQHOkxlfGVezHdrcTtRgznZULy/fUTIGqcse
-         Dvw1cvBIZMIkyuKy7SoB1MSw794xikqWpJU7UKKkSKt9bNas47JGxL7Q7Yt6ueJK9ojS
-         MDQQ==
-X-Gm-Message-State: APjAAAX7acRpBCaVAoWEBkA6xhB70JsRQXl2TzOm9na9XBmXGUmPHnOE
-        M5PhklrTnQ3bPrpdr7Wph3bVaQ==
-X-Google-Smtp-Source: APXvYqwkKVw1bAAQBUi8yqP1MVOYlX5JePdNh+IRgQ/w6eYv3qmLpuUqAW7yQ1Cci4uJUYPWLV5LyA==
-X-Received: by 2002:a63:3003:: with SMTP id w3mr6655849pgw.364.1572032852353;
-        Fri, 25 Oct 2019 12:47:32 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 16sm3500789pfn.35.2019.10.25.12.47.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 12:47:31 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 12:47:30 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
- controller
-Message-ID: <20191025194730.GM20212@google.com>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-12-rnayak@codeaurora.org>
+        Fri, 25 Oct 2019 15:49:28 -0400
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 632C62010AC9;
+        Fri, 25 Oct 2019 12:49:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 632C62010AC9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1572032967;
+        bh=arffu6CtqVuIvQ0iJb4yQV3sPO18YA6ZcJjsgBLt/xQ=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=lD93IP13AyAM2AwIGQvUum25fkCiBf3v7KXinxUlkR4XjpFDt5L83C2dKGYY3/tiu
+         Hrn2jhYlP4712hBMEMtZ9zx7eNeKe56E8ME8t/sv7Y6J78os4oUe4F6I4GeL+LtQi6
+         QENmDTLIJ9GIhTP8aIuKaFddenhSXQtN7EiMFd+g=
+Subject: Re: [PATCH v2 1/4] KEYS: Defined an ima hook for measuring keys on
+ key create or update
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        casey@schaufler-ca.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191023233950.22072-1-nramas@linux.microsoft.com>
+ <20191023233950.22072-2-nramas@linux.microsoft.com>
+ <1572032428.4532.72.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <715d35ba-a102-3524-77a8-70a784628b46@linux.microsoft.com>
+Date:   Fri, 25 Oct 2019 12:49:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191023090219.15603-12-rnayak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1572032428.4532.72.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajendra/Maulik,
+On 10/25/2019 12:40 PM, Mimi Zohar wrote:
 
-On Wed, Oct 23, 2019 at 02:32:19PM +0530, Rajendra Nayak wrote:
-> From: Maulik Shah <mkshah@codeaurora.org>
+> On Wed, 2019-10-23 at 16:39 -0700, Lakshmi Ramasubramanian wrote:
+>> Defined an ima hook to measure keys created or updated in the system.
 > 
-> Add pdc interrupt controller for sc7180
-> 
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
-> v3:
-> Used the qcom,sdm845-pdc compatible for pdc node
-> 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index f2981ada578f..07ea393c2b5f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -184,6 +184,16 @@
->  			#power-domain-cells = <1>;
->  		};
->  
-> +		pdc: interrupt-controller@b220000 {
+> "IMA" is an anacronym.  Unless it is a part of a function name, it
+> should be capitalized.
+Will fix that.
 
-Aren't the nodes supposed to be ordered by address as for SDM845?
-If so this node should be added after 'qupv3_id_1: geniqup@ac0000',
-not before.
+> 
+> Before describing "what" you're doing, describe the problem.  For
+> example, "The asymmetric keys used for verifying file signatures or
+> certificates are currently not included in the IMA measurement list.
+>   This patch defines a new IMA hook named ima_key_create_or_update() to
+> measure keys."
+Agree - will update.
+
+
+>> +
+>> +	if (!ima_initialized)
+>> +		return;
+> 
+> There's no reason to define a new variable to determine if IMA is
+> initialized.  Use ima_policy_flag.
+Will change it.
+
+>  Like process_measurements, the test should be in process_buffer_measurement(), not here.
+
+Currently, queuing of requests when IMA is not initialized is done for 
+keys only. Moving that check inside process_buffer_measurement would 
+mean handling queuing for all buffer measurements.
+
+Can that be done as a separate patch set and not in this one?
+
+>> @@ -936,6 +937,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+>>   		goto error_link_end;
+>>   	}
+>>   
+>> +	/* let the ima module know about the created key. */
+>> +	ima_post_key_create_or_update(keyring, key, flags, true);
+>> +
+>>   	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
+> 
+> This patch defines the new IMA hook.  This call and the subsequent one
+> below can be defined in a separate patch.  The subject line of that
+> patch would be "keys: Add ima_key_create_or_update call to measure
+> keys".
+> 
+> Mimi
+Agree - will change it.
+
+thanks,
+  -lakshmi
