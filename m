@@ -2,101 +2,163 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEE9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C20CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B560320663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ME0YWFZW"
+	by mail.kernel.org (Postfix) with ESMTP id A5AD5222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409009AbfJYKJp (ORCPT
+        id S2409028AbfJYKKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:09:45 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49238 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405435AbfJYKJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:09:43 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9P9kJ7s013500;
-        Fri, 25 Oct 2019 12:09:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=3CmaVffBxE3uJFrNAgwHUb+zxRINz2K1o3h0Psd77+A=;
- b=ME0YWFZWHlV0X3KTUfj053wzdl9tyR1xZ6jkn11lXi//vssFQMNHcByMdjkDZ7RwKm/g
- CAcSY6FL6pxYxqjueeZojXh6EThZ5vsj8rrqZ3LoAHwe7iD6GHVITT1NOQOR/lpKXh13
- 12kc0me3h+wV8Ye2CS+q4+uM3bks2tKRQC6sjHk/K1S9ugz0TlyToFh26rY54sF/MoxO
- cSqqEFLTHO023gDA+Dnnk9mWj4YXrWC78Ioi5EOCESR1SQ9z9OKw+mvu7+LDglpr++Z6
- NolohpTVRaF5jJOpR1pQ1kcCYp9t0noNDy1ZR/Df4nAH2y5jpaKPwaxKRKEPMZQlKajW LA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vt9s7f0yr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 12:09:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A37B210002A;
-        Fri, 25 Oct 2019 12:09:31 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 951842C38A0;
-        Fri, 25 Oct 2019 12:09:31 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 25 Oct
- 2019 12:09:31 +0200
-Subject: Re: [PATCH 0/4] update regulator configuration for stm32mp157 boards
-To:     Pascal Paillet <p.paillet@st.com>, <mcoquelin.stm32@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191011140533.32619-1-p.paillet@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <cd4f7f4c-1919-acbe-489e-5021fb8499d8@st.com>
-Date:   Fri, 25 Oct 2019 12:09:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 06:10:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:38382 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2409013AbfJYKKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:10:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4365B28;
+        Fri, 25 Oct 2019 03:10:17 -0700 (PDT)
+Received: from [10.162.41.137] (p8cg001049571a15.blr.arm.com [10.162.41.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FC723F6C4;
+        Fri, 25 Oct 2019 03:10:05 -0700 (PDT)
+Subject: Re: [PATCH V7] mm/debug: Add tests validating architecture page table
+ helpers
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <ccdd4f7a-c7dc-ca10-d30c-0bc05c7136c7@arm.com>
+ <69256008-2235-4AF1-A3BA-0146C82CCB93@lca.pw>
+ <3cfec421-4006-4159-ca32-313ff5196ff9@c-s.fr>
+ <763d58b4-f532-0bba-bf2b-71433ac514fb@arm.com>
+ <d811622e-0d35-3bc6-9568-36abc1bee355@c-s.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <78d13292-0cfe-31b6-7a9c-daf7fb7f3d23@arm.com>
+Date:   Fri, 25 Oct 2019 15:40:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191011140533.32619-1-p.paillet@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <d811622e-0d35-3bc6-9568-36abc1bee355@c-s.fr>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-25_05:2019-10-23,2019-10-25 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pascal
 
-On 10/11/19 4:05 PM, Pascal Paillet wrote:
-> The goal of this patch-set is to
-> - add support of PWR blok regulators on the stm32mp157 boards
-> - undapte various regulator configurations
-> 
-> Pascal Paillet (4):
->    ARM: dts: stm32: add PWR regulators support on stm32mp157
->    ARM: dts: stm32: change default minimal buck1 value on stm32mp157
->    ARM: dts: stm32: Fix active discharge usage on stm32mp157
->    ARM: dts: stm32: disable active-discharge for vbus_otg on
->      stm32mp157a-avenger96
-> 
->   arch/arm/boot/dts/stm32mp157a-avenger96.dts |  8 +++++--
->   arch/arm/boot/dts/stm32mp157a-dk1.dts       |  9 ++++++--
->   arch/arm/boot/dts/stm32mp157c-dk2.dts       |  8 -------
->   arch/arm/boot/dts/stm32mp157c-ed1.dts       | 25 ++++++---------------
->   arch/arm/boot/dts/stm32mp157c.dtsi          | 23 +++++++++++++++++++
->   5 files changed, 43 insertions(+), 30 deletions(-)
-> 
 
-Series applied on stm32-next.
+On 10/25/2019 02:22 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 25/10/2019 à 10:24, Anshuman Khandual a écrit :
+>>
+>>
+>> On 10/25/2019 12:41 PM, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 25/10/2019 à 07:52, Qian Cai a écrit :
+>>>>
+>>>>
+>>>>> On Oct 24, 2019, at 11:45 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
+>>>>>
+>>>>> Nothing specific. But just tested this with x86 defconfig with relevant configs
+>>>>> which are required for this test. Not sure if it involved W=1.
+>>>>
+>>>> No, it will not. It needs to run like,
+>>>>
+>>>> make W=1 -j 64 2>/tmp/warns
+>>>>
+>>>
+>>> Are we talking about this peace of code ?
+>>>
+>>> +static unsigned long __init get_random_vaddr(void)
+>>> +{
+>>> +    unsigned long random_vaddr, random_pages, total_user_pages;
+>>> +
+>>> +    total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
+>>> +
+>>> +    random_pages = get_random_long() % total_user_pages;
+>>> +    random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
+>>> +
+>>> +    WARN_ON((random_vaddr > TASK_SIZE) ||
+>>> +        (random_vaddr < FIRST_USER_ADDRESS));
+>>> +    return random_vaddr;
+>>> +}
+>>> +
+>>>
+>>> ramdom_vaddr is unsigned,
+>>> random_pages is unsigned and lower than total_user_pages
+>>>
+>>> So the max value random_vaddr can get is FIRST_USER_ADDRESS + ((TASK_SIZE - FIRST_USER_ADDRESS - 1) / PAGE_SIZE) * PAGE_SIZE = TASK_SIZE - 1
+>>> And the min value random_vaddr can get is FIRST_USER_ADDRESS (that's when random_pages = 0)
+>>
+>> That's right.
+>>
+>>>
+>>> So the WARN_ON() is just unneeded, isn't it ?
+>>
+>> It is just a sanity check on possible vaddr values before it's corresponding
+>> page table mappings could be created. If it's worth to drop this in favor of
+>> avoiding these unwanted warning messages on x86, will go ahead with it as it
+>> is not super important.
+>>
+> 
+> But you are checking what ? That the compiler does calculation correctly or what ?
 
-Regards
-Alex
+IIRC, probably this was for later if and when the vaddr calculation becomes
+dependent on other factors rather than this simple arithmetic involving start
+and end of process address space on a platform.
+
+> As mentionned just above, based on the calculation done, what you are testing cannot happen, so I'm having a hard time understanding what kind of sanity check it can be.
+
+You are right.
+
+> 
+> Can you give an exemple of a situation which could trigger the warning ?
+
+I was mistaken. We dont need those checks for now, hence will drop them next time.
+
+> 
+> Christophe
+> 
