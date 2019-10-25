@@ -2,99 +2,201 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40959CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E400CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14ADC21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E26222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="cQVFHky3"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ghmjdeVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394573AbfJYNTy (ORCPT
+        id S2394590AbfJYNXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:19:54 -0400
-Received: from mout.gmx.net ([212.227.17.22]:42897 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394561AbfJYNTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:19:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572009580;
-        bh=KFRM/HuQYrBsmzUGAol+zTtrK8sFAfsaYLY7BYhLUSE=;
-        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
-         References;
-        b=cQVFHky33nyI+63EU/Z0YFLvNd2hFP4hzV7/zX54U+EJosF7b6j/8OgoVERM2TQb9
-         zU8KJufzEhc0V+hc9XE5EjW4PylZWIy4eUSX5QYnxyf6CCS79Ydc/kgfFaYj9xUDwE
-         DQuVV1/2g076OrHPiHufi5ni86M3gTpjGemCP7cc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mlf0U-1hfGob3qew-00ilro; Fri, 25
- Oct 2019 15:19:39 +0200
-Message-ID: <3f6f8ac5dd3c3f053c682e8fc408c85d7b3e93e0.camel@gmx.de>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-From:   Robert Stupp <snazy@gmx.de>
-Reply-To: snazy@snazy.de
-To:     snazy@snazy.de, Michal Hocko <mhocko@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Date:   Fri, 25 Oct 2019 15:19:37 +0200
-In-Reply-To: <eab6798a6081fba94353be71681fcd8c7dcf8011.camel@gmx.de>
-References: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
-         <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
-         <20191025092143.GE658@dhcp22.suse.cz>
-         <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
-         <20191025114633.GE17610@dhcp22.suse.cz>
-         <20191025115038.GF17610@dhcp22.suse.cz>
-         <eab6798a6081fba94353be71681fcd8c7dcf8011.camel@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 25 Oct 2019 09:23:21 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39101 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394579AbfJYNXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:23:21 -0400
+Received: by mail-il1-f194.google.com with SMTP id i12so1818136ils.6
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 06:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ojEgknO9gsXeCFh5vUTwvNw4vcn18ObyJp/IQFfkXH4=;
+        b=ghmjdeVEvFvSvG4KtfjhR9Z3D1l6oZlkktIdvWK/D7Ly8jj0WNyKfHtTZc2lgjStTT
+         Xhoobs6lf5kaUYh2SlVmVWTe7V9HLUkNK1oACZ2zm8ZnaLajhW8HKmt+IKWw4oUmHjBA
+         R4JdZ7vYqxS4PsSR+hVLfAdIlGiVChkESV0Sk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ojEgknO9gsXeCFh5vUTwvNw4vcn18ObyJp/IQFfkXH4=;
+        b=TaonmSymCKIxTDSwaKdE8HyfJ7/y0oOHGc4JDgxrkq9J2qMt/9/HlYS6OslvikY9lt
+         FUEFSfVH9Cr7aug1zk8tvKaUVaYWFXTrHT0nAuIaft7FqzUudyZqFmILepqlG9sL2I2w
+         1NTvQRsS9EAb2DX+ak77qPfgXYI/AkI/ynl9ZmfbQQsFqEAWFnaXmfxpNVxubFwZF0yz
+         PvFzP4QgnyPCRpE4OjjxL85WTcOpoZT9B0D1o9A/sOaK/eILuCUS5b3/kL+bcsOcpt7I
+         bm4Lsw/fQ2R2NdAKwKdm/D+qr1KDp+3EMMMcN50xy/w3qN1NeMiDA/QeN0sUJOYvUF6a
+         ud8Q==
+X-Gm-Message-State: APjAAAULTJKetxsSwYj5HLL7M5PkS1nvKBF+ynHVfY1iHEk1Ck6bR/wa
+        CsfzX21lamBNOef8gHScMqH8I0vwi/uIIufyjxJ3QA==
+X-Google-Smtp-Source: APXvYqw0pBA4TWcmcAghY5wftGh5PsNrcHujAq3KoFAEr3ZRnDiuFICtxs82RGWOsFQdTo67xfnYb+skWRVTZwG0zos=
+X-Received: by 2002:a92:5d8f:: with SMTP id e15mr4259484ilg.173.1572009800025;
+ Fri, 25 Oct 2019 06:23:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Q6llJXN/am3SGFo+oibZ1pCgXyV1XsvnsZFtNqUCawdAvCMcZdU
- xgqttSCpTyJuLIS+wt8q/75J0L/91em0rU4c7pMqEsNNQOvbNoWlknyPJbeplL5eANmRkjR
- fARCp5v0a8qIMGVYdhIGz8u40415NGBQKBQmKTUb7TrVF/c2oD2po3e4wzEfoKTNLV/PfsA
- LtJlJVwMDa5gNkaEnYpYA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Lk83J9fMnHY=:aKC97v3q4y6d5T1C3vLaP3
- buogJYs0jBkvbzCI8XmxnlLLVe5JDQQkf2SfpLP3CM96Obsg4nKWYBUB5bKMMwDf6ghCTFv1g
- GvY5PY0n5a6iJPAHdozhZKTg5CwEWIMHeoivCuzdczejU3yZNhfrKkgMgIuPPP2eJH2yZr8tI
- j6wdjMLv/h/SPSNxBgCp4UmHq7z/E3TJ9+j7tFjvvaTNOojgq/U49B+5mRWlH5RQKmIpoN2K6
- CeMPK4z1hyEoTgcS3cHGfjCCb7FutILyBqUf5LKtaWiRQDOXyjEDxK1ktB+JXZhzx64d01y2K
- MVgD3t36Q+dVV59PHqLx8J6zJmdmkA+uC0VXmD7klLy/57PyJwXcl5+pRTZtLSE/dCOVwSYG4
- 6z6XsRPPa1pHfO1mq7TgKiND0trd/rVuWKvKysPXrS01EZOKP+iu8QufO3AYLnMwapPfUqbo2
- n0MLHeS3t+7nRGm+VH9cGggf42LlbnmzqifRhHSMju1sxAyG9OA81Cs86tPHfGL8iT/tt3G1d
- e0qeezUCOss4qOt7mORCOJ57aWvMD3+LnC3v4/wBc1ImL6I1b+05vWKLTJFk7RQLkuD2zEMrq
- 3h2oTDnXo0nzHd3uwc3KMiu4t8NFAHbCdHhSJMXxKK4bP1ds0+m7vwH5PWP7DncDBjVxI1mQX
- 8G/0JXYG41zN4rrY1/nc8icW70jouYw0kX0syAgJcOcR+SqYeVbdd/sabLxkCZfQ5rDecwNoE
- gK/GyIpZFmsoPmtpoZUWYo/Yza3h5zSPQkZxVmGhUiBH9umdMTPZC2xllYc+rORCETFqQKjWh
- fW2c4DkpN5wjtVkWBQj2QeS2FQJIi0WMz4IuyE/9jC2r4ay6dtrP3ezDIpaDq+tiO1G4QNDpL
- kd4ZiDvjntvdjZkB8Ejp/eG/jWScSZreotG3z0YLWiad9tDK6VpVESrQ6g/I3mLazZeWFpl3k
- eW7ujeY4NosaxJgrcjmNho5ucQ3GhxsfNCsKKzMHw5Guiuc4QlnIQweRyIAADRl5rA5ygb/CL
- +qnFnyPbl9bvHMcXu8C5CUpY6QYI/3iRee+QahIKxgPJ4KWcXWGTwowZPquCMu3QxIg87YIhC
- +oOXVR4brg0ackPyFxtsnUCdzNoecvtsyoqYKJdo+NJ7n3uwKe1b0uAQ558O7AfRoieKZCi7r
- 3q38UzzN/6zmyniB1YiDMCUbl2WbWP3pb+BFCSs++BOUT/VUY0+5ZXwDyFzc198S8Glm14wAM
- f+BY8KQNEsHFTrPBIf9ABsTIB9Zz/BXU9uADT6Q==
+References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+ <20191005141913.22020-6-jagan@amarulasolutions.com> <20191007105708.raxavxk4n7bvxh7x@gilmour>
+ <CAMty3ZCiwOGgwbsjTHvEZhwHGhsgb6_FeBs9hHgLai9=rV2_HQ@mail.gmail.com>
+ <20191016080306.44pmo3rfmtnkgosq@gilmour> <CAMty3ZCTE=W+TNRvdowec-eYB625j97uG8F3fzVMtRFsKsqFFQ@mail.gmail.com>
+ <20191017095225.ntx647ivegaldlyf@gilmour> <CAMty3ZAvqRLh16vFd-63h4+SzQkNydGfNKX_pByqFD-hZfncpQ@mail.gmail.com>
+ <20191024182749.czihj3gnvj5yz2eo@hendrix>
+In-Reply-To: <20191024182749.czihj3gnvj5yz2eo@hendrix>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 25 Oct 2019 18:53:08 +0530
+Message-ID: <CAMty3ZBL+P82uZP0dT0Y695p1K9tyxgqQ-X14OE+H4dZmXMkpg@mail.gmail.com>
+Subject: Re: [PATCH v10 5/6] arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 13:59 +0200, Robert Stupp wrote:
-> On Fri, 2019-10-25 at 13:50 +0200, Michal Hocko wrote:
-> > On Fri 25-10-19 13:46:33, Michal Hocko wrote:
-> > >
-> I suspect, that it's something that's "special" on my machine. But
-> I've
-> got no clue what that might be. Do you think it makes sense to try
-> with
-> all the spectre/meltdown mitigations disabled? Or SMT disabled?
+On Fri, Oct 25, 2019 at 12:33 AM Maxime Ripard <mripard@kernel.org> wrote:
 >
+> On Thu, Oct 24, 2019 at 01:28:28PM +0530, Jagan Teki wrote:
+> > On Thu, Oct 17, 2019 at 3:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > On Wed, Oct 16, 2019 at 02:19:44PM +0530, Jagan Teki wrote:
+> > > > On Wed, Oct 16, 2019 at 1:33 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > > >
+> > > > > On Mon, Oct 14, 2019 at 05:37:50PM +0530, Jagan Teki wrote:
+> > > > > > On Mon, Oct 7, 2019 at 4:27 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Sat, Oct 05, 2019 at 07:49:12PM +0530, Jagan Teki wrote:
+> > > > > > > > Add MIPI DSI pipeline for Allwinner A64.
+> > > > > > > >
+> > > > > > > > - dsi node, with A64 compatible since it doesn't support
+> > > > > > > >   DSI_SCLK gating unlike A33
+> > > > > > > > - dphy node, with A64 compatible with A33 fallback since
+> > > > > > > >   DPHY on A64 and A33 is similar
+> > > > > > > > - finally, attach the dsi_in to tcon0 for complete MIPI DSI
+> > > > > > > >
+> > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > > > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> > > > > > > > ---
+> > > > > > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++++
+> > > > > > > >  1 file changed, 38 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > > index 69128a6dfc46..ad4170b8aee0 100644
+> > > > > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > > > > > @@ -382,6 +382,12 @@
+> > > > > > > >                                       #address-cells = <1>;
+> > > > > > > >                                       #size-cells = <0>;
+> > > > > > > >                                       reg = <1>;
+> > > > > > > > +
+> > > > > > > > +                                     tcon0_out_dsi: endpoint@1 {
+> > > > > > > > +                                             reg = <1>;
+> > > > > > > > +                                             remote-endpoint = <&dsi_in_tcon0>;
+> > > > > > > > +                                             allwinner,tcon-channel = <1>;
+> > > > > > > > +                                     };
+> > > > > > > >                               };
+> > > > > > > >                       };
+> > > > > > > >               };
+> > > > > > > > @@ -1003,6 +1009,38 @@
+> > > > > > > >                       status = "disabled";
+> > > > > > > >               };
+> > > > > > > >
+> > > > > > > > +             dsi: dsi@1ca0000 {
+> > > > > > > > +                     compatible = "allwinner,sun50i-a64-mipi-dsi";
+> > > > > > > > +                     reg = <0x01ca0000 0x1000>;
+> > > > > > > > +                     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > > +                     clocks = <&ccu CLK_BUS_MIPI_DSI>;
+> > > > > > > > +                     clock-names = "bus";
+> > > > > > >
+> > > > > > > This won't validate with the bindings you have either here, since it
+> > > > > > > still expects bus and mod.
+> > > > > > >
+> > > > > > > I guess in that cas, we can just drop clock-names, which will require
+> > > > > > > a bit of work on the driver side as well.
+> > > > > >
+> > > > > > Okay.
+> > > > > > mod clock is not required for a64, ie reason we have has_mod_clk quirk
+> > > > > > patch. Adjust the clock-names: on dt-bindings would make sense here,
+> > > > > > what do you think?
+> > > > >
+> > > > > I'm confused, what are you suggesting?
+> > > >
+> > > > Sorry for the confusion.
+> > > >
+> > > > The mod clock is not required for A64 and we have a patch for handling
+> > > > mod clock using has_mod_clk quirk(on the series), indeed the mod clock
+> > > > is available in A31 and not needed for A64. So, to satisfy this
+> > > > requirement the clock-names on dt-bindings can update to make mod
+> > > > clock-name is optional and bus clock is required.
+> > >
+> > > No, the bus clock name is not needed if there's only one clock.
+> >
+> > Okay, is it because the same clock handle it on PHY side?
+>
+> No, because there's only one clock and thus you don't need to
+> differentiate them.
+>
+> > >
+> > > > I'm not exactly sure, this is correct but trying to understand if it
+> > > > is possible or not? something like
+> > > >
+> > > >    clocks:
+> > > >       minItems: 1
+> > > >       maxItems: 2
+> > > >      items:
+> > > >        - description: Bus Clock
+> > > >        - description: Module Clock
+> > >
+> > > That's correct.
+> > >
+> > > >    clock-names:
+> > > >       minItems: 1
+> > > >       maxItems: 2
+> > > >      items:
+> > > >        - const: bus
+> > > >        - const: mod
+> > >
+> > > Here, just keep the current clock-names definition, and make it
+> > > required only for SoCs that are not the A64
+> >
+> > Okay, please have a look here I have pasted the diff for comments.
+> >
+> >    clocks:
+> > +    minItems: 2
+> >      items:
+> >        - description: Bus Clock
+> >        - description: Module Clock
+>
+> Didn't you tell me that you didn't need the module clock?
+>
+> How do you handle the case were you just have the bus clock then?
 
-Bummer - booting the kernel with `mitigations=3Doff` didn't help.
-
-
+Make sense, it is my mistake then. we don't require to specify here I
+think since it implies globally. I think it should be sufficient to
+mention on allOf: section based on the SoC like I mentioned in above
+snippet.
