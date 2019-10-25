@@ -2,60 +2,62 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE18CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F2ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F42206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B72D2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uwRBtnrt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U0lEHUyh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436697AbfJYHaD (ORCPT
+        id S2436812AbfJYHaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:30:03 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41784 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393141AbfJYHaD (ORCPT
+        Fri, 25 Oct 2019 03:30:06 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48878 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436703AbfJYHaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:30:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P7TuEW083485;
-        Fri, 25 Oct 2019 02:29:56 -0500
+        Fri, 25 Oct 2019 03:30:04 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P7TwoV011174;
+        Fri, 25 Oct 2019 02:29:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571988596;
-        bh=1cUSfoEykjjueYG50S/BGu6RsBmbXbVHtUUcLABJHMI=;
-        h=From:To:CC:Subject:Date;
-        b=uwRBtnrtb3CFRjtSl0++4rf3rnturX1wqc1+D9oes00aGejogJ7GbOKKslvkEwjjV
-         I19AB807gOyTl43CB3aaKU3+cqj9tPekh9xEGcOm4Neu3Fxr5ZNPZI5wvP4SoIy8fi
-         HUJdRg1i7p0Xh/lnJgDVLAQIOr7UifrA2flW/vfU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9P7TuIY094281
+        s=ti-com-17Q1; t=1571988598;
+        bh=arZMjFkSUwGW/O88UV38VO+/3czIljIqMYjKH7DkrHA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=U0lEHUyhrqMnzuVElsu8rzeZSrYdZtm971/hBuSLwdGIRpVfAuRVUTe33qwl0eRg3
+         CY4siQFyPpPGUKYZa0VbC6Re5PF87WPCQxTOGV3RtaKZXNrl7JRq5XkBzxI+h0ln0D
+         cypjjoWoo42mHJtbi8IcnVobtlVwA/DPJQUbpBUg=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9P7Twk6105539
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 25 Oct 2019 02:29:56 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 25 Oct 2019 02:29:58 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
- Oct 2019 02:29:55 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2019 02:29:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 25 Oct 2019 02:29:44 -0500
+ Frontend Transport; Fri, 25 Oct 2019 02:29:47 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7Tr4F103329;
-        Fri, 25 Oct 2019 02:29:53 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7Tr4G103329;
+        Fri, 25 Oct 2019 02:29:55 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v5 0/3] dmaengine: bindings/edma: dma-channel-mask to array
-Date:   Fri, 25 Oct 2019 10:30:53 +0300
-Message-ID: <20191025073056.25450-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v5 1/3] dt-bindings: dmaengine: dma-common: Change dma-channel-mask to uint32-array
+Date:   Fri, 25 Oct 2019 10:30:54 +0300
+Message-ID: <20191025073056.25450-2-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191025073056.25450-1-peter.ujfalusi@ti.com>
+References: <20191025073056.25450-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -65,47 +67,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Make the dma-channel-mask to be usable for controllers with more than 32
+channels.
 
-Changes since v4:
-- Rebased on next to make it apply cleanly
-- Added Reviewed-by from Rob for the DT documentation patches
-
-Changes since v3:
-- Update the dma-common.yaml and edma binding documentation according to Rob's
-  suggestion
-
-Changes since v2:
-- Fix dma-common.yaml documentation patch and extend the description of the
-  dma-channel-mask array
-- The edma documentation now includes information on the dma-channel-mask array
-  size for EDMAs with 32 or 64 channels
-
-Changes since v1:
-- Extend the common dma-channel-mask to uint32-array to be usable for
-  controllers with more than 32 channels
-- Use the dma-channel-mask instead custom property for available channels for
-  EDMA.
-
-The original patch was part of the EDMA multicore usage series.
-
-EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
-needs to be an array to be usable for the driver.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Peter Ujfalusi (3):
-  dt-bindings: dmaengine: dma-common: Change dma-channel-mask to
-    uint32-array
-  dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
-  dmaengine: ti: edma: Add support for handling reserved channels
+ Documentation/devicetree/bindings/dma/dma-common.yaml | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/dma/dma-common.yaml   |  9 ++-
- .../devicetree/bindings/dma/ti-edma.txt       |  8 +++
- drivers/dma/ti/edma.c                         | 59 +++++++++++++++++--
- 3 files changed, 69 insertions(+), 7 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+index ed0a49a6f020..02a34ba2b49b 100644
+--- a/Documentation/devicetree/bindings/dma/dma-common.yaml
++++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+@@ -25,11 +25,18 @@ properties:
+       Used to provide DMA controller specific information.
+ 
+   dma-channel-mask:
+-    $ref: /schemas/types.yaml#definitions/uint32
+     description:
+       Bitmask of available DMA channels in ascending order that are
+       not reserved by firmware and are available to the
+       kernel. i.e. first channel corresponds to LSB.
++      The first item in the array is for channels 0-31, the second is for
++      channels 32-63, etc.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++    items:
++      minItems: 1
++      # Should be enough
++      maxItems: 255
+ 
+   dma-channels:
+     $ref: /schemas/types.yaml#definitions/uint32
 -- 
 Peter
 
