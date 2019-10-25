@@ -2,162 +2,125 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83524CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E31BCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C7B20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6vDnA9u"
+	by mail.kernel.org (Postfix) with ESMTP id 4A5A721D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571998343;
+	bh=ZqvKv4DJnU3ajM4K1ySMFbJhed57e+ZSryrSplrlzwY=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=kX8nUqjmk+b4UoDAtKHH0/0Y66n277+2/oDwJDWalPkmdpKk3l1BIj86qq2aZRO2j
+	 cu3Vxc1Sg4I61tkX2lJoFEkw+DAZ8tzhUSgzbkJ72hgOvWrpHTtL1m4ogSy2cqYzqa
+	 RMKZa8Y+MbB38ST4J2Na7laQudbF3/7LXKNHharY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409059AbfJYKLx (ORCPT
+        id S2409080AbfJYKMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:11:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33364 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408997AbfJYKLw (ORCPT
+        Fri, 25 Oct 2019 06:12:22 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37652 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409011AbfJYKMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:11:52 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s1so1676145wro.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 03:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZAD6ZzaZyQsOGAtOPlQ1VAdek0AzOAWPDx07f4OSZF4=;
-        b=G6vDnA9ukuAGDzLUpMimNpZMuMQhp3A1G9/CRnCCvMz3bi6q0gk2DVrZtOUvjGItir
-         LmyD7QTi+bK7Uqxi3h3QOLHei2Hnvahbfq67+6YJczqNpuSBdsls+uGgE29tZLIBPbt7
-         KoLklQzdDmj+6WXr8wIzjsC3NZvbyUQzx4u2uH3rTPvzEMa1oAOX4TUTyNZxl6TRpoRR
-         pjgWL2aCw4e+bxeHH4YhGvVbcHsZ7aZxy2i4bt6LJK26C8cYXse6iefLX8zJXbgTEhBm
-         HBFJ/l4+h7I36ODRMkaIdXWoOrN0yEfxHDCXtVc/56K/ZdkPynA4qWIvpsMF0IvTUm7q
-         PSwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZAD6ZzaZyQsOGAtOPlQ1VAdek0AzOAWPDx07f4OSZF4=;
-        b=fG/ZUj12JtPXtWKqSpqaNeZqSLa6kp3EhygOfJleim9HbS8kck7kDTL+BAsyBrlEV1
-         4wNnt9SmToABRYucV4Sa1GVxKk/QSVOCvbRS+LKFKLIXXC2pCfZh4CuZKpVlOnkR2rRg
-         L2CGixWlfpGGQGGzv0RvWI8uMeLMbAX9WWhGwPbH2ArPzM3+Gsh2tovOZw76dMR7DIYX
-         7vAZb4F1sG4waKmFQN5YEXUzUx8r5YA69tj4lEZD0MC7pslh8Tz0oQPPOHXhGpJxyqk8
-         k/JlIupOzfXC+5n525K99UHgmheUjDmfea9QWOXxqiljtav/d4nam1VMeC23Hqarxc39
-         X38w==
-X-Gm-Message-State: APjAAAViZee6nmCQTwFcmUIAT07gINB24O3Tf0f9rPCA4mwrX0xfLdkF
-        7JvAusg7kdbG5k6c1yLtM8LQdCJ7HZM/doyKUw0=
-X-Google-Smtp-Source: APXvYqzhinGDUdQ3f70E0S5qjeySWIXV3GGj0hExkZ85bjLLl01EyWNG6tk8kP2wxSrIjSAPC4xjpC+C44+fB0n6d8o=
-X-Received: by 2002:a5d:65cf:: with SMTP id e15mr2103728wrw.391.1571998309987;
- Fri, 25 Oct 2019 03:11:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191025075335.GC32742@smile.fi.intel.com> <0d3919c9-40e0-7343-0bbc-159984348216@redhat.com>
-In-Reply-To: <0d3919c9-40e0-7343-0bbc-159984348216@redhat.com>
-From:   Andrey Zhizhikin <andrey.z@gmail.com>
-Date:   Fri, 25 Oct 2019 12:11:37 +0200
-Message-ID: <CAHtQpK5ZSOMKY4U0y-HHHH6QiuYRWHr90SAzjaACpAGgTzALLQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
- Trail Whiskey Cove PMIC
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 25 Oct 2019 06:12:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=Mfwi8AbI+njv6OXBWSEU3ESst6lzCiQazpD9WrFtGOs=; b=PejzMVlZbUqx
+        fSWESryCFXJJPU17sFwlk8S7+h3cO3184RFLTHRDblukpGYd9k6aH+GZ92FC7DUHc/FverGf3dyhE
+        11xAB+QcwD6u3+XkSgQ+ZsuE7z8ez8yPINS6cItdVxMHrr29OdjzG9Ncm+6mzIx6ULE8NaXmNJWy9
+        2yxTc=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iNwZo-0006dx-NU; Fri, 25 Oct 2019 10:12:12 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 251942743267; Fri, 25 Oct 2019 11:12:12 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     alsa-devel@alsa-project.org, Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jiri Kosina <trivial@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: pxa: poodle: Spelling s/enpoints/endpoints/, s/connetion/connection/" to the asoc tree
+In-Reply-To: <20191024153130.31082-1-geert+renesas@glider.be>
+X-Patchwork-Hint: ignore
+Message-Id: <20191025101212.251942743267@ypsilon.sirena.org.uk>
+Date:   Fri, 25 Oct 2019 11:12:12 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:38 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 25-10-2019 09:53, Andy Shevchenko wrote:
-> > On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
-> >> This patchset introduces additional regulator driver for Intel Cherry
-> >> Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
-> >> PMIC, which is used to instantiate this regulator.
-> >>
-> >> Regulator support for this PMIC was present in kernel release from Intel
-> >> targeted Aero platform, but was not entirely ported upstream and has
-> >> been omitted in mainline kernel releases. Consecutively, absence of
-> >> regulator caused the SD Card interface not to be provided with Vqcc
-> >> voltage source needed to operate with UHS-I cards.
-> >>
-> >> Following patches are addessing this issue and making sd card interface
-> >> to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
-> >> of the SD Card interface in consumers and exposes optional "vqmmc"
-> >> voltage source, which mmc driver uses to switch signalling voltages
-> >> between 1.8V and 3.3V.
-> >>
-> >> This set contains of 2 patches: one is implementing the regulator driver
-> >> (based on a non upstreamed version from Intel Aero), and another patch
-> >> registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
-> >
-> > Thank you.
-> > Hans, Cc'ed, has quite interested in these kind of patches.
-> > Am I right, Hans?
->
-> Yes since I do a lot of work on Bay and Cherry Trail hw enablement I'm
-> always interested in CHT specific patches.
->
-> Overall this series looks good (from a high level view I did not
-> do a detailed review) but I wonder if we really want to export all the
-> regulators when we just need the vsdio one?
+The patch
 
-I thought about this point, and actually came to a personal conclusion
-that if I do this as a new driver - then it is better to list all
-possible regulators, creating some sort of "skeleton" which people
-could then work on if need be. I do agree that at the present moment
-the one regulator which is exposed is the one for vsdio, but listing
-all possibilities should not hurt. This was my motivation to put them
-all into the driver on the first place.
+   ASoC: pxa: poodle: Spelling s/enpoints/endpoints/, s/connetion/connection/
 
-If you believe additional regulator elements should be removed from
-this version of the driver - I can clean them up and come up with v2
-here.
+has been applied to the asoc tree at
 
->
-> Most regulators are controlled by either the P-Unit inside the CHT SoC
-> or through ACPI OpRegion accesses.  Luckily the regulator subsys does not
-> expose a sysfs interface for users to directly poke regulators, but this will
-> still make it somewhat easier for users to poke regulators which they should
-> leave alone.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
-Agree, this is a valid point. But honestly I would really be surprised
-if a user would directly touch something which can burn his silicon to
-pieces. Regulators are usually not approached by users; unless they
-are really HW engineers and know what they are doing.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
->
-> Note I'm not saying this is wrong, having support for all regulators in place
-> in case we need it in the future is also kinda nice. OTOH if we just need the
-> one now, maybe we should just support the one for now ?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-This I've already covered above I guess.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> Andrey, may I ask which device you are testing this on?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Sure, I use the original Intel Aero board. It used to have an official
-image from Aero team with a heavily patched 4.4.y kernel, but when I
-decided to have this updated to the latest stable branch - I've faced
-the issue of missing core functionality, which led me to this patch.
+Thanks,
+Mark
 
->
-> Anyways overall good work, thank you for doing this!
+From 16c33235321d5ce3463ebefc205d7cf11929d59f Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 24 Oct 2019 17:31:30 +0200
+Subject: [PATCH] ASoC: pxa: poodle: Spelling s/enpoints/endpoints/,
+ s/connetion/connection/
 
-You're welcome, and thanks for looking into this!
+Fix misspelling of "endpoints" and "connection".
 
->
-> Regards,
->
-> Hans
->
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191024153130.31082-1-geert+renesas@glider.be
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/pxa/poodle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/sound/soc/pxa/poodle.c b/sound/soc/pxa/poodle.c
+index 48d5c2252b10..59ef04d0467a 100644
+--- a/sound/soc/pxa/poodle.c
++++ b/sound/soc/pxa/poodle.c
+@@ -56,7 +56,7 @@ static void poodle_ext_control(struct snd_soc_dapm_context *dapm)
+ 		snd_soc_dapm_disable_pin(dapm, "Headphone Jack");
+ 	}
+ 
+-	/* set the enpoints to their new connetion states */
++	/* set the endpoints to their new connection states */
+ 	if (poodle_spk_func == POODLE_SPK_ON)
+ 		snd_soc_dapm_enable_pin(dapm, "Ext Spk");
+ 	else
 -- 
-Regards,
-Andrey.
+2.20.1
+
