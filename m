@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8B4CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15922CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3071220679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFFC20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012382;
-	bh=p9C5sV/9RGDGSsR26ocpzESBcVa9EVNGwDLOF9hwdCM=;
+	s=default; t=1572012391;
+	bh=vcEe/AZRcAACSEWJpKR8lWOXG7KeCano0noHAQBGTgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=voOc25vGgnDtNw2pcUY4grnM7Taq3kGdq3b4EU9TQNkMHk4STJiBtKxQtONBmO+uU
-	 TUfdUAckXCUFnL1z4UbwZTiD/WfpGW8j9ztCs6E5IJITw9l08+hoJ+NGf2QuTXSobL
-	 6xRrk9UdFOQVMO9OZMVHAaxHx+EP+AiFI9Hs6Itc=
+	b=vVGNTYGWO5cORv75seZqL9W1maqfd0H8ZxePt18Rw0Y9OB0A/LRDdyS+2h3h87nBU
+	 ShOt5es+257/XwSfSKtFhSDtPfxEIQE/ofT0kXezm1/gZRwf5JzrZ/34R7aRQpX/rN
+	 fnvwj72GNAnu0l8MzqT5KXNdzg0AemHO8DCB0Vec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405861AbfJYOGV (ORCPT
+        id S2407467AbfJYOG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49864 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:06:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505147AbfJYNzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:55:48 -0400
+        id S2505138AbfJYNzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:55:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C5AE222D2;
-        Fri, 25 Oct 2019 13:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3756D2084C;
+        Fri, 25 Oct 2019 13:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011747;
-        bh=p9C5sV/9RGDGSsR26ocpzESBcVa9EVNGwDLOF9hwdCM=;
+        s=default; t=1572011744;
+        bh=vcEe/AZRcAACSEWJpKR8lWOXG7KeCano0noHAQBGTgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTAWeLFx7Bgny8r22Q93xvoJ/zJ8z95fO/DVedtBqhfhiVXFaM90S2tX3xU7pTlKV
-         Ow3Ay4hFwlrsUak09C+UsmwU9CCfr/ZGogT+xRvoyhviZpwtlZ86MlZI+Nj7gmdacs
-         CJ/9VNNYheuREaYpz5fZtUD420sk4O65t79LziUU=
+        b=giifTOcdoDpypXG6cgB+mrTsgkBCdeP9KL+HJUQ70nCrRrp8tzqPzviBxAlophz1+
+         Ci3jbvDRV4gvguiwtShSY+WthCXHYfhMmCbBNTGOMFMLanMuELNXWGFZgCW8gAXh4l
+         2Nn4aFbMihEGRLHFZ9oxLft/uVUw93CUN464Czxc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krishnamraju Eraparaju <krishna2@chelsio.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 27/33] RDMA/siw: Fix serialization issue in write_space()
-Date:   Fri, 25 Oct 2019 09:54:59 -0400
-Message-Id: <20191025135505.24762-27-sashal@kernel.org>
+Cc:     Vlad Buslov <vladbu@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 25/33] net: sched: sch_htb: don't call qdisc_put() while holding tree lock
+Date:   Fri, 25 Oct 2019 09:54:57 -0400
+Message-Id: <20191025135505.24762-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -60,107 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishnamraju Eraparaju <krishna2@chelsio.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit df791c54d627bae53c9be3be40a69594c55de487 ]
+[ Upstream commit 4ce70b4aed5752332b268909336b351721965dc4 ]
 
-In siw_qp_llp_write_space(), 'sock' members should be accessed with
-sk_callback_lock held, otherwise, it could race with
-siw_sk_restore_upcalls(). And this could cause "NULL deref" panic.  Below
-panic is due to the NULL cep returned from sk_to_cep(sk):
+Recent changes that removed rtnl dependency from rules update path of tc
+also made tcf_block_put() function sleeping. This function is called from
+ops->destroy() of several Qdisc implementations, which in turn is called by
+qdisc_put(). Some Qdiscs call qdisc_put() while holding sch tree spinlock,
+which results sleeping-while-atomic BUG.
 
-  Call Trace:
-   <IRQ>    siw_qp_llp_write_space+0x11/0x40 [siw]
-   tcp_check_space+0x4c/0xf0
-   tcp_rcv_established+0x52b/0x630
-   tcp_v4_do_rcv+0xf4/0x1e0
-   tcp_v4_rcv+0x9b8/0xab0
-   ip_protocol_deliver_rcu+0x2c/0x1c0
-   ip_local_deliver_finish+0x44/0x50
-   ip_local_deliver+0x6b/0xf0
-   ? ip_protocol_deliver_rcu+0x1c0/0x1c0
-   ip_rcv+0x52/0xd0
-   ? ip_rcv_finish_core.isra.14+0x390/0x390
-   __netif_receive_skb_one_core+0x83/0xa0
-   netif_receive_skb_internal+0x73/0xb0
-   napi_gro_frags+0x1ff/0x2b0
-   t4_ethrx_handler+0x4a7/0x740 [cxgb4]
-   process_responses+0x2c9/0x590 [cxgb4]
-   ? t4_sge_intr_msix+0x1d/0x30 [cxgb4]
-   ? handle_irq_event_percpu+0x51/0x70
-   ? handle_irq_event+0x41/0x60
-   ? handle_edge_irq+0x97/0x1a0
-   napi_rx_handler+0x14/0xe0 [cxgb4]
-   net_rx_action+0x2af/0x410
-   __do_softirq+0xda/0x2a8
-   do_softirq_own_stack+0x2a/0x40
-   </IRQ>
-   do_softirq+0x50/0x60
-   __local_bh_enable_ip+0x50/0x60
-   ip_finish_output2+0x18f/0x520
-   ip_output+0x6e/0xf0
-   ? __ip_finish_output+0x1f0/0x1f0
-   __ip_queue_xmit+0x14f/0x3d0
-   ? __slab_alloc+0x4b/0x58
-   __tcp_transmit_skb+0x57d/0xa60
-   tcp_write_xmit+0x23b/0xfd0
-   __tcp_push_pending_frames+0x2e/0xf0
-   tcp_sendmsg_locked+0x939/0xd50
-   tcp_sendmsg+0x27/0x40
-   sock_sendmsg+0x57/0x80
-   siw_tx_hdt+0x894/0xb20 [siw]
-   ? find_busiest_group+0x3e/0x5b0
-   ? common_interrupt+0xa/0xf
-   ? common_interrupt+0xa/0xf
-   ? common_interrupt+0xa/0xf
-   siw_qp_sq_process+0xf1/0xe60 [siw]
-   ? __wake_up_common_lock+0x87/0xc0
-   siw_sq_resume+0x33/0xe0 [siw]
-   siw_run_sq+0xac/0x190 [siw]
-   ? remove_wait_queue+0x60/0x60
-   kthread+0xf8/0x130
-   ? siw_sq_resume+0xe0/0xe0 [siw]
-   ? kthread_bind+0x10/0x10
-   ret_from_fork+0x35/0x40
+Steps to reproduce for htb:
 
-Fixes: f29dd55b0236 ("rdma/siw: queue pair methods")
-Link: https://lore.kernel.org/r/20190923101112.32685-1-krishna2@chelsio.com
-Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+tc qdisc add dev ens1f0 root handle 1: htb default 12
+tc class add dev ens1f0 parent 1: classid 1:1 htb rate 100kbps ceil 100kbps
+tc qdisc add dev ens1f0 parent 1:1 handle 40: sfq perturb 10
+tc class add dev ens1f0 parent 1:1 classid 1:2 htb rate 100kbps ceil 100kbps
+
+Resulting dmesg:
+
+[ 4791.148551] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:909
+[ 4791.151354] in_atomic(): 1, irqs_disabled(): 0, pid: 27273, name: tc
+[ 4791.152805] INFO: lockdep is turned off.
+[ 4791.153605] CPU: 19 PID: 27273 Comm: tc Tainted: G        W         5.3.0-rc8+ #721
+[ 4791.154336] Hardware name: Supermicro SYS-2028TP-DECR/X10DRT-P, BIOS 2.0b 03/30/2017
+[ 4791.155075] Call Trace:
+[ 4791.155803]  dump_stack+0x85/0xc0
+[ 4791.156529]  ___might_sleep.cold+0xac/0xbc
+[ 4791.157251]  __mutex_lock+0x5b/0x960
+[ 4791.157966]  ? console_unlock+0x363/0x5d0
+[ 4791.158676]  ? tcf_chain0_head_change_cb_del.isra.0+0x1b/0xf0
+[ 4791.159395]  ? tcf_chain0_head_change_cb_del.isra.0+0x1b/0xf0
+[ 4791.160103]  tcf_chain0_head_change_cb_del.isra.0+0x1b/0xf0
+[ 4791.160815]  tcf_block_put_ext.part.0+0x21/0x50
+[ 4791.161530]  tcf_block_put+0x50/0x70
+[ 4791.162233]  sfq_destroy+0x15/0x50 [sch_sfq]
+[ 4791.162936]  qdisc_destroy+0x5f/0x160
+[ 4791.163642]  htb_change_class.cold+0x5df/0x69d [sch_htb]
+[ 4791.164505]  tc_ctl_tclass+0x19d/0x480
+[ 4791.165360]  rtnetlink_rcv_msg+0x170/0x4b0
+[ 4791.166191]  ? netlink_deliver_tap+0x95/0x400
+[ 4791.166907]  ? rtnl_dellink+0x2d0/0x2d0
+[ 4791.167625]  netlink_rcv_skb+0x49/0x110
+[ 4791.168345]  netlink_unicast+0x171/0x200
+[ 4791.169058]  netlink_sendmsg+0x224/0x3f0
+[ 4791.169771]  sock_sendmsg+0x5e/0x60
+[ 4791.170475]  ___sys_sendmsg+0x2ae/0x330
+[ 4791.171183]  ? ___sys_recvmsg+0x159/0x1f0
+[ 4791.171894]  ? do_wp_page+0x9c/0x790
+[ 4791.172595]  ? __handle_mm_fault+0xcd3/0x19e0
+[ 4791.173309]  __sys_sendmsg+0x59/0xa0
+[ 4791.174024]  do_syscall_64+0x5c/0xb0
+[ 4791.174725]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 4791.175435] RIP: 0033:0x7f0aa41497b8
+[ 4791.176129] Code: 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 8d 05 65 8f 0c 00 8b 00 85 c0 75 17 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 48 83 ec 28 89 5
+4
+[ 4791.177532] RSP: 002b:00007fff4e37d588 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+[ 4791.178243] RAX: ffffffffffffffda RBX: 000000005d8132f7 RCX: 00007f0aa41497b8
+[ 4791.178947] RDX: 0000000000000000 RSI: 00007fff4e37d5f0 RDI: 0000000000000003
+[ 4791.179662] RBP: 0000000000000000 R08: 0000000000000001 R09: 00000000020149a0
+[ 4791.180382] R10: 0000000000404eda R11: 0000000000000246 R12: 0000000000000001
+[ 4791.181100] R13: 000000000047f640 R14: 0000000000000000 R15: 0000000000000000
+
+In htb_change_class() function save parent->leaf.q to local temporary
+variable and put reference to it after sch tree lock is released in order
+not to call potentially sleeping cls API in atomic section. This is safe to
+do because Qdisc has already been reset by qdisc_purge_queue() inside sch
+tree lock critical section.
+
+Fixes: c266f64dbfa2 ("net: sched: protect block state with mutex")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_qp.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ net/sched/sch_htb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_qp.c b/drivers/infiniband/sw/siw/siw_qp.c
-index 430314c8abd94..52d402f39df93 100644
---- a/drivers/infiniband/sw/siw/siw_qp.c
-+++ b/drivers/infiniband/sw/siw/siw_qp.c
-@@ -182,12 +182,19 @@ void siw_qp_llp_close(struct siw_qp *qp)
-  */
- void siw_qp_llp_write_space(struct sock *sk)
- {
--	struct siw_cep *cep = sk_to_cep(sk);
-+	struct siw_cep *cep;
+diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
+index 7bcf20ef91453..8184c87da8bec 100644
+--- a/net/sched/sch_htb.c
++++ b/net/sched/sch_htb.c
+@@ -1302,6 +1302,7 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
+ 	struct htb_class *cl = (struct htb_class *)*arg, *parent;
+ 	struct nlattr *opt = tca[TCA_OPTIONS];
+ 	struct nlattr *tb[TCA_HTB_MAX + 1];
++	struct Qdisc *parent_qdisc = NULL;
+ 	struct tc_htb_opt *hopt;
+ 	u64 rate64, ceil64;
+ 	int warn = 0;
+@@ -1401,7 +1402,7 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
+ 		if (parent && !parent->level) {
+ 			/* turn parent into inner node */
+ 			qdisc_purge_queue(parent->leaf.q);
+-			qdisc_put(parent->leaf.q);
++			parent_qdisc = parent->leaf.q;
+ 			if (parent->prio_activity)
+ 				htb_deactivate(q, parent);
  
--	cep->sk_write_space(sk);
-+	read_lock(&sk->sk_callback_lock);
-+
-+	cep  = sk_to_cep(sk);
-+	if (cep) {
-+		cep->sk_write_space(sk);
+@@ -1480,6 +1481,7 @@ static int htb_change_class(struct Qdisc *sch, u32 classid,
+ 	cl->cbuffer = PSCHED_TICKS2NS(hopt->cbuffer);
  
--	if (!test_bit(SOCK_NOSPACE, &sk->sk_socket->flags))
--		(void)siw_sq_start(cep->qp);
-+		if (!test_bit(SOCK_NOSPACE, &sk->sk_socket->flags))
-+			(void)siw_sq_start(cep->qp);
-+	}
-+
-+	read_unlock(&sk->sk_callback_lock);
- }
+ 	sch_tree_unlock(sch);
++	qdisc_put(parent_qdisc);
  
- static int siw_qp_readq_init(struct siw_qp *qp, int irq_size, int orq_size)
+ 	if (warn)
+ 		pr_warn("HTB: quantum of class %X is %s. Consider r2q change.\n",
 -- 
 2.20.1
 
