@@ -2,125 +2,176 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94805CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3B8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B612084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZwUQClY"
+	by mail.kernel.org (Postfix) with ESMTP id 1F006222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfJYVkY (ORCPT
+        id S1726350AbfJYVk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:40:24 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:33350 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfJYVkY (ORCPT
+        Fri, 25 Oct 2019 17:40:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39878 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfJYVk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:40:24 -0400
-Received: by mail-ua1-f65.google.com with SMTP id c16so1036448uan.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 14:40:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eLRTvF39CVqCAmddGFaUsqwSoY4prNIEuh/o+NUz9p0=;
-        b=nZwUQClYiXQ3Q52cTJI0jeh6bazrVJ+0UCwrx0+54WLkrX9dSlGV2PmY8y824qhqm+
-         b+SsEDhWiXq1vyab8zOMbLt8DhbgT32DsHm0LjkkTaQ8wSdZ04Z068CQf10fi5T6mqZG
-         zjUCFHf9Fcmio8uikM9+SHUQ1o4GuEZM1oAdAl++/ApeZP/iz2BcFl9JTY/GXVwKZTcB
-         0IsWFCeBssn/P/ZcmLKkBkgsGKonf9IgvdUar6yKNQSkHanHTQbtP2n1EXdi45W9kU4m
-         TVnPXm/1DG4WURnHnBCY0X642BPoq6T5AptAXxcLFsw7IIuU0b5f10JYnaHC0W3N00B3
-         rHaA==
+        Fri, 25 Oct 2019 17:40:26 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r141so3435851wme.4
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 14:40:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eLRTvF39CVqCAmddGFaUsqwSoY4prNIEuh/o+NUz9p0=;
-        b=RJGSNEJAq6ce8CoJ1S67dr4xxG7yioSCy2KW5VSddWZn7n2etiop0aAK+W+eteosWn
-         rtMAywSpzghqMxKQYIeajCAMvnsvWdYRpezym8ViWMVttVgsex2JVSVbU5iBd96+li5h
-         h8bolfoTfPB68+nK76J7CmsPQXyLgkywSua7dwbmoFSmPuKvcV0NIRovu3LT4F6auyww
-         /wj0UrOxmk7++ppCsdET9oIkCLXnLbxOUXJg0HdltCj1xlwJflxmTkX/f+MJspxpRLXQ
-         biKR7Cdn7ysKt1jy68pFBwQeLVcnqGiUS9s1vp5jocOXQw36OwDVgHw1ojeJPQdF3r4e
-         218Q==
-X-Gm-Message-State: APjAAAXADsq3FJ5J5tV6FrlYax6WjRltIXrqRhpzcIbxYanv8LstYk+j
-        AnF7Kgviap2h4JLLp1qO5zgUaLd+wpnvbjUknrCpsw==
-X-Google-Smtp-Source: APXvYqzB/CyaeixcYXmheo+/rDDZ8UwTzUWhRNGhABApN6r+1HSU0y6CYCp+GyizuEe28jQkvtHrxlkE/Z+LErTCmf0=
-X-Received: by 2002:ab0:6387:: with SMTP id y7mr2789274uao.110.1572039622492;
- Fri, 25 Oct 2019 14:40:22 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KqXCDwMNLnU9Sq5mjJqUeqsnhfK8AbIw6Nf9qBzmidA=;
+        b=ml9g8e/RbbvdEpUpQLNDz9/KiXZbuPQnPlgZnOfL4C67bIYtEhX+8CbJs4JAhCY7y2
+         f3htqd3KJa3Q9PGuMrRjS+GCp+6UVq8L3FhT+rjY3k0ypEwbBMMnfkiJPMHsGftgRQs7
+         8KSsE7JXS+des/LfM8GYS4GMI3UoB99ib5SqTu79NASBf6usD6jkQUHTdpnzuHMNcFBM
+         jIm4HdPlXeNOYPJOKXmsNBS6YctCSc3PLhSl1SWRBkuGz5PrgQgsOCrqjmXnaPHDWM1T
+         +JD2WoYy0rxnyueQwIcTiQ9OyQFjIuaOPnrZ2FBUFl6P6tsKzPVOZGUgcRZgFW9KN+oa
+         t4Rg==
+X-Gm-Message-State: APjAAAW9K3zxuNEY33wFzOi8UyOX67cs5lyUnCj3aq5m0ZUNJt55qa7/
+        0klyoVxJx3MVxXbsuLkLH+A=
+X-Google-Smtp-Source: APXvYqymbwQKh72Rl1MZ6bfp6hyf49nHbGJoeGwrP2gGGiP1hWP9BfsPEOxl7jNURX5qoP5WvBuH1w==
+X-Received: by 2002:a1c:96d5:: with SMTP id y204mr3257831wmd.63.1572039624378;
+        Fri, 25 Oct 2019 14:40:24 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id h17sm3759607wme.6.2019.10.25.14.40.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 14:40:23 -0700 (PDT)
+Subject: Re: [RFC PATCH 3/3] nvme: Introduce nvme_execute_passthru_rq_nowait()
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20191025202535.12036-1-logang@deltatee.com>
+ <20191025202535.12036-4-logang@deltatee.com>
+ <28b40ab8-c695-784e-3f52-03a18b891d25@grimberg.me>
+ <11006dd2-718f-b569-4ef3-c01232354d5f@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <952c93fa-ef69-e113-a285-b1e9a0ddcafc@grimberg.me>
+Date:   Fri, 25 Oct 2019 14:40:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191024225132.13410-1-samitolvanen@google.com> <20191024225132.13410-3-samitolvanen@google.com>
- <20191025094137.GB40270@lakrids.cambridge.arm.com>
-In-Reply-To: <20191025094137.GB40270@lakrids.cambridge.arm.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 25 Oct 2019 14:40:11 -0700
-Message-ID: <CABCJKue5QAuHi4tzk+82=HD9ts2SLTqn1VZ4OmGfhu0LG8GHfQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/17] arm64/lib: copy_page: avoid x18 register in
- assembler code
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <11006dd2-718f-b569-4ef3-c01232354d5f@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 2:41 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > diff --git a/arch/arm64/lib/copy_page.S b/arch/arm64/lib/copy_page.S
-> > index bbb8562396af..8b562264c165 100644
-> > --- a/arch/arm64/lib/copy_page.S
-> > +++ b/arch/arm64/lib/copy_page.S
-> > @@ -34,45 +34,45 @@ alternative_else_nop_endif
-> >       ldp     x14, x15, [x1, #96]
-> >       ldp     x16, x17, [x1, #112]
-> >
-> > -     mov     x18, #(PAGE_SIZE - 128)
-> > +     add     x0, x0, #256
-> >       add     x1, x1, #128
-> >  1:
-> > -     subs    x18, x18, #128
-> > +     tst     x0, #(PAGE_SIZE - 1)
-> >
-> >  alternative_if ARM64_HAS_NO_HW_PREFETCH
-> >       prfm    pldl1strm, [x1, #384]
-> >  alternative_else_nop_endif
-> >
-> > -     stnp    x2, x3, [x0]
-> > +     stnp    x2, x3, [x0, #-256]
-> >       ldp     x2, x3, [x1]
-> > -     stnp    x4, x5, [x0, #16]
-> > +     stnp    x4, x5, [x0, #-240]
-> >       ldp     x4, x5, [x1, #16]
->
-> For legibility, could we make the offset and bias explicit in the STNPs
-> so that these line up? e.g.
->
->         stnp    x4, x5, [x0, #16 - 256]
->         ldp     x4, x5, [x1, #16]
->
-> ... that'd make it much easier to see by eye that this is sound, much as
-> I trust my mental arithmetic. ;)
 
-Sure, that makes sense. I'll change this in v3.
+>>> +#ifdef CONFIG_NVME_TARGET_PASSTHRU
+>>> +static void nvme_execute_passthru_rq_work(struct work_struct *w)
+>>> +{
+>>> +    struct nvme_request *req = container_of(w, struct nvme_request,
+>>> work);
+>>> +    struct request *rq = blk_mq_rq_from_pdu(req);
+>>> +    rq_end_io_fn *done = rq->end_io;
+>>> +    void *end_io_data = rq->end_io_data;
+>>
+>> Why is end_io_data stored to a local variable here? where is it set?
+> 
+> blk_execute_rq() (which is called by nvme_execute_rq()) will overwrite
+> rq->endio and rq->end_io_data. We store them here so we can call the
+> callback appropriately after the request completes. It would be set by
+> the caller in the same way they set it if they were calling
+> blk_execute_rq_nowait().
 
-Sami
+I see..
+
+>>> +
+>>> +    nvme_execute_passthru_rq(rq);
+>>> +
+>>> +    if (done) {
+>>> +        rq->end_io_data = end_io_data;
+>>> +        done(rq, 0);
+>>> +    }
+>>> +}
+>>> +
+>>> +void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn
+>>> *done)
+>>> +{
+>>> +    struct nvme_command *cmd = nvme_req(rq)->cmd;
+>>> +    struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
+>>> +    struct nvme_ns *ns = rq->q->queuedata;
+>>> +    struct gendisk *disk = ns ? ns->disk : NULL;
+>>> +    u32 effects;
+>>> +
+>>> +    /*
+>>> +     * This function may be called in interrupt context, so we cannot
+>>> sleep
+>>> +     * but nvme_passthru_[start|end]() may sleep so we need to execute
+>>> +     * the command in a work queue.
+>>> +     */
+>>> +    effects = nvme_command_effects(ctrl, ns, cmd->common.opcode);
+>>> +    if (effects) {
+>>> +        rq->end_io = done;
+>>> +        INIT_WORK(&nvme_req(rq)->work, nvme_execute_passthru_rq_work);
+>>> +        queue_work(nvme_wq, &nvme_req(rq)->work);
+>>
+>> This work will need to be flushed when in nvme_stop_ctrl. That is
+>> assuming that it will fail-fast and not hang (which it should given
+>> that its a passthru command that is allocated via nvme_alloc_request).
+> 
+> Hmm, that's going to be a bit tricky. Seeing the work_struct belongs
+> potentially to a number of different requests, we can't just flush the
+> individual work items. I think we'd have to create a work-queue per ctrl
+> and flush that. Any objections to that?
+
+I'd object to that overhead...
+
+How about marking the request if the workqueue path is taken and
+in nvme_stop_ctrl you add a blk_mq_tagset_busy_iter and cancel
+it in the callback?
+
+Something like:
+--
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index fa7ba09dca77..13dbbec5497d 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3955,12 +3955,33 @@ void nvme_complete_async_event(struct nvme_ctrl 
+*ctrl, __le16 status,
+  }
+  EXPORT_SYMBOL_GPL(nvme_complete_async_event);
+
++static bool nvme_flush_async_passthru_request(struct request *rq,
++               void *data, bool reserved)
++{
++       if (!(nvme_req(rq)->flags & NVME_REQ_ASYNC_PASSTHRU))
++               return true;
++
++       dev_dbg_ratelimited(((struct nvme_ctrl *) data)->device,
++                               "Cancelling passthru I/O %d", req->tag);
++       flush_work(&nvme_req(rq)->work);
++       return true;
++}
++
++static void nvme_flush_async_passthru_requests(struct nvme_ctrl *ctrl)
++{
++       blk_mq_tagset_busy_iter(ctrl->tagset,
++               nvme_flush_async_passthru_request, ctrl);
++       blk_mq_tagset_busy_iter(ctrl->admin_tagset,
++               nvme_flush_async_passthru_request, ctrl);
++}
++
+  void nvme_stop_ctrl(struct nvme_ctrl *ctrl)
+  {
+         nvme_mpath_stop(ctrl);
+         nvme_stop_keep_alive(ctrl);
+         flush_work(&ctrl->async_event_work);
+         cancel_work_sync(&ctrl->fw_act_work);
++       nvme_flush_async_passthru_requests(ctrl);
+  }
+  EXPORT_SYMBOL_GPL(nvme_stop_ctrl);
+--
