@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9ADCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E714ACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AF6222CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBD321D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="ER2j/UqV"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Lujjlyr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440307AbfJYMlK (ORCPT
+        id S2440321AbfJYMlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:41:10 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43858 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440295AbfJYMlI (ORCPT
+        Fri, 25 Oct 2019 08:41:13 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46867 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440298AbfJYMlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:41:08 -0400
-Received: by mail-lj1-f196.google.com with SMTP id s4so1662424ljj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:41:05 -0700 (PDT)
+        Fri, 25 Oct 2019 08:41:11 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t8so1599290lfc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IwcdyWxRDO/TUjQjvqfZVlSTaDYPWlQZLs741mWfW6c=;
-        b=ER2j/UqVSwUAHLo4Mrnww4RdyHncxOt+lyD7CK40XfpSeF9zh46mxSVrXefq1dbdQq
-         SK4pLpEx+99DSzB5FVd7ww025gdapgUXdzjPaYkwswtuzB6r0p/cjvuKl9Mra2EQzJbT
-         Y1X9gx7BA1Twme6NVkPv2WJNBYSm15HQ3WcTM=
+        bh=KpsQXq8uXz3AjuC8zFugbFdIMVLEeL/wAcaNezuzQIg=;
+        b=Lujjlyr+AfXRRl+wGvn8Qvihn/KN8LWCqi4kolwlKQZ7qjqldAl04AGkDa5+2tsD/r
+         yj6GGSKX09NBG8L94vYyMd0K4TnZcW1MStdU1wA1BSIa87qLvQlGrwuQZ4FYy9GlPjE4
+         1nHwzz11Ni13Hg5j85JaC31Bke/wlaf4zEK5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IwcdyWxRDO/TUjQjvqfZVlSTaDYPWlQZLs741mWfW6c=;
-        b=qlpzXNDDVgXbDH6Dq+nQz86It7KbdO2w2AXtysxk4qikYO/TnvORAM+EoHr1mazW4Q
-         Tcb4nMmhqoRERI4xwW1qcH7O/8g5/rCPsGXOzopmrKYEBgximcbvKL18PZhESUG1ev/Z
-         Kslis5eOWPngC7wDU/NJ5c27x8g+k4F8J8U1ZJnqTBuHz4oXrsXiDrZP3a69lOc2Zad1
-         N6yGybeyg54+caWopHQPF0hnjyT8SkLDrxuwqd1X6NN+1/jvBZlR/Wc63cazY86KldjU
-         X9KsUfaPoKiKZlxy5QDtE6o2AAvZAQYWAamBygFZCKZpjw5mB92ke/6WsA3MWUyhjm4x
-         q4xQ==
-X-Gm-Message-State: APjAAAUQRKlDb0iQj2dcDjD7jtrzKQdcuAo40o2jCmvRhy1IDe3dYdTL
-        oHqXDvatv1C2kSJySEfycTdTdw==
-X-Google-Smtp-Source: APXvYqwysahdkFyTq3euhj9wcjVsQd23ylHoZzA6rJqlxIRVMOBd4gyepST20slS+5sWHRyxTpKKuQ==
-X-Received: by 2002:a2e:8652:: with SMTP id i18mr2441361ljj.86.1572007264655;
-        Fri, 25 Oct 2019 05:41:04 -0700 (PDT)
+        bh=KpsQXq8uXz3AjuC8zFugbFdIMVLEeL/wAcaNezuzQIg=;
+        b=ilMAnMj85i4+uNGwNbPJPfD3/J5YTMwe2sxcm60wBfSS09R3Wg7M+cWgEMCislwYor
+         /imdvEiAeKARDWOU67kzlMGxp2x+ijJAAu+04sHQA0msavLwnXiaAg692h7UfLVW46EJ
+         8+rJO0PTEr+E21carL1Wj8U7I7jnNIMGKgZUW3DXAUvaEC0RGQhjjBqWQcaIUOLOCpw/
+         tWGxGeaMbTtIL/fTiw206I7iexZDCKxb3/UfIJsvLiMxvT7TA4Smpcfd1DfvL/DuCipt
+         hTq0Xy2H1q0mLBBKAODyIjQ2YEvPoMmMRmegy/vLGO4RYRoc80c4gxSQgRdrkuI3TSYb
+         5mCg==
+X-Gm-Message-State: APjAAAVmR+HE6GXMPSKtppzMO5jRaSAU1RM+ULa4ASU0nXo2qTFkrvrD
+        z7o0z45Bw7Yfoejxt6dycOy9gw==
+X-Google-Smtp-Source: APXvYqzQ4jZPtompIQ6wN1YvHfqQ3rKdaVk4lJJ+494PK+/61L3WRbLUt2K3EJ0JdAgAc1tvXnRrhg==
+X-Received: by 2002:a19:5e53:: with SMTP id z19mr2490404lfi.111.1572007267800;
+        Fri, 25 Oct 2019 05:41:07 -0700 (PDT)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id 10sm821028lfy.57.2019.10.25.05.41.03
+        by smtp.gmail.com with ESMTPSA id 10sm821028lfy.57.2019.10.25.05.41.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 05:41:04 -0700 (PDT)
+        Fri, 25 Oct 2019 05:41:06 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -61,9 +61,9 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         Scott Wood <oss@buserror.net>,
         Valentin Longchamp <valentin.longchamp@keymile.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v2 02/23] soc: fsl: qe: drop volatile qualifier of struct qe_ic::regs
-Date:   Fri, 25 Oct 2019 14:40:37 +0200
-Message-Id: <20191025124058.22580-3-linux@rasmusvillemoes.dk>
+Subject: [PATCH v2 04/23] soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
+Date:   Fri, 25 Oct 2019 14:40:39 +0200
+Message-Id: <20191025124058.22580-5-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191025124058.22580-1-linux@rasmusvillemoes.dk>
 References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
@@ -75,49 +75,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The actual io accessors (e.g. in_be32) implicitly add a volatile
-qualifier to their address argument. Remove volatile from the struct
-definition and the qe_ic_(read/write) helpers, in preparation for
-switching from the ppc-specific io accessors to generic ones.
+In preparation for allowing QE to be built for architectures other
+than ppc, use the generic readx_poll_timeout_atomic() helper from
+iopoll.h rather than the ppc-only spin_event_timeout().
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/qe_ic.c | 4 ++--
- drivers/soc/fsl/qe/qe_ic.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/soc/fsl/qe/qe.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
-index 9bac546998d3..791adcd121d1 100644
---- a/drivers/soc/fsl/qe/qe_ic.c
-+++ b/drivers/soc/fsl/qe/qe_ic.c
-@@ -171,12 +171,12 @@ static struct qe_ic_info qe_ic_info[] = {
- 		},
- };
- 
--static inline u32 qe_ic_read(volatile __be32  __iomem * base, unsigned int reg)
-+static inline u32 qe_ic_read(__be32  __iomem *base, unsigned int reg)
+diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+index 60bf047001be..bcdec37b25ca 100644
+--- a/drivers/soc/fsl/qe/qe.c
++++ b/drivers/soc/fsl/qe/qe.c
+@@ -22,6 +22,7 @@
+ #include <linux/module.h>
+ #include <linux/delay.h>
+ #include <linux/ioport.h>
++#include <linux/iopoll.h>
+ #include <linux/crc32.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/of_platform.h>
+@@ -108,7 +109,8 @@ int qe_issue_cmd(u32 cmd, u32 device, u8 mcn_protocol, u32 cmd_input)
  {
- 	return in_be32(base + (reg >> 2));
+ 	unsigned long flags;
+ 	u8 mcn_shift = 0, dev_shift = 0;
+-	u32 ret;
++	u32 val;
++	int ret;
+ 
+ 	spin_lock_irqsave(&qe_lock, flags);
+ 	if (cmd == QE_RESET) {
+@@ -135,13 +137,12 @@ int qe_issue_cmd(u32 cmd, u32 device, u8 mcn_protocol, u32 cmd_input)
+ 	}
+ 
+ 	/* wait for the QE_CR_FLG to clear */
+-	ret = spin_event_timeout((ioread32be(&qe_immr->cp.cecr) & QE_CR_FLG) == 0,
+-				 100, 0);
+-	/* On timeout (e.g. failure), the expression will be false (ret == 0),
+-	   otherwise it will be true (ret == 1). */
++	ret = readx_poll_timeout_atomic(ioread32be, &qe_immr->cp.cecr, val,
++					(val & QE_CR_FLG) == 0, 0, 100);
++	/* On timeout, ret is -ETIMEDOUT, otherwise it will be 0. */
+ 	spin_unlock_irqrestore(&qe_lock, flags);
+ 
+-	return ret == 1;
++	return ret == 0;
  }
+ EXPORT_SYMBOL(qe_issue_cmd);
  
--static inline void qe_ic_write(volatile __be32  __iomem * base, unsigned int reg,
-+static inline void qe_ic_write(__be32  __iomem *base, unsigned int reg,
- 			       u32 value)
- {
- 	out_be32(base + (reg >> 2), value);
-diff --git a/drivers/soc/fsl/qe/qe_ic.h b/drivers/soc/fsl/qe/qe_ic.h
-index 08c695672a03..9420378d9b6b 100644
---- a/drivers/soc/fsl/qe/qe_ic.h
-+++ b/drivers/soc/fsl/qe/qe_ic.h
-@@ -72,7 +72,7 @@
- 
- struct qe_ic {
- 	/* Control registers offset */
--	volatile u32 __iomem *regs;
-+	u32 __iomem *regs;
- 
- 	/* The remapper for this QEIC */
- 	struct irq_domain *irqhost;
 -- 
 2.23.0
 
