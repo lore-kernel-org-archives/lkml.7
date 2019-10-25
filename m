@@ -2,269 +2,192 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B815CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206CACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5931821D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2B921D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="VmroIG5O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyRKZsUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395465AbfJYPii (ORCPT
+        id S2395473AbfJYPlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:38:38 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43087 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbfJYPih (ORCPT
+        Fri, 25 Oct 2019 11:41:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40134 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732142AbfJYPlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:38:37 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v24so2118901lfe.10
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:38:34 -0700 (PDT)
+        Fri, 25 Oct 2019 11:41:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o28so2855426wro.7;
+        Fri, 25 Oct 2019 08:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=QGOnyC6fPU62C993cv5/zxOWVpPqi3zzB9tH7VQx0sw=;
-        b=VmroIG5OrTVx5swuaF5geMDmi11yaqoLx3wuTHCQCL+j4t24lGe9jUTPUSFr0+JPC0
-         x6srozhL0z1lzThbfXljvO0JHyc4drs8Ov/QWZxZN+2zMp6hDQ+Jzti8YX+Mb+YwfcVN
-         JvaiZQo6Qe3Q2M4KRfwhO2z8mgJBqDR6jzrWY2RAfvWDYuBnGOTU5y/Dcuj0vMBCOmbt
-         J2Bg9fFw1pUsQyyGQXLWdS+GYErW9wtZQqjnvwBuO01aO61lmGq85ClPh0bEE/ueiw+G
-         3F0VpvBa+8H2BLbLR3ADHfyNVXpX1OPocltAPu23dqRAjHIl7ervrh0K5eT9N8IzdoaN
-         iXYg==
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=wYEzynn3rt7rQLSQNoUgSXmg6Ipe410oiaIgCm4TPbE=;
+        b=OyRKZsUizMcAVB1VNkg/O4FDcTPB8I/Tdra/lY8N8AdmWtWo3QQ7ZMQG8gL4YSs/uM
+         ej9bQ7K1v4aE7XMZK6WQP2QmDBlrakdkVohOWdpntcFZbQNA6f7lBfr8DIEcVXlyTj1y
+         VS7GI634PINUQYGittrG0pa83c6yzTlHYI8acZdN4ijRAl1135+ET/YBPLu0spsWjOzy
+         pfu47iur72z/hlPVlL+jZIRx+o0NVYYXDpSRiPL9pTsyvQSqUu3v5zbQ4KVVWnEnRVkG
+         CRqLLfPAd3kRbrVrwSdIOaWRo/Z9AiouA6Rtaf5MNZdZBu2rhdZ0nQZPk/pkUwPrp9ZD
+         4OnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=QGOnyC6fPU62C993cv5/zxOWVpPqi3zzB9tH7VQx0sw=;
-        b=L8EgfIA7MqCERPd8bFxBFWyZu64swNxellAxmpVWgs31eTTuEXeYIU2OdXTkAAOHER
-         w2/4BnbkLKsP4Q/lLZmLU1gy0LmUvtkO5Q9xaxHXLIUJZoMPwuEKI0xsIYRrqk2iqQJh
-         R8kjLp4vp0KxJHQUydI9UJ0C+lT2fxweFhIEv63hXZlZF20siO1RHZJzHDyRBpPI+Bt0
-         n0Tn7KQsZzKjfP0xIxzsKplUm0cgvbO69mr674Q1bH8vBaATru6YyO1WIEVV3UX2LP2e
-         /t9+2tAo16GjqzyBdMi2tn2RoLldnraft7r2XIT942KWesyrF75h/9MWBnW9kzD9BbLX
-         lP8A==
-X-Gm-Message-State: APjAAAW6GlHxP3BNKO70j68q+b7aiztugVIgFSKrDcCjDatT7qEDB7QN
-        N8tGathlLb5MYY4fR1a74Y/bnuEZ9o4=
-X-Google-Smtp-Source: APXvYqwjAvRXTYhDGZ9lV/RtezwI+E4lXjKxBy4stHHexFccpGKuJ4OOqOBT4slktakn6SblOhjq6A==
-X-Received: by 2002:a19:4318:: with SMTP id q24mr3166573lfa.12.1572017913346;
-        Fri, 25 Oct 2019 08:38:33 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id y3sm922228lfh.97.2019.10.25.08.38.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 25 Oct 2019 08:38:31 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 08:38:17 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     torvalds@linux-foundation.org
-Cc:     olof@lixom.net, soc@kernel.org, arm@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: SoC fixes
-Message-ID: <20191025153817.rtj6hh6jmr5asfto@localhost>
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=wYEzynn3rt7rQLSQNoUgSXmg6Ipe410oiaIgCm4TPbE=;
+        b=UhrvLAYMGTDMYeVSl9/0DuRCY0QYaJeGFMLrCjDYN1rcDRIj0qK4lwYe7Iw9zBA11d
+         pVMoDaR82D8isaAb4Yrn8r0ndt+tL7Ie9BfQ6axN1tM49Nx5odQP8Gvc/WAy0kzc1T76
+         rZPxSgGeAgEipGqWsMREN5vTQRDtdcLq8D6LSqOMezFLPySbPc8Sx2ODL3D6vXBIXBny
+         m/0YrArixyfuzP9fAvbukTZu2D7QPDYFUN4M/Yq50jHLqn0850ZWvb3SD+zXyTUQVz7+
+         +vJIe0fYzW8uhs7Z+Nv1dx2OrC6xS2YpNUIXU7VNuXX0zFcdSqqAKzqs2wFQZVhVCEYO
+         +cGg==
+X-Gm-Message-State: APjAAAWC+WzWCUgPo8XT4+ym4YAyYLzuoZO7OnHMb4h4Bp4MYQHMRZlh
+        knIsztIkqfRROCLlm4PY78woKpM6
+X-Google-Smtp-Source: APXvYqwgBmbpGD/5Aws8MhKpC/UZOI30fRZBN5bkJ7Ry9EixqGE1GgrCmFYj7qHNEjsSbur2RqTYiA==
+X-Received: by 2002:a5d:4847:: with SMTP id n7mr3580204wrs.398.1572018058918;
+        Fri, 25 Oct 2019 08:40:58 -0700 (PDT)
+Received: from [192.168.43.159] ([109.126.132.16])
+        by smtp.gmail.com with ESMTPSA id w18sm2835623wrl.75.2019.10.25.08.40.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Oct 2019 08:40:58 -0700 (PDT)
+Subject: Re: [PATCH liburing 1/1] test/defer: Test deferring with drain and
+ links
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <b9509294fde6425b000d71613bd352059334c60d.1571995330.git.asml.silence@gmail.com>
+ <3d2e8533-6085-b328-7e27-9a5be2027b7f@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <9ec359eb-b639-65a5-4f01-7e7fdfa9a8af@gmail.com>
+Date:   Fri, 25 Oct 2019 18:40:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <3d2e8533-6085-b328-7e27-9a5be2027b7f@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Xtiy6oWrn7CAyC5aJXaj1VJzzBvQsTkYq"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Xtiy6oWrn7CAyC5aJXaj1VJzzBvQsTkYq
+Content-Type: multipart/mixed; boundary="w9edxVA1ZlgVuhbFhQK3ELJnInNwpRp3A";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <9ec359eb-b639-65a5-4f01-7e7fdfa9a8af@gmail.com>
+Subject: Re: [PATCH liburing 1/1] test/defer: Test deferring with drain and
+ links
+References: <b9509294fde6425b000d71613bd352059334c60d.1571995330.git.asml.silence@gmail.com>
+ <3d2e8533-6085-b328-7e27-9a5be2027b7f@kernel.dk>
+In-Reply-To: <3d2e8533-6085-b328-7e27-9a5be2027b7f@kernel.dk>
+
+--w9edxVA1ZlgVuhbFhQK3ELJnInNwpRp3A
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 25/10/2019 18:13, Jens Axboe wrote:
+> On 10/25/19 3:48 AM, Pavel Begunkov (Silence) wrote:
+>> From: Pavel Begunkov <asml.silence@gmail.com>
+>>
+>> 1. test user_data integrity with cancelled links
+>> 2. test the whole link is cancelled by sq_thread
+>> 3. hunging io_uring based on koverflow and kdropped
+>>
+>> Be aware, that this test may leave unkillable user process, or
+>> unstopped actively polling kthread.
+>=20
+> That's fine, that's what the test suite is for! Thanks, applied.
+
+Just found it "a bit uncomfortable", that after several runs
+my CPU was doing nothing but polling in vain.
+
+>=20
+> BTW, you need to update your liburing repo, you're several tests
+> behind and I need to hand apply the test/Makefile every time.
+>=20
+Sorry for that, will do
+
+--=20
+Yours sincerely,
+Pavel Begunkov
 
 
-The following changes since commit 60c1b3e25728e0485f08e72e61c3cad5331925a3:
+--w9edxVA1ZlgVuhbFhQK3ELJnInNwpRp3A--
 
-  ARM: multi_v7_defconfig: Fix SPI_STM32_QSPI support (2019-10-04 10:18:55 -0700)
+--Xtiy6oWrn7CAyC5aJXaj1VJzzBvQsTkYq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-are available in the Git repository at:
+-----BEGIN PGP SIGNATURE-----
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2zF4UACgkQWt5b1Glr
++6UqGg//b43i37rukCMw1oa1k7hmAJa1D8XKWetHVxZeUVfwDwDbTnj9MDZnhQXe
+5TCifVb9xQuupOSUzLwmWDLmKrwmmE4M4f+C/yAowtVeulp6Bk8qBhJxy6VFEHGc
+mEW8SkQ4D/MbG9TfYg2RnImvCMPQMbVKjHMKl1/lpsnD2CpPkvuj3DCwGJf1ZOLE
+1b2nuJc2Xeo0QYtKBL9YXo3aF5Wg1UAIbV3UzHdGEixizp3+HO8zN3O5tMFrb78J
+WklwnMff99fm/0viKkGIUDBapWUEIPNyRGfO3YJGuduqGX/AvhlTTjMMX8HxVgAH
+icT7X/ZaQBNhrW5O0dQMZN5lKwC1PrtoLR2FRru/R0fXxr1MiCNW3THiW+aGH5z2
+R6oguxTD7e1ur0UeHHMAYOz+7SqFophL87K5LoRHVSR3CRQXx+mw5QzaIw5eHokS
+jjijlYIM9AxYs0Ld+cL9yvb39tPXAycdRNQjJIf5X9uhAUxVFdfgpp67C1dQgBJY
+EFiwR3zOpBbRCxBjWFvN+4Tt2o9/3EcMeOlF23I/uuunMCrFODYBZYFCnGPfcP7q
+rXb3H0N8Ijn71XTXmH6b1leVBN5SH+84C6utcQ/y1VkhjlE44DoMjfZq7agqmlOg
+JlYjwTSEXJkOxNpNTTOgIkxZydv3CAu6BlrFsbe35hAxDtAYI/Q=
+=A2ji
+-----END PGP SIGNATURE-----
 
-for you to fetch changes up to 86ec2e1739aa1d6565888b4b2059fa47354e1a89:
-
-  ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157 (2019-10-25 08:18:23 -0700)
-
-----------------------------------------------------------------
-ARM: SoC fixes
-
-A slightly larger set of fixes have accrued in the last two weeks.
-Mostly a collection of the usual smaller fixes:
-
- - Marvell Armada: USB phy setup issues on Turris Mox
-
- - Broadcom: GPIO/pinmux DT mapping corrections for Stingray, MMC bus
- width fix for RPi Zero W, GPIO LED removal for RPI CM3. Also some
- maintainer updates.
-
- - OMAP: Fixlets for display config, interrupt settings for wifi, some
-   clock/PM pieces. Also IOMMU regression fix and a ti-sysc no-watchdog
-   regression fix.
-
- - i.MX: A few fixes around PM/settings, some devicetree fixlets and
- catching up with config option changes in DRM
-
- - Rockchip: RockRro64 misc DT fixups, Hugsun X99 USB-C, Kevin display
- panel settings
-
-... and some smaller fixes for Davinci (backlight, McBSP DMA), Allwinner
-(phy regulators, PMU removal on A64, etc).
-
-----------------------------------------------------------------
-Adam Ford (2):
-      ARM: dts: logicpd-torpedo-som: Remove twl_keypad
-      ARM: dts: imx6q-logicpd: Re-Enable SNVS power key
-
-Andrey Smirnov (2):
-      ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect' usage
-      ARM: dts: vf610-zii-scu4-aib: Specify 'i2c-mux-idle-disconnect'
-
-Anson Huang (5):
-      soc: imx: imx-scu: Getting UID from SCU should have response
-      ARM: dts: imx7s: Correct GPT's ipg clock source
-      arm64: dts: imx8mq: Use correct clock for usdhc's ipg clk
-      arm64: dts: imx8mm: Use correct clock for usdhc's ipg clk
-      arm64: dts: imx8mn: Use correct clock for usdhc's ipg clk
-
-Baolin Wang (1):
-      MAINTAINERS: Update the Spreadtrum SoC maintainer
-
-Bartosz Golaszewski (1):
-      ARM: davinci_all_defconfig: enable GPIO backlight
-
-Douglas Anderson (1):
-      arm64: dts: rockchip: Fix override mode for rk3399-kevin panel
-
-Fabio Estevam (1):
-      ARM: imx_v6_v7_defconfig: Enable CONFIG_DRM_MSM
-
-Florian Fainelli (2):
-      Merge tag 'tags/bcm2835-maintainers-next-2019-10-15' into maintainers/next
-      MAINTAINERS: Remove Gregory and Brian for ARCH_BRCMSTB
-
-Heiko Stuebner (1):
-      dt-bindings: arm: rockchip: fix Theobroma-System board bindings
-
-Hugh Cole-Baker (1):
-      arm64: dts: rockchip: fix Rockpro64 RK808 interrupt line
-
-Jernej Skrabec (2):
-      arm64: dts: allwinner: a64: pine64-plus: Add PHY regulator delay
-      arm64: dts: allwinner: a64: sopine-baseboard: Add PHY regulator delay
-
-Lucas Stach (1):
-      arm64: dts: zii-ultra: fix ARM regulator states
-
-Marek Behún (1):
-      arm64: dts: armada-3720-turris-mox: convert usb-phy to phy-supply
-
-Maxime Ripard (2):
-      dt-bindings: media: sun4i-csi: Drop the module clock
-      ARM: dts: sun7i: Drop the module clock from the device tree
-
-Olof Johansson (11):
-      Merge tag 'mvebu-fixes-5.4-1' of git://git.infradead.org/linux-mvebu into arm/fixes
-      Merge tag 'arm-soc/for-5.4/devicetree-arm64-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-      Merge tag 'omap-for-v5.4/fixes-rc3-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/fixes
-      Merge tag 'imx-fixes-5.4' of git://git.kernel.org/.../shawnguo/linux into arm/fixes
-      Merge tag 'v5.4-rockchip-dtsfixes1' of git://git.kernel.org/.../mmind/linux-rockchip into arm/fixes
-      Merge tag 'davinci-fixes-for-v5.4' of git://git.kernel.org/.../nsekhar/linux-davinci into arm/fixes
-      Merge tag 'arm-soc/for-5.4/devicetree-fixes' of https://github.com/Broadcom/stblinux into arm/fixes
-      Merge tag 'arm-soc/for-5.4/devicetree-fixes-part2' of https://github.com/Broadcom/stblinux into arm/fixes
-      Merge tag 'sunxi-fixes-for-5.4-1' of https://git.kernel.org/.../sunxi/linux into arm/fixes
-      Merge tag 'omap-for-v5.4/fixes-rc4-signed' of git://git.kernel.org/.../tmlind/linux-omap into arm/fixes
-      Merge tag 'arm-soc/for-5.5/maintainers' of https://github.com/Broadcom/stblinux into arm/fixes
-
-Patrice Chotard (1):
-      ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157
-
-Peter Ujfalusi (1):
-      ARM: davinci: dm365: Fix McBSP dma_slave_map entry
-
-Pragnesh Patel (1):
-      media: dt-bindings: Fix building error for dt_binding_check
-
-Ran Wang (1):
-      arm64: dts: lx2160a: Correct CPU core idle state name
-
-Rayagonda Kokatanur (1):
-      arm64: dts: Fix gpio to pinmux mapping
-
-Simon Arlott (1):
-      mailmap: Add Simon Arlott (replacement for expired email address)
-
-Soeren Moch (3):
-      arm64: dts: rockchip: fix RockPro64 vdd-log regulator settings
-      arm64: dts: rockchip: fix RockPro64 sdhci settings
-      arm64: dts: rockchip: fix RockPro64 sdmmc settings
-
-Stefan Wahren (3):
-      MAINTAINERS: Add BCM2711 to BCM2835 ARCH
-      ARM: dts: bcm2835-rpi-zero-w: Fix bus-width of sdhci
-      ARM: dts: bcm2837-rpi-cm3: Avoid leds-gpio probing issue
-
-Suman Anna (2):
-      ARM: OMAP2+: Plug in device_enable/idle ops for IOMMUs
-      ARM: OMAP2+: Add pdata for OMAP3 ISP IOMMU
-
-Tero Kristo (1):
-      ARM: dts: omap5: fix gpu_cm clock provider name
-
-Tony Lindgren (6):
-      ARM: omap2plus_defconfig: Fix selected panels after generic panel changes
-      Merge tag 'fix-missing-panels' into fixes
-      ARM: dts: Use level interrupt for omap4 & 5 wlcore
-      Merge tag 'wlcore-fix' into fixes
-      bus: ti-sysc: Fix watchdog quirk handling
-      Merge branch 'watchdog-fix' into fixes
-
-Vasily Khoruzhick (1):
-      arm64: dts: allwinner: a64: Drop PMU node
-
-Vivek Unune (1):
-      arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
-
- .mailmap                                           |  1 +
- .../devicetree/bindings/arm/rockchip.yaml          |  4 +--
- .../bindings/media/allwinner,sun4i-a10-csi.yaml    |  9 ++----
- MAINTAINERS                                        |  9 +++---
- arch/arm/boot/dts/am3874-iceboard.dts              |  9 +-----
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts           |  1 +
- arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi             |  8 +++++
- arch/arm/boot/dts/imx6-logicpd-som.dtsi            |  4 +++
- arch/arm/boot/dts/imx7s.dtsi                       |  8 ++---
- arch/arm/boot/dts/logicpd-torpedo-som.dtsi         |  4 +++
- arch/arm/boot/dts/omap4-droid4-xt894.dts           |  2 +-
- arch/arm/boot/dts/omap4-panda-common.dtsi          |  2 +-
- arch/arm/boot/dts/omap4-sdp.dts                    |  2 +-
- arch/arm/boot/dts/omap4-var-som-om44-wlan.dtsi     |  2 +-
- arch/arm/boot/dts/omap5-board-common.dtsi          |  2 +-
- arch/arm/boot/dts/omap54xx-clocks.dtsi             |  2 +-
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  8 ++---
- arch/arm/boot/dts/sun7i-a20.dtsi                   |  5 ++-
- arch/arm/boot/dts/vf610-zii-scu4-aib.dts           |  2 ++
- arch/arm/configs/davinci_all_defconfig             |  1 +
- arch/arm/configs/imx_v6_v7_defconfig               |  1 +
- arch/arm/configs/omap2plus_defconfig               | 12 ++++----
- arch/arm/mach-davinci/dm365.c                      |  4 +--
- arch/arm/mach-omap2/pdata-quirks.c                 | 11 +++++++
- .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  |  9 ++++++
- .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |  6 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  9 ------
- .../dts/broadcom/stingray/stingray-pinctrl.dtsi    |  5 +--
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  3 +-
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     | 36 +++++++++++-----------
- arch/arm64/boot/dts/freescale/imx8mm.dtsi          |  6 ++--
- arch/arm64/boot/dts/freescale/imx8mn.dtsi          |  6 ++--
- .../arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi |  4 +--
- arch/arm64/boot/dts/freescale/imx8mq.dtsi          |  4 +--
- .../boot/dts/marvell/armada-3720-turris-mox.dts    | 13 ++++----
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  |  2 +-
- arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts |  4 +--
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts  | 12 +++-----
- drivers/bus/ti-sysc.c                              | 18 ++++++++---
- drivers/soc/imx/soc-imx-scu.c                      |  2 +-
- 40 files changed, 145 insertions(+), 107 deletions(-)
+--Xtiy6oWrn7CAyC5aJXaj1VJzzBvQsTkYq--
