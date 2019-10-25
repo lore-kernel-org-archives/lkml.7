@@ -2,154 +2,124 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DA0CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66CCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E40120867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B008A21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571991382;
-	bh=JHa/hSEb/t0poYTi2uk6JevGpIMf6TI2RYRYzriatso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HvwL6N0mymNRvPHASQFPEOaw03ocrGa8ZEUotbHserHJTB8Idnj6x+iAfFA52vUsm
-	 StacC2LUUGdzE3cP9F+/A8D6KY4swa2cvUhdsXIxN9olAIJjMej6HHtLAWiVjNgLLq
-	 h05BdIwrvo9RQnJwZFtgJ6IauHyfiClW4KT0XsJ4=
+	s=default; t=1571991471;
+	bh=Dn2szSoAGmzySrJY3pCAB5nKowwTaEmGkh3gR/+MK9c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HcrKdGKJaLzifzzf2Cuo1q3dEE4TCPD2umwUtBLFQschOb6YNPgwmAUKhykw9cRZm
+	 R1zA+zlsKbJCdXWHLsuWfOYc+9XmuzNpgaayW6bByerSMiFFq7Ab4ptGrU/b9GhX9T
+	 sfc+lTc2nfA98tj+R602rOszwwYvuenGHGZ3AJ8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407770AbfJYIQV (ORCPT
+        id S2407891AbfJYIRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:16:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60320 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2407695AbfJYIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:16:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6CED2B184;
-        Fri, 25 Oct 2019 08:16:18 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 10:16:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     peterz@infradead.org, Yunsheng Lin <linyunsheng@huawei.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, geert@linux-m68k.org,
-        gregkh@linuxfoundation.org, paul.burton@mips.com
-Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
- NO_NODE
-Message-ID: <20191025081617.GA17610@dhcp22.suse.cz>
-References: <20191024092013.GW17610@dhcp22.suse.cz>
- <20191024174013.GA149516@google.com>
+        Fri, 25 Oct 2019 04:17:50 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45612 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405453AbfJYIRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:17:49 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o205so969670oib.12;
+        Fri, 25 Oct 2019 01:17:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SfnbCnGC7bfHOPS0ndKHFbRPzpZx17Z/G8hlBOm+gDw=;
+        b=SzKm8X5kDdzGk2IaVp/Lq25RtzTxxFCl+gs9SXSCVtLukCzgCp3ep9o9wG7PljhWSX
+         RQCEfRoMjfXh7O3qEUdHXhQqbafpO3KRRzzgsuHuTsKqm+iLwaPyCI/3oIwxBnaZOAHR
+         a2THVIJxco3+nc7wvhIoPnT/42OK7KbOvFYdModD3xuUnahgdEhWZN2/yLlpT/RWQ0hW
+         FJmdxw4emPDFBVRdYFoKmZJyzPj87tyZ9huR2es8Int8WqOQe7yd3yWnR6Q1C6JmROr7
+         MvydLZOiQfdp87dKPfN7j/dRFKF+rJaAMHaLPNxC1rZ6VQgQ6e2woNkMa0jJ4g1PGBR7
+         i8Hg==
+X-Gm-Message-State: APjAAAUQ8qISP2O49SbC0DGgDNdnqr48ZWZrORro+pfrEWZ712BOToiX
+        nzNxjM1TZaopwRTecAlxGaRvkPeecs5b71EMKHiA6ROx
+X-Google-Smtp-Source: APXvYqy8cLx1sSZoK5TmfzZ9Fq2zyzJe1nqJrBJBeOYFMnzoCQUbQKbV2BtvN5+jfRQs36i5xBnTlOAQNSQe/C70Bo8=
+X-Received: by 2002:aca:5885:: with SMTP id m127mr1963800oib.110.1571991468336;
+ Fri, 25 Oct 2019 01:17:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024174013.GA149516@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2435090.1mJ0fSsrDY@kreacher> <20191025025343.tyihliza45os3e4r@vireshk-i7>
+In-Reply-To: <20191025025343.tyihliza45os3e4r@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 25 Oct 2019 10:17:37 +0200
+Message-ID: <CAJZ5v0hyAX6zpr+2EzURg7ACmaXhbTAc7mBnr9ep11LkF1EBOg@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: processor: Add QoS requests for all CPUs
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 24-10-19 12:40:13, Bjorn Helgaas wrote:
-> On Thu, Oct 24, 2019 at 11:20:13AM +0200, Michal Hocko wrote:
-> > On Wed 23-10-19 12:10:39, Bjorn Helgaas wrote:
-> > > On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
-> > > > On 2019/10/23 5:04, Bjorn Helgaas wrote:
-> > > > > On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
-> > > 
-> > > > > I think the underlying problem you're addressing is that:
-> > > > > 
-> > > > >   - NUMA_NO_NODE == -1,
-> > > > >   - dev_to_node(dev) may return NUMA_NO_NODE,
-> > > > >   - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
-> > > > >   - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
-> > > > > 
-> > > > > For example, on arm64, mips loongson, s390, and x86,
-> > > > > cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
-> > > > > an invalid array index.
-> > > > 
-> > > > The invalid array index of -1 is the underlying problem here when
-> > > > cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
-> > > > is not NUMA_NO_NODE aware yet.
-> > > > 
-> > > > In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
-> > > > disscusion, it is requested that it is better to warn about the pcie
-> > > > device without a node assigned by the firmware before making the
-> > > > cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
-> > > > devices of "NUMA_NO_NODE" node can be fixed by their vendor.
-> > > > 
-> > > > See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
-> > > 
-> > > Right.  We should warn if the NUMA node number would help us but DT or
-> > > the firmware didn't give us one.
-> > > 
-> > > But we can do that independently of any cpumask_of_node() changes.
-> > > There's no need to do one patch before the other.  Even if you make
-> > > cpumask_of_node() tolerate NUMA_NO_NODE, we'll still get the warning
-> > > because we're not actually changing any node assignments.
-> > 
-> > Agreed. And this has been proposed previously I believe but my
-> > understanding was that Petr was against that.
-> 
-> I don't think Peter was opposed to a warning.
+On Fri, Oct 25, 2019 at 4:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 25-10-19, 02:41, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > The _PPC change notifications from the platform firmware are per-CPU,
+> > so acpi_processor_ppc_init() needs to add a frequency QoS request
+> > for each CPU covered by a cpufreq policy to take all of them into
+> > account.
+> >
+> > Even though ACPI thermal control of CPUs sets frequency limits
+> > per processor package, it also needs a frequency QoS request for each
+> > CPU in a cpufreq policy in case some of them are taken offline and
+> > the frequency limit needs to be set through the remaining online
+> > ones (this is slightly excessive, because all CPUs covered by one
+> > cpufreq policy will set the same frequency limit through their QoS
+> > requests, but it is not incorrect).
+> >
+> > Modify the code in accordance with the above observations.
+>
+> I am not sure if I understood everything you just said, but I don't
+> see how things can break with the current code we have.
+>
+> Both acpi_thermal_cpufreq_init() and acpi_processor_ppc_init() are
+> called from acpi_processor_notifier() which is registered as a policy
+> notifier and is called when a policy is created or removed. Even if
+> some CPUs of a policy go offline, it won't matter as the request for
+> the policy stays and it will be dropped only when all the CPUs of a
+> policy go offline.
+>
+> What am I missing ?
 
-Now, he was opposed to cpumask_of_node handling IIRC.
+The way the request is used.
 
-> I assume you're
-> referring to [1], which is about how cpumask_of_node() should work.
-> That's not my area, so I don't have a strong opinion.  From that
-> discussion:
-> 
-> Yunsheng> From what I can see, the problem can be fixed in three
-> Yunsheng> place:
-> Yunsheng> 1. Make user dev_to_node return a valid node id
-> Yunsheng>    even when proximity domain is not set by bios(or node id
-> Yunsheng>    set by buggy bios is not valid), which may need info from
-> Yunsheng>    the numa system to make sure it will return a valid node.
-> Yunsheng>
-> Yunsheng> 2. User that call cpumask_of_node should ensure the node
-> Yunsheng>    id is valid before calling cpumask_of_node, and user also
-> Yunsheng>    need some info to make ensure node id is valid.
-> Yunsheng>
-> Yunsheng> 3. Make sure cpumask_of_node deal with invalid node id as
-> Yunsheng>    this patchset.
-> 
-> Peter> 1) because even it is not set, the device really does belong
-> Peter> to a node.  It is impossible a device will have magic
-> Peter> uniform access to memory when CPUs cannot.
-> Peter> 
-> Peter> 2) is already true today, cpumask_of_node() requires a valid
-> Peter> node_id.
-> Peter> 
-> Peter> 3) is just wrong and increases overhead for everyone.
-> 
-> I think Peter is advocating (1), i.e., if firmware doesn't tell us a
-> node ID, we just pick one.  We can certainly do that in *addition* to
-> adding a warning.  I'd like it to be a separate patch because I think
-> we want the warning no matter what so users have some clue that
-> performance could be better.
+Say there are two CPUs, A and B, in the same policy.  A is
+policy->cpu, so acpi_processor_ppc_init() adds a QoS request for A
+only (note that the B's QoS request, B->perflib_req, remains
+inactive).
 
-Yes, those should be two different patches.
+Now, some time later, the platform firmware notifies the OS of a _PPC
+change for B.  That means acpi_processor_notify() is called and it
+calls acpi_processor_ppc_has_changed(B) and that invokes
+acpi_processor_get_platform_limit(B), which in turn looks at the B's
+QoS request (B->perflib_req) and sees that it is inactive, so 0 is
+returned without doing anything.  However, *some* QoS request should
+be updated then.
 
-> If we pick one, I guess we either assign some default, like node 0, to
-> everything; or we somehow pick a random node to assign.
+Would it be correct to update the A's QoS request in that case?  No,
+because the _PPC limit for A may be different that the _PPC limit for
+B in principle.
 
-I have tried to explain that picking a default node is tricky because
-node 0 is not generally available and you never know when a node might
-just disappear if the device is not bound to it.
-
-I really do not see why the proposed online_cpu_mask for that case is
-such a big deal. It will likely lead to suboptimal performance but what
-do you expect from a suboptimal HW description. There is no question
-that the proper node affinity should be set and the warning might really
-help here but trying to be clever and find a replacement sounds like
-potential for more subtly broken results than doing a straightforward
-thing.
-
-But I will just go silent now because I am just repeating myself.
-
--- 
-Michal Hocko
-SUSE Labs
+The thermal case is not completely analogous, because
+cpufreq_set_cur_state() finds online CPUs in the same package as the
+target one and tries to update the QoS request for each of them, which
+will include the original policy->cpu, whose QoS request has been
+registered by acpi_thermal_cpufreq_init(), as long as it is online.
+If it is offline, it will be skipped and there is no easy way to find
+a "previous policy->cpu".  It is possible to do that, but IMO it is
+more straightforward to have a request for each CPU added.
