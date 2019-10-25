@@ -2,260 +2,99 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6D0CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF3ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059F820867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FD321D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:46:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571978771;
+	bh=wiorhjSe1Jgcumgj5fluZs16cVEe1hZJXsHjFLCRfNw=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=ep1tSqCF+6FJ881qZ4zWsy38qtyRjYz6v5g/3AOBV8BfCfoTQH+hCDB6yYKFh8+jT
+	 fX9kB31PYPtwC2Iv5QcANd4vXxZqtWFDWbKYk2URih5m3u+YIoUiZWgAL7iFf990Sf
+	 gL3iy8KXAW6GzWmjg+w0C6q1DAmSaiRiH4bHxVmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389763AbfJYEiw (ORCPT
+        id S2390024AbfJYEqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 00:38:52 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21871 "EHLO mga18.intel.com"
+        Fri, 25 Oct 2019 00:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388090AbfJYEiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 00:38:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 21:38:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
-   d="scan'208";a="282150315"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 24 Oct 2019 21:38:49 -0700
-Date:   Thu, 24 Oct 2019 21:43:11 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
-Message-ID: <20191024214311.43d76a5c@jacob-builder>
-In-Reply-To: <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
-        <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S2387990AbfJYEqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 00:46:10 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9E121D71
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 04:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571978769;
+        bh=wiorhjSe1Jgcumgj5fluZs16cVEe1hZJXsHjFLCRfNw=;
+        h=From:Date:Subject:To:From;
+        b=oEnXcmg1azk8QDn15o3bAkiEncszDSU5RsmnFzLqFni3RkGh2DwCR2RLRRq3CBBWC
+         8PODXZeZvxdBdOdL/Hzc0UYPX9h1i7q5lKT0Wx/hUXkswqkiFmnfxnAyrqGkZaN8S0
+         Kr5oPdgpCBStOwCCb5jrWGFtXAaAv1PRbhbj1a9s=
+Received: by mail-wr1-f50.google.com with SMTP id o28so692297wro.7
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 21:46:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAX+PE8v7BR/+0AHY1ojTHYYkozoLGBRx/Mqww0CsMmSpbZZXFNO
+        MwWPynhWWyNR/B2ABi7Bu40cpUxEDmW3C8PlSlsc4g==
+X-Google-Smtp-Source: APXvYqyNOFp3Ms+uinOmOvqe7XDGXR8wMZpz/A8vGbtQnxZA8XQ8zPGalHKbQrZUar9wc/bhTGaD7FmpMXccmbOUWG8=
+X-Received: by 2002:a5d:51c2:: with SMTP id n2mr865701wrv.149.1571978767560;
+ Thu, 24 Oct 2019 21:46:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 24 Oct 2019 21:45:56 -0700
+X-Gmail-Original-Message-ID: <CALCETrVepdYd4uN8jrG8i6iaixWp+N3MdGv5WhjOdCr9sLRK1w@mail.gmail.com>
+Message-ID: <CALCETrVepdYd4uN8jrG8i6iaixWp+N3MdGv5WhjOdCr9sLRK1w@mail.gmail.com>
+Subject: Please stop using iopl() in DPDK
+To:     dev@dpdk.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baolu,
+Hi all-
 
-Thanks for the review. please see my comments inline.
+Supporting iopl() in the Linux kernel is becoming a maintainability
+problem.  As far as I know, DPDK is the only major modern user of
+iopl().
 
-On Fri, 25 Oct 2019 10:30:48 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+After doing some research, DPDK uses direct io port access for only a
+single purpose: accessing legacy virtio configuration structures.
+These structures are mapped in IO space in BAR 0 on legacy virtio
+devices.
 
-> Hi Jacob,
-> 
-> On 10/25/19 3:54 AM, Jacob Pan wrote:
-> > When VT-d driver runs in the guest, PASID allocation must be
-> > performed via virtual command interface. This patch registers a
-> > custom IOASID allocator which takes precedence over the default
-> > XArray based allocator. The resulting IOASID allocation will always
-> > come from the host. This ensures that PASID namespace is system-
-> > wide.
-> > 
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >   drivers/iommu/Kconfig       |  1 +
-> >   drivers/iommu/intel-iommu.c | 67
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> > include/linux/intel-iommu.h |  2 ++ 3 files changed, 70
-> > insertions(+)
-> > 
-> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > index fd50ddffffbf..961fe5795a90 100644
-> > --- a/drivers/iommu/Kconfig
-> > +++ b/drivers/iommu/Kconfig
-> > @@ -211,6 +211,7 @@ config INTEL_IOMMU_SVM
-> >   	bool "Support for Shared Virtual Memory with Intel IOMMU"
-> >   	depends on INTEL_IOMMU && X86
-> >   	select PCI_PASID
-> > +	select IOASID
-> >   	select MMU_NOTIFIER
-> >   	help
-> >   	  Shared Virtual Memory (SVM) provides a facility for
-> > devices diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 3f974919d3bd..ced1d89ef977
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -1706,6 +1706,9 @@ static void free_dmar_iommu(struct
-> > intel_iommu *iommu) if (ecap_prs(iommu->ecap))
-> >   			intel_svm_finish_prq(iommu);
-> >   	}
-> > +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap))
-> > +
-> > ioasid_unregister_allocator(&iommu->pasid_allocator);  
-> 
-> Since scalable mode is disabled if pasid allocator failed to register,
-> add sm_support(iommu) check here will be better.
-> 
-I was thinking to be symmetric with register call, checking for the
-same conditions. Also, I like your advice below to only disable SVA
-instead of scalable mode.
-> > +
-> >   #endif
-> >   }
-> >   
-> > @@ -4910,6 +4913,44 @@ static int __init
-> > probe_acpi_namespace_devices(void) return 0;
-> >   }
-> >   
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
-> > void *data) +{
-> > +	struct intel_iommu *iommu = data;
-> > +	ioasid_t ioasid;
-> > +
-> > +	/*
-> > +	 * VT-d virtual command interface always uses the full 20
-> > bit
-> > +	 * PASID range. Host can partition guest PASID range based
-> > on
-> > +	 * policies but it is out of guest's control.
-> > +	 */
-> > +	if (min < PASID_MIN || max > intel_pasid_max_id)
-> > +		return INVALID_IOASID;
-> > +
-> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
-> > +		return INVALID_IOASID;
-> > +
-> > +	return ioasid;
-> > +}
-> > +
-> > +static void intel_ioasid_free(ioasid_t ioasid, void *data)
-> > +{
-> > +	struct intel_iommu *iommu = data;
-> > +
-> > +	if (!iommu)
-> > +		return;
-> > +	/*
-> > +	 * Sanity check the ioasid owner is done at upper layer,
-> > e.g. VFIO
-> > +	 * We can only free the PASID when all the devices are
-> > unbond.
-> > +	 */
-> > +	if (ioasid_find(NULL, ioasid, NULL)) {
-> > +		pr_alert("Cannot free active IOASID %d\n", ioasid);
-> > +		return;
-> > +	}
-> > +	vcmd_free_pasid(iommu, ioasid);
-> > +}
-> > +#endif
-> > +
-> >   int __init intel_iommu_init(void)
-> >   {
-> >   	int ret = -ENODEV;
-> > @@ -5020,6 +5061,32 @@ int __init intel_iommu_init(void)
-> >   				       "%s", iommu->name);
-> >   		iommu_device_set_ops(&iommu->iommu,
-> > &intel_iommu_ops); iommu_device_register(&iommu->iommu);
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +		if (ecap_vcs(iommu->ecap) &&
-> > vccap_pasid(iommu->vccap)) {
-> > +			pr_info("Register custom PASID
-> > allocator\n");
-> > +			/*
-> > +			 * Register a custom ASID allocator if we
-> > are running
-> > +			 * in a guest, the purpose is to have a
-> > system wide PASID
-> > +			 * namespace among all PASID users.
-> > +			 * There can be multiple vIOMMUs in each
-> > guest but only
-> > +			 * one allocator is active. All vIOMMU
-> > allocators will
-> > +			 * eventually be calling the same host
-> > allocator.
-> > +			 */
-> > +			iommu->pasid_allocator.alloc =
-> > intel_ioasid_alloc;
-> > +			iommu->pasid_allocator.free =
-> > intel_ioasid_free;
-> > +			iommu->pasid_allocator.pdata = (void
-> > *)iommu;
-> > +			ret =
-> > ioasid_register_allocator(&iommu->pasid_allocator);
-> > +			if (ret) {
-> > +				pr_warn("Custom PASID allocator
-> > registeration failed\n");
-> > +				/*
-> > +				 * Disable scalable mode on this
-> > IOMMU if there
-> > +				 * is no custom allocator. Mixing
-> > SM capable vIOMMU
-> > +				 * and non-SM vIOMMU are not
-> > supported.
-> > +				 */
-> > +				intel_iommu_sm = 0;  
-> 
-> It's insufficient to disable scalable mode by only clearing
-> intel_iommu_sm. The DMA_RTADDR_SMT bit in root entry has already been
-> set. Probably, you need to
-> 
-> for each iommu
-> 	clear DMA_RTADDR_SMT in root entry
-> 
-> Alternatively, since vSVA is the only customer of this custom PASID
-> allocator, is it possible to only disable SVA here?
-> 
-Yeah, I think disable SVA is better. We can still do gIOVA in SM. I
-guess we need to introduce a flag for sva_enabled.
-> > +			}
-> > +		}
-> > +#endif
-> >   	}
-> >   
-> >   	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index 1d4b8dcdc5d8..c624733cb2e6
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -19,6 +19,7 @@
-> >   #include <linux/iommu.h>
-> >   #include <linux/io-64-nonatomic-lo-hi.h>
-> >   #include <linux/dmar.h>
-> > +#include <linux/ioasid.h>
-> >   
-> >   #include <asm/cacheflush.h>
-> >   #include <asm/iommu.h>
-> > @@ -546,6 +547,7 @@ struct intel_iommu {
-> >   #ifdef CONFIG_INTEL_IOMMU_SVM
-> >   	struct page_req_dsc *prq;
-> >   	unsigned char prq_name[16];    /* Name for PRQ interrupt
-> > */
-> > +	struct ioasid_allocator_ops pasid_allocator; /* Custom
-> > allocator for PASIDs */ #endif
-> >   	struct q_inval  *qi;            /* Queued invalidation
-> > info */ u32 *iommu_state; /* Store iommu states between suspend and
-> > resume.*/ 
-> 
-> Best regards,
-> baolu
+There are at least three ways you could avoid using iopl().  Here they
+are in rough order of quality in my opinion:
 
-[Jacob Pan]
+1. Change pci_uio_ioport_read() and pci_uio_ioport_write() to use
+read() and write() on resource0 in sysfs.
+
+2. Use the alternative access mechanism in the virtio legacy spec:
+there is a way to access all of these structures via configuration
+space.
+
+3. Use ioperm() instead of iopl().
+
+
+We are considering changes to the kernel that will potentially harm
+the performance of any program that uses iopl(3) -- in particular,
+context switches will become more expensive, and the scheduler might
+need to explicitly penalize such programs to ensure fairness.  Using
+ioperm() already hurts performance, and the proposed changes to iopl()
+will make it even worse.  Alternatively, the kernel could drop iopl()
+support entirely.  I will certainly make a change to allow
+distributions to remove iopl() support entirely from their kernels,
+and I expect that distributions will do this.
+
+Please fix DPDK.
+
+Thanks,
+Andy
