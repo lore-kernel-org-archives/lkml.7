@@ -2,162 +2,123 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4558CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FCBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A3421D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:44:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1NSkzY+"
+	by mail.kernel.org (Postfix) with ESMTP id F251621D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfJYToV (ORCPT
+        id S1727533AbfJYTpK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:44:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60035 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727457AbfJYToV (ORCPT
+        Fri, 25 Oct 2019 15:45:10 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:48495 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfJYTpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:44:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572032660;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gjP7lTTjpTfakTXfOsGFWUmjZaWNVRnXwyVyG8tVt5E=;
-        b=g1NSkzY+81DL8fIl6+i5hmRZJ03l6kAgyYmSOkhDMJ5NTOr+sW5mO2XtFKS7hUMChOXD/5
-        ILH5a1Q+0oBYNY0uhcBOwELx5idmPDH7vKVXUdAKBfRAzUMfgBjy33r1KsAIj+e2Mbrarw
-        RWncQqX0CgYIYalqWr64qU6tHe7If7Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-2mG1hvoOMmKqLeTPX6Nl1w-1; Fri, 25 Oct 2019 15:44:16 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EEE7801E66;
-        Fri, 25 Oct 2019 19:44:13 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AED061001B23;
-        Fri, 25 Oct 2019 19:43:59 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 15:43:56 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 05/21] audit: log drop of contid on exit of
- last task
-Message-ID: <20191025194356.skqebldthpokwd2m@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <71b75f54342f32f176c2b6d94584f2a666964e68.1568834524.git.rgb@redhat.com>
- <CAHC9VhQYVzGKRx48dgX1j3CJOe1N0widkhWb=_-3ohnOdZHhUw@mail.gmail.com>
+        Fri, 25 Oct 2019 15:45:10 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id E2707C0008;
+        Fri, 25 Oct 2019 19:45:03 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 21:45:02 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     <linux-mtd@lists.infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: Re: [PATCH] MAINTAINERS: mtd/ubi/ubifs: Remove inactive maintainers
+Message-ID: <20191025214502.49f674a7@xps13>
+In-Reply-To: <20191017142229.3853-1-miquel.raynal@bootlin.com>
+References: <20191017142229.3853-1-miquel.raynal@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhQYVzGKRx48dgX1j3CJOe1N0widkhWb=_-3ohnOdZHhUw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: 2mG1hvoOMmKqLeTPX6Nl1w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-10 20:38, Paul Moore wrote:
-> On Wed, Sep 18, 2019 at 9:24 PM Richard Guy Briggs <rgb@redhat.com> wrote=
-:
-> > Since we are tracking the life of each audit container indentifier, we
-> > can match the creation event with the destruction event.  Log the
-> > destruction of the audit container identifier when the last process in
-> > that container exits.
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  kernel/audit.c   | 32 ++++++++++++++++++++++++++++++++
-> >  kernel/audit.h   |  2 ++
-> >  kernel/auditsc.c |  2 ++
-> >  3 files changed, 36 insertions(+)
-> >
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index ea0899130cc1..53d13d638c63 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -2503,6 +2503,38 @@ int audit_set_contid(struct task_struct *task, u=
-64 contid)
-> >         return rc;
-> >  }
-> >
-> > +void audit_log_container_drop(void)
-> > +{
-> > +       struct audit_buffer *ab;
-> > +       uid_t uid;
-> > +       struct tty_struct *tty;
-> > +       char comm[sizeof(current->comm)];
-> > +
-> > +       if (!current->audit || !current->audit->cont ||
-> > +           refcount_read(&current->audit->cont->refcount) > 1)
-> > +               return;
-> > +       ab =3D audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTA=
-INER_OP);
-> > +       if (!ab)
-> > +               return;
-> > +
-> > +       uid =3D from_kuid(&init_user_ns, task_uid(current));
-> > +       tty =3D audit_get_tty();
-> > +       audit_log_format(ab,
-> > +                        "op=3Ddrop opid=3D%d contid=3D%llu old-contid=
-=3D%llu pid=3D%d uid=3D%u auid=3D%u tty=3D%s ses=3D%u",
-> > +                        task_tgid_nr(current), audit_get_contid(curren=
-t),
-> > +                        audit_get_contid(current), task_tgid_nr(curren=
-t), uid,
-> > +                        from_kuid(&init_user_ns, audit_get_loginuid(cu=
-rrent)),
-> > +                        tty ? tty_name(tty) : "(none)",
-> > +                                audit_get_sessionid(current));
-> > +       audit_put_tty(tty);
-> > +       audit_log_task_context(ab);
-> > +       audit_log_format(ab, " comm=3D");
-> > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> > +       audit_log_d_path_exe(ab, current->mm);
-> > +       audit_log_format(ab, " res=3D1");
-> > +       audit_log_end(ab);
-> > +}
->=20
-> Why can't we just do this in audit_cont_put()?  Is it because we call
-> audit_cont_put() in the new audit_free() function?  What if we were to
-> do it in __audit_free()/audit_free_syscall()?
+Hi David,
 
-The intent was to put this before the EOE record of a syscall so we
-could fill out all the fields similarly to op=3Dset, but this could stand
-alone dropping or nulling a bunch of fields.
+Gentle ping?
 
-It would also never get printed if we left it before the EOE and had the
-audit signal info record keep a reference to it.
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 17 Oct 2019
+16:22:29 +0200:
 
-Hmmm...
+> Despite their substantial personal investment in the MTD/UBI/UBIFS a
+> few years back, David, Brian, Artem and Adrian are not actively
+> maintaining the subsystem anymore. We warmly salute them for all the
+> work they have achieved and will of course still welcome their
+> participation and reviews.
+> 
+> That said, Marek retired himself a few weeks ago quoting Harald [1]:
+> 
+>         It matters who has which title and when. Should somebody not
+>         be an active maintainer, make sure he's not listed as such.
+> 
+> For this same reason, let’s trim the maintainers list with the
+> actually active ones over the past two years.
+> 
+> [1] http://laforge.gnumonks.org/blog/20180307-mchardy-gpl/
+> 
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Artem Bityutskiy <dedekind1@gmail.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  MAINTAINERS | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0632422ce9d4..0e5e0736ee55 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10528,8 +10528,6 @@ F:	include/linux/vmalloc.h
+>  F:	mm/
+>  
+>  MEMORY TECHNOLOGY DEVICES (MTD)
+> -M:	David Woodhouse <dwmw2@infradead.org>
+> -M:	Brian Norris <computersforpeace@gmail.com>
+>  M:	Miquel Raynal <miquel.raynal@bootlin.com>
+>  M:	Richard Weinberger <richard@nod.at>
+>  M:	Vignesh Raghavendra <vigneshr@ti.com>
+> @@ -16579,8 +16577,6 @@ F:	drivers/media/pci/tw686x/
+>  
+>  UBI FILE SYSTEM (UBIFS)
+>  M:	Richard Weinberger <richard@nod.at>
+> -M:	Artem Bityutskiy <dedekind1@gmail.com>
+> -M:	Adrian Hunter <adrian.hunter@intel.com>
+>  L:	linux-mtd@lists.infradead.org
+>  T:	git git://git.infradead.org/ubifs-2.6.git
+>  W:	http://www.linux-mtd.infradead.org/doc/ubifs.html
+> @@ -16697,7 +16693,6 @@ S:	Maintained
+>  F:	drivers/scsi/ufs/ufs-mediatek*
+>  
+>  UNSORTED BLOCK IMAGES (UBI)
+> -M:	Artem Bityutskiy <dedekind1@gmail.com>
+>  M:	Richard Weinberger <richard@nod.at>
+>  W:	http://www.linux-mtd.infradead.org/
+>  L:	linux-mtd@lists.infradead.org
 
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+Thanks,
+Miquèl
