@@ -2,82 +2,104 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21F7C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA85CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C865A2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1BD2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437299AbfJYHuy (ORCPT
+        id S2437333AbfJYHxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:50:54 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38199 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbfJYHux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:50:53 -0400
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F10A6240013;
-        Fri, 25 Oct 2019 07:50:50 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "kernelci.org bot" <bot@kernelci.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO CS
-In-Reply-To: <20191024193225.GM46373@sirena.co.uk>
-References: <20191024141309.22434-1-gregory.clement@bootlin.com> <20191024193225.GM46373@sirena.co.uk>
-Date:   Fri, 25 Oct 2019 09:50:50 +0200
-Message-ID: <87woctp8kl.fsf@FE-laptop>
+        Fri, 25 Oct 2019 03:53:38 -0400
+Received: from mga05.intel.com ([192.55.52.43]:61386 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727275AbfJYHxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:53:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 00:53:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
+   d="scan'208";a="223845569"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Oct 2019 00:53:36 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iNuPf-0001i5-GF; Fri, 25 Oct 2019 10:53:35 +0300
+Date:   Fri, 25 Oct 2019 10:53:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andrey Zhizhikin <andrey.z@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+Message-ID: <20191025075335.GC32742@smile.fi.intel.com>
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
+> This patchset introduces additional regulator driver for Intel Cherry
+> Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
+> PMIC, which is used to instantiate this regulator.
+> 
+> Regulator support for this PMIC was present in kernel release from Intel
+> targeted Aero platform, but was not entirely ported upstream and has
+> been omitted in mainline kernel releases. Consecutively, absence of
+> regulator caused the SD Card interface not to be provided with Vqcc
+> voltage source needed to operate with UHS-I cards.
+> 
+> Following patches are addessing this issue and making sd card interface
+> to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
+> of the SD Card interface in consumers and exposes optional "vqmmc"
+> voltage source, which mmc driver uses to switch signalling voltages
+> between 1.8V and 3.3V. 
+> 
+> This set contains of 2 patches: one is implementing the regulator driver
+> (based on a non upstreamed version from Intel Aero), and another patch
+> registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
 
-> On Thu, Oct 24, 2019 at 04:13:09PM +0200, Gregory CLEMENT wrote:
->> Even if the flag use_gpio_descriptors is set, it is possible that
->> cs_gpiods was not allocated, which leads to a kernel crash:
->> 
->> Unable to handle kernel NULL pointer dereference at virtual address 00000000
->> pgd = (ptrval)
->> [00000000] *pgd=00000000
->> Internal error: Oops: 5 [#1] ARM
->> Modules linked in:
->> CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.4.0-rc3 #1
->> Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
->> PC is at of_register_spi_device+0x20c/0x38c
->> LR is at __of_find_property+0x3c/0x60
->> pc : [<c09b45dc>]    lr : [<c0c47a98>]    psr: 20000013
->
-> Please think hard before including complete backtraces in upstream
-> reports, they are very large and contain almost no useful information
-> relative to their size so often obscure the relevant content in your
-> message. If part of the backtrace is usefully illustrative then it's
-> usually better to pull out the relevant sections.
+Thank you.
+Hans, Cc'ed, has quite interested in these kind of patches.
+Am I right, Hans?
 
-You can remove it while applying it, or I can send a v2.
-
-Actually I thought you would squash it with the initial patch to avoid
-the bisectability break.
-
-Gregory
-
+> 
+> 
+> Andrey Zhizhikin (2):
+>   regulator: add support for Intel Cherry Whiskey Cove regulator
+>   mfd: add regulator cell to Cherry Trail Whiskey Cove PMIC
+> 
+>  drivers/mfd/intel_soc_pmic_chtwc.c            |  15 +-
+>  drivers/regulator/Kconfig                     |  10 +
+>  drivers/regulator/Makefile                    |   1 +
+>  drivers/regulator/intel-cht-wc-regulator.c    | 433 ++++++++++++++++++
+>  .../linux/regulator/intel-cht-wc-regulator.h  |  64 +++
+>  5 files changed, 521 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/regulator/intel-cht-wc-regulator.c
+>  create mode 100644 include/linux/regulator/intel-cht-wc-regulator.h
+> 
+> -- 
+> 2.17.1
+> 
 
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
