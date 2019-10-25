@@ -2,95 +2,148 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03B8CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E47CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7883E21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572003836;
-	bh=oGf8963/ffh0SXo4J75BA8mJA7B6+pkAReflvOi0+gw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x5G5gBTwA2jZQi0K3YlN83cZ5AbU9JYxo9xpVTTmYZT1oZNAWlb7rnaDivweWfgNO
-	 Q8d1Hdq420rUBCYErs8Qsw5pyZRlC15Q7sExssEvnFhu391PvOfjbIzamSn2kTzAYm
-	 I/Nep00Yjx998P3YIc9ugtGXSwsEAzif01Mf1iQw=
+	by mail.kernel.org (Postfix) with ESMTP id E4FF3206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MweLNAF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501993AbfJYLnz (ORCPT
+        id S2502087AbfJYLqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:43:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41398 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2501933AbfJYLnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:43:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EEFC7AC59;
-        Fri, 25 Oct 2019 11:43:52 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 13:43:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
- /proc/pagetypeinfo
-Message-ID: <20191025114350.GD17610@dhcp22.suse.cz>
-References: <192965B3-B446-499C-AEE8-DFF087D46B87@lca.pw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <192965B3-B446-499C-AEE8-DFF087D46B87@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 25 Oct 2019 07:46:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52392 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730088AbfJYLqE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 07:46:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p21so1785710wmg.2;
+        Fri, 25 Oct 2019 04:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=ef0+hHhWKCL6Ca0t5L5+DnFrjs6xNw6+Odbfva8qwPs=;
+        b=MweLNAF2NZ7iEpk6wMj4PgBgpG0sqWOQGUnZ5/A9SGuzDzfVMXAN5EOmXw054lnilC
+         JpvmjXsT/o5JUWHkilzQ2uVNbpRohLVa7vT3MLWYjKbzLw0zfei+xFbAfcpkzUMVHcNT
+         1yuGX4/2mATN/KrU26ulSjsIbQhVgWDlKT89ksOjIDjRWMF97PGryx1U/4GKJcCWlN3Q
+         FEJIHXFkbTrYjPv+N/bdFEOW1ghAqmjl+ZUX4kwlH3mBK5/tH9GhXQEFjxOsG3Uf7DF1
+         8rliUCEFFCibiUJens7WliBKOngilDkc+PKmVWT4F1ICYgPD7EDjpsafY4vWcdZi+n9Z
+         dtiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=ef0+hHhWKCL6Ca0t5L5+DnFrjs6xNw6+Odbfva8qwPs=;
+        b=HjcyKQ93uuk7clM+wMechRaJcC2vhSYsVuJ1ZqtCvh6g9dkz/QiXDvvezF6KqLtEaz
+         N2zugzszywtnFlti8woXMZhdm7+o4bE5Gb45ErydCgjiGDlAWvq75PxJMhtrYTUOcoQy
+         vmT3y/fzzQhiQvUuo9mr/joR0zH+wCYK/3jMAeOlIc5M/aZtzsFbrLsE3nBINXMJZCKo
+         mdnhqwxtD+MiP01iT/N/+Q2sTaHI1ewLGoUYwmJcOV/Yc9HEnxV/4ktEZvtuvaIosegG
+         LPu0ulnzKgw1A2tU/ldI6KESu2R6uJL2Ul5LO5rrCRZS7QT4SWXmDgWjq4Az2OUE5jr0
+         rIzw==
+X-Gm-Message-State: APjAAAVQo8HIMTdum7YuiiPOPiEoDpCAe3ds1wunF7VKuf3cWZ0fYQZN
+        qaFpGRaZARq4eiO5pz21LNo=
+X-Google-Smtp-Source: APXvYqxyiXMNCEwujviBcaGWHHKgI5g4AoZaYE7MQ718Qwr4MDjEGH3/HrmtiPExX3WW7QD0UVNFjg==
+X-Received: by 2002:a1c:f305:: with SMTP id q5mr3127071wmq.137.1572003961887;
+        Fri, 25 Oct 2019 04:46:01 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id g69sm1881335wme.31.2019.10.25.04.46.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 04:46:01 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
+        kvm@vger.kernel.org
+Subject: [GIT PULL] KVM changes for Linux 5.4-rc5
+Date:   Fri, 25 Oct 2019 13:45:59 +0200
+Message-Id: <1572003959-43063-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 25-10-19 07:18:37, Qian Cai wrote:
-> ﻿
-> 
-> > On Oct 25, 2019, at 3:26 AM, Michal Hocko <mhocko@kernel.org> wrote:
-> > 
-> > Considering the pagetypeinfo is a debugging tool we do not really need
-> > exact numbers here. The primary reason to look at the outuput is to see
-> > how pageblocks are spread among different migratetypes and low number of
-> > pages is much more interesting therefore putting a bound on the number
-> > of pages on the free_list sounds like a reasonable tradeoff.
-> > 
-> > The new output will simply tell
-> > [...]
-> > Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >100000  41019  31560  23996  10054   3229    983    648
-> 
-> It was mentioned that developers could use this file is to see the
-> movement of those numbers for debugging, so this supposed to introduce
-> regressions as there is no movement anymore for those 100k+ items?
+Linus,
 
-Can you provide an explicit example please? As the changelog mentions
-it is the "low numbers" that is really interesting when debugging
-fragmentation issues. Because we are running out of a respective migrate
-type and it is interesting to see why and what compaction is doing etc.
+The following changes since commit 3b7c59a1950c75f2c0152e5a9cd77675b09233d6:
 
-Having more than 100k pages on the respective migrate type list is a
-good sign that the migrate type is not in problems. Comparing multiple
-migrate types with >100k pages doesn't really need a large precision
-AFAIU.
+  Merge tag 'pinctrl-v5.4-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl (2019-10-22 06:40:07 -0400)
 
-Now, I do agree that some debugging tools might get confused by > in the
-output but can we wait for reports and see whether anybody actually
-cares? It is more likely that fixing one off debugging tools wouldn't be
-a big deal.
+are available in the git repository at:
 
--- 
-Michal Hocko
-SUSE Labs
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 671ddc700fd08b94967b1e2a937020e30c838609:
+
+  KVM: nVMX: Don't leak L1 MMIO regions to L2 (2019-10-22 19:04:40 +0200)
+
+----------------------------------------------------------------
+Bugfixes for ARM, PPC and x86, plus selftest improvements.
+
+----------------------------------------------------------------
+Greg Kurz (1):
+      KVM: PPC: Book3S HV: XIVE: Ensure VP isn't already in use
+
+Jim Mattson (2):
+      kvm: x86: Expose RDPID in KVM_GET_SUPPORTED_CPUID
+      KVM: nVMX: Don't leak L1 MMIO regions to L2
+
+Liran Alon (1):
+      KVM: VMX: Remove specialized handling of unexpected exit-reasons
+
+Marc Zyngier (4):
+      KVM: arm64: pmu: Fix cycle counter truncation
+      arm64: KVM: Handle PMCR_EL0.LC as RES1 on pure AArch64 systems
+      KVM: arm64: pmu: Set the CHAINED attribute before creating the in-kernel event
+      KVM: arm64: pmu: Reset sample period on overflow handling
+
+Miaohe Lin (1):
+      KVM: SVM: Fix potential wrong physical id in avic_handle_ldr_update
+
+Paolo Bonzini (3):
+      kvm: clear kvmclock MSR on reset
+      Merge tag 'kvmarm-fixes-5.4-2' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
+      Merge tag 'kvm-ppc-fixes-5.4-1' of git://git.kernel.org/.../paulus/powerpc into HEAD
+
+Vitaly Kuznetsov (5):
+      selftests: kvm: synchronize .gitignore to Makefile
+      selftests: kvm: vmx_set_nested_state_test: don't check for VMX support twice
+      selftests: kvm: consolidate VMX support checks
+      selftests: kvm: vmx_dirty_log_test: skip the test when VMX is not supported
+      selftests: kvm: fix sync_regs_test with newer gccs
+
+Wanpeng Li (1):
+      KVM: Don't shrink/grow vCPU halt_poll_ns if host side polling is disabled
+
+kbuild test robot (1):
+      KVM: x86: fix bugon.cocci warnings
+
+ arch/arm64/kvm/sys_regs.c                          |  4 ++
+ arch/powerpc/kvm/book3s_xive.c                     | 24 +++++---
+ arch/powerpc/kvm/book3s_xive.h                     | 12 ++++
+ arch/powerpc/kvm/book3s_xive_native.c              |  6 +-
+ arch/x86/include/asm/kvm_host.h                    |  2 +-
+ arch/x86/kvm/cpuid.c                               |  2 +-
+ arch/x86/kvm/lapic.c                               |  5 --
+ arch/x86/kvm/lapic.h                               |  5 ++
+ arch/x86/kvm/svm.c                                 |  6 +-
+ arch/x86/kvm/vmx/nested.c                          | 64 ++++++++++++----------
+ arch/x86/kvm/vmx/nested.h                          | 13 ++++-
+ arch/x86/kvm/vmx/vmx.c                             | 12 ----
+ arch/x86/kvm/x86.c                                 | 19 ++++---
+ tools/testing/selftests/kvm/.gitignore             |  2 +
+ tools/testing/selftests/kvm/include/x86_64/vmx.h   |  2 +
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c       | 10 ++++
+ .../testing/selftests/kvm/x86_64/sync_regs_test.c  | 21 +++----
+ .../kvm/x86_64/vmx_close_while_nested_test.c       |  6 +-
+ .../selftests/kvm/x86_64/vmx_dirty_log_test.c      |  2 +
+ .../kvm/x86_64/vmx_set_nested_state_test.c         | 13 +----
+ .../selftests/kvm/x86_64/vmx_tsc_adjust_test.c     |  6 +-
+ virt/kvm/arm/pmu.c                                 | 48 +++++++++++-----
+ virt/kvm/kvm_main.c                                | 29 +++++-----
+ 23 files changed, 186 insertions(+), 127 deletions(-)
