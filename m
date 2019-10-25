@@ -2,94 +2,144 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBE9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7699CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5EC21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:22:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jIBHVCHB"
+	by mail.kernel.org (Postfix) with ESMTP id 8AA8E21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571966758;
+	bh=ve6VuYj5fDUJcAsaXlTBkWDVM+Rgj3v6t2W+NC8oL00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PJZ8d9p9xCJK8eLFZv0WTZC6iEh3l52Ah24HEQyudlEet9NzfkHbU3iI6WttTh8MQ
+	 NTeL0RWrcd6mB6goXQlgUjW6JLbc4wKERBhg9oebo62j4dQ60T6NeQU5Y1uux4PAID
+	 ff36pI06JvlL85puqvUERQf2gBnlaCt2K0BISiY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388819AbfJYBWR (ORCPT
+        id S2388870AbfJYBZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 21:22:17 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40298 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388701AbfJYBWQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 21:22:16 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1Jg3W124632;
-        Fri, 25 Oct 2019 01:22:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=SPRaq8yaax6A3Fiu40xuZkAocPCF359sN02pM6RUdk4=;
- b=jIBHVCHBCiHpGBfO5uGzOZtK0SNDwtyjTLle2oJFxDQMeZIZkayyW1htRyHEUwAhXsTN
- utdahHXVB/MEBCfaEkFCF2OwBuDThixlu2m1TDccVKWKRuZjcaegRB3LW85c1v/YMVsj
- x/mF+QVcj8qmwzl50LPaXwttexUAArL7IOEkio17QaBXD4jnQw9Hu5zAhvzO+cCnrfO9
- lyGJXC/GMGAVqJQw4SDJrxR1kI8SAf6e0rWicscjxvlrqEQAxmM1BQghmdTI9LHzeWvz
- Dztweppb3btCAM0oHcz2+iUedCYA2ZPv2HGN2xCaMtkaceZryfX3ANwm1FTCxLbImdUi dg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vqteq76e5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 01:22:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1J7gp040100;
-        Fri, 25 Oct 2019 01:22:03 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2vug0cs0pq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 01:22:03 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9P1M1eX019156;
-        Fri, 25 Oct 2019 01:22:02 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 24 Oct 2019 18:22:01 -0700
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jiri Kosina <trivial@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH trivial] scsi: isci: Spelling s/configruation/configuration/
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191024152543.30310-1-geert+renesas@glider.be>
-Date:   Thu, 24 Oct 2019 21:21:59 -0400
-In-Reply-To: <20191024152543.30310-1-geert+renesas@glider.be> (Geert
-        Uytterhoeven's message of "Thu, 24 Oct 2019 17:25:43 +0200")
-Message-ID: <yq18sp9bow8.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 24 Oct 2019 21:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388701AbfJYBZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 21:25:56 -0400
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 916E021D71;
+        Fri, 25 Oct 2019 01:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571966756;
+        bh=ve6VuYj5fDUJcAsaXlTBkWDVM+Rgj3v6t2W+NC8oL00=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ce2sQCgteWnadCUwG6tR4FF4Mhq9Y0XqyLB4h3wqAOFIH0z022oWyjkBK+N+4Ho6R
+         Kn2kwK2xLuE4NLSSFq19PaVHJTpZJBMmyv47Byg9b3sGbcrp4toJl5NofO16iBGtfL
+         BqQ0+mYsD8YYBiRPe+8Vewjcw5gyh1uCnqRlv1LU=
+Date:   Fri, 25 Oct 2019 03:25:53 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 11/14] sched/kcpustat: Introduce vtime-aware kcpustat
+ accessor for CPUTIME_SYSTEM
+Message-ID: <20191025012552.GA18217@lenoir>
+References: <20191016025700.31277-1-frederic@kernel.org>
+ <20191016025700.31277-12-frederic@kernel.org>
+ <20191024115034.GA4114@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910250012
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910250012
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024115034.GA4114@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 24, 2019 at 01:50:34PM +0200, Peter Zijlstra wrote:
+> On Wed, Oct 16, 2019 at 04:56:57AM +0200, Frederic Weisbecker wrote:
+> 
+> > +static int kcpustat_field_vtime(u64 *cpustat,
+> > +				struct vtime *vtime,
+> > +				enum cpu_usage_stat usage,
+> > +				int cpu, u64 *val)
+> > +{
+> > +	unsigned int seq;
+> > +	int err;
+> > +
+> > +	do {
+> > +		seq = read_seqcount_begin(&vtime->seqcount);
+> > +
+> > +		/*
+> > +		 * We raced against context switch, fetch the
+> > +		 * kcpustat task again.
+> > +		 */
+> > +		if (vtime->cpu != cpu && vtime->cpu != -1) {
+> > +			err = -EAGAIN;
+> > +			continue;
+> 
+> Did that want to be break?
+> 
+> > +		}
+> > +
+> > +		/*
+> > +		 * Two possible things here:
+> > +		 * 1) We are seeing the scheduling out task (prev) or any past one.
+> > +		 * 2) We are seeing the scheduling in task (next) but it hasn't
+> > +		 *    passed though vtime_task_switch() yet so the pending
+> > +		 *    cputime of the prev task may not be flushed yet.
+> > +		 *
+> > +		 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
+> > +		 */
+> > +		if (vtime->state == VTIME_INACTIVE) {
+> > +			err = -EAGAIN;
+> > +			continue;
+> 
+> Idem.
 
-Geert,
+Well, both were meant to be continue. Which means do the same as
+break but just in case we raced with the updater, try again with
+the same task.
 
-> Fix misspelling of "configuration".
+Now as we are checking again, we may as well reload the task indeed
+so I'll turn those into break.
 
-Applied to 5.5/scsi-queue, thanks!
+> 
+> If so, you can do return -EAGAIN here, and return 0 at the end and get
+> rid of err.
+> 
+> Also, if you're spin-waiting here, there should probably be a
+> cpu_relax() before the return -EAGAIN.
+> 
+> And in case that is so, you probably want the rcu_read_lock() section
+> below _inside_ the do{}while loop, such that the RCU section doesn't
+> cover the entire spin-wait.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Good point!
+
+> > +
+> > +	do {
+> > +		struct rq *rq = cpu_rq(cpu);
+> > +		struct task_struct *curr;
+> > +		struct vtime *vtime;
+> > +
+> > +		curr = rcu_dereference(rq->curr);
+> 
+> This is indeed safe now (relies on commit
+> 
+>   5311a98fef7d ("tasks, sched/core: RCUify the assignment of rq->curr")
+
+Yeah and that has simplified the patchset a lot.
+
+Thanks!
