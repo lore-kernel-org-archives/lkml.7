@@ -2,134 +2,154 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D15CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEDCCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80CB21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0BD21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:19:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="YhCGJSwQ"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="a0YitRH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394264AbfJYGRT (ORCPT
+        id S2394275AbfJYGTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 02:17:19 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46682 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731951AbfJYGRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 02:17:19 -0400
-Received: by mail-yw1-f68.google.com with SMTP id l64so397941ywe.13
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 23:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=t+yDxeJ4XXUfVCaR59MeudlF/U+2+GZcUOdyGt0CB5Q=;
-        b=YhCGJSwQ9TTQBhhxucTYrDeV7z+w9I4hUnYYPbd+7CnpCsv8I7IlwAawleMov14EjE
-         O1+66T5zWP10fsVWw/L5bnnqPSe18Xmlb2/JrQazfMXXw8IzjAXfMDx7hkfb15x3DYlW
-         0ox+91Ik+iusEB1287w0Z+O6rC5G2rB/YQyUhZtQI8tPgIigbE+H05iZChfrrzZ6FGdD
-         rE/o4WO1Bvx3YOngvu4G+r6hiawznP/abvCwc2IMb7V4L2RfEN0LT/W9z8v+ipcfuCwZ
-         vTQj0qSh/OWFbGIeC/mndONFr9JRtr/oey0JTge08cI+I47h8/jX2U1OEaKIc4o4jCOb
-         T/1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=t+yDxeJ4XXUfVCaR59MeudlF/U+2+GZcUOdyGt0CB5Q=;
-        b=DDaJUffpjRTwuRCrduf/FvjXUntIxSFpL+29sAUOBp99I4ahSVCl4V4Y7uR6Gs0Zla
-         yKYNIkPtSkzbWYaPtvU5+0bM2Q09C9FH/RngvPpb9F0RyLO94sh/piq6P/WioJb7sojH
-         6xglXRD7QgOyOGpSDDBdeEapLrNk+vvH+BV3A+Awq2J4vR/aQws+E6B73t65aJ6EE/KL
-         RhecVoV5wNfy8cX8ILzTG29Vf7sTbMO8m8XwoGfgiJm/xkX0ZtTylpdJ8CSfzi0co0Hc
-         9sAQhbmKoKk6h6sqSD8fqDNKqWHX4aApIu7G63OTxH5a17kEw9AU7BAdBTyhWusM+wvm
-         MFQA==
-X-Gm-Message-State: APjAAAX0aQ9WJ26bIhOxS1oeKABtgJrJoZHIYYyNepQSAdJP5L2gpDb3
-        bwHwJMn/6Mn9bYtxnmJQ2LlgXLwGJW2DhiTMtsfcbEJo1AV7tw==
-X-Google-Smtp-Source: APXvYqzEPTSM0KLSa5ajm2bHgWPz/RmODhHm+90VIwPxzUzt8CiapNVzJecVKlMg4ztUfUT6uzEbKgJ/XjfdXEkmS/g=
-X-Received: by 2002:a81:25d7:: with SMTP id l206mr896584ywl.36.1571984236754;
- Thu, 24 Oct 2019 23:17:16 -0700 (PDT)
+        Fri, 25 Oct 2019 02:19:01 -0400
+Received: from mail-eopbgr750085.outbound.protection.outlook.com ([40.107.75.85]:60125
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726636AbfJYGTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 02:19:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AXwwF9Z4/QwGHEMo//WlCkMv9i9zLUnYW0zPaPAVCwmdPdyG4P9llCb+P+C5VhfZn9PhF8xGLSq9Evzq/lUqSVP9hXE5TSbPpXlv+ZSQgODU2K1ewNalrWEZ8EckClK9D0Q3zmpAW8DnkQ+KvwniI3z3AYp8hM2J0J0Kpcgm0biT6fVE1V5q+kaQDacOxfe4g+qfTY9bHpSdyAkXmqydc6iRK2hT4U26CcfD49P+a1cYqAlXtnXDyrYxLwS1ycy6LcCXG+h4O6hu+llzKPNimSN4KzBZCe4JA3hBuYbsoEVIGYFYJ94As7p07bog5qOy3VfmjAF5Yam3AgK/jrc5VA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mJzlKuRkehvksagqzdzePl2l3ehTLgtsvIYUxFq173A=;
+ b=EmsllY7fJMcV1Crs9t88j3imQOneOVRBmEMVVzPMVgqvo1NTwGVjhlpPzGIWWkNJr9rBl4gzMwDJpNU2e1Cr/L3GNl+3hVfHV+1lTUPhjtJD8CHO1anGQR4yNM8kMsU0k2qnyTfi3S5FwAmIVxryDTedHUGyMEUwRFBPr9cMy4YlGWq1c+39RuqJC7ik8MemF2dAUr4aDypSKPfoaxXDRc2rEcHtFCaHSRE+Jz/iUDqWiYfhvPbobk+xoy5uJFTjY1Hh5Ai2z/WgqEGACAP8GEBpADVqqsazg3vmuP0KMPAlps5ko0lkproYaSAauYn3fPTDj65+ggP5AFE7euL1ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mJzlKuRkehvksagqzdzePl2l3ehTLgtsvIYUxFq173A=;
+ b=a0YitRH10UBvLl3xprhkcafKU6AI+79DSX3p8DV4GMImHccZB5x/c7eVY1EdnShumzreSoIvZghwA7KD/5tCUSlTGrovD8HEBSv9PcjD3K34VPRYYpmF+rFw2QIzGApP8C6wDyZ04BG199TpteRYKv2p/dptjDRCeFwEBwx0eU4=
+Received: from BN8PR05MB6193.namprd05.prod.outlook.com (20.178.210.214) by
+ BN8PR05MB6050.namprd05.prod.outlook.com (20.178.209.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.18; Fri, 25 Oct 2019 06:18:58 +0000
+Received: from BN8PR05MB6193.namprd05.prod.outlook.com
+ ([fe80::9c5d:367e:9e87:b0d7]) by BN8PR05MB6193.namprd05.prod.outlook.com
+ ([fe80::9c5d:367e:9e87:b0d7%6]) with mapi id 15.20.2387.025; Fri, 25 Oct 2019
+ 06:18:57 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "punit.agrawal@arm.com" <punit.agrawal@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "mszeredi@redhat.com" <mszeredi@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Srinidhi Rao <srinidhir@vmware.com>,
+        Vikash Bansal <bvikas@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Steven Rostedt <srostedt@vmware.com>,
+        "stable@kernel.org" <stable@kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing page
+ refcount
+Thread-Topic: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing
+ page refcount
+Thread-Index: AQHVfffGKc9CRR2dekieWi7B72DxaadSSqyAgA0lZICAC+hNgA==
+Date:   Fri, 25 Oct 2019 06:18:57 +0000
+Message-ID: <0E5175FB-7058-4211-9AA4-9D5E2F6A30B9@vmware.com>
+References: <1570581863-12090-1-git-send-email-akaher@vmware.com>
+ <1570581863-12090-7-git-send-email-akaher@vmware.com>
+ <f899be71-4bc0-d07b-f650-d85a335cdebb@suse.cz>
+ <BF0587E3-D104-4DB2-B972-9BC4FD4CA014@vmware.com>
+In-Reply-To: <BF0587E3-D104-4DB2-B972-9BC4FD4CA014@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=akaher@vmware.com; 
+x-originating-ip: [103.19.212.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1ce706d-31f9-4102-3ffe-08d75913383c
+x-ms-traffictypediagnostic: BN8PR05MB6050:|BN8PR05MB6050:|BN8PR05MB6050:
+x-ms-exchange-purlcount: 2
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR05MB6050461347E270B12A28D10DBB650@BN8PR05MB6050.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(376002)(39860400002)(396003)(199004)(189003)(14444005)(6506007)(66476007)(486006)(6436002)(66446008)(99286004)(76176011)(476003)(66066001)(64756008)(66946007)(6486002)(229853002)(66556008)(54906003)(110136005)(76116006)(71200400001)(316002)(91956017)(5660300002)(2906002)(71190400001)(102836004)(81156014)(81166006)(7736002)(2616005)(966005)(11346002)(26005)(256004)(6512007)(86362001)(3846002)(36756003)(6116002)(6246003)(305945005)(7416002)(8936002)(6306002)(25786009)(186003)(33656002)(478600001)(446003)(4326008)(2501003)(14454004)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR05MB6050;H:BN8PR05MB6193.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U9UmCfeEePulMQRQNRNE5ehd+l6GRrTJra1FWQhsHHEdZbQAxGfaLG2wAEw0YBg5UYuzARBE3zLzBjzz53XNb1ZBXLpPgpomHa9K1FrIev/BmH5DMsVONi4LDJARyjq2afGlazVM+aL9HIZIbWxtkBgoujt3LM6/fjU2M/Bz/yTQccT7Y2V7FIoM/nqDJBVi7ayca+pY1qhnxdnLejbGAGmutfFMxDf0v9pJC3CtqL9DTEbLdnXrFSv8V6/Yt7hsfX+vzNE4inxEnpd3nxXpogyaB3V1BIUBZQr9PXDIK/vFpeDWkR41QAR/JqnJx7l73lDpNn+pgMFOUjDV2UtbJqaVP/93d11OpBQOEaRt+CXi1mbU9e4gjIw0lCum5JtB4//QfwuhgLMiWYxCYGysik0a866aUO8QUIgFM6p5O/t0NtWBixhI4HIoHcX5ZlZqxrxkREbFx7Ye4pCrKS6qyrupzqmx3y0uApyi+hIEATE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DAFA460EC5D47E4BB66F7374ABEAE4DB@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <051fa6cf19fac4ae7029ac9e85fe12caa29b4011.1570530267.git.michal.simek@xilinx.com>
-In-Reply-To: <051fa6cf19fac4ae7029ac9e85fe12caa29b4011.1570530267.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Date:   Fri, 25 Oct 2019 08:17:05 +0200
-Message-ID: <CAHTX3d+b0fFdGwT9fN-GP_3JA3wPYVGFakfgXQod+CsN7skdnQ@mail.gmail.com>
-Subject: Re: [PATCH] microblaze: Increase max dtb size to 64K from 32K
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git <git@xilinx.com>
-Cc:     Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <james.morris@microsoft.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1ce706d-31f9-4102-3ffe-08d75913383c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 06:18:57.5629
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oZti2L57uUDzuWyEmJBZh59+fFJ0BEzNB5xLw4rjKPZiJl+8rYfmf3bpTHrGNgchodu8ScMpoOMr+5XkcSovdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR05MB6050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C3=BAt 8. 10. 2019 v 12:24 odes=C3=ADlatel Michal Simek <michal.simek@xili=
-nx.com> napsal:
->
-> From: Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com>
->
-> This patch increases max dtb size to 64K from 32K. This fixes the issue  =
-of
-> kernel hang with larger dtb of size greater than 32KB.
->
-> Signed-off-by: Siva Durga Prasad Paladugu <siva.durga.paladugu@xilinx.com=
->
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
->  arch/microblaze/kernel/head.S        | 2 +-
->  arch/microblaze/kernel/vmlinux.lds.S | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/microblaze/kernel/head.S b/arch/microblaze/kernel/head.=
-S
-> index f264fdcf152a..7d2894418691 100644
-> --- a/arch/microblaze/kernel/head.S
-> +++ b/arch/microblaze/kernel/head.S
-> @@ -99,7 +99,7 @@ big_endian:
->  _prepare_copy_fdt:
->         or      r11, r0, r0 /* incremment */
->         ori     r4, r0, TOPHYS(_fdt_start)
-> -       ori     r3, r0, (0x8000 - 4)
-> +       ori     r3, r0, (0x10000 - 4)
->  _copy_fdt:
->         lw      r12, r7, r11 /* r12 =3D r7 + r11 */
->         sw      r12, r4, r11 /* addr[r4 + r11] =3D r12 */
-> diff --git a/arch/microblaze/kernel/vmlinux.lds.S b/arch/microblaze/kerne=
-l/vmlinux.lds.S
-> index e1f3e8741292..71072c5cf61f 100644
-> --- a/arch/microblaze/kernel/vmlinux.lds.S
-> +++ b/arch/microblaze/kernel/vmlinux.lds.S
-> @@ -46,7 +46,7 @@ SECTIONS {
->         __fdt_blob : AT(ADDR(__fdt_blob) - LOAD_OFFSET) {
->                 _fdt_start =3D . ;                /* place for fdt blob *=
-/
->                 *(__fdt_blob) ;                 /* Any link-placed DTB */
-> -               . =3D _fdt_start + 0x8000;        /* Pad up to 32kbyte */
-> +               . =3D _fdt_start + 0x10000;       /* Pad up to 64kbyte */
->                 _fdt_end =3D . ;
->         }
->
-> --
-> 2.17.1
->
-
-Applied.
-M
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+DQoNCu+7v09uIDE3LzEwLzE5LCA5OjU4IFBNLCAiQWpheSBLYWhlciIgPGFrYWhlckB2bXdhcmUu
+Y29tPiB3cm90ZToNCiAgICANCj4gPiBUaGlzIHNlZW1zIHRvIGhhdmUgdGhlIHNhbWUgaXNzdWUg
+YXMgdGhlIDQuOSBzdGFibGUgdmVyc2lvbiBbMV0sIGluIG5vdA0KPiA+IHRvdWNoaW5nIHRoZSBh
+cmNoLXNwZWNpZmljIGd1cC5jIHZhcmlhbnRzLg0KPiA+ICAgIA0KPiA+IFsxXQ0KPiA+IGh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvNjY1MDMyM2YtZGJjOS1mMDY5LTAwMGItZjZiMGY5NDFh
+MDY1QHN1c2UuY3ovDQo+ICAgIA0KPiBUaGFua3MgVmxhc3RpbWlsIGZvciBoaWdobGlnaHRpbmcg
+dGhpcyBoZXJlLg0KPiANCj4gWWVzLCBhcmNoLXNwZWNpZmljIGd1cC5jIHZhcmlhbnRzIGFsc28g
+bmVlZCB0byBoYW5kbGUgbm90IG9ubHkgZm9yIDQuNC55LA0KPiBob3dldmVyIGl0IHNob3VsZCBi
+ZSBoYW5kbGVkIHRpbGwgNC4xOS55LiBJIGJlbGlldmUgaXQncyBiZXR0ZXIgdG8gc3RhcnQNCj4g
+ZnJvbSA0LjE5LnkgYW5kIHRoZW4gYmFja3BvcnQgdGhvc2UgY2hhbmdlcyB0aWxsIDQuNC55Lg0K
+PiAgICANCj4gQWZmZWN0ZWQgYXJlYXMgb2YgZ3VwLmMgKHdoZXJlIHBhZ2UtPmNvdW50IGhhdmUg
+YmVlbiB1c2VkKSBhcmU6DQo+ICMxOiBnZXRfcGFnZSgpIHVzZWQgaW4gdGhlc2UgZmlsZXMgYW5k
+IHRoaXMgaXMgc2FmZSBhcw0KPiAgICAgICAgaXQncyBkZWZpbmVkIGluIG1tLmggKGhlcmUgaXQn
+cyBhbHJlYWR5IHRha2VuIGNhcmUgb2YpDQo+ICMyOiBnZXRfaGVhZF9wYWdlX211bHRpcGxlKCkg
+aGFzIGZvbGxvd2luZzoNCj4gICAgICAgICAgICAgICBWTV9CVUdfT05fUEFHRShwYWdlX2NvdW50
+KHBhZ2UpID09IDAsIHBhZ2UpOw0KPiAgICAgICAgICBOZWVkIHRvIGNoYW5nZSB0aGlzIHRvOg0K
+PiAgICAgICAgICAgICAgIFZNX0JVR19PTl9QQUdFKHBhZ2VfcmVmX3plcm9fb3JfY2xvc2VfdG9f
+b3ZlcmZsb3cocGFnZSksIHBhZ2UpOw0KPiAjMzogU29tZSBvZiB0aGUgZmlsZXMgaGF2ZSB1c2Vk
+IHBhZ2VfY2FjaGVfZ2V0X3NwZWN1bGF0aXZlKCksDQo+ICAgICAgICBwYWdlX2NhY2hlX2FkZF9z
+cGVjdWxhdGl2ZSgpIHdpdGggY29tYmluYXRpb24gb2YgY29tcG91bmRfaGVhZCgpLA0KPiAgICAg
+ICAgdGhpcyBzY2VuYXJpbyBuZWVkcyB0byBiZSBoYW5kbGVkIGFzIGl0IHdhcyBoYW5kbGVkIGhl
+cmU6DQo+ICAgICAgICAgICAgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvc3RhYmxlLzE1NzA1ODE4
+NjMtMTIwOTAtNy1naXQtc2VuZC1lbWFpbC1ha2FoZXJAdm13YXJlLmNvbS8NCj4gICAgDQo+IFBs
+ZWFzZSBzaGFyZSB3aXRoIG1lIGFueSBzdWdnZXN0aW9ucyBvciBwYXRjaGVzIGlmIHlvdSBoYXZl
+IGFscmVhZHkgIA0KPiB3b3JrZWQgb24gdGhpcy4NCj4gICAgDQo+IENvdWxkIHdlIGhhbmRsZSBh
+cmNoLXNwZWNpZmljIGd1cC5jIGluIGRpZmZlcmVudCBwYXRjaCBzZXRzIGFuZCANCj4gbGV0IHRo
+ZXNlIHBhdGNoZXMgdG8gbWVyZ2UgdG8gNC40Lnk/DQogIA0KVmxhc3RpbWlsLCBwbGVhc2Ugc3Vn
+Z2VzdCBpZiBpdCdzIGZpbmUgdG8gbWVyZ2UgdGhlc2UgcGF0Y2hlcyB0byA0LjQueQ0KYW5kIGhh
+bmRsZSBhcmNoLXNwZWNpZmljIGd1cC5jIGluIGRpZmZlcmVudCBwYXRjaCBzZXRzIHN0YXJ0cyBm
+cm9tIDQuMTkueSwNCnRoZW4gYmFja3BvcnQgYWxsIHRoZSB3YXkgdG8gNC40LnkuIA0KDQpHcmVn
+LCBhbnkgc3VnZ2VzdGlvbiBmcm9tIHlvdXIgc2lkZS4NCg0KPiAgICAtIEFqYXkNCiAgICANCiAg
+ICANCiAgICANCg0K
