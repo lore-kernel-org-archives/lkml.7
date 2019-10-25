@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6A7CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE619CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62F0222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3E52245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011944;
-	bh=+ostpiwhCn1I+T0qv90CTm3Ku516+AmJJeUSaVZQlDc=;
+	s=default; t=1572011947;
+	bh=luNhTd4Wph/2JoBgh1xl7TIz2ZYbQxAZF6SRn6Jv7ng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmlmXUYO42BNcNu3rG2eNfXMTpYEj/RarlruP/AkJx747AfuchxGFjqaGNfeQ8cbU
-	 lxOgQvJNtZkQpxinn/5cySetBzgnw53mVK8FVKVkQkGTzrRxlJNW8NJHrlwsXulTwT
-	 BAvm6Ck1/pHrAjJgMIqk8NNALTY4goULz9hoWhsM=
+	b=UJBm9Ot2CfkLiND4qhz+Atfe37WDJcfww1hTd+LgwuFDpYDrnhJrvBCp2TQvbLXJS
+	 phX/urrhNvgtg9koUpJjZENFP0tpC98XHk/3W4vbezS0PJO5edkLBNkUZSTnNKTi6v
+	 I7/il0ZwQsFnFtAdHpA4XXBNNctBKKpx+OuQK0Ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505692AbfJYN7C (ORCPT
+        id S2632907AbfJYN7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:59:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54552 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632876AbfJYN6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:54 -0400
+        id S1731381AbfJYN7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:59:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F8E3222BE;
-        Fri, 25 Oct 2019 13:58:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE21921E6F;
+        Fri, 25 Oct 2019 13:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011933;
-        bh=+ostpiwhCn1I+T0qv90CTm3Ku516+AmJJeUSaVZQlDc=;
+        s=default; t=1572011944;
+        bh=luNhTd4Wph/2JoBgh1xl7TIz2ZYbQxAZF6SRn6Jv7ng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bwFJRduz28BntaSV+md8hjtHz6uq3km6oP2Eko9gNc31ILejHDbhiPCVsbT1PuDCu
-         IGzLIPGgvC9mvLjyLAwUBNHUZ2AyEq8xhzy8mZOrnurQxmX0VVLPBx1kR1YnhU8loi
-         S9BJgvDhIJ81RcoTqt07/hI05q7z55+D7dmykTQ0=
+        b=C/VDpWfAZAoYbxSNjCuKoMz8sPp9gTCvESPo4S3bclgPObIESKExTOjJZe+rC4wE5
+         ea+1bS3NtGJhhOOFa7ZVgxc5gKP7gcYOR9UflTAgiXnGkk8RcECjeV2vuxlIaCpHBf
+         o2EC19yKKe3YI0KUo2XGdfcRHRlfMry2OMsqJQHk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 06/16] sch_netem: fix rcu splat in netem_enqueue()
-Date:   Fri, 25 Oct 2019 09:58:30 -0400
-Message-Id: <20191025135842.25977-6-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 10/16] net: usb: sr9800: fix uninitialized local variable
+Date:   Fri, 25 Oct 2019 09:58:34 -0400
+Message-Id: <20191025135842.25977-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135842.25977-1-sashal@kernel.org>
 References: <20191025135842.25977-1-sashal@kernel.org>
@@ -60,106 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 
-[ Upstream commit 159d2c7d8106177bd9a986fd005a311fe0d11285 ]
+[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
 
-qdisc_root() use from netem_enqueue() triggers a lockdep warning.
+Make sure res does not contain random value if the call to
+sr_read_cmd fails for some reason.
 
-__dev_queue_xmit() uses rcu_read_lock_bh() which is
-not equivalent to rcu_read_lock() + local_bh_disable_bh as far
-as lockdep is concerned.
-
-WARNING: suspicious RCU usage
-5.3.0-rc7+ #0 Not tainted
------------------------------
-include/net/sch_generic.h:492 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by syz-executor427/8855:
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: ip_finish_output2+0x2dc/0x2570 net/ipv4/ip_output.c:214
- #1: 00000000b5525c01 (rcu_read_lock_bh){....}, at: __dev_queue_xmit+0x20a/0x3650 net/core/dev.c:3804
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_xmit_skb net/core/dev.c:3502 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_queue_xmit+0x14b8/0x3650 net/core/dev.c:3838
-
-stack backtrace:
-CPU: 0 PID: 8855 Comm: syz-executor427 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5357
- qdisc_root include/net/sch_generic.h:492 [inline]
- netem_enqueue+0x1cfb/0x2d80 net/sched/sch_netem.c:479
- __dev_xmit_skb net/core/dev.c:3527 [inline]
- __dev_queue_xmit+0x15d2/0x3650 net/core/dev.c:3838
- dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
- neigh_hh_output include/net/neighbour.h:500 [inline]
- neigh_output include/net/neighbour.h:509 [inline]
- ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
- ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_mc_output+0x292/0xf40 net/ipv4/ip_output.c:417
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
- ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1555
- udp_send_skb.isra.0+0x6b2/0x1160 net/ipv4/udp.c:887
- udp_sendmsg+0x1e96/0x2820 net/ipv4/udp.c:1174
- inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sch_generic.h | 5 +++++
- net/sched/sch_netem.c     | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/usb/sr9800.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
-index 7a5d6a0731654..ccd2a964dad7d 100644
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -289,6 +289,11 @@ static inline struct Qdisc *qdisc_root(const struct Qdisc *qdisc)
- 	return q;
- }
- 
-+static inline struct Qdisc *qdisc_root_bh(const struct Qdisc *qdisc)
-+{
-+	return rcu_dereference_bh(qdisc->dev_queue->qdisc);
-+}
-+
- static inline struct Qdisc *qdisc_root_sleeping(const struct Qdisc *qdisc)
+diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
+index 004c955c1fd1b..da0ae16f5c74c 100644
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
+ static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
  {
- 	return qdisc->dev_queue->qdisc_sleeping;
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index 2a431628af591..caf33af4f9a7d 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -464,7 +464,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch)
- 	 * skb will be queued.
- 	 */
- 	if (count > 1 && (skb2 = skb_clone(skb, GFP_ATOMIC)) != NULL) {
--		struct Qdisc *rootq = qdisc_root(sch);
-+		struct Qdisc *rootq = qdisc_root_bh(sch);
- 		u32 dupsave = q->duplicate; /* prevent duplicating a dup... */
+ 	struct usbnet *dev = netdev_priv(net);
+-	__le16 res;
++	__le16 res = 0;
  
- 		q->duplicate = 0;
+ 	mutex_lock(&dev->phy_mutex);
+ 	sr_set_sw_mii(dev);
 -- 
 2.20.1
 
