@@ -2,187 +2,143 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2DFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82BBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A06721929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C58621D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VQ7bRN8v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4k77EVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504097AbfJYMCj (ORCPT
+        id S2504159AbfJYMCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:02:39 -0400
-Received: from mail-eopbgr810053.outbound.protection.outlook.com ([40.107.81.53]:19482
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726375AbfJYMCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:02:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WNS91Qgiow8S2Yi5j78QWI336LtUcf7jpdjnWOZAOvzsczji2e6x+W8HdVKlvpSIu2CPxmpvjIlJDzI1m5J7BrZ1OwHheVwH4L0my2nppmiPv33JS3jVFSpYymc5OR0WfinE3J3PI/k31/+wK0prpl0L/7mhlvkS4fmJruzyv1Vv/j086LpgTZixSOgCUAKGOxfEoXojDUKiQFbTpochs39Bgz7yUQMv+fUV7oiMbGA8leJeBz3/gsJLLFFgyKwZ9u+6SNQZlXON7FrK8i5rSlyDErq8SXCdsUWnuACQx55vWejbCDtwTBDIjwpp69T2Of02JsPIgChIAZAzYE+B8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IEtw73Pj30IMlGn/H9mHF0GC4ROHu6+pTJAAqtQoHlw=;
- b=aAHgRnc8DhqIEL/12VnSmsOTItFPiKjMTJnRStqRqTtYv8ydE3YZ2Zshkbsssdqbt4rCt0aHFe1sU7CBA4wGm6wOA8XgfpQFVszW1XgSKcE8tunhDW5u5703I4s9DjI3cQgId08D/EG7RXN546DLn2xHdomLv1RW4t853MIkqnHiAJ46mFdmuu7bzvj+wnbMAMXuQdiULSnwYVUYJJFY8bXdEtNY8evGZyMroMLLuoZmSuQhSl0Fz+6qSnXOi/DXLma1dDd6Gmw9/I7JkE/hn+ywNOsajkTWgUZnhFcZbcgUy805CvslTVLVSqhYLre3f/mwy1VOpRaGZNrxbfUjeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Fri, 25 Oct 2019 08:02:54 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43646 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502539AbfJYMCy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 08:02:54 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t20so2766368qtr.10
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:02:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IEtw73Pj30IMlGn/H9mHF0GC4ROHu6+pTJAAqtQoHlw=;
- b=VQ7bRN8v/rMgsywtmyl04w+4AS76MJI/9dRSuhBf7gvhUvGIBzOr5ZPMvKCVB02S9sPQAwua2uCWmRKMs3Pmhf89xJOPX84DChtuQ7g8WupCFK3/PtbmK8/mLkeABTK6W7bye8H/AivZUZo0ChNqnMzoSGWn6IPSAIiMHhLFP2k=
-Received: from BYAPR02MB5591.namprd02.prod.outlook.com (20.178.1.29) by
- BYAPR02MB5655.namprd02.prod.outlook.com (20.177.231.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.23; Fri, 25 Oct 2019 12:01:51 +0000
-Received: from BYAPR02MB5591.namprd02.prod.outlook.com
- ([fe80::f13b:8984:42b7:26ed]) by BYAPR02MB5591.namprd02.prod.outlook.com
- ([fe80::f13b:8984:42b7:26ed%5]) with mapi id 15.20.2387.023; Fri, 25 Oct 2019
- 12:01:50 +0000
-From:   Anurag Kumar Vulisha <anuragku@xilinx.com>
-To:     Jack Pham <jackp@codeaurora.org>, Felipe Balbi <balbi@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
-Subject: RE: [PATCH] usb: dwc3: gadget: Correct the logic for finding last SG
- entry
-Thread-Topic: [PATCH] usb: dwc3: gadget: Correct the logic for finding last SG
- entry
-Thread-Index: AQHVFi8wapUkz2GgO0KPkbPlYU1PoKaMvgMAgAH+Z2CAARGqgIDZi58AgALQ1iA=
-Date:   Fri, 25 Oct 2019 12:01:50 +0000
-Message-ID: <BYAPR02MB5591EFB659784B6A017B446EA7650@BYAPR02MB5591.namprd02.prod.outlook.com>
-References: <1559141985-17104-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <87y32gcvc1.fsf@linux.intel.com>
- <BYAPR02MB559181C009B74446A797838DA7170@BYAPR02MB5591.namprd02.prod.outlook.com>
- <87ftoldh48.fsf@linux.intel.com>
- <20191023165804.GD9754@jackp-linux.qualcomm.com>
-In-Reply-To: <20191023165804.GD9754@jackp-linux.qualcomm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anuragku@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 669c1913-0380-4293-f991-08d759431eb9
-x-ms-traffictypediagnostic: BYAPR02MB5655:|BYAPR02MB5655:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB5655940BA9B585E36C75935EA7650@BYAPR02MB5655.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02015246A9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(199004)(189003)(13464003)(51444003)(76116006)(66066001)(33656002)(64756008)(66556008)(66476007)(55016002)(446003)(66946007)(4326008)(6246003)(186003)(6436002)(26005)(25786009)(478600001)(66446008)(6116002)(11346002)(3846002)(14454004)(316002)(54906003)(229853002)(7736002)(305945005)(110136005)(9686003)(74316002)(476003)(6506007)(2906002)(256004)(486006)(7696005)(5660300002)(99286004)(71190400001)(71200400001)(76176011)(81166006)(81156014)(102836004)(52536014)(8676002)(8936002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5655;H:BYAPR02MB5591.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nvtk1HmZMoj66nZJnJQv/cZFqJafMNFpWKBGcZB0RQFBED3MHfGIpD3My2Qso/mO0VRMCvnSsWwTAEVKaPqPALQPOba7NJkT1sk6vHVw9UiZLjsUbYxZHW4MKNeadJN99gg+9ex+THXcnehOK7Bc8u6JZ3kws7rIvsrh40/F1DTO0fXG0fFsK9V+CisTyejtwIWlJXwFFnBgC+rHSrk596cAMub6RqJV2PYTuGyfBaZ6gxZmbCvyBUDAp6viGgItTIQ1gG0gqzRnRfF/0rYmDTqOuH0RXHKoQU4aHFgRQVRmTg9MfuleFgTQdBAPuFFdYPLr+Bo9FBC0NDk4H0ubyYqZsfplaZNprOVMwCCk+OtXPk/CNl7VX5bT5UP43DuuAdmrtRHPk97x8TcJp6hPnR4xEJjrpnqyktGHEAm1zBLcujvaowxoKrhoFJYhUtP7
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U3muYkVb3sn/zD3GnI85KoquW1PDnagsDLGnaKlzxUg=;
+        b=f4k77EVP3oB4TFXVyejNteYMnBZxJxaPv8yN3YKZaUih/akVpJpz0PNswqsYe66tUn
+         N0ITsPRgnY4LreqhjwD5DBfzXKkKzwt1St7lMeCB0Yp8v2NQDZgGjx+M08dNoog9n7ZI
+         mewMpnX+8qU3u0sHTOjU7bPeMnjmGHRoDoOV8EFtaaaH/XqVYF0VmiVm9R36gf+bh0bq
+         65NWOFmTuUdi0Oe8GkOHKJOA94GrI7mONOr1/x4ChNNx+VnxHLPCTEjhVURKm3OeLg2K
+         +13SambnQ31yajHSVkLMYDmQ6jrTVqGB0z4jtVAkFbYGxThNppfkbg7ZfNKkOV3645qt
+         uWSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U3muYkVb3sn/zD3GnI85KoquW1PDnagsDLGnaKlzxUg=;
+        b=jueQwO7mho7iEp2P6s77sTqKlDmIxEF0Y2kgxUL7UA/oFcqILDAMu7eohVuM2H1fOX
+         nAYU/oj//J6kM9wrbH/qBRFPQO9VcK66okwXtn4+acjsoe7iFaYH2h+IBiD6tfldRtJ+
+         77sEV8WDMRgsR3wAdyUEU2pmrNAa/bWygMDRhlJqAlhO0Rt9x9gRzJAqYu6t1mwEDjV6
+         pkZslgrHdI5q0S5XFqd2R3BMf79H5SVNijwfdTLC09rLhvaDuH+YQrRw3zysBxYeBP0f
+         ut2NbpwbDbIJstozeSGzQprlrDwdFxQNYCBON7UAzuxcbjOWA/DNyUxHPUigIQiHt93A
+         LYfA==
+X-Gm-Message-State: APjAAAUQZF8VndASpE39ncg7PDOotIu/mVpTvan6iphN+WV7N+pR2cWo
+        u+Q4YT/LvTRk0B+y+uuc9OE=
+X-Google-Smtp-Source: APXvYqxyathMCAeGIRon/l7dS54Jlq7okRabEc4gt560TDidgz/g1QfGAoadWP2Sp4XPsfqiMddMXw==
+X-Received: by 2002:ac8:2a31:: with SMTP id k46mr2663074qtk.392.1572004971789;
+        Fri, 25 Oct 2019 05:02:51 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.179.80.16])
+        by smtp.gmail.com with ESMTPSA id 144sm1083827qkj.5.2019.10.25.05.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 05:02:50 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5894041199; Fri, 25 Oct 2019 09:02:48 -0300 (-03)
+Date:   Fri, 25 Oct 2019 09:02:48 -0300
+To:     Hewenliang <hewenliang4@huawei.com>
+Cc:     peterz@infradead.org, jolsa@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        ilubashe@akamai.com, ak@linux.intel.com,
+        linux-kernel@vger.kernel.org, hushiyuan@huawei.com,
+        linfeilong@huawei.com
+Subject: Re: [PATCH] perf tools: Call closedir to release the resource before
+ we return
+Message-ID: <20191025120248.GA23511@kernel.org>
+References: <20191025031605.23658-1-hewenliang4@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 669c1913-0380-4293-f991-08d759431eb9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 12:01:50.7770
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: K5RY6QbWIPmUznlB0Mp5Y5npXu4S2eiON8uT+Wo7itvJLr8yHFZnYPXcsMAKPN1uQdhpOUOcpVIvCcX6RAZE2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5655
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025031605.23658-1-hewenliang4@huawei.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Thu, Oct 24, 2019 at 11:16:05PM -0400, Hewenliang escreveu:
+> We should close the directory on pattern failure before the return
+> of rm_rf_depth_pat.
+> 
+> Fixes: cdb6b0235f170 ("perf tools: Add pattern name checking to rm_rf")
+> Signed-off-by: Hewenliang <hewenliang4@huawei.com>
 
-Hi Jack,
+I've already applied:
 
->-----Original Message-----
->From: Jack Pham [mailto:jackp@codeaurora.org]
->Sent: Wednesday, October 23, 2019 10:28 PM
->To: Felipe Balbi <balbi@kernel.org>
->Cc: Anurag Kumar Vulisha <anuragku@xilinx.com>; Greg Kroah-Hartman
-><gregkh@linuxfoundation.org>; linux-usb@vger.kernel.org; linux-
->kernel@vger.kernel.org; v.anuragkumar@gmail.com
->Subject: Re: [PATCH] usb: dwc3: gadget: Correct the logic for finding last=
- SG
->entry
->
->Hi Anurag,
->
->On Fri, Jun 07, 2019 at 09:49:59AM +0300, Felipe Balbi wrote:
->> Anurag Kumar Vulisha <anuragku@xilinx.com> writes:
->> >>> The dma_map_sg() merges sg1 & sg2 memory regions into sg1-
->> >>>dma_address.
->> >>> Similarly sg3 & sg4 into sg2->dma_address, sg5 & sg6 into the
->> >>> sg3->dma_address and sg6 & sg8 into sg4->dma_address. Here the
->> >>memory
->> >>> regions are merged but the page_link properties like SG_END are not
->> >>> retained into the merged sgs.
->> >>
->> >>isn't this a bug in the scatterlist mapping code? Why doesn't it keep
->> >>SG_END?
->> >>
->> >
->> > Thanks for providing your comment.
->> >
->> > I don't think it is a bug, instead I feel some enhancement needs to be=
- done
->in
->> > dma-mapping code.
->> >
->> > SG_END represents the last sg entry in the sglist and it is correctly =
-getting
->> > set to the last sg entry.
->> >
->> > The issue happens only when 2 or more sg entry pages are merged into
->> > contiguous dma-able address and sg_is_last() is used to find the last =
-sg
->entry
->> > with valid dma address.
->>
->> Right, and that's something that's bound to happen. I'm arguing that,
->perhaps,
->> dma API should move SG_END in case entries are merged.
->>
->> > I think that along with sg_is_last() a new flag (SG_DMA_END) and funct=
-ion
->> > (something like sg_dma_is_last() ) needs to be added into dma-mapping
->code for
->> > identifying the last valid sg entry with valid dma address. So that we=
- can
->> > make use of that function instead of sg_is_last().
->>
->> Sure, propose a patch to DMA API.
->
->I'm curious if this was ever resolved. I just ran into this exact issue
->with Android ADB which uses 16KB buffers, along with f_fs supporting
->S/G since 5.0, combined with our IOMMU which performs this merging
->behavior, so it resulted in a single TRB getting queued with CHN=3D1 and
->LST=3D0 and thus the transfer never completes. Your initial patch resolves
->the issue for me, but upon revisiting this discussion I couldn't tell if
->you had attempted to patch DMA API instead as per Felipe's suggestion.
->
+commit 6080728ff8e9c9116e52e6f840152356ac2fea56
+Author: Yunfeng Ye <yeyunfeng@huawei.com>
+Date:   Tue Oct 15 16:30:08 2019 +0800
 
-We were stuck with some internal priority tasks, so couldn't initiate the
-discussion with IOMMU maintainers. Will work on preparing the patch
-and  sending the same very soon.
+    perf tools: Fix resource leak of closedir() on the error paths
+    
+    Both build_mem_topology() and rm_rf_depth_pat() have resource leaks of
+    closedir() on the error paths.
+    
+    Fix this by calling closedir() before function returns.
+    
+    Fixes: e2091cedd51b ("perf tools: Add MEM_TOPOLOGY feature to perf data file")
+    Fixes: cdb6b0235f17 ("perf tools: Add pattern name checking to rm_rf")
+    Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+    Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Thanks,
-Anurag Kumar Vulisha
+[acme@quaco perf]$ git tag --contains 6080728ff8e9c9116e52e6f840152356ac2fea56
+perf-urgent-for-mingo-5.4-20191017
+[acme@quaco perf]$ 
 
->Thanks,
->Jack
->--
->The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->a Linux Foundation Collaborative Project
+It is already in tip/perf/urgent, should get to Linus soon.
+
+- Arnaldo
+
+> ---
+>  tools/perf/util/util.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+> index 5eda6e19c947..1aadca8c43f3 100644
+> --- a/tools/perf/util/util.c
+> +++ b/tools/perf/util/util.c
+> @@ -154,8 +154,10 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
+>  		if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."))
+>  			continue;
+>  
+> -		if (!match_pat(d->d_name, pat))
+> +		if (!match_pat(d->d_name, pat)) {
+> +			closedir(dir);
+>  			return -2;
+> +		}
+>  
+>  		scnprintf(namebuf, sizeof(namebuf), "%s/%s",
+>  			  path, d->d_name);
+> -- 
+> 2.19.1
+
+-- 
+
+- Arnaldo
