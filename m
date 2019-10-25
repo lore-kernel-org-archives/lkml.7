@@ -2,124 +2,125 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B85CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED61ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F35921D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C141B21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393539AbfJYLvK (ORCPT
+        id S2387593AbfJYLwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:51:10 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:40890 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfJYLvK (ORCPT
+        Fri, 25 Oct 2019 07:52:39 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:40074 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfJYLwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:51:10 -0400
-Received: by mail-il1-f197.google.com with SMTP id x17so1978650ill.7
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 04:51:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=GCYuTfVSSG8sj2mz/8sBF97BcpApt0s2WcNDvXp5Rdc=;
-        b=I2ZkdKbcAbTzEHaKVkb/9uxs4CqI4qyR8x0Rg1RasXmVNArXJTDmdLemrRxUyEWogf
-         j390VyeTtIWbVfMnRdU4UTSM0zyFmQg7MBxx4iZ3xTWM810tlhM8QDGflE/0+9+r40RT
-         OyhetChCuFPA/l4TQPxy7vL/tQ+t/dfLr+LfD35cXZa99wcFAdLdozFbdqp7WXk0iPND
-         fmfGFvGeW7EIsUPZew55bt9Q6ko+VRUtePpFF9G5vjye9xAVHhDkK4dpy+EonLjnOh1g
-         wGuKZsgoVwzD3W7peEM6fCWyrX/6qj4z4kRn3GZ3iyqP6N6enx5Oi8gL4P3fDxGu+u8K
-         FMEg==
-X-Gm-Message-State: APjAAAVDTJrbZYCX0qRkuRb57FZYOb2FCjG93OM8iNzWvlrMioDN7jCv
-        +pNLollLliG/5q/OeS9YO8QriGZSlt+VlDeH8y6HyMni0nFL
-X-Google-Smtp-Source: APXvYqzi/Tq9tGi61conwDmSuuhTnjfKda+BVSQOBrtGtekXzYN1GkXl7rH3BUyOB+Lfpg3b30IwlpSKdF3RBgWrpzeQAVPYjyPu
-MIME-Version: 1.0
-X-Received: by 2002:a02:ba8d:: with SMTP id g13mr3313659jao.93.1572004268056;
- Fri, 25 Oct 2019 04:51:08 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 04:51:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fbbe1e0595bac322@google.com>
-Subject: KASAN: null-ptr-deref Write in io_wq_cancel_all
-From:   syzbot <syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Fri, 25 Oct 2019 07:52:39 -0400
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id Hnsc2100N5USYZQ01nsc2s; Fri, 25 Oct 2019 13:52:37 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNy8y-0004EC-Fz; Fri, 25 Oct 2019 13:52:36 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iNy8y-0002VS-DX; Fri, 25 Oct 2019 13:52:36 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kbuild@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] kconfig: Wrap long "make help" text lines
+Date:   Fri, 25 Oct 2019 13:52:32 +0200
+Message-Id: <20191025115232.9592-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Some "make help" text lines extend beyond 80 characters.
+Wrap them before an opening parenthesis, or before 80 characters.
 
-syzbot found the following crash on:
-
-HEAD commit:    139c2d13 Add linux-next specific files for 20191025
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17ab5a70e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28fd7a693df38d29
-dashboard link: https://syzkaller.appspot.com/bug?extid=d958a65633ea70280b23
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: null-ptr-deref in set_bit  
-include/asm-generic/bitops-instrumented.h:28 [inline]
-BUG: KASAN: null-ptr-deref in io_wq_cancel_all+0x28/0x2a0 fs/io-wq.c:574
-Write of size 8 at addr 0000000000000004 by task syz-executor.5/17477
-
-CPU: 1 PID: 17477 Comm: syz-executor.5 Not tainted 5.4.0-rc4-next-20191025  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  __kasan_report.cold+0x5/0x41 mm/kasan/report.c:510
-  kasan_report+0x12/0x20 mm/kasan/common.c:634
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  __kasan_check_write+0x14/0x20 mm/kasan/common.c:98
-  set_bit include/asm-generic/bitops-instrumented.h:28 [inline]
-  io_wq_cancel_all+0x28/0x2a0 fs/io-wq.c:574
-  io_ring_ctx_wait_and_kill+0x1e2/0x710 fs/io_uring.c:3679
-  io_uring_release+0x42/0x50 fs/io_uring.c:3691
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x904/0x2e60 kernel/exit.c:817
-  do_group_exit+0x135/0x360 kernel/exit.c:921
-  get_signal+0x47c/0x24f0 kernel/signal.c:2734
-  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459ef9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7129716c78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: 0000000000000005 RBX: 0000000000000002 RCX: 0000000000459ef9
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000ebf
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f71297176d4
-R13: 00000000004c14ae R14: 00000000004d4c68 R15: 00000000ffffffff
-==================================================================
-
-
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+This is v2 of "[PATCH] kconfig: Wrap long "make help" text line for
+xenconfig ".
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+v2:
+  - Fix more recent offenders.
+---
+ Documentation/Makefile   | 6 ++++--
+ Makefile                 | 3 ++-
+ scripts/Makefile.package | 3 ++-
+ scripts/kconfig/Makefile | 3 ++-
+ 4 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index e145e4db508bc6a4..0c5185187dad0b68 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -128,8 +128,10 @@ dochelp:
+ 	@echo  '  pdfdocs         - PDF'
+ 	@echo  '  epubdocs        - EPUB'
+ 	@echo  '  xmldocs         - XML'
+-	@echo  '  linkcheckdocs   - check for broken external links (will connect to external hosts)'
+-	@echo  '  refcheckdocs    - check for references to non-existing files under Documentation'
++	@echo  '  linkcheckdocs   - check for broken external links'
++	@echo  '                    (will connect to external hosts)'
++	@echo  '  refcheckdocs    - check for references to non-existing files under'
++	@echo  '                    Documentation'
+ 	@echo  '  cleandocs       - clean all generated files'
+ 	@echo
+ 	@echo  '  make SPHINXDIRS="s1 s2" [target] Generate only docs of folder s1, s2'
+diff --git a/Makefile b/Makefile
+index 5475cdb6d57d4117..5a1ef8db2cec69f6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1523,7 +1523,8 @@ help:
+ 	@echo  '  make V=0|1 [targets] 0 => quiet build (default), 1 => verbose build'
+ 	@echo  '  make V=2   [targets] 2 => give reason for rebuild of target'
+ 	@echo  '  make O=dir [targets] Locate all output files in "dir", including .config'
+-	@echo  '  make C=1   [targets] Check re-compiled c source with $$CHECK (sparse by default)'
++	@echo  '  make C=1   [targets] Check re-compiled c source with $$CHECK'
++	@echo  '                       (sparse by default)'
+ 	@echo  '  make C=2   [targets] Force check of all c source with $$CHECK'
+ 	@echo  '  make RECORDMCOUNT_WARN=1 [targets] Warn about ignored mcount sections'
+ 	@echo  '  make W=n   [targets] Enable extra build checks, n=1,2,3 where'
+diff --git a/scripts/Makefile.package b/scripts/Makefile.package
+index 56eadcc48d46de54..ee9b368dfcf37736 100644
+--- a/scripts/Makefile.package
++++ b/scripts/Makefile.package
+@@ -146,7 +146,8 @@ help:
+ 	@echo '  binrpm-pkg          - Build only the binary kernel RPM package'
+ 	@echo '  deb-pkg             - Build both source and binary deb kernel packages'
+ 	@echo '  bindeb-pkg          - Build only the binary kernel deb package'
+-	@echo '  snap-pkg            - Build only the binary kernel snap package (will connect to external hosts)'
++	@echo '  snap-pkg            - Build only the binary kernel snap package'
++	@echo '                        (will connect to external hosts)'
+ 	@echo '  tar-pkg             - Build the kernel as an uncompressed tarball'
+ 	@echo '  targz-pkg           - Build the kernel as a gzip compressed tarball'
+ 	@echo '  tarbz2-pkg          - Build the kernel as a bzip2 compressed tarball'
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index ef2f2336c46960df..a7d130b9306e8876 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -137,7 +137,8 @@ help:
+ 	@echo  '  olddefconfig	  - Same as oldconfig but sets new symbols to their'
+ 	@echo  '                    default value without prompting'
+ 	@echo  '  kvmconfig	  - Enable additional options for kvm guest kernel support'
+-	@echo  '  xenconfig       - Enable additional options for xen dom0 and guest kernel support'
++	@echo  '  xenconfig       - Enable additional options for xen dom0 and guest kernel'
++	@echo  '                    support'
+ 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
+ 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
+ 
+-- 
+2.17.1
+
