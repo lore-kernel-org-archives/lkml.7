@@ -2,119 +2,117 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A7ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82274C47E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B805921D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571996695;
-	bh=q1UznsEKUTO8DreF7BRcK2/bVfkBTIWE2k+BAoSlRi0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Tnwpo/ImG21MLiuk4Hp0lWAFQQ2rK+CBJGk3h0Q/TOw52VZUj0QoFHBxmV/f8JK7+
-	 ZVMiY+DLmENneJL/xXacm8F9XPv2l3vxHXMJzOB9Kpa961d2hHBq4pYe5tqX/eonXn
-	 YgvBUNEIj+e0AIz7tf9UtdIR7k+/QevB1ArLyYHA=
+	by mail.kernel.org (Postfix) with ESMTP id 638FD21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439037AbfJYJoy (ORCPT
+        id S2394356AbfJYJpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438753AbfJYJoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:44:54 -0400
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C77121D7B;
-        Fri, 25 Oct 2019 09:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571996693;
-        bh=q1UznsEKUTO8DreF7BRcK2/bVfkBTIWE2k+BAoSlRi0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j+4cL/VoDsMzQnNkvnWFhzyhskY08i846+9LMot9YhK5Si2KUxJomhBF7ay8BnXAf
-         oqAIGsXK+pMPjEkVcK49yAL2m7EjsSdVpc9rexdQZGi02Hy4P1NpHjWNUQx5q7oWVX
-         Jlg5ZvB94p6aFLiUaTA4BS+HKvumJ9FhRte/EFY0=
-Received: by mail-lj1-f175.google.com with SMTP id a22so1987535ljd.0;
-        Fri, 25 Oct 2019 02:44:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAXiv030t4yoPoDNs38/6uD9B6zomXoYzlHrqprrsi+hoKBlVBGI
-        EW8u+bNYvnNGDWVYCdsDg4L4p8RzFEfRKnEoNLA=
-X-Google-Smtp-Source: APXvYqwl+DBfLhBQ3kOA031iJfAqOQBIuEDEfqQNNhf7s01GbbN0ZPVErIek93n4uOnjRPsK+uuAcxbVUt9hgJE7Qb8=
-X-Received: by 2002:a2e:9e85:: with SMTP id f5mr1545540ljk.235.1571996691460;
- Fri, 25 Oct 2019 02:44:51 -0700 (PDT)
+        Fri, 25 Oct 2019 05:45:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43570 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2392769AbfJYJpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:45:42 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EE3213F827BF640EF8BF;
+        Fri, 25 Oct 2019 17:45:40 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
+ 17:45:31 +0800
+Subject: Re: [PATCH] crypto: qat - remove redundant condition accel_dev->is_vf
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, <qat-linux@intel.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <78b1532c-f8bf-48e4-d0a7-30ea0137d408@huawei.com>
+ <CAKv+Gu_MVe8mEeC-fVVbbLfUv-rEEk5_eoxfHjTCMgAFmSHrJw@mail.gmail.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <0b95f573-548b-4cec-e433-ef0ef16229cf@huawei.com>
+Date:   Fri, 25 Oct 2019 17:45:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20191025085617.23132-1-ribalda@kernel.org> <20191025094319.GO5433@paasikivi.fi.intel.com>
-In-Reply-To: <20191025094319.GO5433@paasikivi.fi.intel.com>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Fri, 25 Oct 2019 11:44:35 +0200
-X-Gmail-Original-Message-ID: <CAPybu_34jx0HBjnpS8hbwYniymG_E+SGf+ezZAusYhKhHqPEBQ@mail.gmail.com>
-Message-ID: <CAPybu_34jx0HBjnpS8hbwYniymG_E+SGf+ezZAusYhKhHqPEBQ@mail.gmail.com>
-Subject: Re: [PATCH v3] Documentation: media: *_DEFAULT targets for subdevs
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKv+Gu_MVe8mEeC-fVVbbLfUv-rEEk5_eoxfHjTCMgAFmSHrJw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No, I am retarded on friday :)
 
-Sorry about that
 
-On Fri, Oct 25, 2019 at 11:43 AM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> On Fri, Oct 25, 2019 at 10:56:16AM +0200, Ricardo Ribalda Delgado wrote:
-> > Some sensors have optical blanking areas, this is, pixels that are
-> > painted and do not account for light, only noise.
-> >
-> > These special pixels are very useful for calibrating the sensor, but
-> > should not be displayed on a DEFAULT target.
-> >
-> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  Documentation/media/uapi/v4l/v4l2-selection-targets.rst | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
-> > index f74f239b0510..a69571308a45 100644
-> > --- a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
-> > +++ b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
-> > @@ -38,8 +38,10 @@ of the two interfaces they are used.
-> >      * - ``V4L2_SEL_TGT_CROP_DEFAULT``
-> >        - 0x0001
-> >        - Suggested cropping rectangle that covers the "whole picture".
-> > +        This includes only active pixels and excludes other non-active
-> > +        pixels such as black pixels.
-> > +      - Yes
-> >        - Yes
-> > -      - No
-> >      * - ``V4L2_SEL_TGT_CROP_BOUNDS``
-> >        - 0x0002
-> >        - Bounds of the crop rectangle. All valid crop rectangles fit inside
-> > @@ -60,8 +62,8 @@ of the two interfaces they are used.
-> >      * - ``V4L2_SEL_TGT_COMPOSE_DEFAULT``
-> >        - 0x0101
-> >        - Suggested composition rectangle that covers the "whole picture".
-> > -      - Yes
-> >        - No
-> > +      - Yes
->
-> Was this intended?
->
-> v4?
->
-> >      * - ``V4L2_SEL_TGT_COMPOSE_BOUNDS``
-> >        - 0x0102
-> >        - Bounds of the compose rectangle. All valid compose rectangles fit
->
-> --
-> Sakari Ailus
+On 2019/10/25 17:33, Ard Biesheuvel wrote:
+> On Fri, 25 Oct 2019 at 09:24, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+>>
+>> Warning is found by the code analysis tool:
+>>   "Redundant condition: accel_dev->is_vf"
+>>
+>> So remove the redundant condition accel_dev->is_vf.
+>>
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+>> ---
+>>  drivers/crypto/qat/qat_common/adf_dev_mgr.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/crypto/qat/qat_common/adf_dev_mgr.c b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+>> index 2d06409bd3c4..b54b8850fe20 100644
+>> --- a/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+>> +++ b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+>> @@ -196,7 +196,7 @@ int adf_devmgr_add_dev(struct adf_accel_dev *accel_dev,
+>>         atomic_set(&accel_dev->ref_count, 0);
+>>
+>>         /* PF on host or VF on guest */
+>> -       if (!accel_dev->is_vf || (accel_dev->is_vf && !pf)) {
+>> +       if (!accel_dev->is_vf || !pf) {
+> 
+> I disagree with this change. There is no bug here, and the way the
+> condition is formulated self-documents the code, i.e.,
+> 
+> IF NOT is_vf
+> OR (is_vf BUT NOT pf)
+> 
+> Using an automated tool to reduce every boolean expression to its
+> minimal representation doesn't seem that useful to me, since the
+> compiler is perfectly capable of doing that when generating the object
+> code.
+> 
+ok, thanks, this modify just fix warning, and make code simple.
+
+> 
+> 
+> 
+>>                 struct vf_id_map *map;
+>>
+>>                 list_for_each(itr, &accel_table) {
+>> @@ -292,7 +292,7 @@ void adf_devmgr_rm_dev(struct adf_accel_dev *accel_dev,
+>>                        struct adf_accel_dev *pf)
+>>  {
+>>         mutex_lock(&table_lock);
+>> -       if (!accel_dev->is_vf || (accel_dev->is_vf && !pf)) {
+>> +       if (!accel_dev->is_vf || !pf) {
+>>                 id_map[accel_dev->accel_id] = 0;
+>>                 num_devices--;
+>>         } else if (accel_dev->is_vf && pf) {
+>> --
+>> 2.7.4
+>>
+> 
+> .
+> 
+
