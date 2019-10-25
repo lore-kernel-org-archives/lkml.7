@@ -2,149 +2,174 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5A1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF24CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C4E21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D3E21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Du+lHpQx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SMp3ZpI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfJYA0J (ORCPT
+        id S1730136AbfJYA2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 20:26:09 -0400
-Received: from mail-eopbgr720082.outbound.protection.outlook.com ([40.107.72.82]:9893
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728974AbfJYA0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 20:26:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XmaVFjwc50K41Am+sWMst+WRFGpGVz9Luoh/jic4FY1VAIgMo96n9sMOKTy34maphMdv19WHXauCxoJSwEk8xM/nCfTEq3hn1Qm1rk5BHclfjyRT8GS6HeGhOPdKOcx5bda3reSc9frSuP9jcvl1O3JzdiMzjR/NadocGxtDr+ugLDqG4Sx7pdmrC991haqNTqKKBmKtSQUHDiidQw7siDfGAJRgaintxOlGC5BDqxH6kf7DiN5Co+GnBFYtQ12RIeTeJcXvsPzV4FrqF6PZkeOj0auSFloKKw6HlKjD/KxOeDVR5p5QOLQKhSs870iq7tYAHth7Rq8IH57If0c+kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dfff4yOH061+CW62Q5/udySjEm4p9yEfJG5pf6tkhnA=;
- b=ixwK5AYlcaRW3OBu7Tj0y3cwCO95cH5Q4DhKxLy2K/oNs5peMmyCwFzxYM+WAWaGK60+C3K9uQEPF7AqESMzEZL2qRWhB4qhZK0N2lpeUezLmwYjhEMCtN2INv75ai3AD3w/IeZiI0lB4IcawR00DfBBpTRLM6K7+PxQLpQtlttU+8S6j5YiEJ17rHpJpPmM6aVsZo3i4wOsWU4PCa/+dcESVKyujJmq7eoFkUFj+FT20bhmN+EiH7SM1d8fbqghyZDE9GvRR0Qxz14tw+qNXJnpmm6iXG5zBp4mgpMz7deMRXrYUkcP8aB2jbXbjfYo8ElOxHU/rYDdU2Rd0Ny3YA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dfff4yOH061+CW62Q5/udySjEm4p9yEfJG5pf6tkhnA=;
- b=Du+lHpQx/VkZysgfGX3rIccIRMEt42Xi7tGucDUzamTrPiMc2/BC9ShFT3unhM/q3VthMTAypGzvj8R7ZTEsfggsaLZyqCxhnFJ3scaBrrhsNYwAKgMqz/D8Tx9Rq4K+14WJijjDekPBL0qF9XjkXr5wnt/apxprIFT6be/zDzI=
-Received: from BYAPR03MB4135.namprd03.prod.outlook.com (20.177.127.85) by
- BYAPR03MB4885.namprd03.prod.outlook.com (20.179.92.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.23; Fri, 25 Oct 2019 00:26:00 +0000
-Received: from BYAPR03MB4135.namprd03.prod.outlook.com
- ([fe80::d168:6b9a:e289:e124]) by BYAPR03MB4135.namprd03.prod.outlook.com
- ([fe80::d168:6b9a:e289:e124%4]) with mapi id 15.20.2347.029; Fri, 25 Oct 2019
- 00:26:00 +0000
-From:   Andrew Duggan <aduggan@synaptics.com>
-To:     "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Andrew Duggan <aduggan@synaptics.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Simon Wood <simon@mungewell.org>,
-        Nick Dyer <nick@shmanahar.org>
-Subject: [PATCH 3/3] Input: synaptics-rmi4 - remove unused result_bits mask
-Thread-Topic: [PATCH 3/3] Input: synaptics-rmi4 - remove unused result_bits
- mask
-Thread-Index: AQHVisrHXpJCG1jOgkKDGh+ebpapnw==
-Date:   Fri, 25 Oct 2019 00:26:00 +0000
-Message-ID: <20191025002527.3189-4-aduggan@synaptics.com>
-References: <20191025002527.3189-1-aduggan@synaptics.com>
-In-Reply-To: <20191025002527.3189-1-aduggan@synaptics.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.147.44.15]
-x-clientproxiedby: BYAPR07CA0051.namprd07.prod.outlook.com
- (2603:10b6:a03:60::28) To BYAPR03MB4135.namprd03.prod.outlook.com
- (2603:10b6:a03:77::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aduggan@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c51ebfb3-cac3-423e-9d1b-08d758e1e95d
-x-ms-traffictypediagnostic: BYAPR03MB4885:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR03MB4885D953063025AE0535B4E6B2650@BYAPR03MB4885.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 02015246A9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(39860400002)(376002)(396003)(199004)(189003)(6436002)(52116002)(81156014)(2501003)(81166006)(26005)(110136005)(66556008)(8936002)(386003)(36756003)(66476007)(66946007)(2906002)(6506007)(99286004)(102836004)(6512007)(8676002)(186003)(66446008)(86362001)(50226002)(64756008)(54906003)(76176011)(25786009)(316002)(478600001)(6486002)(3846002)(6116002)(1076003)(256004)(5660300002)(11346002)(446003)(71190400001)(7736002)(2616005)(305945005)(486006)(476003)(66066001)(14454004)(71200400001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4885;H:BYAPR03MB4135.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i+UdQdgb7hSwkfSEl2VK1flk0ZQf4ZtP4UZqQzh97ClBPw8T3CnX1Oi+/qO2hbE4RAnCuUxkE4hfP4sYECgjVfMp3x0582Y6iirSCdOUHnhdrprc65m35eNiSA5Pb5CWnb8QMlCgFavr08JwHJ7hHJENJQlwoGSJNXMhMXE/jQT3ov4T2+RDUpS0ilg6amCU+4ZxHB6LnPrBg3x88fmaWhKoJxB+be5sIXL2/+alCSULqCGqLiA4yJRLqgJdelNB8kz7SAeKPP9be1FfiwPyvVCVFTyao+skMvfyXAFw/UbT42KHNlsztvb0/NNvIvLslPIHlgkmyEb/BmBYEkfE9VOTXuN3Hplzg1cz2WDe2j5jsurF/zlkO5+YKi7DQfBvslhoiVeR0H18M1xgHbnO9t8vkMHp9l3OxrN2XXoFP1bxc/z1igd6zKRCUIeyrwkV
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 24 Oct 2019 20:28:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40722 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726164AbfJYA2S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 20:28:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571963297;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u/ZOKafSqcbNjqFdVZXED/KJXRu4OrJLpD9UUq91aWI=;
+        b=SMp3ZpI5ar/bAtyGT1SHFnpN7PAvHCa7qdb3grBS77MWuLkRIlzbwbtC8U9YW7Ci8uaVH1
+        mslVVlVfXewOqnnJXTi8cegffA2Igu1IU+jp5VugcJHii1VYG4H0kQSGBDVn/xh/6LsAdW
+        XqVmhfssZgbFNL+sTPW9KV1fMwXfPEE=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-VX937yK2O8WYHiayHRwYBA-1; Thu, 24 Oct 2019 20:28:07 -0400
+Received: by mail-lj1-f199.google.com with SMTP id y12so37349ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 17:28:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f/h48WimOkxwuWTFiUpPnQ+AjLWqpj9bNjA3x7P2LxY=;
+        b=GOgklHxcKsjlzMgevoQGueyw6EWw+bJ2telR2dQfK0Utd4rm8t+IG9b3wDZ5IcffLb
+         ATf86CiW7rRp5Amln5F+9q8hnt5pcPf8LWdjgimMrwZkh/7uWKK8q8st7i5C+FP5Rz17
+         8gvHEHwW/B4dUeNvVQdGAM/d/mewyveNa+CDo6IDR9ZJg4l30yJPv4+oGubzOBtxYAu6
+         7tni376HxBaNSriiAGGM8DrhvdJvfPhpnev+3r9j9ABU5MwzGmrf5/jNNCumV3Y6lTK1
+         IjgL/nZuiT4VBzC7uvBJ3Gj+2IXpLUQdzxS+gHxOifnzVVyArqKkEpxe6MXn0E5QEAfc
+         LU8Q==
+X-Gm-Message-State: APjAAAV4i+o52hSvUPApOPtfgTXG8wJW8oZ+l8GoGw6OD549w2MHp+JW
+        EzWawhar80q16XOJ2KYOzZmtpFoeqdvnfkemlPI+3H4DcpzNXdKFM1HpdYdiozkitchJkgjTvZx
+        A1B0Xm0hMRUzjz5JNFWvxbzOAi7W9yYt5BqJnVRZo
+X-Received: by 2002:a19:22c4:: with SMTP id i187mr501156lfi.152.1571963286002;
+        Thu, 24 Oct 2019 17:28:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqym7fXeLAILTlm6k1G46RUJImDXCll6Wg9ol9S+dM0yK8R9moFI+ZU3df0ukjTnsrZDz4UD/s6A4arXkCsnm3c=
+X-Received: by 2002:a19:22c4:: with SMTP id i187mr501098lfi.152.1571963284768;
+ Thu, 24 Oct 2019 17:28:04 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c51ebfb3-cac3-423e-9d1b-08d758e1e95d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 00:26:00.5595
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lC0jCkNHJ8+b/OAPTqyXUerBJy3LKTzSDVymF5elQRSvFhVHgkN0qGB8jlcq7kcAYvt7RlRT2CRq/Jg/R5RqeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4885
+References: <20191021200948.23775-1-mcroce@redhat.com> <20191021200948.23775-4-mcroce@redhat.com>
+ <20191023100009.GC8732@netronome.com> <CAGnkfhxg1sXkmiNS-+H184omQaKbp_+_Sy7Vi-9W9qLwGGPU6g@mail.gmail.com>
+ <20191023175522.GB28355@netronome.com>
+In-Reply-To: <20191023175522.GB28355@netronome.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Fri, 25 Oct 2019 02:27:28 +0200
+Message-ID: <CAGnkfhyEB0JU7LPZfYxHiKkryrkzoOs3Krumt1Lph+Q=qx1s8A@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/4] flow_dissector: extract more ICMP information
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Blakey <paulb@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>
+X-MC-Unique: VX937yK2O8WYHiayHRwYBA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The result_bits mask is no longer used by the driver and should be
-removed.
+On Wed, Oct 23, 2019 at 7:55 PM Simon Horman <simon.horman@netronome.com> w=
+rote:
+>
+> On Wed, Oct 23, 2019 at 12:53:37PM +0200, Matteo Croce wrote:
+> > On Wed, Oct 23, 2019 at 12:00 PM Simon Horman
+> > <simon.horman@netronome.com> wrote:
+> > > On Mon, Oct 21, 2019 at 10:09:47PM +0200, Matteo Croce wrote:
+> > > > +     switch (ih->type) {
+> > > > +     case ICMP_ECHO:
+> > > > +     case ICMP_ECHOREPLY:
+> > > > +     case ICMP_TIMESTAMP:
+> > > > +     case ICMP_TIMESTAMPREPLY:
+> > > > +     case ICMPV6_ECHO_REQUEST:
+> > > > +     case ICMPV6_ECHO_REPLY:
+> > > > +             /* As we use 0 to signal that the Id field is not pre=
+sent,
+> > > > +              * avoid confusion with packets without such field
+> > > > +              */
+> > > > +             key_icmp->id =3D ih->un.echo.id ? : 1;
+> > >
+> > > Its not obvious to me why the kernel should treat id-zero as a specia=
+l
+> > > value if it is not special on the wire.
+> > >
+> > > Perhaps a caller who needs to know if the id is present can
+> > > check the ICMP type as this code does, say using a helper.
+> > >
+> >
+> > Hi,
+> >
+> > The problem is that the 0-0 Type-Code pair identifies the echo replies.
+> > So instead of adding a bool is_present value I hardcoded the info in
+> > the ID field making it always non null, at the expense of a possible
+> > collision, which is harmless.
+>
+> Sorry, I feel that I'm missing something here.
+>
+> My reading of the code above is that for the cased types above
+> (echo, echo reply, ...) the id is present. Otherwise it is not.
+> My idea would be to put a check for those types in a helper.
+>
 
-Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
----
- drivers/input/rmi4/rmi_f11.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Something like icmp_has_id(), I like it.
 
-diff --git a/drivers/input/rmi4/rmi_f11.c b/drivers/input/rmi4/rmi_f11.c
-index 26c239325f95..bbf9ae9f3f0c 100644
---- a/drivers/input/rmi4/rmi_f11.c
-+++ b/drivers/input/rmi4/rmi_f11.c
-@@ -510,7 +510,6 @@ struct f11_data {
- 	struct rmi_2d_sensor_platform_data sensor_pdata;
- 	unsigned long *abs_mask;
- 	unsigned long *rel_mask;
--	unsigned long *result_bits;
- };
-=20
- enum f11_finger_state {
-@@ -1057,7 +1056,7 @@ static int rmi_f11_initialize(struct rmi_function *fn=
-)
- 	/*
- 	** init instance data, fill in values and create any sysfs files
- 	*/
--	f11 =3D devm_kzalloc(&fn->dev, sizeof(struct f11_data) + mask_size * 3,
-+	f11 =3D devm_kzalloc(&fn->dev, sizeof(struct f11_data) + mask_size * 2,
- 			GFP_KERNEL);
- 	if (!f11)
- 		return -ENOMEM;
-@@ -1076,8 +1075,6 @@ static int rmi_f11_initialize(struct rmi_function *fn=
-)
- 			+ sizeof(struct f11_data));
- 	f11->rel_mask =3D (unsigned long *)((char *)f11
- 			+ sizeof(struct f11_data) + mask_size);
--	f11->result_bits =3D (unsigned long *)((char *)f11
--			+ sizeof(struct f11_data) + mask_size * 2);
-=20
- 	set_bit(fn->irq_pos, f11->abs_mask);
- 	set_bit(fn->irq_pos + 1, f11->rel_mask);
---=20
-2.20.1
+> I do agree that the override you have used is harmless enough
+> in the context of the only user of the id which appears in
+> the following patch of this series.
+>
+>
+> Some other things I noticed in this patch on a second pass:
+>
+> * I think you can remove the icmp field from struct flow_dissector_key_po=
+rts
+>
+
+You mean flow_dissector_key_icmp maybe?
+
+> * I think that adding icmp to struct flow_keys should be accompanied by
+>   adding ICMP to flow_keys_dissector_symmetric_keys. But I think this is
+>   not desirable outside of the bonding use-case and rather
+>   the bonding driver should define its own structures that
+>   includes the keys it needs - basically copies of struct flow_keys
+>   and flow_keys_dissector_symmetric_keys with some modifications.
+>
+
+Just flow_keys_dissector_symmetric_keys or flow_keys_dissector_keys too?
+Anyway, it seems that the bonding uses the flow_dissector only when
+using encap2+3 or encap3+4 hashing, which means decap some known
+tunnels (mpls and gre and pppoe I think).
+For the other modes it just uses iph_to_flow_copy_v{4,6}addrs() and
+skb_flow_get_ports(), so maybe we can avoid copying that structure.
+
+> * Modifying flow_keys_have_l4 affects the behaviour of
+>   skb_get_hash_flowi6() but there is not a corresponding update
+>   to flow_keys_have_l4(). I didn't look at all the other call sites
+>   but it strikes me that this is a) a wide-spread behavioural change
+>   and b) is perhaps not required for the bond-use case.
+
+Right, no need to alter flow_keys_have_l4() at all.
+
+I'll send a v2 with those suggestions.
+
+Thanks,
+--
+Matteo Croce
+per aspera ad upstream
 
