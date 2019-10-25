@@ -2,124 +2,130 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66CCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E70CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B008A21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571991471;
-	bh=Dn2szSoAGmzySrJY3pCAB5nKowwTaEmGkh3gR/+MK9c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HcrKdGKJaLzifzzf2Cuo1q3dEE4TCPD2umwUtBLFQschOb6YNPgwmAUKhykw9cRZm
-	 R1zA+zlsKbJCdXWHLsuWfOYc+9XmuzNpgaayW6bByerSMiFFq7Ab4ptGrU/b9GhX9T
-	 sfc+lTc2nfA98tj+R602rOszwwYvuenGHGZ3AJ8I=
+	by mail.kernel.org (Postfix) with ESMTP id E85D821872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:19:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RCi7rsWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407891AbfJYIRu (ORCPT
+        id S2407437AbfJYITP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:17:50 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45612 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405453AbfJYIRt (ORCPT
+        Fri, 25 Oct 2019 04:19:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52341 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405453AbfJYITP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:17:49 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o205so969670oib.12;
-        Fri, 25 Oct 2019 01:17:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SfnbCnGC7bfHOPS0ndKHFbRPzpZx17Z/G8hlBOm+gDw=;
-        b=SzKm8X5kDdzGk2IaVp/Lq25RtzTxxFCl+gs9SXSCVtLukCzgCp3ep9o9wG7PljhWSX
-         RQCEfRoMjfXh7O3qEUdHXhQqbafpO3KRRzzgsuHuTsKqm+iLwaPyCI/3oIwxBnaZOAHR
-         a2THVIJxco3+nc7wvhIoPnT/42OK7KbOvFYdModD3xuUnahgdEhWZN2/yLlpT/RWQ0hW
-         FJmdxw4emPDFBVRdYFoKmZJyzPj87tyZ9huR2es8Int8WqOQe7yd3yWnR6Q1C6JmROr7
-         MvydLZOiQfdp87dKPfN7j/dRFKF+rJaAMHaLPNxC1rZ6VQgQ6e2woNkMa0jJ4g1PGBR7
-         i8Hg==
-X-Gm-Message-State: APjAAAUQ8qISP2O49SbC0DGgDNdnqr48ZWZrORro+pfrEWZ712BOToiX
-        nzNxjM1TZaopwRTecAlxGaRvkPeecs5b71EMKHiA6ROx
-X-Google-Smtp-Source: APXvYqy8cLx1sSZoK5TmfzZ9Fq2zyzJe1nqJrBJBeOYFMnzoCQUbQKbV2BtvN5+jfRQs36i5xBnTlOAQNSQe/C70Bo8=
-X-Received: by 2002:aca:5885:: with SMTP id m127mr1963800oib.110.1571991468336;
- Fri, 25 Oct 2019 01:17:48 -0700 (PDT)
+        Fri, 25 Oct 2019 04:19:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571991553;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0PrSSF3wO1cJpdgdh+GJt9lzgrmCJZ2ZadeLy2HGxrQ=;
+        b=RCi7rsWT3PMcQrGSU9USOTxMBYjxTGW/RyuQbu0Gs5AbKZqB6zZdmW04EStS5zXQJoLZxg
+        0UDqmS3UcCurprBFlfQvUjVjtrCvs2+/xR6RH5NNSFi9Zel1Zgiex/Cf0Lyw8YwHn8bLd2
+        5t6KGBS/C9e7avoZk8RqCU6usnVzQMA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-EJRcQS6kM0S5C-o7lah5hQ-1; Fri, 25 Oct 2019 04:19:09 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98FCD800D41;
+        Fri, 25 Oct 2019 08:19:07 +0000 (UTC)
+Received: from [10.36.116.205] (ovpn-116-205.ams2.redhat.com [10.36.116.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F2C51001B28;
+        Fri, 25 Oct 2019 08:18:59 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm, vmstat: hide /proc/pagetypeinfo from normal users
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>
+References: <20191025072610.18526-1-mhocko@kernel.org>
+ <20191025072610.18526-2-mhocko@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <f51a7b6f-cb6c-3392-230b-136814523a32@redhat.com>
+Date:   Fri, 25 Oct 2019 10:18:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <2435090.1mJ0fSsrDY@kreacher> <20191025025343.tyihliza45os3e4r@vireshk-i7>
-In-Reply-To: <20191025025343.tyihliza45os3e4r@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 25 Oct 2019 10:17:37 +0200
-Message-ID: <CAJZ5v0hyAX6zpr+2EzURg7ACmaXhbTAc7mBnr9ep11LkF1EBOg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: processor: Add QoS requests for all CPUs
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191025072610.18526-2-mhocko@kernel.org>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: EJRcQS6kM0S5C-o7lah5hQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 4:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 25-10-19, 02:41, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > The _PPC change notifications from the platform firmware are per-CPU,
-> > so acpi_processor_ppc_init() needs to add a frequency QoS request
-> > for each CPU covered by a cpufreq policy to take all of them into
-> > account.
-> >
-> > Even though ACPI thermal control of CPUs sets frequency limits
-> > per processor package, it also needs a frequency QoS request for each
-> > CPU in a cpufreq policy in case some of them are taken offline and
-> > the frequency limit needs to be set through the remaining online
-> > ones (this is slightly excessive, because all CPUs covered by one
-> > cpufreq policy will set the same frequency limit through their QoS
-> > requests, but it is not incorrect).
-> >
-> > Modify the code in accordance with the above observations.
->
-> I am not sure if I understood everything you just said, but I don't
-> see how things can break with the current code we have.
->
-> Both acpi_thermal_cpufreq_init() and acpi_processor_ppc_init() are
-> called from acpi_processor_notifier() which is registered as a policy
-> notifier and is called when a policy is created or removed. Even if
-> some CPUs of a policy go offline, it won't matter as the request for
-> the policy stays and it will be dropped only when all the CPUs of a
-> policy go offline.
->
-> What am I missing ?
+On 25.10.19 09:26, Michal Hocko wrote:
+> From: Michal Hocko <mhocko@suse.com>
+>=20
+> /proc/pagetypeinfo is a debugging tool to examine internal page
+> allocator state wrt to fragmentation. It is not very useful for
+> any other use so normal users really do not need to read this file.
+>=20
+> Waiman Long has noticed that reading this file can have negative side
+> effects because zone->lock is necessary for gathering data and that
+> a) interferes with the page allocator and its users and b) can lead to
+> hard lockups on large machines which have very long free_list.
+>=20
+> Reduce both issues by simply not exporting the file to regular users.
+>=20
+> Reported-by: Waiman Long <longman@redhat.com>
+> Cc: stable
+> Fixes: 467c996c1e19 ("Print out statistics in relation to fragmentation a=
+voidance to /proc/pagetypeinfo")
+> Acked-by: Mel Gorman <mgorman@suse.de>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Acked-by: Waiman Long <longman@redhat.com>
+> Acked-by: Rafael Aquini <aquini@redhat.com>
+> Acked-by: David Rientjes <rientjes@google.com>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> ---
+>   mm/vmstat.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 6afc892a148a..4e885ecd44d1 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1972,7 +1972,7 @@ void __init init_mm_internals(void)
+>   #endif
+>   #ifdef CONFIG_PROC_FS
+>   =09proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
+> -=09proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
+> +=09proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
+>   =09proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
+>   =09proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
+>   #endif
+>=20
 
-The way the request is used.
+Looks good too me (the ack list is already long enough :) )
 
-Say there are two CPUs, A and B, in the same policy.  A is
-policy->cpu, so acpi_processor_ppc_init() adds a QoS request for A
-only (note that the B's QoS request, B->perflib_req, remains
-inactive).
+--=20
 
-Now, some time later, the platform firmware notifies the OS of a _PPC
-change for B.  That means acpi_processor_notify() is called and it
-calls acpi_processor_ppc_has_changed(B) and that invokes
-acpi_processor_get_platform_limit(B), which in turn looks at the B's
-QoS request (B->perflib_req) and sees that it is inactive, so 0 is
-returned without doing anything.  However, *some* QoS request should
-be updated then.
+Thanks,
 
-Would it be correct to update the A's QoS request in that case?  No,
-because the _PPC limit for A may be different that the _PPC limit for
-B in principle.
+David / dhildenb
 
-The thermal case is not completely analogous, because
-cpufreq_set_cur_state() finds online CPUs in the same package as the
-target one and tries to update the QoS request for each of them, which
-will include the original policy->cpu, whose QoS request has been
-registered by acpi_thermal_cpufreq_init(), as long as it is online.
-If it is offline, it will be skipped and there is no easy way to find
-a "previous policy->cpu".  It is possible to do that, but IMO it is
-more straightforward to have a request for each CPU added.
