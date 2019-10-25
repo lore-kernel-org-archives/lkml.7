@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B87CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C79CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D170205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBDF21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbfJYSIF (ORCPT
+        id S1732365AbfJYSIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46778 "EHLO
+        Fri, 25 Oct 2019 14:08:01 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46822 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731433AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731456AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0008OV-9K; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xw-0008Oq-ME; Fri, 25 Oct 2019 19:05:36 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001j1-Mr; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xv-0001jP-S1; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "=?UTF-8?q?J=C3=B6rgen=20Storvist?=" <jorgen.storvist@gmail.com>
-Date:   Fri, 25 Oct 2019 19:03:20 +0100
-Message-ID: <lsq.1572026582.714142772@decadent.org.uk>
+        "Boris Brezillon" <boris.brezillon@collabora.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
+Date:   Fri, 25 Oct 2019 19:03:25 +0100
+Message-ID: <lsq.1572026582.555569129@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 19/47] USB: serial: option: add support for GosunCn
- ME3630 RNDIS mode
+Subject: [PATCH 3.16 24/47] media: v4l2: Test type instead of cfg->type in
+ v4l2_ctrl_new_custom()
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,40 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jörgen Storvist <jorgen.storvist@gmail.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-commit aed2a26283528fb69c38e414f649411aa48fb391 upstream.
+commit 07d89227a983df957a6a7c56f7c040cde9ac571f upstream.
 
-Added USB IDs for GosunCn ME3630 cellular module in RNDIS mode.
+cfg->type can be overridden by v4l2_ctrl_fill() and the new value is
+stored in the local type var. Fix the tests to use this local var.
 
-T:  Bus=03 Lev=01 Prnt=01 Port=01 Cnt=03 Dev#= 18 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=19d2 ProdID=0601 Rev=03.18
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=b950269c
-C:  #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 1 Cls=e0(wlcon) Sub=01 Prot=03 Driver=rndis_host
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
-I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-
-Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 0996517cf8ea ("V4L/DVB: v4l2: Add new control handling framework")
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+[hverkuil-cisco@xs4all.nl: change to !qmenu and !qmenu_int (checkpatch)]
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/option.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1466,6 +1466,7 @@ static const struct usb_device_id option
- 	  .driver_info = (kernel_ulong_t)&net_intf4_blacklist },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0414, 0xff, 0xff, 0xff) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0417, 0xff, 0xff, 0xff) },
-+	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0601, 0xff) },	/* GosunCn ZTE WeLink ME3630 (RNDIS mode) */
- 	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x0602, 0xff) },	/* GosunCn ZTE WeLink ME3630 (MBIM mode) */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1008, 0xff, 0xff, 0xff),
- 	  .driver_info = (kernel_ulong_t)&net_intf4_blacklist },
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1747,16 +1747,15 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(s
+ 		v4l2_ctrl_fill(cfg->id, &name, &type, &min, &max, &step,
+ 								&def, &flags);
+ 
+-	is_menu = (cfg->type == V4L2_CTRL_TYPE_MENU ||
+-		   cfg->type == V4L2_CTRL_TYPE_INTEGER_MENU);
++	is_menu = (type == V4L2_CTRL_TYPE_MENU ||
++		   type == V4L2_CTRL_TYPE_INTEGER_MENU);
+ 	if (is_menu)
+ 		WARN_ON(step);
+ 	else
+ 		WARN_ON(cfg->menu_skip_mask);
+-	if (cfg->type == V4L2_CTRL_TYPE_MENU && qmenu == NULL)
++	if (type == V4L2_CTRL_TYPE_MENU && !qmenu) {
+ 		qmenu = v4l2_ctrl_get_menu(cfg->id);
+-	else if (cfg->type == V4L2_CTRL_TYPE_INTEGER_MENU &&
+-		 qmenu_int == NULL) {
++	} else if (type == V4L2_CTRL_TYPE_INTEGER_MENU && !qmenu_int) {
+ 		handler_set_err(hdl, -EINVAL);
+ 		return NULL;
+ 	}
 
