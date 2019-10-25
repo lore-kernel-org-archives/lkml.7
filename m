@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8F6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3E9CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9269220679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B88321D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012139;
-	bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
+	s=default; t=1572012156;
+	bh=C1P+Xj2RBoVy2we2sZgbkygtZuviJY1xq4z3GXO7iXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJRXhPRdepqpdJpLHlPQlWNB+L79gYMjARMIYQkKAara704DS1CXChB8IhOfS15Ft
-	 zGQoRWZ8r/5qdcOHCdL0G6lzCOAuFl+m/KwCfjwcetNTWPMDiUWpxDGUL8BhtwRD9v
-	 P8vUFJMnhF+oAjQuwGLkEFplt7tsOUT9WdTi8gRM=
+	b=WT7kdaII68YuIjNcVCUeJ1BdTSq01xFutGCayAanj9jI+QP0VzJFntTRToq8QpyLD
+	 CNmCWLEpgGWIMhd3q3KHbdORYf3r9iovOSSNdR+VRcIDMSb8d9Xl7Fb4128If+wIr8
+	 qwxdUaLoo+zrCyviykBIwog/x5F8vedbRscoiad4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394952AbfJYOCS (ORCPT
+        id S2395027AbfJYOCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:02:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505375AbfJYN5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:49 -0400
+        id S1731267AbfJYN5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E6D21D82;
-        Fri, 25 Oct 2019 13:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 670BD21E6F;
+        Fri, 25 Oct 2019 13:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011868;
-        bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
+        s=default; t=1572011862;
+        bh=C1P+Xj2RBoVy2we2sZgbkygtZuviJY1xq4z3GXO7iXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pU3ZFbSxEqArx4Trc+gBG8b1CXa4i4cVhXgFuONM6S8vdkSX2E3IfMiPoyHczKyZz
-         1mtm6Oe8MP67Ew77DtoJQKO5YI8lzG83P7KUjzfE3F+u7Ux096nfUpZY0VGhQGhq28
-         IiiXZkkLcVlAFjKA5T3YY/5Z1J7THsHSEV/EOV0M=
+        b=isJo0QWN3RYsRWQdaLzGKF78JA1FwTM6vd+jhR8fVuGCr8v5FHUULqQUaC7f2hzjA
+         5faKvqalmELdCn6vcgAZSuYKnndQJA4wqk6I6OPnll6l5DcThySWz2DRH4PCwHL+Kk
+         r0YhMXuwzwxfMnHCJU7geImLAVsqix1EqgGf5TX8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 18/25] net: usb: sr9800: fix uninitialized local variable
-Date:   Fri, 25 Oct 2019 09:57:06 -0400
-Message-Id: <20191025135715.25468-18-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        syzbot+6b825a6494a04cc0e3f7@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 15/25] llc: fix sk_buff leak in llc_conn_service()
+Date:   Fri, 25 Oct 2019 09:57:03 -0400
+Message-Id: <20191025135715.25468-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135715.25468-1-sashal@kernel.org>
 References: <20191025135715.25468-1-sashal@kernel.org>
@@ -61,34 +60,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
+[ Upstream commit b74555de21acd791f12c4a1aeaf653dd7ac21133 ]
 
-Make sure res does not contain random value if the call to
-sr_read_cmd fails for some reason.
+syzbot reported:
 
-Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    BUG: memory leak
+    unreferenced object 0xffff88811eb3de00 (size 224):
+       comm "syz-executor559", pid 7315, jiffies 4294943019 (age 10.300s)
+       hex dump (first 32 bytes):
+         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+         00 a0 38 24 81 88 ff ff 00 c0 f2 15 81 88 ff ff  ..8$............
+       backtrace:
+         [<000000008d1c66a1>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+         [<000000008d1c66a1>] slab_post_alloc_hook mm/slab.h:439 [inline]
+         [<000000008d1c66a1>] slab_alloc_node mm/slab.c:3269 [inline]
+         [<000000008d1c66a1>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+         [<00000000447d9496>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+         [<000000000cdbf82f>] alloc_skb include/linux/skbuff.h:1058 [inline]
+         [<000000000cdbf82f>] llc_alloc_frame+0x66/0x110 net/llc/llc_sap.c:54
+         [<000000002418b52e>] llc_conn_ac_send_sabme_cmd_p_set_x+0x2f/0x140  net/llc/llc_c_ac.c:777
+         [<000000001372ae17>] llc_exec_conn_trans_actions net/llc/llc_conn.c:475  [inline]
+         [<000000001372ae17>] llc_conn_service net/llc/llc_conn.c:400 [inline]
+         [<000000001372ae17>] llc_conn_state_process+0x1ac/0x640  net/llc/llc_conn.c:75
+         [<00000000f27e53c1>] llc_establish_connection+0x110/0x170  net/llc/llc_if.c:109
+         [<00000000291b2ca0>] llc_ui_connect+0x10e/0x370 net/llc/af_llc.c:477
+         [<000000000f9c740b>] __sys_connect+0x11d/0x170 net/socket.c:1840
+         [...]
+
+The bug is that most callers of llc_conn_send_pdu() assume it consumes a
+reference to the skb, when actually due to commit b85ab56c3f81 ("llc:
+properly handle dev_queue_xmit() return value") it doesn't.
+
+Revert most of that commit, and instead make the few places that need
+llc_conn_send_pdu() to *not* consume a reference call skb_get() before.
+
+Fixes: b85ab56c3f81 ("llc: properly handle dev_queue_xmit() return value")
+Reported-by: syzbot+6b825a6494a04cc0e3f7@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/llc_conn.h |  2 +-
+ net/llc/llc_c_ac.c     |  8 ++++++--
+ net/llc/llc_conn.c     | 32 +++++++++-----------------------
+ 3 files changed, 16 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index 35f39f23d8814..8f8c9ede88c26 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
- static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
- {
- 	struct usbnet *dev = netdev_priv(net);
--	__le16 res;
-+	__le16 res = 0;
+diff --git a/include/net/llc_conn.h b/include/net/llc_conn.h
+index df528a6235487..ea985aa7a6c5e 100644
+--- a/include/net/llc_conn.h
++++ b/include/net/llc_conn.h
+@@ -104,7 +104,7 @@ void llc_sk_reset(struct sock *sk);
  
- 	mutex_lock(&dev->phy_mutex);
- 	sr_set_sw_mii(dev);
+ /* Access to a connection */
+ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb);
+-int llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb);
++void llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb);
+ void llc_conn_rtn_pdu(struct sock *sk, struct sk_buff *skb);
+ void llc_conn_resend_i_pdu_as_cmd(struct sock *sk, u8 nr, u8 first_p_bit);
+ void llc_conn_resend_i_pdu_as_rsp(struct sock *sk, u8 nr, u8 first_f_bit);
+diff --git a/net/llc/llc_c_ac.c b/net/llc/llc_c_ac.c
+index 4b60f68cb4925..8354ae40ec85b 100644
+--- a/net/llc/llc_c_ac.c
++++ b/net/llc/llc_c_ac.c
+@@ -372,6 +372,7 @@ int llc_conn_ac_send_i_cmd_p_set_1(struct sock *sk, struct sk_buff *skb)
+ 	llc_pdu_init_as_i_cmd(skb, 1, llc->vS, llc->vR);
+ 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
+ 	if (likely(!rc)) {
++		skb_get(skb);
+ 		llc_conn_send_pdu(sk, skb);
+ 		llc_conn_ac_inc_vs_by_1(sk, skb);
+ 	}
+@@ -389,7 +390,8 @@ static int llc_conn_ac_send_i_cmd_p_set_0(struct sock *sk, struct sk_buff *skb)
+ 	llc_pdu_init_as_i_cmd(skb, 0, llc->vS, llc->vR);
+ 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
+ 	if (likely(!rc)) {
+-		rc = llc_conn_send_pdu(sk, skb);
++		skb_get(skb);
++		llc_conn_send_pdu(sk, skb);
+ 		llc_conn_ac_inc_vs_by_1(sk, skb);
+ 	}
+ 	return rc;
+@@ -406,6 +408,7 @@ int llc_conn_ac_send_i_xxx_x_set_0(struct sock *sk, struct sk_buff *skb)
+ 	llc_pdu_init_as_i_cmd(skb, 0, llc->vS, llc->vR);
+ 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
+ 	if (likely(!rc)) {
++		skb_get(skb);
+ 		llc_conn_send_pdu(sk, skb);
+ 		llc_conn_ac_inc_vs_by_1(sk, skb);
+ 	}
+@@ -916,7 +919,8 @@ static int llc_conn_ac_send_i_rsp_f_set_ackpf(struct sock *sk,
+ 	llc_pdu_init_as_i_cmd(skb, llc->ack_pf, llc->vS, llc->vR);
+ 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
+ 	if (likely(!rc)) {
+-		rc = llc_conn_send_pdu(sk, skb);
++		skb_get(skb);
++		llc_conn_send_pdu(sk, skb);
+ 		llc_conn_ac_inc_vs_by_1(sk, skb);
+ 	}
+ 	return rc;
+diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
+index 56c3fb5cc8058..444c13e752a08 100644
+--- a/net/llc/llc_conn.c
++++ b/net/llc/llc_conn.c
+@@ -30,7 +30,7 @@
+ #endif
+ 
+ static int llc_find_offset(int state, int ev_type);
+-static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *skb);
++static void llc_conn_send_pdus(struct sock *sk);
+ static int llc_conn_service(struct sock *sk, struct sk_buff *skb);
+ static int llc_exec_conn_trans_actions(struct sock *sk,
+ 				       struct llc_conn_state_trans *trans,
+@@ -193,11 +193,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 	return rc;
+ }
+ 
+-int llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb)
++void llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb)
+ {
+ 	/* queue PDU to send to MAC layer */
+ 	skb_queue_tail(&sk->sk_write_queue, skb);
+-	return llc_conn_send_pdus(sk, skb);
++	llc_conn_send_pdus(sk);
+ }
+ 
+ /**
+@@ -255,7 +255,7 @@ void llc_conn_resend_i_pdu_as_cmd(struct sock *sk, u8 nr, u8 first_p_bit)
+ 	if (howmany_resend > 0)
+ 		llc->vS = (llc->vS + 1) % LLC_2_SEQ_NBR_MODULO;
+ 	/* any PDUs to re-send are queued up; start sending to MAC */
+-	llc_conn_send_pdus(sk, NULL);
++	llc_conn_send_pdus(sk);
+ out:;
+ }
+ 
+@@ -296,7 +296,7 @@ void llc_conn_resend_i_pdu_as_rsp(struct sock *sk, u8 nr, u8 first_f_bit)
+ 	if (howmany_resend > 0)
+ 		llc->vS = (llc->vS + 1) % LLC_2_SEQ_NBR_MODULO;
+ 	/* any PDUs to re-send are queued up; start sending to MAC */
+-	llc_conn_send_pdus(sk, NULL);
++	llc_conn_send_pdus(sk);
+ out:;
+ }
+ 
+@@ -340,16 +340,12 @@ int llc_conn_remove_acked_pdus(struct sock *sk, u8 nr, u16 *how_many_unacked)
+ /**
+  *	llc_conn_send_pdus - Sends queued PDUs
+  *	@sk: active connection
+- *	@hold_skb: the skb held by caller, or NULL if does not care
+  *
+- *	Sends queued pdus to MAC layer for transmission. When @hold_skb is
+- *	NULL, always return 0. Otherwise, return 0 if @hold_skb is sent
+- *	successfully, or 1 for failure.
++ *	Sends queued pdus to MAC layer for transmission.
+  */
+-static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *hold_skb)
++static void llc_conn_send_pdus(struct sock *sk)
+ {
+ 	struct sk_buff *skb;
+-	int ret = 0;
+ 
+ 	while ((skb = skb_dequeue(&sk->sk_write_queue)) != NULL) {
+ 		struct llc_pdu_sn *pdu = llc_pdu_sn_hdr(skb);
+@@ -361,20 +357,10 @@ static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *hold_skb)
+ 			skb_queue_tail(&llc_sk(sk)->pdu_unack_q, skb);
+ 			if (!skb2)
+ 				break;
+-			dev_queue_xmit(skb2);
+-		} else {
+-			bool is_target = skb == hold_skb;
+-			int rc;
+-
+-			if (is_target)
+-				skb_get(skb);
+-			rc = dev_queue_xmit(skb);
+-			if (is_target)
+-				ret = rc;
++			skb = skb2;
+ 		}
++		dev_queue_xmit(skb);
+ 	}
+-
+-	return ret;
+ }
+ 
+ /**
 -- 
 2.20.1
 
