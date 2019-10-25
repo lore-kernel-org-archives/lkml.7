@@ -2,116 +2,152 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4BBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91FBCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844DD21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E30F222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572038022;
+	bh=l1yNRnI9t0MZPaPdUHueT4hnKwOc3uigRQXtietqzqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ba8PLaKbIVI5YBkK/O6FWEc8ioNlVdeY9xU5ntVvJnLpCXO/zHyVI3kHXym5xgocq
+	 LMFmV+mFXVrLPHZgCAb+ViBHJBzUeG5QX19y4sEONYgGzFd1qcOBxodvoOSHwpYPrX
+	 Ot+U11EvYpPDTm1zTC/24FcxuWY2XA1SH/DAPXDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfJYVMi (ORCPT
+        id S1726188AbfJYVNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:12:38 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:36076 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfJYVMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:12:38 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1iO6so-00082S-Ir; Fri, 25 Oct 2019 15:12:31 -0600
-To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20191025202535.12036-1-logang@deltatee.com>
- <20191025202535.12036-4-logang@deltatee.com>
- <28b40ab8-c695-784e-3f52-03a18b891d25@grimberg.me>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <11006dd2-718f-b569-4ef3-c01232354d5f@deltatee.com>
-Date:   Fri, 25 Oct 2019 15:12:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 17:13:41 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46861 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfJYVNl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 17:13:41 -0400
+Received: by mail-oi1-f193.google.com with SMTP id c2so2492628oic.13;
+        Fri, 25 Oct 2019 14:13:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YsHXnqwoM7wQXF0uPaovfdPHuECAxo/T6mEqOx5c+dY=;
+        b=d5n/hl88X3WT/lDSfXeXeT7eh88OeCGJXh8DRG3bf/6br3ocb/wuas+P+uO5Lb3nbw
+         DPjWOGbTZlvh5mTFAO4IO+vImTbmuJ5tNUrRaOg98/5mIIOkNGhaouW8CVGujBOB2jjg
+         VbZRAR5dfuu8UZ27vhgKAqADN7gKY6Dy9B3xPwuP/7+TJUeR8/kVXH6gJ8s01CzUqhN9
+         XqgtCuX8+Jau/J2Th0uMDWgg7HuxN+IruTh4GMaWknCIOzE8QR0itD02xgSCIPsjVm1d
+         Syd86ZMT9UBjAv2+HIiiz1iACDvvaXRpQJ8KdYnLThigdYv8wXuX9rkgJw1Ls42prPLe
+         QRNg==
+X-Gm-Message-State: APjAAAU7tpQIs/Z2bDboLH0G3FwCCcelOfp4pPvbDRYrJxzaVPUbCw7D
+        tfW6+Qfe/pt4cuJ/Re94eg==
+X-Google-Smtp-Source: APXvYqwE4WNyEIPHUmWISUbe3EXRa308MBi5x/EUd8BbYKV1jvLUEmP2vAxDgTjVnSwi+WqgYLFnXA==
+X-Received: by 2002:aca:1e0e:: with SMTP id m14mr4801375oic.72.1572038019693;
+        Fri, 25 Oct 2019 14:13:39 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n4sm875917oic.2.2019.10.25.14.13.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 14:13:38 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:13:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org, letux-kernel@openphoenux.org,
+        linux-mmc@vger.kernel.org, kernel@pyra-handheld.com,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 01/11] Documentation: dt: wireless: update wl1251 for
+ sdio
+Message-ID: <20191025211338.GA20249@bogus>
+References: <cover.1571510481.git.hns@goldelico.com>
+ <741828f69eca2a9c9a0a7e80973c91f50cc71f9b.1571510481.git.hns@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <28b40ab8-c695-784e-3f52-03a18b891d25@grimberg.me>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: hch@lst.de, maxg@mellanox.com, kbusch@kernel.org, sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 3/3] nvme: Introduce nvme_execute_passthru_rq_nowait()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <741828f69eca2a9c9a0a7e80973c91f50cc71f9b.1571510481.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-10-25 2:41 p.m., Sagi Grimberg wrote:
->> +#ifdef CONFIG_NVME_TARGET_PASSTHRU
->> +static void nvme_execute_passthru_rq_work(struct work_struct *w)
->> +{
->> +    struct nvme_request *req = container_of(w, struct nvme_request,
->> work);
->> +    struct request *rq = blk_mq_rq_from_pdu(req);
->> +    rq_end_io_fn *done = rq->end_io;
->> +    void *end_io_data = rq->end_io_data;
+On Sat, Oct 19, 2019 at 08:41:16PM +0200, H. Nikolaus Schaller wrote:
+> The standard method for sdio devices connected to
+> an sdio interface is to define them as a child node
+> like we can see with wlcore.
 > 
-> Why is end_io_data stored to a local variable here? where is it set?
-
-blk_execute_rq() (which is called by nvme_execute_rq()) will overwrite
-rq->endio and rq->end_io_data. We store them here so we can call the
-callback appropriately after the request completes. It would be set by
-the caller in the same way they set it if they were calling
-blk_execute_rq_nowait().
-
->> +
->> +    nvme_execute_passthru_rq(rq);
->> +
->> +    if (done) {
->> +        rq->end_io_data = end_io_data;
->> +        done(rq, 0);
->> +    }
->> +}
->> +
->> +void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn
->> *done)
->> +{
->> +    struct nvme_command *cmd = nvme_req(rq)->cmd;
->> +    struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
->> +    struct nvme_ns *ns = rq->q->queuedata;
->> +    struct gendisk *disk = ns ? ns->disk : NULL;
->> +    u32 effects;
->> +
->> +    /*
->> +     * This function may be called in interrupt context, so we cannot
->> sleep
->> +     * but nvme_passthru_[start|end]() may sleep so we need to execute
->> +     * the command in a work queue.
->> +     */
->> +    effects = nvme_command_effects(ctrl, ns, cmd->common.opcode);
->> +    if (effects) {
->> +        rq->end_io = done;
->> +        INIT_WORK(&nvme_req(rq)->work, nvme_execute_passthru_rq_work);
->> +        queue_work(nvme_wq, &nvme_req(rq)->work);
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> ---
+>  .../bindings/net/wireless/ti,wl1251.txt       | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> This work will need to be flushed when in nvme_stop_ctrl. That is
-> assuming that it will fail-fast and not hang (which it should given
-> that its a passthru command that is allocated via nvme_alloc_request).
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> index bb2fcde6f7ff..88612ff29f2d 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+> @@ -35,3 +35,29 @@ Examples:
+>  		ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
+>  	};
+>  };
+> +
+> +&mmc3 {
+> +	vmmc-supply = <&wlan_en>;
+> +
+> +	bus-width = <4>;
+> +	non-removable;
+> +	ti,non-removable;
+> +	cap-power-off-card;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc3_pins>;
 
-Hmm, that's going to be a bit tricky. Seeing the work_struct belongs
-potentially to a number of different requests, we can't just flush the
-individual work items. I think we'd have to create a work-queue per ctrl
-and flush that. Any objections to that?
+None of the above are really relevant to this binding.
 
-Logan
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	wlan: wl1251@1 {
+
+wifi@1
+
+> +		compatible = "ti,wl1251";
+> +
+> +		reg = <1>;
+> +
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;	/* GPIO_21 */
+> +
+> +		ti,wl1251-has-eeprom;
+> +	};
+> +};
+> -- 
+> 2.19.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
