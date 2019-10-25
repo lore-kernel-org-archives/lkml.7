@@ -2,148 +2,111 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355BFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C5ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A0321929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F0F21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408872AbfJYJuM (ORCPT
+        id S2408874AbfJYJum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:50:12 -0400
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:53530 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407918AbfJYJuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:50:11 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 46zzqj258lzKmZ4;
-        Fri, 25 Oct 2019 11:50:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id TLtJwWbBoCxd; Fri, 25 Oct 2019 11:50:05 +0200 (CEST)
-Date:   Fri, 25 Oct 2019 20:49:56 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: clone3() example code
-Message-ID: <20191025094956.hvr44v2lbfxf7dfs@yavin.dot.cyphar.com>
-References: <CAKgNAkgKX1Z6Uns3pAvXe-JMSmWqo2PrqeoS65aEriZsV35QmA@mail.gmail.com>
- <20191025084142.jpwypkyczehylhgv@wittgenstein>
+        Fri, 25 Oct 2019 05:50:42 -0400
+Received: from mga11.intel.com ([192.55.52.93]:40297 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390193AbfJYJum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:50:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 02:50:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="202566063"
+Received: from irvmail001.ir.intel.com ([163.33.26.43])
+  by orsmga006.jf.intel.com with ESMTP; 25 Oct 2019 02:50:39 -0700
+Received: from sivswdev08.ir.intel.com (sivswdev08.ir.intel.com [10.237.217.47])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id x9P9ocwp003574;
+        Fri, 25 Oct 2019 10:50:38 +0100
+Received: from sivswdev08.ir.intel.com (localhost [127.0.0.1])
+        by sivswdev08.ir.intel.com with ESMTP id x9P9ocxT020005;
+        Fri, 25 Oct 2019 10:50:38 +0100
+Received: (from gcabiddu@localhost)
+        by sivswdev08.ir.intel.com with LOCAL id x9P9obDT019995;
+        Fri, 25 Oct 2019 10:50:37 +0100
+Date:   Fri, 25 Oct 2019 10:50:37 +0100
+From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        qat-linux <qat-linux@intel.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+Subject: Re: [PATCH] crypto: qat - remove redundant condition
+ accel_dev->is_vf
+Message-ID: <20191025095037.GA19336@sivswdev08.ir.intel.com>
+References: <78b1532c-f8bf-48e4-d0a7-30ea0137d408@huawei.com>
+ <CAKv+Gu_MVe8mEeC-fVVbbLfUv-rEEk5_eoxfHjTCMgAFmSHrJw@mail.gmail.com>
+ <77832b26242f4987877d6122ba14a0d0@irsmsx101.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qfxueoggiia3z6jh"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025084142.jpwypkyczehylhgv@wittgenstein>
+In-Reply-To: <77832b26242f4987877d6122ba14a0d0@irsmsx101.ger.corp.intel.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 25, 2019 at 10:45:31AM +0100, Yunfeng Ye wrote:
+> On 2019/10/25 17:33, Ard Biesheuvel wrote:
+> > On Fri, 25 Oct 2019 at 09:24, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+> >>
+> >> Warning is found by the code analysis tool:
+> >>   "Redundant condition: accel_dev->is_vf"
+> >>
+> >> So remove the redundant condition accel_dev->is_vf.
+> >>
+> >> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> >> ---
+> >>  drivers/crypto/qat/qat_common/adf_dev_mgr.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/crypto/qat/qat_common/adf_dev_mgr.c b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+> >> index 2d06409bd3c4..b54b8850fe20 100644
+> >> --- a/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+> >> +++ b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+> >> @@ -196,7 +196,7 @@ int adf_devmgr_add_dev(struct adf_accel_dev *accel_dev,
+> >>         atomic_set(&accel_dev->ref_count, 0);
+> >>
+> >>         /* PF on host or VF on guest */
+> >> -       if (!accel_dev->is_vf || (accel_dev->is_vf && !pf)) {
+> >> +       if (!accel_dev->is_vf || !pf) {
+> > 
+> > I disagree with this change. There is no bug here, and the way the
+> > condition is formulated self-documents the code, i.e.,
+> > 
+> > IF NOT is_vf
+> > OR (is_vf BUT NOT pf)
+> > 
+> > Using an automated tool to reduce every boolean expression to its
+> > minimal representation doesn't seem that useful to me, since the
+> > compiler is perfectly capable of doing that when generating the object
+> > code.
+> > 
+> ok, thanks, this modify just fix warning, and make code simple.
+This change simplifies the code but it makes it less readable.
+I'd prefer to leave it as it was.
 
---qfxueoggiia3z6jh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards,
 
-On 2019-10-25, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
->=20
-> int main(int argc, char *argv[])
-> {
-> 	int pidfd =3D -1;
-> 	pid_t parent_tid =3D -1, pid =3D -1;
-> 	struct clone_args args =3D {0};
->=20
-> 	args.parent_tid =3D ptr_to_u64(&parent_tid); /* CLONE_PARENT_SETTID */
-> 	args.pidfd =3D ptr_to_u64(&pidfd); /* CLONE_PIDFD */
-> 	args.flags =3D CLONE_PIDFD | CLONE_PARENT_SETTID;
-> 	args.exit_signal =3D SIGCHLD;
->=20
-> 	pid =3D sys_clone3(&args);
-
-I'd suggest that
-
-	struct clone_args args =3D {
-		.flags =3D CLONE_PIDFD | CLONE_PARENT_SETTID,
-		.parent_tid =3D ptr_to_u64(&parent_tid), /* CLONE_PARENT_SETTID */
-		.pidfd =3D ptr_to_u64(&pidfd),           /* CLONE_PIDFD */
-		.exit_signal =3D SIGCHLD,
-	};
-
-or alternatively
-
-	pid =3D sys_clone3(&(struct clone_args) {
-		.flags =3D CLONE_PIDFD | CLONE_PARENT_SETTID,
-		.parent_tid =3D ptr_to_u64(&parent_tid), /* CLONE_PARENT_SETTID */
-		.pidfd =3D ptr_to_u64(&pidfd),           /* CLONE_PIDFD */
-		.exit_signal =3D SIGCHLD,
-	});
-
-are easier to read.
-
-> 	if (pid < 0) {
-> 		fprintf(stderr, "%s - Failed to create new process\n", strerror(errno));
-> 		exit(EXIT_FAILURE);
-> 	}
->=20
-> 	if (pid =3D=3D 0) {
-> 		printf("Child process with pid %d\n", getpid());
-> 		exit(EXIT_SUCCESS);
-> 	}
->=20
-> 	printf("Parent process received child's pid %d as return value\n", pid);
-> 	printf("Parent process received child's pidfd %d\n", *(int *)args.pidfd);
-> 	printf("Parent process received child's pid %d as return argument\n",
-> 	       *(pid_t *)args.parent_tid);
->=20
-> 	if (0) {
-> 		if (waitid(P_ALL, pid, NULL, 0) =3D=3D 0) {
-> 			fprintf(stderr, "Managed to wait on CLONE_NO_WAITALL process with wait=
-id(P_ALL)\n");
-> 			exit(EXIT_FAILURE);
-> 		}
-> 		printf("Child process %d requested CLONE_NO_WAITALL\n", pid);
-> 	} else {
-> 		printf("Child process %d did not request CLONE_NO_WAITALL\n", pid);
-> 	}
->=20
-> 	if (wait_for_pid(pid))
-> 		exit(EXIT_FAILURE);
->=20
-> 	if (pid !=3D *(pid_t *)args.parent_tid)
-> 		exit(EXIT_FAILURE);
->=20
-> 	close(pidfd);
->=20
-> 	return 0;
-> }
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---qfxueoggiia3z6jh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXbLFQAAKCRCdlLljIbnQ
-El81AP0Zq9hqMvdLZ606cwcrvwrlF1Dz1SNfa3Qr2ixC8xKfigD+OBZQIMDUhECt
-fIXlzzzhuKElKrMxiI6ydgtkfRPGJgA=
-=Ka/u
------END PGP SIGNATURE-----
-
---qfxueoggiia3z6jh--
+-- 
+Giovanni
