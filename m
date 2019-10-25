@@ -2,106 +2,193 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3269CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3236ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3468222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="RZyaCaiJ"
+	by mail.kernel.org (Postfix) with ESMTP id 06BCE222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572011991;
+	bh=o2EdR++2WPKoIvYqUvhtA2VH9DhrxH5SuJrHcibTyiU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e9noqDJlP7Xfpg1hU3OrfymkhVI1soZjzVmUL1OkTDgYXY7R3DRGMoWUBgMSOLgeP
+	 yZMSuLV5vwSU+9HlraYGa7ZD6Bqx3o7HP3JdS6q3iWS0LfK39M3qBIhUWL5mbWROaT
+	 eQtWA20AVAdVT8anoMlgGqZ6HO4vYAl40nB4XDeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633010AbfJYN7n (ORCPT
+        id S2404219AbfJYN7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:59:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34023 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393861AbfJYN7m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:59:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id q1so2548200ion.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 06:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5damUobXw35eKUSqmStJSloE/QuWy0XVotbTFO5vID0=;
-        b=RZyaCaiJaHYmSMdwUP82cTCXFN3vu0WxKxVQjZKeFy57IDmzRSD7tcqvaTfRo/dDt9
-         x8b4s31KmLKmHKJ3pBRxKEGbbo3XLDPhjDllXUJAOIURhCUO9hxU7QktQcTH3kS/7JTD
-         Eb9xVA717huW4WbnH4JREIx0emrcxIpXHLNdbGO4axO7AVDdHaGBx1Pge2yEpK9mZ8/V
-         Jrnh7+cvPCrV3IBwXRRUuF5DEq35cE7V8lMDdGcKs5zcIw8r4axr8hTaAZTrXFH2a3TZ
-         fpBF2y/GuV/e2GPRUzudtDxE4044d1m99NSLQ6nwpqx56q/orsOWZbbr7TlvamZvdFch
-         dz6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5damUobXw35eKUSqmStJSloE/QuWy0XVotbTFO5vID0=;
-        b=nqSjCFOEL2LHJDTfPNOtHlIraYYn08LvQ1y1JvVJlpvAKI1JXev7hdghlz7VirbOCZ
-         uI50ZCmDtQybuYpeJgHEVmAFqRlIGasSnpdy0eUHp11QJowzzEUczCkcJxobhZV9P3zs
-         RdwTlU0IbbgsiUIwyhU3MqvTo1LVwaVSV1lQvUB/dMhiDsOjc+oou/fr8CmOS5gXY2lC
-         W6VIMRW25GkdHLz2vDC5XflDueibzzIycdycPSPO6ZeTw6leVGl2yTknQDQA3NmkcfLZ
-         hsjqeMTYcqoHE16mCTwuzuCIFDdQr/MgaU2hcM6kyg/RRDsHpxJSo1mGsG1KOY/xyCwo
-         3XOw==
-X-Gm-Message-State: APjAAAV0JuCGA9scAKm4NXNhBUoU7yNIPABF37RRufHr8iqAWSCGiz3K
-        Nm6I79/qVUJh0FvF1eYuvmMidy9R/eXFFw==
-X-Google-Smtp-Source: APXvYqw+GYMIOhF+Eo/gR33C8Q/wZtTiAp6hopd13x3qNlBV5U7aFaV5rqHPKzQp867TNpG5VC6dYw==
-X-Received: by 2002:a6b:e30f:: with SMTP id u15mr3566633ioc.96.1572011980590;
-        Fri, 25 Oct 2019 06:59:40 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id 9sm343223ilt.16.2019.10.25.06.59.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 06:59:39 -0700 (PDT)
-Subject: Re: [PATCH][next] io-wq: fix unintentional integer overflow on left
- shift
-To:     Colin Ian King <colin.king@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191025124315.21742-1-colin.king@canonical.com>
- <fc23061e-31ec-8a66-2b62-771121d182de@kernel.dk>
- <02517010-9244-771f-d0ce-558bbebe6a63@kernel.dk>
- <a13505ab-52f1-b47d-7b1d-45552982fc82@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4a750188-2696-c35a-9c5a-8bfe509edf14@kernel.dk>
-Date:   Fri, 25 Oct 2019 07:59:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 09:59:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2632913AbfJYN7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:59:08 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A110222CD;
+        Fri, 25 Oct 2019 13:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572011947;
+        bh=o2EdR++2WPKoIvYqUvhtA2VH9DhrxH5SuJrHcibTyiU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yukmQGTLKYMfPyeypLlEdMFOf1KLAdpLSma45xKzifiNskgfLOASkztGXyU/3B5N4
+         3H12a+pyzrZPvdSAan9dZMweqZUf33G4gAwldUNEdQlUjMOrqG9/VRO1udRktbBIyk
+         8uRe3Im355uiZF68stGoV9m1Z7EDu4aCtZzBePhE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Koen Vandeputte <koen.vandeputte@ncentric.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 12/16] ath9k: dynack: fix possible deadlock in ath_dynack_node_{de}init
+Date:   Fri, 25 Oct 2019 09:58:36 -0400
+Message-Id: <20191025135842.25977-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191025135842.25977-1-sashal@kernel.org>
+References: <20191025135842.25977-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a13505ab-52f1-b47d-7b1d-45552982fc82@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 7:59 AM, Colin Ian King wrote:
-> On 25/10/2019 14:56, Jens Axboe wrote:
->> On 10/25/19 6:54 AM, Jens Axboe wrote:
->>> On 10/25/19 6:43 AM, Colin King wrote:
->>>> From: Colin Ian King <colin.king@canonical.com>
->>>>
->>>> Shifting the integer value 1U is evaluated with type unsigned int
->>>> using 32-bit arithmetic and then used in an expression that expects
->>>> a 64-bit value, so there is potentially an integer overflow. Fix this
->>>> by using the BIT_ULL macro to perform the shift and avoid the overflow.
->>>
->>> Good catch, that should indeed have been 1ULL. I'll fold in your
->>> fix, thanks!
->>
->> BTW, this missed the same issue on the clear side of it, in
->> io_worker_handle_work(). I've fixed that one up the same way.
->>
-> Ah, good, somehow the scanner missed that.
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-Something to take a look at! :-)
+[ Upstream commit e1aa1a1db3b01c9890e82cf065cee99962ba1ed9 ]
 
+Fix following lockdep warning disabling bh in
+ath_dynack_node_init/ath_dynack_node_deinit
+
+[   75.955878] --------------------------------
+[   75.955880] inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+[   75.955884] swapper/0/0 [HC0[0]:SC1[3]:HE1:SE0] takes:
+[   75.955888] 00000000792a7ee0 (&(&da->qlock)->rlock){+.?.}, at: ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.955905] {SOFTIRQ-ON-W} state was registered at:
+[   75.955912]   lock_acquire+0x9a/0x160
+[   75.955917]   _raw_spin_lock+0x2c/0x70
+[   75.955927]   ath_dynack_node_init+0x2a/0x60 [ath9k_hw]
+[   75.955934]   ath9k_sta_state+0xec/0x160 [ath9k]
+[   75.955976]   drv_sta_state+0xb2/0x740 [mac80211]
+[   75.956008]   sta_info_insert_finish+0x21a/0x420 [mac80211]
+[   75.956039]   sta_info_insert_rcu+0x12b/0x2c0 [mac80211]
+[   75.956069]   sta_info_insert+0x7/0x70 [mac80211]
+[   75.956093]   ieee80211_prep_connection+0x42e/0x730 [mac80211]
+[   75.956120]   ieee80211_mgd_auth.cold+0xb9/0x15c [mac80211]
+[   75.956152]   cfg80211_mlme_auth+0x143/0x350 [cfg80211]
+[   75.956169]   nl80211_authenticate+0x25e/0x2b0 [cfg80211]
+[   75.956172]   genl_family_rcv_msg+0x198/0x400
+[   75.956174]   genl_rcv_msg+0x42/0x90
+[   75.956176]   netlink_rcv_skb+0x35/0xf0
+[   75.956178]   genl_rcv+0x1f/0x30
+[   75.956180]   netlink_unicast+0x154/0x200
+[   75.956182]   netlink_sendmsg+0x1bf/0x3d0
+[   75.956186]   ___sys_sendmsg+0x2c2/0x2f0
+[   75.956187]   __sys_sendmsg+0x44/0x80
+[   75.956190]   do_syscall_64+0x55/0x1a0
+[   75.956192]   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   75.956194] irq event stamp: 2357092
+[   75.956196] hardirqs last  enabled at (2357092): [<ffffffff818c62de>] _raw_spin_unlock_irqrestore+0x3e/0x50
+[   75.956199] hardirqs last disabled at (2357091): [<ffffffff818c60b1>] _raw_spin_lock_irqsave+0x11/0x80
+[   75.956202] softirqs last  enabled at (2357072): [<ffffffff8106dc09>] irq_enter+0x59/0x60
+[   75.956204] softirqs last disabled at (2357073): [<ffffffff8106dcbe>] irq_exit+0xae/0xc0
+[   75.956206]
+               other info that might help us debug this:
+[   75.956207]  Possible unsafe locking scenario:
+
+[   75.956208]        CPU0
+[   75.956209]        ----
+[   75.956210]   lock(&(&da->qlock)->rlock);
+[   75.956213]   <Interrupt>
+[   75.956214]     lock(&(&da->qlock)->rlock);
+[   75.956216]
+                *** DEADLOCK ***
+
+[   75.956217] 1 lock held by swapper/0/0:
+[   75.956219]  #0: 000000003bb5675c (&(&sc->sc_pcu_lock)->rlock){+.-.}, at: ath9k_tasklet+0x55/0x240 [ath9k]
+[   75.956225]
+               stack backtrace:
+[   75.956228] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc1-wdn+ #13
+[   75.956229] Hardware name: Dell Inc. Studio XPS 1340/0K183D, BIOS A11 09/08/2009
+[   75.956231] Call Trace:
+[   75.956233]  <IRQ>
+[   75.956236]  dump_stack+0x67/0x90
+[   75.956239]  mark_lock+0x4c1/0x640
+[   75.956242]  ? check_usage_backwards+0x130/0x130
+[   75.956245]  ? sched_clock_local+0x12/0x80
+[   75.956247]  __lock_acquire+0x484/0x7a0
+[   75.956250]  ? __lock_acquire+0x3b9/0x7a0
+[   75.956252]  lock_acquire+0x9a/0x160
+[   75.956259]  ? ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.956262]  _raw_spin_lock_bh+0x34/0x80
+[   75.956268]  ? ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.956275]  ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.956280]  ath_rx_tasklet+0xd09/0xe90 [ath9k]
+[   75.956286]  ath9k_tasklet+0x102/0x240 [ath9k]
+[   75.956288]  tasklet_action_common.isra.0+0x6d/0x170
+[   75.956291]  __do_softirq+0xcc/0x425
+[   75.956294]  irq_exit+0xae/0xc0
+[   75.956296]  do_IRQ+0x8a/0x110
+[   75.956298]  common_interrupt+0xf/0xf
+[   75.956300]  </IRQ>
+[   75.956303] RIP: 0010:cpuidle_enter_state+0xb2/0x400
+[   75.956308] RSP: 0018:ffffffff82203e70 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffd7
+[   75.956310] RAX: ffffffff82219800 RBX: ffffffff822bd0a0 RCX: 0000000000000000
+[   75.956312] RDX: 0000000000000046 RSI: 0000000000000006 RDI: ffffffff82219800
+[   75.956314] RBP: ffff888155a01c00 R08: 00000011af51aabe R09: 0000000000000000
+[   75.956315] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
+[   75.956317] R13: 00000011af51aabe R14: 0000000000000003 R15: ffffffff82219800
+[   75.956321]  cpuidle_enter+0x24/0x40
+[   75.956323]  do_idle+0x1ac/0x220
+[   75.956326]  cpu_startup_entry+0x14/0x20
+[   75.956329]  start_kernel+0x482/0x489
+[   75.956332]  secondary_startup_64+0xa4/0xb0
+
+Fixes: c774d57fd47c ("ath9k: add dynamic ACK timeout estimation")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Tested-by: Koen Vandeputte <koen.vandeputte@ncentric.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath9k/dynack.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath9k/dynack.c b/drivers/net/wireless/ath/ath9k/dynack.c
+index 22b3cc4c27cda..58205a5bd74b5 100644
+--- a/drivers/net/wireless/ath/ath9k/dynack.c
++++ b/drivers/net/wireless/ath/ath9k/dynack.c
+@@ -285,9 +285,9 @@ void ath_dynack_node_init(struct ath_hw *ah, struct ath_node *an)
+ 
+ 	an->ackto = ackto;
+ 
+-	spin_lock(&da->qlock);
++	spin_lock_bh(&da->qlock);
+ 	list_add_tail(&an->list, &da->nodes);
+-	spin_unlock(&da->qlock);
++	spin_unlock_bh(&da->qlock);
+ }
+ EXPORT_SYMBOL(ath_dynack_node_init);
+ 
+@@ -301,9 +301,9 @@ void ath_dynack_node_deinit(struct ath_hw *ah, struct ath_node *an)
+ {
+ 	struct ath_dynack *da = &ah->dynack;
+ 
+-	spin_lock(&da->qlock);
++	spin_lock_bh(&da->qlock);
+ 	list_del(&an->list);
+-	spin_unlock(&da->qlock);
++	spin_unlock_bh(&da->qlock);
+ }
+ EXPORT_SYMBOL(ath_dynack_node_deinit);
+ 
 -- 
-Jens Axboe
+2.20.1
 
