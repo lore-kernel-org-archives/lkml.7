@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D0FCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ADECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA1122070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E862070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732799AbfJYSIY (ORCPT
+        id S1732862AbfJYSIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:24 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46838 "EHLO
+        Fri, 25 Oct 2019 14:08:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46776 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731468AbfJYSFp (ORCPT
+        by vger.kernel.org with ESMTP id S1731426AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:45 -0400
+        Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0008Ot-Js; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xv-0008OO-PW; Fri, 25 Oct 2019 19:05:35 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001je-Ui; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xv-0001iW-Bi; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        hpa@zytor.com, "Dianzhang Chen" <dianzhangchen0@gmail.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>, bp@alien8.de
-Date:   Fri, 25 Oct 2019 19:03:28 +0100
-Message-ID: <lsq.1572026582.859033438@decadent.org.uk>
+        "Nicolas Dichtel" <nicolas.dichtel@6wind.com>,
+        "Steffen Klassert" <steffen.klassert@secunet.com>,
+        "Anirudh Gupta" <anirudh.gupta@sophos.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>
+Date:   Fri, 25 Oct 2019 19:03:14 +0100
+Message-ID: <lsq.1572026582.942700400@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 27/47] x86/ptrace: Fix possible spectre-v1 in
- ptrace_get_debugreg()
+Subject: [PATCH 3.16 13/47] xfrm: fix sa selector validation
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +57,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dianzhang Chen <dianzhangchen0@gmail.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
+commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee upstream.
 
-The index to access the threads ptrace_bps is controlled by userspace via
-syscall: sys_ptrace(), hence leading to a potential exploitation of the
-Spectre variant 1 vulnerability.
+After commit b38ff4075a80, the following command does not work anymore:
+$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
+  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
+  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
 
-The index can be controlled from:
-    ptrace -> arch_ptrace -> ptrace_get_debugreg.
+In fact, the selector is not mandatory, allow the user to provide an empty
+selector.
 
-Fix this by sanitizing the user supplied index before using it access
-thread->ptrace_bps.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
-[bwh: Backported to 3.16: fold in fix-up from commit 223cea6a4f05
- "Merge branch 'x86-pti-for-linus' of ..."]
+Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
+CC: Anirudh Gupta <anirudh.gupta@sophos.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/ptrace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/xfrm/xfrm_user.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -24,6 +24,7 @@
- #include <linux/rcupdate.h>
- #include <linux/export.h>
- #include <linux/context_tracking.h>
-+#include <linux/nospec.h>
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -165,6 +165,9 @@ static int verify_newsa_info(struct xfrm
+ 	}
  
- #include <asm/uaccess.h>
- #include <asm/pgtable.h>
-@@ -707,7 +708,8 @@ static unsigned long ptrace_get_debugreg
- 	unsigned long val = 0;
- 
- 	if (n < HBP_NUM) {
--		struct perf_event *bp = thread->ptrace_bps[n];
-+		int index = array_index_nospec(n, HBP_NUM);
-+		struct perf_event *bp = thread->ptrace_bps[index];
- 
- 		if (bp)
- 			val = bp->hw.info.address;
+ 	switch (p->sel.family) {
++	case AF_UNSPEC:
++		break;
++
+ 	case AF_INET:
+ 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+ 			goto out;
 
