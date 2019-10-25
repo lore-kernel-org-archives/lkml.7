@@ -2,116 +2,133 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DCECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F7BCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B23621929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB62621929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DI7Heg3R"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="F+4Nk17K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395396AbfJYPcR (ORCPT
+        id S2395408AbfJYPcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:32:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37352 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731226AbfJYPcR (ORCPT
+        Fri, 25 Oct 2019 11:32:19 -0400
+Received: from mail-io1-f47.google.com ([209.85.166.47]:36261 "EHLO
+        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731226AbfJYPcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:32:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+/gvmWPLED77Ax/dLgOjX8mNE1xoFxjC6a1H8EDfWLI=; b=DI7Heg3Rzw+oStT3b/lEoSSFU
-        hZUtuX0mKVr3jNZkkAZE/ptp6HYkT5GkRd1yaOAJwpTmEVIr14js9eAdoPF90102RlY+y6GSupnKV
-        FgUi5TK00zzM0kNJrIiNuswOq1UkVjLXMCTmvzqMkXutsJyta4VE+7reWjmy9nqXD70GrkYUfjIFG
-        67FXpRJD0V+qltjeOFImhWTnNBac2c+aaISiU0qB9/gatrM5xbSLVszuOGfXsc+5K5DEbqcj9HqWu
-        +KSG29Sjk/lefD5Pd/SoyL5KBdx/d4zvpjMFdQzr4siCPMttMDq9mqXyJH4z5usGzfXihXZO+aEEG
-        RcF61RLIQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iO1ZN-0003Wd-Ux; Fri, 25 Oct 2019 15:32:05 +0000
-Date:   Fri, 25 Oct 2019 08:32:05 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     hughd@google.com, aarcange@redhat.com,
-        kirill.shutemov@linux.intel.com, gavin.dg@linux.alibaba.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [v4 PATCH] mm: thp: handle page cache THP correctly in
- PageTransCompoundMap
-Message-ID: <20191025153205.GQ2963@bombadil.infradead.org>
-References: <1571865575-42913-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191024135547.GH2963@bombadil.infradead.org>
- <c3932146-1b91-fa90-b947-9d4ebe5c5135@linux.alibaba.com>
+        Fri, 25 Oct 2019 11:32:18 -0400
+Received: by mail-io1-f47.google.com with SMTP id c16so2895639ioc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:32:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=9SGhr83kGhgMvdo0bnTpUhl94AG5c9MOBhWi01H1Iug=;
+        b=F+4Nk17KdT82i8j5y2iA+2wDLHVgdDsF5PCZ/vdSJhuRCz/ZUX5ixCLqiW5gGmqg3g
+         R0uKgNv2nFd+eMtDoadUcSBjm+CVzqchlyKso1bTnpiw17lLOQyjFYX6t6hksl7y1hKM
+         5pYyDOvRvcT4X26/pq6edwCh0UNQCCra+SqmY+yQym61QWEhAgWsLpM6heetTlv/cKk9
+         KrPpP/p9XSyn5XGJv7K6edxVuqD7kQKx41BgouHmk43pRrcsLAJX7Ey6IYcDgbxYeRk1
+         cHNZ8NWFDcNzxIDLZWuPRpka0bm8YilvouWZo3gQJTSimbN1tl6Jfjp4FN/guAtnEcuy
+         RdBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9SGhr83kGhgMvdo0bnTpUhl94AG5c9MOBhWi01H1Iug=;
+        b=n7Tz2fylvDWJ5foeZI4M+NFVjcW5/IuK5mxOZ+rf44KNtkAxIS+YWfN6Ojn3m2pQ99
+         ru6WZIT+SUEIGQ2BnS3akdwyQ0pBzDezHrB9rBwjPsFUykI0HtYvQ4W2SUX2gtS1wL9+
+         Acf16+PiCeCQ+KsL6FLAZH4tCADOQQmIml2dChqjBthldCOWxECJ/KwHz+kGDiLzpbmh
+         MCv6CMXAQspttN1lTsLwQEpbFKagfE6hTjHWsZSreJJLwoSvtHyesOR4N3waA+Nlf5QW
+         6DH+dEKpOP4ZfcSmIMORHMvPnIsN16DWTDX+dB5lK5SjP7tTlz5zimPiXpWOYvHYGvba
+         wcQg==
+X-Gm-Message-State: APjAAAUSPLgUJ7KQJsGxDEnN6cBcskmkpswvqCiDMUm/zY1LNu29pIru
+        unT3XE3Nm722+mwcDsvSpjroZRyhvk7cdQ==
+X-Google-Smtp-Source: APXvYqwWN4xdDosFK6XsmDmPL6Ua8uL4QwxiANjl9J1p/mLV6gwtbsWK7zVFaY9idQhPOH1IpRi3yw==
+X-Received: by 2002:a6b:e615:: with SMTP id g21mr4239446ioh.56.1572017536570;
+        Fri, 25 Oct 2019 08:32:16 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s90sm392468ill.40.2019.10.25.08.32.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 08:32:15 -0700 (PDT)
+Subject: Re: [BUG][RFC] Miscalculated inflight counter in io_uring
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <bfecc5ba-274b-b2f7-52dc-8ac6e0fab352@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <539958bc-7010-c6dc-7647-b6632b37569c@kernel.dk>
+Date:   Fri, 25 Oct 2019 09:32:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3932146-1b91-fa90-b947-9d4ebe5c5135@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <bfecc5ba-274b-b2f7-52dc-8ac6e0fab352@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 09:33:11AM -0700, Yang Shi wrote:
-> On 10/24/19 6:55 AM, Matthew Wilcox wrote:
-> > On Thu, Oct 24, 2019 at 05:19:35AM +0800, Yang Shi wrote:
-> > > We have usecase to use tmpfs as QEMU memory backend and we would like to
-> > > take the advantage of THP as well.  But, our test shows the EPT is not
-> > > PMD mapped even though the underlying THP are PMD mapped on host.
-> > > The number showed by /sys/kernel/debug/kvm/largepage is much less than
-> > > the number of PMD mapped shmem pages as the below:
-> > > 
-> > > 7f2778200000-7f2878200000 rw-s 00000000 00:14 262232 /dev/shm/qemu_back_mem.mem.Hz2hSf (deleted)
-> > > Size:            4194304 kB
-> > > [snip]
-> > > AnonHugePages:         0 kB
-> > > ShmemPmdMapped:   579584 kB
-> > > [snip]
-> > > Locked:                0 kB
-> > > 
-> > > cat /sys/kernel/debug/kvm/largepages
-> > > 12
-> > > 
-> > > And some benchmarks do worse than with anonymous THPs.
-> > > 
-> > > By digging into the code we figured out that commit 127393fbe597 ("mm:
-> > > thp: kvm: fix memory corruption in KVM with THP enabled") checks if
-> > > there is a single PTE mapping on the page for anonymous THP when
-> > > setting up EPT map.  But, the _mapcount < 0 check doesn't fit to page
-> > > cache THP since every subpage of page cache THP would get _mapcount
-> > > inc'ed once it is PMD mapped, so PageTransCompoundMap() always returns
-> > > false for page cache THP.  This would prevent KVM from setting up PMD
-> > > mapped EPT entry.
-> > > 
-> > > So we need handle page cache THP correctly.  However, when page cache
-> > > THP's PMD gets split, kernel just remove the map instead of setting up
-> > > PTE map like what anonymous THP does.  Before KVM calls get_user_pages()
-> > > the subpages may get PTE mapped even though it is still a THP since the
-> > > page cache THP may be mapped by other processes at the mean time.
-> > > 
-> > > Checking its _mapcount and whether the THP has PTE mapped or not.
-> > > Although this may report some false negative cases (PTE mapped by other
-> > > processes), it looks not trivial to make this accurate.
-> > I don't understand why you care how it's mapped into userspace.  If there
-> > is a PMD-sized page in the page cache, then you can use a PMD mapping
-> > in the EPT tables to map it.  Why would another process having a PTE
-> > mapping on the page cause you to not use a PMD mapping?
+On 10/25/19 3:48 AM, Pavel Begunkov wrote:
+> In case of IORING_SETUP_SQPOLL | IORING_SETUP_IOPOLL:
 > 
-> We don't care if the THP is PTE mapped by other process, but either
-> PageDoubleMap flag or _mapcount/compound_mapcount can't tell us if the PTE
-> map comes from the current process or other process unless gup could return
-> pmd's status.
+> @inflight count returned by io_submit_sqes() is the number of entries
+> picked up from a sqring including already completed/failed. And
+> completed but not failed requests will be placed into @poll_list.
+> 
+> Then io_sq_thread() tries to poll @inflight events, even though failed
+> won't appear in @poll_list. Thus, it will think that there are always
+> something to poll (i.e. @inflight > 0)
+> 
+> There are several issues with this:
+> 1. io_sq_thread won't ever sleep
+> 2. io_sq_thread() may be left running and actively polling even after
+> user process is destroyed
+> 3. the same goes for mm_struct with all vmas of the user process
+> TL;DR;
+> awhile @inflight > 0, io_sq_thread won't put @cur_mm, so locking
+> recycling of vmas used for rings' mapping, which hold refcount of
+> io_uring's struct file. Thus, io_uring_release() won't be called, as
+> well as kthread_{park,stop}(). That's all in case when the user process
+> haven't unmapped rings.
+> 
+> 
+> I'm not sure how to fix it better:
+> 1. try to put failed into poll_list (grabbing mutex).
+> 
+> 2. test for zero-inflight case with comparing sq and cq. something like
+> ```
+> if (nr_polled == 0) {
+> 	lock(comp_lock);
+> 	if (cached_cq_head == cached_sq_tail)
+> 		inflight = 0;
+> 	unlock(comp_lock);
+> }
+> ```
+> But that's adds extra spinlock locking in fast-path. And that's unsafe
+> to use non-cached heads/tails, as it could be maliciously changed by
+> userspace.
+> 
+> 3. Do some counting of failed (probably needs atomic or synchronisation)
+> 
+> 4. something else?
 
-But why do you care if the THP is PTE mapped by _this_ process?
-This process has a reference to the page; the page is PMD sized and PMD
-aligned, so you can use a PMD mapping in the guest, regardless of how
-it's mapped by userspace.  Maybe this process doesn't even have the page
-mapped at all?
+Can we just look at the completion count? Ala:
+
+prev_tail = ctx->cached_cq_tail;
+inflight += io_submit_sqes(ctx, to_submit, cur_mm != NULL,      
+                                             mm_fault);
+if (prev_tail != ctx->cached_cq_tail)
+	inflight -= (ctx->cached_cq_tail - prev_tail);
+
+or something like that.
+
+-- 
+Jens Axboe
 
