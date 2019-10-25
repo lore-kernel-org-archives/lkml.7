@@ -2,97 +2,88 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BFFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66253CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7990C21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CA52084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572039145;
-	bh=0ObkKRXqTP3o1EclY5QQh8rma1cY+y7OhQpJFI1TkKw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uMzkM6fHTa1qvNTgtfiPSuK8atyhfwLDdJdpnr4iVbfafXXX88LnPuLfvUmBAHW6n
-	 xBGBaUTSpGQiMQzbsLefy9fO8dHPBVUdQOjEe5TJKVVhhUochc7bCILXj8f5qsYcrs
-	 cHi15OSGsQw/k3+8Nb2mu/WTJq/VH9XG2xeIpMyY=
+	s=default; t=1572039179;
+	bh=SZUK9+O0OoECdBmeSIf56mgCIoPc3bu1KThHvH15OVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0tgYiOVDno1mD1EOCKR7PGM7sOUKXwIyFBnb34dSB7RX16DplhjymzZ9MMGsMUowe
+	 6sHWAm5vOrC8xVy7eyvmY9Ltc6+oVXNEQAStLdMhNQfEFKbYFzCXJGE1QJeLg7tx4U
+	 lU4z9FecDS2ip4IuMqsB2Pxe8Oiw+qj/zmMdzKiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfJYVcY (ORCPT
+        id S1726506AbfJYVc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:32:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbfJYVcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:32:24 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39215222BD;
-        Fri, 25 Oct 2019 21:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572039141;
-        bh=0ObkKRXqTP3o1EclY5QQh8rma1cY+y7OhQpJFI1TkKw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=T/tcBt0tR0VkYhbFAjIpfIpWfv9Qp+NQh7+uphLWp5GzeftLprDvzscysNIR+1MJO
-         yjE79XXURlFI5e9YuPWzoAty2f17HbWrwZQUwv96BaCveEFfca+ieHDbB/Py0+eu9S
-         oOx0S/4FxsVYyn8ImQXtxj5ftwgybT9mdMcUBI/s=
-Date:   Fri, 25 Oct 2019 14:32:20 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     zhanglin <zhang.lin16@zte.com.cn>
-Cc:     dan.j.williams@intel.com, jgg@ziepe.ca, mingo@kernel.org,
-        dave.hansen@linux.intel.com, namit@vmware.com, bp@suse.de,
-        christophe.leroy@c-s.fr, rdunlap@infradead.org, osalvador@suse.de,
-        richardw.yang@linux.intel.com, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        jiang.xuexin@zte.com.cn, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] kernel: Restrict permissions of /proc/iomem.
-Message-Id: <20191025143220.cb15a90fe95a4ebdda70f89c@linux-foundation.org>
-In-Reply-To: <1571993801-12665-1-git-send-email-zhang.lin16@zte.com.cn>
-References: <1571993801-12665-1-git-send-email-zhang.lin16@zte.com.cn>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 25 Oct 2019 17:32:58 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46967 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfJYVc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 17:32:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 89so2994658oth.13;
+        Fri, 25 Oct 2019 14:32:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z0Dfu2WmLrW82obqVEzdgL4RLEpx99A6YNjCZkr1AdY=;
+        b=tWphUpcA7ok/rG8n8/XWesvW/0xO/Jtrnae3TxShxPqwGsz6nrJE7MMUXRF0YsLLUC
+         U5L4a5LZKsTvWXLG+GNtOTr8cLw/7VfYt5ZkiGQrbAD1NPU6wJCcyUTYXfWH2EGfI7ZI
+         LkzCtGl1K54RMJXgUmBHSlE9MZvZsDgrBl9W1UY2ajiykT36fGnFw1LdBthCFZM02CxU
+         KQD0vESGULJEfmm68DGI0dQ7g2tuCskEFHDzIP5xHO+aZUT4o1NhISnCfveKtU08wahR
+         vcunTQn0yKvj6DJ18GtA4qRhBBpSB2BRlT7xAf023Sp/2fXDY/kPI+gJtYdj2QrN+JZF
+         4dxA==
+X-Gm-Message-State: APjAAAWFiDiihH+NDUScxE+vOOp+LSVOSMb9kOEK8atLSEp5r/IJspAK
+        cH7W6Q7Wk2xcoTg5xvcnIkoao1A=
+X-Google-Smtp-Source: APXvYqz5bA/sDLT9LYdiIgseo6TuDUbb3NL+cEtzFm8N8YSHB9VLO4PAlGBNFEbX6YVVd8nSUc1Qdw==
+X-Received: by 2002:a9d:65cb:: with SMTP id z11mr737532oth.195.1572039176538;
+        Fri, 25 Oct 2019 14:32:56 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e102sm1132401ote.78.2019.10.25.14.32.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 14:32:55 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:32:55 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Andy Yan <andy.yan@rock-chips.com>
+Cc:     heiko@sntech.de, kever.yang@rock-chips.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add doc about rk3308 General
+ Register Files
+Message-ID: <20191025213255.GA21912@bogus>
+References: <20191021084437.28279-1-andy.yan@rock-chips.com>
+ <20191021084555.28356-1-andy.yan@rock-chips.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021084555.28356-1-andy.yan@rock-chips.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019 16:56:41 +0800 zhanglin <zhang.lin16@zte.com.cn> wrote:
-
-> The permissions of /proc/iomem currently are -r--r--r--. Everyone can
-> see its content. As iomem contains information about the physical memory
-> content of the device, restrict the information only to root.
+On Mon, 21 Oct 2019 16:45:55 +0800, Andy Yan wrote:
+> RK3308 GRF is divided into four sections: GRF, SGRF,
+> DETECTGRF, COREGRF. This patch add documentation for
+> it.
 > 
-> ...
->
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -139,7 +139,8 @@ static int __init ioresources_init(void)
->  {
->  	proc_create_seq_data("ioports", 0, NULL, &resource_op,
->  			&ioport_resource);
-> -	proc_create_seq_data("iomem", 0, NULL, &resource_op, &iomem_resource);
-> +	proc_create_seq_data("iomem", S_IRUSR, NULL, &resource_op,
-> +			&iomem_resource);
->  	return 0;
->  }
->  __initcall(ioresources_init);
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/soc/rockchip/grf.txt          | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
 
-It's risky to change things like this - heaven knows which userspace
-applications might break.
-
-Possibly we could obfuscate the information if that is considered
-desirable.  Why is this a problem anyway?  What are the possible
-exploit scenarios?
-
-Can't the same info be obtained by running dmesg and looking at the
-startup info?
-
-Can't the user who is concerned about this run chmod 0400 /proc/iomem
-at boot?
-
-Maybe Kees has an opinion?
-
+Reviewed-by: Rob Herring <robh@kernel.org>
