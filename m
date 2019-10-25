@@ -2,228 +2,185 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027DACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12A3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF46821D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F6921D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:55:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foVyjmSW"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dDbon0qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393555AbfJYLyW (ORCPT
+        id S2502026AbfJYLz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:54:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36967 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730372AbfJYLyW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:54:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e11so2016677wrv.4
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 04:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D1LWEk5NDwzMMuF3rkTFZO8+rZQPu2LeOg3dA41BWEk=;
-        b=foVyjmSWVCB+ODO3mICLm2j4i1gb55MmAGwOlRsBDwiOFyHF2PL2yvwKoBkKn0vNqK
-         ELdUYWXNM7Vni1z1T2d0hdDudJFR0dC7wh8jmtXzGAfQ8K2GZXufbOQVnTenI3jyoIW8
-         PeDyz+27Vp74ZHKkEGbM1R5yJ+YM8/E0gyL87dsPxZhQWW8a5u1fMUeI1B2Gd5Pwou4b
-         WrXB5iCwMrw2gBka1Yh5w0qgaaQfYvL3cDY4uREkwJPwaSFXG7nJ+0QXDuih8YiTfE2V
-         KysDj2yiXEc1ruL6pjOjsNLMWRuYzEuCsfg60DEdisNtOTVrBD/TEu/SNWFnWDPrBYRv
-         B0+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D1LWEk5NDwzMMuF3rkTFZO8+rZQPu2LeOg3dA41BWEk=;
-        b=NSDdZ/soFO9+sTavOYc6K1n9tC1fZzWvZICg3cMcN7am9zqb0RErbxayNWu7BNnUVc
-         jmDEW5tZShzTVuMRpsmJTJ3cZmD8KjSB5l75CG6wZXv3fbMrcLO/tJWETekPkF7sGdbt
-         ugeyBf1Pe4/izBE741mcvOf+eN1NSwINp8OHRuxXohEtevFJXpCm1Iml9DEmrzuYd3FB
-         JGuodnN4/0uOjyd2tHuNwZjXkhCIaWXr2NICJAp9Wlv7JB0LW1+skQFltOL4t9w0TzPs
-         Fvq/uBMHusLutEqKu53+Us2PY88MABz6/lY3EahzZs0P4W93O3NMvkK1Zv5YVEN9+SZ1
-         1tyQ==
-X-Gm-Message-State: APjAAAXgf4VW27LGZBB4aqjYFhQ6waALTeHt403dLJZenSYYUER9Bwq+
-        jVPnK/QtUkSrZpP1xe0WBInA4i0HWphD0J+5T90=
-X-Google-Smtp-Source: APXvYqz+3Xw9UHDe/WVlrgvvSEnMNWID/tGfnWcDU7yo8lh7WP7z5yB8vBQrTlwrLsJuXGo9ptbRDBtG6Em1EK/VQ30=
-X-Received: by 2002:adf:edcc:: with SMTP id v12mr2580991wro.158.1572004457239;
- Fri, 25 Oct 2019 04:54:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191025075335.GC32742@smile.fi.intel.com> <0d3919c9-40e0-7343-0bbc-159984348216@redhat.com>
- <CAHtQpK5ZSOMKY4U0y-HHHH6QiuYRWHr90SAzjaACpAGgTzALLQ@mail.gmail.com> <0136a15a-7af4-dabc-a857-fcd80d5576a9@redhat.com>
-In-Reply-To: <0136a15a-7af4-dabc-a857-fcd80d5576a9@redhat.com>
-From:   Andrey Zhizhikin <andrey.z@gmail.com>
-Date:   Fri, 25 Oct 2019 13:54:05 +0200
-Message-ID: <CAHtQpK42mbpdZ5ppU6gjNvKOBZU8+DfdWLEmvjLRa0MnVTZZww@mail.gmail.com>
-Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
- Trail Whiskey Cove PMIC
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+        Fri, 25 Oct 2019 07:55:27 -0400
+Received: from mout.gmx.net ([212.227.15.19]:44325 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbfJYLz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 07:55:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1572004515;
+        bh=mLDxk03QgZ49jLBWzJk07zrzftgPYbqYvmcg2mY5ycA=;
+        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
+         References;
+        b=dDbon0qmEYRdDCA8JWudMc2B08QtrpSI70J48PhNyA4bQePEKdauZ5emLd3cx4z02
+         SoUN4d4JEimPvJpjFjsRlqwRwIcxMeFhjFPMEdkhxfR2/gEbgmRFIAFkhf0NDT/3Ul
+         DThNKvNv8+0RLXToE4l5cM3qAPnVrzREwjvEw3qI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mnps0-1hd4e11Vso-00pNxA; Fri, 25
+ Oct 2019 13:55:15 +0200
+Message-ID: <d740f26ea94f9f1c2fc0530c1ea944f8e59aad85.camel@gmx.de>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+From:   Robert Stupp <snazy@gmx.de>
+Reply-To: snazy@snazy.de
+To:     Michal Hocko <mhocko@kernel.org>, snazy@snazy.de
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Date:   Fri, 25 Oct 2019 13:55:13 +0200
+In-Reply-To: <20191025114633.GE17610@dhcp22.suse.cz>
+References: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
+         <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
+         <20191025092143.GE658@dhcp22.suse.cz>
+         <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
+         <20191025114633.GE17610@dhcp22.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cNUvOUD9nrltn6/gYgTexXM/uEZqc30ijw4NkgQvGpOvolVX00J
+ b408xrKUAZ9HQfCGo7fRA03Lro5arpDxTSfurS8/NfK0ks/UWThAd+0MUH1RL22JDs/57yZ
+ AH17KRh7KXV0EdQyVIzrQ2IuE3YCK1gEriC1hMzgV8oTBzZ3QCCaX41uC+AGg82QxG/G4Fm
+ V3oMf2P3DcI26OMPdtXIQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:38xgz3rSgBw=:G7lsGuMYS1aNz2KyfxDTPn
+ rMVxSgm6FkKrsQ7VGpMo2/qaHdxIZmM407ia+jo5TnYHVaX/n7q5gsQcK0dSZMcOUt5EbyG/Z
+ HSP9A2fidEqPUQAnQQnfxREzoS0ngwYuIKHowSj0/4k01nCP8RZwq8STcKN59oLoHtZOJz/S4
+ kUdFVLRTGt5bXunbg+NrUv4cuD+uTPSaKN/W8QfNhItFqK1mO1MDep9aFazkfqi/oRVGktSAs
+ jkc4PgVa47LvOSNZF8KdI8SLXuu/zNbk3DFEWKEhKEauI2IIqcqYUxO5u7UyR8z29uIzgKJW+
+ bNTcfzwfYHFnYe5EpUOJWfAldgir52ALMIiAKij+OPw4tLPJ7biOjymlvIMc4Tm9roCYyoH2c
+ WdEt/q7/bdpE//sA0Y/442JyJ3iIhTx0Oqg3BXhq7v1RRqQzVfLsxeyUGqTQBKCsxNgUW2Gjn
+ lutHjFbtxfqCR3XPh4rtjL5MMbfzBrHSsVNx8CV02Jn9ezskQsVqeB1oGQ1lNCYu3hIqxOcuT
+ Yt31sgwyVraTrxWq+CUdEd7a7DQ4zaNq12BQF/wA7oHA1SXVY4K0u334nf7wqc8m5PEzavCkY
+ ZQP364yqDEGN+4+l4HxhwLiI5U08u4sn9M6FdH1z2fCKB57eDZ+77cyHWC+KXv8dsA9lpRtUc
+ HfWw8xEnR016PRTExq8LysJfyEq8VQDBouXbb798C5CZtX28cZjqsqazp1Q6b9ZI6zZ86S0lt
+ e6dLPmgMVouG6oojsdmmdTm5Qicxbh7N0E4F1ydPEGYk4KSH3VvIvTdCWOWPiVVD2B5e8bmkb
+ dOFvsf967Sd0w9wCNlB1Jk/E83RnbxmHQuf3nU3WTEsbKcOCUlcTOx0BA0jg5XNNMnAoaQPJn
+ v2KxB+LA8TCJKASPpMUc0JoRZauj5QCfOkh+yRuf2jJzYjFg+7lPERNEbe0N8+ReSmAINUCVv
+ b4bEXbwnfIQXbeRdgsdlbVYAHcCieWZmq7vbiAO/zDJLT/kRg9XwzKDbE7AqHFZu5WsGIUL+/
+ Wp42m8XcqJc/X1Ge5HmhN/BIOAE7XR0uoFM/DnNIIXHS0Jct/WlNjR1EvNLn7Z3oGQ7FBRSz0
+ DGaS73qqJil49j2rnQSByrjdhGoGtH7GsLi4ZlD9Tu2sDroW4Rajq5/PspBFzhxu6tB+eEnjS
+ SYYiXREdn/Z+jJu1yy0uPqpj8A8k/PsmngtqiZC92BAWlzmeMumcGjB9+HGxoxiYda5fGQKHL
+ dgAqEUWlcteriUf1aHyeIlO1zmMFkzdmKOdNaVA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Fri, Oct 25, 2019 at 12:45 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 25-10-2019 12:11, Andrey Zhizhikin wrote:
-> > On Fri, Oct 25, 2019 at 11:38 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 25-10-2019 09:53, Andy Shevchenko wrote:
-> >>> On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
-> >>>> This patchset introduces additional regulator driver for Intel Cherry
-> >>>> Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
-> >>>> PMIC, which is used to instantiate this regulator.
-> >>>>
-> >>>> Regulator support for this PMIC was present in kernel release from Intel
-> >>>> targeted Aero platform, but was not entirely ported upstream and has
-> >>>> been omitted in mainline kernel releases. Consecutively, absence of
-> >>>> regulator caused the SD Card interface not to be provided with Vqcc
-> >>>> voltage source needed to operate with UHS-I cards.
-> >>>>
-> >>>> Following patches are addessing this issue and making sd card interface
-> >>>> to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
-> >>>> of the SD Card interface in consumers and exposes optional "vqmmc"
-> >>>> voltage source, which mmc driver uses to switch signalling voltages
-> >>>> between 1.8V and 3.3V.
-> >>>>
-> >>>> This set contains of 2 patches: one is implementing the regulator driver
-> >>>> (based on a non upstreamed version from Intel Aero), and another patch
-> >>>> registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
-> >>>
-> >>> Thank you.
-> >>> Hans, Cc'ed, has quite interested in these kind of patches.
-> >>> Am I right, Hans?
-> >>
-> >> Yes since I do a lot of work on Bay and Cherry Trail hw enablement I'm
-> >> always interested in CHT specific patches.
-> >>
-> >> Overall this series looks good (from a high level view I did not
-> >> do a detailed review) but I wonder if we really want to export all the
-> >> regulators when we just need the vsdio one?
+On Fri, 2019-10-25 at 13:46 +0200, Michal Hocko wrote:
+> On Fri 25-10-19 13:02:23, Robert Stupp wrote:
+> > On Fri, 2019-10-25 at 11:21 +0200, Michal Hocko wrote:
+> > > On Thu 24-10-19 16:34:46, Randy Dunlap wrote:
+> > > > [adding linux-mm + people]
+> > > >
+> > > > On 10/24/19 12:36 AM, Robert Stupp wrote:
+> > > > > Hi guys,
+> > > > >
+> > > > > I've got an issue with `mlockall(MCL_CURRENT)` after
+> > > > > upgrading
+> > > > > Ubuntu 19.04 to 19.10 - i.e. kernel version change from 5.0.x
+> > > > > to
+> > > > > 5.3.x.
+> > > > >
+> > > > > The following simple program hangs forever with one CPU
+> > > > > running
+> > > > > at 100% (kernel):
+> > >
+> > > Can you capture everal snapshots of proc/$(pidof $YOURTASK)/stack
+> > > while
+> > > this is happening?
 > >
-> > I thought about this point, and actually came to a personal conclusion
-> > that if I do this as a new driver - then it is better to list all
-> > possible regulators, creating some sort of "skeleton" which people
-> > could then work on if need be. I do agree that at the present moment
-> > the one regulator which is exposed is the one for vsdio, but listing
-> > all possibilities should not hurt. This was my motivation to put them
-> > all into the driver on the first place.
+> > Sure,
 > >
-> > If you believe additional regulator elements should be removed from
-> > this version of the driver - I can clean them up and come up with v2
-> > here.
+> > Approach:
+> > - one shell running
+> >   while true; do cat /proc/$(pidof test)/stack; done
+> > - starting ./test in another shell + ctrl-c quite some times
 > >
-> >>
-> >> Most regulators are controlled by either the P-Unit inside the CHT SoC
-> >> or through ACPI OpRegion accesses.  Luckily the regulator subsys does not
-> >> expose a sysfs interface for users to directly poke regulators, but this will
-> >> still make it somewhat easier for users to poke regulators which they should
-> >> leave alone.
+> > Vast majority of all ./test invocations return an empty 'stack'
+> > file.
+> > Some tries, maybe 1 out of 20, returned these snapshots.
+> > Was running 5.3.7 for this test.
 > >
-> > Agree, this is a valid point. But honestly I would really be surprised
-> > if a user would directly touch something which can burn his silicon to
-> > pieces. Regulators are usually not approached by users; unless they
-> > are really HW engineers and know what they are doing.
->
-> True.
->
-> Hmm, I do just realize that the regulator subsystem turns off regulators
-> which are not in use from its pov, which would be kinda bad here.
-
-Interesting point, this I did not know.
-
->
-> It does this when the kernel is done initializing / switches to the
-> initrd or directly to the rootfs. Its been a while since I've last touched
-> this. Have you tried building the regulator driver (and mfd stuff and i2c
-> controller, etc.) into the kernel, so that the regulators work without modules?
-
-This is the first thing that I've tested - I've selected the new
-regulator as built-in, and it is fully operable.
-
->
-> I'm afraid that if you do that they will all get turned off, with expecting
-> results... Although I guess the regulator subsystem may skip this step for
-> regulators without any constrains, to be sure I would have to re-read the code.
-
-I guess (although to 100% sure), that this is exactly the reason why
-this regulator remains operable - it does have neither source nor
-constraints, therefore it remains enabled.
-
->
-> Anyways this is a serious concern which we need to resolve.
->
-> >> Andrey, may I ask which device you are testing this on?
 > >
-> > Sure, I use the original Intel Aero board. It used to have an official
-> > image from Aero team with a heavily patched 4.4.y kernel, but when I
-> > decided to have this updated to the latest stable branch - I've faced
-> > the issue of missing core functionality, which led me to this patch.
+> > [<0>] __handle_mm_fault+0x4c5/0x7a0
+> > [<0>] handle_mm_fault+0xca/0x1f0
+> > [<0>] __get_user_pages+0x230/0x770
+> > [<0>] populate_vma_page_range+0x74/0x80
+> > [<0>] __mm_populate+0xb1/0x150
+> > [<0>] __x64_sys_mlockall+0x11c/0x190
+> > [<0>] do_syscall_64+0x5a/0x130
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [<0>] __handle_mm_fault+0x4c5/0x7a0
+> > [<0>] handle_mm_fault+0xca/0x1f0
+> > [<0>] __get_user_pages+0x230/0x770
+> > [<0>] populate_vma_page_range+0x74/0x80
+> > [<0>] __mm_populate+0xb1/0x150
+> > [<0>] __x64_sys_mlockall+0x11c/0x190
+> > [<0>] do_syscall_64+0x5a/0x130
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> >
+> > [<0>] __handle_mm_fault+0x4c5/0x7a0
+> > [<0>] handle_mm_fault+0xca/0x1f0
+> > [<0>] __get_user_pages+0x230/0x770
+> > [<0>] populate_vma_page_range+0x74/0x80
+> > [<0>] __mm_populate+0xb1/0x150
+> > [<0>] __x64_sys_mlockall+0x11c/0x190
+> > [<0>] do_syscall_64+0x5a/0x130
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> >
+> > [<0>] __do_fault+0x3c/0x130
+> > [<0>] do_fault+0x248/0x640
+> > [<0>] __handle_mm_fault+0x4c5/0x7a0
+> > [<0>] handle_mm_fault+0xca/0x1f0
+> > [<0>] __get_user_pages+0x230/0x770
+> > [<0>] populate_vma_page_range+0x74/0x80
+> > [<0>] __mm_populate+0xb1/0x150
+> > [<0>] __x64_sys_mlockall+0x11c/0x190
+> > [<0>] do_syscall_64+0x5a/0x130
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
 >
-> Ah I see, the reason I was asking is because I only know of three CHT
-> devices using a Whiskey Cove PMIC (instead of the AXP288, Crystal Cove or
-> TI one): the GPD Win, GPD pocket and one of the Lenovo Book versions
-> (the one with the CHT SoC).
-
-I've stumbled upon those platforms, specifically when I was searching
-for information about the sdmmc interface. It looks like that they all
-are affected by this missing vqmmc piece, since a lot of people have
-raised complaints some SD Cards are not recognized.
-
+> This is expected.
 >
-> Lets say I want to test this patch-set on one of the GPD devices,
-> I guess I need an UHS-I capable card and then what should I see
-> in sysfs for the mmc settings ?
-
-This is rather trivial: with the absence of 1.8v on the interface,
-UHS-I cards are failing during the speed switch sped in
-initialization. If you would plug in the UHS-I SD Card in the slot,
-then driver outputs the error message in dmesg:
-mmc2: error -110 whilst initialising SD card
-
-Error codes returned are either ETIMEDOUT or EILSEQ, depending on how
-the SD Card controller handles improper voltages on interface.
-
-With the patch applied, when UHS-I card is inserted, following message
-in recorded in dmesg:
-mmc2: new ultra high speed SDR104 SDHC card at address aaaa
-
-SDR104 mode is only for UHS-capable cards (Grade I and above); that
-message is for example recorded when SanDisk Extreme 32GB card is
-inserted. I've also tested different other cards from Verbatim,
-Swissbit and SanDisk, and they all were recognized OK.
-
-BTW, as a side note: there is a way to disable 1.8v switching in mmc
-sub-system via quirks2, this makes all UHS-I cards to operate as High
-Speed (HS) cards at 3.3v IO level. This is rather a hack, but people
-using the CHT-based products tend to do exactly that (or at least this
-is a common solution proposed in Internet).
-
-As for sysfs attributes: I actually didn't look into those to really
-tell you which values for which parameters would definitely
-distinguish UHS cards and settings from HS ones.
-
+> > // doubt this one is relevant
+> > [<0>] __wake_up_common_lock+0x7c/0xc0
+> > [<0>] __wake_up_sync_key+0x1e/0x30
+> > [<0>] __wake_up_parent+0x26/0x30
+> > [<0>] do_notify_parent+0x1cc/0x280
+> > [<0>] do_exit+0x703/0xaf0
+> > [<0>] do_group_exit+0x47/0xb0
+> > [<0>] get_signal+0x165/0x880
+> > [<0>] do_signal+0x34/0x280
+> > [<0>] exit_to_usermode_loop+0xbf/0x160
+> > [<0>] do_syscall_64+0x10f/0x130
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 >
-> Regards,
->
-> Hans
->
+> Hmm, this means that the task has exited so how come there are
+> other syscalls happening. Are you sure you are collecting stacks for
+> the
+> correct task?
 
--- 
-Regards,
-Andrey.
+I guess that the `cat /proc/$(pidof test)/stack` captured the stack
+after I hit ctrl-c. Does that make sense?
+
+Also tried `syscall(SYS_mlockall, MCL_CURRENT);` instead of
+`mlockall(MCL_CURRENT)` - same behavior.
+
