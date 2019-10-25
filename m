@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04DACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B56CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4A92070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1BD2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbfJYSHx (ORCPT
+        id S1732148AbfJYSHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:07:53 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46840 "EHLO
+        Fri, 25 Oct 2019 14:07:48 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46646 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731467AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731363AbfJYSFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:44 -0400
+        Fri, 25 Oct 2019 14:05:41 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0008Ov-Rd; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xz-0008Ot-Ah; Fri, 25 Oct 2019 19:05:39 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001jj-Va; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xw-0001lI-MN; Fri, 25 Oct 2019 19:05:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        bp@alien8.de, "Dianzhang Chen" <dianzhangchen0@gmail.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>, hpa@zytor.com
-Date:   Fri, 25 Oct 2019 19:03:29 +0100
-Message-ID: <lsq.1572026582.468426755@decadent.org.uk>
+        "Like Xu" <like.xu@linux.intel.com>,
+        "Joe Perches" <joe@perches.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>
+Date:   Fri, 25 Oct 2019 19:03:48 +0100
+Message-ID: <lsq.1572026582.631294584@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 28/47] x86/tls: Fix possible spectre-v1 in
- do_get_thread_area()
+Subject: [PATCH 3.16 47/47] KVM: x86/vPMU: refine kvm_pmu err msg when
+ event creation failed
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,60 +57,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dianzhang Chen <dianzhangchen0@gmail.com>
+From: Like Xu <like.xu@linux.intel.com>
 
-commit 993773d11d45c90cb1c6481c2638c3d9f092ea5b upstream.
+commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
 
-The index to access the threads tls array is controlled by userspace
-via syscall: sys_ptrace(), hence leading to a potential exploitation
-of the Spectre variant 1 vulnerability.
+If a perf_event creation fails due to any reason of the host perf
+subsystem, it has no chance to log the corresponding event for guest
+which may cause abnormal sampling data in guest result. In debug mode,
+this message helps to understand the state of vPMC and we may not
+limit the number of occurrences but not in a spamming style.
 
-The index can be controlled from:
-        ptrace -> arch_ptrace -> do_get_thread_area.
-
-Fix this by sanitizing the user supplied index before using it to access
-the p->thread.tls_array.
-
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/1561524630-3642-1-git-send-email-dianzhangchen0@gmail.com
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/tls.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/kvm/pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/tls.c
-+++ b/arch/x86/kernel/tls.c
-@@ -4,6 +4,7 @@
- #include <linux/user.h>
- #include <linux/regset.h>
- #include <linux/syscalls.h>
-+#include <linux/nospec.h>
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -187,8 +187,8 @@ static void reprogram_counter(struct kvm
+ 						 intr ? kvm_perf_overflow_intr :
+ 						 kvm_perf_overflow, pmc);
+ 	if (IS_ERR(event)) {
+-		printk_once("kvm: pmu event creation failed %ld\n",
+-				PTR_ERR(event));
++		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
++			    PTR_ERR(event), pmc->idx);
+ 		return;
+ 	}
  
- #include <asm/uaccess.h>
- #include <asm/desc.h>
-@@ -177,6 +178,7 @@ int do_get_thread_area(struct task_struc
- 		       struct user_desc __user *u_info)
- {
- 	struct user_desc info;
-+	int index;
- 
- 	if (idx == -1 && get_user(idx, &u_info->entry_number))
- 		return -EFAULT;
-@@ -184,8 +186,11 @@ int do_get_thread_area(struct task_struc
- 	if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
- 		return -EINVAL;
- 
--	fill_user_desc(&info, idx,
--		       &p->thread.tls_array[idx - GDT_ENTRY_TLS_MIN]);
-+	index = idx - GDT_ENTRY_TLS_MIN;
-+	index = array_index_nospec(index,
-+			GDT_ENTRY_TLS_MAX - GDT_ENTRY_TLS_MIN + 1);
-+
-+	fill_user_desc(&info, idx, &p->thread.tls_array[index]);
- 
- 	if (copy_to_user(u_info, &info, sizeof(info)))
- 		return -EFAULT;
 
