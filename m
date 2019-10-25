@@ -2,131 +2,103 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0BDCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA669CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0271F21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8151921D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hz/47V9f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qiISsN8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408803AbfJYJQh (ORCPT
+        id S2438195AbfJYJQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:16:37 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35591 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfJYJQf (ORCPT
+        Fri, 25 Oct 2019 05:16:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35966 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfJYJQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:16:35 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v6so1243750wmj.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 02:16:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LqL/giNmiaN7MjvzLD58EJ8vgYkA2PkROlxY25BcBj0=;
-        b=hz/47V9ffmAwEV72alKSS5gIi736wBM4pfyrQiaf4tHCT7AY0ZUt+xpZeuYpSVRCCJ
-         4YrOK0XZKNwPQMElY1rOA5IHnph8kq59CvVftwr8XZVOi11I6Ra14Qs0OPvFgVFNZQX3
-         P5i4HnWhyNrlgvNeslyFqQm7AdbOLtL6tF3qgvd0hMXE9Sbnbk8AeNeE2sFOb/Mzqbuz
-         Q80G0ZrfTuUkXR23+Um9mB9J9xKeVDJqKC0wN1rNf/3OCe27kXdnQZ6XV5FO0ZRXASJG
-         y4XMDbx7I1AEuQIwb8EBbNtFZSLjOH5XUuWz5+XUDm3gz5favqlYq4db0SjpIBfQBF0S
-         OgLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LqL/giNmiaN7MjvzLD58EJ8vgYkA2PkROlxY25BcBj0=;
-        b=A84i+FVekJRXdtDjEyN9qNQ3VgW6iwG/2uhLIRfjSTDZ3XdV0ViuVgmfsSuhUBm2PR
-         WB+wf5wFLkRIA0rGcJ29kJSEKgNdiIguWw8ScQBQrTEfPtlZbvZT800NHFXqkFbA1iPp
-         uE1eXHW8/AIxStz28mBrKLv8vrPFHOU2jYjGxVCvfBy3Z/4q37LsnqUVgjvGaXDmPSN0
-         Sp0GLrEjJWule9imTZVwkoqV9dxjcl93tdN7Nk7unI9povKpbAT0+7Qz6oyr4Ig43HJy
-         bjuKY3Gic74+fxEZ8ymTwrylwtunyUKOc7KZYssdbb2XUcamTEgr6sZUwLK3uQ+ms3fJ
-         WqQw==
-X-Gm-Message-State: APjAAAWg2lnx3dmAvYIUleM5qn6MSR73+MrR0SU6Of6ppX+gUdylHB39
-        0MoIeBra3TT1bEEliYAHKFfsBxx2i/Eq2fXRMCfbO7US
-X-Google-Smtp-Source: APXvYqzDzOuefPYKqaMstm3Cj/vQ5UByIxrFzJrmYXD+eZvSfz3cMnMayHcuMMjIrZfl/2xuOJ/xVBDfLEoY9oAy5SI=
-X-Received: by 2002:a7b:cb81:: with SMTP id m1mr2295246wmi.123.1571994993205;
- Fri, 25 Oct 2019 02:16:33 -0700 (PDT)
+        Fri, 25 Oct 2019 05:16:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4HNQYHclJdpz6RgSoEiA+TUKr4RT5EnizppRlQ3bps8=; b=qiISsN8DPpzxJuDWz5BDD7Vsb
+        nyk65gVZOZKlJdImt/zQ93JZf06MrUU84AZ2Rsfj9ptyTwWjr0D3qFev4YZQfFPwJTMmDobsN0BIk
+        BjQ5xOzlgeGTMGH/nj+hTq32C+lTp3YOmIQQjx690HEJY53zroXK96U1kgH2zoh/q6D+yAR7fxkCR
+        NbWzxkhobMh986G8cityFONFpJ+3Kz3hnTzKbLn0NepyOKE4bk0Ic96FQ5eI9MaWJNoVq2rAnv1bg
+        zC0/oopErZGmxqjGq2sEPyLSJLd+UMv9VuOpm84Rd7H5jLuP4VkpiYrpLY9ByFMTMEMhCU+USTsNm
+        TJq8gTq9A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNvi1-00055a-9Y; Fri, 25 Oct 2019 09:16:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3873A3006E3;
+        Fri, 25 Oct 2019 11:15:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 07F88201A6624; Fri, 25 Oct 2019 11:16:35 +0200 (CEST)
+Date:   Fri, 25 Oct 2019 11:16:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191025091634.GA4114@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+ <20191023170025.f34g3vxaqr4f5gqh@treble>
+ <20191024131634.GC4131@hirez.programming.kicks-ass.net>
+ <20191025064456.6jjrngm4m3mspaxw@pathway.suse.cz>
 MIME-Version: 1.0
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191024142939.25920-3-andrey.zhizhikin@leica-geosystems.com> <20191025080655.GF32742@smile.fi.intel.com>
-In-Reply-To: <20191025080655.GF32742@smile.fi.intel.com>
-From:   Andrey Zhizhikin <andrey.z@gmail.com>
-Date:   Fri, 25 Oct 2019 11:16:22 +0200
-Message-ID: <CAHtQpK7P2X42WxZzok+XVZESV7O_JWK3Th7JMnMQsaq6f0gELw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mfd: add regulator cell to Cherry Trail Whiskey Cove PMIC
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025064456.6jjrngm4m3mspaxw@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 10:07 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Oct 24, 2019 at 02:29:39PM +0000, Andrey Zhizhikin wrote:
-> > Add a regulator mfd cell to Whiskey Cove PMIC driver, which is used to
-> > supply various voltage rails.
-> >
-> > In addition, make the initialization of this mfd driver early enough in
-> > order to provide regulator cell to mmc sub-system when it is initialized.
->
-> Doesn't deferred probe mechanism work for you?
-> MMC core returns that error till we have the driver initialized.
+On Fri, Oct 25, 2019 at 08:44:56AM +0200, Petr Mladek wrote:
+> On Thu 2019-10-24 15:16:34, Peter Zijlstra wrote:
 
-This would work for mmc sub-system, but my idea was that later when
-more cells are added to this mfd - it might turn out that we would
-require an early initialization anyway. So I decided to take an
-opportunity to adjust it with this patch as well, and this is what I
-roughly explained in the commit message. When I'm reading it now,
-exactly this point was not mentioned in commit message at all, and I
-rather coupled the early init with mmc sub-system, which creates a
-source of confusion here. I guess if there would be no other
-objections about early init - I'd go with v2 of this patch, where I
-would clean-up the point below and adjust the commit description.
+> > Right, that really should be able to run early. Esp. after commit
+> > 
+> >   11e86dc7f274 ("x86/paravirt: Detect over-sized patching bugs in paravirt_patch_call()")
+> > 
+> > paravirt patching is unconditional. We _never_ run with the indirect
+> > call except very early boot, but modules should have them patched way
+> > before their init section runs.
+> > 
+> > We rely on this for spectre-v2 and friends.
+> 
+> Livepatching has the same requirement. The module code has to be fully
+> livepatched before the module gets actually used.
 
-Thanks a lot for pointing this out!
+Right, and that is just saying that all paravirt RELAs (pv_ops) can
+basically be deleted from modules.
 
->
-> > +     }, {
-> > +             .name = "cht_wcove_regulator",
-> > +             .id = CHT_WC_REGULATOR_VSDIO + 1,
->
-> > +             .num_resources = 0,
-> > +             .resources = NULL,
->
-> No need to put these.
+Which avoids the reported problem in yet another way.
 
-Agreed, this was forgotten. Sorry for that.
+> It means before mod->init() is called and before the module is moved
+> into MODULE_STATE_LIVE state.
 
->
-> > -static struct i2c_driver cht_wc_driver = {
-> > +static struct i2c_driver cht_wc_i2c_driver = {
->
-> Renaming is not explained in the commit message.
+Funny thing, currently ftrace is running code before all that. It runs
+code before klp_module_coming(), before jump_label patching.
 
-True, this point I forgot to mention. Actually, this is tightly
-coupled with the fact that mfd driver has been moved to an earlier
-init stage and since it does belong to I2C sub-system (and represented
-by i2c_device structure) - I decided to make a name sound more
-logical.
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
-
--- 
-Regards,
-Andrey.
+My other patch in this thread fixes that.
