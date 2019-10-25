@@ -2,264 +2,248 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA07CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BD4CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA9321D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ga91dKJk"
+	by mail.kernel.org (Postfix) with ESMTP id 9FABD206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572018493;
+	bh=3iAASSy+lZ90ERSlhjhVjKuBzFsrzimEoOU4y0Rrsf0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D/S0h0zOLMum4lQj+KYXoykVKlsT3Llkf61+8TasGoATaJPkmXxCNalzOXanNxZbQ
+	 NQ6U+Jg7ubdbgam6t4PU1uB1sgjy7ThIaj6MT6eEu0VTrYHvWLQM/c+wMFZt6LGcTK
+	 kwgkDN5guLjquMvHw6v24Ukggyn4l4/hOsWc1iVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395515AbfJYPr2 (ORCPT
+        id S2502043AbfJYPsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:47:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33363 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395505AbfJYPr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:47:27 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s1so2919282wro.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:47:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fo4JPUIMC83Jn+ORQE5fOd6wpwt98Yvm2b1ZRTBSf+k=;
-        b=ga91dKJkyn2cOlf6giFVU0C2YNUeJjkbLh3Pf3h4sZyinbRfzD7EcS4kSgvNA7jtgf
-         XR9TrWWx1kOpavXYRxxIkwm6ScKXIyQya+vNCwa9XP+O9Fq87NVlIJdwQqN/s9Lelej7
-         HAOZ2MPW35Q9izjXjt9YvVa5kdHq6dfJvHcYdWY30LImx8kCmyfVu34FUTzxPYTmGvBJ
-         1+h1S2xkNz3WABifyH13EHHjE6fihQTe/9XOKtDc+A6Lo2iGMM537BwN1GpIajQTXgGG
-         F79oiTBy04YTWxY2gLNpis442uOF/suSwKB6d/qIz576NKM+R8PZbesZaPVhJyGJHsMc
-         nJdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fo4JPUIMC83Jn+ORQE5fOd6wpwt98Yvm2b1ZRTBSf+k=;
-        b=VJubsyaM9STxN5kzo2uogLK2hftXs+Kf4qFXd5+v8O+ihmZ17e1WmV4ceCUjoXTxA+
-         OMx+bgEhYfS0tUoFoylcDJ/FLaNWY922/K6rfIXY9+OxMyfwlV1zTw8FR6rcZtYVwws3
-         ejrBpwxPG/Gd1R9qV9oaiK12pyzg7qYLbszrMtCAr+kaSkwqiv2KAJm4yuCUjUR3yA7Z
-         hZ8Qv6yAzcll6zG5zanicBdNpuYOM9TC3M9j6X6SyTMfEAxcvrAXW/BturwO/3Pa7XgK
-         0xhEKdxwprMQhpKCdc+S0yS2hQ3rwCr6oLAyguKVJ9zyHBGfoafvhlp2IrTMy7hrSro1
-         JHuQ==
-X-Gm-Message-State: APjAAAVBt+vIrODHREXQ1wQGyRIwWq03iOrXPrwNqm0lvyg5cl6A5kZv
-        cb0Kzvxn5nAxSTbojC3bdWtMP3YEMkPF842oq3xQEw==
-X-Google-Smtp-Source: APXvYqwwkfHhZltSUACukXwYTKWvdIaDOhOctFQxNvUMIYQ3giUfUnfKv7ozh5lgMUz3hiL/7aAkS7f/pWM26k1Sqd8=
-X-Received: by 2002:adf:e651:: with SMTP id b17mr3130375wrn.191.1572018445122;
- Fri, 25 Oct 2019 08:47:25 -0700 (PDT)
+        Fri, 25 Oct 2019 11:48:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395419AbfJYPsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:48:11 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71EA3206DD;
+        Fri, 25 Oct 2019 15:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572018490;
+        bh=3iAASSy+lZ90ERSlhjhVjKuBzFsrzimEoOU4y0Rrsf0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fCmctIaKRt1tPFbEFPsb8c1it1ktzrOXsAQqLq7lSONFQQNlya7Yqzgosb0gV2ZKZ
+         aDYa8A9PF/Xd481OU0MioMO7ruGkwP3/kz7ZBtV4fOP4fr0Zw3Jg9eWMDvxYhAwU3c
+         8FQgL9/Rm7MvdTOP2Hcz9lgD06AukuvaKjVQ/ELQ=
+Received: by mail-qk1-f173.google.com with SMTP id u184so2192920qkd.4;
+        Fri, 25 Oct 2019 08:48:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAVfiBPYgCeeci77qjVBy98tNFklNEPekBm4pbrfqGmeCWgfSZP7
+        y3wedcO0KR+TS/ByKcx7r9Id4eXE2F7Tozw+4Q==
+X-Google-Smtp-Source: APXvYqysvjptChaLFfLF0sa7vWALwkacSeg0QojTdUR0ZCZdRgXGcI6FMohz8x0bf7U1RoHPx4nHPpSv9uBwIJnjMvs=
+X-Received: by 2002:a05:620a:12b4:: with SMTP id x20mr3674151qki.254.1572018489448;
+ Fri, 25 Oct 2019 08:48:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191023005337.196160-1-irogers@google.com> <20191024190202.109403-1-irogers@google.com>
- <20191024190202.109403-3-irogers@google.com> <20191025080142.GF31679@krava>
-In-Reply-To: <20191025080142.GF31679@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 25 Oct 2019 08:47:12 -0700
-Message-ID: <CAP-5=fWoHN9wqWasZyyu8mB99-1SOP3NhTT9XX6d99aTG6-AOA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/9] perf tools: splice events onto evlist even on error
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
+References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
+ <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com> <fbd4960b219099b7a48ef24019ba829f866edb3b.camel@fi.rohmeurope.com>
+ <4570db9c-7bc8-f131-269a-248b87e25e38@gmail.com> <201df0f7319b94eb581a040a2b1b07dbfed12e94.camel@fi.rohmeurope.com>
+ <c5761d78-3334-adaa-b871-cb6da356483b@gmail.com> <8974a3974377d0623ed968563b035e701191440e.camel@fi.rohmeurope.com>
+ <e9d1c529-90ef-34bf-d893-02a109ba19ba@gmail.com> <c35a2bca83c711bd7b19c8a99798374388705bfc.camel@fi.rohmeurope.com>
+ <06b3909a-b3ff-2c0e-d1df-a475a69951ed@gmail.com> <d43d06dbaa0df204fff0194be57d6cd3b832addd.camel@fi.rohmeurope.com>
+ <CAL_JsqK7fYYdobOrgxFaMOy+uONCV-i0aOiBQ9oOc4OOPLR8cw@mail.gmail.com> <4fcea7213ae9b3c0de775d1854f8e160ea0b178a.camel@fi.rohmeurope.com>
+In-Reply-To: <4fcea7213ae9b3c0de775d1854f8e160ea0b178a.camel@fi.rohmeurope.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 25 Oct 2019 10:47:57 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+_4SaVHqZFXhF_J+yqqcjuzEZpxFvxJfzsNpL1xBQijw@mail.gmail.com>
+Message-ID: <CAL_Jsq+_4SaVHqZFXhF_J+yqqcjuzEZpxFvxJfzsNpL1xBQijw@mail.gmail.com>
+Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
+ BD71828 PMIC
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 1:01 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Fri, Oct 25, 2019 at 9:37 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
 >
-> On Thu, Oct 24, 2019 at 12:01:55PM -0700, Ian Rogers wrote:
-> > If event parsing fails the event list is leaked, instead splice the list
-> > onto the out result and let the caller cleanup.
-> >
-> > An example input for parse_events found by libFuzzer that reproduces
-> > this memory leak is 'm{'.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/parse-events.c | 17 +++++++++++------
-> >  1 file changed, 11 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index edb3ae76777d..f0d50f079d2f 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1968,15 +1968,20 @@ int parse_events(struct evlist *evlist, const char *str,
-> >
-> >       ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
-> >       perf_pmu__parse_cleanup();
-> > +
-> > +     if (!ret && list_empty(&parse_state.list)) {
-> > +             WARN_ONCE(true, "WARNING: event parser found nothing\n");
-> > +             return -1;
-> > +     }
-> > +
-> > +     /*
-> > +      * Add list to the evlist even with errors to allow callers to clean up.
-> > +      */
-> > +     perf_evlist__splice_list_tail(evlist, &parse_state.list);
+> Hello Peeps,
 >
-> I still dont understand this one.. if there was an error, the list
-> should be empty, right? also if there's an error and there's something
-> on the list, what is it? how it gets deleted?
->
-> thanks,
-> jirka
-
-What I see happening with PARSER_DEBUG for 'm{' is (I've tried to
-manually tweak the line numbers to be consistent with the current
-parse-events.y, sorry for any discrepancies):
-
-Starting parse
-Entering state 0
-Reading a token: Next token is token PE_START_EVENTS (1.1: )
-Shifting token PE_START_EVENTS (1.1: )
-Entering state 1
-Reading a token: Next token is token PE_EVENT_NAME (1.0: )
-Shifting token PE_EVENT_NAME (1.0: )
-Entering state 8
-Reading a token: Next token is token PE_NAME (1.0: )
-Shifting token PE_NAME (1.0: )
-Entering state 46
-Reading a token: Next token is token '{' (1.1: )
-Reducing stack by rule 50 (line 510):
--> $$ = nterm opt_event_config (1.0: )
-Stack now 0 1 8 46
-Entering state 51
-Reducing stack by rule 27 (line 229):
-  $1 = token PE_NAME (1.0: )
-  $2 = nterm opt_event_config (1.0: )
--> $$ = nterm event_pmu (1.0: )
-Stack now 0 1 8
-Entering state 25
-Reducing stack by rule 19 (line 219):
-  $1 = nterm event_pmu (1.0: )
--> $$ = nterm event_def (1.0: )
-Stack now 0 1 8
-Entering state 47
-Reducing stack by rule 17 (line 210):
-  $1 = token PE_EVENT_NAME (1.0: )
-  $2 = nterm event_def (1.0: )
--> $$ = nterm event_name (1.0: )
-Stack now 0 1
-Entering state 23
-Next token is token '{' (1.1: )
-Reducing stack by rule 16 (line 207):
-  $1 = nterm event_name (1.0: )
--> $$ = nterm event_mod (1.0: )
-Stack now 0 1
-Entering state 22
-Reducing stack by rule 14 (line 191):
-  $1 = nterm event_mod (1.0: )
--> $$ = nterm event (1.0: )
-Stack now 0 1
-Entering state 21
-Reducing stack by rule 7 (line 147):
-  $1 = nterm event (1.0: )
--> $$ = nterm groups (1.0: )
-Stack now 0 1
-Entering state 18
-Next token is token '{' (1.1: )
-Reducing stack by rule 3 (line 119):
-  $1 = nterm groups (1.0: )
--> $$ = nterm start_events (1.0: )
-Stack now 0 1
-Entering state 17
-Reducing stack by rule 1 (line 115):
-  $1 = token PE_START_EVENTS (1.1: )
-  $2 = nterm start_events (1.0: )
--> $$ = nterm start (1.1: )
-Stack now 0
-Entering state 3
-Next token is token '{' (1.1: )
-Error: popping nterm start (1.1: )
-Stack now 0
-Cleanup: discarding lookahead token '{' (1.1: )
-Stack now 0
-
-Working backward through this we're going:
-start: PE_START_EVENTS start_events
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L115
-
-start_events: groups
-{
-struct parse_events_state *parse_state = _parse_state;
-parse_events_update_lists($1, &parse_state->list); // <--- where list
-gets onto the state
-}
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L119
-
-groups: event
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L147
-
-event: event_mod
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L191
-
-event_mod: event_name
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L207
-
-event_name: PE_EVENT_NAME event_def
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L210
-
-event_def: event_pmu
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L219
-
-event_pmu: PE_NAME opt_event_config
-{
-...
-ALLOC_LIST(list);  // <--- where list gets allocated
-...
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L229
-
-opt_event_config:
-https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L510
-
-So the parse_state is ending up with a list, however, parsing is
-failing. If the list isn't adding to the evlist then it becomes a
-leak. Splicing it onto the evlist allows the caller to clean this up
-and avoids the leak. An alternate approach is to free the failed list
-and not get the caller to clean up. A way to do this is to create an
-evlist, splice the failed list onto it and then free it - which winds
-up being fairly identical to this approach, and this approach is a
-smaller change.
-
-Thanks,
-Ian
-
-> > +
-> >       if (!ret) {
-> >               struct evsel *last;
+> On Fri, 2019-10-25 at 08:24 -0500, Rob Herring wrote:
+> > On Fri, Oct 25, 2019 at 2:07 AM Vaittinen, Matti
+> > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> > > Hi Again Jacek,
+> > >
+> > > This has been a nice conversation. I guess I have learned something
+> > > from this all but I think this is no longer going forward too much
+> > > :)
+> > > I'll cook up second version - where I add LEDs to DT (even if I
+> > > don't
+> > > see the value for it now). I won't add own compatible for the LED
+> > > (for
+> > > now) - as it is part of MFD - and I'll add the LEDs also to binding
+> > > docs. I think that will get the attention from Lee/Rob better than
+> > > the
+> > > LED driver discussion. We can continue discussion there. I hope
+> > > this is
+> > > Ok to you. (And then just few compulsory notes about my view on
+> > > your
+> > > replies - after all, I can't let you to have the final say xD - you
+> > > can
+> > > ignore them or respond just as you like)
+> > >
+> > > On Fri, 2019-10-25 at 00:04 +0200, Jacek Anaszewski wrote:
+> > > > Hi Matti,
+> > > >
+> > > > On 10/24/19 10:15 AM, Vaittinen, Matti wrote:
+> > > > > Hello Jacek,
+> > > > >
+> > > > > On Wed, 2019-10-23 at 23:59 +0200, Jacek Anaszewski wrote:
+> > > > > > On 10/23/19 10:37 AM, Vaittinen, Matti wrote:
+> > > > > > > On Tue, 2019-10-22 at 19:40 +0200, Jacek Anaszewski wrote:
+> > > > > > > > On 10/22/19 2:40 PM, Vaittinen, Matti wrote:
+> > > > > > > > > On Mon, 2019-10-21 at 21:09 +0200, Jacek Anaszewski
+> > > > > > > > > wrote:
+> > > > > > > > > > On 10/21/19 10:00 AM, Vaittinen, Matti wrote:
+> > > > > > > > > > > Hello Dan,
+> > > > > > > > > > >
+> > > > > > > > > > > Thanks for taking the time to check my driver :) I
+> > > > > > > > > > > truly
+> > > > > > > > > > > appreciate
+> > > > > > > > > > > all
+> > > > > > > > > > > the help!
+> > > > > > > > > > >
+> > > > > > > > > > > A "fundamental question" regarding these review
+> > > > > > > > > > > comments is
+> > > > > > > > > > > whether
+> > > > > > > > > > > I
+> > > > > > > > > > > should add DT entries for these LEDs or not. I
+> > > > > > > > > > > thought
+> > > > > > > > > > > I
+> > > > > > > > > > > shouldn't
+> > > > > > > > > > > but
+> > > > > > > > > > > I would like to get a comment from Rob regarding
+> > > > > > > > > > > it.
+> > > > > > > > > >
+> > > > > > > > > > If the LED controller is a part of MFD device probed
+> > > > > > > > > > from
+> > > > > > > > > > DT
+> > > > > > > > > > then
+> > > > > > > > > > there is no doubt it should have corresponding DT
+> > > > > > > > > > sub-
+> > > > > > > > > > node.
 > >
-> > -             if (list_empty(&parse_state.list)) {
-> > -                     WARN_ONCE(true, "WARNING: event parser found nothing\n");
-> > -                     return -1;
-> > -             }
-> > -
-> > -             perf_evlist__splice_list_tail(evlist, &parse_state.list);
-> >               evlist->nr_groups += parse_state.nr_groups;
-> >               last = evlist__last(evlist);
-> >               last->cmdline_group_boundary = true;
-> > --
-> > 2.23.0.866.gb869b98d4c-goog
-> >
+> > Agreed.
 >
+> Ouch. That annoying feeling when you notice you have been wrong...
+>
+> > [...]
+> >
+> > > > > Right. Or at first it might be enough (and simplest) to assume
+> > > > > that
+> > > > > if
+> > > > > LEDs are used via this driver, then colour for both LEDs is set
+> > > > > explicitly by user-space. I wouldn't try guessing if sibling
+> > > > > LED
+> > > > > state
+> > > > > changes to OFF when one LED is turned ON - or if LED states
+> > > > > change
+> > > > > to
+> > > > > ON if both are turned OFF. This would require exporting
+> > > > > interfaces
+> > > > > from
+> > > > > power-supply driver - and it would still be racy. The thing is
+> > > > > that
+> > > > > when both LEDs are on board they are both either under HW or SW
+> > > > > control. So it makes no sense to control only one LED in such
+> > > > > case.
+> > > > > Thus I think it is Ok if this LED driver is registering both
+> > > > > class
+> > > > > devices at one probe. No need to instantiate own platform
+> > > > > devices
+> > > > > for
+> > > > > both of the LEDs.
+> > > >
+> > > > We always register all LEDs originating from the same device in
+> > > > one
+> > > > probe.
+> > > >
+> > >
+> > > Then I see little benefit from of_compatible or leds subnode for
+> > > MFD
+> > > devices with many LEDs. The driver or core must in any ways parse
+> > > the
+> > > DT in order to find the sub nodes with information for individual
+> > > LEDs.
+> > > I don't think that would be much different from just using the MFD
+> > > node
+> > > as controller node and walking through the MFD child nodes to
+> > > locate
+> > > LED sub nodes (at least for MFDs with simple LED controller).
+> >
+> > The cases for not having child nodes are when you have child nodes
+> > with nothing more than a compatible and possibly provider properties
+> > (e.g. #gpio-cells for gpio providers). If you have other resource
+> > dependencies (e.g. clocks) or data to define (e.g. voltages for
+> > regulators), then child nodes absolutely make sense.
+>
+> Thanks for telling the reasoning behind. Makes sense.
+>
+> > Once we have
+> > child nodes, then generally it is easier for every function to be a
+> > child node and not mix the two. I'm sure I have told people
+> > incorrectly to not do child nodes because they define incomplete
+> > bindings.
+>
+> Does this mean that if I add LED controlled node with LED nodes inside
+> - then I should actually add sub nodes for clk and GPIO too? I would
+> prefer still having the clk provider information in MFD node as adding
+> a sub-node for clk would probably require changes in the bd718x7_clk
+> driver. (Not big ones but avoidable if clk provider information can
+> still dwell in MFD node).
+
+Probably not, if there's an existing structure to follow, then
+continue doing that.
+
+> > I would group the led nodes under an led-controller node (with a
+> > compatible). The simple reason is each level only has one
+> > number/address space and you can't mix different ones. You're not
+> > numbering the leds here, but could you (with numbers that correspond
+> > to something in the h/w, not just 0..N)?
+>
+> I don't know what that would be. The LED controller resides in MFD
+> device in I2C bus and has no meaningful numbers I can think of. The
+> actual LEDs (on my board) are dummy devices and I really don't know how
+> to invent meaningfull numbers for them either.
+
+If you have something like "led control registers 1, 2, 3" where 1,2,3
+is each LED channel, then use that. Or if the LED supplies (or supply
+pins) have some numbering, use that. If there's none of that, then
+following standard node names kind of falls apart. '<generic name>-N'
+is what I've been defining for some schema.
+
+Rob
