@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956D8CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704EBCA9EBE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746492070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4449C205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbfJYSG5 (ORCPT
+        id S1731574AbfJYSGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:06:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46594 "EHLO
+        Fri, 25 Oct 2019 14:06:52 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46570 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731320AbfJYSFl (ORCPT
+        by vger.kernel.org with ESMTP id S1731310AbfJYSFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:41 -0400
+        Fri, 25 Oct 2019 14:05:40 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0008OI-KG; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xx-0008PF-51; Fri, 25 Oct 2019 19:05:37 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001i2-0q; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xw-0001kO-9Q; Fri, 25 Oct 2019 19:05:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jeremy Sowden" <jeremy@azazel.net>,
-        syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com,
-        "Steffen Klassert" <steffen.klassert@secunet.com>
-Date:   Fri, 25 Oct 2019 19:03:08 +0100
-Message-ID: <lsq.1572026582.240053415@decadent.org.uk>
+        "Trond Myklebust" <trond.myklebust@hammerspace.com>
+Date:   Fri, 25 Oct 2019 19:03:37 +0100
+Message-ID: <lsq.1572026582.664818921@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 07/47] af_key: fix leaks in key_pol_get_resp and dump_sp.
+Subject: [PATCH 3.16 36/47] NFSv4: Handle the special Linux file open
+ access mode
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,46 +55,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 7c80eb1c7e2b8420477fbc998971d62a648035d9 upstream.
+commit 44942b4e457beda00981f616402a1a791e8c616e upstream.
 
-In both functions, if pfkey_xfrm_policy2msg failed we leaked the newly
-allocated sk_buff.  Free it on error.
+According to the open() manpage, Linux reserves the access mode 3
+to mean "check for read and write permission on the file and return
+a file descriptor that can't be used for reading or writing."
 
-Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE_xxx.")
-Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Currently, the NFSv4 code will ask the server to open the file,
+and will use an incorrect share access mode of 0. Since it has
+an incorrect share access mode, the client later forgets to send
+a corresponding close, meaning it can leak stateids on the server.
+
+Fixes: ce4ef7c0a8a05 ("NFS: Split out NFS v4 file operations")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/key/af_key.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ fs/nfs/inode.c    | 1 +
+ fs/nfs/nfs4file.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -2437,8 +2437,10 @@ static int key_pol_get_resp(struct sock
- 		goto out;
- 	}
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		goto out;
-+	}
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -893,6 +893,7 @@ int nfs_open(struct inode *inode, struct
+ 	nfs_fscache_open_file(inode, filp);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(nfs_open);
  
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = hdr->sadb_msg_version;
-@@ -2689,8 +2691,10 @@ static int dump_sp(struct xfrm_policy *x
- 		return PTR_ERR(out_skb);
+ int nfs_release(struct inode *inode, struct file *filp)
+ {
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -34,7 +34,7 @@ nfs4_file_open(struct inode *inode, stru
+ 	dprintk("NFS: open file(%pd2)\n", dentry);
  
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		return err;
-+	}
+ 	if ((openflags & O_ACCMODE) == 3)
+-		openflags--;
++		return nfs_open(inode, filp);
  
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = pfk->dump.msg_version;
+ 	/* We can't create new files here */
+ 	openflags &= ~(O_CREAT|O_EXCL);
 
