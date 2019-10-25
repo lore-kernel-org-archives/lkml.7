@@ -2,144 +2,146 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E23CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C693FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A5121929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A240E206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437685AbfJYIER (ORCPT
+        id S2437707AbfJYIEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:04:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51668 "EHLO mx1.suse.de"
+        Fri, 25 Oct 2019 04:04:49 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4760 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405453AbfJYIER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:04:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EB135B930;
-        Fri, 25 Oct 2019 08:04:14 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     netdev@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Wagner <dwagner@suse.de>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Miller <davem@davemloft.net>
-Subject: [PATCH] net: usb: lan78xx: Disable interrupts before calling generic_handle_irq()
-Date:   Fri, 25 Oct 2019 10:04:13 +0200
-Message-Id: <20191025080413.22665-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.23.0
+        id S2437690AbfJYIEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:04:49 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 096A5ECD9030C7B20AD8;
+        Fri, 25 Oct 2019 16:04:46 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 25 Oct
+ 2019 16:04:42 +0800
+Subject: =?UTF-8?Q?Re:_[f2fs-dev]_[bug_report]_compiler_warning:_fs/f2fs/nod?=
+ =?UTF-8?B?ZS5jOiBJbiBmdW5jdGlvbiDigJhfX3NldF9uYXRfY2FjaGVfZGlydHnigJk6IA==?=
+ =?UTF-8?Q?=e2=80=98head=e2=80=99_may_be_used_uninitialized?=
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>
+References: <fc71f3b73116115f78bcee2753e7bb3d5331731e.camel@analog.com>
+ <e815981a-50ef-0f49-cab6-e510ea44ddc0@huawei.com>
+ <425c2a3697b9973bb2bb51b692f80c02ef105285.camel@analog.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <dbd29eb5-527d-300e-61b8-227d44eb6c86@huawei.com>
+Date:   Fri, 25 Oct 2019 16:04:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <425c2a3697b9973bb2bb51b692f80c02ef105285.camel@analog.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lan78xx_status() will run with interrupts enabled due to the change in
-ed194d136769 ("usb: core: remove local_irq_save() around ->complete()
-handler"). generic_handle_irq() expects to be run with IRQs disabled.
+On 2019/10/24 17:54, Ardelean, Alexandru wrote:
+> On Thu, 2019-10-24 at 17:12 +0800, Chao Yu wrote:
+>> [External]
+>>
+>> On 2019/10/23 22:02, Ardelean, Alexandru wrote:
+>>> Seems to have been introduced via:
+>>>
+>>> ----------------------------------------------------------------
+>>>
+>>> commit 780de47cf6cb5f524cd98ec8ffbffc3da5696e17
+>>> Author: Chao Yu <yuchao0@huawei.com>
+>>> Date:   Tue Mar 20 23:08:30 2018 +0800
+>>>
+>>>     f2fs: don't track new nat entry in nat set
+>>>     
+>>>     Nat entry set is used only in checkpoint(), and during checkpoint()
+>>> we
+>>>     won't flush new nat entry with unallocated address, so we don't
+>>> need to
+>>>     add new nat entry into nat set, then nat_entry_set::entry_cnt can
+>>>     indicate actual entry count we need to flush in checkpoint().
+>>>     
+>>>     Signed-off-by: Yunlei He <heyunlei@huawei.com>
+>>>     Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>     Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> ----------------------------------------------------------------
+>>>
+>>> Compiler warning is:
+>>> ----------------------------------------------------------------
+>>>
+>>>   CC      fs/f2fs/node.o
+>>> In file included from ./include/linux/wait.h:7:0,
+>>>                  from ./include/linux/wait_bit.h:8,
+>>>                  from ./include/linux/fs.h:6,
+>>>                  from fs/f2fs/node.c:11:
+>>> fs/f2fs/node.c: In function ‘__set_nat_cache_dirty’:
+>>> ./include/linux/list.h:63:13: error: ‘head’ may be used uninitialized
+>>> in
+>>> this function [-Werror=maybe-uninitialized]
+>>>   next->prev = new;
+>>>              ^
+>>> fs/f2fs/node.c:238:24: note: ‘head’ was declared here
+>>>   struct nat_entry_set *head;
+>>
+>> That's not correct, @head will only be assigned and used if new_ne equals
+>> NULL.
+> 
+> Ack.
+> I admit that I don't understand the code, and don't claim to understand it.
+> 
+> This may be just a weird compiler issue.
+> I thought I'd send it just as a heads-up.
 
-[    4.886203] 000: irq 79 handler irq_default_primary_handler+0x0/0x8 enabled interrupts
-[    4.886243] 000: WARNING: CPU: 0 PID: 0 at kernel/irq/handle.c:152 __handle_irq_event_percpu+0x154/0x168
-[    4.896294] 000: Modules linked in:
-[    4.896301] 000: CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.6 #39
-[    4.896310] 000: Hardware name: Raspberry Pi 3 Model B+ (DT)
-[    4.896315] 000: pstate: 60000005 (nZCv daif -PAN -UAO)
-[    4.896321] 000: pc : __handle_irq_event_percpu+0x154/0x168
-[    4.896331] 000: lr : __handle_irq_event_percpu+0x154/0x168
-[    4.896339] 000: sp : ffff000010003cc0
-[    4.896346] 000: x29: ffff000010003cc0 x28: 0000000000000060
-[    4.896355] 000: x27: ffff000011021980 x26: ffff00001189c72b
-[    4.896364] 000: x25: ffff000011702bc0 x24: ffff800036d6e400
-[    4.896373] 000: x23: 000000000000004f x22: ffff000010003d64
-[    4.896381] 000: x21: 0000000000000000 x20: 0000000000000002
-[    4.896390] 000: x19: ffff8000371c8480 x18: 0000000000000060
-[    4.896398] 000: x17: 0000000000000000 x16: 00000000000000eb
-[    4.896406] 000: x15: ffff000011712d18 x14: 7265746e69206465
-[    4.896414] 000: x13: ffff000010003ba0 x12: ffff000011712df0
-[    4.896422] 000: x11: 0000000000000001 x10: ffff000011712e08
-[    4.896430] 000: x9 : 0000000000000001 x8 : 000000000003c920
-[    4.896437] 000: x7 : ffff0000118cc410 x6 : ffff0000118c7f00
-[    4.896445] 000: x5 : 000000000003c920 x4 : 0000000000004510
-[    4.896453] 000: x3 : ffff000011712dc8 x2 : 0000000000000000
-[    4.896461] 000: x1 : 73a3f67df94c1500 x0 : 0000000000000000
-[    4.896466] 000: Call trace:
-[    4.896471] 000:  __handle_irq_event_percpu+0x154/0x168
-[    4.896481] 000:  handle_irq_event_percpu+0x50/0xb0
-[    4.896489] 000:  handle_irq_event+0x40/0x98
-[    4.896497] 000:  handle_simple_irq+0xa4/0xf0
-[    4.896505] 000:  generic_handle_irq+0x24/0x38
-[    4.896513] 000:  intr_complete+0xb0/0xe0
-[    4.896525] 000:  __usb_hcd_giveback_urb+0x58/0xd8
-[    4.896533] 000:  usb_giveback_urb_bh+0xd0/0x170
-[    4.896539] 000:  tasklet_action_common.isra.0+0x9c/0x128
-[    4.896549] 000:  tasklet_hi_action+0x24/0x30
-[    4.896556] 000:  __do_softirq+0x120/0x23c
-[    4.896564] 000:  irq_exit+0xb8/0xd8
-[    4.896571] 000:  __handle_domain_irq+0x64/0xb8
-[    4.896579] 000:  bcm2836_arm_irqchip_handle_irq+0x60/0xc0
-[    4.896586] 000:  el1_irq+0xb8/0x140
-[    4.896592] 000:  arch_cpu_idle+0x10/0x18
-[    4.896601] 000:  do_idle+0x200/0x280
-[    4.896608] 000:  cpu_startup_entry+0x20/0x28
-[    4.896615] 000:  rest_init+0xb4/0xc0
-[    4.896623] 000:  arch_call_rest_init+0xc/0x14
-[    4.896632] 000:  start_kernel+0x454/0x480
+I think that's the right thing to do.
 
-Fixes: ed194d136769 ("usb: core: remove local_irq_save() around ->complete() handler")
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Stefan Wahren <wahrenst@gmx.net>
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Miller <davem@davemloft.net>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
+> I saw this on a Raspberry Pi branch [after we enabled warnings as errors]:
+> https://travis-ci.org/analogdevicesinc/linux/jobs/601844926#L1208
+> 
+> Looking in the latest f2fs/dev[-test] tree, it looks like the code is
+> similar as in 4.19.
+> https://github.com/analogdevicesinc/linux/blob/rpi-4.19.y/fs/f2fs/node.c#L235
+> 
+> Could be that the RPi branch has some more compiler-stuff enabled.
+> 
+> In any case, feel free to disregard this.
+> We will see how we fix this on our end for that branch specifically.
 
-Hi,
-
-This patch just fixes the warning. There are still problems left (the
-unstable NFS report from me) but I suggest to look at this
-separately. The initial patch to revert all the irqdomain code might
-just hide the problem. At this point I don't know what's going on so I
-rather go baby steps. The revert is still possible if nothing else
-works.
+That would make sense, let me know if you have any other suspicious compiler
+warnings. :)
 
 Thanks,
-Daniel
 
- drivers/net/usb/lan78xx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 62948098191f..f24a1b0b801f 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1264,8 +1264,11 @@ static void lan78xx_status(struct lan78xx_net *dev, struct urb *urb)
- 		netif_dbg(dev, link, dev->net, "PHY INTR: 0x%08x\n", intdata);
- 		lan78xx_defer_kevent(dev, EVENT_LINK_RESET);
- 
--		if (dev->domain_data.phyirq > 0)
-+		if (dev->domain_data.phyirq > 0) {
-+			local_irq_disable();
- 			generic_handle_irq(dev->domain_data.phyirq);
-+			local_irq_enable();
-+		}
- 	} else
- 		netdev_warn(dev->net,
- 			    "unexpected interrupt: 0x%08x\n", intdata);
--- 
-2.23.0
-
+> 
+> Thanks
+> Alex
+> 
+>>
+>> Thanks,
+>>
+>>>                         ^
+>>> cc1: all warnings being treated as errors
+>>> ----------------------------------------------------------------
+>>>
+>>> Thanks
+>>> Alex
+>>>
+>>> _______________________________________________
+>>> Linux-f2fs-devel mailing list
+>>> Linux-f2fs-devel@lists.sourceforge.net
+>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>>
