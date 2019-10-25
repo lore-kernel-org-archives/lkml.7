@@ -2,178 +2,83 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC545CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56EACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7563521872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NMVL0nKx"
+	by mail.kernel.org (Postfix) with ESMTP id A912120650
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfJYWuf (ORCPT
+        id S1726263AbfJYW4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 18:50:35 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40776 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfJYWue (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 18:50:34 -0400
-Received: by mail-il1-f196.google.com with SMTP id d83so3189655ilk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tKLlAY4Xw7xSeIaP4a35tzIajquRX72GBLi2rGXctCA=;
-        b=NMVL0nKxTd83P4SmTdQ4y6M3dnl6xh2afGk90De61SMHV1pSozOqiNjC43vJR7j3Bp
-         UoXkubWBdfT9AhAfBJcTwA2vdWaZqH2mHy9WbJahWI9acAnfjWQU3JTQQoD+Ib7VYXkl
-         rWqfJx9yBDt8jEwMGmsJ9PSt962tlyDtUiXH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tKLlAY4Xw7xSeIaP4a35tzIajquRX72GBLi2rGXctCA=;
-        b=r0dX0hVtg7HXbuTDMDnIIBtvQSk77TL8T465uRRVhhoE+PGvL8fPSPYYFS73hzNiob
-         7z28LV9DAzHqA55tHCzSCv59xV1jULBf6J+A9oy121WoZRrfDRCLD6FlwqcY3jvpgskH
-         CHTOBJXEyiR5zlAk1JPUhq/qb+jK2SgvQxehxFEYpaN8qeJBCymKozhZniy48QSo8T8Q
-         oRf/0B/g3OksLJXZ0tdBBaSotk3RDHCZP17bH2UHdiHM+qo6x8fLQEQ1TrZJrhHhp8Qn
-         ziwRl6OZ5I/n8QQmni77wD7yOi8dXwoJILJ2d41bMmEu30wVY3vKyIUCz/hc/7BYWAWn
-         hGRA==
-X-Gm-Message-State: APjAAAWX8iDK3Mjw9X7tpyLjoQphXz10AmDXEMKHjdRPNrIXKZ5thY7W
-        W8YcKvIe7LkpfxqYw7rhCxEkBGdKysY=
-X-Google-Smtp-Source: APXvYqyj8/5g5i9+4iTEAJxrPvf/DfQstPsPnd83wO4KgvCzhOvE+ztTWdOLOKQrZkkGF3n3crCYgA==
-X-Received: by 2002:a92:3559:: with SMTP id c86mr7185081ila.201.1572043833312;
-        Fri, 25 Oct 2019 15:50:33 -0700 (PDT)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id n2sm423902ion.25.2019.10.25.15.50.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 15:50:30 -0700 (PDT)
-Received: by mail-il1-f179.google.com with SMTP id y5so3193108ilb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:50:29 -0700 (PDT)
-X-Received: by 2002:a05:6e02:792:: with SMTP id q18mr6756233ils.58.1572043829241;
- Fri, 25 Oct 2019 15:50:29 -0700 (PDT)
+        Fri, 25 Oct 2019 18:56:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:63698 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbfJYW4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 18:56:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 15:56:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,230,1569308400"; 
+   d="scan'208";a="192681144"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga008.jf.intel.com with ESMTP; 25 Oct 2019 15:56:41 -0700
+Received: from fmsmsx114.amr.corp.intel.com ([169.254.6.30]) by
+ FMSMSX103.amr.corp.intel.com ([169.254.2.173]) with mapi id 14.03.0439.000;
+ Fri, 25 Oct 2019 15:56:41 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Phillips, D Scott" <d.scott.phillips@intel.com>
+CC:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "decui@microsoft.com" <decui@microsoft.com>,
+        "jerry.hoemann@hpe.com" <jerry.hoemann@hpe.com>,
+        "toshi.kani@hpe.com" <toshi.kani@hpe.com>,
+        "stuart.w.hayes@gmail.com" <stuart.w.hayes@gmail.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+Thread-Topic: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+Thread-Index: AQHVi11zx/Vg7UPM5E6mX4rKODcEtqdsam+AgAADGwA=
+Date:   Fri, 25 Oct 2019 22:56:40 +0000
+Message-ID: <38f7f4852ad1cc76c7c7473a6fda85cb9acae14c.camel@intel.com>
+References: <20191025175553.63271-1-d.scott.phillips@intel.com>
+         <CAPcyv4iQpO+JF8b7NUJUZ3fQFU=PWFeiWrXSd47QGnQPeRsrTg@mail.gmail.com>
+In-Reply-To: <CAPcyv4iQpO+JF8b7NUJUZ3fQFU=PWFeiWrXSd47QGnQPeRsrTg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.164]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DF2368668D1A8B41AFDAAD42333BA373@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191025215428.31607-1-abhishekpandit@chromium.org> <20191025215428.31607-4-abhishekpandit@chromium.org>
-In-Reply-To: <20191025215428.31607-4-abhishekpandit@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 25 Oct 2019 15:50:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vf64F885me=PUpv34Lb6iZpm1ui30nLHww6T3rmRVJXA@mail.gmail.com>
-Message-ID: <CAD=FV=Vf64F885me=PUpv34Lb6iZpm1ui30nLHww6T3rmRVJXA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: rockchip: Add brcm bluetooth module on uart0
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Oct 25, 2019 at 2:55 PM Abhishek Pandit-Subedi
-<abhishekpandit@chromium.org> wrote:
->
-> This enables the Broadcom uart bluetooth driver on uart0 and gives it
-> ownership of its gpios. In order to use this, you must enable the
-> following kconfig options:
->   - CONFIG_BT_HCIUART_BCM
->   - CONFIG_SERIAL_DEV
->
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
->
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 31 +++++++---------------------
->  1 file changed, 7 insertions(+), 24 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index 7525e3dd1fc1..8c9f91ba6f57 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-
-You are changing this for _all_ veryon, not just those veyron devices
-using Broadcom.  I don't think you want to change the marvell-based
-boards.
-
-...presumably you'll want to make you change only affect minnie,
-speedy, and mickey.
-
-
-> @@ -23,30 +23,6 @@
->                 reg = <0x0 0x0 0x0 0x80000000>;
->         };
->
-> -       bt_activity: bt-activity {
-> -               compatible = "gpio-keys";
-> -               pinctrl-names = "default";
-> -               pinctrl-0 = <&bt_host_wake>;
-> -
-> -               /*
-> -                * HACK: until we have an LPM driver, we'll use an
-> -                * ugly GPIO key to allow Bluetooth to wake from S3.
-> -                * This is expected to only be used by BT modules that
-> -                * use UART for comms.  For BT modules that talk over
-> -                * SDIO we should use a wakeup mechanism related to SDIO.
-> -                *
-> -                * Use KEY_RESERVED here since that will work as a wakeup but
-> -                * doesn't get reported to higher levels (so doesn't confuse
-> -                * Chrome).
-> -                */
-> -               bt-wake {
-> -                       label = "BT Wakeup";
-> -                       gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-> -                       linux,code = <KEY_RESERVED>;
-> -                       wakeup-source;
-> -               };
-> -
-> -       };
->
->         power_button: power-button {
->                 compatible = "gpio-keys";
-> @@ -434,6 +410,13 @@
->         /* Pins don't include flow control by default; add that in */
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-> +
-> +       bluetooth {
-> +               compatible = "brcm,bcm43540-bt";
-
-You probably need some pinctrl entries here to make sure that things
-are properly configured, like:
-
-pinctrl-names = "default";
-pinctrl-0 = <&bt_host_wake>, <&bt_dev_wake>, <&bt_enable>;
-
-This would require defining bt_dev_wake and bt_enable and removing the
-hacky output-only versions they have now.
-
-
-> +               host-wakeup-gpios       = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-> +               shutdown-gpios          = <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;
-
-Right now gpio4 RK_PD5 is controlled by the "sdio_pwrseq".  Should you
-remove it from there?  Looks like it was a no-op for marvell which
-makes it a little easier.
-
-
-> +               device-wakeup-gpios     = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-
-You probably need to stop driving this in the pinctrl hogs for
-Broadcom boards...
-
-
--Doug
+DQpPbiBGcmksIDIwMTktMTAtMjUgYXQgMTU6NDUgLTA3MDAsIERhbiBXaWxsaWFtcyB3cm90ZToN
+Cj4gT24gRnJpLCBPY3QgMjUsIDIwMTkgYXQgMTA6NTUgQU0gRCBTY290dCBQaGlsbGlwcw0KPiA8
+ZC5zY290dC5waGlsbGlwc0BpbnRlbC5jb20+IHdyb3RlOg0KPiA+IEFsbG93IG5kY3RsLmggdG8g
+YmUgbGljZW5zZWQgd2l0aCBCU0QtMi1DbGF1c2Ugc28gdGhhdCBvdGhlcg0KPiA+IG9wZXJhdGlu
+ZyBzeXN0ZW1zIGNhbiBwcm92aWRlIHRoZSBzYW1lIHVzZXIgbGV2ZWwgaW50ZXJmYWNlLg0KPiA+
+IC0tLQ0KPiA+IA0KPiA+IEkndmUgYmVlbiB3b3JraW5nIG9uIG52ZGltbSBzdXBwb3J0IGluIEZy
+ZWVCU0QgYW5kIHdvdWxkIGxpa2UgdG8NCj4gPiBvZmZlciB0aGUgc2FtZSBuZGN0bCBBUEkgdGhl
+cmUgdG8gZWFzZSBwb3J0aW5nIG9mIGFwcGxpY2F0aW9uDQo+ID4gY29kZS4gSGVyZSBJJ20gcHJv
+cG9zaW5nIHRvIGFkZCB0aGUgQlNELTItQ2xhdXNlIGxpY2Vuc2UgdG8gdGhpcw0KPiA+IGhlYWRl
+ciBmaWxlLCBzbyB0aGF0IGl0IGNhbiBsYXRlciBiZSBjb3BpZWQgaW50byBGcmVlQlNELg0KPiA+
+IA0KPiA+IEkgYmVsaWV2ZSB0aGF0IGFsbCB0aGUgYXV0aG9ycyBvZiBjaGFuZ2VzIHRvIHRoaXMg
+ZmlsZSAoaW4gdGhlIFRvOg0KPiA+IGxpc3QpIHdvdWxkIG5lZWQgdG8gYWdyZWUgdG8gdGhpcyBj
+aGFuZ2UgYmVmb3JlIGl0IGNvdWxkIGJlDQo+ID4gYWNjZXB0ZWQsIHNvIGFueSBzaWduZWQtb2Zm
+LWJ5IGlzIGludGVudGlvbmFsbHkgb21taXRlZCBmb3Igbm93Lg0KPiA+IFRoYW5rcywNCj4gDQo+
+IEkgaGF2ZSBubyBwcm9ibGVtIHdpdGggdGhpcyBjaGFuZ2UsIGJ1dCBsZXQncyB0YWtlIHRoZSBv
+cHBvcnR1bml0eSB0bw0KPiBsZXQgU1BEWCBkbyBpdHMgam9iIGFuZCBkcm9wIHRoZSBmdWxsIGxp
+Y2Vuc2UgdGV4dC4NCg0KVGhpcyBpcyBmaW5lIGJ5IG1lIHRvbywgYmFycmluZyB0aGUgZnVsbCBs
+aWNlbnNlIHRleHQgdnMuIFNQRFggY2F2ZWF0DQpEYW4gbWVudGlvbnMuDQo=
