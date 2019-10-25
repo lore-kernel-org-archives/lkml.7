@@ -2,133 +2,186 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7451ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE9821872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3994E21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rd6oFM/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbfJYRps (ORCPT
+        id S1726758AbfJYRra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:45:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:12513 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfJYRpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 13:45:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 10:45:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
-   d="scan'208";a="198086417"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Oct 2019 10:45:47 -0700
-Received: from orsmsx162.amr.corp.intel.com (10.22.240.85) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 25 Oct 2019 10:45:44 -0700
-Received: from orsmsx121.amr.corp.intel.com ([169.254.10.88]) by
- ORSMSX162.amr.corp.intel.com ([169.254.3.148]) with mapi id 14.03.0439.000;
- Fri, 25 Oct 2019 10:45:44 -0700
-From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-CC:     Randy Dunlap <rdunlap@infradead.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-Subject: RE: [PATCH] namespace: fix namespace.pl script to support relative
- paths
-Thread-Topic: [PATCH] namespace: fix namespace.pl script to support relative
- paths
-Thread-Index: AQHVdYkISHS3XNGT0kCKyhZHN6EY9KdALBNAgAIVm4CAAmLQsIAjqUEAgACZz9CAALWTgIACLwmw
-Date:   Fri, 25 Oct 2019 17:45:43 +0000
-Message-ID: <02874ECE860811409154E81DA85FBB589693D053@ORSMSX121.amr.corp.intel.com>
-References: <20190129204319.15238-1-jacob.e.keller@intel.com>
- <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
- <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
- <CAK7LNARyUEakeG_N9TWcO2cjFSzbgY__k_QJm6C+oOz+fW0aeg@mail.gmail.com>
- <02874ECE860811409154E81DA85FBB58968E1402@ORSMSX121.amr.corp.intel.com>
- <CAK7LNARAhZtzdnS9+mgtamj=pLdV81dudnYVDa8NRxcQPpF0bw@mail.gmail.com>
- <02874ECE860811409154E81DA85FBB589693A38A@ORSMSX121.amr.corp.intel.com>
- <CAK7LNAQow8N9a5e_=pu7qDiuvETy1x1P5fxp20zYOZgQhXPJhg@mail.gmail.com>
-In-Reply-To: <CAK7LNAQow8N9a5e_=pu7qDiuvETy1x1P5fxp20zYOZgQhXPJhg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZmZmNDVjMTgtNDA3ZC00NzM1LThlZmQtNThmM2Q3Yjc4NTdjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWFV0eGJtcWZwbFY4QVdIR1djN2VydkordFhyaHNuTUN4elpiOWFpZWxib1pQN25GSDNMM2R5MVFiWXZrOWlMNSJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 25 Oct 2019 13:47:30 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43075 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfJYRr3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 13:47:29 -0400
+Received: by mail-ed1-f65.google.com with SMTP id q24so2465405edr.10;
+        Fri, 25 Oct 2019 10:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nFXeXF++tgXXCjkYLE9Tl1lYiBQix+wSHABAFTa5qpE=;
+        b=rd6oFM/lAV8CSL0wUQ9ei7gzzh/oezHlmbzGWss5cCyiKNt5LDViQ7Y/5IJFGhXfem
+         AnPF9WUcNcjre67ysV1zYw9kkFnCD+/MHIWtGtzXSuA/4mEiFVDslr/vbcJ31TDjRPgS
+         3xX+6tcXvIJ1C1XcWN2jWZKerurEnr1+nf+omnJG6IeaIcbf1iWCwmUPeXs6xew32WEA
+         d7xJ/qvInnIHtRzY8cjkFn/3XjKLVCsuBPN4klAnKx+fymZBl/9j54d+8KSX2dabo8iJ
+         6gg3QhP89ayfPOQZCDlDEctJkZQBpvTOuZGkfVqzrri6iowmaPRJ7+qUxT6PyPgLPh2j
+         mJKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nFXeXF++tgXXCjkYLE9Tl1lYiBQix+wSHABAFTa5qpE=;
+        b=Qeq9ipaDUg0PtXsmWasGhT0QkioAhEYJJS4RLgNbbUeQrgvh7SIpmg7dnV0dSc3db3
+         8IoQ4LHIAnL8o4yhxrCl5v+8qRH1slgd/ZpEBN3jkBkjNkp+LKa9pkV0EeoTweFxILJ4
+         VAOElnfOMZ1qBFJYbx5cFfhkwLET5W4wenLMutu/bAps23pWHzPxPY9KYgtsrmA+l9QU
+         N6HN34oJQX23VLt7vN50mDrt39nqRUyeulbSR1BT0stX0tuv6HQdAScJSZcE37C59Tk8
+         ty6NTvfUypwxsq6rDrgi+h1Qr93S7fUQLGP9DVT1l3GaZYQjYe/gwzAOPe++ioa6pTmW
+         OOZg==
+X-Gm-Message-State: APjAAAWtYr/yxj/wgwU7tCf0o4wdiVwP7/Olpo/zh7UX7d4CYv/UJlXa
+        wKvMfLNCvWIGNWQiEAXeuhUQwXpI
+X-Google-Smtp-Source: APXvYqxJ50WVCKouFO6KoyguFWvUVeCreJLgDickuQTima4WPvJS+y3MF3IBxnpEX/LYa4XKdxtJTg==
+X-Received: by 2002:a50:ac3c:: with SMTP id v57mr5219173edc.300.1572025646319;
+        Fri, 25 Oct 2019 10:47:26 -0700 (PDT)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id re21sm5033ejb.65.2019.10.25.10.47.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 10:47:25 -0700 (PDT)
+Subject: Re: [PATCH v5 net-next 05/12] dt-bindings: net: ti: add new cpsw
+ switch driver bindings
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>
+Cc:     Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <20191024100914.16840-1-grygorii.strashko@ti.com>
+ <20191024100914.16840-6-grygorii.strashko@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
+ X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
+ HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
+ YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
+ PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
+ UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
+ iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
+ WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
+ UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
+ sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
+ KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
+ t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
+ AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
+ RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
+ e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
+ UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
+ 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
+ V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
+ xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
+ dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
+ pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
+ caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
+ 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <caf68306-46ce-f97d-b45a-0fc1cd5323f7@gmail.com>
+Date:   Fri, 25 Oct 2019 10:47:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191024100914.16840-6-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hc2FoaXJvIFlhbWFkYSA8
-eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgT2N0b2Jl
-ciAyMywgMjAxOSA2OjIyIFBNDQo+IFRvOiBLZWxsZXIsIEphY29iIEUgPGphY29iLmUua2VsbGVy
-QGludGVsLmNvbT4NCj4gQ2M6IFJhbmR5IER1bmxhcCA8cmR1bmxhcEBpbmZyYWRlYWQub3JnPjsg
-aW50ZWwtd2lyZWQtbGFuQGxpc3RzLm9zdW9zbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWtidWlsZCA8bGludXgta2J1aWxkQHZnZXIua2VybmVsLm9yZz4NCj4g
-U3ViamVjdDogUmU6IFtQQVRDSF0gbmFtZXNwYWNlOiBmaXggbmFtZXNwYWNlLnBsIHNjcmlwdCB0
-byBzdXBwb3J0IHJlbGF0aXZlDQo+IHBhdGhzDQo+IA0KPiBPbiBUaHUsIE9jdCAyNCwgMjAxOSBh
-dCA2OjM0IEFNIEtlbGxlciwgSmFjb2IgRQ0KPiA8amFjb2IuZS5rZWxsZXJAaW50ZWwuY29tPiB3
-cm90ZToNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206
-IE1hc2FoaXJvIFlhbWFkYSA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+DQo+ID4gPiBT
-ZW50OiBUdWVzZGF5LCBPY3RvYmVyIDIyLCAyMDE5IDEwOjIyIFBNDQo+ID4gPiBUbzogS2VsbGVy
-LCBKYWNvYiBFIDxqYWNvYi5lLmtlbGxlckBpbnRlbC5jb20+OyBSYW5keSBEdW5sYXANCj4gPiA+
-IDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+ID4gPiBDYzogaW50ZWwtd2lyZWQtbGFuQGxpc3Rz
-Lm9zdW9zbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrYnVp
-bGQNCj4gPiA+IDxsaW51eC1rYnVpbGRAdmdlci5rZXJuZWwub3JnPg0KPiA+ID4gU3ViamVjdDog
-UmU6IFtQQVRDSF0gbmFtZXNwYWNlOiBmaXggbmFtZXNwYWNlLnBsIHNjcmlwdCB0byBzdXBwb3J0
-IHJlbGF0aXZlDQo+ID4gPiBwYXRocw0KPiA+ID4NCj4gPiA+IFRoaXMgc2NyaXB0cyBoYXMgYmVl
-biA1LXllYXIgYnJva2VuLA0KPiA+ID4gYW5kIEkgZGlkIG5vdCBzZWUgYW55IGNvbXBsYWludCBl
-eGNlcHQgZnJvbSB5b3UuDQo+ID4gPiBTbywgSSB3b25kZXIgaG93IG1hbnkgcGVvcGxlIGFyZSB1
-c2luZyB0aGlzLg0KPiA+ID4NCj4gPiA+IE5vciwgZG8gSSB1bmRlcnN0YW5kIGhvdyB0byB1c2Ug
-aXQuDQo+ID4gPg0KPiA+ID4gQ291bGQgeW91IHRlYWNoIG1lIGEgYml0IG1vcmUgYWJvdXQgdGhp
-cyBzY3JpcHQ/DQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBTb21ldGhpbmcgbWlnaHQgYmUg
-bWlzc2luZyBpbiBteSBtaW5kLCBidXQNCj4gPiA+IEkgZG8gbm90IGtub3cgaG93IHRvIHVzZSB0
-aGlzIHNjcmlwdCBpbiBhIHVzZWZ1bCB3YXkuDQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBJ
-dCBwcm92aWRlcyB0aHJlZSBjaGVja3MuDQo+ID4gPg0KPiA+ID4gWzFdIGxpc3RfbXVsdGlwbHlf
-ZGVmaW5lZCgpDQo+ID4gPg0KPiA+ID4gVGhpcyB3YXJucyBtdWx0aXBsZSBkZWZpbml0aW9uIG9m
-IGZ1bmN0aW9ucy4NCj4gPiA+DQo+ID4gPiBUaGUgY29tcGlsZXIgd291bGQgZmFpbCBpZiBpdCBz
-YXcgYW55IG11bHRpcGxlIGRlZmluaXRpb24sDQo+ID4gPiBzbyB0aGUgcmVwb3J0cyBmcm9tIHRo
-aXMgY2hlY2sgYXJlIGFsbCBmYWxzZS1wb3NpdGl2ZS4NCj4gPiA+DQo+ID4gPg0KPiA+ID4gWzJd
-IHJlc29sdmVfZXh0ZXJuYWxfcmVmZXJlbmNlcygpDQo+ID4gPg0KPiA+ID4gVGhpcyB3YXJucyB1
-bnJlc29sdmVkIHN5bWJvbHMuDQo+ID4gPg0KPiA+ID4gVGhlIGNvbXBpbGVyIHdvdWxkIGZhaWwg
-aWYgaXQgc2F3IGFueSB1bnJlc29sdmVkIHN5bWJvbCwNCj4gPiA+IHNvIHRoZSByZXBvcnRzIGZy
-b20gdGhpcyBjaGVjayBhcmUgYWxsIGZhbHNlLXBvc2l0aXZlLCB0b28uDQo+ID4gPg0KPiA+ID4N
-Cj4gPg0KPiA+IFRoZSBjb21waWxlciB3b24ndCBuZWNlc3NhcmlseSBmYWlsIHdoZW4gYnVpbGRp
-bmcgbW9kdWxlcywgYmVjYXVzZSB0aGUgc3ltYm9sDQo+IG1pZ2h0IGJlIGluIGFub3RoZXIgbG9h
-ZGFibGUgbW9kdWxlLg0KPiANCj4gUmlnaHQsIGJ1dCB0aGlzIGlzIGFscmVhZHkgY2hlY2tlZCBi
-eSBtb2Rwb3N0LCBpc24ndCBpdD8NCj4gDQo+IA0KPiANCj4gPiA+DQo+ID4gPg0KPiA+ID4gWzNd
-IGxpc3RfZXh0cmFfZXh0ZXJuYWxzDQo+ID4gPg0KPiA+ID4gVGhpcyB3YXJucyBzeW1ib2xzIHdp
-dGggbm8gcmVmZXJlbmNlLg0KPiA+ID4NCj4gPiA+IFRoaXMgcG90ZW50aWFsbHkgY29udGFpbnMg
-bG90cyBvZiBmYWxzZS1wb3NpdGl2ZXMuDQo+ID4gPiBGb3IgZXhhbXBsZSwgdGhlIGNvcmUgZnJh
-bWV3b3JrIHByb3ZpZGVzIEFQSXMsIGJ1dCBpZiBhbGwgZHJpdmVycw0KPiA+ID4gYXJlIGRpc2Fi
-bGVkLCB0aGVyZSBpcyBubyB1c2VyIG9mIHRob3NlIEFQSXMuDQo+ID4gPg0KPiA+DQo+ID4gV2Ug
-dXNlIHRoaXMgdG8gaGVscCB2ZXJpZnkgdGhhdCBkcml2ZXIgbW9kdWxlcyBkbyBub3QgZXhwb3Nl
-IHN5bWJvbHMuDQo+IA0KPiBBaCwgdGhlIG91dHB1dCBpcyBxdWl0ZSBsYXJnZSwgc28NCj4geW91
-IHNlYXJjaCBmb3Igb25seSBtb2R1bGVzIGluIHlvdXIgaW50ZXJlc3QuIFJpZ2h0Pw0KPiANCg0K
-V2UgcnVuIGl0IG9uIG9ubHkgb25lIG1vZHVsZSBhdCBhIHRpbWUsIHllcy4NCg0KPiANCj4gSWYg
-eW91IHdhbnQgdG8gZGV0ZWN0IG1pc3NpbmcgJ3N0YXRpYycsDQo+IGhhdmUgeW91IHRyaWVkICdz
-cGFyc2UnPw0KPiANCg0KV2UndmUgdXNlZCB0aGF0IGFzIHdlbGwuIA0KDQpUbyBiZSBmYWlyLCBJ
-IGFncmVlIHRoYXQgaXQgY292ZXJzIHNpbWlsYXIgZnVuY3Rpb25hbGl0eSBhcyBvdGhlciB0b29s
-cy4gSSBoYXZlbid0IGxvb2tlZCBkaXJlY3RseSBhdCBuYW1lc3BhY2UucGwgb3V0cHV0IGluIGEg
-d2hpbGUsIGFuZCB0aGUgZml4IGhlcmUgaXMgbXVsdGlwbGUgeWVhcnMgb2xkIHRoYXQgdG9vayBh
-IGxvbmcgdGltZSB0byBnZXQgcGlja2VkIHVwLg0KDQpJZiBpdCdzIGFncmVlZCB0aGF0IHRoZSB0
-b29sIGhhcyBubyB2YWx1ZSwgYW5kIGVzcGVjaWFsbHkgaWYgaXQgcmVzdWx0cyBpbiBmYWxzZSBp
-bmRpY2F0aW9ucyBvZiBhIHByb2JsZW0sIHRoZW4gbWF5YmUgcmVtb3ZpbmcgaXQgdG8gcHJldmVu
-dCBzb21lb25lIGZyb20gbWlzLXJlYWRpbmcgaXRzIG91dHB1dCBtYWtlcyBzZW5zZT8NCg0KVGhh
-bmtzLA0KSmFrZQ0KDQo+IA0KPiANCj4gPiBUaGFua3MsDQo+ID4gSmFrZQ0KPiANCj4gDQo+IA0K
-PiAtLQ0KPiBCZXN0IFJlZ2FyZHMNCj4gTWFzYWhpcm8gWWFtYWRhDQo=
+On 10/24/19 3:09 AM, Grygorii Strashko wrote:
+> Add bindings for the new TI CPSW switch driver. Comparing to the legacy
+> bindings (net/cpsw.txt):
+> - ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
+> marked as "disabled" if not physically wired.
+> - all deprecated properties dropped;
+> - all legacy propertiies dropped which represent constant HW cpapbilities
+> (cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
+> active_slave)
+> - TI CPTS DT properties are reused as is, but grouped in "cpts" sub-node
+> - TI Davinci MDIO DT bindings are reused as is, because Davinci MDIO is
+> reused.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+
+[snip]
+> +- mdio : CPSW MDIO bus block description
+> +	- bus_freq : MDIO Bus frequency
+
+clock-frequency is a more typical property to describe the bus clock's
+frequency, that is what i2c and spi do.
+
+> +	See bindings/net/mdio.txt and davinci-mdio.txt
+> +
+> +- cpts : The Common Platform Time Sync (CPTS) module description
+> +	- clocks : should contain the CPTS reference clock
+> +	- clock-names : should be "cpts"
+> +	See bindings/clock/clock-bindings.txt
+> +
+> +	Optional properties - all ports:
+> +	- cpts_clock_mult : Numerator to convert input clock ticks into ns
+> +	- cpts_clock_shift : Denominator to convert input clock ticks into ns
+> +			  Mult and shift will be calculated basing on CPTS
+> +			  rftclk frequency if both cpts_clock_shift and
+> +			  cpts_clock_mult properties are not provided.
+
+Why would those two be needed that would be modeled in the Linux Common
+Clock Framework?
+-- 
+Florian
