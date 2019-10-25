@@ -2,79 +2,61 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C67CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5391ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3889A21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:57:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="duXG1RTD"
+	by mail.kernel.org (Postfix) with ESMTP id 25A85222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633164AbfJYQ5W (ORCPT
+        id S2633174AbfJYQ5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 12:57:22 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40021 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731452AbfJYQ5V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:57:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id p6so3183269iod.7
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 09:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=5pSGcxvGK5oP1IzZ6MvQUjfgBRIVbr1nCRtFhGB+l/g=;
-        b=duXG1RTDxWIMYQGeJPrnpPXYv0P9L6mQbFSR2slgjVGBwz6IVjvu7wuAwvset9ZtzV
-         6jvmifH2vXVRG6AAjK86eT2Xz2Z/j4apGTbLMUAsQmuowPTsdXgQyctz1HWL1odKHcC0
-         uIv0E+gToGvtWjykUoPOxM8CT46Ym0CYklc+ARNcwJwr06H1zrMj/oZl2r4HOlw7Kf+q
-         4Vhn8Po11/ajYvBykrEjyA5r1KpMQPhcAaMrdaYaSMOn2t8c/0WJc9qEzTdu3iqZCCL/
-         smuw5THimoIjHilWHV25SgbPr9o4M2vGMuZB4tgoYWk5N/YgIYIU5miMuU+Y5Ck+TZ1s
-         iGBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5pSGcxvGK5oP1IzZ6MvQUjfgBRIVbr1nCRtFhGB+l/g=;
-        b=Op7BimgbjnyMP2h3SX7vHbrWCqgadlJ8luKNNz7vVYX9EOg6udqdZ0QDPTiipp8SSB
-         d3J95S+xa4DWbtJUSDHi6F1lVB3dcDgsWDI9ijuHgNphw6dYMoDMT4WAC+tn0s/kMeFR
-         I51hwn1EE8Xp6faZTB1Hl/hsea1rg6Mpj1GAaO892opP3TpM7jUVH6ME6iy9EVkEKYRp
-         lyWsxVC2MbtLLbzkXmONHrk+11TkaTCY4CJpIeitnTijPlpz4hprISrx1gFk3/pY05Ll
-         pEiiMtEV74wNI5PddtMoDoQWvGeFuHm2LPziQFTiDbscwZje5xpJIQ/ICjbdEqgjh/B1
-         k9jw==
-X-Gm-Message-State: APjAAAXJBOzQEMiAF/t8acB3z6L7SUVvb/GyqV9crJT/0eATnwbNgRvK
-        xFydeDCOS3KEMpjK5vvQDcCjcrk2RTuAlA==
-X-Google-Smtp-Source: APXvYqyUpEp9ixe20yDGImEZLQS+sG7eIycZtte66x8PZp9xJWJA7yk5nLnfMKLdeOUFkdwFPmBODw==
-X-Received: by 2002:a05:6602:2581:: with SMTP id p1mr4644702ioo.32.1572022640231;
-        Fri, 25 Oct 2019 09:57:20 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r13sm421723ilo.35.2019.10.25.09.57.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 09:57:19 -0700 (PDT)
-Subject: Re: [BUG] io_uring: defer logic based on shared data
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
- <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
- <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
- <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
- <df3b9edd-86ad-5460-b61b-66707c0fb630@kernel.dk>
- <31a7765b-bb6d-985a-454d-d998678100d1@gmail.com>
- <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
- <e5a6f77a-3404-0dc8-ac6e-584737d71a33@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <a0d8a8e1-18dc-8090-037c-e5baf9bd45c3@kernel.dk>
-Date:   Fri, 25 Oct 2019 10:57:18 -0600
+        Fri, 25 Oct 2019 12:57:30 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15672 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633153AbfJYQ53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 12:57:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 09:57:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
+   d="scan'208";a="373604667"
+Received: from davidpat-mobl2.amr.corp.intel.com (HELO [10.251.153.16]) ([10.251.153.16])
+  by orsmga005.jf.intel.com with ESMTP; 25 Oct 2019 09:57:27 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoC: eve: implement set_bias_level function
+ for rt5514
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        "M, Naveen" <naveen.m@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>
+References: <1571994691-20199-1-git-send-email-brent.lu@intel.com>
+ <3ce80285-ddb5-653d-cf60-febc9fd0bdee@linux.intel.com>
+ <CF33C36214C39B4496568E5578BE70C740320822@PGSMSX108.gar.corp.intel.com>
+ <219281e5-d685-d584-0d22-5dcf3ca2bec2@linux.intel.com>
+ <CF33C36214C39B4496568E5578BE70C74032096B@PGSMSX108.gar.corp.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <618b3202-6418-a7e2-9b8e-bc32c01d46ed@linux.intel.com>
+Date:   Fri, 25 Oct 2019 11:57:26 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <e5a6f77a-3404-0dc8-ac6e-584737d71a33@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CF33C36214C39B4496568E5578BE70C74032096B@PGSMSX108.gar.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,64 +64,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 10:55 AM, Pavel Begunkov wrote:
-> On 25/10/2019 19:44, Jens Axboe wrote:
->> On 10/25/19 10:40 AM, Pavel Begunkov wrote:
->>> On 25/10/2019 19:32, Jens Axboe wrote:
->>>> On 10/25/19 10:27 AM, Jens Axboe wrote:
->>>>> On 10/25/19 10:21 AM, Pavel Begunkov wrote:
->>>>>> On 25/10/2019 19:03, Jens Axboe wrote:
->>>>>>> On 10/25/19 3:55 AM, Pavel Begunkov wrote:
->>>>>>>> I found 2 problems with __io_sequence_defer().
->>>>>>>>
->>>>>>>> 1. it uses @sq_dropped, but doesn't consider @cq_overflow
->>>>>>>> 2. @sq_dropped and @cq_overflow are write-shared with userspace, so
->>>>>>>> it can be maliciously changed.
->>>>>>>>
->>>>>>>> see sent liburing test (test/defer *_hung()), which left an unkillable
->>>>>>>> process for me
->>>>>>>
->>>>>>> OK, how about the below. I'll split this in two, as it's really two
->>>>>>> separate fixes.
->>>>>> cached_sq_dropped is good, but I was concerned about cached_cq_overflow.
->>>>>> io_cqring_fill_event() can be called in async, so shouldn't we do some
->>>>>> synchronisation then?
->>>>>
->>>>> We should probably make it an atomic just to be on the safe side, I'll
->>>>> update the series.
->>>>
->>>> Here we go, patch 1:
->>>>
->>>> http://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=f2a241f596ed9e12b7c8f960e79ccda8053ea294
->>>>
->>>> patch 2:
->>>>
->>>> http://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=b7d0297d2df5bfa0d1ecf9d6c66d23676751ef6a
->>>>
->>> 1. submit rqs (not yet completed)
->>> 2. poll_list is empty, inflight = 0
->>> 3. async completed and placed into poll_list
->>>
->>> So, poll_list is not empty, but we won't get to polling again.
->>> At least until someone submitted something.
->>
->> But if they are issued, the will sit in ->poll_list as well. That list
->> holds both "submitted, but pending" and completed entries.
->>
-> Missed it, then should work. Thanks!
 
-Glad we agree :-)
 
->> + ret = iters = 0;
-> A small suggestion, could we just initialise it in declaration
-> to be a bit more concise?
-> e.g. int ret = 0, iters = 0;
+On 10/25/19 11:14 AM, Lu, Brent wrote:
+>>
+>> Can you clarify if the rt5514 needs the MCLK while it's doing the hotword
+>> detection?
 > 
-> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
-> And let me test it as both patches are ready.
+> No, running the detection does not raise the bias level so the set_bias_level
+> will not be called. The mclk is only turned on then off in mixer control's handler
+> (rt5514_dsp_voice_wake_up_put) when enabling the hotword detection.
+> 
+>>
+>> My point is really that this patch uses a card-level BIAS indication, and I'd like
+>> to make sure this does not interfere with the audio DSP being in D3 state.
+> 
+> The function checks the name of dapm so it would only react when rt5514's
+> bias level is changing. And also the idle_bias_off of the codec driver is true so
+> it's target_bias_level should not be overwritten in the dapm_power_widgets()
+> function. The behavior should be similar to the previous patch which is using
+> supply widget.
 
-Sure, I'll make that change and add your reviewed-by. Thanks!
+Ah yes, I did miss this test:
 
--- 
-Jens Axboe
++	if (!component || strcmp(component->name, RT5514_DEV_NAME))
++		return 0;
+
+Looks good then, thanks for the explanations.
+
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
