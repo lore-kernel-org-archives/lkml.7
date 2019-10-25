@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E2BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E999CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9444222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59049222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012083;
-	bh=6fwHDYAVti6MCwtld+8+l3TvOFU3KBYtoriCECp5pMg=;
+	s=default; t=1572012085;
+	bh=iBDissv+RAFwCtToVRjoa9uFXuIcswIIMG6AChOrBYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqMCwEZewd6jJHk4dGqr1pRXxgNc6zlLxT2DIEzcBYdj2VVznMKVTxMKjftWY+K8U
-	 IZjA9RmeON2/Z/k5pr9U5c9Eubr62h9Bcf9Hs0cbBThm6ePEYKJz8XxRhELFxkL1O/
-	 JrT3Toz0zFFIwDK5c3LLmUN9B2F9gs1heKjo7u6w=
+	b=jKCfErfpS/j72Rnst2IXti5/l45mxGGFxj9qLOnRP9JXXiD26eiAQUJ87g7LNuHsk
+	 kocOG7NmB2euk+Xda3acaabU8Ckbi8Jp2J6aSP+YtNS2ynFUlRb61J4Wf8QsVG0JlQ
+	 EdVvlYO1FnalaganUU+bDULRIr9hElVS7oWk8hCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505561AbfJYN6Z (ORCPT
+        id S2505549AbfJYN6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505514AbfJYN6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732654AbfJYN6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 09:58:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F145222C2;
-        Fri, 25 Oct 2019 13:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFAB7222CD;
+        Fri, 25 Oct 2019 13:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011898;
-        bh=6fwHDYAVti6MCwtld+8+l3TvOFU3KBYtoriCECp5pMg=;
+        s=default; t=1572011896;
+        bh=iBDissv+RAFwCtToVRjoa9uFXuIcswIIMG6AChOrBYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oi+l7OHVloAJ/tHT9Gqs8X+zhUjIY7rG7fuuZPz25wv4wWL0fEXjKC6PYXSgglw+a
-         QQq1MO0tVtT33Ee5i6vizWU4xuQp5OIxhEIxgXe8Hd8W2IvgAbbKDMRC9GZ1VDzaNc
-         pjdy/6KvR0wGcH2Q5JRGHZg1tdLZYdZ4akiB7yGk=
+        b=jWcwYswdRTKyDUCIkheulVQKAdujauAFH3DEluDyxVaNWsCISfGAZkg/OKfn6j28d
+         rQf/bFcQETsaUXy8TDa5krPKlSWrstQPJOEfpvCnvULZts88tSwcdx8ZAhHN3Sp+LB
+         0FfJxxSH7ErvU27FWqlPOawzO0Vfs4hUlDuUtpkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/20] sch_netem: fix rcu splat in netem_enqueue()
-Date:   Fri, 25 Oct 2019 09:57:49 -0400
-Message-Id: <20191025135801.25739-9-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 08/20] drm/msm: Use the correct dma_sync calls in msm_gem
+Date:   Fri, 25 Oct 2019 09:57:48 -0400
+Message-Id: <20191025135801.25739-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
 References: <20191025135801.25739-1-sashal@kernel.org>
@@ -60,106 +61,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 159d2c7d8106177bd9a986fd005a311fe0d11285 ]
+[ Upstream commit 3de433c5b38af49a5fc7602721e2ab5d39f1e69c ]
 
-qdisc_root() use from netem_enqueue() triggers a lockdep warning.
+[subject was: drm/msm: shake fist angrily at dma-mapping]
 
-__dev_queue_xmit() uses rcu_read_lock_bh() which is
-not equivalent to rcu_read_lock() + local_bh_disable_bh as far
-as lockdep is concerned.
+So, using dma_sync_* for our cache needs works out w/ dma iommu ops, but
+it falls appart with dma direct ops.  The problem is that, depending on
+display generation, we can have either set of dma ops (mdp4 and dpu have
+iommu wired to mdss node, which maps to toplevel drm device, but mdp5
+has iommu wired up to the mdp sub-node within mdss).
 
-WARNING: suspicious RCU usage
-5.3.0-rc7+ #0 Not tainted
------------------------------
-include/net/sch_generic.h:492 suspicious rcu_dereference_check() usage!
+Fixes this splat on mdp5 devices:
 
-other info that might help us debug this:
+   Unable to handle kernel paging request at virtual address ffffffff80000000
+   Mem abort info:
+     ESR = 0x96000144
+     Exception class = DABT (current EL), IL = 32 bits
+     SET = 0, FnV = 0
+     EA = 0, S1PTW = 0
+   Data abort info:
+     ISV = 0, ISS = 0x00000144
+     CM = 1, WnR = 1
+   swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000810e4000
+   [ffffffff80000000] pgd=0000000000000000
+   Internal error: Oops: 96000144 [#1] SMP
+   Modules linked in: btqcomsmd btqca bluetooth cfg80211 ecdh_generic ecc rfkill libarc4 panel_simple msm wcnss_ctrl qrtr_smd drm_kms_helper venus_enc venus_dec videobuf2_dma_sg videobuf2_memops drm venus_core ipv6 qrtr qcom_wcnss_pil v4l2_mem2mem qcom_sysmon videobuf2_v4l2 qmi_helpers videobuf2_common crct10dif_ce mdt_loader qcom_common videodev qcom_glink_smem remoteproc bmc150_accel_i2c bmc150_magn_i2c bmc150_accel_core bmc150_magn snd_soc_lpass_apq8016 snd_soc_msm8916_analog mms114 mc nf_defrag_ipv6 snd_soc_lpass_cpu snd_soc_apq8016_sbc industrialio_triggered_buffer kfifo_buf snd_soc_lpass_platform snd_soc_msm8916_digital drm_panel_orientation_quirks
+   CPU: 2 PID: 33 Comm: kworker/2:1 Not tainted 5.3.0-rc2 #1
+   Hardware name: Samsung Galaxy A5U (EUR) (DT)
+   Workqueue: events deferred_probe_work_func
+   pstate: 80000005 (Nzcv daif -PAN -UAO)
+   pc : __clean_dcache_area_poc+0x20/0x38
+   lr : arch_sync_dma_for_device+0x28/0x30
+   sp : ffff0000115736a0
+   x29: ffff0000115736a0 x28: 0000000000000001
+   x27: ffff800074830800 x26: ffff000011478000
+   x25: 0000000000000000 x24: 0000000000000001
+   x23: ffff000011478a98 x22: ffff800009fd1c10
+   x21: 0000000000000001 x20: ffff800075ad0a00
+   x19: 0000000000000000 x18: ffff0000112b2000
+   x17: 0000000000000000 x16: 0000000000000000
+   x15: 00000000fffffff0 x14: ffff000011455d70
+   x13: 0000000000000000 x12: 0000000000000028
+   x11: 0000000000000001 x10: ffff00001106c000
+   x9 : ffff7e0001d6b380 x8 : 0000000000001000
+   x7 : ffff7e0001d6b380 x6 : ffff7e0001d6b382
+   x5 : 0000000000000000 x4 : 0000000000001000
+   x3 : 000000000000003f x2 : 0000000000000040
+   x1 : ffffffff80001000 x0 : ffffffff80000000
+   Call trace:
+    __clean_dcache_area_poc+0x20/0x38
+    dma_direct_sync_sg_for_device+0xb8/0xe8
+    get_pages+0x22c/0x250 [msm]
+    msm_gem_get_and_pin_iova+0xdc/0x168 [msm]
+    ...
 
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by syz-executor427/8855:
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: ip_finish_output2+0x2dc/0x2570 net/ipv4/ip_output.c:214
- #1: 00000000b5525c01 (rcu_read_lock_bh){....}, at: __dev_queue_xmit+0x20a/0x3650 net/core/dev.c:3804
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_xmit_skb net/core/dev.c:3502 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_queue_xmit+0x14b8/0x3650 net/core/dev.c:3838
+Fixes the combination of two patches:
 
-stack backtrace:
-CPU: 0 PID: 8855 Comm: syz-executor427 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5357
- qdisc_root include/net/sch_generic.h:492 [inline]
- netem_enqueue+0x1cfb/0x2d80 net/sched/sch_netem.c:479
- __dev_xmit_skb net/core/dev.c:3527 [inline]
- __dev_queue_xmit+0x15d2/0x3650 net/core/dev.c:3838
- dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
- neigh_hh_output include/net/neighbour.h:500 [inline]
- neigh_output include/net/neighbour.h:509 [inline]
- ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
- ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_mc_output+0x292/0xf40 net/ipv4/ip_output.c:417
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
- ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1555
- udp_send_skb.isra.0+0x6b2/0x1160 net/ipv4/udp.c:887
- udp_sendmsg+0x1e96/0x2820 net/ipv4/udp.c:1174
- inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 0036bc73ccbe (drm/msm: stop abusing dma_map/unmap for cache)
+Fixes: 449fa54d6815 (dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device)
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+[seanpaul changed subject to something more desriptive]
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190730214633.17820-1-robdclark@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sch_generic.h | 5 +++++
- net/sched/sch_netem.c     | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_gem.c | 47 +++++++++++++++++++++++++++++++----
+ 1 file changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
-index 538f3c4458b04..5d5a137b9067f 100644
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -276,6 +276,11 @@ static inline struct Qdisc *qdisc_root(const struct Qdisc *qdisc)
- 	return q;
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index a472d4d902dde..569e8c45a59aa 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -40,6 +40,46 @@ static bool use_pages(struct drm_gem_object *obj)
+ 	return !msm_obj->vram_node;
  }
  
-+static inline struct Qdisc *qdisc_root_bh(const struct Qdisc *qdisc)
++/*
++ * Cache sync.. this is a bit over-complicated, to fit dma-mapping
++ * API.  Really GPU cache is out of scope here (handled on cmdstream)
++ * and all we need to do is invalidate newly allocated pages before
++ * mapping to CPU as uncached/writecombine.
++ *
++ * On top of this, we have the added headache, that depending on
++ * display generation, the display's iommu may be wired up to either
++ * the toplevel drm device (mdss), or to the mdp sub-node, meaning
++ * that here we either have dma-direct or iommu ops.
++ *
++ * Let this be a cautionary tail of abstraction gone wrong.
++ */
++
++static void sync_for_device(struct msm_gem_object *msm_obj)
 +{
-+	return rcu_dereference_bh(qdisc->dev_queue->qdisc);
++	struct device *dev = msm_obj->base.dev->dev;
++
++	if (get_dma_ops(dev)) {
++		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
++			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++	} else {
++		dma_map_sg(dev, msm_obj->sgt->sgl,
++			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++	}
 +}
 +
- static inline struct Qdisc *qdisc_root_sleeping(const struct Qdisc *qdisc)
- {
- 	return qdisc->dev_queue->qdisc_sleeping;
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index 12e3ae09c4ba1..95002e56fa48b 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -475,7 +475,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 	 * skb will be queued.
- 	 */
- 	if (count > 1 && (skb2 = skb_clone(skb, GFP_ATOMIC)) != NULL) {
--		struct Qdisc *rootq = qdisc_root(sch);
-+		struct Qdisc *rootq = qdisc_root_bh(sch);
- 		u32 dupsave = q->duplicate; /* prevent duplicating a dup... */
++static void sync_for_cpu(struct msm_gem_object *msm_obj)
++{
++	struct device *dev = msm_obj->base.dev->dev;
++
++	if (get_dma_ops(dev)) {
++		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
++			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++	} else {
++		dma_unmap_sg(dev, msm_obj->sgt->sgl,
++			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++	}
++}
++
+ /* allocate pages from VRAM carveout, used when no IOMMU: */
+ static struct page **get_pages_vram(struct drm_gem_object *obj,
+ 		int npages)
+@@ -106,8 +146,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
+ 		 * because display controller, GPU, etc. are not coherent:
+ 		 */
+ 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
+-					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
++			sync_for_device(msm_obj);
+ 	}
  
- 		q->duplicate = 0;
+ 	return msm_obj->pages;
+@@ -124,9 +163,7 @@ static void put_pages(struct drm_gem_object *obj)
+ 			 * GPU, etc. are not coherent:
+ 			 */
+ 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
+-					     msm_obj->sgt->nents,
+-					     DMA_BIDIRECTIONAL);
++				sync_for_cpu(msm_obj);
+ 
+ 			sg_free_table(msm_obj->sgt);
+ 			kfree(msm_obj->sgt);
 -- 
 2.20.1
 
