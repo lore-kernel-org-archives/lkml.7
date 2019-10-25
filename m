@@ -2,131 +2,114 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EAFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234E4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8424C222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLizEG5H"
+	by mail.kernel.org (Postfix) with ESMTP id F34A221D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503952AbfJYMCF (ORCPT
+        id S2504013AbfJYMCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:02:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25790 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2502539AbfJYMCE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:02:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572004923;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IBg/RemnUO6FrGBf0EaqOcr2gXDDQq0ETHC+883fOmI=;
-        b=QLizEG5HiQ1UD/o52bIlhmIdM6K3ICA2+5sbykhC27eRB2cuFb7VLUBk5adiYaemE/fFhm
-        5HMJdb1+ioPyWEI8M2wpNWanNKvIpMppmS2T2jEe1ZkiICZPC8jZxJIP37yiCJE7o2ntpP
-        mCNTIU8ANm0dl+r4LPkwDLlqUqFdZdQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-9JO_5gNoPreq6XvpTBvKag-1; Fri, 25 Oct 2019 08:01:59 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 25 Oct 2019 08:02:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38047 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502539AbfJYMCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 08:02:23 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC4EA800D41;
-        Fri, 25 Oct 2019 12:01:57 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8A7DC5D9CA;
-        Fri, 25 Oct 2019 12:01:55 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 14:01:54 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-Subject: Re: [PATCH] perf c2c: Fix memory leak in c2c_he_zalloc()
-Message-ID: <20191025120154.GA25352@krava>
-References: <9d5f26f8-9429-bcb6-d491-cb789f761ea2@huawei.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 51DF677323
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:02:23 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id a81so1019212wma.4
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:02:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nhnGjNYl34BBej/G9IX/zdJYT44shCWthBnaow9hDa0=;
+        b=g1dYTTVYRlnM/iM+4jeX+Texf207jbABhAVpIVBEM0bUS1amuF+SwiFxzyPIo06r0k
+         kBLeYgPQwodexL9mNJR2gqAfUO8ZkBoE3ekTlCsYu11kczxcBMm7WtfIqrl85ybkwklh
+         YziFODkSWJpGRmJ/36LNjiakX6IOiHKBCLb5ZZmgnIUIRqcVjh0HETOjAbIEI//pCpU4
+         iSMQUVPLbP0w7xFacXoeu2E/q+jFI3RaqZBpgc1kJBVVfqLFDxKuKN/LUF3gHpGOXblh
+         kpiBrk74G3pTOgQfYtxk+n/fJf8sgtipHAq0fnYQXZq1jsa8YeuMSEEfcTe0DTDHmK0A
+         m5Iw==
+X-Gm-Message-State: APjAAAVC6rl1nRsCfhAxrHh3Rd7UFVmAO37grmJI0SWG7mpI1mVCbeAi
+        o2fv37SDKbuhOIliH/6U9yqb9STY4psH7igYFx/9lw9K1R3BpdxY+OxXtlCfF2pLgr7JmdAYMGA
+        WqEgv4befRTQX9VsGkREGOepg
+X-Received: by 2002:a1c:9847:: with SMTP id a68mr3155391wme.18.1572004941654;
+        Fri, 25 Oct 2019 05:02:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxwsMVOR60a0YiZNHpidmA8uSmWVIC5eakJiKfRUewwkkwxWAf6JFvuj/ZwuF4qfke5tp78TQ==
+X-Received: by 2002:a1c:9847:: with SMTP id a68mr3155367wme.18.1572004941369;
+        Fri, 25 Oct 2019 05:02:21 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:9c7b:17ec:2a40:d29? ([2001:b07:6468:f312:9c7b:17ec:2a40:d29])
+        by smtp.gmail.com with ESMTPSA id 79sm2637628wmb.7.2019.10.25.05.02.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Oct 2019 05:02:20 -0700 (PDT)
+Subject: Re: [PATCH] x86/kvm: Fix -Wmissing-prototypes warnings
+To:     wang.yi59@zte.com.cn, kvm@vger.kernel.org
+Cc:     rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        up2wing@gmail.com, wang.liang82@zte.com.cn
+References: <201910250958273740534@zte.com.cn>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <07bbeb02-e8fe-36d5-a761-402a48fe076f@redhat.com>
+Date:   Fri, 25 Oct 2019 14:02:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <9d5f26f8-9429-bcb6-d491-cb789f761ea2@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 9JO_5gNoPreq6XvpTBvKag-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <201910250958273740534@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 05:42:47PM +0800, Yunfeng Ye wrote:
-> A memory leak in c2c_he_zalloc() is found by visual inspection.
->=20
-> Fix this by adding memory free on the error paths in c2c_he_zalloc().
->=20
-> Fixes: 7f834c2e84bb ("perf c2c report: Display node for cacheline address=
-")
-> Fixes: 1e181b92a2da ("perf c2c report: Add 'node' sort key")
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Queued, thanks.  It may not appear on git.kernel.org until after KVM
+Forum though.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Paolo
 
-thanks,
-jirka
-
+On 25/10/19 03:58, wang.yi59@zte.com.cn wrote:
+> Gentle Ping :)
+> 
+>> We get two warning when build kernel with W=1:
+>> arch/x86/kernel/kvm.c:872:6: warning: no previous prototype for ‘arch_haltpoll_enable’ [-Wmissing-prototypes]
+>> arch/x86/kernel/kvm.c:885:6: warning: no previous prototype for ‘arch_haltpoll_disable’ [-Wmissing-prototypes]
+>>
+>> Including the missing head file can fix this.
+>>
+>> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+>> ---
+>>  arch/x86/kernel/kvm.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+>> index e820568..32ef1ee 100644
+>> --- a/arch/x86/kernel/kvm.c
+>> +++ b/arch/x86/kernel/kvm.c
+>> @@ -33,6 +33,7 @@
+>>  #include <asm/apicdef.h>
+>>  #include <asm/hypervisor.h>
+>>  #include <asm/tlb.h>
+>> +#include <asm/cpuidle_haltpoll.h>
+>>
+>>  static int kvmapf = 1;
+> 
+> 
 > ---
->  tools/perf/builtin-c2c.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
->=20
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index e69f44941aad..ad7d38a9dcbe 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -138,21 +138,29 @@ static void *c2c_he_zalloc(size_t size)
->=20
->  =09c2c_he->cpuset =3D bitmap_alloc(c2c.cpus_cnt);
->  =09if (!c2c_he->cpuset)
-> -=09=09return NULL;
-> +=09=09goto free_c2c_he;
->=20
->  =09c2c_he->nodeset =3D bitmap_alloc(c2c.nodes_cnt);
->  =09if (!c2c_he->nodeset)
-> -=09=09return NULL;
-> +=09=09goto free_cpuset;
->=20
->  =09c2c_he->node_stats =3D zalloc(c2c.nodes_cnt * sizeof(*c2c_he->node_st=
-ats));
->  =09if (!c2c_he->node_stats)
-> -=09=09return NULL;
-> +=09=09goto free_nodeset;
->=20
->  =09init_stats(&c2c_he->cstats.lcl_hitm);
->  =09init_stats(&c2c_he->cstats.rmt_hitm);
->  =09init_stats(&c2c_he->cstats.load);
->=20
->  =09return &c2c_he->he;
-> +
-> +free_nodeset:
-> +=09free(c2c_he->nodeset);
-> +free_cpuset:
-> +=09free(c2c_he->cpuset);
-> +free_c2c_he:
-> +=09free(c2c_he);
-> +=09return NULL;
->  }
->=20
->  static void c2c_he_free(void *he)
-> --=20
-> 2.7.4
->=20
+> Best wishes
+> Yi Wang
+> 
 
