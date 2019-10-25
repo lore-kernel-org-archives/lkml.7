@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF06DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C15ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 834A021D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15FD2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732529AbfJYSIJ (ORCPT
+        id S1732597AbfJYSIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46794 "EHLO
+        Fri, 25 Oct 2019 14:08:14 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46802 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731438AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731441AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0008OQ-R9; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xx-0008PB-2v; Fri, 25 Oct 2019 19:05:37 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001ig-EO; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xw-0001kE-7O; Fri, 25 Oct 2019 19:05:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Felipe Balbi" <felipe.balbi@linux.intel.com>,
-        "Kiruthika Varadarajan" <Kiruthika.Varadarajan@harman.com>
-Date:   Fri, 25 Oct 2019 19:03:16 +0100
-Message-ID: <lsq.1572026582.212582703@decadent.org.uk>
+        "Christophe Leroy" <christophe.leroy@c-s.fr>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>
+Date:   Fri, 25 Oct 2019 19:03:35 +0100
+Message-ID: <lsq.1572026582.623399615@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 15/47] usb: gadget: ether: Fix race between
- gether_disconnect and rx_submit
+Subject: [PATCH 3.16 34/47] lib/scatterlist: Fix mapping iterator when
+ sg->offset is greater than PAGE_SIZE
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,48 +56,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit d29fcf7078bc8be2b6366cbd4418265b53c94fac upstream.
+commit aeb87246537a83c2aff482f3f34a2e0991e02cbc upstream.
 
-On spin lock release in rx_submit, gether_disconnect get a chance to
-run, it makes port_usb NULL, rx_submit access NULL port USB, hence null
-pointer crash.
+All mapping iterator logic is based on the assumption that sg->offset
+is always lower than PAGE_SIZE.
 
-Fixed by releasing the lock in rx_submit after port_usb is used.
+But there are situations where sg->offset is such that the SG item
+is on the second page. In that case sg_copy_to_buffer() fails
+properly copying the data into the buffer. One of the reason is
+that the data will be outside the kmapped area used to access that
+data.
 
-Fixes: 2b3d942c4878 ("usb ethernet gadget: split out network core")
-Signed-off-by: Kiruthika Varadarajan <Kiruthika.Varadarajan@harman.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-[bwh: Backported to 3.16: adjust filename]
+This patch fixes the issue by adjusting the mapping iterator
+offset and pgoffset fields such that offset is always lower than
+PAGE_SIZE.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 4225fc8555a9 ("lib/scatterlist: use page iterator in the mapping iterator")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/gadget/u_ether.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ lib/scatterlist.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/gadget/u_ether.c
-+++ b/drivers/usb/gadget/u_ether.c
-@@ -202,11 +202,12 @@ rx_submit(struct eth_dev *dev, struct us
- 		out = dev->port_usb->out_ep;
- 	else
- 		out = NULL;
--	spin_unlock_irqrestore(&dev->lock, flags);
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -459,17 +459,18 @@ static bool sg_miter_get_next_page(struc
+ {
+ 	if (!miter->__remaining) {
+ 		struct scatterlist *sg;
+-		unsigned long pgoffset;
  
- 	if (!out)
-+	{
-+		spin_unlock_irqrestore(&dev->lock, flags);
- 		return -ENOTCONN;
--
-+	}
+ 		if (!__sg_page_iter_next(&miter->piter))
+ 			return false;
  
- 	/* Padding up to RX_EXTRA handles minor disagreements with host.
- 	 * Normally we use the USB "terminate on short read" convention;
-@@ -227,6 +228,7 @@ rx_submit(struct eth_dev *dev, struct us
+ 		sg = miter->piter.sg;
+-		pgoffset = miter->piter.sg_pgoffset;
  
- 	if (dev->port_usb->is_fixed)
- 		size = max_t(size_t, size, dev->port_usb->fixed_out_len);
-+	spin_unlock_irqrestore(&dev->lock, flags);
- 
- 	skb = alloc_skb(size + NET_IP_ALIGN, gfp_flags);
- 	if (skb == NULL) {
+-		miter->__offset = pgoffset ? 0 : sg->offset;
++		miter->__offset = miter->piter.sg_pgoffset ? 0 : sg->offset;
++		miter->piter.sg_pgoffset += miter->__offset >> PAGE_SHIFT;
++		miter->__offset &= PAGE_SIZE - 1;
+ 		miter->__remaining = sg->offset + sg->length -
+-				(pgoffset << PAGE_SHIFT) - miter->__offset;
++				     (miter->piter.sg_pgoffset << PAGE_SHIFT) -
++				     miter->__offset;
+ 		miter->__remaining = min_t(unsigned long, miter->__remaining,
+ 					   PAGE_SIZE - miter->__offset);
+ 	}
 
