@@ -2,155 +2,142 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D963CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B1CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7EF21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hfOx8YhL"
+	by mail.kernel.org (Postfix) with ESMTP id ABFA221929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501916AbfJYJ73 (ORCPT
+        id S2502013AbfJYJ7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:59:29 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54864 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408510AbfJYJ72 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:59:28 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P9xKrK066500;
-        Fri, 25 Oct 2019 04:59:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571997560;
-        bh=V6hOD5dytEB/3BCbaVXsPiwjMD39duocB15Lwiy7XLU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hfOx8YhLPWRW7wJRbqNBJ5mw+F8j9L+oe9BMdToXpsp09kwVmjN6EZOJvwO2uj7SS
-         cMWaPs07XcDgR7OdghbpebCYu67pTRGMVN64KCF64D2pmOxpLOfLrMvqmb9pPf22a+
-         JYFM/F5Jg1NPIn9+zkdhTQcIvDJt7VxWtEecH1N4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9P9xKuQ077394
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 25 Oct 2019 04:59:20 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
- Oct 2019 04:59:09 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 25 Oct 2019 04:59:09 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P9xHaw053809;
-        Fri, 25 Oct 2019 04:59:18 -0500
-Subject: Re: [PATCH] usb: cdns3: gadget: Don't manage pullups
-To:     Peter Chen <peter.chen@nxp.com>,
-        Pawel Laszczak <pawell@cadence.com>
-CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191023090232.27237-1-rogerq@ti.com>
- <BYAPR07MB4709A6212601A75DCB1A25ACDD6B0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <20191025031343.GA13392@b29397-desktop>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <83a1da01-19d6-65a9-aecd-2027fd62a272@ti.com>
-Date:   Fri, 25 Oct 2019 12:59:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Fri, 25 Oct 2019 05:59:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6275 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2501943AbfJYJ7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:59:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 02:59:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="228849164"
+Received: from fyin-mobl.ccr.corp.intel.com (HELO [10.239.204.247]) ([10.239.204.247])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Oct 2019 02:59:37 -0700
+Subject: Re: [PATCH v4] ACPI/processor_idle: Remove dummy wait if kernel is in
+ guest
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+References: <20191024070420.4512-1-fengwei.yin@intel.com>
+ <CAJZ5v0hU9z3BfAK5x1i4Qw334Wf8o5azaKL9kyAJoADcau3hxA@mail.gmail.com>
+From:   "Yin, Fengwei" <fengwei.yin@intel.com>
+Message-ID: <13725e35-03ec-abb5-466d-0961775a4800@intel.com>
+Date:   Fri, 25 Oct 2019 17:59:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191025031343.GA13392@b29397-desktop>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAJZ5v0hU9z3BfAK5x1i4Qw334Wf8o5azaKL9kyAJoADcau3hxA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
-
-On 25/10/2019 06:13, Peter Chen wrote:
-> On 19-10-23 09:17:45, Pawel Laszczak wrote:
->> Hi,
+On 10/25/2019 5:06 PM, Rafael J. Wysocki wrote:
+> On Thu, Oct 24, 2019 at 9:04 AM Yin Fengwei <fengwei.yin@intel.com> wrote:
 >>
->> Reviewed-by: Pawel Laszczak <pawell@cadence.com>
-> 
-> Hi Roger & Pawel,
-> 
-> Assume gadget function has already enabled, if you switch host mode
-> to device mode, with your changes, where the device mode will be enabled
-> again?
-
-When it switches from device mode to host the UDC is removed. When we switch
-back from host to device mode the UDC is added, so,
-
-usb_add_gadget_udc_release()-> check_pending_gadget_drivers()->
-udc_bind_to_driver()->usb_udc_connect_control()->usb_gadget_connect()->
-gadget->ops->pullup()
-
-cheers,
--roger
-> 
-> Peter
+>> In function acpi_idle_do_entry(), an ioport access is used for
+>> dummy wait to guarantee hardware behavior. But it could trigger
+>> unnecessary VMexit if kernel is running as guest in virtualization
+>> environment.
 >>
->> Regards,
->> Pawel,
+>> If it's in virtualization environment, the deeper C state enter
+>> operation (inb()) will trap to hypervisor. It's not needed to do
+>> dummy wait after the inb() call. So we could just remove the
+>> dummy io port access to avoid unnecessary VMexit.
 >>
->>> The USB gadget core is supposed to manage pullups
->>> of the controller. Don't manage pullups from within
->>> the controller driver. Otherwise, function drivers
->>> are not able to keep the controller disconnected from
->>> the bus till they are ready. (e.g. g_webcam)
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>> Hi Greg/Felipe,
->>>
->>> This can be used for -rc as it is a bug fix.
->>>
->>> cheers,
->>> -roger
->>>
->>> drivers/usb/cdns3/gadget.c | 4 ----
->>> 1 file changed, 4 deletions(-)
->>>
->>> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->>> index 2ca280f4c054..714382d96055 100644
->>> --- a/drivers/usb/cdns3/gadget.c
->>> +++ b/drivers/usb/cdns3/gadget.c
->>> @@ -2324,8 +2324,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
->>> 	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
->>>
->>> 	cdns3_configure_dmult(priv_dev, NULL);
->>> -
->>> -	cdns3_gadget_pullup(&priv_dev->gadget, 1);
->>> }
->>>
->>> /**
->>> @@ -2708,8 +2706,6 @@ static int cdns3_gadget_suspend(struct cdns3 *cdns, bool do_wakeup)
->>> 	/* disable interrupt for device */
->>> 	writel(0, &priv_dev->regs->usb_ien);
->>>
->>> -	cdns3_gadget_pullup(&priv_dev->gadget, 0);
->>> -
->>> 	return 0;
->>> }
->>>
->>> --
->>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>> And keep dummy io port access to maintain timing for native
+>> environment.
 >>
+>> Signed-off-by: Yin Fengwei <fengwei.yin@intel.com>
+>> ---
+>> ChangeLog:
+>> v3 -> v4:
+>>   - Drop overengineered function pointer and do check whether
+>>     we are in guest before dummy inl call.
+>>
+>> v2 -> v3:
+>>   - Remove dummy io port access totally for virtualization env.
+>>
+>> v1 -> v2:
+>>   - Use ndelay instead of dead loop for dummy delay.
+>>
+>>   drivers/acpi/processor_idle.c | 21 +++++++++++++++------
+>>   1 file changed, 15 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+>> index ed56c6d20b08..2ae95df2e74f 100644
+>> --- a/drivers/acpi/processor_idle.c
+>> +++ b/drivers/acpi/processor_idle.c
+>> @@ -642,6 +642,19 @@ static int acpi_idle_bm_check(void)
+>>          return bm_status;
+>>   }
+>>
+>> +static void wait_for_freeze(void)
+>> +{
+>> +#ifdef CONFIG_X86
+>> +       /* No delay is needed if we are in guest */
+>> +       if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+>> +               return;
+>> +#endif
+>> +       /* Dummy wait op - must do something useless after P_LVL2 read
+>> +          because chipsets cannot guarantee that STPCLK# signal
+>> +          gets asserted in time to freeze execution properly. */
+>> +       inl(acpi_gbl_FADT.xpm_timer_block.address);
+>> +}
+>> +
+>>   /**
+>>    * acpi_idle_do_entry - enter idle state using the appropriate method
+>>    * @cx: cstate data
+>> @@ -658,10 +671,7 @@ static void __cpuidle acpi_idle_do_entry(struct acpi_processor_cx *cx)
+>>          } else {
+>>                  /* IO port based C-state */
+>>                  inb(cx->address);
+>> -               /* Dummy wait op - must do something useless after P_LVL2 read
+>> -                  because chipsets cannot guarantee that STPCLK# signal
+>> -                  gets asserted in time to freeze execution properly. */
+>> -               inl(acpi_gbl_FADT.xpm_timer_block.address);
+>> +               wait_for_freeze();
+>>          }
+>>   }
+>>
+>> @@ -682,8 +692,7 @@ static int acpi_idle_play_dead(struct cpuidle_device *dev, int index)
+>>                          safe_halt();
+>>                  else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
+>>                          inb(cx->address);
+>> -                       /* See comment in acpi_idle_do_entry() */
+>> -                       inl(acpi_gbl_FADT.xpm_timer_block.address);
+>> +                       wait_for_freeze();
+>>                  } else
+>>                          return -ENODEV;
+>>          }
+>> --
+> 
+> Applying as 5.5 material, thanks!
+Thanks a lot.
+
+Regards
+Yin, Fengwei
+
 > 
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
