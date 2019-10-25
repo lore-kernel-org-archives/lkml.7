@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7598ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE873CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAF421E6F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DE9222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011785;
-	bh=QSmGXgoZuqNrvkoLmP9wfJAp3Sy8AYkjslCE+zJhmH0=;
+	s=default; t=1572011789;
+	bh=A/CvQbHbjzhxBY6tspVGBAtk1iIGUmNPzlWeyfyCtuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mciyI4G2zDADqkuPadcstms3qpqhI6mY6zYfhSaA4s7DeDiFlvpLE8sP+jQOhRnbv
-	 rTmATq++YjdqDEP3hxGrh2cTxrRoxXZBvBguJ2/+kjsg3wfcVBfhtZkPUTafYmAAzU
-	 sxP1SPoFbJKld146WQfzl9rX/JqScRs+AwBgFOA8=
+	b=g1/OiEIQzmYgwCckGKzzMtBmD03ZSwxyKIKUIkgTZ+wnZIvqoSEHZI/BLQpTOW7Rj
+	 r9QB2+hiG1PWRKPiLg1DHhESIWPdMKAyl0NqICI5OeESrxBdOEE5UQYZbvYOY5FZ3h
+	 TKFJ7QWCIAh0usnX3UA0EkJqkZAOJGBzhwOuET88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505254AbfJYN4Y (ORCPT
+        id S2632829AbfJYN42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50636 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632796AbfJYN4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:19 -0400
+        id S2505244AbfJYN4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9106222CE;
-        Fri, 25 Oct 2019 13:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1906A222C4;
+        Fri, 25 Oct 2019 13:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011778;
-        bh=QSmGXgoZuqNrvkoLmP9wfJAp3Sy8AYkjslCE+zJhmH0=;
+        s=default; t=1572011780;
+        bh=A/CvQbHbjzhxBY6tspVGBAtk1iIGUmNPzlWeyfyCtuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8Ly167mwqFeZudg9e5HqcqqmFR+lzMmwI+5uDMjmT/L8L3HgRgJmc5KFXPkO8qnN
-         LgJLfYNn1sTvUBPHBM2vlYeK2ffHqdBX6iFLFSS70N4GRmyNrPFCP38pdrBnnKNUrZ
-         6I26BOIikwcFmp79c6WsowDrO9rdU+fRCUB+4IHE=
+        b=Bs3pancHWQRpukymm+KxBpeVbrdSw5LOcH6Sqkd7+0EVbnJz1DMX1gGV+uWdgStfu
+         ZomD48tCyU3/srxePu/JIEu5dTESOtpgTHATlOJ6tgRoxxemrpQZBCXfIKTBUvns5E
+         vg4RWHdd8tUI2EsvF33TLP7IUNvR6kgjPIvFU9HI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 08/37] nvme-pci: fix conflicting p2p resource adds
-Date:   Fri, 25 Oct 2019 09:55:32 -0400
-Message-Id: <20191025135603.25093-8-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/37] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Fri, 25 Oct 2019 09:55:34 -0400
+Message-Id: <20191025135603.25093-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -60,76 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-The nvme pci driver had been adding its CMB resource to the P2P DMA
-subsystem everytime on on a controller reset. This results in the
-following warning:
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-    ------------[ cut here ]------------
-    nvme 0000:00:03.0: Conflicting mapping in same section
-    WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
-    ...
-    Call Trace:
-     pci_p2pdma_add_resource+0x153/0x370
-     nvme_reset_work+0x28c/0x17b1 [nvme]
-     ? add_timer+0x107/0x1e0
-     ? dequeue_entity+0x81/0x660
-     ? dequeue_entity+0x3b0/0x660
-     ? pick_next_task_fair+0xaf/0x610
-     ? __switch_to+0xbc/0x410
-     process_one_work+0x1cf/0x350
-     worker_thread+0x215/0x3d0
-     ? process_one_work+0x350/0x350
-     kthread+0x107/0x120
-     ? kthread_park+0x80/0x80
-     ret_from_fork+0x1f/0x30
-    ---[ end trace f7ea76ac6ee72727 ]---
-    nvme nvme0: failed to register the CMB
+use-after-free instance:
 
-This patch fixes this by registering the CMB with P2P only once.
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
 
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
+
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index a64a8bca0d5b9..33c40333a5280 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1652,6 +1652,9 @@ static void nvme_map_cmb(struct nvme_dev *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
- 	int bar;
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index dff82a3c2caa9..5721f96a6e63e 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -853,7 +853,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
  
-+	if (dev->cmb_size)
-+		return;
-+
- 	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
- 	if (!dev->cmbsz)
- 		return;
-@@ -2136,7 +2139,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+ 
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+ }
+@@ -929,7 +929,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
+ }
+ 
+@@ -938,7 +938,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
  {
- 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -982,7 +982,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
  
--	nvme_release_cmb(dev);
- 	pci_free_irq_vectors(pdev);
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
  
- 	if (pci_is_enabled(pdev)) {
-@@ -2596,6 +2598,7 @@ static void nvme_remove(struct pci_dev *pdev)
- 	nvme_stop_ctrl(&dev->ctrl);
- 	nvme_remove_namespaces(&dev->ctrl);
- 	nvme_dev_disable(dev, true);
-+	nvme_release_cmb(dev);
- 	nvme_free_host_mem(dev);
- 	nvme_dev_remove_admin(dev);
- 	nvme_free_queues(dev, 0);
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
