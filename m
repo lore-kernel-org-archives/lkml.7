@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F8FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA0CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A75222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5AD222CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011841;
-	bh=Sj36tnrRRQFdrL/jhKlFBZYqwV2M/qzEaEe5cOTJFlc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wJ1H3WZP3ES4uj1Qd3rZqsYL0UpaTZAy9Em/EjRg4nWlaF/VjSfzmvqhFxdGlDQp2
-	 qe/GUnbr7iU636ApQjRqICaOIc51+hq6uGbfJPi+rxOJjrcBB+jCT9oheuum5nZU3g
-	 u06GL9p2VjAkB0a3mw+1l1HhJYaDway9/NiOqCQ8=
+	s=default; t=1572011844;
+	bh=JhgiOy7W35cOH2G64kH7kdFPGPQuCkXJeZQQJAg3rA8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ItzpngVhT00vD+WJubwPM7sEh43nWciQdai+rrMA89c+coYw28Duxc29660T3aES+
+	 RfLQI5wE5DuJOGlvWLqYpJx7/DBY7CnyxHBx/ngGlQJltMoa6Q5xf3fakmge+X8tqv
+	 MKDs6bcilGx1i9wh8+WTkRKO79YhbeomjOnPdfbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505296AbfJYN5U (ORCPT
+        id S2394823AbfJYN5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:57:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:57:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632860AbfJYN5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:17 -0400
+        id S2505293AbfJYN5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5D8222CD;
-        Fri, 25 Oct 2019 13:57:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B38EE21E6F;
+        Fri, 25 Oct 2019 13:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011837;
-        bh=Sj36tnrRRQFdrL/jhKlFBZYqwV2M/qzEaEe5cOTJFlc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WRUB6OsM0lVcKXbpJQhnCi/+p5PCnFV/zhLm4bHNZQIQRKBr6wrShqQpsH+WUXjnF
-         ffErS/2HU5GPtEYpHjTLLPIg/rrV8KXZ1MJNVHNEQtgBZv0a8WLAzRkNVLyWKUI1sU
-         2iJX/ZHWTcZZkRCfkk8MlTWP7oX5iR1I4oLkZSuI=
+        s=default; t=1572011839;
+        bh=JhgiOy7W35cOH2G64kH7kdFPGPQuCkXJeZQQJAg3rA8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RsAl1KP5EgW+e0tf+JFy7N67cdcwtzL1Obp6f7nLwTLUy6KS0eoMx8ITDJHsNpriX
+         jgB+9wRbvBExKPdGcmRlkSCC0wRtUZSQAeNFv3kKrtEUKdwbKk8eOSWjZsa16SE0dZ
+         J7fNHDdIeQR3hoqZpw5Vqhibcf7v8VkbWB+GGu5s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Talbert <ptalbert@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/25] PCI/ASPM: Do not initialize link state when aspm_disabled is set
-Date:   Fri, 25 Oct 2019 09:56:49 -0400
-Message-Id: <20191025135715.25468-1-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Rene Wagner <redhatbugzilla@callerid.de>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/25] HID: i2c-hid: Add Odys Winbook 13 to descriptor override
+Date:   Fri, 25 Oct 2019 09:56:50 -0400
+Message-Id: <20191025135715.25468-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191025135715.25468-1-sashal@kernel.org>
+References: <20191025135715.25468-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,45 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Talbert <ptalbert@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 17c91487364fb33797ed84022564ee7544ac4945 ]
+[ Upstream commit f8f807441eefddc3c6d8a378421f0ede6361d565 ]
 
-Now that ASPM is configured for *all* PCIe devices at boot, a problem is
-seen with systems that set the FADT NO_ASPM bit.  This bit indicates that
-the OS should not alter the ASPM state, but when
-pcie_aspm_init_link_state() runs it only checks for !aspm_support_enabled.
-This misses the ACPI_FADT_NO_ASPM case because that is setting
-aspm_disabled.
+The Odys Winbook 13 uses a SIPODEV SP1064 touchpad, which does not
+supply descriptors, add this to the DMI descriptor override list, fixing
+the touchpad not working.
 
-The result is systems may hang at boot after 1302fcf; avoidable if they
-boot with pcie_aspm=off (sets !aspm_support_enabled).
-
-Fix this by having aspm_init_link_state() check for either
-!aspm_support_enabled or acpm_disabled.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201001
-Fixes: 1302fcf0d03e ("PCI: Configure *all* devices, not just hot-added ones")
-Signed-off-by: Patrick Talbert <ptalbert@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1526312
+Reported-by: Rene Wagner <redhatbugzilla@callerid.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 6b4e82a4b64e0..370c3459e8845 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -858,7 +858,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
- 	struct pcie_link_state *link;
- 	int blacklist = !!pcie_aspm_sanity_check(pdev);
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index cac262a912c12..c5ac23b75143a 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -338,6 +338,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Odys Winbook 13",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AXDIA International GmbH"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "WINBOOK 13"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
  
--	if (!aspm_support_enabled)
-+	if (!aspm_support_enabled || aspm_disabled)
- 		return;
- 
- 	if (pdev->link_state)
 -- 
 2.20.1
 
