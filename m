@@ -2,132 +2,171 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D10CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B5CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D74921D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0BIlOeQS"
+	by mail.kernel.org (Postfix) with ESMTP id EEDB821D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572012286;
+	bh=1kvYVhKs4R6vAtpyTfayYMB4tTxyHX53RnLPQ+GiAMU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jNMQF0cvvYfNt/YXTvCV2D15r/O0H+sh6v1ajMTo6J0zlAUunHQ4iReqPqwDJdd3z
+	 N7bqeg7LfAjjH2B4LP90VxN8/2kaeLvTnXwf/sJ0jWt/llhMfUewnnmXNEPvmv3+E4
+	 1qlwbDSO1Cc5oPXVE+7FMs76cd+8XVfEr3UJSkC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395223AbfJYOEm (ORCPT
+        id S2505276AbfJYN4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:04:42 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36329 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2395206AbfJYOEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:04:38 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9PDuBtP028321;
-        Fri, 25 Oct 2019 16:04:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=6Ht0zZxdeBCxT8SIBqaJnpSGpFwNjqaDeglBn/VrO3w=;
- b=0BIlOeQSsfPknWnAKmzTKfZ1WxZOkuAIOg7bvNrhnz03goBTWB/ZKl/fARBIcXwySHb7
- rUa2rmTeWjDAvlteKeaNh3+rS323DdXO4YKTYgsy/GIR+7EGEqgIbrseqF1Vnyj5BfP9
- DrMDAiqEiXqeHL6bvBka3MXKoWwiCmliaHP2H2UAU+14Swr2iYmhSMu84FF8ZdnPWDsw
- vthdwaU+05MCs7wEUKfmZzomEgXkTtsuXPTB/+inaJUOECbERcWCGNwpvq86ge4EpwKL
- 1ytaduFZxRFR7t1mtK0GVAfGpKmN0bAfCHJdZK/JcBy9YzanWqSwcGVexr30U41PJHBg aA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vt9s2058n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 16:04:26 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5A93C100034;
-        Fri, 25 Oct 2019 16:04:25 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4D3822C38A2;
-        Fri, 25 Oct 2019 16:04:25 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 25 Oct 2019 16:04:24
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
-CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: [PATCH] i2c: i2c-stm32f7: fix & reorder remove & probe error handling
-Date:   Fri, 25 Oct 2019 16:04:24 +0200
-Message-ID: <1572012264-31996-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 25 Oct 2019 09:56:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2632845AbfJYN4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:32 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B53222D4;
+        Fri, 25 Oct 2019 13:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572011790;
+        bh=1kvYVhKs4R6vAtpyTfayYMB4tTxyHX53RnLPQ+GiAMU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jyMxk8nvdlRACEw+gfpnaP2sNvP/hY/dH2Gpt1SNf9hH2DB8Vb9DB0cUfPAQ1Lwgl
+         +hFM0oifNdGl/pP1pu2IvBaVrcxI7DxTTFAXhEyk0UM3l0R5cy/QNHD7jEHOrIuTeb
+         sT8PW3tk57I/avAPXw3Buvg3MBSKSUJPMA7sEgAk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Laurence Oberman <loberman@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/37] scsi: RDMA/srp: Fix a sleep-in-invalid-context bug
+Date:   Fri, 25 Oct 2019 09:55:38 -0400
+Message-Id: <20191025135603.25093-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
+References: <20191025135603.25093-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-25_08:2019-10-25,2019-10-25 signatures=0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing dma channels free calls in case of error during probe
-and reorder the remove function so that dma channels are freed after
-the i2c adapter is deleted.
-Overall, reorder the remove function so that probe error handling order
-and remove function order are same.
+From: Bart Van Assche <bvanassche@acm.org>
 
-Fixes: 7ecc8cfde553 ("i2c: i2c-stm32f7: Add DMA support")
+[ Upstream commit fd56141244066a6a21ef458670071c58b6402035 ]
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
+The previous patch guarantees that srp_queuecommand() does not get
+invoked while reconnecting occurs. Hence remove the code from
+srp_queuecommand() that prevents command queueing while reconnecting.
+This patch avoids that the following can appear in the kernel log:
+
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:747
+in_atomic(): 1, irqs_disabled(): 0, pid: 5600, name: scsi_eh_9
+1 lock held by scsi_eh_9/5600:
+ #0:  (rcu_read_lock){....}, at: [<00000000cbb798c7>] __blk_mq_run_hw_queue+0xf1/0x1e0
+Preemption disabled at:
+[<00000000139badf2>] __blk_mq_delay_run_hw_queue+0x78/0xf0
+CPU: 9 PID: 5600 Comm: scsi_eh_9 Tainted: G        W        4.15.0-rc4-dbg+ #1
+Hardware name: Dell Inc. PowerEdge R720/0VWT90, BIOS 2.5.4 01/22/2016
+Call Trace:
+ dump_stack+0x67/0x99
+ ___might_sleep+0x16a/0x250 [ib_srp]
+ __mutex_lock+0x46/0x9d0
+ srp_queuecommand+0x356/0x420 [ib_srp]
+ scsi_dispatch_cmd+0xf6/0x3f0
+ scsi_queue_rq+0x4a8/0x5f0
+ blk_mq_dispatch_rq_list+0x73/0x440
+ blk_mq_sched_dispatch_requests+0x109/0x1a0
+ __blk_mq_run_hw_queue+0x131/0x1e0
+ __blk_mq_delay_run_hw_queue+0x9a/0xf0
+ blk_mq_run_hw_queue+0xc0/0x1e0
+ blk_mq_start_hw_queues+0x2c/0x40
+ scsi_run_queue+0x18e/0x2d0
+ scsi_run_host_queues+0x22/0x40
+ scsi_error_handler+0x18d/0x5f0
+ kthread+0x11c/0x140
+ ret_from_fork+0x24/0x30
+
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Laurence Oberman <loberman@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Leon Romanovsky <leonro@mellanox.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-stm32f7.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/infiniband/ulp/srp/ib_srp.c | 21 ++-------------------
+ 1 file changed, 2 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index d36cf08461f7..f8ef203dabfc 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -1980,6 +1980,11 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 	pm_runtime_set_suspended(i2c_dev->dev);
- 	pm_runtime_dont_use_autosuspend(i2c_dev->dev);
- 
-+	if (i2c_dev->dma) {
-+		stm32_i2c_dma_free(i2c_dev->dma);
-+		i2c_dev->dma = NULL;
-+	}
-+
- clk_free:
- 	clk_disable_unprepare(i2c_dev->clk);
- 
-@@ -1990,21 +1995,21 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
+index bc6a44a16445c..f619fd7d8f9e6 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -2279,7 +2279,6 @@ static void srp_handle_qp_err(struct ib_cq *cq, struct ib_wc *wc,
+ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
  {
- 	struct stm32f7_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
- 
--	if (i2c_dev->dma) {
--		stm32_i2c_dma_free(i2c_dev->dma);
--		i2c_dev->dma = NULL;
--	}
+ 	struct srp_target_port *target = host_to_target(shost);
+-	struct srp_rport *rport = target->rport;
+ 	struct srp_rdma_ch *ch;
+ 	struct srp_request *req;
+ 	struct srp_iu *iu;
+@@ -2289,16 +2288,6 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
+ 	u32 tag;
+ 	u16 idx;
+ 	int len, ret;
+-	const bool in_scsi_eh = !in_interrupt() && current == shost->ehandler;
 -
- 	i2c_del_adapter(&i2c_dev->adap);
- 	pm_runtime_get_sync(i2c_dev->dev);
+-	/*
+-	 * The SCSI EH thread is the only context from which srp_queuecommand()
+-	 * can get invoked for blocked devices (SDEV_BLOCK /
+-	 * SDEV_CREATED_BLOCK). Avoid racing with srp_reconnect_rport() by
+-	 * locking the rport mutex if invoked from inside the SCSI EH.
+-	 */
+-	if (in_scsi_eh)
+-		mutex_lock(&rport->mutex);
  
--	clk_disable_unprepare(i2c_dev->clk);
+ 	scmnd->result = srp_chkready(target->rport);
+ 	if (unlikely(scmnd->result))
+@@ -2360,13 +2349,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
+ 		goto err_unmap;
+ 	}
+ 
+-	ret = 0;
 -
- 	pm_runtime_put_noidle(i2c_dev->dev);
- 	pm_runtime_disable(i2c_dev->dev);
- 	pm_runtime_set_suspended(i2c_dev->dev);
- 	pm_runtime_dont_use_autosuspend(i2c_dev->dev);
+-unlock_rport:
+-	if (in_scsi_eh)
+-		mutex_unlock(&rport->mutex);
+-
+-	return ret;
++	return 0;
  
-+	if (i2c_dev->dma) {
-+		stm32_i2c_dma_free(i2c_dev->dma);
-+		i2c_dev->dma = NULL;
-+	}
-+
-+	clk_disable_unprepare(i2c_dev->clk);
-+
- 	return 0;
+ err_unmap:
+ 	srp_unmap_data(scmnd, ch, req);
+@@ -2388,7 +2371,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
+ 		ret = SCSI_MLQUEUE_HOST_BUSY;
+ 	}
+ 
+-	goto unlock_rport;
++	return ret;
  }
  
+ /*
 -- 
-2.7.4
+2.20.1
 
