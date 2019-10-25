@@ -2,128 +2,108 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751DACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D622BCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570F720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD73821D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="p5vOz3zl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439296AbfJYKEk (ORCPT
+        id S2439349AbfJYKEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:04:40 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:8121 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390461AbfJYKEj (ORCPT
+        Fri, 25 Oct 2019 06:04:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48216 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2439300AbfJYKEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:04:39 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: Vo2odXphj/KVzfXpt/vKYWCW+4NLpQZ99A9C2N47hGAgQ0jNaDTC8qQIVcS3vhFkuqMNxJAyH9
- gFEI/d4dEZ7ZrILkTkBR/pEiN3r89MWShBO9WOVcAkJ9NZmFHXLGhySop1YGD2YsFfn9nTb0uT
- 3wDmeijlf+5LRnAto2lZjBDiMeoFeIIYqktYNkhkaqE3PQuZA/1LdbtVZ/j8SNsd/clchTL6LP
- QEk01eLvH6ul2ZewjsSeeNBiBhq9rrgC51Gdm7nlKo4haN5u3WzwP+68JkVqMxuIIf57IKqGpJ
- O9k=
-X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="54399032"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2019 03:04:38 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 25 Oct 2019 03:04:38 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 25 Oct 2019 03:04:37 -0700
-Date:   Fri, 25 Oct 2019 12:05:43 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     <Eugen.Hristev@microchip.com>, <peda@axentia.se>,
-        <mark.rutland@arm.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
+        Fri, 25 Oct 2019 06:04:49 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9P9kLQa013525;
+        Fri, 25 Oct 2019 12:04:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=LdDWBmizAidX7nACBRDQOW3NAPgi1A1WqR7cHH1QieI=;
+ b=p5vOz3zlP3sBHqqFt+bGPYa7oWTnVUct6Y1yxRqVuSL+iojPUdrJB4nO3U1oOBEBgJqb
+ Z14FIFgVJ16tZtPthoj2th8RQKP65qUsEj1ETzk+gxV7BRGo5QDMd4s7aIjDOvQYnpMR
+ bloh6th+SpqEzOfuPNUlY+NB8QMfguOsoPuzbGfeGusR6JaEEhvtzXtmbSyTYlJvn2gE
+ mlXliXHpDWWlugwDYpUN9HxX5qdfElo4qCVcBA7QGND7OGIcC821MPS/Uc+GfIFd5VmD
+ dG4UWQ35WRYFSivykclby4IiheoV7vr9hQj0D26Po3g08TqzpRzZ8xqn/fxdBKIi9v/j IQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vt9s7f06m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Oct 2019 12:04:39 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6173E10002A;
+        Fri, 25 Oct 2019 12:04:39 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 549432C2E84;
+        Fri, 25 Oct 2019 12:04:39 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 25 Oct
+ 2019 12:04:38 +0200
+Subject: Re: [PATCH] ARM: dts: stm32f429: remove useless dma-ranges property
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
-        <robh+dt@kernel.org>, <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH v5 0/9] i2c: add support for filters
-Message-ID: <20191025100542.licpieymkbsbm5cd@M43218.corp.atmel.com>
-Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
-        Eugen.Hristev@microchip.com, peda@axentia.se, mark.rutland@arm.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
- <20191024183035.GA1870@kunai>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191015123058.14669-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <6fd21667-a233-1eaf-eb51-54f9f5ee9a07@st.com>
+Date:   Fri, 25 Oct 2019 12:04:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191024183035.GA1870@kunai>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191015123058.14669-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-25_05:2019-10-23,2019-10-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 08:30:35PM +0200, Wolfram Sang wrote:
-> On Wed, Sep 11, 2019 at 08:24:14AM +0000, Eugen.Hristev@microchip.com wrote:
-> > From: Eugen Hristev <eugen.hristev@microchip.com>
-> > 
-> > Hello,
-> > 
-> > This series adds support for analog and digital filters for i2c controllers
-> > 
-> > This series is based on the series:
-> > [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
-> > and later
-> > [PATCH v4 0/9] i2c: add support for filters
-> > and enhanced to add the bindings for all controllers plus an extra bindings
-> > for the width of the spikes in nanoseconds (digital filters) and cut-off
-> > frequency (analog filters)
-> > 
-> > First, bindings are created for
-> > 'i2c-analog-filter'
-> > 'i2c-digital-filter'
-> > 'i2c-digital-filter-width-ns'
-> > 'i2c-analog-filter-cutoff-frequency'
-> > 
-> > The support is added in the i2c core to retrieve filter width/cutoff frequency
-> > and add it to the timings structure.
-> > Next, the at91 driver is enhanced for supporting digital filter, advanced
-> > digital filter (with selectable spike width) and the analog filter.
-> > 
-> > Finally the device tree for two boards are modified to make use of the
-> > new properties.
-> > 
-> > This series is the result of the comments on the ML in the direction
-> > requested: to make the bindings globally available for i2c drivers.
+Hi Benjamin
+
+On 10/15/19 2:30 PM, Benjamin Gaignard wrote:
+> Remove dma-ranges from ltdc node since it is already set
+> on bus node.
 > 
-> Applied patches 1-7 to for-next (patch 3 is v6). Thanks for your
-> patience and thanks to Ludovic and Peter for the review! Patches 8-9
-> should go via the at91 tree.
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>   arch/arm/boot/dts/stm32429i-eval.dts | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+> index ba08624c6237..21bc657f21c3 100644
+> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+> @@ -234,7 +234,6 @@
+>   	status = "okay";
+>   	pinctrl-0 = <&ltdc_pins>;
+>   	pinctrl-names = "default";
+> -	dma-ranges;
+>   
+>   	port {
+>   		ltdc_out_rgb: endpoint {
 > 
 
-Thanks, patch 8 and 9 applied to at91-dt.
+Applied on stm32-next. For the next time commit header has to be 
+formatted like that:
 
-Regards
+ARM: dts: stm32: .....
 
-Ludovic
+Thanks.
+Alex
