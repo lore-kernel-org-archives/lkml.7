@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2307CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32415CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A83820679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0679720679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012219;
-	bh=0sqIvR85YuzqiVsC6kKHxZpEfLG836+jSv/fWL0564g=;
+	s=default; t=1572012223;
+	bh=4FHOxC6pqpm6oT3yQASFq8lb6G3bbj8VfuKwrmRl9U8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJGfpYqcd+OR8YdvGwtJ5K6xnYMjwRHC82+H5ed/NZOrI4MBEn/FvuCGFFdbTSesv
-	 rhlp04aS9DH2rykGc/tyxb453SFidtW/Yp/XdfbOUMesn6AJnEqG2XTFomQozlqlXN
-	 1FZ8oEwRjyE0R+f+Hv9d1E+C5eqzYkLR3KgP2VJ4=
+	b=S5ElB/U+FNAEW+EPbQwRQZQJSrTyzfO6roMF4EoGMiZ1Ak3Q2JwqGkO+9NA2Repwy
+	 iV4lR51PPLoG5U6FpGq6JyN3b6xHUaxtBq3t45bILVeq8UGFEyB7kLT9ZQ2RFAsnFg
+	 twrAWtnJW+Sfr+syd0Gyk5hMrQplmEcsgXPz747k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395134AbfJYODi (ORCPT
+        id S2394766AbfJYN5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51608 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:57:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389598AbfJYN5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:02 -0400
+        id S2394748AbfJYN47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7FCC222C2;
-        Fri, 25 Oct 2019 13:56:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 603DA222BD;
+        Fri, 25 Oct 2019 13:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011820;
-        bh=0sqIvR85YuzqiVsC6kKHxZpEfLG836+jSv/fWL0564g=;
+        s=default; t=1572011818;
+        bh=4FHOxC6pqpm6oT3yQASFq8lb6G3bbj8VfuKwrmRl9U8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SottDZANK+wi1M+7WD0eNC9s1MGJ1B/t2Ss6H2xkfE81Js/LNEa9Zfj6cwlJ+pwTl
-         e6n88VSfaDsU7h8vADG34dqYnskCDr4oFyiQBHeNy4/HokKSa+It7v45I7xqZNcTg/
-         JtlXZY/Ful9QJiKHMF11g/LkV9ajsqK12+Aj6sK4=
+        b=fma8qiktMWbvOdt9cTdube+DU4Vvk8ssNpNek84xUtG6/s0CA5nOOpq1vfFdiR6hJ
+         gdp/dtugh0YWElB7+iTjs/S7ApNAVR/CQLncZ0d1jdIB/xoWfYTpjs3GwV7aC0Kyj2
+         dBt7zI+vCtuFxsXJTqwSy8fwtGW6krYO6QoLD5b0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/37] Btrfs: fix hang when loading existing inode cache off disk
-Date:   Fri, 25 Oct 2019 09:55:55 -0400
-Message-Id: <20191025135603.25093-31-sashal@kernel.org>
+Cc:     Chandan Rajendra <chandan@linux.ibm.com>,
+        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/37] jbd2: flush_descriptor(): Do not decrease buffer head's ref count
+Date:   Fri, 25 Oct 2019 09:55:53 -0400
+Message-Id: <20191025135603.25093-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -60,84 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Chandan Rajendra <chandan@linux.ibm.com>
 
-[ Upstream commit 7764d56baa844d7f6206394f21a0e8c1f303c476 ]
+[ Upstream commit 547b9ad698b434eadca46319cb47e5875b55ef03 ]
 
-If we are able to load an existing inode cache off disk, we set the state
-of the cache to BTRFS_CACHE_FINISHED, but we don't wake up any one waiting
-for the cache to be available. This means that anyone waiting for the
-cache to be available, waiting on the condition that either its state is
-BTRFS_CACHE_FINISHED or its available free space is greather than zero,
-can hang forever.
+When executing generic/388 on a ppc64le machine, we notice the following
+call trace,
 
-This could be observed running fstests with MOUNT_OPTIONS="-o inode_cache",
-in particular test case generic/161 triggered it very frequently for me,
-producing a trace like the following:
+VFS: brelse: Trying to free free buffer
+WARNING: CPU: 0 PID: 6637 at /root/repos/linux/fs/buffer.c:1195 __brelse+0x84/0xc0
 
-  [63795.739712] BTRFS info (device sdc): enabling inode map caching
-  [63795.739714] BTRFS info (device sdc): disk space caching is enabled
-  [63795.739716] BTRFS info (device sdc): has skinny extents
-  [64036.653886] INFO: task btrfs-transacti:3917 blocked for more than 120 seconds.
-  [64036.654079]       Not tainted 5.2.0-rc4-btrfs-next-50 #1
-  [64036.654143] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  [64036.654232] btrfs-transacti D    0  3917      2 0x80004000
-  [64036.654239] Call Trace:
-  [64036.654258]  ? __schedule+0x3ae/0x7b0
-  [64036.654271]  schedule+0x3a/0xb0
-  [64036.654325]  btrfs_commit_transaction+0x978/0xae0 [btrfs]
-  [64036.654339]  ? remove_wait_queue+0x60/0x60
-  [64036.654395]  transaction_kthread+0x146/0x180 [btrfs]
-  [64036.654450]  ? btrfs_cleanup_transaction+0x620/0x620 [btrfs]
-  [64036.654456]  kthread+0x103/0x140
-  [64036.654464]  ? kthread_create_worker_on_cpu+0x70/0x70
-  [64036.654476]  ret_from_fork+0x3a/0x50
-  [64036.654504] INFO: task xfs_io:3919 blocked for more than 120 seconds.
-  [64036.654568]       Not tainted 5.2.0-rc4-btrfs-next-50 #1
-  [64036.654617] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-  [64036.654685] xfs_io          D    0  3919   3633 0x00000000
-  [64036.654691] Call Trace:
-  [64036.654703]  ? __schedule+0x3ae/0x7b0
-  [64036.654716]  schedule+0x3a/0xb0
-  [64036.654756]  btrfs_find_free_ino+0xa9/0x120 [btrfs]
-  [64036.654764]  ? remove_wait_queue+0x60/0x60
-  [64036.654809]  btrfs_create+0x72/0x1f0 [btrfs]
-  [64036.654822]  lookup_open+0x6bc/0x790
-  [64036.654849]  path_openat+0x3bc/0xc00
-  [64036.654854]  ? __lock_acquire+0x331/0x1cb0
-  [64036.654869]  do_filp_open+0x99/0x110
-  [64036.654884]  ? __alloc_fd+0xee/0x200
-  [64036.654895]  ? do_raw_spin_unlock+0x49/0xc0
-  [64036.654909]  ? do_sys_open+0x132/0x220
-  [64036.654913]  do_sys_open+0x132/0x220
-  [64036.654926]  do_syscall_64+0x60/0x1d0
-  [64036.654933]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Call Trace:
+ __brelse+0x80/0xc0 (unreliable)
+ invalidate_bh_lru+0x78/0xc0
+ on_each_cpu_mask+0xa8/0x130
+ on_each_cpu_cond_mask+0x130/0x170
+ invalidate_bh_lrus+0x44/0x60
+ invalidate_bdev+0x38/0x70
+ ext4_put_super+0x294/0x560
+ generic_shutdown_super+0xb0/0x170
+ kill_block_super+0x38/0xb0
+ deactivate_locked_super+0xa4/0xf0
+ cleanup_mnt+0x164/0x1d0
+ task_work_run+0x110/0x160
+ do_notify_resume+0x414/0x460
+ ret_from_except_lite+0x70/0x74
 
-Fix this by adding a wake_up() call right after setting the cache state to
-BTRFS_CACHE_FINISHED, at start_caching(), when we are able to load the
-cache from disk.
+The warning happens because flush_descriptor() drops bh reference it
+does not own. The bh reference acquired by
+jbd2_journal_get_descriptor_buffer() is owned by the log_bufs list and
+gets released when this list is processed. The reference for doing IO is
+only acquired in write_dirty_buffer() later in flush_descriptor().
 
-Fixes: 82d5902d9c681b ("Btrfs: Support reading/writing on disk free ino cache")
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Harish Sriram <harish@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Chandan Rajendra <chandan@linux.ibm.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode-map.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/jbd2/revoke.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index ffca2abf13d0c..4a5882665f8a6 100644
---- a/fs/btrfs/inode-map.c
-+++ b/fs/btrfs/inode-map.c
-@@ -145,6 +145,7 @@ static void start_caching(struct btrfs_root *root)
- 		spin_lock(&root->ino_cache_lock);
- 		root->ino_cache_state = BTRFS_CACHE_FINISHED;
- 		spin_unlock(&root->ino_cache_lock);
-+		wake_up(&root->ino_cache_wait);
- 		return;
- 	}
+diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
+index 69b9bc329964f..f08073d7bbf57 100644
+--- a/fs/jbd2/revoke.c
++++ b/fs/jbd2/revoke.c
+@@ -638,10 +638,8 @@ static void flush_descriptor(journal_t *journal,
+ {
+ 	jbd2_journal_revoke_header_t *header;
  
+-	if (is_journal_aborted(journal)) {
+-		put_bh(descriptor);
++	if (is_journal_aborted(journal))
+ 		return;
+-	}
+ 
+ 	header = (jbd2_journal_revoke_header_t *)descriptor->b_data;
+ 	header->r_count = cpu_to_be32(offset);
 -- 
 2.20.1
 
