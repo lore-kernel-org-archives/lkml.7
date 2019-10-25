@@ -2,157 +2,93 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EB9CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45F3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD36A21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8711121929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jE1NTew1"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FGzHDnk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504633AbfJYMwl (ORCPT
+        id S2504651AbfJYMzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:52:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28512 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2501908AbfJYMwk (ORCPT
+        Fri, 25 Oct 2019 08:55:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38816 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504636AbfJYMzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:52:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572007959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=n8i+TCwhs+dWNyEedELhI+i+2i1MD1dNVmQL25FSLho=;
-        b=jE1NTew1lG5YZVM3W/f3hVHMophYRDCAOl3HYHcmLL6ec3tWvyQhgd4s8QIPkktxAxniQh
-        Fvxo5H0QzxExHWBvDzZHOXUV/msWVmqQeVGx/T72AN+zozJiYa6whu4K/sxIJI8aV+7rfL
-        S8K4aM9Qd7eMhEn5zXByD5mXUj0ULLg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-322-T_9r8giqN4iMM0deT0aUtQ-1; Fri, 25 Oct 2019 08:52:35 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF95A800D41;
-        Fri, 25 Oct 2019 12:52:32 +0000 (UTC)
-Received: from optiplex-lnx (ovpn-112-25.rdu2.redhat.com [10.10.112.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74E5E10013A1;
-        Fri, 25 Oct 2019 12:52:25 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 08:52:22 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
- /proc/pagetypeinfo
-Message-ID: <20191025125222.GC4596@optiplex-lnx>
-References: <20191025072610.18526-1-mhocko@kernel.org>
- <20191025072610.18526-3-mhocko@kernel.org>
+        Fri, 25 Oct 2019 08:55:00 -0400
+Received: by mail-io1-f65.google.com with SMTP id u8so2279510iom.5
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:54:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XqRZL3LD0cAYpu4i+Oz5gNumeaGbwkRBXuU0UymszRw=;
+        b=FGzHDnk90eDcHEqQWBtHbS3AqS9XkVlgVqg8Fd/yZObK1UxjtNbnkzE5l1zepmuPRt
+         cyes7m2M8EpWs9YBTaEhM3KTiF1PGqCHVc4Y1WdjrYQNQouiqoOWPD5QQEhHWWpgVZz/
+         e856QHAOTtBAoIyYul0s8yv+7tN+FJp0X4oepfLB7PK7iDZL2UUgnbZ5tJoFy2ffytTo
+         lezWPU0QbbjY0zNb46QXfJ3CReBKOH3x9+6QQL6wgMrGLESuaSMJty1UuYhYP/Pqtpn3
+         O9gnBqnzoG6ynfXyoP3XcHbGsbbf6hE9kU9/tNabsHlTWiv5RxCN8icaVFOTafceI+cG
+         ztSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XqRZL3LD0cAYpu4i+Oz5gNumeaGbwkRBXuU0UymszRw=;
+        b=ndPEqBbjRIeb86GLNcCo5VjygzH7Vk6+3iVgRiTF51ynj0JRCxiNRt9T+Lf8sJBRPC
+         LGej6mvIBIXsaVAnmHIXBuDHkSX/uEZPA4M/CRO5NFfLU8YCCVJdoHpKfF5kx0+k8wIZ
+         OqjXI+ZbxHxMFaxFTtxjO5tHNxUdUap1w2kG5g2G7rQu01W+hZ30/mM8j8MZcFpcUshW
+         ZW+0MblTOD/7yWcJFnPJQ6m/G6vAPu6bDes0Eny/1u1Zr0DwbBGHOlFvVnCj0kN7Odze
+         pDVHrnvzLIff9E7VbIt9JsEYNMBKKzfzAGoouEhjq2/C5VbcbB9Pv6ALzUOjJ9j0jKXe
+         JdXA==
+X-Gm-Message-State: APjAAAW/ELPLnW0Kt/s2hop6DAQYwCm4C77QHjVo0/u/y5JusV8ZOYR7
+        yKR0/4hORGKbGCiSO0OMDgNBopwmQl+8EQ==
+X-Google-Smtp-Source: APXvYqyRv6QNh4wAE0Yq4PNSmeWazYkJpqCtu/Gt2kSofhSOTEiA6Gjj45It1k+vN2/LmYqGl4akaw==
+X-Received: by 2002:a6b:f415:: with SMTP id i21mr3597034iog.109.1572008097263;
+        Fri, 25 Oct 2019 05:54:57 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l64sm66767ilh.2.2019.10.25.05.54.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 05:54:56 -0700 (PDT)
+Subject: Re: [PATCH][next] io-wq: fix unintentional integer overflow on left
+ shift
+To:     Colin King <colin.king@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191025124315.21742-1-colin.king@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fc23061e-31ec-8a66-2b62-771121d182de@kernel.dk>
+Date:   Fri, 25 Oct 2019 06:54:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191025072610.18526-3-mhocko@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: T_9r8giqN4iMM0deT0aUtQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191025124315.21742-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 09:26:10AM +0200, Michal Hocko wrote:
-> From: Michal Hocko <mhocko@suse.com>
->=20
-> pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
-> This is not really nice because it blocks both any interrupts on that
-> cpu and the page allocator. On large machines this might even trigger
-> the hard lockup detector.
->=20
-> Considering the pagetypeinfo is a debugging tool we do not really need
-> exact numbers here. The primary reason to look at the outuput is to see
-> how pageblocks are spread among different migratetypes and low number of
-> pages is much more interesting therefore putting a bound on the number
-> of pages on the free_list sounds like a reasonable tradeoff.
->=20
-> The new output will simply tell
-> [...]
-> Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >1000=
-00  41019  31560  23996  10054   3229    983    648
->=20
-> instead of
-> Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  =
-41019  31560  23996  10054   3229    983    648
->=20
-> The limit has been chosen arbitrary and it is a subject of a future
-> change should there be a need for that.
->=20
-> While we are at it, also drop the zone lock after each free_list
-> iteration which will help with the IRQ and page allocator responsiveness
-> even further as the IRQ lock held time is always bound to those 100k
-> pages.
->=20
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Reviewed-by: Waiman Long <longman@redhat.com>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/vmstat.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
->=20
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 4e885ecd44d1..ddb89f4e0486 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1383,12 +1383,29 @@ static void pagetypeinfo_showfree_print(struct se=
-q_file *m,
->  =09=09=09unsigned long freecount =3D 0;
->  =09=09=09struct free_area *area;
->  =09=09=09struct list_head *curr;
-> +=09=09=09bool overflow =3D false;
-> =20
->  =09=09=09area =3D &(zone->free_area[order]);
-> =20
-> -=09=09=09list_for_each(curr, &area->free_list[mtype])
-> -=09=09=09=09freecount++;
-> -=09=09=09seq_printf(m, "%6lu ", freecount);
-> +=09=09=09list_for_each(curr, &area->free_list[mtype]) {
-> +=09=09=09=09/*
-> +=09=09=09=09 * Cap the free_list iteration because it might
-> +=09=09=09=09 * be really large and we are under a spinlock
-> +=09=09=09=09 * so a long time spent here could trigger a
-> +=09=09=09=09 * hard lockup detector. Anyway this is a
-> +=09=09=09=09 * debugging tool so knowing there is a handful
-> +=09=09=09=09 * of pages in this order should be more than
-> +=09=09=09=09 * sufficient
-> +=09=09=09=09 */
-> +=09=09=09=09if (++freecount >=3D 100000) {
-> +=09=09=09=09=09overflow =3D true;
-> +=09=09=09=09=09break;
-> +=09=09=09=09}
-> +=09=09=09}
-> +=09=09=09seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
-> +=09=09=09spin_unlock_irq(&zone->lock);
-> +=09=09=09cond_resched();
-> +=09=09=09spin_lock_irq(&zone->lock);
->  =09=09}
->  =09=09seq_putc(m, '\n');
->  =09}
-> --=20
-> 2.20.1
->=20
-Acked-by: Rafael Aquini <aquini@redhat.com>
+On 10/25/19 6:43 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Shifting the integer value 1U is evaluated with type unsigned int
+> using 32-bit arithmetic and then used in an expression that expects
+> a 64-bit value, so there is potentially an integer overflow. Fix this
+> by using the BIT_ULL macro to perform the shift and avoid the overflow.
+
+Good catch, that should indeed have been 1ULL. I'll fold in your
+fix, thanks!
+
+-- 
+Jens Axboe
 
