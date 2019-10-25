@@ -2,176 +2,85 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3B8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB34CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F006222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF1720659
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572040147;
+	bh=9OocIlW3MdTggjKr6xrZoWrr6c8j+hbrcGG725i/W60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z39JeqzKu1ZW63cONaOMnlKJQGVkrYZ+yPCq/1Chw5XY8taHHUY3LLcFOJtYRGd0D
+	 LSCOR5pi6nZNFTu7+Zhi3NbCaZu+2TGIKpDY5ERXcnX6gxyrJ5wxqgi/v1ND+qoLEX
+	 ji65HrcZ67LWrZdt4jw4whuQS6Tt9BFG3tRRl8Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfJYVk1 (ORCPT
+        id S1726202AbfJYVtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:40:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39878 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfJYVk0 (ORCPT
+        Fri, 25 Oct 2019 17:49:06 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38913 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfJYVtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:40:26 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r141so3435851wme.4
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 14:40:25 -0700 (PDT)
+        Fri, 25 Oct 2019 17:49:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v138so2577503oif.6;
+        Fri, 25 Oct 2019 14:49:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KqXCDwMNLnU9Sq5mjJqUeqsnhfK8AbIw6Nf9qBzmidA=;
-        b=ml9g8e/RbbvdEpUpQLNDz9/KiXZbuPQnPlgZnOfL4C67bIYtEhX+8CbJs4JAhCY7y2
-         f3htqd3KJa3Q9PGuMrRjS+GCp+6UVq8L3FhT+rjY3k0ypEwbBMMnfkiJPMHsGftgRQs7
-         8KSsE7JXS+des/LfM8GYS4GMI3UoB99ib5SqTu79NASBf6usD6jkQUHTdpnzuHMNcFBM
-         jIm4HdPlXeNOYPJOKXmsNBS6YctCSc3PLhSl1SWRBkuGz5PrgQgsOCrqjmXnaPHDWM1T
-         +JD2WoYy0rxnyueQwIcTiQ9OyQFjIuaOPnrZ2FBUFl6P6tsKzPVOZGUgcRZgFW9KN+oa
-         t4Rg==
-X-Gm-Message-State: APjAAAW9K3zxuNEY33wFzOi8UyOX67cs5lyUnCj3aq5m0ZUNJt55qa7/
-        0klyoVxJx3MVxXbsuLkLH+A=
-X-Google-Smtp-Source: APXvYqymbwQKh72Rl1MZ6bfp6hyf49nHbGJoeGwrP2gGGiP1hWP9BfsPEOxl7jNURX5qoP5WvBuH1w==
-X-Received: by 2002:a1c:96d5:: with SMTP id y204mr3257831wmd.63.1572039624378;
-        Fri, 25 Oct 2019 14:40:24 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id h17sm3759607wme.6.2019.10.25.14.40.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 14:40:23 -0700 (PDT)
-Subject: Re: [RFC PATCH 3/3] nvme: Introduce nvme_execute_passthru_rq_nowait()
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Keith Busch <kbusch@kernel.org>, Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20191025202535.12036-1-logang@deltatee.com>
- <20191025202535.12036-4-logang@deltatee.com>
- <28b40ab8-c695-784e-3f52-03a18b891d25@grimberg.me>
- <11006dd2-718f-b569-4ef3-c01232354d5f@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <952c93fa-ef69-e113-a285-b1e9a0ddcafc@grimberg.me>
-Date:   Fri, 25 Oct 2019 14:40:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wGm3OSExE/97BmM29xjH36/abWZ9nPYDMo8RkVIn7DU=;
+        b=ISKp1hthhRab8G1/BzjmgcJCtX2BtVilxMqR/GAIdLmwh8PuNwXtbk5XC5KwSZWhO6
+         a0pU3jvTPSFQCBKO8Fsz+R8oqem9R4JsvriLiO1abdJ9xO7pl5/2te7H6vEmiQ5dV4iU
+         32/eu0DWGnl7JMvtUD4JnE5ZsUAcGOvGSDqI5uw+eqWedniSEMgIpEHZUzvljwuYaxL8
+         U4f21bXknCiJr0aocYIxj8x+sbU9TYqXfCo+9O11Yi56tBIJSRgFo/1T5EwXeSFqScps
+         cwoPB44//bZ7u5+/4I9FBfMUBbbAlkRx4aursLyRMfUfWlZwy0xKFhGbcJns6Ovs5Pr0
+         dTZQ==
+X-Gm-Message-State: APjAAAVKPO7Yy1y6MrZ7iSO9mjF1GE0nIY3vcJxgUgfHiufiM8mxh6ys
+        yAl6l3/SQb6roQikEQDjmA==
+X-Google-Smtp-Source: APXvYqwLbnmVyTEOV9qgJJFVyWAeKISdHnloLOn/3BypbMbjV29PEr1S6ftViDUyEbH+5o61CqsHSw==
+X-Received: by 2002:a05:6808:7d9:: with SMTP id f25mr4933670oij.69.1572040144629;
+        Fri, 25 Oct 2019 14:49:04 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 34sm1139469otf.55.2019.10.25.14.49.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 14:49:03 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:49:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, mturquette@baylibre.com,
+        sboyd@kernel.org, mark.rutland@arm.com, paul@crapouillou.net
+Subject: Re: [PATCH 1/2 v2] dt-bindings: clock: Add X1000 bindings.
+Message-ID: <20191025214903.GA14052@bogus>
+References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
+ <1571763389-43443-1-git-send-email-zhouyanjie@zoho.com>
+ <1571763389-43443-2-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-In-Reply-To: <11006dd2-718f-b569-4ef3-c01232354d5f@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571763389-43443-2-git-send-email-zhouyanjie@zoho.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>> +#ifdef CONFIG_NVME_TARGET_PASSTHRU
->>> +static void nvme_execute_passthru_rq_work(struct work_struct *w)
->>> +{
->>> +    struct nvme_request *req = container_of(w, struct nvme_request,
->>> work);
->>> +    struct request *rq = blk_mq_rq_from_pdu(req);
->>> +    rq_end_io_fn *done = rq->end_io;
->>> +    void *end_io_data = rq->end_io_data;
->>
->> Why is end_io_data stored to a local variable here? where is it set?
+On Wed, 23 Oct 2019 00:56:28 +0800, Zhou Yanjie wrote:
+> Add the clock bindings for the X1000 Soc from Ingenic.
 > 
-> blk_execute_rq() (which is called by nvme_execute_rq()) will overwrite
-> rq->endio and rq->end_io_data. We store them here so we can call the
-> callback appropriately after the request completes. It would be set by
-> the caller in the same way they set it if they were calling
-> blk_execute_rq_nowait().
-
-I see..
-
->>> +
->>> +    nvme_execute_passthru_rq(rq);
->>> +
->>> +    if (done) {
->>> +        rq->end_io_data = end_io_data;
->>> +        done(rq, 0);
->>> +    }
->>> +}
->>> +
->>> +void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn
->>> *done)
->>> +{
->>> +    struct nvme_command *cmd = nvme_req(rq)->cmd;
->>> +    struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
->>> +    struct nvme_ns *ns = rq->q->queuedata;
->>> +    struct gendisk *disk = ns ? ns->disk : NULL;
->>> +    u32 effects;
->>> +
->>> +    /*
->>> +     * This function may be called in interrupt context, so we cannot
->>> sleep
->>> +     * but nvme_passthru_[start|end]() may sleep so we need to execute
->>> +     * the command in a work queue.
->>> +     */
->>> +    effects = nvme_command_effects(ctrl, ns, cmd->common.opcode);
->>> +    if (effects) {
->>> +        rq->end_io = done;
->>> +        INIT_WORK(&nvme_req(rq)->work, nvme_execute_passthru_rq_work);
->>> +        queue_work(nvme_wq, &nvme_req(rq)->work);
->>
->> This work will need to be flushed when in nvme_stop_ctrl. That is
->> assuming that it will fail-fast and not hang (which it should given
->> that its a passthru command that is allocated via nvme_alloc_request).
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> ---
+>  .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
+>  include/dt-bindings/clock/x1000-cgu.h              | 41 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/x1000-cgu.h
 > 
-> Hmm, that's going to be a bit tricky. Seeing the work_struct belongs
-> potentially to a number of different requests, we can't just flush the
-> individual work items. I think we'd have to create a work-queue per ctrl
-> and flush that. Any objections to that?
 
-I'd object to that overhead...
-
-How about marking the request if the workqueue path is taken and
-in nvme_stop_ctrl you add a blk_mq_tagset_busy_iter and cancel
-it in the callback?
-
-Something like:
---
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index fa7ba09dca77..13dbbec5497d 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3955,12 +3955,33 @@ void nvme_complete_async_event(struct nvme_ctrl 
-*ctrl, __le16 status,
-  }
-  EXPORT_SYMBOL_GPL(nvme_complete_async_event);
-
-+static bool nvme_flush_async_passthru_request(struct request *rq,
-+               void *data, bool reserved)
-+{
-+       if (!(nvme_req(rq)->flags & NVME_REQ_ASYNC_PASSTHRU))
-+               return true;
-+
-+       dev_dbg_ratelimited(((struct nvme_ctrl *) data)->device,
-+                               "Cancelling passthru I/O %d", req->tag);
-+       flush_work(&nvme_req(rq)->work);
-+       return true;
-+}
-+
-+static void nvme_flush_async_passthru_requests(struct nvme_ctrl *ctrl)
-+{
-+       blk_mq_tagset_busy_iter(ctrl->tagset,
-+               nvme_flush_async_passthru_request, ctrl);
-+       blk_mq_tagset_busy_iter(ctrl->admin_tagset,
-+               nvme_flush_async_passthru_request, ctrl);
-+}
-+
-  void nvme_stop_ctrl(struct nvme_ctrl *ctrl)
-  {
-         nvme_mpath_stop(ctrl);
-         nvme_stop_keep_alive(ctrl);
-         flush_work(&ctrl->async_event_work);
-         cancel_work_sync(&ctrl->fw_act_work);
-+       nvme_flush_async_passthru_requests(ctrl);
-  }
-  EXPORT_SYMBOL_GPL(nvme_stop_ctrl);
---
+Reviewed-by: Rob Herring <robh@kernel.org>
