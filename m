@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D572DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269BDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B178921929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF47E21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393033AbfJYFiu (ORCPT
+        id S2393051AbfJYFiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 01:38:50 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30303 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732032AbfJYFiu (ORCPT
+        Fri, 25 Oct 2019 01:38:54 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5554 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2393008AbfJYFix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 01:38:50 -0400
-X-UUID: 8ce9b5801e054811be1b7e7f2deca765-20191025
-X-UUID: 8ce9b5801e054811be1b7e7f2deca765-20191025
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        Fri, 25 Oct 2019 01:38:53 -0400
+X-UUID: 1c1ad6368989436e8fe9507eb69c7957-20191025
+X-UUID: 1c1ad6368989436e8fe9507eb69c7957-20191025
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 504928272; Fri, 25 Oct 2019 13:38:46 +0800
+        with ESMTP id 1106138998; Fri, 25 Oct 2019 13:38:46 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Fri, 25 Oct 2019 13:38:42 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -47,12 +47,10 @@ CC:     Philipp Zabel <p.zabel@pengutronix.de>,
         <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
         <srv_heupstream@mediatek.com>,
         Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH] drm/mediatek: update cursors by using async atomic update
-Date:   Fri, 25 Oct 2019 13:38:42 +0800
-Message-ID: <20191025053843.16808-2-bibby.hsieh@mediatek.com>
+Subject: [PATCH] drm/mediatek: covert to helper nonblocking atomic commit
+Date:   Fri, 25 Oct 2019 13:38:41 +0800
+Message-ID: <20191025053843.16808-1-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191025053843.16808-1-bibby.hsieh@mediatek.com>
-References: <20191025053843.16808-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -61,140 +59,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support to async updates of cursors by using the new atomic
-interface for that.
+In order to commit state asynchronously, we change
+.atomic_commit to drm_atomic_helper_commit().
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c  | 32 +++++++++++++++++
- drivers/gpu/drm/mediatek/mtk_drm_crtc.h  |  3 ++
- drivers/gpu/drm/mediatek/mtk_drm_plane.c | 44 ++++++++++++++++++++++++
- 3 files changed, 79 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 11 ++++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 86 ++-----------------------
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  7 --
+ 3 files changed, 16 insertions(+), 88 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index b07dc9b59ca3..3c96178bd559 100644
+index b97eb5f58483..b07dc9b59ca3 100644
 --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
 +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -395,6 +395,38 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
- 	}
- }
- 
-+void mtk_drm_crtc_cursor_update(struct drm_crtc *crtc, struct drm_plane *plane,
-+				struct drm_plane_state *new_state)
-+{
-+	struct mtk_drm_private *priv = crtc->dev->dev_private;
-+	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-+	const struct drm_plane_helper_funcs *plane_helper_funcs =
-+			plane->helper_private;
-+	int i;
-+
-+	if (!mtk_crtc->enabled)
-+		return;
-+
-+	plane_helper_funcs->atomic_update(plane, new_state);
-+
-+	for (i = 0; i < mtk_crtc->layer_nr; i++) {
-+		struct drm_plane *plane = &mtk_crtc->planes[i];
-+		struct mtk_plane_state *plane_state;
-+
-+		plane_state = to_mtk_plane_state(plane->state);
-+		if (plane_state->pending.dirty) {
-+			plane_state->pending.config = true;
-+			plane_state->pending.dirty = false;
-+		}
-+	}
-+	mtk_crtc->pending_planes = true;
-+	if (priv->data->shadow_register) {
-+		mtk_disp_mutex_acquire(mtk_crtc->mutex);
-+		mtk_crtc_ddp_config(crtc);
-+		mtk_disp_mutex_release(mtk_crtc->mutex);
-+	}
-+}
-+
- static void mtk_drm_crtc_atomic_enable(struct drm_crtc *crtc,
- 				       struct drm_crtc_state *old_state)
+@@ -317,6 +317,7 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
  {
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-index fcc134eb00c9..e65d58db201d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-@@ -20,4 +20,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 			const enum mtk_ddp_comp_id *path,
- 			unsigned int path_len);
+ 	struct drm_device *drm = mtk_crtc->base.dev;
++	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	int i;
  
-+void mtk_drm_crtc_cursor_update(struct drm_crtc *crtc, struct drm_plane *plane,
-+				struct drm_plane_state *plane_state);
+ 	DRM_DEBUG_DRIVER("%s\n", __func__);
+@@ -340,6 +341,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
+ 
+ 	pm_runtime_put(drm->dev);
 +
- #endif /* MTK_DRM_CRTC_H */
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index 584a9ecadce6..f0e91ecb3b4c 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -7,6 +7,7 @@
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_fourcc.h>
-+#include <drm/drm_atomic_uapi.h>
- #include <drm/drm_plane_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
- 
-@@ -70,6 +71,47 @@ static void mtk_drm_plane_destroy_state(struct drm_plane *plane,
- 	kfree(to_mtk_plane_state(state));
++	if (crtc->state->event && !crtc->state->active) {
++		spin_lock_irq(&crtc->dev->event_lock);
++		drm_crtc_send_vblank_event(crtc, crtc->state->event);
++		crtc->state->event = NULL;
++		spin_unlock_irq(&crtc->dev->event_lock);
++	}
  }
  
-+static int mtk_plane_atomic_async_check(struct drm_plane *plane,
-+					struct drm_plane_state *state)
-+{
-+	struct drm_crtc_state *crtc_state;
-+
-+	if (plane != state->crtc->cursor)
-+		return -EINVAL;
-+
-+	if (!plane->state)
-+		return -EINVAL;
-+
-+	if (!plane->state->fb)
-+		return -EINVAL;
-+
-+	if (state->state)
-+		crtc_state = drm_atomic_get_existing_crtc_state(state->state,
-+								state->crtc);
-+	else /* Special case for asynchronous cursor updates. */
-+		crtc_state = state->crtc->state;
-+
-+	return drm_atomic_helper_check_plane_state(plane->state, crtc_state,
-+						   DRM_PLANE_HELPER_NO_SCALING,
-+						   DRM_PLANE_HELPER_NO_SCALING,
-+						   true, true);
-+}
-+
-+static void mtk_plane_atomic_async_update(struct drm_plane *plane,
-+					  struct drm_plane_state *new_state)
-+{
-+	plane->state->crtc_x = new_state->crtc_x;
-+	plane->state->crtc_y = new_state->crtc_y;
-+	plane->state->crtc_h = new_state->crtc_h;
-+	plane->state->crtc_w = new_state->crtc_w;
-+	plane->state->src_x = new_state->src_x;
-+	plane->state->src_y = new_state->src_y;
-+	plane->state->src_h = new_state->src_h;
-+	plane->state->src_w = new_state->src_w;
-+
-+	mtk_drm_crtc_cursor_update(new_state->crtc, plane, new_state);
-+}
-+
- static const struct drm_plane_funcs mtk_plane_funcs = {
- 	.update_plane = drm_atomic_helper_update_plane,
- 	.disable_plane = drm_atomic_helper_disable_plane,
-@@ -151,6 +193,8 @@ static const struct drm_plane_helper_funcs mtk_plane_helper_funcs = {
- 	.atomic_check = mtk_plane_atomic_check,
- 	.atomic_update = mtk_plane_atomic_update,
- 	.atomic_disable = mtk_plane_atomic_disable,
-+	.atomic_async_update = mtk_plane_atomic_async_update,
-+	.atomic_async_check = mtk_plane_atomic_async_check,
+ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+@@ -456,12 +464,15 @@ static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
+ 	if (mtk_crtc->event && state->base.event)
+ 		DRM_ERROR("new event while there is still a pending event\n");
+ 
++	spin_lock_irq(&crtc->dev->event_lock);
+ 	if (state->base.event) {
+ 		state->base.event->pipe = drm_crtc_index(crtc);
+ 		WARN_ON(drm_crtc_vblank_get(crtc) != 0);
++		WARN_ON(mtk_crtc->event);
+ 		mtk_crtc->event = state->base.event;
+ 		state->base.event = NULL;
+ 	}
++	spin_unlock_irq(&crtc->dev->event_lock);
+ }
+ 
+ static void mtk_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 6588dc6dd5e3..16e5771d182e 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -36,89 +36,14 @@
+ #define DRIVER_MAJOR 1
+ #define DRIVER_MINOR 0
+ 
+-static void mtk_atomic_schedule(struct mtk_drm_private *private,
+-				struct drm_atomic_state *state)
+-{
+-	private->commit.state = state;
+-	schedule_work(&private->commit.work);
+-}
+-
+-static void mtk_atomic_complete(struct mtk_drm_private *private,
+-				struct drm_atomic_state *state)
+-{
+-	struct drm_device *drm = private->drm;
+-
+-	drm_atomic_helper_wait_for_fences(drm, state, false);
+-
+-	/*
+-	 * Mediatek drm supports runtime PM, so plane registers cannot be
+-	 * written when their crtc is disabled.
+-	 *
+-	 * The comment for drm_atomic_helper_commit states:
+-	 *     For drivers supporting runtime PM the recommended sequence is
+-	 *
+-	 *     drm_atomic_helper_commit_modeset_disables(dev, state);
+-	 *     drm_atomic_helper_commit_modeset_enables(dev, state);
+-	 *     drm_atomic_helper_commit_planes(dev, state,
+-	 *                                     DRM_PLANE_COMMIT_ACTIVE_ONLY);
+-	 *
+-	 * See the kerneldoc entries for these three functions for more details.
+-	 */
+-	drm_atomic_helper_commit_modeset_disables(drm, state);
+-	drm_atomic_helper_commit_modeset_enables(drm, state);
+-	drm_atomic_helper_commit_planes(drm, state,
+-					DRM_PLANE_COMMIT_ACTIVE_ONLY);
+-
+-	drm_atomic_helper_wait_for_vblanks(drm, state);
+-
+-	drm_atomic_helper_cleanup_planes(drm, state);
+-	drm_atomic_state_put(state);
+-}
+-
+-static void mtk_atomic_work(struct work_struct *work)
+-{
+-	struct mtk_drm_private *private = container_of(work,
+-			struct mtk_drm_private, commit.work);
+-
+-	mtk_atomic_complete(private, private->commit.state);
+-}
+-
+-static int mtk_atomic_commit(struct drm_device *drm,
+-			     struct drm_atomic_state *state,
+-			     bool async)
+-{
+-	struct mtk_drm_private *private = drm->dev_private;
+-	int ret;
+-
+-	ret = drm_atomic_helper_prepare_planes(drm, state);
+-	if (ret)
+-		return ret;
+-
+-	mutex_lock(&private->commit.lock);
+-	flush_work(&private->commit.work);
+-
+-	ret = drm_atomic_helper_swap_state(state, true);
+-	if (ret) {
+-		mutex_unlock(&private->commit.lock);
+-		drm_atomic_helper_cleanup_planes(drm, state);
+-		return ret;
+-	}
+-
+-	drm_atomic_state_get(state);
+-	if (async)
+-		mtk_atomic_schedule(private, state);
+-	else
+-		mtk_atomic_complete(private, state);
+-
+-	mutex_unlock(&private->commit.lock);
+-
+-	return 0;
+-}
++static const struct drm_mode_config_helper_funcs mtk_drm_mode_config_helpers = {
++	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
++};
+ 
+ static const struct drm_mode_config_funcs mtk_drm_mode_config_funcs = {
+ 	.fb_create = mtk_drm_mode_fb_create,
+ 	.atomic_check = drm_atomic_helper_check,
+-	.atomic_commit = mtk_atomic_commit,
++	.atomic_commit = drm_atomic_helper_commit,
  };
  
- int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
+ static const enum mtk_ddp_comp_id mt2701_mtk_ddp_main[] = {
+@@ -265,6 +190,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ 	drm->mode_config.max_width = 4096;
+ 	drm->mode_config.max_height = 4096;
+ 	drm->mode_config.funcs = &mtk_drm_mode_config_funcs;
++	drm->mode_config.helper_private = &mtk_drm_mode_config_helpers;
+ 
+ 	ret = component_bind_all(drm->dev, drm);
+ 	if (ret)
+@@ -540,8 +466,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ 	if (!private)
+ 		return -ENOMEM;
+ 
+-	mutex_init(&private->commit.lock);
+-	INIT_WORK(&private->commit.work, mtk_atomic_work);
+ 	private->data = of_device_get_match_data(dev);
+ 
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index b6a82728d563..9f4ce60174f6 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -46,13 +46,6 @@ struct mtk_drm_private {
+ 	struct device_node *comp_node[DDP_COMPONENT_ID_MAX];
+ 	struct mtk_ddp_comp *ddp_comp[DDP_COMPONENT_ID_MAX];
+ 	const struct mtk_mmsys_driver_data *data;
+-
+-	struct {
+-		struct drm_atomic_state *state;
+-		struct work_struct work;
+-		struct mutex lock;
+-	} commit;
+-
+ 	struct drm_atomic_state *suspend_state;
+ 
+ 	bool dma_parms_allocated;
 -- 
 2.18.0
 
