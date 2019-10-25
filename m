@@ -2,273 +2,101 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75F5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0C3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C14F205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1804205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+16CLj0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GeGIRqOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfJYBbv (ORCPT
+        id S2389003AbfJYBb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 21:31:51 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46288 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726486AbfJYBbu (ORCPT
+        Thu, 24 Oct 2019 21:31:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60450 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfJYBb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 21:31:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571967107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M40XR0T9BKbXD14zie05WcoP5tWOnHL2zQPkemlNf7o=;
-        b=h+16CLj0q+WPLqWCQ1P3KE2C7mWdead0xdRhonN8OD/vZoSJ1+kpdcMYhlioiMDZn91SYn
-        hK5xHE7V+PZM+aboZDf9Bji8xX/B+NUsxYXAFjnQnvwGUlGCw0c/VM8Z9yEMcLi2GYwu3s
-        zsRih9TfxJSe/xs5n6DgjnGUAJqoPtc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-OONSmIk_NKq6Om9oMPq8mA-1; Thu, 24 Oct 2019 21:31:43 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33A9C1005500;
-        Fri, 25 Oct 2019 01:31:41 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-33.pek2.redhat.com [10.72.12.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B4C6A5DA8D;
-        Fri, 25 Oct 2019 01:31:26 +0000 (UTC)
-Subject: Re: [PATCH 1/2 v5] x86/kdump: always reserve the low 1MiB when the
- crashkernel option is specified
-From:   lijiang <lijiang@redhat.com>
-To:     Simon Horman <horms@verge.net.au>, d.hatayama@fujitsu.com
-Cc:     linux-kernel@vger.kernel.org, jgross@suse.com,
-        Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org,
-        kexec@lists.infradead.org, dhowells@redhat.com, mingo@redhat.com,
-        bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com,
-        tglx@linutronix.de, dyoung@redhat.com, vgoyal@redhat.com
-References: <20191023141912.29110-1-lijiang@redhat.com>
- <20191023141912.29110-2-lijiang@redhat.com>
- <20191024100719.GC11441@verge.net.au>
- <4c1c4b78-23f0-a2b9-4be7-5bab0335f10a@redhat.com>
-Message-ID: <6da13645-c5e9-6c95-1f2d-bede177f9863@redhat.com>
-Date:   Fri, 25 Oct 2019 09:31:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 24 Oct 2019 21:31:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1Tqnq148236;
+        Fri, 25 Oct 2019 01:31:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=YX6iSuSJzD6bU5Zqg+Y9VBaCEuVJRCJvQMMc8dq7OWs=;
+ b=GeGIRqOFHcCZr9lhDl0wY7Q6cc++SgPFYwlc0Rk/pIHYkVF/y5PkKixTrHbfCZaPR40S
+ g48gV8wllNV7qBc74C+s6DRo5npG/I7N/RxaXCS6LOu0ch+aGbdN/J+dry6ZJGJm7YRS
+ 0WepkDHpsjG13Ol3snKybs2RW/gkamZXaeP+mwMNokrbDMzdRg3xaI9UqEIhKJwwAVp8
+ 50jtQB3NG0Vd356wsWWt5MK0Jb+5aIX864AIAJYjs1A+s+HWOSGRb9zl2zbjHWI0VdUc
+ A6tQbXw2mXYeDx/aXJyuJfXyj/KeRGzOtXLMDHUM2NeWqqOEbVuFOF475JbTPD1vLw3R Sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vqswtyb13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 01:31:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1Stak022517;
+        Fri, 25 Oct 2019 01:31:46 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vunbk6jka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 01:31:46 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9P1VjwH028060;
+        Fri, 25 Oct 2019 01:31:45 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 24 Oct 2019 18:31:45 -0700
+To:     John Garry <john.garry@huawei.com>
+Cc:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/18] hisi_sas: Misc patches, mostly debugfs
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1571926105-74636-1-git-send-email-john.garry@huawei.com>
+Date:   Thu, 24 Oct 2019 21:31:43 -0400
+In-Reply-To: <1571926105-74636-1-git-send-email-john.garry@huawei.com> (John
+        Garry's message of "Thu, 24 Oct 2019 22:08:07 +0800")
+Message-ID: <yq1zhhpa9vk.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <4c1c4b78-23f0-a2b9-4be7-5bab0335f10a@redhat.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: OONSmIk_NKq6Om9oMPq8mA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=663
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910250014
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=749 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910250014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E5=9C=A8 2019=E5=B9=B410=E6=9C=8824=E6=97=A5 19:33, lijiang =E5=86=99=E9=
-=81=93:
-> =E5=9C=A8 2019=E5=B9=B410=E6=9C=8824=E6=97=A5 18:07, Simon Horman =E5=86=
-=99=E9=81=93:
->> Hi Linbo,
->>
->> thanks for your patch.
->>
->> On Wed, Oct 23, 2019 at 10:19:11PM +0800, Lianbo Jiang wrote:
->>> Kdump kernel will reuse the first 640k region because the real mode
->>> trampoline has to work in this area. When the vmcore is dumped, the
->>> old memory in this area may be accessed, therefore, kernel has to
->>> copy the contents of the first 640k area to a backup region so that
->>> kdump kernel can read the old memory from the backup area of the
->>> first 640k area, which is done in the purgatory().
->>>
->>> But, the current handling of copying the first 640k area runs into
->>> problems when SME is enabled, kernel does not properly copy these
->>> old memory to the backup area in the purgatory(), thereby, kdump
->>> kernel reads out the encrypted contents, because the kdump kernel
->>> must access the first kernel's memory with the encryption bit set
->>> when SME is enabled in the first kernel. Please refer to this link:
->>>
->>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204793
->>>
->>> Finally, it causes the following errors, and the crash tool gets
->>> invalid pointers when parsing the vmcore.
->>>
->>> crash> kmem -s|grep -i invalid
->>> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086a=
-c099f0c5a4
->>> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086a=
-c099f0c5a4
->>> crash>
->>>
->>> To avoid the above errors, when the crashkernel option is specified,
->>> lets reserve the remaining low 1MiB memory(after reserving real mode
->>> memory) so that the allocated memory does not fall into the low 1MiB
->>> area, which makes us not to copy the first 640k content to a backup
->>> region in purgatory(). This indicates that it does not need to be
->>> included in crash dumps or used for anything except the processor
->>> trampolines that must live in the low 1MiB.
->>>
->>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
->>> ---
->>> BTW:I also tried to fix the above problem in purgatory(), but there
->>> are too many restricts in purgatory() context, for example: i can't
->>> allocate new memory to create the identity mapping page table for
->>> SME situation.
->>>
->>> Currently, there are two places where the first 640k area is needed,
->>> the first one is in the find_trampoline_placement(), another one is
->>> in the reserve_real_mode(), and their content doesn't matter.
->>>
->>> In addition, also need to clean all the code related to the backup
->>> region later.
->>>
->>>  arch/x86/realmode/init.c |  2 ++
->>>  include/linux/kexec.h    |  2 ++
->>>  kernel/kexec_core.c      | 13 +++++++++++++
->>>  3 files changed, 17 insertions(+)
->>>
->>> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
->>> index 7dce39c8c034..064cc79a015d 100644
->>> --- a/arch/x86/realmode/init.c
->>> +++ b/arch/x86/realmode/init.c
->>> @@ -3,6 +3,7 @@
->>>  #include <linux/slab.h>
->>>  #include <linux/memblock.h>
->>>  #include <linux/mem_encrypt.h>
->>> +#include <linux/kexec.h>
->>> =20
->>>  #include <asm/set_memory.h>
->>>  #include <asm/pgtable.h>
->>> @@ -34,6 +35,7 @@ void __init reserve_real_mode(void)
->>> =20
->>>  =09memblock_reserve(mem, size);
->>>  =09set_real_mode_mem(mem);
->>> +=09kexec_reserve_low_1MiB();
->>>  }
->>> =20
->>>  static void __init setup_real_mode(void)
->>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->>> index 1776eb2e43a4..30acf1d738bc 100644
->>> --- a/include/linux/kexec.h
->>> +++ b/include/linux/kexec.h
->>> @@ -306,6 +306,7 @@ extern void __crash_kexec(struct pt_regs *);
->>>  extern void crash_kexec(struct pt_regs *);
->>>  int kexec_should_crash(struct task_struct *);
->>>  int kexec_crash_loaded(void);
->>> +void __init kexec_reserve_low_1MiB(void);
->>>  void crash_save_cpu(struct pt_regs *regs, int cpu);
->>>  extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
->>> =20
->>> @@ -397,6 +398,7 @@ static inline void __crash_kexec(struct pt_regs *re=
-gs) { }
->>>  static inline void crash_kexec(struct pt_regs *regs) { }
->>>  static inline int kexec_should_crash(struct task_struct *p) { return 0=
-; }
->>>  static inline int kexec_crash_loaded(void) { return 0; }
->>> +static inline void __init kexec_reserve_low_1MiB(void) { }
->>>  #define kexec_in_progress false
->>>  #endif /* CONFIG_KEXEC_CORE */
->>> =20
->>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->>> index 15d70a90b50d..5bd89f1fee42 100644
->>> --- a/kernel/kexec_core.c
->>> +++ b/kernel/kexec_core.c
->>> @@ -37,6 +37,7 @@
->>>  #include <linux/compiler.h>
->>>  #include <linux/hugetlb.h>
->>>  #include <linux/frame.h>
->>> +#include <linux/memblock.h>
->>> =20
->>>  #include <asm/page.h>
->>>  #include <asm/sections.h>
->>> @@ -70,6 +71,18 @@ struct resource crashk_low_res =3D {
->>>  =09.desc  =3D IORES_DESC_CRASH_KERNEL
->>>  };
->>> =20
->>> +/*
->>> + * When the crashkernel option is specified, only use the low
->>> + * 1MiB for the real mode trampoline.
->>> + */
->>> +void __init kexec_reserve_low_1MiB(void)
->>> +{
->>> +=09if (strstr(boot_command_line, "crashkernel=3D")) {
->>
->> Could you comment on the issue of using strstr which
->> was raised by Hatayama-san in response to an earlier revision
->> of this patch?
->>
->=20
-> Thank you, Simon and Hatayama-san. Lets talk about it here.
->=20
->> strstr() matches for example, ANYEXTRACHARACTERScrashkernel=3DANYEXTRACH=
-ARACTERS.
->>
->> Is it enough to use cmdline_find_option_bool()?
->>
->=20
-> The cmdline_find_option_bool() will find a boolean option, but the crashk=
-ernel option
-> is not a boolean option, maybe it looks odd. So, should we use the cmdlin=
-e_find_option()
-> better?
->=20
-> +#include <asm/cmdline.h>
->=20
->  void __init kexec_reserve_low_1MiB(void)
->  {
-> -       if (strstr(boot_command_line, "crashkernel=3D")) {
-> +       char buffer[4];
-> +
-> +       if (cmdline_find_option(boot_command_line, "crashkernel=3D",
-> +                               buffer, sizeof(buffer))) {
-Maybe it is simpler as follow:
 
-+       if (cmdline_find_option(boot_command_line, "crashkernel=3D",
-+                               NULL, 0)) {
+John,
 
-Any thoughts?
+> This series introduces a couple of minor improvements in the main
+> driver, and mostly changes in the driver debugfs support.
+>
+> The main change in the driver debugfs support is the ability to take
+> multiple memory dumps, which was not available previously. And the
+> bulk of the changes here is to create new structures for this purpose.
+>
+> We also add a new debugfs feature to report PHY down events, which
+> seem to be useful to some people.
 
-Thanks
-Lianbo
->                 memblock_reserve(0, 1<<20);
->                 pr_info("Reserving the low 1MiB of memory for crashkernel=
-\n");
->         }
->=20
-> And here, no need to parse the arguments of crashkernel(sometimes, which =
-has a
-> complicated syntax), so the size of buffer should be enough. What's your =
-opinion?
->=20
-> Thanks
-> Lianbo
->=20
->> Thanks in advance!
->>
->>> +=09=09memblock_reserve(0, 1<<20);
->>> +=09=09pr_info("Reserving the low 1MiB of memory for crashkernel\n");
->>> +=09}
->>> +}
->>> +
->>>  int kexec_should_crash(struct task_struct *p)
->>>  {
->>>  =09/*
->>> --=20
->>> 2.17.1
->>>
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
->>>
+Applied to 5.5/scsi-queue, thanks!
 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
