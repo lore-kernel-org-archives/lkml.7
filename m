@@ -2,120 +2,97 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A32CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F525CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B542070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A57320679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440088AbfJYLSM (ORCPT
+        id S2410153AbfJYLVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:18:12 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42533 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439235AbfJYLSL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:18:11 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iNxJV-0002cs-0I; Fri, 25 Oct 2019 10:59:25 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     davem@davemloft.net, oliver@neukum.org
-Cc:     hayeswang@realtek.com, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 1/2] r8152: Pass driver_info to REALTEK_USB_DEVICE() macro
-Date:   Fri, 25 Oct 2019 18:59:18 +0800
-Message-Id: <20191025105919.689-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 25 Oct 2019 07:21:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56812 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726352AbfJYLVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 07:21:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 396CDB227;
+        Fri, 25 Oct 2019 11:21:49 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-scsi@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3 1/7] cdrom: add poll_event_interruptible
+Date:   Fri, 25 Oct 2019 13:21:38 +0200
+Message-Id: <0a5ab9c86120851692aaa4390ee85ab9b2f86a8a.1572002144.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1572002144.git.msuchanek@suse.de>
+References: <cover.1572002144.git.msuchanek@suse.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-REALTEK_USB_DEVICE() in current form doesn't take driver_info as its
-parameter.
+Add convenience macro for polling an event that does not have a
+waitqueue.
 
-However, driver_info can be useful to add device specific information so
-let's adjust REALTEK_USB_DEVICE() macro to be able to do that.
-
-It'll be used by later patch.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- drivers/net/usb/r8152.c | 38 ++++++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ drivers/cdrom/cdrom.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index d3c30ccc8577..1a987d4e45ab 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -6725,12 +6725,13 @@ static void rtl8152_disconnect(struct usb_interface *intf)
- 	}
- }
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index ac42ae4651ce..2ad6b73482fe 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -282,10 +282,24 @@
+ #include <linux/fcntl.h>
+ #include <linux/blkdev.h>
+ #include <linux/times.h>
++#include <linux/delay.h>
+ #include <linux/uaccess.h>
++#include <linux/sched/signal.h>
+ #include <scsi/scsi_common.h>
+ #include <scsi/scsi_request.h>
  
--#define REALTEK_USB_DEVICE(vend, prod)	\
-+#define REALTEK_USB_DEVICE(vend, prod, info)	\
- 	.match_flags = USB_DEVICE_ID_MATCH_DEVICE | \
- 		       USB_DEVICE_ID_MATCH_INT_CLASS, \
- 	.idVendor = (vend), \
- 	.idProduct = (prod), \
--	.bInterfaceClass = USB_CLASS_VENDOR_SPEC \
-+	.bInterfaceClass = USB_CLASS_VENDOR_SPEC, \
-+	.driver_info = (info) \
- }, \
- { \
- 	.match_flags = USB_DEVICE_ID_MATCH_INT_INFO | \
-@@ -6739,25 +6740,26 @@ static void rtl8152_disconnect(struct usb_interface *intf)
- 	.idProduct = (prod), \
- 	.bInterfaceClass = USB_CLASS_COMM, \
- 	.bInterfaceSubClass = USB_CDC_SUBCLASS_ETHERNET, \
--	.bInterfaceProtocol = USB_CDC_PROTO_NONE
-+	.bInterfaceProtocol = USB_CDC_PROTO_NONE, \
-+	.driver_info = (info) \
- 
- /* table of devices that work with this driver */
- static const struct usb_device_id rtl8152_table[] = {
--	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8050)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8152)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_LINKSYS, 0x0041)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_NVIDIA,  0x09ff)},
--	{REALTEK_USB_DEVICE(VENDOR_ID_TPLINK,  0x0601)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8050, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8152, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_LINKSYS, 0x0041, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_NVIDIA,  0x09ff, 0)},
-+	{REALTEK_USB_DEVICE(VENDOR_ID_TPLINK,  0x0601, 0)},
- 	{}
- };
- 
++#define poll_event_interruptible(event, interval) ({ \
++	int ret = 0; \
++	while (!(event)) { \
++		if (signal_pending(current)) { \
++			ret = -ERESTARTSYS; \
++			break; \
++		} \
++		msleep_interruptible(interval); \
++	} \
++	ret; \
++})
++
+ /* used to tell the module to turn on full debugging messages */
+ static bool debug;
+ /* default compatibility mode */
 -- 
-2.17.1
+2.23.0
 
