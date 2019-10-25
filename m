@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE88CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F88CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910A321E6F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE47222D1
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011852;
-	bh=s2yQoOMO/7vJo00zrg4wbCZ/eAiOz/CEpJ75Q9s+nw0=;
+	s=default; t=1572011855;
+	bh=mQSjl+6l8tcgihZIqV3o5Ut6GEBQr47azfL0WrVi7So=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLqW/OoArJsxaOyeKm5h5R1g+ndCTbHb7QBSyD/UQx4O9Yl4tb4s3wTo0txBoYfXQ
-	 utvlyowSsXSTzXtsHRnxsxHjuaTptt76xA0/GEVmEfWP/eo9i57t5w2J9ooBltNSFz
-	 sOVUR/1IqLFBtqZjyae9JDZnC+urIhnrzLKUwm90=
+	b=VxXRPEsCWLJvjWCVaWZ2WyTiMW9p3CirXuVt/CySN6uTHgvg//YPIZuGy8ifT/9G1
+	 oFoTvUS5j963fnmLKaaHSSQcJXQ/WXLdNF/YUXNHbSbQ90Nln2h+5Qepj52yDFUDiY
+	 bNvjVlzdW+aevZoKu2lBjWlboUzqSt1iCZFhWTlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505334AbfJYN5b (ORCPT
+        id S2505348AbfJYN5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:57:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394825AbfJYN5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2505312AbfJYN5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 09:57:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A1DF21E6F;
-        Fri, 25 Oct 2019 13:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 590DD222BE;
+        Fri, 25 Oct 2019 13:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1572011844;
-        bh=s2yQoOMO/7vJo00zrg4wbCZ/eAiOz/CEpJ75Q9s+nw0=;
+        bh=mQSjl+6l8tcgihZIqV3o5Ut6GEBQr47azfL0WrVi7So=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VSzZUcm3j3FHuQ9FkU/G9r3NYPktT1wuBRhdQaMe8ctPuhg/H7DQ2BBqcA09TpcJD
-         kV0W77409VWfYRHFVgMncaEuYAMthq2IIjHQVUm+jaoBIQnZhXpHsF5rqEokfyc5z8
-         eMHCU2A+ppmbyN7LW0XPanblwwa4h5NSrAcEG+as=
+        b=BjQkE7IZPVGcWxKDzNXDSBq2tqJBWadOPClWd8uPy2scAZhFOLxXbf/Ay0Hfc40p4
+         qrhhw2624ammI5rOGqCwflYs6mMQxJbA4EX0+gMAOmME4V/V46/DPSuoC5RlWL/9uw
+         lPTye5Z6Y53AcvCvSnomtQkSoDYhydYUPnKcRDRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chad Dupuis <cdupuis@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/25] scsi: qedf: Do not retry ELS request if qedf_alloc_cmd fails
-Date:   Fri, 25 Oct 2019 09:56:54 -0400
-Message-Id: <20191025135715.25468-6-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 07/25] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Fri, 25 Oct 2019 09:56:55 -0400
+Message-Id: <20191025135715.25468-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135715.25468-1-sashal@kernel.org>
 References: <20191025135715.25468-1-sashal@kernel.org>
@@ -60,91 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chad Dupuis <cdupuis@marvell.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit f1c43590365bac054d753d808dbbd207d09e088d ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-If we cannot allocate an ELS middlepath request, simply fail instead of
-trying to delay and then reallocate.  This delay logic is causing soft
-lockup messages:
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [kworker/2:1:7639]
-Modules linked in: xt_CHECKSUM ipt_MASQUERADE nf_nat_masquerade_ipv4 tun devlink ip6t_rpfilter ipt_REJECT nf_reject_ipv4 ip6t_REJECT nf_reject_ipv6 xt_conntrack ip_set nfnetlink ebtable_nat ebtable_broute bridge stp llc ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_security ip6table_raw iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack iptable_mangle iptable_security iptable_raw ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter dm_service_time vfat fat rpcrdma sunrpc ib_isert iscsi_target_mod ib_iser libiscsi scsi_transport_iscsi ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib rdma_ucm ib_ucm ib_uverbs ib_umad rdma_cm ib_cm iw_cm sb_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm
-irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd iTCO_wdt iTCO_vendor_support qedr(OE) ib_core joydev ipmi_ssif pcspkr hpilo hpwdt sg ipmi_si ipmi_devintf ipmi_msghandler ioatdma shpchp lpc_ich wmi dca acpi_power_meter dm_multipath ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic qedf(OE) libfcoe mgag200 libfc i2c_algo_bit drm_kms_helper scsi_transport_fc qede(OE) syscopyarea sysfillrect sysimgblt fb_sys_fops ttm qed(OE) drm crct10dif_pclmul e1000e crct10dif_common crc32c_intel scsi_tgt hpsa i2c_core ptp scsi_transport_sas pps_core dm_mirror dm_region_hash dm_log dm_mod
-CPU: 2 PID: 7639 Comm: kworker/2:1 Kdump: loaded Tainted: G           OEL ------------   3.10.0-861.el7.x86_64 #1
-Hardware name: HP ProLiant DL580 Gen9/ProLiant DL580 Gen9, BIOS U17 07/21/2016
-Workqueue: qedf_2_dpc qedf_handle_rrq [qedf]
-task: ffff959edd628fd0 ti: ffff959ed6f08000 task.ti: ffff959ed6f08000
-RIP: 0010:[<ffffffff8355913a>]  [<ffffffff8355913a>] delay_tsc+0x3a/0x60
-RSP: 0018:ffff959ed6f0bd30  EFLAGS: 00000246
-RAX: 000000008ef5f791 RBX: 5f646d635f666465 RCX: 0000025b8ededa2f
-RDX: 000000000000025b RSI: 0000000000000002 RDI: 0000000000217d1e
-RBP: ffff959ed6f0bd30 R08: ffffffffc079aae8 R09: 0000000000000200
-R10: ffffffffc07952c6 R11: 0000000000000000 R12: 6c6c615f66646571
-R13: ffff959ed6f0bcc8 R14: ffff959ed6f0bd08 R15: ffff959e00000028
-FS:  0000000000000000(0000) GS:ffff959eff480000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f4117fa1eb0 CR3: 0000002039e66000 CR4: 00000000003607e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-[<ffffffff8355907d>] __const_udelay+0x2d/0x30
-[<ffffffffc079444a>] qedf_initiate_els+0x13a/0x450 [qedf]
-[<ffffffffc0794210>] ? qedf_srr_compl+0x2a0/0x2a0 [qedf]
-[<ffffffffc0795337>] qedf_send_rrq+0x127/0x230 [qedf]
-[<ffffffffc078ed55>] qedf_handle_rrq+0x15/0x20 [qedf]
-[<ffffffff832b2dff>] process_one_work+0x17f/0x440
-[<ffffffff832b3ac6>] worker_thread+0x126/0x3c0
-[<ffffffff832b39a0>] ? manage_workers.isra.24+0x2a0/0x2a0
-[<ffffffff832bae31>] kthread+0xd1/0xe0
-[<ffffffff832bad60>] ? insert_kthread_work+0x40/0x40
-[<ffffffff8391f637>] ret_from_fork_nospec_begin+0x21/0x21
-[<ffffffff832bad60>] ? insert_kthread_work+0x40/0x40
+use-after-free instance:
 
-Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
+
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
+
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedf/qedf_els.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qedf/qedf_els.c b/drivers/scsi/qedf/qedf_els.c
-index 59c18ca4cda98..e5927a09f7bce 100644
---- a/drivers/scsi/qedf/qedf_els.c
-+++ b/drivers/scsi/qedf/qedf_els.c
-@@ -23,8 +23,6 @@ static int qedf_initiate_els(struct qedf_rport *fcport, unsigned int op,
- 	int rc = 0;
- 	uint32_t did, sid;
- 	uint16_t xid;
--	uint32_t start_time = jiffies / HZ;
--	uint32_t current_time;
- 	struct fcoe_wqe *sqe;
- 	unsigned long flags;
- 	u16 sqe_idx;
-@@ -50,18 +48,12 @@ static int qedf_initiate_els(struct qedf_rport *fcport, unsigned int op,
- 		goto els_err;
- 	}
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 9045c5f3734e8..080038bbed39b 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -855,7 +855,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
  
--retry_els:
- 	els_req = qedf_alloc_cmd(fcport, QEDF_ELS);
- 	if (!els_req) {
--		current_time = jiffies / HZ;
--		if ((current_time - start_time) > 10) {
--			QEDF_INFO(&(qedf->dbg_ctx), QEDF_LOG_ELS,
--				   "els: Failed els 0x%x\n", op);
--			rc = -ENOMEM;
--			goto els_err;
--		}
--		mdelay(20 * USEC_PER_MSEC);
--		goto retry_els;
-+		QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_ELS,
-+			  "Failed to alloc ELS request 0x%x\n", op);
-+		rc = -ENOMEM;
-+		goto els_err;
- 	}
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
  
- 	QEDF_INFO(&(qedf->dbg_ctx), QEDF_LOG_ELS, "initiate_els els_req = "
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+ }
+@@ -931,7 +931,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
+ }
+ 
+@@ -940,7 +940,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
+ {
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -984,7 +984,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
