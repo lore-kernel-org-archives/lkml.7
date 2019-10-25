@@ -2,67 +2,63 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A4ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E799ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3CF21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7C021D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v78dJxug"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hFgQwJif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbfJYTBO (ORCPT
+        id S1726203AbfJYTD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:01:14 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36164 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfJYTBL (ORCPT
+        Fri, 25 Oct 2019 15:03:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45219 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfJYTD2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:01:11 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so3908789ljj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:01:08 -0700 (PDT)
+        Fri, 25 Oct 2019 15:03:28 -0400
+Received: by mail-pg1-f195.google.com with SMTP id r1so2106759pgj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:03:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=ffwll.ch; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=wFvTsWNvHJ0WjeT2ge2ILK79JvBVN7ahbjSFyxAR7pU=;
-        b=v78dJxugprqotYddXPTzIHDXQSAzW913b2mUSaMFrraFzeBt3Gv9qTo5GUsA3NCsWp
-         isa7IL0xKSppXymDvd9mTTBVXIYn9QSjp6bnQhmHyV9lmmgVF9/t8mGEY7zLRp71htRO
-         gLlIzxcowaFlVv7WJ5TOqgqkKYjMF1koDORRgfHxYCclB4kLnTPYZAnsa44fCkBBNj5/
-         gh5ySPVt3Gln6rKSWty5E+qNev4vJi+OgOH7mBTs75CSPEMvzayyGrXqhDbFcpnxJqoM
-         JcK1PFn2OtnzlYGJZ8dmDWa76bqdcScdsYtoAiQl7MTW45J6v2wT8me9SFsIUx/gmHnq
-         cMlA==
+        bh=hj/i16Oz3ttbHOZu54m4vyC0cEmTPwImzjB+4h1naI8=;
+        b=hFgQwJifeWrgblDTYKBTY3Y3mtkyucjAM9oiofrZTG4htQgonKBSjaAUmxr0sx0vdd
+         CkwKKPDPs/vuyDhcLqQIxI95oYX3RvYuQlOGsEzy8L0Vx4jLADD6upn8HvNCKVMxxUH3
+         lhqj6AuYau3YBBNXWqgRveGMHWJkiv6v8COv0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wFvTsWNvHJ0WjeT2ge2ILK79JvBVN7ahbjSFyxAR7pU=;
-        b=J9AL58czMAWkG0JHz61usmGgaIeb/8zhfYuArDOxQ3enFBrCiSHFVayd5K8wozuSo+
-         i4j5PHka3IQu7c10+nqD3Z5Md9emW019x2dCgL4maxMsdQSTLXptcTCrpoPdvm3Lpli4
-         m2jpCieVdwO6aNX1pcq1GSp4/5GrEUsA7urRmrSFvRnfY4aYh0l9NjFXuHSf3bEgsMwA
-         ZCiY4JT8fx63S4zJFKZPFuvuLhSOMmemJEHElmzd6wqXFyJTKX5+1d8+2il5xkFKnys3
-         5ziT8ECPZQdJKaGqocVqoX2tDfKbvCrDwl0ZnSHZpBctMTizvVAERMdeezZ3ker4KJ81
-         tYiA==
-X-Gm-Message-State: APjAAAWLHIdLA7YS3J4nfS3240X2kaq1n9YDPDWapsNsP3ahRwZUDsv6
-        cZui1G42q13ZbgptdtknzXA4eM8vJTJ3ZO3Q6QqshA==
-X-Google-Smtp-Source: APXvYqxFSfaOsliKazmZ5eJpCmumnqMP2BZkt+/2K7ETI0cBygySHAL7fZJ9CFQ5dJ/sS8ZWldDyOQob+3KKJA1iA20=
-X-Received: by 2002:a2e:9dca:: with SMTP id x10mr3088479ljj.112.1572030067022;
- Fri, 25 Oct 2019 12:01:07 -0700 (PDT)
+        bh=hj/i16Oz3ttbHOZu54m4vyC0cEmTPwImzjB+4h1naI8=;
+        b=oI5VUVI0iWJKWuZjqV0/NN2NsiMozlWvpytpn5Fxwiul4uclF9c34gZv0/D2JEJBNv
+         8Klnz0ct7uNqzgZI61OlW6xMtBu9SLL+ZrxzDzUD2CPe8IjVms7AP453VlHvRL3WORAu
+         PbHQgr0USueA3m0I9XSIhkeirFQHlqVvKr46Qt/yjUtywR+E5AAMALPF548yMuaZqHBP
+         0xHZ+CR5TmgW011lRwIIPqemN7MtOvKKJDQVYMI5y/gajoywsFOC0fSeZmnsCMHxkTE+
+         BGiIZ7lAQYcKShcB/H1AHQn4+B+jp7+5uIQ3ShLe2VziPlPd2SSx1tpPOF3GUACLPxu9
+         kUxA==
+X-Gm-Message-State: APjAAAUABCwN3MAbZmATJOPqvRtka8GKtf5Ssh9fcHLS+T/SmruYULrd
+        HkeebiTOEmvh7QmnM94euZFHmU+2w8tQ60ClcTymwQ==
+X-Google-Smtp-Source: APXvYqx1QntQpmmaG2tVUM7DRPf1xKWF3i+asEKdoEJbskpoGAJlHQLyADmx+TrZ6hEbYF8Oicsvx4ertzhB0zLyvhk=
+X-Received: by 2002:a63:2c53:: with SMTP id s80mr6038808pgs.377.1572030204942;
+ Fri, 25 Oct 2019 12:03:24 -0700 (PDT)
 MIME-Version: 1.0
 References: <20191023001206.15741-1-rajatja@google.com> <20191024112040.GE2825247@ulmo>
  <CAA93t1ozojwgVoLCZ=AWx72yddQoiaZCMFG35gQg3mQL9n9Z2w@mail.gmail.com> <20191025113609.GB928835@ulmo>
 In-Reply-To: <20191025113609.GB928835@ulmo>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 25 Oct 2019 12:00:29 -0700
-Message-ID: <CACK8Z6EfLtT3kSG8r6q_LuV3WpuKs8DvxHO=VieObhPQa3Jgvg@mail.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 25 Oct 2019 21:03:12 +0200
+Message-ID: <CAKMK7uGscg0YDgNZh61PAhnkF8xnASepo2HK2Y51wROPSkqJLA@mail.gmail.com>
 Subject: Re: [PATCH] drm: Add support for integrated privacy screens
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rajat Jain <rajatxjain@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+Cc:     Rajat Jain <rajatxjain@gmail.com>, Rajat Jain <rajatja@google.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
@@ -75,7 +71,7 @@ Cc:     Rajat Jain <rajatxjain@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
         =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
         Greg KH <gregkh@linuxfoundation.org>,
         Mat King <mathewk@google.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
@@ -90,7 +86,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 4:36 AM Thierry Reding <thierry.reding@gmail.com> w=
+On Fri, Oct 25, 2019 at 1:36 PM Thierry Reding <thierry.reding@gmail.com> w=
 rote:
 >
 > On Thu, Oct 24, 2019 at 01:45:16PM -0700, Rajat Jain wrote:
@@ -243,27 +239,23 @@ nnector *connector,
 > above. I'm not sure if that's enough to keep the state up-to-date,
 > though. Is there some way for a kill switch to trigger an interrupt or
 > other event of some sort so that the state could be kept up-to-date?
-
-I was basically imagining a hardware that I don't have at the moment.
-So I do not know the answer, but I think the answer may be yes.
-
 >
 > Daniel (or anyone else), do you know of any precedent for state that
 > might get modified behind the atomic helpers' back? Seems to me like we
 > need to find some point where we can actually read back the current
 > "hardware value" of this privacy screen property and store that back
 > into the state.
+
+We have atomic properties that the driver also updates, not just userspace:
+- link status
+- hdcp machinery
+
+But both still use the state structures like anything else, and then
+update that state structure through some worker.
+
+And yes I totally didn't catch this here, this breaks atomic, badly :-)
+
 >
-
-I'll wait for suggestions.
-
-What I did not quite understand about the use of a local state in
-software is what does this local software state buy us? Even with
-local state, in the "set_property" flow, we'll update it at the same
-time when we flush it out to hardware. Is it about avoiding an ACPI
-call during the "get_property" flow? Also, is it worth it if i brings
-with it complexity of interrupt handling?
-
 > >
 > > >
 > > > >       } else if (connector->funcs->atomic_get_property) {
@@ -348,12 +340,12 @@ the
 > are UABI, don't typically face the user directly. They're still part of
 > an API, so as long as they are properly documented there shouldn't be
 > any ambiguities.
->
 
-OK, I do not mind changing to whatever is acceptable. Jani / Daniel,
-do you have any recommendation here?
+Sometimes we go the cheap way with connector properties and say that
+those should be set by the user directly, through something like
+xrandr (mostly for stuff to hack around broken monitors). But ofc
+nicer if the property comes with some proper userspace integration.
 
-> > >
 > > > > +                             ARRAY_SIZE(drm_privacy_screen_enum_li=
 st));
 > > > > +             if (!prop)
@@ -526,7 +518,7 @@ and
 > > > > +      * eDP / integrated displays?
 > > > > +      */
 > > > > +     switch (connector->connector_type) {
-2) > > > > +     case DRM_MODE_CONNECTOR_eDP:
+> > > > +     case DRM_MODE_CONNECTOR_eDP:
 > > > > +             conn_addr =3D ACPI_BASE_ADR_FOR_INTEGRATED + port_ind=
 ex;
 > > > > +             break;
@@ -577,10 +569,9 @@ y
 > Also, I'm wondering if you couldn't somehow derive the port_index from
 > the connector. If all this does is to find an ACPI node corresponding to
 > a connector, shouldn't the connector really be all that you need?
->
 
-Yes, I agree that finding an ACPI node corresponding to a connector,
-should require only the info that the connector already has.
+Yeah port should be stored already plenty of times in i915 connector struct=
+s.
 
 > > > I we store the privacy setting in the atomic state, there isn't reall=
 y a
@@ -664,9 +655,11 @@ inux.git/commit/?id=3D110ea1d833ad)
 > to store it in the connector. But it shouldn't be called privacy_screen
 > in that case.
 
-Yes, I agree.
+Probably still should be in i915. We have a few firmware handle things
+in there already. If other drivers need this, we could make an acpi
+helper library that drivers can call to find the right acpi handle for
+their connector.
 
->
 > > 2) Use ACPI _DSM mthods to identify screen, set and get values. This
 > > is where I think we're setting (generic) expectations for the ACPI
 > > methods in how they should behave if ACPI is to be used to control
@@ -682,10 +675,6 @@ Yes, I agree.
 > It's opt-in functionality that drivers should call if they know that the
 > connector has an associated ACPI handle that can be used for privacy
 > screen control.
-
-Ah, OK, I see where the disconnect was. Sure, I think we are converging now=
-.
-
 >
 > After reading the patch again and realizing that you're not actually
 > dealing with an ACPI handle to the privacy screen directly but one for
@@ -694,9 +683,6 @@ Ah, OK, I see where the disconnect was. Sure, I think we are converging now=
 > to see ACPI as part of the function name to make that explicit. We could
 > always address that at a later point, but may as well do it right from
 > the start.
-
-Sure, I agree and will change the naming.
-
 >
 > > I agree that the functionality we're adding is ACPI specific (today -
 > > but can be extended to gpio in future for non x86 platforms), but not
@@ -714,18 +700,16 @@ Sure, I agree and will change the naming.
 > As I mentioned above, if we could derive the port index from the
 > connector, that'd be much better. Could you perhaps use drm_connector's
 > index field?
-
-That's a good idea. I'll check it out to see if it matches my needs.
-If it does, I think we might have found a way to make it totally
-separate from i915. I don't have a vast range of test hardware and
-monitors etc to test though. So I'll test with what I have available.
-
-I'll keep you updated.
-
 >
 > Unless there's a way to reliably detect this type of functionality from
 > generic code, I think it should always be called from the driver.
->
+
+Maybe time to pitch the old classic again:
+
+https://blog.ffwll.ch/2016/12/midlayers-once-more-with-feeling.html
+
+Especially all the links in the first part.
+
 > > So, for the reasons stated above, IMHO it is better to retain this
 > > functionality in drm code instead of i915 driver. But I'm new to the
 > > drm / i915 code, and would be happy to change my code if people have
@@ -743,24 +727,9 @@ I'll keep you updated.
 > because PCI graphics adapters don't have a struct device that represents
 > the connector.
 
-OK, I understand what you are saying. The ACPI handle essentially
-denotes the firmware node for that drm_connector device, analogous to
-the device tree nodes. Ideally, I wanted to have it stored in the
-drm_connector->kdev->fwnode which I think was the best place as it
-would also make the ACPI node visible in the sysfs like it is visible
-for PCI devices today. Unfortunately I found that the
-drm_connector->kdev is not created at the time when I need to lookup
-and register privacy screen (kdev is created much later), so that is
-not an option. Note that the drm_privacy_screen_set_val() and
-drm_privacy_screen_get_val() will need to access this ACPI handle to
-do their jobs. So unless I move that code or the property representing
-privacy screen also into i915, I can't really put that handle in i915.
++1 on all the stuff Thierry says here essentially.
 
-Thanks,
-
-Rajat
-
-
+Cheers, Daniel
 
 >
 > Thierry
@@ -955,3 +924,10 @@ or)
 > > > > --
 > > > > 2.23.0.866.gb869b98d4c-goog
 > > > >
+
+
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
