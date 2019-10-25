@@ -2,103 +2,84 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35CACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0B2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CC92070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571992251;
-	bh=qPuBMoxRjvpFkzIBTbK1+Sj7VeGDrKvcqY80diQQkP8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gHWi7YaDCji2O7lbDeB0lzH+Dvmlfb7VP+9CfaHvpEbGBS7foty/cQMcdhNlJSx46
-	 L9lRym1p4egn60qagVpFDQncAhQIA030ptddNxqZoEzTkBp6rC5T5DLbyZIMHzlcSg
-	 iQC11ISjRqItbURqMaqqR9YtmNFG5JlwyfsKRxOw=
+	by mail.kernel.org (Postfix) with ESMTP id 58EBB222CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393079AbfJYIau (ORCPT
+        id S2407456AbfJYIbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:30:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56233 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389290AbfJYIau (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:30:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g24so1091257wmh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:30:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WbtLEpxURuAgUvWpg00n4NSzJioqm+P4SunJQG8F86k=;
-        b=glhwaD7x4wvVUqBGgc2VNTWDk2nHWkStoxGi2/7DzGWd6rmZ50JKeP5Kgw9+yMGoIc
-         r3D8WDhKMc+wukrUfmptv/F97gCLm3XAxl6ua0bkkdo8mvWtIE3nxApyf4LywVZKfs6F
-         /ooivXkE7HvX6UBcmQc0/DzTpsaSbZQeFHca8kcaiEnYRfatl897rgccfgSBtBLfVqnr
-         PDwXJa92kDo0TuAa58KK3sW56rA0E/KPdtAODU3yYVH9SBduGfv1UJBCqSebJInfYy0G
-         myPB4w7L+PJi/hZbWStO1ef+46Me/myV0D36D1RgkXLZk+rwM0paxB73VOWZoo30vFZ5
-         J1GA==
-X-Gm-Message-State: APjAAAV67HOZSxCCEF6wf3SsGEhp8hFFFh/EKJQXrSYCCEdzH726sJFd
-        rsQ3IcNf++iaQ/l51S9WqTO9K2Fw+GZzu/FlNz4=
-X-Google-Smtp-Source: APXvYqyC8NCbSxEGilZd/aYDNefNH9iMDpvtNEaMy9SYv/fLuXfs4IxPlQiP9A8lJMELvGrFkqbI3YULBvsK/sL8woo=
-X-Received: by 2002:a1c:2d49:: with SMTP id t70mr2309007wmt.131.1571992246721;
- Fri, 25 Oct 2019 01:30:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191016125019.157144-1-namhyung@kernel.org> <20191016125019.157144-2-namhyung@kernel.org>
- <20191024174433.GA3622521@devbig004.ftw2.facebook.com>
-In-Reply-To: <20191024174433.GA3622521@devbig004.ftw2.facebook.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 25 Oct 2019 17:30:35 +0900
-Message-ID: <CAM9d7chWpj105TYR0qP3T8FJ=-2wjp+sh6Rk8zkvJb_ugtL3Dw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cgroup: Add generation number with cgroup id
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
+        Fri, 25 Oct 2019 04:31:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5182 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389290AbfJYIbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:31:03 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4A36215660F7E19A1B36;
+        Fri, 25 Oct 2019 16:31:01 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 25 Oct
+ 2019 16:30:56 +0800
+Subject: Re: [PATCH 2/2] f2fs: Add f2fs stats to sysfs
+To:     Hridya Valsaraju <hridya@google.com>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
         LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Song Liu <liu.song.a23@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Android Kernel Team <kernel-team@android.com>
+References: <20191023214821.107615-1-hridya@google.com>
+ <20191023214821.107615-2-hridya@google.com>
+ <e61510b8-c8d7-349f-b297-9df367c26a9f@huawei.com>
+ <CA+wgaPNas7ixNtepJE_6e7b6Dcutb9a1Who4WrUfKSw1ZnQhTA@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <96f89e7c-d91e-e263-99f7-16998cc443a7@huawei.com>
+Date:   Fri, 25 Oct 2019 16:30:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <CA+wgaPNas7ixNtepJE_6e7b6Dcutb9a1Who4WrUfKSw1ZnQhTA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
+On 2019/10/25 11:51, Hridya Valsaraju wrote:
+> On Thu, Oct 24, 2019 at 2:26 AM Chao Yu <yuchao0@huawei.com> wrote:
+>>
+>> On 2019/10/24 5:48, Hridya Valsaraju wrote:
+>>> Currently f2fs stats are only available from /d/f2fs/status. This patch
+>>> adds some of the f2fs stats to sysfs so that they are accessible even
+>>> when debugfs is not mounted.
+>>
+>> Why don't we mount debugfs first?
+> 
+> Thank you for taking a look at the patch Chao. We will not be mounting
+> debugfs for security reasons.
 
-On Fri, Oct 25, 2019 at 2:44 AM Tejun Heo <tj@kernel.org> wrote:
-> On Wed, Oct 16, 2019 at 09:50:18PM +0900, Namhyung Kim wrote:
-> > Later 64 bit system can have a simpler implementation with a single 64
-> > bit sequence number and a RB tree.  But it'll need to grab a spinlock
-> > during lookup.  I'm not entirely sure it's ok, so I left it as is.
->
-> Any chance I can persuade you into making this conversion?  idr is
-> exactly the wrong data structure to use for cyclic allocations.  We've
-> been doing it mostly for historical reasons but I really hope we can
-> move away from it.  These lookups aren't in super hot paths and doing
-> locked lookups should be fine.
+Hi, Hridya,
 
-As you know, it entails change in kernfs id and its users.
-And I really want to finish the perf cgroup sampling work first.
-Can I work on this after the perf work is done?
+May I ask is there any use case for those new entries?
 
->
-> >  /*
-> >   * A cgroup_root represents the root of a cgroup hierarchy, and may be
-> >   * associated with a kernfs_root to form an active hierarchy.  This is
-> > @@ -521,7 +529,7 @@ struct cgroup_root {
-> >       unsigned int flags;
-> >
-> >       /* IDs for cgroups in this hierarchy */
-> > -     struct idr cgroup_idr;
-> > +     struct cgroup_idr cgroup_idr;
->
-> Given that there's cgroup->self css, can we get rid of the above?
+So many sysfs entries exist, if there is real use case, how about backuping
+entire /d/f2fs/status entry into /proc/fs/f2fs/<dev>/ directory rather than
+adding some of stats as a single entry in sysfs directory?
 
-I don't follow.  Do you want to remove cgroup_idr and share the
-css_idr for cgroup id?
+Thanks,
 
-Thanks
-Namhyung
+> 
+> Regards,
+> Hridya
+> 
+>>
+>> Thanks,
+> .
+> 
