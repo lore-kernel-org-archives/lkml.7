@@ -2,158 +2,138 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD47CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45A8CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2EE20684
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C81B20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRyVA/kp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nt7t9+IE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437447AbfJYO2s (ORCPT
+        id S2437722AbfJYO24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:28:48 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43452 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436722AbfJYO2r (ORCPT
+        Fri, 25 Oct 2019 10:28:56 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47393 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2409359AbfJYO2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:28:47 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so2561269wrr.10;
-        Fri, 25 Oct 2019 07:28:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0lU4vBZ00lsZOGR37S7Y41s23WGWn3vWrl2tK4zXVT4=;
-        b=FRyVA/kppsnK9aDVKI19li9Up5yBufEWGsaMRrbzNqAdVN0Pxy+nXiU8vTXFGK/P/e
-         nF7MumzJx/Z607woRf65WoIBgRny3FnE9Kkhy/Z2ke7J90aD7SE5wBIJ674ICi7FEUvF
-         wqJw/a10wiqU+bqUYJfPtsofmfqfBgsK6R6YhsGVb/n1NM0D2pfqZacOM4oYIotTYY1q
-         gvC/tBc0E1muwXXuvboSMbF7uV54wopD6ZaKZiBqzKQAhGtSh2Pnx3E+rzzgzNMeMFte
-         kqQvKg6PJ7N7fkxJa7Wraj/57XEimHE3914RA77cOpooEhpdL8dTwYrPsAbKNpHE10Lm
-         wTJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0lU4vBZ00lsZOGR37S7Y41s23WGWn3vWrl2tK4zXVT4=;
-        b=HmBK+xOjT83ZtI00SOR0VmZcWihsMBsvqRIQu5xGrr2R6CgOptdZ/OhcvLXMAegeHf
-         L6zvGWzfN5rVW64hXjWzpUsIm7fv/LjawJgE3DEhESow7g7DRchSw8MMIt0Fd99CEy3D
-         UreOGHm7/qf+1SezKBAync2vBOtsun6wzheX10m861hNa3J2kQ6M/3EWn+NFqEzWG78r
-         OdDxvAOrhir4+fgshoHrcDOSSpYmfcnAjvvjnCRhL1nNcHN/NM3qhtexpqnIoq/3m4xQ
-         DAE5dH6mbCo9+ZliLgmmXuaCrhg5lqMCBrWFS0tkrhBgPWeHJWE/xH2xVTqRxemWVDks
-         bsqA==
-X-Gm-Message-State: APjAAAVWrbAexr6+q+N/r7dlREr0mH7FhQU+dGIycafjyBhf6ErTvYBU
-        NNAte3jfonEkemPRbK3WdaQ=
-X-Google-Smtp-Source: APXvYqyKe3NGWagSOC0ejXtsTs8OGvjSR/esTy0xnHYnHPSF5tQir+GSkLkz8VE581dzDdt3nsxkbA==
-X-Received: by 2002:a05:6000:44:: with SMTP id k4mr3450806wrx.170.1572013725170;
-        Fri, 25 Oct 2019 07:28:45 -0700 (PDT)
-Received: from sivanov-pc ([92.247.20.94])
-        by smtp.gmail.com with ESMTPSA id o70sm2620480wme.29.2019.10.25.07.28.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 25 Oct 2019 07:28:44 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 17:28:42 +0300
-From:   Samuil Ivanov <samuil.ivanovbg@gmail.com>
-To:     dan.carpenter@oracle.com, gregkh@linuxfoundation.org
-Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Staging: qlge: Rename prefix of a function to qlge
-Message-ID: <20191025142842.GA10016@sivanov-pc>
-References: <20191024212941.28149-1-samuil.ivanovbg@gmail.com>
- <20191024212941.28149-2-samuil.ivanovbg@gmail.com>
- <20191025101705.GM24678@kadam>
+        Fri, 25 Oct 2019 10:28:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572013734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zyapHGu7/Oo0qkTwxuNUgfmvbp8XI8/6ksqWtHCwxRA=;
+        b=Nt7t9+IEakoCiIqlAPm0fhLzSVlF8tBA8qkW/cPqDgjyJ+sL8XHnba3qyQIOEmLyCu3sk0
+        Ym7EXIKPVxuYBtuz2qB0iDBH4q2tExewHKURVbQj/TkHj4m3DCy3AwINBSjipgD4Z6x4GY
+        eH3wA1dH4ryHDSame2iQXrmzftiHTEI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-trDOS9OGPUCDUZ3yGX7yiw-1; Fri, 25 Oct 2019 10:28:50 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B27621800E01;
+        Fri, 25 Oct 2019 14:28:49 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-117-192.phx2.redhat.com [10.3.117.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6409B5D9CA;
+        Fri, 25 Oct 2019 14:28:49 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
+Subject: [PATCH] tpm: Add major_version sysfs file
+Date:   Fri, 25 Oct 2019 07:28:47 -0700
+Message-Id: <20191025142847.14931-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025101705.GM24678@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: trDOS9OGPUCDUZ3yGX7yiw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 01:19:05PM +0300, Dan Carpenter wrote:
-> On Fri, Oct 25, 2019 at 12:29:39AM +0300, Samuil Ivanov wrote:
-> > diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-> > index 6ec7e3ce3863..e9f1363c5bf2 100644
-> > --- a/drivers/staging/qlge/qlge.h
-> > +++ b/drivers/staging/qlge/qlge.h
-> > @@ -2262,7 +2262,7 @@ int ql_write_mpi_reg(struct ql_adapter *qdev, u32 reg, u32 data);
-> >  int ql_unpause_mpi_risc(struct ql_adapter *qdev);
-> >  int ql_pause_mpi_risc(struct ql_adapter *qdev);
-> >  int ql_hard_reset_mpi_risc(struct ql_adapter *qdev);
-> > -int ql_soft_reset_mpi_risc(struct ql_adapter *qdev);
-> > +int qlge_soft_reset_mpi_risc(struct ql_adapter *qdev);
-> 
-> The patch series doesn't change all the functions so now it's hodge
-> podge.
-> 
-> >  int ql_dump_risc_ram_area(struct ql_adapter *qdev, void *buf, u32 ram_addr,
-> >  			  int word_count);
-> >  int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump);
-> > diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> > index 019b7e6a1b7a..df5344e113ca 100644
-> > --- a/drivers/staging/qlge/qlge_dbg.c
-> > +++ b/drivers/staging/qlge/qlge_dbg.c
-> > @@ -1312,7 +1312,7 @@ void ql_get_dump(struct ql_adapter *qdev, void *buff)
-> >  
-> >  	if (!test_bit(QL_FRC_COREDUMP, &qdev->flags)) {
-> >  		if (!ql_core_dump(qdev, buff))
-> > -			ql_soft_reset_mpi_risc(qdev);
-> > +			qlge_soft_reset_mpi_risc(qdev);
-> >  		else
-> >  			netif_err(qdev, drv, qdev->ndev, "coredump failed!\n");
-> >  	} else {
-> > diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-> > index 9e422bbbb6ab..efe893935929 100644
-> > --- a/drivers/staging/qlge/qlge_mpi.c
-> > +++ b/drivers/staging/qlge/qlge_mpi.c
-> > @@ -88,9 +88,10 @@ int ql_write_mpi_reg(struct ql_adapter *qdev, u32 reg, u32 data)
-> >  	return status;
-> >  }
-> >  
-> > -int ql_soft_reset_mpi_risc(struct ql_adapter *qdev)
-> > +int qlge_soft_reset_mpi_risc(struct ql_adapter *qdev)
-> >  {
-> >  	int status;
-> > +
-> >  	status = ql_write_mpi_reg(qdev, 0x00001010, 1);
-> 
-> This white space change is unrelated.
-> 
-> >  	return status;
-> >  }
-> 
-> regards,
-> dan carpenter
-> 
+Easily determining what TCG version a tpm device implements
+has been a pain point for userspace for a long time, so
+add a sysfs file to report the tcg version of a tpm device.
 
-Hello Dan and Greg,
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-integrity@vger.kernel.org
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+ drivers/char/tpm/tpm-sysfs.c | 34 +++++++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
-Dan you are correct it is a bit of a hodge podge :)
-I think that it is better to have a bigger patches that will rename
-more functions, but I don't this it is good to have all the
-functions renamed in one patch.
+diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
+index edfa89160010..9372c2d6f0b3 100644
+--- a/drivers/char/tpm/tpm-sysfs.c
++++ b/drivers/char/tpm/tpm-sysfs.c
+@@ -309,7 +309,17 @@ static ssize_t timeouts_show(struct device *dev, struc=
+t device_attribute *attr,
+ }
+ static DEVICE_ATTR_RO(timeouts);
+=20
+-static struct attribute *tpm_dev_attrs[] =3D {
++static ssize_t major_version_show(struct device *dev,
++=09=09=09=09  struct device_attribute *attr, char *buf)
++{
++=09struct tpm_chip *chip =3D to_tpm_chip(dev);
++
++=09return sprintf(buf, "%s\n", chip->flags & TPM_CHIP_FLAG_TPM2
++=09=09       ? "2.0" : "1.2");
++}
++static DEVICE_ATTR_RO(major_version);
++
++static struct attribute *tpm12_dev_attrs[] =3D {
+ =09&dev_attr_pubek.attr,
+ =09&dev_attr_pcrs.attr,
+ =09&dev_attr_enabled.attr,
+@@ -320,18 +330,28 @@ static struct attribute *tpm_dev_attrs[] =3D {
+ =09&dev_attr_cancel.attr,
+ =09&dev_attr_durations.attr,
+ =09&dev_attr_timeouts.attr,
++=09&dev_attr_major_version.attr,
+ =09NULL,
+ };
+=20
+-static const struct attribute_group tpm_dev_group =3D {
+-=09.attrs =3D tpm_dev_attrs,
++static struct attribute *tpm20_dev_attrs[] =3D {
++=09&dev_attr_major_version.attr,
++=09NULL
++};
++
++static const struct attribute_group tpm12_dev_group =3D {
++=09.attrs =3D tpm12_dev_attrs,
++};
++
++static const struct attribute_group tpm20_dev_group =3D {
++=09.attrs =3D tpm20_dev_attrs,
+ };
+=20
+ void tpm_sysfs_add_device(struct tpm_chip *chip)
+ {
+-=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
+-=09=09return;
+-
+ =09WARN_ON(chip->groups_cnt !=3D 0);
+-=09chip->groups[chip->groups_cnt++] =3D &tpm_dev_group;
++=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
++=09=09chip->groups[chip->groups_cnt++] =3D &tpm20_dev_group;
++=09else
++=09=09chip->groups[chip->groups_cnt++] =3D &tpm12_dev_group;
+ }
+--=20
+2.23.0
 
-Just in the header file I counted around 55 function definitions,
-and in the source files there are some more.
-So that will make one huge patch.
-
-And I am not sure if the maintainers will be OK with reviewing it.
-
-So my sugestion is to have a bigger patches.
-For example, one patch with 10 to 15 subpatches.
-And one subpatch will rename one function and
-update the occurrences in the driver.
-
-This way with like 5 iterations all the functions will be renamed.
-
-If you have a better solution please tell.
-
-Grt,
-Samuil
