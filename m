@@ -2,157 +2,149 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96982CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D68CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A66A20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A849D20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jv-coder.de header.i=@jv-coder.de header.b="TNS2p7nF"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="bj9aU8RC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409233AbfJYKPD (ORCPT
+        id S2409270AbfJYKQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:15:03 -0400
-Received: from mail.jv-coder.de ([5.9.79.73]:56566 "EHLO mail.jv-coder.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409192AbfJYKPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:15:03 -0400
-Received: from [10.61.40.7] (unknown [37.156.92.209])
-        by mail.jv-coder.de (Postfix) with ESMTPSA id DE6049F64C;
-        Fri, 25 Oct 2019 10:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jv-coder.de; s=dkim;
-        t=1571998500; bh=l6SMEEglbngUE1u9wb5gv9AnEVw28sr8tAsIuis+AgI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version;
-        b=TNS2p7nFpVBUBCB6MB2bSg55s/ff4MNGPsg7LhgkkywahAYiodOzfRvAg/W4X61ze
-         4HzRj30WOf6QBBvXX4BP1tgR8zu2NDmewiS+3y6FzdoPu0CmhDzeNRNGpGd5T79WjA
-         uWJq9ufks7txNb5HM6jyYK0nIPTiE5TChr7vAkY4=
-Subject: Re: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Tom Rix <trix@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
- <20191024103134.GD13225@gauss3.secunet.de>
- <ad094bfc-ebb3-012b-275b-05fb5a8f86e5@jv-coder.de>
- <20191025094758.pchz4wupvo3qs6hy@linutronix.de>
-From:   Joerg Vehlow <lkml@jv-coder.de>
-Message-ID: <202da67b-95c7-3355-1abc-f67a40a554e9@jv-coder.de>
-Date:   Fri, 25 Oct 2019 12:14:59 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 25 Oct 2019 06:16:29 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42523 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409209AbfJYKQ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:16:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so1644130wrs.9
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 03:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=NP2Oouc7q1f33SRB3lHPUh+PTnPTT6dHPVBMKG6sPiU=;
+        b=bj9aU8RCRgfOVopITop5T+/S7+KhRLClYo637JC469jcCDxsyhi7R7ikwq1cpJxUPA
+         dlL/pvGGk0ohBWtJiL9fXWDv+nw9Uo6Z13Pwte/z0s6tXFdg6qjIgFGH/86a+YX/BiGV
+         4Djt72clRVeBDRAkAzTZ9nSHbmKMQ1wJC8cU/1uG/UrT/T/JoesqptzOPoYiJeYKo45R
+         zoztkaJre2osrvBkTZDYGVf8GI/puig6CLMB+Imo8jHopE+zv27hMiGNe20mQCVnN7MJ
+         SESL7Hn0UPiiufI2wbXz/4z5cHGH87Hw1Qd/oZl/zj6GmWNSKF/F98/vwnXfmImQDL7m
+         crRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=NP2Oouc7q1f33SRB3lHPUh+PTnPTT6dHPVBMKG6sPiU=;
+        b=CZY6zyVfMtxRfakrSMhOxhGjd8ol52ZxDQ5IfVEg+RlBSfM3GJG4mTVTlIUPIU7F/4
+         CmvhBOLb89iRrrRXG0TiZi3bVpTW6HvqMrnCs8DkjSpMluv0CyKK8MqRvdRUas5SChDk
+         qWaTp+lt8qCll+AXkGT3nP5QiIq89yuYfa5Y8vRF7egSWeaxlXOKfeCPznnFM3o9UJOL
+         ftIBGJSvkjvrpqk0BAA865kNZXGApFF//2FU+opvRQu50NosIw9Ta5bWEsIFPUb5V4kX
+         2L/hm4Ej5Wkblz5UTzpHY2okQjTZAqAUfCBwT1Cx7whsFOiFqHzFWDIMermXzfJJh+l+
+         84IA==
+X-Gm-Message-State: APjAAAWy4SKkWWIOd0OmNzHbVfd5PK1J2McK11LqvKR0hc7x1rm8Hie8
+        BLjab+RL2csD0aT6hSHDF4jczQ==
+X-Google-Smtp-Source: APXvYqyQmDbEw04RVn2bj6bG5HpjBc5PMzPUHuWj3daUsWSfNOQ0apCRK9QUZmbPG1dd/cOcivlT2g==
+X-Received: by 2002:a5d:5388:: with SMTP id d8mr2281953wrv.92.1571998586903;
+        Fri, 25 Oct 2019 03:16:26 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e751:37a0:1e95:e65d])
+        by smtp.gmail.com with ESMTPSA id r19sm1732999wrr.47.2019.10.25.03.16.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 03:16:26 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 11:16:24 +0100
+From:   Alessio Balsini <balsini@android.com>
+To:     Jens Axboe <axboe@kernel.dk>, Alasdair G Kergon <agk@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Cc:     elsk@google.com, dvander@google.com, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: dm-snapshot for system updates in Android
+Message-ID: <20191025101624.GA61225@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025094758.pchz4wupvo3qs6hy@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that I look back at my mail, you are right, I did not say anything
-about rt, my bad. But maybe you could add too the rt patches website, that
-an RT tag has to be added.
+Hello everyone!
 
-@Tom Rix, will you resend the patch? You may also add the information,
-that I found the bug running the ipsec_stress ltp tests. Generating any
-ipsec traffic (maybe concurrent) should be sufficient.
+I hope you will appreciate knowing that we are currently evaluating the use of
+dm-snapshot to implement a mechanism to obtain revertible, space-efficient
+system upgrades in Android.  More specifically, we are using
+dm-snapshot-persistent to test the updated device after reboot, then issue a
+merge in case of success, otherwise, destroy the snapshot.
+This new update mechanism is still under evaluation, but its development is
+openly done in AOSP.
 
-Here is one of the oops logs I still have:
+At the current stage, we have a prototype we are happy with, both in terms of
+space consumption overhead (for the COW device) and benchmarking results for
+read-write and merge operations.
 
-[  139.717259] BUG: unable to handle kernel NULL pointer dereference at 
-0000000000000518
-[  139.717260] PGD 0 P4D 0
-[  139.717262] Oops: 0000 [#1] PREEMPT SMP PTI
-[  139.717273] CPU: 2 PID: 11987 Comm: netstress Not tainted 
-4.19.59-rt24-preemt-rt #1
-[  139.717274] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
-BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-[  139.717306] RIP: 0010:xfrm_trans_reinject+0x97/0xd0
-[  139.717307] Code: 42 eb 45 83 6d b0 01 31 f6 48 8b 42 08 48 c7 42 08 
-00 00 00 00 48 8b 0a 48 c7 02 00 00 00 00 48 89 41 08 48 89 08 48 8b 42 
-10 <48> 8b b8 18 05 00 00 48 8b 42 40 e8 d9 e1 4b 00 48 8b 55 a0 48 39
-[  139.717307] RSP: 0018:ffffc900007b37e8 EFLAGS: 00010246
-[  139.717308] RAX: 0000000000000000 RBX: ffffc900007b37e8 RCX: 
-ffff88807db206a8
-[  139.717309] RDX: ffff88807db206a8 RSI: 0000000000000000 RDI: 
-0000000000000000
-[  139.717309] RBP: ffffc900007b3848 R08: 0000000000000001 R09: 
-ffffc900007b35c8
-[  139.717309] R10: ffffea0001dcfc00 R11: 00000000000890c4 R12: 
-ffff88807db20680
-[  139.717310] R13: 00000000000f4240 R14: 0000000000000000 R15: 
-0000000000000000
-[  139.717310] FS:  00007f4643034700(0000) GS:ffff88807db00000(0000) 
-knlGS:0000000000000000
-[  139.717311] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  139.717337] CR2: 0000000000000518 CR3: 00000000769c6000 CR4: 
-00000000000006e0
-[  139.717350] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 
-0000000000000000
-[  139.717350] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 
-0000000000000400
-[  139.717350] Call Trace:
-[  139.717387]  tasklet_action_common.isra.18+0x6d/0xd0
-[  139.717388]  tasklet_action+0x1d/0x20
-[  139.717389]  do_current_softirqs+0x196/0x360
-[  139.717390]  __local_bh_enable+0x51/0x60
-[  139.717397]  ip_finish_output2+0x18b/0x3f0
-[  139.717408]  ? task_rq_lock+0x53/0xe0
-[  139.717415]  ip_finish_output+0xbe/0x1b0
-[  139.717416]  ip_output+0x72/0x100
-[  139.717422]  ? ipcomp_output+0x5e/0x280
-[  139.717424]  xfrm_output_resume+0x4b5/0x540
-[  139.717436]  ? refcount_dec_and_test_checked+0x11/0x20
-[  139.717443]  ? kfree_skbmem+0x33/0x80
-[  139.717444]  xfrm_output+0xd7/0x110
-[  139.717451]  xfrm4_output_finish+0x2b/0x30
-[  139.717452]  __xfrm4_output+0x3a/0x50
-[  139.717453]  xfrm4_output+0x40/0xe0
-[  139.717454]  ? xfrm_dst_check+0x174/0x250
-[  139.717455]  ? xfrm4_output+0x40/0xe0
-[  139.717456]  ? xfrm_dst_check+0x174/0x250
-[  139.717457]  ip_local_out+0x3b/0x50
-[  139.717458]  __ip_queue_xmit+0x16b/0x420
-[  139.717464]  ip_queue_xmit+0x10/0x20
-[  139.717466]  __tcp_transmit_skb+0x566/0xad0
-[  139.717467]  tcp_write_xmit+0x3a4/0x1050
-[  139.717468]  __tcp_push_pending_frames+0x35/0xe0
-[  139.717469]  tcp_push+0xdb/0x100
-[  139.717469]  tcp_sendmsg_locked+0x491/0xd70
-[  139.717470]  tcp_sendmsg+0x2c/0x50
-[  139.717476]  inet_sendmsg+0x3e/0xf0
-[  139.717483]  sock_sendmsg+0x3e/0x50
-[  139.717484]  __sys_sendto+0x114/0x1a0
-[  139.717491]  ? __rt_mutex_unlock+0xe/0x10
-[  139.717492]  ? _mutex_unlock+0xe/0x10
-[  139.717500]  ? ksys_write+0xc5/0xe0
-[  139.717501]  __x64_sys_sendto+0x28/0x30
-[  139.717503]  do_syscall_64+0x4d/0x110
-[  139.717504]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+I would be glad if you could provide some feedback on a few points that I don't
+have completely clear.
 
-Am 25.10.2019 um 11:47 schrieb Sebastian Andrzej Siewior:
-> On 2019-10-25 11:37:59 [+0200], Joerg Vehlow wrote:
->> Hi,
->>
->> I always expected this to be applied to the RT patches. That's why
->> I originally send my patch to to Sebastian, Thomas and Steven (I added
->> them again now. The website of the rt patches says patches for the
->> CONFIG_REEMPT_RT patchset should be send to lkml.
->>
->> I hope one of the rt patch maintainers will reply here.
-> I've seen the first patch and it was not mentioned that it was RT
-> related so I did not pay any attention to it.
-> Please repost your v2, please add RT next to patch, please state the RT
-> version and the actual problem and I take a look.
->
->> Jörg
-> Sebastian
+
+-- Interface stability
+
+To obtain an initial, empty COW device as quick as possible, we force to 0 only
+its first 32 bit (magic field). This solution looks clear from the kernel code,
+but can we rely on that for all the kernels with SNAPSHOT_DISK_VERSION == 1?
+Would you appreciate it if a similar statement is added as part of
+/Documentation, making this solution more stable? Or maybe I can think of
+adding an initialization flag to the dm-snapshot table to explicitly request
+the COW initialization within the kernel?
+
+Another issue we are facing is to be able to know in advance what the minimum
+COW device size would be for a given update to be able to allocate the right
+size for the COW device in advance.  To do so, we rely on the current COW
+structure that seems to have kept the same stable shape in the last decade, and
+compute the total COW size by knowing the number of modified chunks. The
+formula would be something like that:
+
+  table_line_bytes      = 64 * 2 / 8;
+  exceptions_per_chunk  = chunk_size_bytes / table_line_bytes;
+  total_cow_size_chunks = 1 + 1 + modified_chunks
+                        + modified_chunks / exceptions_per_chunk;
+
+This formula seems to be valid for all the recent kernels we checked. Again,
+can we assume it to be valid for all the kernels for which
+SNAPSHOT_DISK_VERSION == 1?
+
+
+-- Alignment
+
+Our approach follows the solution proposed by Mikulas [1].
+Being the block alignment of file extents automatically managed by the
+filesystem, using FIEMAP should have no alignment-related performance issue.
+But in our implementation we hit a misalignment [2] branch which leads to
+dmwarning messages [3, 4].
+
+I have a limited experience with the block layer and dm, so I'm still
+struggling in finding the root cause for this, either in user space or kernel
+space.
+But our benchmarks seems to be good, so we were thinking as last option to
+rate-limit or directly remove that warning from our kernels as a temporary
+solution, but we prefer to avoid diverging from mainline. Rate-limiting is a
+solution that would make sense also to be proposed in the list, but completely
+removing the warning doesn't seem the right thing to do. Maybe we are
+benchmarking something else? What do you think?
+
+Many thanks for taking the time to read this, feedbacks would be highly
+appreciated.
+
+Regards.
+Alessio
+
+[1] https://www.redhat.com/archives/dm-devel/2018-October/msg00363.html
+[2] https://elixir.bootlin.com/linux/v5.3/source/block/blk-settings.c#L540
+[3] https://elixir.bootlin.com/linux/v5.3/source/drivers/md/dm-table.c#L484
+[4] https://elixir.bootlin.com/linux/v5.3/source/drivers/md/dm-table.c#L1558
 
