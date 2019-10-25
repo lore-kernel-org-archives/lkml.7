@@ -2,212 +2,144 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B075CCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAAECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD10206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F0F206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alucOV4v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaNXE4RG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438717AbfJYOdM (ORCPT
+        id S2439750AbfJYOfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:33:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43121 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbfJYOdL (ORCPT
+        Fri, 25 Oct 2019 10:35:19 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40884 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbfJYOfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:33:11 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so2578566wrr.10;
-        Fri, 25 Oct 2019 07:33:10 -0700 (PDT)
+        Fri, 25 Oct 2019 10:35:19 -0400
+Received: by mail-qt1-f195.google.com with SMTP id o49so3526128qta.7
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KGiMJW/6P3cnUhB4JrbHZgX1QIfc96w6Xat8RH1XNVg=;
-        b=alucOV4vUEvggzS1eI0kxbI5TkYw4knLudcurVGQ8/dRND3z8Tout0msr6rYuE0ceu
-         1xmkWOVyE8QtcW2f/OETC2x3tbjlgY1g1L1xT/HImJdkbu+gIC7c9rRMaCeVKekow55Q
-         4VtCdbCtAmYJTqEiUrOoct1dCxxz3gmZz7Na0pkjzgGdKzaMER57KZNUE5TxZzY/s0XU
-         QqBZlGyLHbnh0mTr81ZNZFq1oRUWGKEmv5nEDg7P3qg3hovrstMDvWDjQDTK8Ly8VDLV
-         F8Fdp5yetecGE+2kPM9x0NM75l/bxD3nk7v8g+8kzX6CKvvGZYgab4ci8pCph/1ZK16B
-         0TMQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lXPA/LtMnA7aSw5n8YP7FVXNorxbEcaJTv2YJu2OC/k=;
+        b=UaNXE4RG0wIiCPJHcPiTca9OIdeFgR+pMc/VggkinIBBFt3kBYPNsZF6dWynAKJXfF
+         OiwIuGByps9gwriU2jGT172hgMrZxjOK4NslnpADvu5+b/mdp+Q74194LRhWTA5szIGj
+         6zZ2k98vDPZ30MUBnKp+mOVv5CxgqYD4Il7valmfEu6eZN/J8hrlCDRLoYRYjyAxEM3A
+         Z0y0CsmFQL3pPsRd9xgW38obOhyJW9KrWIu6L9ZHkorO9WVCdvqrt6feQW6XoRhHeVtm
+         OxNuIMYvmUc1cxPci0ESPuKOx59Vrv8KR0kSTkTU6uLNJMSNwLxhuKW3v2UW4saOJ4cF
+         B2dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KGiMJW/6P3cnUhB4JrbHZgX1QIfc96w6Xat8RH1XNVg=;
-        b=uU8uqy3mJ09ZKIBPAIh2GyT9Zj8qMLfc3ASz/t3b5eDRWhjKm0T9lfgK6kg1DKhUKr
-         r3DNZB2bine9X9aeol4KTLOSsEKqqyh2UNdH/AGoSmCKWYZzzhLmsFA4+LHaOyhtQBgK
-         7CpKkB7FRULHlKQeglH8+EPpPesgr96Alig9fii2qAP4Q02AofPvxeGeQwX4h6LXioMV
-         zmlLMoOrENKLMkglrAf0UTZZJSsTW1bhz2jOlIJ+FRMeDKoUJDqcV3gvaKiMtUk/Wahj
-         G2/mjK4fWuVhZiyqOY1RAvbcP0eO/9RAqFx/olGXKFPpdU0rVPk3v/ekQRzVCvqaWRXd
-         1Xcw==
-X-Gm-Message-State: APjAAAXZXMyz6WYdGjVPTGfgnRSMRnT5e4G5OvHju+wPdvFpv1mLdxFK
-        fCU9/kE88Ru38c65grHxIWU=
-X-Google-Smtp-Source: APXvYqwdNmnPoI1aDfrbDo5svOKCrwjtWB42cBkCY42Ea0zNfgJYgtDPiVT+rOg6CHerph2EIfQpbQ==
-X-Received: by 2002:a5d:4f91:: with SMTP id d17mr3423123wru.184.1572013989370;
-        Fri, 25 Oct 2019 07:33:09 -0700 (PDT)
-Received: from furher.auvence.co ([92.103.174.138])
-        by smtp.gmail.com with ESMTPSA id h17sm2079971wmb.33.2019.10.25.07.33.08
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lXPA/LtMnA7aSw5n8YP7FVXNorxbEcaJTv2YJu2OC/k=;
+        b=q17dC+ANkgo2kW7C4nYCc9TEUcS7nNlDrijBh0ERGzWU7lKuGl4vmYY5PCzKEwMdjm
+         /PBSdCBXXUsoeu9FtV0wKQiKEmw44YDMMJvDNX9fsz7rIQ85X2GWx2qUuASMFppoOW3Z
+         Jiy4VV9yZUplNOY4SiS3iORKmNQWMDZg6bk/yZDW+lZorYaofZPwiyTbyZpVDlFTrUB7
+         FzJ1mcBSa4H+NiaP5z0sAshVXTpWKNygDtuyK8BrsrqUu11yCPzC/nJ0lfrgNr1OImuf
+         yGV+FUMcCp8edxbFehS2WYpKXcMCBe+bYOKuyVJQsn9PS8D/SCE0qqq26bahNt+Mm4Qq
+         fX+A==
+X-Gm-Message-State: APjAAAVM6kFe29h1kG/SC4uwTUQcLmQVNvvv7CFr1O7Ap5DHNF2i2Nc8
+        t3BMYwsvCE4qzSbibA8jNxo=
+X-Google-Smtp-Source: APXvYqy8Hzz7lpHQK2U/jo/PBxIApeo+yUgVwegKzHDhb2zNk/PDBdgi9h+GYIc8i/WLuGqFNC5Ddw==
+X-Received: by 2002:aed:3225:: with SMTP id y34mr3310196qtd.353.1572014116754;
+        Fri, 25 Oct 2019 07:35:16 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id i185sm1260948qkc.129.2019.10.25.07.35.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 07:33:08 -0700 (PDT)
-From:   Joris Offouga <offougajoris@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Otavio Salvador <otavio@ossystems.com.br>,
-        Joris Offouga <offougajoris@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH V2] ARM: dts: imx7d-pico: Add LCD support
-Date:   Fri, 25 Oct 2019 16:32:58 +0200
-Message-Id: <20191025143258.27757-1-offougajoris@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 25 Oct 2019 07:35:15 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AD44541199; Fri, 25 Oct 2019 11:35:13 -0300 (-03)
+Date:   Fri, 25 Oct 2019 11:35:13 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH 3/6] perf/probe: Fix to probe an inline function
+ which has no entry pc
+Message-ID: <20191025143513.GB15617@kernel.org>
+References: <157199317547.8075.1010940983970397945.stgit@devnote2>
+ <157199320336.8075.16189530425277588587.stgit@devnote2>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157199320336.8075.16189530425277588587.stgit@devnote2>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+Em Fri, Oct 25, 2019 at 05:46:43PM +0900, Masami Hiramatsu escreveu:
+> Fix perf probe to probe an inlne function which has no entry pc
+> or low pc but only has ranges attribute.
+> 
+> This seems very rare case, but I could find a few examples, as
+> same as probe_point_search_cb(), use die_entrypc() to get the
+> entry address in probe_point_inline_cb() too.
+> 
+> Without this patch,
+>   # tools/perf/perf probe -D __amd_put_nb_event_constraints
+>   Failed to get entry address of __amd_put_nb_event_constraints.
+>   Probe point '__amd_put_nb_event_constraints' not found.
+>     Error: Failed to add events.
+> 
+> With this patch,
+>   # tools/perf/perf probe -D __amd_put_nb_event_constraints
+>   p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
 
-Add support for the VXT VL050-8048NT-C01 panel connected through
-the 24 bit parallel LCDIF interface.
+Here I got it slightly different:
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-Signed-off-by: Joris Offouga <offougajoris@gmail.com>
----
- Changes v1 -> v2
- 	change "From:" Joris Offouga to Fabio Estevam
-	set Joris Offouga signed-off to the last one
+Before:
 
- arch/arm/boot/dts/imx7d-pico.dtsi | 83 +++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  Failed to get entry address of __amd_put_nb_event_constraints.
+  Probe point '__amd_put_nb_event_constraints' not found.
+    Error: Failed to add events.
+  [root@quaco ~]#
 
-diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index 6f50ebf31a0a..6814d4288e2e 100644
---- a/arch/arm/boot/dts/imx7d-pico.dtsi
-+++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -69,6 +69,37 @@
- 		clocks = <&clks IMX7D_CLKO2_ROOT_DIV>;
- 		clock-names = "ext_clock";
- 	};
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_backlight>;
-+		pwms = <&pwm4 0 50000 0>;
-+		brightness-levels = <0 36 72 108 144 180 216 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	reg_lcd_3v3: regulator-lcd-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	panel {
-+		compatible = "vxt,vl050-8048nt-c01";
-+		backlight = <&backlight>;
-+		power-supply = <&reg_lcd_3v3>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&display_out>;
-+			};
-+		};
-+	};
- };
+After:
+
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  p:probe/__amd_put_nb_event_constraints _text+33789
+  [root@quaco ~]#
+
+
+----
+
+I'm now checking if this is because I applied patch 4/6 before 3/6
  
- &clks {
-@@ -230,6 +261,18 @@
- 	};
- };
- 
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif>;
-+	status = "okay";
-+
-+	port {
-+		display_out: endpoint {
-+			remote-endpoint = <&panel_in>;
-+		};
-+	};
-+};
-+
- &sai1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_sai1>;
-@@ -349,6 +392,12 @@
- };
- 
- &iomuxc {
-+	pinctrl_backlight: backlight {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO11__PWM4_OUT		0x0
-+		>;
-+	};
-+
- 	pinctrl_ecspi3: ecspi3grp {
- 		fsl,pins = <
- 			MX7D_PAD_I2C1_SCL__ECSPI3_MISO		0x2
-@@ -413,6 +462,40 @@
- 		>;
- 	};
- 
-+	pinctrl_lcdif: lcdifgrp {
-+		fsl,pins = <
-+			MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
-+			MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
-+			MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
-+			MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
-+			MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
-+			MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
-+			MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
-+			MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
-+			MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
-+			MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
-+			MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
-+			MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
-+			MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
-+			MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
-+			MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
-+			MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
-+			MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
-+			MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
-+			MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
-+			MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
-+			MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
-+			MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
-+			MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
-+			MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
-+			MX7D_PAD_LCD_CLK__LCD_CLK		0x79
-+			MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x78
-+			MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x78
-+			MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x78
-+			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x14
-+		>;
-+	};
-+
- 	pinctrl_pwm1: pwm1 {
- 		fsl,pins = <
- 			MX7D_PAD_GPIO1_IO08__PWM1_OUT   0x7f
+> Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  tools/perf/util/probe-finder.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 71633f55f045..2fa932bcf960 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -930,7 +930,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
+>  		ret = find_probe_point_lazy(in_die, pf);
+>  	else {
+>  		/* Get probe address */
+> -		if (dwarf_entrypc(in_die, &addr) != 0) {
+> +		if (die_entrypc(in_die, &addr) != 0) {
+>  			pr_warning("Failed to get entry address of %s.\n",
+>  				   dwarf_diename(in_die));
+>  			return -ENOENT;
+
 -- 
-2.17.1
 
+- Arnaldo
