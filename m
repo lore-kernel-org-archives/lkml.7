@@ -2,116 +2,230 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD137CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70497CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA59321872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB6121D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JhPv5ImW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438003AbfJYI1K (ORCPT
+        id S2438025AbfJYI13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:27:10 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:56133 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389356AbfJYI1K (ORCPT
+        Fri, 25 Oct 2019 04:27:29 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23456 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437964AbfJYI12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:27:10 -0400
-Received: by mail-il1-f198.google.com with SMTP id n81so1519659ili.22
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:27:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2Z+vWF41GYXH8//3OQ+PBbYTPKapgaj+4O6q+OjV10U=;
-        b=LGkdJ/r+l6lMO4yqJUcoppyXZ2WbgMwm08Puux5TuzwGTD7ek0zf1QiVFMFd/qXhpW
-         elF0jNd9sNMYTFMZFOMNv5vfk66PS3Ul12bkrWZr4Jczk02YJVnJESI3RsKreSLsN4Xg
-         rKgKfjBGeDPEUMTsCs2lr4V81642GcuaezjC2EbR5euFxnRt+JjPlz1wgfR+xlhlnjoW
-         /5WAGut4XlzAdHfv723QxwhOEat4yAsqy4D1C0vPy2ihwq7fjk0idEqtBgm8nql42his
-         6PltyeOzm8sTNdpkRhHknbvckUnuGna52dRvmZsFNXkM46LsqLYMOqmHYgx/r7wmMX1M
-         vEQw==
-X-Gm-Message-State: APjAAAXRK7DMpOUY2D0j7MXxJKgFT2GoYIYOZCrtMpYhjTweQEobnInA
-        zBjpoKmCZoOkYQNhEVSkharZTsIsMG1AjZ+x+wWwHTspnVXE
-X-Google-Smtp-Source: APXvYqxSDwW6Tww3QwRy3e0hO/R9Au/K6Msz+XoPEzW0Senw0ypG/StxAOnzFDLiy4k24SsIAdrUvpSDKNBCgillkV5oQkEAttJH
+        Fri, 25 Oct 2019 04:27:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571992047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qcI5t6CsVJQabA12BdZ1TYYosDenntzCg3SsjvCibXY=;
+        b=JhPv5ImWGuCDMRheD6A3eWczLHOSi1FyBaB9mBHTG2Yn2o0CY42HMH4x9Cswj8/WEQrGlx
+        2l6Pid07J3l5WlGGpu7LRqlKGXC7fkkn9rTmNWBlyxkiB5kkhcV47TjBaCN/3asObIOiiw
+        JkQDTe8OUU2iX8Z7CxzCok06QwoEpto=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-5c6reNZEMcu2u6L7u5k0yQ-1; Fri, 25 Oct 2019 04:27:21 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D615B1800E00;
+        Fri, 25 Oct 2019 08:27:18 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B8291194B6;
+        Fri, 25 Oct 2019 08:27:14 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 10:27:14 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3 6/9] perf tools: add destructors for parse event terms
+Message-ID: <20191025082714.GH31679@krava>
+References: <20191023005337.196160-1-irogers@google.com>
+ <20191024190202.109403-1-irogers@google.com>
+ <20191024190202.109403-7-irogers@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:1907:: with SMTP id 7mr2888673ilz.72.1571992027666;
- Fri, 25 Oct 2019 01:27:07 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 01:27:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000066214a0595b7ea86@google.com>
-Subject: WARNING in collapse_file
-From:   syzbot <syzbot+742a9c5d4ab05d343c49@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, hughd@google.com, jglisse@redhat.com,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191024190202.109403-7-irogers@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 5c6reNZEMcu2u6L7u5k0yQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Oct 24, 2019 at 12:01:59PM -0700, Ian Rogers wrote:
+> If parsing fails then destructors are ran to clean the up the stack.
+> Rename the head union member to make the term and evlist use cases more
+> distinct, this simplifies matching the correct destructor.
 
-syzbot found the following crash on:
+nice did not know about this.. looks like it's been in bison for some time,=
+ right?
 
-HEAD commit:    a6fcdcd9 Add linux-next specific files for 20191021
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11145ed8e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=32434321999f01e9
-dashboard link: https://syzkaller.appspot.com/bug?extid=742a9c5d4ab05d343c49
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/parse-events.y | 69 +++++++++++++++++++++++-----------
+>  1 file changed, 48 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-event=
+s.y
+> index 545ab7cefc20..4725b14b9db4 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -12,6 +12,7 @@
+>  #include <stdio.h>
+>  #include <linux/compiler.h>
+>  #include <linux/types.h>
+> +#include <linux/zalloc.h>
+>  #include "pmu.h"
+>  #include "evsel.h"
+>  #include "parse-events.h"
+> @@ -37,6 +38,25 @@ static struct list_head* alloc_list()
+>  =09return list;
+>  }
+> =20
+> +static void free_list_evsel(struct list_head* list_evsel)
+> +{
+> +=09struct perf_evsel *pos, *tmp;
+> +
+> +=09list_for_each_entry_safe(pos, tmp, list_evsel, node) {
+> +=09=09list_del_init(&pos->node);
+> +=09=09perf_evsel__delete(pos);
+> +=09}
+> +=09free(list_evsel);
 
-Unfortunately, I don't have any reproducer for this crash yet.
+I think you need to iterate 'struct evsel' in here, not 'struct perf_evsel'
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+742a9c5d4ab05d343c49@syzkaller.appspotmail.com
+should be:
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1080 at mm/khugepaged.c:1643  
-collapse_file+0x1f9d/0x4170 mm/khugepaged.c:1643
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 1080 Comm: khugepaged Not tainted 5.4.0-rc4-next-20191021 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x35 kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:collapse_file+0x1f9d/0x4170 mm/khugepaged.c:1643
-Code: a1 c0 ff 31 c9 ba 01 00 00 00 4c 89 fe 48 8b bd c0 fe ff ff e8 e4 e9  
-ec ff e9 b4 fd ff ff 4c 8b bd 88 fe ff ff e8 93 a1 c0 ff <0f> 0b 4c 8b a3  
-50 ff ff ff c7 85 80 fe ff ff 00 00 00 00 e9 05 f6
-RSP: 0018:ffff8880a7e57ad0 EFLAGS: 00010293
-RAX: ffff8880a7e74440 RBX: ffff8880a7e57c88 RCX: ffffffff81b2a998
-RDX: 0000000000000000 RSI: ffffffff81b2acbd RDI: 0000000000000001
-RBP: ffff8880a7e57cb0 R08: ffff8880a7e74440 R09: fffff940004730b1
-R10: fffff940004730b0 R11: ffffea0002398587 R12: 0000000000000001
-R13: ffffea0002ffa848 R14: 0000000000000000 R15: ffffea0002230000
-  khugepaged_scan_file mm/khugepaged.c:1881 [inline]
-  khugepaged_scan_mm_slot mm/khugepaged.c:1979 [inline]
-  khugepaged_do_scan mm/khugepaged.c:2063 [inline]
-  khugepaged+0x2da9/0x4360 mm/khugepaged.c:2108
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+=09struct evsel *evsel, *tmp;
 
+=09list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
+=09=09list_del_init(&evsel->core.node);
+=09=09evsel__delete(evsel);
+=09}
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+thanks,
+jirka
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> +}
+> +
+> +static void free_term(struct parse_events_term *term)
+> +{
+> +=09if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_STR)
+> +=09=09free(term->val.str);
+> +=09zfree(&term->array.ranges);
+> +=09free(term);
+> +}
+> +
+>  static void inc_group_count(struct list_head *list,
+>  =09=09       struct parse_events_state *parse_state)
+>  {
+> @@ -66,6 +86,7 @@ static void inc_group_count(struct list_head *list,
+>  %type <num> PE_VALUE_SYM_TOOL
+>  %type <num> PE_RAW
+>  %type <num> PE_TERM
+> +%type <num> value_sym
+>  %type <str> PE_NAME
+>  %type <str> PE_BPF_OBJECT
+>  %type <str> PE_BPF_SOURCE
+> @@ -76,37 +97,43 @@ static void inc_group_count(struct list_head *list,
+>  %type <str> PE_EVENT_NAME
+>  %type <str> PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_KERNEL_PMU_EVENT
+>  %type <str> PE_DRV_CFG_TERM
+> -%type <num> value_sym
+> -%type <head> event_config
+> -%type <head> opt_event_config
+> -%type <head> opt_pmu_config
+> +%destructor { free ($$); } <str>
+>  %type <term> event_term
+> -%type <head> event_pmu
+> -%type <head> event_legacy_symbol
+> -%type <head> event_legacy_cache
+> -%type <head> event_legacy_mem
+> -%type <head> event_legacy_tracepoint
+> +%destructor { free_term ($$); } <term>
+> +%type <list_terms> event_config
+> +%type <list_terms> opt_event_config
+> +%type <list_terms> opt_pmu_config
+> +%destructor { parse_events_terms__delete ($$); } <list_terms>
+> +%type <list_evsel> event_pmu
+> +%type <list_evsel> event_legacy_symbol
+> +%type <list_evsel> event_legacy_cache
+> +%type <list_evsel> event_legacy_mem
+> +%type <list_evsel> event_legacy_tracepoint
+> +%type <list_evsel> event_legacy_numeric
+> +%type <list_evsel> event_legacy_raw
+> +%type <list_evsel> event_bpf_file
+> +%type <list_evsel> event_def
+> +%type <list_evsel> event_mod
+> +%type <list_evsel> event_name
+> +%type <list_evsel> event
+> +%type <list_evsel> events
+> +%type <list_evsel> group_def
+> +%type <list_evsel> group
+> +%type <list_evsel> groups
+> +%destructor { free_list_evsel ($$); } <list_evsel>
+>  %type <tracepoint_name> tracepoint_name
+> -%type <head> event_legacy_numeric
+> -%type <head> event_legacy_raw
+> -%type <head> event_bpf_file
+> -%type <head> event_def
+> -%type <head> event_mod
+> -%type <head> event_name
+> -%type <head> event
+> -%type <head> events
+> -%type <head> group_def
+> -%type <head> group
+> -%type <head> groups
+> +%destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
+>  %type <array> array
+>  %type <array> array_term
+>  %type <array> array_terms
+> +%destructor { free ($$.ranges); } <array>
+> =20
+>  %union
+>  {
+>  =09char *str;
+>  =09u64 num;
+> -=09struct list_head *head;
+> +=09struct list_head *list_evsel;
+> +=09struct list_head *list_terms;
+>  =09struct parse_events_term *term;
+>  =09struct tracepoint_name {
+>  =09=09char *sys;
+> --=20
+> 2.23.0.866.gb869b98d4c-goog
+>=20
+
