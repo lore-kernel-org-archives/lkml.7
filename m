@@ -2,79 +2,84 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733A9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A78DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D0621D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dL3ngCsL"
+	by mail.kernel.org (Postfix) with ESMTP id D518121D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571971215;
+	bh=VuIkAO3ugvVIrk34pCVzm5VFvJRsMK+QkxTA75X9r+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xSprOL/WMdT3sy7w2Hb40bONhK3CNJIdlXKraGSo5coFMJ+oue13f5dhYJAxXqA9G
+	 23PZabv6X8GXPRGqccDKZzzbTzSIvZSQDR8ZM33nzd6g0VbSurpptOy9h/LBN/i4RE
+	 9Adlt3KEp8ChRnoHh8lBoabzZfHzYu6kDN+c6FLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390402AbfJYCjK (ORCPT
+        id S2390464AbfJYCkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 22:39:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41440 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728416AbfJYCjJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 22:39:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=sVL72IEnASGUFIun+CE72v94BxJjKdJ1NDcm7LwViSw=; b=dL3ngCsLRac53SA2YNqk+ZHSH5
-        /c+2xQjru/wv3o1K9PFWtdRc+BJWDT9L7Fm9GRiDQAvV8vRB45MnBE750UHjij1PwEf5tBSG6e2l6
-        /Tg+3oFNXeFsCALow9InwXg4UdprbSzoxL9wjNSbCrnjbAmFmgmARliJ5PP9Jt0n/5Lce4uHz3Jyw
-        CiSgP7n/s3xVb/xPTWpl4uXywI0WOyvsRKTMCzYi1sYssZ9fSAOxRKrbVtReTgSMO3XPm5SSlBtRO
-        lMWsTttycMSw5WoLF9mldBrdK2PQgzz2zsjxcXDnBh3fA7M1eejwnHXPwp/77YQh95XZdnWeMrKi/
-        ZuW4lIFA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iNpVM-0003py-Ui; Fri, 25 Oct 2019 02:39:08 +0000
-Date:   Thu, 24 Oct 2019 19:39:08 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 2/8] cdrom: factor out common open_for_* code
-Message-ID: <20191025023908.GB14108@infradead.org>
-References: <cover.1571834862.git.msuchanek@suse.de>
- <da032629db4a770a5f98ff400b91b44873cbdf46.1571834862.git.msuchanek@suse.de>
- <20191024021958.GA11485@infradead.org>
- <20191024085014.GF938@kitsune.suse.cz>
+        Thu, 24 Oct 2019 22:40:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390205AbfJYCkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 22:40:14 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588EA2166E;
+        Fri, 25 Oct 2019 02:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571971213;
+        bh=VuIkAO3ugvVIrk34pCVzm5VFvJRsMK+QkxTA75X9r+0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ly9foHepoYGj/bMScIwLR5+FQLcHMIn88pQaij8yEXfm4+MVhQKaK9tMUjKufAEQB
+         qKGc5v3xKBChLV1GxJcePyu+4YnqN0OsQMQ3MRxBUSvYUNqmO/MsDjr9SH5GOXrllj
+         Q9/YERVB/J0pjX6qcEBkoOdn1XCcju4fnXo1cJEM=
+Date:   Fri, 25 Oct 2019 10:39:53 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v3 06/10] ARM: dts: imx: Rename "iram" node to "sram"
+Message-ID: <20191025023951.GB30015@dragon>
+References: <20191002164316.14905-1-krzk@kernel.org>
+ <20191002164316.14905-6-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191024085014.GF938@kitsune.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191002164316.14905-6-krzk@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:50:14AM +0200, Michal Suchánek wrote:
-> Then I will get complaints I do unrelated changes and it's hard to
-> review. The code gets removed later anyway.
+On Wed, Oct 02, 2019 at 06:43:12PM +0200, Krzysztof Kozlowski wrote:
+> The device node name should reflect generic class of a device so rename
+> the "iram" node to "sram".  This will be also in sync with upcoming DT
+> schema.  No functional change.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-If you refactor you you pretty much have a card blanche for the
-refactored code and the direct surroundings.
+Applied, thanks.
