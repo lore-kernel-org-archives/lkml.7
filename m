@@ -2,116 +2,104 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7199CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6453CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EB221D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1A5205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440482AbfJYOmA (ORCPT
+        id S2440494AbfJYOnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:42:00 -0400
-Received: from mga12.intel.com ([192.55.52.136]:59444 "EHLO mga12.intel.com"
+        Fri, 25 Oct 2019 10:43:17 -0400
+Received: from mga11.intel.com ([192.55.52.93]:59704 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440461AbfJYOmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:42:00 -0400
+        id S2436853AbfJYOnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:43:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 07:41:59 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 07:43:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
-   d="scan'208";a="223939301"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Oct 2019 07:41:57 -0700
-Cc:     baolu.lu@linux.intel.com,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
- <20191024214311.43d76a5c@jacob-builder>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC60@SHSMSX104.ccr.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <e950cde8-8cd9-6089-c833-23d2ffb539d1@linux.intel.com>
-Date:   Fri, 25 Oct 2019 22:39:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC60@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="228921327"
+Received: from pgsmsx107.gar.corp.intel.com ([10.221.44.105])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Oct 2019 07:43:14 -0700
+Received: from pgsmsx108.gar.corp.intel.com ([169.254.8.51]) by
+ PGSMSX107.gar.corp.intel.com ([169.254.7.221]) with mapi id 14.03.0439.000;
+ Fri, 25 Oct 2019 22:43:13 +0800
+From:   "Lu, Brent" <brent.lu@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "M, Naveen" <naveen.m@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [alsa-devel] [PATCH] ASoC: eve: implement set_bias_level
+ function for rt5514
+Thread-Topic: [alsa-devel] [PATCH] ASoC: eve: implement set_bias_level
+ function for rt5514
+Thread-Index: AQHVixSpuo5KyaaW0kmhCX7+/fo7hqdq3ikAgACJfMA=
+Date:   Fri, 25 Oct 2019 14:43:12 +0000
+Message-ID: <CF33C36214C39B4496568E5578BE70C740320822@PGSMSX108.gar.corp.intel.com>
+References: <1571994691-20199-1-git-send-email-brent.lu@intel.com>
+ <3ce80285-ddb5-653d-cf60-febc9fd0bdee@linux.intel.com>
+In-Reply-To: <3ce80285-ddb5-653d-cf60-febc9fd0bdee@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2M5NGUzY2ItYWE2Mi00M2I1LWE3ZTgtZGY4N2NjOWQ0N2NlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYmw5bnFvdWdlOWk0RG9KZXN1SE9lZ0RjbUJ1R0IwTWo3M2djNU05dE1wd0w0OTlFNXcwZUF1UUdMNm9HdGt3NyJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [172.30.20.206]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 10/25/19 2:40 PM, Tian, Kevin wrote:
->>>> ioasid_register_allocator(&iommu->pasid_allocator);
->>>> +			if (ret) {
->>>> +				pr_warn("Custom PASID allocator
->>>> registeration failed\n");
->>>> +				/*
->>>> +				 * Disable scalable mode on this
->>>> IOMMU if there
->>>> +				 * is no custom allocator. Mixing
->>>> SM capable vIOMMU
->>>> +				 * and non-SM vIOMMU are not
->>>> supported.
->>>> +				 */
->>>> +				intel_iommu_sm = 0;
->>> It's insufficient to disable scalable mode by only clearing
->>> intel_iommu_sm. The DMA_RTADDR_SMT bit in root entry has already
->> been
->>> set. Probably, you need to
->>>
->>> for each iommu
->>> 	clear DMA_RTADDR_SMT in root entry
->>>
->>> Alternatively, since vSVA is the only customer of this custom PASID
->>> allocator, is it possible to only disable SVA here?
->>>
->> Yeah, I think disable SVA is better. We can still do gIOVA in SM. I
->> guess we need to introduce a flag for sva_enabled.
-> I'm not sure whether tying above logic to SVA is the right approach.
-> If vcmd interface doesn't work, the whole SM mode doesn't make
-> sense which is based on PASID-granular protection (SVA is only one
-> usage atop). If the only remaining usage of SM is to map gIOVA using
-> reserved PASID#0, then why not disabling SM and just fallback to
-> legacy mode?
-> 
-> Based on that I prefer to disabling the SM mode completely (better
-> through an interface), and move the logic out of CONFIG_INTEL_
-> IOMMU_SVM
-> 
-
-Unfortunately, it is dangerous to disable SM after boot. SM uses
-different root/device contexts and pasid table formats. Disabling SM
-after boot requires changing above from SM format into legacy format.
-
-Since ioasid registration failure is a rare case. How about moving this
-part of code up to the early stage of intel_iommu_init() and returning
-error if hardware present vcmd capability but software fails to register
-a custom ioasid allocator?
-
-Best regards,
-baolu
+PiBPbiAxMC8yNS8xOSA0OjExIEFNLCBCcmVudCBMdSB3cm90ZToNCj4gPiBUaGUgZmlyc3QgRE1J
+QyBjYXB0dXJlIGFsd2F5cyBmYWlsICh6ZXJvIHNlcXVlbmNlIGRhdGEgZnJvbSBQQ00gcG9ydCkN
+Cj4gPiBhZnRlciB1c2luZyBEU1AgaG90d29yZGluZyBmdW5jdGlvbiAoaS5lLiBHb29nbGUgYXNz
+aXN0YW50KS4NCj4gDQo+IENhbiB5b3UgY2xhcmlmeSB3aGVyZSB0aGUgRFNQIGhvdHdvcmRpbmcg
+aXMgZG9uZT8gSW50ZWwgRFNQIG9yIHJ0NTUxND8NCj4gDQo+IFR1cm5pbmcgb24gdGhlIE1DTEsg
+d2l0aCB0aGUgQklBUyBpbmZvIG1pZ2h0IGZvcmNlIHRoZSBJbnRlbCBEU1AgdG8gcmVtYWluDQo+
+IG9uLCB3aGljaCB3b3VsZCBpbXBhY3QgcG93ZXIgY29uc3VtcHRpb24gaWYgaXQgd2FzIHN1cHBv
+c2VkIHRvIHJlbWFpbiBvZmYuDQo+IA0KDQpIaSBQaWVycmUsDQoNCkl0J3MgZG9uZSBpbiBydDU1
+MTQncyBEU1AgYW5kIHRoZSBpbnRlcmZhY2UgaXMgU1BJIGluc3RlYWQgb2YgSTJTIGZvciB0aGUg
+dm9pY2Ugd2FrZSANCnVwIGZ1bmN0aW9uLg0KDQpUaGVyZSBpcyBhIGRyaXZlciBydDU1MTQtc3Bp
+LmMgd2hpY2ggcHJvdmlkZXMgcGxhdGZvcm0gZHJpdmVyIGFuZCBEQUkuIFVzZXIgc3BhY2UgDQph
+cHBsaWNhdGlvbiBmaXJzdCB1c2VzIHRoZSBtaXhlciB0byB0dXJuIG9uIHRoZSB2b2ljZSB3YWtl
+IHVwIGZ1bmN0aW9uOg0KDQphbWl4ZXIgLWMwIGNzZXQgbmFtZT0nRFNQIFZvaWNlIFdha2UgVXAn
+IG9uDQoNClRoZW4gb3BlbiBhbmQgcmVhZCBkYXRhIGZyb20gdGhlIFBDTSBwb3J0IHdoaWNoIGdv
+ZXMgdG8gdGhlIFNQSSBwbGF0Zm9ybSBhbmQgDQpkYWkgY29kZS4gRmluYWxseSBpdCB1c2VzIHNh
+bWUgbWl4ZXIgdG8gdHVybiBvZmYgdGhlIGZ1bmN0aW9uIGFuZCByZXR1cm4gdG8gbm9ybWFsIA0K
+Y29kZWMgbW9kZS4gVGhlIERNSUMgcmVjb3JkaW5nIChmcm9tIEkyUykgYW5kIHRoZSB2b2ljZSB3
+YWtlIG9uIGZ1bmN0aW9uIHNob3VsZCANCmJlIG11dHVhbGx5IGV4Y2x1c2l2ZSBhY2NvcmRpbmcg
+dG8gdGhlIGRyaXZlciBkZXNpZ24uDQoNCkluIHRoZSBjb2RlYyBkcml2ZXIgcnQ1NTE0LmMgdGhl
+cmUgaXMgYSBydDU1MTRfc2V0X2JpYXNfbGV2ZWwgZnVuY3Rpb24uIEl0J3MgZXhwZWN0ZWQgdG8g
+DQp0dXJuIG9uL29mZiBtY2xrIGhlcmUgYWNjb3JkaW5nIHRvIFJlYWx0ZWsgcGVvcGxlJ3Mgc2F5
+IGJ1dCBvdXIgc3NwIGNsb2NrIHJlcXVpcmVzIHNldCANCnJhdGUgZnVuY3Rpb24gdG8gYmUgY2Fs
+bGVkIGluIGFkdmFuY2Ugc28gSSBpbXBsZW1lbnQgdGhlIGNvZGUgaW4gbWFjaGluZSBkcml2ZXIu
+DQoNCg0KUmVnYXJkcywNCkJyZW50DQo+ID4gVGhpcyBydDU1MTQgY29kZWMgcmVxdWlyZXMgdG8g
+Y29udHJvbCBtY2xrIGRpcmVjdGx5IGluIHRoZQ0KPiA+IHNldF9iaWFzX2xldmVsIGZ1bmN0aW9u
+LiBJbXBsZW1lbnQgdGhpcyBmdW5jdGlvbiBpbiBtYWNoaW5lIGRyaXZlciB0bw0KPiA+IGNvbnRy
+b2wgdGhlIHNzcDFfbWNsayBjbG9jayBleHBsaWNpdGx5IGNvdWxkIGZpeCB0aGlzIGlzc3VlLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQnJlbnQgTHUgPGJyZW50Lmx1QGludGVsLmNvbT4NCg0K
