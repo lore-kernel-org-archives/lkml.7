@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A29CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CA1CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1747720663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7376520679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012436;
-	bh=0meya3MA2lOI1CtkbdB1xT+Fow3FlBRZRoOpoYC2tGg=;
+	s=default; t=1572012441;
+	bh=YMIA8rjAV5K28qn2+cRhD8XtwVSArNt+QfSzG8Gnd1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p1q1H5RvPMFO/kwfVscUEn3YI5gI1sud9N+WDAkOPtqak3fs7diDuAfVBuvEBxA6/
-	 3QTA9/LNXNRS+iJutI9OwtNcHN40uxMi6fXGgQnpMJ7qw0MkQBSJVhrfLSwILGwdTM
-	 FdpRA4kpzmvruNjvSKpCvHtBfoAFaNsXnNM6ZYUI=
+	b=Uunewev+FK0KsO3td2HvEVx11R0BGL88qWVyXGtTqTzbrwIEspOBoscc3KmFGM1DZ
+	 XAKHjW3D5y1Hfrbnhd1iun9tVnlzRp3HfZeDiP2rt7o6MM9lVWFNsuY+XUOWHkDw2r
+	 a6IL7pXnjQFKJ06/T8xdrfv0CQo993Ax/g5IUfbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436820AbfJYOHO (ORCPT
+        id S2505067AbfJYNz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:55:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502362AbfJYNzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:55:32 -0400
+        id S2505010AbfJYNzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:55:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47CC821D81;
-        Fri, 25 Oct 2019 13:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C33921D82;
+        Fri, 25 Oct 2019 13:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011732;
-        bh=0meya3MA2lOI1CtkbdB1xT+Fow3FlBRZRoOpoYC2tGg=;
+        s=default; t=1572011724;
+        bh=YMIA8rjAV5K28qn2+cRhD8XtwVSArNt+QfSzG8Gnd1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvImXxN/rEO3FEDo4W2/oXdgjFoX8LhWLhE7EmK1oGGrwqrxV/D2ztznAi7vAowmq
-         MYETiI02tmxffPSlUmF8fJUPzw/iKh99dZ9v8JlBFRFugGAHKg9JXH3Rsm8beU0Fmf
-         eXYTQIbp6QLiTFGjyVnLN0vWHi90/SJU617ZVI4Y=
+        b=oV24+2v/mbfLG5HUUUMNOENigDqHHy9Dll/0ue1Lpf/sdd73pFgKZQnzMMApvqmhJ
+         2BPq1Xy1nAJMS1Wg4nE/AEiwQLqwxXKaKvLldTVJxmljx5qHeGaAhE1YENBG5vZil8
+         VDMYbHiS2cwGLYUfmAMnvIL+mG7KJhyrXn0h1wjE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 14/33] scsi: qla2xxx: Fix different size DMA Alloc/Unmap
-Date:   Fri, 25 Oct 2019 09:54:46 -0400
-Message-Id: <20191025135505.24762-14-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 09/33] NFC: pn533: fix use-after-free and memleaks
+Date:   Fri, 25 Oct 2019 09:54:41 -0400
+Message-Id: <20191025135505.24762-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -60,43 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit d376dbda187317d06d3a2d495b43a7983e4a3250 ]
+[ Upstream commit 6af3aa57a0984e061f61308fe181a9a12359fecc ]
 
-[   17.177276] qla2xxx 0000:05:00.0: DMA-API: device driver frees DMA memory
-    with different size [device address=0x00000006198b0000] [map size=32784 bytes]
-    [unmap size=8208 bytes]
-[   17.177390] RIP: 0010:check_unmap+0x7a2/0x1750
-[   17.177425] Call Trace:
-[   17.177438]  debug_dma_free_coherent+0x1b5/0x2d5
-[   17.177470]  dma_free_attrs+0x7f/0x140
-[   17.177489]  qla24xx_sp_unmap+0x1e2/0x610 [qla2xxx]
-[   17.177509]  qla24xx_async_gnnft_done+0x9c6/0x17d0 [qla2xxx]
-[   17.177535]  qla2x00_do_work+0x514/0x2200 [qla2xxx]
+The driver would fail to deregister and its class device and free
+related resources on late probe errors.
 
-Fixes: b5f3bc39a0e8 ("scsi: qla2xxx: Fix inconsistent DMA mem alloc/free")
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
+Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_gs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/pn533/usb.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index 9f58e591666da..ebf223cfebbc5 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -4152,7 +4152,7 @@ int qla24xx_async_gpnft(scsi_qla_host_t *vha, u8 fc4_type, srb_t *sp)
- 								rspsz,
- 								&sp->u.iocb_cmd.u.ctarg.rsp_dma,
- 								GFP_KERNEL);
--		sp->u.iocb_cmd.u.ctarg.rsp_allocated_size = sizeof(struct ct_sns_pkt);
-+		sp->u.iocb_cmd.u.ctarg.rsp_allocated_size = rspsz;
- 		if (!sp->u.iocb_cmd.u.ctarg.rsp) {
- 			ql_log(ql_log_warn, vha, 0xffff,
- 			    "Failed to allocate ct_sns request.\n");
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index c5289eaf17eef..e897e4d768ef7 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -547,18 +547,25 @@ static int pn533_usb_probe(struct usb_interface *interface,
+ 
+ 	rc = pn533_finalize_setup(priv);
+ 	if (rc)
+-		goto error;
++		goto err_deregister;
+ 
+ 	usb_set_intfdata(interface, phy);
+ 
+ 	return 0;
+ 
++err_deregister:
++	pn533_unregister_device(phy->priv);
+ error:
++	usb_kill_urb(phy->in_urb);
++	usb_kill_urb(phy->out_urb);
++	usb_kill_urb(phy->ack_urb);
++
+ 	usb_free_urb(phy->in_urb);
+ 	usb_free_urb(phy->out_urb);
+ 	usb_free_urb(phy->ack_urb);
+ 	usb_put_dev(phy->udev);
+ 	kfree(in_buf);
++	kfree(phy->ack_buffer);
+ 
+ 	return rc;
+ }
 -- 
 2.20.1
 
