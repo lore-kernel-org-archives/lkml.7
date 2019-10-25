@@ -2,140 +2,131 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EAFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E599C21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8424C222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+HAYxss"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLizEG5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503853AbfJYMAe (ORCPT
+        id S2503952AbfJYMCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:00:34 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51500 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409923AbfJYMAe (ORCPT
+        Fri, 25 Oct 2019 08:02:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25790 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2502539AbfJYMCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:00:34 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q70so1842896wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UhHAdHsaOmL633PWB+Nv1shzHRTR1yQ6YiNmAxA5vZ0=;
-        b=c+HAYxssJ6PmAichZwcofghRZRRfb4FXHmThSMVT18jqwxfH98y+ArRu2B2v81lO1b
-         rAKP+Eij3RVSTBFtNNMSwr2CCaIIotMdQfx4XtS/EghtV2mDxqZt/sBAUYYZTDmY9Vvd
-         ggD6H5htobsWbw22Imh87vdNeiRFjqgPnt0tJRUJJ0Fy/bp8uswnmR5Hy06uAaeulyZL
-         HEHgT0knd3yfzPOYH3jWqzZCi7wQstYA10GvBYVADJo5O7x80cGLTytmIZdvDQVeRdA0
-         jevbZifhvawJlFkXGMmZ/G8sJrextdLlW7M91txbhXPSxEXBPnOq8Pelw8bjIVcrr6/2
-         s0Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UhHAdHsaOmL633PWB+Nv1shzHRTR1yQ6YiNmAxA5vZ0=;
-        b=N3OdmJq/4o3jPpOJijsfVCC0Me9+TcwwEglr6DBXuvUTMQE93Y4Aj6Z1ww28iISjhx
-         LfKqOXG8n5b/C4YsQitzs58PixfgdDPooa4yDKye1qDvWRHST2yLJmImjQbUM7l61xkW
-         NcKLF3e/aHKxQDui8hDp6D7Z4e67R93tWAS/Yv67Lnt5bo65oxXurCRVa51vQPHnsiBa
-         lUeRltJBXYw0xwID/unicOe0XVoigkmkFtTaaD2qtQyVI3rcCJZeOl5KkWQG2bnSYVgu
-         rXas+X+COPONg+KPT/4AsMXPknniY7mXhw/rEr5GLUiwufedQbBhsIXIHPFU5/3ZfNhf
-         dguA==
-X-Gm-Message-State: APjAAAXlA2TRPrLzFF16uHr8+toPQtasDzUscQH6yRCjOuyIRFe97rt1
-        /9ktmmRee6XP1iJSmplq251p+jWW9VOaQ6quqYQ=
-X-Google-Smtp-Source: APXvYqz53WRnRzuRZle2h9/cd3RYP1HGa5S/+d6xQfKRmQmSIRqOEf2+ejx8NuH4glFtcf2jjdWIqZsCaCeFhOy8gv4=
-X-Received: by 2002:a1c:1d53:: with SMTP id d80mr2234228wmd.88.1572004832208;
- Fri, 25 Oct 2019 05:00:32 -0700 (PDT)
+        Fri, 25 Oct 2019 08:02:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572004923;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IBg/RemnUO6FrGBf0EaqOcr2gXDDQq0ETHC+883fOmI=;
+        b=QLizEG5HiQ1UD/o52bIlhmIdM6K3ICA2+5sbykhC27eRB2cuFb7VLUBk5adiYaemE/fFhm
+        5HMJdb1+ioPyWEI8M2wpNWanNKvIpMppmS2T2jEe1ZkiICZPC8jZxJIP37yiCJE7o2ntpP
+        mCNTIU8ANm0dl+r4LPkwDLlqUqFdZdQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-280-9JO_5gNoPreq6XvpTBvKag-1; Fri, 25 Oct 2019 08:01:59 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC4EA800D41;
+        Fri, 25 Oct 2019 12:01:57 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8A7DC5D9CA;
+        Fri, 25 Oct 2019 12:01:55 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 14:01:54 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+Subject: Re: [PATCH] perf c2c: Fix memory leak in c2c_he_zalloc()
+Message-ID: <20191025120154.GA25352@krava>
+References: <9d5f26f8-9429-bcb6-d491-cb789f761ea2@huawei.com>
 MIME-Version: 1.0
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191024142939.25920-3-andrey.zhizhikin@leica-geosystems.com>
- <20191025080655.GF32742@smile.fi.intel.com> <CAHtQpK7P2X42WxZzok+XVZESV7O_JWK3Th7JMnMQsaq6f0gELw@mail.gmail.com>
- <20191025104925.GR32742@smile.fi.intel.com>
-In-Reply-To: <20191025104925.GR32742@smile.fi.intel.com>
-From:   Andrey Zhizhikin <andrey.z@gmail.com>
-Date:   Fri, 25 Oct 2019 14:00:21 +0200
-Message-ID: <CAHtQpK6OLkzSO_k6qv_Le3w8bSocwwZWiFSaOWLJLjDkVNSMCQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mfd: add regulator cell to Cherry Trail Whiskey Cove PMIC
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9d5f26f8-9429-bcb6-d491-cb789f761ea2@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: 9JO_5gNoPreq6XvpTBvKag-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 12:49 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Oct 25, 2019 at 11:16:22AM +0200, Andrey Zhizhikin wrote:
-> > On Fri, Oct 25, 2019 at 10:07 AM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Thu, Oct 24, 2019 at 02:29:39PM +0000, Andrey Zhizhikin wrote:
-> > > > Add a regulator mfd cell to Whiskey Cove PMIC driver, which is used to
-> > > > supply various voltage rails.
-> > > >
-> > > > In addition, make the initialization of this mfd driver early enough in
-> > > > order to provide regulator cell to mmc sub-system when it is initialized.
-> > >
-> > > Doesn't deferred probe mechanism work for you?
-> > > MMC core returns that error till we have the driver initialized.
-> >
-> > This would work for mmc sub-system, but my idea was that later when
-> > more cells are added to this mfd - it might turn out that we would
-> > require an early initialization anyway. So I decided to take an
-> > opportunity to adjust it with this patch as well, and this is what I
-> > roughly explained in the commit message. When I'm reading it now,
-> > exactly this point was not mentioned in commit message at all, and I
-> > rather coupled the early init with mmc sub-system, which creates a
-> > source of confusion here. I guess if there would be no other
-> > objections about early init - I'd go with v2 of this patch, where I
-> > would clean-up the point below and adjust the commit description.
-> >
-> > Thanks a lot for pointing this out!
->
-> > > > -static struct i2c_driver cht_wc_driver = {
-> > > > +static struct i2c_driver cht_wc_i2c_driver = {
-> > >
-> > > Renaming is not explained in the commit message.
-> >
-> > True, this point I forgot to mention. Actually, this is tightly
-> > coupled with the fact that mfd driver has been moved to an earlier
-> > init stage and since it does belong to I2C sub-system (and represented
-> > by i2c_device structure) - I decided to make a name sound more
-> > logical.
->
-> So, seems you have three changes in one patch. Please, split accordingly.
+On Fri, Oct 25, 2019 at 05:42:47PM +0800, Yunfeng Ye wrote:
+> A memory leak in c2c_he_zalloc() is found by visual inspection.
+>=20
+> Fix this by adding memory free on the error paths in c2c_he_zalloc().
+>=20
+> Fixes: 7f834c2e84bb ("perf c2c report: Display node for cacheline address=
+")
+> Fixes: 1e181b92a2da ("perf c2c report: Add 'node' sort key")
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 
-Got it, thanks! Now I see it would be more logical to have 3 patches
-in the following order:
-- i2c driver renaming
-- additional regulator cell
-- early init
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-If you don't mind - I'd wait for other people to comment on this
-patch, collect all points, and then come up with v2 of this patch (and
-whole series in fact).
+thanks,
+jirka
 
->
-> In v2 also Cc all stakeholders I mentioned.
+> ---
+>  tools/perf/builtin-c2c.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index e69f44941aad..ad7d38a9dcbe 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -138,21 +138,29 @@ static void *c2c_he_zalloc(size_t size)
+>=20
+>  =09c2c_he->cpuset =3D bitmap_alloc(c2c.cpus_cnt);
+>  =09if (!c2c_he->cpuset)
+> -=09=09return NULL;
+> +=09=09goto free_c2c_he;
+>=20
+>  =09c2c_he->nodeset =3D bitmap_alloc(c2c.nodes_cnt);
+>  =09if (!c2c_he->nodeset)
+> -=09=09return NULL;
+> +=09=09goto free_cpuset;
+>=20
+>  =09c2c_he->node_stats =3D zalloc(c2c.nodes_cnt * sizeof(*c2c_he->node_st=
+ats));
+>  =09if (!c2c_he->node_stats)
+> -=09=09return NULL;
+> +=09=09goto free_nodeset;
+>=20
+>  =09init_stats(&c2c_he->cstats.lcl_hitm);
+>  =09init_stats(&c2c_he->cstats.rmt_hitm);
+>  =09init_stats(&c2c_he->cstats.load);
+>=20
+>  =09return &c2c_he->he;
+> +
+> +free_nodeset:
+> +=09free(c2c_he->nodeset);
+> +free_cpuset:
+> +=09free(c2c_he->cpuset);
+> +free_c2c_he:
+> +=09free(c2c_he);
+> +=09return NULL;
+>  }
+>=20
+>  static void c2c_he_free(void *he)
+> --=20
+> 2.7.4
+>=20
 
-Would certainly do!
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
-
--- 
-Regards,
-Andrey.
