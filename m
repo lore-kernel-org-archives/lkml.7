@@ -2,67 +2,121 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37507CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5F121872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0903C21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572036307;
+	bh=NJ+WKmfKRhR8+SGv+N61qy5UYgwj40QkXtak7NdAe0E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=eydkI+OFk6QxpS+WSVhFQ/XkPcsWvrXtjXpbxOlVw/BsuABpZb3X44gVazwDXkIg+
+	 hb6uUMn+0FzGvW2do852kl013GpDfR7/o2/HwGcpmOSnlrkML5MqGz7+Fsjp9HRH5B
+	 zII6vr+MK34dW2TUIvR1TdDA/gx9w/OG3ffFfXy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfJYUoG (ORCPT
+        id S1728752AbfJYUpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:44:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38999 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfJYUoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:44:06 -0400
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iO6RE-0004il-IH; Fri, 25 Oct 2019 22:44:00 +0200
-Date:   Fri, 25 Oct 2019 22:43:54 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-cc:     Andy Lutomirski <luto@kernel.org>, dev@dpdk.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [dpdk-dev] Please stop using iopl() in DPDK
-In-Reply-To: <20191025091310.05770edc@hermes.lan>
-Message-ID: <alpine.DEB.2.21.1910252232590.1905@nanos.tec.linutronix.de>
-References: <CALCETrVepdYd4uN8jrG8i6iaixWp+N3MdGv5WhjOdCr9sLRK1w@mail.gmail.com> <20191025091310.05770edc@hermes.lan>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 25 Oct 2019 16:45:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726008AbfJYUpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:45:05 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDF862084C;
+        Fri, 25 Oct 2019 20:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572036304;
+        bh=NJ+WKmfKRhR8+SGv+N61qy5UYgwj40QkXtak7NdAe0E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hAO/+ldMyc2wFvU1rB2jr0qbCqMxryeZV9hwR22nNQXYS8Yoc7HbfACHC2As3i6Vc
+         mkFJYj1DrtmY9EnT1zuXju84hh/PR6Qga5KZ/9gScxEENzgefDYJE/RDM8zXrzUvMC
+         M/ey0st6s4jumET4Gmw9cUl3goRr2Rat24VbPRnk=
+Date:   Fri, 25 Oct 2019 15:45:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        palmer@sifive.com, hch@infradead.org, longman@redhat.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jackie Liu <liuyun01@kylinos.cn>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Firoz Khan <firoz.khan@linaro.org>, sparclinux@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        James Hogan <jhogan@kernel.org>,
+        Vineet Gupta <vgupta@synopsys.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-snps-arc@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-mips@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 0/2] Enabling MSI for Microblaze
+Message-ID: <20191025204502.GA170580@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1571983829.git.michal.simek@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019, Stephen Hemminger wrote:
-> On Thu, 24 Oct 2019 21:45:56 -0700
-> Andy Lutomirski <luto@kernel.org> wrote:
-> > 3. Use ioperm() instead of iopl().
+On Fri, Oct 25, 2019 at 08:10:36AM +0200, Michal Simek wrote:
+> Hi,
 > 
-> Ioperm has the wrong thread semantics. All DPDK applications have
-> multiple threads and the initialization logic needs to work even
-> if the thread is started later; threads can also be started by
-> the user application.
+> these two patches come from discussion with Christoph, Bjorn, Palmer and
+> Waiman. The first patch was suggestion by Christoph here
+> https://lore.kernel.org/linux-riscv/20191008154604.GA7903@infradead.org/
+> The second part was discussed
+> https://lore.kernel.org/linux-pci/mhng-5d9bcb53-225e-441f-86cc-b335624b3e7c@palmer-si-x1e/
+> and
+> https://lore.kernel.org/linux-pci/20191017181937.7004-1-palmer@sifive.com/
 > 
-> Iopl applies to whole process so this is not an issue.
+> Thanks,
+> Michal
+> 
+> Changes in v2:
+> - Fix typo in commit message s/expect/except/ - Reported-by: Masahiro
+> 
+> Michal Simek (1):
+>   asm-generic: Make msi.h a mandatory include/asm header
+> 
+> Palmer Dabbelt (1):
+>   pci: Default to PCI_MSI_IRQ_DOMAIN
+> 
+>  arch/arc/include/asm/Kbuild     | 1 -
+>  arch/arm/include/asm/Kbuild     | 1 -
+>  arch/arm64/include/asm/Kbuild   | 1 -
+>  arch/mips/include/asm/Kbuild    | 1 -
+>  arch/powerpc/include/asm/Kbuild | 1 -
+>  arch/riscv/include/asm/Kbuild   | 1 -
+>  arch/sparc/include/asm/Kbuild   | 1 -
+>  drivers/pci/Kconfig             | 2 +-
+>  include/asm-generic/Kbuild      | 1 +
+>  9 files changed, 2 insertions(+), 8 deletions(-)
 
-No. iopl is also per thread and not per process. That has been that way
-forever. The man page is blantantly wrong.
-
-Both iopl and ioperm are inherited on fork.
- 
-Thanks,
-
-	tglx
+I applied these to pci/msi for v5.5, thanks!
