@@ -2,91 +2,68 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B251CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ECCCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348F22084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65849222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572039268;
-	bh=gXMn/R89/penzcJ1w5eK6vOORbHy9rAc1lvFQOJYUXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CYkzN09SFuJ0dUJP8vW91uowl9YilRo0gAGmBbT/9HOID/IKUhNLZZqt8G2FCBfna
-	 FF8GxJ+fyXNDSGMo25Pdoxer3SNX7e3zTDW/HYe6APqb8bEIdtOs3zpmP00C7NZv3C
-	 coxy1d6tu6oJOo4LldGzbbJXICekh91tD6Bf9ObA=
+	s=default; t=1572039307;
+	bh=pcJg0LOXnS2SS0hUm6EUQCdRc08q50KmG7tFF5hdh14=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=0n+3Sd47YScIW/7cT/NQoruLmW4wj7dhq3/9u+X4XQWDk8vaz7oRjFX3Bbv6D/gIj
+	 mtys0ZPhCV7LS0eEJjY96F/R0tfiwvQ3n0qNzKb9UWaQI1IRhfMvIh/f0Se5b8vSEv
+	 ga/DnmjLzwtRIfvSFAl/OZoA3Db06TV3GaO3v1zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfJYVe1 (ORCPT
+        id S1726340AbfJYVfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:34:27 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45429 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfJYVe0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:34:26 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o205so2529656oib.12;
-        Fri, 25 Oct 2019 14:34:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7s13LulzXudWEH5AkoywW9MOEghDGN0K+d1ZGtH3B3c=;
-        b=tVHnNSNJLp2979W8b6xbt0OarM8UhGcRhCSaN/oB1YbAhXcRZtx4WeBdEReFQgcOHo
-         okH7OPH0QIyyTMQvpMeN8KcUHcqFJ/0Q3xnvqmzAkSnZkgf6ZTKb1JwHAgufCVH1qXpP
-         oG1hsp89Qof2SIp3ahPS9856HsHHBoQo+Q2MczZHPhda+EZfqkw2xaZYjKSjTNmYk9Kf
-         W/JsN3eKJ56UdQjZvYMz5Utrb5bfduJrBjPhUGfFb0VCs0quGQyTJ7767oMvQk0QaWZm
-         aC1j1Vg8p6LauhHXTs9NrI2/VagRAaQVmESdXAobC6nT39zt6MzxgrZrxYXMr8pDrZI1
-         xoWg==
-X-Gm-Message-State: APjAAAVY9KaE3De93bYYh4p7RMGL16RtfEcFF4iVfMOrW2DeHupiMMnn
-        KyL9I2nTZEdYvR8Xm+gt8012v34=
-X-Google-Smtp-Source: APXvYqzEB0xkyNi3l5evme7y6Aqv/FjHQN7vgdqXP2eNniCNF6eIh+57bLjIBDVD2J2VvpizXaoAXg==
-X-Received: by 2002:aca:d882:: with SMTP id p124mr264599oig.44.1572039265901;
-        Fri, 25 Oct 2019 14:34:25 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y6sm943059oiy.45.2019.10.25.14.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:34:24 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 16:34:23 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: at91: Document Kizbox2-2 board
- binding
-Message-ID: <20191025213423.GA24616@bogus>
-References: <20191021125804.23856-1-kamel.bouhara@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021125804.23856-1-kamel.bouhara@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 25 Oct 2019 17:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbfJYVfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 17:35:05 -0400
+Subject: Re: [GIT PULL] KVM changes for Linux 5.4-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572039305;
+        bh=pcJg0LOXnS2SS0hUm6EUQCdRc08q50KmG7tFF5hdh14=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=g1c1/hIze9UYEMThUbJC3/kTH6MLN9giuAD+kRknJ+1wbTUoUTD9Kz3dnN8RqUID8
+         TTbdg3duymEcdX3OLFnFLInHw7DgkjPeDlx1pyMG7nPP/6pQEEn/gqI881kFCMscdU
+         RfvHtdOQG4EOU8l4VvUSiReFLRHpeLd7AA5VFb3c=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1572003959-43063-1-git-send-email-pbonzini@redhat.com>
+References: <1572003959-43063-1-git-send-email-pbonzini@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1572003959-43063-1-git-send-email-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
+ tags/for-linus
+X-PR-Tracked-Commit-Id: 671ddc700fd08b94967b1e2a937020e30c838609
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8c123380b30f408647f3b159831c863cd56b1400
+Message-Id: <157203930529.23557.6500819875416650825.pr-tracker-bot@kernel.org>
+Date:   Fri, 25 Oct 2019 21:35:05 +0000
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        rkrcmar@redhat.com, kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 14:58:03 +0200, Kamel Bouhara wrote:
-> Document devicetree's binding for the Kizbox2-2 board of
-> Overkiz SAS based on SAMA5D31 SoC.
-> 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> ---
-> Changes in v2:
-> 	- Removed other kizbox2 boards as the main difference between
-> 	them is the usart configuration, only add the two heads variant
-> 	for now.
-> 
->  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+The pull request you sent on Fri, 25 Oct 2019 13:45:59 +0200:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8c123380b30f408647f3b159831c863cd56b1400
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
