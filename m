@@ -2,90 +2,122 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F28CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ABBCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8FA2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572038491;
-	bh=hE+Aowh8dOcGnIZltaHdNLw4vJBMAlkN9d1+VdMtepg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gxsZ5EXqoaLQ9T5q8oeemdlwlDTS341oSnqDkUaysdPg0xGt4iwSl024QL52pVZFd
-	 DxKtQazg1j3GK4IQurJ2Ny4gY3DYa+7/KA50knQEZxLFWZTFlD1madHW26au6DoxWU
-	 uuHDz9oKH+KSey9SwHnjcLQFWufL5ROWV10fVTGM=
+	by mail.kernel.org (Postfix) with ESMTP id 97C24222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pi2tVgiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfJYVVa (ORCPT
+        id S1726155AbfJYVXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:21:30 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37849 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfJYVV3 (ORCPT
+        Fri, 25 Oct 2019 17:23:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36777 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfJYVXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:21:29 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 53so3022110otv.4;
-        Fri, 25 Oct 2019 14:21:29 -0700 (PDT)
+        Fri, 25 Oct 2019 17:23:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 23so2360208pgk.3;
+        Fri, 25 Oct 2019 14:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k7mM1YAB7j9cvjOb/HqAxXCujobS240Bo0w21vdsY1w=;
+        b=pi2tVgiT9aqazAYDlnNx3FH4kOZg6SRZoAAgVBh6VR/3pAbY5oJyJTHkSiIyF4CuU7
+         DMqs+bSwx/Crk7vDa/RyaL+R7mbs/orQI8QxMTaK8RR8cGZuA6ZnJ9y5dgAZPnASD0mu
+         9W1EPOyymwsRZqmkCKC0gw+5wWwVIiOyKhG3ewSsnDU/fKHV+03XVOf7jZczPLspH+8p
+         5z98dtNXwxLfcB/vZS4zvK7sHv54NVtq0N3ARlz3jcS8rQ24s/W3bA5PDZ2KellSPrRL
+         jJiZYZ/16rn5upnZ5Y1MjgLd6jC/9dAmyaaJC2MlHDFBiaQR//9cpX21UOVEzWIJ64Bl
+         3Akw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=t2kppBEOgy6RnOJeg3mWNTbWNUIFFBZPEWBzlZe65iU=;
-        b=EEmlV7BG5gzFll2Uegx3j7UU0kpLZnb0/VVrcLfZFGf+zm0CpY15akfH0BOkg9x8MD
-         6jFtpaZVInPhXiYrQsjWA/7wgaA3RNkpIlLIJFQ1J9g3cccE2JmzSJ7vr3JcLaL4LJPO
-         3fSp+GOFtqtLvOl6mYkp06BUXZBN5Ve/r7kQxoRGMnYHJ3HHgv46mD2eA09K/4GHnyq5
-         9Zqkl1RN836wwOEzlLnxgprhR2xRRvyhU/A9r6iGohEtDVbcDJZUb+ppKJz1dG7y0HkA
-         axTjDHXi6buPtfhbA1AhOl4M0NXOiWAXW0OyvcFXXOwmtnTrCspnxxv70srzyQpMGJJI
-         PHRQ==
-X-Gm-Message-State: APjAAAUDjVzEqIoUNzd5XJjhBLp0+a6pQYOG5DP3OlPgm9W4uf8vBT6m
-        e/8weOCoBL+kH+heVgofHw==
-X-Google-Smtp-Source: APXvYqzfALz/bSOT92RSeok6HEe+wg7/IAkKBr5Ut9pLPU5O+zQ3UDEKAg0PqDzo3TuhVW8gFCuqsw==
-X-Received: by 2002:a9d:82e:: with SMTP id 43mr4568743oty.23.1572038488683;
-        Fri, 25 Oct 2019 14:21:28 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b31sm1129632otc.70.2019.10.25.14.21.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k7mM1YAB7j9cvjOb/HqAxXCujobS240Bo0w21vdsY1w=;
+        b=oRpfid64KGBkoyri7jrsK5UpLecGD5W09QUEt5f+nDHyS7gK3l1yJLR5w3D4XRDeap
+         kErbmx3Nti+bnrDjqXoDKRDlgHZTzpHfG+NB55YBSyNL9O9bfhxsDimJpLYYeaHreniL
+         25ljUJPVzJSQyOUtj1ID4htJiLUwe5SXQAKljRraXhlsQ1pEhVg+2hTW3trttY56dTqS
+         pOoBfY6ioFqb3uFTDt1v0Dlo+Hiu5g1h0tGNs+wrm/hcEHPIA656ecdAF+6v8AO3m2Ru
+         Hq6M57oV4Mv0a71Tb/YG7+Qk9laT9kLcbLHtNPwhn5BbHN6dMFcwBCrF6cyfQBEER1wE
+         iA8w==
+X-Gm-Message-State: APjAAAVJGQ+MfqDnv5Cvosyv8fVLh8ZOFLsE2MS9fXizPQowQcisPQEs
+        mdXNtF4qXB8F1yYtdV66Xw5qoZ9XvZI=
+X-Google-Smtp-Source: APXvYqzTFCBHjd13CWS/a0Gdd1iSXbr8uW7LLcyfqefhI2rLGrPSDKHAfWAbnkuii4ydDR+Pc8ayAw==
+X-Received: by 2002:a63:1d60:: with SMTP id d32mr6843817pgm.37.1572038601840;
+        Fri, 25 Oct 2019 14:23:21 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id a16sm4238064pfa.53.2019.10.25.14.23.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:21:28 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 16:21:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Fri, 25 Oct 2019 14:23:21 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] dt-bindings: arm: realtek: Tidy up conversion to
- json-schema
-Message-ID: <20191025212127.GA4819@bogus>
-References: <20191020040817.16882-1-afaerber@suse.de>
- <20191020040817.16882-4-afaerber@suse.de>
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: sdm845-cheza: delete zap-shader
+Date:   Fri, 25 Oct 2019 14:21:06 -0700
+Message-Id: <20191025212106.2657-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191020040817.16882-4-afaerber@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 20 Oct 2019 06:08:12 +0200, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Restore the device names for compatible strings as comments.
-> Prepare for adding more SoCs by inserting oneOf.
-> 
-> Fixes: 693af5f3eeaa ("dt-bindings: arm: Convert Realtek board/soc bindings to json-schema")
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  v2: New
->  
->  Documentation/devicetree/bindings/arm/realtek.yaml | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
+From: Rob Clark <robdclark@chromium.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is unused on cheza.  Delete the node to get ride of the reserved-
+memory section, and to avoid the driver from attempting to load a zap
+shader that doesn't exist every time it powers up the GPU.
+
+(This also avoids a massive amount of dmesg spam about missing zap fw.)
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 34881c0113cb..99a28d64ee62 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -165,6 +165,8 @@
+ /delete-node/ &venus_mem;
+ /delete-node/ &cdsp_mem;
+ /delete-node/ &cdsp_pas;
++/delete-node/ &zap_shader;
++/delete-node/ &gpu_mem;
+ 
+ /* Increase the size from 120 MB to 128 MB */
+ &mpss_region {
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index f406a4340b05..2287354fef86 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2824,7 +2824,7 @@
+ 
+ 			qcom,gmu = <&gmu>;
+ 
+-			zap-shader {
++			zap_shader: zap-shader {
+ 				memory-region = <&gpu_mem>;
+ 			};
+ 
+-- 
+2.21.0
+
