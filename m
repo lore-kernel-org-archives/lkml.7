@@ -2,234 +2,193 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C16DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7110FCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED39921929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F23321929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VhEzACbm"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="npb34cvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438298AbfJYJGr (ORCPT
+        id S2438336AbfJYJHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:06:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28898 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2438276AbfJYJGr (ORCPT
+        Fri, 25 Oct 2019 05:07:45 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:47327 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438275AbfJYJHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:06:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571994404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7fTgOTMBeF31B4vmWB9JS07f2fjdYULIg77zQQzJWV0=;
-        b=VhEzACbmxuW3p9OQevQ6POlh3XQWnHQf+8TGH5m7LNn8AAKaBcnwonXOq6yqEpyDks2F9t
-        348fN/LYomSX4N9D1O7Lr1T5u5tEBezETYCZ+txfVxWV5nKUeUMwALG5yBxFVhGo9v+NrL
-        oPt8DlFjYg2ubrdel4gwYxLPqDl5CYM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-Lnyoon1zOo6zTh0Brqtzfw-1; Fri, 25 Oct 2019 05:06:43 -0400
-Received: by mail-wr1-f72.google.com with SMTP id e14so683989wrm.21
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 02:06:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QAaGwMo3n+rr2aQNEdB20hiTv23JYLyYkwDVMy7rmpY=;
-        b=PauD8RX9QIIkv0woDENJtzJKkmJyvG7iW/z/5zLJBkHNar8XZUrYQDd2MVnIxFiD4T
-         R0WoO4XI5CU6CL33QO7n4MRsFJ5UBkyMF28T2o69joonCXbai/g71zChwnmd96J7ri5v
-         3+h0G/tdhwdB+IJozy2z507d4GkTGzCQDP96x9EZwfxq+8uGJxui6TxITXbfr0Kj+Qud
-         JLO3t1SYp4qEpF9jcWS2LAUlNOjyfcan5Am2rwJqo7d8QvyXtu5/lROdD8BOAVJf1fPd
-         DJUAQ/KiUXOYArlQSczaHZzywM0BpRHtQUYg7ArdMJfUVPUtlTIU4eRpgPmZLuiHYAI9
-         ycuw==
-X-Gm-Message-State: APjAAAWLWSToKB0+HhQ3HgcRQPWGeNP51KWKMhOQ4kOpfDFfZv6bzFwq
-        FKT9n8fdf0vCvSd3gWdaXRE7GqEZP18yfSlKxwOH7/plKuLBRH97TC66CbaLoxoDDzspgnGfw38
-        jCle7G8uWRkel+utHv3I63gYr
-X-Received: by 2002:a1c:49c2:: with SMTP id w185mr2409623wma.16.1571994401859;
-        Fri, 25 Oct 2019 02:06:41 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyhMGKrNBdso6mcA1iGrIvyQtimRFR80K0kW8QMex0xxsM7pKZ+OjmD8wQ9Ylzt+nw5TTn+8Q==
-X-Received: by 2002:a1c:49c2:: with SMTP id w185mr2409583wma.16.1571994401531;
-        Fri, 25 Oct 2019 02:06:41 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id a9sm2654827wmf.14.2019.10.25.02.06.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 02:06:40 -0700 (PDT)
-Subject: Re: [PATCH 3/4] ACPI / PMIC: Add Cherry Trail Crystal Cove PMIC
- OpRegion driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191024213827.144974-1-hdegoede@redhat.com>
- <20191024213827.144974-4-hdegoede@redhat.com>
- <20191025074518.GZ32742@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <230f4820-688f-4b04-ee62-771486fcfa63@redhat.com>
-Date:   Fri, 25 Oct 2019 11:06:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191025074518.GZ32742@smile.fi.intel.com>
+        Fri, 25 Oct 2019 05:07:43 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: IexAyWthAuiLEYdXymJH5wRWhzQHNSXelgGrFn+a8xzkkNhJU+aU+VsO+0ydluBz0iiVMDP0fj
+ eLJTcOQodps2cr4GMVlWh+Q+vX1pkyn//tkuO4OL9dzdA6WatJoZBFKGA/IIm/021J3MKtvYNh
+ NXXBvUEcCbLVhEZOze4DHRHjWlc5mitzXvcjJShF+FRDBvP7xPLL5JyxymnZsx9p2PxsKzksbF
+ q2ZNX0bHe1hCy8SgEkpFaR2rE7aJCkSBGT6U7GpLpaMoN7QLd2rEqUL0QeKzCGNH5YiPWCxz3s
+ dZY=
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="52906644"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2019 02:07:43 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 25 Oct 2019 02:07:34 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 25 Oct 2019 02:07:34 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RmUrAIVSI4/mPZbmXVtqHNbOQ3LHiBGIJ4hxtzsxGNd47+NBVgMqio88aZzOCvOiZDVDgQgeqg+sdrcFZNZMtSv4sEFFOCMIRIBR/v4nMx8ZLH8txD3f7SLSRlV8uIqEsEmjBWinNEdkvE/B4LejNnuQemx28RlXtBDEPNkPDN3HIc08Ue6Tud/ciUGLAp2NydIcvDBqUegieqQd+IKO+90CpeXZbRBCN1BHLCyzN1tGE0HcyQicztcTWO1+HerhDW6C9f4exH+EC+bq7Wm9Tda/EALrV4osDO32m9gOBln7d6RHHefC7wR9uj9cmHwGVfJ3TdlWOb//FqWfGxsaNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CQbfEhqlNKf6UbNoH49tqM0zOAmq92qItby+ITKgtu8=;
+ b=WuiHFxxdx+zSZFVrU/SY9ZNSsWzc9+WD0DDLW76GYuEcMyEf0Qo0Ahphw6li8m3//DdgtHs8W0RKqBiWrTRzDUTHmZ+VYqs/NhQ+qRs9zTlNN0OUN0Ig5kCCjK6ClejvQaN8ASwqSiwYK+awJliyY01V4id16UE7IW1Rvy41Vqs5b3PVn4S25/YVrJEk8xQkkYZPEgQoIAsVPenCZOLoRkoMCVgnt2NmryjSWxhQ0cSnDVHUMqTuOvQKIHBfiP+8SSA5V/uC90lpzy46S3z5yz8V1qoA4u2Kv2xfTB1Kwgl6mgg1sgNetmoVebYNfNmqaGO00/h/PgK4ZVtAo2qIRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CQbfEhqlNKf6UbNoH49tqM0zOAmq92qItby+ITKgtu8=;
+ b=npb34cvgLh20pod/fzJ6IYFeqRwPP+XzwMMK6Tm98npnufcqXRIx/4/7ZZaUfBNC3XpEUsgh+ifKL+Uf+IxxvxhcRj6se4NrsuOUb0VD4jMauBGhoOGIT+Z9h6l3IHt2x+Dn+v0zhUxWsOdezaAiq53IX9bidxfCYnYH2Upjutk=
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.85) by
+ DM6PR11MB2572.namprd11.prod.outlook.com (20.176.100.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2367.24; Fri, 25 Oct 2019 09:07:29 +0000
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22]) by DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::3874:9f3c:5325:d22%6]) with mapi id 15.20.2387.023; Fri, 25 Oct 2019
+ 09:07:29 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <Codrin.Ciubotariu@microchip.com>, <linux-crypto@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mark.rutland@arm.com>, <alexandre.belloni@bootlin.com>,
+        <herbert@gondor.apana.org.au>, <arnd@arndb.de>,
+        <Tudor.Ambarus@microchip.com>, <Ludovic.Desroches@microchip.com>,
+        <robh+dt@kernel.org>, <mpm@selenic.com>
+Subject: Re: [PATCH 2/2] hwrng: atmel: add new platform support for sam9x60
+Thread-Topic: [PATCH 2/2] hwrng: atmel: add new platform support for sam9x60
+Thread-Index: AQHVixOa0hr3oqzTbEKwBZhiv5PNKg==
+Date:   Fri, 25 Oct 2019 09:07:28 +0000
+Message-ID: <d5274a26-ae1b-f1c2-136c-3e3b6a9a69e7@microchip.com>
+References: <20191024170452.2145-1-codrin.ciubotariu@microchip.com>
+ <20191024170452.2145-2-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20191024170452.2145-2-codrin.ciubotariu@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-MC-Unique: Lnyoon1zOo6zTh0Brqtzfw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0163.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1b::31) To DM6PR11MB3225.namprd11.prod.outlook.com
+ (2603:10b6:5:59::21)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20191025120719921
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d1f602ac-96c9-4f47-8ea5-08d7592ac2bf
+x-ms-traffictypediagnostic: DM6PR11MB2572:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB257239FF7F7269B2E1BDB74E87650@DM6PR11MB2572.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:242;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(346002)(136003)(376002)(199004)(189003)(256004)(7416002)(52116002)(14454004)(476003)(11346002)(2616005)(186003)(2906002)(66066001)(26005)(6506007)(31686004)(316002)(102836004)(486006)(110136005)(76176011)(71190400001)(478600001)(54906003)(71200400001)(53546011)(386003)(81166006)(305945005)(6486002)(446003)(7736002)(2201001)(8676002)(31696002)(229853002)(64756008)(25786009)(81156014)(4326008)(8936002)(99286004)(6246003)(5660300002)(6116002)(66476007)(66556008)(66446008)(3846002)(36756003)(66946007)(6512007)(86362001)(6436002)(2501003)(138113003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB2572;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WiTZTuJSHC+uq0YuseIV/QgWNeBJtCtfnMqKmKpktCwtHbDfy86ChIWf1Zgo9hDUuzEanVzRgUC4ZXzlBnW0msACqkha/sbe7IffNJeW3OLtLKU+qCXDMG+d9vJJnyOWSmNdauyNklGaPPzC6ieeTrMgj51uRhgVCQDlpV5ftdPx6aEY/nQmQ9CZLcjqzLIqhYkPQYYxbQZBgvxnr8nqHdJOWW9NlWWhTZo6jaTtzs6fQ4gx9B/nk+dFyslkp71cN4dOTfg6K2m+SL4YPhxo+jYOK8+FVi5XpUEwt0lue0G5vaG0MG9lArDJiex6/TOwmREhn4H1LoqPCRO4cLrq8kN523rCGvMz1hGv45VKNFhIK5wS0LL+DlHcLH+aPw5oL9yuCfSWjG8Js0Ub6yJujmV2MMX+NlU+iDqlX6Gno8zy18IvemwzYco79wuhUtZC
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B23E54D3BB3A5C4285E1997EB4B53632@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1f602ac-96c9-4f47-8ea5-08d7592ac2bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 09:07:28.8386
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HJZP/Sa1KqebVL5POBstR+KAJsu9aHgq2PPjzXsjShprazqXkasVA0ZKeH5D+idPQVQbz4g/rYwATPlWStNwYlge3COlT0o0c8kZnOWveiI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2572
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 25-10-2019 09:45, Andy Shevchenko wrote:
-> On Thu, Oct 24, 2019 at 11:38:26PM +0200, Hans de Goede wrote:
->> We have no docs for the CHT Crystal Cove PMIC. The Asus Zenfone-2 kernel
->> code has 2 Crystal Cove regulator drivers, one calls the PMIC a "Crystal
->> Cove Plus" PMIC and talks about Cherry Trail, so presuambly that one
->> could be used to get register info for the regulators if we need to
->> implement regulator support in the future.
->>
->> For now the sole purpose of this driver is to make
->> intel_soc_pmic_exec_mipi_pmic_seq_element work on devices with a
->> CHT Crystal Cove PMIC.
->>
->> Specifically this fixes the following MIPI PMIC sequence related errors
->> on e.g. an Asus T100HA:
->>
->> [  178.211801] intel_soc_pmic_exec_mipi_pmic_seq_element: No PMIC regist=
-ered
->> [  178.211897] [drm:intel_dsi_dcs_init_backlight_funcs [i915]] *ERROR* m=
-ipi_exec_pmic failed, error: -6
->>
->=20
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->=20
-> as long as name pattern uses "chtcc".
-
-As I already replied to your other similar remark, I would really like to
-stick with crc, crc to me means either crystal-cove or well a crc, cc trigg=
-ers
-different associations in my mind. Also other crystal-cove files also use c=
-rc
-in their filename. Or alternatively we could just write out crystalcove lik=
-e the
-gpio driver does: drivers/gpio/gpio-crystalcove.c
-
-Regards,
-
-Hans
-
-
-
->=20
->=20
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/acpi/Kconfig                  |  7 +++++
->>   drivers/acpi/Makefile                 |  1 +
->>   drivers/acpi/pmic/intel_pmic_chtcrc.c | 44 +++++++++++++++++++++++++++
->>   3 files changed, 52 insertions(+)
->>   create mode 100644 drivers/acpi/pmic/intel_pmic_chtcrc.c
->>
->> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
->> index 089f7f8e1be7..0f23d8b22c42 100644
->> --- a/drivers/acpi/Kconfig
->> +++ b/drivers/acpi/Kconfig
->> @@ -520,6 +520,13 @@ config BYTCRC_PMIC_OPREGION
->>   =09  This config adds ACPI operation region support for the Bay Trail
->>   =09  version of the Crystal Cove PMIC.
->>  =20
->> +config CHTCRC_PMIC_OPREGION
->> +=09bool "ACPI operation region support for Cherry Trail Crystal Cove PM=
-IC"
->> +=09depends on INTEL_SOC_PMIC
->> +=09help
->> +=09  This config adds ACPI operation region support for the Cherry Trai=
-l
->> +=09  version of the Crystal Cove PMIC.
->> +
->>   config XPOWER_PMIC_OPREGION
->>   =09bool "ACPI operation region support for XPower AXP288 PMIC"
->>   =09depends on MFD_AXP20X_I2C && IOSF_MBI=3Dy
->> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
->> index ee59b1db69a1..68853f23e901 100644
->> --- a/drivers/acpi/Makefile
->> +++ b/drivers/acpi/Makefile
->> @@ -110,6 +110,7 @@ obj-$(CONFIG_ACPI_EXTLOG)=09+=3D acpi_extlog.o
->>  =20
->>   obj-$(CONFIG_PMIC_OPREGION)=09+=3D pmic/intel_pmic.o
->>   obj-$(CONFIG_BYTCRC_PMIC_OPREGION) +=3D pmic/intel_pmic_bytcrc.o
->> +obj-$(CONFIG_CHTCRC_PMIC_OPREGION) +=3D pmic/intel_pmic_chtcrc.o
->>   obj-$(CONFIG_XPOWER_PMIC_OPREGION) +=3D pmic/intel_pmic_xpower.o
->>   obj-$(CONFIG_BXT_WC_PMIC_OPREGION) +=3D pmic/intel_pmic_bxtwc.o
->>   obj-$(CONFIG_CHT_WC_PMIC_OPREGION) +=3D pmic/intel_pmic_chtwc.o
->> diff --git a/drivers/acpi/pmic/intel_pmic_chtcrc.c b/drivers/acpi/pmic/i=
-ntel_pmic_chtcrc.c
->> new file mode 100644
->> index 000000000000..ebf8d3187df1
->> --- /dev/null
->> +++ b/drivers/acpi/pmic/intel_pmic_chtcrc.c
->> @@ -0,0 +1,44 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Intel Cherry Trail Crystal Cove PMIC operation region driver
->> + *
->> + * Copyright (C) 2019 Hans de Goede <hdegoede@redhat.com>
->> + */
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/init.h>
->> +#include <linux/mfd/intel_soc_pmic.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include "intel_pmic.h"
->> +
->> +/*
->> + * We have no docs for the CHT Crystal Cove PMIC. The Asus Zenfone-2 ke=
-rnel
->> + * code has 2 Crystal Cove regulator drivers, one calls the PMIC a "Cry=
-stal
->> + * Cove Plus" PMIC and talks about Cherry Trail, so presuambly that one
->> + * could be used to get register info for the regulators if we need to
->> + * implement regulator support in the future.
->> + *
->> + * For now the sole purpose of this driver is to make
->> + * intel_soc_pmic_exec_mipi_pmic_seq_element work on devices with a
->> + * CHT Crystal Cove PMIC.
->> + */
->> +static struct intel_pmic_opregion_data intel_chtcrc_pmic_opregion_data =
-=3D {
->> +=09.pmic_i2c_address =3D 0x6e,
->> +};
->> +
->> +static int intel_chtcrc_pmic_opregion_probe(struct platform_device *pde=
-v)
->> +{
->> +=09struct intel_soc_pmic *pmic =3D dev_get_drvdata(pdev->dev.parent);
->> +=09return intel_pmic_install_opregion_handler(&pdev->dev,
->> +=09=09=09ACPI_HANDLE(pdev->dev.parent), pmic->regmap,
->> +=09=09=09&intel_chtcrc_pmic_opregion_data);
->> +}
->> +
->> +static struct platform_driver intel_chtcrc_pmic_opregion_driver =3D {
->> +=09.probe =3D intel_chtcrc_pmic_opregion_probe,
->> +=09.driver =3D {
->> +=09=09.name =3D "cht_crystal_cove_pmic",
->> +=09},
->> +};
->> +builtin_platform_driver(intel_chtcrc_pmic_opregion_driver);
->> --=20
->> 2.23.0
->>
->=20
-
+SGkgQ29kcmluLA0KDQpPbiAyNC4xMC4yMDE5IDIwOjA0LCBDb2RyaW4gQ2l1Ym90YXJpdSB3cm90
+ZToNCj4gQWRkIHBsYXRmb3JtIHN1cHBvcnQgZm9yIHRoZSBuZXcgSVAgZm91bmQgb24gc2FtOXg2
+MCBTb0MuIEZvciB0aGlzDQo+IHZlcnNpb24sIGlmIHRoZSBwZXJpcGhlcmFsIGNsayBpcyBhYm92
+ZSAxMDBNSHosIHRoZSBIQUxGUiBiaXQgbXVzdCBiZQ0KPiBzZXQuIFRoaXMgYml0IGlzIGF2YWls
+YWJsZSBvbmx5IGlmIHRoZSBJUCBjYW4gZ2VuZXJhdGUgYSByYW5kb20gbnVtYmVyDQo+IGV2ZXJ5
+IDE2OCBjeWNsZXMgKGluc3RlYWQgb2YgODQpLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ29kcmlu
+IENpdWJvdGFyaXUgPGNvZHJpbi5jaXVib3Rhcml1QG1pY3JvY2hpcC5jb20+DQo+IC0tLQ0KPiAg
+ZHJpdmVycy9jaGFyL2h3X3JhbmRvbS9hdG1lbC1ybmcuYyB8IDM5ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKyksIDIgZGVs
+ZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jaGFyL2h3X3JhbmRvbS9hdG1l
+bC1ybmcuYyBiL2RyaXZlcnMvY2hhci9od19yYW5kb20vYXRtZWwtcm5nLmMNCj4gaW5kZXggZTU1
+NzA1NzQ1ZDVlLi4wYWE5NDI1ZTZjM2UgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2hhci9od19y
+YW5kb20vYXRtZWwtcm5nLmMNCj4gKysrIGIvZHJpdmVycy9jaGFyL2h3X3JhbmRvbS9hdG1lbC1y
+bmcuYw0KPiBAQCAtMTQsMTQgKzE0LDIyIEBADQo+ICAjaW5jbHVkZSA8bGludXgvY2xrLmg+DQo+
+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gICNpbmNsdWRlIDxsaW51eC9od19yYW5kb20uaD4N
+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9wbGF0
+Zm9ybV9kZXZpY2UuaD4NCj4gIA0KPiAgI2RlZmluZSBUUk5HX0NSCQkweDAwDQo+ICsjZGVmaW5l
+IFRSTkdfTVIJCTB4MDQNCj4gICNkZWZpbmUgVFJOR19JU1IJMHgxYw0KPiAgI2RlZmluZSBUUk5H
+X09EQVRBCTB4NTANCj4gIA0KPiAgI2RlZmluZSBUUk5HX0tFWQkweDUyNGU0NzAwIC8qIFJORyAq
+Lw0KPiAgDQo+ICsjZGVmaW5lIFRSTkdfSEFMRlIJQklUKDApIC8qIGdlbmVyYXRlIFJOIGV2ZXJ5
+IDE2OCBjeWNsZXMgKi8NCj4gKw0KPiArc3RydWN0IGF0bWVsX3RybmdfcGRhdGEgew0KPiArCWJv
+b2wgaGFzX2hhbGZfcmF0ZTsNCj4gK307DQo+ICsNCj4gIHN0cnVjdCBhdG1lbF90cm5nIHsNCj4g
+IAlzdHJ1Y3QgY2xrICpjbGs7DQo+ICAJdm9pZCBfX2lvbWVtICpiYXNlOw0KPiBAQCAtNjMsNiAr
+NzEsNyBAQCBzdGF0aWMgaW50IGF0bWVsX3RybmdfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZSAqcGRldikNCj4gIHsNCj4gIAlzdHJ1Y3QgYXRtZWxfdHJuZyAqdHJuZzsNCj4gIAlzdHJ1Y3Qg
+cmVzb3VyY2UgKnJlczsNCj4gKwljb25zdCBzdHJ1Y3QgYXRtZWxfdHJuZ19wZGF0YSAqcGRhdGE7
+DQo+ICAJaW50IHJldDsNCj4gIA0KPiAgCXRybmcgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwg
+c2l6ZW9mKCp0cm5nKSwgR0ZQX0tFUk5FTCk7DQo+IEBAIC03Nyw2ICs4NiwxNyBAQCBzdGF0aWMg
+aW50IGF0bWVsX3RybmdfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAl0
+cm5nLT5jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgTlVMTCk7DQo+ICAJaWYgKElTX0VS
+Uih0cm5nLT5jbGspKQ0KPiAgCQlyZXR1cm4gUFRSX0VSUih0cm5nLT5jbGspOw0KPiArCXBkYXRh
+ID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOw0KPiArCWlmICghcGRhdGEp
+DQo+ICsJCXJldHVybiAtRU5PREVWOw0KPiArDQo+ICsJaWYgKHBkYXRhLT5oYXNfaGFsZl9yYXRl
+KSB7DQo+ICsJCXVuc2lnbmVkIGxvbmcgcmF0ZSA9IGNsa19nZXRfcmF0ZSh0cm5nLT5jbGspOw0K
+PiArDQo+ICsJCS8qIGlmIHBlcmlwaGVyYWwgY2xrIGlzIGFib3ZlIDEwME1Ieiwgc2V0IEhBTEZS
+ICovDQo+ICsJCWlmIChyYXRlID4gMTAwMDAwMDAwKQ0KPiArCQkJd3JpdGVsKFRSTkdfSEFMRlIs
+IHRybmctPmJhc2UgKyBUUk5HX01SKTsNCj4gKwl9Pg0KPiAgCXJldCA9IGNsa19wcmVwYXJlX2Vu
+YWJsZSh0cm5nLT5jbGspOw0KPiAgCWlmIChyZXQpDQo+IEBAIC0xNDEsOSArMTYxLDI0IEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBhdG1lbF90cm5nX3BtX29wcyA9IHsNCj4gIH07
+DQo+ICAjZW5kaWYgLyogQ09ORklHX1BNICovDQo+ICANCj4gK3N0YXRpYyBzdHJ1Y3QgYXRtZWxf
+dHJuZ19wZGF0YSBhdDkxc2FtOWc0NV9jb25maWcgPSB7DQo+ICsJLmhhc19oYWxmX3JhdGUgPSBm
+YWxzZSwNCj4gK307DQoNCllvdSBjYW4gdXNlIGNvbnN0IGZvciB0aGlzLg0KDQo+ICsNCj4gK3N0
+YXRpYyBzdHJ1Y3QgYXRtZWxfdHJuZ19wZGF0YSBzYW05eDYwX2NvbmZpZyA9IHsNCj4gKwkuaGFz
+X2hhbGZfcmF0ZSA9IHRydWUsDQo+ICt9Ow0KPiArDQoNClNhbWUgaGVyZS4NCg0KPiAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfdHJuZ19kdF9pZHNbXSA9IHsNCj4gLQl7
+IC5jb21wYXRpYmxlID0gImF0bWVsLGF0OTFzYW05ZzQ1LXRybmciIH0sDQo+IC0JeyAvKiBzZW50
+aW5lbCAqLyB9DQo+ICsJew0KPiArCQkuY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxc2FtOWc0NS10
+cm5nIiwNCj4gKwkJLmRhdGEgPSAmYXQ5MXNhbTlnNDVfY29uZmlnLA0KPiArCX0sIHsNCj4gKwkJ
+LmNvbXBhdGlibGUgPSAibWljcm9jaGlwLHNhbTl4NjAtdHJuZyIsDQo+ICsJCS5kYXRhID0gJnNh
+bTl4NjBfY29uZmlnLA0KPiArCX0sIHsNCj4gKwkJLyogc2VudGluZWwgKi8NCj4gKwl9DQo+ICB9
+Ow0KPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYXRtZWxfdHJuZ19kdF9pZHMpOw0KPiAgDQo+
+IA0K
