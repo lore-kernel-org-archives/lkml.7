@@ -2,76 +2,81 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702B1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B32CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF712070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571995317;
-	bh=Aieb55nYMX5zzkdninwj8DhE8U97ilH0GnzMlqv6gDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W7kjkiJodkbaPL2Krryh0KsXasw4whlOu97o/NNLjeeRGE5bIhMBwllTzMdNC0laD
-	 TYQPmvKGLVzWjVMNeeLtMjIUpCITX7TOBbmef0n2s30vO6BldvyE4y5OOiJj3QWudH
-	 Wa43rdC33iVdnfjfyZNyz/p1FCpIIgkIVpC5ymO4=
+	by mail.kernel.org (Postfix) with ESMTP id 239BE2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438467AbfJYJV4 (ORCPT
+        id S2438496AbfJYJXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:21:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38156 "EHLO mx1.suse.de"
+        Fri, 25 Oct 2019 05:23:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34978 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438394AbfJYJVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:21:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F29F3B553;
-        Fri, 25 Oct 2019 09:21:43 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 11:21:43 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Robert Stupp <snazy@snazy.de>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-Message-ID: <20191025092143.GE658@dhcp22.suse.cz>
-References: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
- <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
+        id S1726350AbfJYJXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:23:19 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 68A0481B295D4CF832AE;
+        Fri, 25 Oct 2019 17:23:16 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
+ 17:23:09 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <jason@lakedaemon.net>, <andrew@lunn.ch>,
+        <gregory.clement@bootlin.com>, <sebastian.hesselbarth@gmail.com>,
+        <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] pinctrl: armada-37xx: remove unneeded semicolon
+Date:   Fri, 25 Oct 2019 17:22:33 +0800
+Message-ID: <20191025092233.25108-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 24-10-19 16:34:46, Randy Dunlap wrote:
-> [adding linux-mm + people]
-> 
-> I see only one change in the last 4 years:
-> 
-> commit dedca63504a204dc8410d98883fdc16dffa8cb80
-> Author: Potyra, Stefan <Stefan.Potyra@elektrobit.com>
-> Date:   Thu Jun 13 15:55:55 2019 -0700
-> 
->     mm/mlock.c: mlockall error for flag MCL_ONFAULT
-> 
-> 
-> On 10/24/19 12:36 AM, Robert Stupp wrote:
-> > Hi guys,
-> > 
-> > I've got an issue with `mlockall(MCL_CURRENT)` after upgrading Ubuntu 19.04 to 19.10 - i.e. kernel version change from 5.0.x to 5.3.x.
-> > 
-> > The following simple program hangs forever with one CPU running at 100% (kernel):
+Remove unneeded semicolon.
+This is detected by coccinelle.
 
-Can you capture everal snapshots of proc/$(pidof $YOURTASK)/stack while
-this is happening?
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+index 9df4277..fd32989 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -733,7 +733,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+ 			ret = 0;
+ 			break;
+ 		}
+-	};
++	}
+ 	if (ret) {
+ 		dev_err(dev, "no gpio-controller child node\n");
+ 		return ret;
+@@ -800,7 +800,7 @@ static int armada_37xx_gpiochip_register(struct platform_device *pdev,
+ 			ret = 0;
+ 			break;
+ 		}
+-	};
++	}
+ 	if (ret)
+ 		return ret;
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
+
