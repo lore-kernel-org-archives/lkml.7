@@ -2,119 +2,118 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BA2CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83BBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C8921D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E19621D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ig5SOSgv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIRKYTaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436922AbfJYIvg (ORCPT
+        id S2437269AbfJYIvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:51:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39237 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfJYIvf (ORCPT
+        Fri, 25 Oct 2019 04:51:40 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37632 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733259AbfJYIvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:51:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p12so1106994pgn.6
+        Fri, 25 Oct 2019 04:51:36 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q130so1157682wme.2
         for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8o6EjIfqN25bChdB576+plHQp91qpYydoxPIwoMERx4=;
-        b=ig5SOSgvEB3siL/ERQz6j33KrwwKzxL1zUp3xfMb5RU0dPThOC8RlTm44Jrra5oBDo
-         gDoq8FmENLk3bGlty1/AZbNnVJk/bCmcoQ+JPZo4FL8oyFbwtQNXi4NAi+iwFUi8MHuY
-         cKIfHTDHCl24b+kKXy6K+SFElDlXTwmHj4lEopxpWCVs8DgwS2sKQ7S7lh17HQNz2Nze
-         +QP0vWaEekwMRoTJpo2pRA6NbArcLoSNKtFr0ivdXHsSpXZC317WSzljDyRh4SbTshdL
-         ywU9VRy42nEuM273qR+BmINlEjy43G7v1mQiMxQHZF/mM0F+r32CLl6tJEbH0VVWRKLH
-         ckTw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aMQiRvfvzltgh99VMklkfKOfsR6mD4ds3sE5X/Su2O8=;
+        b=TIRKYTaBshWTPJj4UWu519prJLZg9t6m71FKYN77RqdVJbA6wswRsoDddyDRllrah9
+         eLJ3ZX1U4jp5zVDyhyakhz/h9viCJIKMk5e+zoedFAa6MS3btKN3u9No0budl9ClmrlA
+         omN6AAfjUcChu8sDFXBzSTwu5dL8CNs49ncvElnoIN28khvj/Y/ZE2uOo4BtoIrCU1US
+         E77RHhb6oKvX4/M+nYwCG/kFefGqMwUp0YwFG21cyaPOv93dMr9pScAm3j1wNMd1HkLg
+         37EdA8Ii06PBPKCqELNApcGdvtq1xTGtSGKw36wBnrK4qlMwycpOMVtKMxWizxSwsOhq
+         ePww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8o6EjIfqN25bChdB576+plHQp91qpYydoxPIwoMERx4=;
-        b=bff9U3UcKFNQW+6J/BWduQEn5rnC7pfk3XP0VJsLpGqE0SCGYXbAl1VnM8pFM5p8Ua
-         PfyyYWeW0sKfzVgWm8u1xO8I8KC3akpXlhP10hJ9Zy7RryUb7eiSlINH/B9tOqOgIANt
-         q0CFa1NT10pV0WKa0SV4hq7hNC3S6FMJ6gIBwzQJ7o9ICziyoAWF5LboP0RKGqyvxkl+
-         QaJ9n3IjH+I7iGsjUgusn2VMl4N2uSNWMn2ZBX98ce5rbbBmZc8ABlCCzC1TXV5aOcPy
-         vGrhmsIuB4f5DA+sS0s+OzQ5Xm5GcNanFNsZwSaliP3YHHIozFJUD8sUxt1hf/gL3Y0r
-         B1yQ==
-X-Gm-Message-State: APjAAAWpzegWhlmoqfFAwK5AP7h4sCiaBlphCvHeMJV8gHAWC0xLi/qj
-        i444T8UQ1cUP65+oJaKg1+W3Ow==
-X-Google-Smtp-Source: APXvYqyeYikLu3j/t2D6AwdxoxPXvX51u7+dkh7OgZVYL/qG+aBDEDqw3nTis5fGL/9ccbruKTJ12g==
-X-Received: by 2002:a65:5503:: with SMTP id f3mr2973662pgr.351.1571993495124;
-        Fri, 25 Oct 2019 01:51:35 -0700 (PDT)
-Received: from localhost ([122.172.151.112])
-        by smtp.gmail.com with ESMTPSA id f8sm1454698pfn.147.2019.10.25.01.51.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 01:51:34 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 14:21:32 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ACPI: processor: Add QoS requests for all CPUs
-Message-ID: <20191025085132.qk6iynyavgvp7wlm@vireshk-i7>
-References: <2435090.1mJ0fSsrDY@kreacher>
- <20191025025343.tyihliza45os3e4r@vireshk-i7>
- <CAJZ5v0hyAX6zpr+2EzURg7ACmaXhbTAc7mBnr9ep11LkF1EBOg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aMQiRvfvzltgh99VMklkfKOfsR6mD4ds3sE5X/Su2O8=;
+        b=MltvLQd/9Bj0LQkRA0A4FAnyPOjxRUKEI0diHpfk09ACtQVFuJzuy8Defa4OrjVgwC
+         1NQ+xT+0yu0HA3/nGbHVrydltiLjUC1b8pwt1tV/kcRB9aNogFS6LKLX1Sc1MNH/SLsK
+         R7Q+t6tNW7TAT8EudzlubOOBA/QreYyGZ9YLY0odNOfZQRKrnmqb8ntuDKGmu5/pfnEW
+         8TGx0ivWKn1KamDpZcCGOZii2Z/oT3WKiw9qrV9b+7pNsHIHTiFMcTNuJ7K9OQ2np3Jy
+         EVW0+xL2GbSH6sDd1OeWmIlGcwv1H5VbwvacKrAopmj/GXloauf/Q2F3hLrC7voLJdS/
+         fjJQ==
+X-Gm-Message-State: APjAAAXkAtVboTsuXdfJf43Xrd88kpjRBoBpMx0tzxUcExmXDzRz6X/g
+        iUI4kB+iesa3sA8VaL37qM5N42hJ18ivEE9yO1BbLalj9BQ=
+X-Google-Smtp-Source: APXvYqwXe4RLnYUEE5xCp6/dPcTi6vC7x27ZS6aisYOk3qLPoJRv2XdeWFAUsCJ7MCm/WyUwKOMjpH4VuQ/H0xMKp0o=
+X-Received: by 2002:a1c:b4c1:: with SMTP id d184mr2266482wmf.37.1571993494613;
+ Fri, 25 Oct 2019 01:51:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hyAX6zpr+2EzURg7ACmaXhbTAc7mBnr9ep11LkF1EBOg@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191025075335.GC32742@smile.fi.intel.com> <20191025075540.GD32742@smile.fi.intel.com>
+In-Reply-To: <20191025075540.GD32742@smile.fi.intel.com>
+From:   Andrey Zhizhikin <andrey.z@gmail.com>
+Date:   Fri, 25 Oct 2019 10:51:23 +0200
+Message-ID: <CAHtQpK5ue=6u9ABugyQgzZODt9XuOyW-H4VvcZV3Vmacx8a6pg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>, lgirdwood@gmail.com,
+        broonie@kernel.org, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-10-19, 10:17, Rafael J. Wysocki wrote:
-> On Fri, Oct 25, 2019 at 4:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 25-10-19, 02:41, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Fri, Oct 25, 2019 at 9:55 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Oct 25, 2019 at 10:53:35AM +0300, Andy Shevchenko wrote:
+> > On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
+> > > This patchset introduces additional regulator driver for Intel Cherry
+> > > Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
+> > > PMIC, which is used to instantiate this regulator.
 > > >
-> > > The _PPC change notifications from the platform firmware are per-CPU,
-> > > so acpi_processor_ppc_init() needs to add a frequency QoS request
-> > > for each CPU covered by a cpufreq policy to take all of them into
-> > > account.
+> > > Regulator support for this PMIC was present in kernel release from Intel
+> > > targeted Aero platform, but was not entirely ported upstream and has
+> > > been omitted in mainline kernel releases. Consecutively, absence of
+> > > regulator caused the SD Card interface not to be provided with Vqcc
+> > > voltage source needed to operate with UHS-I cards.
 > > >
-> > > Even though ACPI thermal control of CPUs sets frequency limits
-> > > per processor package, it also needs a frequency QoS request for each
-> > > CPU in a cpufreq policy in case some of them are taken offline and
-> > > the frequency limit needs to be set through the remaining online
-> > > ones (this is slightly excessive, because all CPUs covered by one
-> > > cpufreq policy will set the same frequency limit through their QoS
-> > > requests, but it is not incorrect).
+> > > Following patches are addessing this issue and making sd card interface
+> > > to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
+> > > of the SD Card interface in consumers and exposes optional "vqmmc"
+> > > voltage source, which mmc driver uses to switch signalling voltages
+> > > between 1.8V and 3.3V.
 > > >
-> > > Modify the code in accordance with the above observations.
+> > > This set contains of 2 patches: one is implementing the regulator driver
+> > > (based on a non upstreamed version from Intel Aero), and another patch
+> > > registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
 > >
-> > I am not sure if I understood everything you just said, but I don't
-> > see how things can break with the current code we have.
-> >
-> > Both acpi_thermal_cpufreq_init() and acpi_processor_ppc_init() are
-> > called from acpi_processor_notifier() which is registered as a policy
-> > notifier and is called when a policy is created or removed. Even if
-> > some CPUs of a policy go offline, it won't matter as the request for
-> > the policy stays and it will be dropped only when all the CPUs of a
-> > policy go offline.
-> >
-> > What am I missing ?
-> 
-> The way the request is used.
+> > Thank you.
+> > Hans, Cc'ed, has quite interested in these kind of patches.
+> > Am I right, Hans?
+>
+> Since it's about UHS/SD, Cc to Adrian as well.
 
-Yes, I missed the point :)
+Thanks for looking into this, and including also interested people
+here. I've included only maintainers, but all interested parties are
+also very welcomed.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
 -- 
-viresh
+Regards,
+Andrey.
