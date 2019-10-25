@@ -2,96 +2,184 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15492CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21AFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6BC321D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A7221D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHy7E4JV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfJYTFt (ORCPT
+        id S1726596AbfJYTHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:05:49 -0400
-Received: from smtprelay0017.hostedemail.com ([216.40.44.17]:50696 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725847AbfJYTFt (ORCPT
+        Fri, 25 Oct 2019 15:07:47 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:39034 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfJYTHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:05:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AE4838384364;
-        Fri, 25 Oct 2019 19:05:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: food96_326534c4f0a3f
-X-Filterd-Recvd-Size: 2493
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 25 Oct 2019 19:05:46 +0000 (UTC)
-Message-ID: <220d8f2c1b299d2e71fdcf50b98286aae5b0c6f2.camel@perches.com>
-Subject: Re: [PATCH 3.16 47/47] KVM: x86/vPMU: refine kvm_pmu err msg when
- event creation failed
-From:   Joe Perches <joe@perches.com>
-To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Date:   Fri, 25 Oct 2019 12:05:43 -0700
-In-Reply-To: <lsq.1572026582.631294584@decadent.org.uk>
-References: <lsq.1572026582.631294584@decadent.org.uk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 25 Oct 2019 15:07:46 -0400
+Received: by mail-yw1-f67.google.com with SMTP id k127so1197012ywc.6;
+        Fri, 25 Oct 2019 12:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7PioBQzt1SxKot1k2zyn69TdTTFkJtrCnw+zC1H1TUg=;
+        b=BHy7E4JV0EVw+PQo4oBTqfqC6zfjWD/oIyOWP/Bi1jmvqtkSOVLGv4Ufbe2IXKT9kE
+         RfBbjKKpVrmYfQooxBlAR6oQqO0RvGccy0zLsEmgUnIwfbvmrcL140ThP8429w8iVXRN
+         h5yi7+dKnReb9z67k/L9nmzZcn05IV/1llbiGSdeJmsBKJzTsUkSQD9KDQJ4v8LOpivP
+         CU0nZiNO4KSEPNn/81l6hhXMD1ze+hJjPoqL7juhZLN0FJqTVtSZ382kIXec3ZcPLCti
+         W58Dgj8/V1zVqTBCQNyGVV2YzPbljVH8FnslkeMsYvW/f65X5yiteIRLfKjKGKDubaJ5
+         Yz1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7PioBQzt1SxKot1k2zyn69TdTTFkJtrCnw+zC1H1TUg=;
+        b=XbFUx7KM4SyVhmegl0qZxMB8SGBK8FmpfhKKKqd5GUWSvP21mXgPbXHku4fPQ/7DV/
+         9hBh7oSPF5FSVYQBi2miNJ4KdOxBlzWuqhzkcQ2txc4CDoF+HtdXsvLsq2ptWbS1DbPD
+         NJszeZm2UzblwxXAyktBNuUfv4aEOpRVrY8iF39E5cUtx1PXYO8OI603Vcn+K4tj2b/p
+         SLpo9A/BCYeyyEA0sPDM+8FoG/cPBZ7PTS+YD1qKhpFdZs4QJ+kYAlr5tqhV+YCvl+eg
+         yTa0mZ76CXg0YWTgPlOqUdC4pk0PW0+Kpw8XMyWYUgw9InxZKWzu3VX1xJgcsaoj9saU
+         ZMYA==
+X-Gm-Message-State: APjAAAXSIjv9dU4qXnV7kAZObr81NL3ooOweV90JufUnSQEUR9sB53iD
+        nMmd3uqB+banexVn0/icy9fWPN18
+X-Google-Smtp-Source: APXvYqzNJrQhr2JXatlntkdOP58PQNejFDYnA7//rfqlYq9YhvlK3DQmJIaGvUqiyXBKaoinUUWgAg==
+X-Received: by 2002:a81:494b:: with SMTP id w72mr3460774ywa.435.1572030465082;
+        Fri, 25 Oct 2019 12:07:45 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id d205sm2408236ywh.75.2019.10.25.12.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 12:07:44 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     slongerbeam@gmail.com
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        linux-kernel@vger.kernel.org, Adam Ford <aford173@gmail.com>
+Subject: [PATCH] media: ov5640: Put max framerate into table and simplify check
+Date:   Fri, 25 Oct 2019 14:07:23 -0500
+Message-Id: <20191025190723.21105-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 19:03 +0100, Ben Hutchings wrote:
-> 3.16.76-rc1 review patch.  If anyone has any objections, please let me know.
+Currently the various modes are placed into a table, but when
+ov5640_find_mode is called, it has to double check whether
+or not the requested framerate is tolerated by the mode.
+The determination is based on checking hact, vact, and frame rate.
 
-This seems more like an enhancement than a bug fix.
+Only 640x480 is allowed at 60fps and QSXGA is limited to 15fps, but
+as the number of permitted frame rates change, this will begin to
+add more and more complexity to the check.
 
-Is this really the type of patch that is appropriate
-for stable?
+This patch simplifies the check by adding the max framerate
+allowed for each mode into the table of modes.  It then compares
+the requested framerate to the max permitted in the mode's table.
+This reduces the number of comparisions to one down from three
+at run-time.
 
-> ------------------
-> 
-> From: Like Xu <like.xu@linux.intel.com>
-> 
-> commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
-> 
-> If a perf_event creation fails due to any reason of the host perf
-> subsystem, it has no chance to log the corresponding event for guest
-> which may cause abnormal sampling data in guest result. In debug mode,
-> this message helps to understand the state of vPMC and we may not
-> limit the number of occurrences but not in a spamming style.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Like Xu <like.xu@linux.intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> [bwh: Backported to 3.16: adjust context]
-> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> ---
->  arch/x86/kvm/pmu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -187,8 +187,8 @@ static void reprogram_counter(struct kvm
->  						 intr ? kvm_perf_overflow_intr :
->  						 kvm_perf_overflow, pmc);
->  	if (IS_ERR(event)) {
-> -		printk_once("kvm: pmu event creation failed %ld\n",
-> -				PTR_ERR(event));
-> +		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
-> +			    PTR_ERR(event), pmc->idx);
->  		return;
->  	}
->  
-> 
+Signed-off-by: Adam Ford <aford173@gmail.com>
+
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 5e495c833d32..19e10c59860b 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -189,6 +189,7 @@ struct ov5640_mode_info {
+ 	u32 vtot;
+ 	const struct reg_value *reg_data;
+ 	u32 reg_data_size;
++	u32 max_fps;
+ };
+ 
+ struct ov5640_ctrls {
+@@ -544,6 +545,7 @@ static const struct ov5640_mode_info ov5640_mode_init_data = {
+ 	0, SUBSAMPLING, 640, 1896, 480, 984,
+ 	ov5640_init_setting_30fps_VGA,
+ 	ARRAY_SIZE(ov5640_init_setting_30fps_VGA),
++	OV5640_30_FPS,
+ };
+ 
+ static const struct ov5640_mode_info
+@@ -551,39 +553,48 @@ ov5640_mode_data[OV5640_NUM_MODES] = {
+ 	{OV5640_MODE_QCIF_176_144, SUBSAMPLING,
+ 	 176, 1896, 144, 984,
+ 	 ov5640_setting_QCIF_176_144,
+-	 ARRAY_SIZE(ov5640_setting_QCIF_176_144)},
++	 ARRAY_SIZE(ov5640_setting_QCIF_176_144),
++	 OV5640_30_FPS},
+ 	{OV5640_MODE_QVGA_320_240, SUBSAMPLING,
+ 	 320, 1896, 240, 984,
+ 	 ov5640_setting_QVGA_320_240,
+-	 ARRAY_SIZE(ov5640_setting_QVGA_320_240)},
++	 ARRAY_SIZE(ov5640_setting_QVGA_320_240),
++	 OV5640_30_FPS},
+ 	{OV5640_MODE_VGA_640_480, SUBSAMPLING,
+ 	 640, 1896, 480, 1080,
+ 	 ov5640_setting_VGA_640_480,
+-	 ARRAY_SIZE(ov5640_setting_VGA_640_480)},
++	 ARRAY_SIZE(ov5640_setting_VGA_640_480),
++	 OV5640_60_FPS},
+ 	{OV5640_MODE_NTSC_720_480, SUBSAMPLING,
+ 	 720, 1896, 480, 984,
+ 	 ov5640_setting_NTSC_720_480,
+-	 ARRAY_SIZE(ov5640_setting_NTSC_720_480)},
++	 ARRAY_SIZE(ov5640_setting_NTSC_720_480),
++	OV5640_30_FPS},
+ 	{OV5640_MODE_PAL_720_576, SUBSAMPLING,
+ 	 720, 1896, 576, 984,
+ 	 ov5640_setting_PAL_720_576,
+-	 ARRAY_SIZE(ov5640_setting_PAL_720_576)},
++	 ARRAY_SIZE(ov5640_setting_PAL_720_576),
++	 OV5640_30_FPS},
+ 	{OV5640_MODE_XGA_1024_768, SUBSAMPLING,
+ 	 1024, 1896, 768, 1080,
+ 	 ov5640_setting_XGA_1024_768,
+-	 ARRAY_SIZE(ov5640_setting_XGA_1024_768)},
++	 ARRAY_SIZE(ov5640_setting_XGA_1024_768),
++	 OV5640_30_FPS},
+ 	{OV5640_MODE_720P_1280_720, SUBSAMPLING,
+ 	 1280, 1892, 720, 740,
+ 	 ov5640_setting_720P_1280_720,
+-	 ARRAY_SIZE(ov5640_setting_720P_1280_720)},
++	 ARRAY_SIZE(ov5640_setting_720P_1280_720),
++	 OV5640_30_FPS},
+ 	{OV5640_MODE_1080P_1920_1080, SCALING,
+ 	 1920, 2500, 1080, 1120,
+ 	 ov5640_setting_1080P_1920_1080,
+-	 ARRAY_SIZE(ov5640_setting_1080P_1920_1080)},
++	 ARRAY_SIZE(ov5640_setting_1080P_1920_1080),
++	 OV5640_30_FPS},
+ 	{OV5640_MODE_QSXGA_2592_1944, SCALING,
+ 	 2592, 2844, 1944, 1968,
+ 	 ov5640_setting_QSXGA_2592_1944,
+-	 ARRAY_SIZE(ov5640_setting_QSXGA_2592_1944)},
++	 ARRAY_SIZE(ov5640_setting_QSXGA_2592_1944),
++	 OV5640_15_FPS},
+ };
+ 
+ static int ov5640_init_slave_id(struct ov5640_dev *sensor)
+@@ -1606,14 +1617,8 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
+ 	    (!nearest && (mode->hact != width || mode->vact != height)))
+ 		return NULL;
+ 
+-	/* Only 640x480 can operate at 60fps (for now) */
+-	if (fr == OV5640_60_FPS &&
+-	    !(mode->hact == 640 && mode->vact == 480))
+-		return NULL;
+-
+-	/* 2592x1944 only works at 15fps max */
+-	if ((mode->hact == 2592 && mode->vact == 1944) &&
+-	    fr > OV5640_15_FPS)
++	/* Check to see if the current mode exceeds the max frame rate */
++	if (ov5640_framerates[fr] > ov5640_framerates[mode->max_fps])
+ 		return NULL;
+ 
+ 	return mode;
+-- 
+2.17.1
 
