@@ -2,90 +2,94 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EB6CA9EBE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904A7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDAE21E6F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572039217;
-	bh=FejHKcLxUD6YZa9A0tJyNtYYQaYIFbX8ad+SM9QQ0Vc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N4QP7avqemJaSgkaIrjH0mSbN7UCKrr4kbXYxeFeGJ6Q76OrY72kMmCIlSG//9OZY
-	 K/7ceQ5y07ztBWwSf9aAdcMGYxfIy043gsnFYCAXPFAMKBFeYLGfzRLXcdq+YFGYRj
-	 oNIMRkLLNiDqOlhQnZHr7ffexiNlfFqZ5SwF8w3U=
+	by mail.kernel.org (Postfix) with ESMTP id 5700D21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:33:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrasXp4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfJYVdg (ORCPT
+        id S1726599AbfJYVdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:33:36 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44317 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfJYVdg (ORCPT
+        Fri, 25 Oct 2019 17:33:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25352 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725801AbfJYVdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:33:36 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s71so2530383oih.11;
-        Fri, 25 Oct 2019 14:33:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=YVOI5BksXqXVDYjh4ZHfhwaKBf7oo5QOi6Ea1fnvZZA=;
-        b=joRYFP9buimVYGbL4DeMgOM9yzLWMV5TFSeuGNLBXIC+KBLtdo7RcgNkb3F2T9h/Cb
-         +ay4L+iWFU1fXZoXR6TmNGNcCKfGyiVz2/16USRdkFwHANMrGhHiVZWXXkkhzrglk2bB
-         8Cj2u8VqDzwH6044NyMN194qgVJdPhAxVfOl0j5R9gM7b6pUOmT0KSoALlYhrqaLiiCN
-         w5JOrNB1AvuqzrAp7W6qvmkBW5tvNW3yRToH5CgkA8id2Ue7ha92yP2kQ139HjsWoIpY
-         uDlbWxGlZTgOSIEZqgdGST9Tr31YrE8guEFPT1IagKKDuAqxEHFiq3D749QZ3nQf6vNp
-         tZUA==
-X-Gm-Message-State: APjAAAXarS3it9Y35/V3vR6YS60j/eQ0PH5xnI9+8hAcOcJJLk4XywQK
-        zxVBvf4SW+7ekUgxdgBGbg==
-X-Google-Smtp-Source: APXvYqxYjwJxn6QbHvgIuZeN2Tf1vqbH+R6KZFoYsxBwWvCaHLGlk2Yy19NAAb3evbHiPlC//+mPmQ==
-X-Received: by 2002:aca:c457:: with SMTP id u84mr4804204oif.35.1572039215372;
-        Fri, 25 Oct 2019 14:33:35 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t12sm1116390otq.61.2019.10.25.14.33.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:33:34 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 16:33:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Eugen.Hristev@microchip.com
-Cc:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Eugen.Hristev@microchip.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: sama5d4_wdt: add
-  microchip,sam9x60-wdt compatible
-Message-ID: <20191025213334.GA23280@bogus>
-References: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571648890-15140-1-git-send-email-eugen.hristev@microchip.com>
-Content-Language: en-US
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 25 Oct 2019 17:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572039225;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V+bF0QtZ1XTU+DOJV+lanoshTKDpNiumcmQH+i3m6S0=;
+        b=hrasXp4G4AOZBEXJOlFz/Ztn/4YjTTfNGW83/juxhU1XVgiZ8DHg5HZIwXW6ZIPpsCphGb
+        dITZWAawb/KJlUiv/ftJMsrDnm0eI1eu5H5+6XB+JMemitb8bAEaaAYlmiez3dozVoFErI
+        6637Ti7/gK5khjJfDd0vUhqO7e7z2SI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-WvtHTBd2Nn2Fgt22bTNHcw-1; Fri, 25 Oct 2019 17:33:41 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B3A147B;
+        Fri, 25 Oct 2019 21:33:40 +0000 (UTC)
+Received: from emilne (unknown [10.18.25.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 55D9764020;
+        Fri, 25 Oct 2019 21:33:39 +0000 (UTC)
+Message-ID: <557baf9f96bf15982dea0ad063412834bfbdccaa.camel@redhat.com>
+Subject: Re: [PATCH] lpfc: fix build error of lpfc_debugfs.c for
+ vfree/vmalloc
+From:   "Ewan D. Milne" <emilne@redhat.com>
+To:     James Smart <jsmart2021@gmail.com>, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        martin.petersen@oracle.com, sfr@canb.auug.org.au,
+        Dick Kennedy <dick.kennedy@broadcom.com>
+Date:   Fri, 25 Oct 2019 17:33:38 -0400
+In-Reply-To: <20191025182530.26653-1-jsmart2021@gmail.com>
+References: <20191025182530.26653-1-jsmart2021@gmail.com>
+Mime-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: WvtHTBd2Nn2Fgt22bTNHcw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 21 Oct 2019 09:14:05 +0000, <Eugen.Hristev@microchip.com> wrote:
-> 
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> The Atmel sama5d4_wdt needs to be compatible with microchip,sam9x60-wdt
-> The sama5d4_wdt driver is updated to work with both hardware blocks
-> (sama5d4/sama5d2 and sam9x60 based blocks)
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+On Fri, 2019-10-25 at 11:25 -0700, James Smart wrote:
+> lpfc_debufs.c was missing include of vmalloc.h when compiled on PPC.
+>=20
+> Add missing header.
+>=20
+> Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+> Signed-off-by: James Smart <jsmart2021@gmail.com>
 > ---
->  Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+>  drivers/scsi/lpfc/lpfc_debugfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_de=
+bugfs.c
+> index ab124f7d50d6..6c8effcfc8ae 100644
+> --- a/drivers/scsi/lpfc/lpfc_debugfs.c
+> +++ b/drivers/scsi/lpfc/lpfc_debugfs.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/ctype.h>
+> +#include <linux/vmalloc.h>
+> =20
+>  #include <scsi/scsi.h>
+>  #include <scsi/scsi_device.h>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+
