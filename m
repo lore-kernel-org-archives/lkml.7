@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56249CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D197CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA70222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451C4222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011831;
-	bh=lLl/382NG8pDVJRx0pzc1ZEuxoHjguG+r8UTBHq+76s=;
+	s=default; t=1572011836;
+	bh=zeqYmL5GoaVYe5Q3NXD8KEAQqOx4fkn4rH1/8+vbsF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PoM6tI2Y8J2yUg2nP93keAfxVkL49l5hjKMYh/90RD6xkYCYdGjZdhIrJaWsXf3/6
-	 sFXj7fTId0jObB3P+NVYKOr/k/HoALksBUUY9GZKouV0p7+KUP43pBg+03Dzraq20s
-	 iG+vZPgy6EM/oQvXuYvVAh7X0td7hQ17NBO8YXLs=
+	b=R+ulK0FAdhYt+wbOV5QDDagnN1J0wx+oWAK3cfgSYWFacjw/zsL2RCjD3ec++Ld+i
+	 FQKqAOvltmKi7Q7sfxKYFWPPyTUBqzja7G4kdopj2XgMKfnAnEu5MJqDq0UeoDdzrH
+	 RxQOQLHUZHNbOSE7mGuRB5rlsrAhkHekve7Eul/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505278AbfJYN5K (ORCPT
+        id S2394819AbfJYN5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51708 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394797AbfJYN5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:08 -0400
+        id S2502373AbfJYN5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E5521E6F;
-        Fri, 25 Oct 2019 13:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28CDC222C4;
+        Fri, 25 Oct 2019 13:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011826;
-        bh=lLl/382NG8pDVJRx0pzc1ZEuxoHjguG+r8UTBHq+76s=;
+        s=default; t=1572011829;
+        bh=zeqYmL5GoaVYe5Q3NXD8KEAQqOx4fkn4rH1/8+vbsF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YyITTS1GBtMEPt6oj5R13jY3BqHEx3rtH0SIA3td2rlICIkboWxbVOWTnsZL54w4e
-         kFG6BT2NWP/Q5IO9agejJG9OfqcFwHuPFHhBYr2sTFFwkqliBLZGLf/ENz/mybFs/C
-         +YgdknK0kGw+nvU9pjwj70ZSvoCvuDItsZE2fKCQ=
+        b=yYQlufbZmOfkqYd7De4EcI2wn5WlWcHvwjBbPmiPnWKCwERPFxNzC3IVG6H1Y0O+J
+         EoIAhprKZd3V5weNQODotRZGLP901bxtwNsdZOj8jcXNLFf2DJKTMNEjJcy0TkE9v4
+         PeEIuAptOw+BDVyuUcA6ITqiME8BBimsvJzdToWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@gmail.com>,
-        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 35/37] ipv6: Handle race in addrconf_dad_work
-Date:   Fri, 25 Oct 2019 09:55:59 -0400
-Message-Id: <20191025135603.25093-35-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 36/37] bdi: Do not use freezable workqueue
+Date:   Fri, 25 Oct 2019 09:56:00 -0400
+Message-Id: <20191025135603.25093-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -61,93 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
+[ Upstream commit a2b90f11217790ec0964ba9c93a4abb369758c26 ]
 
-Rajendra reported a kernel panic when a link was taken down:
+A removable block device, such as NVMe or SSD connected over Thunderbolt
+can be hot-removed any time including when the system is suspended. When
+device is hot-removed during suspend and the system gets resumed, kernel
+first resumes devices and then thaws the userspace including freezable
+workqueues. What happens in that case is that the NVMe driver notices
+that the device is unplugged and removes it from the system. This ends
+up calling bdi_unregister() for the gendisk which then schedules
+wb_workfn() to be run one more time.
 
-[ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
-[ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
+However, since the bdi_wq is still frozen flush_delayed_work() call in
+wb_shutdown() blocks forever halting system resume process. User sees
+this as hang as nothing is happening anymore.
 
-<snip>
+Triggering sysrq-w reveals this:
 
-[ 6870.570501] Call Trace:
-[ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
-[ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
-[ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
-[ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
-[ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
-[ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
-[ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
-[ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
-[ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
-[ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
-[ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
-[ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
-[ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
+  Workqueue: nvme-wq nvme_remove_dead_ctrl_work [nvme]
+  Call Trace:
+   ? __schedule+0x2c5/0x630
+   ? wait_for_completion+0xa4/0x120
+   schedule+0x3e/0xc0
+   schedule_timeout+0x1c9/0x320
+   ? resched_curr+0x1f/0xd0
+   ? wait_for_completion+0xa4/0x120
+   wait_for_completion+0xc3/0x120
+   ? wake_up_q+0x60/0x60
+   __flush_work+0x131/0x1e0
+   ? flush_workqueue_prep_pwqs+0x130/0x130
+   bdi_unregister+0xb9/0x130
+   del_gendisk+0x2d2/0x2e0
+   nvme_ns_remove+0xed/0x110 [nvme_core]
+   nvme_remove_namespaces+0x96/0xd0 [nvme_core]
+   nvme_remove+0x5b/0x160 [nvme]
+   pci_device_remove+0x36/0x90
+   device_release_driver_internal+0xdf/0x1c0
+   nvme_remove_dead_ctrl_work+0x14/0x30 [nvme]
+   process_one_work+0x1c2/0x3f0
+   worker_thread+0x48/0x3e0
+   kthread+0x100/0x140
+   ? current_work+0x30/0x30
+   ? kthread_park+0x80/0x80
+   ret_from_fork+0x35/0x40
 
-addrconf_dad_work is kicked to be scheduled when a device is brought
-up. There is a race between addrcond_dad_work getting scheduled and
-taking the rtnl lock and a process taking the link down (under rtnl).
-The latter removes the host route from the inet6_addr as part of
-addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
-to use the host route in ipv6_ifa_notify. If the down event removes
-the host route due to the race to the rtnl, then the BUG listed above
-occurs.
+This is not limited to NVMes so exactly same issue can be reproduced by
+hot-removing SSD (over Thunderbolt) while the system is suspended.
 
-This scenario does not occur when the ipv6 address is not kept
-(net.ipv6.conf.all.keep_addr_on_down = 0) as addrconf_ifdown sets the
-state of the ifp to DEAD. Handle when the addresses are kept by checking
-IF_READY which is reset by addrconf_ifdown.
+Prevent this from happening by removing WQ_FREEZABLE from bdi_wq.
 
-The 'dead' flag for an inet6_addr is set only under rtnl, in
-addrconf_ifdown and it means the device is getting removed (or IPv6 is
-disabled). The interesting cases for changing the idev flag are
-addrconf_notify (NETDEV_UP and NETDEV_CHANGE) and addrconf_ifdown
-(reset the flag). The former does not have the idev lock - only rtnl;
-the latter has both. Based on that the existing dead + IF_READY check
-can be moved to right after the rtnl_lock in addrconf_dad_work.
-
-Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
-Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: AceLan Kao <acelan.kao@canonical.com>
+Link: https://marc.info/?l=linux-kernel&m=138695698516487
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=204385
+Link: https://lore.kernel.org/lkml/20191002122136.GD2819@lahna.fi.intel.com/#t
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/addrconf.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ mm/backing-dev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index d2968a79abea8..75f520db6a6db 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -3974,6 +3974,12 @@ static void addrconf_dad_work(struct work_struct *w)
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index 72e6d0c55cfad..00277c8855c68 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -249,8 +249,8 @@ static int __init default_bdi_init(void)
+ {
+ 	int err;
  
- 	rtnl_lock();
+-	bdi_wq = alloc_workqueue("writeback", WQ_MEM_RECLAIM | WQ_FREEZABLE |
+-					      WQ_UNBOUND | WQ_SYSFS, 0);
++	bdi_wq = alloc_workqueue("writeback", WQ_MEM_RECLAIM | WQ_UNBOUND |
++				 WQ_SYSFS, 0);
+ 	if (!bdi_wq)
+ 		return -ENOMEM;
  
-+	/* check if device was taken down before this delayed work
-+	 * function could be canceled
-+	 */
-+	if (idev->dead || !(idev->if_flags & IF_READY))
-+		goto out;
-+
- 	spin_lock_bh(&ifp->lock);
- 	if (ifp->state == INET6_IFADDR_STATE_PREDAD) {
- 		action = DAD_BEGIN;
-@@ -4019,11 +4025,6 @@ static void addrconf_dad_work(struct work_struct *w)
- 		goto out;
- 
- 	write_lock_bh(&idev->lock);
--	if (idev->dead || !(idev->if_flags & IF_READY)) {
--		write_unlock_bh(&idev->lock);
--		goto out;
--	}
--
- 	spin_lock(&ifp->lock);
- 	if (ifp->state == INET6_IFADDR_STATE_DEAD) {
- 		spin_unlock(&ifp->lock);
 -- 
 2.20.1
 
