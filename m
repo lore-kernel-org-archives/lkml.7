@@ -2,136 +2,88 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBA5CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436AACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4E52084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D962084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572022964;
+	bh=NJVJJyPZXQ7Ii02Y5Qwry+y+ZCCNT8UgMTLVzZ5U+9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x2wBPRslFIjEWAP5aE2bzBw/vqT9uVg2whXYP6QRq5oKvsFbv/QqoCqCzOvwSmLt2
+	 stxS/kjG7k2U+Fo5l/Jrk79fJK75IaUT7JfkxmW6Xlaj9sV4HELtxAw6okjQWoV+Jp
+	 uuNN3FA092UJ6GfzWtgHBvS+gaCub/elvNC1Wmdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405890AbfJYRCe (ORCPT
+        id S2409623AbfJYRCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:02:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32014 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726511AbfJYRCe (ORCPT
+        Fri, 25 Oct 2019 13:02:43 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39481 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfJYRCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 13:02:34 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PGuiXf029285;
-        Fri, 25 Oct 2019 13:02:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vv42u28q1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 13:02:16 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9PGxFGo035516;
-        Fri, 25 Oct 2019 13:02:16 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vv42u28pe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 13:02:16 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9PH1SHd031917;
-        Fri, 25 Oct 2019 17:02:14 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01dal.us.ibm.com with ESMTP id 2vqt47sxx0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 17:02:14 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PH2Dma33554838
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 17:02:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C959B2065;
-        Fri, 25 Oct 2019 17:02:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F5B0B2066;
-        Fri, 25 Oct 2019 17:02:12 +0000 (GMT)
-Received: from [9.85.155.79] (unknown [9.85.155.79])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Oct 2019 17:02:12 +0000 (GMT)
-Subject: Re: [PATCH v9 2/8] powerpc/ima: add support to initialize ima policy
- rules
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
- <20191024034717.70552-3-nayna@linux.ibm.com>
- <dd7e04fc-25e8-280f-b565-bdb031939655@linux.microsoft.com>
-From:   Nayna Jain <nayna@linux.vnet.ibm.com>
-Message-ID: <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com>
-Date:   Fri, 25 Oct 2019 12:02:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 13:02:42 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v138so2076611oif.6;
+        Fri, 25 Oct 2019 10:02:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1je0vidW0gA9BZC2ySQZiimdAJyw9gnUzbO+i+g1658=;
+        b=KCeXTwkCz++8iwpIr3e9q93eTyEjUk5Sf4ZjnGalCRdLPvncK0CBwVVwMbywMSslMf
+         xvQdURrvZnCBZiQwsmk+/JYw3eWfchltSFIPt0rbaBKgzh5kPxtHbNZriFTMZxKmcWbd
+         c4QU5YFKfM2L2i1M9rzrsIjV6KC9n0YOxhXeFxw9cbE/yMO8Kn41qx4cBilgGX/GrN80
+         CFLOJnVyMGUPFWoivbuLOo3HxO+iHcrXuwxr8yQY+FKLVWBAzL8fooEMepXZ/y9eIQtz
+         ctegwMO0qFyZwh4KleRRViEh8ggMNCpxm3Ht/15qhDiCHWr5jA987r//VMyWDri9rora
+         uLog==
+X-Gm-Message-State: APjAAAXMKRxe+JqOzJ+kW32h7MRVfdtPNwVIqujrUVpU7MPwSGJNMH6+
+        WdCScLdvLsnT6A0chQwhZQ==
+X-Google-Smtp-Source: APXvYqxSd3WRuomUGEAUJ8aEqH2FmnEDdcA7sgomWRVtFipQ4J6+Yd869cRA6aUPe1Xixkib9ypHCw==
+X-Received: by 2002:aca:d882:: with SMTP id p124mr3788390oig.44.1572022961666;
+        Fri, 25 Oct 2019 10:02:41 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t18sm871763otm.8.2019.10.25.10.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 10:02:40 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 12:02:40 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v4 5/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+Message-ID: <20191025170240.GA7951@bogus>
+References: <20191021124428.2541-1-brgl@bgdev.pl>
+ <20191021124428.2541-6-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <dd7e04fc-25e8-280f-b565-bdb031939655@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910250156
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021124428.2541-6-brgl@bgdev.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 21 Oct 2019 14:44:27 +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Convert the binding document for MAX77650 core MFD module to YAML.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../devicetree/bindings/mfd/max77650.txt      |  46 ------
+>  .../devicetree/bindings/mfd/max77650.yaml     | 149 ++++++++++++++++++
+>  2 files changed, 149 insertions(+), 46 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+> 
 
-On 10/24/19 12:35 PM, Lakshmi Ramasubramanian wrote:
-> On 10/23/2019 8:47 PM, Nayna Jain wrote:
->
->> +/*
->> + * The "secure_rules" are enabled only on "secureboot" enabled systems.
->> + * These rules verify the file signatures against known good values.
->> + * The "appraise_type=imasig|modsig" option allows the known good 
->> signature
->> + * to be stored as an xattr or as an appended signature.
->> + *
->> + * To avoid duplicate signature verification as much as possible, 
->> the IMA
->> + * policy rule for module appraisal is added only if 
->> CONFIG_MODULE_SIG_FORCE
->> + * is not enabled.
->> + */
->> +static const char *const secure_rules[] = {
->> +    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
->> +#ifndef CONFIG_MODULE_SIG_FORCE
->> +    "appraise func=MODULE_CHECK appraise_type=imasig|modsig",
->> +#endif
->> +    NULL
->> +};
->
-> Is there any way to not use conditional compilation in the above array 
-> definition? Maybe define different functions to get "secure_rules" for 
-> when CONFIG_MODULE_SIG_FORCE is defined and when it is not defined.
-
-How will you decide which function to be called ?
-
-Thanks & Regards,
-
-     - Nayna
-
+Reviewed-by: Rob Herring <robh@kernel.org>
