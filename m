@@ -2,68 +2,95 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14760CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5AACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD8621D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C5021D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438589AbfJYJaz (ORCPT
+        id S2438606AbfJYJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:30:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43340 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438521AbfJYJay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:30:54 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DFE559FBAB0490E9D0C7;
-        Fri, 25 Oct 2019 17:30:52 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 17:30:46 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <3chas3@gmail.com>, <davem@davemloft.net>
-CC:     <linux-atm-general@lists.sourceforge.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] atm: remove unneeded semicolon
-Date:   Fri, 25 Oct 2019 17:30:30 +0800
-Message-ID: <20191025093030.956-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 25 Oct 2019 05:31:44 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:38593 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405781AbfJYJbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:31:44 -0400
+X-Originating-IP: 92.137.17.54
+Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id E7C3160004;
+        Fri, 25 Oct 2019 09:31:41 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     YueHaibing <yuehaibing@huawei.com>, jason@lakedaemon.net,
+        andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
+        linus.walleij@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH -next] pinctrl: armada-37xx: remove unneeded semicolon
+In-Reply-To: <20191025092233.25108-1-yuehaibing@huawei.com>
+References: <20191025092233.25108-1-yuehaibing@huawei.com>
+Date:   Fri, 25 Oct 2019 11:31:41 +0200
+Message-ID: <87lft9p3wi.fsf@FE-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove unneeded semicolon.
+YueHaibing <yuehaibing@huawei.com> writes:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/atm/firestream.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Remove unneeded semicolon.
+> This is detected by coccinelle.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-diff --git a/drivers/atm/firestream.c b/drivers/atm/firestream.c
-index 2bbab02..aad00d2 100644
---- a/drivers/atm/firestream.c
-+++ b/drivers/atm/firestream.c
-@@ -1070,7 +1070,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
- 					RC_FLAGS_BFPS_BFP * bfp |
- 					RC_FLAGS_RXBM_PSB, 0, 0);
- 			break;
--		};
-+		}
- 		if (IS_FS50 (dev)) {
- 			submit_command (dev, &dev->hp_txq, 
- 					QE_CMD_REG_WR | QE_CMD_IMM_INQ,
+I am against this patch, I don't see any value of this change. It will
+only make backporting future fix more difficult and will obscurate the
+git blame.
+
+I could see the interest of scripts/coccinelle/misc/semicolon.cocci
+when submitting new code, but not for existing code.
+
+Gregory
+
+> ---
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> index 9df4277..fd32989 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> @@ -733,7 +733,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+>  			ret = 0;
+>  			break;
+>  		}
+> -	};
+> +	}
+>  	if (ret) {
+>  		dev_err(dev, "no gpio-controller child node\n");
+>  		return ret;
+> @@ -800,7 +800,7 @@ static int armada_37xx_gpiochip_register(struct platform_device *pdev,
+>  			ret = 0;
+>  			break;
+>  		}
+> -	};
+> +	}
+>  	if (ret)
+>  		return ret;
+>  
+> -- 
+> 2.7.4
+>
+>
+
 -- 
-2.7.4
-
-
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
