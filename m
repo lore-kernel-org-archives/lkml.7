@@ -2,167 +2,192 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBC8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07388CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C2420867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="I5U5hBDv"
+	by mail.kernel.org (Postfix) with ESMTP id D447520867
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407023AbfJYHei (ORCPT
+        id S2407039AbfJYHfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:34:38 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:47627 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406004AbfJYHeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:34:37 -0400
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: V2hd1pyqxd38PXeH2BqNkK+m6yZ+PUGOz56BXfR5aMrTIWdjtIl/RvupeW6KMbRLY5/0p/G8Qy
- 8Wj5AWyu0/A+rs6AN1TWAqRGp5E8uhyG1HAnO9BJ5k4/h0OUg3pzyoiQI0v3zx7Rds9ZrcWidG
- joySauTyVhZIkqgoVTsDk1UTRE5DZHT5tds3JYcYlJhw23TEkDZaNxsHNmDcDSulndSUp/9VKY
- teA1GOfJn5G5OBlOKu/VBBb/rysPiqTSdwIZHFBFsOOvDzGnLmmAI8nUV9bsZDjff5AQGk2SWg
- uCY=
-X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
-   d="scan'208";a="52932564"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2019 00:34:36 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 25 Oct 2019 00:34:34 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 25 Oct 2019 00:34:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m2cW8FYUTCnpA6dGrL6B0q9pKpndta0q8//kpWpnic9cS461AKd7JOlIs1n1XYunVQydiGZ6v9GGhoeOcltzCgrguUx/C1ejoubhLd0Q7PMWxKpIJNEN+QVimMpMJsBOd4llTrvQmXgZ4K5sA4rau9W974xN2r2aXpRU6gF95DBAtTdhJ7Nata8ZqYu/0bQ2d+WrvaxwxFL0+xW4HpG0/5DY+JZ03BJDWOEn4mxRCQuHVSwWvHXDRKk9olueCsxPYVnrrhMXLcufa+Pn+XQyW2jmJaJlHTyz4xZTNy4T2ECV9dKMHtO9dRPt8DUNlKUht/7gOyqvkiEaUVIJ61HZ5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r7SC8mMStlHEDZ5ri/e02ClS1jNHuD60CFazcfME7+s=;
- b=aPEqzsgK3ZTO40zDbbLLjF2Bqjep1SVcMXnrELOrffr+iGyssdHJyxt1ScVO0S2qzwuGviQ8RF3MuFAgcXbZKvGtFtvAARuV5CR/9p1HhMzZJycgLZu9eLQsjXAmxPxANwGyBi9S6PMJPjg/IYNIKsD1Q7YxE3qh42W7B63KteuwSnvkJ0koDS2QcFLLleACf6fyl6akw1nRaGId5mhbYJ7HCr8xe66a2ReHUIul635YTCpUPVJa3n3esYHpxguS6IqhBE4GLDRyArNZ44V1KhVcnegIs3VGAH6tby0LQfBnJUM5PEmAtwoJC1/c7xrVK27MKcG2B9eOnjMj3qCvYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r7SC8mMStlHEDZ5ri/e02ClS1jNHuD60CFazcfME7+s=;
- b=I5U5hBDvg19coXtfiIjLbyN5UkOngSBuQCQR6xjAk2dNwE79yz4nNcs5rySPRuJoqdA2S2ELKVEyug8RslLQzJOvK1cjFU5+BDXrYaxo6bQV9REFqmCfWxzwhlMtBuIw3iTH5SimCAP7NI3xCLc0cGYi0lW1uig9jR3mw/lXB7M=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3583.namprd11.prod.outlook.com (20.178.250.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2347.18; Fri, 25 Oct 2019 07:34:30 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2347.030; Fri, 25 Oct 2019
- 07:34:30 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <boris.brezillon@collabora.com>
-CC:     <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-        <geert+renesas@glider.be>, <andrew@aj.id.au>, <richard@nod.at>,
-        <linux-kernel@vger.kernel.org>, <vz@mleia.com>,
-        <marek.vasut@gmail.com>, <jonas@norrbonn.se>,
-        <linux-mtd@lists.infradead.org>, <joel@jms.id.au>,
-        <miquel.raynal@bootlin.com>, <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <computersforpeace@gmail.com>, <dwmw2@infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>
-Subject: Re: [PATCH v2 09/22] mtd: spi-nor: Fix retlen handling in sst_write()
-Thread-Topic: [PATCH v2 09/22] mtd: spi-nor: Fix retlen handling in
- sst_write()
-Thread-Index: AQHVcqwocr2G1vTqBEOgTu/C0BezHKdTlJMAgBeTUIA=
-Date:   Fri, 25 Oct 2019 07:34:30 +0000
-Message-ID: <7f23e9c0-0e9c-e365-e103-75ead47000a3@microchip.com>
-References: <20190924074533.6618-1-tudor.ambarus@microchip.com>
- <20190924074533.6618-10-tudor.ambarus@microchip.com>
- <20191010093308.2fe94974@dhcp-172-31-174-146.wireless.concordia.ca>
-In-Reply-To: <20191010093308.2fe94974@dhcp-172-31-174-146.wireless.concordia.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0192.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1c::36) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [86.120.239.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 83b8bfcc-5d3a-4947-9a7b-08d7591dc5af
-x-ms-traffictypediagnostic: MN2PR11MB3583:
-x-microsoft-antispam-prvs: <MN2PR11MB35834DD9781A0747FDA5270DF0650@MN2PR11MB3583.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:883;
-x-forefront-prvs: 02015246A9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(136003)(366004)(396003)(376002)(199004)(189003)(7416002)(31696002)(14454004)(316002)(6506007)(66066001)(256004)(6246003)(386003)(6916009)(478600001)(25786009)(2906002)(71200400001)(6512007)(71190400001)(31686004)(8936002)(11346002)(3846002)(76176011)(26005)(476003)(6116002)(6486002)(81156014)(53546011)(99286004)(81166006)(229853002)(8676002)(52116002)(446003)(102836004)(66946007)(66556008)(86362001)(4326008)(7736002)(54906003)(66476007)(305945005)(2616005)(486006)(36756003)(5660300002)(66446008)(64756008)(6436002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3583;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HoNcVBwx12ZaXfjSPsx3bnGWP9gMMSTKHyCo69kG0wbkt8GkHyE+i9LzNHtStmI8KMM1JUJHqFMRCAOm2UdcDyu5dYqctFgYIV1IJHkNZ6gpxs1FaG8grWSE1xPS7OAtCWpVjy9m26nLFd/XLAI1F9pc6t7dFBJL+RKGKnZeVDWWJb47YGbjFKLLPkf983xGP/dqd+n9gwMuxqKbG9xOi8ITxKkbECJR1lWB7f3rBHpSBxOagSjlLCSLu/C3Je47VyVvAqdG9Z5tkU8iguawX9xx2oAFdoQAim2h3klfyeYqkk/ynu8o4V6fTBnzKIFBAqDRzvAbd4U2P51XwjeUyZoXlVhmMI8/i4X/7WDtx4px5PR8LmZKcVQhV5vN8AtLWKKUDx5atXm2250hM+8GV4S+pgWj0Dm9WzrYi62SqPWOJ6Jn/6s8Bscwwn331JRK
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <45DA9D045FD26A47B1E5C2B4A28D6DC7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 25 Oct 2019 03:35:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38966 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390611AbfJYHfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:35:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C31ECAC84;
+        Fri, 25 Oct 2019 07:35:05 +0000 (UTC)
+Subject: Re: [PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
+ /proc/pagetypeinfo
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+References: <20191025072610.18526-1-mhocko@kernel.org>
+ <20191025072610.18526-3-mhocko@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a6c08a4b-f8a4-1223-c897-3ee2267ac24a@suse.cz>
+Date:   Fri, 25 Oct 2019 09:35:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83b8bfcc-5d3a-4947-9a7b-08d7591dc5af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 07:34:30.4346
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: akEJHOa8RD9C1ExePW1kvGmqf61Wi7oIbXkZAbTVcoN+PFzurYaIDppZ21O1QXT7TTwBQzmumnC/4or90AhR7PgTQnyeIiHCMKsV02XzvNw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3583
+In-Reply-To: <20191025072610.18526-3-mhocko@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDEwLzEwLzIwMTkgMTA6MzMgQU0sIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCg0KPj4g
-IGRyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIHwgMjIgKysrKysrKysrKystLS0tLS0tLS0t
-LQ0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkN
-Cj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMgYi9kcml2
-ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYw0KPj4gaW5kZXggMGFlZTA2OGE1ODM1Li5iZTVkZWU2
-MjJkNTEgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYw0KPj4g
-KysrIGIvZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMNCj4+IEBAIC0yNjY1LDEyICsyNjY1
-LDEyIEBAIHN0YXRpYyBpbnQgc3N0X3dyaXRlKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBsb2ZmX3Qg
-dG8sIHNpemVfdCBsZW4sDQo+PiAgCQkvKiB3cml0ZSBvbmUgYnl0ZS4gKi8NCj4+ICAJCXJldCA9
-IHNwaV9ub3Jfd3JpdGVfZGF0YShub3IsIHRvLCAxLCBidWYpOw0KPj4gIAkJaWYgKHJldCA8IDAp
-DQo+PiAtCQkJZ290byBzc3Rfd3JpdGVfZXJyOw0KPj4gKwkJCWdvdG8gdW5sb2NrX2FuZF91bnBy
-ZXA7DQo+PiAgCQlXQVJOKHJldCAhPSAxLCAiV2hpbGUgd3JpdGluZyAxIGJ5dGUgd3JpdHRlbiAl
-aSBieXRlc1xuIiwNCj4+ICAJCSAgICAgKGludClyZXQpOw0KPj4gIAkJcmV0ID0gc3BpX25vcl93
-YWl0X3RpbGxfcmVhZHkobm9yKTsNCj4+ICAJCWlmIChyZXQpDQo+PiAtCQkJZ290byBzc3Rfd3Jp
-dGVfZXJyOw0KPj4gKwkJCWdvdG8gdW5sb2NrX2FuZF91bnByZXA7DQo+PiAgCX0NCj4+ICAJdG8g
-Kz0gYWN0dWFsOw0KPiBOb3Qgc3VyZSB3ZSBuZWVkIHRoaXMgbmV3IGxhYmVsLCB3ZSBjYW4ganVz
-dCBoYXZlOg0KPiANCj4gCWFjdHVhbCA9IDA7DQo+IAkvKiBTdGFydCB3cml0ZSBmcm9tIG9kZCBh
-ZGRyZXNzLiAqLw0KPiAJaWYgKHRvICUgMikgew0KPiAJCW5vci0+cHJvZ3JhbV9vcGNvZGUgPSBT
-UElOT1JfT1BfQlA7DQo+IA0KPiAJCS8qIHdyaXRlIG9uZSBieXRlLiAqLw0KPiAJCXJldCA9IHNw
-aV9ub3Jfd3JpdGVfZGF0YShub3IsIHRvLCAxLCBidWYpOw0KPiAJCWlmIChyZXQgPCAwKQ0KPiAJ
-CQlnb3RvIG91dDsNCj4gCQlXQVJOKHJldCAhPSAxLCAiV2hpbGUgd3JpdGluZyAxIGJ5dGUgd3Jp
-dHRlbiAlaQ0KPiAJCWJ5dGVzXG4iLCAoaW50KXJldCk7DQo+IAkJcmV0ID0gc3BpX25vcl93YWl0
-X3RpbGxfcmVhZHkobm9yKTsNCj4gCQlpZiAocmV0KQ0KPiAJCQlnb3RvIG91dDsNCj4gDQo+IAkJ
-dG8rKzsNCj4gCQlhY3R1YWwrKzsNCj4gCX0NCj4gDQoNCm5pY2UsIHRoYW5rcyENCg==
+On 10/25/19 9:26 AM, Michal Hocko wrote:
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
+> This is not really nice because it blocks both any interrupts on that
+> cpu and the page allocator. On large machines this might even trigger
+> the hard lockup detector.
+> 
+> Considering the pagetypeinfo is a debugging tool we do not really need
+> exact numbers here. The primary reason to look at the outuput is to see
+> how pageblocks are spread among different migratetypes and low number of
+> pages is much more interesting therefore putting a bound on the number
+> of pages on the free_list sounds like a reasonable tradeoff.
+> 
+> The new output will simply tell
+> [...]
+> Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >100000  41019  31560  23996  10054   3229    983    648
+> 
+> instead of
+> Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  41019  31560  23996  10054   3229    983    648
+> 
+> The limit has been chosen arbitrary and it is a subject of a future
+> change should there be a need for that.
+> 
+> While we are at it, also drop the zone lock after each free_list
+> iteration which will help with the IRQ and page allocator responsiveness
+> even further as the IRQ lock held time is always bound to those 100k
+> pages.
+> 
+> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> Reviewed-by: Waiman Long <longman@redhat.com>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+> ---
+>  mm/vmstat.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 4e885ecd44d1..ddb89f4e0486 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1383,12 +1383,29 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
+>  			unsigned long freecount = 0;
+>  			struct free_area *area;
+>  			struct list_head *curr;
+> +			bool overflow = false;
+>  
+>  			area = &(zone->free_area[order]);
+>  
+> -			list_for_each(curr, &area->free_list[mtype])
+> -				freecount++;
+> -			seq_printf(m, "%6lu ", freecount);
+> +			list_for_each(curr, &area->free_list[mtype]) {
+> +				/*
+> +				 * Cap the free_list iteration because it might
+> +				 * be really large and we are under a spinlock
+> +				 * so a long time spent here could trigger a
+> +				 * hard lockup detector. Anyway this is a
+> +				 * debugging tool so knowing there is a handful
+> +				 * of pages in this order should be more than
+> +				 * sufficient
+> +				 */
+> +				if (++freecount >= 100000) {
+> +					overflow = true;
+> +					break;
+> +				}
+> +			}
+> +			seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
+> +			spin_unlock_irq(&zone->lock);
+> +			cond_resched();
+> +			spin_lock_irq(&zone->lock);
+>  		}
+>  		seq_putc(m, '\n');
+>  	}
+> 
+
