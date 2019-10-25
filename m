@@ -2,106 +2,264 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C12CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA07CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEBC21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA9321D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="he6aRuQ/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ga91dKJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395501AbfJYPrO (ORCPT
+        id S2395515AbfJYPr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:47:14 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33082 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395419AbfJYPrO (ORCPT
+        Fri, 25 Oct 2019 11:47:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33363 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395505AbfJYPr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:47:14 -0400
-Received: by mail-il1-f195.google.com with SMTP id v2so2270322ilm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:47:12 -0700 (PDT)
+        Fri, 25 Oct 2019 11:47:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s1so2919282wro.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:47:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=SsJ9ZEsxHLQX+f5vHYqEDrQy/+4JococvH2/h9P17zw=;
-        b=he6aRuQ/AIXKWZI2PJA3rZyD95WzKjyJhLQXtgU2F+cFoWNyNr5oBn19vvmLGvleil
-         GtyNdLTqx/qKDJhASDKdA1OfeQ86afMcrr/1/YA9HXLHyfYmIt7m3BmNszqWRC1PXtOT
-         GN48AV+vgsBLwXVGUlHCoQDhuSmUX3pyzwuAzEkUEAnQvfVFIWXlNZAKRxSZJuKgBdI2
-         OvTYiTD9G/QxLBgOpNQA7oNTsqQ04KOIk+35wesndDTFmphRZB595YIcQvhWf4LrfhK0
-         JFczvffbCSE2VRcGW3zi4kBnPLP8B5grOkdyw2RRc3Zt64X7oda/4dyyi61tr7FjGNbi
-         Jksg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fo4JPUIMC83Jn+ORQE5fOd6wpwt98Yvm2b1ZRTBSf+k=;
+        b=ga91dKJkyn2cOlf6giFVU0C2YNUeJjkbLh3Pf3h4sZyinbRfzD7EcS4kSgvNA7jtgf
+         XR9TrWWx1kOpavXYRxxIkwm6ScKXIyQya+vNCwa9XP+O9Fq87NVlIJdwQqN/s9Lelej7
+         HAOZ2MPW35Q9izjXjt9YvVa5kdHq6dfJvHcYdWY30LImx8kCmyfVu34FUTzxPYTmGvBJ
+         1+h1S2xkNz3WABifyH13EHHjE6fihQTe/9XOKtDc+A6Lo2iGMM537BwN1GpIajQTXgGG
+         F79oiTBy04YTWxY2gLNpis442uOF/suSwKB6d/qIz576NKM+R8PZbesZaPVhJyGJHsMc
+         nJdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SsJ9ZEsxHLQX+f5vHYqEDrQy/+4JococvH2/h9P17zw=;
-        b=TXLb9pWHQNECKaXQ9kXHX1nzlGwAN0sYq9pttmkU/mRVHNLGy5yHzTQjTPfM1ts9rJ
-         nFHaORqrAvPMbduoLWHJL6Teldnh9/di3Tz6tMUT3vswz4PAzeegWh/bShtXBW9CJhvH
-         liD3dbje97JnXYu7vVqUAeUBeg5NI6AScW5e2nc4/qYK4pOuXgvmN72G+SOhA00kdRnz
-         9HifEEsd+AtkF/tDcop6hFBT7jGKycLEqkAxrHyApCkdx8FUSbwhIWstWZVCiC40BPPX
-         GP8yGIrhgdpi2iXUgrAYKFr4a8+H3eN1XCL3ZlcfGSDYC3JFQa0O8MSzd9cPwjvc0958
-         HoaA==
-X-Gm-Message-State: APjAAAUhI06kQS2T33loXQrm5WA+YwqIROOt3RdcwHSFFOrcj9BOzkBo
-        Lx2XkHXg4bZgKtL2CKDk7xJr+z4NWVtiow==
-X-Google-Smtp-Source: APXvYqwyySGpPibGqJVkRv9IbFQnmdKTYqHgRrLK378RuRbWMxYvoS8nhyRCggpIVCKVC1/kW9KC/A==
-X-Received: by 2002:a92:ce12:: with SMTP id b18mr5159832ilo.130.1572018431360;
-        Fri, 25 Oct 2019 08:47:11 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id q11sm366277ilc.29.2019.10.25.08.47.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 08:47:10 -0700 (PDT)
-Subject: Re: [PATCH liburing 1/1] test/defer: Test deferring with drain and
- links
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <b9509294fde6425b000d71613bd352059334c60d.1571995330.git.asml.silence@gmail.com>
- <3d2e8533-6085-b328-7e27-9a5be2027b7f@kernel.dk>
- <9ec359eb-b639-65a5-4f01-7e7fdfa9a8af@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7a2af956-e96f-a24c-2afe-806789a7fae2@kernel.dk>
-Date:   Fri, 25 Oct 2019 09:47:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fo4JPUIMC83Jn+ORQE5fOd6wpwt98Yvm2b1ZRTBSf+k=;
+        b=VJubsyaM9STxN5kzo2uogLK2hftXs+Kf4qFXd5+v8O+ihmZ17e1WmV4ceCUjoXTxA+
+         OMx+bgEhYfS0tUoFoylcDJ/FLaNWY922/K6rfIXY9+OxMyfwlV1zTw8FR6rcZtYVwws3
+         ejrBpwxPG/Gd1R9qV9oaiK12pyzg7qYLbszrMtCAr+kaSkwqiv2KAJm4yuCUjUR3yA7Z
+         hZ8Qv6yAzcll6zG5zanicBdNpuYOM9TC3M9j6X6SyTMfEAxcvrAXW/BturwO/3Pa7XgK
+         0xhEKdxwprMQhpKCdc+S0yS2hQ3rwCr6oLAyguKVJ9zyHBGfoafvhlp2IrTMy7hrSro1
+         JHuQ==
+X-Gm-Message-State: APjAAAVBt+vIrODHREXQ1wQGyRIwWq03iOrXPrwNqm0lvyg5cl6A5kZv
+        cb0Kzvxn5nAxSTbojC3bdWtMP3YEMkPF842oq3xQEw==
+X-Google-Smtp-Source: APXvYqwwkfHhZltSUACukXwYTKWvdIaDOhOctFQxNvUMIYQ3giUfUnfKv7ozh5lgMUz3hiL/7aAkS7f/pWM26k1Sqd8=
+X-Received: by 2002:adf:e651:: with SMTP id b17mr3130375wrn.191.1572018445122;
+ Fri, 25 Oct 2019 08:47:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9ec359eb-b639-65a5-4f01-7e7fdfa9a8af@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191023005337.196160-1-irogers@google.com> <20191024190202.109403-1-irogers@google.com>
+ <20191024190202.109403-3-irogers@google.com> <20191025080142.GF31679@krava>
+In-Reply-To: <20191025080142.GF31679@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 25 Oct 2019 08:47:12 -0700
+Message-ID: <CAP-5=fWoHN9wqWasZyyu8mB99-1SOP3NhTT9XX6d99aTG6-AOA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] perf tools: splice events onto evlist even on error
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 9:40 AM, Pavel Begunkov wrote:
-> On 25/10/2019 18:13, Jens Axboe wrote:
->> On 10/25/19 3:48 AM, Pavel Begunkov (Silence) wrote:
->>> From: Pavel Begunkov <asml.silence@gmail.com>
->>>
->>> 1. test user_data integrity with cancelled links
->>> 2. test the whole link is cancelled by sq_thread
->>> 3. hunging io_uring based on koverflow and kdropped
->>>
->>> Be aware, that this test may leave unkillable user process, or
->>> unstopped actively polling kthread.
->>
->> That's fine, that's what the test suite is for! Thanks, applied.
-> 
-> Just found it "a bit uncomfortable", that after several runs
-> my CPU was doing nothing but polling in vain.
+On Fri, Oct 25, 2019 at 1:01 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Thu, Oct 24, 2019 at 12:01:55PM -0700, Ian Rogers wrote:
+> > If event parsing fails the event list is leaked, instead splice the list
+> > onto the out result and let the caller cleanup.
+> >
+> > An example input for parse_events found by libFuzzer that reproduces
+> > this memory leak is 'm{'.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.c | 17 +++++++++++------
+> >  1 file changed, 11 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> > index edb3ae76777d..f0d50f079d2f 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -1968,15 +1968,20 @@ int parse_events(struct evlist *evlist, const char *str,
+> >
+> >       ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
+> >       perf_pmu__parse_cleanup();
+> > +
+> > +     if (!ret && list_empty(&parse_state.list)) {
+> > +             WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> > +             return -1;
+> > +     }
+> > +
+> > +     /*
+> > +      * Add list to the evlist even with errors to allow callers to clean up.
+> > +      */
+> > +     perf_evlist__splice_list_tail(evlist, &parse_state.list);
+>
+> I still dont understand this one.. if there was an error, the list
+> should be empty, right? also if there's an error and there's something
+> on the list, what is it? how it gets deleted?
+>
+> thanks,
+> jirka
 
-Looks like it's testing one of the cases that isn't fixed that. We
-shouldn't do that until a known fix is available, at least. Basically
-the tests should test for things that used to be a problem, but are
-now fixed.
+What I see happening with PARSER_DEBUG for 'm{' is (I've tried to
+manually tweak the line numbers to be consistent with the current
+parse-events.y, sorry for any discrepancies):
 
-But let's just get it fixed :-)
+Starting parse
+Entering state 0
+Reading a token: Next token is token PE_START_EVENTS (1.1: )
+Shifting token PE_START_EVENTS (1.1: )
+Entering state 1
+Reading a token: Next token is token PE_EVENT_NAME (1.0: )
+Shifting token PE_EVENT_NAME (1.0: )
+Entering state 8
+Reading a token: Next token is token PE_NAME (1.0: )
+Shifting token PE_NAME (1.0: )
+Entering state 46
+Reading a token: Next token is token '{' (1.1: )
+Reducing stack by rule 50 (line 510):
+-> $$ = nterm opt_event_config (1.0: )
+Stack now 0 1 8 46
+Entering state 51
+Reducing stack by rule 27 (line 229):
+  $1 = token PE_NAME (1.0: )
+  $2 = nterm opt_event_config (1.0: )
+-> $$ = nterm event_pmu (1.0: )
+Stack now 0 1 8
+Entering state 25
+Reducing stack by rule 19 (line 219):
+  $1 = nterm event_pmu (1.0: )
+-> $$ = nterm event_def (1.0: )
+Stack now 0 1 8
+Entering state 47
+Reducing stack by rule 17 (line 210):
+  $1 = token PE_EVENT_NAME (1.0: )
+  $2 = nterm event_def (1.0: )
+-> $$ = nterm event_name (1.0: )
+Stack now 0 1
+Entering state 23
+Next token is token '{' (1.1: )
+Reducing stack by rule 16 (line 207):
+  $1 = nterm event_name (1.0: )
+-> $$ = nterm event_mod (1.0: )
+Stack now 0 1
+Entering state 22
+Reducing stack by rule 14 (line 191):
+  $1 = nterm event_mod (1.0: )
+-> $$ = nterm event (1.0: )
+Stack now 0 1
+Entering state 21
+Reducing stack by rule 7 (line 147):
+  $1 = nterm event (1.0: )
+-> $$ = nterm groups (1.0: )
+Stack now 0 1
+Entering state 18
+Next token is token '{' (1.1: )
+Reducing stack by rule 3 (line 119):
+  $1 = nterm groups (1.0: )
+-> $$ = nterm start_events (1.0: )
+Stack now 0 1
+Entering state 17
+Reducing stack by rule 1 (line 115):
+  $1 = token PE_START_EVENTS (1.1: )
+  $2 = nterm start_events (1.0: )
+-> $$ = nterm start (1.1: )
+Stack now 0
+Entering state 3
+Next token is token '{' (1.1: )
+Error: popping nterm start (1.1: )
+Stack now 0
+Cleanup: discarding lookahead token '{' (1.1: )
+Stack now 0
 
--- 
-Jens Axboe
+Working backward through this we're going:
+start: PE_START_EVENTS start_events
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L115
 
+start_events: groups
+{
+struct parse_events_state *parse_state = _parse_state;
+parse_events_update_lists($1, &parse_state->list); // <--- where list
+gets onto the state
+}
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L119
+
+groups: event
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L147
+
+event: event_mod
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L191
+
+event_mod: event_name
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L207
+
+event_name: PE_EVENT_NAME event_def
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L210
+
+event_def: event_pmu
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L219
+
+event_pmu: PE_NAME opt_event_config
+{
+...
+ALLOC_LIST(list);  // <--- where list gets allocated
+...
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L229
+
+opt_event_config:
+https://github.com/torvalds/linux/blob/master/tools/perf/util/parse-events.y#L510
+
+So the parse_state is ending up with a list, however, parsing is
+failing. If the list isn't adding to the evlist then it becomes a
+leak. Splicing it onto the evlist allows the caller to clean this up
+and avoids the leak. An alternate approach is to free the failed list
+and not get the caller to clean up. A way to do this is to create an
+evlist, splice the failed list onto it and then free it - which winds
+up being fairly identical to this approach, and this approach is a
+smaller change.
+
+Thanks,
+Ian
+
+> > +
+> >       if (!ret) {
+> >               struct evsel *last;
+> >
+> > -             if (list_empty(&parse_state.list)) {
+> > -                     WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> > -                     return -1;
+> > -             }
+> > -
+> > -             perf_evlist__splice_list_tail(evlist, &parse_state.list);
+> >               evlist->nr_groups += parse_state.nr_groups;
+> >               last = evlist__last(evlist);
+> >               last->cmdline_group_boundary = true;
+> > --
+> > 2.23.0.866.gb869b98d4c-goog
+> >
+>
