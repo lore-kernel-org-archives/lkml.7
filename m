@@ -6,92 +6,106 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B994DCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE5DCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9173521D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5578621929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aMwI8klD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CnVy8qTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408889AbfJYJuz (ORCPT
+        id S2408915AbfJYJzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:50:55 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7018 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2394402AbfJYJuz (ORCPT
+        Fri, 25 Oct 2019 05:55:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52366 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2393420AbfJYJzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:50:55 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9P9kDaV017184;
-        Fri, 25 Oct 2019 11:50:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=QLmQ7NG6Rb6GQwzM3It23TN1eLiUzLgrVwcFTuDKfVY=;
- b=aMwI8klDD8OHXRbQDkKmUSJYL1BJAGOs/xEFuqPNo0MHhZVqVd1mu45I1V+MPcaY7Gig
- KJCqbeKu/FLKDH9m6ZImsPIFY/KbfIS+/B75CvqmQXBIUHlcYyG8R4hSPVPzVUDbGCV9
- h89gL+XE38aFBQiBf3gX3vRxGdoTGhpUYBDaDG22R6r1+8aPS61e7PcI7fIpD6FOcV3O
- TCukUg4kLi74WfgFHoVSMAdsiXbPawYEQJS0tpfuGLXeujT2CdeWZWj4pta3xL7QMIAQ
- IpUA+evHHgEjD0dOPCCAUv4aRZHlxb73Tmvkj1upqdxUmH8Q55l5AK8UrP1P2vkLY0k2 Gg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vt9s56xa7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 11:50:45 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7AE4610002A;
-        Fri, 25 Oct 2019 11:50:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 484B52BF6B3;
-        Fri, 25 Oct 2019 11:50:41 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 25 Oct
- 2019 11:50:40 +0200
-Subject: Re: [PATCH 0/2] Add support for DAC on stm32mp157c-ed1
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1570630372-24579-1-git-send-email-fabrice.gasnier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <28a4fc8c-9dd7-3139-c569-4749a6a47664@st.com>
-Date:   Fri, 25 Oct 2019 11:50:39 +0200
+        Fri, 25 Oct 2019 05:55:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571997315;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UVoMMueYUvZ0eI/99xRHtgd80EIwZE7u1t/HBTorxLk=;
+        b=CnVy8qTu145LnR3iFmrmWvmicVVYM7v8yuXrnpCj8yZTpswO96LH0qednG4VTVnKY+rOoS
+        sEaFJl89pu9UGUXu0nwdsdIYFCAOkpAqwRmxaLi5RVHjp4TXmO6qI3HbGwFNH8Lqu9/SJb
+        eEtnMH6bd99zWuKsGz2oPKQN95O0+0o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-42-29ZThwCIPJi-QKNlPM682w-1; Fri, 25 Oct 2019 05:55:10 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F6D91005500;
+        Fri, 25 Oct 2019 09:55:09 +0000 (UTC)
+Received: from [10.72.12.249] (ovpn-12-249.pek2.redhat.com [10.72.12.249])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC3E160BEC;
+        Fri, 25 Oct 2019 09:54:56 +0000 (UTC)
+Subject: Re: [PATCH v2] vhost: introduce mdev based hardware backend
+From:   Jason Wang <jasowang@redhat.com>
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <47a572fd-5597-1972-e177-8ee25ca51247@redhat.com>
+ <20191023030253.GA15401@___>
+ <ac36f1e3-b972-71ac-fe0c-3db03e016dcf@redhat.com>
+ <20191023070747.GA30533@___>
+ <106834b5-dae5-82b2-0f97-16951709d075@redhat.com> <20191023101135.GA6367@___>
+ <5a7bc5da-d501-2750-90bf-545dd55f85fa@redhat.com>
+ <20191024042155.GA21090@___>
+ <d37529e1-5147-bbe5-cb9d-299bd6d4aa1a@redhat.com>
+ <d4cc4f4e-2635-4041-2f68-cd043a97f25a@redhat.com>
+ <20191024091839.GA17463@___>
+ <fefc82a3-a137-bc03-e1c3-8de79b238080@redhat.com>
+Message-ID: <e7e239ba-2461-4f8d-7dd7-0f557ac7f4bf@redhat.com>
+Date:   Fri, 25 Oct 2019 17:54:55 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1570630372-24579-1-git-send-email-fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <fefc82a3-a137-bc03-e1c3-8de79b238080@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-25_05:2019-10-23,2019-10-25 signatures=0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 29ZThwCIPJi-QKNlPM682w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi fabrice
 
-On 10/9/19 4:12 PM, Fabrice Gasnier wrote:
-> This series adds support for digital-to-analog converter on
-> stm32mp157c-ed1 board:
-> - define pins that can be used for DAC
-> - configure DAC channels to use these
-> 
-> Fabrice Gasnier (2):
->    ARM: dts: stm32: Add DAC pins used on stm32mp157c-ed1
->    ARM: dts: stm32: Add DAC support to stm32mp157c-ed1
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 12 ++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts     | 13 +++++++++++++
->   2 files changed, 25 insertions(+)
-> 
+On 2019/10/24 =E4=B8=8B=E5=8D=886:42, Jason Wang wrote:
+>
+> Yes.
+>
+>
+>> =C2=A0 And we should try to avoid
+>> putting ctrl vq and Rx/Tx vqs in the same DMA space to prevent
+>> guests having the chance to bypass the host (e.g. QEMU) to
+>> setup the backend accelerator directly.
+>
+>
+> That's really good point.=C2=A0 So when "vhost" type is created, parent=
+=20
+> should assume addr of ctrl_vq is hva.
+>
+> Thanks
 
-Series applied on stm32-next.
 
-Regards
-Alex
+This works for vhost but not virtio since there's no way for virtio=20
+kernel driver to differ ctrl_vq with the rest when doing DMA map. One=20
+possible solution is to provide DMA domain isolation between virtqueues.=20
+Then ctrl vq can use its dedicated DMA domain for the work.
+
+Anyway, this could be done in the future. We can have a version first=20
+that doesn't support ctrl_vq.
+
+Thanks
+
