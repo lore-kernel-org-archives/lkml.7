@@ -2,109 +2,98 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE04CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15682CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5397D20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA4620663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:06:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aYjOYOL3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BdoOO1x/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502501AbfJYKGA (ORCPT
+        id S2439424AbfJYKGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:06:00 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28296 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2502231AbfJYKF7 (ORCPT
+        Fri, 25 Oct 2019 06:06:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36584 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438337AbfJYKGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:05:59 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9P9kQvn028292;
-        Fri, 25 Oct 2019 12:05:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=n2MLxqp2NxcGExWiPF20RRSPXekUyzL4iy5WQSoD2ZM=;
- b=aYjOYOL3VyFlDt4YRVhrG0Ose2rOahNd/PoPgFPdENXNzTxlEdUu371CqoRQ9hG5cmsB
- leolSO7dQizetVC1Nda94JXsHhjziZ9oXJj6CpwDX5PreSJF3QBlBc0z2ZM9ZUtbX6vt
- XVnq+eH6posVSvGYdHQs/mgVnKeq33k3Pk6EkLsT9Xa3JEqexe5xhvZ1ECvno6Z/QMNw
- ERVhq+3np8T4SKWrnCDI4h34jbHCnypL0aXr77N0SOZB60TTU1hQKTLbEAgOKAE1Cesy
- xdn1FotV/GUiGEx0cxf6IzV54RixaxZyiAmmRAFCFfq81qEqXhQNompRdW2jJQpOvsv1 rg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2vt9s4f2ep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 12:05:49 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6840B100039;
-        Fri, 25 Oct 2019 12:05:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 558392C2E8B;
-        Fri, 25 Oct 2019 12:05:49 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 25 Oct
- 2019 12:05:48 +0200
-Subject: Re: [PATCH] ARM: dts: stm32f469: remove useless dma-ranges property
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191015123058.14669-1-benjamin.gaignard@st.com>
- <20191015123058.14669-2-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <dd501071-98b1-9635-ac2e-810b60aa892a@st.com>
-Date:   Fri, 25 Oct 2019 12:05:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 06:06:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=q6FFczL57RhsN1t0BzhzZVDPDAgimSM0qYSWHe2kb80=; b=BdoOO1x/Mx78pKJns8iGGvn8w
+        MwPIkb/Rp8dGTlpmX4DcXhYJAkdz2yLZTMpQsJcQKxGgODLRU+HVbE+GJ59s7JpWFTiXH1Ywy/SmE
+        pFaBsx+s0NNpL6bsKdjio5Owv1HsmkuzcvVrnm4xeoHr8O7QWvjb7yOm3+aiHWw5zP4kIix8ju4Ko
+        RgfnyjuBFfIRqLGVhG9Ks/gadccoul6ccLW9HLDnTsRM/GvWbazOZkLAIn/m4ps5apiXqySAMkziY
+        pBYjP221fSvKCP36RK+34I7FvVuY7dDKYaHpjbNbhENpgx6ph2fuvtK1CuvTJIW49AuJGgOUq3QpS
+        fnQRDNPew==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNwU4-0002JW-Ha; Fri, 25 Oct 2019 10:06:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D87D230314F;
+        Fri, 25 Oct 2019 12:05:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AA12E203C086A; Fri, 25 Oct 2019 12:06:12 +0200 (CEST)
+Date:   Fri, 25 Oct 2019 12:06:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org,
+        live-patching@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191025100612.GB5671@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+ <20191023170025.f34g3vxaqr4f5gqh@treble>
+ <20191024131634.GC4131@hirez.programming.kicks-ass.net>
+ <20191025064456.6jjrngm4m3mspaxw@pathway.suse.cz>
+ <20191025084300.GG4131@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20191015123058.14669-2-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-25_05:2019-10-23,2019-10-25 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025084300.GG4131@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin
+On Fri, Oct 25, 2019 at 10:43:00AM +0200, Peter Zijlstra wrote:
 
-On 10/15/19 2:30 PM, Benjamin Gaignard wrote:
-> Remove dma-ranges from ltdc node since it is already set
-> on bus node.
+> But none of that explains why apply_alternatives() is also delayed.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->   arch/arm/boot/dts/stm32f469-disco.dts | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-> index a3ff04940aec..c928126d5b7e 100644
-> --- a/arch/arm/boot/dts/stm32f469-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
-> @@ -166,7 +166,6 @@
->   };
->   
->   &ltdc {
-> -	dma-ranges;
->   	status = "okay";
->   
->   	port {
->
+> So I'm very tempted to just revert that patchset for doing it all
+> wrong.
 
-Applied on stm32-next. For the next time commit header has to be 
-formatted like that:
+And I've done just that. This includes Josh's validation patch, the
+revert and my klp_appy_relocations_add() patches with the removal of
+module_disable_ro().
 
-ARM: dts: stm32: .....
+Josh, can you test or give me clue on how to test? I need to run a few
+errands today, but I'll try and have a poke either tonight or tomorrow.
 
-Thanks.
-Alex
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/rwx
+
+After this it is waiting for Mark's argh64 patches to land:
+
+  https://lkml.kernel.org/r/20191021163426.9408-5-mark.rutland@arm.com
+
+And then we can go and delete module_disable_ro() entirely -- hooray!
