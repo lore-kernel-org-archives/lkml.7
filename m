@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91164CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07F3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696F221D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82F8222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012314;
-	bh=wmDM3AG/qEIJGIcgSaYNHZAHKaejfltQf3svsNxsYKY=;
+	s=default; t=1572012319;
+	bh=bF77Zw/5cdGAn3080C6Xdx/ktL7Ruz/ZbJHIi4/G2Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I25VXv0fMusWWsWxUnZKbPMqkQ5PV6lHCYK/stEtJfqwwEjkkICFSFo7qQQvTYLs3
-	 plSrP+/7vbGH8T5oJ+wiu5t4OjcdNF9UGLjv4jjWles3YyZZTx0DONJwliGNHdYW1L
-	 Xl8tdRhdSGMqBnPSCWYw2k6Jt861OeQaKKM24S+Y=
+	b=19CowqQH94qbGs7rFJZrG+crBsjxqwkGeN3ATk9Wh3iUN4khdeBhdypAV8RJ+sSsz
+	 Xgn8ghYSKkradxtce5z5F1zwJ4MeWLeffchgNuIM5cG6OHLKZcdPqm2bFH8JPNKSjE
+	 wv4laRrG9Jpv7wsvNEDJWhqKXaDRBQA3z/dQ3Vlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505250AbfJYN4V (ORCPT
+        id S2395271AbfJYOFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:05:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632795AbfJYN4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733183AbfJYN4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 09:56:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3FAA22459;
-        Fri, 25 Oct 2019 13:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8B9521E6F;
+        Fri, 25 Oct 2019 13:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011776;
-        bh=wmDM3AG/qEIJGIcgSaYNHZAHKaejfltQf3svsNxsYKY=;
+        s=default; t=1572011777;
+        bh=bF77Zw/5cdGAn3080C6Xdx/ktL7Ruz/ZbJHIi4/G2Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b3/PNdQ2q96mZ0C/6VCVZNH9xrNJAZ//TqG/OOv0D1IFFvFVO1xKR8/ij0x7xqssU
-         IaPKofa6y7TZGRQgXngqYNZoWQ1eAiMW9SclCANY/Q4rf15ixd6aRQ1E76BlwPxzsu
-         lRDwEIukzpSRF71VLP9DueD3/9wJQjZk0adDaD5w=
+        b=I2SyMDbSQJDAxUL5O73Hf4eoLCMrw9+7Pznxk/rV64TeigQpUPU0CElv94g91MHoe
+         APW/7VzBsJy9/rcSLHqG1yp1d15jzgYsU/j8dqqWXqToxjoZUYnaC/6vW1O87aUWxX
+         eRUovRfsCjpcLCCMiY08B1zc9lnGqUL8DE4Ea4u0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 06/37] ALSA: hda: Fix race between creating and refreshing sysfs entries
-Date:   Fri, 25 Oct 2019 09:55:30 -0400
-Message-Id: <20191025135603.25093-6-sashal@kernel.org>
+Cc:     Kovtunenko Oleksandr <alexander198961@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/37] Fixed https://bugzilla.kernel.org/show_bug.cgi?id=202935 allow write on the same file
+Date:   Fri, 25 Oct 2019 09:55:31 -0400
+Message-Id: <20191025135603.25093-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,104 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Kovtunenko Oleksandr <alexander198961@gmail.com>
 
-[ Upstream commit ed180abba7f1fc3cf04ffa27767b1bcc8e8c842a ]
+[ Upstream commit 9ab70ca653307771589e1414102c552d8dbdbbef ]
 
-hda_widget_sysfs_reinit() can free underlying codec->widgets structure
-on which widget_tree_create() operates. Add locking to prevent such
-issues from happening.
+Copychunk allows source and target to be on the same file.
+For details on restrictions see MS-SMB2 3.3.5.15.6
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=110382
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kovtunenko Oleksandr <alexander198961@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/hdaudio.h | 1 +
- sound/hda/hdac_device.c | 7 +++++++
- sound/hda/hdac_sysfs.c  | 3 +++
- 3 files changed, 11 insertions(+)
+ fs/cifs/cifsfs.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
-index cd1773d0e08f0..0c68783be26fc 100644
---- a/include/sound/hdaudio.h
-+++ b/include/sound/hdaudio.h
-@@ -82,6 +82,7 @@ struct hdac_device {
- 	bool  link_power_control:1;
+diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
+index d5457015801d8..146a766cb86f3 100644
+--- a/fs/cifs/cifsfs.c
++++ b/fs/cifs/cifsfs.c
+@@ -1049,11 +1049,6 @@ ssize_t cifs_file_copychunk_range(unsigned int xid,
  
- 	/* sysfs */
-+	struct mutex widget_lock;
- 	struct hdac_widget_tree *widgets;
+ 	cifs_dbg(FYI, "copychunk range\n");
  
- 	/* regmap */
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index dbf02a3a8d2f2..020fbbbcf6f5c 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -55,6 +55,7 @@ int snd_hdac_device_init(struct hdac_device *codec, struct hdac_bus *bus,
- 	codec->bus = bus;
- 	codec->addr = addr;
- 	codec->type = HDA_DEV_CORE;
-+	mutex_init(&codec->widget_lock);
- 	pm_runtime_set_active(&codec->dev);
- 	pm_runtime_get_noresume(&codec->dev);
- 	atomic_set(&codec->in_pm, 0);
-@@ -141,7 +142,9 @@ int snd_hdac_device_register(struct hdac_device *codec)
- 	err = device_add(&codec->dev);
- 	if (err < 0)
- 		return err;
-+	mutex_lock(&codec->widget_lock);
- 	err = hda_widget_sysfs_init(codec);
-+	mutex_unlock(&codec->widget_lock);
- 	if (err < 0) {
- 		device_del(&codec->dev);
- 		return err;
-@@ -158,7 +161,9 @@ EXPORT_SYMBOL_GPL(snd_hdac_device_register);
- void snd_hdac_device_unregister(struct hdac_device *codec)
- {
- 	if (device_is_registered(&codec->dev)) {
-+		mutex_lock(&codec->widget_lock);
- 		hda_widget_sysfs_exit(codec);
-+		mutex_unlock(&codec->widget_lock);
- 		device_del(&codec->dev);
- 		snd_hdac_bus_remove_device(codec->bus, codec);
- 	}
-@@ -404,7 +409,9 @@ int snd_hdac_refresh_widgets(struct hdac_device *codec, bool sysfs)
- 	}
- 
- 	if (sysfs) {
-+		mutex_lock(&codec->widget_lock);
- 		err = hda_widget_sysfs_reinit(codec, start_nid, nums);
-+		mutex_unlock(&codec->widget_lock);
- 		if (err < 0)
- 			return err;
- 	}
-diff --git a/sound/hda/hdac_sysfs.c b/sound/hda/hdac_sysfs.c
-index fb2aa344981e6..909d5ef1179c9 100644
---- a/sound/hda/hdac_sysfs.c
-+++ b/sound/hda/hdac_sysfs.c
-@@ -395,6 +395,7 @@ static int widget_tree_create(struct hdac_device *codec)
- 	return 0;
- }
- 
-+/* call with codec->widget_lock held */
- int hda_widget_sysfs_init(struct hdac_device *codec)
- {
- 	int err;
-@@ -411,11 +412,13 @@ int hda_widget_sysfs_init(struct hdac_device *codec)
- 	return 0;
- }
- 
-+/* call with codec->widget_lock held */
- void hda_widget_sysfs_exit(struct hdac_device *codec)
- {
- 	widget_tree_free(codec);
- }
- 
-+/* call with codec->widget_lock held */
- int hda_widget_sysfs_reinit(struct hdac_device *codec,
- 			    hda_nid_t start_nid, int num_nodes)
- {
+-	if (src_inode == target_inode) {
+-		rc = -EINVAL;
+-		goto out;
+-	}
+-
+ 	if (!src_file->private_data || !dst_file->private_data) {
+ 		rc = -EBADF;
+ 		cifs_dbg(VFS, "missing cifsFileInfo on copy range src file\n");
 -- 
 2.20.1
 
