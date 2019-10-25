@@ -2,115 +2,143 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F03CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDACCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA492084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572001589;
-	bh=mk3jXEmUzesR1uKpUHpv6nCjEjMknVkj6SQJSeYWGjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l0Wal47aGNliivR/HIT8W2nODlluxXnAkJ0obnum6vPaNdQX/FetwH4Y/j2aYV1Mk
-	 EdUVAn2ppIoQHyVhuMuMnDVP+v/eWfHCK4MU3mAoYHQAbuRFmG+TmyVYRHDYHLCmGa
-	 G7bDShmKFG5nZG69eC35KHW5C6/xqUq8fL23eWvE=
+	by mail.kernel.org (Postfix) with ESMTP id 094232084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qQKDibw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394521AbfJYLG2 (ORCPT
+        id S2438466AbfJYLGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:06:28 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38207 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393421AbfJYLG2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:06:28 -0400
-Received: by mail-qt1-f196.google.com with SMTP id o25so2598087qtr.5
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 04:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aAYJchrbdICiOouupZ3A2UdeXvhJ/5TzX3VjCK2DOiM=;
-        b=oxpJk3tEnskZxe8iXIuVvPHl3cMuWRs4x09179QW10AzgrypuocXGoAbrt+D014hA1
-         Uat5zpvrxGy3L82G7JaJtlBgjCmeRXaHhgOJD3ONf0PYclBoKI4JBBMqbiH3VolgsRuX
-         3qlqdt4OcJtacnig67cUQlwvcOhVVAcWgPRkjmwBlgaRPatTQgcZw7/FhXiLMiypQSaQ
-         E+V+OORTvGtHbONsMyjfZe79DqXPmhuXkjVutWyih4K9p9cgpvvDqbAo7goV32ogmk5r
-         Sd9GBGvNwCl4qVepMy7wG+z2CNkLudarZqiEEJdh02drso6inseQak9NP6MRPJOxCe3H
-         K6Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aAYJchrbdICiOouupZ3A2UdeXvhJ/5TzX3VjCK2DOiM=;
-        b=cbjIG7oMAxBeR1misgGnLtU79hpU64V+osSzifv+X1QI2TBdUHhN/EG/UWN4u/J5HO
-         kUSmx2Fg1f3hl2TEBiccGsrAc8Ay4a20E4675eTCkUek1tPxS9BsLVl4l3Kth8vzs7eS
-         aYsAafgJt3BDC+OSPoNC+sYenZp4K7aPzU51/QuCUX0EsH32KsotAxCK2m8FKLydNjf5
-         /lGYuSdQdLlq89MkGYvOSpt2PLiHvRL4+1TqK885Rp1pYQ61ycB8K5GXNSBBWIrSZRiM
-         1L/x9faCj1uyiGllAwLMewS9jXl0BNfyOEFZgoPOuTtApGbmXU63AuYPum0yx+jfm1E3
-         5IZg==
-X-Gm-Message-State: APjAAAV1xK+BJOQ2FGqr1U3WU0fKzc6cin/+61r2ayySVMffEkK6jj6p
-        j1q5NTnhwo7XkiWNtGZ3s1Y=
-X-Google-Smtp-Source: APXvYqwkYOtNgqNBsGOZ0X77v5ngzGtMWQBie9c47GqL28SaJZ30mFMzXisPFswYGKwPLUNbWnHCAA==
-X-Received: by 2002:a0c:d985:: with SMTP id y5mr2554913qvj.208.1572001586755;
-        Fri, 25 Oct 2019 04:06:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::fd3c])
-        by smtp.gmail.com with ESMTPSA id q44sm1557323qtk.16.2019.10.25.04.06.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 04:06:25 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 04:06:23 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Song Liu <liu.song.a23@gmail.com>
-Subject: Re: [PATCH 1/2] cgroup: Add generation number with cgroup id
-Message-ID: <20191025110623.GH3622521@devbig004.ftw2.facebook.com>
-References: <20191016125019.157144-1-namhyung@kernel.org>
- <20191016125019.157144-2-namhyung@kernel.org>
- <20191024174433.GA3622521@devbig004.ftw2.facebook.com>
- <CAM9d7chWpj105TYR0qP3T8FJ=-2wjp+sh6Rk8zkvJb_ugtL3Dw@mail.gmail.com>
+        Fri, 25 Oct 2019 07:06:39 -0400
+Received: from mout.web.de ([212.227.15.3]:53235 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393483AbfJYLGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 07:06:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1572001564;
+        bh=vUOD97YDKmM1idl52vAgkHaJpLDtnh+9IX8AJaJynFY=;
+        h=X-UI-Sender-Class:Subject:Cc:References:To:From:Date:In-Reply-To;
+        b=qQKDibw8gX8BYLFPdPnqsAvblfeMhQD5bK4jCl5TFgVScV5LT9lFQlVY+1UO677Fc
+         Nr6vppn9tNdwtdhe86bNWSWz8t/r5WwNs1uXFKCrTX18qtipy1+L02rcPOn8mJsSK7
+         fyCsLyHJkfLQKU414PvqHQY7odoW/dK+Bzg/dKjQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.4.210]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lk8fS-1hqHME1Iok-00c8kt; Fri, 25
+ Oct 2019 13:06:04 +0200
+Subject: Re: [v3] coccicheck: Support search for SmPL scripts within selected
+ directory hierarchy
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>
+References: <201910251738005781441@zte.com.cn>
+To:     Zhong Shiqi <zhong.shiqi@zte.com.cn>, cocci@systeme.lip6.fr
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <8d81532a-ff38-8e78-79e0-bb8b6b8f9561@web.de>
+Date:   Fri, 25 Oct 2019 13:06:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7chWpj105TYR0qP3T8FJ=-2wjp+sh6Rk8zkvJb_ugtL3Dw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <201910251738005781441@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:VaowjKObMWms629eT8x2R3VEbY8dp4SSRE/6uRK1x0xevnr5yyo
+ ijWtr+TWyJjot9T2DEBGIa7FVGEtuTr8RGTaxrhDJ/lMPA/1COf779whlQ3XOPkf/GZLUc9
+ Xxq3yilyzMBNhIcXY2pHrFtmsdj6tUp3OIOPWoQx3C5gQ44IUynjpW9VMFsO/GKTKEJUnj4
+ 4joS1F7/0R9feuDGE+nWw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rVj3wfSAF0g=:FqlKcZMthOv5QP1IsC13J8
+ Qz8KWGdkk6azwd9GISG8yj5kkYAF0ENEKpxqwCZ+/+6Xhksvk1T5wVNWtuDo3mEA2cfXR9CG8
+ j7jhKaQcP8NoOy47x9bcOymzM8M5Gd3CSudfkx87vWIdPVaGdVxaZJgyufS9roqZ3ZvStorST
+ Nd08RKqOxnGaGBhH9lpvzv5wyZf5/lOoiUODBC223+Ma3UK/tqRPjw4Ffn8MDJTbXmRxi8VCV
+ bqrHfINtG6c6bFFU/fAvcE8CkeYqmWHYl5nCPGOnIJSg/22RSYvCtfbnG1bBznEXZRwKV0gCp
+ J0lwbXCUdtKSgsn2k+Wq5z5iPCiJkJV/+t1jaMvQmI5fGG9Qmuunfgy83sQsHN5GV2YT58bwY
+ LyJsWJxVcJ5E7K5h1/g+HjlmcT6z4n8jz2vJomW7bBw7sFb1rwtq1QnPATpwrLKv+kgfUs0LI
+ 9/h5aBoXvmyJNy0zChhUQtlD+kpSb0hIveHzefnzOyvtES4FiLzSrgen+aWY5161MS7+s4vwR
+ kP5h0QWUVvyW5WXf9cf9qsebnWGz/jKit/jOzaiC0Bs1rP50zm+g2gG6FpVMzxIB7Nx35lwcr
+ kfHjahBkXn16M3I2dy3VROYJGdW4JP1aIvWiu0ezLbyMcE9dJxam/bNw/VXK1ByrXDPWtj8oa
+ dWkEk4YGlripdtss59lZ7mjYEwnvgAH313DR96c11ysuPvM+2hqXkZJWVtjdwKPif55ztHJzh
+ yztWQYR2KjFAGq+fv6fHh4jIax7beC7PbXcjY8G/XdwF/UsrrBemR6eWhIfBhAxPREGG1nTtG
+ 8cTt+lEnNwiZ66iS9dsYQ9THczvG7d4yqeWniYEFBTThGjksOYlb7LTzGV4i1ugAGwCandEZ4
+ Nqcr1LYEFQ0K+96iHHewjW/XZ9KOathw/9Zr1u2sTt7L4sEHIk1QrPdWqTmpbB5mDNseEWVCm
+ RKDLD7LaELH6gkgjUCuh++K32+Tc2UmT130OlbNnjFHDPy5X41CzpSZR5f4AhsoPj47m6s2Tn
+ tRzgvcm1L2DbYHRnSP5iMbVdkglStp/YwesKgwjQ8QHEi6SCYj25sy0Cj6EntPZRHSyPPa39Y
+ nYvJFF0L5N/TKbvOODeIbOWX8WSoC26mZZYOARrlguXy6+heqCcBbiyty1LX1k//ygwFqa3DX
+ WY1fkDxQBvxnq/whljGZONrML8ghdYvujtVBsaLgNKXRwbQGp9ueGgcbeeOHF6aJ7lh01fWoq
+ 8dSlKkW1qAG5WP+W/FTDJXO+VZG7nbeJqvtn56/MM6cF+0vK2J2cUS4SzOxo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> 	Thanks,i think it  would be better!
 
-On Fri, Oct 25, 2019 at 05:30:35PM +0900, Namhyung Kim wrote:
-> > Any chance I can persuade you into making this conversion?  idr is
-> > exactly the wrong data structure to use for cyclic allocations.  We've
-> > been doing it mostly for historical reasons but I really hope we can
-> > move away from it.  These lookups aren't in super hot paths and doing
-> > locked lookups should be fine.
-> 
-> As you know, it entails change in kernfs id and its users.
-> And I really want to finish the perf cgroup sampling work first.
-> Can I work on this after the perf work is done?
+Will this clarification trigger any further collateral evolution
+for related information sources?
 
-Sure, but I think we should get the userland visible behaviors right.
-Ignoring implementation details:
+Example:
+https://bottest.wiki.kernel.org/coccicheck
 
-* cgroup vs. css IDs doesn't matter for now.  css IDs aren't visible
-  to userland anyway and it could be that keeping using idr as-is or
-  always using 64bit IDs is the better solution for them.
 
-* On 32bit ino setups, 32bit ino + gen as cgroup and export fs IDs.
+By the way:
+Would you like to take another look at the preservation of delimiters
+(like space characters) in presented messages?
 
-* On 64bit ino setups, 64bit unique ino (allocated whichever way) + 0
-  gen as cgroup and export fs IDs.
-
-Thanks.
-
--- 
-tejun
+Regards,
+Markus
