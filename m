@@ -2,139 +2,104 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1184CCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E927CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF803206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7367A206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LXIEHDUQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DNkB25Zd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437799AbfJYIJp (ORCPT
+        id S2437818AbfJYIKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:09:45 -0400
-Received: from mail-eopbgr1320098.outbound.protection.outlook.com ([40.107.132.98]:34048
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437709AbfJYIJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:09:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aiJMZzB/GvjSZjJo5mt+9otVYd1KGkcuZthNeiGfWoTUIJTNw7okKwAH3lPgWuK/t0pUgCH/QtIZqTKcmttoJKZoqabm/6zpUhKTNV2cimry6TK5S5bcq25H2Ig+1Gf2OuDyQkrL8tSUG+h9cIip1LwyAE0z8bEbSTrzHOjl5nsmVB83FsuVN4fRqZCrv4e8/Od0T+MOXsBNWFXTiYC5jqC6Rx90451qUO0ndCUvSvnMkWp+iq0DwoWnsfXXIa2Uq2CcreBhY/Jk0gr4F4HLLWZRa/DOnvlufb6MJYbnlMif5CpHVyx/6I6hmzO+Ite7VHXFFYEVmEmqamygLjQldg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aJzPMvF3gNhEod7hSUTXjtiYmM1Q5WpgV+lbnuyqDNY=;
- b=g6X2uQzpR3cLDjSDFW6YyRFfo/Rt87dIp2pwAI+88DkRJp8FwjC6EsMZpevxx/MRt+UK7XFvp9yT8MK7OeFyu5COnIVuh4XDDcJregHbN1fkSEjPbXls5VQQxbg/tnwAISO/9pnwjP1kXACOqeHKPD6qNw432oQH0m9TolG0kj8L+pFTSBYAD7N+QUhdDHZtZO5O2YJWK8ni9yu3Y/LEkFFSl3YXBIeIp4t5vqI2eVv+9k9ERRXF0VNhYCz0xAShQtJldY+jc87N5ukCoEbWDO7e4WH1ESH4VU00POK7Oowe3MN4PbVs8KcR//bt4Ju+VXDaLUvx/Kh93jcZ1uZBrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aJzPMvF3gNhEod7hSUTXjtiYmM1Q5WpgV+lbnuyqDNY=;
- b=LXIEHDUQ2P19C8CToq7fg+qkkwRoBCWJP7Hb/5ZzKrSVMcKd2+pZjJsVmKWXmkUeG3dysTFeekH8FAmjObAMQ6Wig+UaIe3K+1cNWdEe2XHWCjWhcyRUvzuDiBV9Lj6ZYwRP1UvX7Y1F2Ebkr7hT3UXjjbHOvFlCSYITzLG8Vk4=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0188.APCP153.PROD.OUTLOOK.COM (10.170.190.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.8; Fri, 25 Oct 2019 08:09:35 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::69f1:c9:209a:1809]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::69f1:c9:209a:1809%2]) with mapi id 15.20.2408.008; Fri, 25 Oct 2019
- 08:09:35 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     "hch@lst.de" <hch@lst.de>
-CC:     "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: RE: [PATCH] video: hyperv: hyperv_fb: Use physical memory for fb on
- HyperV Gen 1 VMs.
-Thread-Topic: [PATCH] video: hyperv: hyperv_fb: Use physical memory for fb on
- HyperV Gen 1 VMs.
-Thread-Index: AQHViMlWrXYtpApox02C+wFzOSr7Mqdn8eSAgAMRNnA=
-Date:   Fri, 25 Oct 2019 08:09:34 +0000
-Message-ID: <PU1P153MB0169EA21993B5893EA7569FABB650@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <20191022110905.4032-1-weh@microsoft.com>
- <20191023091037.GB21910@lst.de>
-In-Reply-To: <20191023091037.GB21910@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-x-originating-ip: [167.220.255.109]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 24ff4c23-8138-4d29-1133-08d75922ac57
-x-ms-traffictypediagnostic: PU1P153MB0188:|PU1P153MB0188:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB018872C43B734F3DB492815FBB650@PU1P153MB0188.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02015246A9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(136003)(366004)(376002)(51914003)(199004)(189003)(76116006)(102836004)(5640700003)(6436002)(25786009)(7416002)(10090500001)(8936002)(14444005)(486006)(81156014)(256004)(1730700003)(7696005)(2351001)(81166006)(9686003)(86362001)(66066001)(71190400001)(71200400001)(66574012)(66946007)(2906002)(55016002)(66446008)(64756008)(66556008)(66476007)(11346002)(52536014)(8990500004)(446003)(478600001)(10290500003)(14454004)(26005)(186003)(305945005)(99286004)(74316002)(2501003)(229853002)(476003)(33656002)(6506007)(107886003)(316002)(22452003)(76176011)(8676002)(6246003)(6916009)(7736002)(54906003)(3846002)(6116002)(4326008)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0188;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /iVAauybsTTLeGIrJTQszPrZF3AtTH8Z3g5fIz+CkmEnunQW13rdjgmmOhHbzX0/EZkepskwm7wQUtmYfQjtmqPqih8uC6V82NhFju+p3GK6XEUOwnoQSzwyANhNBkY6EIeXBJzRZooc4qyy/hZYAG3kVlXC+kCEkOfHCNQ2Qzz+l+TzmxpEjvpv/k+h7gJoGS4i0eejdHCCB9THaS7lpIxFCOU6ENpE4TP/m9vdIQpq9dS4D0Z9dWTRjskFx2DSRvL4yJAqqB9ck1KwSBqOuWLKNpK1BI7ZT0wsVDkMxBUUXT+XE6+s9d+eWXf1wHGGC/woNSAzjcHhTHyvct3n0jI7eQOk2CplNoHJni3l94EayPwE9akEzIkdjdhJSlGofB1Dix5fKrAyzUn9bQLLsLJgA/o2y801v71yDJewMds2hrNNHnXKzcHAyCrTnOeh
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 25 Oct 2019 04:10:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35634 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437404AbfJYIKo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:10:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8Sc47oM8963qpiXK5I7HTH3chzXQNmOfoNk1YmTZRUA=; b=DNkB25ZdI237ISuoSpzbiyMJX
+        kzgXrCVKjcOAlRuqiwHbmyEQYY3gQ1wGpVApWN15N06kEQnRnnAD7g8uIkmB17+VAD8HnM0n107S8
+        Lp0fGAfUpK4blN+BJM3WfT/d64+hKo4NmaRE5kDGTwcN+lDKFBV+ITTWCw3xVrxhzZhSS5c6GxAB/
+        U7hG8wi23LfzwNnudOfHNzqWsRXVyBCXOBueGJw6TzsoL3mT39Kx5eEHkn+B62XHAHlYlSKNobmoX
+        67RCA2wo+oWKu+6I7YTrvIY9Qxw8Wu1vwkc0uBbUc3SLaek6piFS7PoHIUPuo1ZxoTBjNGXYf4asE
+        BCajCheyw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNugB-0001Ql-R4; Fri, 25 Oct 2019 08:10:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 404503006E3;
+        Fri, 25 Oct 2019 10:09:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 178B5201A6624; Fri, 25 Oct 2019 10:10:37 +0200 (CEST)
+Date:   Fri, 25 Oct 2019 10:10:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH -tip] locking/mutex: Complain upon api misuse wrt
+ interrupt context
+Message-ID: <20191025081037.GF4131@hirez.programming.kicks-ass.net>
+References: <20191025033634.3330-1-dave@stgolabs.net>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24ff4c23-8138-4d29-1133-08d75922ac57
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 08:09:34.6214
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AM2+s/rTgmL476ZEDBm5/8pDQ90Zon6rChg++pasIBno+z+MAqxmoD5Y7H/4zSfG0HwtlahD42i8IA7ysZGQwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0188
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025033634.3330-1-dave@stgolabs.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGZvciB0aGUgcmV2aWV3LiBQbGVhc2Ugc2VlIG15IHJlc3BvbnNlIGlubGluZS4NCg0K
-PiA+ICsJc2VsZWN0IERNQV9DTUENCj4gDQo+IFRo0ZZzIG5lZWRzIHRvIGJlDQo+IA0KPiAJc2Vs
-ZWN0IERNQV9DTUEgaWYgSEFWRV9ETUFfQ09OVElHVU9VUw0KPiANCj4gPiArI2luY2x1ZGUgPGxp
-bnV4L2RtYS1jb250aWd1b3VzLmg+DQo+IA0KPiA+ICsJLyogQWxsb2NhdGUgZnJvbSBDTUEgKi8N
-Cj4gPiArCS8vIHJlcXVlc3RfcGFnZXMgPSAocmVxdWVzdF9zaXplID4+IFBBR0VfU0hJRlQpICsg
-MTsNCj4gPiArCXJlcXVlc3RfcGFnZXMgPSAocm91bmRfdXAocmVxdWVzdF9zaXplLCBQQUdFX1NJ
-WkUpID4+IFBBR0VfU0hJRlQpOw0KPiA+ICsJcGFnZSA9IGRtYV9hbGxvY19mcm9tX2NvbnRpZ3Vv
-dXMoTlVMTCwgcmVxdWVzdF9wYWdlcywgMCwgZmFsc2UpOw0KPiANCj4gZG1hX2FsbG9jX2Zyb21f
-Y29udGlndW91cyBpcyBhbiBpbnRlcm5hbCBoZWxwZXIsIHlvdSBtdXN0IHVzZSBpdA0KPiB0aHJv
-dWdoIGRtYV9hbGxvY19jb2hlcmVudCBhbmQgcGFzcyBhIHN0cnVjdCBkZXZpY2UgdG8gdGhhdCBm
-dW5jdGlvbi4NCj4gDQoNCkNhbiBJIGRpcmVjdGx5IHVzZSBjbWFfYWxsb2MoKSBhbmQgY21hX3Jl
-bGVhc2UoKSBpbiB0aGlzIGNhc2U/IFRoZSBjb250aWd1b3VzDQptZW1vcnkgYWxsb2NhdGVkIGlz
-IGp1c3QgZm9yIHZpcnR1YWwgZnJhbWVidWZmZXIgZGV2aWNlLCBub3QgZm9yIGFueSBETUENCm9w
-ZXJhdGlvbi4gSSB0aGluayB1c2luZyBkbWFfYWxsb2NfY29oZXJlbnQoKSBtaWdodCBiZSBhIGJp
-dCBvZiBvdmVya2lsbC4NCg0KPiA+ICsJaWYgKCFnZW4ydm0pIHsNCj4gPiArCQlwZGV2ID0gcGNp
-X2dldF9kZXZpY2UoUENJX1ZFTkRPUl9JRF9NSUNST1NPRlQsDQo+ID4gKwkJCVBDSV9ERVZJQ0Vf
-SURfSFlQRVJWX1ZJREVPLCBOVUxMKTsNCj4gPiArCQlpZiAoIXBkZXYpIHsNCj4gPiArCQkJcHJf
-ZXJyKCJVbmFibGUgdG8gZmluZCBQQ0kgSHlwZXItViB2aWRlb1xuIik7DQo+ID4gKwkJCXJldHVy
-biAtRU5PREVWOw0KPiA+ICsJCX0NCj4gPiArCX0NCj4gDQo+IFBsZWFzZSBhY3R1YWxseSBpbXBs
-ZW1lbnQgYSBwY2lfZHJpdmVyIGluc3RlYWQgb2YgaGFja3MgbGlrZSB0aGlzLg0KPiANCg0KSSBk
-b24ndCBxdWl0ZSBmb2xsb3cgdGhpcy4gV2hhdCBkbyB5b3UgbWVhbiBpbXBsZW1lbnRpbmcgYSBw
-Y2lfZHJpdmVyDQppbiB0aGlzIGNhc2U/DQoNCj4gPiArCQkJcGFyLT5uZWVkX2RvY29weSA9IGZh
-bHNlOw0KPiA+ICsJCQlnb3RvIGdldG1lbTE7DQo+ID4gKwkJfSBlbHNlIHsNCj4gDQo+IE5vIG5l
-ZWQgZm9yIGFuIGVsc2UgYWZ0ZXIgYSBnb3RvLg0KVGhhbmtzLiBXaWxsIGRvLg0KDQpXZWkNCg==
+On Thu, Oct 24, 2019 at 08:36:34PM -0700, Davidlohr Bueso wrote:
+> Sprinkle warning checks, under CONFIG_DEBUG_MUTEXES. While the mutex
+> rules and semantics are explicitly documented, this allows to expose
+> any abusers and robustifies the whole thing. While trylock and unlock
+> are non-blocking, calling from irq context is still forbidden (lock
+> must be within the same context as unlock).
+> 
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> ---
+>  kernel/locking/mutex.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+> index 468a9b8422e3..7e9c316c646c 100644
+> --- a/kernel/locking/mutex.c
+> +++ b/kernel/locking/mutex.c
+> @@ -733,6 +733,9 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
+>   */
+>  void __sched mutex_unlock(struct mutex *lock)
+>  {
+> +#ifdef CONFIG_DEBUG_MUTEXES
+> +	WARN_ON(in_interrupt());
+> +#endif
+>  #ifndef CONFIG_DEBUG_LOCK_ALLOC
+>  	if (__mutex_unlock_fast(lock))
+>  		return;
+> @@ -1413,6 +1416,7 @@ int __sched mutex_trylock(struct mutex *lock)
+>  
+>  #ifdef CONFIG_DEBUG_MUTEXES
+>  	DEBUG_LOCKS_WARN_ON(lock->magic != lock);
+> +	WARN_ON(in_interrupt());
+>  #endif
+>  
+>  	locked = __mutex_trylock(lock);
+
+
+No real objection, but should not lockdep already complain about this?
+__mutex_unlock_slowpath() takes ->wait_lock irq-unsafe, so then using it
+from an IRQ should generate an insta IRQ inversion report.
