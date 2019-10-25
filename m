@@ -2,125 +2,168 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1223CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06894CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDD521D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C285E21D82
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:15:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NInZl2n0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfJYTPh (ORCPT
+        id S1726908AbfJYTPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:15:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15296 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726632AbfJYTPh (ORCPT
+        Fri, 25 Oct 2019 15:15:40 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38540 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfJYTPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 15:15:37 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PJBqIX003104
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:15:34 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vv52aumxh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:15:34 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 25 Oct 2019 20:15:32 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 25 Oct 2019 20:15:30 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PJFTGC56688726
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 19:15:29 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47E21A405B;
-        Fri, 25 Oct 2019 19:15:29 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A9C1A404D;
-        Fri, 25 Oct 2019 19:15:28 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Oct 2019 19:15:28 +0000 (GMT)
-Subject: Re: [PATCH] tpm: Add major_version sysfs file
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
-Date:   Fri, 25 Oct 2019 15:15:28 -0400
-In-Reply-To: <20191025184522.5txabdikcrn2dgvj@cantor>
-References: <20191025142847.14931-1-jsnitsel@redhat.com>
-         <1572027516.4532.41.camel@linux.ibm.com>
-         <20191025184522.5txabdikcrn2dgvj@cantor>
+Received: by mail-pl1-f193.google.com with SMTP id w8so1759441plq.5;
+        Fri, 25 Oct 2019 12:15:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kD+tjQBMZ/Kzwr3+FKFta1lL67FtvDA1KxEZTDOTl4g=;
+        b=NInZl2n0t1/gDeExYL1/6yisd3c76oTrodWsybCBjzFNHXvRAnp0Pte+mvw41k9r8l
+         RcmhKAC9J5xZlCFgK+NnYmlkjz6sKwY8X2WhbZaid6oy9m7YRKKBFaNRYR8VhCt4JTMP
+         r/kqjo+jqbCFZcQxE/aahJJJmPDhAjY6yXQb/Yf5BKi0q6X1354LcotBRpVRdDcPVG9t
+         Dn9ImqfYsF4bfLUt2hOrnpLyjiFyVPPzZj8oImWavp2Vov4382BMN8Dlyt185eBblw0o
+         yzNFeoc1NWwB8H03DeZ06WlD5lYYbXT2Du3xvpI8YflZhHdnr67rHirhEtQHJZgy2egA
+         yQIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kD+tjQBMZ/Kzwr3+FKFta1lL67FtvDA1KxEZTDOTl4g=;
+        b=Fw3NyqPmCgevsNfL6tOg+GDM1Ml5vYVBOLCJSYxto4/K91JyX6T3S9yH1eWEKRparr
+         WNV+KSh3+L4ssaL6J0YehrzJ4ituYW7Yus1KWwUGKboOTfcrpU4Gca4Ij9jCCdNSO4Yv
+         QyXAbwiHKboq9cFbz0J6PA6L4zExlosEfmDKEhnPcl3NPx/n5ZQgd1RP0oX6mKMFTL0y
+         ahf8RSfDQvYqOv7aBFn58I1xbqDf00k9ciCST6FhVXFX3ZAzuBxMsWWPL2QWj5jEIizh
+         3GAV+Q18H27PRA5Re4qYGcysOFfbzp8rVCXMuGWOqJE2TJzXeyiZA+l6ic7EZssx6WGQ
+         VZXA==
+X-Gm-Message-State: APjAAAWNpEvls8jxYvi8IZ1JAbl8nUI0GpUCGdFYbV63DNt9IvRjYNxf
+        fXpTCSUPMjwAe9Ba/mlzGH7K24l65xD7E1iDaNf8X9Y49Mk=
+X-Google-Smtp-Source: APXvYqy1owYNaCwZnUik5nuZ5m6K8hOhekiWMgYF8Uq9aL+MLtKWvGLynxF5xPCuaZ326S5yFfYCQtsZd6OXwt1OxCw=
+X-Received: by 2002:a17:902:9881:: with SMTP id s1mr5731612plp.18.1572030936171;
+ Fri, 25 Oct 2019 12:15:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191025190047.38130-1-stuart.w.hayes@gmail.com> <20191025190047.38130-2-stuart.w.hayes@gmail.com>
+In-Reply-To: <20191025190047.38130-2-stuart.w.hayes@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 25 Oct 2019 22:15:24 +0300
+Message-ID: <CAHp75Vd46k06WbU24Gq-+2GnzjvM0hTkMVK6+z842piDFJ-mOw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] PCI: pciehp: Add support for disabling in-band presence
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102519-0008-0000-0000-00000327A0B9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102519-0009-0000-0000-00004A46D912
-Message-Id: <1572030928.4532.57.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910250173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 11:45 -0700, Jerry Snitselaar wrote:
-> On Fri Oct 25 19, Mimi Zohar wrote:
-> >On Fri, 2019-10-25 at 07:28 -0700, Jerry Snitselaar wrote:
-> >> Easily determining what TCG version a tpm device implements
-> >> has been a pain point for userspace for a long time, so
-> >> add a sysfs file to report the tcg version of a tpm device.
-> >
-> >Use "TCG" uppercase consistently.
+On Fri, Oct 25, 2019 at 10:00 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+>
+> From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>
+> The presence detect state (PDS) is normally a logical or of in-band and
+> out-of-band presence. As of PCIe 4.0, there is the option to disable
+> in-band presence so that the PDS bit always reflects the state of the
+> out-of-band presence.
+>
+> The recommendation of the PCIe spec is to disable in-band presence
+> whenever supported.
+>
 
-And "TPM"
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> > 
-> >>
-> >> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> >> Cc: Peter Huewe <peterhuewe@gmx.de>
-> >> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> >> Cc: linux-integrity@vger.kernel.org
-> >> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> >
-> >thanks!
-> >
-> >Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> >
-> >FYI, on my system(s) the new file is accessible as
-> >/sys/class/tpm/tpm0/version_major.  Does this need to be documented
-> >anywhere?
-> >
-> >
-> 
-> Yes, there should be an entry added to
-> Documentation/ABI/stable/sysfs-class-tpm.
-> I will fix that up and the TCG not being uppercase in a v2.
-> 
-> Should Documentation/ABI/stable/sysfs-class-tpm updated in
-> some way to reflect that those are all links under device
-> now and not actually there.
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> ---
+>  drivers/pci/hotplug/pciehp.h     | 1 +
+>  drivers/pci/hotplug/pciehp_hpc.c | 9 ++++++++-
+>  include/uapi/linux/pci_regs.h    | 2 ++
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index 654c972b8ea0..27e4cd6529b0 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -83,6 +83,7 @@ struct controller {
+>         struct pcie_device *pcie;
+>
+>         u32 slot_cap;                           /* capabilities and quirks */
+> +       unsigned int inband_presence_disabled:1;
+>
+>         u16 slot_ctrl;                          /* control register access */
+>         struct mutex ctrl_lock;
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 1a522c1c4177..dc109d521f30 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -811,7 +811,7 @@ static inline void dbg_ctrl(struct controller *ctrl)
+>  struct controller *pcie_init(struct pcie_device *dev)
+>  {
+>         struct controller *ctrl;
+> -       u32 slot_cap, link_cap;
+> +       u32 slot_cap, slot_cap2, link_cap;
+>         u8 poweron;
+>         struct pci_dev *pdev = dev->port;
+>         struct pci_bus *subordinate = pdev->subordinate;
+> @@ -869,6 +869,13 @@ struct controller *pcie_init(struct pcie_device *dev)
+>                 FLAG(link_cap, PCI_EXP_LNKCAP_DLLLARC),
+>                 pdev->broken_cmd_compl ? " (with Cmd Compl erratum)" : "");
+>
+> +       pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP2, &slot_cap2);
+> +       if (slot_cap2 & PCI_EXP_SLTCAP2_IBPD) {
+> +               pcie_write_cmd_nowait(ctrl, PCI_EXP_SLTCTL_IBPD_DISABLE,
+> +                                     PCI_EXP_SLTCTL_IBPD_DISABLE);
+> +               ctrl->inband_presence_disabled = 1;
+> +       }
+> +
+>         /*
+>          * If empty slot's power status is on, turn power off.  The IRQ isn't
+>          * requested yet, so avoid triggering a notification with this command.
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 29d6e93fd15e..ea1cf9546e4d 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -604,6 +604,7 @@
+>  #define  PCI_EXP_SLTCTL_PWR_OFF        0x0400 /* Power Off */
+>  #define  PCI_EXP_SLTCTL_EIC    0x0800  /* Electromechanical Interlock Control */
+>  #define  PCI_EXP_SLTCTL_DLLSCE 0x1000  /* Data Link Layer State Changed Enable */
+> +#define  PCI_EXP_SLTCTL_IBPD_DISABLE   0x4000 /* In-band PD disable */
+>  #define PCI_EXP_SLTSTA         26      /* Slot Status */
+>  #define  PCI_EXP_SLTSTA_ABP    0x0001  /* Attention Button Pressed */
+>  #define  PCI_EXP_SLTSTA_PFD    0x0002  /* Power Fault Detected */
+> @@ -676,6 +677,7 @@
+>  #define PCI_EXP_LNKSTA2                50      /* Link Status 2 */
+>  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2 52      /* v2 endpoints with link end here */
+>  #define PCI_EXP_SLTCAP2                52      /* Slot Capabilities 2 */
+> +#define  PCI_EXP_SLTCAP2_IBPD  0x0001  /* In-band PD Disable Supported */
+>  #define PCI_EXP_SLTCTL2                56      /* Slot Control 2 */
+>  #define PCI_EXP_SLTSTA2                58      /* Slot Status 2 */
+>
+> --
+> 2.18.1
+>
 
-The importance is that there is a common file that can be used by
-userspace applications, instead of having to search for it, not that
-it is a link per-se.
 
-Mimi
-
+-- 
+With Best Regards,
+Andy Shevchenko
