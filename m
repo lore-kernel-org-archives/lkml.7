@@ -2,187 +2,112 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950DCC47E49
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2F6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C2921D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572034819;
-	bh=n6IuL5NT84NRdDBMzq5N2XWRhRMjsUq7P3Szh+BtIGc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fCEfY8+r4qAxiKDAm9xr4WG04h0FrpnR4dncvWzrBmIkpXRdqzrDC8Wmwxo27DjK4
-	 572qpdKiTtkDGKdFuo3rXXEDxa8I+1qKTfYAVS3OEgCid3WkE55kUZErS5mrWSM+U3
-	 79rvkvghWC4pOBdkSSQrK6EKhBjMbFm4cdJ3wByo=
+	by mail.kernel.org (Postfix) with ESMTP id 6442021D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfJYUUS (ORCPT
+        id S1728176AbfJYUUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 16:20:55 -0400
+Received: from mga07.intel.com ([134.134.136.100]:18009 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfJYUUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:20:18 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC94D21D81;
-        Fri, 25 Oct 2019 20:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572034816;
-        bh=n6IuL5NT84NRdDBMzq5N2XWRhRMjsUq7P3Szh+BtIGc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gJ+2dxRDAfY9Kig49YlagePxiTr7gkDHH0fmrpH6UslJwD9yt26aEXnsJdGr0Rt3z
-         TQPk/R0YYQ/PE2arNWMMM2yRacdmPkP/icnRG+HLt+TyuGx9lE3Y+03gyMhYbG4qy/
-         ruUgemKAkWRE/TynwQ3uHOFmC2/Dc5aPVc5a8R2k=
-Date:   Fri, 25 Oct 2019 15:20:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
- back old behavior
-Message-ID: <20191025202004.GA147688@google.com>
+        id S1726589AbfJYUUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:20:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 13:20:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
+   d="scan'208";a="400221917"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Oct 2019 13:20:53 -0700
+Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 25 Oct 2019 13:20:52 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.88]) by
+ ORSMSX116.amr.corp.intel.com ([169.254.7.79]) with mapi id 14.03.0439.000;
+ Fri, 25 Oct 2019 13:20:52 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+Subject: RE: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Topic: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Index: AQHVdYkISHS3XNGT0kCKyhZHN6EY9KdALBNAgAIVm4CAAmLQsIAjqUEAgACZz9CAALWTgIACLwmwgACTTID//5iEgA==
+Date:   Fri, 25 Oct 2019 20:20:51 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB589693DABC@ORSMSX121.amr.corp.intel.com>
+References: <20190129204319.15238-1-jacob.e.keller@intel.com>
+ <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
+ <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
+ <CAK7LNARyUEakeG_N9TWcO2cjFSzbgY__k_QJm6C+oOz+fW0aeg@mail.gmail.com>
+ <02874ECE860811409154E81DA85FBB58968E1402@ORSMSX121.amr.corp.intel.com>
+ <CAK7LNARAhZtzdnS9+mgtamj=pLdV81dudnYVDa8NRxcQPpF0bw@mail.gmail.com>
+ <02874ECE860811409154E81DA85FBB589693A38A@ORSMSX121.amr.corp.intel.com>
+ <CAK7LNAQow8N9a5e_=pu7qDiuvETy1x1P5fxp20zYOZgQhXPJhg@mail.gmail.com>
+ <02874ECE860811409154E81DA85FBB589693D053@ORSMSX121.amr.corp.intel.com>
+ <6127ec91-ad81-f0d7-576e-22e06e677442@infradead.org>
+In-Reply-To: <6127ec91-ad81-f0d7-576e-22e06e677442@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOWU4ZmM3ODctNGY1Mi00MTM4LTljMjktNzE1ZDg0ZWE5Y2Y1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiajNuSXhreW1PSlhYaUxBcmh1M1JGQ0lwVEJuSzZWZXV5RUg1cUs0OER1bndVRXJsWVp1K1lWcFlCdGJkWGdBdiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023192205.97024-1-olof@lixom.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
-> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
-> the behavior was changed such that native (kernel) handling of DPC
-> got tied to whether the kernel also handled AER. While this is what
-> the standard recommends, there are BIOSes out there that lack the DPC
-> handling since it was never required in the past.
-
-Some systems do not grant OS control of AER via _OSC.  I guess the
-problem is that on those systems, the OS DPC driver used to work, but
-after eed85ff4c0da7, it does not.  Right?
-
-We should also update negotiate_os_control() to request control of DPC
-via _OSC.  Kuppuswamy's patch [1] does that but hasn't been merged
-yet.  That will conflict with this, but I can resolve that.
-
-I applied this as below (with the nits Keith noticed) to pci/aer for
-v5.5, thanks!
-
-[1] https://lore.kernel.org/r/b638cbd3e122b4c7a58b949d7224230d2c4b34d4.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com
-
-commit 35a0b2378c19
-Author: Olof Johansson <olof@lixom.net>
-Date:   Wed Oct 23 12:22:05 2019 -0700
-
-    PCI/DPC: Add "pcie_ports=dpc-native" to allow DPC without AER control
-    
-    Prior to eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
-    Linux handled DPC events regardless of whether firmware had granted it
-    ownership of AER or DPC, e.g., via _OSC.
-    
-    PCIe r5.0, sec 6.2.10, recommends that the OS link control of DPC to
-    control of AER, so after eed85ff4c0da7, Linux handles DPC events only if it
-    has control of AER.
-    
-    On platforms that do not grant OS control of AER via _OSC, Linux DPC
-    handling worked before eed85ff4c0da7 but not after.
-    
-    To make Linux DPC handling work on those platforms the same way they did
-    before, add a "pcie_ports=dpc-native" kernel parameter that makes Linux
-    handle DPC events regardless of whether it has control of AER.
-    
-    [bhelgaas: commit log, move pcie_ports_dpc_native to drivers/pci/]
-    Link: https://lore.kernel.org/r/20191023192205.97024-1-olof@lixom.net
-    Signed-off-by: Olof Johansson <olof@lixom.net>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c7ac2f3ac99f..806c89f79be8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3540,6 +3540,8 @@
- 			even if the platform doesn't give the OS permission to
- 			use them.  This may cause conflicts if the platform
- 			also tries to use these services.
-+		dpc-native	Use native PCIe service for DPC only.  May
-+				cause conflicts if firmware uses AER or DPC.
- 		compat	Disable native PCIe services (PME, AER, DPC, PCIe
- 			hotplug).
- 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index a32ec3487a8d..e06f42f58d3d 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -291,7 +291,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	int status;
- 	u16 ctl, cap;
- 
--	if (pcie_aer_get_firmware_first(pdev))
-+	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
- 
- 	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index 944827a8c7d3..1e673619b101 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -25,6 +25,8 @@
- 
- #define PCIE_PORT_DEVICE_MAXSERVICES   5
- 
-+extern bool pcie_ports_dpc_native;
-+
- #ifdef CONFIG_PCIEAER
- int pcie_aer_init(void);
- #else
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 1b330129089f..5075cb9e850c 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -250,8 +250,13 @@ static int get_port_device_capability(struct pci_dev *dev)
- 		pcie_pme_interrupt_enable(dev, false);
- 	}
- 
-+	/*
-+	 * With dpc-native, allow Linux to use DPC even if it doesn't have
-+	 * permission to use AER.
-+	 */
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
--	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
-+	    pci_aer_available() &&
-+	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
- 		services |= PCIE_PORT_SERVICE_DPC;
- 
- 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 0a87091a0800..160d67c59310 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -29,12 +29,20 @@ bool pcie_ports_disabled;
-  */
- bool pcie_ports_native;
- 
-+/*
-+ * If the user specified "pcie_ports=dpc-native", use the Linux DPC PCIe
-+ * service even if the platform hasn't given us permission.
-+ */
-+bool pcie_ports_dpc_native;
-+
- static int __init pcie_port_setup(char *str)
- {
- 	if (!strncmp(str, "compat", 6))
- 		pcie_ports_disabled = true;
- 	else if (!strncmp(str, "native", 6))
- 		pcie_ports_native = true;
-+	else if (!strncmp(str, "dpc-native", 10))
-+		pcie_ports_dpc_native = true;
- 
- 	return 1;
- }
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgPHJkdW5s
+YXBAaW5mcmFkZWFkLm9yZz4NCj4gU2VudDogRnJpZGF5LCBPY3RvYmVyIDI1LCAyMDE5IDEyOjMw
+IFBNDQo+IFRvOiBLZWxsZXIsIEphY29iIEUgPGphY29iLmUua2VsbGVyQGludGVsLmNvbT47IE1h
+c2FoaXJvIFlhbWFkYQ0KPiA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+DQo+IENjOiBp
+bnRlbC13aXJlZC1sYW5AbGlzdHMub3N1b3NsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgta2J1aWxkDQo+IDxsaW51eC1rYnVpbGRAdmdlci5rZXJuZWwub3JnPg0KPiBT
+dWJqZWN0OiBSZTogW1BBVENIXSBuYW1lc3BhY2U6IGZpeCBuYW1lc3BhY2UucGwgc2NyaXB0IHRv
+IHN1cHBvcnQgcmVsYXRpdmUNCj4gcGF0aHMNCj4gDQo+IE9uIDEwLzI1LzE5IDEwOjQ1IEFNLCBL
+ZWxsZXIsIEphY29iIEUgd3JvdGU6DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gPj4gRnJvbTogTWFzYWhpcm8gWWFtYWRhIDx5YW1hZGEubWFzYWhpcm9Ac29jaW9uZXh0
+LmNvbT4NCj4gPj4gU2VudDogV2VkbmVzZGF5LCBPY3RvYmVyIDIzLCAyMDE5IDY6MjIgUE0NCj4g
+Pj4gVG86IEtlbGxlciwgSmFjb2IgRSA8amFjb2IuZS5rZWxsZXJAaW50ZWwuY29tPg0KPiA+PiBD
+YzogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+OyBpbnRlbC13aXJlZC1sYW5A
+bGlzdHMub3N1b3NsLm9yZzsNCj4gPj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2J1aWxkIDxsaW51eC1rYnVpbGRAdmdlci5rZXJuZWwub3JnPg0KPiA+PiBTdWJqZWN0OiBS
+ZTogW1BBVENIXSBuYW1lc3BhY2U6IGZpeCBuYW1lc3BhY2UucGwgc2NyaXB0IHRvIHN1cHBvcnQg
+cmVsYXRpdmUNCj4gPj4gcGF0aHMNCj4gPj4NCj4gPj4gSWYgeW91IHdhbnQgdG8gZGV0ZWN0IG1p
+c3NpbmcgJ3N0YXRpYycsDQo+ID4+IGhhdmUgeW91IHRyaWVkICdzcGFyc2UnPw0KPiA+Pg0KPiA+
+DQo+ID4gV2UndmUgdXNlZCB0aGF0IGFzIHdlbGwuDQo+ID4NCj4gPiBUbyBiZSBmYWlyLCBJIGFn
+cmVlIHRoYXQgaXQgY292ZXJzIHNpbWlsYXIgZnVuY3Rpb25hbGl0eSBhcyBvdGhlciB0b29scy4g
+SSBoYXZlbid0DQo+IGxvb2tlZCBkaXJlY3RseSBhdCBuYW1lc3BhY2UucGwgb3V0cHV0IGluIGEg
+d2hpbGUsIGFuZCB0aGUgZml4IGhlcmUgaXMgbXVsdGlwbGUNCj4geWVhcnMgb2xkIHRoYXQgdG9v
+ayBhIGxvbmcgdGltZSB0byBnZXQgcGlja2VkIHVwLg0KPiA+DQo+ID4gSWYgaXQncyBhZ3JlZWQg
+dGhhdCB0aGUgdG9vbCBoYXMgbm8gdmFsdWUsIGFuZCBlc3BlY2lhbGx5IGlmIGl0IHJlc3VsdHMg
+aW4gZmFsc2UNCj4gaW5kaWNhdGlvbnMgb2YgYSBwcm9ibGVtLCB0aGVuIG1heWJlIHJlbW92aW5n
+IGl0IHRvIHByZXZlbnQgc29tZW9uZSBmcm9tIG1pcy0NCj4gcmVhZGluZyBpdHMgb3V0cHV0IG1h
+a2VzIHNlbnNlPw0KPiANCj4gSWYgdGhlcmUgaXMgYSBzYXRpc2ZhY3RvcnkgYWx0ZXJuYXRpdmUs
+IEkgZXhwZWN0IHRoYXQgbmFtZXNwYWNlLnBsIGlzIG9sZCwNCj4gdW5tYWludGFpbmVkLCBhbmQg
+dW5uZWVkZWQsIGFuZCBzaG91bGQgZ28gYXdheS4NCj4gDQo+IC0tDQo+IH5SYW5keQ0KDQpHaXZl
+biBZYW1hZGEncyBjb21tZW50cyBhbmQgbXkgZXhwZXJpZW5jZSwgbW9kcG9zdCBhbmQgc3BhcnNl
+IGFyZSBib3RoIGdvb2QgYXQgZGV0ZWN0aW5nIHRoZSBpc3N1ZXMgdGhhdCBuYW1lc3BhY2UucGwg
+aGFuZGxlcy4NCg0KSSBhbSBub3Qgc3VyZSBpZiB0aGVyZSdzIGFueSBvdGhlciBvdXRwdXQgdGhh
+dCB3b3VsZCBiZSB2YWx1YWJsZSBmcm9tIG5hbWVzcGFjZS5wbCwgYnV0IGlmIG5vdC4uIEkgZG9u
+J3Qgc2VlIGEgcmVhc29uIHRvIGtlZXAgaXQgY29tcGFyZWQgdG8gdGhlIG90aGVyIHRvb2xzLg0K
+DQpUaGFua3MsDQpKYWtlDQo=
