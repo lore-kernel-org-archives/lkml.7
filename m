@@ -2,176 +2,82 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716D0CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0766CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51ACD205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15EA21928
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:45:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="caAydi5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387783AbfJYAlp (ORCPT
+        id S2387888AbfJYApi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 20:41:45 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:65441 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfJYAlo (ORCPT
+        Thu, 24 Oct 2019 20:45:38 -0400
+Received: from mail-yb1-f202.google.com ([209.85.219.202]:54693 "EHLO
+        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfJYAph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 20:41:44 -0400
-Received: from 79.184.254.57.ipv4.supernova.orange.pl (79.184.254.57) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 3d5b083a06540a5e; Fri, 25 Oct 2019 02:41:41 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ACPI: processor: Add QoS requests for all CPUs
-Date:   Fri, 25 Oct 2019 02:41:40 +0200
-Message-ID: <2435090.1mJ0fSsrDY@kreacher>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 24 Oct 2019 20:45:37 -0400
+Received: by mail-yb1-f202.google.com with SMTP id k79so611688ybf.21
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 17:45:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=ykFrkrtkEuTw1kHPTs7ZKgy0svb1H2iYZiKkqKmnwyo=;
+        b=caAydi5ejwcAIKJB+h/wUp8YdaIkgAPPznlLGZBkHbnI6yj2GkZKxIkLsh/yxTN7xc
+         VAnEO9LWW8EFcUph6sYxzx6b0gKkJlX30tmIljhyc3mTyRmEjsEpRNsvzB+71uOWCSQt
+         2hw+6NiU+kX7ZDh8GtMNEUgv1mVZ7FArsc6GhCYr9IxwTx6FK3hg6e4ngvKNiVcvEy6a
+         BzfEs4n3534cyL8HRkXAYSg3BfqC0q9pKHVJVF9R00Z+qvuDIZCQeeyWQocwZbuclchU
+         7vvJs317Gq6UDwoBUFAMNxBYh2aI9SaRA/LHPLmc8in9XojzLpJdrXxdCdhvXMb9zjkx
+         OIZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=ykFrkrtkEuTw1kHPTs7ZKgy0svb1H2iYZiKkqKmnwyo=;
+        b=EMkkarMR6HfPhYMZKbp1fYqv8wrw/bm5z9o77THPqBbN8Yn54N8VZPDQR5kbHpId1F
+         cEhot7t8F7eRETD/kJGodHwdEbaCDsBpyJmSJBS+Ip8gePcyZpBZHS6MicsH7Xkacr0d
+         2wfF6WM1nsjjyo/v28FtwHWCG1DDolCQBlj7eCSjt0hq2taopleIyVSCGKaUjFil2Ug7
+         uRJW8xAPFFI5ytojoqquCDsCW8iJ3LNj/MzJeJiMfAK1PhTEqX6zgitiXsZsdwrbECp+
+         vfHSw4L8RfKXcImpjV2oc0K/LXkmF5PJ1Dc1UpMOl1wE2t03joFhHiipGkwdTikE99Us
+         vifQ==
+X-Gm-Message-State: APjAAAW/xVqtIEP/QiScRHZtnTR+bLhXTr8CHNV6y9UgROP12MUSaeZ7
+        v2NpPIwNSp3nI1krkmkpy/6lBtTYQuU=
+X-Google-Smtp-Source: APXvYqxGFEMFLOZigeTFDOQm5tsU7MYmQW2vciA/3Nu5rxcdD+N6iPXPa9sJ/vz/kyTh/xhzdR/xPBC3Kx0=
+X-Received: by 2002:a25:afca:: with SMTP id d10mr1027880ybj.54.1571964336762;
+ Thu, 24 Oct 2019 17:45:36 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 09:45:31 +0900
+In-Reply-To: <20191018010846.186484-1-pliard@google.com>
+Message-Id: <20191025004531.89978-1-pliard@google.com>
+Mime-Version: 1.0
+References: <20191018010846.186484-1-pliard@google.com>
+X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
+Subject: Re: [PATCH] squashfs: Migrate from ll_rw_block usage to BIO
+From:   Philippe Liard <pliard@google.com>
+To:     phillip@squashfs.org.uk
+Cc:     linux-kernel@vger.kernel.org, groeck@chromium.org,
+        pliard@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Personally speaking, just for Android related use cases, I'd suggest
+> latest EROFS if you care more about system overall performance more
+> than compression ratio, even https://lkml.org/lkml/2017/9/22/814 is
+> applied (you can do benchmark), we did much efforts 3 years ago.
+>
+> And that is not only performance but noticable memory overhead (a lot
+> of extra memory allocations) and heavy page cache thrashing in low
+> memory scenarios (it's very common [1].)
 
-The _PPC change notifications from the platform firmware are per-CPU,
-so acpi_processor_ppc_init() needs to add a frequency QoS request
-for each CPU covered by a cpufreq policy to take all of them into
-account.
-
-Even though ACPI thermal control of CPUs sets frequency limits
-per processor package, it also needs a frequency QoS request for each
-CPU in a cpufreq policy in case some of them are taken offline and
-the frequency limit needs to be set through the remaining online
-ones (this is slightly excessive, because all CPUs covered by one
-cpufreq policy will set the same frequency limit through their QoS
-requests, but it is not incorrect).
-
-Modify the code in accordance with the above observations.
-
-Fixes: d15ce412737a ("ACPI: cpufreq: Switch to QoS requests instead of cpufreq notifier")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/processor_perflib.c |   38 +++++++++++++++++++++++---------------
- drivers/acpi/processor_thermal.c |   38 +++++++++++++++++++++++---------------
- 2 files changed, 46 insertions(+), 30 deletions(-)
-
-Index: linux-pm/drivers/acpi/processor_thermal.c
-===================================================================
---- linux-pm.orig/drivers/acpi/processor_thermal.c
-+++ linux-pm/drivers/acpi/processor_thermal.c
-@@ -127,26 +127,34 @@ static int cpufreq_set_cur_state(unsigne
- 
- void acpi_thermal_cpufreq_init(struct cpufreq_policy *policy)
- {
--	int cpu = policy->cpu;
--	struct acpi_processor *pr = per_cpu(processors, cpu);
--	int ret;
--
--	if (!pr)
--		return;
--
--	ret = freq_qos_add_request(&policy->constraints, &pr->thermal_req,
--				   FREQ_QOS_MAX, INT_MAX);
--	if (ret < 0)
--		pr_err("Failed to add freq constraint for CPU%d (%d)\n", cpu,
--		       ret);
-+	unsigned int cpu;
-+
-+	for_each_cpu(cpu, policy->related_cpus) {
-+		struct acpi_processor *pr = per_cpu(processors, cpu);
-+		int ret;
-+
-+		if (!pr)
-+			continue;
-+
-+		ret = freq_qos_add_request(&policy->constraints,
-+					   &pr->thermal_req,
-+					   FREQ_QOS_MAX, INT_MAX);
-+		if (ret < 0)
-+			pr_err("Failed to add freq constraint for CPU%d (%d)\n",
-+			       cpu, ret);
-+	}
- }
- 
- void acpi_thermal_cpufreq_exit(struct cpufreq_policy *policy)
- {
--	struct acpi_processor *pr = per_cpu(processors, policy->cpu);
-+	unsigned int cpu;
-+
-+	for_each_cpu(cpu, policy->related_cpus) {
-+		struct acpi_processor *pr = per_cpu(processors, policy->cpu);
- 
--	if (pr)
--		freq_qos_remove_request(&pr->thermal_req);
-+		if (pr)
-+			freq_qos_remove_request(&pr->thermal_req);
-+	}
- }
- #else				/* ! CONFIG_CPU_FREQ */
- static int cpufreq_get_max_state(unsigned int cpu)
-Index: linux-pm/drivers/acpi/processor_perflib.c
-===================================================================
---- linux-pm.orig/drivers/acpi/processor_perflib.c
-+++ linux-pm/drivers/acpi/processor_perflib.c
-@@ -159,26 +159,34 @@ void acpi_processor_ignore_ppc_init(void
- 
- void acpi_processor_ppc_init(struct cpufreq_policy *policy)
- {
--	int cpu = policy->cpu;
--	struct acpi_processor *pr = per_cpu(processors, cpu);
--	int ret;
--
--	if (!pr)
--		return;
--
--	ret = freq_qos_add_request(&policy->constraints, &pr->perflib_req,
--				   FREQ_QOS_MAX, INT_MAX);
--	if (ret < 0)
--		pr_err("Failed to add freq constraint for CPU%d (%d)\n", cpu,
--		       ret);
-+	unsigned int cpu;
-+
-+	for_each_cpu(cpu, policy->related_cpus) {
-+		struct acpi_processor *pr = per_cpu(processors, cpu);
-+		int ret;
-+
-+		if (!pr)
-+			continue;
-+
-+		ret = freq_qos_add_request(&policy->constraints,
-+					   &pr->perflib_req,
-+					   FREQ_QOS_MAX, INT_MAX);
-+		if (ret < 0)
-+			pr_err("Failed to add freq constraint for CPU%d (%d)\n",
-+			       cpu, ret);
-+	}
- }
- 
- void acpi_processor_ppc_exit(struct cpufreq_policy *policy)
- {
--	struct acpi_processor *pr = per_cpu(processors, policy->cpu);
-+	unsigned int cpu;
-+
-+	for_each_cpu(cpu, policy->related_cpus) {
-+		struct acpi_processor *pr = per_cpu(processors, cpu);
- 
--	if (pr)
--		freq_qos_remove_request(&pr->perflib_req);
-+		if (pr)
-+			freq_qos_remove_request(&pr->perflib_req);
-+	}
- }
- 
- static int acpi_processor_get_performance_control(struct acpi_processor *pr)
-
-
-
+Thanks for the suggestion. EROFS is on our radar and we will
+(re)consider it once it goes out of staging. But we will most likely
+stay on squashfs until this happens.
