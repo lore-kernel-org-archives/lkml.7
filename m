@@ -2,105 +2,98 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46017CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF35ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1632621D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F7621D82
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LOsYNFJ3"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="VwfW1KxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503176AbfJYPxY (ORCPT
+        id S2395536AbfJYPzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:53:24 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39288 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502304AbfJYPxY (ORCPT
+        Fri, 25 Oct 2019 11:55:12 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37093 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388846AbfJYPzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:53:24 -0400
-Received: by mail-io1-f65.google.com with SMTP id y12so2969173ioa.6
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:53:23 -0700 (PDT)
+        Fri, 25 Oct 2019 11:55:12 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b20so2172872lfp.4
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=BTCG2yDYkKpAkRxeGSjbivKMcUqz/dGEfEhScgVd6MY=;
-        b=LOsYNFJ30GiYM0TVbIi0pCwCvywaMwemc8XsosqG8jQA2FDGLXmQCVlCHJvQN9NVCc
-         38O7VnvVlV5Rhho6slDLFCKcj2PUM3nVSu38Z54JoM9bwlEehv8aG3l/YrI7ljI/H233
-         t9LeZgYAKOqp9yl1JhH9vhR98y05l1Bgj/9RmdYUSy1K3Eizn0odTPD4HElXRDwW+zqa
-         SbHUIwco2X/FvPXJPWNhZKS6+781cXqUP3IwB3C+X4AocW4H1Q3vF2qktYUZx+cdaexg
-         a2C0S8r74ZMyiDS3299MKx7SHy122W9AkKY5QKp5mCrmhKUYYiZQGM6dcGcrnRQ4vjwV
-         96Kg==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sS3PYP7sb7nZeexvyG7CuYvg14FuVX9+0KxUSPIEzcs=;
+        b=VwfW1KxAddVtUt5JxxIFhB1j5MYK1n5dRFc4R3VO/CRFd0eDr0VpBkjyzcYr4QYNkj
+         LIBNEP/T58NdOhaWBLVpU326qFlLvC+zDFOkhHMb2DUPHmjHoDuMhsm+to9KZ4yL/qbN
+         m/Re4JDkfbIXC428QMJ59pVYZgp6SWgCNZvEEWG4xCyUNFXFQ5cIXFMaELnA4Kcqw7Bs
+         36lycD+7NVwtHBR/Pb+Q4JYWGJEBwFUpJEmfSJ8I3MLZ9YboRfCoYlcFXhv9w3q3swDm
+         5vjLhkePVx/QJr+mVONya5OrYUXzfHoB3lWh2Hb8kZ8pzwBNz0PxvsQrBLZFNTJrbFAj
+         nodw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=BTCG2yDYkKpAkRxeGSjbivKMcUqz/dGEfEhScgVd6MY=;
-        b=X6JvyU3LnzX9n6wabxCAdVAMQL7EXk77kR07GsXJYbOdrvP3ZQ0kxt+yf0w4XBpXfa
-         gcmzub0UAzuLwTUve+36oIkk/floEKAj+Qw1HBUsMa/hk8OXP0wOZWjXCzAHwVtnNTqi
-         dWyGaQZK9V/fUO6mgky7Ehw5xMoXgdzWwE6m9sN1z7EK9hJM7URKUc8JUEWfIDjH/LHA
-         T5z41xiklP2REBANI4wMKt6Hj4MOtzal+t8RwmLUzGn7VVlGSOMikLOdOh/U7Ejlm7Vz
-         6FHvk8R7zjdpXAOduLG3+sKd7d7BS2hG00zFQGvOPWsAge+QVJS/326B+RJDOhy/0viH
-         WjaA==
-X-Gm-Message-State: APjAAAVBjPQEijhe8ADzQX6TK1Zz4dNXZjcAzsp2NutbXK/7Z20uyviK
-        1l3X46ORCf0TE/48QHUZJz1fYw==
-X-Google-Smtp-Source: APXvYqyRv4NFbYB61iRVAes1oYhBMfB6E/EnuYSHHEoiWYs7t/2gjTWcjGIdGdbuzeRDIP+hxK08Dw==
-X-Received: by 2002:a02:6508:: with SMTP id u8mr4734969jab.28.1572018802766;
-        Fri, 25 Oct 2019 08:53:22 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id t9sm308318ios.66.2019.10.25.08.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 08:53:22 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 08:53:19 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Yash Shah <yash.shah@sifive.com>
-cc:     "Paul Walmsley ( Sifive)" <paul.walmsley@g.sifive.com>,
-        "Palmer Dabbelt ( Sifive)" <palmer@g.sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "will@kernel.org" <will@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        Greentime Hu <greentime.hu@g.sifive.com>,
-        "alex@ghiti.fr" <alex@ghiti.fr>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        "sorear2@gmail.com" <sorear2@gmail.com>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH v2] RISC-V: Add PCIe I/O BAR memory mapping
-In-Reply-To: <1571992163-6811-1-git-send-email-yash.shah@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1910250852420.28076@viisi.sifive.com>
-References: <1571992163-6811-1-git-send-email-yash.shah@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sS3PYP7sb7nZeexvyG7CuYvg14FuVX9+0KxUSPIEzcs=;
+        b=nPUTxEBvl069ssjrmPqyK4SMLzDzKhML7rRxlATGa4JJJ+aHAVxwOJcs+85/bevM4e
+         LdBfzs/uoH0BvbHeNadJ3qW1Q/C306UAmNJmLT5vuqAnm0lKftPfqUK1X7WlGCZcGzB+
+         DLOUJz1TgX+z278WuLBJ7R8W6ST9xVIJei5BNYQd0obuYLX2YBbK5/vwwtqLhWD5F+2l
+         e589Sf06hq6ARlMj16Qru1HilIMvFIptX/quIv1obUjEFAZJB6CakSIooAecgVJH6ZQJ
+         FbluryvkbjBwcJLFEi39CwVUbrtMKQSyDpvrc2vxLMdeKQi1bFtbqU241tG3gzXDvOLi
+         kOwQ==
+X-Gm-Message-State: APjAAAVvO7qGLrm9ePYQhYZ2bwvXZUbEX2pH0in0BONYtZPFg9rljgKR
+        3obKtK/gC22wywMJ9ecwcO0vhRaiTq8IKOxooVpT
+X-Google-Smtp-Source: APXvYqynWNcfJAV5BSOoIkWNJbu7fzy1hygZ1L6EWTv9teeMfhYOH+6vtS9qysworxUgBfYNGDL9w7vnEaeLXe2Rst8=
+X-Received: by 2002:ac2:51b6:: with SMTP id f22mr3196445lfk.175.1572018910101;
+ Fri, 25 Oct 2019 08:55:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <7869bb43-5cb1-270a-07d1-31574595e13e@huawei.com>
+ <16e0170d878.280e.85c95baa4474aabc7814e68940a78392@paul-moore.com> <a700333e-53b8-1a28-b27d-2ba3f612df2a@huawei.com>
+In-Reply-To: <a700333e-53b8-1a28-b27d-2ba3f612df2a@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 25 Oct 2019 11:54:58 -0400
+Message-ID: <CAHC9VhRfEkPCC-T1W2AOD2FTkUD4Z=BT=R+-kF+=Rejv9fyWOw@mail.gmail.com>
+Subject: Re: [PATCH] audit: remove redundant condition check in kauditd_thread()
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org, hushiyuan@huawei.com,
+        linfeilong@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019, Yash Shah wrote:
+On Fri, Oct 25, 2019 at 3:14 AM Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+> On 2019/10/25 13:43, Paul Moore wrote:
+> > On October 23, 2019 3:27:50 PM Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+> >> Warning is found by the code analysis tool:
+> >>  "the condition 'if(ac && rc < 0)' is redundant: ac"
+> >>
+> >>
+> >> The @ac variable has been checked before. It can't be a null pointer
+> >> here, so remove the redundant condition check.
+> >>
+> >>
+> >> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> >> ---
+> >> kernel/audit.c | 4 ++--
+> >> 1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > Hello,
+> >
+> > Thank you for the patch.  Looking quickly at it, it appears to be correct, unfortunately I'm not in a position to merge non-critical patches, but I expect to merge this next week.
+> >
+> ok, thanks.
 
-> For legacy I/O BARs (non-MMIO BARs) to work correctly on RISC-V Linux,
-> we need to establish a reserved memory region for them, so that drivers
-> that wish to use the legacy I/O BARs can issue reads and writes against
-> a memory region that is mapped to the host PCIe controller's I/O BAR
-> mapping.
-> 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+I was able to find some time today to take a closer look and it still
+looks good to me so I've merge it into audit/next - thanks!
 
-Thanks.  And just to confirm: this is a fix, right?  Without this patch, 
-legacy PCIe I/O resources won't be accessible on RISC-V?
-
-
-- Paul
+-- 
+paul moore
+www.paul-moore.com
