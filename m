@@ -2,178 +2,102 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD31CA9EBE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFA7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C524E21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ReQEnplZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9895121929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502546AbfJYOsK (ORCPT
+        id S2395306AbfJYOs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:48:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:47056 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394082AbfJYOsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:48:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n15so2619858wrw.13;
-        Fri, 25 Oct 2019 07:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
-        b=ReQEnplZs6d9r7FMszuAt1KQpVhgBAK8HrNTFjUqY3S/9APV1+HGvrsZ9waq7e63YU
-         qE3MBI4hqWqVJcX+VWmtAW85YKN71otDbfGbheixnIP6tSrWow7JIdFnGpXtiV+mVJW2
-         1p2ctbskyMZMfpkAuSXvh/NwSIRIncEVf4MMrb16d505nLujE9HTPHxu4LuAIaDSZ+Jc
-         KyD8GrKirgOQpcezDEDjZuvpDgE4yTBKNJS+69u7yUoDohsPtX/u+wyEaGIbvTZHormM
-         1LsppGHi80Arm2rQS0fl8o4nF9UjLZIsJPeKNNAtOJQk0Dc1AvH/QKIDvuZYoU6aXOrF
-         VoIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bIQBfe8sGIHTcc6sIk8ML0XGqqJRWtOG/huxYjSxgWs=;
-        b=WhjmwmWapfeXRhBFDu8d/qB3iUL7FMy4Wmydi93rBjYhG76MuJzdhD1YBvnFpqn+FT
-         dnX1SPbAXdowQVjjLZ+PqE9XjWUTj7cBZ2C9J0A893jqHyFjK92Qe13U96MLx1G1pOwG
-         PBQSyMyHBmFHa2yDun/xTUbO+NGzQrr3GRrjcmsuSpz2sL25yvVbnZqYtNqwM7Be2yYH
-         OCDASejiZWOiX9FKPv8Tiks7hJ01jRkXje/Q8dos2EmV2bmNZQNZ5/tG40AH/3rL9J2t
-         u9erg18cDwkQEn4r8M0SikS0zulAneJ7JtYvOZ9qCwlNq4lcWi2VsKBEtXRAGqNNtYAG
-         +6AQ==
-X-Gm-Message-State: APjAAAWZNH4H1w0uNfv5R1aM2gEXSdL2eSET9aaMn/otQwKNyejaYNI8
-        8TKPgpP8f+WA/IbQ274TcbI=
-X-Google-Smtp-Source: APXvYqxsX3C8tseMrdTDPvXw+m20Jy/sW7m38w3vpts8ZabQ38lGcQ4VQLB8VI+iJPUaxLQS52CZqA==
-X-Received: by 2002:a5d:4847:: with SMTP id n7mr3349140wrs.398.1572014885771;
-        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
-Received: from mail.google.com ([104.238.174.53])
-        by smtp.gmail.com with ESMTPSA id 26sm2126489wmf.20.2019.10.25.07.48.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 25 Oct 2019 07:48:05 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 14:48:03 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Changbin Du <changbin.du@gmail.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-usb@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH v2] kernel-doc: rename the kernel-doc directive
- 'functions' to 'identifiers'
-Message-ID: <20191025144802.uixg2crhw6h7gghq@mail.google.com>
-References: <20191020131717.28990-1-changbin.du@gmail.com>
- <20191024121940.1d6a64df@lwn.net>
- <87woctb9cj.fsf@intel.com>
+        Fri, 25 Oct 2019 10:48:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61585 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389921AbfJYOs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:48:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 07:48:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
+   d="scan'208";a="223940563"
+Received: from bnail-mobl.amr.corp.intel.com (HELO [10.252.140.167]) ([10.252.140.167])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Oct 2019 07:48:25 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoC: eve: implement set_bias_level function
+ for rt5514
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "M, Naveen" <naveen.m@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1571994691-20199-1-git-send-email-brent.lu@intel.com>
+ <3ce80285-ddb5-653d-cf60-febc9fd0bdee@linux.intel.com>
+ <CF33C36214C39B4496568E5578BE70C740320822@PGSMSX108.gar.corp.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <219281e5-d685-d584-0d22-5dcf3ca2bec2@linux.intel.com>
+Date:   Fri, 25 Oct 2019 09:48:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87woctb9cj.fsf@intel.com>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+In-Reply-To: <CF33C36214C39B4496568E5578BE70C740320822@PGSMSX108.gar.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 09:57:48AM +0300, Jani Nikula wrote:
-> On Thu, 24 Oct 2019, Jonathan Corbet <corbet@lwn.net> wrote:
-> > On Sun, 20 Oct 2019 21:17:17 +0800
-> > Changbin Du <changbin.du@gmail.com> wrote:
-> >
-> >> The 'functions' directive is not only for functions, but also works for
-> >> structs/unions. So the name is misleading. This patch renames it to
-> >> 'identifiers', which specific the functions/types to be included in
-> >> documentation. We keep the old name as an alias of the new one before
-> >> all documentation are updated.
-> >> 
-> >> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> >
-> > So I think this is basically OK, but I have one more request...
-> >
-> > [...]
-> >
-> >> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-> >> index 1159405cb920..0689f9c37f1e 100644
-> >> --- a/Documentation/sphinx/kerneldoc.py
-> >> +++ b/Documentation/sphinx/kerneldoc.py
-> >> @@ -59,9 +59,10 @@ class KernelDocDirective(Directive):
-> >>      optional_arguments = 4
-> >>      option_spec = {
-> >>          'doc': directives.unchanged_required,
-> >> -        'functions': directives.unchanged,
-> >>          'export': directives.unchanged,
-> >>          'internal': directives.unchanged,
-> >> +        'identifiers': directives.unchanged,
-> >> +        'functions': directives.unchanged,  # alias of 'identifiers'
-> >>      }
-> >>      has_content = False
-> >>  
-> >> @@ -71,6 +72,7 @@ class KernelDocDirective(Directive):
-> >>  
-> >>          filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
-> >>          export_file_patterns = []
-> >> +        identifiers = None
-> >>  
-> >>          # Tell sphinx of the dependency
-> >>          env.note_dependency(os.path.abspath(filename))
-> >> @@ -86,19 +88,22 @@ class KernelDocDirective(Directive):
-> >>              export_file_patterns = str(self.options.get('internal')).split()
-> >>          elif 'doc' in self.options:
-> >>              cmd += ['-function', str(self.options.get('doc'))]
-> >> +        elif 'identifiers' in self.options:
-> >> +            identifiers = self.options.get('identifiers').split()
-> >>          elif 'functions' in self.options:
-> >> -            functions = self.options.get('functions').split()
-> >> -            if functions:
-> >> -                for f in functions:
-> >> -                    cmd += ['-function', f]
-> >> -            else:
-> >> -                cmd += ['-no-doc-sections']
-> >> +            identifiers = self.options.get('functions').split()
-> >
-> > Rather than do this, can you just change the elif line to read:
-> >
-> >     elif ('identifiers' in self.options) or ('functions' in self.options):
-> >
-> > ...then leave the rest of the code intact?  It keeps the logic together,
-> > and avoids the confusing distinction between identifiers=='' and
-> > identifiers==None .
-> 
-> I think the problem is you still need to distinguish between the two for
-> the get('functions') part.
-> 
-> One option is to rename 'functions' to 'identifiers' in the above block,
-> and put something like this above the whole if ladder (untested):
-> 
->         # backward compat
->         if 'functions' in self.options:
->             if 'identifiers' in self.options:
->                 kernellog.warn(env.app, "fail")
-This will miss the content of 'functions' directive if both exist in
-same doc.
 
->             else:
->                 self.options.set('identifiers', self.options.get('functions'))
-> 
-> BR,
-> Jani.
->
-After comparing, I still perfer my original code which is simpler. :)
 
+On 10/25/19 9:43 AM, Lu, Brent wrote:
+>> On 10/25/19 4:11 AM, Brent Lu wrote:
+>>> The first DMIC capture always fail (zero sequence data from PCM port)
+>>> after using DSP hotwording function (i.e. Google assistant).
+>>
+>> Can you clarify where the DSP hotwording is done? Intel DSP or rt5514?
+>>
+>> Turning on the MCLK with the BIAS info might force the Intel DSP to remain
+>> on, which would impact power consumption if it was supposed to remain off.
+>>
 > 
-> -- 
-> Jani Nikula, Intel Open Source Graphics Center
+> Hi Pierre,
+> 
+> It's done in rt5514's DSP and the interface is SPI instead of I2S for the voice wake
+> up function.
+> 
+> There is a driver rt5514-spi.c which provides platform driver and DAI. User space
+> application first uses the mixer to turn on the voice wake up function:
+> 
+> amixer -c0 cset name='DSP Voice Wake Up' on
+> 
+> Then open and read data from the PCM port which goes to the SPI platform and
+> dai code. Finally it uses same mixer to turn off the function and return to normal
+> codec mode. The DMIC recording (from I2S) and the voice wake on function should
+> be mutually exclusive according to the driver design.
+> 
+> In the codec driver rt5514.c there is a rt5514_set_bias_level function. It's expected to
+> turn on/off mclk here according to Realtek people's say but our ssp clock requires set
+> rate function to be called in advance so I implement the code in machine driver.
 
--- 
-Cheers,
-Changbin Du
+Can you clarify if the rt5514 needs the MCLK while it's doing the 
+hotword detection?
+
+My point is really that this patch uses a card-level BIAS indication, 
+and I'd like to make sure this does not interfere with the audio DSP 
+being in D3 state.
