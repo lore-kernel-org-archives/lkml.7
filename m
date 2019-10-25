@@ -2,100 +2,162 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B48CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4558CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD58222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A3421D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:44:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1NSkzY+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfJYTno (ORCPT
+        id S1727506AbfJYToV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:43:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25734 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726754AbfJYTno (ORCPT
+        Fri, 25 Oct 2019 15:44:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60035 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727457AbfJYToV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:43:44 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PJhf9t110294
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:43:43 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vv46t6cgy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:43:43 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 25 Oct 2019 20:42:48 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 25 Oct 2019 20:42:44 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PJghpi57671886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 19:42:43 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B317711C04C;
-        Fri, 25 Oct 2019 19:42:43 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0989111C050;
-        Fri, 25 Oct 2019 19:42:43 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Oct 2019 19:42:42 +0000 (GMT)
-Subject: Re: [PATCH] tpm: Add major_version sysfs file
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        linux-integrity@vger.kernel.org
-Date:   Fri, 25 Oct 2019 15:42:42 -0400
-In-Reply-To: <20191025193243.GI23952@ziepe.ca>
-References: <20191025142847.14931-1-jsnitsel@redhat.com>
-         <1572027516.4532.41.camel@linux.ibm.com>
-         <20191025184522.5txabdikcrn2dgvj@cantor> <20191025193243.GI23952@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102519-0016-0000-0000-000002BDA382
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102519-0017-0000-0000-0000331EEEAF
-Message-Id: <1572032562.4532.74.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910250179
+        Fri, 25 Oct 2019 15:44:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572032660;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gjP7lTTjpTfakTXfOsGFWUmjZaWNVRnXwyVyG8tVt5E=;
+        b=g1NSkzY+81DL8fIl6+i5hmRZJ03l6kAgyYmSOkhDMJ5NTOr+sW5mO2XtFKS7hUMChOXD/5
+        ILH5a1Q+0oBYNY0uhcBOwELx5idmPDH7vKVXUdAKBfRAzUMfgBjy33r1KsAIj+e2Mbrarw
+        RWncQqX0CgYIYalqWr64qU6tHe7If7Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-2mG1hvoOMmKqLeTPX6Nl1w-1; Fri, 25 Oct 2019 15:44:16 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EEE7801E66;
+        Fri, 25 Oct 2019 19:44:13 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AED061001B23;
+        Fri, 25 Oct 2019 19:43:59 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 15:43:56 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
+        mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V7 05/21] audit: log drop of contid on exit of
+ last task
+Message-ID: <20191025194356.skqebldthpokwd2m@madcap2.tricolour.ca>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <71b75f54342f32f176c2b6d94584f2a666964e68.1568834524.git.rgb@redhat.com>
+ <CAHC9VhQYVzGKRx48dgX1j3CJOe1N0widkhWb=_-3ohnOdZHhUw@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAHC9VhQYVzGKRx48dgX1j3CJOe1N0widkhWb=_-3ohnOdZHhUw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 2mG1hvoOMmKqLeTPX6Nl1w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 16:32 -0300, Jason Gunthorpe wrote:
-> On Fri, Oct 25, 2019 at 11:45:22AM -0700, Jerry Snitselaar wrote:
-> > On Fri Oct 25 19, Mimi Zohar wrote:
-> > Yes, there should be an entry added to
-> > Documentation/ABI/stable/sysfs-class-tpm.
-> > I will fix that up and the TCG not being uppercase in a v2.
-> > 
-> > Should Documentation/ABI/stable/sysfs-class-tpm updated in
-> > some way to reflect that those are all links under device
-> > now and not actually there.
-> 
-> Applications should not use the link version, that path was a
-> mistake. The link is for compatability with old userspace.
+On 2019-10-10 20:38, Paul Moore wrote:
+> On Wed, Sep 18, 2019 at 9:24 PM Richard Guy Briggs <rgb@redhat.com> wrote=
+:
+> > Since we are tracking the life of each audit container indentifier, we
+> > can match the creation event with the destruction event.  Log the
+> > destruction of the audit container identifier when the last process in
+> > that container exits.
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  kernel/audit.c   | 32 ++++++++++++++++++++++++++++++++
+> >  kernel/audit.h   |  2 ++
+> >  kernel/auditsc.c |  2 ++
+> >  3 files changed, 36 insertions(+)
+> >
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index ea0899130cc1..53d13d638c63 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -2503,6 +2503,38 @@ int audit_set_contid(struct task_struct *task, u=
+64 contid)
+> >         return rc;
+> >  }
+> >
+> > +void audit_log_container_drop(void)
+> > +{
+> > +       struct audit_buffer *ab;
+> > +       uid_t uid;
+> > +       struct tty_struct *tty;
+> > +       char comm[sizeof(current->comm)];
+> > +
+> > +       if (!current->audit || !current->audit->cont ||
+> > +           refcount_read(&current->audit->cont->refcount) > 1)
+> > +               return;
+> > +       ab =3D audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTA=
+INER_OP);
+> > +       if (!ab)
+> > +               return;
+> > +
+> > +       uid =3D from_kuid(&init_user_ns, task_uid(current));
+> > +       tty =3D audit_get_tty();
+> > +       audit_log_format(ab,
+> > +                        "op=3Ddrop opid=3D%d contid=3D%llu old-contid=
+=3D%llu pid=3D%d uid=3D%u auid=3D%u tty=3D%s ses=3D%u",
+> > +                        task_tgid_nr(current), audit_get_contid(curren=
+t),
+> > +                        audit_get_contid(current), task_tgid_nr(curren=
+t), uid,
+> > +                        from_kuid(&init_user_ns, audit_get_loginuid(cu=
+rrent)),
+> > +                        tty ? tty_name(tty) : "(none)",
+> > +                                audit_get_sessionid(current));
+> > +       audit_put_tty(tty);
+> > +       audit_log_task_context(ab);
+> > +       audit_log_format(ab, " comm=3D");
+> > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
+> > +       audit_log_d_path_exe(ab, current->mm);
+> > +       audit_log_format(ab, " res=3D1");
+> > +       audit_log_end(ab);
+> > +}
+>=20
+> Why can't we just do this in audit_cont_put()?  Is it because we call
+> audit_cont_put() in the new audit_free() function?  What if we were to
+> do it in __audit_free()/audit_free_syscall()?
 
-Are you suggesting that userspace has to search for the device info? 
-That makes no sense.
+The intent was to put this before the EOE record of a syscall so we
+could fill out all the fields similarly to op=3Dset, but this could stand
+alone dropping or nulling a bunch of fields.
 
-Mimi
+It would also never get printed if we left it before the EOE and had the
+audit signal info record keep a reference to it.
+
+Hmmm...
+
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
