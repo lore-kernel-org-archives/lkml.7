@@ -2,137 +2,138 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7E1CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B618DCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F60821D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893CE21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572035436;
-	bh=Bb1ujteTR8xP3fNUIo5zPOH0/+KxNzcMSgBRw/Yby9g=;
+	s=default; t=1572035614;
+	bh=+V3MYXgziPOZllvPaeN2wWalwWrmuc8yiZofvYCWoNY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vNGzP2g4UcsvMRVasy9TTvGokNYOwGsfcFkJ+836sDklDNQjR6O6vctjgGkx2DC73
-	 2nEWW6x4cDxZOQeRdn6snlfJ5LCWcVVTUNKWxULjJZF7DAKrDKnCIrzSI2uFlX9+He
-	 Sdn1sqZnMABFyrOih3HpPg84G2wMkWsxdASitn9s=
+	b=wESsCKCr6P0X6Yc03+RjodsyCY1BjgwqHVc5hJM3cKn9kHsFXl8eLHbqdQnSWgYwC
+	 OWw0MR4V/n99EEee4o5oVEokKKEaGe3derSxiivGz7v5wTlK9pPgjLiFhaYdiuTscb
+	 XPYcZ2PCbJAC6LbXQ8PfnSjEIsRKwWuE1wVK28fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfJYUae (ORCPT
+        id S1728530AbfJYUdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:30:34 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33376 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbfJYUae (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:30:34 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a15so2478219oic.0;
-        Fri, 25 Oct 2019 13:30:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DjnUodnaL6w0elyh2CsGwsstDrRTdxNuqmD9G+YqUd4=;
-        b=cEdmt9X0RedGeE58QLRAjUCtEpWlXbZoqwElE2jizOvUrKkArrwEDToYVzdXpzeqGd
-         UaG2X+U0IGq1dj44GLHKcogyV80hGl59HTzT6U+yjk3jQ3qMAGuFNPf5KnpNmpyJYoaT
-         RZABGN8ldGvQ3fINoyxhF3d/Qp2daeCKeYdD7U1Jf1l0aegpObAuGg9AfyWThowB/NEh
-         N1IdGwWZ4+kkLh9r76wqXnXeI5RroruqvM7BiH1jGKX3exKeX1FDpRsq/Gs3kXMWwO45
-         e6SvSTQ5IXZPxjCm52llzZjGh9MQtTTC9wmyWxZE67Kdu09CTlOJ2UKFnGL82I783oQ4
-         RpYg==
-X-Gm-Message-State: APjAAAV7BIFwowKm8CM8Ui03BwKk79+myEPLfg5YuP9vDYsa/3Ist7wI
-        y+x/mlwpUjM2amliLXMM0Q==
-X-Google-Smtp-Source: APXvYqy/fDo5GIME57rCCB5sn8utMkgqqWQkRouqjcMDQCu4olP7uzs9etttYKNKUcq1tCCeLd1KXQ==
-X-Received: by 2002:aca:b256:: with SMTP id b83mr2268898oif.101.1572035431991;
-        Fri, 25 Oct 2019 13:30:31 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l19sm842018oie.22.2019.10.25.13.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 13:30:31 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 15:30:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xingyu Chen <xingyu.chen@amlogic.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>, linux-watchdog@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] dt-bindings: watchdog: add new binding for meson
- secure watchdog
-Message-ID: <20191025203030.GA28391@bogus>
-References: <1571983984-11771-1-git-send-email-xingyu.chen@amlogic.com>
- <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
+        Fri, 25 Oct 2019 16:33:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728514AbfJYUdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:33:32 -0400
+Received: from rapoport-lnx (unknown [87.70.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0C9205F4;
+        Fri, 25 Oct 2019 20:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572035611;
+        bh=+V3MYXgziPOZllvPaeN2wWalwWrmuc8yiZofvYCWoNY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1ISSeESRZG09GzO0p+0h+u/Da++xXbkOcsQ5mlswN8E+JmDJy8i2vG7sk1XtBAlth
+         O+JkATp4aZZ6UwRybaJhjTl0dq8o88pCslQd7+isc/kOjQ3j0a42WMTbSUrvr9icVT
+         /jJxJNBEQReX2euA+K+z//obJVLa7yxkT+K4iwqU=
+Date:   Fri, 25 Oct 2019 23:33:19 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Michal Simek <monstr@monstr.eu>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        sparclinux@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH 06/12] microblaze: use pgtable-nopmd instead of
+ 4level-fixup
+Message-ID: <20191025203318.GA8413@rapoport-lnx>
+References: <1571822941-29776-1-git-send-email-rppt@kernel.org>
+ <1571822941-29776-7-git-send-email-rppt@kernel.org>
+ <aa7df5a1-5022-bc82-8816-74c956e2fd90@monstr.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571983984-11771-3-git-send-email-xingyu.chen@amlogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <aa7df5a1-5022-bc82-8816-74c956e2fd90@monstr.eu>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 02:13:02PM +0800, Xingyu Chen wrote:
-> The binding targets the Meson-A/C series compatible SoCs, in which the
-> watchdog registers are in secure world.
+On Fri, Oct 25, 2019 at 10:24:30AM +0200, Michal Simek wrote:
+> Hi Mike,
 > 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> ---
->  .../bindings/watchdog/amlogic,meson-sec-wdt.yaml   | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
+> On 23. 10. 19 11:28, Mike Rapoport wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > microblaze has only two-level page tables and can use pgtable-nopmd and
+> > folding of the upper layers.
+> > 
+> > Replace usage of include/asm-generic/4level-fixup.h and explicit definition
+> > of __PAGETABLE_PMD_FOLDED in microblaze with
+> > include/asm-generic/pgtable-nopmd.h and adjust page table manipulation
+> > macros and functions accordingly.
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >  arch/microblaze/include/asm/page.h    |  3 ---
+> >  arch/microblaze/include/asm/pgalloc.h | 16 ----------------
+> >  arch/microblaze/include/asm/pgtable.h | 32 ++------------------------------
+> >  arch/microblaze/kernel/signal.c       | 10 +++++++---
+> >  arch/microblaze/mm/init.c             |  7 +++++--
+> >  arch/microblaze/mm/pgtable.c          | 13 +++++++++++--
+> >  6 files changed, 25 insertions(+), 56 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
-> new file mode 100644
-> index 00000000..0bbc807
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-sec-wdt.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-wdt.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Watchdog Timer
-> +
-> +maintainers:
-> +  - Xingyu Chen <xingyu.chen@amlogic.com>
-> +
-> +description: |+
-> +  Secure Watchdog Timer used in Meson-A/C series Compatible SoCs
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-sec-wdt
+> I have take a look at this and when this is applied on the top of
+> 5.4-rc2 there is not a problem.
+> But as was reported by 0-day there is compilation issue on the top of
+> mmotm/master tree and I am able to replicate it.
+> It means there are other changes in Andrew's tree which are causing it.
 
-If there are no other properties, then you don't need this. Just have 
-the secure firmware driver instantiate the watchdog.
+0day is still using an old tree for mmotm:
 
-> +
-> +  secure-monitor:
-> +    description: phandle to the secure-monitor node
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +required:
-> +  - compatible
-> +  - secure-monitor
-> +
-> +examples:
-> +  - |
-> +    watchdog {
-> +          compatible = "amlogic,meson-sec-wdt";
-> +          secure-monitor = <&sm>;
-> +    };
+> url:    https://github.com/0day-ci/linux/commits/Mike-Rapoport/mm-remove-__ARCH_HAS_4LEVEL_HACK/20191025-063009
+> base:   git://git.cmpxchg.org/linux-mmotm.git master
+> config: microblaze-mmu_defconfig (attached as .config)
+
+A while ago Johannes moved the mmotm to github and the last commit in
+git.cmpxchg.org/linux-mmotm.git was in the end of August.
+
+[1] https://lore.kernel.org/linux-mm/20190916134327.GC29985@cmpxchg.org
+ 
+> Thanks,
+> Michal
+> 
 > -- 
-> 2.7.4
+> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Xilinx Microblaze
+> Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+> U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
 > 
+
+-- 
+Sincerely yours,
+Mike.
