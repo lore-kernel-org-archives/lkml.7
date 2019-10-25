@@ -2,111 +2,229 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F50CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7E8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7979021D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F7C21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sMzj0MJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393100AbfJYIso (ORCPT
+        id S2393195AbfJYIuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:48:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42741 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389425AbfJYIso (ORCPT
+        Fri, 25 Oct 2019 04:50:23 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51431 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfJYIuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:48:44 -0400
-Received: by mail-oi1-f196.google.com with SMTP id i185so1050033oif.9;
-        Fri, 25 Oct 2019 01:48:43 -0700 (PDT)
+        Fri, 25 Oct 2019 04:50:22 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q70so1175536wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lRw/HB9cs0P4tEenIW1OQJEsVhGUoZlMNerElFOWtvc=;
+        b=sMzj0MJ9/h1HCNuIsf7Rz6+lrrL0m4lFXm8/9rU9bydl0zwMq0ka2eToPYJumIYt41
+         kH46+4jayoge4n3So13+aPBWLad3P8wt8qF20bx3WR2GaUrQ2HWy0/Ux6gY89YE/iJCs
+         Nbcx0WiYZthyflzw79Ps7ISbGS+UsqPpfJW4dybIookg6K/mYmPywjPYb6ZUqu+d5YXD
+         vlCi8jSBK06+hHFYroazF17Fsoenpc0TCDxc5Bk79IYaD59BMVSvl9SFNnvN30WfBqN0
+         Zc8Ki1M00LMpSec+ZGL9Lbobi3+5oLupSvxMcy8Sueu7D4pUFaTudee+8UwVjYrz9tTI
+         dC1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uA6lSNHDRCatiJVJ/bgW4yuf0LByUeyt0njk9B4ukrc=;
-        b=pB1+s7USrm2jK85Akcv2CH3fUw/7POfgi/pgDdjS44HoqmOwhRJtXlOBQHZ2MEEmZz
-         zu9xxhWTFFKoHoaQMdR60oyEToi9uPlwzM1BBa2FNJ2D58lrim6ylC/Z1eY04ZZg6Fi4
-         yXdYkFlm7DbQBtjVP2+uFUxx+0qkSBCyk3gYQuXKGl/yTFANNMvx1reHErjCeQePx++4
-         8wY3yEAY+hSwF4/cEGQxXi8/Q6yJIXeITmGmxUARPAP4I+TM3sLtu3MgrZmOM1wpvbQg
-         FtcJRprTvebpzrS4IP17JXY7ad5Vw6O52Pjz8/W6o05yoDGNbPO3HcFv+5oFuSAfmDwv
-         K69A==
-X-Gm-Message-State: APjAAAXd7HRybCHuKR49gUG/tXaXd9tT+IRTL99HwWmVJ6M1pCcKlTS7
-        cJgcweT4SFuFCbApgqlqv7rlhXFWaEQDhZF7W+c=
-X-Google-Smtp-Source: APXvYqy3g9SYZvOxsJVmghtKOBqa12cq3/vF5Q6/wloURwxegziLuCjjGM4yxIDdlwF02aQ5tVVijREi3KOgNM/I0d4=
-X-Received: by 2002:aca:882:: with SMTP id 124mr2027997oii.54.1571993322988;
- Fri, 25 Oct 2019 01:48:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lRw/HB9cs0P4tEenIW1OQJEsVhGUoZlMNerElFOWtvc=;
+        b=dgyJeIKnGzOsu9hGUb3lSPk/MBp11QZEX5JETU9+kkssIiM9kssizbH5I0RHAfPB5/
+         2TtdOovYqrzKL3xROBBCrgXZjURAmR1QO7GEulXfmE9byJqadmO8Gg/vBXFhyGPm9MSx
+         9c8lzWfb0K9L7OzR9NDwUDtUWWRZr7GeBfRUIf/gLugcr2fvpKSTSNN0dRnbWZkeZyXb
+         6ny18IbTyiarNx9cBqag4bnT08QE0UxEbAxKQsGmtN6qbQ0bT2J5SV10CRN64hselbmi
+         1I7GE1lZU4Lg2+sUW1bPe/9x02iDXIigjzzJOmYFhJTrWo734blN2Dh/EuZLbiL34+h+
+         qHnw==
+X-Gm-Message-State: APjAAAVGJEIeHGKXFc9X8Ie0tDjvbjkEMwfUilFdipSTcW81r8a0U/1/
+        +pqts2PV3LhGz+1xfcO4qoJpwQ==
+X-Google-Smtp-Source: APXvYqyVNCUwL+zbMIQYijH0nGElvkNZYDgn3r2MdehDdUtgyhppVljV36JwyibkLIy+VZvozzobaw==
+X-Received: by 2002:a1c:6702:: with SMTP id b2mr2287107wmc.107.1571993419746;
+        Fri, 25 Oct 2019 01:50:19 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id f8sm1339404wmb.37.2019.10.25.01.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 01:50:19 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 09:50:17 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        baohua@kernel.org, stephan@gerhold.net
+Subject: Re: [PATCH v3 03/10] mfd: cs5535-mfd: Request shared IO regions
+ centrally
+Message-ID: <20191025085017.46bdt6kc6zfoda4g@holly.lan>
+References: <20191024163832.31326-1-lee.jones@linaro.org>
+ <20191024163832.31326-4-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <20191024152201.29868-1-geert+renesas@glider.be>
- <878spaqg2k.fsf@kamboji.qca.qualcomm.com> <20191024.095709.187911510311520475.davem@davemloft.net>
-In-Reply-To: <20191024.095709.187911510311520475.davem@davemloft.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 25 Oct 2019 10:48:31 +0200
-Message-ID: <CAMuHMdXLyoxpjYYVhnZ35hwD25+MPXkte5QV_YYOadPVTf9_zA@mail.gmail.com>
-Subject: Re: [PATCH v2] [trivial] net: Fix misspellings of "configure" and "configuration"
-To:     David Miller <davem@davemloft.net>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jiri Kosina <trivial@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024163832.31326-4-lee.jones@linaro.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Thu, Oct 24, 2019 at 05:38:25PM +0100, Lee Jones wrote:
+> Prior to this patch, IO regions were requested via an MFD subsytem-level
+> .enable() call-back and similarly released by a .disable() call-back.
+> Double requests/releases were avoided by a centrally handled usage count
+> mechanism.
+> 
+> This complexity can all be avoided by handling IO regions only once during
+> .probe() and .remove() of the parent device.  Since this is the only
+> legitimate user of the aforementioned usage count mechanism, this patch
+> will allow it to be removed from MFD core in subsequent steps.
+> 
+> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/mfd/cs5535-mfd.c | 71 +++++++++++++++++-----------------------
+>  1 file changed, 30 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/mfd/cs5535-mfd.c b/drivers/mfd/cs5535-mfd.c
+> index b35f1efa01f6..27fa8fa1ec9b 100644
+> --- a/drivers/mfd/cs5535-mfd.c
+> +++ b/drivers/mfd/cs5535-mfd.c
+> @@ -27,38 +27,6 @@ enum cs5535_mfd_bars {
+>  	NR_BARS,
+>  };
+>  
+> -static int cs5535_mfd_res_enable(struct platform_device *pdev)
+> -{
+> -	struct resource *res;
+> -
+> -	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
+> -	if (!res) {
+> -		dev_err(&pdev->dev, "can't fetch device resource info\n");
+> -		return -EIO;
+> -	}
+> -
+> -	if (!request_region(res->start, resource_size(res), DRV_NAME)) {
+> -		dev_err(&pdev->dev, "can't request region\n");
+> -		return -EIO;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static int cs5535_mfd_res_disable(struct platform_device *pdev)
+> -{
+> -	struct resource *res;
+> -
+> -	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
+> -	if (!res) {
+> -		dev_err(&pdev->dev, "can't fetch device resource info\n");
+> -		return -EIO;
+> -	}
+> -
+> -	release_region(res->start, resource_size(res));
+> -	return 0;
+> -}
+> -
+>  static struct resource cs5535_mfd_resources[NR_BARS];
+>  
+>  static struct mfd_cell cs5535_mfd_cells[] = {
+> @@ -81,17 +49,11 @@ static struct mfd_cell cs5535_mfd_cells[] = {
+>  		.name = "cs5535-pms",
+>  		.num_resources = 1,
+>  		.resources = &cs5535_mfd_resources[PMS_BAR],
+> -
+> -		.enable = cs5535_mfd_res_enable,
+> -		.disable = cs5535_mfd_res_disable,
+>  	},
+>  	{
+>  		.name = "cs5535-acpi",
+>  		.num_resources = 1,
+>  		.resources = &cs5535_mfd_resources[ACPI_BAR],
+> -
+> -		.enable = cs5535_mfd_res_enable,
+> -		.disable = cs5535_mfd_res_disable,
+>  	},
+>  };
+>  
+> @@ -117,22 +79,47 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
+>  		r->end = pci_resource_end(pdev, bar);
+>  	}
+>  
+> +	err = pci_request_region(pdev, PMS_BAR, DRV_NAME);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Failed to request PMS_BAR's IO region\n");
+> +		goto err_disable;
+> +	}
+> +
+>  	err = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE, cs5535_mfd_cells,
+>  			      ARRAY_SIZE(cs5535_mfd_cells), NULL, 0, NULL);
+>  	if (err) {
+>  		dev_err(&pdev->dev,
+>  			"Failed to add CS5535 sub-devices: %d\n", err);
+> -		goto err_disable;
+> +		goto err_release_pms;
+>  	}
+>  
+> -	if (machine_is_olpc())
+> -		mfd_clone_cell("cs5535-acpi", olpc_acpi_clones, ARRAY_SIZE(olpc_acpi_clones));
+> +	if (machine_is_olpc()) {
+> +		err = pci_request_region(pdev, ACPI_BAR, DRV_NAME);
+> +		if (err) {
+> +			dev_err(&pdev->dev,
+> +				"Failed to request ACPI_BAR's IO region\n");
+> +			goto err_remove_devices;
+> +		}
 
-On Thu, Oct 24, 2019 at 6:57 PM David Miller <davem@davemloft.net> wrote:
-> From: Kalle Valo <kvalo@codeaurora.org>
-> Date: Thu, 24 Oct 2019 19:11:15 +0300
->
-> > Geert Uytterhoeven <geert+renesas@glider.be> writes:
-> >
-> >> Fix various misspellings of "configuration" and "configure".
-> >>
-> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >> ---
-> >> v2:
-> >>   - Merge
-> >>     [trivial] net/mlx5e: Spelling s/configuraiton/configuration/
-> >>     [trivial] qed: Spelling s/configuraiton/configuration/
-> >>   - Fix typo in subject,
-> >>   - Extend with various other similar misspellings.
-> >> ---
-> >>  drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c | 2 +-
-> >>  drivers/net/ethernet/qlogic/qed/qed_int.h                | 4 ++--
-> >>  drivers/net/ethernet/qlogic/qed/qed_sriov.h              | 2 +-
-> >>  drivers/net/ethernet/qlogic/qede/qede_filter.c           | 2 +-
-> >>  drivers/net/wireless/ath/ath9k/ar9003_hw.c               | 2 +-
-> >>  drivers/net/wireless/intel/iwlwifi/iwl-fh.h              | 2 +-
-> >>  drivers/net/wireless/ti/wlcore/spi.c                     | 2 +-
-> >>  include/uapi/linux/dcbnl.h                               | 2 +-
-> >>  8 files changed, 9 insertions(+), 9 deletions(-)
-> >
-> > I hope this goes to net-next? Easier to handle possible conflicts that
-> > way.
-> >
-> > For the wireless part:
-> >
-> > Acked-by: Kalle Valo <kvalo@codeaurora.org>
->
-> Yeah I can take it if that's easier.
+I agree cs5535-acpi isn't used is the kernel but I think it stills
+fails a w.t.f. per minute test to have a mismatch between when
+a device is added and when it requests resources.
 
-That would be great, thanks!
+Especially since I don't think this is transient within the patch
+series.
 
-Gr{oetje,eeting}s,
 
-                        Geert
+> +
+> +		err = mfd_clone_cell("cs5535-acpi", olpc_acpi_clones,
+> +				     ARRAY_SIZE(olpc_acpi_clones));
+> +		if (err) {
+> +			dev_err(&pdev->dev, "Failed to clone MFD cell\n");
+> +			goto err_release_acpi;
+> +		}
+> +	}
+>  
+>  	dev_info(&pdev->dev, "%zu devices registered.\n",
+>  			ARRAY_SIZE(cs5535_mfd_cells));
+>  
+>  	return 0;
+>  
+> +err_release_acpi:
+> +	pci_release_region(pdev, ACPI_BAR);
+> +err_remove_devices:
+> +	mfd_remove_devices(&pdev->dev);
+> +err_release_pms:
+> +	pci_release_region(pdev, PMS_BAR);
+>  err_disable:
+>  	pci_disable_device(pdev);
+>  	return err;
+> @@ -141,6 +128,8 @@ static int cs5535_mfd_probe(struct pci_dev *pdev,
+>  static void cs5535_mfd_remove(struct pci_dev *pdev)
+>  {
+>  	mfd_remove_devices(&pdev->dev);
+> +	pci_release_region(pdev, ACPI_BAR);
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+This will issue a warning if !machine_is_olpc() .
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+For the release region family of calls "the described resource region
+must match a currently busy region."
+
+
+Daniel.
