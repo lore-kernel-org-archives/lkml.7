@@ -2,77 +2,78 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A514CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC6FCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B46221D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557FE21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394277AbfJYJea (ORCPT
+        id S2394315AbfJYJeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:34:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55002 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730207AbfJYJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:34:29 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5DC944AADF4BD93F2232;
-        Fri, 25 Oct 2019 17:34:27 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 17:34:17 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <agross@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] clk: qcom: remove unneeded semicolon
-Date:   Fri, 25 Oct 2019 17:33:32 +0800
-Message-ID: <20191025093332.27592-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 25 Oct 2019 05:34:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:21579 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393290AbfJYJeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:34:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 02:34:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="188875359"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 25 Oct 2019 02:34:33 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iNvzM-00031f-SQ; Fri, 25 Oct 2019 12:34:32 +0300
+Date:   Fri, 25 Oct 2019 12:34:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] ACPI / PMIC: Add Cherry Trail Crystal Cove PMIC
+ OpRegion driver
+Message-ID: <20191025093432.GL32742@smile.fi.intel.com>
+References: <20191024213827.144974-1-hdegoede@redhat.com>
+ <20191024213827.144974-4-hdegoede@redhat.com>
+ <20191025074518.GZ32742@smile.fi.intel.com>
+ <230f4820-688f-4b04-ee62-771486fcfa63@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <230f4820-688f-4b04-ee62-771486fcfa63@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove unneeded semicolon.
+On Fri, Oct 25, 2019 at 11:06:40AM +0200, Hans de Goede wrote:
+> On 25-10-2019 09:45, Andy Shevchenko wrote:
+> > On Thu, Oct 24, 2019 at 11:38:26PM +0200, Hans de Goede wrote:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/clk/qcom/clk-rcg2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > as long as name pattern uses "chtcc".
+> 
+> As I already replied to your other similar remark, I would really like to
+> stick with crc, crc to me means either crystal-cove or well a crc, cc triggers
+> different associations in my mind. Also other crystal-cove files also use crc
+> in their filename.
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index b98b81e..99c4bfa 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -206,7 +206,7 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
- 		break;
- 	default:
- 		return -EINVAL;
--	};
-+	}
- 
- 	if (!f)
- 		return -EINVAL;
-@@ -319,7 +319,7 @@ static int __clk_rcg2_set_rate(struct clk_hw *hw, unsigned long rate,
- 		break;
- 	default:
- 		return -EINVAL;
--	};
-+	}
- 
- 	if (!f)
- 		return -EINVAL;
+Okay, let's stick with crc for this one.
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
 
 
