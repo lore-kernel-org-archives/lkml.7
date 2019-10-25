@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3293CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7598ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA3B222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DAF421E6F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011777;
-	bh=NcEaAectkCFyZ7qca4yYHQDM+lDAU9HA63XtClUPuzA=;
+	s=default; t=1572011785;
+	bh=QSmGXgoZuqNrvkoLmP9wfJAp3Sy8AYkjslCE+zJhmH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4JEZzaK8yDoguvPnh6lFSYvq2yem2VhBiOc7C7egmhAkhAe8hv2xA5IFJ02v4Jgj
-	 oHKbphKh5Z9joVoJgB5D1v3ddn6AGjkYRO8NQDjJpKWgCHLKNd98/wwRgFkr1B349O
-	 m84MqX3ZG6WnoHfo6Ao+nqUuQjaoakpQt4dgS7g0=
+	b=mciyI4G2zDADqkuPadcstms3qpqhI6mY6zYfhSaA4s7DeDiFlvpLE8sP+jQOhRnbv
+	 rTmATq++YjdqDEP3hxGrh2cTxrRoxXZBvBguJ2/+kjsg3wfcVBfhtZkPUTafYmAAzU
+	 sxP1SPoFbJKld146WQfzl9rX/JqScRs+AwBgFOA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632819AbfJYN4Q (ORCPT
+        id S2505254AbfJYN4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50504 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632795AbfJYN4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:14 -0400
+        id S2632796AbfJYN4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C54B222CB;
-        Fri, 25 Oct 2019 13:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9106222CE;
+        Fri, 25 Oct 2019 13:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011773;
-        bh=NcEaAectkCFyZ7qca4yYHQDM+lDAU9HA63XtClUPuzA=;
+        s=default; t=1572011778;
+        bh=QSmGXgoZuqNrvkoLmP9wfJAp3Sy8AYkjslCE+zJhmH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uaeAnNRjOcwx6bnQ73txwedDDJ9HGmaTTkRrYOHXIuIBSiubcSNd2hdphqAbFyBHs
-         jA9cq7lMXMb/IJQUUanL9NHZtzV/y1zupgPdB/ZkajETq10a2DxPlAd/bY/LiHrx4r
-         aa9WrzqZCwgFMK6YlxDJlWZOkS19nfD/Uao/0a4I=
+        b=l8Ly167mwqFeZudg9e5HqcqqmFR+lzMmwI+5uDMjmT/L8L3HgRgJmc5KFXPkO8qnN
+         LgJLfYNn1sTvUBPHBM2vlYeK2ffHqdBX6iFLFSS70N4GRmyNrPFCP38pdrBnnKNUrZ
+         6I26BOIikwcFmp79c6WsowDrO9rdU+fRCUB+4IHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 05/37] f2fs: fix to do sanity check on valid node/block count
-Date:   Fri, 25 Oct 2019 09:55:29 -0400
-Message-Id: <20191025135603.25093-5-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 08/37] nvme-pci: fix conflicting p2p resource adds
+Date:   Fri, 25 Oct 2019 09:55:32 -0400
+Message-Id: <20191025135603.25093-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -59,99 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit 7b63f72f73af57bb040f03b9713ec9979d8911f4 ]
+[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
 
-As Jungyeon reported in bugzilla:
+The nvme pci driver had been adding its CMB resource to the P2P DMA
+subsystem everytime on on a controller reset. This results in the
+following warning:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203229
+    ------------[ cut here ]------------
+    nvme 0000:00:03.0: Conflicting mapping in same section
+    WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
+    ...
+    Call Trace:
+     pci_p2pdma_add_resource+0x153/0x370
+     nvme_reset_work+0x28c/0x17b1 [nvme]
+     ? add_timer+0x107/0x1e0
+     ? dequeue_entity+0x81/0x660
+     ? dequeue_entity+0x3b0/0x660
+     ? pick_next_task_fair+0xaf/0x610
+     ? __switch_to+0xbc/0x410
+     process_one_work+0x1cf/0x350
+     worker_thread+0x215/0x3d0
+     ? process_one_work+0x350/0x350
+     kthread+0x107/0x120
+     ? kthread_park+0x80/0x80
+     ret_from_fork+0x1f/0x30
+    ---[ end trace f7ea76ac6ee72727 ]---
+    nvme nvme0: failed to register the CMB
 
-- Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
+This patch fixes this by registering the CMB with P2P only once.
 
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
-
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-sync
-
-- Kernel message
- kernel BUG at fs/f2fs/recovery.c:591!
- RIP: 0010:recover_data+0x12d8/0x1780
- Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-With corrupted image wihch has out-of-range valid node/block count, during
-recovery, once we failed due to no free space, it will trigger kernel
-panic.
-
-Adding sanity check on valid node/block count in f2fs_sanity_check_ckpt()
-to detect such condition, so that potential panic can be avoided.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 6851afc3bf805..3fc96cffe6ac5 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2344,7 +2344,8 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
- 	unsigned int log_blocks_per_seg;
- 	unsigned int segment_count_main;
- 	unsigned int cp_pack_start_sum, cp_payload;
--	block_t user_block_count;
-+	block_t user_block_count, valid_user_blocks;
-+	block_t avail_node_count, valid_node_count;
- 	int i, j;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index a64a8bca0d5b9..33c40333a5280 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1652,6 +1652,9 @@ static void nvme_map_cmb(struct nvme_dev *dev)
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 	int bar;
  
- 	total = le32_to_cpu(raw_super->segment_count);
-@@ -2379,6 +2380,24 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
- 		return 1;
- 	}
- 
-+	valid_user_blocks = le64_to_cpu(ckpt->valid_block_count);
-+	if (valid_user_blocks > user_block_count) {
-+		f2fs_msg(sbi->sb, KERN_ERR,
-+			"Wrong valid_user_blocks: %u, user_block_count: %u",
-+			valid_user_blocks, user_block_count);
-+		return 1;
-+	}
++	if (dev->cmb_size)
++		return;
 +
-+	valid_node_count = le32_to_cpu(ckpt->valid_node_count);
-+	avail_node_count = sbi->total_node_count - sbi->nquota_files -
-+						F2FS_RESERVED_NODE_NUM;
-+	if (valid_node_count > avail_node_count) {
-+		f2fs_msg(sbi->sb, KERN_ERR,
-+			"Wrong valid_node_count: %u, avail_node_count: %u",
-+			valid_node_count, avail_node_count);
-+		return 1;
-+	}
-+
- 	main_segs = le32_to_cpu(raw_super->segment_count_main);
- 	blocks_per_seg = sbi->blocks_per_seg;
+ 	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
+ 	if (!dev->cmbsz)
+ 		return;
+@@ -2136,7 +2139,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
  
+-	nvme_release_cmb(dev);
+ 	pci_free_irq_vectors(pdev);
+ 
+ 	if (pci_is_enabled(pdev)) {
+@@ -2596,6 +2598,7 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	nvme_stop_ctrl(&dev->ctrl);
+ 	nvme_remove_namespaces(&dev->ctrl);
+ 	nvme_dev_disable(dev, true);
++	nvme_release_cmb(dev);
+ 	nvme_free_host_mem(dev);
+ 	nvme_dev_remove_admin(dev);
+ 	nvme_free_queues(dev, 0);
 -- 
 2.20.1
 
