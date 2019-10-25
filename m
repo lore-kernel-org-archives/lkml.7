@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9533CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6B7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9174721D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C9020679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012296;
-	bh=tH84Z0n/mSY4WyqsWkBcbzxNQsg59IxMwvdWkIi/cDI=;
+	s=default; t=1572012301;
+	bh=Kng16m/t/WNxtUlNeRND0rxRsZYZ9Z4Lln/p1bnA7HM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YW2xz2k/kE2hmBylQRKqLOOx8UDCYFdUmoFvi1e+XEOC6Nj9O4Es5oqtPlFGpZyUN
-	 ci7J468kaBxU2ZH2z+BcqoH9Hcgzd3SoAz1ThDwh8Vq6BhG+JU2eTYsX+2Zu4bmmQG
-	 FSzjbVlBHXltcth7zmDP2DTbf+IW6kH0VOhYOMtE=
+	b=wTt2AnheTLXfGMfXEqiGsp4JeWfEkSVwqtIgHpq+2XBD428YzWAJk5l+WQfoeZne+
+	 cffgkWEZ9vL08Gcl6ngP04NTmpp5yFr4d/fqDgIbFgvqiGDYJgi0YspBHbWZI34zJ8
+	 i3zxs2Kqtll7UGzknVyzqySn80iRUzUCYsFXLKEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395249AbfJYOEz (ORCPT
+        id S2632844AbfJYN4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50916 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394652AbfJYN4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:33 -0400
+        id S2393547AbfJYN4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56748222BD;
-        Fri, 25 Oct 2019 13:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15F24222BD;
+        Fri, 25 Oct 2019 13:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011792;
-        bh=tH84Z0n/mSY4WyqsWkBcbzxNQsg59IxMwvdWkIi/cDI=;
+        s=default; t=1572011781;
+        bh=Kng16m/t/WNxtUlNeRND0rxRsZYZ9Z4Lln/p1bnA7HM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCnLBZJrJlYu6AvweXB3cZt3kiuTjPJWS83CVacGhQjdYNoyuztwH3rfB0AVR1mEH
-         ICQcZqdHRn3sAzlNiy6mQxfa34RxvAwE4cOryU68J7Kt9Q9hfZHI/34Lhs9TaAscLE
-         MCuhuHyw/O4nnESer6QtpSVfsihvdOCAx80IwJZs=
+        b=ntNtq83ft2ZJ/1APDsZzioMitK0dAQuQUw71kTvH+XYmpQfc3O0A3UjQZusdCP4Vq
+         KTpatm7D1+uyQIHkmheBZ7hOANYi6RUrBlCw/t9E8x9aak360NJUHsVhWfbefdeSvq
+         U/gBpV/GOAdyesUYFNKRjWMuBPdWLzXNFK2P2+wI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chad Dupuis <cdupuis@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/37] scsi: bnx2fc: Only put reference to io_req in bnx2fc_abts_cleanup if cleanup times out
-Date:   Fri, 25 Oct 2019 09:55:39 -0400
-Message-Id: <20191025135603.25093-15-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 11/37] KVM: PPC: Book3S HV: Fix lockdep warning when entering the guest
+Date:   Fri, 25 Oct 2019 09:55:35 -0400
+Message-Id: <20191025135603.25093-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -60,96 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chad Dupuis <cdupuis@marvell.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit a92ac6ee7980f3c139910d0d0a079802363818cb ]
+[ Upstream commit 3309bec85e60d60d6394802cb8e183a4f4a72def ]
 
-In certain tests where the SCSI error handler issues an abort that is
-already outstanding, we will cleanup the command so that the SCSI error
-handler can proceed.  In some of these cases we were seeing a command
-mismatch:
+The trace_hardirqs_on() sets current->hardirqs_enabled and from here
+the lockdep assumes interrupts are enabled although they are remain
+disabled until the context switches to the guest. Consequent
+srcu_read_lock() checks the flags in rcu_lock_acquire(), observes
+disabled interrupts and prints a warning (see below).
 
- kernel: scsi host2: bnx2fc: xid:0x42b eh_abort - refcnt = 2
- kernel: bnx2fc: eh_abort: io_req (xid = 0x42b) already in abts processing
- kernel: scsi host2: bnx2fc: xid:0x42b Entered bnx2fc_initiate_cleanup
- kernel: scsi host2: bnx2fc: xid:0x42b CLEANUP io_req xid = 0x80b
- kernel: scsi host2: bnx2fc: xid:0x80b cq_compl- cleanup resp rcvd
- kernel: scsi host2: bnx2fc: xid:0x42b complete - rx_state = 9
- kernel: scsi host2: bnx2fc: xid:0x42b Entered process_cleanup_compl refcnt = 2, cmd_type = 1
- kernel: scsi host2: bnx2fc: xid:0x42b scsi_done. err_code = 0x7
- kernel: scsi host2: bnx2fc: xid:0x42b sc=ffff8807f93dfb80, result=0x7, retries=0, allowed=5
- kernel: ------------[ cut here ]------------
- kernel: WARNING: at /root/rpmbuild/BUILD/netxtreme2-7.14.43/obj/default/bnx2fc-2.12.1/driver/bnx2fc_io.c:1347 bnx2fc_eh_abort+0x56f/0x680 [bnx2fc]()
- kernel: xid=0x42b refcount=-1
- kernel: Modules linked in:
- kernel: nls_utf8 isofs sr_mod cdrom tcp_lp dm_round_robin xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge ebtable_filter ebtables fuse ip6table_filter ip6_tables iptable_filter bnx2fc(OE) cnic(OE) uio fcoe libfcoe 8021q libfc garp mrp scsi_transport_fc stp llc scsi_tgt vfat fat dm_service_time intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd ses enclosure ipmi_ssif i2c_core hpilo hpwdt wmi sg ipmi_devintf pcspkr ipmi_si ipmi_msghandler shpchp acpi_power_meter dm_multipath nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables xfs sd_mod crc_t10dif
- kernel: crct10dif_generic bnx2x(OE) crct10dif_pclmul crct10dif_common crc32c_intel mdio ptp pps_core libcrc32c smartpqi scsi_transport_sas fjes uas usb_storage dm_mirror dm_region_hash dm_log dm_mod
- kernel: CPU: 9 PID: 2012 Comm: scsi_eh_2 Tainted: G        W  OE  ------------   3.10.0-514.el7.x86_64 #1
- kernel: Hardware name: HPE Synergy 480 Gen10/Synergy 480 Gen10 Compute Module, BIOS I42 03/21/2018
- kernel: ffff8807f25a3d98 0000000015e7fa0c ffff8807f25a3d50 ffffffff81685eac
- kernel: ffff8807f25a3d88 ffffffff81085820 ffff8807f8e39000 ffff880801ff7468
- kernel: ffff880801ff7610 0000000000002002 ffff8807f8e39014 ffff8807f25a3df0
- kernel: Call Trace:
- kernel: [<ffffffff81685eac>] dump_stack+0x19/0x1b
- kernel: [<ffffffff81085820>] warn_slowpath_common+0x70/0xb0
- kernel: [<ffffffff810858bc>] warn_slowpath_fmt+0x5c/0x80
- kernel: [<ffffffff8168d842>] ? _raw_spin_lock_bh+0x12/0x50
- kernel: [<ffffffffa0549e6f>] bnx2fc_eh_abort+0x56f/0x680 [bnx2fc]
- kernel: [<ffffffff814570af>] scsi_error_handler+0x59f/0x8b0
- kernel: [<ffffffff81456b10>] ? scsi_eh_get_sense+0x250/0x250
- kernel: [<ffffffff810b052f>] kthread+0xcf/0xe0
- kernel: [<ffffffff810b0460>] ? kthread_create_on_node+0x140/0x140
- kernel: [<ffffffff81696418>] ret_from_fork+0x58/0x90
- kernel: [<ffffffff810b0460>] ? kthread_create_on_node+0x140/0x140
- kernel: ---[ end trace 42deb88f2032b111 ]---
+This moves trace_hardirqs_on/off closer to __kvmppc_vcore_entry to
+prevent lockdep from being confused.
 
-The reason that there was a mismatch is that the SCSI command is actual
-returned from the cleanup handler.  In previous testing, the type of
-cleanup notification we'd get from the CQE did not trigger the code that
-returned the SCSI command.  To overcome the previous behavior we would put
-a reference in bnx2fc_abts_cleanup() to account for the SCSI command.
-However, in cases where the SCSI command is actually off, we end up with an
-extra put.
+DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
+WARNING: CPU: 16 PID: 8038 at kernel/locking/lockdep.c:4128 check_flags.part.25+0x224/0x280
+[...]
+NIP [c000000000185b84] check_flags.part.25+0x224/0x280
+LR [c000000000185b80] check_flags.part.25+0x220/0x280
+Call Trace:
+[c000003fec253710] [c000000000185b80] check_flags.part.25+0x220/0x280 (unreliable)
+[c000003fec253780] [c000000000187ea4] lock_acquire+0x94/0x260
+[c000003fec253840] [c00800001a1e9768] kvmppc_run_core+0xa60/0x1ab0 [kvm_hv]
+[c000003fec253a10] [c00800001a1ed944] kvmppc_vcpu_run_hv+0x73c/0xec0 [kvm_hv]
+[c000003fec253ae0] [c00800001a1095dc] kvmppc_vcpu_run+0x34/0x48 [kvm]
+[c000003fec253b00] [c00800001a1056bc] kvm_arch_vcpu_ioctl_run+0x2f4/0x400 [kvm]
+[c000003fec253b90] [c00800001a0f3618] kvm_vcpu_ioctl+0x460/0x850 [kvm]
+[c000003fec253d00] [c00000000041c4f4] do_vfs_ioctl+0xe4/0x930
+[c000003fec253db0] [c00000000041ce04] ksys_ioctl+0xc4/0x110
+[c000003fec253e00] [c00000000041ce78] sys_ioctl+0x28/0x80
+[c000003fec253e20] [c00000000000b5a4] system_call+0x5c/0x70
+Instruction dump:
+419e0034 3d220004 39291730 81290000 2f890000 409e0020 3c82ffc6 3c62ffc5
+3884be70 386329c0 4bf6ea71 60000000 <0fe00000> 3c62ffc6 3863be90 4801273d
+irq event stamp: 1025
+hardirqs last  enabled at (1025): [<c00800001a1e9728>] kvmppc_run_core+0xa20/0x1ab0 [kvm_hv]
+hardirqs last disabled at (1024): [<c00800001a1e9358>] kvmppc_run_core+0x650/0x1ab0 [kvm_hv]
+softirqs last  enabled at (0): [<c0000000000f1210>] copy_process.isra.4.part.5+0x5f0/0x1d00
+softirqs last disabled at (0): [<0000000000000000>]           (null)
+---[ end trace 31180adcc848993e ]---
+possible reason: unannotated irqs-off.
+irq event stamp: 1025
+hardirqs last  enabled at (1025): [<c00800001a1e9728>] kvmppc_run_core+0xa20/0x1ab0 [kvm_hv]
+hardirqs last disabled at (1024): [<c00800001a1e9358>] kvmppc_run_core+0x650/0x1ab0 [kvm_hv]
+softirqs last  enabled at (0): [<c0000000000f1210>] copy_process.isra.4.part.5+0x5f0/0x1d00
+softirqs last disabled at (0): [<0000000000000000>]           (null)
 
-The fix for this is to only take the extra put in bnx2fc_abts_cleanup if
-the completion for the cleanup times out.
-
-Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 8b24e69fc47e ("KVM: PPC: Book3S HV: Close race with testing for signals on guest entry", 2017-06-26)
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bnx2fc/bnx2fc_io.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
-index bc9f2a2365f4d..d27cf966e5600 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_io.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
-@@ -1098,16 +1098,16 @@ static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
- 	time_left = wait_for_completion_timeout(&io_req->tm_done,
- 						BNX2FC_FW_TIMEOUT);
- 	io_req->wait_for_comp = 0;
--	if (!time_left)
-+	if (!time_left) {
- 		BNX2FC_IO_DBG(io_req, "%s(): Wait for cleanup timed out.\n",
- 			      __func__);
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 3ae3e8d141e3e..dbfe32327212e 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -2993,25 +2993,26 @@ static noinline void kvmppc_run_core(struct kvmppc_vcore *vc)
+ 		}
+ 	}
  
 -	/*
--	 * Release reference held by SCSI command the cleanup completion
--	 * hits the BNX2FC_CLEANUP case in bnx2fc_process_cq_compl() and
--	 * thus the SCSI command is not returnedi by bnx2fc_scsi_done().
+-	 * Interrupts will be enabled once we get into the guest,
+-	 * so tell lockdep that we're about to enable interrupts.
 -	 */
--	kref_put(&io_req->refcount, bnx2fc_cmd_release);
-+		/*
-+		 * Put the extra reference to the SCSI command since it would
-+		 * not have been returned in this case.
-+		 */
-+		kref_put(&io_req->refcount, bnx2fc_cmd_release);
-+	}
+-	trace_hardirqs_on();
+-
+ 	guest_enter_irqoff();
  
- 	spin_lock_bh(&tgt->tgt_lock);
- 	return rc;
+ 	srcu_idx = srcu_read_lock(&vc->kvm->srcu);
+ 
+ 	this_cpu_disable_ftrace();
+ 
++	/*
++	 * Interrupts will be enabled once we get into the guest,
++	 * so tell lockdep that we're about to enable interrupts.
++	 */
++	trace_hardirqs_on();
++
+ 	trap = __kvmppc_vcore_entry();
+ 
++	trace_hardirqs_off();
++
+ 	this_cpu_enable_ftrace();
+ 
+ 	srcu_read_unlock(&vc->kvm->srcu, srcu_idx);
+ 
+-	trace_hardirqs_off();
+ 	set_irq_happened(trap);
+ 
+ 	spin_lock(&vc->lock);
 -- 
 2.20.1
 
