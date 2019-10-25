@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8889CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BDDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6082721D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E92321D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="B02mlFO5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HOt8Ncx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503665AbfJYLri (ORCPT
+        id S2503801AbfJYLrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:47:38 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:56260 "EHLO
+        Fri, 25 Oct 2019 07:47:45 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:56354 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502216AbfJYLrh (ORCPT
+        with ESMTP id S1730504AbfJYLrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:47:37 -0400
+        Fri, 25 Oct 2019 07:47:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1572004040; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1572004041; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1LZRPjTaNqgAPsZFTi/ag+L9T2zf0Gi9U0ItR3Ud6R4=;
-        b=B02mlFO54gTbqc/s+dk8ch5UrJ8fvqLpEOWRuzlscmxYYz8vKQUqE5IVUW9H41OryJlH8Y
-        x8c6Asu3Br0KUl4v/7k0gksf8XUiXRmaGXgD4spbBHx1zXlRqwMc4e97/zxu7ywVc7ICew
-        kRS/NHVYaX8/5JJ3xw1VFXsQBuNVeAw=
+        bh=Mz9JbxcWyvPWbx0nI2AEdeCSfmVBVosO5HLgE6B68I4=;
+        b=HOt8Ncx2UqYCq9fg/D15nJ3f9LtDknGCgUfrYZXqHJzHa2dHHTgTnr1NZSd+eriPdk8Xyn
+        eRAgc8JENIXZmRaDHuXSoCFyJrj5lu18lJcbvmvfdO22r8XZ3AMZ4JvmTT1Kkd3n2b8W9d
+        t9+SYTvEpU6OB8qcnYR8e4Hnv0aC7+M=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Bin Liu <b-liu@ti.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v2 3/6] usb: musb: jz4740: Add support for DMA
-Date:   Fri, 25 Oct 2019 13:47:07 +0200
-Message-Id: <20191025114710.13222-3-paul@crapouillou.net>
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 4/6] usb: musb: jz4740: Drop dependency on NOP_USB_XCEIV
+Date:   Fri, 25 Oct 2019 13:47:08 +0200
+Message-Id: <20191025114710.13222-4-paul@crapouillou.net>
 In-Reply-To: <20191025114710.13222-1-paul@crapouillou.net>
 References: <20191025114710.13222-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -50,97 +49,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for using the DMA channels built into the Inventra IP.
+The driver does not depend directly on the NOP transceiver. It can
+compile and work just fine without it.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-    v2: Rebase on 4.5-rc4
+    v2: New patch
 
- drivers/usb/musb/Kconfig  |  2 +-
- drivers/usb/musb/jz4740.c | 21 +++++++++++++++------
- 2 files changed, 16 insertions(+), 7 deletions(-)
+ drivers/usb/musb/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
-index 52f8e2b57ad5..210e4844c92a 100644
+index 210e4844c92a..56ccba3c8444 100644
 --- a/drivers/usb/musb/Kconfig
 +++ b/drivers/usb/musb/Kconfig
-@@ -142,7 +142,7 @@ config USB_UX500_DMA
+@@ -111,7 +111,6 @@ config USB_MUSB_UX500
  
- config USB_INVENTRA_DMA
- 	bool 'Inventra'
--	depends on USB_MUSB_OMAP2PLUS
-+	depends on USB_MUSB_OMAP2PLUS || USB_MUSB_JZ4740
- 	help
- 	  Enable DMA transfers using Mentor's engine.
- 
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index 5261f8dfedec..bbecfdee6ea1 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -25,11 +25,14 @@ struct jz4740_glue {
- static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
- {
- 	unsigned long   flags;
--	irqreturn_t     retval = IRQ_NONE;
-+	irqreturn_t     retval = IRQ_NONE, retval_dma = IRQ_NONE;
- 	struct musb     *musb = __hci;
- 
- 	spin_lock_irqsave(&musb->lock, flags);
- 
-+	if (IS_ENABLED(CONFIG_USB_INVENTRA_DMA) && musb->dma_controller)
-+		retval_dma = musbhs_dma_controller_irq(musb->dma_controller);
-+
- 	musb->int_usb = musb_readb(musb->mregs, MUSB_INTRUSB);
- 	musb->int_tx = musb_readw(musb->mregs, MUSB_INTRTX);
- 	musb->int_rx = musb_readw(musb->mregs, MUSB_INTRRX);
-@@ -47,7 +50,10 @@ static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
- 
- 	spin_unlock_irqrestore(&musb->lock, flags);
- 
--	return retval;
-+	if (retval == IRQ_HANDLED || retval_dma == IRQ_HANDLED)
-+		return IRQ_HANDLED;
-+
-+	return IRQ_NONE;
- }
- 
- static struct musb_fifo_cfg jz4740_musb_fifo_cfg[] = {
-@@ -91,18 +97,19 @@ static int jz4740_musb_init(struct musb *musb)
- 	musb->dyn_fifo = true;
- 
- 	musb->isr = jz4740_musb_interrupt;
-+	musb->dma_share_usb_irq = true;
- 
- 	return 0;
- }
- 
--/*
-- * DMA has not been confirmed to work with CONFIG_USB_INVENTRA_DMA,
-- * so let's not set up the dma function pointers yet.
-- */
- static const struct musb_platform_ops jz4740_musb_ops = {
- 	.quirks		= MUSB_DMA_INVENTRA | MUSB_INDEXED_EP,
- 	.fifo_mode	= 2,
- 	.init		= jz4740_musb_init,
-+#ifdef CONFIG_USB_INVENTRA_DMA
-+	.dma_init	= musbhs_dma_controller_create,
-+	.dma_exit	= musbhs_dma_controller_destroy,
-+#endif
- };
- 
- static int jz4740_probe(struct platform_device *pdev)
-@@ -137,6 +144,8 @@ static int jz4740_probe(struct platform_device *pdev)
- 	}
- 
- 	musb->dev.parent		= &pdev->dev;
-+	musb->dev.dma_mask		= &musb->dev.coherent_dma_mask;
-+	musb->dev.coherent_dma_mask	= DMA_BIT_MASK(32);
- 
- 	glue->dev			= &pdev->dev;
- 	glue->musb			= musb;
+ config USB_MUSB_JZ4740
+ 	tristate "JZ4740"
+-	depends on NOP_USB_XCEIV
+ 	depends on MIPS || COMPILE_TEST
+ 	depends on USB_MUSB_GADGET
+ 	depends on USB=n || USB_OTG_BLACKLIST_HUB
 -- 
 2.23.0
 
