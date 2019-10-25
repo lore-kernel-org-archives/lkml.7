@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFC7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1282ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEE2205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EF2205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfJYSGy (ORCPT
+        id S1731734AbfJYSHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:06:54 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46680 "EHLO
+        Fri, 25 Oct 2019 14:07:01 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46698 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731373AbfJYSFl (ORCPT
+        by vger.kernel.org with ESMTP id S1731405AbfJYSFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:41 -0400
+        Fri, 25 Oct 2019 14:05:42 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xz-0008Oq-A1; Fri, 25 Oct 2019 19:05:39 +0100
+        id 1iO3xz-0008Ov-FF; Fri, 25 Oct 2019 19:05:39 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0001l3-In; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xw-0001ks-Eg; Fri, 25 Oct 2019 19:05:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,22 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Rolf Eike Beer" <eike-kernel@sf-tec.de>,
-        "Jeroen Roovers" <jer@gentoo.org>, "Helge Deller" <deller@gmx.de>
-Date:   Fri, 25 Oct 2019 19:03:45 +0100
-Message-ID: <lsq.1572026582.412581904@decadent.org.uk>
+        "Mikko Rapeli" <mikko.rapeli@iki.fi>,
+        "Fabian Frederick" <fabf@skynet.be>,
+        "Zhouyang Jia" <jiazhouyang09@gmail.com>,
+        "Yann Droneaud" <ydroneaud@opteya.com>,
+        "Sam Protsenko" <semen.protsenko@linaro.org>,
+        "David Howells" <dhowells@redhat.com>,
+        "Colin Ian King" <colin.king@canonical.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Jan Harkes" <jaharkes@cs.cmu.edu>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>
+Date:   Fri, 25 Oct 2019 19:03:43 +0100
+Message-ID: <lsq.1572026582.453051988@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 44/47] parisc: Fix kernel panic due invalid values in
- IAOQ0 or IAOQ1
+Subject: [PATCH 3.16 42/47] coda: pass the host file in vma->vm_file on mmap
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,81 +64,165 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Helge Deller <deller@gmx.de>
+From: Jan Harkes <jaharkes@cs.cmu.edu>
 
-commit 10835c854685393a921b68f529bf740fa7c9984d upstream.
+commit 7fa0a1da3dadfd9216df7745a1331fdaa0940d1c upstream.
 
-On parisc the privilege level of a process is stored in the lowest two bits of
-the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
-for the kernel and privilege level 3 for user-space. So userspace should not be
-allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
-level to e.g. 0 to try to gain kernel privileges.
+Patch series "Coda updates".
 
-This patch prevents such modifications by always setting the two lowest bits to
-one (which relates to privilege level 3 for user-space) if IAOQ0 or IAOQ1 are
-modified via ptrace calls in the native and compat ptrace paths.
+The following patch series is a collection of various fixes for Coda,
+most of which were collected from linux-fsdevel or linux-kernel but
+which have as yet not found their way upstream.
 
-Link: https://bugs.gentoo.org/481768
-Reported-by: Jeroen Roovers <jer@gentoo.org>
-Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
-Signed-off-by: Helge Deller <deller@gmx.de>
+This patch (of 22):
+
+Various file systems expect that vma->vm_file points at their own file
+handle, several use file_inode(vma->vm_file) to get at their inode or
+use vma->vm_file->private_data.  However the way Coda wrapped mmap on a
+host file broke this assumption, vm_file was still pointing at the Coda
+file and the host file systems would scribble over Coda's inode and
+private file data.
+
+This patch fixes the incorrect expectation and wraps vm_ops->open and
+vm_ops->close to allow Coda to track when the vm_area_struct is
+destroyed so we still release the reference on the Coda file handle at
+the right time.
+
+Link: http://lkml.kernel.org/r/0e850c6e59c0b147dc2dcd51a3af004c948c3697.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: Keep calling file_operations::mmap directly]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/parisc/kernel/ptrace.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ fs/coda/file.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 2 deletions(-)
 
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -155,6 +155,9 @@ long arch_ptrace(struct task_struct *chi
- 		if ((addr & (sizeof(unsigned long)-1)) ||
- 		     addr >= sizeof(struct pt_regs))
- 			break;
-+		if (addr == PT_IAOQ0 || addr == PT_IAOQ1) {
-+			data |= 3; /* ensure userspace privilege */
-+		}
- 		if ((addr >= PT_GR1 && addr <= PT_GR31) ||
- 				addr == PT_IAOQ0 || addr == PT_IAOQ1 ||
- 				(addr >= PT_FR0 && addr <= PT_FR31 + 4) ||
-@@ -188,16 +191,18 @@ long arch_ptrace(struct task_struct *chi
+--- a/fs/coda/file.c
++++ b/fs/coda/file.c
+@@ -26,6 +26,13 @@
+ #include "coda_linux.h"
+ #include "coda_int.h"
  
- static compat_ulong_t translate_usr_offset(compat_ulong_t offset)
++struct coda_vm_ops {
++	atomic_t refcnt;
++	struct file *coda_file;
++	const struct vm_operations_struct *host_vm_ops;
++	struct vm_operations_struct vm_ops;
++};
++
+ static ssize_t
+ coda_file_read(struct file *coda_file, char __user *buf, size_t count, loff_t *ppos)
  {
--	if (offset < 0)
--		return sizeof(struct pt_regs);
--	else if (offset <= 32*4)	/* gr[0..31] */
--		return offset * 2 + 4;
--	else if (offset <= 32*4+32*8)	/* gr[0..31] + fr[0..31] */
--		return offset + 32*4;
--	else if (offset < sizeof(struct pt_regs)/2 + 32*4)
--		return offset * 2 + 4 - 32*8;
-+	compat_ulong_t pos;
-+
-+	if (offset < 32*4)	/* gr[0..31] */
-+		pos = offset * 2 + 4;
-+	else if (offset < 32*4+32*8)	/* fr[0] ... fr[31] */
-+		pos = (offset - 32*4) + PT_FR0;
-+	else if (offset < sizeof(struct pt_regs)/2 + 32*4) /* sr[0] ... ipsw */
-+		pos = (offset - 32*4 - 32*8) * 2 + PT_SR0 + 4;
- 	else
--		return sizeof(struct pt_regs);
-+		pos = sizeof(struct pt_regs);
-+
-+	return pos;
+@@ -93,6 +100,34 @@ coda_file_write(struct file *coda_file,
+ 	return ret;
  }
  
- long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
-@@ -241,9 +246,12 @@ long compat_arch_ptrace(struct task_stru
- 			addr = translate_usr_offset(addr);
- 			if (addr >= sizeof(struct pt_regs))
- 				break;
-+			if (addr == PT_IAOQ0+4 || addr == PT_IAOQ1+4) {
-+				data |= 3; /* ensure userspace privilege */
-+			}
- 			if (addr >= PT_FR0 && addr <= PT_FR31 + 4) {
- 				/* Special case, fp regs are 64 bits anyway */
--				*(__u64 *) ((char *) task_regs(child) + addr) = data;
-+				*(__u32 *) ((char *) task_regs(child) + addr) = data;
- 				ret = 0;
- 			}
- 			else if ((addr >= PT_GR1+4 && addr <= PT_GR31+4) ||
++static void
++coda_vm_open(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	atomic_inc(&cvm_ops->refcnt);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->open)
++		cvm_ops->host_vm_ops->open(vma);
++}
++
++static void
++coda_vm_close(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->close)
++		cvm_ops->host_vm_ops->close(vma);
++
++	if (atomic_dec_and_test(&cvm_ops->refcnt)) {
++		vma->vm_ops = cvm_ops->host_vm_ops;
++		fput(cvm_ops->coda_file);
++		kfree(cvm_ops);
++	}
++}
++
+ static int
+ coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
+ {
+@@ -100,6 +135,8 @@ coda_file_mmap(struct file *coda_file, s
+ 	struct coda_inode_info *cii;
+ 	struct file *host_file;
+ 	struct inode *coda_inode, *host_inode;
++	struct coda_vm_ops *cvm_ops;
++	int ret;
+ 
+ 	cfi = CODA_FTOC(coda_file);
+ 	BUG_ON(!cfi || cfi->cfi_magic != CODA_MAGIC);
+@@ -108,6 +145,13 @@ coda_file_mmap(struct file *coda_file, s
+ 	if (!host_file->f_op->mmap)
+ 		return -ENODEV;
+ 
++	if (WARN_ON(coda_file != vma->vm_file))
++		return -EIO;
++
++	cvm_ops = kmalloc(sizeof(struct coda_vm_ops), GFP_KERNEL);
++	if (!cvm_ops)
++		return -ENOMEM;
++
+ 	coda_inode = file_inode(coda_file);
+ 	host_inode = file_inode(host_file);
+ 
+@@ -121,6 +165,7 @@ coda_file_mmap(struct file *coda_file, s
+ 	 * the container file on us! */
+ 	else if (coda_inode->i_mapping != host_inode->i_mapping) {
+ 		spin_unlock(&cii->c_lock);
++		kfree(cvm_ops);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -129,7 +174,29 @@ coda_file_mmap(struct file *coda_file, s
+ 	cfi->cfi_mapcount++;
+ 	spin_unlock(&cii->c_lock);
+ 
+-	return host_file->f_op->mmap(host_file, vma);
++	vma->vm_file = get_file(host_file);
++	ret = host_file->f_op->mmap(host_file, vma);
++
++	if (ret) {
++		/* if ->mmap fails, our caller will put coda_file so we
++		 * should drop the reference to the host_file that we got.
++		 */
++		fput(host_file);
++		kfree(cvm_ops);
++	} else {
++		/* here we add redirects for the open/close vm_operations */
++		cvm_ops->host_vm_ops = vma->vm_ops;
++		if (vma->vm_ops)
++			cvm_ops->vm_ops = *vma->vm_ops;
++
++		cvm_ops->vm_ops.open = coda_vm_open;
++		cvm_ops->vm_ops.close = coda_vm_close;
++		cvm_ops->coda_file = coda_file;
++		atomic_set(&cvm_ops->refcnt, 1);
++
++		vma->vm_ops = &cvm_ops->vm_ops;
++	}
++	return ret;
+ }
+ 
+ int coda_open(struct inode *coda_inode, struct file *coda_file)
+@@ -239,4 +306,3 @@ const struct file_operations coda_file_o
+ 	.fsync		= coda_fsync,
+ 	.splice_read	= coda_file_splice_read,
+ };
+-
 
