@@ -2,147 +2,223 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD27CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77499CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00FB2206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:33:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pTMCWdIk"
+	by mail.kernel.org (Postfix) with ESMTP id 574FA206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 02:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389875AbfJYCc5 (ORCPT
+        id S2390100AbfJYCdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 22:32:57 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46941 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728416AbfJYCc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 22:32:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q21so406761plr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 19:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=g1ns30NWBvyr7boX6LL1Xy9XjoQxnnSYF9EZ4Db7JXo=;
-        b=pTMCWdIkG2cC3CrrCS6QNFDxjPVipsYh4cnjbLOMvo/dRNvfEgjpLq085gUwWBxFI7
-         oW1yDmWGuCoUBtppG8o5fzQ84VjmJxenG3SWZwrEd9/irg7P9GghSu4xIjpQMllExLmO
-         IwRRhGZt8peS8UzhqKhVzfAvtwE/2kuxn/C4z5QUmWLo3xL/o5wAPxXOTMB2pFtDknpd
-         aOOQJjxTN+2eWKVYjBl3cRroPcjT5Mzk99ZLS7j/iFml1r3qRFvB4Y895bqdewPlk6sW
-         nL1rYXHyfkVHoYNtwSKzXYWDIkXrdKkSuGcr99FBismEKHoTHzLqFFVtJlV5MW3WZyU4
-         UAMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=g1ns30NWBvyr7boX6LL1Xy9XjoQxnnSYF9EZ4Db7JXo=;
-        b=Ei+mtzcUZjKutkcBK36ocGUQ2+ApPvXagALPqT7xctmN9AzztdUcQu/jgheTMAGEqq
-         gGNlcxHuAeKUW3SUwimU9kPhaF7Ai4hh27GJ+a1HZO/p1fj/cRcild/2AImiOMvNTeiQ
-         QLB3hvF3Bp1wOGhcdVaUZSquYJmD44uzDpR9YPmpQfZGs7+9JsBzS93Ply7VWL9IOCHe
-         Ko3URg3M8PbpK0bZvrAhGDW9wqAU7Nygpvx5jNALHkliW4r9iqBGa6pNOCWWV5o4Gnnu
-         zgcJ3TEIhtE81vgcb/uwl5igsgYGDi8A3lPS6NnDUNbRxKcP8EgFoY6Ota9oJOk0P7Y2
-         MN9g==
-X-Gm-Message-State: APjAAAW0+Tx3sMs6K56txPDCLolRrDPN7pWyFlgCgjmwIOgAr7KB5p76
-        qIP+MQo3MCd2sOGZopfkIbszoQ==
-X-Google-Smtp-Source: APXvYqzBwaAIQFbX3bMEtf0GQp6J6XBRgOCr8x81MVhZh1qy1hbfTEFcOAEv5o2X8PBCHhwS3S4rAA==
-X-Received: by 2002:a17:902:44d:: with SMTP id 71mr1069193ple.320.1571970775667;
-        Thu, 24 Oct 2019 19:32:55 -0700 (PDT)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id b13sm366035pgd.58.2019.10.24.19.32.54
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 24 Oct 2019 19:32:54 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 19:32:39 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Li Xinhai <xinhai.li@outlook.com>
-cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH] mm: allow unmapped hole at head side of mbind range
-In-Reply-To: <c90d668a-9abc-df1b-8b9c-70a6e6afd94a@suse.cz>
-Message-ID: <alpine.LSU.2.11.1910241900070.1096@eggly.anvils>
-References: <TY2PR04MB29753892EBAD17D9E8FECBAEE86A0@TY2PR04MB2975.apcprd04.prod.outlook.com> <c90d668a-9abc-df1b-8b9c-70a6e6afd94a@suse.cz>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Thu, 24 Oct 2019 22:33:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:13701 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728416AbfJYCdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 22:33:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 19:33:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,226,1569308400"; 
+   d="scan'208";a="197904107"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Oct 2019 19:33:21 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
+Date:   Fri, 25 Oct 2019 10:30:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019, Vlastimil Babka wrote:
+Hi Jacob,
 
-> + linux-api
+On 10/25/19 3:54 AM, Jacob Pan wrote:
+> When VT-d driver runs in the guest, PASID allocation must be
+> performed via virtual command interface. This patch registers a
+> custom IOASID allocator which takes precedence over the default
+> XArray based allocator. The resulting IOASID allocation will always
+> come from the host. This ensures that PASID namespace is system-
+> wide.
 > 
-> On 10/24/19 9:35 AM, Li Xinhai wrote:
-> > From: Li Xinhai  <xinhai.li@outlook.com>
-> > 
-> > mbind_range silently ignore unmapped hole at middle and tail of the 
-> > specified range, but report EFAULT if hole at head side.
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/Kconfig       |  1 +
+>   drivers/iommu/intel-iommu.c | 67 +++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/intel-iommu.h |  2 ++
+>   3 files changed, 70 insertions(+)
 > 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index fd50ddffffbf..961fe5795a90 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -211,6 +211,7 @@ config INTEL_IOMMU_SVM
+>   	bool "Support for Shared Virtual Memory with Intel IOMMU"
+>   	depends on INTEL_IOMMU && X86
+>   	select PCI_PASID
+> +	select IOASID
+>   	select MMU_NOTIFIER
+>   	help
+>   	  Shared Virtual Memory (SVM) provides a facility for devices
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 3f974919d3bd..ced1d89ef977 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -1706,6 +1706,9 @@ static void free_dmar_iommu(struct intel_iommu *iommu)
+>   		if (ecap_prs(iommu->ecap))
+>   			intel_svm_finish_prq(iommu);
+>   	}
+> +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap))
+> +		ioasid_unregister_allocator(&iommu->pasid_allocator);
+
+Since scalable mode is disabled if pasid allocator failed to register,
+add sm_support(iommu) check here will be better.
+
+> +
+>   #endif
+>   }
+>   
+> @@ -4910,6 +4913,44 @@ static int __init probe_acpi_namespace_devices(void)
+>   	return 0;
+>   }
+>   
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max, void *data)
+> +{
+> +	struct intel_iommu *iommu = data;
+> +	ioasid_t ioasid;
+> +
+> +	/*
+> +	 * VT-d virtual command interface always uses the full 20 bit
+> +	 * PASID range. Host can partition guest PASID range based on
+> +	 * policies but it is out of guest's control.
+> +	 */
+> +	if (min < PASID_MIN || max > intel_pasid_max_id)
+> +		return INVALID_IOASID;
+> +
+> +	if (vcmd_alloc_pasid(iommu, &ioasid))
+> +		return INVALID_IOASID;
+> +
+> +	return ioasid;
+> +}
+> +
+> +static void intel_ioasid_free(ioasid_t ioasid, void *data)
+> +{
+> +	struct intel_iommu *iommu = data;
+> +
+> +	if (!iommu)
+> +		return;
+> +	/*
+> +	 * Sanity check the ioasid owner is done at upper layer, e.g. VFIO
+> +	 * We can only free the PASID when all the devices are unbond.
+> +	 */
+> +	if (ioasid_find(NULL, ioasid, NULL)) {
+> +		pr_alert("Cannot free active IOASID %d\n", ioasid);
+> +		return;
+> +	}
+> +	vcmd_free_pasid(iommu, ioasid);
+> +}
+> +#endif
+> +
+>   int __init intel_iommu_init(void)
+>   {
+>   	int ret = -ENODEV;
+> @@ -5020,6 +5061,32 @@ int __init intel_iommu_init(void)
+>   				       "%s", iommu->name);
+>   		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
+>   		iommu_device_register(&iommu->iommu);
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +		if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap)) {
+> +			pr_info("Register custom PASID allocator\n");
+> +			/*
+> +			 * Register a custom ASID allocator if we are running
+> +			 * in a guest, the purpose is to have a system wide PASID
+> +			 * namespace among all PASID users.
+> +			 * There can be multiple vIOMMUs in each guest but only
+> +			 * one allocator is active. All vIOMMU allocators will
+> +			 * eventually be calling the same host allocator.
+> +			 */
+> +			iommu->pasid_allocator.alloc = intel_ioasid_alloc;
+> +			iommu->pasid_allocator.free = intel_ioasid_free;
+> +			iommu->pasid_allocator.pdata = (void *)iommu;
+> +			ret = ioasid_register_allocator(&iommu->pasid_allocator);
+> +			if (ret) {
+> +				pr_warn("Custom PASID allocator registeration failed\n");
+> +				/*
+> +				 * Disable scalable mode on this IOMMU if there
+> +				 * is no custom allocator. Mixing SM capable vIOMMU
+> +				 * and non-SM vIOMMU are not supported.
+> +				 */
+> +				intel_iommu_sm = 0;
+
+It's insufficient to disable scalable mode by only clearing
+intel_iommu_sm. The DMA_RTADDR_SMT bit in root entry has already been
+set. Probably, you need to
+
+for each iommu
+	clear DMA_RTADDR_SMT in root entry
+
+Alternatively, since vSVA is the only customer of this custom PASID
+allocator, is it possible to only disable SVA here?
+
+> +			}
+> +		}
+> +#endif
+>   	}
+>   
+>   	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index 1d4b8dcdc5d8..c624733cb2e6 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -19,6 +19,7 @@
+>   #include <linux/iommu.h>
+>   #include <linux/io-64-nonatomic-lo-hi.h>
+>   #include <linux/dmar.h>
+> +#include <linux/ioasid.h>
+>   
+>   #include <asm/cacheflush.h>
+>   #include <asm/iommu.h>
+> @@ -546,6 +547,7 @@ struct intel_iommu {
+>   #ifdef CONFIG_INTEL_IOMMU_SVM
+>   	struct page_req_dsc *prq;
+>   	unsigned char prq_name[16];    /* Name for PRQ interrupt */
+> +	struct ioasid_allocator_ops pasid_allocator; /* Custom allocator for PASIDs */
+>   #endif
+>   	struct q_inval  *qi;            /* Queued invalidation info */
+>   	u32 *iommu_state; /* Store iommu states between suspend and resume.*/
 > 
-> Hmm that's unfortunate. mbind() manpage says:
-> 
-> EFAULT Part or all of the memory range specified by nodemask and maxnode
-> points outside your accessible address space.  Or, there was an unmapped
-> hole in  the  specified  memory range specified by addr and len.
-> 
-> That sounds like any hole inside the specified range should return
-> EFAULT.
 
-Yes (though an exception is allowed when restoring to default).
-
-> But perhaps it can be also interpreted as you suggest, that the
-> whole range is an unmapped hole.  There's some risk of breaking existing
-> userspace if we change it either way.
-> 
-> > It is more reasonable to support silently ignore holes at any part of 
-> > the range, only report EFAULT if the whole range is in hole.
-> > 
-> > Signed-off-by: Li Xinhai <xinhai.li@outlook.com>
-
-Xinhai, I'm sceptical about this patch: is it something you found
-by code inspection, or something you found when using mbind()?
-
-I've not looked long enough to be certain, nor experimented, but:
-
-mbind_range() is only one stage of the mbind() syscall implementation,
-and is preceded by queue_pages_range(): look what queue_pages_test_walk()
-does when MPOL_MF_DISCONTIG_OK not set.
-
-My impression is that mbind_range() is merely correcting an omission
-from the checks already made my queue_pages_test_walk() (an odd way
-to proceed, I admit: would be better to check initially than later).
-
-I do think that you should not make this change without considering
-MPOL_MF_DISCONTIG_OK and its intention.
-
-Hugh
-
-> > ---
-> > 
-> >  mm/mempolicy.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > 
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 4ae967bcf954..ae160d9936d9 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -738,7 +738,7 @@ static int mbind_range(struct mm_struct *mm, unsigned long start,
-> >         unsigned long vmend;
-> >  
-> >         vma = find_vma(mm, start);
-> > -       if (!vma || vma->vm_start > start)
-> > +       if (!vma || vma->vm_start >= end)
-> >                 return -EFAULT;
-> >  
-> >         prev = vma->vm_prev;
-> > 
+Best regards,
+baolu
