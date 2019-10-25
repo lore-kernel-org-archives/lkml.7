@@ -2,142 +2,154 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7331ECA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6AECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAEC2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 619AD21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c83H9Xm7"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dX1bDxYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393966AbfJYF45 (ORCPT
+        id S2404179AbfJYGAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 01:56:57 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39975 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393713AbfJYF45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 01:56:57 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d8so1144192otc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 22:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zThSuPucnYB11UxQ84T8AiU13at0QlBZrNas229mVK4=;
-        b=c83H9Xm7uwJMYI/yUjZRfhl0JIbApRXJSslgxBFnsu3+JNMmAMx7Vvqg79Mi6F5/T6
-         YA1unfPBbMrOhFSPnFZD9anMpGXO7as8l8PS3IU6UuRSTKTtHQRTeIQ5cnevXgD2hoQR
-         L0ZIv9KKe1hJr4+zMi9wkJlNvAqVxGIkipCP5TMv1G54C7Yvfa8pafyAv2nflkMDdISX
-         B2QPxwy33Po1tlfhJM858lU65nHQxQ1WeBZuvXvDX0IWU/0EVCywYRpPVABbk3oam2AI
-         lU8d5Q6W9avvustlUo+sDMgS/yqJ5T/Yq21JKWYu7JnDhMg35Fd522DIvy6agg0OXOi6
-         IImg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zThSuPucnYB11UxQ84T8AiU13at0QlBZrNas229mVK4=;
-        b=tKYUYinp55f2TPTcyVl2mEQZUZCb2Q3TtVmlY8Jp1S6zpXmIwYcCRQ4G+B7nHayDg8
-         8hRzKwMYFhXpq9KzZMByX7q0sxRfBkfwZHiXPAhtj3uOIbDisXe/JRPX8bjUWbuJ4wJP
-         VicAAD7lVTa56rXTm/dej3sIcEAobXLtZbsmxLt+ofrUgmZZVJdtrxKLOPm25P9U69wi
-         3pfOjhJiTPmiHXGbC9Ij3wuD9PXnv1bWHLe7pMJ1Qov4IzeSGxGWeZZNJuRf/aRGerb3
-         mCuKHiDO3xOnqpr+FVWY2NBhza+QVjhh0p6oeq769MuHvZRk9lYpmjiDOegrBVjYtlp8
-         NjLA==
-X-Gm-Message-State: APjAAAV/hqVA5IyoaN4LopM3A5nECi/2fa62g1pWmtVVEAfEd4DbqlAY
-        xA3Q6mEvM20hO8H0zP9Rq/8/w7cdTNKvU9smkgDLRA==
-X-Google-Smtp-Source: APXvYqw/DUlrRogzHWRrsD06nz/kflR9lP8eB8Uz45TB1T3cs5AdM0YleXz3T7NJw93Ak+GBflKz0IBcBroUy3HWdSA=
-X-Received: by 2002:a9d:2241:: with SMTP id o59mr1342045ota.224.1571983016328;
- Thu, 24 Oct 2019 22:56:56 -0700 (PDT)
+        Fri, 25 Oct 2019 02:00:42 -0400
+Received: from mout.gmx.net ([212.227.15.18]:59341 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393967AbfJYGAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 02:00:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1571983222;
+        bh=wZlyKENycmK9lsri3lVZvS+vGwQPRxstzXSq54uEgJo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=dX1bDxYx3CT2VCRZ5EqGCvuVnkWgIpLus5YsA9xbBXpUbJR2qWlvMUdGx5/OQEX1r
+         k14XlJCS3vq+UitNLKbQQS0qyh/BOXBE2RY1gxxBxi09FuVHOKGEjln8es/E939Ep7
+         aFkYoOEHKFTlXV/4PfuQHRwRBsS8N4q7JKzFSWGY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.112]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MowKi-1he8Hw1ZDK-00qTcW; Fri, 25
+ Oct 2019 08:00:22 +0200
+Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for interrupt
+ handling
+To:     Daniel Wagner <dwagner@suse.de>, UNGLinuxDriver@microchip.com
+Cc:     netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20191018082817.111480-1-dwagner@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <a8ce75ca-f756-309e-11b4-6ad597e94ad9@gmx.net>
+Date:   Fri, 25 Oct 2019 08:00:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191021190310.85221-1-john.stultz@linaro.org>
-In-Reply-To: <20191021190310.85221-1-john.stultz@linaro.org>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Fri, 25 Oct 2019 11:26:44 +0530
-Message-ID: <CAO_48GHk8b=7Rs2CYZvnki2EMpeo_4FRy+_3F0Mv_nAK42MpgQ@mail.gmail.com>
-Subject: Re: [PATCH v13 0/5] DMA-BUF Heaps (destaging ION)
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191018082817.111480-1-dwagner@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:loHQDQWry2EsaXAbHdVuW9BsRZL5d6w37/LhjAdnn4zbwdK+I2F
+ bJvlGDW9j6Zik3ReSxnWZsFVcOgNyv5ehuSgjzw1kvQh/TGiIoQ1QOi6FMaSI5+xHNcr0wB
+ nAejnS/bYom/Xd3AdVOBJYCNX+7Bh3mply9te/INQjz9oZHSPStnarRAmlpzXilNK+QMUJN
+ DKmerXE06uXHtLyz81yUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EPY1KEOBwA8=:HgIsmDJp2gMfjRXKreHUOD
+ sItz/VQ9rbfCjFXmW0zLDZn6l/K2eyt/Hgrb8UZYIhNOH8wfg6Dg8FHPV+TDSBS9A3br6aD5j
+ EljSBhFJLAhZ1KvF4/1qemD4+lCY6xut3A52zroXkZkmvbBOueaD0dCDkp31Kmrx6djCL/6l1
+ jsfV65ep2Z3JajfUJRoS4uF64agzXTUt+tqU7EuWBPL7dDZGDxT3ScRAKLmoJ36PecMUMScs1
+ Rro534Y+FWAEXJNba2MIUZXCzExOjNw+yjYd5M/YJ9HiKpl6z10I2SKzkbJe3CcsQplleV1Eq
+ vd23GaVI73Fv/qBj7iee+w5S8m2HsHazYsKSKASvHvO7snXPJPgMti/yIc6kxOjz4lRe6oFYy
+ c42BiOUVnXCwC02nX16BA+FGydw8gWNmK3l3JsXbvUhFY4xnT7t7vX3dIdAKf6ul0SRTAk9MT
+ 5wu+secPp1zOqGpPtqFV9nBMCs2DITd8/kCG9fTZ95DGdBYfUv8Qs3cg5uV00dubA5ZPz4yBi
+ x8haQfdG3t6oQJGhLQeqN3ojTq4w9rg5N9NrgnsaGDjeFjzb81CSgdaIxaWrvR/VBkAby1wSO
+ VfTcvgqtbvYerDOG1gEUhf097wFf2vnBAoL9SXkvTSHQXl3R2fzHBAaiRdGQ+lJKZNSNxRgW5
+ Kohwtf1i27UL3lr/ap80SnYxgGmlVQ8BjtMk8EUWbmYe9u+MHHPFqmkrdswXrNg++LECU/Yqp
+ cem3BjZUR1dIoRZq+NNJxOWFbS9xI1oa3w43rNa6gkyt7cbpV94D8SyHIyU+tTf0wy066AeZN
+ peJrmzJQ+Uo81xPrQk1XUn0gkW4piUl1ehTs0OhD7ThGhRrL3fj0luX9aHTRlh4oGBrMyyu+w
+ 7+E6I4U+68Mutlz7y4Q90F/lrLPlLKGpfmwdknPumkAYcM70zY1j9Oae2RkuJzh6dzYPkHSao
+ caZxwmCcrCaSUpJ/HIO8Byf29iH5Gf+U39WAwrEIpB9bX5toGUwLjvcmcuWBN0kn4mELLiKJu
+ KC5g/3xYPRZ0e/QgtVY9dCKvQwHVRijF7UnAiuWDjREye8rO7FcSOm6kkTfP1BL6fOAXiPfOD
+ iAjIzMD8ZEexIe8kxI7DqA/wmREgTRYq6tqPZmV5usQnxj7QtXbMn4UB9ro0YjzZWcTcUDh+a
+ cPu3JT9RLvCEaqRSOWIJJUuJrPCOdXbMCN5pm1HSs+JUVIMwxVAOPefqU+EpXz5wOSnuk4CNC
+ AnFfwMEosnCpVkxtjU0Vp8qtwM4sFjHbUGa8Pz2M4HZTK1WEvKBtUUdha/is=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+Am 18.10.19 um 10:28 schrieb Daniel Wagner:
+> handle_simple_irq() expect interrupts to be disabled. The USB
+> framework is using threaded interrupts, which implies that interrupts
+> are re-enabled as soon as it has run.
+>
+> This reverts the changes from cc89c323a30e ("lan78xx: Use irq_domain
+> for phy interrupt from USB Int. EP").
+>
+> [    4.886203] 000: irq 79 handler irq_default_primary_handler+0x0/0x8 enabled interrupts
+> [    4.886243] 000: WARNING: CPU: 0 PID: 0 at kernel/irq/handle.c:152 __handle_irq_event_percpu+0x154/0x168
+> [    4.896294] 000: Modules linked in:
+> [    4.896301] 000: CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.6 #39
+> [    4.896310] 000: Hardware name: Raspberry Pi 3 Model B+ (DT)
+> [    4.896315] 000: pstate: 60000005 (nZCv daif -PAN -UAO)
+> [    4.896321] 000: pc : __handle_irq_event_percpu+0x154/0x168
+> [    4.896331] 000: lr : __handle_irq_event_percpu+0x154/0x168
+> [    4.896339] 000: sp : ffff000010003cc0
+> [    4.896346] 000: x29: ffff000010003cc0 x28: 0000000000000060
+> [    4.896355] 000: x27: ffff000011021980 x26: ffff00001189c72b
+> [    4.896364] 000: x25: ffff000011702bc0 x24: ffff800036d6e400
+> [    4.896373] 000: x23: 000000000000004f x22: ffff000010003d64
+> [    4.896381] 000: x21: 0000000000000000 x20: 0000000000000002
+> [    4.896390] 000: x19: ffff8000371c8480 x18: 0000000000000060
+> [    4.896398] 000: x17: 0000000000000000 x16: 00000000000000eb
+> [    4.896406] 000: x15: ffff000011712d18 x14: 7265746e69206465
+> [    4.896414] 000: x13: ffff000010003ba0 x12: ffff000011712df0
+> [    4.896422] 000: x11: 0000000000000001 x10: ffff000011712e08
+> [    4.896430] 000: x9 : 0000000000000001 x8 : 000000000003c920
+> [    4.896437] 000: x7 : ffff0000118cc410 x6 : ffff0000118c7f00
+> [    4.896445] 000: x5 : 000000000003c920 x4 : 0000000000004510
+> [    4.896453] 000: x3 : ffff000011712dc8 x2 : 0000000000000000
+> [    4.896461] 000: x1 : 73a3f67df94c1500 x0 : 0000000000000000
+> [    4.896466] 000: Call trace:
+> [    4.896471] 000:  __handle_irq_event_percpu+0x154/0x168
+> [    4.896481] 000:  handle_irq_event_percpu+0x50/0xb0
+> [    4.896489] 000:  handle_irq_event+0x40/0x98
+> [    4.896497] 000:  handle_simple_irq+0xa4/0xf0
+> [    4.896505] 000:  generic_handle_irq+0x24/0x38
+> [    4.896513] 000:  intr_complete+0xb0/0xe0
+> [    4.896525] 000:  __usb_hcd_giveback_urb+0x58/0xd8
+> [    4.896533] 000:  usb_giveback_urb_bh+0xd0/0x170
+> [    4.896539] 000:  tasklet_action_common.isra.0+0x9c/0x128
+> [    4.896549] 000:  tasklet_hi_action+0x24/0x30
+> [    4.896556] 000:  __do_softirq+0x120/0x23c
+> [    4.896564] 000:  irq_exit+0xb8/0xd8
+> [    4.896571] 000:  __handle_domain_irq+0x64/0xb8
+> [    4.896579] 000:  bcm2836_arm_irqchip_handle_irq+0x60/0xc0
+> [    4.896586] 000:  el1_irq+0xb8/0x140
+> [    4.896592] 000:  arch_cpu_idle+0x10/0x18
+> [    4.896601] 000:  do_idle+0x200/0x280
+> [    4.896608] 000:  cpu_startup_entry+0x20/0x28
+> [    4.896615] 000:  rest_init+0xb4/0xc0
+> [    4.896623] 000:  arch_call_rest_init+0xc/0x14
+> [    4.896632] 000:  start_kernel+0x454/0x480
+>
+> [dwagner: Updated Jisheng's initial patch]
+>
+> Fixes: cc89c323a30e ("lan78xx: Use irq_domain for phy interrupt from USB Int. EP")
+> Cc: Woojung Huh <woojung.huh@microchip.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Stefan Wahren <wahrenst@gmx.net>
+> Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
 
-On Tue, 22 Oct 2019 at 00:33, John Stultz <john.stultz@linaro.org> wrote:
->
-> Lucky number 13! :)
->
-> Last week in v12 I had re-added some symbol exports to support
-> later patches I have pending to enable loading heaps from
-> modules. He reminded me that back around v3 (its been awhile!) I
-> had removed those exports due to concerns about the fact that we
-> don't support module removal.
->
-> So I'm respinning the patches, removing the exports again. I'll
-> submit a patch to re-add them in a later series enabling moduels
-> which can be reviewed indepently.
+Acked-by: Stefan Wahren <wahrenst@gmx.net>
 
-This looks good to me, and hasn't seen any more comments, so I am
-going to merge it via drm-misc-next today.
->
-> With that done, lets get on to the boilerplate!
->
-> The patchset implements per-heap devices which can be opened
-> directly and then an ioctl is used to allocate a dmabuf from the
-> heap.
->
-> The interface is similar, but much simpler then IONs, only
-> providing an ALLOC ioctl.
->
-> Also, I've provided relatively simple system and cma heaps.
->
-> I've booted and tested these patches with AOSP on the HiKey960
-> using the kernel tree here:
->   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
->
-> And the userspace changes here:
->   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
->
-> Compared to ION, this patchset is missing the system-contig,
-> carveout and chunk heaps, as I don't have a device that uses
-> those, so I'm unable to do much useful validation there.
-> Additionally we have no upstream users of chunk or carveout,
-> and the system-contig has been deprecated in the common/andoid-*
-> kernels, so this should be ok.
->
-> I've also removed the stats accounting, since any such
-> accounting should be implemented by dma-buf core or the heaps
-> themselves.
->
-> New in v13:
-> * Re-remove symbol exports, per discussion with Brian. I'll
->   resubmit these separately in a later patch so they can be
->   independently reviewed
->
-> thanks
-> -john
-
-<snip>
-
-Best,
-Sumit.
