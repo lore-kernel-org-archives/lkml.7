@@ -2,147 +2,99 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593C0CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40959CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3103E21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14ADC21D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KYfluYqg"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="cQVFHky3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394558AbfJYNP7 (ORCPT
+        id S2394573AbfJYNTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:15:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59157 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2393740AbfJYNP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:15:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572009357;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Qc7JyFaQ3Jjw6yQFnv45T7QS+wjmR7iVCKyhF3rYk0U=;
-        b=KYfluYqgCDbDKtw0AimJ/MwSmStB/N54JA1YmDCfKTC06Pm/8jKmp3ut0bNfeIahle3Rod
-        R0zO/PUyWlo+O+NGMZ9hOumvlMfKiNUxnjQvGvvkBwVO7Cwl+rH6YECghT7d2xf7zQansR
-        ZGm0++ergp78jYis+Ovx9xmuFtwSbOk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-258-8ekQ5j0IMNeA5_AvJaMQLg-1; Fri, 25 Oct 2019 09:15:53 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 058C347B;
-        Fri, 25 Oct 2019 13:15:51 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 27C84600CD;
-        Fri, 25 Oct 2019 13:15:48 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v2] x86/hyper-v: micro-optimize send_ipi_one case
-Date:   Fri, 25 Oct 2019 15:15:46 +0200
-Message-Id: <20191025131546.18794-1-vkuznets@redhat.com>
+        Fri, 25 Oct 2019 09:19:54 -0400
+Received: from mout.gmx.net ([212.227.17.22]:42897 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394561AbfJYNTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:19:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1572009580;
+        bh=KFRM/HuQYrBsmzUGAol+zTtrK8sFAfsaYLY7BYhLUSE=;
+        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
+         References;
+        b=cQVFHky33nyI+63EU/Z0YFLvNd2hFP4hzV7/zX54U+EJosF7b6j/8OgoVERM2TQb9
+         zU8KJufzEhc0V+hc9XE5EjW4PylZWIy4eUSX5QYnxyf6CCS79Ydc/kgfFaYj9xUDwE
+         DQuVV1/2g076OrHPiHufi5ni86M3gTpjGemCP7cc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mlf0U-1hfGob3qew-00ilro; Fri, 25
+ Oct 2019 15:19:39 +0200
+Message-ID: <3f6f8ac5dd3c3f053c682e8fc408c85d7b3e93e0.camel@gmx.de>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+From:   Robert Stupp <snazy@gmx.de>
+Reply-To: snazy@snazy.de
+To:     snazy@snazy.de, Michal Hocko <mhocko@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Date:   Fri, 25 Oct 2019 15:19:37 +0200
+In-Reply-To: <eab6798a6081fba94353be71681fcd8c7dcf8011.camel@gmx.de>
+References: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
+         <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
+         <20191025092143.GE658@dhcp22.suse.cz>
+         <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
+         <20191025114633.GE17610@dhcp22.suse.cz>
+         <20191025115038.GF17610@dhcp22.suse.cz>
+         <eab6798a6081fba94353be71681fcd8c7dcf8011.camel@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: 8ekQ5j0IMNeA5_AvJaMQLg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Q6llJXN/am3SGFo+oibZ1pCgXyV1XsvnsZFtNqUCawdAvCMcZdU
+ xgqttSCpTyJuLIS+wt8q/75J0L/91em0rU4c7pMqEsNNQOvbNoWlknyPJbeplL5eANmRkjR
+ fARCp5v0a8qIMGVYdhIGz8u40415NGBQKBQmKTUb7TrVF/c2oD2po3e4wzEfoKTNLV/PfsA
+ LtJlJVwMDa5gNkaEnYpYA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lk83J9fMnHY=:aKC97v3q4y6d5T1C3vLaP3
+ buogJYs0jBkvbzCI8XmxnlLLVe5JDQQkf2SfpLP3CM96Obsg4nKWYBUB5bKMMwDf6ghCTFv1g
+ GvY5PY0n5a6iJPAHdozhZKTg5CwEWIMHeoivCuzdczejU3yZNhfrKkgMgIuPPP2eJH2yZr8tI
+ j6wdjMLv/h/SPSNxBgCp4UmHq7z/E3TJ9+j7tFjvvaTNOojgq/U49B+5mRWlH5RQKmIpoN2K6
+ CeMPK4z1hyEoTgcS3cHGfjCCb7FutILyBqUf5LKtaWiRQDOXyjEDxK1ktB+JXZhzx64d01y2K
+ MVgD3t36Q+dVV59PHqLx8J6zJmdmkA+uC0VXmD7klLy/57PyJwXcl5+pRTZtLSE/dCOVwSYG4
+ 6z6XsRPPa1pHfO1mq7TgKiND0trd/rVuWKvKysPXrS01EZOKP+iu8QufO3AYLnMwapPfUqbo2
+ n0MLHeS3t+7nRGm+VH9cGggf42LlbnmzqifRhHSMju1sxAyG9OA81Cs86tPHfGL8iT/tt3G1d
+ e0qeezUCOss4qOt7mORCOJ57aWvMD3+LnC3v4/wBc1ImL6I1b+05vWKLTJFk7RQLkuD2zEMrq
+ 3h2oTDnXo0nzHd3uwc3KMiu4t8NFAHbCdHhSJMXxKK4bP1ds0+m7vwH5PWP7DncDBjVxI1mQX
+ 8G/0JXYG41zN4rrY1/nc8icW70jouYw0kX0syAgJcOcR+SqYeVbdd/sabLxkCZfQ5rDecwNoE
+ gK/GyIpZFmsoPmtpoZUWYo/Yza3h5zSPQkZxVmGhUiBH9umdMTPZC2xllYc+rORCETFqQKjWh
+ fW2c4DkpN5wjtVkWBQj2QeS2FQJIi0WMz4IuyE/9jC2r4ay6dtrP3ezDIpaDq+tiO1G4QNDpL
+ kd4ZiDvjntvdjZkB8Ejp/eG/jWScSZreotG3z0YLWiad9tDK6VpVESrQ6g/I3mLazZeWFpl3k
+ eW7ujeY4NosaxJgrcjmNho5ucQ3GhxsfNCsKKzMHw5Guiuc4QlnIQweRyIAADRl5rA5ygb/CL
+ +qnFnyPbl9bvHMcXu8C5CUpY6QYI/3iRee+QahIKxgPJ4KWcXWGTwowZPquCMu3QxIg87YIhC
+ +oOXVR4brg0ackPyFxtsnUCdzNoecvtsyoqYKJdo+NJ7n3uwKe1b0uAQ558O7AfRoieKZCi7r
+ 3q38UzzN/6zmyniB1YiDMCUbl2WbWP3pb+BFCSs++BOUT/VUY0+5ZXwDyFzc198S8Glm14wAM
+ f+BY8KQNEsHFTrPBIf9ABsTIB9Zz/BXU9uADT6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When sending an IPI to a single CPU there is no need to deal with cpumasks.
-With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
-cycles) improvement with smp_call_function_single() loop benchmark. The
-optimization, however, is tiny and straitforward. Also, send_ipi_one() is
-important for PV spinlock kick.
+On Fri, 2019-10-25 at 13:59 +0200, Robert Stupp wrote:
+> On Fri, 2019-10-25 at 13:50 +0200, Michal Hocko wrote:
+> > On Fri 25-10-19 13:46:33, Michal Hocko wrote:
+> > >
+> I suspect, that it's something that's "special" on my machine. But
+> I've
+> got no clue what that might be. Do you think it makes sense to try
+> with
+> all the spectre/meltdown mitigations disabled? Or SMT disabled?
+>
 
-I was also wondering if it would make sense to switch to using regular
-APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
-cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
-vector)).
+Bummer - booting the kernel with `mitigations=3Doff` didn't help.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-Changes since v1:
- - Style changes [Roman, Joe]
----
- arch/x86/hyperv/hv_apic.c           | 13 ++++++++++---
- arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
- 2 files changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index e01078e93dd3..fd17c6341737 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -194,10 +194,17 @@ static bool __send_ipi_mask(const struct cpumask *mas=
-k, int vector)
-=20
- static bool __send_ipi_one(int cpu, int vector)
- {
--=09struct cpumask mask =3D CPU_MASK_NONE;
-+=09trace_hyperv_send_ipi_one(cpu, vector);
-=20
--=09cpumask_set_cpu(cpu, &mask);
--=09return __send_ipi_mask(&mask, vector);
-+=09if (!hv_hypercall_pg || (vector < HV_IPI_LOW_VECTOR) ||
-+=09    (vector > HV_IPI_HIGH_VECTOR))
-+=09=09return false;
-+
-+=09if (cpu >=3D 64)
-+=09=09return __send_ipi_mask_ex(cpumask_of(cpu), vector);
-+
-+=09return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
-+=09=09=09       BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
- }
-=20
- static void hv_send_ipi(int cpu, int vector)
-diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/tra=
-ce/hyperv.h
-index ace464f09681..4d705cb4d63b 100644
---- a/arch/x86/include/asm/trace/hyperv.h
-+++ b/arch/x86/include/asm/trace/hyperv.h
-@@ -71,6 +71,21 @@ TRACE_EVENT(hyperv_send_ipi_mask,
- =09=09      __entry->ncpus, __entry->vector)
- =09);
-=20
-+TRACE_EVENT(hyperv_send_ipi_one,
-+=09    TP_PROTO(int cpu,
-+=09=09     int vector),
-+=09    TP_ARGS(cpu, vector),
-+=09    TP_STRUCT__entry(
-+=09=09    __field(int, cpu)
-+=09=09    __field(int, vector)
-+=09=09    ),
-+=09    TP_fast_assign(__entry->cpu =3D cpu;
-+=09=09=09   __entry->vector =3D vector;
-+=09=09    ),
-+=09    TP_printk("cpu %d vector %x",
-+=09=09      __entry->cpu, __entry->vector)
-+=09);
-+
- #endif /* CONFIG_HYPERV */
-=20
- #undef TRACE_INCLUDE_PATH
---=20
-2.20.1
 
