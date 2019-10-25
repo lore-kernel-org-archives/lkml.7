@@ -2,198 +2,133 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62ECCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FC4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D3521D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dYyeYPev"
+	by mail.kernel.org (Postfix) with ESMTP id B4A5C2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387968AbfJYSJd (ORCPT
+        id S2387522AbfJYSI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:09:33 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:42879 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387624AbfJYSJA (ORCPT
+        Fri, 25 Oct 2019 14:08:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46772 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731425AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:09:00 -0400
-Received: by mail-pg1-f202.google.com with SMTP id x203so2353519pgx.9
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 11:09:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=ctmZG51sv2R5UJ2kBx8tVOr4dCy1I0HKxUdPtmnT1GM=;
-        b=dYyeYPevtPk/t37x9mRrMR5qzd0EiRxgbC+WOzHaBhT7OuVZOThJLLcRcDbJl+lm4E
-         +g4PT7uBh8q2SXf20DR3Fp+XTWs4+/ig0w+6mA7Vsryya1nhFv/dAUNdpVrSN4QGDVtK
-         4lhyzAwfouI0ZoIopv4e11GAQB5RMIaHVrh7Zph7Zik5ZHDaXnIs30Xd7GAqSv6v2zPa
-         tLUY+i0YV6R8vfrkPalvVvqtnzO3DMLjn7vi0jbU4TAj0+3sGH5ZUmOeR8z7Q9iyxZR5
-         a+G6rYmpJOet9Oef2p+kkO7e6XdDlIQBA8xdMwwx89yuqdVdNZxqhALFQKn8kgfoMbTM
-         naKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=ctmZG51sv2R5UJ2kBx8tVOr4dCy1I0HKxUdPtmnT1GM=;
-        b=j6+9KJ1CsInSNXOgsOS55Vt3XPVkXqdZJlTXKer0ilozl6UMe0SvHT2g1fGPAt1ENC
-         8FgpAcTKPmPhZCSy496ZdjJ3+3fUp9XDzjWrJRbbYvkLJYEjJYIlkLCbn2+HLuzwTHZ/
-         Pl147QgaedQFev1x34fi5b/zGTwkuW6xjT5hh581Mr/M4Uq3AqtuiSI1dB1YzF2zaHEt
-         9Fy2Dfc/0pY6u9tS4hMKjzO1Gg0+Rydpuqb1jeXMlrPFqV6o5/lGupuqeo34SB3glw+d
-         kK2i4nEn3J9CHr1Qg3e+ARIsK0pPzWr1Qmj6Mg82wMk9hQvJVRyRYjwfUVK4YDzvzhMT
-         YM+A==
-X-Gm-Message-State: APjAAAVJ+vbGUIPaBK7vRYxTD/VD7Ax1yHWYOA3tKjKpgYGzJZ2C+HVx
-        3ytwe4ahQVC88Cr7BLSe0e5aDM7KQXJ6
-X-Google-Smtp-Source: APXvYqxKrTwQDIKiiFKmpRyDS3SgYyCMORvUXmlra460C8yXTKbzaNzYpXk2mqOgOIOxbjFf5CygsBaCr6qa
-X-Received: by 2002:a63:ff54:: with SMTP id s20mr5793046pgk.398.1572026939470;
- Fri, 25 Oct 2019 11:08:59 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 11:08:27 -0700
-In-Reply-To: <20191025180827.191916-1-irogers@google.com>
-Message-Id: <20191025180827.191916-10-irogers@google.com>
-Mime-Version: 1.0
-References: <20191024190202.109403-1-irogers@google.com> <20191025180827.191916-1-irogers@google.com>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH v4 9/9] perf tools: add a deep delete for parse event terms
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Fri, 25 Oct 2019 14:05:44 -0400
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iO3xw-0008Oe-9L; Fri, 25 Oct 2019 19:05:36 +0100
+Received: from ben by deadeye with local (Exim 4.92.2)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iO3xv-0001j6-Nj; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
+        "Vasily Gorbik" <gor@linux.ibm.com>
+Date:   Fri, 25 Oct 2019 19:03:21 +0100
+Message-ID: <lsq.1572026582.905866993@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 20/47] s390: fix stfle zero padding
+In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a parse_events_term deep delete function so that owned strings and
-arrays are freed.
+3.16.76-rc1 review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+------------------
+
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
+
+commit 4f18d869ffd056c7858f3d617c71345cf19be008 upstream.
+
+The stfle inline assembly returns the number of double words written
+(condition code 0) or the double words it would have written
+(condition code 3), if the memory array it got as parameter would have
+been large enough.
+
+The current stfle implementation assumes that the array is always
+large enough and clears those parts of the array that have not been
+written to with a subsequent memset call.
+
+If however the array is not large enough memset will get a negative
+length parameter, which means that memset clears memory until it gets
+an exception and the kernel crashes.
+
+To fix this simply limit the maximum length. Move also the inline
+assembly to an extra function to avoid clobbering of register 0, which
+might happen because of the added min_t invocation together with code
+instrumentation.
+
+The bug was introduced with commit 14375bc4eb8d ("[S390] cleanup
+facility list handling") but was rather harmless, since it would only
+write to a rather large array. It became a potential problem with
+commit 3ab121ab1866 ("[S390] kernel: Add z/VM LGR detection"). Since
+then it writes to an array with only four double words, while some
+machines already deliver three double words. As soon as machines have
+a facility bit within the fifth double a crash on IPL would happen.
+
+Fixes: 14375bc4eb8d ("[S390] cleanup facility list handling")
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/parse-events.c | 16 +++++++++++++---
- tools/perf/util/parse-events.h |  1 +
- tools/perf/util/parse-events.y | 12 ++----------
- tools/perf/util/pmu.c          |  2 +-
- 4 files changed, 17 insertions(+), 14 deletions(-)
+ arch/s390/include/asm/facility.h | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 3db1b647db38..d4347227b396 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2814,6 +2814,18 @@ int parse_events_term__clone(struct parse_events_term **new,
- 	return new_term(new, &temp, str, 0);
+--- a/arch/s390/include/asm/facility.h
++++ b/arch/s390/include/asm/facility.h
+@@ -33,6 +33,18 @@ static inline int test_facility(unsigned
+ 	return __test_facility(nr, &S390_lowcore.stfle_fac_list);
  }
  
-+void parse_events_term__delete(struct parse_events_term *term)
++static inline unsigned long __stfle_asm(u64 *stfle_fac_list, int size)
 +{
-+	if (term->array.nr_ranges)
-+		zfree(&term->array.ranges);
++	register unsigned long reg0 asm("0") = size - 1;
 +
-+	if (term->type_val != PARSE_EVENTS__TERM_TYPE_NUM)
-+		zfree(&term->val.str);
-+
-+	zfree(&term->config);
-+	free(term);
++	asm volatile(
++		".insn s,0xb2b00000,0(%1)" /* stfle */
++		: "+d" (reg0)
++		: "a" (stfle_fac_list)
++		: "memory", "cc");
++	return reg0;
 +}
 +
- int parse_events_copy_term_list(struct list_head *old,
- 				 struct list_head **new)
- {
-@@ -2844,10 +2856,8 @@ void parse_events_terms__purge(struct list_head *terms)
- 	struct parse_events_term *term, *h;
- 
- 	list_for_each_entry_safe(term, h, terms, list) {
--		if (term->array.nr_ranges)
--			zfree(&term->array.ranges);
- 		list_del_init(&term->list);
--		free(term);
-+		parse_events_term__delete(term);
- 	}
- }
- 
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 34f58d24a06a..5ee8ac93840c 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -139,6 +139,7 @@ int parse_events_term__sym_hw(struct parse_events_term **term,
- 			      char *config, unsigned idx);
- int parse_events_term__clone(struct parse_events_term **new,
- 			     struct parse_events_term *term);
-+void parse_events_term__delete(struct parse_events_term *term);
- void parse_events_terms__delete(struct list_head *terms);
- void parse_events_terms__purge(struct list_head *terms);
- void parse_events__clear_array(struct parse_events_array *a);
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 1438749fb178..401ab359a524 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -49,14 +49,6 @@ static void free_list_evsel(struct list_head* list_evsel)
- 	free(list_evsel);
- }
- 
--static void free_term(struct parse_events_term *term)
--{
--	if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
--		free(term->val.str);
--	zfree(&term->array.ranges);
--	free(term);
--}
+ /**
+  * stfle - Store facility list extended
+  * @stfle_fac_list: array where facility list can be stored
+@@ -52,13 +64,8 @@ static inline void stfle(u64 *stfle_fac_
+ 	memcpy(stfle_fac_list, &S390_lowcore.stfl_fac_list, 4);
+ 	if (S390_lowcore.stfl_fac_list & 0x01000000) {
+ 		/* More facility bits available with stfle */
+-		register unsigned long reg0 asm("0") = size - 1;
 -
- static void inc_group_count(struct list_head *list,
- 		       struct parse_events_state *parse_state)
- {
-@@ -99,7 +91,7 @@ static void inc_group_count(struct list_head *list,
- %type <str> PE_DRV_CFG_TERM
- %destructor { free ($$); } <str>
- %type <term> event_term
--%destructor { free_term ($$); } <term>
-+%destructor { parse_events_term__delete ($$); } <term>
- %type <list_terms> event_config
- %type <list_terms> opt_event_config
- %type <list_terms> opt_pmu_config
-@@ -693,7 +685,7 @@ event_config ',' event_term
- 	struct parse_events_term *term = $3;
- 
- 	if (!head) {
--		free_term(term);
-+		parse_events_term__delete(term);
- 		YYABORT;
+-		asm volatile(".insn s,0xb2b00000,0(%1)" /* stfle */
+-			     : "+d" (reg0)
+-			     : "a" (stfle_fac_list)
+-			     : "memory", "cc");
+-		nr = (reg0 + 1) * 8; /* # bytes stored by stfle */
++		nr = __stfle_asm(stfle_fac_list, size);
++		nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
  	}
- 	list_add_tail(&term->list, head);
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index f9f427d4c313..db1e57113f4b 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1260,7 +1260,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
- 		info->metric_name = alias->metric_name;
- 
- 		list_del_init(&term->list);
--		free(term);
-+		parse_events_term__delete(term);
- 	}
- 
- 	/*
--- 
-2.24.0.rc0.303.g954a862665-goog
+ 	memset((char *) stfle_fac_list + nr, 0, size * 8 - nr);
+ 	preempt_enable();
 
