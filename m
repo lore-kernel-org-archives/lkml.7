@@ -2,82 +2,119 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24407CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D715EC47E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7092084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="femDesdz"
+	by mail.kernel.org (Postfix) with ESMTP id ADB4F21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572001498;
+	bh=dTvtN9K5VEVzsh5mbQEjeAPvD4c+mAT/a6OOuXXWhuM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RCRAWRl85/frst4b+JzUnpahA7NcefGbUuzxzA4Gybt/4BskGJmINMuJzTl8KX2oO
+	 PmYb1xoa/uyCLTJKLxnlNHwH+t5tBubahxNAbGC3zlI1ufzCoNksu+75oGaWgIAOEJ
+	 qNTttSLCanbURyyaBdGP59nBp/4k88gvxZRQyA/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410125AbfJYLDz (ORCPT
+        id S2393455AbfJYLE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:03:55 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33265 "EHLO ozlabs.org"
+        Fri, 25 Oct 2019 07:04:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407262AbfJYLDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:03:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2390097AbfJYLE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 07:04:57 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4701Sm2xxqz9sPK;
-        Fri, 25 Oct 2019 22:03:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1572001432;
-        bh=zR2+Wwbibdf/2nUQuITloJZKmPyWJx1+odpdcK+KecM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=femDesdzuQMKmpeQquHw9TYWi2ahr/MEHHgZP72991U55pcEPgkOtaw7UktH8gHSH
-         t8mxNFAm01wWMBTHub3OozAc2CiVlBYzz7RBav3esumybZNTyXi35rORWAL+aR7OwD
-         Lc9ZaoKGGRAds/fPXStuUdq5HyP78jR4ZEA2NdFwVA9LczvXt0Kk5P4NykZquk8lOf
-         /GNTHjPRYJi61LSBo2e7nDfFjWpVwSexgkjbJUPAiNt1F/v1BqAM1m1fyAwpZyPY8M
-         7dbC0jyQ0TlLa9qKy3C9J1rUfAVV9VzS5QC5GjfZn92quJPJ3Fii8c1tMU8vbveF7q
-         7ggeAwqpuQOxA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/prom_init: Undo relocation before entering secure mode
-In-Reply-To: <20190911163433.12822-1-bauerman@linux.ibm.com>
-References: <20190911163433.12822-1-bauerman@linux.ibm.com>
-Date:   Fri, 25 Oct 2019 22:03:51 +1100
-Message-ID: <87o8y5dr3c.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id ADAA22084C;
+        Fri, 25 Oct 2019 11:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572001496;
+        bh=dTvtN9K5VEVzsh5mbQEjeAPvD4c+mAT/a6OOuXXWhuM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BVV0Rmltbeu4aGw3zh74OGXjep5lC57B1P3op2QeC2oM1re3T+jy0T28GaFe2vliS
+         QxCxb73SjIwdbUAoph5Yz+ty4KaXWOcibel5t3dvpZqYeiqPESBDJMk6cn7CLfWZRr
+         EMKZ+2Bqgui5g+/0q7PW14MYUflLbl5wgPE4wVd0=
+From:   Will Deacon <will@kernel.org>
+To:     amd-gfx@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nicolas Waisman <nico@semmle.com>
+Subject: [PATCH] drm/radeon: Handle workqueue allocation failure
+Date:   Fri, 25 Oct 2019 12:04:50 +0100
+Message-Id: <20191025110450.10474-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
-> The ultravisor will do an integrity check of the kernel image but we
-> relocated it so the check will fail. Restore the original image by
-> relocating it back to the kernel virtual base address.
->
-> This works because during build vmlinux is linked with an expected virtual
-> runtime address of KERNELBASE.
->
-> Fixes: 6a9c930bd775 ("powerpc/prom_init: Add the ESM call to prom_init")
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/elf.h         |  3 +++
->  arch/powerpc/kernel/prom_init.c        | 11 +++++++++++
->  arch/powerpc/kernel/prom_init_check.sh |  3 ++-
->  3 files changed, 16 insertions(+), 1 deletion(-)
+In the highly unlikely event that we fail to allocate the "radeon-crtc"
+workqueue, we should bail cleanly rather than blindly march on with a
+NULL pointer installed for the 'flip_queue' field of the 'radeon_crtc'
+structure.
 
-This breaks the build when CONFIG_RELOCATABLE=n:
+This was reported previously by Nicolas, but I don't think his fix was
+correct:
 
-    prom_init.c:(.init.text+0x3160): undefined reference to `relocate'
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Link: https://lore.kernel.org/lkml/CADJ_3a8WFrs5NouXNqS5WYe7rebFP+_A5CheeqAyD_p7DFJJcg@mail.gmail.com/
+Signed-off-by: Will Deacon <will@kernel.org>
+---
 
-See http://kisskb.ellerman.id.au/kisskb/buildresult/14004234/
+Compile-tested only.
 
-cheers
+ drivers/gpu/drm/radeon/radeon_display.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index e81b01f8db90..3e4ef1380fca 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -672,17 +672,25 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
+ {
+ 	struct radeon_device *rdev = dev->dev_private;
+ 	struct radeon_crtc *radeon_crtc;
++	struct workqueue_struct *wq;
+ 	int i;
+ 
+ 	radeon_crtc = kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CONN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
+ 	if (radeon_crtc == NULL)
+ 		return;
+ 
++	wq = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
++	if (unlikely(!wq)) {
++		kfree(radeon_crtc);
++		return;
++	}
++
+ 	drm_crtc_init(dev, &radeon_crtc->base, &radeon_crtc_funcs);
+ 
+ 	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
+ 	radeon_crtc->crtc_id = index;
+-	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
++	radeon_crtc->flip_queue = wq;
++
+ 	rdev->mode_info.crtcs[index] = radeon_crtc;
+ 
+ 	if (rdev->family >= CHIP_BONAIRE) {
+-- 
+2.24.0.rc0.303.g954a862665-goog
+
