@@ -2,199 +2,198 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67971CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365D8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3758421872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022C12054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LoSD3OZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfJYUt2 (ORCPT
+        id S1728768AbfJYUtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:49:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23023 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfJYUt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:49:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 13:49:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
-   d="scan'208";a="210441346"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Oct 2019 13:49:26 -0700
-Date:   Fri, 25 Oct 2019 13:49:26 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Boaz Harrosh <boaz@plexistor.com>, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-Message-ID: <20191025204926.GA26184@iweiny-DESK2.sc.intel.com>
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
- <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
- <20191023221332.GE2044@dread.disaster.area>
- <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
- <20191024073446.GA4614@dread.disaster.area>
- <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
- <20191024213508.GB4614@dread.disaster.area>
- <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
- <20191025003603.GE4614@dread.disaster.area>
+        Fri, 25 Oct 2019 16:49:35 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:40804 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfJYUte (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:49:34 -0400
+Received: by mail-vs1-f65.google.com with SMTP id v10so2364900vsc.7
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 13:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B01qVjfF1LUa0PK52bjL02zxaBRU3eQBI1v+W/4JeHk=;
+        b=LoSD3OZaEiLCMCyYB7WH+dmOE3giL1Rn/oOCaqr8KZIUPs9oNnBAX6h7DIpplETh/t
+         Omaop/utJ7AeIZA9zdG2w3rvVFoP7cm2sHz8InOOQrKWFNZwxRR99vskLqIZWxI+akK7
+         Cn8Rjj+QMmBCU8FITbSo18rQdoyRMsKUvjpt6Ar8qszVQ65XaVmFB+VKjRWHMe854GK3
+         ASqeAGPJEm1/jq31LvxmrmHzMfPkeiCJgRdv49M55kLjJgk0flgNf6HmaNmtlpmBIPyW
+         bbCRcDAnLzrC5k0HlPPGloTl1WOPl/1JYKEDPIqkdq+OQXGt/qBiXYUzNyt2hflsRSK0
+         sD9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B01qVjfF1LUa0PK52bjL02zxaBRU3eQBI1v+W/4JeHk=;
+        b=WtEkPP1Q/zXQnWNUAyF2K6nVgx45nSDzTZyoVEA7H6g83O9IQqJZ+CbFn972SHkrsJ
+         qdOqmIYe7COh2v8s17exATboeW52wILaZ7/TiHkSmvK+4L584sJ7PI8dNpapaVnFSsQP
+         T0HIUBhACN9FBZFKjtDKYBArIZc3CrCjiZhzeoBk7jKl7VRlmAXW+wBxdiEUnmkK2XRU
+         /Tlqthts8L+r8BcqH1iZFhsNwBWFmkDxnRfiuYJL+ammEXaFv3HhLSNgs5/UgLCsKsZ/
+         pCI2JWGYS6g/j8opMCiUEJuhZX734kI1wo4oz9RdXAH3Oi4bc9gnSjitb0ApELahOS66
+         b5jA==
+X-Gm-Message-State: APjAAAU1yyIXuIHYwYewZFvbuiH/Xs9XXwDA0txJpQgY8lyoXio7HYng
+        wymqL/oswUvdXDObwqjqwHep0gy+qo8T55Zk4negHA==
+X-Google-Smtp-Source: APXvYqzcB7+AMsKpePQsUZyUkWAMYpmk/dddGNr2g0bTzgYSUkedQgyZ3hkkauso52AIP99G7DNDWaPuxb1mAJtXqiU=
+X-Received: by 2002:a67:ffc7:: with SMTP id w7mr3154037vsq.15.1572036572738;
+ Fri, 25 Oct 2019 13:49:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025003603.GE4614@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191024225132.13410-1-samitolvanen@google.com> <20191024225132.13410-6-samitolvanen@google.com>
+ <20191025105643.GD40270@lakrids.cambridge.arm.com>
+In-Reply-To: <20191025105643.GD40270@lakrids.cambridge.arm.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 25 Oct 2019 13:49:21 -0700
+Message-ID: <CABCJKuc+XiDRdqfvjwCF7y=1wX3QO0MCUpeu4Gdcz91+nmnEAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 05/17] add support for Clang's Shadow Call Stack (SCS)
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:36:03AM +1100, Dave Chinner wrote:
-> On Fri, Oct 25, 2019 at 02:29:04AM +0300, Boaz Harrosh wrote:
-> > On 25/10/2019 00:35, Dave Chinner wrote:
-> 
-> If something like a find or backup program brings the inode into
-> cache, the app may not even get the behaviour it wants, and it can't
-> change it until the inode is evicted from cache, which may be never.
+On Fri, Oct 25, 2019 at 3:56 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > +#define SCS_SIZE     1024
+>
+> I think it'd be worth a comment on how this size was chosen. IIRC this
+> empirical?
 
-Why would this be never?
+Correct. I'll add a comment.
 
-> Nobody wants implicit/random/uncontrollable/unchangeable behaviour
-> like this.
+> > +#define SCS_END_MAGIC        0xaf0194819b1635f6UL
+>
+> Keyboard smash? ... or is there a prize for whoever figures out the
+> secret? ;)
 
-I'm thinking this could work with a bit of effort on the users part.  While the
-behavior does have a bit of uncertainty, I feel like there has to be a way to
-get the inode to drop from the cache when a final iput() happens on the inode.
+It's a random number, so if someone figures out a secret in it,
+they'll definitely deserve a prize. :)
 
-Admin programs should not leave files open forever, without the users knowing
-about it.  So I don't understand why the inode could not be evicted from the
-cache if the FS knew that this change had been made and the inode needs to be
-"re-loaded".  See below...
+> > +static inline void task_set_scs(struct task_struct *tsk, void *s)
+> > +{
+> > +     task_thread_info(tsk)->shadow_call_stack = s;
+> > +}
+>
+> This should probably be named get and set, or have:
+>
+> #define task_scs(tsk)   (task_thread_info(tsk)->shadow_call_stack)
+>
+> ... which can have a trivial implementation as NULL for the !SCS case.
 
-> 
-> > (And never change the flag on the fly)
-> > (Just brain storming here)
-> 
-> We went over all this ground when we disabled the flag in the first
-> place. We disabled the flag because we couldn't come up with a sane
-> way to flip the ops vector short of tracking the number of aops
-> calls in progress at any given time. i.e. reference counting the
-> aops structure, but that's hard to do with a const ops structure,
-> and so it got disabled rather than allowing users to crash
-> kernels....
+Sure, sounds good.
 
-Agreed.  We can't change the a_ops without some guarantee that no one is using
-the file.  Which means we need all fds to close and a final iput().  I thought
-that would mean an eviction of the inode and a subsequent reload.
+> For all the trivial wrappers you can put the implementation on the same
+> line as the prototype. That makes it a bit easier to compare against the
+> prototypes on the other side of the ifdeffery.
+>
+> e.g. this lot can be:
+>
+> static inline void *task_scs(struct task_struct *tsk) { return 0; }
+> static inline void task_set_scs(struct task_struct *tsk, void *s) { }
+> static inline void scs_init(void) { }
 
-Yesterday I coded up the following (applies on top of this series) but I can't
-seem to get it to work because I believe xfs is keeping a reference on the
-inode.  What am I missing?  I think if I could get xfs to recognize that the
-inode needs to be cleared from it's cache this would work, with some caveats.
+Agreed.
 
-Currently this works if I remount the fs or if I use <procfs>/drop_caches like
-Boaz mentioned.
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index bcdf53125210..ae7ebe9f0586 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -94,6 +94,7 @@
+> >  #include <linux/livepatch.h>
+> >  #include <linux/thread_info.h>
+> >  #include <linux/stackleak.h>
+> > +#include <linux/scs.h>
+>
+> Nit: alphabetical order, please (this should come before stackleak.h).
 
-Isn't there a way to get xfs to do that on it's own?
+The includes in kernel/fork.c aren't in alphabetical order, so I just
+added this to the end here.
 
-Ira
+> > +     retval = scs_prepare(p, node);
+> > +     if (retval)
+> > +             goto bad_fork_cleanup_thread;
+>
+> Can we please fold scs_prepare() into scs_task_init() and do this in
+> dup_task_struct()? That way we set this up consistently in one place,
+> where we're also allocating the regular stack.
 
+Yes, that does sound cleaner. I'll change that.
 
-From 7762afd95a3e21a782dffd2fd8e13ae4a23b5e4a Mon Sep 17 00:00:00 2001
-From: Ira Weiny <ira.weiny@intel.com>
-Date: Fri, 25 Oct 2019 13:32:07 -0700
-Subject: [PATCH] squash: Allow phys change on any length file
+> > +     scs_task_reset(idle);
+>
+> I'm a bit confused by this -- please see comments below on
+> scs_task_reset().
 
-delay the changing of the effective bit to when the inode is re-read
-into the cache.
+> > +static inline void *__scs_base(struct task_struct *tsk)
+> > +{
+> > +     return (void *)((uintptr_t)task_scs(tsk) & ~(SCS_SIZE - 1));
+> > +}
+>
+> We only ever assign the base to task_scs(tsk), with the current live
+> value being in a register that we don't read. Are we expecting arch code
+> to keep this up-to-date with the register value?
+>
+> I would have expected that we just leave this as the base (as we do for
+> the regular stack in the task struct), and it's down to arch code to
+> save/restore the current value where necessary.
+>
+> Am I missing some caveat with that approach?
 
-Currently a work in Progress because xfs seems to cache the inodes as
-well and I'm not sure how to get xfs to release it's reference.
----
- fs/xfs/xfs_ioctl.c | 18 +++++++-----------
- include/linux/fs.h |  5 ++++-
- 2 files changed, 11 insertions(+), 12 deletions(-)
+To keep the address of the currently active shadow stack out of
+memory, the arm64 implementation clears this field when it loads x18
+and saves the current value before a context switch. The generic code
+doesn't expect the arch code to necessarily do so, but does allow it.
+This requires us to use __scs_base() when accessing the base pointer
+and to reset it in idle tasks before they're reused, hence
+scs_task_reset().
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 89cf47ef273e..4d730d5781d9 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1233,10 +1233,13 @@ xfs_diflags_to_linux(
- 		inode->i_flags |= S_NOATIME;
- 	else
- 		inode->i_flags &= ~S_NOATIME;
--	if (xflags & FS_XFLAG_DAX)
--		inode->i_flags |= S_DAX;
--	else
--		inode->i_flags &= ~S_DAX;
-+	/* NOTE: we do not allow the physical DAX flag to immediately change
-+	 * the effective IS_DAX() flag tell the VFS layer to remove the inode
-+	 * from the cache on the final iput() to force recreation on the next
-+	 * 'fresh' open */
-+	if (((xflags & FS_XFLAG_DAX) && !IS_DAX(inode)) ||
-+	    (!(xflags & FS_XFLAG_DAX) && IS_DAX(inode)))
-+		inode->i_flags |= S_REVALIDATE;
- }
- 
- static int
-@@ -1320,13 +1323,6 @@ xfs_ioctl_setattr_dax_invalidate(
- 	/* lock, flush and invalidate mapping in preparation for flag change */
- 	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
- 
--	/* File size must be zero to avoid races with asynchronous page
--	 * faults */
--	if (i_size_read(inode) > 0) {
--		error = -EINVAL;
--		goto out_unlock;
--	}
--
- 	error = filemap_write_and_wait(inode->i_mapping);
- 	if (error)
- 		goto out_unlock;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 0b4d8fc79e0f..4e9b7bf53c86 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1998,6 +1998,7 @@ struct super_operations {
- #define S_ENCRYPTED	16384	/* Encrypted file (using fs/crypto/) */
- #define S_CASEFOLD	32768	/* Casefolded file */
- #define S_VERITY	65536	/* Verity file (using fs/verity/) */
-+#define S_REVALIDATE	131072	/* Drop inode from cache on final put */
- 
- /*
-  * Note that nosuid etc flags are inode-specific: setting some file-system
-@@ -2040,6 +2041,7 @@ static inline bool sb_rdonly(const struct super_block *sb) { return sb->s_flags
- #define IS_ENCRYPTED(inode)	((inode)->i_flags & S_ENCRYPTED)
- #define IS_CASEFOLDED(inode)	((inode)->i_flags & S_CASEFOLD)
- #define IS_VERITY(inode)	((inode)->i_flags & S_VERITY)
-+#define IS_REVALIDATE(inode)	((inode)->i_flags & S_REVALIDATE)
- 
- #define IS_WHITEOUT(inode)	(S_ISCHR(inode->i_mode) && \
- 				 (inode)->i_rdev == WHITEOUT_DEV)
-@@ -3027,7 +3029,8 @@ extern int inode_needs_sync(struct inode *inode);
- extern int generic_delete_inode(struct inode *inode);
- static inline int generic_drop_inode(struct inode *inode)
- {
--	return !inode->i_nlink || inode_unhashed(inode);
-+	return !inode->i_nlink || inode_unhashed(inode) ||
-+		IS_REVALIDATE(inode);
- }
- 
- extern struct inode *ilookup5_nowait(struct super_block *sb,
--- 
-2.20.1
+> > +     BUILD_BUG_ON(SCS_SIZE > PAGE_SIZE);
+>
+> It's probably worth a comment on why we rely on SCS_SIZE <= PAGE_SIZE.
 
+Ack.
 
+> > +static inline unsigned long *scs_magic(struct task_struct *tsk)
+> > +{
+> > +     return (unsigned long *)(__scs_base(tsk) + SCS_SIZE - sizeof(long));
+>
+> Slightly simpler as:
+>
+>         return (unsigned long *)(__scs_base(tsk) + SCS_SIZE) - 1;
+
+Yes, that's a bit cleaner.
+
+I'll fix these in v3. Thank you for the review!
+
+Sami
