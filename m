@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A0DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CA8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9BC21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC5521D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="O1Zrkhgi"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="jKc8arHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504554AbfJYMmH (ORCPT
+        id S2504548AbfJYMmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:42:07 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45878 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504551AbfJYMle (ORCPT
+        Fri, 25 Oct 2019 08:42:12 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38058 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504544AbfJYMlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:41:34 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v8so1610950lfa.12
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:41:33 -0700 (PDT)
+        Fri, 25 Oct 2019 08:41:31 -0400
+Received: by mail-lf1-f67.google.com with SMTP id q28so1629509lfa.5
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OvUZNskoObmKKJYsbx/wH8iXu8sDYM+jDByiAdju3Rg=;
-        b=O1Zrkhgig/GHdHnwKsmpqtbkvDL3Y1rbK+JGj+Cs0DZWtFaWKeld23eELOlF+fW35i
-         ahKQ49AZ8AKtvvJqeiZLjoI7J8pcRbGnauSMHAK4OFjos9Ny65vqjsTi7H7vouL3ATlL
-         cOrkitUQVw23vF5rAUldJcjlmIvXqFsHyVYjo=
+        bh=vlC6c2mLi3OFOrUlQdhK/IVokJUA43/TPqoeSB5eKTw=;
+        b=jKc8arHSmx2y4WG6E6pxme2fpIipCQg3lj3xfo/NE13M78vwKaac8r87bS926CIlOe
+         G8HjFyTR6NrrVEFfD2f145q33utez8HIUqLF7wEvHmOg4BYXyAYRqgdqUUut5SdZTL4F
+         2f2wUM68LsShYG8dX6rYt18eoJRknZHtyrkIQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OvUZNskoObmKKJYsbx/wH8iXu8sDYM+jDByiAdju3Rg=;
-        b=lFBrjqG9k1WuUNF4Te33tC2WLNd/XGj7jNNR+CzVT7lw+Wiwg/ftvE8xucRYEWhgQS
-         pyh5FbGfsynjj/QdBGWkJ1FnuP4Tmhmntk00HxSdHcV+s6MikGfWAp5A/Hl02QMl07fj
-         lDsXeXfepK6JQ0/LA+TMV2CL7/CQNW5MeNcm+14JIyWEd8mt73sYfszTBOJb1qDhBcaM
-         G3cPOH69SaGy/mI1pXHn1yEFOIUqXwb3miqg4ja9CLJt7aH0pN9qz3SYU4+0Q5JROLMd
-         UHwzB4coClMOBHg018s+98fqcLjEDMx19CziVCMo1oLnCzECMzRS9vmmVYS+w05L+tkx
-         Cd4A==
-X-Gm-Message-State: APjAAAVtd+6I9PflWoxy/8Be5EswhjPpScuGpNtVPPDWEel7ppvLvng7
-        b0JI+nn6bTOFWGA8H+VWKOZIpg==
-X-Google-Smtp-Source: APXvYqzaZam+cJPG9bi7OgeGhos6Wma0vuM3s9YGw4M43Jx9w05f90bLjSb8WkcVyEkm6MHVqZnaoA==
-X-Received: by 2002:a05:6512:40e:: with SMTP id u14mr2657599lfk.73.1572007292444;
-        Fri, 25 Oct 2019 05:41:32 -0700 (PDT)
+        bh=vlC6c2mLi3OFOrUlQdhK/IVokJUA43/TPqoeSB5eKTw=;
+        b=TU2aBZCrYMDH8geQ6HWbuyMm85GxEA0B2AMtmeX7IqS1KlRGuBV+E8GMYlUCt+d3Hl
+         LgWwjx2PEYev3IpcIIkffV9OuzKP4BzploWDS3qU7NqT61g9mQ0LB0S3Tq1cV93NfQhJ
+         gcx2Kg8UTwKnmFp3qPLWVpXkdtjjt4fyDI6LU2WM1mroYeTMYpoQHv7mRdS2dP1I11Gr
+         Yskw+L5gEGH+lymON6yLX6eRyAuD8G7dfMTR1Q+Th8IOP8f4iGnI5ZUcDAI9Vzx84imZ
+         Zf+UeqQbVr2PQLUt4nXxHskgFzzQoBiiu2OGMNKKJc+hnEbhfflWmasnThF93gRArIWJ
+         sTVw==
+X-Gm-Message-State: APjAAAVuTNepuuj60TsH/EWMQO66txlLoYoOX8v+GKQxJ/+9CHGTgJK8
+        aHmCx6+oZaYQ7RZSDxKyrlWb2A==
+X-Google-Smtp-Source: APXvYqyOmmWKDKIwnL+Dz+ZoHsEg95l0xY0B31Vt0IMF9adkil2MZ7+eec85cG8dv6k9ac6S6ZK0SA==
+X-Received: by 2002:a19:f018:: with SMTP id p24mr2542630lfc.93.1572007288855;
+        Fri, 25 Oct 2019 05:41:28 -0700 (PDT)
 Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id 10sm821028lfy.57.2019.10.25.05.41.31
+        by smtp.gmail.com with ESMTPSA id 10sm821028lfy.57.2019.10.25.05.41.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 05:41:32 -0700 (PDT)
+        Fri, 25 Oct 2019 05:41:28 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Christophe Leroy <christophe.leroy@c-s.fr>
@@ -60,10 +60,11 @@ Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Scott Wood <oss@buserror.net>,
         Valentin Longchamp <valentin.longchamp@keymile.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v2 23/23] soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
-Date:   Fri, 25 Oct 2019 14:40:58 +0200
-Message-Id: <20191025124058.22580-24-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v2 20/23] serial: make SERIAL_QE depend on PPC32
+Date:   Fri, 25 Oct 2019 14:40:55 +0200
+Message-Id: <20191025124058.22580-21-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191025124058.22580-1-linux@rasmusvillemoes.dk>
 References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
@@ -75,26 +76,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The core QE code now also builds for ARM, so replace the FSL_SOC &&
-PPC32 dependencies by the more lax requirements OF && HAS_IOMEM.
+Currently SERIAL_QE depends on QUICC_ENGINE, which in turn depends on
+PPC32, so this doesn't add any extra dependency. However, the QUICC
+Engine IP block also exists on some arm boards, so this serves as
+preparation for removing the PPC32 dependency from QUICC_ENGINE and
+build the QE support in drivers/soc/fsl/qe, while preventing
+allmodconfig/randconfig failures due to SERIAL_QE not being supported
+yet.
 
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- drivers/soc/fsl/qe/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/fsl/qe/Kconfig b/drivers/soc/fsl/qe/Kconfig
-index cfa4b2939992..0c5b8b8e46b6 100644
---- a/drivers/soc/fsl/qe/Kconfig
-+++ b/drivers/soc/fsl/qe/Kconfig
-@@ -5,7 +5,7 @@
- 
- config QUICC_ENGINE
- 	bool "QUICC Engine (QE) framework support"
--	depends on FSL_SOC && PPC32
-+	depends on OF && HAS_IOMEM
- 	select GENERIC_ALLOCATOR
- 	select CRC32
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 67a9eb3f94ce..78246f535809 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1056,6 +1056,7 @@ config SERIAL_LANTIQ
+ config SERIAL_QE
+ 	tristate "Freescale QUICC Engine serial port support"
+ 	depends on QUICC_ENGINE
++	depends on PPC32
+ 	select SERIAL_CORE
+ 	select FW_LOADER
  	help
 -- 
 2.23.0
