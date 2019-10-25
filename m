@@ -2,144 +2,120 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAAECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DF7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F0F206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797A0206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaNXE4RG"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aONyD56R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439750AbfJYOfT (ORCPT
+        id S2439849AbfJYOfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:35:19 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40884 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729132AbfJYOfT (ORCPT
+        Fri, 25 Oct 2019 10:35:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34161 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfJYOfn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:35:19 -0400
-Received: by mail-qt1-f195.google.com with SMTP id o49so3526128qta.7
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:35:17 -0700 (PDT)
+        Fri, 25 Oct 2019 10:35:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id q1so2692368ion.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:35:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lXPA/LtMnA7aSw5n8YP7FVXNorxbEcaJTv2YJu2OC/k=;
-        b=UaNXE4RG0wIiCPJHcPiTca9OIdeFgR+pMc/VggkinIBBFt3kBYPNsZF6dWynAKJXfF
-         OiwIuGByps9gwriU2jGT172hgMrZxjOK4NslnpADvu5+b/mdp+Q74194LRhWTA5szIGj
-         6zZ2k98vDPZ30MUBnKp+mOVv5CxgqYD4Il7valmfEu6eZN/J8hrlCDRLoYRYjyAxEM3A
-         Z0y0CsmFQL3pPsRd9xgW38obOhyJW9KrWIu6L9ZHkorO9WVCdvqrt6feQW6XoRhHeVtm
-         OxNuIMYvmUc1cxPci0ESPuKOx59Vrv8KR0kSTkTU6uLNJMSNwLxhuKW3v2UW4saOJ4cF
-         B2dA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/9qYAuqixNYfI9Kr55bTuc8CcvxFw8cE5OUFu4p4+58=;
+        b=aONyD56Rkk05rXhXwzoK/uYqJbja4qx+1mP3kVvNy/OHTq88vOZ8YaZYDYI7iMLSmx
+         XgIEoQylbIWIPnKB0FFKF6+zFZiT9+gYngQw2+fLw/M8dsH6Bu7fX5t6sMdXFWaHu1cg
+         KjjBOAbOlwOW4yKcuJdMW+02anTbEghiAOw6aGAZ1aKD0vUXtApsCFNVagGBGH9JMhOc
+         whJJUPtJJXlquRk61K6rPqvD1HZZsiftCg2fPylAFNkcM0qaqV2ZL7XN5TyhmGE92u6m
+         TIgxyeyK3ekrXaRaxA8a8yuIHZS/FCoTmzwBwdLkgB7n+JJ1l3wx7OvxjfbjmriTNTrP
+         e1gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lXPA/LtMnA7aSw5n8YP7FVXNorxbEcaJTv2YJu2OC/k=;
-        b=q17dC+ANkgo2kW7C4nYCc9TEUcS7nNlDrijBh0ERGzWU7lKuGl4vmYY5PCzKEwMdjm
-         /PBSdCBXXUsoeu9FtV0wKQiKEmw44YDMMJvDNX9fsz7rIQ85X2GWx2qUuASMFppoOW3Z
-         Jiy4VV9yZUplNOY4SiS3iORKmNQWMDZg6bk/yZDW+lZorYaofZPwiyTbyZpVDlFTrUB7
-         FzJ1mcBSa4H+NiaP5z0sAshVXTpWKNygDtuyK8BrsrqUu11yCPzC/nJ0lfrgNr1OImuf
-         yGV+FUMcCp8edxbFehS2WYpKXcMCBe+bYOKuyVJQsn9PS8D/SCE0qqq26bahNt+Mm4Qq
-         fX+A==
-X-Gm-Message-State: APjAAAVM6kFe29h1kG/SC4uwTUQcLmQVNvvv7CFr1O7Ap5DHNF2i2Nc8
-        t3BMYwsvCE4qzSbibA8jNxo=
-X-Google-Smtp-Source: APXvYqy8Hzz7lpHQK2U/jo/PBxIApeo+yUgVwegKzHDhb2zNk/PDBdgi9h+GYIc8i/WLuGqFNC5Ddw==
-X-Received: by 2002:aed:3225:: with SMTP id y34mr3310196qtd.353.1572014116754;
-        Fri, 25 Oct 2019 07:35:16 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id i185sm1260948qkc.129.2019.10.25.07.35.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 07:35:15 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AD44541199; Fri, 25 Oct 2019 11:35:13 -0300 (-03)
-Date:   Fri, 25 Oct 2019 11:35:13 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH 3/6] perf/probe: Fix to probe an inline function
- which has no entry pc
-Message-ID: <20191025143513.GB15617@kernel.org>
-References: <157199317547.8075.1010940983970397945.stgit@devnote2>
- <157199320336.8075.16189530425277588587.stgit@devnote2>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/9qYAuqixNYfI9Kr55bTuc8CcvxFw8cE5OUFu4p4+58=;
+        b=TIv3LJNHod7rldI1zcU0OusqJl9ZcgnKyT9JTRaKVuFNWUT8IwrAMMMBS+M9dMsEgB
+         SogNZtzPmlH6lsLZvLCXrW5NeyK069swSRJMcModWx+AsBR9au9nT6LbVsnK1s1oqw41
+         jmj+7myyMsUA43K6eIE8Lfp0oEa3LdfJ4WyX2PjbRs3Ba85M74n9hPZP+f7iSVhHWfQd
+         7L5vZcAAVSRL/qrtoZl09hdfzGyUg7ZGlALtk9Unm3hcAsT6TRwtfx74IXbO0+PXTjLG
+         VAnGA9gvac/VUhsZRTp7ASP4NPn5gmm/g55Zpyypd9qFkTYo1ATueHSkhDK4fTvvrFYC
+         FvKA==
+X-Gm-Message-State: APjAAAWjphpEdpEOLfB5jfb6DlQ9fCRPjnWfx1o567R60d47+Fb4DZ4R
+        KxLbNbVHaTvfyeqXyduAL78EYA==
+X-Google-Smtp-Source: APXvYqzCk4LIIEO6fwzWQ4Aizr9NmwLJrGe8CX3F9q7vsLiVqV5xEJLQvH8RAsCNeur92g7+4Z3Rcg==
+X-Received: by 2002:a6b:7945:: with SMTP id j5mr3665548iop.12.1572014142897;
+        Fri, 25 Oct 2019 07:35:42 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id z19sm366997ilj.49.2019.10.25.07.35.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 07:35:41 -0700 (PDT)
+Subject: Re: KASAN: null-ptr-deref Write in io_wq_cancel_all
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <000000000000fbbe1e0595bac322@google.com>
+ <CACT4Y+Y946C-kyiBSZtyKY7PU4qxrysOfukd42--pXdyTRyjbw@mail.gmail.com>
+ <0e1b3410-95b0-f9d9-6838-486eae0bf5d7@kernel.dk>
+Message-ID: <e2eec48d-dcf4-58ba-b463-1651fd3d4f5e@kernel.dk>
+Date:   Fri, 25 Oct 2019 08:35:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157199320336.8075.16189530425277588587.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <0e1b3410-95b0-f9d9-6838-486eae0bf5d7@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Oct 25, 2019 at 05:46:43PM +0900, Masami Hiramatsu escreveu:
-> Fix perf probe to probe an inlne function which has no entry pc
-> or low pc but only has ranges attribute.
+On 10/25/19 7:50 AM, Jens Axboe wrote:
+> On 10/25/19 5:58 AM, Dmitry Vyukov wrote:
+>> On Fri, Oct 25, 2019 at 1:51 PM syzbot
+>> <syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com> wrote:
+>>>
+>>> Hello,
+>>>
+>>> syzbot found the following crash on:
+>>>
+>>> HEAD commit:    139c2d13 Add linux-next specific files for 20191025
+>>> git tree:       linux-next
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=17ab5a70e00000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=28fd7a693df38d29
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=d958a65633ea70280b23
+>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>>
+>>> Unfortunately, I don't have any reproducer for this crash yet.
+>>>
+>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>> Reported-by: syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com
+>>
+>> +Jens
 > 
-> This seems very rare case, but I could find a few examples, as
-> same as probe_point_search_cb(), use die_entrypc() to get the
-> entry address in probe_point_inline_cb() too.
+> Let me know if/when you have a reproducer for this one. I initially thought
+> this was a basic NULL pointer check, but it doesn't look like it. I wonder
+> if the thread handling the request got a signal, and since it had the
+> task file_table with the io_uring fd attached, it's triggering an exit.
 > 
-> Without this patch,
->   # tools/perf/perf probe -D __amd_put_nb_event_constraints
->   Failed to get entry address of __amd_put_nb_event_constraints.
->   Probe point '__amd_put_nb_event_constraints' not found.
->     Error: Failed to add events.
-> 
-> With this patch,
->   # tools/perf/perf probe -D __amd_put_nb_event_constraints
->   p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
+> I'll poke at it, but don't immediately see the issue.
 
-Here I got it slightly different:
-
-Before:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints _text+33789
-  [root@quaco ~]#
-
-
-----
-
-I'm now checking if this is because I applied patch 4/6 before 3/6
- 
-> Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/perf/util/probe-finder.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 71633f55f045..2fa932bcf960 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -930,7 +930,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
->  		ret = find_probe_point_lazy(in_die, pf);
->  	else {
->  		/* Get probe address */
-> -		if (dwarf_entrypc(in_die, &addr) != 0) {
-> +		if (die_entrypc(in_die, &addr) != 0) {
->  			pr_warning("Failed to get entry address of %s.\n",
->  				   dwarf_diename(in_die));
->  			return -ENOENT;
+Ah, I see it, if we run into work needing to get done as the worker
+is exiting, we do that work. But that makes us busy, and we can then
+exit the thread without having dropped the mm/files associated with
+the original task. I've folded in a fix.
 
 -- 
+Jens Axboe
 
-- Arnaldo
