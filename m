@@ -2,199 +2,110 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B10CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67838CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498F721928
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:44:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F2sR4ys3"
+	by mail.kernel.org (Postfix) with ESMTP id 42F5C21928
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389326AbfJYBou (ORCPT
+        id S2389372AbfJYBpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 21:44:50 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48525 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726951AbfJYBot (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 21:44:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571967888;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qh0akrNYwC0Elz7QBIFcRniueVNDTS2+GYfPxYhIx0c=;
-        b=F2sR4ys3CW0SPnhs00iI9LPAVsdidjB+RR1WajZzKb4rZ+JMzNahjeQ+/wJyOcH7embj4O
-        1UoFR4oSzOl67RLY+K0g1UgzctpuixHK69VG3py0N9w/27ebIRsaQPyZiCyQ2Ztbjdx9ZO
-        0HQaJG8S61sLu7jeT6M27RKWXmEtdpQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-MJT2DVAnPa2BFC_zHXHHbQ-1; Thu, 24 Oct 2019 21:44:44 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73A47476;
-        Fri, 25 Oct 2019 01:44:40 +0000 (UTC)
-Received: from [10.72.12.158] (ovpn-12-158.pek2.redhat.com [10.72.12.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A17835C1D4;
-        Fri, 25 Oct 2019 01:44:06 +0000 (UTC)
-Subject: Re: [PATCH V5 2/6] modpost: add support for mdev class id
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191023130752.18980-1-jasowang@redhat.com>
- <20191023130752.18980-3-jasowang@redhat.com>
- <20191023154245.32e4fa49@x1.home>
- <555a101e-0ed1-2e9d-c1a4-e3b37d76bd18@redhat.com>
- <20191024135441.160daa56@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <7eb2c515-74a9-7d65-e09c-dee4f952e9c1@redhat.com>
-Date:   Fri, 25 Oct 2019 09:44:05 +0800
+        Thu, 24 Oct 2019 21:45:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:50609 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389344AbfJYBpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 21:45:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Oct 2019 18:45:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,226,1569308400"; 
+   d="scan'208";a="197896429"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Oct 2019 18:45:16 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v6 01/10] iommu/vt-d: Enlightened PASID allocation
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <1571788403-42095-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571788403-42095-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20191023004503.GB100970@otc-nc-03>
+ <f17d8df6-d77a-32b9-104c-1ae246c7a117@linux.intel.com>
+ <20191023105523.75895d76@jacob-builder>
+ <20191023141126.38bc1644@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <d5f68e37-adba-0804-904b-660e8e812ece@linux.intel.com>
+Date:   Fri, 25 Oct 2019 09:42:43 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191024135441.160daa56@x1.home>
+In-Reply-To: <20191023141126.38bc1644@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: MJT2DVAnPa2BFC_zHXHHbQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 2019/10/25 =E4=B8=8A=E5=8D=883:54, Alex Williamson wrote:
-> On Thu, 24 Oct 2019 11:31:04 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> On 2019/10/24 =E4=B8=8A=E5=8D=885:42, Alex Williamson wrote:
->>> On Wed, 23 Oct 2019 21:07:48 +0800
->>> Jason Wang <jasowang@redhat.com> wrote:
->>>  =20
->>>> Add support to parse mdev class id table.
->>>>
->>>> Reviewed-by: Parav Pandit <parav@mellanox.com>
->>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
->>>> ---
->>>>    drivers/vfio/mdev/vfio_mdev.c     |  2 ++
->>>>    scripts/mod/devicetable-offsets.c |  3 +++
->>>>    scripts/mod/file2alias.c          | 10 ++++++++++
->>>>    3 files changed, 15 insertions(+)
->>>>
->>>> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_md=
-ev.c
->>>> index 7b24ee9cb8dd..cb701cd646f0 100644
->>>> --- a/drivers/vfio/mdev/vfio_mdev.c
->>>> +++ b/drivers/vfio/mdev/vfio_mdev.c
->>>> @@ -125,6 +125,8 @@ static const struct mdev_class_id id_table[] =3D {
->>>>    =09{ 0 },
->>>>    };
->>>>   =20
->>>> +MODULE_DEVICE_TABLE(mdev, id_table);
->>>> +
->>> Two questions, first we have:
+On 10/24/19 5:11 AM, Jacob Pan wrote:
+> On Wed, 23 Oct 2019 10:55:23 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> 
+>>>> Do you have to check this everytime? every dmar_readq is going to
+>>>> trap to the other side ...
 >>>
->>> #define MODULE_DEVICE_TABLE(type, name)                                =
- \
->>> extern typeof(name) __mod_##type##__##name##_device_table              =
- \
->>>     __attribute__ ((unused, alias(__stringify(name))))
+>>> Yes. We don't need to check it every time. Check once and save the
+>>> result during boot is enough.
 >>>
->>> Therefore we're defining __mod_mdev__id_table_device_table with alias
->>> id_table.  When the virtio mdev bus driver is added in 5/6 it uses the
->>> same name value.  I see virtio types all register this way (virtio,
->>> id_table), so I assume there's no conflict, but pci types mostly (not
->>> entirely) seem to use unique names.  Is there a preference to one way
->>> or the other or it simply doesn't matter?
+>>> How about below incremental change?
+>>>    
+>> Below is good but I was thinking to include vccap in struct
+>> intel_iommu{} where cap and ecaps reside. i.e.
+>> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+>> index 14b87ae2916a..e2cf25c9c956 100644
+>> --- a/include/linux/intel-iommu.h
+>> +++ b/include/linux/intel-iommu.h
+>> @@ -528,6 +528,7 @@ struct intel_iommu {
+>>          u64             reg_size; /* size of hw register set */
+>>          u64             cap;
+>>          u64             ecap;
+>> +       u64             vccap;
 >>
->> It looks to me that those symbol were local, so it doesn't matter. But
->> if you wish I can switch to use unique name.
-> I don't have a strong opinion, I'm just trying to make sure we're not
-> doing something obviously broken.
-
-
-Yes, to be more safe I will switch to unique names here.
-
-
->
->>>>    static struct mdev_driver vfio_mdev_driver =3D {
->>>>    =09.name=09=3D "vfio_mdev",
->>>>    =09.probe=09=3D vfio_mdev_probe,
->>>> diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetab=
-le-offsets.c
->>>> index 054405b90ba4..6cbb1062488a 100644
->>>> --- a/scripts/mod/devicetable-offsets.c
->>>> +++ b/scripts/mod/devicetable-offsets.c
->>>> @@ -231,5 +231,8 @@ int main(void)
->>>>    =09DEVID(wmi_device_id);
->>>>    =09DEVID_FIELD(wmi_device_id, guid_string);
->>>>   =20
->>>> +=09DEVID(mdev_class_id);
->>>> +=09DEVID_FIELD(mdev_class_id, id);
->>>> +
->>>>    =09return 0;
->>>>    }
->>>> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
->>>> index c91eba751804..d365dfe7c718 100644
->>>> --- a/scripts/mod/file2alias.c
->>>> +++ b/scripts/mod/file2alias.c
->>>> @@ -1335,6 +1335,15 @@ static int do_wmi_entry(const char *filename, v=
-oid *symval, char *alias)
->>>>    =09return 1;
->>>>    }
->>>>   =20
->>>> +/* looks like: "mdev:cN" */
->>>> +static int do_mdev_entry(const char *filename, void *symval, char *al=
-ias)
->>>> +{
->>>> +=09DEF_FIELD(symval, mdev_class_id, id);
->>>> +
->>>> +=09sprintf(alias, "mdev:c%02X", id);
->>> A lot of entries call add_wildcard() here, should we?  Sorry for the
->>> basic questions, I haven't played in this code.  Thanks,
+>> Also, we can use a static branch here.
 >>
->> It's really good question. My understanding is we won't have a module
->> that can deal with all kinds of classes like CLASS_ID_ANY. So there's
->> probably no need for the wildcard.
-> The comment for add_wildcard() indicates future extension, so it's hard
-> to know what we might need in the future until we do need it.  The
-> majority of modules.alias entries on my laptop (even if I exclude pci
-> aliases) end with a wildcard.  Thanks,
+> On a second thought, we cannot use static(branch) here in that we
+> cannot assume there is only one vIOMMU all the time. Have to cache the
+> vccap per iommu.
 
+intel_iommu is a per iommu structure, right? Or I missed anything?
 
-Yes, so I will add that for future extension.
+> 
+>>> diff --git a/drivers/iommu/intel-pasid.c
+>>> b/drivers/iommu/intel-pasid.c index ff7e877b7a4d..c15d9d7e1e73
+>>> 100644 --- a/drivers/iommu/intel-pasid.c
+>>> +++ b/drivers/iommu/intel-pasid.c
+>>> @@ -29,22 +29,29 @@ u32 intel_pasid_max_id = PASID_MAX;
+>>>
+> [Jacob Pan]
+> 
 
-Thanks
-
-
->
-> Alex
->
-
+Best regards,
+baolu
