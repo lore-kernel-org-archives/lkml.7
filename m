@@ -2,168 +2,107 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FDCCA9EBE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDD9CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5FE21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F3121D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kPwkxDQF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UJvxtYwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbfJYR6P (ORCPT
+        id S1731014AbfJYR7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:58:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49600 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730835AbfJYR6O (ORCPT
+        Fri, 25 Oct 2019 13:59:23 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35037 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730964AbfJYR7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 13:58:14 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9PHw97j055061;
-        Fri, 25 Oct 2019 12:58:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572026289;
-        bh=63VepNm8tn+UdkLGnRpF0hNOBgQ7fk7h+1gs9D3JlVQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kPwkxDQFhLjOzLZul6tct1e4wAyK5BfPHAy8gmimSlb9EILu9xc3pMfXl7Jq6VAZB
-         91N0pywrPDPCjWzSF0eZD+6CoBaZCe8lvcM7SqOlcuHsb2/Yp1xM3TIAlsj1aF1RK/
-         mC0WCfI4uWNHmEqEsd7xkwfzK/nQN0DrPt7AYYeA=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9PHw9Bl072443;
-        Fri, 25 Oct 2019 12:58:09 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
- Oct 2019 12:58:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 25 Oct 2019 12:58:09 -0500
-Received: from [10.250.35.43] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9PHw9AG064403;
-        Fri, 25 Oct 2019 12:58:09 -0500
-Subject: Re: [PATCH v14 13/19] leds: lp55xx: Add multicolor framework support
- to lp55xx
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191018122521.6757-1-dmurphy@ti.com>
- <20191018122521.6757-14-dmurphy@ti.com>
- <a24832d9-1c3d-b3ea-4326-2ef4937d5a59@gmail.com>
- <c9a704d4-b411-59f1-02bf-3ea7b219c4b4@gmail.com>
- <e1b84d15-d670-9393-aa65-85120e522a35@ti.com>
- <0cd2082a-16d7-c414-7bd2-708a97885da1@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b469d35b-ca39-2a99-1e86-420edcabf1ac@ti.com>
-Date:   Fri, 25 Oct 2019 12:57:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <0cd2082a-16d7-c414-7bd2-708a97885da1@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 25 Oct 2019 13:59:23 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d13so1015685pfq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 10:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=unR/WpfWQtLnGQnVJ3by74evvy2oa+5Uab8WgXeyAOE=;
+        b=UJvxtYwH9CGFkhirLQqu+rJtutpY1tWkr0flVmuS0Babg4DFzpDp05K3KnQ8twaZiN
+         +BBYOmr2jN1sMSIL9K0URLOOLTXtEJXXAx0biRbmUzyhYd3CyxSUYDiR/PbetdFM8KbG
+         mJlwQavQlCGDYNmm5n+WNQH6sO0aZl/kw20fL+xByx0qsQ4zJRb7SuQSmLLWDGMqH8mN
+         J4v5YTQ3TLHFTfmECzZ+VlH+pIZ7dKUz6nPePhGYW23nReE4ncBLxC/Ry0cxRr5VRuv2
+         a8i+EbPkU2FT2pWcT3Sjy6n0fPdS8JIJ7sibUjGKyYafF9SE1KXbPrBu04RSfjW6RFD4
+         A/uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=unR/WpfWQtLnGQnVJ3by74evvy2oa+5Uab8WgXeyAOE=;
+        b=MCfst6PvFGXElCjkwkmmzqNiB/iwm1wfKUT3RcxmDDPDsIIbpnK+Qloye9oacsklIW
+         4vi/rykMU8I6IDDDrz3lExwIrjKfbKs2Ljr13AA7Mi5PDt5OMwtGqGzzpLQoCnNl/BQV
+         hT6+NQobKxoYEcKX4/Y2wYu1sNonipvNTzhGrH6g9GlA3xFbvakAbxhQRfALgO7EDKfp
+         hJofK6VXQDsVAjtcbrIm7Vg74xahCOPxVMWSlOTB+T93Db/vpSs4O4UltHDrPZ+kc+o5
+         xkr1d0sIYrMU6TwCM0+Q09yd2/6gjrAlE2Z7bvuIgtbOMB8JFDHqnc6Kk8JAlbjgUfJ8
+         Cz7Q==
+X-Gm-Message-State: APjAAAWESIs7TsnswJUH+7igbIn6I42TFoF9eMH0Z8dt2TwuZ4Emzr+c
+        b+8Whe0OGBJ8UbFGUt1KHai1
+X-Google-Smtp-Source: APXvYqwqGQ38V7Ub8lavu+bHjXLvP5YFKQZgt51D74jM8Myzon3TzVpmB6KO12QNI/CECFGWcyO9+g==
+X-Received: by 2002:a65:464b:: with SMTP id k11mr6073160pgr.263.1572026361779;
+        Fri, 25 Oct 2019 10:59:21 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:7108:7f86:4131:5b00:9fc5:5eaa])
+        by smtp.gmail.com with ESMTPSA id r13sm3430303pfg.3.2019.10.25.10.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 10:59:21 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/2] Add IMX296 CMOS image sensor support
+Date:   Fri, 25 Oct 2019 23:29:06 +0530
+Message-Id: <20191025175908.14260-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Hello,
 
-On 10/22/19 12:41 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 10/22/19 6:37 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 10/18/19 4:56 PM, Jacek Anaszewski wrote:
->>> On 10/18/19 11:48 PM, Jacek Anaszewski wrote:
->>>> Dan,
->>> +        ret = lp5xx_parse_channel_child(child, cfg, i);
->>>> I went into details of this parsing and finally came up with
->>>> the code which is a bit greater in size, but IMHO cleaner.
->>>> Note changes in variable naming. It is not even compile-tested.
->>>>
->>>> static int lp55xx_parse_common_child(struct device_node *np,
->>>>                                       struct lp55xx_led_config *cfg,
->>>>                                       int led_number, int *chan_nr)
->>>> {
->>>>           int ret;
->>>>
->>>>           of_property_read_string(np, "chan-name",
->>>>                                   &cfg[led_number].name);
->>>>           of_property_read_u8(np, "led-cur",
->>>>                               &cfg[led_number].led_current);
->>>>           of_property_read_u8(np, "max-cur",
->>>>                               &cfg[led_number].max_current);
->>>>
->>>>           ret = of_property_read_u32(np, "reg", chan_nr);
->>>>           if (ret)
->>>>                   return ret;
->>>>
->>>>           if (chan_nr < 0 || chan_nr > cfg->max_chan_nr) /* side note:
->>>> new
->>>> max_chan_nr property needed in cfg */
->>>>                   return -EINVAL;
->>>>
->>>>           return 0;
->>>> }
->>>>
->>>> static int lp55xx_parse_mutli_led_child(struct device_node *np,
->>>>                                           struct lp55xx_led_config *cfg,
->>>>                                           int child_number,
->>>>                                           int color_number)
->>>> {
->>>>           int chan_nr, color_id;
->>>>
->>>>           ret = lp55xx_parse_common_child(child, cfg, child_number,
->>>> color_number,
->>>>                                           &chan_nr);
->>>>           if (ret)
->>>>                   return ret;
->>>>
->>>>           ret = of_property_read_u32(child, "color", &color_id);
->>>>           if (ret)
->>>>                  return ret;
->>>>
->>>>           cfg[child_number].color_components[color_number].color_id =
->>>> color_id;
->>>>           cfg[child_number].color_components[color_number].output_num =
->>>> chan_nr;
->>>>           set_bit(color_id, &cfg[child_number].available_colors);
->>>>
->>>>           return 0;
->>>> }
->>>>
->>>> staitc int lp55xx_parse_mutli_led(struct device_node *np,
->>>>                                     struct lp55xx_led_config *cfg,
->>>>                                     int child_number)
->>>> {
->>>>           struct device_node *child;
->>>>           int num_colors = 0, i = 0;
->>> s/, i = 0//
->>>
->>>>           for_each_child_of_node(np, child) {
->>>>                   ret = lp55xx_parse_mutli_led_child(child, cfg,
->>>> num_colors,
->>>>                                                      child_number, i))
->>> Replace above call with below:
->>>
->>> ret = lp55xx_parse_mutli_led_child(child, cfg, child_number, num_colors);
->>>
->> I applied your DT parser patch from the v13 series.  Which eliminates
->> this comment correct?
-> Yes, it contains this fix.
->
-OK I added your patch and it broke a lot of the DT parsing for the LP55xx.
+This patchset adds support for IMX296 CMOS image sensor from Sony.
+Sensor can be programmed through I2C and 4-wire interface but the
+current driver only supports I2C interface. The sensor is
+capable of outputting frames in CSI2 format (1 Lane). In the case
+of sensor resolution, driver only supports 1440x1088 at 30 FPS.
 
-I would prefer to stick with the original code without having to 
-re-write this again.
+The driver has been validated using Framos IMX296 module interfaced to
+96Boards Dragonboard410c.
 
-Dan
+Thanks,
+Mani
+
+Changes in v3:
+
+* Fixed the reference to video-interfaces.txt in binding.
+
+Changes in v2:
+
+* Switched to YAML binding
+
+Manivannan Sadhasivam (2):
+  dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
+  media: i2c: Add IMX296 CMOS image sensor driver
+
+ .../devicetree/bindings/media/i2c/imx296.yaml |  98 +++
+ MAINTAINERS                                   |   8 +
+ drivers/media/i2c/Kconfig                     |  11 +
+ drivers/media/i2c/Makefile                    |   1 +
+ drivers/media/i2c/imx296.c                    | 733 ++++++++++++++++++
+ 5 files changed, 851 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
+ create mode 100644 drivers/media/i2c/imx296.c
+
+-- 
+2.17.1
 
