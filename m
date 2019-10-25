@@ -2,93 +2,129 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0581CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21760CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F60521D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D1621872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 22:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="I0aloD8x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W06oXB6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfJYWpp (ORCPT
+        id S1726326AbfJYWuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 18:45:45 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39187 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfJYWpp (ORCPT
+        Fri, 25 Oct 2019 18:50:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39904 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfJYWuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 18:45:45 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t8so5667397qtc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:45:45 -0700 (PDT)
+        Fri, 25 Oct 2019 18:50:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s17so2057418plp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 15:50:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4DYywa8gONdexolDcaR4V0aX/JK63D5OgCkX4AmxYjM=;
-        b=I0aloD8xas/075MWzchVZHS0wcDNzZnYmgSqnSVwoh6XglP1H5IIloMzB6c/VVfkjt
-         I9b0mN0tuuXtua87BfCpt4l7cJlJAurRikm7ONSk9LwLkEgHrhCONdV/QRZ6TYqlBC7b
-         KqvfixMs3DBdd8K6qZoRwBnzYgGbgeI8eo7iSPTL1wJJ+Z7kNfkQ+dJhuARHYvaEreQH
-         b8g3REB4sn2z5R5HaMXvW2dQZOadlP9Ia/TLFBYOW3KhW4tYQcclDurwovbWhJVe/VJT
-         mN4kfjK/D0jLvg1P19r91OJWmnlpXMc6LGqdDzto59BK/TZpsltWYDq57ksdJmhmsE/q
-         y4Ow==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=WK3SlUf5Gs26MRGfMYO+sZq/r8if+NvP4msj/EMhnDI=;
+        b=W06oXB6IMpWhM8dtYxX4fJ2EYFzVUD5CG6VL1kdGUPIGPjDdJOvFUBgYM3ETY3MfKK
+         IGw50t96VojqD+FT/EO1EVcSuM2ummWiEQqaHrpkfnQKdLdjWpXhJPCoDfuncYeLu7yR
+         S/dND9LH65leNIe3NixQsxPxXFhbVLUDu7zLJ2/R8HjgnPgQhadWewKuo7gGRIcEY+jq
+         qd+N/q5dVs390J3XqSeJcYZue+xNm061VT5uIFLhDjYYJPS/W6XuVG89a3yHNM8afRuw
+         gVMVCjzQ/OJ6MmZmisewh8Ds3g1fUbpntD6qrNjczAA+0j4/t78L45JkiT3Nk0mLNoe+
+         qcKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4DYywa8gONdexolDcaR4V0aX/JK63D5OgCkX4AmxYjM=;
-        b=S4Fz+FysgiBbT696eCdFYOu9yOT9/Hg4OroqoxmYUz2HKpXifyxRl67ucEpxZxpo+Y
-         UFYHJr2S1meMglksqUnOXvS0giA6oXbi1E3MO5Rb2qUiPVKrLF6yN2yz4oZ/Ngc9y+p2
-         WFhTb+7xrrs57EoOEZ7mxUq48vdGADU3UZsGHK2CBgrdybcXr/4ADGjQkejvqtP/Cv8l
-         85bYA/09rpMzOzee5owAOoQqeAawSERdiKAp721ZrxohU9pogVsp5xv6FfojGbEWp2lK
-         7Kx6lp2EGJNoyJ5c981vIr52AR8cyrH1XEZXTf/OQwUwy1SY48pX/e70xSIm2iM42480
-         Hf/Q==
-X-Gm-Message-State: APjAAAUop8JwxMmJHNywNLkz2yTDlO9TUF1BRriyvSyD1XzTx+0ffn2E
-        RZqThg5XjOfixH/34OL02JfsniTkzK3z0j0TMW+HiA==
-X-Google-Smtp-Source: APXvYqzy7VtFTfrpPLjnQlO6ySEwY9RkrlXI8yizPrLMlhzT28dBaqq8uErfsoVFeBdn1EAHmE3bhLbMtWcD/J+SLo0=
-X-Received: by 2002:ac8:4241:: with SMTP id r1mr5773124qtm.111.1572043544756;
- Fri, 25 Oct 2019 15:45:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191025175553.63271-1-d.scott.phillips@intel.com>
-In-Reply-To: <20191025175553.63271-1-d.scott.phillips@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 25 Oct 2019 15:45:33 -0700
-Message-ID: <CAPcyv4iQpO+JF8b7NUJUZ3fQFU=PWFeiWrXSd47QGnQPeRsrTg@mail.gmail.com>
-Subject: Re: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
-To:     D Scott Phillips <d.scott.phillips@intel.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        stuart hayes <stuart.w.hayes@gmail.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WK3SlUf5Gs26MRGfMYO+sZq/r8if+NvP4msj/EMhnDI=;
+        b=qzHaUtkYHoXFNof4bFXlJXnwDg1Y+esSv3qgoK5DYy9UwWiZ3mfoX8QluJz8bt4j7I
+         79Bu78Rh+P9fAceIKhISNbh43wZZw4bFf/APaGKGMY4bM2jGFPHXebamhyQMaIdb1YF2
+         NLO5BZbGSYMGmV2TBykIb77WgqqajUAZDTsJjsDGR7XDrfWc+yLu7IN9MW9xPip7anvs
+         zjgKnYSLiI6OQSgk63vYvGIscIOdZupnuVIEhLFvQXFPEIUYbzTAU8SbfMW0p3oKDfkW
+         67nJJQ+IoNorSj8Zw6/X3Dkd43Wr+Qt3KyK2BEziQUN0hJ+CiON8kxMtlsa0uo7sScX+
+         lcFA==
+X-Gm-Message-State: APjAAAXRNgA03UdI/ktRYV2725MraAXgs9XTmg+Nfn5c/3rIp5h2rEQ9
+        RH5/XoQk01BQ1LLCbFsCsJ6JB6EBCp8=
+X-Google-Smtp-Source: APXvYqwQLQqa6cIVroIB0jGdxbexLrpc2SfRdat8vKLK45RzjXk9xs4WDP+k4gpJHIg7f7PX43Yojw==
+X-Received: by 2002:a17:902:d913:: with SMTP id c19mr6398645plz.48.1572043816005;
+        Fri, 25 Oct 2019 15:50:16 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id o15sm2758018pjs.14.2019.10.25.15.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 15:50:15 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [RFC][PATCH 0/3] Support non-default CMA regions to the dmabuf heaps interface
+Date:   Fri, 25 Oct 2019 22:50:06 +0000
+Message-Id: <20191025225009.50305-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 10:55 AM D Scott Phillips
-<d.scott.phillips@intel.com> wrote:
->
-> Allow ndctl.h to be licensed with BSD-2-Clause so that other
-> operating systems can provide the same user level interface.
-> ---
->
-> I've been working on nvdimm support in FreeBSD and would like to
-> offer the same ndctl API there to ease porting of application
-> code. Here I'm proposing to add the BSD-2-Clause license to this
-> header file, so that it can later be copied into FreeBSD.
->
-> I believe that all the authors of changes to this file (in the To:
-> list) would need to agree to this change before it could be
-> accepted, so any signed-off-by is intentionally ommited for now.
-> Thanks,
+Now that the dmabuf heaps core code has been queued, I wanted to
+submit for initial review some of the changes I have pending.
 
-I have no problem with this change, but let's take the opportunity to
-let SPDX do its job and drop the full license text.
+In previous versions, the dmabuf CMA heap added all CMA areas to
+the dmabuf heaps interface. However, Andrew noted this may not
+be desirable, so I've come up with a DT binding and code to
+allow specified CMA regions to be added to the dmabuf heaps
+interface.
+
+This allows additional CMA regions for things like cameras, etc
+to be allocated from separately from the default region.
+
+Review and feedback would be greatly appreciated!
+
+thanks
+-john
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Pratik Patel <pratikp@codeaurora.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Alistair Strachan <astrachan@google.com>
+Cc: Sandeep Patil <sspatil@google.com>
+Cc: Hridya Valsaraju <hridya@google.com>
+Cc: devicetree@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+
+John Stultz (3):
+  dt-bindings: dma-buf: heaps: Describe CMA regions to be added to
+    dmabuf heaps interface.
+  dma-buf: heaps: Allow adding specified non-default CMA heaps
+  example: dts: hi3660-hikey960: Add dts entries to test cma heap
+    binding
+
+ .../bindings/dma/dmabuf-heap-cma.txt          | 31 +++++++++++++++
+ .../boot/dts/hisilicon/hi3660-hikey960.dts    | 13 ++++++-
+ drivers/dma-buf/heaps/cma_heap.c              | 38 +++++++++++++++++++
+ 3 files changed, 81 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/dmabuf-heap-cma.txt
+
+-- 
+2.17.1
+
