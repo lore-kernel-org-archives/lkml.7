@@ -2,68 +2,102 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F33CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E84BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FB720867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DC720867
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406914AbfJYHb7 (ORCPT
+        id S2394278AbfJYHdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:31:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5180 "EHLO huawei.com"
+        Fri, 25 Oct 2019 03:33:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34864 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405554AbfJYHb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:31:59 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 76B832B0C9F9B3549437;
-        Fri, 25 Oct 2019 15:31:55 +0800 (CST)
-Received: from huawei.com (10.175.104.225) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 15:31:47 +0800
-From:   Hewenliang <hewenliang4@huawei.com>
-To:     <zephaniah@gmail.com>, <tglx@linutronix.de>, <len.brown@intel.com>,
-        <ben@decadent.org.uk>, <swinslow@gmail.com>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-CC:     <linfeilong@huawei.com>, <hewenliang4@huawei.com>
-Subject: [PATCH] tools/power x86_energy_perf_policy: Fix the leakage of file descriptor in get_pkg_num
-Date:   Fri, 25 Oct 2019 03:31:46 -0400
-Message-ID: <20191025073146.23582-1-hewenliang4@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        id S1726479AbfJYHdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:33:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C7075AFB7;
+        Fri, 25 Oct 2019 07:33:05 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 09:33:04 +0200
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] net: usb: lan78xx: Use phy_mac_interrupt() for interrupt
+ handling
+Message-ID: <20191025073304.zqw2yxaulkyopk5y@beryllium.lan>
+References: <20191018082817.111480-1-dwagner@suse.de>
+ <20191018131532.dsfhyiilsi7cy4cm@linutronix.de>
+ <20191022101747.001b6d06@cakuba.netronome.com>
+ <20191023074719.gcov5xfrcvns5tlg@beryllium.lan>
+ <20191023080640.zcw2f2v7fpanoewm@beryllium.lan>
+ <20191024104317.32bp32krrjmfb36p@linutronix.de>
+ <20191024110610.lwwy75dkgwjdxml6@beryllium.lan>
+ <20191024141216.wz2dcdxy4mrl2q5a@beryllium.lan>
+ <78ab19da-2f30-86e0-fad1-667f5e6ba8b1@gmx.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78ab19da-2f30-86e0-fad1-667f5e6ba8b1@gmx.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-we need close the file(fp pointer) before the return of get_pkg_num.
+Hi Stefan,
 
-Fixes: 4beec1d75 ("tools/power x86_energy_perf_policy: support HWP.EPP")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
----
- tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Oct 24, 2019 at 07:25:37PM +0200, Stefan Wahren wrote:
+> Am 24.10.19 um 16:12 schrieb Daniel Wagner:
+> > On Thu, Oct 24, 2019 at 01:06:10PM +0200, Daniel Wagner wrote:
+> >
+> > Sebastians suggested to try the RPi kernel. The rpi-5.2.y kernel
+> > behaves exactly the same. That is one PHY interrupt and later on NFS
+> > timeouts.
+> >
+> > According their website the current shipped RPi kernel is in version
+> > 4.18. Here is what happends with rpi-4.18.y:
+> 
+> No, it's 4.19. It's always a LTS kernel.
 
-diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-index 3fe1eed900d4..165eb4da8a64 100644
---- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-+++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-@@ -1111,6 +1111,7 @@ unsigned int get_pkg_num(int cpu)
- 	retval = fscanf(fp, "%d\n", &pkg);
- 	if (retval != 1)
- 		errx(1, "%s: failed to parse", pathname);
-+	fclose(fp);
- 	return pkg;
- }
- 
--- 
-2.19.1
+Ah okay and obviously, 4.19 works also nicely. No surprise here.
+
+> I'm curious, what's the motivation behind this? The rpi tree contains
+> additional hacks, so i'm not sure the results are comparable. Also the
+> USB host driver is a different one.
+
+The idea was to see what the PHY interrupt is doing. As it turns out
+the RPi tree and mainline have almost the same infrastructure code
+here (irqdomain). There are some additional tweaks in the RPi
+kernel. My initial revert patch removed all this infrastructure code,
+which is probably not a good idea. If the way forward is to steal the
+bits and pieces from the RPi tree which should keep this code in
+place.
+
+With the local_irq_disable() patch, which I am going to send asap, the
+warning which everyone is seeing should be gone. So one bug down.
+
+> > There are no NFS timeouts and commands like 'apt update' work reasoble
+> > fast. So no long delays or hangs. Time to burn this hardware.
+> 
+> Since enabling lan78xx for Raspberry Pi 3B+, we found a lot of driver
+> issues. So i'm not really surprised, that there are still more of them.
+
+If the vendor would work on fixing the bugs it would not be real
+problem.
+
+Thanks,
+Daniel
 
