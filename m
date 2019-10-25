@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A59CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C446ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F241820679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C63620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012239;
-	bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
+	s=default; t=1572012249;
+	bh=TFQRTj3/7D8jnoe4BJv+m0z7LgOh2e78JsSqRuTuDww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1dQv/64dj792wH+YUpMCIVLwqx1PU7Lbtbl0AoW4VURPN9utXWolm18cT3Sjd8Hxd
-	 mn0rkCPjE8c1gZSph4uwb0l/ETMLTD/xg26oqoX/wbzqkTkExzz9NKEIFZqYEdyl9B
-	 PtazfEOgAW7aA9VOPYDFBuyWnFxItL/92bDORlVs=
+	b=aWGLwh0xS9piCfYhQLAM3cNCtT5nVFqaPX7u+Rd/MeD84j6Ca6L12ANQRe8H7xFNk
+	 ywzD4lixehJR9tU4mDW82/bkwsnMkjcHgju034pw+k5oN1B1KjD91/Qtl30jj530pE
+	 XxKhdPtgo1LmMMrvZd7TEWngXpWcQbxTekySpCOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395165AbfJYOD5 (ORCPT
+        id S2394665AbfJYN4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394725AbfJYN4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:53 -0400
+        id S2505278AbfJYN4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3342821D7F;
-        Fri, 25 Oct 2019 13:56:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E98121E6F;
+        Fri, 25 Oct 2019 13:56:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011813;
-        bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
+        s=default; t=1572011795;
+        bh=TFQRTj3/7D8jnoe4BJv+m0z7LgOh2e78JsSqRuTuDww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fN4BV8qGGtkDspxwvwGWAp+K6fekNDk002vsLZ1KCiKzvIdHbFBc/7ZU/yunMIl3p
-         dTj9aBMV75JyTB2AAGjkXjOdmc8Egqoe/njxNh1vMTz3BVZiGp6FXwZpBHKyroWEJG
-         lmyTYOntmqAqru0kvcEVUrsMCCW7jnXkt5Dg9smc=
+        b=EAoBtzKiCYFa5UeIIg+zdL2vB0SEPRdostL4eZPR6v/92KQm8dxrGI7Js5c5zEVyl
+         CoKFyOOMv8OzFf10N9ZSlBEoggZRje8TWEZ0gxRLCiZr7Fn+sJHZTYLQqih2QMwoZQ
+         7TnQpUMe87wiFXG4/Q1Mn2VFF3CthVb4Hutb64LI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/37] NFC: pn533: fix use-after-free and memleaks
-Date:   Fri, 25 Oct 2019 09:55:50 -0400
-Message-Id: <20191025135603.25093-26-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 17/37] drm/msm: stop abusing dma_map/unmap for cache
+Date:   Fri, 25 Oct 2019 09:55:41 -0400
+Message-Id: <20191025135603.25093-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -60,53 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 6af3aa57a0984e061f61308fe181a9a12359fecc ]
+[ Upstream commit 0036bc73ccbe7e600a3468bf8e8879b122252274 ]
 
-The driver would fail to deregister and its class device and free
-related resources on late probe errors.
+Recently splats like this started showing up:
 
-Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
-Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
+   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
+   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
+   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
+   Workqueue: msm msm_gem_free_work [msm]
+   pstate: 80c00005 (Nzcv daif +PAN +UAO)
+   pc : __iommu_dma_unmap+0xb8/0xc0
+   lr : __iommu_dma_unmap+0x54/0xc0
+   sp : ffff0000119abce0
+   x29: ffff0000119abce0 x28: 0000000000000000
+   x27: ffff8001f9946648 x26: ffff8001ec271068
+   x25: 0000000000000000 x24: ffff8001ea3580a8
+   x23: ffff8001f95ba010 x22: ffff80018e83ba88
+   x21: ffff8001e548f000 x20: fffffffffffff000
+   x19: 0000000000001000 x18: 00000000c00001fe
+   x17: 0000000000000000 x16: 0000000000000000
+   x15: ffff000015b70068 x14: 0000000000000005
+   x13: 0003142cc1be1768 x12: 0000000000000001
+   x11: ffff8001f6de9100 x10: 0000000000000009
+   x9 : ffff000015b78000 x8 : 0000000000000000
+   x7 : 0000000000000001 x6 : fffffffffffff000
+   x5 : 0000000000000fff x4 : ffff00001065dbc8
+   x3 : 000000000000000d x2 : 0000000000001000
+   x1 : fffffffffffff000 x0 : 0000000000000000
+   Call trace:
+    __iommu_dma_unmap+0xb8/0xc0
+    iommu_dma_unmap_sg+0x98/0xb8
+    put_pages+0x5c/0xf0 [msm]
+    msm_gem_free_work+0x10c/0x150 [msm]
+    process_one_work+0x1e0/0x330
+    worker_thread+0x40/0x438
+    kthread+0x12c/0x130
+    ret_from_fork+0x10/0x18
+   ---[ end trace afc0dc5ab81a06bf ]---
+
+Not quite sure what triggered that, but we really shouldn't be abusing
+dma_{map,unmap}_sg() for cache maint.
+
+Cc: Stephen Boyd <sboyd@kernel.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/pn533/usb.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_gem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
-index 5d823e965883b..fcb57d64d97e6 100644
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -559,18 +559,25 @@ static int pn533_usb_probe(struct usb_interface *interface,
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index f59ca27a4a357..93b20ad23c23f 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -108,7 +108,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
+ 		 * because display controller, GPU, etc. are not coherent:
+ 		 */
+ 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
++			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
+ 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+ 	}
  
- 	rc = pn533_finalize_setup(priv);
- 	if (rc)
--		goto error;
-+		goto err_deregister;
+@@ -138,7 +138,7 @@ static void put_pages(struct drm_gem_object *obj)
+ 			 * GPU, etc. are not coherent:
+ 			 */
+ 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
++				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
+ 					     msm_obj->sgt->nents,
+ 					     DMA_BIDIRECTIONAL);
  
- 	usb_set_intfdata(interface, phy);
- 
- 	return 0;
- 
-+err_deregister:
-+	pn533_unregister_device(phy->priv);
- error:
-+	usb_kill_urb(phy->in_urb);
-+	usb_kill_urb(phy->out_urb);
-+	usb_kill_urb(phy->ack_urb);
-+
- 	usb_free_urb(phy->in_urb);
- 	usb_free_urb(phy->out_urb);
- 	usb_free_urb(phy->ack_urb);
- 	usb_put_dev(phy->udev);
- 	kfree(in_buf);
-+	kfree(phy->ack_buffer);
- 
- 	return rc;
- }
 -- 
 2.20.1
 
