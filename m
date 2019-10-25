@@ -2,168 +2,158 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58957CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD47CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFD920684
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2EE20684
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:28:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YGwv2Rk5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRyVA/kp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436889AbfJYO2i (ORCPT
+        id S2437447AbfJYO2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:28:38 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41248 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730064AbfJYO2h (ORCPT
+        Fri, 25 Oct 2019 10:28:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43452 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436722AbfJYO2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:28:37 -0400
-Received: by mail-qk1-f195.google.com with SMTP id p10so1917929qkg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:28:37 -0700 (PDT)
+        Fri, 25 Oct 2019 10:28:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so2561269wrr.10;
+        Fri, 25 Oct 2019 07:28:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=XdYJcYMzVhQgoFmob+oynB67MiEVSjs4OZR3a6ZTGLY=;
-        b=YGwv2Rk5+KotYS/VCzmFtyamoqtqiGyCDe/FQfko1jffk1zDfQS49YVUM//q5jr/lI
-         OnoWikuXiUAPvGp0XL5l8xYN83UZp607lHFfOusvCV7nO7t1MMEb3LbxUV0HNlUk021H
-         TtNmcx3Kicb4hHiD2tjLOMsbh9GlR78kRygmcsRgcTIPztXUtoqhs9KrIpKEszrfJHCs
-         oU6XnvJqLiUpe+48Zs9PdiDK9KGDk6AAT0Zb+PZE1H5Dp5g54rOKBkXF0JX63XmSznLA
-         8dNKyziNDarAKClOYgeVaab/VtLBWsgUU3H5PCnGF6HtljBNUtQICIx095g2BZOMZWw/
-         kXIQ==
+        bh=0lU4vBZ00lsZOGR37S7Y41s23WGWn3vWrl2tK4zXVT4=;
+        b=FRyVA/kppsnK9aDVKI19li9Up5yBufEWGsaMRrbzNqAdVN0Pxy+nXiU8vTXFGK/P/e
+         nF7MumzJx/Z607woRf65WoIBgRny3FnE9Kkhy/Z2ke7J90aD7SE5wBIJ674ICi7FEUvF
+         wqJw/a10wiqU+bqUYJfPtsofmfqfBgsK6R6YhsGVb/n1NM0D2pfqZacOM4oYIotTYY1q
+         gvC/tBc0E1muwXXuvboSMbF7uV54wopD6ZaKZiBqzKQAhGtSh2Pnx3E+rzzgzNMeMFte
+         kqQvKg6PJ7N7fkxJa7Wraj/57XEimHE3914RA77cOpooEhpdL8dTwYrPsAbKNpHE10Lm
+         wTJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XdYJcYMzVhQgoFmob+oynB67MiEVSjs4OZR3a6ZTGLY=;
-        b=rGNzD0rgb5fozQn/kVc+B3S/q7FUudUUZp6eg9lIN/C1N02MieDzAXLVKUULLjaJH8
-         gujSQJW3v18Qnk+6AmptZ7yFlc7JfwYN0hEmDdyasU2uP59rxa6IoZrbXFSrSirkGnzl
-         pP74hEsf4rPAcUaSK6supsuf283jmqQ3J8E4T+PlP6KurgQ+W7S9n5XE5wr3w9cCOiyp
-         sEvxhZKenFI5AuaXUrvIQ4k41/nOBfo44ltM0Tr64+xNMrrYGiZiSsG7tJNYMeSY2VyY
-         8I0sv7fFL3AqL+iUdu/uJYDAAzo6DLzBQsMLyk1CTAQNTl8URNb3tIWihWZgirsaZC+M
-         n1og==
-X-Gm-Message-State: APjAAAUGPjuufSG1rQlsskTvH9IEcWjFByFIq3roBODBggzXYLUw2BaL
-        Atq9d8nztDwDRai9L2wla8j6q0KN
-X-Google-Smtp-Source: APXvYqxms4d03xqmmuuy0/+2YbNpwgLjlKuvKLJr8gZfMliDEvRV0NhxVceZwsO+mMTKPitNS9DWBw==
-X-Received: by 2002:ae9:f707:: with SMTP id s7mr3307181qkg.82.1572013716173;
-        Fri, 25 Oct 2019 07:28:36 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id m25sm1683727qtc.0.2019.10.25.07.28.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 07:28:34 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7493941199; Fri, 25 Oct 2019 11:28:32 -0300 (-03)
-Date:   Fri, 25 Oct 2019 11:28:32 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        bh=0lU4vBZ00lsZOGR37S7Y41s23WGWn3vWrl2tK4zXVT4=;
+        b=HmBK+xOjT83ZtI00SOR0VmZcWihsMBsvqRIQu5xGrr2R6CgOptdZ/OhcvLXMAegeHf
+         L6zvGWzfN5rVW64hXjWzpUsIm7fv/LjawJgE3DEhESow7g7DRchSw8MMIt0Fd99CEy3D
+         UreOGHm7/qf+1SezKBAync2vBOtsun6wzheX10m861hNa3J2kQ6M/3EWn+NFqEzWG78r
+         OdDxvAOrhir4+fgshoHrcDOSSpYmfcnAjvvjnCRhL1nNcHN/NM3qhtexpqnIoq/3m4xQ
+         DAE5dH6mbCo9+ZliLgmmXuaCrhg5lqMCBrWFS0tkrhBgPWeHJWE/xH2xVTqRxemWVDks
+         bsqA==
+X-Gm-Message-State: APjAAAVWrbAexr6+q+N/r7dlREr0mH7FhQU+dGIycafjyBhf6ErTvYBU
+        NNAte3jfonEkemPRbK3WdaQ=
+X-Google-Smtp-Source: APXvYqyKe3NGWagSOC0ejXtsTs8OGvjSR/esTy0xnHYnHPSF5tQir+GSkLkz8VE581dzDdt3nsxkbA==
+X-Received: by 2002:a05:6000:44:: with SMTP id k4mr3450806wrx.170.1572013725170;
+        Fri, 25 Oct 2019 07:28:45 -0700 (PDT)
+Received: from sivanov-pc ([92.247.20.94])
+        by smtp.gmail.com with ESMTPSA id o70sm2620480wme.29.2019.10.25.07.28.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 25 Oct 2019 07:28:44 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 17:28:42 +0300
+From:   Samuil Ivanov <samuil.ivanovbg@gmail.com>
+To:     dan.carpenter@oracle.com, gregkh@linuxfoundation.org
+Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH 1/6] perf/probe: Fix wrong address verification
-Message-ID: <20191025142832.GA15617@kernel.org>
-References: <157199317547.8075.1010940983970397945.stgit@devnote2>
- <157199318513.8075.10463906803299647907.stgit@devnote2>
- <20191025121448.GC23511@kernel.org>
- <20191025213633.b1227d0721b97edc8e8f9335@kernel.org>
+Subject: Re: [PATCH 1/3] Staging: qlge: Rename prefix of a function to qlge
+Message-ID: <20191025142842.GA10016@sivanov-pc>
+References: <20191024212941.28149-1-samuil.ivanovbg@gmail.com>
+ <20191024212941.28149-2-samuil.ivanovbg@gmail.com>
+ <20191025101705.GM24678@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025213633.b1227d0721b97edc8e8f9335@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191025101705.GM24678@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Oct 25, 2019 at 09:36:33PM +0900, Masami Hiramatsu escreveu:
-> Hi,
+On Fri, Oct 25, 2019 at 01:19:05PM +0300, Dan Carpenter wrote:
+> On Fri, Oct 25, 2019 at 12:29:39AM +0300, Samuil Ivanov wrote:
+> > diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+> > index 6ec7e3ce3863..e9f1363c5bf2 100644
+> > --- a/drivers/staging/qlge/qlge.h
+> > +++ b/drivers/staging/qlge/qlge.h
+> > @@ -2262,7 +2262,7 @@ int ql_write_mpi_reg(struct ql_adapter *qdev, u32 reg, u32 data);
+> >  int ql_unpause_mpi_risc(struct ql_adapter *qdev);
+> >  int ql_pause_mpi_risc(struct ql_adapter *qdev);
+> >  int ql_hard_reset_mpi_risc(struct ql_adapter *qdev);
+> > -int ql_soft_reset_mpi_risc(struct ql_adapter *qdev);
+> > +int qlge_soft_reset_mpi_risc(struct ql_adapter *qdev);
 > 
-> On Fri, 25 Oct 2019 09:14:48 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> The patch series doesn't change all the functions so now it's hodge
+> podge.
 > 
-> > Em Fri, Oct 25, 2019 at 05:46:25PM +0900, Masami Hiramatsu escreveu:
-> > > Since there are some DIE which has only ranges instead of the
-> > > combination of entrypc/highpc, address verification must use
-> > > dwarf_haspc() instead of dwarf_entrypc/dwarf_highpc.
-> > > 
-> > > Also, the ranges only DIE will have a partial code in different
-> > > section (e.g. unlikely code will be in text.unlikely as "FUNC.cold"
-> > > symbol). In that case, we can not use dwarf_entrypc() or
-> > > die_entrypc(), because the offset from original DIE can be
-> > > a minus value.
-> > > 
-> > > Instead, this simply gets the symbol and offset from symtab.
-> > > 
-> > > Without this patch;
-> > >   # tools/perf/perf probe -D clear_tasks_mm_cpumask:1
-> > >   Failed to get entry address of clear_tasks_mm_cpumask
-> > >     Error: Failed to add events.
-> > > 
-> > > And with this patch
-> > >   # tools/perf/perf probe -D clear_tasks_mm_cpumask:1
-> > >   p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
-> > >   p:probe/clear_tasks_mm_cpumask_1 clear_tasks_mm_cpumask+5
-> > >   p:probe/clear_tasks_mm_cpumask_2 clear_tasks_mm_cpumask+8
-> > >   p:probe/clear_tasks_mm_cpumask_3 clear_tasks_mm_cpumask+16
-> > >   p:probe/clear_tasks_mm_cpumask_4 clear_tasks_mm_cpumask+82
-> > 
-> > Ok, so this just asks for the definition, but doesn't try to actually
-> > _use_ it, which I did and it fails:
-> > 
-> > [root@quaco tracebuffer]# perf probe -D clear_tasks_mm_cpumask:1
-> > p:probe/clear_tasks_mm_cpumask _text+919968
-> > p:probe/clear_tasks_mm_cpumask_1 _text+919973
-> > p:probe/clear_tasks_mm_cpumask_2 _text+919976
-> > [root@quaco tracebuffer]#
-> > [root@quaco tracebuffer]# perf probe clear_tasks_mm_cpumask
-> > Probe point 'clear_tasks_mm_cpumask' not found.
-> >   Error: Failed to add events.
-> > [root@quaco tracebuffer]#
-> > 
-> > So I'll tentatively continue to apply the other patches in this series,
-> > maybe one of them will fix this.
+> >  int ql_dump_risc_ram_area(struct ql_adapter *qdev, void *buf, u32 ram_addr,
+> >  			  int word_count);
+> >  int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump);
+> > diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> > index 019b7e6a1b7a..df5344e113ca 100644
+> > --- a/drivers/staging/qlge/qlge_dbg.c
+> > +++ b/drivers/staging/qlge/qlge_dbg.c
+> > @@ -1312,7 +1312,7 @@ void ql_get_dump(struct ql_adapter *qdev, void *buff)
+> >  
+> >  	if (!test_bit(QL_FRC_COREDUMP, &qdev->flags)) {
+> >  		if (!ql_core_dump(qdev, buff))
+> > -			ql_soft_reset_mpi_risc(qdev);
+> > +			qlge_soft_reset_mpi_risc(qdev);
+> >  		else
+> >  			netif_err(qdev, drv, qdev->ndev, "coredump failed!\n");
+> >  	} else {
+> > diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
+> > index 9e422bbbb6ab..efe893935929 100644
+> > --- a/drivers/staging/qlge/qlge_mpi.c
+> > +++ b/drivers/staging/qlge/qlge_mpi.c
+> > @@ -88,9 +88,10 @@ int ql_write_mpi_reg(struct ql_adapter *qdev, u32 reg, u32 data)
+> >  	return status;
+> >  }
+> >  
+> > -int ql_soft_reset_mpi_risc(struct ql_adapter *qdev)
+> > +int qlge_soft_reset_mpi_risc(struct ql_adapter *qdev)
+> >  {
+> >  	int status;
+> > +
+> >  	status = ql_write_mpi_reg(qdev, 0x00001010, 1);
 > 
-> Yes, it should be fixed by [2/6] :)
+> This white space change is unrelated.
+> 
+> >  	return status;
+> >  }
+> 
+> regards,
+> dan carpenter
+> 
 
-Yeah, it is, works there, but unfortunately I couldn't see it in action
-even having put it successfuly into place:
+Hello Dan and Greg,
 
-[root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-Added new event:
-  probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
+Dan you are correct it is a bit of a hodge podge :)
+I think that it is better to have a bigger patches that will rename
+more functions, but I don't this it is good to have all the
+functions renamed in one patch.
 
-You can now use it in all perf tools, such as:
+Just in the header file I counted around 55 function definitions,
+and in the source files there are some more.
+So that will make one huge patch.
 
-	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+And I am not sure if the maintainers will be OK with reviewing it.
 
-[root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask/max-stack=16/
+So my sugestion is to have a bigger patches.
+For example, one patch with 10 to 15 subpatches.
+And one subpatch will rename one function and
+update the occurrences in the driver.
 
-Doesn't seem to be used in x86-64...
+This way with like 5 iterations all the functions will be renamed.
 
-[acme@quaco perf]$ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
-./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
-./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
-./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
-[acme@quaco perf]$ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
-./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
-[acme@quaco perf]$
+If you have a better solution please tell.
 
-:-)
- 
-> Actually, a probe point with offset line and no-offset are handled
-> a bit differently.
-
-What is the difference? Anyway, things seem to work as advertised, so
-I'm happy ;-)
-
-- Arnaldo
+Grt,
+Samuil
