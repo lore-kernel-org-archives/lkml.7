@@ -2,112 +2,142 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FEFCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F59C47E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7F420663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:32:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GxSMRql1"
+	by mail.kernel.org (Postfix) with ESMTP id 4F5C320663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572021307;
+	bh=lWYHZtoun29Gp1m3AaZKgVa81no97teNsKd9JffXKcw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nFWCeqIgD5oiw7x1Q7tYWVSUwdFX7zwXPwF2YPqew7BbMAWD6nOMp7zvzT1vlnVRK
+	 6D1epRkXJJkFZc7vjr+jGKSIOUCW2Ean/ggWKFH+bJgTs7ax+Yo2NzDoCxrhG4Gs0u
+	 RDIv/ZnP52lWDysVTFvU0jv4ZtdTHv5SLkvphz10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409567AbfJYQcx (ORCPT
+        id S2633052AbfJYQfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 12:32:53 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39714 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409520AbfJYQcw (ORCPT
+        Fri, 25 Oct 2019 12:35:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38291 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbfJYQfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:32:52 -0400
-Received: by mail-il1-f195.google.com with SMTP id i12so2378752ils.6
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 09:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=VRu4DyxG0YyclcQqaQ2raKSDjbldbf0XZXEiP7mXYGk=;
-        b=GxSMRql1v3o4jRFIDm4nTbvjBtvY9OgYR3nCOG+KJaKk1kKuv1AeyCP6MNa4ETtbzH
-         ZN5meYC3xcx8365zrs+uYmvZI8qP6xM68FDoYrT3RourFhao2gzQC3uQ8KHR1+T0GZ6n
-         FLq5eQlpUxFQGpMUTbKDNyobCWhpTtH+BBkhAb+fBOToMKwmpvpIPOnqjW2rKv5xtt0L
-         UYNrj/NnoSklNu/QVxk3wo8U8sHfBS2XsxMl3XAVcNr3vMTaEPG6PmYBf+yyaf1b1XFw
-         7VI0vi5S9AjkiSzCc2Cr89ExJmPvzdGvvNi7sex7ZP0d/pAoP/GQkFglI3dAQ5iSkNGP
-         PCuw==
+        Fri, 25 Oct 2019 12:35:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v186so2020537oie.5;
+        Fri, 25 Oct 2019 09:35:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VRu4DyxG0YyclcQqaQ2raKSDjbldbf0XZXEiP7mXYGk=;
-        b=YGyo3gV5SWIkfhNkwYoQD6VS1kN45wXnaLQS0FnHWor66HwBCG8fgPu9fyFKq/Taan
-         U/RwhCrzSOyfUiF7Zf1eFW62ITQ4D2sEVyOjZYYnTi+kiWe1pzoCckyvQ8VGrlvk5mbi
-         4bUm+NbKH7nXDpF49aZq0RmXsTFcxhvsw6VTe3qNhqG3YXlVBGl7AqoPy074dD+H4B1G
-         nMUbuOjtPuU95reUQIr21vgEoSK2jnX/ZMfFd94KuyjfpMfjzrO7KAR8lvU9CtuJHeEy
-         Ehn8eZyqeDakR+vfyo2AxbyCVnQLlbpYG/VVkzk7f0U4n26evxFdJr2wA7wAP64OdnyD
-         ZXiw==
-X-Gm-Message-State: APjAAAV5UUtxY9u1/wx7oQH1iHHRbfrGWQQG9Tzw5lJl2eyU19CZyjtR
-        K0nXkCKtSQiAiyGVsHMN6idM5RpOT1MF6A==
-X-Google-Smtp-Source: APXvYqwF/bEdWpUoFvbraiiARXM2qNWBEjlCOgGj8rCaCQmlnXrKGV15Bznn3yzMXbmiGb8vQR4EPg==
-X-Received: by 2002:a92:8f94:: with SMTP id r20mr5285130ilk.41.1572021171149;
-        Fri, 25 Oct 2019 09:32:51 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id p5sm366365ils.32.2019.10.25.09.32.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 09:32:49 -0700 (PDT)
-Subject: Re: [BUG] io_uring: defer logic based on shared data
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
- <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
- <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
- <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
-Message-ID: <df3b9edd-86ad-5460-b61b-66707c0fb630@kernel.dk>
-Date:   Fri, 25 Oct 2019 10:32:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yF/H3rJbJdDx83JTlFll9X6DSAUOcAkkMlYZ2qdb7W8=;
+        b=QiwAJalqCI8mNc1wnZCikHiR/CnYe0MVtgCchW39277vQyJo1AlM0g6QSsS4OvQ1dm
+         E54K5WhID+Whu8iG2qhJHnKEZKqw63gSzsn38lbk91QT8pZWdoMmPtRJZqxEZx4xxlhv
+         cpwZimI/LMynnruvrJXu2iCRP2J604IJmKxzfnMaagMQw2S47xvCCbw8e9T5fP/6WoT4
+         ZqAriFHgCUWCSAVS8/dfwl2iZvP6c2B04+cm/IVqsJIER5zc1MCA8suTGWXUfPVop996
+         yQvm6Ojp/DmEU3h1dromQ1RM1yUhtc3+fALxw9kqiLyCiV68bqfE5suojDchyvncnsLw
+         pJUA==
+X-Gm-Message-State: APjAAAWgcMoVDugrCNN3PBsfmApwWkdY9Dm8MXPeyrPAQT9VCQCuuL8a
+        46M+TwQzPCWVI0W0txh5XeE5DZM=
+X-Google-Smtp-Source: APXvYqzFwnoi2h7408Dc9NQGKmnU5cVF5hryFdhRKy0DlizILQRgNbq8bMnefvU0IgZdMGEtFQImJQ==
+X-Received: by 2002:a54:4e8a:: with SMTP id c10mr3912144oiy.65.1572021305176;
+        Fri, 25 Oct 2019 09:35:05 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r3sm861176otk.31.2019.10.25.09.35.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 09:35:04 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 11:35:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: accel: bma400: add bindings
+Message-ID: <20191025163503.GA19293@bogus>
+References: <20191018031848.18538-1-dan@dlrobertson.com>
+ <20191018031848.18538-2-dan@dlrobertson.com>
 MIME-Version: 1.0
-In-Reply-To: <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018031848.18538-2-dan@dlrobertson.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 10:27 AM, Jens Axboe wrote:
-> On 10/25/19 10:21 AM, Pavel Begunkov wrote:
->> On 25/10/2019 19:03, Jens Axboe wrote:
->>> On 10/25/19 3:55 AM, Pavel Begunkov wrote:
->>>> I found 2 problems with __io_sequence_defer().
->>>>
->>>> 1. it uses @sq_dropped, but doesn't consider @cq_overflow
->>>> 2. @sq_dropped and @cq_overflow are write-shared with userspace, so
->>>> it can be maliciously changed.
->>>>
->>>> see sent liburing test (test/defer *_hung()), which left an unkillable
->>>> process for me
->>>
->>> OK, how about the below. I'll split this in two, as it's really two
->>> separate fixes.
->> cached_sq_dropped is good, but I was concerned about cached_cq_overflow.
->> io_cqring_fill_event() can be called in async, so shouldn't we do some
->> synchronisation then?
+On Fri, Oct 18, 2019 at 03:18:47AM +0000, Dan Robertson wrote:
+> Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
+> accelerometer sensor.
 > 
-> We should probably make it an atomic just to be on the safe side, I'll
-> update the series.
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+> ---
+>  .../devicetree/bindings/iio/accel/bma400.yaml | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bma400.yaml
 
-Here we go, patch 1:
+bosch,bma400.yaml
 
-http://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=f2a241f596ed9e12b7c8f960e79ccda8053ea294
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bma400.yaml b/Documentation/devicetree/bindings/iio/accel/bma400.yaml
+> new file mode 100644
+> index 000000000000..e0a85dc7bf34
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bma400.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/bma400.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bosch BMA400 triaxial acceleration sensor
+> +
+> +maintainers:
+> +  - Dan Robertson <dan@dlrobertson.com>
+> +
+> +description: |
+> +  Acceleration and temerature iio sensors with an i2c interface
+> +
+> +  Specifications about the sensor can be found at:
+> +    https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMA400-DS000.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - bosch,bma400
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
 
-patch 2:
+i2c {
 
-http://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=b7d0297d2df5bfa0d1ecf9d6c66d23676751ef6a
+(will enable i2c bus schema)
 
--- 
-Jens Axboe
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      bma400@14 {
 
+accelerometer@14
+
+> +        compatible = "bosch,bma400";
+> +        reg = <0x14>;
+> +      };
+> +    };
+> 
+> 
