@@ -2,158 +2,101 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4E8CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA2FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281A721929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56CF21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:52:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="G1L77h5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392610AbfJYEvT (ORCPT
+        id S2392653AbfJYEwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 00:51:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49244 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729081AbfJYEvT (ORCPT
+        Fri, 25 Oct 2019 00:52:04 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36706 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732606AbfJYEwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 00:51:19 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9P4ldTw090258
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 00:51:18 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vuqygbxhn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 00:51:17 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Fri, 25 Oct 2019 05:51:15 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 25 Oct 2019 05:51:06 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9P4p5Ja27918530
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 04:51:05 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9EE44C040;
-        Fri, 25 Oct 2019 04:51:05 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60D7C4C050;
-        Fri, 25 Oct 2019 04:51:05 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Oct 2019 04:51:05 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A95EAA0147;
-        Fri, 25 Oct 2019 15:51:03 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH 10/10] ocxl: Conditionally bind SCM devices to the generic OCXL driver
-Date:   Fri, 25 Oct 2019 15:47:05 +1100
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191025044721.16617-1-alastair@au1.ibm.com>
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
+        Fri, 25 Oct 2019 00:52:04 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u16so599166lfq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 21:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YmH4co9M+ZSsgCt8IZXd3+esyhYdCc0EXhkw0YqcSCs=;
+        b=G1L77h5L6Hu8ngA1fW2Hs+AazniThA9Zqssrirkcm/tG7cam7B2ULQrQky8ApcCjQf
+         BYDSeBr3KPlxNVkqMFhhcGM24x/rqgchiQZZ2AE9GRILdUzB+gC8f0/+PWXe+ATVR23O
+         EVg6zZ4nQ/gWPmFKj1nG5S9NTbZuiQ0rQj7bc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YmH4co9M+ZSsgCt8IZXd3+esyhYdCc0EXhkw0YqcSCs=;
+        b=UP8BRUgda2wCRinXn8skEHZraz8pEudEE0+gdDzzpBOeQI1lh0zBKz4Y2eJLPV7KoZ
+         m48RCn/XSu/4lfIURtWN7I31iPfnfqDCilxvqbQkisrpIW9XGS+jcSCPXCj0ecJ8NZU1
+         t4puEjgGLaBsjS4GH3UYuBErkpuupKRJFc70UcFx89IIxkE9npGNlMptxGDA7mkxDuUx
+         nGSTs/xeS1/n8hHqxYnMs0HHWEld3V59BLHSIwnt/y3IT5DhxizaRx5NSZaW4KH8pYVY
+         rsukdQTVg9kL3l0bouRYCyelL01xTjX+0suyU01wWH2WRkGejdf9xwFquHzlBbGMyklx
+         /4nw==
+X-Gm-Message-State: APjAAAXSW5x1uI0bJwMvAG4lnYjUOzdFwKvsuOVcT/yBrCGPo1v46w/W
+        qKH3aZx3ced+mdBQyyLbAVArzmG1eMeN4c0s+OWumA==
+X-Google-Smtp-Source: APXvYqyzvCADhCjLC3w+Kn5bN11jVlzo8YcU37wvGQvuo5kjy90lV4V+CZGv0RYVRJMOcXh1iwgKckj0ufBBjYpHf9Q=
+X-Received: by 2002:ac2:4c38:: with SMTP id u24mr990839lfq.45.1571979122321;
+ Thu, 24 Oct 2019 21:52:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102504-0012-0000-0000-0000035D3A48
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102504-0013-0000-0000-000021986F40
-Message-Id: <20191025044721.16617-11-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=933 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910250045
+References: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20191024185540.GF1870@kunai>
+In-Reply-To: <20191024185540.GF1870@kunai>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Fri, 25 Oct 2019 10:21:51 +0530
+Message-ID: <CAHO=5PGCZxBmbJ3rXM5WVLcRF3FecaLYFa7Rx3W=FeikpDHfuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] i2c: iproc: Add i2c repeated start capability
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Michael Cheng <ccheng@broadcom.com>,
+        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Icarus Chau <icarus.chau@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
-
-This patch allows the user to bind OpenCAPI SCM devices to the generic OCXL
-driver.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- drivers/misc/ocxl/Kconfig | 7 +++++++
- drivers/misc/ocxl/pci.c   | 3 +++
- 2 files changed, 10 insertions(+)
-
-diff --git a/drivers/misc/ocxl/Kconfig b/drivers/misc/ocxl/Kconfig
-index 1916fa65f2f2..8a683715c97c 100644
---- a/drivers/misc/ocxl/Kconfig
-+++ b/drivers/misc/ocxl/Kconfig
-@@ -29,3 +29,10 @@ config OCXL
- 	  dedicated OpenCAPI link, and don't follow the same protocol.
- 
- 	  If unsure, say N.
-+
-+config OCXL_SCM_GENERIC
-+	bool "Treat OpenCAPI Storage Class Memory as a generic OpenCAPI device"
-+	default n
-+	help
-+	  Select this option to treat OpenCAPI Storage Class Memory
-+	  devices an generic OpenCAPI devices.
-diff --git a/drivers/misc/ocxl/pci.c b/drivers/misc/ocxl/pci.c
-index cb920aa88d3a..7137055c1883 100644
---- a/drivers/misc/ocxl/pci.c
-+++ b/drivers/misc/ocxl/pci.c
-@@ -10,6 +10,9 @@
-  */
- static const struct pci_device_id ocxl_pci_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x062B), },
-+#ifdef CONFIG_OCXL_SCM_GENERIC
-+	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
-+#endif
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, ocxl_pci_tbl);
--- 
-2.21.0
-
+On Fri, Oct 25, 2019 at 12:25 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> On Mon, Sep 30, 2019 at 12:14:29PM +0530, Rayagonda Kokatanur wrote:
+> > From: Lori Hikichi <lori.hikichi@broadcom.com>
+> >
+> > Enable handling of i2c repeated start. The current code
+> > handles a multi msg i2c transfer as separate i2c bus
+> > transactions. This change will now handle this case
+> > using the i2c repeated start protocol. The number of msgs
+> > in a transfer is limited to two, and must be a write
+> > followed by a read.
+> >
+> > Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
+> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > Signed-off-by: Icarus Chau <icarus.chau@broadcom.com>
+> > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> > Signed-off-by: Shivaraj Shetty <sshetty1@broadcom.com>
+>
+> Patch looks good but doesn't apply for me on top of v5.4-rc4? What was
+> your base?
+>
+> Also, I will apply it to for-next (v5.5). If you want it for v5.4, then
+> please add a Fixes tag.
+>
+thank you, please apply it to for-next (v5.5).
+Do I need to resend patch again for you to apply it to v5.5 ?
