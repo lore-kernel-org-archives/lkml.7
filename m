@@ -2,171 +2,166 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C69CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE9E20684
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9919206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N0sE4R4O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GCGwtzIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfJYTaE (ORCPT
+        id S1727185AbfJYTbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:30:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35134 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJYTaD (ORCPT
+        Fri, 25 Oct 2019 15:31:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41744 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727143AbfJYTbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:30:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eRmEhu6UaEE9aDlNXBAMxFiri2OdztWgkwKxSJoiZ7s=; b=N0sE4R4O6dRfbhhWJpeT2AZCV
-        5qYj2nO9mONNABKxdKeG5MU9hjSvSqIyIU/ZowuG3q1df2Mt5b6L+AEwwrbVGmuivPhzfAeVJsuxe
-        llD1ZFLQL8MHpA+KduLWRmHp1xqT5+hgS0V74Gbm2Q6SBS0aiuD7nf2S4lhioXwcIDbFUMXVC69cd
-        sAxkeE42hfhRi7u5Uk01raoShpsq6U9iHP2Pw9nd67tEF4E8QjAgzWESB5Q2DGv0bce9YhNnJoKZW
-        MteCGtihh7nGLw56DwWPDYGsUoTc8+U428/IpU9P7mnAMWKyWZs6VtULssZFyI084NS1MW9EwpdOH
-        Bo2KVaH4Q==;
-Received: from [2601:1c0:6280:3f0::9ef4]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iO5He-0003Ig-Tg; Fri, 25 Oct 2019 19:30:02 +0000
-Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative
- paths
-To:     "Keller, Jacob E" <jacob.e.keller@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-References: <20190129204319.15238-1-jacob.e.keller@intel.com>
- <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
- <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
- <CAK7LNARyUEakeG_N9TWcO2cjFSzbgY__k_QJm6C+oOz+fW0aeg@mail.gmail.com>
- <02874ECE860811409154E81DA85FBB58968E1402@ORSMSX121.amr.corp.intel.com>
- <CAK7LNARAhZtzdnS9+mgtamj=pLdV81dudnYVDa8NRxcQPpF0bw@mail.gmail.com>
- <02874ECE860811409154E81DA85FBB589693A38A@ORSMSX121.amr.corp.intel.com>
- <CAK7LNAQow8N9a5e_=pu7qDiuvETy1x1P5fxp20zYOZgQhXPJhg@mail.gmail.com>
- <02874ECE860811409154E81DA85FBB589693D053@ORSMSX121.amr.corp.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6127ec91-ad81-f0d7-576e-22e06e677442@infradead.org>
-Date:   Fri, 25 Oct 2019 12:30:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 25 Oct 2019 15:31:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572031871;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=S/xdyRsNHfBtMV1DseEdmIGdbbGR2o5yNrdis2nPB90=;
+        b=GCGwtzIoxjzM6lnkp+VC4SKvWbmXBIPc1e5SvJMM48oaWR1LZmyitjZ2RItJ/2i7A/B/RR
+        +6/Q1DTR7dt43inkEnyfigvp5o/dqfq9dxGKyhD4OHccq438O5kPRyZgE7EUSd8AXwlmFI
+        0EljLm+kuKZINroHIVjnSYYsGgHaBwg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-u90dXLTROhOmVtUgkgnK3A-1; Fri, 25 Oct 2019 15:31:06 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12C715E6;
+        Fri, 25 Oct 2019 19:31:05 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-117-192.phx2.redhat.com [10.3.117.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0E2160852;
+        Fri, 25 Oct 2019 19:31:04 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
+Subject: [PATCH v2] tpm: Add major_version sysfs file
+Date:   Fri, 25 Oct 2019 12:31:03 -0700
+Message-Id: <20191025193103.30226-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <02874ECE860811409154E81DA85FBB589693D053@ORSMSX121.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: u90dXLTROhOmVtUgkgnK3A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 10:45 AM, Keller, Jacob E wrote:
-> 
->> -----Original Message-----
->> From: Masahiro Yamada <yamada.masahiro@socionext.com>
->> Sent: Wednesday, October 23, 2019 6:22 PM
->> To: Keller, Jacob E <jacob.e.keller@intel.com>
->> Cc: Randy Dunlap <rdunlap@infradead.org>; intel-wired-lan@lists.osuosl.org;
->> linux-kernel@vger.kernel.org; linux-kbuild <linux-kbuild@vger.kernel.org>
->> Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative
->> paths
->>
->> On Thu, Oct 24, 2019 at 6:34 AM Keller, Jacob E
->> <jacob.e.keller@intel.com> wrote:
->>>
->>>> -----Original Message-----
->>>> From: Masahiro Yamada <yamada.masahiro@socionext.com>
->>>> Sent: Tuesday, October 22, 2019 10:22 PM
->>>> To: Keller, Jacob E <jacob.e.keller@intel.com>; Randy Dunlap
->>>> <rdunlap@infradead.org>
->>>> Cc: intel-wired-lan@lists.osuosl.org; linux-kernel@vger.kernel.org; linux-
->> kbuild
->>>> <linux-kbuild@vger.kernel.org>
->>>> Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative
->>>> paths
->>>>
->>>> This scripts has been 5-year broken,
->>>> and I did not see any complaint except from you.
->>>> So, I wonder how many people are using this.
->>>>
->>>> Nor, do I understand how to use it.
->>>>
->>>> Could you teach me a bit more about this script?
->>>>
->>>>
->>>>
->>>> Something might be missing in my mind, but
->>>> I do not know how to use this script in a useful way.
->>>>
->>>>
->>>>
->>>> It provides three checks.
->>>>
->>>> [1] list_multiply_defined()
->>>>
->>>> This warns multiple definition of functions.
->>>>
->>>> The compiler would fail if it saw any multiple definition,
->>>> so the reports from this check are all false-positive.
->>>>
->>>>
->>>> [2] resolve_external_references()
->>>>
->>>> This warns unresolved symbols.
->>>>
->>>> The compiler would fail if it saw any unresolved symbol,
->>>> so the reports from this check are all false-positive, too.
->>>>
->>>>
->>>
->>> The compiler won't necessarily fail when building modules, because the symbol
->> might be in another loadable module.
->>
->> Right, but this is already checked by modpost, isn't it?
->>
->>
->>
->>>>
->>>>
->>>> [3] list_extra_externals
->>>>
->>>> This warns symbols with no reference.
->>>>
->>>> This potentially contains lots of false-positives.
->>>> For example, the core framework provides APIs, but if all drivers
->>>> are disabled, there is no user of those APIs.
->>>>
->>>
->>> We use this to help verify that driver modules do not expose symbols.
->>
->> Ah, the output is quite large, so
->> you search for only modules in your interest. Right?
->>
-> 
-> We run it on only one module at a time, yes.
-> 
->>
->> If you want to detect missing 'static',
->> have you tried 'sparse'?
->>
-> 
-> We've used that as well. 
-> 
-> To be fair, I agree that it covers similar functionality as other tools. I haven't looked directly at namespace.pl output in a while, and the fix here is multiple years old that took a long time to get picked up.
-> 
-> If it's agreed that the tool has no value, and especially if it results in false indications of a problem, then maybe removing it to prevent someone from mis-reading its output makes sense?
+Easily determining what TCG version a tpm device implements
+has been a pain point for userspace for a long time, so
+add a sysfs file to report the TCG version of a tpm device.
 
-If there is a satisfactory alternative, I expect that namespace.pl is old,
-unmaintained, and unneeded, and should go away.
+Also add an entry to Documentation/ABI/stable/sysfs-class-tpm
+describing the new file.
 
--- 
-~Randy
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-integrity@vger.kernel.org
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+v2: - Fix TCG usage in commit message.
+    - Add entry to sysfs-class-tpm in Documentation/ABI/stable
+
+ Documentation/ABI/stable/sysfs-class-tpm | 11 ++++++++
+ drivers/char/tpm/tpm-sysfs.c             | 34 +++++++++++++++++++-----
+ 2 files changed, 38 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/ABI/stable/sysfs-class-tpm b/Documentation/ABI/s=
+table/sysfs-class-tpm
+index c0e23830f56a..c6bd02bafafd 100644
+--- a/Documentation/ABI/stable/sysfs-class-tpm
++++ b/Documentation/ABI/stable/sysfs-class-tpm
+@@ -183,3 +183,14 @@ Description:=09The "timeouts" property shows the 4 ven=
+dor-specific values
+ =09=09The four timeout values are shown in usecs, with a trailing
+ =09=09"[original]" or "[adjusted]" depending on whether the values
+ =09=09were scaled by the driver to be reported in usec from msecs.
++
++What:=09=09/sys/class/tpm/tpmX/major_version
++Date:=09=09October 2019
++KernelVersion:=095.5
++Contact:=09linux-integrity@vger.kernel.org
++Description:=09The "major_version" property shows the TCG spec version
++=09=09implemented by the TPM device.
++
++=09=09Example output:
++
++=09=092.0
+diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
+index edfa89160010..9372c2d6f0b3 100644
+--- a/drivers/char/tpm/tpm-sysfs.c
++++ b/drivers/char/tpm/tpm-sysfs.c
+@@ -309,7 +309,17 @@ static ssize_t timeouts_show(struct device *dev, struc=
+t device_attribute *attr,
+ }
+ static DEVICE_ATTR_RO(timeouts);
+=20
+-static struct attribute *tpm_dev_attrs[] =3D {
++static ssize_t major_version_show(struct device *dev,
++=09=09=09=09  struct device_attribute *attr, char *buf)
++{
++=09struct tpm_chip *chip =3D to_tpm_chip(dev);
++
++=09return sprintf(buf, "%s\n", chip->flags & TPM_CHIP_FLAG_TPM2
++=09=09       ? "2.0" : "1.2");
++}
++static DEVICE_ATTR_RO(major_version);
++
++static struct attribute *tpm12_dev_attrs[] =3D {
+ =09&dev_attr_pubek.attr,
+ =09&dev_attr_pcrs.attr,
+ =09&dev_attr_enabled.attr,
+@@ -320,18 +330,28 @@ static struct attribute *tpm_dev_attrs[] =3D {
+ =09&dev_attr_cancel.attr,
+ =09&dev_attr_durations.attr,
+ =09&dev_attr_timeouts.attr,
++=09&dev_attr_major_version.attr,
+ =09NULL,
+ };
+=20
+-static const struct attribute_group tpm_dev_group =3D {
+-=09.attrs =3D tpm_dev_attrs,
++static struct attribute *tpm20_dev_attrs[] =3D {
++=09&dev_attr_major_version.attr,
++=09NULL
++};
++
++static const struct attribute_group tpm12_dev_group =3D {
++=09.attrs =3D tpm12_dev_attrs,
++};
++
++static const struct attribute_group tpm20_dev_group =3D {
++=09.attrs =3D tpm20_dev_attrs,
+ };
+=20
+ void tpm_sysfs_add_device(struct tpm_chip *chip)
+ {
+-=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
+-=09=09return;
+-
+ =09WARN_ON(chip->groups_cnt !=3D 0);
+-=09chip->groups[chip->groups_cnt++] =3D &tpm_dev_group;
++=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
++=09=09chip->groups[chip->groups_cnt++] =3D &tpm20_dev_group;
++=09else
++=09=09chip->groups[chip->groups_cnt++] =3D &tpm12_dev_group;
+ }
+--=20
+2.23.0
 
