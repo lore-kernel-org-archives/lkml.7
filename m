@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CDECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE1FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8E021D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F0C21D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012359;
-	bh=5RWzo9QEth0RFKVssuXKnx/G3xiOpNSN1TtPLBONbeI=;
+	s=default; t=1572012363;
+	bh=dohttlxCdPOApquhLN5tpx4Dij76s6ZKsW9LgIRt4JA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2uGOQfXQIh7uvuZnqVB3149M9m5ktp67sC/tsL6GGuAs9bdr/U+848xr3PH0izJo
-	 CZaPSPCiV1Gqfj6Toim9NYLiMq4vGsdoDZ+/jMGa4I9v/fAWXF8weD30KiYVi+niMY
-	 CIZy4Txa4eXYXwXmbklHOSIuTLPITJmSCzxSHqbU=
+	b=w+ZsCssGo6HMxomQaZw1njp4IsgNldHM0NibrAQH5R5JhHXc04npjHf5E8d4DMMn7
+	 ArGAsFhuggGc1lRvV6qv2vLd0NIulWKGyh2wHhfEu0HhW4cMUQSMVLStU7PlhQmcOM
+	 IBtrHSakLKS9RdCeXXjpxsXCPTBpL4N/XYJhz478=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505185AbfJYNzz (ORCPT
+        id S2395324AbfJYOGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:06:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632745AbfJYNzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:55:43 -0400
+        id S2505176AbfJYNzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:55:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26843222C2;
-        Fri, 25 Oct 2019 13:55:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 707CF21E6F;
+        Fri, 25 Oct 2019 13:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011742;
-        bh=5RWzo9QEth0RFKVssuXKnx/G3xiOpNSN1TtPLBONbeI=;
+        s=default; t=1572011753;
+        bh=dohttlxCdPOApquhLN5tpx4Dij76s6ZKsW9LgIRt4JA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3ylLd1lVvyoh8VETzhb4yfP06+tlKHLgFa527iXcvqaGmMcEpx7eQamtVtXWVgak
-         Ijd1ZgNxeA2eIHhXC6HwsZsyY2mL2oY3lNt3ML3bi5F5K/ke0AV31OcoLAH2/uVj2E
-         l5Yu6KyNIIs95sBZHqb6duzmMxLC1KD+3PX4wRbw=
+        b=dGWN9ABomd9HNkhILbNdgiXIrGfGDjayvQ+2TufNqUoWWenYxTzYNPZPtR8S4skKE
+         Y5taYdaq5Ev/le2up46dK0ynUdxIvCkNYC1Ofy/blXOJDkUjYlzI1jmy5TPXWQKotO
+         ryYebQdbTRBCz9INkaXaWWLZ+5Md2IWPwNoYyF+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 23/33] Btrfs: fix inode cache block reserve leak on failure to allocate data space
-Date:   Fri, 25 Oct 2019 09:54:55 -0400
-Message-Id: <20191025135505.24762-23-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.3 30/33] bdi: Do not use freezable workqueue
+Date:   Fri, 25 Oct 2019 09:55:02 -0400
+Message-Id: <20191025135505.24762-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -58,233 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 29d47d00e0ae61668ee0c5d90bef2893c8abbafa ]
+[ Upstream commit a2b90f11217790ec0964ba9c93a4abb369758c26 ]
 
-If we failed to allocate the data extent(s) for the inode space cache, we
-were bailing out without releasing the previously reserved metadata. This
-was triggering the following warnings when unmounting a filesystem:
+A removable block device, such as NVMe or SSD connected over Thunderbolt
+can be hot-removed any time including when the system is suspended. When
+device is hot-removed during suspend and the system gets resumed, kernel
+first resumes devices and then thaws the userspace including freezable
+workqueues. What happens in that case is that the NVMe driver notices
+that the device is unplugged and removes it from the system. This ends
+up calling bdi_unregister() for the gendisk which then schedules
+wb_workfn() to be run one more time.
 
-  $ cat -n fs/btrfs/inode.c
-  (...)
-  9268  void btrfs_destroy_inode(struct inode *inode)
-  9269  {
-  (...)
-  9276          WARN_ON(BTRFS_I(inode)->block_rsv.reserved);
-  9277          WARN_ON(BTRFS_I(inode)->block_rsv.size);
-  (...)
-  9281          WARN_ON(BTRFS_I(inode)->csum_bytes);
-  9282          WARN_ON(BTRFS_I(inode)->defrag_bytes);
-  (...)
+However, since the bdi_wq is still frozen flush_delayed_work() call in
+wb_shutdown() blocks forever halting system resume process. User sees
+this as hang as nothing is happening anymore.
 
-Several fstests test cases triggered this often, such as generic/083,
-generic/102, generic/172, generic/269 and generic/300 at least, producing
-stack traces like the following in dmesg/syslog:
+Triggering sysrq-w reveals this:
 
-  [82039.079546] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9276 btrfs_destroy_inode+0x203/0x270 [btrfs]
-  (...)
-  [82039.081543] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.081912] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.082673] RIP: 0010:btrfs_destroy_inode+0x203/0x270 [btrfs]
-  (...)
-  [82039.083913] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010206
-  [82039.084320] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
-  [82039.084736] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8dde29b34660
-  [82039.085156] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.085578] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
-  [82039.086000] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
-  [82039.086416] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
-  [82039.086837] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.087253] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
-  [82039.087672] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.088089] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.088504] Call Trace:
-  [82039.088918]  destroy_inode+0x3b/0x70
-  [82039.089340]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
-  [82039.089768]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
-  [82039.090183]  ? wait_for_completion+0x65/0x1a0
-  [82039.090607]  close_ctree+0x172/0x370 [btrfs]
-  [82039.091021]  generic_shutdown_super+0x6c/0x110
-  [82039.091427]  kill_anon_super+0xe/0x30
-  [82039.091832]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.092233]  deactivate_locked_super+0x3a/0x70
-  [82039.092636]  cleanup_mnt+0x3b/0x80
-  [82039.093039]  task_work_run+0x93/0xc0
-  [82039.093457]  exit_to_usermode_loop+0xfa/0x100
-  [82039.093856]  do_syscall_64+0x162/0x1d0
-  [82039.094244]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.094634] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.095876] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.096290] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.096700] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.097110] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.097522] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.097937] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.098350] irq event stamp: 0
-  [82039.098750] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.099150] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.099545] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.099925] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.100292] ---[ end trace f2521afa616ddccc ]---
-  [82039.100707] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9277 btrfs_destroy_inode+0x1ac/0x270 [btrfs]
-  (...)
-  [82039.103050] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.103428] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.104203] RIP: 0010:btrfs_destroy_inode+0x1ac/0x270 [btrfs]
-  (...)
-  [82039.105461] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010206
-  [82039.105866] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
-  [82039.106270] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8dde29b34660
-  [82039.106673] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.107078] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
-  [82039.107487] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
-  [82039.107894] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
-  [82039.108309] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.108723] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
-  [82039.109146] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.109567] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.109989] Call Trace:
-  [82039.110405]  destroy_inode+0x3b/0x70
-  [82039.110830]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
-  [82039.111257]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
-  [82039.111675]  ? wait_for_completion+0x65/0x1a0
-  [82039.112101]  close_ctree+0x172/0x370 [btrfs]
-  [82039.112519]  generic_shutdown_super+0x6c/0x110
-  [82039.112988]  kill_anon_super+0xe/0x30
-  [82039.113439]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.113861]  deactivate_locked_super+0x3a/0x70
-  [82039.114278]  cleanup_mnt+0x3b/0x80
-  [82039.114685]  task_work_run+0x93/0xc0
-  [82039.115083]  exit_to_usermode_loop+0xfa/0x100
-  [82039.115476]  do_syscall_64+0x162/0x1d0
-  [82039.115863]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.116254] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.117463] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.117882] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.118330] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.118743] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.119159] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.119574] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.119987] irq event stamp: 0
-  [82039.120387] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.120787] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.121182] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.121563] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.121933] ---[ end trace f2521afa616ddccd ]---
-  [82039.122353] WARNING: CPU: 2 PID: 13167 at fs/btrfs/inode.c:9278 btrfs_destroy_inode+0x1bc/0x270 [btrfs]
-  (...)
-  [82039.124606] CPU: 2 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.125008] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.125801] RIP: 0010:btrfs_destroy_inode+0x1bc/0x270 [btrfs]
-  (...)
-  [82039.126998] RSP: 0018:ffffac0b426a7d30 EFLAGS: 00010202
-  [82039.127399] RAX: ffff8ddf77691158 RBX: ffff8dde29b34660 RCX: 0000000000000002
-  [82039.127803] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff8dde29b34660
-  [82039.128206] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.128611] R10: ffffac0b426a7c90 R11: ffffffffb9aad768 R12: ffffac0b426a7db0
-  [82039.129020] R13: ffff8ddf5fbec0a0 R14: dead000000000100 R15: 0000000000000000
-  [82039.129428] FS:  00007f8db96d12c0(0000) GS:ffff8de036b00000(0000) knlGS:0000000000000000
-  [82039.129846] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.130261] CR2: 0000000001416108 CR3: 00000002315cc001 CR4: 00000000003606e0
-  [82039.130684] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.131142] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.131561] Call Trace:
-  [82039.131990]  destroy_inode+0x3b/0x70
-  [82039.132417]  btrfs_free_fs_root+0x16/0xa0 [btrfs]
-  [82039.132844]  btrfs_free_fs_roots+0xd8/0x160 [btrfs]
-  [82039.133262]  ? wait_for_completion+0x65/0x1a0
-  [82039.133688]  close_ctree+0x172/0x370 [btrfs]
-  [82039.134157]  generic_shutdown_super+0x6c/0x110
-  [82039.134575]  kill_anon_super+0xe/0x30
-  [82039.134997]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.135415]  deactivate_locked_super+0x3a/0x70
-  [82039.135832]  cleanup_mnt+0x3b/0x80
-  [82039.136239]  task_work_run+0x93/0xc0
-  [82039.136637]  exit_to_usermode_loop+0xfa/0x100
-  [82039.137029]  do_syscall_64+0x162/0x1d0
-  [82039.137418]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.137812] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.139059] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.139475] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.139890] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.140302] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.140719] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.141138] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.141597] irq event stamp: 0
-  [82039.142043] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.142443] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.142839] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.143220] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.143588] ---[ end trace f2521afa616ddcce ]---
-  [82039.167472] WARNING: CPU: 3 PID: 13167 at fs/btrfs/extent-tree.c:10120 btrfs_free_block_groups+0x30d/0x460 [btrfs]
-  (...)
-  [82039.173800] CPU: 3 PID: 13167 Comm: umount Tainted: G        W         5.2.0-rc4-btrfs-next-50 #1
-  [82039.174847] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626ccb91-prebuilt.qemu-project.org 04/01/2014
-  [82039.177031] RIP: 0010:btrfs_free_block_groups+0x30d/0x460 [btrfs]
-  (...)
-  [82039.180397] RSP: 0018:ffffac0b426a7dd8 EFLAGS: 00010206
-  [82039.181574] RAX: ffff8de010a1db40 RBX: ffff8de010a1db40 RCX: 0000000000170014
-  [82039.182711] RDX: ffff8ddff4380040 RSI: ffff8de010a1da58 RDI: 0000000000000246
-  [82039.183817] RBP: ffff8ddf5fbec000 R08: 0000000000000000 R09: 0000000000000000
-  [82039.184925] R10: ffff8de036404380 R11: ffffffffb8a5ea00 R12: ffff8de010a1b2b8
-  [82039.186090] R13: ffff8de010a1b2b8 R14: 0000000000000000 R15: dead000000000100
-  [82039.187208] FS:  00007f8db96d12c0(0000) GS:ffff8de036b80000(0000) knlGS:0000000000000000
-  [82039.188345] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  [82039.189481] CR2: 00007fb044005170 CR3: 00000002315cc006 CR4: 00000000003606e0
-  [82039.190674] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  [82039.191829] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  [82039.192978] Call Trace:
-  [82039.194160]  close_ctree+0x19a/0x370 [btrfs]
-  [82039.195315]  generic_shutdown_super+0x6c/0x110
-  [82039.196486]  kill_anon_super+0xe/0x30
-  [82039.197645]  btrfs_kill_super+0x12/0xa0 [btrfs]
-  [82039.198696]  deactivate_locked_super+0x3a/0x70
-  [82039.199619]  cleanup_mnt+0x3b/0x80
-  [82039.200559]  task_work_run+0x93/0xc0
-  [82039.201505]  exit_to_usermode_loop+0xfa/0x100
-  [82039.202436]  do_syscall_64+0x162/0x1d0
-  [82039.203339]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [82039.204091] RIP: 0033:0x7f8db8fbab37
-  (...)
-  [82039.206360] RSP: 002b:00007ffdce35b468 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-  [82039.207132] RAX: 0000000000000000 RBX: 0000560d20b00060 RCX: 00007f8db8fbab37
-  [82039.207906] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000560d20b00240
-  [82039.208621] RBP: 0000560d20b00240 R08: 0000560d20b00270 R09: 0000000000000015
-  [82039.209285] R10: 00000000000006b4 R11: 0000000000000246 R12: 00007f8db94bce64
-  [82039.209984] R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffdce35b6f0
-  [82039.210642] irq event stamp: 0
-  [82039.211306] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  [82039.211971] hardirqs last disabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.212643] softirqs last  enabled at (0): [<ffffffffb7884ff2>] copy_process.part.33+0x7f2/0x1f00
-  [82039.213304] softirqs last disabled at (0): [<0000000000000000>] 0x0
-  [82039.213875] ---[ end trace f2521afa616ddccf ]---
+  Workqueue: nvme-wq nvme_remove_dead_ctrl_work [nvme]
+  Call Trace:
+   ? __schedule+0x2c5/0x630
+   ? wait_for_completion+0xa4/0x120
+   schedule+0x3e/0xc0
+   schedule_timeout+0x1c9/0x320
+   ? resched_curr+0x1f/0xd0
+   ? wait_for_completion+0xa4/0x120
+   wait_for_completion+0xc3/0x120
+   ? wake_up_q+0x60/0x60
+   __flush_work+0x131/0x1e0
+   ? flush_workqueue_prep_pwqs+0x130/0x130
+   bdi_unregister+0xb9/0x130
+   del_gendisk+0x2d2/0x2e0
+   nvme_ns_remove+0xed/0x110 [nvme_core]
+   nvme_remove_namespaces+0x96/0xd0 [nvme_core]
+   nvme_remove+0x5b/0x160 [nvme]
+   pci_device_remove+0x36/0x90
+   device_release_driver_internal+0xdf/0x1c0
+   nvme_remove_dead_ctrl_work+0x14/0x30 [nvme]
+   process_one_work+0x1c2/0x3f0
+   worker_thread+0x48/0x3e0
+   kthread+0x100/0x140
+   ? current_work+0x30/0x30
+   ? kthread_park+0x80/0x80
+   ret_from_fork+0x35/0x40
 
-Fix this by releasing the reserved metadata on failure to allocate data
-extent(s) for the inode cache.
+This is not limited to NVMes so exactly same issue can be reproduced by
+hot-removing SSD (over Thunderbolt) while the system is suspended.
 
-Fixes: 69fe2d75dd91d0 ("btrfs: make the delalloc block rsv per inode")
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Prevent this from happening by removing WQ_FREEZABLE from bdi_wq.
+
+Reported-by: AceLan Kao <acelan.kao@canonical.com>
+Link: https://marc.info/?l=linux-kernel&m=138695698516487
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=204385
+Link: https://lore.kernel.org/lkml/20191002122136.GD2819@lahna.fi.intel.com/#t
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode-map.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/backing-dev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index 84b2c9ee52a74..45db4fb4b9599 100644
---- a/fs/btrfs/inode-map.c
-+++ b/fs/btrfs/inode-map.c
-@@ -486,6 +486,7 @@ int btrfs_save_ino_cache(struct btrfs_root *root,
- 					      prealloc, prealloc, &alloc_hint);
- 	if (ret) {
- 		btrfs_delalloc_release_extents(BTRFS_I(inode), prealloc, true);
-+		btrfs_delalloc_release_metadata(BTRFS_I(inode), prealloc, true);
- 		goto out_put;
- 	}
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index e8e89158adec6..553372b39178c 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -236,8 +236,8 @@ static int __init default_bdi_init(void)
+ {
+ 	int err;
+ 
+-	bdi_wq = alloc_workqueue("writeback", WQ_MEM_RECLAIM | WQ_FREEZABLE |
+-					      WQ_UNBOUND | WQ_SYSFS, 0);
++	bdi_wq = alloc_workqueue("writeback", WQ_MEM_RECLAIM | WQ_UNBOUND |
++				 WQ_SYSFS, 0);
+ 	if (!bdi_wq)
+ 		return -ENOMEM;
  
 -- 
 2.20.1
