@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF67CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E811ACA9EBE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D95222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0341222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011898;
-	bh=KWU7BHtW1MjfF5bDFuWkOZ9ClbP7k9UzxG8j4pcmr1I=;
+	s=default; t=1572011901;
+	bh=AicnZ9XfDMx3XkBE1GCecASN86fDAtFADqghqLPnsv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQYyuAb1AVL0+MirC4aBzppLJzdetL/4PInNAD+Gmprkmvu14F7H8mNZTZkB3/Mku
-	 f0e2CfHwn84M9kW4hDBlonC1fbBHd2jPqW+Mae5iAxX5JqjcbE/CtOokcoK9e71WMu
-	 jth/t07cnuf7AaX2z7gECcKN2YA1aNhEuoTWPnHw=
+	b=rcbjwydv8GhcLoWoWjNH2uUXqNdXHw0nJtZXOJAWTD/I8ymXdUWCMuI88C7lxBgoI
+	 I0GS4OryNVgCJ5yQX1xVQOLSSGEUfxcOAeENtil82AsT69+Irs6cxDQaXltJjnfFeT
+	 ctFtpW8u1QhrJI3WVfprIlxQWtdrIf3/UjrCg/cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505512AbfJYN6Q (ORCPT
+        id S2505532AbfJYN6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732654AbfJYN6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:13 -0400
+        id S2505505AbfJYN6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCE79222BE;
-        Fri, 25 Oct 2019 13:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D649222C4;
+        Fri, 25 Oct 2019 13:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011892;
-        bh=KWU7BHtW1MjfF5bDFuWkOZ9ClbP7k9UzxG8j4pcmr1I=;
+        s=default; t=1572011895;
+        bh=AicnZ9XfDMx3XkBE1GCecASN86fDAtFADqghqLPnsv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVFj28ukSLkya+ZoN4WpxTlOcKHrgBkYK+uhDx6kl3rNsNNwSF7spuw49BZSS+A2Y
-         /Uuyf0rHhcWa2WA6eOlKYlvV92vLSdvRYAgBQq/fulKt/Jsn4pUpMfLqPIt8zD82ph
-         d4t1jWOSLXE5KJl7DP+YqgCzZdyOHkli8ha+KL70=
+        b=bVpuGDrS+Vt5HVI9bA+RhmHkcPh6/YW8g2/XgJdKJGeSKX8Gkb9EagmQH+h8FWRjS
+         SdABbT3Cfjjipx2hu46V4Jqj/ZPrvVpe79EjBhxX9Jx/yrjimsDRuIICoSl6bu7/yv
+         yjcoqJgrm6Dd5yPYEfbj8vSd1vrjjMAdRWLj+glk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 05/20] powerpc/pseries/hvconsole: Fix stack overread via udbg
-Date:   Fri, 25 Oct 2019 09:57:45 -0400
-Message-Id: <20191025135801.25739-5-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 07/20] drm/msm: stop abusing dma_map/unmap for cache
+Date:   Fri, 25 Oct 2019 09:57:47 -0400
+Message-Id: <20191025135801.25739-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
 References: <20191025135801.25739-1-sashal@kernel.org>
@@ -59,114 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 934bda59f286d0221f1a3ebab7f5156a996cc37d ]
+[ Upstream commit 0036bc73ccbe7e600a3468bf8e8879b122252274 ]
 
-While developing KASAN for 64-bit book3s, I hit the following stack
-over-read.
+Recently splats like this started showing up:
 
-It occurs because the hypercall to put characters onto the terminal
-takes 2 longs (128 bits/16 bytes) of characters at a time, and so
-hvc_put_chars() would unconditionally copy 16 bytes from the argument
-buffer, regardless of supplied length. However, udbg_hvc_putc() can
-call hvc_put_chars() with a single-byte buffer, leading to the error.
+   WARNING: CPU: 4 PID: 251 at drivers/iommu/dma-iommu.c:451 __iommu_dma_unmap+0xb8/0xc0
+   Modules linked in: ath10k_snoc ath10k_core fuse msm ath mac80211 uvcvideo cfg80211 videobuf2_vmalloc videobuf2_memops vide
+   CPU: 4 PID: 251 Comm: kworker/u16:4 Tainted: G        W         5.2.0-rc5-next-20190619+ #2317
+   Hardware name: LENOVO 81JL/LNVNB161216, BIOS 9UCN23WW(V1.06) 10/25/2018
+   Workqueue: msm msm_gem_free_work [msm]
+   pstate: 80c00005 (Nzcv daif +PAN +UAO)
+   pc : __iommu_dma_unmap+0xb8/0xc0
+   lr : __iommu_dma_unmap+0x54/0xc0
+   sp : ffff0000119abce0
+   x29: ffff0000119abce0 x28: 0000000000000000
+   x27: ffff8001f9946648 x26: ffff8001ec271068
+   x25: 0000000000000000 x24: ffff8001ea3580a8
+   x23: ffff8001f95ba010 x22: ffff80018e83ba88
+   x21: ffff8001e548f000 x20: fffffffffffff000
+   x19: 0000000000001000 x18: 00000000c00001fe
+   x17: 0000000000000000 x16: 0000000000000000
+   x15: ffff000015b70068 x14: 0000000000000005
+   x13: 0003142cc1be1768 x12: 0000000000000001
+   x11: ffff8001f6de9100 x10: 0000000000000009
+   x9 : ffff000015b78000 x8 : 0000000000000000
+   x7 : 0000000000000001 x6 : fffffffffffff000
+   x5 : 0000000000000fff x4 : ffff00001065dbc8
+   x3 : 000000000000000d x2 : 0000000000001000
+   x1 : fffffffffffff000 x0 : 0000000000000000
+   Call trace:
+    __iommu_dma_unmap+0xb8/0xc0
+    iommu_dma_unmap_sg+0x98/0xb8
+    put_pages+0x5c/0xf0 [msm]
+    msm_gem_free_work+0x10c/0x150 [msm]
+    process_one_work+0x1e0/0x330
+    worker_thread+0x40/0x438
+    kthread+0x12c/0x130
+    ret_from_fork+0x10/0x18
+   ---[ end trace afc0dc5ab81a06bf ]---
 
-  ==================================================================
-  BUG: KASAN: stack-out-of-bounds in hvc_put_chars+0xdc/0x110
-  Read of size 8 at addr c0000000023e7a90 by task swapper/0
+Not quite sure what triggered that, but we really shouldn't be abusing
+dma_{map,unmap}_sg() for cache maint.
 
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.2.0-rc2-next-20190528-02824-g048a6ab4835b #113
-  Call Trace:
-    dump_stack+0x104/0x154 (unreliable)
-    print_address_description+0xa0/0x30c
-    __kasan_report+0x20c/0x224
-    kasan_report+0x18/0x30
-    __asan_report_load8_noabort+0x24/0x40
-    hvc_put_chars+0xdc/0x110
-    hvterm_raw_put_chars+0x9c/0x110
-    udbg_hvc_putc+0x154/0x200
-    udbg_write+0xf0/0x240
-    console_unlock+0x868/0xd30
-    register_console+0x970/0xe90
-    register_early_udbg_console+0xf8/0x114
-    setup_arch+0x108/0x790
-    start_kernel+0x104/0x784
-    start_here_common+0x1c/0x534
-
-  Memory state around the buggy address:
-   c0000000023e7980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   c0000000023e7a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1
-  >c0000000023e7a80: f1 f1 01 f2 f2 f2 00 00 00 00 00 00 00 00 00 00
-                           ^
-   c0000000023e7b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   c0000000023e7b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ==================================================================
-
-Document that a 16-byte buffer is requred, and provide it in udbg.
-
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190630124735.27786-1-robdclark@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/hvconsole.c |  2 +-
- drivers/tty/hvc/hvc_vio.c                  | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/msm_gem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/hvconsole.c b/arch/powerpc/platforms/pseries/hvconsole.c
-index 74da18de853af..73ec15cd27080 100644
---- a/arch/powerpc/platforms/pseries/hvconsole.c
-+++ b/arch/powerpc/platforms/pseries/hvconsole.c
-@@ -62,7 +62,7 @@ EXPORT_SYMBOL(hvc_get_chars);
-  * @vtermno: The vtermno or unit_address of the adapter from which the data
-  *	originated.
-  * @buf: The character buffer that contains the character data to send to
-- *	firmware.
-+ *	firmware. Must be at least 16 bytes, even if count is less than 16.
-  * @count: Send this number of characters.
-  */
- int hvc_put_chars(uint32_t vtermno, const char *buf, int count)
-diff --git a/drivers/tty/hvc/hvc_vio.c b/drivers/tty/hvc/hvc_vio.c
-index b05dc50866279..8bab8b00d47d6 100644
---- a/drivers/tty/hvc/hvc_vio.c
-+++ b/drivers/tty/hvc/hvc_vio.c
-@@ -120,6 +120,14 @@ static int hvterm_raw_get_chars(uint32_t vtermno, char *buf, int count)
- 	return got;
- }
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 795660e29b2ce..a472d4d902dde 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -106,7 +106,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
+ 		 * because display controller, GPU, etc. are not coherent:
+ 		 */
+ 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-			dma_map_sg(dev->dev, msm_obj->sgt->sgl,
++			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
+ 					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+ 	}
  
-+/**
-+ * hvterm_raw_put_chars: send characters to firmware for given vterm adapter
-+ * @vtermno: The virtual terminal number.
-+ * @buf: The characters to send. Because of the underlying hypercall in
-+ *       hvc_put_chars(), this buffer must be at least 16 bytes long, even if
-+ *       you are sending fewer chars.
-+ * @count: number of chars to send.
-+ */
- static int hvterm_raw_put_chars(uint32_t vtermno, const char *buf, int count)
- {
- 	struct hvterm_priv *pv = hvterm_privs[vtermno];
-@@ -232,6 +240,7 @@ static const struct hv_ops hvterm_hvsi_ops = {
- static void udbg_hvc_putc(char c)
- {
- 	int count = -1;
-+	unsigned char bounce_buffer[16];
+@@ -124,7 +124,7 @@ static void put_pages(struct drm_gem_object *obj)
+ 			 * GPU, etc. are not coherent:
+ 			 */
+ 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
+-				dma_unmap_sg(obj->dev->dev, msm_obj->sgt->sgl,
++				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
+ 					     msm_obj->sgt->nents,
+ 					     DMA_BIDIRECTIONAL);
  
- 	if (!hvterm_privs[0])
- 		return;
-@@ -242,7 +251,12 @@ static void udbg_hvc_putc(char c)
- 	do {
- 		switch(hvterm_privs[0]->proto) {
- 		case HV_PROTOCOL_RAW:
--			count = hvterm_raw_put_chars(0, &c, 1);
-+			/*
-+			 * hvterm_raw_put_chars requires at least a 16-byte
-+			 * buffer, so go via the bounce buffer
-+			 */
-+			bounce_buffer[0] = c;
-+			count = hvterm_raw_put_chars(0, bounce_buffer, 1);
- 			break;
- 		case HV_PROTOCOL_HVSI:
- 			count = hvterm_hvsi_put_chars(0, &c, 1);
 -- 
 2.20.1
 
