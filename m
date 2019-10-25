@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21761CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08B7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90CF21D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF88222CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011867;
-	bh=yLvyAnHAEgczV4YdF+b+23Rh3pGAHOvTyZQMjPJaQYg=;
+	s=default; t=1572011868;
+	bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LjQCkMLQfl+mdmf5tp2lcR3VSHESYyKs157rXvHfo4Ti9OhKXEXD+BvTKjS6Ke/cL
-	 7KOF84lgU6VyZVCUyp26JWFhk70dv8CJHa3g0HNYHqq4fVxIx/tO1DSZcQ+a47iZtU
-	 WmVXEK1pJKugARDMBxE/CQFSuLX2HBjcQlBFTglk=
+	b=Dc8BdebVLk4Uc4bUqUbBfcYMVOArF+JYL7vGMx3wRkyoSNcVjxPth2RDfYHOPyXtj
+	 v9wLK5IMEdttmjmzFwuZMXwhWj7Fkiruae2kv03ctNiHjOl/Tq0tJRqVr+35IS5DUn
+	 7dt5G6RGFaYcSNZSZEt5QmmRIkwh6rY1w3jr5FyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfJYN5p (ORCPT
+        id S2394843AbfJYN5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52598 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389590AbfJYN5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:39 -0400
+        id S2505369AbfJYN5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05F9921D82;
-        Fri, 25 Oct 2019 13:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9DF721D82;
+        Fri, 25 Oct 2019 13:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011858;
-        bh=yLvyAnHAEgczV4YdF+b+23Rh3pGAHOvTyZQMjPJaQYg=;
+        s=default; t=1572011864;
+        bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UDNV480b07ghtqQbUFVoG5tnYK7ciF/5TrukKHgu5HUFm1LhiZbIMTOSPHdpCN7b4
-         +Yyp27dRdTtd6/6ReI55GVqFJA9ReiaZmaYl1LVYtLbAhZe56MIeoB0nTLfEgXmU9b
-         5HHPFUq0DL6SJLc69Cl3QgGJl4y2hFRkbuqZiYw0=
+        b=PQjQIDXYyoe5gJoQ1j0uZyR/NAFUpAoaXGuyiMWSuihvCCLBgebDamrxzsHkPKQQZ
+         aWnfiUh0xTp4bgRH489mp+45Iy6bh79i5Gxg/pBWPKkoVQfoKPIJACQtDEPxl8WwXE
+         WtyvS3WLfX7ff3qsHbnj7D8G0MgobB11HceRxNZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
-        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
+Cc:     Johan Hovold <johan@kernel.org>,
+        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/25] llc: fix sk_buff leak in llc_sap_state_process()
-Date:   Fri, 25 Oct 2019 09:57:02 -0400
-Message-Id: <20191025135715.25468-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 16/25] NFC: pn533: fix use-after-free and memleaks
+Date:   Fri, 25 Oct 2019 09:57:04 -0400
+Message-Id: <20191025135715.25468-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135715.25468-1-sashal@kernel.org>
 References: <20191025135715.25468-1-sashal@kernel.org>
@@ -61,134 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit c6ee11c39fcc1fb55130748990a8f199e76263b4 ]
+[ Upstream commit 6af3aa57a0984e061f61308fe181a9a12359fecc ]
 
-syzbot reported:
+The driver would fail to deregister and its class device and free
+related resources on late probe errors.
 
-    BUG: memory leak
-    unreferenced object 0xffff888116270800 (size 224):
-       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
-       hex dump (first 32 bytes):
-         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
-       backtrace:
-         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
-         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
-         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
-         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
-         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
-         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
-         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
-         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
-         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-	 [...]
-
-The bug is that llc_sap_state_process() always takes an extra reference
-to the skb, but sometimes neither llc_sap_next_state() nor
-llc_sap_state_process() itself drops this reference.
-
-Fix it by changing llc_sap_next_state() to never consume a reference to
-the skb, rather than sometimes do so and sometimes not.  Then remove the
-extra skb_get() and kfree_skb() from llc_sap_state_process().
-
-Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
-Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
+Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_s_ac.c | 12 +++++++++---
- net/llc/llc_sap.c  | 23 ++++++++---------------
- 2 files changed, 17 insertions(+), 18 deletions(-)
+ drivers/nfc/pn533/usb.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/net/llc/llc_s_ac.c b/net/llc/llc_s_ac.c
-index a94bd56bcac6f..7ae4cc684d3ab 100644
---- a/net/llc/llc_s_ac.c
-+++ b/net/llc/llc_s_ac.c
-@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sap *sap, struct sk_buff *skb)
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_ui_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index 5d823e965883b..fcb57d64d97e6 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -559,18 +559,25 @@ static int pn533_usb_probe(struct usb_interface *interface,
  
-@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc_sap *sap, struct sk_buff *skb)
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
+ 	rc = pn533_finalize_setup(priv);
+ 	if (rc)
+-		goto error;
++		goto err_deregister;
  
-@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct llc_sap *sap, struct sk_buff *skb)
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_test_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
+ 	usb_set_intfdata(interface, phy);
  
-diff --git a/net/llc/llc_sap.c b/net/llc/llc_sap.c
-index d90928f502260..a7534950e60a1 100644
---- a/net/llc/llc_sap.c
-+++ b/net/llc/llc_sap.c
-@@ -197,29 +197,22 @@ static int llc_sap_next_state(struct llc_sap *sap, struct sk_buff *skb)
-  *	After executing actions of the event, upper layer will be indicated
-  *	if needed(on receiving an UI frame). sk can be null for the
-  *	datalink_proto case.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
- {
- 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
+ 	return 0;
  
--	/*
--	 * We have to hold the skb, because llc_sap_next_state
--	 * will kfree it in the sending path and we need to
--	 * look at the skb->cb, where we encode llc_sap_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_cfm_flag = 0;
- 	llc_sap_next_state(sap, skb);
--	if (ev->ind_cfm_flag == LLC_IND) {
--		if (skb->sk->sk_state == TCP_LISTEN)
--			kfree_skb(skb);
--		else {
--			llc_save_primitive(skb->sk, skb, ev->prim);
- 
--			/* queue skb to the user. */
--			if (sock_queue_rcv_skb(skb->sk, skb))
--				kfree_skb(skb);
--		}
-+	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
-+		llc_save_primitive(skb->sk, skb, ev->prim);
++err_deregister:
++	pn533_unregister_device(phy->priv);
+ error:
++	usb_kill_urb(phy->in_urb);
++	usb_kill_urb(phy->out_urb);
++	usb_kill_urb(phy->ack_urb);
 +
-+		/* queue skb to the user. */
-+		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
-+			return;
- 	}
- 	kfree_skb(skb);
+ 	usb_free_urb(phy->in_urb);
+ 	usb_free_urb(phy->out_urb);
+ 	usb_free_urb(phy->ack_urb);
+ 	usb_put_dev(phy->udev);
+ 	kfree(in_buf);
++	kfree(phy->ack_buffer);
+ 
+ 	return rc;
  }
 -- 
 2.20.1
