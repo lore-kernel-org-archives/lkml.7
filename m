@@ -2,94 +2,65 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164A2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA86CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73EB206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572018550;
-	bh=yjAaE0xQhH20vJrkI1srEKz9AtxqLuI40WnRKCUXgj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zUTTPz9abo3Ng2L+BThSI64cl8M1kzgB+Ifa0LRtwvm58c9Z0HltqGXDACpmuv21q
-	 bAUegWU4tmF75ZYjBD2m+BA09mVcYo2BX9P/VMbgZcZrKo6BrVpnUL+eNPVOmgwty2
-	 CwPbgI42vLwwcXQMIG9L65xVoDIv6032XkUpvnD8=
+	by mail.kernel.org (Postfix) with ESMTP id 79B39206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502263AbfJYPtI (ORCPT
+        id S2395528AbfJYPum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 11:50:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:42564 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502051AbfJYPtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:49:05 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F39206DD;
-        Fri, 25 Oct 2019 15:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572018545;
-        bh=yjAaE0xQhH20vJrkI1srEKz9AtxqLuI40WnRKCUXgj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0cgKbZZFBv4uMey3849inISOi+o8JI/NP51o1L8I+z1XUhBRwjCrkqDC7OKZ2wpue
-         5uHXeoI08lQR31eMc4qNzUO+kgiEFikYiwzmbTzR+To6Itq+Q5QHFTxWU9zp0JlKCF
-         RkFlUdCpVDOuS+vNw3wOE0etJU5F0p6s7wp/Pp7U=
-Date:   Fri, 25 Oct 2019 11:49:03 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mahesh Bandewar <maheshb@google.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.3 12/33] blackhole_netdev: fix syzkaller
- reported issue
-Message-ID: <20191025154903.GH31224@sasha-vm>
-References: <20191025135505.24762-1-sashal@kernel.org>
- <20191025135505.24762-12-sashal@kernel.org>
+        id S2388136AbfJYPum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:50:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 605AC328;
+        Fri, 25 Oct 2019 08:50:41 -0700 (PDT)
+Received: from C02TF0J2HF1T.local (C02TF0J2HF1T.cambridge.arm.com [10.1.26.186])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04E5F3F71A;
+        Fri, 25 Oct 2019 08:50:38 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 16:50:36 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 09/10] arm/arm64: Make use of the SMCCC 1.1 wrapper
+Message-ID: <20191025155036.GA999@C02TF0J2HF1T.local>
+References: <20191021152823.14882-1-steven.price@arm.com>
+ <20191021152823.14882-10-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025135505.24762-12-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191021152823.14882-10-steven.price@arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 09:54:44AM -0400, Sasha Levin wrote:
->From: Mahesh Bandewar <maheshb@google.com>
->
->[ Upstream commit b0818f80c8c1bc215bba276bd61c216014fab23b ]
->
->While invalidating the dst, we assign backhole_netdev instead of
->loopback device. However, this device does not have idev pointer
->and hence no ip6_ptr even if IPv6 is enabled. Possibly this has
->triggered the syzbot reported crash.
->
->The syzbot report does not have reproducer, however, this is the
->only device that doesn't have matching idev created.
->
->Crash instruction is :
->
->static inline bool ip6_ignore_linkdown(const struct net_device *dev)
->{
->        const struct inet6_dev *idev = __in6_dev_get(dev);
->
->        return !!idev->cnf.ignore_routes_with_linkdown; <= crash
->}
->
->Also ipv6 always assumes presence of idev and never checks for it
->being NULL (as does the above referenced code). So adding a idev
->for the blackhole_netdev to avoid this class of crashes in the future.
->
->Signed-off-by: David S. Miller <davem@davemloft.net>
->Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Mon, Oct 21, 2019 at 04:28:22PM +0100, Steven Price wrote:
+> Rather than directly choosing which function to use based on
+> psci_ops.conduit, use the new arm_smccc_1_1 wrapper instead.
+> 
+> In some cases we still need to do some operations based on the
+> conduit, but the code duplication is removed.
+> 
+> No functional change.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-I've dropped this patch.
-
--- 
-Thanks,
-Sasha
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
