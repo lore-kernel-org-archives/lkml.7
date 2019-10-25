@@ -2,133 +2,78 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBA5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05396CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFB120867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC45B21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408471AbfJYLNo (ORCPT
+        id S2408659AbfJYLNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:13:44 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:43724 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfJYLNn (ORCPT
+        Fri, 25 Oct 2019 07:13:45 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:44324 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404433AbfJYLNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:13:43 -0400
+        Fri, 25 Oct 2019 07:13:45 -0400
 Received: from ramsan ([84.195.182.253])
-        by albert.telenet-ops.be with bizsmtp
-        id HnDi210045USYZQ06nDiaV; Fri, 25 Oct 2019 13:13:42 +0200
+        by xavier.telenet-ops.be with bizsmtp
+        id HnDi2100b5USYZQ01nDiZ5; Fri, 25 Oct 2019 13:13:43 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNxSN-0003rD-SW; Fri, 25 Oct 2019 13:08:35 +0200
+        id 1iNxSN-0003rD-Pb; Fri, 25 Oct 2019 13:08:35 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNvlG-00068o-No; Fri, 25 Oct 2019 11:19:58 +0200
+        id 1iNvpN-0006Go-9V; Fri, 25 Oct 2019 11:24:13 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH resend] i2c: core: Use DEVICE_ATTR_RW() helper macros
-Date:   Fri, 25 Oct 2019 11:19:50 +0200
-Message-Id: <20191025091950.23563-1-geert+renesas@glider.be>
+Subject: [PATCH] drm/bridge: ti-tfp410: Update drm_connector_init_with_ddc() error message
+Date:   Fri, 25 Oct 2019 11:24:11 +0200
+Message-Id: <20191025092411.24059-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i2c core sysfs attributes from DEVICE_ATTR() to
-DEVICE_ATTR_RW(), to reduce boilerplate.
-This requires renaming some functions.
+The code was changed to call drm_connector_init_with_ddc() instead of
+drm_connector_init(), but the corresponding error message was not
+updated.
 
-Although no suitable macro exists for the delete_device attribute,
-rename i2c_sysfs_delete_device() to delete_device_store() for
-consistency.
-
+Fixes: cfb444552926989f ("drm/bridge: ti-tfp410: Provide ddc symlink in connector sysfs directory")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/i2c/i2c-core-base.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+v2:
+  - Add Reviewed-by.
+---
+ drivers/gpu/drm/bridge/ti-tfp410.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 5f6a4985f2bc8f33..8f6940063c294b9c 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -449,15 +449,15 @@ static void i2c_client_dev_release(struct device *dev)
- }
+diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
+index aa3198dc9903cefb..5ca4c0417c186e6e 100644
+--- a/drivers/gpu/drm/bridge/ti-tfp410.c
++++ b/drivers/gpu/drm/bridge/ti-tfp410.c
+@@ -140,7 +140,8 @@ static int tfp410_attach(struct drm_bridge *bridge)
+ 					  dvi->connector_type,
+ 					  dvi->ddc);
+ 	if (ret) {
+-		dev_err(dvi->dev, "drm_connector_init() failed: %d\n", ret);
++		dev_err(dvi->dev, "drm_connector_init_with_ddc() failed: %d\n",
++			ret);
+ 		return ret;
+ 	}
  
- static ssize_t
--show_name(struct device *dev, struct device_attribute *attr, char *buf)
-+name_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%s\n", dev->type == &i2c_client_type ?
- 		       to_i2c_client(dev)->name : to_i2c_adapter(dev)->name);
- }
--static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
-+static DEVICE_ATTR_RO(name);
- 
- static ssize_t
--show_modalias(struct device *dev, struct device_attribute *attr, char *buf)
-+modalias_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	int len;
-@@ -472,7 +472,7 @@ show_modalias(struct device *dev, struct device_attribute *attr, char *buf)
- 
- 	return sprintf(buf, "%s%s\n", I2C_MODULE_PREFIX, client->name);
- }
--static DEVICE_ATTR(modalias, S_IRUGO, show_modalias, NULL);
-+static DEVICE_ATTR_RO(modalias);
- 
- static struct attribute *i2c_dev_attrs[] = {
- 	&dev_attr_name.attr,
-@@ -1039,8 +1039,8 @@ EXPORT_SYMBOL_GPL(i2c_adapter_depth);
-  * the user to provide incorrect parameters.
-  */
- static ssize_t
--i2c_sysfs_new_device(struct device *dev, struct device_attribute *attr,
--		     const char *buf, size_t count)
-+new_device_store(struct device *dev, struct device_attribute *attr,
-+		 const char *buf, size_t count)
- {
- 	struct i2c_adapter *adap = to_i2c_adapter(dev);
- 	struct i2c_board_info info;
-@@ -1095,7 +1095,7 @@ i2c_sysfs_new_device(struct device *dev, struct device_attribute *attr,
- 
- 	return count;
- }
--static DEVICE_ATTR(new_device, S_IWUSR, NULL, i2c_sysfs_new_device);
-+static DEVICE_ATTR_WO(new_device);
- 
- /*
-  * And of course let the users delete the devices they instantiated, if
-@@ -1107,8 +1107,8 @@ static DEVICE_ATTR(new_device, S_IWUSR, NULL, i2c_sysfs_new_device);
-  * the user to delete the wrong device.
-  */
- static ssize_t
--i2c_sysfs_delete_device(struct device *dev, struct device_attribute *attr,
--			const char *buf, size_t count)
-+delete_device_store(struct device *dev, struct device_attribute *attr,
-+		    const char *buf, size_t count)
- {
- 	struct i2c_adapter *adap = to_i2c_adapter(dev);
- 	struct i2c_client *client, *next;
-@@ -1151,7 +1151,7 @@ i2c_sysfs_delete_device(struct device *dev, struct device_attribute *attr,
- 	return res;
- }
- static DEVICE_ATTR_IGNORE_LOCKDEP(delete_device, S_IWUSR, NULL,
--				   i2c_sysfs_delete_device);
-+				  delete_device_store);
- 
- static struct attribute *i2c_adapter_attrs[] = {
- 	&dev_attr_name.attr,
 -- 
 2.17.1
 
