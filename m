@@ -2,145 +2,68 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE177CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F33CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CA520867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXsrzo3I"
+	by mail.kernel.org (Postfix) with ESMTP id 24FB720867
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406889AbfJYHbh (ORCPT
+        id S2406914AbfJYHb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:31:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39189 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403890AbfJYHbg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:31:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p12so970164pgn.6;
-        Fri, 25 Oct 2019 00:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/2N+MJXhRREUEbo0WZe6XYT3rSaV4YhCnP6qLL0FGS8=;
-        b=AXsrzo3I092Y+LE6biYcv8FyzQ4fX8QsV+U2vz82UpvgcFIwHIZQnJFEI4dhB+iIiL
-         hmz4mAFCVyx8n4wMKPznzBVJvwDF00mBMy06K8L5OxLSj9YmmpwlGt5+bwhYGAZ96ALN
-         e5DPtBaK7Hv+s9weHnEvY5r4MWX5lsA1dyDNc/mihZXXTO3NN/OfaWsFTszx4gz/QYWe
-         eL5wiCgh1DNXAaIzgUSo0LQzu/vjiW6V1RVqFksSsrq8mbzTcvHQQ5rr1ZkpsZbmu/iX
-         MeYYM0c83IBIp+4rCwpcg3+ifDvyUrWwxK6mT3QGcXTLmWpx6dkRsdesRq4pmrlEp5D3
-         cJeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/2N+MJXhRREUEbo0WZe6XYT3rSaV4YhCnP6qLL0FGS8=;
-        b=aHfQpZJVVI6uOdjWiBXfVOTI946pmgLUFWOXVkUSiRY11B0Uy4Plsdv9rJjOOLRogC
-         mVujaevfc7KcUNUd1nzHrj/Y83g8Zbg022cs6OkiM4X0iNkUedvv6ZLupqzENsZEo5i4
-         Ujz9xvuGRnXYb5mDMRrmOQLorR0W7Iu11QSFjgRLhbLk4r/smcWs1tgj3SZkfANMY1ww
-         uGE202s7CQqXGQ5b04YIAugKInLi3B/xreJPp34h9cp/2JfYl9yGMclDXyQ0SZDNZ58v
-         Q2wbxGzn36HKGIsBX01GCPbbF0TxVsLYevi/Ru/ZdSPytMRwClbyZlgXOpNBKSV9wp7Y
-         /T/A==
-X-Gm-Message-State: APjAAAXpVxdwvjPNbHP4Yb6/f7MtLyiyzK8wCe6gStm5V8xKEY+YMAHz
-        ZP5sPeqDaQeyBAx61J/g5d8=
-X-Google-Smtp-Source: APXvYqxmnZ8QV+Ivae6fUHJ98I73necM49LU2eHLmv2RYZMlhl/4p9p7L8eDApXo77Be+4/Lbtbo4w==
-X-Received: by 2002:a63:7448:: with SMTP id e8mr2665978pgn.268.1571988696197;
-        Fri, 25 Oct 2019 00:31:36 -0700 (PDT)
-Received: from localhost.localdomain ([103.231.91.67])
-        by smtp.gmail.com with ESMTPSA id y8sm1299823pgs.34.2019.10.25.00.31.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 00:31:35 -0700 (PDT)
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
-Cc:     torvalds@linux-foundation.org, rdunlap@infradead.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] scripts:patch-kernel:bash syntax replace
-Date:   Fri, 25 Oct 2019 12:58:53 +0530
-Message-Id: <20191025072852.356-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 25 Oct 2019 03:31:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405554AbfJYHb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:31:59 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 76B832B0C9F9B3549437;
+        Fri, 25 Oct 2019 15:31:55 +0800 (CST)
+Received: from huawei.com (10.175.104.225) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
+ 15:31:47 +0800
+From:   Hewenliang <hewenliang4@huawei.com>
+To:     <zephaniah@gmail.com>, <tglx@linutronix.de>, <len.brown@intel.com>,
+        <ben@decadent.org.uk>, <swinslow@gmail.com>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
+CC:     <linfeilong@huawei.com>, <hewenliang4@huawei.com>
+Subject: [PATCH] tools/power x86_energy_perf_policy: Fix the leakage of file descriptor in get_pkg_num
+Date:   Fri, 25 Oct 2019 03:31:46 -0400
+Message-ID: <20191025073146.23582-1-hewenliang4@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch will replace backquote with dollar parenthesis
-for better realdibility.
+we need close the file(fp pointer) before the return of get_pkg_num.
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Fixes: 4beec1d75 ("tools/power x86_energy_perf_policy: support HWP.EPP")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
 ---
- scripts/patch-kernel | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/patch-kernel b/scripts/patch-kernel
-index 033d5916797d..d864bbd67940 100755
---- a/scripts/patch-kernel
-+++ b/scripts/patch-kernel
-@@ -153,7 +153,7 @@ applyPatch () {
-     echo "failed.  Clean up yourself."
-     return 1;
-   fi
--  if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
-+  if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
-   then
-     echo "Aborting.  Reject files found."
-     return 1;
-@@ -175,7 +175,7 @@ reversePatch () {
- 		echo "failed.  Clean it up."
- 		exit 1
- 	fi
--	if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
-+	if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
- 	then
- 		echo "Aborting.  Reject files found."
- 		return 1
-@@ -189,7 +189,7 @@ reversePatch () {
- # set current VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION
- # force $TMPFILEs below to be in local directory: a slash character prevents
- # the dot command from using the search path.
--TMPFILE=`mktemp ./.tmpver.XXXXXX` || { echo "cannot make temp file" ; exit 1; }
-+TMPFILE=$(mktemp ./.tmpver.XXXXXX$( || { echo "cannot make temp file" ; exit 1; }
- grep -E "^(VERSION|PATCHLEVEL|SUBLEVEL|EXTRAVERSION)" $sourcedir/Makefile > $TMPFILE
- tr -d [:blank:] < $TMPFILE > $TMPFILE.1
- . $TMPFILE.1
-@@ -200,7 +200,7 @@ then
-     exit 1
- fi
-
--NAME=`grep ^NAME $sourcedir/Makefile`
-+NAME=$(grep ^NAME $sourcedir/Makefile)
- NAME=${NAME##*=}
-
- echo "Current kernel version is $VERSION.$PATCHLEVEL.$SUBLEVEL${EXTRAVERSION} ($NAME)"
-@@ -216,8 +216,8 @@ fi
-
- #echo "stopvers=$stopvers"
- if [ $stopvers != "default" ]; then
--	STOPSUBLEVEL=`echo $stopvers | cut -d. -f3`
--	STOPEXTRA=`echo $stopvers | cut -d. -f4`
-+	STOPSUBLEVEL=$(echo $stopvers | cut -d. -f3)
-+	STOPEXTRA=$(echo $stopvers | cut -d. -f4)
- 	STOPFULLVERSION=${stopvers%%.$STOPEXTRA}
- 	#echo "#___STOPSUBLEVEL=/$STOPSUBLEVEL/, STOPEXTRA=/$STOPEXTRA/"
- else
-@@ -306,7 +306,7 @@ if [ x$gotac != x ]; then
- 		HIGHESTPATCH=0
- 		for PATCHNAMES in $patchdir/patch-${CURRENTFULLVERSION}-ac*\.*
- 		do
--			ACVALUE=`echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/'`
-+			ACVALUE=$(echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/')
- 			# Check it is actually a recognised patch type
- 			findFile $patchdir/patch-${CURRENTFULLVERSION}-ac${ACVALUE} || break
-
---
-2.20.1
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index 3fe1eed900d4..165eb4da8a64 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -1111,6 +1111,7 @@ unsigned int get_pkg_num(int cpu)
+ 	retval = fscanf(fp, "%d\n", &pkg);
+ 	if (retval != 1)
+ 		errx(1, "%s: failed to parse", pathname);
++	fclose(fp);
+ 	return pkg;
+ }
+ 
+-- 
+2.19.1
 
