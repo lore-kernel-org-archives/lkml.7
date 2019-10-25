@@ -2,122 +2,134 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ABBCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F6CCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97C24222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pi2tVgiT"
+	by mail.kernel.org (Postfix) with ESMTP id B0A9D2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfJYVXX (ORCPT
+        id S1726225AbfJYVYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:23:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36777 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfJYVXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:23:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 23so2360208pgk.3;
-        Fri, 25 Oct 2019 14:23:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k7mM1YAB7j9cvjOb/HqAxXCujobS240Bo0w21vdsY1w=;
-        b=pi2tVgiT9aqazAYDlnNx3FH4kOZg6SRZoAAgVBh6VR/3pAbY5oJyJTHkSiIyF4CuU7
-         DMqs+bSwx/Crk7vDa/RyaL+R7mbs/orQI8QxMTaK8RR8cGZuA6ZnJ9y5dgAZPnASD0mu
-         9W1EPOyymwsRZqmkCKC0gw+5wWwVIiOyKhG3ewSsnDU/fKHV+03XVOf7jZczPLspH+8p
-         5z98dtNXwxLfcB/vZS4zvK7sHv54NVtq0N3ARlz3jcS8rQ24s/W3bA5PDZ2KellSPrRL
-         jJiZYZ/16rn5upnZ5Y1MjgLd6jC/9dAmyaaJC2MlHDFBiaQR//9cpX21UOVEzWIJ64Bl
-         3Akw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k7mM1YAB7j9cvjOb/HqAxXCujobS240Bo0w21vdsY1w=;
-        b=oRpfid64KGBkoyri7jrsK5UpLecGD5W09QUEt5f+nDHyS7gK3l1yJLR5w3D4XRDeap
-         kErbmx3Nti+bnrDjqXoDKRDlgHZTzpHfG+NB55YBSyNL9O9bfhxsDimJpLYYeaHreniL
-         25ljUJPVzJSQyOUtj1ID4htJiLUwe5SXQAKljRraXhlsQ1pEhVg+2hTW3trttY56dTqS
-         pOoBfY6ioFqb3uFTDt1v0Dlo+Hiu5g1h0tGNs+wrm/hcEHPIA656ecdAF+6v8AO3m2Ru
-         Hq6M57oV4Mv0a71Tb/YG7+Qk9laT9kLcbLHtNPwhn5BbHN6dMFcwBCrF6cyfQBEER1wE
-         iA8w==
-X-Gm-Message-State: APjAAAVJGQ+MfqDnv5Cvosyv8fVLh8ZOFLsE2MS9fXizPQowQcisPQEs
-        mdXNtF4qXB8F1yYtdV66Xw5qoZ9XvZI=
-X-Google-Smtp-Source: APXvYqzTFCBHjd13CWS/a0Gdd1iSXbr8uW7LLcyfqefhI2rLGrPSDKHAfWAbnkuii4ydDR+Pc8ayAw==
-X-Received: by 2002:a63:1d60:: with SMTP id d32mr6843817pgm.37.1572038601840;
-        Fri, 25 Oct 2019 14:23:21 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id a16sm4238064pfa.53.2019.10.25.14.23.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:23:21 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 25 Oct 2019 17:24:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41466 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725283AbfJYVYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 17:24:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 040CDB1C1;
+        Fri, 25 Oct 2019 21:24:09 +0000 (UTC)
+Subject: Re: [PATCH v2 1/8] dt-bindings: watchdog: realtek: Convert RTD119x to
+ schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: qcom: sdm845-cheza: delete zap-shader
-Date:   Fri, 25 Oct 2019 14:21:06 -0700
-Message-Id: <20191025212106.2657-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191020040817.16882-1-afaerber@suse.de>
+ <20191020040817.16882-2-afaerber@suse.de> <20191025211638.GA28819@bogus>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <aeb0d0ed-5649-9035-c753-39e8a1511c9d@suse.de>
+Date:   Fri, 25 Oct 2019 23:24:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191025211638.GA28819@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Am 25.10.19 um 23:16 schrieb Rob Herring:
+> On Sun, Oct 20, 2019 at 06:08:10AM +0200, Andreas Färber wrote:
+>> Convert the Realtek watchdog binding to a YAML schema.
+>>
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>  v2: New
+>>  
+>>  .../bindings/watchdog/realtek,rtd119x.txt          | 17 ----------
+>>  .../bindings/watchdog/realtek,rtd119x.yaml         | 38 ++++++++++++++++++++++
+>>  2 files changed, 38 insertions(+), 17 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
+>>  create mode 100644 Documentation/devicetree/bindings/watchdog/realtek,rtd119x.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt b/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
+>> deleted file mode 100644
+>> index 05653054bd5b..000000000000
+>> --- a/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
+>> +++ /dev/null
+>> @@ -1,17 +0,0 @@
+>> -Realtek RTD1295 Watchdog
+>> -========================
+>> -
+>> -Required properties:
+>> -
+>> -- compatible :  Should be "realtek,rtd1295-watchdog"
+>> -- reg        :  Specifies the physical base address and size of registers
+>> -- clocks     :  Specifies one clock input
+>> -
+>> -
+>> -Example:
+>> -
+>> -	watchdog@98007680 {
+>> -		compatible = "realtek,rtd1295-watchdog";
+>> -		reg = <0x98007680 0x100>;
+>> -		clocks = <&osc27M>;
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.yaml b/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.yaml
+>> new file mode 100644
+>> index 000000000000..5d92cfdfd046
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/realtek,rtd119x.yaml
+>> @@ -0,0 +1,38 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/watchdog/realtek,rtd119x.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Realtek RTD1295 Watchdog
+>> +
+>> +maintainers:
+>> +  - Andreas Färber <afaerber@suse.de>
+>> +
+>> +allOf:
+>> +  - $ref: watchdog.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    oneOf:
+>> +      - const: realtek,rtd1295-watchdog
+> 
+> You can drop the 'oneOf' here unless you're planning to add another 
+> entry with 2 compatible strings.
 
-This is unused on cheza.  Delete the node to get ride of the reserved-
-memory section, and to avoid the driver from attempting to load a zap
-shader that doesn't exist every time it powers up the GPU.
+It's a preparation for adding rtd1195-watchdog when needed, to make
+future diffs smaller. There's also RTD1395 and RTD1619 to be tested.
 
-(This also avoids a massive amount of dmesg spam about missing zap fw.)
+> 
+> With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+Thanks,
+Andreas
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 34881c0113cb..99a28d64ee62 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -165,6 +165,8 @@
- /delete-node/ &venus_mem;
- /delete-node/ &cdsp_mem;
- /delete-node/ &cdsp_pas;
-+/delete-node/ &zap_shader;
-+/delete-node/ &gpu_mem;
- 
- /* Increase the size from 120 MB to 128 MB */
- &mpss_region {
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index f406a4340b05..2287354fef86 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2824,7 +2824,7 @@
- 
- 			qcom,gmu = <&gmu>;
- 
--			zap-shader {
-+			zap_shader: zap-shader {
- 				memory-region = <&gpu_mem>;
- 			};
- 
 -- 
-2.21.0
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
