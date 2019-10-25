@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E999CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B21ACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59049222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38299222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012085;
-	bh=iBDissv+RAFwCtToVRjoa9uFXuIcswIIMG6AChOrBYg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKCfErfpS/j72Rnst2IXti5/l45mxGGFxj9qLOnRP9JXXiD26eiAQUJ87g7LNuHsk
-	 kocOG7NmB2euk+Xda3acaabU8Ckbi8Jp2J6aSP+YtNS2ynFUlRb61J4Wf8QsVG0JlQ
-	 EdVvlYO1FnalaganUU+bDULRIr9hElVS7oWk8hCw=
+	s=default; t=1572012097;
+	bh=47t+Nnmbk++aVQPPcj57svH35Wds3MJ6qI0wsT4LmTE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vn0GUZt0XdK8AvywPMNACIKJdV9arJkYW7YrbiINBaSddmzE/MvqU9CSc90yOYrQ7
+	 N3hfTy2Uon0elrIur0r1zpDk1n6qlg2mR+hRjbWPNriKWp/lAB6NWH+A/1LVmfSH/d
+	 ScLV6cHv0LSovzk+8jHevPGbYP9K8szxKO2VoftQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505549AbfJYN6X (ORCPT
+        id S2505475AbfJYN6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732654AbfJYN6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:18 -0400
+        id S2389701AbfJYN6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFAB7222CD;
-        Fri, 25 Oct 2019 13:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EE23222C2;
+        Fri, 25 Oct 2019 13:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011896;
-        bh=iBDissv+RAFwCtToVRjoa9uFXuIcswIIMG6AChOrBYg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jWcwYswdRTKyDUCIkheulVQKAdujauAFH3DEluDyxVaNWsCISfGAZkg/OKfn6j28d
-         rQf/bFcQETsaUXy8TDa5krPKlSWrstQPJOEfpvCnvULZts88tSwcdx8ZAhHN3Sp+LB
-         0FfJxxSH7ErvU27FWqlPOawzO0Vfs4hUlDuUtpkY=
+        s=default; t=1572011883;
+        bh=47t+Nnmbk++aVQPPcj57svH35Wds3MJ6qI0wsT4LmTE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1d27D0O609ZMBBRZPWFnlaMK7yVfvPh27IEOnkiVgBPpRN4yW/HQmdAO6S/tGBcmN
+         +W0t6pPjDFtKM0BuJ6iRDuWIla8/5hAiIeB9beg7g9cpvy74Fb7LaKQ5WSpSNLwP1Y
+         b8GygqRg/pFh6SbUaZWT6TvPHojTnpoBdCsDeH0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 08/20] drm/msm: Use the correct dma_sync calls in msm_gem
-Date:   Fri, 25 Oct 2019 09:57:48 -0400
-Message-Id: <20191025135801.25739-8-sashal@kernel.org>
+Cc:     Patrick Talbert <ptalbert@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/20] PCI/ASPM: Do not initialize link state when aspm_disabled is set
+Date:   Fri, 25 Oct 2019 09:57:41 -0400
+Message-Id: <20191025135801.25739-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
-References: <20191025135801.25739-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,148 +57,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Patrick Talbert <ptalbert@redhat.com>
 
-[ Upstream commit 3de433c5b38af49a5fc7602721e2ab5d39f1e69c ]
+[ Upstream commit 17c91487364fb33797ed84022564ee7544ac4945 ]
 
-[subject was: drm/msm: shake fist angrily at dma-mapping]
+Now that ASPM is configured for *all* PCIe devices at boot, a problem is
+seen with systems that set the FADT NO_ASPM bit.  This bit indicates that
+the OS should not alter the ASPM state, but when
+pcie_aspm_init_link_state() runs it only checks for !aspm_support_enabled.
+This misses the ACPI_FADT_NO_ASPM case because that is setting
+aspm_disabled.
 
-So, using dma_sync_* for our cache needs works out w/ dma iommu ops, but
-it falls appart with dma direct ops.  The problem is that, depending on
-display generation, we can have either set of dma ops (mdp4 and dpu have
-iommu wired to mdss node, which maps to toplevel drm device, but mdp5
-has iommu wired up to the mdp sub-node within mdss).
+The result is systems may hang at boot after 1302fcf; avoidable if they
+boot with pcie_aspm=off (sets !aspm_support_enabled).
 
-Fixes this splat on mdp5 devices:
+Fix this by having aspm_init_link_state() check for either
+!aspm_support_enabled or acpm_disabled.
 
-   Unable to handle kernel paging request at virtual address ffffffff80000000
-   Mem abort info:
-     ESR = 0x96000144
-     Exception class = DABT (current EL), IL = 32 bits
-     SET = 0, FnV = 0
-     EA = 0, S1PTW = 0
-   Data abort info:
-     ISV = 0, ISS = 0x00000144
-     CM = 1, WnR = 1
-   swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000810e4000
-   [ffffffff80000000] pgd=0000000000000000
-   Internal error: Oops: 96000144 [#1] SMP
-   Modules linked in: btqcomsmd btqca bluetooth cfg80211 ecdh_generic ecc rfkill libarc4 panel_simple msm wcnss_ctrl qrtr_smd drm_kms_helper venus_enc venus_dec videobuf2_dma_sg videobuf2_memops drm venus_core ipv6 qrtr qcom_wcnss_pil v4l2_mem2mem qcom_sysmon videobuf2_v4l2 qmi_helpers videobuf2_common crct10dif_ce mdt_loader qcom_common videodev qcom_glink_smem remoteproc bmc150_accel_i2c bmc150_magn_i2c bmc150_accel_core bmc150_magn snd_soc_lpass_apq8016 snd_soc_msm8916_analog mms114 mc nf_defrag_ipv6 snd_soc_lpass_cpu snd_soc_apq8016_sbc industrialio_triggered_buffer kfifo_buf snd_soc_lpass_platform snd_soc_msm8916_digital drm_panel_orientation_quirks
-   CPU: 2 PID: 33 Comm: kworker/2:1 Not tainted 5.3.0-rc2 #1
-   Hardware name: Samsung Galaxy A5U (EUR) (DT)
-   Workqueue: events deferred_probe_work_func
-   pstate: 80000005 (Nzcv daif -PAN -UAO)
-   pc : __clean_dcache_area_poc+0x20/0x38
-   lr : arch_sync_dma_for_device+0x28/0x30
-   sp : ffff0000115736a0
-   x29: ffff0000115736a0 x28: 0000000000000001
-   x27: ffff800074830800 x26: ffff000011478000
-   x25: 0000000000000000 x24: 0000000000000001
-   x23: ffff000011478a98 x22: ffff800009fd1c10
-   x21: 0000000000000001 x20: ffff800075ad0a00
-   x19: 0000000000000000 x18: ffff0000112b2000
-   x17: 0000000000000000 x16: 0000000000000000
-   x15: 00000000fffffff0 x14: ffff000011455d70
-   x13: 0000000000000000 x12: 0000000000000028
-   x11: 0000000000000001 x10: ffff00001106c000
-   x9 : ffff7e0001d6b380 x8 : 0000000000001000
-   x7 : ffff7e0001d6b380 x6 : ffff7e0001d6b382
-   x5 : 0000000000000000 x4 : 0000000000001000
-   x3 : 000000000000003f x2 : 0000000000000040
-   x1 : ffffffff80001000 x0 : ffffffff80000000
-   Call trace:
-    __clean_dcache_area_poc+0x20/0x38
-    dma_direct_sync_sg_for_device+0xb8/0xe8
-    get_pages+0x22c/0x250 [msm]
-    msm_gem_get_and_pin_iova+0xdc/0x168 [msm]
-    ...
-
-Fixes the combination of two patches:
-
-Fixes: 0036bc73ccbe (drm/msm: stop abusing dma_map/unmap for cache)
-Fixes: 449fa54d6815 (dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device)
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-[seanpaul changed subject to something more desriptive]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190730214633.17820-1-robdclark@gmail.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=201001
+Fixes: 1302fcf0d03e ("PCI: Configure *all* devices, not just hot-added ones")
+Signed-off-by: Patrick Talbert <ptalbert@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_gem.c | 47 +++++++++++++++++++++++++++++++----
- 1 file changed, 42 insertions(+), 5 deletions(-)
+ drivers/pci/pcie/aspm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index a472d4d902dde..569e8c45a59aa 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -40,6 +40,46 @@ static bool use_pages(struct drm_gem_object *obj)
- 	return !msm_obj->vram_node;
- }
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index b12fe65d07f82..f69a9180c5ffd 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -581,7 +581,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
+ 	struct pcie_link_state *link;
+ 	int blacklist = !!pcie_aspm_sanity_check(pdev);
  
-+/*
-+ * Cache sync.. this is a bit over-complicated, to fit dma-mapping
-+ * API.  Really GPU cache is out of scope here (handled on cmdstream)
-+ * and all we need to do is invalidate newly allocated pages before
-+ * mapping to CPU as uncached/writecombine.
-+ *
-+ * On top of this, we have the added headache, that depending on
-+ * display generation, the display's iommu may be wired up to either
-+ * the toplevel drm device (mdss), or to the mdp sub-node, meaning
-+ * that here we either have dma-direct or iommu ops.
-+ *
-+ * Let this be a cautionary tail of abstraction gone wrong.
-+ */
-+
-+static void sync_for_device(struct msm_gem_object *msm_obj)
-+{
-+	struct device *dev = msm_obj->base.dev->dev;
-+
-+	if (get_dma_ops(dev)) {
-+		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	} else {
-+		dma_map_sg(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	}
-+}
-+
-+static void sync_for_cpu(struct msm_gem_object *msm_obj)
-+{
-+	struct device *dev = msm_obj->base.dev->dev;
-+
-+	if (get_dma_ops(dev)) {
-+		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	} else {
-+		dma_unmap_sg(dev, msm_obj->sgt->sgl,
-+			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+	}
-+}
-+
- /* allocate pages from VRAM carveout, used when no IOMMU: */
- static struct page **get_pages_vram(struct drm_gem_object *obj,
- 		int npages)
-@@ -106,8 +146,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
- 		 * because display controller, GPU, etc. are not coherent:
- 		 */
- 		if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--			dma_sync_sg_for_device(dev->dev, msm_obj->sgt->sgl,
--					msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-+			sync_for_device(msm_obj);
- 	}
+-	if (!aspm_support_enabled)
++	if (!aspm_support_enabled || aspm_disabled)
+ 		return;
  
- 	return msm_obj->pages;
-@@ -124,9 +163,7 @@ static void put_pages(struct drm_gem_object *obj)
- 			 * GPU, etc. are not coherent:
- 			 */
- 			if (msm_obj->flags & (MSM_BO_WC|MSM_BO_UNCACHED))
--				dma_sync_sg_for_cpu(obj->dev->dev, msm_obj->sgt->sgl,
--					     msm_obj->sgt->nents,
--					     DMA_BIDIRECTIONAL);
-+				sync_for_cpu(msm_obj);
- 
- 			sg_free_table(msm_obj->sgt);
- 			kfree(msm_obj->sgt);
+ 	if (pdev->link_state)
 -- 
 2.20.1
 
