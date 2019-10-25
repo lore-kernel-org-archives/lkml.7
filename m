@@ -2,143 +2,165 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82BBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99A3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C58621D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:02:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4k77EVP"
+	by mail.kernel.org (Postfix) with ESMTP id 87D9021D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504159AbfJYMCy (ORCPT
+        id S2502563AbfJYMEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:02:54 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43646 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502539AbfJYMCy (ORCPT
+        Fri, 25 Oct 2019 08:04:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53086 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436494AbfJYMED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:02:54 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t20so2766368qtr.10
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U3muYkVb3sn/zD3GnI85KoquW1PDnagsDLGnaKlzxUg=;
-        b=f4k77EVP3oB4TFXVyejNteYMnBZxJxaPv8yN3YKZaUih/akVpJpz0PNswqsYe66tUn
-         N0ITsPRgnY4LreqhjwD5DBfzXKkKzwt1St7lMeCB0Yp8v2NQDZgGjx+M08dNoog9n7ZI
-         mewMpnX+8qU3u0sHTOjU7bPeMnjmGHRoDoOV8EFtaaaH/XqVYF0VmiVm9R36gf+bh0bq
-         65NWOFmTuUdi0Oe8GkOHKJOA94GrI7mONOr1/x4ChNNx+VnxHLPCTEjhVURKm3OeLg2K
-         +13SambnQ31yajHSVkLMYDmQ6jrTVqGB0z4jtVAkFbYGxThNppfkbg7ZfNKkOV3645qt
-         uWSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U3muYkVb3sn/zD3GnI85KoquW1PDnagsDLGnaKlzxUg=;
-        b=jueQwO7mho7iEp2P6s77sTqKlDmIxEF0Y2kgxUL7UA/oFcqILDAMu7eohVuM2H1fOX
-         nAYU/oj//J6kM9wrbH/qBRFPQO9VcK66okwXtn4+acjsoe7iFaYH2h+IBiD6tfldRtJ+
-         77sEV8WDMRgsR3wAdyUEU2pmrNAa/bWygMDRhlJqAlhO0Rt9x9gRzJAqYu6t1mwEDjV6
-         pkZslgrHdI5q0S5XFqd2R3BMf79H5SVNijwfdTLC09rLhvaDuH+YQrRw3zysBxYeBP0f
-         ut2NbpwbDbIJstozeSGzQprlrDwdFxQNYCBON7UAzuxcbjOWA/DNyUxHPUigIQiHt93A
-         LYfA==
-X-Gm-Message-State: APjAAAUQZF8VndASpE39ncg7PDOotIu/mVpTvan6iphN+WV7N+pR2cWo
-        u+Q4YT/LvTRk0B+y+uuc9OE=
-X-Google-Smtp-Source: APXvYqxyathMCAeGIRon/l7dS54Jlq7okRabEc4gt560TDidgz/g1QfGAoadWP2Sp4XPsfqiMddMXw==
-X-Received: by 2002:ac8:2a31:: with SMTP id k46mr2663074qtk.392.1572004971789;
-        Fri, 25 Oct 2019 05:02:51 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.179.80.16])
-        by smtp.gmail.com with ESMTPSA id 144sm1083827qkj.5.2019.10.25.05.02.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 05:02:50 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5894041199; Fri, 25 Oct 2019 09:02:48 -0300 (-03)
-Date:   Fri, 25 Oct 2019 09:02:48 -0300
-To:     Hewenliang <hewenliang4@huawei.com>
-Cc:     peterz@infradead.org, jolsa@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        ilubashe@akamai.com, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org, hushiyuan@huawei.com,
-        linfeilong@huawei.com
-Subject: Re: [PATCH] perf tools: Call closedir to release the resource before
- we return
-Message-ID: <20191025120248.GA23511@kernel.org>
-References: <20191025031605.23658-1-hewenliang4@huawei.com>
+        Fri, 25 Oct 2019 08:04:03 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PC2SXJ016312
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:04:03 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vucdsjnuu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:02:56 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Fri, 25 Oct 2019 13:00:41 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 25 Oct 2019 13:00:38 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PC0bFW17367244
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 12:00:37 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EABE7A4051;
+        Fri, 25 Oct 2019 12:00:36 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5CBF8A4057;
+        Fri, 25 Oct 2019 12:00:35 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.242])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 25 Oct 2019 12:00:35 +0000 (GMT)
+Subject: Re: [PATCH] sched/fair: Make sched-idle cpu selection consistent
+ throughout
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+References: <5eba2fb4af9ebc7396101bb9bd6c8aa9c8af0710.1571899508.git.viresh.kumar@linaro.org>
+ <7d3a1549-a99c-ae42-6074-8ed2ecd7074f@linux.ibm.com>
+ <20191025081108.6gaprbwm5fvokun6@vireshk-i7>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Fri, 25 Oct 2019 17:30:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025031605.23658-1-hewenliang4@huawei.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191025081108.6gaprbwm5fvokun6@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102512-4275-0000-0000-000003777F6C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102512-4276-0000-0000-0000388AAD04
+Message-Id: <3c8f52ac-4302-5152-2d57-2fe912e1ff9b@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910250114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Oct 24, 2019 at 11:16:05PM -0400, Hewenliang escreveu:
-> We should close the directory on pattern failure before the return
-> of rm_rf_depth_pat.
+
+
+On 10/25/19 1:41 PM, Viresh Kumar wrote:
+> On 25-10-19, 12:13, Parth Shah wrote:
+>> Hi Viresh,
+>>
+>> On 10/24/19 12:15 PM, Viresh Kumar wrote:
+>>> There are instances where we keep searching for an idle CPU despite
+>>> having a sched-idle cpu already (in find_idlest_group_cpu(),
+>>> select_idle_smt() and select_idle_cpu() and then there are places where
+>>> we don't necessarily do that and return a sched-idle cpu as soon as we
+>>> find one (in select_idle_sibling()). This looks a bit inconsistent and
+>>> it may be worth having the same policy everywhere.
+>>>
+>>> On the other hand, choosing a sched-idle cpu over a idle one shall be
+>>> beneficial from performance point of view as well, as we don't need to
+>>> get the cpu online from a deep idle state which is quite a time
+>>> consuming process and delays the scheduling of the newly wakeup task.
+>>>
+>>> This patch tries to simplify code around sched-idle cpu selection and
+>>> make it consistent throughout.
+>>>
+>>> FWIW, tests were done with the help of rt-app (8 SCHED_OTHER and 5
+>>> SCHED_IDLE tasks, not bound to any cpu) on ARM platform (octa-core), and
+>>> no significant difference in scheduling latency of SCHED_OTHER tasks was
+>>> found.
+>>>
+>>> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>> ---
+>>
+>> [...]
+>>
+>>> @@ -5755,13 +5749,11 @@ static int select_idle_smt(struct task_struct *p, int target)
+>>>  	for_each_cpu(cpu, cpu_smt_mask(target)) {
+>>>  		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+>>>  			continue;
+>>> -		if (available_idle_cpu(cpu))
+>>> +		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
+>>>  			return cpu;
+>>
+>> I guess this is a correct approach, but just wondering what if we still
+>> keep searching for a sched_idle CPU even though we have found an
+>> available_idle CPU?
 > 
-> Fixes: cdb6b0235f170 ("perf tools: Add pattern name checking to rm_rf")
-> Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-
-I've already applied:
-
-commit 6080728ff8e9c9116e52e6f840152356ac2fea56
-Author: Yunfeng Ye <yeyunfeng@huawei.com>
-Date:   Tue Oct 15 16:30:08 2019 +0800
-
-    perf tools: Fix resource leak of closedir() on the error paths
-    
-    Both build_mem_topology() and rm_rf_depth_pat() have resource leaks of
-    closedir() on the error paths.
-    
-    Fix this by calling closedir() before function returns.
-    
-    Fixes: e2091cedd51b ("perf tools: Add MEM_TOPOLOGY feature to perf data file")
-    Fixes: cdb6b0235f17 ("perf tools: Add pattern name checking to rm_rf")
-    Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-    Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-[acme@quaco perf]$ git tag --contains 6080728ff8e9c9116e52e6f840152356ac2fea56
-perf-urgent-for-mingo-5.4-20191017
-[acme@quaco perf]$ 
-
-It is already in tip/perf/urgent, should get to Linus soon.
-
-- Arnaldo
-
-> ---
->  tools/perf/util/util.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> I do believe selecting a sched-idle CPU should almost always be better
+> (performance wise), unless we have a strong argument against it. And
+> anyway, the load balancer will get triggered at a later point of time
+> and will pull away these newly wakeup tasks to idle CPUs. The
+> advantage we get out of it is that the tasks get serviced a bit
+> earlier when they first get queued.
 > 
-> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-> index 5eda6e19c947..1aadca8c43f3 100644
-> --- a/tools/perf/util/util.c
-> +++ b/tools/perf/util/util.c
-> @@ -154,8 +154,10 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
->  		if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."))
+> It is really up to the maintainers to see what kind of policy do we
+> want to adapt here and not a choice I can make :)
+> 
+
+yeah, I agree. I will favor selecting sched-idle first for smaller domains
+like SMT but would leave on experts.
+BTW, if sched-idle is given priority then maybe...
+> @@ -5818,13 +5810,11 @@ static int select_idle_cpu(struct task_struct *p,
+> struct sched_domain *sd, int t
+>
+>  	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
+>  		if (!--nr)
+> -			return si_cpu;
+> +			return -1;
+>  		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
 >  			continue;
->  
-> -		if (!match_pat(d->d_name, pat))
-> +		if (!match_pat(d->d_name, pat)) {
-> +			closedir(dir);
->  			return -2;
-> +		}
->  
->  		scnprintf(namebuf, sizeof(namebuf), "%s/%s",
->  			  path, d->d_name);
-> -- 
-> 2.19.1
+> -		if (available_idle_cpu(cpu))
+> +		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
+>  			break;
+...here too can be optimized I guess.
 
--- 
 
-- Arnaldo
+Thanks,
+Parth
+
