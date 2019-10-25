@@ -2,104 +2,102 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EEBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760E5CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E762A205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD5221872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DnmXcTuG"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ws9PLaNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505727AbfJYQ0v (ORCPT
+        id S2633039AbfJYQ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 12:26:51 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51640 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502714AbfJYQ0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:26:51 -0400
-Received: from zn.tnic (p200300EC2F0D3C00114ACBE854FF623C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:3c00:114a:cbe8:54ff:623c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EC34C1EC0CE8;
-        Fri, 25 Oct 2019 18:26:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1572020810;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=QNBNQdarg0dpZLohqWeIybHPr4TLX6P1ivjz+W78+CM=;
-        b=DnmXcTuGaBym1zEMBVWHXgE82fqZaXQ3+jXVHt8wA7J3TFThBKwlXqp5QfH0DkMQ32PwR9
-        wvjPkZ58XyV07bBK9xoacO4x3OmtjgZ1J2GKH9abz7nBwjVWw7258/GObXS9Ow4+uuZKJ7
-        c9I7hqwW0CGComP0MCM7YTa+cLO6qlY=
-Date:   Fri, 25 Oct 2019 18:26:45 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 05/16] KVM: VMX: Drop initialization of
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191025162645.GE6483@zn.tnic>
-References: <20191021234632.32363-1-sean.j.christopherson@intel.com>
- <20191022000820.1854-1-sean.j.christopherson@intel.com>
+        Fri, 25 Oct 2019 12:27:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36351 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505728AbfJYQ1z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 12:27:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id c16so3099336ioc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 09:27:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=RaDvY6LWZ/yZX1Gor0UyKnQkPXm7WlGMpaKJhq/jVms=;
+        b=ws9PLaNtS2Vs7N+gwq3wuxTl8ddkUm0eF3zqwKbupfigCYPVUJ7sr18qgftp+jHQ+K
+         jqgvoYgNUAz5GX8mRS0pqloApfqLkovP9aOKBJ8EcuSiXrJkhBhexauQ3F9AQ4ZKkZ66
+         BklMZXpMSe/W6VzpEo8cB7e5DL7NZihYMIouBZTtcsK8sw5iw/K19iYL7p2wHbXLiT9p
+         c4HmcEJwGWawKaWQQn6wOpmaAw557J5FMFeC6u1SSTN6enmBRUbhq0QeirxDcLKdwfvM
+         JCVZMzFILX+VtlmMIP5QpC2Qjrr89v9KM/hlwCEEg633WsTyF12Vbdu/I8itDWIY56Nf
+         Texw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RaDvY6LWZ/yZX1Gor0UyKnQkPXm7WlGMpaKJhq/jVms=;
+        b=Asf+lluyooKlRW7UgqfMowpOWHCSFge9R2kfFOI1ju7DEWLxO1PShdxMndNV78DjWF
+         rP3GFMAK4VvkoQ/HR7yUVA7iEsA7YyVJkQJO35QjQWsUr4jJxq8qfsDeeKL5nXkjN/up
+         9bkPvizn78XGKXkrd1ML4gKo/hWlnzHPAuR4G4R2jt670P1qPmAwS02P1Lk4PTQAopEs
+         SICyfyAL4X9IpNuWX3IbRdv3WGb6VIwDvZ5VVOeBzoVs72Yed1wWK1q/ehk19upcoGum
+         YyJtqVc13rSu26CskAPKqXXufugU6HZMUJfLEiTxyTc3vDXA6M4UTupRIjHXFoM1q3TG
+         Me4w==
+X-Gm-Message-State: APjAAAUJjzwLGwA0ILllp0URj5r2xaqNSvrKQ80Bo1r63+csaajD8iPf
+        5+nQIBS22vLA6AHtuvZyuMAwABKINoj8TQ==
+X-Google-Smtp-Source: APXvYqxXSmEHcQy85qGn/KxnpvoMemzTN/kWJyZmSFui3ekTNgy4YIHRWXy1SYpaWRsDxeahPYAK6A==
+X-Received: by 2002:a6b:c98e:: with SMTP id z136mr4182029iof.15.1572020872810;
+        Fri, 25 Oct 2019 09:27:52 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p5sm364983ils.32.2019.10.25.09.27.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 09:27:51 -0700 (PDT)
+Subject: Re: [BUG] io_uring: defer logic based on shared data
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
+ <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
+ <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
+Date:   Fri, 25 Oct 2019 10:27:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191022000820.1854-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 05:08:20PM -0700, Sean Christopherson wrote:
-> +	if (WARN_ON_ONCE(!(msr & FEATURE_CONTROL_LOCKED)))
-> +		return 1;
-> +
-> +	/* launched w/ TXT and VMX disabled */
-> +	if (!(msr & FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX) &&
-> +	    tboot_enabled())
-> +		return 1;
-> +	/* launched w/o TXT and VMX only enabled w/ TXT */
-> +	if (!(msr & FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX) &&
-> +	    (msr & FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX) &&
-> +	    !tboot_enabled()) {
-> +		pr_warn("kvm: disable TXT in the BIOS or "
-> +			"activate TXT before enabling KVM\n");
-> +		return 1;
+On 10/25/19 10:21 AM, Pavel Begunkov wrote:
+> On 25/10/2019 19:03, Jens Axboe wrote:
+>> On 10/25/19 3:55 AM, Pavel Begunkov wrote:
+>>> I found 2 problems with __io_sequence_defer().
+>>>
+>>> 1. it uses @sq_dropped, but doesn't consider @cq_overflow
+>>> 2. @sq_dropped and @cq_overflow are write-shared with userspace, so
+>>> it can be maliciously changed.
+>>>
+>>> see sent liburing test (test/defer *_hung()), which left an unkillable
+>>> process for me
+>>
+>> OK, how about the below. I'll split this in two, as it's really two
+>> separate fixes.
+> cached_sq_dropped is good, but I was concerned about cached_cq_overflow.
+> io_cqring_fill_event() can be called in async, so shouldn't we do some
+> synchronisation then?
 
-Might as well fix that with a cleanup patch ontop:
-
-WARNING: quoted string split across lines
-#69: FILE: arch/x86/kvm/vmx/vmx.c:2208:
-+               pr_warn("kvm: disable TXT in the BIOS or "
-+                       "activate TXT before enabling KVM\n");
-
-
-Also in that same cleanup patch, if the order of those tests doesn't
-matter, you can simplify them a bit:
-
-	if (tboot_enabled()) {
-		/* msr flag test here */
-
-	/* tboot disabled */
-	} else {
-		/* other two tests here */
-	}
-
-Should make it a bit easier to parse.
+We should probably make it an atomic just to be on the safe side, I'll
+update the series.
 
 -- 
-Regards/Gruss,
-    Boris.
+Jens Axboe
 
-https://people.kernel.org/tglx/notes-about-netiquette
