@@ -2,94 +2,91 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615CECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B708CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324CC21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572010024;
-	bh=wWtJyuS7Y6pDd2zj78ezeFYBGJ+IyV5IyE4gOB6/Cck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KkNjkIM6nGU8g1yqGfiPILsvR93K2ivwzbc93FUIVJg3h59Hvtk1jK3YO8gwg9Tw9
-	 tYojvQgyztth6fGVRtgdxI1Xax9P8xLtyxgWH5KYE29IK8A0FgMh+cuMPIV73ASx4X
-	 eFvra5CyLU4MQxy6n5CoqBrKtLTnNU4sKUTQRytM=
+	by mail.kernel.org (Postfix) with ESMTP id 3C93C21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394624AbfJYN1D (ORCPT
+        id S2394641AbfJYN2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:27:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50466 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726259AbfJYN1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:27:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1D5D0AD3A;
-        Fri, 25 Oct 2019 13:27:01 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 15:27:00 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     snazy@snazy.de
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-Message-ID: <20191025132700.GJ17610@dhcp22.suse.cz>
-References: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
- <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
- <20191025092143.GE658@dhcp22.suse.cz>
- <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
- <20191025114633.GE17610@dhcp22.suse.cz>
- <d740f26ea94f9f1c2fc0530c1ea944f8e59aad85.camel@gmx.de>
- <20191025120505.GG17610@dhcp22.suse.cz>
- <20191025121104.GH17610@dhcp22.suse.cz>
- <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
+        Fri, 25 Oct 2019 09:28:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:40616 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfJYN2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:28:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B79EE28;
+        Fri, 25 Oct 2019 06:28:02 -0700 (PDT)
+Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.145.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 476EF3F718;
+        Fri, 25 Oct 2019 06:28:02 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 15:28:01 +0200
+From:   Christoffer Dall <christoffer.dall@arm.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/15] KVM: Dynamically size memslot arrays
+Message-ID: <20191025132801.GK2652@e113682-lin.lund.arm.com>
+References: <20191024230744.14543-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
+In-Reply-To: <20191024230744.14543-1-sean.j.christopherson@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 25-10-19 15:10:39, Robert Stupp wrote:
-[...]
-> cat /proc/$(pidof test)/smaps
+On Thu, Oct 24, 2019 at 04:07:29PM -0700, Sean Christopherson wrote:
+> The end goal of this series is to dynamically size the memslot array so
+> that KVM allocates memory based on the number of memslots in use, as
+> opposed to unconditionally allocating memory for the maximum number of
+> memslots.  On x86, each memslot consumes 88 bytes, and so with 2 address
+> spaces of 512 memslots, each VM consumes ~90k bytes for the memslots.
+> E.g. given a VM that uses a total of 30 memslots, dynamic sizing reduces
+> the memory footprint from 90k to ~2.6k bytes.
+> 
+> The changes required to support dynamic sizing are relatively small,
+> e.g. are essentially contained in patches 14/15 and 15/15.  Patches 1-13
+> clean up the memslot code, which has gotten quite crusty, especially
+> __kvm_set_memory_region().  The clean up is likely not strictly necessary
+> to switch to dynamic sizing, but I didn't have a remotely reasonable
+> level of confidence in the correctness of the dynamic sizing without first
+> doing the clean up.
+> 
+> Christoffer, I added your Tested-by to the patches that I was confident
+> would be fully tested based on the desription of what you tested.  Let me
+> know if you disagree with any of 'em.
+> 
+The only testing I've done of patch 9 would be via the vm_free part of
+kvm selftest, so not sure how valid that is, but sure.
 
-Nothing really unusual that would jump at me except for
-> 7f8be90ed000-7f8be9265000 r-xp 00025000 103:02
-> 44307431                  /lib/x86_64-linux-gnu/libc-2.30.so
-> Size:               1504 kB
-> KernelPageSize:        4 kB
-> MMUPageSize:           4 kB
-> Rss:                 832 kB
-> Pss:                   5 kB
-> Shared_Clean:        832 kB
-> Shared_Dirty:          0 kB
-> Private_Clean:         0 kB
-> Private_Dirty:         0 kB
-> Referenced:          832 kB
-> Anonymous:             0 kB
-> LazyFree:              0 kB
-> AnonHugePages:         0 kB
-> ShmemPmdMapped:        0 kB
-> Shared_Hugetlb:        0 kB
-> Private_Hugetlb:       0 kB
-> Swap:                  0 kB
-> SwapPss:               0 kB
-> Locked:                5 kB
+Looks fine otherwise.
 
-Huh, 5kB, is this really the case or some copy&paste error?
-How can we end up with !pagesize multiple here?
 
-> THPeligible:		0
-> VmFlags: rd ex mr mw me lo sd
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+
+    Christoffer
