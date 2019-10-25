@@ -2,110 +2,345 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F4ECA9EBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364F4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42E620659
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A1wCE4Hs"
+	by mail.kernel.org (Postfix) with ESMTP id 06F8220867
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391722AbfJYDHk (ORCPT
+        id S2391798AbfJYDJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 23:07:40 -0400
-Received: from ozlabs.org ([203.11.71.1]:36373 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391622AbfJYDHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 23:07:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46zpvF444Yz9sPh;
-        Fri, 25 Oct 2019 14:07:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1571972857;
-        bh=Wcc7GmXRkytzaoO7yz2JCTW9vMTn48DxT18BiwpgEUQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=A1wCE4HslN+dI9HIEBgyIr8spiNvFkTBKARKrejYkCf7jpUWO9qKP0nTMk3KeE6Iv
-         FqvQZ3JKaFFXeHpsHPaOlQLOKgmi09fothFhRA+7mJqGHnM3A0jAQ0oxhji3YIvL/u
-         9KJQeFEYee8odWfZRfasLGOd6I6oEw6VgfG+oCOI31vBCFrOlyMQlUp0nXYVl38uNW
-         77J8OETwmpTQK2szfe/mjxRnxjZbAV+55PwKP5A35ydLqrMrcmNVNajLOqkoFz0Lcw
-         ZjnHUj8RVTUmnxL46XmX+T2xZ+7g4HQWUTaQfdOvakw5mdVDnDY7dHEjFUg5VnbPZl
-         5s9BgyHk4Q8LA==
-Date:   Fri, 25 Oct 2019 14:07:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Smart <jsmart2021@gmail.com>
-Subject: linux-next: build failure after merge of the scsi-mkp tree
-Message-ID: <20191025140736.0c9e9d64@canb.auug.org.au>
+        Thu, 24 Oct 2019 23:09:08 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:7906 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389230AbfJYDJI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 23:09:08 -0400
+X-UUID: 49568c31a3bd4ae7aa666cd7b3e49b89-20191025
+X-UUID: 49568c31a3bd4ae7aa666cd7b3e49b89-20191025
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1986252158; Fri, 25 Oct 2019 09:49:48 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 25 Oct
+ 2019 09:49:45 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 25 Oct 2019 09:49:44 +0800
+Message-ID: <1571968186.18464.3.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 2/2] usb: cdns3: Add TI specific wrapper driver
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Roger Quadros <rogerq@ti.com>
+CC:     <felipe.balbi@linux.intel.com>, <gregkh@linuxfoundation.org>,
+        <pawell@cadence.com>, <peter.chen@nxp.com>, <nsekhar@ti.com>,
+        <kurahul@cadence.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Date:   Fri, 25 Oct 2019 09:49:46 +0800
+In-Reply-To: <20191024114717.30984-3-rogerq@ti.com>
+References: <20191024114717.30984-1-rogerq@ti.com>
+         <20191024114717.30984-3-rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f0ti=U1JDDubgaKxd22sHes";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 3AC33AF4A9FE5BD081ED7950EDBEB3978C63142DE1505C4174253A93B01C45552000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/f0ti=U1JDDubgaKxd22sHes
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2019-10-24 at 14:47 +0300, Roger Quadros wrote:
+> The J721e platform comes with 2 Cadence USB3 controller
+> instances. This driver supports the TI specific wrapper
+> on this platform.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> ---
+>  drivers/usb/cdns3/Kconfig    |  10 ++
+>  drivers/usb/cdns3/Makefile   |   1 +
+>  drivers/usb/cdns3/cdns3-ti.c | 236 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 247 insertions(+)
+>  create mode 100644 drivers/usb/cdns3/cdns3-ti.c
+> 
+> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
+> index d0331613a355..2a1e89d12ed9 100644
+> --- a/drivers/usb/cdns3/Kconfig
+> +++ b/drivers/usb/cdns3/Kconfig
+> @@ -43,4 +43,14 @@ config USB_CDNS3_PCI_WRAP
+>  	  If you choose to build this driver as module it will
+>  	  be dynamically linked and module will be called cdns3-pci.ko
+>  
+> +config USB_CDNS3_TI
+> +	tristate "Cadence USB3 support on TI platforms"
+> +	depends on ARCH_K3 || COMPILE_TEST
+> +	default USB_CDNS3
+> +	help
+> +	  Say 'Y' or 'M' here if you are building for Texas Instruments
+> +	  platforms that contain Cadence USB3 controller core.
+> +
+> +	  e.g. J721e.
+> +
+>  endif
+> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
+> index a703547350bb..948e6b88d1a9 100644
+> --- a/drivers/usb/cdns3/Makefile
+> +++ b/drivers/usb/cdns3/Makefile
+> @@ -14,3 +14,4 @@ endif
+>  cdns3-$(CONFIG_USB_CDNS3_HOST)		+= host.o
+>  
+>  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci-wrap.o
+> +obj-$(CONFIG_USB_CDNS3_TI)		+= cdns3-ti.o
+> diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
+> new file mode 100644
+> index 000000000000..89620e40023f
+> --- /dev/null
+> +++ b/drivers/usb/cdns3/cdns3-ti.c
+> @@ -0,0 +1,236 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/**
+> + * cdns3-ti.c - TI specific Glue layer for Cadence USB Controller
+> + *
+> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/io.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +/* USB Wrapper register offsets */
+> +#define USBSS_PID		0x0
+> +#define	USBSS_W1		0x4
+> +#define USBSS_STATIC_CONFIG	0x8
+> +#define USBSS_PHY_TEST		0xc
+> +#define	USBSS_DEBUG_CTRL	0x10
+> +#define	USBSS_DEBUG_INFO	0x14
+> +#define	USBSS_DEBUG_LINK_STATE	0x18
+> +#define	USBSS_DEVICE_CTRL	0x1c
+> +
+> +/* Wrapper 1 register bits */
+> +#define USBSS_W1_PWRUP_RST		BIT(0)
+> +#define USBSS_W1_OVERCURRENT_SEL	BIT(8)
+> +#define USBSS_W1_MODESTRAP_SEL		BIT(9)
+> +#define USBSS_W1_OVERCURRENT		BIT(16)
+> +#define USBSS_W1_MODESTRAP_MASK		GENMASK(18, 17)
+> +#define USBSS_W1_MODESTRAP_SHIFT	17
+> +#define USBSS_W1_USB2_ONLY		BIT(19)
+> +
+> +/* Static config register bits */
+> +#define USBSS1_STATIC_PLL_REF_SEL_MASK	GENMASK(8, 5)
+> +#define USBSS1_STATIC_PLL_REF_SEL_SHIFT	5
+> +#define USBSS1_STATIC_LOOPBACK_MODE_MASK	GENMASK(4, 3)
+> +#define USBSS1_STATIC_LOOPBACK_MODE_SHIFT	3
+> +#define USBSS1_STATIC_VBUS_SEL_MASK	GENMASK(2, 1)
+> +#define USBSS1_STATIC_VBUS_SEL_SHIFT	1
+> +#define USBSS1_STATIC_LANE_REVERSE	BIT(0)
+> +
+> +/* Modestrap modes */
+> +enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
+> +		      USBSS_MODESTRAP_MODE_HOST,
+> +		      USBSS_MODESTRAP_MODE_PERIPHERAL};
+> +
+> +struct cdns_ti {
+> +	struct device *dev;
+> +	void __iomem *usbss;
+> +	int usb2_only:1;
+> +	int vbus_divider:1;
+> +	struct clk *usb2_refclk;
+> +	struct clk *lpm_clk;
+> +};
+> +
+> +static const int cdns_ti_rate_table[] = {	/* in KHZ */
+> +	9600,
+> +	10000,
+> +	12000,
+> +	19200,
+> +	20000,
+> +	24000,
+> +	25000,
+> +	26000,
+> +	38400,
+> +	40000,
+> +	58000,
+> +	50000,
+> +	52000,
+> +};
+> +
+> +static inline u32 cdns_ti_readl(struct cdns_ti *data, u32 offset)
+> +{
+> +	return readl(data->usbss + offset);
+> +}
+> +
+> +static inline void cdns_ti_writel(struct cdns_ti *data, u32 offset, u32 value)
+> +{
+> +	writel(value, data->usbss + offset);
+> +}
+> +
+> +static int cdns_ti_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct cdns_ti *data;
+> +	struct resource	*res;
+> +	int error;
+> +	u32 reg;
+> +	int rate_code, i;
+> +	unsigned long rate;
+> +
+> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	data->dev = dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	data->usbss = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(data->usbss))
+> +		return PTR_ERR(data->usbss);
+use devm_platform_ioremap_resource() ?
 
-Hi all,
+> +
+> +	data->usb2_refclk = devm_clk_get(dev, "ref");
+> +	if (IS_ERR(data->usb2_refclk)) {
+> +		dev_err(dev, "can't get usb2_refclk\n");
+> +		return PTR_ERR(data->usb2_refclk);
+> +	}
+> +
+> +	data->lpm_clk = devm_clk_get(dev, "lpm");
+> +	if (IS_ERR(data->lpm_clk)) {
+> +		dev_err(dev, "can't get lpm_clk\n");
+> +		return PTR_ERR(data->lpm_clk);
+> +	}
+> +
+> +	rate = clk_get_rate(data->usb2_refclk);
+> +	rate /= 1000;	/* To KHz */
+> +	for (i = 0; i < ARRAY_SIZE(cdns_ti_rate_table); i++) {
+> +		if (cdns_ti_rate_table[i] == rate)
+> +			break;
+> +	}
+> +
+> +	if (i == ARRAY_SIZE(cdns_ti_rate_table)) {
+> +		dev_err(dev, "unsupported usb2_refclk rate: %lu KHz\n", rate);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rate_code = i;
+> +
+> +	pm_runtime_enable(dev);
+> +	error = pm_runtime_get_sync(dev);
+> +	if (error < 0) {
+> +		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
+> +		goto err_get;
+> +	}
+> +
+> +	/* assert RESET */
+> +	reg = cdns_ti_readl(data, USBSS_W1);
+> +	reg &= ~USBSS_W1_PWRUP_RST;
+> +	cdns_ti_writel(data, USBSS_W1, reg);
+> +
+> +	/* set static config */
+> +	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
+> +	reg &= ~USBSS1_STATIC_PLL_REF_SEL_MASK;
+> +	reg |= rate_code << USBSS1_STATIC_PLL_REF_SEL_SHIFT;
+> +
+> +	reg &= ~USBSS1_STATIC_VBUS_SEL_MASK;
+> +	data->vbus_divider = device_property_read_bool(dev, "ti,vbus-divider");
+> +	if (data->vbus_divider)
+> +		reg |= 1 << USBSS1_STATIC_VBUS_SEL_SHIFT;
+> +
+> +	cdns_ti_writel(data, USBSS_STATIC_CONFIG, reg);
+> +	reg = cdns_ti_readl(data, USBSS_STATIC_CONFIG);
+> +
+> +	/* set USB2_ONLY mode if requested */
+> +	reg = cdns_ti_readl(data, USBSS_W1);
+> +	data->usb2_only = device_property_read_bool(dev, "ti,usb2-only");
+> +	if (data->usb2_only)
+> +		reg |= USBSS_W1_USB2_ONLY;
+> +
+> +	/* set default modestrap */
+> +	reg |= USBSS_W1_MODESTRAP_SEL;
+> +	reg &= ~USBSS_W1_MODESTRAP_MASK;
+> +	reg |= USBSS_MODESTRAP_MODE_NONE << USBSS_W1_MODESTRAP_SHIFT;
+> +	cdns_ti_writel(data, USBSS_W1, reg);
+> +
+> +	/* de-assert RESET */
+> +	reg |= USBSS_W1_PWRUP_RST;
+> +	cdns_ti_writel(data, USBSS_W1, reg);
+> +
+> +	error = of_platform_populate(node, NULL, NULL, dev);
+> +	if (error) {
+> +		dev_err(dev, "failed to create children: %d\n", error);
+> +		goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	pm_runtime_put_sync(data->dev);
+> +err_get:
+> +	pm_runtime_disable(data->dev);
+> +
+> +	return error;
+> +}
+> +
+> +static int cdns_ti_remove_core(struct device *dev, void *c)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +
+> +	platform_device_unregister(pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_ti_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +
+> +	device_for_each_child(dev, NULL, cdns_ti_remove_core);
+> +	pm_runtime_put_sync(dev);
+> +	pm_runtime_disable(dev);
+> +
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cdns_ti_of_match[] = {
+> +	{ .compatible = "ti,j721e-usb", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, cdns_ti_of_match);
+> +
+> +static struct platform_driver cdns_ti_driver = {
+> +	.probe		= cdns_ti_probe,
+> +	.remove		= cdns_ti_remove,
+> +	.driver		= {
+> +		.name	= "cdns3-ti",
+> +		.of_match_table	= cdns_ti_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(cdns_ti_driver);
+> +
+> +MODULE_ALIAS("platform:cdns3-ti");
+> +MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Cadence USB3 TI Glue Layer");
 
-After merging the scsi-mkp tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
 
-drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_release=
-':
-drivers/scsi/lpfc/lpfc_debugfs.c:2109:2: error: implicit declaration of fun=
-ction 'vfree'; did you mean 'kvfree'? [-Werror=3Dimplicit-function-declarat=
-ion]
- 2109 |  vfree(debug->buffer);
-      |  ^~~~~
-      |  kvfree
-drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_open':
-drivers/scsi/lpfc/lpfc_debugfs.c:2150:18: error: implicit declaration of fu=
-nction 'vmalloc'; did you mean 'kvmalloc'? [-Werror=3Dimplicit-function-dec=
-laration]
- 2150 |  debug->buffer =3D vmalloc(size);
-      |                  ^~~~~~~
-      |                  kvmalloc
-drivers/scsi/lpfc/lpfc_debugfs.c:2150:16: warning: assignment to 'char *' f=
-rom 'int' makes pointer from integer without a cast [-Wint-conversion]
- 2150 |  debug->buffer =3D vmalloc(size);
-      |                ^
-
-Caused by commit
-
-  95bfc6d8ad86 ("scsi: lpfc: Make FW logging dynamically configurable")
-
-I have used the scsi-mkp tree from next-20191024 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/f0ti=U1JDDubgaKxd22sHes
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2yZvgACgkQAVBC80lX
-0Gydbwf/Vc3oPByi1E+pcxq7+hsLXzK8V0c8iX39Sx9aO4CjuiuAWH2oxTcN4YoN
-MNn1dZ86gNdFDdTxQ3OAZY+q/MA9TnCLGUmxuGrxvFDsumBK4+YqjlY0UgH89lR9
-E8aoHi3A/+HMtyANFgrh0c/REqURZdVuWnU4HN0a92pGcpzpuI/gy7Oqqq2pJeQX
-PcA3l62PJXiVbm4BYEtxTx6of27SiFbyaaV8TIvyOdLnWmZ/Mz88nyrnbYMr3Hpv
-VIc34kQJ0Eqh9JPcrqmyAofcPB/aPbKSUiSv3TibEywKsiNdQemutbLknSBz7nE0
-/ZnZbGCa15k7bepf6Qn3Sz5EYw+h5A==
-=mo8E
------END PGP SIGNATURE-----
-
---Sig_/f0ti=U1JDDubgaKxd22sHes--
