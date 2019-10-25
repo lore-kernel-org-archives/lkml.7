@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2124CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D0FCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90ABF222C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1122070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732773AbfJYSIX (ORCPT
+        id S1732799AbfJYSIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46934 "EHLO
+        Fri, 25 Oct 2019 14:08:24 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46838 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731503AbfJYSFp (ORCPT
+        by vger.kernel.org with ESMTP id S1731468AbfJYSFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:45 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xy-0008Oi-Sd; Fri, 25 Oct 2019 19:05:38 +0100
+        id 1iO3xw-0008Ot-Js; Fri, 25 Oct 2019 19:05:36 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0001kn-Dn; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xv-0001je-Ui; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com,
-        syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com
-Date:   Fri, 25 Oct 2019 19:03:42 +0100
-Message-ID: <lsq.1572026582.796070921@decadent.org.uk>
+        hpa@zytor.com, "Dianzhang Chen" <dianzhangchen0@gmail.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>, bp@alien8.de
+Date:   Fri, 25 Oct 2019 19:03:28 +0100
+Message-ID: <lsq.1572026582.859033438@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 41/47] ALSA: seq: Break too long mutex context in the
- write loop
+Subject: [PATCH 3.16 27/47] x86/ptrace: Fix possible spectre-v1 in
+ ptrace_get_debugreg()
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,70 +56,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Dianzhang Chen <dianzhangchen0@gmail.com>
 
-commit ede34f397ddb063b145b9e7d79c6026f819ded13 upstream.
+commit 31a2fbb390fee4231281b939e1979e810f945415 upstream.
 
-The fix for the racy writes and ioctls to sequencer widened the
-application of client->ioctl_mutex to the whole write loop.  Although
-it does unlock/relock for the lengthy operation like the event dup,
-the loop keeps the ioctl_mutex for the whole time in other
-situations.  This may take quite long time if the user-space would
-give a huge buffer, and this is a likely cause of some weird behavior
-spotted by syzcaller fuzzer.
+The index to access the threads ptrace_bps is controlled by userspace via
+syscall: sys_ptrace(), hence leading to a potential exploitation of the
+Spectre variant 1 vulnerability.
 
-This patch puts a simple workaround, just adding a mutex break in the
-loop when a large number of events have been processed.  This
-shouldn't hit any performance drop because the threshold is set high
-enough for usual operations.
+The index can be controlled from:
+    ptrace -> arch_ptrace -> ptrace_get_debugreg.
 
-Fixes: 7bd800915677 ("ALSA: seq: More protection for concurrent write and ioctl races")
-Reported-by: syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com
-Reported-by: syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fix this by sanitizing the user supplied index before using it access
+thread->ptrace_bps.
+
+Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
+Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
+[bwh: Backported to 3.16: fold in fix-up from commit 223cea6a4f05
+ "Merge branch 'x86-pti-for-linus' of ..."]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/seq/seq_clientmgr.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/x86/kernel/ptrace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1014,7 +1014,7 @@ static ssize_t snd_seq_write(struct file
- {
- 	struct snd_seq_client *client = file->private_data;
- 	int written = 0, len;
--	int err;
-+	int err, handled;
- 	struct snd_seq_event event;
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -24,6 +24,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/export.h>
+ #include <linux/context_tracking.h>
++#include <linux/nospec.h>
  
- 	if (!(snd_seq_file_flags(file) & SNDRV_SEQ_LFLG_OUTPUT))
-@@ -1027,6 +1027,8 @@ static ssize_t snd_seq_write(struct file
- 	if (!client->accept_output || client->pool == NULL)
- 		return -ENXIO;
+ #include <asm/uaccess.h>
+ #include <asm/pgtable.h>
+@@ -707,7 +708,8 @@ static unsigned long ptrace_get_debugreg
+ 	unsigned long val = 0;
  
-+ repeat:
-+	handled = 0;
- 	/* allocate the pool now if the pool is not allocated yet */ 
- 	mutex_lock(&client->ioctl_mutex);
- 	if (client->pool->size > 0 && !snd_seq_write_pool_allocated(client)) {
-@@ -1086,12 +1088,19 @@ static ssize_t snd_seq_write(struct file
- 						   0, 0, &client->ioctl_mutex);
- 		if (err < 0)
- 			break;
-+		handled++;
+ 	if (n < HBP_NUM) {
+-		struct perf_event *bp = thread->ptrace_bps[n];
++		int index = array_index_nospec(n, HBP_NUM);
++		struct perf_event *bp = thread->ptrace_bps[index];
  
- 	__skip_event:
- 		/* Update pointers and counts */
- 		count -= len;
- 		buf += len;
- 		written += len;
-+
-+		/* let's have a coffee break if too many events are queued */
-+		if (++handled >= 200) {
-+			mutex_unlock(&client->ioctl_mutex);
-+			goto repeat;
-+		}
- 	}
- 
-  out:
+ 		if (bp)
+ 			val = bp->hw.info.address;
 
