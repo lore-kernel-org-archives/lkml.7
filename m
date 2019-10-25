@@ -2,88 +2,125 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A162CCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC2CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75AFF205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572026421;
-	bh=w6k37SmPZPh1bToZd3ldVpAwOET03tACIRG/OQf1rxk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bVCAnibKtzWdj3T3dLvYKbOa8JHA23hrEEKvRKTaXsVmj2hSWHaBDNXWpcWa/slTp
-	 dgRJTGBjB4w89WG2RG9V9JOUtxjbtTIfzU3fQ75JqTNrXdCm5v2fSsiPITPJFLz6rs
-	 MHnIbKn+WzN+qI7SRYmFRIUKCmT1nBSqysIa5nxc=
+	by mail.kernel.org (Postfix) with ESMTP id 50CAE2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:02:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="czTwe7iE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbfJYSAU (ORCPT
+        id S1731260AbfJYSCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:00:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730926AbfJYSAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:00:20 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD83721D7F;
-        Fri, 25 Oct 2019 18:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572026419;
-        bh=w6k37SmPZPh1bToZd3ldVpAwOET03tACIRG/OQf1rxk=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=bQt2Em5RCSV4ep1b7DWyUMc2QvMBVDIGS9b1ycG7hniWN17TvUfv0RhjhA+pdCpAo
-         ajeHec60HphK8M2icrqm/74lo5GBLllMCCobsDSWU+TuIjT0bCRymILKhmWBiunUTP
-         KhaMJHiD04Kcuqrh1zf3Yw98DU/ytwWtQPpLffII=
-Date:   Fri, 25 Oct 2019 20:00:15 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-cc:     jpoimboe@redhat.com, pmladek@suse.com, joe.lawrence@redhat.com,
-        shuah@kernel.org, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/livepatch: Disable the timeout
-In-Reply-To: <20191025115041.23186-1-mbenes@suse.cz>
-Message-ID: <nycvar.YFH.7.76.1910251959550.13160@cbobk.fhfr.pm>
-References: <20191025115041.23186-1-mbenes@suse.cz>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 25 Oct 2019 14:02:48 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55672 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731197AbfJYSCr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 14:02:47 -0400
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 35AE72010AC6;
+        Fri, 25 Oct 2019 11:02:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 35AE72010AC6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1572026566;
+        bh=7hGCl+P0baIDKMMzceGB2joTvpQFYOW1rsl65AwaESg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=czTwe7iEXiYO6JkheRJPPNMnL5Cbg61vTN7/+dfgsvKoyQ7DzcAkTVmgEHaD44Y/h
+         jbDjF2ZBpVUKnbsyoUyslQapQJhi9p/QuR0SQXCtdREc4TW2b9zURqy/JaFZ00xmBr
+         UuMXyYCz38KvLS+eL4dyR4/GY0NDH+IiFMK2xe2E=
+Subject: Re: [PATCH v9 2/8] powerpc/ima: add support to initialize ima policy
+ rules
+To:     Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>
+References: <20191024034717.70552-1-nayna@linux.ibm.com>
+ <20191024034717.70552-3-nayna@linux.ibm.com>
+ <dd7e04fc-25e8-280f-b565-bdb031939655@linux.microsoft.com>
+ <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <482b2f08-f810-6ed0-4b32-0d5e64246ece@linux.microsoft.com>
+Date:   Fri, 25 Oct 2019 11:03:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019, Miroslav Benes wrote:
+On 10/25/2019 10:02 AM, Nayna Jain wrote:
 
-> Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
-> timeout per test") introduced a timeout per test. Livepatch tests could
-> run longer than 45 seconds, especially on slower machines. They do not
-> hang and they detect if something goes awry with internal accounting.
-> 
-> Better than looking for an arbitrary value, just disable the timeout for
-> livepatch selftests.
-> 
-> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> ---
->  tools/testing/selftests/livepatch/settings | 1 +
->  1 file changed, 1 insertion(+)
->  create mode 100644 tools/testing/selftests/livepatch/settings
-> 
-> diff --git a/tools/testing/selftests/livepatch/settings b/tools/testing/selftests/livepatch/settings
-> new file mode 100644
-> index 000000000000..e7b9417537fb
-> --- /dev/null
-> +++ b/tools/testing/selftests/livepatch/settings
-> @@ -0,0 +1 @@
-> +timeout=0
+ >> Is there any way to not use conditional compilation in
+ >> the above array definition? Maybe define different functions to get
+ >> "secure_rules" for when CONFIG_MODULE_SIG_FORCE is defined and when
+ >> it is not defined.
+ >
+ > How will you decide which function to be called ?
 
-Pushed to livepatching.git#for-5.5/selftests. Thanks,
+Define the array in the C file:
 
--- 
-Jiri Kosina
-SUSE Labs
+const char *const secure_rules_kernel_check[] = {
+    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+    NULL
+};
+
+const char *const secure_rules_kernel_module_check[] = {
+    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+    "appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+    NULL
+};
+
+And, in the header file :
+
+extern const char *const secure_rules_kernel_check;
+extern const char *const secure_rules_kernel_module_check;
+
+#ifdef CONFIG_MODULE_SIG_FORCE
+const char *secure_rules() { return secure_rules_kernel_check; }
+#else
+const char *secure_rules() { return secure_rules_kernel_module_check;}
+#endif // #ifdef CONFIG_MODULE_SIG_FORCE
+
+If you want to avoid duplication, secure_rules_kernel_check and 
+secure_rules_kernel_module_check could be defined in separate C files 
+and conditionally compiled (in Makefile).
+
+
+I was just trying to suggest the guidelines given in
+"Section 21) Conditional Compilation" in coding-style.rst.
+
+It says:
+Whenever possible don't use preprocessor conditionals (#ifdef, #if) in 
+.c files;...
+
+Feel free to do what you think is appropriate.
+
+thanks,
+  -lakshmi
+
 
