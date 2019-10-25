@@ -2,107 +2,109 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25348CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1014BCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F7420663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB69520663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:02:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="A/OkVqFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502230AbfJYKCh (ORCPT
+        id S2502320AbfJYKCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:02:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:38184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404388AbfJYKCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:02:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF82128;
-        Fri, 25 Oct 2019 03:02:36 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD6EB3F6C4;
-        Fri, 25 Oct 2019 03:02:34 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 11:02:32 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     samitolvanen@google.com
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/17] arm64: kernel: avoid x18 as an arbitrary temp
- register
-Message-ID: <20191025100232.GC40270@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191024225132.13410-1-samitolvanen@google.com>
- <20191024225132.13410-5-samitolvanen@google.com>
+        Fri, 25 Oct 2019 06:02:43 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11340 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2408871AbfJYKCn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:02:43 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9P9kCWW017181;
+        Fri, 25 Oct 2019 12:02:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=L3mtGVkYrQhlA9oMyG4z+zFmzlcb+vI8GVGs4DcezXs=;
+ b=A/OkVqFKWSxzuT+sF0tIFGtEkqXmPoLwQtuOihl0MJVjs9tdkR2msDxWM7yGkuXgdY8f
+ 3Kv2FPd7fLkdjubQDxGSIqSqV2yPauoXLytDspg3Iu3k/C0Sg18HcElk+y7WVloHKW62
+ 1c7NUUyJ8ZowVKZQek3JHZHt36yECnPDyOtNEX9A17xonUqOM8cr/4Yh7Mle3o0iGf90
+ CKLr6yhv8ZNde6oFi5j3DNRpUhC63pIoEtXUji1hOsLHx7qc/Asl23EQo+/j1bxVp81C
+ jBsIdZKsd1lsqrd65MFVJadXf9T43P+imE0/UdHGdgyBre7JQ4ucGYkZwyEwj2uiXUtZ bA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2vt9s5706c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Oct 2019 12:02:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A2E1B10002A;
+        Fri, 25 Oct 2019 12:02:33 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 960CB2C2E84;
+        Fri, 25 Oct 2019 12:02:33 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 25 Oct
+ 2019 12:02:32 +0200
+Subject: Re: [PATCH] ARM: dts: stm32f469: remove useless interrupt from dsi
+ node
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191011130658.23670-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <a2a82d35-100f-40c3-0827-c110ac37a02f@st.com>
+Date:   Fri, 25 Oct 2019 12:02:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024225132.13410-5-samitolvanen@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20191011130658.23670-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-25_05:2019-10-23,2019-10-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Minor nit, but could we make the title a bit more specific (and more
-uniform across the series)? e.g.
+Hi Benjamin
 
-  arm64: kvm: avoid x18 in __cpu_soft_restart
-
-That makes things a bit nicer when trawling through git logs as the
-scope of the patch is clearer.
-
-On Thu, Oct 24, 2019 at 03:51:19PM -0700, samitolvanen@google.com wrote:
-> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+On 10/11/19 3:06 PM, Benjamin Gaignard wrote:
+> DSI driver doesn't use interrupt, remove it from the node since it
+> breaks yaml check.
 > 
-> The code in __cpu_soft_restart() uses x18 as an arbitrary temp register,
-> which will shortly be disallowed. So use x8 instead.
-> 
-> Link: https://patchwork.kernel.org/patch/9836877/
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-
-Either way:
-
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > ---
->  arch/arm64/kernel/cpu-reset.S | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>   arch/arm/boot/dts/stm32f469.dtsi | 1 -
+>   1 file changed, 1 deletion(-)
 > 
-> diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-> index 6ea337d464c4..32c7bf858dd9 100644
-> --- a/arch/arm64/kernel/cpu-reset.S
-> +++ b/arch/arm64/kernel/cpu-reset.S
-> @@ -42,11 +42,11 @@ ENTRY(__cpu_soft_restart)
->  	mov	x0, #HVC_SOFT_RESTART
->  	hvc	#0				// no return
->  
-> -1:	mov	x18, x1				// entry
-> +1:	mov	x8, x1				// entry
->  	mov	x0, x2				// arg0
->  	mov	x1, x3				// arg1
->  	mov	x2, x4				// arg2
-> -	br	x18
-> +	br	x8
->  ENDPROC(__cpu_soft_restart)
->  
->  .popsection
-> -- 
-> 2.24.0.rc0.303.g954a862665-goog
+> diff --git a/arch/arm/boot/dts/stm32f469.dtsi b/arch/arm/boot/dts/stm32f469.dtsi
+> index 5ae5213f68cb..be002e8a78ac 100644
+> --- a/arch/arm/boot/dts/stm32f469.dtsi
+> +++ b/arch/arm/boot/dts/stm32f469.dtsi
+> @@ -8,7 +8,6 @@
+>   		dsi: dsi@40016c00 {
+>   			compatible = "st,stm32-dsi";
+>   			reg = <0x40016c00 0x800>;
+> -			interrupts = <92>;
+>   			resets = <&rcc STM32F4_APB2_RESET(DSI)>;
+>   			reset-names = "apb";
+>   			clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
 > 
+
+Applied on stm32-next. For the next time commit header has to be 
+formatted like that:
+
+ARM: dts: stm32: .....
+
+Thanks.
+Alex
