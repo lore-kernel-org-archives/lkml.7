@@ -2,99 +2,163 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF3ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE6CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FD321D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571978771;
-	bh=wiorhjSe1Jgcumgj5fluZs16cVEe1hZJXsHjFLCRfNw=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=ep1tSqCF+6FJ881qZ4zWsy38qtyRjYz6v5g/3AOBV8BfCfoTQH+hCDB6yYKFh8+jT
-	 fX9kB31PYPtwC2Iv5QcANd4vXxZqtWFDWbKYk2URih5m3u+YIoUiZWgAL7iFf990Sf
-	 gL3iy8KXAW6GzWmjg+w0C6q1DAmSaiRiH4bHxVmc=
+	by mail.kernel.org (Postfix) with ESMTP id CFBE521929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390024AbfJYEqK (ORCPT
+        id S2390464AbfJYEsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 00:46:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387990AbfJYEqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 00:46:10 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 25 Oct 2019 00:48:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35380 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387990AbfJYEsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 00:48:37 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9P4ler6060678
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 00:48:36 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vumnyrqhd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 00:48:36 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Fri, 25 Oct 2019 05:48:33 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 25 Oct 2019 05:48:25 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9P4mOAN42991730
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 04:48:24 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 489635204F;
+        Fri, 25 Oct 2019 04:48:24 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9AAC952051;
+        Fri, 25 Oct 2019 04:48:23 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9E121D71
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 04:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571978769;
-        bh=wiorhjSe1Jgcumgj5fluZs16cVEe1hZJXsHjFLCRfNw=;
-        h=From:Date:Subject:To:From;
-        b=oEnXcmg1azk8QDn15o3bAkiEncszDSU5RsmnFzLqFni3RkGh2DwCR2RLRRq3CBBWC
-         8PODXZeZvxdBdOdL/Hzc0UYPX9h1i7q5lKT0Wx/hUXkswqkiFmnfxnAyrqGkZaN8S0
-         Kr5oPdgpCBStOwCCb5jrWGFtXAaAv1PRbhbj1a9s=
-Received: by mail-wr1-f50.google.com with SMTP id o28so692297wro.7
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 21:46:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAX+PE8v7BR/+0AHY1ojTHYYkozoLGBRx/Mqww0CsMmSpbZZXFNO
-        MwWPynhWWyNR/B2ABi7Bu40cpUxEDmW3C8PlSlsc4g==
-X-Google-Smtp-Source: APXvYqyNOFp3Ms+uinOmOvqe7XDGXR8wMZpz/A8vGbtQnxZA8XQ8zPGalHKbQrZUar9wc/bhTGaD7FmpMXccmbOUWG8=
-X-Received: by 2002:a5d:51c2:: with SMTP id n2mr865701wrv.149.1571978767560;
- Thu, 24 Oct 2019 21:46:07 -0700 (PDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C0730A0147;
+        Fri, 25 Oct 2019 15:48:21 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: [PATCH 00/10] Add support for OpenCAPI SCM devices
+Date:   Fri, 25 Oct 2019 15:46:55 +1100
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 24 Oct 2019 21:45:56 -0700
-X-Gmail-Original-Message-ID: <CALCETrVepdYd4uN8jrG8i6iaixWp+N3MdGv5WhjOdCr9sLRK1w@mail.gmail.com>
-Message-ID: <CALCETrVepdYd4uN8jrG8i6iaixWp+N3MdGv5WhjOdCr9sLRK1w@mail.gmail.com>
-Subject: Please stop using iopl() in DPDK
-To:     dev@dpdk.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102504-0020-0000-0000-0000037E3ECB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102504-0021-0000-0000-000021D488E6
+Message-Id: <20191025044721.16617-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=698 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910250045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all-
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Supporting iopl() in the Linux kernel is becoming a maintainability
-problem.  As far as I know, DPDK is the only major modern user of
-iopl().
+This series adds support for OpenCAPI SCM devices, exposing
+them as nvdimms so that we can make use of the existing
+infrastructure.
 
-After doing some research, DPDK uses direct io port access for only a
-single purpose: accessing legacy virtio configuration structures.
-These structures are mapped in IO space in BAR 0 on legacy virtio
-devices.
+The first patch (in memory_hotplug) has reviews/acks, but has
+not yet made it upstream.
 
-There are at least three ways you could avoid using iopl().  Here they
-are in rough order of quality in my opinion:
+Alastair D'Silva (10):
+  memory_hotplug: Add a bounds check to __add_pages
+  nvdimm: remove prototypes for nonexistent functions
+  powerpc: Add OPAL calls for LPC memory alloc/release
+  powerpc: Map & release OpenCAPI LPC memory
+  ocxl: Tally up the LPC memory on a link & allow it to be mapped
+  ocxl: Add functions to map/unmap LPC memory
+  ocxl: Save the device serial number in ocxl_fn
+  nvdimm: Add driver for OpenCAPI Storage Class Memory
+  powerpc: Enable OpenCAPI Storage Class Memory driver on bare metal
+  ocxl: Conditionally bind SCM devices to the generic OCXL driver
 
-1. Change pci_uio_ioport_read() and pci_uio_ioport_write() to use
-read() and write() on resource0 in sysfs.
+ arch/powerpc/configs/powernv_defconfig     |    4 +
+ arch/powerpc/include/asm/opal-api.h        |    2 +
+ arch/powerpc/include/asm/opal.h            |    3 +
+ arch/powerpc/include/asm/pnv-ocxl.h        |    2 +
+ arch/powerpc/platforms/powernv/ocxl.c      |   41 +
+ arch/powerpc/platforms/powernv/opal-call.c |    2 +
+ drivers/misc/ocxl/Kconfig                  |    7 +
+ drivers/misc/ocxl/config.c                 |   50 +
+ drivers/misc/ocxl/core.c                   |   60 +
+ drivers/misc/ocxl/link.c                   |   60 +
+ drivers/misc/ocxl/ocxl_internal.h          |   36 +
+ drivers/misc/ocxl/pci.c                    |    3 +
+ drivers/nvdimm/Kconfig                     |   17 +
+ drivers/nvdimm/Makefile                    |    3 +
+ drivers/nvdimm/nd-core.h                   |    4 -
+ drivers/nvdimm/ocxl-scm.c                  | 2210 ++++++++++++++++++++
+ drivers/nvdimm/ocxl-scm_internal.c         |  232 ++
+ drivers/nvdimm/ocxl-scm_internal.h         |  331 +++
+ drivers/nvdimm/ocxl-scm_sysfs.c            |  219 ++
+ include/linux/memory_hotplug.h             |    5 +
+ include/misc/ocxl.h                        |   19 +
+ include/uapi/linux/ocxl-scm.h              |  128 ++
+ mm/memory_hotplug.c                        |   22 +
+ 23 files changed, 3456 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/nvdimm/ocxl-scm.c
+ create mode 100644 drivers/nvdimm/ocxl-scm_internal.c
+ create mode 100644 drivers/nvdimm/ocxl-scm_internal.h
+ create mode 100644 drivers/nvdimm/ocxl-scm_sysfs.c
+ create mode 100644 include/uapi/linux/ocxl-scm.h
 
-2. Use the alternative access mechanism in the virtio legacy spec:
-there is a way to access all of these structures via configuration
-space.
+-- 
+2.21.0
 
-3. Use ioperm() instead of iopl().
-
-
-We are considering changes to the kernel that will potentially harm
-the performance of any program that uses iopl(3) -- in particular,
-context switches will become more expensive, and the scheduler might
-need to explicitly penalize such programs to ensure fairness.  Using
-ioperm() already hurts performance, and the proposed changes to iopl()
-will make it even worse.  Alternatively, the kernel could drop iopl()
-support entirely.  I will certainly make a change to allow
-distributions to remove iopl() support entirely from their kernels,
-and I expect that distributions will do this.
-
-Please fix DPDK.
-
-Thanks,
-Andy
