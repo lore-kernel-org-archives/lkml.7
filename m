@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC430CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DDBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81771205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417E32245C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732567AbfJYSIM (ORCPT
+        id S1732453AbfJYSIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:12 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46788 "EHLO
+        Fri, 25 Oct 2019 14:08:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46818 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731437AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731455AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0008OS-Vw; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xw-0008Os-PO; Fri, 25 Oct 2019 19:05:36 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001ik-Ha; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xv-0001jZ-Tk; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andreas Schwab" <schwab@linux-m68k.org>,
-        "Christophe Leroy" <christophe.leroy@c-s.fr>,
-        "Michael Ellerman" <mpe@ellerman.id.au>
-Date:   Fri, 25 Oct 2019 19:03:17 +0100
-Message-ID: <lsq.1572026582.906478485@decadent.org.uk>
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Christian Lamparter" <chunkeey@gmail.com>,
+        "Kalle Valo" <kvalo@codeaurora.org>
+Date:   Fri, 25 Oct 2019 19:03:27 +0100
+Message-ID: <lsq.1572026582.802343109@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 16/47] powerpc/32s: fix suspend/resume when IBATs 4-7
- are used
+Subject: [PATCH 3.16 26/47] carl9170: fix misuse of device driver API
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,246 +56,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 6ecb78ef56e08d2119d337ae23cb951a640dc52d upstream.
+commit feb09b2933275a70917a869989ea2823e7356be8 upstream.
 
-Previously, only IBAT1 and IBAT2 were used to map kernel linear mem.
-Since commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
-STRICT_KERNEL_RWX"), we may have all 8 BATs used for mapping
-kernel text. But the suspend/restore functions only save/restore
-BATs 0 to 3, and clears BATs 4 to 7.
+This patch follows Alan Stern's recent patch:
+"p54: Fix race between disconnect and firmware loading"
 
-Make suspend and restore functions respectively save and reload
-the 8 BATs on CPUs having MMU_FTR_USE_HIGH_BATS feature.
+that overhauled carl9170 buggy firmware loading and driver
+unbinding procedures.
 
-Reported-by: Andreas Schwab <schwab@linux-m68k.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Since the carl9170 code was adapted from p54 it uses the
+same functions and is likely to have the same problem, but
+it's just that the syzbot hasn't reproduce them (yet).
+
+a summary from the changes (copied from the p54 patch):
+ * Call usb_driver_release_interface() rather than
+   device_release_driver().
+
+ * Lock udev (the interface's parent) before unbinding the
+   driver instead of locking udev->parent.
+
+ * During the firmware loading process, take a reference
+   to the USB interface instead of the USB device.
+
+ * Don't take an unnecessary reference to the device during
+   probe (and then don't drop it during disconnect).
+
+and
+
+ * Make sure to prevent use-after-free bugs by explicitly
+   setting the driver context to NULL after signaling the
+   completion.
+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/kernel/swsusp_32.S         | 73 ++++++++++++++++++++++---
- arch/powerpc/platforms/powermac/sleep.S | 68 +++++++++++++++++++++--
- 2 files changed, 128 insertions(+), 13 deletions(-)
+ drivers/net/wireless/ath/carl9170/usb.c | 39 +++++++++++--------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
 
---- a/arch/powerpc/kernel/swsusp_32.S
-+++ b/arch/powerpc/kernel/swsusp_32.S
-@@ -23,11 +23,19 @@
- #define SL_IBAT2	0x48
- #define SL_DBAT3	0x50
- #define SL_IBAT3	0x58
--#define SL_TB		0x60
--#define SL_R2		0x68
--#define SL_CR		0x6c
--#define SL_LR		0x70
--#define SL_R12		0x74	/* r12 to r31 */
-+#define SL_DBAT4	0x60
-+#define SL_IBAT4	0x68
-+#define SL_DBAT5	0x70
-+#define SL_IBAT5	0x78
-+#define SL_DBAT6	0x80
-+#define SL_IBAT6	0x88
-+#define SL_DBAT7	0x90
-+#define SL_IBAT7	0x98
-+#define SL_TB		0xa0
-+#define SL_R2		0xa8
-+#define SL_CR		0xac
-+#define SL_LR		0xb0
-+#define SL_R12		0xb4	/* r12 to r31 */
- #define SL_SIZE		(SL_R12 + 80)
+--- a/drivers/net/wireless/ath/carl9170/usb.c
++++ b/drivers/net/wireless/ath/carl9170/usb.c
+@@ -128,6 +128,8 @@ static struct usb_device_id carl9170_usb
+ };
+ MODULE_DEVICE_TABLE(usb, carl9170_usb_ids);
  
- 	.section .data
-@@ -112,6 +120,41 @@ _GLOBAL(swsusp_arch_suspend)
- 	mfibatl	r4,3
- 	stw	r4,SL_IBAT3+4(r11)
- 
-+BEGIN_MMU_FTR_SECTION
-+	mfspr	r4,SPRN_DBAT4U
-+	stw	r4,SL_DBAT4(r11)
-+	mfspr	r4,SPRN_DBAT4L
-+	stw	r4,SL_DBAT4+4(r11)
-+	mfspr	r4,SPRN_DBAT5U
-+	stw	r4,SL_DBAT5(r11)
-+	mfspr	r4,SPRN_DBAT5L
-+	stw	r4,SL_DBAT5+4(r11)
-+	mfspr	r4,SPRN_DBAT6U
-+	stw	r4,SL_DBAT6(r11)
-+	mfspr	r4,SPRN_DBAT6L
-+	stw	r4,SL_DBAT6+4(r11)
-+	mfspr	r4,SPRN_DBAT7U
-+	stw	r4,SL_DBAT7(r11)
-+	mfspr	r4,SPRN_DBAT7L
-+	stw	r4,SL_DBAT7+4(r11)
-+	mfspr	r4,SPRN_IBAT4U
-+	stw	r4,SL_IBAT4(r11)
-+	mfspr	r4,SPRN_IBAT4L
-+	stw	r4,SL_IBAT4+4(r11)
-+	mfspr	r4,SPRN_IBAT5U
-+	stw	r4,SL_IBAT5(r11)
-+	mfspr	r4,SPRN_IBAT5L
-+	stw	r4,SL_IBAT5+4(r11)
-+	mfspr	r4,SPRN_IBAT6U
-+	stw	r4,SL_IBAT6(r11)
-+	mfspr	r4,SPRN_IBAT6L
-+	stw	r4,SL_IBAT6+4(r11)
-+	mfspr	r4,SPRN_IBAT7U
-+	stw	r4,SL_IBAT7(r11)
-+	mfspr	r4,SPRN_IBAT7L
-+	stw	r4,SL_IBAT7+4(r11)
-+END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++static struct usb_driver carl9170_driver;
 +
- #if  0
- 	/* Backup various CPU config stuffs */
- 	bl	__save_cpu_setup
-@@ -277,27 +320,41 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
- 	mtibatu	3,r4
- 	lwz	r4,SL_IBAT3+4(r11)
- 	mtibatl	3,r4
--#endif
+ static void carl9170_usb_submit_data_urb(struct ar9170 *ar)
+ {
+ 	struct urb *urb;
+@@ -967,32 +969,28 @@ err_out:
+ 
+ static void carl9170_usb_firmware_failed(struct ar9170 *ar)
+ {
+-	struct device *parent = ar->udev->dev.parent;
+-	struct usb_device *udev;
 -
- BEGIN_MMU_FTR_SECTION
--	li	r4,0
-+	lwz	r4,SL_DBAT4(r11)
- 	mtspr	SPRN_DBAT4U,r4
-+	lwz	r4,SL_DBAT4+4(r11)
- 	mtspr	SPRN_DBAT4L,r4
-+	lwz	r4,SL_DBAT5(r11)
- 	mtspr	SPRN_DBAT5U,r4
-+	lwz	r4,SL_DBAT5+4(r11)
- 	mtspr	SPRN_DBAT5L,r4
-+	lwz	r4,SL_DBAT6(r11)
- 	mtspr	SPRN_DBAT6U,r4
-+	lwz	r4,SL_DBAT6+4(r11)
- 	mtspr	SPRN_DBAT6L,r4
-+	lwz	r4,SL_DBAT7(r11)
- 	mtspr	SPRN_DBAT7U,r4
-+	lwz	r4,SL_DBAT7+4(r11)
- 	mtspr	SPRN_DBAT7L,r4
-+	lwz	r4,SL_IBAT4(r11)
- 	mtspr	SPRN_IBAT4U,r4
-+	lwz	r4,SL_IBAT4+4(r11)
- 	mtspr	SPRN_IBAT4L,r4
-+	lwz	r4,SL_IBAT5(r11)
- 	mtspr	SPRN_IBAT5U,r4
-+	lwz	r4,SL_IBAT5+4(r11)
- 	mtspr	SPRN_IBAT5L,r4
-+	lwz	r4,SL_IBAT6(r11)
- 	mtspr	SPRN_IBAT6U,r4
-+	lwz	r4,SL_IBAT6+4(r11)
- 	mtspr	SPRN_IBAT6L,r4
-+	lwz	r4,SL_IBAT7(r11)
- 	mtspr	SPRN_IBAT7U,r4
-+	lwz	r4,SL_IBAT7+4(r11)
- 	mtspr	SPRN_IBAT7L,r4
- END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
-+#endif
+-	/*
+-	 * Store a copy of the usb_device pointer locally.
+-	 * This is because device_release_driver initiates
+-	 * carl9170_usb_disconnect, which in turn frees our
+-	 * driver context (ar).
++	/* Store a copies of the usb_interface and usb_device pointer locally.
++	 * This is because release_driver initiates carl9170_usb_disconnect,
++	 * which in turn frees our driver context (ar).
+ 	 */
+-	udev = ar->udev;
++	struct usb_interface *intf = ar->intf;
++	struct usb_device *udev = ar->udev;
  
- 	/* Flush all TLBs */
- 	lis	r4,0x1000
---- a/arch/powerpc/platforms/powermac/sleep.S
-+++ b/arch/powerpc/platforms/powermac/sleep.S
-@@ -37,10 +37,18 @@
- #define SL_IBAT2	0x48
- #define SL_DBAT3	0x50
- #define SL_IBAT3	0x58
--#define SL_TB		0x60
--#define SL_R2		0x68
--#define SL_CR		0x6c
--#define SL_R12		0x70	/* r12 to r31 */
-+#define SL_DBAT4	0x60
-+#define SL_IBAT4	0x68
-+#define SL_DBAT5	0x70
-+#define SL_IBAT5	0x78
-+#define SL_DBAT6	0x80
-+#define SL_IBAT6	0x88
-+#define SL_DBAT7	0x90
-+#define SL_IBAT7	0x98
-+#define SL_TB		0xa0
-+#define SL_R2		0xa8
-+#define SL_CR		0xac
-+#define SL_R12		0xb0	/* r12 to r31 */
- #define SL_SIZE		(SL_R12 + 80)
+ 	complete(&ar->fw_load_wait);
++	/* at this point 'ar' could be already freed. Don't use it anymore */
++	ar = NULL;
  
- 	.section .text
-@@ -125,6 +133,41 @@ _GLOBAL(low_sleep_handler)
- 	mfibatl	r4,3
- 	stw	r4,SL_IBAT3+4(r1)
+ 	/* unbind anything failed */
+-	if (parent)
+-		device_lock(parent);
+-
+-	device_release_driver(&udev->dev);
+-	if (parent)
+-		device_unlock(parent);
++	usb_lock_device(udev);
++	usb_driver_release_interface(&carl9170_driver, intf);
++	usb_unlock_device(udev);
  
-+BEGIN_MMU_FTR_SECTION
-+	mfspr	r4,SPRN_DBAT4U
-+	stw	r4,SL_DBAT4(r1)
-+	mfspr	r4,SPRN_DBAT4L
-+	stw	r4,SL_DBAT4+4(r1)
-+	mfspr	r4,SPRN_DBAT5U
-+	stw	r4,SL_DBAT5(r1)
-+	mfspr	r4,SPRN_DBAT5L
-+	stw	r4,SL_DBAT5+4(r1)
-+	mfspr	r4,SPRN_DBAT6U
-+	stw	r4,SL_DBAT6(r1)
-+	mfspr	r4,SPRN_DBAT6L
-+	stw	r4,SL_DBAT6+4(r1)
-+	mfspr	r4,SPRN_DBAT7U
-+	stw	r4,SL_DBAT7(r1)
-+	mfspr	r4,SPRN_DBAT7L
-+	stw	r4,SL_DBAT7+4(r1)
-+	mfspr	r4,SPRN_IBAT4U
-+	stw	r4,SL_IBAT4(r1)
-+	mfspr	r4,SPRN_IBAT4L
-+	stw	r4,SL_IBAT4+4(r1)
-+	mfspr	r4,SPRN_IBAT5U
-+	stw	r4,SL_IBAT5(r1)
-+	mfspr	r4,SPRN_IBAT5L
-+	stw	r4,SL_IBAT5+4(r1)
-+	mfspr	r4,SPRN_IBAT6U
-+	stw	r4,SL_IBAT6(r1)
-+	mfspr	r4,SPRN_IBAT6L
-+	stw	r4,SL_IBAT6+4(r1)
-+	mfspr	r4,SPRN_IBAT7U
-+	stw	r4,SL_IBAT7(r1)
-+	mfspr	r4,SPRN_IBAT7L
-+	stw	r4,SL_IBAT7+4(r1)
-+END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
-+
- 	/* Backup various CPU config stuffs */
- 	bl	__save_cpu_setup
+-	usb_put_dev(udev);
++	usb_put_intf(intf);
+ }
  
-@@ -325,22 +368,37 @@ grackle_wake_up:
- 	mtibatl	3,r4
+ static void carl9170_usb_firmware_finish(struct ar9170 *ar)
+ {
++	struct usb_interface *intf = ar->intf;
+ 	int err;
  
- BEGIN_MMU_FTR_SECTION
--	li	r4,0
-+	lwz	r4,SL_DBAT4(r1)
- 	mtspr	SPRN_DBAT4U,r4
-+	lwz	r4,SL_DBAT4+4(r1)
- 	mtspr	SPRN_DBAT4L,r4
-+	lwz	r4,SL_DBAT5(r1)
- 	mtspr	SPRN_DBAT5U,r4
-+	lwz	r4,SL_DBAT5+4(r1)
- 	mtspr	SPRN_DBAT5L,r4
-+	lwz	r4,SL_DBAT6(r1)
- 	mtspr	SPRN_DBAT6U,r4
-+	lwz	r4,SL_DBAT6+4(r1)
- 	mtspr	SPRN_DBAT6L,r4
-+	lwz	r4,SL_DBAT7(r1)
- 	mtspr	SPRN_DBAT7U,r4
-+	lwz	r4,SL_DBAT7+4(r1)
- 	mtspr	SPRN_DBAT7L,r4
-+	lwz	r4,SL_IBAT4(r1)
- 	mtspr	SPRN_IBAT4U,r4
-+	lwz	r4,SL_IBAT4+4(r1)
- 	mtspr	SPRN_IBAT4L,r4
-+	lwz	r4,SL_IBAT5(r1)
- 	mtspr	SPRN_IBAT5U,r4
-+	lwz	r4,SL_IBAT5+4(r1)
- 	mtspr	SPRN_IBAT5L,r4
-+	lwz	r4,SL_IBAT6(r1)
- 	mtspr	SPRN_IBAT6U,r4
-+	lwz	r4,SL_IBAT6+4(r1)
- 	mtspr	SPRN_IBAT6L,r4
-+	lwz	r4,SL_IBAT7(r1)
- 	mtspr	SPRN_IBAT7U,r4
-+	lwz	r4,SL_IBAT7+4(r1)
- 	mtspr	SPRN_IBAT7L,r4
- END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 	err = carl9170_parse_firmware(ar);
+@@ -1010,7 +1008,7 @@ static void carl9170_usb_firmware_finish
+ 		goto err_unrx;
  
+ 	complete(&ar->fw_load_wait);
+-	usb_put_dev(ar->udev);
++	usb_put_intf(intf);
+ 	return;
+ 
+ err_unrx:
+@@ -1053,7 +1051,6 @@ static int carl9170_usb_probe(struct usb
+ 		return PTR_ERR(ar);
+ 
+ 	udev = interface_to_usbdev(intf);
+-	usb_get_dev(udev);
+ 	ar->udev = udev;
+ 	ar->intf = intf;
+ 	ar->features = id->driver_info;
+@@ -1095,15 +1092,14 @@ static int carl9170_usb_probe(struct usb
+ 	atomic_set(&ar->rx_anch_urbs, 0);
+ 	atomic_set(&ar->rx_pool_urbs, 0);
+ 
+-	usb_get_dev(ar->udev);
++	usb_get_intf(intf);
+ 
+ 	carl9170_set_state(ar, CARL9170_STOPPED);
+ 
+ 	err = request_firmware_nowait(THIS_MODULE, 1, CARL9170FW_NAME,
+ 		&ar->udev->dev, GFP_KERNEL, ar, carl9170_usb_firmware_step2);
+ 	if (err) {
+-		usb_put_dev(udev);
+-		usb_put_dev(udev);
++		usb_put_intf(intf);
+ 		carl9170_free(ar);
+ 	}
+ 	return err;
+@@ -1132,7 +1128,6 @@ static void carl9170_usb_disconnect(stru
+ 
+ 	carl9170_release_firmware(ar);
+ 	carl9170_free(ar);
+-	usb_put_dev(udev);
+ }
+ 
+ #ifdef CONFIG_PM
 
