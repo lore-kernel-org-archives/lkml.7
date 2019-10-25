@@ -2,110 +2,145 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB51CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE177CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54D02070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CA520867
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cAifdiSW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXsrzo3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437027AbfJYHaQ (ORCPT
+        id S2406889AbfJYHbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:30:16 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41786 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393149AbfJYHaD (ORCPT
+        Fri, 25 Oct 2019 03:31:37 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39189 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403890AbfJYHbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:30:03 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P7U13n083504;
-        Fri, 25 Oct 2019 02:30:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571988601;
-        bh=3qESwgK0U+EAwQQL6PAX7MJ+aaVlzVEC8XOoAoFnNlo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=cAifdiSWMeUuttErMKa1KjLN/dVC0GXLvGV0SibL6sYDkZhMthGoSNTZk8WiXyNNk
-         tUVDT8vDYnmfxXo2cQUxAYUEwWxggineOtpvg0CSQ3sOXUO2yhN43t9LW5kEs4tEMC
-         VVA1pPos/fQ/T2V9kF354Md43jR/RxiB2+7Qpeu0=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7U0h9070088;
-        Fri, 25 Oct 2019 02:30:00 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
- Oct 2019 02:29:49 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 25 Oct 2019 02:29:59 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7Tr4H103329;
-        Fri, 25 Oct 2019 02:29:58 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v5 2/3] dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
-Date:   Fri, 25 Oct 2019 10:30:55 +0300
-Message-ID: <20191025073056.25450-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191025073056.25450-1-peter.ujfalusi@ti.com>
-References: <20191025073056.25450-1-peter.ujfalusi@ti.com>
+        Fri, 25 Oct 2019 03:31:36 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p12so970164pgn.6;
+        Fri, 25 Oct 2019 00:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/2N+MJXhRREUEbo0WZe6XYT3rSaV4YhCnP6qLL0FGS8=;
+        b=AXsrzo3I092Y+LE6biYcv8FyzQ4fX8QsV+U2vz82UpvgcFIwHIZQnJFEI4dhB+iIiL
+         hmz4mAFCVyx8n4wMKPznzBVJvwDF00mBMy06K8L5OxLSj9YmmpwlGt5+bwhYGAZ96ALN
+         e5DPtBaK7Hv+s9weHnEvY5r4MWX5lsA1dyDNc/mihZXXTO3NN/OfaWsFTszx4gz/QYWe
+         eL5wiCgh1DNXAaIzgUSo0LQzu/vjiW6V1RVqFksSsrq8mbzTcvHQQ5rr1ZkpsZbmu/iX
+         MeYYM0c83IBIp+4rCwpcg3+ifDvyUrWwxK6mT3QGcXTLmWpx6dkRsdesRq4pmrlEp5D3
+         cJeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/2N+MJXhRREUEbo0WZe6XYT3rSaV4YhCnP6qLL0FGS8=;
+        b=aHfQpZJVVI6uOdjWiBXfVOTI946pmgLUFWOXVkUSiRY11B0Uy4Plsdv9rJjOOLRogC
+         mVujaevfc7KcUNUd1nzHrj/Y83g8Zbg022cs6OkiM4X0iNkUedvv6ZLupqzENsZEo5i4
+         Ujz9xvuGRnXYb5mDMRrmOQLorR0W7Iu11QSFjgRLhbLk4r/smcWs1tgj3SZkfANMY1ww
+         uGE202s7CQqXGQ5b04YIAugKInLi3B/xreJPp34h9cp/2JfYl9yGMclDXyQ0SZDNZ58v
+         Q2wbxGzn36HKGIsBX01GCPbbF0TxVsLYevi/Ru/ZdSPytMRwClbyZlgXOpNBKSV9wp7Y
+         /T/A==
+X-Gm-Message-State: APjAAAXpVxdwvjPNbHP4Yb6/f7MtLyiyzK8wCe6gStm5V8xKEY+YMAHz
+        ZP5sPeqDaQeyBAx61J/g5d8=
+X-Google-Smtp-Source: APXvYqxmnZ8QV+Ivae6fUHJ98I73necM49LU2eHLmv2RYZMlhl/4p9p7L8eDApXo77Be+4/Lbtbo4w==
+X-Received: by 2002:a63:7448:: with SMTP id e8mr2665978pgn.268.1571988696197;
+        Fri, 25 Oct 2019 00:31:36 -0700 (PDT)
+Received: from localhost.localdomain ([103.231.91.67])
+        by smtp.gmail.com with ESMTPSA id y8sm1299823pgs.34.2019.10.25.00.31.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 00:31:35 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net
+Cc:     torvalds@linux-foundation.org, rdunlap@infradead.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] scripts:patch-kernel:bash syntax replace
+Date:   Fri, 25 Oct 2019 12:58:53 +0530
+Message-Id: <20191025072852.356-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similarly to paRAM slots, channels can be used by other cores.
+This patch will replace backquote with dollar parenthesis
+for better realdibility.
 
-The common dma-channel-mask property can be used for specifying the
-available channels.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- Documentation/devicetree/bindings/dma/ti-edma.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ scripts/patch-kernel | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-index 4bbc94d829c8..0e1398f93aa2 100644
---- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-@@ -42,6 +42,11 @@ Optional properties:
- - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
- 		the driver, they are allocated to be used by for example the
- 		DSP. See example.
-+- dma-channel-mask: Mask of usable channels.
-+		Single uint32 for EDMA with 32 channels, array of two uint32 for
-+		EDMA with 64 channels. See example and
-+		Documentation/devicetree/bindings/dma/dma-common.yaml
-+
- 
- ------------------------------------------------------------------------------
- eDMA3 Transfer Controller
-@@ -91,6 +96,9 @@ edma: edma@49000000 {
- 	ti,edma-memcpy-channels = <20 21>;
- 	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
- 	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
-+	/* The following channels are reserved: 35-44 */
-+	dma-channel-mask = <0xffffffff /* Channel 0-31 */
-+			    0xffffe007>; /* Channel 32-63 */
- };
- 
- edma_tptc0: tptc@49800000 {
--- 
-Peter
+diff --git a/scripts/patch-kernel b/scripts/patch-kernel
+index 033d5916797d..d864bbd67940 100755
+--- a/scripts/patch-kernel
++++ b/scripts/patch-kernel
+@@ -153,7 +153,7 @@ applyPatch () {
+     echo "failed.  Clean up yourself."
+     return 1;
+   fi
+-  if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
++  if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
+   then
+     echo "Aborting.  Reject files found."
+     return 1;
+@@ -175,7 +175,7 @@ reversePatch () {
+ 		echo "failed.  Clean it up."
+ 		exit 1
+ 	fi
+-	if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
++	if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
+ 	then
+ 		echo "Aborting.  Reject files found."
+ 		return 1
+@@ -189,7 +189,7 @@ reversePatch () {
+ # set current VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION
+ # force $TMPFILEs below to be in local directory: a slash character prevents
+ # the dot command from using the search path.
+-TMPFILE=`mktemp ./.tmpver.XXXXXX` || { echo "cannot make temp file" ; exit 1; }
++TMPFILE=$(mktemp ./.tmpver.XXXXXX$( || { echo "cannot make temp file" ; exit 1; }
+ grep -E "^(VERSION|PATCHLEVEL|SUBLEVEL|EXTRAVERSION)" $sourcedir/Makefile > $TMPFILE
+ tr -d [:blank:] < $TMPFILE > $TMPFILE.1
+ . $TMPFILE.1
+@@ -200,7 +200,7 @@ then
+     exit 1
+ fi
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-NAME=`grep ^NAME $sourcedir/Makefile`
++NAME=$(grep ^NAME $sourcedir/Makefile)
+ NAME=${NAME##*=}
+
+ echo "Current kernel version is $VERSION.$PATCHLEVEL.$SUBLEVEL${EXTRAVERSION} ($NAME)"
+@@ -216,8 +216,8 @@ fi
+
+ #echo "stopvers=$stopvers"
+ if [ $stopvers != "default" ]; then
+-	STOPSUBLEVEL=`echo $stopvers | cut -d. -f3`
+-	STOPEXTRA=`echo $stopvers | cut -d. -f4`
++	STOPSUBLEVEL=$(echo $stopvers | cut -d. -f3)
++	STOPEXTRA=$(echo $stopvers | cut -d. -f4)
+ 	STOPFULLVERSION=${stopvers%%.$STOPEXTRA}
+ 	#echo "#___STOPSUBLEVEL=/$STOPSUBLEVEL/, STOPEXTRA=/$STOPEXTRA/"
+ else
+@@ -306,7 +306,7 @@ if [ x$gotac != x ]; then
+ 		HIGHESTPATCH=0
+ 		for PATCHNAMES in $patchdir/patch-${CURRENTFULLVERSION}-ac*\.*
+ 		do
+-			ACVALUE=`echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/'`
++			ACVALUE=$(echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/')
+ 			# Check it is actually a recognised patch type
+ 			findFile $patchdir/patch-${CURRENTFULLVERSION}-ac${ACVALUE} || break
+
+--
+2.20.1
 
