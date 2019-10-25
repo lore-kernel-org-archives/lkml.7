@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D834ECA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF67CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4AA222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D95222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011893;
-	bh=PgKnupQdYBqyAjhO6bP5I+70rfrYLfkOkbV+KSfxYYE=;
+	s=default; t=1572011898;
+	bh=KWU7BHtW1MjfF5bDFuWkOZ9ClbP7k9UzxG8j4pcmr1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9wGYNxu9tcEq3S1UDiIRUrR6dJDsHQK7Np8arMOcGdb8MkYqfMcJBr+/e0x8PANI
-	 DkEdUFvSOiHp+Rqja2yNe1kEI7Wgauh+PzwvfqMBmjRmSsLov2AKC6TK2/b9FaN2V7
-	 LsgKj9Rsup1GEz5A2dnQFW1rL7Fj6015wiAyma2I=
+	b=KQYyuAb1AVL0+MirC4aBzppLJzdetL/4PInNAD+Gmprkmvu14F7H8mNZTZkB3/Mku
+	 f0e2CfHwn84M9kW4hDBlonC1fbBHd2jPqW+Mae5iAxX5JqjcbE/CtOokcoK9e71WMu
+	 jth/t07cnuf7AaX2z7gECcKN2YA1aNhEuoTWPnHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505500AbfJYN6L (ORCPT
+        id S2505512AbfJYN6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53360 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505484AbfJYN6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:09 -0400
+        id S1732654AbfJYN6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA67A222CD;
-        Fri, 25 Oct 2019 13:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCE79222BE;
+        Fri, 25 Oct 2019 13:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011888;
-        bh=PgKnupQdYBqyAjhO6bP5I+70rfrYLfkOkbV+KSfxYYE=;
+        s=default; t=1572011892;
+        bh=KWU7BHtW1MjfF5bDFuWkOZ9ClbP7k9UzxG8j4pcmr1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tiXINrJT/it0T9sc4oUX04PEhcwuRvpwhiS0OF63jaNGCkhY/33ckGJe2PjWbuV4C
-         JhMSNzlFwsS8ZVYwhr+lt2KZvTE/Asz781Xqsqi8BbikuWgftdH+xPN3ZbVhzAa0pv
-         hZwcOzU4kLVUwLmj9O3WqlS6xrz20st5mGfm1j+Y=
+        b=GVFj28ukSLkya+ZoN4WpxTlOcKHrgBkYK+uhDx6kl3rNsNNwSF7spuw49BZSS+A2Y
+         /Uuyf0rHhcWa2WA6eOlKYlvV92vLSdvRYAgBQq/fulKt/Jsn4pUpMfLqPIt8zD82ph
+         d4t1jWOSLXE5KJl7DP+YqgCzZdyOHkli8ha+KL70=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 04/20] driver core: platform: Fix the usage of platform device name(pdev->name)
-Date:   Fri, 25 Oct 2019 09:57:44 -0400
-Message-Id: <20191025135801.25739-4-sashal@kernel.org>
+Cc:     Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 05/20] powerpc/pseries/hvconsole: Fix stack overread via udbg
+Date:   Fri, 25 Oct 2019 09:57:45 -0400
+Message-Id: <20191025135801.25739-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
 References: <20191025135801.25739-1-sashal@kernel.org>
@@ -59,89 +59,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+From: Daniel Axtens <dja@axtens.net>
 
-[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
+[ Upstream commit 934bda59f286d0221f1a3ebab7f5156a996cc37d ]
 
-Platform core is using pdev->name as the platform device name to do
-the binding of the devices with the drivers. But, when the platform
-driver overrides the platform device name with dev_set_name(),
-the pdev->name is pointing to a location which is freed and becomes
-an invalid parameter to do the binding match.
+While developing KASAN for 64-bit book3s, I hit the following stack
+over-read.
 
-use-after-free instance:
+It occurs because the hypercall to put characters onto the terminal
+takes 2 longs (128 bits/16 bytes) of characters at a time, and so
+hvc_put_chars() would unconditionally copy 16 bytes from the argument
+buffer, regardless of supplied length. However, udbg_hvc_putc() can
+call hvc_put_chars() with a single-byte buffer, leading to the error.
 
-[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
-[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
-[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
-			G S      W  O      4.19.30+ #3
-[   33.346835] Hardware name: MTP (DT)
-[   33.350419] Call trace:
-[   33.352941]  dump_backtrace+0x0/0x3b8
-[   33.356713]  show_stack+0x24/0x30
-[   33.360119]  dump_stack+0x160/0x1d8
-[   33.363709]  print_address_description+0x84/0x2e0
-[   33.368549]  kasan_report+0x26c/0x2d0
-[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
-[   33.377248]  strcmp+0x8c/0xb0
-[   33.380306]  platform_match+0x70/0x1f8
-[   33.384168]  __driver_attach+0x78/0x3a0
-[   33.388111]  bus_for_each_dev+0x13c/0x1b8
-[   33.392237]  driver_attach+0x4c/0x58
-[   33.395910]  bus_add_driver+0x350/0x560
-[   33.399854]  driver_register+0x23c/0x328
-[   33.403886]  __platform_driver_register+0xd0/0xe0
+  ==================================================================
+  BUG: KASAN: stack-out-of-bounds in hvc_put_chars+0xdc/0x110
+  Read of size 8 at addr c0000000023e7a90 by task swapper/0
 
-So, use dev_name(&pdev->dev), which fetches the platform device name from
-the kobject(dev->kobj->name) of the device instead of the pdev->name.
+  CPU: 0 PID: 0 Comm: swapper Not tainted 5.2.0-rc2-next-20190528-02824-g048a6ab4835b #113
+  Call Trace:
+    dump_stack+0x104/0x154 (unreliable)
+    print_address_description+0xa0/0x30c
+    __kasan_report+0x20c/0x224
+    kasan_report+0x18/0x30
+    __asan_report_load8_noabort+0x24/0x40
+    hvc_put_chars+0xdc/0x110
+    hvterm_raw_put_chars+0x9c/0x110
+    udbg_hvc_putc+0x154/0x200
+    udbg_write+0xf0/0x240
+    console_unlock+0x868/0xd30
+    register_console+0x970/0xe90
+    register_early_udbg_console+0xf8/0x114
+    setup_arch+0x108/0x790
+    start_kernel+0x104/0x784
+    start_here_common+0x1c/0x534
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  Memory state around the buggy address:
+   c0000000023e7980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   c0000000023e7a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1
+  >c0000000023e7a80: f1 f1 01 f2 f2 f2 00 00 00 00 00 00 00 00 00 00
+                           ^
+   c0000000023e7b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   c0000000023e7b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ==================================================================
+
+Document that a 16-byte buffer is requred, and provide it in udbg.
+
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/pseries/hvconsole.c |  2 +-
+ drivers/tty/hvc/hvc_vio.c                  | 16 +++++++++++++++-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 14ff40371f013..ffa77b3df4ba2 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -845,7 +845,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 	if (len != -ENODEV)
- 		return len;
- 
--	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
-+	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
- 
- 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+diff --git a/arch/powerpc/platforms/pseries/hvconsole.c b/arch/powerpc/platforms/pseries/hvconsole.c
+index 74da18de853af..73ec15cd27080 100644
+--- a/arch/powerpc/platforms/pseries/hvconsole.c
++++ b/arch/powerpc/platforms/pseries/hvconsole.c
+@@ -62,7 +62,7 @@ EXPORT_SYMBOL(hvc_get_chars);
+  * @vtermno: The vtermno or unit_address of the adapter from which the data
+  *	originated.
+  * @buf: The character buffer that contains the character data to send to
+- *	firmware.
++ *	firmware. Must be at least 16 bytes, even if count is less than 16.
+  * @count: Send this number of characters.
+  */
+ int hvc_put_chars(uint32_t vtermno, const char *buf, int count)
+diff --git a/drivers/tty/hvc/hvc_vio.c b/drivers/tty/hvc/hvc_vio.c
+index b05dc50866279..8bab8b00d47d6 100644
+--- a/drivers/tty/hvc/hvc_vio.c
++++ b/drivers/tty/hvc/hvc_vio.c
+@@ -120,6 +120,14 @@ static int hvterm_raw_get_chars(uint32_t vtermno, char *buf, int count)
+ 	return got;
  }
-@@ -921,7 +921,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
- 		return rc;
  
- 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
--			pdev->name);
-+			dev_name(&pdev->dev));
- 	return 0;
- }
- 
-@@ -930,7 +930,7 @@ static const struct platform_device_id *platform_match_id(
- 			struct platform_device *pdev)
++/**
++ * hvterm_raw_put_chars: send characters to firmware for given vterm adapter
++ * @vtermno: The virtual terminal number.
++ * @buf: The characters to send. Because of the underlying hypercall in
++ *       hvc_put_chars(), this buffer must be at least 16 bytes long, even if
++ *       you are sending fewer chars.
++ * @count: number of chars to send.
++ */
+ static int hvterm_raw_put_chars(uint32_t vtermno, const char *buf, int count)
  {
- 	while (id->name[0]) {
--		if (strcmp(pdev->name, id->name) == 0) {
-+		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
- 			pdev->id_entry = id;
- 			return id;
- 		}
-@@ -974,7 +974,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
- 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 	struct hvterm_priv *pv = hvterm_privs[vtermno];
+@@ -232,6 +240,7 @@ static const struct hv_ops hvterm_hvsi_ops = {
+ static void udbg_hvc_putc(char c)
+ {
+ 	int count = -1;
++	unsigned char bounce_buffer[16];
  
- 	/* fall-back to driver name match */
--	return (strcmp(pdev->name, drv->name) == 0);
-+	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
- }
- 
- #ifdef CONFIG_PM_SLEEP
+ 	if (!hvterm_privs[0])
+ 		return;
+@@ -242,7 +251,12 @@ static void udbg_hvc_putc(char c)
+ 	do {
+ 		switch(hvterm_privs[0]->proto) {
+ 		case HV_PROTOCOL_RAW:
+-			count = hvterm_raw_put_chars(0, &c, 1);
++			/*
++			 * hvterm_raw_put_chars requires at least a 16-byte
++			 * buffer, so go via the bounce buffer
++			 */
++			bounce_buffer[0] = c;
++			count = hvterm_raw_put_chars(0, bounce_buffer, 1);
+ 			break;
+ 		case HV_PROTOCOL_HVSI:
+ 			count = hvterm_hvsi_put_chars(0, &c, 1);
 -- 
 2.20.1
 
