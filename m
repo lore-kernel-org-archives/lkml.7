@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB90C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D083CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FF821D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2833921D82
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011760;
-	bh=tmHS6dNPbM8iY9hq0ePqUSvZvvPJdn4+Z3vB+QWrr4k=;
+	s=default; t=1572011767;
+	bh=YHnkUtw/XFK3xLZfVX45y1vkAAIo5c2SU20QP3kvqz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CK09ZPoaCwpJYlwzjXnzK7E4rEg8xczPsJ9sPHuUg18wvvopJaY79SF1YQnW0tSMz
-	 Y2TM7Ch9Fu/oRCxzPof+ksrDIJiq90FXFD1Ko07kN5Wa7vftohkdVl6+5QaZfyxUAV
-	 L2mXlR8pAC3caZNY4JMwwDB31KEN1zva2to6VlUc=
+	b=Y68Vp/oP2ThpFI/6u+zIWRpOBVmmBFgvcXClZZJ+gRrspffo5bHZjGcLa8XpFSt4V
+	 FfuMjMRyO0snZvwil6a7rxFMV9gaP4/A5lsLKh7LC0Re6XZWvTCr3UHOHO2jRltxxY
+	 MxrCzSF8IJTblkeLpwCzMr850cDiSIReKdhrKyf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505214AbfJYN4A (ORCPT
+        id S2505231AbfJYN4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49788 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632758AbfJYNzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:55:44 -0400
+        id S2505204AbfJYNz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:55:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F9C0222CB;
-        Fri, 25 Oct 2019 13:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45DE121E6F;
+        Fri, 25 Oct 2019 13:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011743;
-        bh=tmHS6dNPbM8iY9hq0ePqUSvZvvPJdn4+Z3vB+QWrr4k=;
+        s=default; t=1572011757;
+        bh=YHnkUtw/XFK3xLZfVX45y1vkAAIo5c2SU20QP3kvqz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M9K8+TWqbKTeXgrxBR919Jszce70V9bMIuw5tNIMP34vrrkNoCbShC3Z+rr/qGIOG
-         poCywqGq1BAv/Sw4ibKUzKxtRpujzgApBubLaibvwewerPX1vCX9W9zofyyBBovWJi
-         eqh1BA+ov/xcAM3yRCWFMk+TplZyvEZgojSyJouc=
+        b=oGwWxYJP6lUgbX8jY5COVBfApoiUAEcB3UQbq4S+BTlz4lAQwF0/5veIsOzQk72tm
+         vvNXAzFuZtnsqiANaCV2iLMRj10gSjysSQ7QZmFQatrUuJZZY4H8+cBEoDiD+PCPId
+         IWBnHwkEIoMhc2OwJmE29HdFcqHYs8HD9UDMKcIY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 24/33] ubi: ubi_wl_get_peb: Increase the number of attempts while getting PEB
-Date:   Fri, 25 Oct 2019 09:54:56 -0400
-Message-Id: <20191025135505.24762-24-sashal@kernel.org>
+Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 33/33] nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T
+Date:   Fri, 25 Oct 2019 09:55:05 -0400
+Message-Id: <20191025135505.24762-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -59,98 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit 8615b94f029a4fb4306d3512aaf1c45f5fc24d4b ]
+[ Upstream commit 19ea025e1d28c629b369c3532a85b3df478cc5c6 ]
 
-Running stress test io_paral (A pressure ubi test in mtd-utils) on an
-UBI device with fewer PEBs (fastmap enabled) may cause ENOSPC errors and
-make UBI device read-only, but there are still free PEBs on the UBI
-device. This problem can be easily reproduced by performing the following
-steps on a 2-core machine:
-  $ modprobe nandsim first_id_byte=0x20 second_id_byte=0x33 parts=80
-  $ modprobe ubi mtd="0,0" fm_autoconvert
-  $ ./io_paral /dev/ubi0
+Kingston NVME SSD with firmware version E8FK11.T has no interrupt after
+resume with actions related to suspend to idle. This patch applied
+NVME_QUIRK_SIMPLE_SUSPEND quirk to fix this issue.
 
-We may see the following verbose:
-(output)
-  [io_paral] update_volume():108: failed to write 380 bytes at offset
-  95920 of volume 2
-  [io_paral] update_volume():109: update: 97088 bytes
-  [io_paral] write_thread():227: function pwrite() failed with error 28
-  (No space left on device)
-  [io_paral] write_thread():229: cannot write 15872 bytes to offs 31744,
-  wrote -1
-(dmesg)
-  ubi0 error: ubi_wl_get_peb [ubi]: Unable to get a free PEB from user WL
-  pool
-  ubi0 warning: ubi_eba_write_leb [ubi]: switch to read-only mode
-  CPU: 0 PID: 2027 Comm: io_paral Not tainted 5.3.0-rc2-00001-g5986cd0 #9
-  ubi0 warning: try_write_vid_and_data [ubi]: failed to write VID header
-  to LEB 2:5, PEB 18
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
-  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-    dump_stack+0x85/0xba
-    ubi_eba_write_leb+0xa1e/0xa40 [ubi]
-    vol_cdev_write+0x307/0x520 [ubi]
-    vfs_write+0xfa/0x280
-    ksys_pwrite64+0xc5/0xe0
-    __x64_sys_pwrite64+0x22/0x30
-    do_syscall_64+0xbf/0x440
-
-In function ubi_wl_get_peb, the operation of filling the pool
-(ubi_update_fastmap) with free PEBs and fetching a free PEB from the pool
-is not atomic. After thread A filling the pool with free PEB, free PEB may
-be taken away by thread B. When thread A checks the expression again, the
-condition is still unsatisfactory. At this time, there may still be free
-PEBs on UBI that can be filled into the pool.
-
-This patch increases the number of attempts to obtain PEB. An extreme
-case (No free PEBs left after creating test volumes) has been tested on
-different type of machines for 100 times. The biggest number of attempts
-are shown below:
-
-             x86_64     arm64
-  2-core        4         4
-  4-core        8         4
-  8-core        4         4
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/fastmap-wl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nvme/host/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/mtd/ubi/fastmap-wl.c b/drivers/mtd/ubi/fastmap-wl.c
-index d9e2e3a6e105f..c44c8470247e1 100644
---- a/drivers/mtd/ubi/fastmap-wl.c
-+++ b/drivers/mtd/ubi/fastmap-wl.c
-@@ -196,7 +196,7 @@ static int produce_free_peb(struct ubi_device *ubi)
-  */
- int ubi_wl_get_peb(struct ubi_device *ubi)
- {
--	int ret, retried = 0;
-+	int ret, attempts = 0;
- 	struct ubi_fm_pool *pool = &ubi->fm_pool;
- 	struct ubi_fm_pool *wl_pool = &ubi->fm_wl_pool;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index d3d6b7bd69033..079da1c613f04 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2267,6 +2267,16 @@ static const struct nvme_core_quirk_entry core_quirks[] = {
+ 		.vid = 0x14a4,
+ 		.fr = "22301111",
+ 		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
++	},
++	{
++		/*
++		 * This Kingston E8FK11.T firmware version has no interrupt
++		 * after resume with actions related to suspend to idle
++		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
++		 */
++		.vid = 0x2646,
++		.fr = "E8FK11.T",
++		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
+ 	}
+ };
  
-@@ -221,12 +221,12 @@ int ubi_wl_get_peb(struct ubi_device *ubi)
- 
- 	if (pool->used == pool->size) {
- 		spin_unlock(&ubi->wl_lock);
--		if (retried) {
-+		attempts++;
-+		if (attempts == 10) {
- 			ubi_err(ubi, "Unable to get a free PEB from user WL pool");
- 			ret = -ENOSPC;
- 			goto out;
- 		}
--		retried = 1;
- 		up_read(&ubi->fm_eba_sem);
- 		ret = produce_free_peb(ubi);
- 		if (ret < 0) {
 -- 
 2.20.1
 
