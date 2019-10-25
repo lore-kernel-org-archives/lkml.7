@@ -2,109 +2,152 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1F4CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5001ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED8C21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6202070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406637AbfJYHOy (ORCPT
+        id S2406706AbfJYHQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:14:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5179 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406555AbfJYHOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:14:54 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3B05BC9B8F20A4332C18;
-        Fri, 25 Oct 2019 15:14:50 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 15:14:44 +0800
-Subject: Re: [PATCH] audit: remove redundant condition check in
- kauditd_thread()
-To:     Paul Moore <paul@paul-moore.com>, <eparis@redhat.com>
-CC:     <linux-audit@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <hushiyuan@huawei.com>, <linfeilong@huawei.com>
-References: <7869bb43-5cb1-270a-07d1-31574595e13e@huawei.com>
- <16e0170d878.280e.85c95baa4474aabc7814e68940a78392@paul-moore.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <a700333e-53b8-1a28-b27d-2ba3f612df2a@huawei.com>
-Date:   Fri, 25 Oct 2019 15:14:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <16e0170d878.280e.85c95baa4474aabc7814e68940a78392@paul-moore.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+        Fri, 25 Oct 2019 03:16:36 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54508 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406555AbfJYHQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:16:35 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EA5701A040B;
+        Fri, 25 Oct 2019 09:16:32 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C8FEC1A0412;
+        Fri, 25 Oct 2019 09:16:27 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8064C402BC;
+        Fri, 25 Oct 2019 15:16:21 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] ASoC: fsl_asrc: refine the setting of internal clock divider
+Date:   Fri, 25 Oct 2019 15:13:22 +0800
+Message-Id: <a0cd2ecf5e833fbdc064ba73391481d6073e7254.1571986398.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The output divider should align with the output sample
+rate, if use ideal sample rate, there will be a lot of overload,
+which would cause underrun.
 
+The maximum divider of asrc clock is 1024, but there is no
+judgement for this limitaion in driver, which may cause the divider
+setting not correct.
 
-On 2019/10/25 13:43, Paul Moore wrote:
-> On October 23, 2019 3:27:50 PM Yunfeng Ye <yeyunfeng@huawei.com> wrote:
->> Warning is found by the code analysis tool:
->>  "the condition 'if(ac && rc < 0)' is redundant: ac"
->>
->>
->> The @ac variable has been checked before. It can't be a null pointer
->> here, so remove the redundant condition check.
->>
->>
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> ---
->> kernel/audit.c | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Hello,
-> 
-> Thank you for the patch.  Looking quickly at it, it appears to be correct, unfortunately I'm not in a position to merge non-critical patches, but I expect to merge this next week.
-> 
-ok, thanks.
+For non-ideal ratio mode, the clock rate should divide the sample
+rate with no remainder, and the quotient should be less than 1024.
 
-> 
->> diff --git a/kernel/audit.c b/kernel/audit.c
->> index da8dc0db5bd3..193f3a1f4425 100644
->> --- a/kernel/audit.c
->> +++ b/kernel/audit.c
->> @@ -830,7 +830,7 @@ static int kauditd_thread(void *dummy)
->>  rc = kauditd_send_queue(sk, portid,
->>  &audit_hold_queue, UNICAST_RETRIES,
->>  NULL, kauditd_rehold_skb);
->> - if (ac && rc < 0) {
->> + if (rc < 0) {
->>  sk = NULL;
->>  auditd_reset(ac);
->>  goto main_queue;
->> @@ -840,7 +840,7 @@ static int kauditd_thread(void *dummy)
->>  rc = kauditd_send_queue(sk, portid,
->>  &audit_retry_queue, UNICAST_RETRIES,
->>  NULL, kauditd_hold_skb);
->> - if (ac && rc < 0) {
->> + if (rc < 0) {
->>  sk = NULL;
->>  auditd_reset(ac);
->>  goto main_queue;
->> --
->> 2.7.4.3
-> 
-> --
-> paul moore
-> www.paul-moore.com
-> 
-> 
-> 
-> 
-> 
-> 
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+Change in v2
+- remove p2p/m2m word
+- use use_ideal_rate
+
+ sound/soc/fsl/fsl_asrc.c | 37 +++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
+
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 0bf91a6f54b9..89cf333154c7 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -259,8 +259,11 @@ static int fsl_asrc_set_ideal_ratio(struct fsl_asrc_pair *pair,
+  * It configures those ASRC registers according to a configuration instance
+  * of struct asrc_config which includes in/output sample rate, width, channel
+  * and clock settings.
++ *
++ * Note:
++ * use_ideal_rate = true is need by some case which need higher performance.
+  */
+-static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
++static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
+ {
+ 	struct asrc_config *config = pair->config;
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+@@ -268,7 +271,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+ 	enum asrc_word_width input_word_width;
+ 	enum asrc_word_width output_word_width;
+ 	u32 inrate, outrate, indiv, outdiv;
+-	u32 clk_index[2], div[2];
++	u32 clk_index[2], div[2], rem[2];
++	u64 clk_rate;
+ 	int in, out, channels;
+ 	int pre_proc, post_proc;
+ 	struct clk *clk;
+@@ -351,8 +355,10 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+ 	/* We only have output clock for ideal ratio mode */
+ 	clk = asrc_priv->asrck_clk[clk_index[ideal ? OUT : IN]];
+ 
+-	div[IN] = clk_get_rate(clk) / inrate;
+-	if (div[IN] == 0) {
++	clk_rate = clk_get_rate(clk);
++	rem[IN] = do_div(clk_rate, inrate);
++	div[IN] = (u32)clk_rate;
++	if (div[IN] == 0 || (!ideal && (div[IN] > 1024 || rem[IN] != 0))) {
+ 		pair_err("failed to support input sample rate %dHz by asrck_%x\n",
+ 				inrate, clk_index[ideal ? OUT : IN]);
+ 		return -EINVAL;
+@@ -360,18 +366,29 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
+ 
+ 	clk = asrc_priv->asrck_clk[clk_index[OUT]];
+ 
+-	/* Use fixed output rate for Ideal Ratio mode (INCLK_NONE) */
+-	if (ideal)
+-		div[OUT] = clk_get_rate(clk) / IDEAL_RATIO_RATE;
++	/*
++	 * Output rate should be align with the out samplerate. If set too
++	 * high output rate, there will be lots of Overload.
++	 * But some case need higher performance, then we can use
++	 * IDEAL_RATIO_RATE specifically for such case.
++	 */
++	clk_rate = clk_get_rate(clk);
++	if (ideal && use_ideal_rate)
++		rem[OUT] = do_div(clk_rate, IDEAL_RATIO_RATE);
+ 	else
+-		div[OUT] = clk_get_rate(clk) / outrate;
++		rem[OUT] = do_div(clk_rate, outrate);
++	div[OUT] = clk_rate;
+ 
+-	if (div[OUT] == 0) {
++	if (div[OUT] == 0 || (!ideal && (div[OUT] > 1024 || rem[OUT] != 0))) {
+ 		pair_err("failed to support output sample rate %dHz by asrck_%x\n",
+ 				outrate, clk_index[OUT]);
+ 		return -EINVAL;
+ 	}
+ 
++	/* Divider range is [1, 1024] */
++	div[IN] = min_t(u32, 1024, div[IN]);
++	div[OUT] = min_t(u32, 1024, div[OUT]);
++
+ 	/* Set the channel number */
+ 	channels = config->channel_num;
+ 
+@@ -560,7 +577,7 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+ 		config.output_sample_rate = rate;
+ 	}
+ 
+-	ret = fsl_asrc_config_pair(pair);
++	ret = fsl_asrc_config_pair(pair, false);
+ 	if (ret) {
+ 		dev_err(dai->dev, "fail to config asrc pair\n");
+ 		return ret;
+-- 
+2.21.0
 
