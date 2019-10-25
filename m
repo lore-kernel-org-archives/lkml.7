@@ -2,157 +2,526 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4267ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0941CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4A521929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42A121929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502828AbfJYKzs (ORCPT
+        id S2409788AbfJYK4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:55:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:38934 "EHLO foss.arm.com"
+        Fri, 25 Oct 2019 06:56:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:38956 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502755AbfJYKzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:55:47 -0400
+        id S2407177AbfJYK4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:56:49 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA2071FB;
-        Fri, 25 Oct 2019 03:55:46 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EE3D3F6C4;
-        Fri, 25 Oct 2019 03:55:45 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Erico Nunes <nunes.erico@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Steven Price <steven.price@arm.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>
-Subject: [PATCH v5] drm: Don't free jobs in wait_event_interruptible()
-Date:   Fri, 25 Oct 2019 11:51:56 +0100
-Message-Id: <20191025105156.14785-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 233811FB;
+        Fri, 25 Oct 2019 03:56:48 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03B9C3F6C4;
+        Fri, 25 Oct 2019 03:56:45 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 11:56:43 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     samitolvanen@google.com
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/17] add support for Clang's Shadow Call Stack (SCS)
+Message-ID: <20191025105643.GD40270@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191024225132.13410-1-samitolvanen@google.com>
+ <20191024225132.13410-6-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024225132.13410-6-samitolvanen@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_sched_cleanup_jobs() attempts to free finished jobs, however because
-it is called as the condition of wait_event_interruptible() it must not
-sleep. Unfortunately some free callbacks (notably for Panfrost) do sleep.
+On Thu, Oct 24, 2019 at 03:51:20PM -0700, samitolvanen@google.com wrote:
+> This change adds generic support for Clang's Shadow Call Stack,
+> which uses a shadow stack to protect return addresses from being
+> overwritten by an attacker. Details are available here:
+> 
+>   https://clang.llvm.org/docs/ShadowCallStack.html
+> 
+> Note that security guarantees in the kernel differ from the
+> ones documented for user space. The kernel must store addresses
+> of shadow stacks used by other tasks and interrupt handlers in
+> memory, which means an attacker capable reading and writing
+> arbitrary memory may be able to locate them and hijack control
+> flow by modifying shadow stacks that are not currently in use.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  Makefile                       |   6 ++
+>  arch/Kconfig                   |  33 +++++++
+>  include/linux/compiler-clang.h |   6 ++
+>  include/linux/compiler_types.h |   4 +
+>  include/linux/scs.h            |  78 +++++++++++++++++
+>  init/init_task.c               |   8 ++
+>  kernel/Makefile                |   1 +
+>  kernel/fork.c                  |   9 ++
+>  kernel/sched/core.c            |   2 +
+>  kernel/sched/sched.h           |   1 +
+>  kernel/scs.c                   | 155 +++++++++++++++++++++++++++++++++
+>  11 files changed, 303 insertions(+)
+>  create mode 100644 include/linux/scs.h
+>  create mode 100644 kernel/scs.c
+> 
+> diff --git a/Makefile b/Makefile
+> index 5475cdb6d57d..2b5c59fb18f2 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -846,6 +846,12 @@ ifdef CONFIG_LIVEPATCH
+>  KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
+>  endif
+>  
+> +ifdef CONFIG_SHADOW_CALL_STACK
+> +CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
+> +KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
+> +export CC_FLAGS_SCS
+> +endif
+> +
+>  # arch Makefile may override CC so keep this after arch Makefile is included
+>  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+>  
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 5f8a5d84dbbe..5e34cbcd8d6a 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -521,6 +521,39 @@ config STACKPROTECTOR_STRONG
+>  	  about 20% of all kernel functions, which increases the kernel code
+>  	  size by about 2%.
+>  
+> +config ARCH_SUPPORTS_SHADOW_CALL_STACK
+> +	bool
+> +	help
+> +	  An architecture should select this if it supports Clang's Shadow
+> +	  Call Stack, has asm/scs.h, and implements runtime support for shadow
+> +	  stack switching.
+> +
+> +config SHADOW_CALL_STACK_VMAP
+> +	bool
+> +	depends on SHADOW_CALL_STACK
+> +	help
+> +	  Use virtually mapped shadow call stacks. Selecting this option
+> +	  provides better stack exhaustion protection, but increases per-thread
+> +	  memory consumption as a full page is allocated for each shadow stack.
+> +
+> +config SHADOW_CALL_STACK
+> +	bool "Clang Shadow Call Stack"
+> +	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+> +	help
+> +	  This option enables Clang's Shadow Call Stack, which uses a
+> +	  shadow stack to protect function return addresses from being
+> +	  overwritten by an attacker. More information can be found from
+> +	  Clang's documentation:
+> +
+> +	    https://clang.llvm.org/docs/ShadowCallStack.html
+> +
+> +	  Note that security guarantees in the kernel differ from the ones
+> +	  documented for user space. The kernel must store addresses of shadow
+> +	  stacks used by other tasks and interrupt handlers in memory, which
+> +	  means an attacker capable reading and writing arbitrary memory may
+> +	  be able to locate them and hijack control flow by modifying shadow
+> +	  stacks that are not currently in use.
+> +
+>  config HAVE_ARCH_WITHIN_STACK_FRAMES
+>  	bool
+>  	help
+> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> index 333a6695a918..afe5e24088b2 100644
+> --- a/include/linux/compiler-clang.h
+> +++ b/include/linux/compiler-clang.h
+> @@ -42,3 +42,9 @@
+>   * compilers, like ICC.
+>   */
+>  #define barrier() __asm__ __volatile__("" : : : "memory")
+> +
+> +#if __has_feature(shadow_call_stack)
+> +# define __noscs	__attribute__((no_sanitize("shadow-call-stack")))
+> +#else
+> +# define __noscs
+> +#endif
 
-Instead let's rename drm_sched_cleanup_jobs() to
-drm_sched_get_cleanup_job() and simply return a job for processing if
-there is one. The caller can then call the free_job() callback outside
-the wait_event_interruptible() where sleeping is possible before
-re-checking and returning to sleep if necessary.
+Huh. I didn't realise it was valid to have a space after the `#` like
+this. I see we're very inconsistent about style on that front, so this
+is fine, I'll just have to get used to it. :)
 
-Tested-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Fixes: 5918045c4ed4 ("drm/scheduler: rework job destruction")
-Signed-off-by: Steven Price <steven.price@arm.com>
----
-Changes since v4:
- * Don't initialise job in drm_sched_get_cleanup_job()
- * Change while loop into if in drm_sched_main()
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 72393a8c1a6c..be5d5be4b1ae 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -202,6 +202,10 @@ struct ftrace_likely_data {
+>  # define randomized_struct_fields_end
+>  #endif
+>  
+> +#ifndef __noscs
+> +# define __noscs
+> +#endif
+> +
+>  #ifndef asm_volatile_goto
+>  #define asm_volatile_goto(x...) asm goto(x)
+>  #endif
+> diff --git a/include/linux/scs.h b/include/linux/scs.h
+> new file mode 100644
+> index 000000000000..c8b0ccfdd803
+> --- /dev/null
+> +++ b/include/linux/scs.h
+> @@ -0,0 +1,78 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Shadow Call Stack support.
+> + *
+> + * Copyright (C) 2018 Google LLC
+> + */
+> +
+> +#ifndef _LINUX_SCS_H
+> +#define _LINUX_SCS_H
+> +
+> +#include <linux/gfp.h>
+> +#include <linux/sched.h>
+> +#include <asm/page.h>
+> +
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +
+> +#define SCS_SIZE	1024
 
- drivers/gpu/drm/scheduler/sched_main.c | 43 ++++++++++++++------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+I think it'd be worth a comment on how this size was chosen. IIRC this
+empirical?
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 9a0ee74d82dc..d4cc7289147e 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
- }
- 
- /**
-- * drm_sched_cleanup_jobs - destroy finished jobs
-+ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
-  *
-  * @sched: scheduler instance
-  *
-- * Remove all finished jobs from the mirror list and destroy them.
-+ * Returns the next finished job from the mirror list (if there is one)
-+ * ready for it to be destroyed.
-  */
--static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
-+static struct drm_sched_job *
-+drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
- {
-+	struct drm_sched_job *job;
- 	unsigned long flags;
- 
- 	/* Don't destroy jobs while the timeout worker is running */
- 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr))
--		return;
--
-+		return NULL;
- 
--	while (!list_empty(&sched->ring_mirror_list)) {
--		struct drm_sched_job *job;
-+	spin_lock_irqsave(&sched->job_list_lock, flags);
- 
--		job = list_first_entry(&sched->ring_mirror_list,
-+	job = list_first_entry_or_null(&sched->ring_mirror_list,
- 				       struct drm_sched_job, node);
--		if (!dma_fence_is_signaled(&job->s_fence->finished))
--			break;
- 
--		spin_lock_irqsave(&sched->job_list_lock, flags);
-+	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
- 		/* remove job from ring_mirror_list */
- 		list_del_init(&job->node);
--		spin_unlock_irqrestore(&sched->job_list_lock, flags);
--
--		sched->ops->free_job(job);
-+	} else {
-+		job = NULL;
-+		/* queue timeout for next job */
-+		drm_sched_start_timeout(sched);
- 	}
- 
--	/* queue timeout for next job */
--	spin_lock_irqsave(&sched->job_list_lock, flags);
--	drm_sched_start_timeout(sched);
- 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
- 
-+	return job;
- }
- 
- /**
-@@ -698,12 +696,19 @@ static int drm_sched_main(void *param)
- 		struct drm_sched_fence *s_fence;
- 		struct drm_sched_job *sched_job;
- 		struct dma_fence *fence;
-+		struct drm_sched_job *cleanup_job = NULL;
- 
- 		wait_event_interruptible(sched->wake_up_worker,
--					 (drm_sched_cleanup_jobs(sched),
-+					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
- 					 (!drm_sched_blocked(sched) &&
- 					  (entity = drm_sched_select_entity(sched))) ||
--					 kthread_should_stop()));
-+					 kthread_should_stop());
-+
-+		if (cleanup_job) {
-+			sched->ops->free_job(cleanup_job);
-+			/* queue timeout for next job */
-+			drm_sched_start_timeout(sched);
-+		}
- 
- 		if (!entity)
- 			continue;
--- 
-2.20.1
+> +#define SCS_END_MAGIC	0xaf0194819b1635f6UL
 
+Keyboard smash? ... or is there a prize for whoever figures out the
+secret? ;)
+
+> +
+> +#define GFP_SCS		(GFP_KERNEL | __GFP_ZERO)
+> +
+> +static inline void *task_scs(struct task_struct *tsk)
+> +{
+> +	return task_thread_info(tsk)->shadow_call_stack;
+> +}
+> +
+> +static inline void task_set_scs(struct task_struct *tsk, void *s)
+> +{
+> +	task_thread_info(tsk)->shadow_call_stack = s;
+> +}
+
+This should probably be named get and set, or have:
+
+#define task_scs(tsk)	(task_thread_info(tsk)->shadow_call_stack)
+
+... which can have a trivial implementation as NULL for the !SCS case.
+
+> +
+> +extern void scs_init(void);
+> +extern void scs_task_init(struct task_struct *tsk);
+> +extern void scs_task_reset(struct task_struct *tsk);
+> +extern int scs_prepare(struct task_struct *tsk, int node);
+> +extern bool scs_corrupted(struct task_struct *tsk);
+> +extern void scs_release(struct task_struct *tsk);
+> +
+> +#else /* CONFIG_SHADOW_CALL_STACK */
+> +
+> +static inline void *task_scs(struct task_struct *tsk)
+> +{
+> +	return 0;
+> +}
+
+For all the trivial wrappers you can put the implementation on the same
+line as the prototype. That makes it a bit easier to compare against the
+prototypes on the other side of the ifdeffery.
+
+e.g. this lot can be:
+
+static inline void *task_scs(struct task_struct *tsk) { return 0; } 
+static inline void task_set_scs(struct task_struct *tsk, void *s) { }
+static inline void scs_init(void) { }
+...
+
+> +#endif /* CONFIG_SHADOW_CALL_STACK */
+> +
+> +#endif /* _LINUX_SCS_H */
+> diff --git a/init/init_task.c b/init/init_task.c
+> index 9e5cbe5eab7b..cbd40460e903 100644
+> --- a/init/init_task.c
+> +++ b/init/init_task.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/audit.h>
+>  #include <linux/numa.h>
+> +#include <linux/scs.h>
+>  
+>  #include <asm/pgtable.h>
+>  #include <linux/uaccess.h>
+> @@ -184,6 +185,13 @@ struct task_struct init_task
+>  };
+>  EXPORT_SYMBOL(init_task);
+>  
+> +#ifdef CONFIG_SHADOW_CALL_STACK
+> +unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)] __init_task_data
+> +		__aligned(SCS_SIZE) = {
+> +	[(SCS_SIZE / sizeof(long)) - 1] = SCS_END_MAGIC
+> +};
+> +#endif
+> +
+>  /*
+>   * Initial thread structure. Alignment of this is handled by a special
+>   * linker map entry.
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index daad787fb795..313dbd44d576 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -102,6 +102,7 @@ obj-$(CONFIG_TRACEPOINTS) += trace/
+>  obj-$(CONFIG_IRQ_WORK) += irq_work.o
+>  obj-$(CONFIG_CPU_PM) += cpu_pm.o
+>  obj-$(CONFIG_BPF) += bpf/
+> +obj-$(CONFIG_SHADOW_CALL_STACK) += scs.o
+>  
+>  obj-$(CONFIG_PERF_EVENTS) += events/
+>  
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index bcdf53125210..ae7ebe9f0586 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -94,6 +94,7 @@
+>  #include <linux/livepatch.h>
+>  #include <linux/thread_info.h>
+>  #include <linux/stackleak.h>
+> +#include <linux/scs.h>
+
+Nit: alphabetical order, please (this should come before stackleak.h).
+
+>  
+>  #include <asm/pgtable.h>
+>  #include <asm/pgalloc.h>
+> @@ -451,6 +452,8 @@ void put_task_stack(struct task_struct *tsk)
+>  
+>  void free_task(struct task_struct *tsk)
+>  {
+> +	scs_release(tsk);
+> +
+>  #ifndef CONFIG_THREAD_INFO_IN_TASK
+>  	/*
+>  	 * The task is finally done with both the stack and thread_info,
+> @@ -834,6 +837,8 @@ void __init fork_init(void)
+>  			  NULL, free_vm_stack_cache);
+>  #endif
+>  
+> +	scs_init();
+> +
+>  	lockdep_init_task(&init_task);
+>  	uprobes_init();
+>  }
+> @@ -907,6 +912,7 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+>  	clear_user_return_notifier(tsk);
+>  	clear_tsk_need_resched(tsk);
+>  	set_task_stack_end_magic(tsk);
+> +	scs_task_init(tsk);
+>  
+>  #ifdef CONFIG_STACKPROTECTOR
+>  	tsk->stack_canary = get_random_canary();
+> @@ -2022,6 +2028,9 @@ static __latent_entropy struct task_struct *copy_process(
+>  				 args->tls);
+>  	if (retval)
+>  		goto bad_fork_cleanup_io;
+> +	retval = scs_prepare(p, node);
+> +	if (retval)
+> +		goto bad_fork_cleanup_thread;
+
+Can we please fold scs_prepare() into scs_task_init() and do this in
+dup_task_struct()? That way we set this up consistently in one place,
+where we're also allocating the regular stack.
+
+Arguably stackleak_task_init() would better fit there too.
+
+>  
+>  	stackleak_task_init(p);
+>  
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index dd05a378631a..e7faeb383008 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6013,6 +6013,8 @@ void init_idle(struct task_struct *idle, int cpu)
+>  	raw_spin_lock_irqsave(&idle->pi_lock, flags);
+>  	raw_spin_lock(&rq->lock);
+>  
+> +	scs_task_reset(idle);
+
+I'm a bit confused by this -- please see comments below on
+scs_task_reset().
+
+> +
+>  	__sched_fork(0, idle);
+>  	idle->state = TASK_RUNNING;
+>  	idle->se.exec_start = sched_clock();
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 0db2c1b3361e..c153003a011c 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -58,6 +58,7 @@
+>  #include <linux/profile.h>
+>  #include <linux/psi.h>
+>  #include <linux/rcupdate_wait.h>
+> +#include <linux/scs.h>
+>  #include <linux/security.h>
+>  #include <linux/stop_machine.h>
+>  #include <linux/suspend.h>
+> diff --git a/kernel/scs.c b/kernel/scs.c
+> new file mode 100644
+> index 000000000000..383d29e8c199
+> --- /dev/null
+> +++ b/kernel/scs.c
+> @@ -0,0 +1,155 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Shadow Call Stack support.
+> + *
+> + * Copyright (C) 2019 Google LLC
+> + */
+> +
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/mm.h>
+> +#include <linux/slab.h>
+> +#include <linux/scs.h>
+
+Nit: alphabetical order, please.
+
+> +#include <linux/vmalloc.h>
+> +#include <asm/scs.h>
+> +
+> +static inline void *__scs_base(struct task_struct *tsk)
+> +{
+> +	return (void *)((uintptr_t)task_scs(tsk) & ~(SCS_SIZE - 1));
+> +}
+
+We only ever assign the base to task_scs(tsk), with the current live
+value being in a register that we don't read. Are we expecting arch code
+to keep this up-to-date with the register value?
+
+I would have expected that we just leave this as the base (as we do for
+the regular stack in the task struct), and it's down to arch code to
+save/restore the current value where necessary.
+
+Am I missing some caveat with that approach?
+
+> +
+> +#ifdef CONFIG_SHADOW_CALL_STACK_VMAP
+> +
+> +/* Keep a cache of shadow stacks */
+> +#define SCS_CACHE_SIZE 2
+> +static DEFINE_PER_CPU(void *, scs_cache[SCS_CACHE_SIZE]);
+> +
+> +static void *scs_alloc(int node)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < SCS_CACHE_SIZE; i++) {
+> +		void *s;
+> +
+> +		s = this_cpu_xchg(scs_cache[i], NULL);
+> +		if (s) {
+> +			memset(s, 0, SCS_SIZE);
+> +			return s;
+> +		}
+> +	}
+> +
+> +	BUILD_BUG_ON(SCS_SIZE > PAGE_SIZE);
+
+It's probably worth a comment on why we rely on SCS_SIZE <= PAGE_SIZE.
+
+> +
+> +	return __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
+> +				    VMALLOC_START, VMALLOC_END,
+> +				    GFP_SCS, PAGE_KERNEL, 0,
+> +				    node, __builtin_return_address(0));
+> +}
+> +
+> +static void scs_free(void *s)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < SCS_CACHE_SIZE; i++) {
+> +		if (this_cpu_cmpxchg(scs_cache[i], 0, s) != 0)
+> +			continue;
+> +
+> +		return;
+> +	}
+> +
+> +	vfree_atomic(s);
+> +}
+> +
+> +static int scs_cleanup(unsigned int cpu)
+> +{
+> +	int i;
+> +	void **cache = per_cpu_ptr(scs_cache, cpu);
+> +
+> +	for (i = 0; i < SCS_CACHE_SIZE; i++) {
+> +		vfree(cache[i]);
+> +		cache[i] = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void __init scs_init(void)
+> +{
+> +	cpuhp_setup_state(CPUHP_BP_PREPARE_DYN, "scs:scs_cache", NULL,
+> +		scs_cleanup);
+> +}
+> +
+> +#else /* !CONFIG_SHADOW_CALL_STACK_VMAP */
+> +
+> +static struct kmem_cache *scs_cache;
+> +
+> +static inline void *scs_alloc(int node)
+> +{
+> +	return kmem_cache_alloc_node(scs_cache, GFP_SCS, node);
+> +}
+> +
+> +static inline void scs_free(void *s)
+> +{
+> +	kmem_cache_free(scs_cache, s);
+> +}
+> +
+> +void __init scs_init(void)
+> +{
+> +	scs_cache = kmem_cache_create("scs_cache", SCS_SIZE, SCS_SIZE,
+> +				0, NULL);
+> +	WARN_ON(!scs_cache);
+> +}
+> +
+> +#endif /* CONFIG_SHADOW_CALL_STACK_VMAP */
+> +
+> +static inline unsigned long *scs_magic(struct task_struct *tsk)
+> +{
+> +	return (unsigned long *)(__scs_base(tsk) + SCS_SIZE - sizeof(long));
+
+Slightly simpler as:
+
+	return (unsigned long *)(__scs_base(tsk) + SCS_SIZE) - 1;
+
+Thanks,
+Mark.
