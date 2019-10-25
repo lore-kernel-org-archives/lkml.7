@@ -2,86 +2,68 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8737CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF7BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E8B2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A99C20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502139AbfJYNli (ORCPT
+        id S2504818AbfJYNly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:41:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58034 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbfJYNli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:41:38 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3B463979F537251B7E3F;
-        Fri, 25 Oct 2019 21:41:34 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 21:41:24 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] NFS: remove unneeded semicolon
-Date:   Fri, 25 Oct 2019 21:41:19 +0800
-Message-ID: <20191025134119.26036-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 25 Oct 2019 09:41:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:40830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502142AbfJYNlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:41:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37AFF28;
+        Fri, 25 Oct 2019 06:41:53 -0700 (PDT)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F15533F71A;
+        Fri, 25 Oct 2019 06:41:51 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] drm/panfrost: Tidy up the devfreq implementation
+Date:   Fri, 25 Oct 2019 14:41:41 +0100
+Message-Id: <20191025134143.14324-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove unneeded semicolon.
+The devfreq implementation in panfrost is unnecessarily open coded. It
+also tracks utilisation metrics per slot which isn't very useful. Let's
+tidy it up!
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/nfs/super.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes since v1:
+ http://lkml.kernel.org/r/20190912112804.10104-1-steven.price%40arm.com
+ * Rebased onto latest drm-misc-next, specifically after
+   d18a96620411 ("drm/panfrost: Remove NULL checks for regulator")
+ * Added tags
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index a84df7d6..8d8d04b 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1592,7 +1592,7 @@ static int nfs_parse_mount_options(char *raw,
- 					dfprintk(MOUNT, "NFS:   invalid "
- 							"lookupcache argument\n");
- 					return 0;
--			};
-+			}
- 			break;
- 		case Opt_fscache_uniq:
- 			if (nfs_get_option_str(args, &mnt->fscache_uniq))
-@@ -1625,7 +1625,7 @@ static int nfs_parse_mount_options(char *raw,
- 				dfprintk(MOUNT, "NFS:	invalid	"
- 						"local_lock argument\n");
- 				return 0;
--			};
-+			}
- 			break;
- 
- 		/*
-@@ -2585,7 +2585,7 @@ static void nfs_get_cache_cookie(struct super_block *sb,
- 		if (mnt_s->fscache_key) {
- 			uniq = mnt_s->fscache_key->key.uniquifier;
- 			ulen = mnt_s->fscache_key->key.uniq_len;
--		};
-+		}
- 	} else
- 		return;
- 
+Steven Price (2):
+  drm/panfrost: Use generic code for devfreq
+  drm/panfrost: Simplify devfreq utilisation tracking
+
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c | 124 ++++++--------------
+ drivers/gpu/drm/panfrost/panfrost_devfreq.h |   3 +-
+ drivers/gpu/drm/panfrost/panfrost_device.h  |  14 +--
+ drivers/gpu/drm/panfrost/panfrost_job.c     |  15 ++-
+ 4 files changed, 48 insertions(+), 108 deletions(-)
+
 -- 
-2.7.4
-
+2.20.1
 
