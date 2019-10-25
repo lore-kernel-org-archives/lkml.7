@@ -2,97 +2,131 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DB4CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EB2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8C621D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:45:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FE/GwmYd"
+	by mail.kernel.org (Postfix) with ESMTP id 683B62053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633136AbfJYQpW (ORCPT
+        id S2440697AbfJYQum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 12:45:22 -0400
-Received: from mail-io1-f50.google.com ([209.85.166.50]:41570 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633128AbfJYQo0 (ORCPT
+        Fri, 25 Oct 2019 12:50:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29930 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2502383AbfJYQuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:44:26 -0400
-Received: by mail-io1-f50.google.com with SMTP id r144so3133265iod.8
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 09:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FnNCWhzA8wzAQcW3IvtMxmOw0mIYmbzhbuz8jcog3z0=;
-        b=FE/GwmYd89R7oOACf+gouF5/sDJA7KfixcIXlgu0Zy2xBlflmjGhsPtumrOF2/chO7
-         ukgC7RpX2WU0ieTsoaIEsugTNO9IxVY55sHdmI8YDpkuFlrYNj3TJ3Yyh4TkMX3TEZVP
-         euzKnHoQXH1CnnfPJ8ycKy7wwlV1V2ytUcp0U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FnNCWhzA8wzAQcW3IvtMxmOw0mIYmbzhbuz8jcog3z0=;
-        b=BsOBYqkTHOOoF2Fhfv1CvF5Txw5hzvMVybFX0/aafm/XL5D+X4bMZ6JEXrY9iBS7Qv
-         aYlQ9Uj5E8HCgW3czZvqCa5+aoPzgK+5s5eJ6m1dWUpYe5M7QIigELHuMYR+mFGVe/6e
-         46FTE9etaqE8NQvCrjYKsw0qvFE07XZE7Lu9CLaz96rv/ec8ZC7qTyMqCOm/S940nys8
-         qrr9TH1t/+JRWy/DbuOfyNyhTLsPCkfhfrpD8evxcEbwiri3+F5CXIxTcY6wqRP1mCtK
-         QZEWctaVidBIbZXIE2d5IacD9tyGT1tch9H9st5Ps2oi9klKtLnc38/tR+pMwGmYNeKa
-         xtSA==
-X-Gm-Message-State: APjAAAWjOZSm2AvsSzrB2JMnrjmQrBjB8+9LNKlxoGEkZZIbQWcK9rAu
-        fqNtiANXCpCCxJmrzyEBbt3cIKuG+JY=
-X-Google-Smtp-Source: APXvYqzP8GKYf3afoh8mhYdPI2JomVxqd6O3RME4/XD3F4xGkvoh25XmFLWreE9g1CWnRhhAHXuWyQ==
-X-Received: by 2002:a6b:bd86:: with SMTP id n128mr4460174iof.214.1572021862432;
-        Fri, 25 Oct 2019 09:44:22 -0700 (PDT)
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com. [209.85.166.180])
-        by smtp.gmail.com with ESMTPSA id l64sm150973ilh.2.2019.10.25.09.44.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 09:44:21 -0700 (PDT)
-Received: by mail-il1-f180.google.com with SMTP id s75so2422623ilc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 09:44:20 -0700 (PDT)
-X-Received: by 2002:a92:d101:: with SMTP id a1mr5273789ilb.142.1572021860411;
- Fri, 25 Oct 2019 09:44:20 -0700 (PDT)
+        Fri, 25 Oct 2019 12:50:08 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PGgK16075467;
+        Fri, 25 Oct 2019 12:49:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vv3ck3jxx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Oct 2019 12:49:40 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9PGghME076302;
+        Fri, 25 Oct 2019 12:49:40 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vv3ck3jxj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Oct 2019 12:49:40 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9PGj6nB008403;
+        Fri, 25 Oct 2019 16:49:39 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma04dal.us.ibm.com with ESMTP id 2vqt489u53-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Oct 2019 16:49:39 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PGncQR51839294
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 16:49:38 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7369DB205F;
+        Fri, 25 Oct 2019 16:49:38 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C168B2065;
+        Fri, 25 Oct 2019 16:49:37 +0000 (GMT)
+Received: from [9.85.155.79] (unknown [9.85.155.79])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 25 Oct 2019 16:49:37 +0000 (GMT)
+Subject: Re: [PATCH v9 1/8] powerpc: detect the secure boot mode of the system
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>
+References: <20191024034717.70552-1-nayna@linux.ibm.com>
+ <20191024034717.70552-2-nayna@linux.ibm.com>
+ <b0282ef2-f75c-a139-9991-01eba15adb22@linux.microsoft.com>
+From:   Nayna Jain <nayna@linux.vnet.ibm.com>
+Message-ID: <569f401a-4327-4295-677f-48037f2582a0@linux.vnet.ibm.com>
+Date:   Fri, 25 Oct 2019 11:49:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 25 Oct 2019 09:44:09 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Uui+a6TS85VNv3XVApq7xYifd8m_ZTmShTC2jeGEO4jg@mail.gmail.com>
-Message-ID: <CAD=FV=Uui+a6TS85VNv3XVApq7xYifd8m_ZTmShTC2jeGEO4jg@mail.gmail.com>
-Subject: Please pick ("LSM: SafeSetID: Stop releasing uninitialized ruleset")
- to 5.3 stable
-To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Micah Morton <mortonm@chromium.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b0282ef2-f75c-a139-9991-01eba15adb22@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910250154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you're still taking things for 5.3 stable, I humbly request picking
-up commit 21ab8580b383 ("LSM: SafeSetID: Stop releasing uninitialized
-ruleset").  While bisecting other problems this crash tripped me up
-and I would have been able to bisect faster had the fix been in
-linux-stable.  Only kernel 5.3 is affected.
 
-For reference, the crash for me looked like:
+On 10/24/19 12:26 PM, Lakshmi Ramasubramanian wrote:
+> On 10/23/2019 8:47 PM, Nayna Jain wrote:
+>> This patch defines a function to detect the secure boot state of a
+>> PowerNV system.
+>
+>> +bool is_ppc_secureboot_enabled(void)
+>> +{
+>> +    struct device_node *node;
+>> +    bool enabled = false;
+>> +
+>> +    node = of_find_compatible_node(NULL, NULL, "ibm,secvar-v1");
+>> +    if (!of_device_is_available(node)) {
+>> +        pr_err("Cannot find secure variable node in device tree; 
+>> failing to secure state\n");
+>> +        goto out;
+>
+> Related to "goto out;" above:
+>
+> Would of_find_compatible_node return NULL if the given node is not found?
+>
+> If of_device_is_available returns false (say, because node is NULL or 
+> it does not find the specified node) would it be correct to call 
+> of_node_put?
 
-Call trace:
- __call_rcu+0x2c/0x1ac
- call_rcu+0x28/0x34
- safesetid_file_write+0x344/0x350
- __vfs_write+0x54/0x18c
- vfs_write+0xcc/0x18c
- ksys_write+0x7c/0xe4
- __arm64_sys_write+0x20/0x2c
- el0_svc_common+0x9c/0x14c
- el0_svc_compat_handler+0x28/0x34
- el0_svc_compat+0x8/0x10
+of_node_put() handles NULL.
 
-Thanks much.
+Thanks & Regards,
 
--Doug
+      - Nayna
+
