@@ -2,134 +2,119 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701D4CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7DDC47E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467102070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZOY5/hfp"
+	by mail.kernel.org (Postfix) with ESMTP id BF7D02070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410365AbfJYLm2 (ORCPT
+        id S2410356AbfJYLm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:42:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53822 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727283AbfJYLm1 (ORCPT
+        Fri, 25 Oct 2019 07:42:27 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35962 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730125AbfJYLm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 07:42:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9PBcvq1052730;
-        Fri, 25 Oct 2019 11:42:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=O7w+ZyhYIJRus2QkwK5GMAVXf4qiZPD4foyde5oWwpg=;
- b=ZOY5/hfp6zt3ObuTbn54E8Xa9Mzj4utgwY+mEpBiaNKbKDC9KA8QnLkNoM6tDmj3So6Y
- LnpTy0bl+U4A+Byr/P77yyWMqpWdamsp5Hg43Vtlmrsu3q9BMk8qygClCtgvdcn/moUv
- cBZio8iaSfzKKr/vzqT0KgsDFZrSCKlcugbtT9CUB7vvU0gVFzIRtvywhfhvuAmadhex
- M05kXOQGhnhCoCat1jIhsIQNr4z2p/WF8ZxYJiRhLX8cjkrzfHeIaN2LQM7BRRDNOW1i
- /Mvd50L0SkS3YRt5rGz45NomlpqUqjuKSe9B2CA3TwRqxA56XfdO/aMO5xEFP/Jz0cZr GQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2vqu4ra8kh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 11:42:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9PBcOAX047222;
-        Fri, 25 Oct 2019 11:42:09 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vug0e4cnp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 11:42:09 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9PBg8G4020274;
-        Fri, 25 Oct 2019 11:42:08 GMT
-Received: from dm-oel.no.oracle.com (/10.172.157.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 25 Oct 2019 04:42:07 -0700
-From:   Dag Moxnes <dag.moxnes@oracle.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
-        parav@mellanox.com
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dag.moxnes@oracle.com
-Subject: [PATCH rdma-next] RDMA/cma: Use ACK timeout for RoCE packetLifeTime
-Date:   Fri, 25 Oct 2019 13:42:01 +0200
-Message-Id: <1572003721-26368-1-git-send-email-dag.moxnes@oracle.com>
-X-Mailer: git-send-email 1.7.1
+Received: by mail-oi1-f195.google.com with SMTP id j7so1444038oib.3;
+        Fri, 25 Oct 2019 04:42:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BcGJu1l7UIRQ0EFIw5C2ACnhv/97dGEXhKfxlqmxdJM=;
+        b=onf2xCiF2+pRsnMG0g5fgBcDzdZh7UkmCitcHxvyAp2Oc71bM73NJ0rhWYwKQNm0ys
+         IykUwHE6qSwO1r0qqeq1Jm0pL6Qpv7KfcfyjznX/+M4ux/Ayou7ek5MFaoORhqZMBpKc
+         U4ZiTqs0PvLcPEZiLTvSGREwFg3SZqa66I0Txqh8lH0RQHarIcVzICmz2whJOmu1UwAC
+         rQii8gUvSFiOsqRXeRQdgp7KkCQG6sbsItjg6j4sm02EzdC3UcxJliCEHUWPiX7sokSO
+         8DFapfXfdWPyCdYLn9EUqexzesERmOvRIMHchkzh+ATu5VmypQCi2qrdZn588bmjKdMr
+         M/uQ==
+X-Gm-Message-State: APjAAAX6DlLLz3FwcnrrB/JublBT84AQZrm4ugNhcE6lAWRJbhzDLGAV
+        WyUbOi0Xw48a1rB/5KQ2EfcjW9ekDu83Sz8tMPw=
+X-Google-Smtp-Source: APXvYqx2AE+sN8UHL3sRoH6FX9kL2APsqTSX1ZwdK3PcIXZcG4Q4tRECEJxY7lT0jOw3NzCSETNK6NJH/5K0P+dzPf8=
+X-Received: by 2002:a05:6808:3b4:: with SMTP id n20mr2516418oie.131.1572003745968;
+ Fri, 25 Oct 2019 04:42:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910250112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910250112
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1906241613280.32342@nanos.tec.linutronix.de>
+ <20190624142346.pxljv3m4npatdiyk@shell.armlinux.org.uk> <20190624144924.GE29120@arrakis.emea.arm.com>
+In-Reply-To: <20190624144924.GE29120@arrakis.emea.arm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 25 Oct 2019 13:42:14 +0200
+Message-ID: <CAMuHMdX_KzP9n=H4vL4J9ijT=2GYy9X1BBpAdomkchoxnCcjfA@mail.gmail.com>
+Subject: Re: [PATCH v7 00/25] Unify vDSOs across more architectures
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Will Deacon <will.deacon@arm.com>, linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Dmitry Safonov <dima@arista.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Peter Collingbourne <pcc@google.com>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Andrei Vagin <avagin@openvz.org>,
+        Huw Davies <huw@codeweavers.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cma is currently using a hard-coded value, CMA_IBOE_PACKET_LIFETIME,
-for the PacketLifeTime, as it can not be determined from the network.
-This value might not be optimal for all networks.
+Hi Catalin,
 
-The cma module supports the function rdma_set_ack_timeout to set the
-ACK timeout for a QP associated with a connection. As per IBTA 12.7.34
-local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
-Assuming a negligible local ACK delay, we can use
-PacketLifeTime = local ACK timeout/2
-as a reasonable approximation for RoCE networks.
+On Mon, Jun 24, 2019 at 4:51 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> On Mon, Jun 24, 2019 at 03:23:46PM +0100, Russell King wrote:
+> > On Mon, Jun 24, 2019 at 04:18:28PM +0200, Thomas Gleixner wrote:
+> > > I talked to Russell King and he suggested to file the ARM parts into his
+> > > patch system and he'll pick them up after 5.3-rc1.
+> > >
+> > >    https://www.arm.linux.org.uk/developer/patches/
+> > >
+> > > I paged out how to deal with it, but you'll surely manage :)
+> >
+> > Easy way: ask git to add the "KernelVersion" tag as a header to the
+> > email using --add-header to e.g. git format-patch, and just mail them
+> > to patches@armlinux.org.uk
+>
+> Although I haven't send patches to Russell in a while, I still have a
+> git alias in my .gitconfig (only works with one patch at a time IIRC,
+> sending multiple patches may arrive in a different order):
+>
+> [alias]
+>         send-rmk-email = !git send-email --add-header=\"KernelVersion: $(git describe --abbrev=0)\" --no-thread --suppress-cc=all --to="patches@arm.linux.org.uk"
 
-Signed-off-by: Dag Moxnes <dag.moxnes@oracle.com>
-Change-Id: I200eda9d54829184e556c3c55d6a8869558d76b2
----
- drivers/infiniband/core/cma.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Doesn't seem to work: no header was added, and my patch was rejected.
+There does seem to be a "--add-header" option for git-format-patch, but
+it adds the header at the top, just below the "Subject:"-header, instead
+of below the "---", so that needs manual editing, too.
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index c8566a4237..2c1b08bde2 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2530,7 +2530,9 @@ EXPORT_SYMBOL(rdma_set_service_type);
-  * This function should be called before rdma_connect() on active side,
-  * and on passive side before rdma_accept(). It is applicable to primary
-  * path only. The timeout will affect the local side of the QP, it is not
-- * negotiated with remote side and zero disables the timer.
-+ * negotiated with remote side and zero disables the timer. In case it is
-+ * set before rdma_resolve_route, the value will also be used to determine
-+ * PacketLifeTime for RoCE.
-  *
-  * Return: 0 for success
-  */
-@@ -2939,7 +2941,16 @@ static int cma_resolve_iboe_route(struct rdma_id_private *id_priv)
- 	route->path_rec->rate = iboe_get_rate(ndev);
- 	dev_put(ndev);
- 	route->path_rec->packet_life_time_selector = IB_SA_EQ;
--	route->path_rec->packet_life_time = CMA_IBOE_PACKET_LIFETIME;
-+	/* In case ACK timeout is set, use this value to calculate
-+	 * PacketLifeTime.  As per IBTA 12.7.34,
-+	 * local ACK timeout = (2 * PacketLifeTime + Local CA’s ACK delay).
-+	 * Assuming a negligible local ACK delay, we can use
-+	 * PacketLifeTime = local ACK timeout/2
-+	 * as a reasonable approximation for RoCE networks.
-+	 */
-+	route->path_rec->packet_life_time = id_priv->timeout_set ?
-+		id_priv->timeout - 1 : CMA_IBOE_PACKET_LIFETIME;
-+
- 	if (!route->path_rec->mtu) {
- 		ret = -EINVAL;
- 		goto err2;
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
