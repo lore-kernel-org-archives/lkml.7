@@ -6,67 +6,86 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AF5CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73675CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D75842084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5223621D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438626AbfJYLIj (ORCPT
+        id S2502997AbfJYLIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:08:39 -0400
+        Fri, 25 Oct 2019 07:08:45 -0400
 Received: from andre.telenet-ops.be ([195.130.132.53]:34164 "EHLO
         andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392749AbfJYLIj (ORCPT
+        with ESMTP id S2439295AbfJYLIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:08:39 -0400
+        Fri, 25 Oct 2019 07:08:43 -0400
 Received: from ramsan ([84.195.182.253])
         by andre.telenet-ops.be with bizsmtp
-        id Hn8b2100S5USYZQ01n8bdN; Fri, 25 Oct 2019 13:08:36 +0200
+        id Hn8b2100B5USYZQ01n8bdK; Fri, 25 Oct 2019 13:08:43 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNxSN-0003rD-Lf; Fri, 25 Oct 2019 13:08:35 +0200
+        id 1iNxSN-0003rD-9j; Fri, 25 Oct 2019 13:08:35 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNvu3-0006Or-Vv; Fri, 25 Oct 2019 11:29:04 +0200
+        id 1iNw6A-0006mw-LI; Fri, 25 Oct 2019 11:41:34 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Jiri Kosina <trivial@kernel.org>, Scott Wood <oss@buserror.net>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial resend] powerpc/booke: Spelling s/date/data/
-Date:   Fri, 25 Oct 2019 11:29:01 +0200
-Message-Id: <20191025092901.24560-1-geert+renesas@glider.be>
+Subject: [PATCH v2 3/7] net: caif: Fix debugfs on 64-bit platforms
+Date:   Fri, 25 Oct 2019 11:41:26 +0200
+Message-Id: <20191025094130.26033-4-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191025094130.26033-1-geert+renesas@glider.be>
+References: <20191025094130.26033-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Caching dates is never a good idea ;-)
+"ser_device.state" is "unsigned long", i.e. 32-bit or 64-bit, depending
+on the platform.  Hence casting its address to "u32 *", and calling
+debugfs_create_x32() breaks operation on 64-bit platforms.
 
-Fixes: e7affb1dba0e9068 ("powerpc/cache: add cache flush operation for various e500")
+Fix this by using the new debugfs_create_xul() helper instead.
+
+Fixes: 9b27105b4a44c54b ("net-caif-driver: add CAIF serial driver (ldisc)")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/powerpc/kernel/cpu_setup_fsl_booke.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+  - No changes.
+---
+ drivers/net/caif/caif_serial.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/cpu_setup_fsl_booke.S b/arch/powerpc/kernel/cpu_setup_fsl_booke.S
-index 2b4f3ec0acf7d988..1d308780e0d31eb9 100644
---- a/arch/powerpc/kernel/cpu_setup_fsl_booke.S
-+++ b/arch/powerpc/kernel/cpu_setup_fsl_booke.S
-@@ -231,7 +231,7 @@ _GLOBAL(__setup_cpu_e5500)
- 	blr
- #endif
+diff --git a/drivers/net/caif/caif_serial.c b/drivers/net/caif/caif_serial.c
+index 40b079162804fb0c..bd40b114d6cd7214 100644
+--- a/drivers/net/caif/caif_serial.c
++++ b/drivers/net/caif/caif_serial.c
+@@ -102,8 +102,8 @@ static inline void debugfs_init(struct ser_device *ser, struct tty_struct *tty)
+ 	debugfs_create_blob("last_rx_msg", 0400, ser->debugfs_tty_dir,
+ 			    &ser->rx_blob);
  
--/* flush L1 date cache, it can apply to e500v2, e500mc and e5500 */
-+/* flush L1 data cache, it can apply to e500v2, e500mc and e5500 */
- _GLOBAL(flush_dcache_L1)
- 	mfmsr	r10
- 	wrteei	0
+-	debugfs_create_x32("ser_state", 0400, ser->debugfs_tty_dir,
+-			   (u32 *)&ser->state);
++	debugfs_create_xul("ser_state", 0400, ser->debugfs_tty_dir,
++			   &ser->state);
+ 
+ 	debugfs_create_x8("tty_status", 0400, ser->debugfs_tty_dir,
+ 			  &ser->tty_status);
 -- 
 2.17.1
 
