@@ -2,95 +2,127 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C380CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E886CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D5B21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3371321D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ox4psQ+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbfJYJd3 (ORCPT
+        id S2394242AbfJYJeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:33:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:41157 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729612AbfJYJd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:33:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 02:33:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="400055610"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Oct 2019 02:33:26 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iNvyH-00030l-QX; Fri, 25 Oct 2019 12:33:25 +0300
-Date:   Fri, 25 Oct 2019 12:33:25 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] ACPI / PMIC: Add byt prefix to Crystal Cove PMIC
- OpRegion driver
-Message-ID: <20191025093325.GK32742@smile.fi.intel.com>
-References: <20191024213827.144974-1-hdegoede@redhat.com>
- <20191024213827.144974-3-hdegoede@redhat.com>
- <20191025074154.GX32742@smile.fi.intel.com>
- <49aa39b7-d457-1140-afdb-2a154278b29f@redhat.com>
+        Fri, 25 Oct 2019 05:34:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35412 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393324AbfJYJeE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:34:04 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l10so1514159wrb.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 02:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nj5N0cwuIEfdMyg4o69ezEPhKqrHPL5y4BGXRPhXkhM=;
+        b=Ox4psQ+D9Aon5jdFqP9hZAU82dvvqpHrYlyw1U71YdGwg1ruw6T2nWCIDV4SZumlwX
+         NZ50aLRBjXgS1ghIkZsObVYJ62kO9cvgpblReUZhnmntfLFV0tc6BiJQ9XyR02IB6r9u
+         /Q5mpSe9QXoW9+9u5R43BJbM/yHZ0JjD0H2GSLc1VG7zCILBp809QfnMmNGinZmYnmKk
+         o/LMQpNWraMOwpVTCvuO40hRfXkaamdRFPRKoUX1gA4pPqBRRiQpznj5xEcwnwCeFu7F
+         Fy+KAVNBkiqo+vb6X+kweV2j8YipD6rKUqTvqJTVe+njLmcFoehYsFtf856upd7U2TfA
+         gskw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nj5N0cwuIEfdMyg4o69ezEPhKqrHPL5y4BGXRPhXkhM=;
+        b=l/6AfppZCKbkHxOOCLPAHw7dU59RBws9lwNZqhWroj0txlEVh7yY6YZ8ECpJaf7ukk
+         JQfQiSUbw5D3qfqP0fUJezYhTBIpZM9NBB1rSLqL2wBv+Q9JavocVxk0Yhy4UaC3Em+8
+         EmV/DjE6L0IC1ir4O3Z/UMSiES3EY0vkPZjIZJeV+HlF4e3kXpcRrlClnopvQOD05PZC
+         BDWiqn+JefYcGxVLOf7E3nCv5EjlMrb2lKu2Ku5k3SMi+FThL7tndeTw3rGNHYe4yP7y
+         1Ef2ssPLyTvzIj5FelZo03a/GpmuhJi6eyd0tb29Mi+7du1Y5Tr/HiRMicBjPdgQtm/2
+         /UWQ==
+X-Gm-Message-State: APjAAAVTRcVrTEqEyHpRCN1bftM2v22aR5bXtVc3bWsCyoxYmbk7bQ1v
+        gCZqpDe08LySvdThgJdoWAKgvBsBGulDucEUUn2JzA==
+X-Google-Smtp-Source: APXvYqx/qJsN2qz7jYls/SoGQQO+isaqWDMB07jXtWfBz9ISudc2jhfrz0asa6LRApcE6FDYxSoqV1eqqsfc1d1djcM=
+X-Received: by 2002:adf:f685:: with SMTP id v5mr2135586wrp.246.1571996042197;
+ Fri, 25 Oct 2019 02:34:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49aa39b7-d457-1140-afdb-2a154278b29f@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <78b1532c-f8bf-48e4-d0a7-30ea0137d408@huawei.com>
+In-Reply-To: <78b1532c-f8bf-48e4-d0a7-30ea0137d408@huawei.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 25 Oct 2019 11:33:59 +0200
+Message-ID: <CAKv+Gu_MVe8mEeC-fVVbbLfUv-rEEk5_eoxfHjTCMgAFmSHrJw@mail.gmail.com>
+Subject: Re: [PATCH] crypto: qat - remove redundant condition accel_dev->is_vf
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, qat-linux@intel.com,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 10:59:06AM +0200, Hans de Goede wrote:
-> On 25-10-2019 09:41, Andy Shevchenko wrote:
-> > On Thu, Oct 24, 2019 at 11:38:25PM +0200, Hans de Goede wrote:
+On Fri, 25 Oct 2019 at 09:24, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
+>
+> Warning is found by the code analysis tool:
+>   "Redundant condition: accel_dev->is_vf"
+>
+> So remove the redundant condition accel_dev->is_vf.
+>
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+>  drivers/crypto/qat/qat_common/adf_dev_mgr.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/crypto/qat/qat_common/adf_dev_mgr.c b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+> index 2d06409bd3c4..b54b8850fe20 100644
+> --- a/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+> +++ b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
+> @@ -196,7 +196,7 @@ int adf_devmgr_add_dev(struct adf_accel_dev *accel_dev,
+>         atomic_set(&accel_dev->ref_count, 0);
+>
+>         /* PF on host or VF on guest */
+> -       if (!accel_dev->is_vf || (accel_dev->is_vf && !pf)) {
+> +       if (!accel_dev->is_vf || !pf) {
 
-> > I would go with previously established pattern, i.e. intel_pmic_bytcc.c.
+I disagree with this change. There is no bug here, and the way the
+condition is formulated self-documents the code, i.e.,
 
-> Well that would be consistent with the chtwc for the Whiskey Cove, but
-> Crystal Cove related files are shortened to crc in many places already:
-> 
-> Filenames before this patch:
-> drivers/acpi/pmic/intel_pmic_crc.c
-> drivers/pwm/pwm-crc.c
-> drivers/mfd/intel_soc_pmic_crc.c
-> 
-> And to me "cc" stands for the Type-C cc lines, or for Cc: from email,
-> so IMHO it is best to stick with crc here.
+IF NOT is_vf
+OR (is_vf BUT NOT pf)
 
-Okay, let's do an exception here due to the fact the code and name already
-exists and spreads enough thru sources.
-
-It means you may use mine tags.
-
-> > I'm wondering shouldn't we rename the PWM and GPIO for the sake of consistency?
-> > Yes, if a driver is used on both CHT and BYT, let it provide two names.
-> 
-> I believe it is fine to keep the blocks which are identical between
-> the 2 versions as just "crystal_cove_foo", but renaming them is fine with me
-> too, but that follows outside the scope of this series and should be
-> done in a follow-up series IMHO.
-
-True.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Using an automated tool to reduce every boolean expression to its
+minimal representation doesn't seem that useful to me, since the
+compiler is perfectly capable of doing that when generating the object
+code.
 
 
+
+
+>                 struct vf_id_map *map;
+>
+>                 list_for_each(itr, &accel_table) {
+> @@ -292,7 +292,7 @@ void adf_devmgr_rm_dev(struct adf_accel_dev *accel_dev,
+>                        struct adf_accel_dev *pf)
+>  {
+>         mutex_lock(&table_lock);
+> -       if (!accel_dev->is_vf || (accel_dev->is_vf && !pf)) {
+> +       if (!accel_dev->is_vf || !pf) {
+>                 id_map[accel_dev->accel_id] = 0;
+>                 num_devices--;
+>         } else if (accel_dev->is_vf && pf) {
+> --
+> 2.7.4
+>
