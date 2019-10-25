@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2432ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9533CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACA921D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9174721D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012293;
-	bh=N76CoPzdJ7FfQP3LJQW2Rr6UIbvii3tkzOHeMY72w/M=;
+	s=default; t=1572012296;
+	bh=tH84Z0n/mSY4WyqsWkBcbzxNQsg59IxMwvdWkIi/cDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rv0dUsyb3uIR8MaOqTJ8CUZGGhRyEx7nDeGpK8DmeUTuPvIFEpGvUPPvEPQDi1kwO
-	 v5/llFkBF4HjhKCvOPu9DrlC7L7gFSM09dF6b6GozOXgyFiUMrT0QXKcKXlhvuul+y
-	 4BksK4F4FmyZdvSGE7iCmjqHHKf7w+jD3g1hd/aQ=
+	b=YW2xz2k/kE2hmBylQRKqLOOx8UDCYFdUmoFvi1e+XEOC6Nj9O4Es5oqtPlFGpZyUN
+	 ci7J468kaBxU2ZH2z+BcqoH9Hcgzd3SoAz1ThDwh8Vq6BhG+JU2eTYsX+2Zu4bmmQG
+	 FSzjbVlBHXltcth7zmDP2DTbf+IW6kH0VOhYOMtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505269AbfJYN4d (ORCPT
+        id S2395249AbfJYOEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50762 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:04:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505261AbfJYN40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:26 -0400
+        id S2394652AbfJYN4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DEF221D7F;
-        Fri, 25 Oct 2019 13:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56748222BD;
+        Fri, 25 Oct 2019 13:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011785;
-        bh=N76CoPzdJ7FfQP3LJQW2Rr6UIbvii3tkzOHeMY72w/M=;
+        s=default; t=1572011792;
+        bh=tH84Z0n/mSY4WyqsWkBcbzxNQsg59IxMwvdWkIi/cDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1jOBBl0JOuNBqPn4fUmlZXGtcUhQuczROkcGu0/+oJbDzDNI5DT6Ml/5XB50V9UDb
-         r7Wol/VlsNiXjRDmpLApQgvofKn48iKfP1JiOvJue3ozRx06Bg0CI9yiYmkn+T7a8b
-         leR1CVfCCdn1sz7JHGbxgfHmd50b5I0oHiPqcaqI=
+        b=bCnLBZJrJlYu6AvweXB3cZt3kiuTjPJWS83CVacGhQjdYNoyuztwH3rfB0AVR1mEH
+         ICQcZqdHRn3sAzlNiy6mQxfa34RxvAwE4cOryU68J7Kt9Q9hfZHI/34Lhs9TaAscLE
+         MCuhuHyw/O4nnESer6QtpSVfsihvdOCAx80IwJZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Emily Deng <Emily.Deng@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 12/37] drm/amdgpu/display: Fix reload driver error
-Date:   Fri, 25 Oct 2019 09:55:36 -0400
-Message-Id: <20191025135603.25093-12-sashal@kernel.org>
+Cc:     Chad Dupuis <cdupuis@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/37] scsi: bnx2fc: Only put reference to io_req in bnx2fc_abts_cleanup if cleanup times out
+Date:   Fri, 25 Oct 2019 09:55:39 -0400
+Message-Id: <20191025135603.25093-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -61,79 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emily Deng <Emily.Deng@amd.com>
+From: Chad Dupuis <cdupuis@marvell.com>
 
-[ Upstream commit 526c654a8a0641d4289bf65effde4d6095bd8384 ]
+[ Upstream commit a92ac6ee7980f3c139910d0d0a079802363818cb ]
 
-Issue:
-Will have follow error when reload driver:
-[ 3986.567739] sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:07.0/drm_dp_aux_dev'
-[ 3986.567743] CPU: 6 PID: 1767 Comm: modprobe Tainted: G           OE     5.0.0-rc1-custom #1
-[ 3986.567745] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-[ 3986.567746] Call Trace:
-......
-[ 3986.567808]  drm_dp_aux_register_devnode+0xdc/0x140 [drm_kms_helper]
-......
-[ 3986.569081] kobject_add_internal failed for drm_dp_aux_dev with -EEXIST, don't try to register things with the same name in the same directory.
+In certain tests where the SCSI error handler issues an abort that is
+already outstanding, we will cleanup the command so that the SCSI error
+handler can proceed.  In some of these cases we were seeing a command
+mismatch:
 
-Reproduce sequences:
-1.modprobe amdgpu
-2.modprobe -r amdgpu
-3.modprobe amdgpu
+ kernel: scsi host2: bnx2fc: xid:0x42b eh_abort - refcnt = 2
+ kernel: bnx2fc: eh_abort: io_req (xid = 0x42b) already in abts processing
+ kernel: scsi host2: bnx2fc: xid:0x42b Entered bnx2fc_initiate_cleanup
+ kernel: scsi host2: bnx2fc: xid:0x42b CLEANUP io_req xid = 0x80b
+ kernel: scsi host2: bnx2fc: xid:0x80b cq_compl- cleanup resp rcvd
+ kernel: scsi host2: bnx2fc: xid:0x42b complete - rx_state = 9
+ kernel: scsi host2: bnx2fc: xid:0x42b Entered process_cleanup_compl refcnt = 2, cmd_type = 1
+ kernel: scsi host2: bnx2fc: xid:0x42b scsi_done. err_code = 0x7
+ kernel: scsi host2: bnx2fc: xid:0x42b sc=ffff8807f93dfb80, result=0x7, retries=0, allowed=5
+ kernel: ------------[ cut here ]------------
+ kernel: WARNING: at /root/rpmbuild/BUILD/netxtreme2-7.14.43/obj/default/bnx2fc-2.12.1/driver/bnx2fc_io.c:1347 bnx2fc_eh_abort+0x56f/0x680 [bnx2fc]()
+ kernel: xid=0x42b refcount=-1
+ kernel: Modules linked in:
+ kernel: nls_utf8 isofs sr_mod cdrom tcp_lp dm_round_robin xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge ebtable_filter ebtables fuse ip6table_filter ip6_tables iptable_filter bnx2fc(OE) cnic(OE) uio fcoe libfcoe 8021q libfc garp mrp scsi_transport_fc stp llc scsi_tgt vfat fat dm_service_time intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd ses enclosure ipmi_ssif i2c_core hpilo hpwdt wmi sg ipmi_devintf pcspkr ipmi_si ipmi_msghandler shpchp acpi_power_meter dm_multipath nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables xfs sd_mod crc_t10dif
+ kernel: crct10dif_generic bnx2x(OE) crct10dif_pclmul crct10dif_common crc32c_intel mdio ptp pps_core libcrc32c smartpqi scsi_transport_sas fjes uas usb_storage dm_mirror dm_region_hash dm_log dm_mod
+ kernel: CPU: 9 PID: 2012 Comm: scsi_eh_2 Tainted: G        W  OE  ------------   3.10.0-514.el7.x86_64 #1
+ kernel: Hardware name: HPE Synergy 480 Gen10/Synergy 480 Gen10 Compute Module, BIOS I42 03/21/2018
+ kernel: ffff8807f25a3d98 0000000015e7fa0c ffff8807f25a3d50 ffffffff81685eac
+ kernel: ffff8807f25a3d88 ffffffff81085820 ffff8807f8e39000 ffff880801ff7468
+ kernel: ffff880801ff7610 0000000000002002 ffff8807f8e39014 ffff8807f25a3df0
+ kernel: Call Trace:
+ kernel: [<ffffffff81685eac>] dump_stack+0x19/0x1b
+ kernel: [<ffffffff81085820>] warn_slowpath_common+0x70/0xb0
+ kernel: [<ffffffff810858bc>] warn_slowpath_fmt+0x5c/0x80
+ kernel: [<ffffffff8168d842>] ? _raw_spin_lock_bh+0x12/0x50
+ kernel: [<ffffffffa0549e6f>] bnx2fc_eh_abort+0x56f/0x680 [bnx2fc]
+ kernel: [<ffffffff814570af>] scsi_error_handler+0x59f/0x8b0
+ kernel: [<ffffffff81456b10>] ? scsi_eh_get_sense+0x250/0x250
+ kernel: [<ffffffff810b052f>] kthread+0xcf/0xe0
+ kernel: [<ffffffff810b0460>] ? kthread_create_on_node+0x140/0x140
+ kernel: [<ffffffff81696418>] ret_from_fork+0x58/0x90
+ kernel: [<ffffffff810b0460>] ? kthread_create_on_node+0x140/0x140
+ kernel: ---[ end trace 42deb88f2032b111 ]---
 
-Root cause:
-When unload driver, it doesn't unregister aux.
+The reason that there was a mismatch is that the SCSI command is actual
+returned from the cleanup handler.  In previous testing, the type of
+cleanup notification we'd get from the CQE did not trigger the code that
+returned the SCSI command.  To overcome the previous behavior we would put
+a reference in bnx2fc_abts_cleanup() to account for the SCSI command.
+However, in cases where the SCSI command is actually off, we end up with an
+extra put.
 
-v2: Don't use has_aux
+The fix for this is to only take the extra put in bnx2fc_abts_cleanup if
+the completion for the cleanup times out.
 
-Signed-off-by: Emily Deng <Emily.Deng@amd.com>
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/scsi/bnx2fc/bnx2fc_io.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 3b07a316680c2..5209b76262311 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2870,6 +2870,13 @@ int amdgpu_dm_connector_atomic_get_property(struct drm_connector *connector,
- 	return ret;
- }
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
+index bc9f2a2365f4d..d27cf966e5600 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_io.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
+@@ -1098,16 +1098,16 @@ static int bnx2fc_abts_cleanup(struct bnx2fc_cmd *io_req)
+ 	time_left = wait_for_completion_timeout(&io_req->tm_done,
+ 						BNX2FC_FW_TIMEOUT);
+ 	io_req->wait_for_comp = 0;
+-	if (!time_left)
++	if (!time_left) {
+ 		BNX2FC_IO_DBG(io_req, "%s(): Wait for cleanup timed out.\n",
+ 			      __func__);
  
-+static void amdgpu_dm_connector_unregister(struct drm_connector *connector)
-+{
-+	struct amdgpu_dm_connector *amdgpu_dm_connector = to_amdgpu_dm_connector(connector);
-+
-+	drm_dp_aux_unregister(&amdgpu_dm_connector->dm_dp_aux.aux);
-+}
-+
- static void amdgpu_dm_connector_destroy(struct drm_connector *connector)
- {
- 	struct amdgpu_dm_connector *aconnector = to_amdgpu_dm_connector(connector);
-@@ -2889,6 +2896,11 @@ static void amdgpu_dm_connector_destroy(struct drm_connector *connector)
- #endif
- 	drm_connector_unregister(connector);
- 	drm_connector_cleanup(connector);
-+	if (aconnector->i2c) {
-+		i2c_del_adapter(&aconnector->i2c->base);
-+		kfree(aconnector->i2c);
+-	/*
+-	 * Release reference held by SCSI command the cleanup completion
+-	 * hits the BNX2FC_CLEANUP case in bnx2fc_process_cq_compl() and
+-	 * thus the SCSI command is not returnedi by bnx2fc_scsi_done().
+-	 */
+-	kref_put(&io_req->refcount, bnx2fc_cmd_release);
++		/*
++		 * Put the extra reference to the SCSI command since it would
++		 * not have been returned in this case.
++		 */
++		kref_put(&io_req->refcount, bnx2fc_cmd_release);
 +	}
-+
- 	kfree(connector);
- }
  
-@@ -2942,7 +2954,8 @@ static const struct drm_connector_funcs amdgpu_dm_connector_funcs = {
- 	.atomic_duplicate_state = amdgpu_dm_connector_atomic_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
- 	.atomic_set_property = amdgpu_dm_connector_atomic_set_property,
--	.atomic_get_property = amdgpu_dm_connector_atomic_get_property
-+	.atomic_get_property = amdgpu_dm_connector_atomic_get_property,
-+	.early_unregister = amdgpu_dm_connector_unregister
- };
- 
- static struct drm_encoder *best_encoder(struct drm_connector *connector)
+ 	spin_lock_bh(&tgt->tgt_lock);
+ 	return rc;
 -- 
 2.20.1
 
