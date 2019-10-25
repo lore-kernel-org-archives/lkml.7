@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29237CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D834ECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC3F222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4AA222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011890;
-	bh=JhgiOy7W35cOH2G64kH7kdFPGPQuCkXJeZQQJAg3rA8=;
+	s=default; t=1572011893;
+	bh=PgKnupQdYBqyAjhO6bP5I+70rfrYLfkOkbV+KSfxYYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iagc2137Nz2jNGsv6n8zExoDUt01HHG/WDzmIEeI7bpDoiSobQqXY5qhWNl1cuUGG
-	 xrlPNoq6Jf9qeKZ5tuGYTBbCi++qfrV2WGptdCpkikp9azLidjBnLD2LTWHakRSnb4
-	 viPhWtnEwx9MsJgxYOV8itCAHQ2CygDq929CnuwA=
+	b=n9wGYNxu9tcEq3S1UDiIRUrR6dJDsHQK7Np8arMOcGdb8MkYqfMcJBr+/e0x8PANI
+	 DkEdUFvSOiHp+Rqja2yNe1kEI7Wgauh+PzwvfqMBmjRmSsLov2AKC6TK2/b9FaN2V7
+	 LsgKj9Rsup1GEz5A2dnQFW1rL7Fj6015wiAyma2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505489AbfJYN6J (ORCPT
+        id S2505500AbfJYN6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53332 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505469AbfJYN6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:07 -0400
+        id S2505484AbfJYN6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BBD2222C4;
-        Fri, 25 Oct 2019 13:58:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA67A222CD;
+        Fri, 25 Oct 2019 13:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011886;
-        bh=JhgiOy7W35cOH2G64kH7kdFPGPQuCkXJeZQQJAg3rA8=;
+        s=default; t=1572011888;
+        bh=PgKnupQdYBqyAjhO6bP5I+70rfrYLfkOkbV+KSfxYYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/5EX1LCIKy+kl2mJ+i/5O9QF/ZwgPa5yoF8fl8A836YQFcIpgYPuU7juBZLHxYmU
-         u9MMqNm6no0LWo+rMWX5CGh1Z4QPsc1ck/d9JgJmhVzSqEpoJIYDTkUUpQRapciqMR
-         YBzM9pbDrFuZkg1XG64kWdznOXwMhKhF9V0LyBX0=
+        b=tiXINrJT/it0T9sc4oUX04PEhcwuRvpwhiS0OF63jaNGCkhY/33ckGJe2PjWbuV4C
+         JhMSNzlFwsS8ZVYwhr+lt2KZvTE/Asz781Xqsqi8BbikuWgftdH+xPN3ZbVhzAa0pv
+         hZwcOzU4kLVUwLmj9O3WqlS6xrz20st5mGfm1j+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Rene Wagner <redhatbugzilla@callerid.de>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/20] HID: i2c-hid: Add Odys Winbook 13 to descriptor override
-Date:   Fri, 25 Oct 2019 09:57:42 -0400
-Message-Id: <20191025135801.25739-2-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 04/20] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Fri, 25 Oct 2019 09:57:44 -0400
+Message-Id: <20191025135801.25739-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
 References: <20191025135801.25739-1-sashal@kernel.org>
@@ -60,42 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit f8f807441eefddc3c6d8a378421f0ede6361d565 ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-The Odys Winbook 13 uses a SIPODEV SP1064 touchpad, which does not
-supply descriptors, add this to the DMI descriptor override list, fixing
-the touchpad not working.
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1526312
-Reported-by: Rene Wagner <redhatbugzilla@callerid.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+use-after-free instance:
+
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
+
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
+
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index cac262a912c12..c5ac23b75143a 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -338,6 +338,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Odys Winbook 13",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AXDIA International GmbH"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "WINBOOK 13"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{ }	/* Terminate list */
- };
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 14ff40371f013..ffa77b3df4ba2 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -845,7 +845,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
  
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+ 
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+ }
+@@ -921,7 +921,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
+ }
+ 
+@@ -930,7 +930,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
+ {
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -974,7 +974,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
