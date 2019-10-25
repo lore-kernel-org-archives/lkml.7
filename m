@@ -2,91 +2,178 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080C9CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82800CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E0021D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8B1222C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:53:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P/LiJppe"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="JXqe5sri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437609AbfJYIwY (ORCPT
+        id S2437782AbfJYIxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:52:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40034 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436926AbfJYIwY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:52:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o28so1342795wro.7
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=exH7wNrvvCyD2xlKncd5d7scqAdy8JMCpKT6Dj5gCMc=;
-        b=P/LiJppexSpoU0kjzgG1KyPIzofv+N8qtq8srko9s77pZexKqCysdXk5Mg0W5PZmog
-         eY08xRKGXJ/XNm90rgAupe0G1IgrKwfOHe3Fp5y7rMnVP6ZJLMG0hjKbIuVcHilTRPkZ
-         yldxUjE23S3SxDeuZqBuJIMoDCTPV7ZDbFCmgC3vIEGJqdAge1GBJ8+xVZrWVaBPvJid
-         ATvZxAcMDt47mFAG/n4ULaAwH3+6akM17+SbZed6kjdRK72F04RT1v/Ir+fr8x5BL+0N
-         QaV/JpbzGc+QE40AgPvA4oS0xTJBMLU1tysNciz0ROYnCqRGdr2z+EjCp2+ZpwyyllIi
-         w7aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=exH7wNrvvCyD2xlKncd5d7scqAdy8JMCpKT6Dj5gCMc=;
-        b=LTuvb1g2qQE9rkHtGrq4FvexO2ceqGCme4vzzSQ8mY8bkEZ2hEUzljZm64+okStDo+
-         eSGZATPo8n/qIHp7LNOrRQzaFmRyHW9A/+y11oFhCjeVA9EG+hTl9n7MjlC7TVFdebeL
-         dlu4FUj0dnh1Q5t4pi8l9XfTydapFV0sZYvXqiFYC7y0ryrZd7gAbyBQzOO2TXO9Xov3
-         SToo5BR/J6Gaj6te9jYr+sD+OhIffmgTxmyoBjtLK+Jcado0+zGbs5bxN4XPiPBoJv5i
-         BEqxgERVV2O1Gj4nUtl+Glaq+MSLUEgvuwDJyFAMZg/Gp/ieagpJZjJ9dZwMlTb45d8V
-         1uUw==
-X-Gm-Message-State: APjAAAXUQaLZyRAcuTMX4bHAQjzdM9fdHqjxYci10OLthlU9tTx8ZgVb
-        rvsnYGf/UteEl1M+ix/VJY3WCg==
-X-Google-Smtp-Source: APXvYqwqeNQ4Rm3LfZvag0FuCF1LHCrER4wDzEhFJR9VIg+vCiqIqlZebROwNpKRP1vRvTHk57W2nQ==
-X-Received: by 2002:a5d:4a81:: with SMTP id o1mr1836767wrq.225.1571993541978;
-        Fri, 25 Oct 2019 01:52:21 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id o4sm1673291wre.91.2019.10.25.01.52.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 01:52:21 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 09:52:19 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     arnd@arndb.de, broonie@kernel.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        baohua@kernel.org, stephan@gerhold.net
-Subject: Re: [PATCH v3 08/10] mfd: mfd-core: Protect against NULL call-back
- function pointer
-Message-ID: <20191025085219.ki5gvqlycncbeztf@holly.lan>
-References: <20191024163832.31326-1-lee.jones@linaro.org>
- <20191024163832.31326-9-lee.jones@linaro.org>
+        Fri, 25 Oct 2019 04:53:00 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:34737 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437618AbfJYIw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:52:59 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46zyYg6BYkz9vC0w;
+        Fri, 25 Oct 2019 10:52:55 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=JXqe5sri; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 6HbhFbyFhM8v; Fri, 25 Oct 2019 10:52:55 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46zyYg4vJdz9vC0r;
+        Fri, 25 Oct 2019 10:52:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1571993575; bh=4oDjhDK0FsO59rFVGt7Y5o7o8C55+19qgM1BU+899t4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JXqe5sriXNQaQXKes3qqbdy43NSrBpwRBpfMpDtkffnR5YWutoOVXs9BVvi7rzrMY
+         QG68soKwprXrLgOAJa7ilqd/FXQFpMspM1kp2DJjaecMsPUGWDU22R2zojRhkImahW
+         aYJ8xO9qWW+5AHxKxjlrTglXwCmCdHn/aPTlV1cw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B9A698B868;
+        Fri, 25 Oct 2019 10:52:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Z1aZY1cuISIS; Fri, 25 Oct 2019 10:52:56 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7BC128B895;
+        Fri, 25 Oct 2019 10:52:54 +0200 (CEST)
+Subject: Re: [PATCH V7] mm/debug: Add tests validating architecture page table
+ helpers
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <ccdd4f7a-c7dc-ca10-d30c-0bc05c7136c7@arm.com>
+ <69256008-2235-4AF1-A3BA-0146C82CCB93@lca.pw>
+ <3cfec421-4006-4159-ca32-313ff5196ff9@c-s.fr>
+ <763d58b4-f532-0bba-bf2b-71433ac514fb@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <d811622e-0d35-3bc6-9568-36abc1bee355@c-s.fr>
+Date:   Fri, 25 Oct 2019 10:52:54 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024163832.31326-9-lee.jones@linaro.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <763d58b4-f532-0bba-bf2b-71433ac514fb@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 05:38:30PM +0100, Lee Jones wrote:
-> If a child device calls mfd_cell_{en,dis}able() without an appropriate
-> call-back being set, we are likely to encounter a panic.  Avoid this
-> by adding suitable checking.
+
+
+Le 25/10/2019 à 10:24, Anshuman Khandual a écrit :
 > 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> 
+> On 10/25/2019 12:41 PM, Christophe Leroy wrote:
+>>
+>>
+>> Le 25/10/2019 à 07:52, Qian Cai a écrit :
+>>>
+>>>
+>>>> On Oct 24, 2019, at 11:45 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
+>>>>
+>>>> Nothing specific. But just tested this with x86 defconfig with relevant configs
+>>>> which are required for this test. Not sure if it involved W=1.
+>>>
+>>> No, it will not. It needs to run like,
+>>>
+>>> make W=1 -j 64 2>/tmp/warns
+>>>
+>>
+>> Are we talking about this peace of code ?
+>>
+>> +static unsigned long __init get_random_vaddr(void)
+>> +{
+>> +    unsigned long random_vaddr, random_pages, total_user_pages;
+>> +
+>> +    total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
+>> +
+>> +    random_pages = get_random_long() % total_user_pages;
+>> +    random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
+>> +
+>> +    WARN_ON((random_vaddr > TASK_SIZE) ||
+>> +        (random_vaddr < FIRST_USER_ADDRESS));
+>> +    return random_vaddr;
+>> +}
+>> +
+>>
+>> ramdom_vaddr is unsigned,
+>> random_pages is unsigned and lower than total_user_pages
+>>
+>> So the max value random_vaddr can get is FIRST_USER_ADDRESS + ((TASK_SIZE - FIRST_USER_ADDRESS - 1) / PAGE_SIZE) * PAGE_SIZE = TASK_SIZE - 1
+>> And the min value random_vaddr can get is FIRST_USER_ADDRESS (that's when random_pages = 0)
+> 
+> That's right.
+> 
+>>
+>> So the WARN_ON() is just unneeded, isn't it ?
+> 
+> It is just a sanity check on possible vaddr values before it's corresponding
+> page table mappings could be created. If it's worth to drop this in favor of
+> avoiding these unwanted warning messages on x86, will go ahead with it as it
+> is not super important.
+> 
 
-Shouldn't this be earlier in the patch set (to avoid transient
-regressions)?
+But you are checking what ? That the compiler does calculation correctly 
+or what ?
+As mentionned just above, based on the calculation done, what you are 
+testing cannot happen, so I'm having a hard time understanding what kind 
+of sanity check it can be.
 
+Can you give an exemple of a situation which could trigger the warning ?
 
-Daniel.
+Christophe
