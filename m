@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B8CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E62CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A17205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E85421D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732387AbfJYSID (ORCPT
+        id S1732489AbfJYSII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46810 "EHLO
+        Fri, 25 Oct 2019 14:08:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46806 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731448AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731439AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0008OD-KC; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xw-0008P4-W8; Fri, 25 Oct 2019 19:05:37 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xu-0001hd-Qz; Fri, 25 Oct 2019 19:05:34 +0100
+        id 1iO3xw-0001k4-4F; Fri, 25 Oct 2019 19:05:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Russell King" <rmk+kernel@armlinux.org.uk>
-Date:   Fri, 25 Oct 2019 19:03:03 +0100
-Message-ID: <lsq.1572026582.925593706@decadent.org.uk>
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        "Julian Wiedmann" <jwi@linux.ibm.com>
+Date:   Fri, 25 Oct 2019 19:03:33 +0100
+Message-ID: <lsq.1572026582.890954541@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 02/47] ARM: riscpc: fix DMA
+Subject: [PATCH 3.16 32/47] s390/qdio: don't touch the dsci in
+ tiqdio_add_input_queues()
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,44 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-commit ffd9a1ba9fdb7f2bd1d1ad9b9243d34e96756ba2 upstream.
+commit ac6639cd3db607d386616487902b4cc1850a7be5 upstream.
 
-DMA got broken a while back in two different ways:
-1) a change in the behaviour of disable_irq() to wait for the interrupt
-   to finish executing causes us to deadlock at the end of DMA.
-2) a change to avoid modifying the scatterlist left the first transfer
-   uninitialised.
+Current code sets the dsci to 0x00000080. Which doesn't make any sense,
+as the indicator area is located in the _left-most_ byte.
 
-DMA is only used with expansion cards, so has gone unnoticed.
+Worse: if the dsci is the _shared_ indicator, this potentially clears
+the indication of activity for a _different_ device.
+tiqdio_thinint_handler() will then have no reason to call that device's
+IRQ handler, and the device ends up stalling.
 
-Fixes: fa4e99899932 ("[ARM] dma: RiscPC: don't modify DMA SG entries")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: d0c9d4a89fff ("[S390] qdio: set correct bit in dsci")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/mach-rpc/dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/s390/cio/qdio_thinint.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/arm/mach-rpc/dma.c
-+++ b/arch/arm/mach-rpc/dma.c
-@@ -131,7 +131,7 @@ static irqreturn_t iomd_dma_handle(int i
- 	} while (1);
- 
- 	idma->state = ~DMA_ST_AB;
--	disable_irq(irq);
-+	disable_irq_nosync(irq);
- 
- 	return IRQ_HANDLED;
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -80,7 +80,6 @@ void tiqdio_add_input_queues(struct qdio
+ 	mutex_lock(&tiq_list_lock);
+ 	list_add_rcu(&irq_ptr->input_qs[0]->entry, &tiq_list);
+ 	mutex_unlock(&tiq_list_lock);
+-	xchg(irq_ptr->dsci, 1 << 7);
  }
-@@ -174,6 +174,9 @@ static void iomd_enable_dma(unsigned int
- 				DMA_FROM_DEVICE : DMA_TO_DEVICE);
- 		}
  
-+		idma->dma_addr = idma->dma.sg->dma_address;
-+		idma->dma_len = idma->dma.sg->length;
-+
- 		iomd_writeb(DMA_CR_C, dma_base + CR);
- 		idma->state = DMA_ST_AB;
- 	}
+ void tiqdio_remove_input_queues(struct qdio_irq *irq_ptr)
 
