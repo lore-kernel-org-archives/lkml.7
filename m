@@ -2,109 +2,119 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10999CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7752DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB47A20684
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EBF9222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RxVRLety"
+	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="OZJ96x4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440483AbfJYPFK (ORCPT
+        id S2440560AbfJYPGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:05:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11448 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2436893AbfJYPFK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:05:10 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x9PEpUFx014286;
-        Fri, 25 Oct 2019 17:04:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=ZMeMc+3j8pjf5jMQ5pjGKgdHlK3Le3Ui9+EuWowxw6E=;
- b=RxVRLetyW5JQMuy2I9X0ZoPm9auwGLD+WdqLLjbs2TevbHp7vBBsif1Nw4JE8qqwZ1w9
- cMpUSFhPXmYLQ1h3jj1rBIDMc6JEsVbe8tv454DYRi4stSFp14H0FCmVWH/vWgoM46nt
- F5BfIrj4qwRZgAw2mHu8PpoEsJGo4IGOup8or7MMCLiXk7W7JK1hUoY/IEETYtkY4GI1
- iGVtknMmCatf1sigl2xA6UfE5oIrCaWkou97M72kp/+FR/W307qCcyT/kfKZUlHEIjcr
- bOwrSFqLhByOUSpFGgB1qId+VUQmeRzz1GdpeseHg5+j+bpDZZaC2SFvlLBzIW3REnIT 5Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2vt9s58dgx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 17:04:42 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3E67C10002A;
-        Fri, 25 Oct 2019 17:04:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2B1CD2A9711;
-        Fri, 25 Oct 2019 17:04:42 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 25 Oct
- 2019 17:04:42 +0200
-Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 25 Oct 2019 17:04:41 +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] iio: adc: stm32-adc: fix stopping dma
-Date:   Fri, 25 Oct 2019 17:04:20 +0200
-Message-ID: <1572015860-8931-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 25 Oct 2019 11:06:36 -0400
+Received: from mail-eopbgr720055.outbound.protection.outlook.com ([40.107.72.55]:43104
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2436893AbfJYPGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:06:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iT/6rP+CfS0LlcRyKbV+3a4mYUzOpZUlyB7D+nmdy4pDbrto9AQAa3e3ot7snwqgJSg6DDXFcKwKcAd1hhmaYXTcwly0Umc0cBpjpLRDMCYbStUxAyS65fiZUQnUcuHzw16yXriIle7NVXAQbKWraUuVO4nYOyd0AdKgUkoPWVhNOJsAi2GhIdq2V++F6GpxEMaODKUdylIOKoX+hGAhBRbuU4RDEzcgh81yxJJNVQfgS/TbXDGz2dtq2Pey90Vxdfl6065uhiKF4XlOpprcbsyQUrlSLqWhF5MOM3UUk/bbK5n27UgtllN/OpcH5NOmU90rf0sNHHbOuCmYMXHokQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DlTzp2nm49mb+C+DlK45o+ydRrwDf97826K0GkDbsNk=;
+ b=Og7nxL1AxNgyk7UO5CBSBMXy7P4nhxKnnAV1NlAUJeH2Gork8FwlBXbb8seFVXQsBiiunnyZRFYOPbGl/WWIcEcuwSOCK3aaqymQYT7BIJfmpob35vn7SilabU+B9+dtAtrWAoxGUZ8u0krTF7X9yL1tmAQGyniaY5kNOSZCSILEKkkfIqPIUVCbvQDa2BQYVEFTi29mT2C4T1GlkA8bWMuJp4uHb+DsUd2cOQ7pN3ToTCbUsPkYnRZtBjBoxCjFZQjkX0a+Ah4YWvnCNxBWbGPC05JLC43zCzFb+9iLNjuE7vS6J26vl8puqPgeA18LgOPYVSpPEAx8Cvsk8OmDQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aquantia.com; dmarc=pass action=none header.from=aquantia.com;
+ dkim=pass header.d=aquantia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DlTzp2nm49mb+C+DlK45o+ydRrwDf97826K0GkDbsNk=;
+ b=OZJ96x4JvIWD6/H5Lqlm25PJUceEd9edlO0Cf7443nlPlZLrgeafkR4d/JhnzrmMvlZ3ghltqtOOG4C58drjm06mcU/kg2POTBJleEk3i95l2JPg2YV5ZMwtvRlm70UA6dwg4UGJo+JgKFJqiIy+RHKwnOM+Z1U6NKyk13TD2a4=
+Received: from BN8PR11MB3762.namprd11.prod.outlook.com (20.178.221.83) by
+ BN8PR11MB3731.namprd11.prod.outlook.com (20.178.220.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.22; Fri, 25 Oct 2019 15:06:26 +0000
+Received: from BN8PR11MB3762.namprd11.prod.outlook.com
+ ([fe80::accc:44e2:f64d:f2f]) by BN8PR11MB3762.namprd11.prod.outlook.com
+ ([fe80::accc:44e2:f64d:f2f%3]) with mapi id 15.20.2387.023; Fri, 25 Oct 2019
+ 15:06:26 +0000
+From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        Egor Pomozov <epomozov@marvell.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Dmitry Bezrukov <Dmitry.Bezrukov@aquantia.com>,
+        Sergey Samoilenko <Sergey.Samoilenko@aquantia.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] [PATCH net-next] net: aquantia: Fix build error wihtout
+ CONFIG_PTP_1588_CLOCK
+Thread-Topic: [EXT] [PATCH net-next] net: aquantia: Fix build error wihtout
+ CONFIG_PTP_1588_CLOCK
+Thread-Index: AQHVi0XB+OhMsSq30UWkt4i3ZpBEGg==
+Date:   Fri, 25 Oct 2019 15:06:25 +0000
+Message-ID: <cdef0123-89da-b9ff-1f52-6d838846ffc9@aquantia.com>
+References: <20191025133726.31796-1-yuehaibing@huawei.com>
+In-Reply-To: <20191025133726.31796-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0044.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1::32) To BN8PR11MB3762.namprd11.prod.outlook.com
+ (2603:10b6:408:8d::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Igor.Russkikh@aquantia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d98c9ea1-ac7f-4a04-a23b-08d7595ce7dd
+x-ms-traffictypediagnostic: BN8PR11MB3731:
+x-ld-processed: 83e2e134-991c-4ede-8ced-34d47e38e6b1,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR11MB3731E1D0C7B27D3053E8EAA798650@BN8PR11MB3731.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(396003)(366004)(376002)(136003)(346002)(199004)(189003)(71200400001)(54906003)(99286004)(6636002)(6116002)(2501003)(66066001)(6246003)(3846002)(256004)(7736002)(8936002)(81166006)(81156014)(316002)(8676002)(186003)(26005)(110136005)(31696002)(229853002)(386003)(6506007)(76176011)(102836004)(52116002)(6512007)(6486002)(71190400001)(476003)(66476007)(86362001)(66556008)(4744005)(64756008)(446003)(36756003)(2616005)(66446008)(31686004)(508600001)(25786009)(4326008)(6436002)(14454004)(2906002)(5660300002)(44832011)(11346002)(66946007)(305945005)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR11MB3731;H:BN8PR11MB3762.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: aquantia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RoYTf5M3Oh4aPXSPrcZqfI5vqoJtqpLbpOyN70IEQIVpJZKSNhva3gO400j7fWYJol1DqPwoos2pBB6qPxoRftWM+l/Cv+R9z+Ns+Fum2UckJ6PQRd9IPw8Lv6Shzx79OqbJEuY0z4X6WQO1fnjWty1tPxf7In+sc1l7rhtp7029cBTFjtQUlhEMJnOwajieedCd/KVXOrX8iDyUA4O8lf6LXvHlS3JhPcaK2B7nwZyTxN/epSiBN5cuj0m+hva7UN4VqjZ0VVMeoMes4YRLOGDblMAoa9f5+51CSbbvXw/cHRbg90vQ8q20nccDv/ihwc403lPYxZbvKefhO2GEyZm0Rmdwifh06x6jGwUu6T5Q5FDUjrx2/+UfOO95nLs/EWk6RSEZvAhbEuJA3sFtVeOifCfyES1yQZBSEf0w4qNQiOY1UG3KYhu6Wj1pqwCC
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE749B4AAE57FF498DA6F3A63793CE55@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-25_08:2019-10-25,2019-10-25 signatures=0
+X-OriginatorOrg: aquantia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d98c9ea1-ac7f-4a04-a23b-08d7595ce7dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 15:06:25.9259
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Xpk6ruTOCw/naSCWhUif1OSdrHi7UWr/YNng9ImOi96JlupMOrqtb/lJFH5ufVLOvYAsikYXMlaj/ierVdDSmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR11MB3731
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There maybe a race when using dmaengine_terminate_all(). The predisable
-routine may call iio_triggered_buffer_predisable() prior to a pending DMA
-callback.
-Adopt dmaengine_terminate_sync() to ensure there's no pending DMA request
-before calling iio_triggered_buffer_predisable().
-
-Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/iio/adc/stm32-adc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 663f8a5..73aee59 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1399,7 +1399,7 @@ static int stm32_adc_dma_start(struct iio_dev *indio_dev)
- 	cookie = dmaengine_submit(desc);
- 	ret = dma_submit_error(cookie);
- 	if (ret) {
--		dmaengine_terminate_all(adc->dma_chan);
-+		dmaengine_terminate_sync(adc->dma_chan);
- 		return ret;
- 	}
- 
-@@ -1477,7 +1477,7 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
- 		stm32_adc_conv_irq_disable(adc);
- 
- 	if (adc->dma_chan)
--		dmaengine_terminate_all(adc->dma_chan);
-+		dmaengine_terminate_sync(adc->dma_chan);
- 
- 	if (stm32_adc_set_trig(indio_dev, NULL))
- 		dev_err(&indio_dev->dev, "Can't clear trigger\n");
--- 
-2.7.4
-
+DQo+IElmIFBUUF8xNTg4X0NMT0NLIGlzIG4sIGJ1aWxkaW5nIGZhaWxzOg0KPiANCj4gZHJpdmVy
+cy9uZXQvZXRoZXJuZXQvYXF1YW50aWEvYXRsYW50aWMvYXFfcHRwLmM6IEluIGZ1bmN0aW9uIGFx
+X3B0cF9hZGpmaW5lOg0KPiBkcml2ZXJzL25ldC9ldGhlcm5ldC9hcXVhbnRpYS9hdGxhbnRpYy9h
+cV9wdHAuYzoyNzk6MTE6DQo+ICBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rp
+b24gc2NhbGVkX3BwbV90b19wcGIgWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRp
+b25dDQo+ICAgICAgICAgICAgc2NhbGVkX3BwbV90b19wcGIoc2NhbGVkX3BwbSkpOw0KDQpIaSBZ
+dWUsDQoNClRoYW5rcyBmb3Igbm90aWNpbmcgdGhpcy4gSXQgc2VlbXMgSSd2ZSBhZGRlZCBzY2Fs
+ZWRfcHBtX3RvX3BwYiB1c2FnZSBidXQgZGlkDQpub3QgY2hlY2tlZCBQVFBfMTU4OF9DTE9DSz1u
+IGNhc2UgYWZ0ZXIgdGhhdC4NCg0KPiANCj4gSnVzdCBjcCBzY2FsZWRfcHBtX3RvX3BwYigpIGZy
+b20gcHRwX2Nsb2NrLmMgdG8gZml4IHRoaXMuDQoNCkknbSBob25lc3RseSBub3Qgc3VyZSBpZiBk
+dXBsaWNhdGluZyB0aGUgY29kZSBpcyBhIGdvb2Qgd2F5IGhlcmUuDQpJJ2xsIHRoaW5rIG9uIGhv
+dyB0byBleGNsdWRlIGF0X3B0cCBhdCBhbGwgb24gc3VjaCBhIGNvbmZpZy4NCg0KUmVnYXJkcywN
+CiAgSWdvcg0K
