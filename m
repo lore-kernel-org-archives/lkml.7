@@ -2,200 +2,141 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725F0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F71CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE262054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56FC21D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:36:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AevmlaZf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYW0esZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfJYTgh (ORCPT
+        id S1727319AbfJYTgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:36:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43945 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726120AbfJYTgg (ORCPT
+        Fri, 25 Oct 2019 15:36:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40236 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfJYTgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:36:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572032194;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=WY4DqfThBC4KF0edM6YYGs6wiTpVUS+SZXP71BDtiMc=;
-        b=AevmlaZf5tgcK+YclBERySM042j0TK/95eaXVmy1JOiqzN/nZiTvAHFFgtzg+dcGVYrxuu
-        6gdZOOs0pA6iy1yvDVDr7ShvksmnxyHf5UY8KnAfu4uTRjSxNNl7PjSJ5bqDHS3LVt5P8z
-        X+Kgep6GMgYzSKwMowpRIAGF/ytGrYo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-yS2I6GnMO_CAHk_1PF2FmQ-1; Fri, 25 Oct 2019 15:36:31 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34C6180183D;
-        Fri, 25 Oct 2019 19:36:30 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-117-192.phx2.redhat.com [10.3.117.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3BB63D8F;
-        Fri, 25 Oct 2019 19:36:29 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
-Subject: [PATCH] tpm: Update mailing list contact information in sysfs-class-tpm
-Date:   Fri, 25 Oct 2019 12:36:28 -0700
-Message-Id: <20191025193628.31004-1-jsnitsel@redhat.com>
+        Fri, 25 Oct 2019 15:36:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o28so3615123wro.7
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vKgsFbx8Ep6iOXlXatCgfl2QJqYHidBhx0D+NEJMyLo=;
+        b=OYW0esZZ6B8EKsDTY2vGfRPRy99SJ3ZPr9FUu3Pu00ygV96AVxKm2XvVThu2GBAKBE
+         IP8FqmojtSAn97B4Lnko6Vl/CndCsFkjQRCZk0Qxwx9aYtaPvvzHsKjf1zUQjW0VfNR/
+         WtSXgiVb0XdlwJ/9mBbEY/qE/44PoZJUbuVFtiHJjj/PSHL4+SSu77q6wDgeS91MArDg
+         CFKAaEIYWSsWWAjy1u4icShmr+I5DJekVSuWShrkT7XD0obab0nMc9O4eML32tB31tqm
+         ebfh++CM8OfUbK+c4gTIw2SnurUjVhfdzazZWgqY7dIsctZ870wOjpFN4wqwrhNzpQnM
+         5eXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vKgsFbx8Ep6iOXlXatCgfl2QJqYHidBhx0D+NEJMyLo=;
+        b=C46SxJantUuFypDvOJzasKcYrL80UEElq4HadrjO4UhqzLmF5nhk0a1gTxPZARAttd
+         tQBEutpAm7p+RVQYvOFwOzCzZCUDN3tDBStU0WHNqe8U8DwGtcGqSaj7GvG6KqppKBHP
+         hZjXpK9YErKziB7U+l5JFrywS/9hyzq3xN586SQqaIRbqumDu4fE4vUftvFza6926xEB
+         397T5MVx7EP7DWENwv40TtLMl+8xCUBGLzTyj3uueqErf7QyQxW4DZNLWr+nedGwuGrK
+         0BuNliRKRIhq/siNY47PxdjI2rplCAVQhVyDG5RQk7nB4rgbFb2JSsERwVWCBbffL8cF
+         0TZw==
+X-Gm-Message-State: APjAAAVcUObpO893re+9Nt988Q4y5njFR1fiUtXxfi1sduwZdzIdVTEW
+        CG2VHewKj6+TIXgTc2/JBjRWkXkSzCxU/jn2EBk=
+X-Google-Smtp-Source: APXvYqwMDwW4AyIxm3bcNrPMq1dwCxnVICIYRR/Y5+vKCesA43Yg/x9R3k2Irdc3Pwz6VVvg8ChPIZGNsdg/LFMO7nw=
+X-Received: by 2002:a5d:6ac3:: with SMTP id u3mr4661857wrw.206.1572032195543;
+ Fri, 25 Oct 2019 12:36:35 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: yS2I6GnMO_CAHk_1PF2FmQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <20191019073242.21652-1-wambui@karuga.xyz> <2bed3fab-e84d-226d-b552-1ac088fc5d9c@amd.com>
+In-Reply-To: <2bed3fab-e84d-226d-b552-1ac088fc5d9c@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 25 Oct 2019 15:36:23 -0400
+Message-ID: <CADnq5_PeCmE-rmUaVDXtLNi20aMzYkeoLUtxHr9yT7P0Nix+qw@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon: remove assignment for return value
+To:     Harry Wentland <hwentlan@amd.com>
+Cc:     Wambui Karuga <wambui@karuga.xyz>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "outreachy-kernel@googlegroups.com" 
+        <outreachy-kernel@googlegroups.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All of the entries in Documentation/ABI/stable/sysfs-class-tpm
-point to the old tpmdd-devel mailing list. This patch
-updates the entries to point to linux-intergrity.
+Applied.  Thanks!
 
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-integrity@vger.kernel.org
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
----
- Documentation/ABI/stable/sysfs-class-tpm | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Alex
 
-diff --git a/Documentation/ABI/stable/sysfs-class-tpm b/Documentation/ABI/s=
-table/sysfs-class-tpm
-index c6bd02bafafd..e0116d42e4a0 100644
---- a/Documentation/ABI/stable/sysfs-class-tpm
-+++ b/Documentation/ABI/stable/sysfs-class-tpm
-@@ -1,7 +1,7 @@
- What:=09=09/sys/class/tpm/tpmX/device/
- Date:=09=09April 2005
- KernelVersion:=092.6.12
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The device/ directory under a specific TPM instance exposes
- =09=09the properties of that TPM chip
-=20
-@@ -9,7 +9,7 @@ Description:=09The device/ directory under a specific TPM i=
-nstance exposes
- What:=09=09/sys/class/tpm/tpmX/device/active
- Date:=09=09April 2006
- KernelVersion:=092.6.17
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "active" property prints a '1' if the TPM chip is accep=
-ting
- =09=09commands. An inactive TPM chip still contains all the state of
- =09=09an active chip (Storage Root Key, NVRAM, etc), and can be
-@@ -21,7 +21,7 @@ Description:=09The "active" property prints a '1' if the =
-TPM chip is accepting
- What:=09=09/sys/class/tpm/tpmX/device/cancel
- Date:=09=09June 2005
- KernelVersion:=092.6.13
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "cancel" property allows you to cancel the currently
- =09=09pending TPM command. Writing any value to cancel will call the
- =09=09TPM vendor specific cancel operation.
-@@ -29,7 +29,7 @@ Description:=09The "cancel" property allows you to cancel=
- the currently
- What:=09=09/sys/class/tpm/tpmX/device/caps
- Date:=09=09April 2005
- KernelVersion:=092.6.12
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "caps" property contains TPM manufacturer and version i=
-nfo.
-=20
- =09=09Example output:
-@@ -46,7 +46,7 @@ Description:=09The "caps" property contains TPM manufactu=
-rer and version info.
- What:=09=09/sys/class/tpm/tpmX/device/durations
- Date:=09=09March 2011
- KernelVersion:=093.1
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "durations" property shows the 3 vendor-specific values
- =09=09used to wait for a short, medium and long TPM command. All
- =09=09TPM commands are categorized as short, medium or long in
-@@ -69,7 +69,7 @@ Description:=09The "durations" property shows the 3 vendo=
-r-specific values
- What:=09=09/sys/class/tpm/tpmX/device/enabled
- Date:=09=09April 2006
- KernelVersion:=092.6.17
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "enabled" property prints a '1' if the TPM chip is enab=
-led,
- =09=09meaning that it should be visible to the OS. This property
- =09=09may be visible but produce a '0' after some operation that
-@@ -78,7 +78,7 @@ Description:=09The "enabled" property prints a '1' if the=
- TPM chip is enabled,
- What:=09=09/sys/class/tpm/tpmX/device/owned
- Date:=09=09April 2006
- KernelVersion:=092.6.17
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "owned" property produces a '1' if the TPM_TakeOwnershi=
-p
- =09=09ordinal has been executed successfully in the chip. A '0'
- =09=09indicates that ownership hasn't been taken.
-@@ -86,7 +86,7 @@ Description:=09The "owned" property produces a '1' if the=
- TPM_TakeOwnership
- What:=09=09/sys/class/tpm/tpmX/device/pcrs
- Date:=09=09April 2005
- KernelVersion:=092.6.12
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "pcrs" property will dump the current value of all Plat=
-form
- =09=09Configuration Registers in the TPM. Note that since these
- =09=09values may be constantly changing, the output is only valid
-@@ -109,7 +109,7 @@ Description:=09The "pcrs" property will dump the curren=
-t value of all Platform
- What:=09=09/sys/class/tpm/tpmX/device/pubek
- Date:=09=09April 2005
- KernelVersion:=092.6.12
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "pubek" property will return the TPM's public endorseme=
-nt
- =09=09key if possible. If the TPM has had ownership established and
- =09=09is version 1.2, the pubek will not be available without the
-@@ -161,7 +161,7 @@ Description:=09The "pubek" property will return the TPM=
-'s public endorsement
- What:=09=09/sys/class/tpm/tpmX/device/temp_deactivated
- Date:=09=09April 2006
- KernelVersion:=092.6.17
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "temp_deactivated" property returns a '1' if the chip h=
-as
- =09=09been temporarily deactivated, usually until the next power
- =09=09cycle. Whether a warm boot (reboot) will clear a TPM chip
-@@ -170,7 +170,7 @@ Description:=09The "temp_deactivated" property returns =
-a '1' if the chip has
- What:=09=09/sys/class/tpm/tpmX/device/timeouts
- Date:=09=09March 2011
- KernelVersion:=093.1
--Contact:=09tpmdd-devel@lists.sf.net
-+Contact:=09linux-integrity@vger.kernel.org
- Description:=09The "timeouts" property shows the 4 vendor-specific values
- =09=09for the TPM's interface spec timeouts. The use of these
- =09=09timeouts is defined by the TPM interface spec that the chip
---=20
-2.23.0
-
+On Wed, Oct 23, 2019 at 11:09 AM Harry Wentland <hwentlan@amd.com> wrote:
+>
+> On 2019-10-19 3:32 a.m., Wambui Karuga wrote:
+> > Remove unnecessary assignment for return value and have the
+> > function return the required value directly.
+> > Issue found by coccinelle:
+> > @@
+> > local idexpression ret;
+> > expression e;
+> > @@
+> >
+> > -ret =
+> > +return
+> >      e;
+> > -return ret;
+> >
+> > Signed-off-by: Wambui Karuga <wambui@karuga.xyz>
+>
+> Thanks for your patch.
+>
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+>
+> Harry
+>
+>
+> > ---
+> >  drivers/gpu/drm/radeon/cik.c | 8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
+> > index 62eab82a64f9..daff9a2af3be 100644
+> > --- a/drivers/gpu/drm/radeon/cik.c
+> > +++ b/drivers/gpu/drm/radeon/cik.c
+> > @@ -221,9 +221,7 @@ int ci_get_temp(struct radeon_device *rdev)
+> >       else
+> >               actual_temp = temp & 0x1ff;
+> >
+> > -     actual_temp = actual_temp * 1000;
+> > -
+> > -     return actual_temp;
+> > +     return actual_temp * 1000;
+> >  }
+> >
+> >  /* get temperature in millidegrees */
+> > @@ -239,9 +237,7 @@ int kv_get_temp(struct radeon_device *rdev)
+> >       else
+> >               actual_temp = 0;
+> >
+> > -     actual_temp = actual_temp * 1000;
+> > -
+> > -     return actual_temp;
+> > +     return actual_temp * 1000;
+> >  }
+> >
+> >  /*
+> >
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
