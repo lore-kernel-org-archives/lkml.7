@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA8CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDF4CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EC7222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A16222CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011909;
-	bh=LTN6V6hmihi+VaoMqArjWGsDY+jF6bjygzvWJgkpK/Q=;
+	s=default; t=1572011912;
+	bh=G+7x1nwZwpYOo4LjOfJn0PsJVGHoMRIw42ih48V61c0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXQ+PwNJVNWiJ4Jo7r6okk8RdWOF5aawzSB0UNfBigyie4c6TMFuTPdgxyWyNzcIM
-	 Llv12VLfagjmMxPTie+9zvK2/JFr3kYGT+NXziNtqS2dwNi4R4OrlDEvKD+BuaqV8V
-	 DyM6LZS21uo7QUEt9VKYxrwY2qx7RvUX65RUXu1Q=
+	b=eZU4SnoQsSYj0UIGs6e/L4YCqmhdUHVmQj8UVE7kc2KlPbToAdYe428UhZRhGL/I4
+	 DpdNs8g2ApDWaJm2ae9SPHKWhWjbDGjrmxehZz20/qBXhT8oAb3g4ZbJlmAPmyssIy
+	 K0XAI4I6llcFflMbwDswrFMzMh1qB3iwNRLkl4EI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505576AbfJYN61 (ORCPT
+        id S2505597AbfJYN6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53474 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505502AbfJYN6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:14 -0400
+        id S2505536AbfJYN6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D40E9222CB;
-        Fri, 25 Oct 2019 13:58:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C32A522468;
+        Fri, 25 Oct 2019 13:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011894;
-        bh=LTN6V6hmihi+VaoMqArjWGsDY+jF6bjygzvWJgkpK/Q=;
+        s=default; t=1572011901;
+        bh=G+7x1nwZwpYOo4LjOfJn0PsJVGHoMRIw42ih48V61c0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LePEQpw2NwaR8My8PP+RJ91etq11kwVVze/f6T1clE38poAX3zILV4rFTjhuJhoKn
-         PhXDKi3VNSt054usPUH3zLPoJF4V9Nqvqw3pmLz7zz5qLbJwU3QEzUXfsdB44YWvnD
-         aLNcCNeENhDYoCW1bzsXyppqXM3irqOGqunL8lHA=
+        b=XJKmesoh3OM278cIkV4SeH3HBJqt147gs4ltMFRm2KaOtpWwDtsobFg/Pnj++pRni
+         AJF0SqUELBn7QBs5fke7oBT405Rfh/VlN03ceNS8MUcYYkGjpHQ43BX5phC2gZq/L2
+         R6Zcf4wuRez1mXbqFgYV2qgVURkO++xBXKAX5wD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Laurence Oberman <loberman@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/20] scsi: RDMA/srp: Fix a sleep-in-invalid-context bug
-Date:   Fri, 25 Oct 2019 09:57:46 -0400
-Message-Id: <20191025135801.25739-6-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
+        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/20] llc: fix sk_buff leak in llc_sap_state_process()
+Date:   Fri, 25 Oct 2019 09:57:50 -0400
+Message-Id: <20191025135801.25739-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
 References: <20191025135801.25739-1-sashal@kernel.org>
@@ -65,108 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit fd56141244066a6a21ef458670071c58b6402035 ]
+[ Upstream commit c6ee11c39fcc1fb55130748990a8f199e76263b4 ]
 
-The previous patch guarantees that srp_queuecommand() does not get
-invoked while reconnecting occurs. Hence remove the code from
-srp_queuecommand() that prevents command queueing while reconnecting.
-This patch avoids that the following can appear in the kernel log:
+syzbot reported:
 
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:747
-in_atomic(): 1, irqs_disabled(): 0, pid: 5600, name: scsi_eh_9
-1 lock held by scsi_eh_9/5600:
- #0:  (rcu_read_lock){....}, at: [<00000000cbb798c7>] __blk_mq_run_hw_queue+0xf1/0x1e0
-Preemption disabled at:
-[<00000000139badf2>] __blk_mq_delay_run_hw_queue+0x78/0xf0
-CPU: 9 PID: 5600 Comm: scsi_eh_9 Tainted: G        W        4.15.0-rc4-dbg+ #1
-Hardware name: Dell Inc. PowerEdge R720/0VWT90, BIOS 2.5.4 01/22/2016
-Call Trace:
- dump_stack+0x67/0x99
- ___might_sleep+0x16a/0x250 [ib_srp]
- __mutex_lock+0x46/0x9d0
- srp_queuecommand+0x356/0x420 [ib_srp]
- scsi_dispatch_cmd+0xf6/0x3f0
- scsi_queue_rq+0x4a8/0x5f0
- blk_mq_dispatch_rq_list+0x73/0x440
- blk_mq_sched_dispatch_requests+0x109/0x1a0
- __blk_mq_run_hw_queue+0x131/0x1e0
- __blk_mq_delay_run_hw_queue+0x9a/0xf0
- blk_mq_run_hw_queue+0xc0/0x1e0
- blk_mq_start_hw_queues+0x2c/0x40
- scsi_run_queue+0x18e/0x2d0
- scsi_run_host_queues+0x22/0x40
- scsi_error_handler+0x18d/0x5f0
- kthread+0x11c/0x140
- ret_from_fork+0x24/0x30
+    BUG: memory leak
+    unreferenced object 0xffff888116270800 (size 224):
+       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
+       hex dump (first 32 bytes):
+         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
+       backtrace:
+         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
+         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
+         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
+         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
+         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
+         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
+         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
+         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+	 [...]
 
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Leon Romanovsky <leonro@mellanox.com>
-Cc: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The bug is that llc_sap_state_process() always takes an extra reference
+to the skb, but sometimes neither llc_sap_next_state() nor
+llc_sap_state_process() itself drops this reference.
+
+Fix it by changing llc_sap_next_state() to never consume a reference to
+the skb, rather than sometimes do so and sometimes not.  Then remove the
+extra skb_get() and kfree_skb() from llc_sap_state_process().
+
+Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
+Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srp/ib_srp.c | 21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
+ net/llc/llc_s_ac.c | 12 +++++++++---
+ net/llc/llc_sap.c  | 23 ++++++++---------------
+ 2 files changed, 17 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 74de1ae48d4f7..a3145ae1d66d2 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -2102,7 +2102,6 @@ static void srp_handle_qp_err(struct ib_cq *cq, struct ib_wc *wc,
- static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
- {
- 	struct srp_target_port *target = host_to_target(shost);
--	struct srp_rport *rport = target->rport;
- 	struct srp_rdma_ch *ch;
- 	struct srp_request *req;
- 	struct srp_iu *iu;
-@@ -2112,16 +2111,6 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
- 	u32 tag;
- 	u16 idx;
- 	int len, ret;
--	const bool in_scsi_eh = !in_interrupt() && current == shost->ehandler;
--
--	/*
--	 * The SCSI EH thread is the only context from which srp_queuecommand()
--	 * can get invoked for blocked devices (SDEV_BLOCK /
--	 * SDEV_CREATED_BLOCK). Avoid racing with srp_reconnect_rport() by
--	 * locking the rport mutex if invoked from inside the SCSI EH.
--	 */
--	if (in_scsi_eh)
--		mutex_lock(&rport->mutex);
- 
- 	scmnd->result = srp_chkready(target->rport);
- 	if (unlikely(scmnd->result))
-@@ -2183,13 +2172,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
- 		goto err_unmap;
- 	}
- 
--	ret = 0;
--
--unlock_rport:
--	if (in_scsi_eh)
--		mutex_unlock(&rport->mutex);
--
--	return ret;
-+	return 0;
- 
- err_unmap:
- 	srp_unmap_data(scmnd, ch, req);
-@@ -2211,7 +2194,7 @@ static int srp_queuecommand(struct Scsi_Host *shost, struct scsi_cmnd *scmnd)
- 		ret = SCSI_MLQUEUE_HOST_BUSY;
- 	}
- 
--	goto unlock_rport;
-+	return ret;
+diff --git a/net/llc/llc_s_ac.c b/net/llc/llc_s_ac.c
+index a94bd56bcac6f..7ae4cc684d3ab 100644
+--- a/net/llc/llc_s_ac.c
++++ b/net/llc/llc_s_ac.c
+@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sap *sap, struct sk_buff *skb)
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_ui_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
  }
  
- /*
+@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc_sap *sap, struct sk_buff *skb)
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
+ 
+@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct llc_sap *sap, struct sk_buff *skb)
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_test_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
+ 
+diff --git a/net/llc/llc_sap.c b/net/llc/llc_sap.c
+index 5404d0d195cc5..d51ff9df9c959 100644
+--- a/net/llc/llc_sap.c
++++ b/net/llc/llc_sap.c
+@@ -197,29 +197,22 @@ static int llc_sap_next_state(struct llc_sap *sap, struct sk_buff *skb)
+  *	After executing actions of the event, upper layer will be indicated
+  *	if needed(on receiving an UI frame). sk can be null for the
+  *	datalink_proto case.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
+ {
+ 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
+ 
+-	/*
+-	 * We have to hold the skb, because llc_sap_next_state
+-	 * will kfree it in the sending path and we need to
+-	 * look at the skb->cb, where we encode llc_sap_state_ev.
+-	 */
+-	skb_get(skb);
+ 	ev->ind_cfm_flag = 0;
+ 	llc_sap_next_state(sap, skb);
+-	if (ev->ind_cfm_flag == LLC_IND) {
+-		if (skb->sk->sk_state == TCP_LISTEN)
+-			kfree_skb(skb);
+-		else {
+-			llc_save_primitive(skb->sk, skb, ev->prim);
+ 
+-			/* queue skb to the user. */
+-			if (sock_queue_rcv_skb(skb->sk, skb))
+-				kfree_skb(skb);
+-		}
++	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
++		llc_save_primitive(skb->sk, skb, ev->prim);
++
++		/* queue skb to the user. */
++		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
++			return;
+ 	}
+ 	kfree_skb(skb);
+ }
 -- 
 2.20.1
 
