@@ -2,115 +2,273 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB11CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75F5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5E021D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C14F205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="0SIQXQwQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+16CLj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388978AbfJYBaj (ORCPT
+        id S1729970AbfJYBbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 21:30:39 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:25998 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388881AbfJYBai (ORCPT
+        Thu, 24 Oct 2019 21:31:51 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46288 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726486AbfJYBbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 21:30:38 -0400
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x9P1UO6G009423
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 10:30:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x9P1UO6G009423
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1571967025;
-        bh=L3Fa2XZ1rR+ziFoIK9l+QqKH+QTJz16N605WBJKiQ08=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0SIQXQwQhh1nG3Yqd6tmVflYOaoOlqAekjd0xdn6Zi07vZyEXkPxfO9g1uiACQUA+
-         BWBLUbGASk+gLmcvxQmbg9ZOVrucrOq7z2aS832+D/lzsVhfY9bNUcbdi6ltYVFh0G
-         xBK7golhkiOOugp5PYL5Ie3sVQ9XKa3hWicNYIKq44MJ/1fjvp2SqvffEg3ek0R0g9
-         JLS7VdsGskxwNX99/NJ9oWk/5p7NjGUq8uFUfVVqrJSzmnsnLUcda4W0Of7E/56M4G
-         ptlyiiZxGvQBBn3j3jtdjyVcqz004L45L6aeHV05k5/Hp/6DQYBi0xrWQjuI5e/nTZ
-         733+qVQVymwLg==
-X-Nifty-SrcIP: [209.85.221.180]
-Received: by mail-vk1-f180.google.com with SMTP id 70so105159vkz.8
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 18:30:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAUNRVXH1RNZDs1Fat5E+SvJjJr3TiLyyNQvXDtLxE9Uy8oGgYis
-        V/7lG54tIwBi4/L5XcmDqpXc5UptC97mK1fC39A=
-X-Google-Smtp-Source: APXvYqwjXYQwp/yhTV3LIZTGMXzTyh2zYajp4PvTFqLtiYYGsakd4IU2B4U96c7jAzih1Ho+3+Qk2o5Gu0wN5fG4gLo=
-X-Received: by 2002:a1f:18ca:: with SMTP id 193mr828852vky.66.1571967024170;
- Thu, 24 Oct 2019 18:30:24 -0700 (PDT)
+        Thu, 24 Oct 2019 21:31:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571967107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M40XR0T9BKbXD14zie05WcoP5tWOnHL2zQPkemlNf7o=;
+        b=h+16CLj0q+WPLqWCQ1P3KE2C7mWdead0xdRhonN8OD/vZoSJ1+kpdcMYhlioiMDZn91SYn
+        hK5xHE7V+PZM+aboZDf9Bji8xX/B+NUsxYXAFjnQnvwGUlGCw0c/VM8Z9yEMcLi2GYwu3s
+        zsRih9TfxJSe/xs5n6DgjnGUAJqoPtc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-OONSmIk_NKq6Om9oMPq8mA-1; Thu, 24 Oct 2019 21:31:43 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33A9C1005500;
+        Fri, 25 Oct 2019 01:31:41 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-33.pek2.redhat.com [10.72.12.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B4C6A5DA8D;
+        Fri, 25 Oct 2019 01:31:26 +0000 (UTC)
+Subject: Re: [PATCH 1/2 v5] x86/kdump: always reserve the low 1MiB when the
+ crashkernel option is specified
+From:   lijiang <lijiang@redhat.com>
+To:     Simon Horman <horms@verge.net.au>, d.hatayama@fujitsu.com
+Cc:     linux-kernel@vger.kernel.org, jgross@suse.com,
+        Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org,
+        kexec@lists.infradead.org, dhowells@redhat.com, mingo@redhat.com,
+        bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com,
+        tglx@linutronix.de, dyoung@redhat.com, vgoyal@redhat.com
+References: <20191023141912.29110-1-lijiang@redhat.com>
+ <20191023141912.29110-2-lijiang@redhat.com>
+ <20191024100719.GC11441@verge.net.au>
+ <4c1c4b78-23f0-a2b9-4be7-5bab0335f10a@redhat.com>
+Message-ID: <6da13645-c5e9-6c95-1f2d-bede177f9863@redhat.com>
+Date:   Fri, 25 Oct 2019 09:31:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191024225132.13410-1-samitolvanen@google.com> <20191024225132.13410-17-samitolvanen@google.com>
-In-Reply-To: <20191024225132.13410-17-samitolvanen@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 25 Oct 2019 10:29:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATPpL-B0APPXFcWPCR6ZTSrXv-v_ZkdFqjKJ4pwUpcWug@mail.gmail.com>
-Message-ID: <CAK7LNATPpL-B0APPXFcWPCR6ZTSrXv-v_ZkdFqjKJ4pwUpcWug@mail.gmail.com>
-Subject: Re: [PATCH v2 16/17] arm64: disable SCS for hypervisor code
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4c1c4b78-23f0-a2b9-4be7-5bab0335f10a@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: OONSmIk_NKq6Om9oMPq8mA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 7:52 AM <samitolvanen@google.com> wrote:
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  arch/arm64/kvm/hyp/Makefile | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-> index ea710f674cb6..8289ea086e5e 100644
-> --- a/arch/arm64/kvm/hyp/Makefile
-> +++ b/arch/arm64/kvm/hyp/Makefile
-> @@ -28,3 +28,6 @@ GCOV_PROFILE  := n
->  KASAN_SANITIZE := n
->  UBSAN_SANITIZE := n
->  KCOV_INSTRUMENT        := n
+=E5=9C=A8 2019=E5=B9=B410=E6=9C=8824=E6=97=A5 19:33, lijiang =E5=86=99=E9=
+=81=93:
+> =E5=9C=A8 2019=E5=B9=B410=E6=9C=8824=E6=97=A5 18:07, Simon Horman =E5=86=
+=99=E9=81=93:
+>> Hi Linbo,
+>>
+>> thanks for your patch.
+>>
+>> On Wed, Oct 23, 2019 at 10:19:11PM +0800, Lianbo Jiang wrote:
+>>> Kdump kernel will reuse the first 640k region because the real mode
+>>> trampoline has to work in this area. When the vmcore is dumped, the
+>>> old memory in this area may be accessed, therefore, kernel has to
+>>> copy the contents of the first 640k area to a backup region so that
+>>> kdump kernel can read the old memory from the backup area of the
+>>> first 640k area, which is done in the purgatory().
+>>>
+>>> But, the current handling of copying the first 640k area runs into
+>>> problems when SME is enabled, kernel does not properly copy these
+>>> old memory to the backup area in the purgatory(), thereby, kdump
+>>> kernel reads out the encrypted contents, because the kdump kernel
+>>> must access the first kernel's memory with the encryption bit set
+>>> when SME is enabled in the first kernel. Please refer to this link:
+>>>
+>>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D204793
+>>>
+>>> Finally, it causes the following errors, and the crash tool gets
+>>> invalid pointers when parsing the vmcore.
+>>>
+>>> crash> kmem -s|grep -i invalid
+>>> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086a=
+c099f0c5a4
+>>> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086a=
+c099f0c5a4
+>>> crash>
+>>>
+>>> To avoid the above errors, when the crashkernel option is specified,
+>>> lets reserve the remaining low 1MiB memory(after reserving real mode
+>>> memory) so that the allocated memory does not fall into the low 1MiB
+>>> area, which makes us not to copy the first 640k content to a backup
+>>> region in purgatory(). This indicates that it does not need to be
+>>> included in crash dumps or used for anything except the processor
+>>> trampolines that must live in the low 1MiB.
+>>>
+>>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>>> ---
+>>> BTW:I also tried to fix the above problem in purgatory(), but there
+>>> are too many restricts in purgatory() context, for example: i can't
+>>> allocate new memory to create the identity mapping page table for
+>>> SME situation.
+>>>
+>>> Currently, there are two places where the first 640k area is needed,
+>>> the first one is in the find_trampoline_placement(), another one is
+>>> in the reserve_real_mode(), and their content doesn't matter.
+>>>
+>>> In addition, also need to clean all the code related to the backup
+>>> region later.
+>>>
+>>>  arch/x86/realmode/init.c |  2 ++
+>>>  include/linux/kexec.h    |  2 ++
+>>>  kernel/kexec_core.c      | 13 +++++++++++++
+>>>  3 files changed, 17 insertions(+)
+>>>
+>>> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+>>> index 7dce39c8c034..064cc79a015d 100644
+>>> --- a/arch/x86/realmode/init.c
+>>> +++ b/arch/x86/realmode/init.c
+>>> @@ -3,6 +3,7 @@
+>>>  #include <linux/slab.h>
+>>>  #include <linux/memblock.h>
+>>>  #include <linux/mem_encrypt.h>
+>>> +#include <linux/kexec.h>
+>>> =20
+>>>  #include <asm/set_memory.h>
+>>>  #include <asm/pgtable.h>
+>>> @@ -34,6 +35,7 @@ void __init reserve_real_mode(void)
+>>> =20
+>>>  =09memblock_reserve(mem, size);
+>>>  =09set_real_mode_mem(mem);
+>>> +=09kexec_reserve_low_1MiB();
+>>>  }
+>>> =20
+>>>  static void __init setup_real_mode(void)
+>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>> index 1776eb2e43a4..30acf1d738bc 100644
+>>> --- a/include/linux/kexec.h
+>>> +++ b/include/linux/kexec.h
+>>> @@ -306,6 +306,7 @@ extern void __crash_kexec(struct pt_regs *);
+>>>  extern void crash_kexec(struct pt_regs *);
+>>>  int kexec_should_crash(struct task_struct *);
+>>>  int kexec_crash_loaded(void);
+>>> +void __init kexec_reserve_low_1MiB(void);
+>>>  void crash_save_cpu(struct pt_regs *regs, int cpu);
+>>>  extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
+>>> =20
+>>> @@ -397,6 +398,7 @@ static inline void __crash_kexec(struct pt_regs *re=
+gs) { }
+>>>  static inline void crash_kexec(struct pt_regs *regs) { }
+>>>  static inline int kexec_should_crash(struct task_struct *p) { return 0=
+; }
+>>>  static inline int kexec_crash_loaded(void) { return 0; }
+>>> +static inline void __init kexec_reserve_low_1MiB(void) { }
+>>>  #define kexec_in_progress false
+>>>  #endif /* CONFIG_KEXEC_CORE */
+>>> =20
+>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>>> index 15d70a90b50d..5bd89f1fee42 100644
+>>> --- a/kernel/kexec_core.c
+>>> +++ b/kernel/kexec_core.c
+>>> @@ -37,6 +37,7 @@
+>>>  #include <linux/compiler.h>
+>>>  #include <linux/hugetlb.h>
+>>>  #include <linux/frame.h>
+>>> +#include <linux/memblock.h>
+>>> =20
+>>>  #include <asm/page.h>
+>>>  #include <asm/sections.h>
+>>> @@ -70,6 +71,18 @@ struct resource crashk_low_res =3D {
+>>>  =09.desc  =3D IORES_DESC_CRASH_KERNEL
+>>>  };
+>>> =20
+>>> +/*
+>>> + * When the crashkernel option is specified, only use the low
+>>> + * 1MiB for the real mode trampoline.
+>>> + */
+>>> +void __init kexec_reserve_low_1MiB(void)
+>>> +{
+>>> +=09if (strstr(boot_command_line, "crashkernel=3D")) {
+>>
+>> Could you comment on the issue of using strstr which
+>> was raised by Hatayama-san in response to an earlier revision
+>> of this patch?
+>>
+>=20
+> Thank you, Simon and Hatayama-san. Lets talk about it here.
+>=20
+>> strstr() matches for example, ANYEXTRACHARACTERScrashkernel=3DANYEXTRACH=
+ARACTERS.
+>>
+>> Is it enough to use cmdline_find_option_bool()?
+>>
+>=20
+> The cmdline_find_option_bool() will find a boolean option, but the crashk=
+ernel option
+> is not a boolean option, maybe it looks odd. So, should we use the cmdlin=
+e_find_option()
+> better?
+>=20
+> +#include <asm/cmdline.h>
+>=20
+>  void __init kexec_reserve_low_1MiB(void)
+>  {
+> -       if (strstr(boot_command_line, "crashkernel=3D")) {
+> +       char buffer[4];
 > +
-> +ORIG_CFLAGS := $(KBUILD_CFLAGS)
-> +KBUILD_CFLAGS = $(subst $(CC_FLAGS_SCS),,$(ORIG_CFLAGS))
+> +       if (cmdline_find_option(boot_command_line, "crashkernel=3D",
+> +                               buffer, sizeof(buffer))) {
+Maybe it is simpler as follow:
 
++       if (cmdline_find_option(boot_command_line, "crashkernel=3D",
++                               NULL, 0)) {
 
-$(subst ... ) is not the correct use here.
+Any thoughts?
 
-It works like sed,   s/$(CC_CFLAGS_SCS)//
-instead of matching by word.
+Thanks
+Lianbo
+>                 memblock_reserve(0, 1<<20);
+>                 pr_info("Reserving the low 1MiB of memory for crashkernel=
+\n");
+>         }
+>=20
+> And here, no need to parse the arguments of crashkernel(sometimes, which =
+has a
+> complicated syntax), so the size of buffer should be enough. What's your =
+opinion?
+>=20
+> Thanks
+> Lianbo
+>=20
+>> Thanks in advance!
+>>
+>>> +=09=09memblock_reserve(0, 1<<20);
+>>> +=09=09pr_info("Reserving the low 1MiB of memory for crashkernel\n");
+>>> +=09}
+>>> +}
+>>> +
+>>>  int kexec_should_crash(struct task_struct *p)
+>>>  {
+>>>  =09/*
+>>> --=20
+>>> 2.17.1
+>>>
+>>>
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>>
 
-
-
-
-KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
-
-is more correct, and simpler.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
