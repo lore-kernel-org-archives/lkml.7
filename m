@@ -2,67 +2,113 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FA8CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D34CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23E921D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE56206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409426AbfJYO3w (ORCPT
+        id S2438351AbfJYOcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:29:52 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60890 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392064AbfJYO3w (ORCPT <rfc822;linux-kernel@vger.kernel.orG>);
-        Fri, 25 Oct 2019 10:29:52 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iO0at-0000lZ-3y; Fri, 25 Oct 2019 22:29:35 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iO0aj-0007VZ-0T; Fri, 25 Oct 2019 22:29:25 +0800
-Date:   Fri, 25 Oct 2019 22:29:25 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        Dave Watson <davejwatson@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>, davem@davemloft.net,
-        glider@google.com, linux-crypto@vger.kernel.org,
+        Fri, 25 Oct 2019 10:32:45 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47282 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbfJYOcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:32:45 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iO0de-0007qC-Bl; Fri, 25 Oct 2019 14:32:26 +0000
+Date:   Fri, 25 Oct 2019 16:32:25 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Tejun Heo <tj@kernel.org>, dvyukov@google.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        akpm@linux-foundation.org, arnd@arndb.de, deepa.kernel@gmail.com,
+        ebiederm@xmission.com, elver@google.com, guro@fb.com,
         linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+9e3b178624a8a2f8fa28@syzkaller.appspotmail.com>
-Subject: Re: [net/tls] Re: KMSAN: uninit-value in aes_encrypt (2)
-Message-ID: <20191025142924.7pgxabkbsbvpgygl@gondor.apana.org.au>
-References: <00000000000065ef5f0595aafe71@google.com>
- <20191024172353.GA740@sol.localdomain>
- <20191024104537.5a98f5b7@cakuba.hsd1.ca.comcast.net>
+        cgroups@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH cgroup/for-5.5] cgroup: remove
+ cgroup_enable_task_cg_lists() optimization
+Message-ID: <20191025143224.wtwkkimqq4644iqq@wittgenstein>
+References: <0000000000003b1e8005956939f1@google.com>
+ <20191021142111.GB1339@redhat.com>
+ <20191024190351.GD3622521@devbig004.ftw2.facebook.com>
+ <20191025125606.GI3622521@devbig004.ftw2.facebook.com>
+ <20191025133358.pxpzxkhqc3mboi5x@wittgenstein>
+ <20191025141325.GB6020@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191024104537.5a98f5b7@cakuba.hsd1.ca.comcast.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191025141325.GB6020@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:45:37AM -0700, Jakub Kicinski wrote:
->
-> Oh, thanks for the CC, I don't see any of these in my inbox. We have 
-> 6 TLS maintainers, the 3 that were CCed on the thread above don't
-> participate much :(
+On Fri, Oct 25, 2019 at 04:13:25PM +0200, Oleg Nesterov wrote:
+> On 10/25, Christian Brauner wrote:
+> >
+> > [+Dmitry]
+> >
+> > On Fri, Oct 25, 2019 at 05:56:06AM -0700, Tejun Heo wrote:
+> > > On Thu, Oct 24, 2019 at 12:03:51PM -0700, Tejun Heo wrote:
+> > > > cgroup_enable_task_cg_lists() is used to lazyily initialize task
+> > > > cgroup associations on the first use to reduce fork / exit overheads
+> > > > on systems which don't use cgroup.  Unfortunately, locking around it
+> > > > has never been actually correct and its value is dubious given how the
+> > > > vast majority of systems use cgroup right away from boot.
+> > > >
+> > > > This patch removes the optimization.  For now, replace the cg_list
+> > > > based branches with WARN_ON_ONCE()'s to be on the safe side.  We can
+> > > > simplify the logic further in the future.
+> > > >
+> > > > Signed-off-by: Tejun Heo <tj@kernel.org>
+> > > > Reported-by: Oleg Nesterov <oleg@redhat.com>
+> > >
+> > > Applying to cgroup/for-5.5.
+> >
+> > The code you removed was the only place where task->flags was set from
+> > !current.
+> 
+> No, that code doesn't modify task->flags. It checks PF_EXITING under siglock
+> but this makes no sense and can't avoid the race with cgroup_exit().
 
-Can you please ensure that all the maintainers are listed in the
-MAINTAINERS file so people can cc them when needed?
+Sorry, you are right. I misread
+Ah right, sorry I misremembered this from the prior thread where we
+discussed where ->flags is set from [1].
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> 
+> > So I think this fixes the syzbot data-race report in:
+> > https://lore.kernel.org/r/0000000000003b1e8005956939f1@google.com
+> 
+> No.
+> 
+> Almost every usage of task->flags (load or sore) can be reported as "data race".
+> 
+> Say, you do
+> 
+> 	if (task->flags & PF_KTHREAD)
+> 
+> while this task does
+> 
+> 	current->flags |= PF_FREEZER_SKIP;
+> 	schedule().
+> 
+> this is data race.
+
+Right, but I thought we agreed on WONTFIX in those scenarios?
+The alternative is to READ_ONCE()/WRITE_ONCE() all of these.
+
+[1]: https://lore.kernel.org/r/20191021134659.GA1339@redhat.com
+
+Anyway, accidental noise on my part.
+Christian
