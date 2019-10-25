@@ -2,356 +2,116 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A73CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7199CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04498205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="RpckThTA"
+	by mail.kernel.org (Postfix) with ESMTP id B1EB221D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440445AbfJYOls (ORCPT
+        id S2440482AbfJYOmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:41:48 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33574 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440001AbfJYOls (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:41:48 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c184so1733339pfb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zopk2n3INMhAt+O7dZr5myyb00sMWX6MG5l0pp/KS1g=;
-        b=RpckThTACjR1E23JjStH5lRdoWr3JL+WZmPTnKi9fI3UV/UaYWg1Syjrb7WJtSWp0l
-         ggj+G7TxRvUcfX1v9IgCWcabopmvjAOQeqkAXHVysYefzXOwNyuqfLEBJxOmnMViORNY
-         J8aiyBw9bi0gTIX/c1GLURyuB5BUGQinTNAU/nUEyggHWgK1oX1/3L9nWmlM5q+pdJKi
-         R8r2JrPJPkJBlzBa/O1HRz1H0aNIwJiBlflMjpuCZ8zxBauEnw6jefVaJ6DtaSLZ6IY0
-         +VlCR9UaEukANTXAHuv/+iDjvaTqOPuGrpE0bR3iUZk4//KDJjZxIiFuUJ+toM2AOolh
-         gyRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zopk2n3INMhAt+O7dZr5myyb00sMWX6MG5l0pp/KS1g=;
-        b=Ec/SjjWmrOEVhbXGWU+orbuuvFUlkcCZu1Gvdk5EwqN0dGYRWjnwa+bw0bw4pjNzmM
-         IBltEru4HSMHstDEL+IjJiJIMdNg1+xIMyypLdeqHqdwZw7r7AniXXZoBB7w1zbObTPE
-         w+MX6Ds7m64cGUbOreIphtdao1Wmt6mpwI6mN1+Yu3DT5/c02EbSRkXJCiwtgezsBY1W
-         v2wJnEm46yc1SN8dM9r342hT8uKBsuTMJKjbSzbM8VKz3dBnJmAXjPERY9jik5lCrY57
-         EY213elueDVzbJpMebQK/RpcTRCEaup4Da1sPGgcYpQji1PSFa8519XfsS6I0wMo10aG
-         moOg==
-X-Gm-Message-State: APjAAAVB0iRsWQ4p4PGg4UERjiwJVGYLP1Z/+5BnkKd2Zdth79+G0fot
-        Mlp7FtskP3J+z4HVRB/4LJrWPA==
-X-Google-Smtp-Source: APXvYqx86q+aCN1lktyEZI9aPO+E6UdsgrtsR3ns5lxuyvWEJVJEU2ZbOpkrSPwdtkiva6CbcH9XTA==
-X-Received: by 2002:a17:90a:6305:: with SMTP id e5mr4582313pjj.24.1572014507264;
-        Fri, 25 Oct 2019 07:41:47 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:180::553e])
-        by smtp.gmail.com with ESMTPSA id j11sm2575271pgk.3.2019.10.25.07.41.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 07:41:46 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 10:41:44 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH 8/8] mm: vmscan: harmonize writeback congestion tracking
- for nodes & memcgs
-Message-ID: <20191025144144.GB386981@cmpxchg.org>
-References: <20191022144803.302233-1-hannes@cmpxchg.org>
- <20191022144803.302233-9-hannes@cmpxchg.org>
- <20191022210352.GB24142@tower.DHCP.thefacebook.com>
+        Fri, 25 Oct 2019 10:42:00 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59444 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440461AbfJYOmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:42:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 07:41:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
+   d="scan'208";a="223939301"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Oct 2019 07:41:57 -0700
+Cc:     baolu.lu@linux.intel.com,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v7 03/11] iommu/vt-d: Add custom allocator for IOASID
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-4-git-send-email-jacob.jun.pan@linux.intel.com>
+ <ae437be4-e633-e670-0e1f-d07b4364f651@linux.intel.com>
+ <20191024214311.43d76a5c@jacob-builder>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC60@SHSMSX104.ccr.corp.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <e950cde8-8cd9-6089-c833-23d2ffb539d1@linux.intel.com>
+Date:   Fri, 25 Oct 2019 22:39:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022210352.GB24142@tower.DHCP.thefacebook.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDC60@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 09:03:57PM +0000, Roman Gushchin wrote:
-> On Tue, Oct 22, 2019 at 10:48:03AM -0400, Johannes Weiner wrote:
-> > The current writeback congestion tracking has separate flags for
-> > kswapd reclaim (node level) and cgroup limit reclaim (memcg-node
-> > level). This is unnecessarily complicated: the lruvec is an existing
-> > abstraction layer for that node-memcg intersection.
-> > 
-> > Introduce lruvec->flags and LRUVEC_CONGESTED. Then track that at the
-> > reclaim root level, which is either the NUMA node for global reclaim,
-> > or the cgroup-node intersection for cgroup reclaim.
+Hi,
+
+On 10/25/19 2:40 PM, Tian, Kevin wrote:
+>>>> ioasid_register_allocator(&iommu->pasid_allocator);
+>>>> +			if (ret) {
+>>>> +				pr_warn("Custom PASID allocator
+>>>> registeration failed\n");
+>>>> +				/*
+>>>> +				 * Disable scalable mode on this
+>>>> IOMMU if there
+>>>> +				 * is no custom allocator. Mixing
+>>>> SM capable vIOMMU
+>>>> +				 * and non-SM vIOMMU are not
+>>>> supported.
+>>>> +				 */
+>>>> +				intel_iommu_sm = 0;
+>>> It's insufficient to disable scalable mode by only clearing
+>>> intel_iommu_sm. The DMA_RTADDR_SMT bit in root entry has already
+>> been
+>>> set. Probably, you need to
+>>>
+>>> for each iommu
+>>> 	clear DMA_RTADDR_SMT in root entry
+>>>
+>>> Alternatively, since vSVA is the only customer of this custom PASID
+>>> allocator, is it possible to only disable SVA here?
+>>>
+>> Yeah, I think disable SVA is better. We can still do gIOVA in SM. I
+>> guess we need to introduce a flag for sva_enabled.
+> I'm not sure whether tying above logic to SVA is the right approach.
+> If vcmd interface doesn't work, the whole SM mode doesn't make
+> sense which is based on PASID-granular protection (SVA is only one
+> usage atop). If the only remaining usage of SM is to map gIOVA using
+> reserved PASID#0, then why not disabling SM and just fallback to
+> legacy mode?
 > 
-> Good idea!
+> Based on that I prefer to disabling the SM mode completely (better
+> through an interface), and move the logic out of CONFIG_INTEL_
+> IOMMU_SVM
 > 
-> Reviewed-by: Roman Gushchin <guro@fb.com>
 
-Thank you.
+Unfortunately, it is dangerous to disable SM after boot. SM uses
+different root/device contexts and pasid table formats. Disabling SM
+after boot requires changing above from SM format into legacy format.
 
-The suggested cleanup fixlet for patch 7 causes conflicts in this
-one. Here is the rebased version:
+Since ioasid registration failure is a rare case. How about moving this
+part of code up to the early stage of intel_iommu_init() and returning
+error if hardware present vcmd capability but software fails to register
+a custom ioasid allocator?
 
----
-
-From 253729a7639780508b166e547d13fa7894987a87 Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Mon, 11 Mar 2019 15:43:44 -0400
-Subject: [PATCH] mm: vmscan: harmonize writeback congestion tracking for
- nodes & memcgs
-
-The current writeback congestion tracking has separate flags for
-kswapd reclaim (node level) and cgroup limit reclaim (memcg-node
-level). This is unnecessarily complicated: the lruvec is an existing
-abstraction layer for that node-memcg intersection.
-
-Introduce lruvec->flags and LRUVEC_CONGESTED. Then track that at the
-reclaim root level, which is either the NUMA node for global reclaim,
-or the cgroup-node intersection for cgroup reclaim.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- include/linux/memcontrol.h |  6 +--
- include/linux/mmzone.h     | 11 +++--
- mm/vmscan.c                | 84 ++++++++++++--------------------------
- 3 files changed, 37 insertions(+), 64 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 498cea07cbb1..d8ffcf60440c 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -133,9 +133,6 @@ struct mem_cgroup_per_node {
- 	unsigned long		usage_in_excess;/* Set to the value by which */
- 						/* the soft limit is exceeded*/
- 	bool			on_tree;
--	bool			congested;	/* memcg has many dirty pages */
--						/* backed by a congested BDI */
--
- 	struct mem_cgroup	*memcg;		/* Back pointer, we cannot */
- 						/* use container_of	   */
- };
-@@ -412,6 +409,9 @@ static inline struct lruvec *mem_cgroup_lruvec(struct mem_cgroup *memcg,
- 		goto out;
- 	}
- 
-+	if (!memcg)
-+		memcg = root_mem_cgroup;
-+
- 	mz = mem_cgroup_nodeinfo(memcg, pgdat->node_id);
- 	lruvec = &mz->lruvec;
- out:
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 449a44171026..c04b4c1f01fa 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -296,6 +296,12 @@ struct zone_reclaim_stat {
- 	unsigned long		recent_scanned[2];
- };
- 
-+enum lruvec_flags {
-+	LRUVEC_CONGESTED,		/* lruvec has many dirty pages
-+					 * backed by a congested BDI
-+					 */
-+};
-+
- struct lruvec {
- 	struct list_head		lists[NR_LRU_LISTS];
- 	struct zone_reclaim_stat	reclaim_stat;
-@@ -303,6 +309,8 @@ struct lruvec {
- 	atomic_long_t			inactive_age;
- 	/* Refaults at the time of last reclaim cycle */
- 	unsigned long			refaults;
-+	/* Various lruvec state flags (enum lruvec_flags) */
-+	unsigned long			flags;
- #ifdef CONFIG_MEMCG
- 	struct pglist_data *pgdat;
- #endif
-@@ -572,9 +580,6 @@ struct zone {
- } ____cacheline_internodealigned_in_smp;
- 
- enum pgdat_flags {
--	PGDAT_CONGESTED,		/* pgdat has many dirty pages backed by
--					 * a congested BDI
--					 */
- 	PGDAT_DIRTY,			/* reclaim scanning has recently found
- 					 * many dirty file pages at the tail
- 					 * of the LRU.
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 6199692af434..47b5c5548f3a 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -267,29 +267,6 @@ static bool writeback_throttling_sane(struct scan_control *sc)
- #endif
- 	return false;
- }
--
--static void set_memcg_congestion(pg_data_t *pgdat,
--				struct mem_cgroup *memcg,
--				bool congested)
--{
--	struct mem_cgroup_per_node *mn;
--
--	if (!memcg)
--		return;
--
--	mn = mem_cgroup_nodeinfo(memcg, pgdat->node_id);
--	WRITE_ONCE(mn->congested, congested);
--}
--
--static bool memcg_congested(pg_data_t *pgdat,
--			struct mem_cgroup *memcg)
--{
--	struct mem_cgroup_per_node *mn;
--
--	mn = mem_cgroup_nodeinfo(memcg, pgdat->node_id);
--	return READ_ONCE(mn->congested);
--
--}
- #else
- static int prealloc_memcg_shrinker(struct shrinker *shrinker)
- {
-@@ -309,18 +286,6 @@ static bool writeback_throttling_sane(struct scan_control *sc)
- {
- 	return true;
- }
--
--static inline void set_memcg_congestion(struct pglist_data *pgdat,
--				struct mem_cgroup *memcg, bool congested)
--{
--}
--
--static inline bool memcg_congested(struct pglist_data *pgdat,
--			struct mem_cgroup *memcg)
--{
--	return false;
--
--}
- #endif
- 
- /*
-@@ -2716,12 +2681,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
- 	return inactive_lru_pages > pages_for_compaction;
- }
- 
--static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
--{
--	return test_bit(PGDAT_CONGESTED, &pgdat->flags) ||
--		(memcg && memcg_congested(pgdat, memcg));
--}
--
- static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
- {
- 	struct mem_cgroup *target_memcg = sc->target_mem_cgroup;
-@@ -2783,10 +2742,12 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
- static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- {
- 	struct reclaim_state *reclaim_state = current->reclaim_state;
--	struct mem_cgroup *target_memcg = sc->target_mem_cgroup;
- 	unsigned long nr_reclaimed, nr_scanned;
-+	struct lruvec *target_lruvec;
- 	bool reclaimable = false;
- 
-+	target_lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup, pgdat);
-+
- again:
- 	memset(&sc->nr, 0, sizeof(sc->nr));
- 
-@@ -2801,7 +2762,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 	}
- 
- 	/* Record the subtree's reclaim efficiency */
--	vmpressure(sc->gfp_mask, target_memcg, true,
-+	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
- 		   sc->nr_scanned - nr_scanned,
- 		   sc->nr_reclaimed - nr_reclaimed);
- 
-@@ -2829,14 +2790,6 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 		if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
- 			set_bit(PGDAT_WRITEBACK, &pgdat->flags);
- 
--		/*
--		 * Tag a node as congested if all the dirty pages
--		 * scanned were backed by a congested BDI and
--		 * wait_iff_congested will stall.
--		 */
--		if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
--			set_bit(PGDAT_CONGESTED, &pgdat->flags);
--
- 		/* Allow kswapd to start writing pages during reclaim.*/
- 		if (sc->nr.unqueued_dirty == sc->nr.file_taken)
- 			set_bit(PGDAT_DIRTY, &pgdat->flags);
-@@ -2852,12 +2805,17 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 	}
- 
- 	/*
-+	 * Tag a node/memcg as congested if all the dirty pages
-+	 * scanned were backed by a congested BDI and
-+	 * wait_iff_congested will stall.
-+	 *
- 	 * Legacy memcg will stall in page writeback so avoid forcibly
- 	 * stalling in wait_iff_congested().
- 	 */
--	if (cgroup_reclaim(sc) && writeback_throttling_sane(sc) &&
-+	if ((current_is_kswapd() ||
-+	     (cgroup_reclaim(sc) && writeback_throttling_sane(sc))) &&
- 	    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
--		set_memcg_congestion(pgdat, target_memcg, true);
-+		set_bit(LRUVEC_CONGESTED, &target_lruvec->flags);
- 
- 	/*
- 	 * Stall direct reclaim for IO completions if underlying BDIs
-@@ -2865,9 +2823,9 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 	 * starts encountering unqueued dirty pages or cycling through
- 	 * the LRU too quickly.
- 	 */
--	if (!sc->hibernation_mode && !current_is_kswapd() &&
--	    current_may_throttle() &&
--	    pgdat_memcg_congested(pgdat, target_memcg))
-+	if (!current_is_kswapd() && current_may_throttle() &&
-+	    !sc->hibernation_mode &&
-+	    test_bit(LRUVEC_CONGESTED, &target_lruvec->flags))
- 		wait_iff_congested(BLK_RW_ASYNC, HZ/10);
- 
- 	if (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
-@@ -3081,8 +3039,16 @@ static unsigned long do_try_to_free_pages(struct zonelist *zonelist,
- 		if (zone->zone_pgdat == last_pgdat)
- 			continue;
- 		last_pgdat = zone->zone_pgdat;
-+
- 		snapshot_refaults(sc->target_mem_cgroup, zone->zone_pgdat);
--		set_memcg_congestion(last_pgdat, sc->target_mem_cgroup, false);
-+
-+		if (cgroup_reclaim(sc)) {
-+			struct lruvec *lruvec;
-+
-+			lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup,
-+						   zone->zone_pgdat);
-+			clear_bit(LRUVEC_CONGESTED, &lruvec->flags);
-+		}
- 	}
- 
- 	delayacct_freepages_end();
-@@ -3462,7 +3428,9 @@ static bool pgdat_balanced(pg_data_t *pgdat, int order, int classzone_idx)
- /* Clear pgdat state for congested, dirty or under writeback. */
- static void clear_pgdat_congested(pg_data_t *pgdat)
- {
--	clear_bit(PGDAT_CONGESTED, &pgdat->flags);
-+	struct lruvec *lruvec = mem_cgroup_lruvec(NULL, pgdat);
-+
-+	clear_bit(LRUVEC_CONGESTED, &lruvec->flags);
- 	clear_bit(PGDAT_DIRTY, &pgdat->flags);
- 	clear_bit(PGDAT_WRITEBACK, &pgdat->flags);
- }
--- 
-2.23.0
-
-
+Best regards,
+baolu
