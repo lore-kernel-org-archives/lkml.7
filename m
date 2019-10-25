@@ -2,104 +2,151 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46BCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DEFCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDD621D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FD921D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SlrAb0Vp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfJYThq (ORCPT
+        id S1727383AbfJYTkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:37:46 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:34630 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726212AbfJYThp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:37:45 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iO5P5-0006Hy-9u; Fri, 25 Oct 2019 13:37:44 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iO5P2-0002a3-Tn; Fri, 25 Oct 2019 13:37:40 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 25 Oct 2019 13:37:39 -0600
-Message-Id: <20191025193739.9878-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 25 Oct 2019 15:40:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36837 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727348AbfJYTkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 15:40:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w18so3646211wrt.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Gj222psC+ydWsaF5gMlny1BmmWIVdou0S6Ni7ju44k=;
+        b=SlrAb0VpRC2LidQiFdSzxi13PPngSwAVFMlhwTS3HufxE9huKhmIAgqmIR//798lPx
+         bOQ2RR/GU0hW0KqsOP8l98Ar1lQDKXoQA/L6z9fLQxb/D/WZFmMR+SdgcBbZtxTMxGLx
+         RFNjhh0n5RhjmOQPhAXid/4PH1covWIixTMlc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=2Gj222psC+ydWsaF5gMlny1BmmWIVdou0S6Ni7ju44k=;
+        b=K+agSMN1L9iFnD6swBRh5oGPA0PQ5LkjQ4l0SL31x4cQ5S18LscPL1pYy0DUmE48+3
+         dlSknep1yNYsWVXvfQNG0zwDY9kxQTncKqShyc8zikU76WKf7nYGHK3N135JSxAArOxk
+         qct21q1AtjT+ONVOhWTbgf2NJUHFchTfzczLpZalHZVxztoYfpo8kLGEdqRwBgAaanDo
+         hoYqyoGnuXdJwpKgtex2ZK1n20fDfIZVIgL2S1zuWmf1zJdaAs5HZJg0UPgaSSlqfztE
+         ZGd5g7IibhHWgBH4l94fVvd4NC6n2ngYKAqgx6Mmm/2e6uGlCpaQJ4Y2T3mvORAGaABR
+         kdhA==
+X-Gm-Message-State: APjAAAUrc96e4ixiVeP2aCzJ+O9Li2NQyz8ETjjRpkYYkgUHRKn0QckZ
+        rYtde4ho6j8vkhshPPq9CdnmOg==
+X-Google-Smtp-Source: APXvYqxxJig4xVfD7GpZ084avKsgHqDpYcderhQdMAjUkkO5TbzG8sIK5Jy5u4TdOHceXtEdNV6Mvw==
+X-Received: by 2002:a05:6000:351:: with SMTP id e17mr4260765wre.96.1572032432883;
+        Fri, 25 Oct 2019 12:40:32 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id r65sm3210045wmr.9.2019.10.25.12.40.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 12:40:31 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 21:40:29 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Wambui Karuga <wambui.karugax@gmail.com>,
+        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com
+Subject: Re: [Outreachy kernel] [Outreachy][PATCH] drm: use DIV_ROUND_UP
+ helper macro for calculations
+Message-ID: <20191025194029.GU11828@phenom.ffwll.local>
+Mail-Followup-To: Julia Lawall <julia.lawall@lip6.fr>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, sean@poorly.run, airlied@linux.ie,
+        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
+References: <20191025094907.3582-1-wambui.karugax@gmail.com>
+ <alpine.DEB.2.21.1910251212070.3307@hadrien>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH] nvmet: Cleanup nvmet_req_init() branching
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910251212070.3307@hadrien>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of checking for fabrics and discovery commands in
-a long and growing if else tree, parse these commands inside
-nvmet_parse_admin_cmd(). These commands are all submitted on
-the admin queue (qid=0) so it makes sense that they be grouped
-together.
+On Fri, Oct 25, 2019 at 12:12:23PM +0200, Julia Lawall wrote:
+> 
+> 
+> On Fri, 25 Oct 2019, Wambui Karuga wrote:
+> 
+> > Replace open coded divisor calculations with the DIV_ROUND_UP kernel
+> > macro for better readability.
+> > Issue found using coccinelle:
+> > @@
+> > expression n,d;
+> > @@
+> > (
+> > - ((n + d - 1) / d)
+> > + DIV_ROUND_UP(n,d)
+> > |
+> > - ((n + (d - 1)) / d)
+> > + DIV_ROUND_UP(n,d)
+> > )
+> >
+> > Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> 
+> Acked-by: Julia Lawall <julia.lawall@lip6.fr>
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
+Applied to drm-misc-next, thanks for your patch.
+-Daniel
 
-This is a prep patch for the nvmet passthru patch set. It was part
-of Christoph's feedback.
+> 
+> 
+> > ---
+> >  drivers/gpu/drm/drm_agpsupport.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/drm_agpsupport.c b/drivers/gpu/drm/drm_agpsupport.c
+> > index 6e09f27fd9d6..4c7ad46fdd21 100644
+> > --- a/drivers/gpu/drm/drm_agpsupport.c
+> > +++ b/drivers/gpu/drm/drm_agpsupport.c
+> > @@ -212,7 +212,7 @@ int drm_agp_alloc(struct drm_device *dev, struct drm_agp_buffer *request)
+> >  	if (!entry)
+> >  		return -ENOMEM;
+> >
+> > -	pages = (request->size + PAGE_SIZE - 1) / PAGE_SIZE;
+> > +	pages = DIV_ROUND_UP(request->size, PAGE_SIZE);
+> >  	type = (u32) request->type;
+> >  	memory = agp_allocate_memory(dev->agp->bridge, pages, type);
+> >  	if (!memory) {
+> > @@ -325,7 +325,7 @@ int drm_agp_bind(struct drm_device *dev, struct drm_agp_binding *request)
+> >  	entry = drm_agp_lookup_entry(dev, request->handle);
+> >  	if (!entry || entry->bound)
+> >  		return -EINVAL;
+> > -	page = (request->offset + PAGE_SIZE - 1) / PAGE_SIZE;
+> > +	page = DIV_ROUND_UP(request->offset, PAGE_SIZE);
+> >  	retcode = drm_bind_agp(entry->memory, page);
+> >  	if (retcode)
+> >  		return retcode;
+> > --
+> > 2.23.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191025094907.3582-1-wambui.karugax%40gmail.com.
+> >
 
- drivers/nvme/target/admin-cmd.c | 5 +++++
- drivers/nvme/target/core.c      | 6 +-----
- 2 files changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/nvme/target/admin-cmd.c b/drivers/nvme/target/admin-cmd.c
-index 831a062d27cb..d446e6e45bcb 100644
---- a/drivers/nvme/target/admin-cmd.c
-+++ b/drivers/nvme/target/admin-cmd.c
-@@ -813,6 +813,11 @@ u16 nvmet_parse_admin_cmd(struct nvmet_req *req)
- 	struct nvme_command *cmd = req->cmd;
- 	u16 ret;
-
-+	if (nvme_is_fabrics(cmd))
-+		return nvmet_parse_fabrics_cmd(req);
-+	if (req->sq->ctrl->subsys->type == NVME_NQN_DISC)
-+		return nvmet_parse_discovery_cmd(req);
-+
- 	ret = nvmet_check_ctrl_status(req, cmd);
- 	if (unlikely(ret))
- 		return ret;
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 3a67e244e568..54668da82db9 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -892,14 +892,10 @@ bool nvmet_req_init(struct nvmet_req *req, struct nvmet_cq *cq,
- 	}
-
- 	if (unlikely(!req->sq->ctrl))
--		/* will return an error for any Non-connect command: */
-+		/* will return an error for any non-connect command: */
- 		status = nvmet_parse_connect_cmd(req);
- 	else if (likely(req->sq->qid != 0))
- 		status = nvmet_parse_io_cmd(req);
--	else if (nvme_is_fabrics(req->cmd))
--		status = nvmet_parse_fabrics_cmd(req);
--	else if (req->sq->ctrl->subsys->type == NVME_NQN_DISC)
--		status = nvmet_parse_discovery_cmd(req);
- 	else
- 		status = nvmet_parse_admin_cmd(req);
-
---
-2.20.1
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
