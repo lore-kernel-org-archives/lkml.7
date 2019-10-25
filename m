@@ -2,94 +2,86 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8619CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C60DCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A1120578
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:21:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="NssrYNXC"
+	by mail.kernel.org (Postfix) with ESMTP id 1407720578
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409495AbfJYKVc (ORCPT
+        id S2409572AbfJYKV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:21:32 -0400
-Received: from ni.piap.pl ([195.187.100.5]:43526 "EHLO ni.piap.pl"
+        Fri, 25 Oct 2019 06:21:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52381 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407901AbfJYKVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:21:31 -0400
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ni.piap.pl (Postfix) with ESMTPSA id 537F4442535;
-        Fri, 25 Oct 2019 12:21:25 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 537F4442535
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1571998885; bh=sun4VvlMaGTBiByATlzJrvKsGY/hA5o6lYFps8BBRXI=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=NssrYNXCHiu67ElUYtL9U50/QUf+6vGBygdUyz3P2NrIb03HAkm6+P/SC464PshKg
-         1KvSpQhoIiV7BLaDqCknMp55EYcXIXTwvL4edonArFzxDbEssEmXDD+26un2QN1xrw
-         FhOPSahjr0IP0POX+PS4NSj6hKpSQAnBfVCzYZlQ=
-From:   khalasa@piap.pl (Krzysztof =?utf-8?Q?Ha=C5=82asa?=)
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] 802.11n IBSS: wlan0 stops receiving packets due to aggregation after sender reboot
-In-Reply-To: <m34l02mh71.fsf@t19.piap.pl>
-References: <m34l02mh71.fsf@t19.piap.pl>
-Date:   Fri, 25 Oct 2019 12:21:25 +0200
-Message-ID: <m37e4tjfbu.fsf@t19.piap.pl>
+        id S2409177AbfJYKV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:21:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 03:21:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="210348774"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Oct 2019 03:21:56 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: usb: dwc3: Move Amlogic G12A DWC3 Glue Bindings to YAML schemas
+In-Reply-To: <CAFBinCBOEG6GT=dp5XQ3+nC18axSodPbgMfE6F7eHLE3gZfSoA@mail.gmail.com>
+References: <20191021132322.25256-1-narmstrong@baylibre.com> <875zkhdye5.fsf@gmail.com> <CAFBinCBOEG6GT=dp5XQ3+nC18axSodPbgMfE6F7eHLE3gZfSoA@mail.gmail.com>
+Date:   Fri, 25 Oct 2019 13:21:55 +0300
+Message-ID: <87sgnh2kho.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 4
-X-KLMS-Message-Action: skipped
-X-KLMS-AntiSpam-Status: not scanned, whitelist
-X-KLMS-AntiPhishing: not scanned, whitelist
-X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, not scanned, whitelist
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a bug where the mac80211 RX aggregation code sets a new aggregation
-"session" at the remote station's request, but the head_seq_num
-(the sequence number the receiver expects to receive) isn't reset.
 
-Spotted on a pair of AR9580 in IBSS mode.
+Hi,
 
-Signed-off-by: Krzysztof Halasa <khalasa@piap.pl>
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+> Hi Felipe,
+>
+> On Tue, Oct 22, 2019 at 9:39 AM Felipe Balbi
+> <felipe.balbi@linux.intel.com> wrote:
+>>
+>>
+>> Hi,
+>>
+>> Neil Armstrong <narmstrong@baylibre.com> writes:
+>>
+>> > Now that we have the DT validation in place, let's convert the device tree
+>> > bindings for the Amlogic G12A DWC3 Glue Bindings over to a YAML schemas,
+>> > the AXG and GXL glue bindings will be converted later.
+>> >
+>> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>
+>> Is this a thing now? Why do we need a new format?
+> this is a 2019 thing now, see an initial announcement from Rob from a
+> year ago: [0]
+>
+> the new yaml schemas allow validation of the actual .dts
+> this can be used for verifying that the example in the dt-bindings is
+> correct, as well as for verifying the actual .dts file (so they match
+> the actual dt-binding)
+> (Rob's old mail - linked above - still has these two on the TODO list,
+> nowadays this works fine)
+>
+> Neil is working towards full yaml schema based validation for all IP
+> blocks used on Amlogic SoCs.
+> with this patch we get a bit closer to that goal
 
-diff --git a/net/mac80211/agg-rx.c b/net/mac80211/agg-rx.c
-index 4d1c335e06e5..67733bd61297 100644
---- a/net/mac80211/agg-rx.c
-+++ b/net/mac80211/agg-rx.c
-@@ -354,10 +354,13 @@ void ___ieee80211_start_rx_ba_session(struct sta_info=
- *sta,
- 			 */
- 			rcu_read_lock();
- 			tid_rx =3D rcu_dereference(sta->ampdu_mlme.tid_rx[tid]);
--			if (tid_rx && tid_rx->timeout =3D=3D timeout)
-+			if (tid_rx && tid_rx->timeout =3D=3D timeout) {
-+				tid_rx->ssn =3D start_seq_num;
-+				tid_rx->head_seq_num =3D start_seq_num;
- 				status =3D WLAN_STATUS_SUCCESS;
--			else
-+			} else {
- 				status =3D WLAN_STATUS_REQUEST_DECLINED;
-+			}
- 			rcu_read_unlock();
- 			goto end;
- 		}
+cool, thanks for the background :-)
 
---=20
-Krzysztof Ha=C5=82asa
-
-=C5=81UKASIEWICZ Research Network
-Industrial Research Institute for Automation and Measurements PIAP
-Al. Jerozolimskie 202, 02-486 Warsaw, Poland
+-- 
+balbi
