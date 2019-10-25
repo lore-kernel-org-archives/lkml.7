@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EBBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22610CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C03222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22C9205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733017AbfJYSIi (ORCPT
+        id S1733144AbfJYSIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46884 "EHLO
+        Fri, 25 Oct 2019 14:08:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46866 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731495AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731485AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xx-0008PC-1x; Fri, 25 Oct 2019 19:05:37 +0100
+        id 1iO3xx-0008P2-0M; Fri, 25 Oct 2019 19:05:37 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0001kJ-8Y; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xw-0001jt-1l; Fri, 25 Oct 2019 19:05:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jay Vosburgh" <j.vosburgh@gmail.com>,
-        "Andy Gospodarek" <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Cong Wang" <xiyou.wangcong@gmail.com>,
-        "Veaceslav Falico" <vfalico@gmail.com>
-Date:   Fri, 25 Oct 2019 19:03:36 +0100
-Message-ID: <lsq.1572026582.768948953@decadent.org.uk>
+        "Hangbin Liu" <liuhangbin@gmail.com>,
+        syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com,
+        "Eric Dumazet" <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Fri, 25 Oct 2019 19:03:31 +0100
+Message-ID: <lsq.1572026582.141904431@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 35/47] bonding: validate ip header before check
- IPPROTO_IGMP
+Subject: [PATCH 3.16 30/47] igmp: fix memory leak in igmpv3_del_delrec()
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,87 +57,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c upstream.
+commit e5b1c6c6277d5a283290a8c033c72544746f9b5b upstream.
 
-bond_xmit_roundrobin() checks for IGMP packets but it parses
-the IP header even before checking skb->protocol.
+im->tomb and/or im->sources might not be NULL, but we
+currently overwrite their values blindly.
 
-We should validate the IP header with pskb_may_pull() before
-using iph->protocol.
+Using swap() will make sure the following call to kfree_pmc(pmc)
+will properly free the psf structures.
 
-Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Tested with the C repro provided by syzbot, which basically does :
+
+ socket(PF_INET, SOCK_DGRAM, IPPROTO_IP) = 3
+ setsockopt(3, SOL_IP, IP_ADD_MEMBERSHIP, "\340\0\0\2\177\0\0\1\0\0\0\0", 12) = 0
+ ioctl(3, SIOCSIFFLAGS, {ifr_name="lo", ifr_flags=0}) = 0
+ setsockopt(3, SOL_IP, IP_MSFILTER, "\340\0\0\2\177\0\0\1\1\0\0\0\1\0\0\0\377\377\377\377", 20) = 0
+ ioctl(3, SIOCSIFFLAGS, {ifr_name="lo", ifr_flags=IFF_UP}) = 0
+ exit_group(0)                    = ?
+
+BUG: memory leak
+unreferenced object 0xffff88811450f140 (size 64):
+  comm "softirq", pid 0, jiffies 4294942448 (age 32.070s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000c7bad083>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
+    [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
+    [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+    [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
+    [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
+    [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
+    [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
+    [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
+    [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930 net/ipv4/ip_sockglue.c:959
+    [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
+    [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
+    [<000000009383a786>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3126
+    [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+    [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
+    [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
+    [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+    [<00000000420d395e>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+    [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 24803f38a5c0 ("igmp: do not remove igmp souce list info when set link down")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Hangbin Liu <liuhangbin@gmail.com>
+Reported-by: syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com
 Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16:
- - Keep using ACCESS_ONCE(), dev_kfree_skb_any(), …_can_tx()
- - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/bonding/bond_main.c | 37 ++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ net/ipv4/igmp.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3700,8 +3700,8 @@ static u32 bond_rr_gen_slave_id(struct b
- static int bond_xmit_roundrobin(struct sk_buff *skb, struct net_device *bond_dev)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	struct iphdr *iph = ip_hdr(skb);
- 	struct slave *slave;
-+	int slave_cnt;
- 	u32 slave_id;
- 
- 	/* Start with the curr_active_slave that joined the bond as the
-@@ -3710,23 +3710,32 @@ static int bond_xmit_roundrobin(struct s
- 	 * send the join/membership reports.  The curr_active_slave found
- 	 * will send all of this type of traffic.
- 	 */
--	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
--		slave = rcu_dereference(bond->curr_active_slave);
--		if (slave && bond_slave_can_tx(slave))
--			bond_dev_queue_xmit(bond, skb, slave->dev);
--		else
--			bond_xmit_slave_id(bond, skb, 0);
--	} else {
--		int slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (skb->protocol == htons(ETH_P_IP)) {
-+		int noff = skb_network_offset(skb);
-+		struct iphdr *iph;
-+
-+		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
-+			goto non_igmp;
- 
--		if (likely(slave_cnt)) {
--			slave_id = bond_rr_gen_slave_id(bond);
--			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
--		} else {
--			dev_kfree_skb_any(skb);
-+		iph = ip_hdr(skb);
-+		if (iph->protocol == IPPROTO_IGMP) {
-+			slave = rcu_dereference(bond->curr_active_slave);
-+			if (slave && bond_slave_can_tx(slave))
-+				bond_dev_queue_xmit(bond, skb, slave->dev);
-+			else
-+				bond_xmit_slave_id(bond, skb, 0);
-+			return NETDEV_TX_OK;
+--- a/net/ipv4/igmp.c
++++ b/net/ipv4/igmp.c
+@@ -1178,12 +1178,8 @@ static void igmpv3_del_delrec(struct in_
+ 		im->interface = pmc->interface;
+ 		im->crcount = in_dev->mr_qrv ?: IGMP_Unsolicited_Report_Count;
+ 		if (im->sfmode == MCAST_INCLUDE) {
+-			im->tomb = pmc->tomb;
+-			pmc->tomb = NULL;
+-
+-			im->sources = pmc->sources;
+-			pmc->sources = NULL;
+-
++			swap(im->tomb, pmc->tomb);
++			swap(im->sources, pmc->sources);
+ 			for (psf = im->sources; psf; psf = psf->sf_next)
+ 				psf->sf_crcount = im->crcount;
  		}
- 	}
- 
-+non_igmp:
-+	slave_cnt = ACCESS_ONCE(bond->slave_cnt);
-+	if (likely(slave_cnt)) {
-+		slave_id = bond_rr_gen_slave_id(bond);
-+		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
-+	} else {
-+		dev_kfree_skb_any(skb);
-+	}
- 	return NETDEV_TX_OK;
- }
- 
 
