@@ -2,103 +2,188 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DC2CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1415CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF06F21872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C9F205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fB1gL4Q1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yg3+cfho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfJYRvh (ORCPT
+        id S1727064AbfJYRvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:51:37 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43543 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfJYRvh (ORCPT
+        Fri, 25 Oct 2019 13:51:43 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:45189 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfJYRvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 13:51:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 3so2038035pfb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 10:51:37 -0700 (PDT)
+        Fri, 25 Oct 2019 13:51:42 -0400
+Received: by mail-pg1-f181.google.com with SMTP id r1so1981115pgj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 10:51:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0u0Pm2MaDUwplKmc1bNNC1kj7B+w8FbdiY927/v2PRE=;
-        b=fB1gL4Q10Ah/2YfT9z2if2xKcCXqbQhWuRT7CMJRE6ePg7WD7AuVGYlwOsjXOsAUzI
-         QBmebtaHd9bpyAzwmy9Vo2nJuiKX/ElyqnYPFm0zrnM1ALkwlUpJE2bjwz7ue/pEMMX5
-         jgbQC10zmfRF7xSc/IjDNXBsRya5lmu2+FMvU7tVut7kfSlkPNhjK7zMghJdljWQDN3r
-         V60DmjicYEjFxDbfU5ZA6yINx8M9/bRCNl6aymRsB8jIFbYnqtBHGvjLM3Ox/nISEOBk
-         EbEyeqUHPz7g3h5OSUMcbq6ZlqiJx6w6vp0PwlpoutOjsqoHMkeeJMZnyQQ/1YLf94DM
-         AVZg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=h3QJdMfhJbfPOyUujEeH2uCMTYfYjj0kP8BVOZvY6vk=;
+        b=yg3+cfhoMvzbNVLOYxlHpxK9zIstoIJ+vmFQRnolgRRIna9gktbKYtnBZ7RBVfRwKn
+         hNHOI/2OChFg9xUnidYcX0AONc1idmHcSOFRAMx5zZgLAfR+omQFY5WcMVEQRO+8g1eP
+         3uiUrvtY7t0ofUZUIevZNs/EuWWoRUXSp7eOaMHfGkS26igzuxLUnKHx7ArgeVNWWFTl
+         5zepKRIYkT/HbMEWB/RIEzhUOX/IhjONMKVbB3KpOiAOs91pXkLpAwgNjikBQrkHRO7K
+         C8awJpIDnRKpXJZNzDVCYoxv7jkI1DE0IzqQl0KVVx74h8VhH6pkLsqNvcVYfLSRzm/m
+         /HlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0u0Pm2MaDUwplKmc1bNNC1kj7B+w8FbdiY927/v2PRE=;
-        b=lc6DSlsGH4VgXMgxJGzVousnGgapCkiViAUKdbMVmOgMSGp4FKXhYV6nnLdFhJW2Dl
-         uyKnJZWzGGLQ6vR7JdewKy2acLmoIq8mXy3F3ytSrIpuwvmOzE2kiIcTTcm166SI0/Jh
-         pz4iVlFE5HxladeZ2z44WnhWiHVeXDavjRpDFov1MCXKH974Ken3JdUv3mJQmwQJa4U1
-         BVHhNq9hMYO0/l8f2Q01iHbtf7sJwfTtib/0ATM3QKwXEHUdJMCnGH8/Vf0qfOmSdXm+
-         sNoZa5ZAgb8WSUGfh4XvXX+EiLCaJ0zhSV/jSgV78E1L07mp+iRnFoOTjEgY0KgKm95A
-         9U9Q==
-X-Gm-Message-State: APjAAAXe3XyLMIwinZpyHiz+AZO0Ro47q0Yerv7WSE+SRclX7k9UocGd
-        9J/PkAY6g/E6Hk4JsMHDVfmO
-X-Google-Smtp-Source: APXvYqzRIk413kYwXUWGVwVmwRUj/Tq9t6WKTxMk1Hf4QEPGYM3So4lhZhQUhTsYLNJstkpWUBKkQw==
-X-Received: by 2002:a63:4e1e:: with SMTP id c30mr5686911pgb.89.1572025896500;
-        Fri, 25 Oct 2019 10:51:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=h3QJdMfhJbfPOyUujEeH2uCMTYfYjj0kP8BVOZvY6vk=;
+        b=KTr1FUap6Gl3rTCZGWHAUjbHuNopfhg3rRWDgNWdCW4OdKThzyKoHyA0IyzF0lmxt4
+         +8fsIsB8iRxl09iI8v3brwVkRZWejHSykpsJk3ZDZjtwzRIZNhBX6vbJEsd+EWeH4tzF
+         XFYS3sfrBig7ALPIe3/2HRqIIl7tEELGP0oweBJfd92uqcO1rN9b5pEcXOqcajO4fhFA
+         1IUdgeL3hCsQ1jSeJ1CDtAe+hYaBfxglYK7lyxUEkuk0oYdGJ5UtvQJdSWxHLkIS4F3z
+         6wI+yrBitBOiCII+R4QJG8jDCND3oQQx+R8SVNpyCusE9SGs1HRVDWq2U0smKhQuL3+e
+         Kzeg==
+X-Gm-Message-State: APjAAAVMeG9vmVJAxLty6wpPNL5DlNIaD4ldcNd2oH1NmiRyF9Afkyte
+        ce3y12GzYgY6MhhT2crRgiin
+X-Google-Smtp-Source: APXvYqyoCaci5yjaMYOinOTAO7wfDp4OzDWRoNXvt7YtfSuacvKl3MyK2mJVfrQraK7kLO0cDLgpiw==
+X-Received: by 2002:a65:4907:: with SMTP id p7mr5957791pgs.429.1572025901575;
+        Fri, 25 Oct 2019 10:51:41 -0700 (PDT)
 Received: from localhost.localdomain ([2405:204:7108:7f86:4131:5b00:9fc5:5eaa])
-        by smtp.gmail.com with ESMTPSA id d14sm3916345pfh.36.2019.10.25.10.51.30
+        by smtp.gmail.com with ESMTPSA id d14sm3916345pfh.36.2019.10.25.10.51.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 10:51:35 -0700 (PDT)
+        Fri, 25 Oct 2019 10:51:41 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     mchehab@kernel.org, robh+dt@kernel.org, sakari.ailus@iki.fi
 Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 0/2] Add IMX296 CMOS image sensor support
-Date:   Fri, 25 Oct 2019 23:21:16 +0530
-Message-Id: <20191025175118.13307-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
+Date:   Fri, 25 Oct 2019 23:21:17 +0530
+Message-Id: <20191025175118.13307-2-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191025175118.13307-1-manivannan.sadhasivam@linaro.org>
+References: <20191025175118.13307-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add devicetree binding for IMX296 CMOS image sensor.
 
-This patchset adds support for IMX296 CMOS image sensor from Sony.
-Sensor can be programmed through I2C and 4-wire interface but the
-current driver only supports I2C interface. The sensor is
-capable of outputting frames in CSI2 format (1 Lane). In the case
-of sensor resolution, driver only supports 1440x1088 at 30 FPS.
-
-The driver has been validated using Framos IMX296 module interfaced to
-96Boards Dragonboard410c.
-
-Thanks,
-Mani
-
-Changes in v2:
-
-* Switched to YAML binding
-
-Manivannan Sadhasivam (2):
-  dt-bindings: media: i2c: Add IMX296 CMOS sensor binding
-  media: i2c: Add IMX296 CMOS image sensor driver
-
- .../devicetree/bindings/media/i2c/imx296.yaml |  98 +++
- MAINTAINERS                                   |   8 +
- drivers/media/i2c/Kconfig                     |  11 +
- drivers/media/i2c/Makefile                    |   1 +
- drivers/media/i2c/imx296.c                    | 733 ++++++++++++++++++
- 5 files changed, 851 insertions(+)
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ .../devicetree/bindings/media/i2c/imx296.yaml | 98 +++++++++++++++++++
+ 1 file changed, 98 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx296.yaml
- create mode 100644 drivers/media/i2c/imx296.c
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx296.yaml b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+new file mode 100644
+index 000000000000..646fe0236138
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/imx296.yaml
+@@ -0,0 +1,98 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/imx296.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sony IMX296 1/2.8-Inch CMOS Image Sensor
++
++maintainers:
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
++
++description: |-
++  The Sony IMX296 is a 1/2.9-Inch active pixel type CMOS Solid-state image
++  sensor with square pixel array and 1.58 M effective pixels. This chip
++  features a global shutter with variable charge-integration time. It is
++  programmable through I2C and 4-wire interfaces. The sensor output is
++  available via CSI-2 serial data output (1 Lane).
++
++properties:
++  compatible:
++    const: sony,imx296
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    description:
++      Input clock for the sensor.
++    items:
++      - const: mclk
++
++  clock-frequency:
++    description:
++      Frequency of the mclk clock in Hertz.
++    default: 37125000
++
++  vddo-supply:
++    description:
++      Definition of the regulator used as interface power supply.
++    maxItems: 1
++
++  vdda-supply:
++    description:
++      Definition of the regulator used as analog power supply.
++    maxItems: 1
++
++  vddd-supply:
++    description:
++      Definition of the regulator used as digital power supply.
++    maxItems: 1
++
++  reset-gpios:
++    description:
++      The phandle and specifier for the GPIO that controls sensor reset.
++    maxItems: 1
++
++  # See ./video-interfaces.txt for details
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - clock-frequency
++  - vddo-supply
++  - vdda-supply
++  - vddd-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    imx296: camera-sensor@1a {
++        compatible = "sony,imx296";
++        reg = <0x1a>;
++        reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&camera_rear_default>;
++        clocks = <&gcc 90>;
++        clock-names = "mclk";
++        clock-frequency = <37125000>;
++        vddo-supply = <&camera_vddo_1v8>;
++        vdda-supply = <&camera_vdda_3v3>;
++        vddd-supply = <&camera_vddd_1v2>;
++
++        port {
++            imx296_ep: endpoint {
++                remote-endpoint = <&csiphy0_ep>;
++            };
++        };
++    };
++
++...
 -- 
 2.17.1
 
