@@ -2,192 +2,241 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1BECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8497ACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED6B21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:45:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dbiCjU4o"
+	by mail.kernel.org (Postfix) with ESMTP id 54BAA206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfJYSpb (ORCPT
+        id S1726776AbfJYSpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:45:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52745 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726216AbfJYSpb (ORCPT
+        Fri, 25 Oct 2019 14:45:51 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34487 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfJYSpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:45:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572029129;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9paRnLLRdvZXOp9cLGb2RQRU7/GKkqNC1DIqfB0QbeY=;
-        b=dbiCjU4o0M/Nfh0+4z1JsJLakXThFDA8fF4QaCgciQ3qCfv8pZz5yyyV4fIVc4OZtIe2Q9
-        n0CvbjpUSUTXBhKZF7C7f8QrJVy9tdVGp82h52BgKN/GGvMuKIKHJ4D6N0wvAEtIsBRF9I
-        O1x02zGgvXFSEgC8cBXzxyJT/39+J9g=
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com
- [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-MtxwpfdGO3eY-0HBqeHNlg-1; Fri, 25 Oct 2019 14:45:25 -0400
-Received: by mail-yw1-f71.google.com with SMTP id j3so855003ywg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 11:45:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=fVbHX43wiPqb+J3ydMwqDaYmuPF6XwOJdbaDgrdUDlo=;
-        b=M2xAtohMZqBpU7ggRDq7EI+k9v8vL4aFWnvSyXEqPFdtz+mO1E50pmKPUCzwUxQOyU
-         50imxuXpK7Hw9y3bmKkeEacJtOBls+v/laoeMF5PDZFjlKSIQ90xntAtNZxetBZoCFsA
-         YZ2tkfiQkpSIh5e8DEnVlFZHBdRGVXRuUQr5Ty/rxb/c7KXGA58DnvGs94fjWedTrgHh
-         eBCNPw9BixkASVA6eHcr4H3eEBC1vrMarctRyAiAZ8Uuru2GzhXAoeLUQ4ZaJRIb+a+U
-         iNVVyhZjsMec6bJPSTRRdpdVQG9/d8YqKpruN3pimrSLOlNAHryqRL5jyakaiWUZHDKL
-         kwAA==
-X-Gm-Message-State: APjAAAXiQBbjcParXR3EXrEM2IUy1Jg6FtEYvzrKXHaBZuibj59L17JL
-        IL7H1+QjrNSg2PUZetPKWgt5BtN5e+kkyU59EMgrOeUv6r8848FV1av7Juu4KcsGpJVEUECsGwr
-        2GVhv/lkCcGliGp5Ps7aPUyGM
-X-Received: by 2002:a81:9a0c:: with SMTP id r12mr3336233ywg.25.1572029124854;
-        Fri, 25 Oct 2019 11:45:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzhdyun8ZpCPIfqKiBejy4EXQawnRyIbjDi97brP0Q/QRJiA3sF00QeN4QWfgu7CUUQeOZuzw==
-X-Received: by 2002:a81:9a0c:: with SMTP id r12mr3336208ywg.25.1572029124425;
-        Fri, 25 Oct 2019 11:45:24 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id 137sm4513696ywu.84.2019.10.25.11.45.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 11:45:23 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 11:45:22 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH] tpm: Add major_version sysfs file
-Message-ID: <20191025184522.5txabdikcrn2dgvj@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Mimi Zohar <zohar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org
-References: <20191025142847.14931-1-jsnitsel@redhat.com>
- <1572027516.4532.41.camel@linux.ibm.com>
+        Fri, 25 Oct 2019 14:45:51 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iO4ao-0003S7-Fj; Fri, 25 Oct 2019 20:45:46 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iO4an-0007ex-21; Fri, 25 Oct 2019 20:45:45 +0200
+Date:   Fri, 25 Oct 2019 20:45:45 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Joris Offouga <offougajoris@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Otavio Salvador <otavio@ossystems.com.br>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7d-pico: Add LCD support
+Message-ID: <20191025184544.7gwwbsrketjtwrwi@pengutronix.de>
+References: <20191025082247.3371-1-offougajoris@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1572027516.4532.41.camel@linux.ibm.com>
-User-Agent: NeoMutt/20180716
-X-MC-Unique: MtxwpfdGO3eY-0HBqeHNlg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191025082247.3371-1-offougajoris@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:38:19 up 160 days, 18:56, 100 users,  load average: 0.17, 0.06,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri Oct 25 19, Mimi Zohar wrote:
->On Fri, 2019-10-25 at 07:28 -0700, Jerry Snitselaar wrote:
->> Easily determining what TCG version a tpm device implements
->> has been a pain point for userspace for a long time, so
->> add a sysfs file to report the tcg version of a tpm device.
->
->Use "TCG" uppercase consistently.
->=A0
->>
->> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> Cc: Peter Huewe <peterhuewe@gmx.de>
->> Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> Cc: linux-integrity@vger.kernel.org
->> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->
->thanks!
->
->Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
->
->FYI, on my system(s) the new file is accessible as
->/sys/class/tpm/tpm0/version_major. =A0Does this need to be documented
->anywhere?
->
->
+Hi Joris,
 
-Yes, there should be an entry added to
-Documentation/ABI/stable/sysfs-class-tpm.
-I will fix that up and the TCG not being uppercase in a v2.
+On 19-10-25 10:22, Joris Offouga wrote:
+> Add support for the VXT VL050-8048NT-C01 panel connected through
+> the 24 bit parallel LCDIF interface.
+> 
+> Signed-off-by: Joris Offouga <offougajoris@gmail.com>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+> ---
+>  arch/arm/boot/dts/imx7d-pico.dtsi | 84 +++++++++++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
+> index 6f50ebf31a0a..9042b1e6f1db 100644
+> --- a/arch/arm/boot/dts/imx7d-pico.dtsi
+> +++ b/arch/arm/boot/dts/imx7d-pico.dtsi
+> @@ -69,6 +69,37 @@
+>  		clocks = <&clks IMX7D_CLKO2_ROOT_DIV>;
+>  		clock-names = "ext_clock";
+>  	};
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_backlight>;
+> +		pwms = <&pwm4 0 50000 0>;
+                                      ^
+     If not inverted please drop the this flag.
+Also you need to add
 
-Should Documentation/ABI/stable/sysfs-class-tpm updated in
-some way to reflect that those are all links under device
-now and not actually there.
+&pwm4 {
+	status = "okay";
+};
 
->> ---
->>  drivers/char/tpm/tpm-sysfs.c | 34 +++++++++++++++++++++++++++-------
->>  1 file changed, 27 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
->> index edfa89160010..9372c2d6f0b3 100644
->> --- a/drivers/char/tpm/tpm-sysfs.c
->> +++ b/drivers/char/tpm/tpm-sysfs.c
->> @@ -309,7 +309,17 @@ static ssize_t timeouts_show(struct device *dev, st=
-ruct device_attribute *attr,
->>  }
->>  static DEVICE_ATTR_RO(timeouts);
->>
->> -static struct attribute *tpm_dev_attrs[] =3D {
->> +static ssize_t major_version_show(struct device *dev,
->> +=09=09=09=09  struct device_attribute *attr, char *buf)
->> +{
->> +=09struct tpm_chip *chip =3D to_tpm_chip(dev);
->> +
->> +=09return sprintf(buf, "%s\n", chip->flags & TPM_CHIP_FLAG_TPM2
->> +=09=09       ? "2.0" : "1.2");
->> +}
->> +static DEVICE_ATTR_RO(major_version);
->> +
->> +static struct attribute *tpm12_dev_attrs[] =3D {
->>  =09&dev_attr_pubek.attr,
->>  =09&dev_attr_pcrs.attr,
->>  =09&dev_attr_enabled.attr,
->> @@ -320,18 +330,28 @@ static struct attribute *tpm_dev_attrs[] =3D {
->>  =09&dev_attr_cancel.attr,
->>  =09&dev_attr_durations.attr,
->>  =09&dev_attr_timeouts.attr,
->> +=09&dev_attr_major_version.attr,
->>  =09NULL,
->>  };
->>
->> -static const struct attribute_group tpm_dev_group =3D {
->> -=09.attrs =3D tpm_dev_attrs,
->> +static struct attribute *tpm20_dev_attrs[] =3D {
->> +=09&dev_attr_major_version.attr,
->> +=09NULL
->> +};
->> +
->> +static const struct attribute_group tpm12_dev_group =3D {
->> +=09.attrs =3D tpm12_dev_attrs,
->> +};
->> +
->> +static const struct attribute_group tpm20_dev_group =3D {
->> +=09.attrs =3D tpm20_dev_attrs,
->>  };
->>
->>  void tpm_sysfs_add_device(struct tpm_chip *chip)
->>  {
->> -=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
->> -=09=09return;
->> -
->>  =09WARN_ON(chip->groups_cnt !=3D 0);
->> -=09chip->groups[chip->groups_cnt++] =3D &tpm_dev_group;
->> +=09if (chip->flags & TPM_CHIP_FLAG_TPM2)
->> +=09=09chip->groups[chip->groups_cnt++] =3D &tpm20_dev_group;
->> +=09else
->> +=09=09chip->groups[chip->groups_cnt++] =3D &tpm12_dev_group;
->>  }
->
+And so you can do the pwm pinctrl within that node, see below.
 
+> +		brightness-levels = <0 36 72 108 144 180 216 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+
+status can be dropped too.
+
+> +	};
+> +
+> +	reg_lcd_3v3: regulator-lcd-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+
+Missing the muxing?
+
+> +		enable-active-high;
+> +	};
+> +
+> +	panel {
+> +		compatible = "vxt,vl050-8048nt-c01";
+> +		backlight = <&backlight>;
+> +		power-supply = <&reg_lcd_3v3>;
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&display_out>;
+> +			};
+> +		};
+> +	};
+
+Please sort the nodes alphabetical.
+
+>  };
+>  
+>  &clks {
+> @@ -230,6 +261,18 @@
+>  	};
+>  };
+>  
+> +&lcdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lcdif>;
+> +	status = "okay";
+> +
+> +	port {
+> +		display_out: endpoint {
+> +			remote-endpoint = <&panel_in>;
+> +		};
+> +	};
+> +};
+> +
+>  &sai1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_sai1>;
+> @@ -349,6 +392,13 @@
+>  };
+>  
+>  &iomuxc {
+> +
+> +	pinctrl_backlight: backlight {
+                                    ^
+                        please add 'grp'
+> +		fsl,pins = <
+> +			MX7D_PAD_GPIO1_IO11__PWM4_OUT		0x0
+> +		>;
+> +	};
+
+IMHO the muxing is part of the pwm4 node. So rename it to
+'pinctrl_pwm4: pwm4grp'.
+
+Regards,
+  Marco
+
+> +
+>  	pinctrl_ecspi3: ecspi3grp {
+>  		fsl,pins = <
+>  			MX7D_PAD_I2C1_SCL__ECSPI3_MISO		0x2
+> @@ -413,6 +463,40 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_lcdif: lcdifgrp {
+> +		fsl,pins = <
+> +			MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
+> +			MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
+> +			MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
+> +			MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
+> +			MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
+> +			MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
+> +			MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
+> +			MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
+> +			MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
+> +			MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
+> +			MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
+> +			MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
+> +			MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
+> +			MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
+> +			MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
+> +			MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
+> +			MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
+> +			MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
+> +			MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
+> +			MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
+> +			MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
+> +			MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
+> +			MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
+> +			MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
+> +			MX7D_PAD_LCD_CLK__LCD_CLK		0x79
+> +			MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x78
+> +			MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x78
+> +			MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x78
+> +			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x14
+> +		>;
+> +	};
+> +
+>  	pinctrl_pwm1: pwm1 {
+>  		fsl,pins = <
+>  			MX7D_PAD_GPIO1_IO08__PWM1_OUT   0x7f
+> -- 
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
