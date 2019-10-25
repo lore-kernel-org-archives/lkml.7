@@ -2,103 +2,198 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE2FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF26CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20B32070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ZfEnKerJ"
+	by mail.kernel.org (Postfix) with ESMTP id 397362070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439247AbfJYLQd (ORCPT
+        id S2439359AbfJYLSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:16:33 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35956 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfJYLQc (ORCPT
+        Fri, 25 Oct 2019 07:18:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42533 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfJYLSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:16:32 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w18so1894113wrt.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 04:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aggsABIYRRLswIwxQlk1bc5yL6gnA80dLaHTc+5bzIY=;
-        b=ZfEnKerJnYGRWOAiA9ZGyMPPaOei4svG9M9ngzt/VRWxfhX1aGYgh7sICeNUFn1fR7
-         t7icu56KqU/9tCId7Kbi7XkVfxv6YB4BLQPMyse3pLgbKdOBq2RnyADMVQmd7OK9ZdfE
-         snsj1mRqO6GJrZCrrYszrJDK3DbAA75l/ppva5wwEcTvIw7vEnNc/cev+coPLU2L0ekv
-         3wsk9Ftia043GAUvXZsDZix9D2JBQbktFGsKUG9Q4cii8tapwG9WaH+FCQQldf7eurht
-         ucacZH6tfAmoBM06Wt/OCCtxtKp6bw0SPtuv54rM6jCPZXz5rxqyFhaMA2mYwITH16OH
-         8b5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aggsABIYRRLswIwxQlk1bc5yL6gnA80dLaHTc+5bzIY=;
-        b=JbOUSY0OvUDlBVEGl1eJbfw6CU3wXAWZwja7yVOTvTAHvl9q7JscXr4oZlUSesPc3+
-         5/PEuwZz0FZs+upc0ZRmfIX5qLI/zslrqgs6C/eHeQWXMfuoFW0S2pRHG5NuYTXKseds
-         MACY46J88s3m2Cl7FuRxJeCpbB6wo16d2NFDKDbp42ttMzWJQEVq1gTOA/x8S4DiguVW
-         3T830qjRbJ+tfk9nu7I+rebtn+U6WNsry0UDAU9s3PuEqYR62ZgCPVD1DTSu4gVnKVeJ
-         j5vo8G696VHaA6mufTB5e2MqCTvZ0BoU60arOrC093WDgiwsDAx9qWT/tc66cBuFRwbB
-         KZ1w==
-X-Gm-Message-State: APjAAAXSw3e7KSFn6s6UesYFPPUaQLKwAdzlewcPSPgTh9Rz6xOjsXdj
-        HBafCCyPG53XrE5CI6hQibT1Kw==
-X-Google-Smtp-Source: APXvYqye0bMzabbhMdyIpkhP6DJpiYxdibp9PiqfCR0Gpk686vQs9d9QZOMBWqPETxqNqJFJXkTTxw==
-X-Received: by 2002:a5d:544d:: with SMTP id w13mr2562396wrv.19.1572002189723;
-        Fri, 25 Oct 2019 04:16:29 -0700 (PDT)
-Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id v20sm1571589wml.26.2019.10.25.04.16.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 04:16:29 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 13:16:27 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Pankaj Sharma <pankj.sharma@samsung.com>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wg@grandegger.com,
-        mkl@pengutronix.de, davem@davemloft.net,
-        eugen.hristev@microchip.com, ludovic.desroches@microchip.com,
-        pankaj.dubey@samsung.com, rcsekar@samsung.com,
-        jhofstee@victronenergy.com, Sriram Dash <sriram.dash@samsung.com>
-Subject: Re: [PATCH v2] can: m_can: add support for handling arbitration error
-Message-ID: <20191025111626.GA31153@netronome.com>
-References: <CGME20191021121350epcas5p3313e54a3bc5c8600c52a6db299893f78@epcas5p3.samsung.com>
- <1571660016-29726-1-git-send-email-pankj.sharma@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571660016-29726-1-git-send-email-pankj.sharma@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 25 Oct 2019 07:18:09 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iNxJY-0002cx-TZ; Fri, 25 Oct 2019 10:59:29 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     davem@davemloft.net, oliver@neukum.org
+Cc:     hayeswang@realtek.com, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 2/2] r8152: Add macpassthru support for ThinkPad Thunderbolt 3 Dock Gen 2
+Date:   Fri, 25 Oct 2019 18:59:19 +0800
+Message-Id: <20191025105919.689-2-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191025105919.689-1-kai.heng.feng@canonical.com>
+References: <20191025105919.689-1-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 05:43:36PM +0530, Pankaj Sharma wrote:
-> The Bosch MCAN hardware (3.1.0 and above) supports interrupt flag to
-> detect Protocol error in arbitration phase.
-> 
-> Transmit error statistics is currently not updated from the MCAN driver.
-> Protocol error in arbitration phase is a TX error and the network
-> statistics should be updated accordingly.
-> 
-> The member "tx_error" of "struct net_device_stats" should be incremented
-> as arbitration is a transmit protocol error. Also "arbitration_lost" of
-> "struct can_device_stats" should be incremented to report arbitration
-> lost.
-> 
-> Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
-> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
-> ---
-> 
-> changes in v2:
-> - common m_can_ prefix for is_protocol_err function
-> - handling stats even if the allocation of the skb fails
-> - resolving build errors on net-next branch
+ThinkPad Thunderbolt 3 Dock Gen 2 is another docking station that uses
+RTL8153 based USB ethernet.
 
-No objections from my side.
+The device supports macpassthru, but it failed to pass the test of -AD,
+-BND and -BD. Simply bypass these tests since the device supports this
+feature just fine.
+
+Also the ACPI objects have some differences between Dell's and Lenovo's,
+so make those ACPI infos no longer hardcoded.
+
+BugLink: https://bugs.launchpad.net/bugs/1827961
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/usb/cdc_ether.c |  7 ++++
+ drivers/net/usb/r8152.c     | 65 ++++++++++++++++++++++++++-----------
+ 2 files changed, 53 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
+index 32f53de5b1fe..92751f6e792d 100644
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -766,6 +766,13 @@ static const struct usb_device_id	products[] = {
+ 	.driver_info = 0,
+ },
+ 
++/* ThinkPad Thunderbolt 3 Dock Gen 2 (based on Realtek RTL8153) */
++{
++	USB_DEVICE_AND_INTERFACE_INFO(LENOVO_VENDOR_ID, 0x3082, USB_CLASS_COMM,
++			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
++	.driver_info = 0,
++},
++
+ /* Lenovo Thinkpad USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(LENOVO_VENDOR_ID, 0x7205, USB_CLASS_COMM,
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 1a987d4e45ab..65bdb745860c 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -658,6 +658,8 @@ enum rtl_register_content {
+ #define RTL8152_NAPI_WEIGHT	64
+ #define rx_reserved_size(x)	((x) + VLAN_ETH_HLEN + ETH_FCS_LEN + \
+ 				 sizeof(struct rx_desc) + RX_ALIGN)
++/* Device quirks */
++#define R8152_QUIRK_LENOVO_MACPASSTHRU		BIT(1)
+ 
+ /* rtl8152 flags */
+ enum rtl8152_flags {
+@@ -670,6 +672,7 @@ enum rtl8152_flags {
+ 	SCHEDULE_TASKLET,
+ 	GREEN_ETHERNET,
+ 	DELL_TB_RX_AGG_BUG,
++	LENOVO_MACPASSTHRU,
+ };
+ 
+ /* Define these values to match your device */
+@@ -1408,38 +1411,57 @@ static int vendor_mac_passthru_addr_read(struct r8152 *tp, struct sockaddr *sa)
+ 	int ret = -EINVAL;
+ 	u32 ocp_data;
+ 	unsigned char buf[6];
+-
+-	/* test for -AD variant of RTL8153 */
+-	ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0);
+-	if ((ocp_data & AD_MASK) == 0x1000) {
+-		/* test for MAC address pass-through bit */
+-		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, EFUSE);
+-		if ((ocp_data & PASS_THRU_MASK) != 1) {
+-			netif_dbg(tp, probe, tp->netdev,
+-				  "No efuse for RTL8153-AD MAC pass through\n");
+-			return -ENODEV;
+-		}
++	bool bypass_test;
++	char *mac_obj_name;
++	acpi_object_type mac_obj_type;
++	int mac_strlen;
++
++	if (test_bit(LENOVO_MACPASSTHRU, &tp->flags)) {
++		bypass_test = true;
++		mac_obj_name = "\\MACA";
++		mac_obj_type = ACPI_TYPE_STRING;
++		mac_strlen = 0x16;
+ 	} else {
+-		/* test for RTL8153-BND and RTL8153-BD */
+-		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
+-		if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
+-			netif_dbg(tp, probe, tp->netdev,
+-				  "Invalid variant for MAC pass through\n");
+-			return -ENODEV;
++		bypass_test = false;
++		mac_obj_name = "\\_SB.AMAC";
++		mac_obj_type = ACPI_TYPE_BUFFER;
++		mac_strlen = 0x17;
++	}
++
++	if (!bypass_test) {
++		/* test for -AD variant of RTL8153 */
++		ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0);
++		if ((ocp_data & AD_MASK) == 0x1000) {
++			/* test for MAC address pass-through bit */
++			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, EFUSE);
++			if ((ocp_data & PASS_THRU_MASK) != 1) {
++				netif_dbg(tp, probe, tp->netdev,
++						"No efuse for RTL8153-AD MAC pass through\n");
++				return -ENODEV;
++			}
++		} else {
++			/* test for RTL8153-BND and RTL8153-BD */
++			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
++			if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
++				netif_dbg(tp, probe, tp->netdev,
++						"Invalid variant for MAC pass through\n");
++				return -ENODEV;
++			}
+ 		}
+ 	}
+ 
+ 	/* returns _AUXMAC_#AABBCCDDEEFF# */
+-	status = acpi_evaluate_object(NULL, "\\_SB.AMAC", NULL, &buffer);
++	status = acpi_evaluate_object(NULL, mac_obj_name, NULL, &buffer);
+ 	obj = (union acpi_object *)buffer.pointer;
+ 	if (!ACPI_SUCCESS(status))
+ 		return -ENODEV;
+-	if (obj->type != ACPI_TYPE_BUFFER || obj->string.length != 0x17) {
++	if (obj->type != mac_obj_type || obj->string.length != mac_strlen) {
+ 		netif_warn(tp, probe, tp->netdev,
+ 			   "Invalid buffer for pass-thru MAC addr: (%d, %d)\n",
+ 			   obj->type, obj->string.length);
+ 		goto amacout;
+ 	}
++
+ 	if (strncmp(obj->string.pointer, "_AUXMAC_#", 9) != 0 ||
+ 	    strncmp(obj->string.pointer + 0x15, "#", 1) != 0) {
+ 		netif_warn(tp, probe, tp->netdev,
+@@ -6626,6 +6648,9 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		netdev->hw_features &= ~NETIF_F_RXCSUM;
+ 	}
+ 
++	if (id->driver_info & R8152_QUIRK_LENOVO_MACPASSTHRU)
++		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
++
+ 	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial &&
+ 	    (!strcmp(udev->serial, "000001000000") ||
+ 	     !strcmp(udev->serial, "000002000000"))) {
+@@ -6754,6 +6779,8 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f, 0)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062, 0)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069, 0)},
++	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082,
++			R8152_QUIRK_LENOVO_MACPASSTHRU)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205, 0)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c, 0)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214, 0)},
+-- 
+2.17.1
+
