@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC44CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E9DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0268A20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F24920663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012414;
-	bh=ZZjjnG3npdaGzZzxef3vjTrq7vHubzzO5lJ6IcAPVKA=;
+	s=default; t=1572012419;
+	bh=SrB6elDN24ZFvsjcyWtUFkgwdAXQ28zARkeICx883oY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yGN6QJffsaDmLyfVahaQ5JXSCytkXIVxxbdGVqfwooR0Q1CgJ9lhaRXqA7wcngdbA
-	 rocVdSFrArtYWYBfAXMu5tta0CIBfeJlLKb/WWF9zBehC1MjdRYkzQCS5o4eMKeYOh
-	 h8afmFjO4JpOr4GQZKWPH2QC8E3cF1g4zysIt5/s=
+	b=xCfeCChcQK7g7ShByoVvdHeGuDiEX4jXYT4y6UFfxjggTQ61ckMrI9qW51gCd73aP
+	 SO0me3MCDffECZAwZ88xc8o7RalofylNZTsI7kW6Rlcy2g1D5vpDvLxl13Lhj0AqRD
+	 XpzdPJAp+zyjazERCLL8y7F1z0wTD4jnQB0WbERE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632727AbfJYNzk (ORCPT
+        id S2503101AbfJYOG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49530 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505101AbfJYNzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:55:35 -0400
+        id S2632718AbfJYNzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:55:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7234222BD;
-        Fri, 25 Oct 2019 13:55:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B36B222CB;
+        Fri, 25 Oct 2019 13:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011734;
-        bh=ZZjjnG3npdaGzZzxef3vjTrq7vHubzzO5lJ6IcAPVKA=;
+        s=default; t=1572011739;
+        bh=SrB6elDN24ZFvsjcyWtUFkgwdAXQ28zARkeICx883oY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNSG62Phu14zNrKY4EJOnALBH7CTO63QES+mP8l0NAXA2N92+CEWj0M8VslHDRE0T
-         DsaxTk67I4v2lMJMRXFpE8KfhI126A+yHg89JT+4o7wq9oFxy3ktn52CgGVLfMEQCP
-         /2tjF1cTebVqgDn5wq9K9/R6UHmMzst3gC1RbN/Q=
+        b=VcyitPiTcT9C9hH1tXCKKGJiAA1ZzV+rVXGiFvFCiVZmHNZ85HfGt7q/paBycuCZG
+         1U0ecvnGwHTMu5dwBYspXLFgeqTTZ1vWlCAGQB9tMhN73wv4N94psNsEIamKa/noib
+         h/vj4CEe6/khSS2VVhHdUSi1cD0DXUglOrsLtvGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 16/33] netfilter: connlabels: prefer static lock initialiser
-Date:   Fri, 25 Oct 2019 09:54:48 -0400
-Message-Id: <20191025135505.24762-16-sashal@kernel.org>
+Cc:     Arun Easi <aeasi@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 20/33] scsi: qedf: Fix crash during sg_reset
+Date:   Fri, 25 Oct 2019 09:54:52 -0400
+Message-Id: <20191025135505.24762-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -61,57 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Arun Easi <aeasi@marvell.com>
 
-[ Upstream commit 105333435b4f3b21ffc325f32fae17719310db64 ]
+[ Upstream commit 47aeee5549cf9326656a8f9190960dfd35c101e2 ]
 
-seen during boot:
-BUG: spinlock bad magic on CPU#2, swapper/0/1
- lock: nf_connlabels_lock+0x0/0x60, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
-Call Trace:
- do_raw_spin_lock+0x14e/0x1b0
- nf_connlabels_get+0x15/0x40
- ct_init_net+0xc4/0x270
- ops_init+0x56/0x1c0
- register_pernet_operations+0x1c8/0x350
- register_pernet_subsys+0x1f/0x40
- tcf_register_action+0x7c/0x1a0
- do_one_initcall+0x13d/0x2d9
+Driver was attempting to print cdb[0], which is not set for resets coming
+from SCSI ioctls. Check for cmd_len before accessing cmnd.
 
-Problem is that ct action init function can run before
-connlabels_init().  Lock has not been initialised yet.
+Crash info:
+[84790.864747] BUG: unable to handle kernel NULL pointer dereference at (null)
+[84790.864783] IP: qedf_initiate_tmf+0x7a/0x6e0 [qedf]
+[84790.865204] Call Trace:
+[84790.865246]  scsi_try_target_reset+0x2b/0x90 [scsi_mod]
+[84790.865266]  scsi_ioctl_reset+0x20f/0x2a0 [scsi_mod]
+[84790.865284]  scsi_ioctl+0x131/0x3a0 [scsi_mod]
 
-Fix it by using a static initialiser.
-
-Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Arun Easi <aeasi@marvell.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_labels.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/qedf/qedf_io.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_labels.c b/net/netfilter/nf_conntrack_labels.c
-index 74b8113f7aebe..d1c6b2a2e7bd1 100644
---- a/net/netfilter/nf_conntrack_labels.c
-+++ b/net/netfilter/nf_conntrack_labels.c
-@@ -11,7 +11,7 @@
- #include <net/netfilter/nf_conntrack_ecache.h>
- #include <net/netfilter/nf_conntrack_labels.h>
+diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
+index d881e822f92cf..56756a5700867 100644
+--- a/drivers/scsi/qedf/qedf_io.c
++++ b/drivers/scsi/qedf/qedf_io.c
+@@ -2363,8 +2363,8 @@ int qedf_initiate_tmf(struct scsi_cmnd *sc_cmd, u8 tm_flags)
  
--static spinlock_t nf_connlabels_lock;
-+static __read_mostly DEFINE_SPINLOCK(nf_connlabels_lock);
+ 	QEDF_ERR(NULL,
+ 		 "tm_flags 0x%x sc_cmd %p op = 0x%02x target_id = 0x%x lun=%d\n",
+-		 tm_flags, sc_cmd, sc_cmd->cmnd[0], rport->scsi_target_id,
+-		 (int)sc_cmd->device->lun);
++		 tm_flags, sc_cmd, sc_cmd->cmd_len ? sc_cmd->cmnd[0] : 0xff,
++		 rport->scsi_target_id, (int)sc_cmd->device->lun);
  
- static int replace_u32(u32 *address, u32 mask, u32 new)
- {
-@@ -89,7 +89,6 @@ int nf_conntrack_labels_init(void)
- {
- 	BUILD_BUG_ON(NF_CT_LABELS_MAX_SIZE / sizeof(long) >= U8_MAX);
- 
--	spin_lock_init(&nf_connlabels_lock);
- 	return nf_ct_extend_register(&labels_extend);
- }
- 
+ 	if (!rdata || !kref_get_unless_zero(&rdata->kref)) {
+ 		QEDF_ERR(NULL, "stale rport\n");
 -- 
 2.20.1
 
