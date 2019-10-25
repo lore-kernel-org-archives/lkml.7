@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA8ACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0428DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA2221E6F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF7221E6F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011806;
-	bh=1oQgUWXsnyNQ3oyHEoHZ3MyPQnHIg/LZon8cKAsd5ik=;
+	s=default; t=1572011808;
+	bh=aGP91nYaydYyiw1aEEPUAzgyU8YIqN75+zUdllje6y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IU8VE8O+YnbReL6ruaqNLuBRSuskU0FOyGin/Gf7/0mPt7LQrVnkQ/hWSOh9Juwhw
-	 M2Zkf1fqw80iburO4rwklC/u+7oOkzFD4WLOtYKRjmo+Of+pF9thEk5pUZhoUcZYTp
-	 e7bfaLF7B+EaNPlAdoFZMgBvfRK37XUU0fH+xLhc=
+	b=eYGmfxe2ZaSaa+P9iO0pZoio4RsYo90IbR9ZReZYXy1KKLRV4KBYem7DG9HbYuthR
+	 bzHI/797h6isq60pwXSVnpNNyAnIwshATRZGvxOLsaTC1UROjC9ysq/ykluPYHMIoX
+	 pIbDiHeZVi2PzBXqm10s/TU0bQ9weP6uzgutAvsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394679AbfJYN4p (ORCPT
+        id S2394698AbfJYN4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51152 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394656AbfJYN4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:41 -0400
+        id S2394666AbfJYN4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D450E222CD;
-        Fri, 25 Oct 2019 13:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EA23222D2;
+        Fri, 25 Oct 2019 13:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011800;
-        bh=1oQgUWXsnyNQ3oyHEoHZ3MyPQnHIg/LZon8cKAsd5ik=;
+        s=default; t=1572011802;
+        bh=aGP91nYaydYyiw1aEEPUAzgyU8YIqN75+zUdllje6y8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+oJ3TBRVLiLaRbs1vyKTZjrnDP7nkD1tl9pWX3Qtb+zCQqCJ7fRKrMElejVn1LUY
-         /Z10jG3B3S7UHVuQeWbDoCfC06ITDghiSdoKTimvZGNoaHebuSXkqNFY3RRidTLypO
-         VG3j5zm9KH7YjRY81s1iVYGDw4cD9GqwSASJ1NMM=
+        b=boeiGQvPVFpbDC7p9ya/ezqhMuWJvsF5KVb1RFA86sucKpEIzy9J5p1jCN2DoN0ug
+         FXd+ZzG1d5vWdWrEm/YdgxE02ijhkEcTYxtdIkdhzKNkPSgle6H8aJz/F1UR0kVvth
+         0EHTAqWwR6ctFObUs+839SdS3junv6Q2G/AOrJ4M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     David Howells <dhowells@redhat.com>,
-        syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com,
+        syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/37] rxrpc: Fix call ref leak
-Date:   Fri, 25 Oct 2019 09:55:45 -0400
-Message-Id: <20191025135603.25093-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 23/37] rxrpc: rxrpc_peer needs to hold a ref on the rxrpc_local record
+Date:   Fri, 25 Oct 2019 09:55:47 -0400
+Message-Id: <20191025135603.25093-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -62,47 +62,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit c48fc11b69e95007109206311b0187a3090591f3 ]
+[ Upstream commit 9ebeddef58c41bd700419cdcece24cf64ce32276 ]
 
-When sendmsg() finds a call to continue on with, if the call is in an
-inappropriate state, it doesn't release the ref it just got on that call
-before returning an error.
+The rxrpc_peer record needs to hold a reference on the rxrpc_local record
+it points as the peer is used as a base to access information in the
+rxrpc_local record.
 
-This causes the following symptom to show up with kasan:
+This can cause problems in __rxrpc_put_peer(), where we need the network
+namespace pointer, and in rxrpc_send_keepalive(), where we need to access
+the UDP socket, leading to symptoms like:
 
-	BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940
-	net/rxrpc/output.c:635
-	Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
+    BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411
+    [inline]
+    BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0
+    net/rxrpc/peer_object.c:435
+    Read of size 8 at addr ffff888097ec0058 by task syz-executor823/24216
 
-where line 635 is:
+Fix this by taking a ref on the local record for the peer record.
 
-	whdr.epoch	= htonl(peer->local->rxnet->epoch);
-
-The local endpoint (which cannot be pinned by the call) has been released,
-but not the peer (which is pinned by the call).
-
-Fix this by releasing the call in the error path.
-
-Fixes: 37411cad633f ("rxrpc: Fix potential NULL-pointer exception")
-Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
+Fixes: ace45bec6d77 ("rxrpc: Fix firewall route keepalive")
+Fixes: 2baec2c3f854 ("rxrpc: Support network namespacing")
+Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/sendmsg.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/rxrpc/peer_object.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 5d6ab4f6fd7ab..3e54ead1e921a 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -661,6 +661,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
- 		case RXRPC_CALL_SERVER_PREALLOC:
- 		case RXRPC_CALL_SERVER_SECURING:
- 		case RXRPC_CALL_SERVER_ACCEPTING:
-+			rxrpc_put_call(call, rxrpc_call_put);
- 			ret = -EBUSY;
- 			goto error_release_sock;
- 		default:
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index 72b4ad210426e..b91b090217cdb 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -220,7 +220,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
+ 	peer = kzalloc(sizeof(struct rxrpc_peer), gfp);
+ 	if (peer) {
+ 		atomic_set(&peer->usage, 1);
+-		peer->local = local;
++		peer->local = rxrpc_get_local(local);
+ 		INIT_HLIST_HEAD(&peer->error_targets);
+ 		peer->service_conns = RB_ROOT;
+ 		seqlock_init(&peer->service_conn_lock);
+@@ -311,7 +311,6 @@ void rxrpc_new_incoming_peer(struct rxrpc_sock *rx, struct rxrpc_local *local,
+ 	unsigned long hash_key;
+ 
+ 	hash_key = rxrpc_peer_hash_key(local, &peer->srx);
+-	peer->local = local;
+ 	rxrpc_init_peer(rx, peer, hash_key);
+ 
+ 	spin_lock(&rxnet->peer_hash_lock);
+@@ -421,6 +420,7 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
+ 	list_del_init(&peer->keepalive_link);
+ 	spin_unlock_bh(&rxnet->peer_hash_lock);
+ 
++	rxrpc_put_local(peer->local);
+ 	kfree_rcu(peer, rcu);
+ }
+ 
+@@ -457,6 +457,7 @@ void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
+ 	if (n == 0) {
+ 		hash_del_rcu(&peer->hash_link);
+ 		list_del_init(&peer->keepalive_link);
++		rxrpc_put_local(peer->local);
+ 		kfree_rcu(peer, rcu);
+ 	}
+ }
 -- 
 2.20.1
 
