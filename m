@@ -2,98 +2,109 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DABCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF65CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8505021929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:50:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="IT1Gb0NT"
+	by mail.kernel.org (Postfix) with ESMTP id E43CB21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394497AbfJYKuR (ORCPT
+        id S2502574AbfJYKvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:50:17 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:39044 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbfJYKuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:50:16 -0400
-Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id EFF1DA31CA;
-        Fri, 25 Oct 2019 12:50:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1572000614;
-        bh=LSdrfEjRO3iV/0CWKtnYmKEWg/ZxVW9HBizh6GaIiDw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IT1Gb0NTcPtC1GPd9ENwia+ZCx+32qCQWP/DjtHPvsJJP1ttsck1+4piBlmZl7KrX
-         G1iwz+cRNPC7cXUL7RVvYxvGi+1GAwWyQrICqTCdhFO7nCMrFBpmgyfklG5QPR1/Xb
-         orn7LtdrTFoyPmPhxYUj4+7n1kYqizeAuwRHCgTc=
-Subject: Re: [PATCH net-next] net: dsa: qca8k: Initialize the switch with
- correct number of ports
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1571924818-27725-1-git-send-email-michal.vokac@ysoft.com>
- <20191024141211.GC30147@lunn.ch>
- <a6e8b1cb-4c32-34ba-2a10-d736a953c108@gmail.com>
-From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <7aeb3ce2-b0b9-ec15-1062-955a0eca4d98@ysoft.com>
-Date:   Fri, 25 Oct 2019 12:50:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 25 Oct 2019 06:51:09 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:45981 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392198AbfJYKvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:51:09 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mj831-1hlZxU1VH3-00fEqI; Fri, 25 Oct 2019 12:51:05 +0200
+Received: by mail-qk1-f181.google.com with SMTP id q70so1261022qke.12;
+        Fri, 25 Oct 2019 03:51:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAWA6fFViRcJqREnWWJ4XnLSnh9uc5TR3f3XkJRs4iop43nFUxmc
+        NGQ8ccT6lVNGOrvmjR3QEB2RQ+274bWdUrVtGAM=
+X-Google-Smtp-Source: APXvYqx2Oor6PcLHOX4Sy8TtHwX6a9dti7RuLVSJPm8RZ72aJo7WkeFnANJ7SePVIoWyJuP+ht+PknNC97FPJwMamtQ=
+X-Received: by 2002:a37:58d:: with SMTP id 135mr2252602qkf.394.1572000663226;
+ Fri, 25 Oct 2019 03:51:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a6e8b1cb-4c32-34ba-2a10-d736a953c108@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191018154052.1276506-1-arnd@arndb.de> <87v9slg9k5.fsf@belgarion.home>
+ <CAK8P3a1JDtHsOW=iaxEycbJ4TBkR9MHUyDMeJnwxCtb=tefnBQ@mail.gmail.com>
+ <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
+ <87r239f2g8.fsf@belgarion.home> <87eez1rhqo.fsf@belgarion.home>
+In-Reply-To: <87eez1rhqo.fsf@belgarion.home>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 25 Oct 2019 12:50:46 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0L3_Hs48X5bh0UD2L_AaxLcUOQ_YS7ZpSd5W-8xcgAog@mail.gmail.com>
+Message-ID: <CAK8P3a0L3_Hs48X5bh0UD2L_AaxLcUOQ_YS7ZpSd5W-8xcgAog@mail.gmail.com>
+Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
+To:     Robert Jarzmik <robert.jarzmik@free.fr>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        IDE-ML <linux-ide@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:bBFl5bX9BqXoDP8OrdvcfGlrYLRY5B1GUhWZJswEMUsHfqL7ZPS
+ wNKiBQqI9J4lWaKwMKWpeuRP8Q7gNW1Huux28MpdQbLQHsG8keYqULuxokAyz8cXvUuDQNr
+ Y4OmkYoxdwxMOhV/OoYmkmbTVaeZ1jGsBbuhOyjPDaixMEDPYwwWYKYrS8WnrToePTYktVe
+ isgPlih4bJp7b5na0cbDg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+amIHTsvEsM=:wxrSdcXp8fCl0WvOtbji8T
+ eiMYbEG4cst6pRKOmo34ky4eqFrbI9L+1xHjnaiY+H7o5c4AvretiveY6HsD/8Q4GCTo+d4EF
+ 6KHQlLX/3bCOUITQRQRqZXMcO8+d/5yBWQ4PLvO/++od9zW+FSeEXlBspQqZItGbvkewyaSgM
+ V2RuqHgZsRHubh1xP1lsxIE2YLtSonVpvh2iNYDMLLKocefeURCWHULZHpLKqb637/1ILOFmh
+ oY55eIQP5dCvyMde+02h4Sc41A/coK0VSMYnmjZbIdabokN8wJmd5BpuqN52whvBKMyQB7Drx
+ +rJNk043np+L19CHym/KU1GD0+Jh/hYMmdbAesunIc/XFNfshrJppNPggA2jYuD+WHt0GoW0h
+ vIRvBMeg6dWxtHSt5iN2OWe8YRwmJozAghx6eaxs/+mtKjhlwdb8pg8wgjMJTT4UVZPNck6ai
+ ETIxAKLIg48ERY2PKPCwjHZWIF59mr9ihwrIm7/PoRVzhB2DgY1bXT+r0Xf1ifNLX95PYOB5M
+ zAGClTyzoyjzTzKwNgwcV4nTh4Je81xIc8FEG8D5S5n2odlouWYtMUHvQkobX+2UgP+dk+Rdq
+ Yf9piYlNy1SKL1OHQdycWsLTFQ3jMWeWKCJRb5PSzWdnYIqeBZU1jM0z+jjUqPYhNrA/3/oIY
+ 6RHI26+ovszi6E37l9e4YOUqQLgkyayuNJDsaLxUKkKdzoog8Z1n6LZPKD/u4+MRIXZCKCrGx
+ pWVDvdMh6MitMHpzAZXm52z3k1A8T63a1CoAVUlqw1z/kLR1+hrsr4BnhFtpR4HNXe8FSWIge
+ SE0Vg8VrS1FRrUX3m8HXrRagLwmAmfEk5PCq5WPOx/NjbgPEUnw5nqQ9HVCS9jOGnKIZvBw5Z
+ /NMhJY+Zi7eyYSpPjOOA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24. 10. 19 18:33, Florian Fainelli wrote:
-> On 10/24/19 7:12 AM, Andrew Lunn wrote:
->> On Thu, Oct 24, 2019 at 03:46:58PM +0200, Michal Vokáč wrote:
->>> Since commit 0394a63acfe2 ("net: dsa: enable and disable all ports")
->>> the dsa core disables all unused ports of a switch. In this case
->>> disabling ports with numbers higher than QCA8K_NUM_PORTS causes that
->>> some switch registers are overwritten with incorrect content.
->>
->> Humm.
->>
->> The same problem might exist in other drivers:
->>
->> linux/drivers/net/dsa$ grep -r "ds->num_ports = DSA_MAX_PORTS"
->> qca8k.c:	priv->ds->num_ports = DSA_MAX_PORTS;
->> b53/b53_common.c:	ds->num_ports = DSA_MAX_PORTS;
-> 
-> Not for b53 because this later gets clamped with dev->num_ports in
-> b53_setup().
+On Thu, Oct 24, 2019 at 10:50 PM Robert Jarzmik <robert.jarzmik@free.fr> wrote:
+> Robert Jarzmik <robert.jarzmik@free.fr> writes:
+> >>> I've now pushed it to
+> >>>
+> >>> git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
+> >>> pxa-multiplatform
+> >>
+> >> Sorry for the duplication, I had some problems with email configuration
+> >> so my reply got rejected, let's see if it goes through this time.
+> > I have it now, thanks, I'll test and review as soon as I can.
+> >
+> > Cheers.
+>
+> Ok Arnd, I have a preliminary test report.
+>
+> I tested only the pxa27x (mioa701), which happens to have a lot of drivers, and
+> only the platform_data flavor (ie. no device-tree test yet). Apart a panic in
+> the regulator framework (which is a known issue [1]), your version seems
+> equivalent so far in terms of runtime to Linux 5.4-rc3).
+>
+> The sound and RTC seem broken, but not by you ...
+>
+> I'll continue the test onwards for pxa3xx and pxa2xx when I'll gather a bit of
+> time, and try to review as well the mach-pxa part.
 
-I quickly checked the code and I think there is still an issue
-in the b53_enable_port and b53_disable_port functions which are
-called from the dsa_port_setup().
+Awesome, thanks for testing so far and for the report!
 
->> mt7530.c:	priv->ds->num_ports = DSA_MAX_PORTS;
->> microchip/ksz_common.c:	ds->num_ports = DSA_MAX_PORTS;
-
-At first glance it looks like mt7530 and microchip has the same problem.
-
->> dsa_loop.c:	ds->num_ports = DSA_MAX_PORTS;
->>
->> dsa_loop.c looks O.K, it does support DSA_MAX_PORTS ports.
->>
->> But the others?
->>
->>      Andrew
-
-I can respin and fix those drivers as well. Or a separate patch
-for each one?
-
-Michal
+        Arnd
