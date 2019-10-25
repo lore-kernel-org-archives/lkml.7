@@ -2,174 +2,133 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF24CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98825CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D3E21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SMp3ZpI5"
+	by mail.kernel.org (Postfix) with ESMTP id 75C74205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 00:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbfJYA2T (ORCPT
+        id S2387667AbfJYAgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 20:28:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40722 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726164AbfJYA2S (ORCPT
+        Thu, 24 Oct 2019 20:36:11 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59287 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729728AbfJYAgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 20:28:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571963297;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u/ZOKafSqcbNjqFdVZXED/KJXRu4OrJLpD9UUq91aWI=;
-        b=SMp3ZpI5ar/bAtyGT1SHFnpN7PAvHCa7qdb3grBS77MWuLkRIlzbwbtC8U9YW7Ci8uaVH1
-        mslVVlVfXewOqnnJXTi8cegffA2Igu1IU+jp5VugcJHii1VYG4H0kQSGBDVn/xh/6LsAdW
-        XqVmhfssZgbFNL+sTPW9KV1fMwXfPEE=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-VX937yK2O8WYHiayHRwYBA-1; Thu, 24 Oct 2019 20:28:07 -0400
-Received: by mail-lj1-f199.google.com with SMTP id y12so37349ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 17:28:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f/h48WimOkxwuWTFiUpPnQ+AjLWqpj9bNjA3x7P2LxY=;
-        b=GOgklHxcKsjlzMgevoQGueyw6EWw+bJ2telR2dQfK0Utd4rm8t+IG9b3wDZ5IcffLb
-         ATf86CiW7rRp5Amln5F+9q8hnt5pcPf8LWdjgimMrwZkh/7uWKK8q8st7i5C+FP5Rz17
-         8gvHEHwW/B4dUeNvVQdGAM/d/mewyveNa+CDo6IDR9ZJg4l30yJPv4+oGubzOBtxYAu6
-         7tni376HxBaNSriiAGGM8DrhvdJvfPhpnev+3r9j9ABU5MwzGmrf5/jNNCumV3Y6lTK1
-         IjgL/nZuiT4VBzC7uvBJ3Gj+2IXpLUQdzxS+gHxOifnzVVyArqKkEpxe6MXn0E5QEAfc
-         LU8Q==
-X-Gm-Message-State: APjAAAV4i+o52hSvUPApOPtfgTXG8wJW8oZ+l8GoGw6OD549w2MHp+JW
-        EzWawhar80q16XOJ2KYOzZmtpFoeqdvnfkemlPI+3H4DcpzNXdKFM1HpdYdiozkitchJkgjTvZx
-        A1B0Xm0hMRUzjz5JNFWvxbzOAi7W9yYt5BqJnVRZo
-X-Received: by 2002:a19:22c4:: with SMTP id i187mr501156lfi.152.1571963286002;
-        Thu, 24 Oct 2019 17:28:06 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqym7fXeLAILTlm6k1G46RUJImDXCll6Wg9ol9S+dM0yK8R9moFI+ZU3df0ukjTnsrZDz4UD/s6A4arXkCsnm3c=
-X-Received: by 2002:a19:22c4:: with SMTP id i187mr501098lfi.152.1571963284768;
- Thu, 24 Oct 2019 17:28:04 -0700 (PDT)
+        Thu, 24 Oct 2019 20:36:10 -0400
+Received: from dread.disaster.area (pa49-181-161-154.pa.nsw.optusnet.com.au [49.181.161.154])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E39F73634F1;
+        Fri, 25 Oct 2019 11:36:04 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iNnaF-0007Qb-GX; Fri, 25 Oct 2019 11:36:03 +1100
+Date:   Fri, 25 Oct 2019 11:36:03 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Boaz Harrosh <boaz@plexistor.com>
+Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
+Message-ID: <20191025003603.GE4614@dread.disaster.area>
+References: <20191020155935.12297-1-ira.weiny@intel.com>
+ <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
+ <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
+ <20191023221332.GE2044@dread.disaster.area>
+ <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
+ <20191024073446.GA4614@dread.disaster.area>
+ <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
+ <20191024213508.GB4614@dread.disaster.area>
+ <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
 MIME-Version: 1.0
-References: <20191021200948.23775-1-mcroce@redhat.com> <20191021200948.23775-4-mcroce@redhat.com>
- <20191023100009.GC8732@netronome.com> <CAGnkfhxg1sXkmiNS-+H184omQaKbp_+_Sy7Vi-9W9qLwGGPU6g@mail.gmail.com>
- <20191023175522.GB28355@netronome.com>
-In-Reply-To: <20191023175522.GB28355@netronome.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Fri, 25 Oct 2019 02:27:28 +0200
-Message-ID: <CAGnkfhyEB0JU7LPZfYxHiKkryrkzoOs3Krumt1Lph+Q=qx1s8A@mail.gmail.com>
-Subject: Re: [PATCH net-next 3/4] flow_dissector: extract more ICMP information
-To:     Simon Horman <simon.horman@netronome.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>
-X-MC-Unique: VX937yK2O8WYHiayHRwYBA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=l3vQdJ1SkhDHY1nke8Lmag==:117 a=l3vQdJ1SkhDHY1nke8Lmag==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XobE76Q3jBoA:10
+        a=7-415B0cAAAA:8 a=wNVn5hzRuzmDeAh33toA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 7:55 PM Simon Horman <simon.horman@netronome.com> w=
-rote:
->
-> On Wed, Oct 23, 2019 at 12:53:37PM +0200, Matteo Croce wrote:
-> > On Wed, Oct 23, 2019 at 12:00 PM Simon Horman
-> > <simon.horman@netronome.com> wrote:
-> > > On Mon, Oct 21, 2019 at 10:09:47PM +0200, Matteo Croce wrote:
-> > > > +     switch (ih->type) {
-> > > > +     case ICMP_ECHO:
-> > > > +     case ICMP_ECHOREPLY:
-> > > > +     case ICMP_TIMESTAMP:
-> > > > +     case ICMP_TIMESTAMPREPLY:
-> > > > +     case ICMPV6_ECHO_REQUEST:
-> > > > +     case ICMPV6_ECHO_REPLY:
-> > > > +             /* As we use 0 to signal that the Id field is not pre=
-sent,
-> > > > +              * avoid confusion with packets without such field
-> > > > +              */
-> > > > +             key_icmp->id =3D ih->un.echo.id ? : 1;
-> > >
-> > > Its not obvious to me why the kernel should treat id-zero as a specia=
-l
-> > > value if it is not special on the wire.
-> > >
-> > > Perhaps a caller who needs to know if the id is present can
-> > > check the ICMP type as this code does, say using a helper.
-> > >
-> >
-> > Hi,
-> >
-> > The problem is that the 0-0 Type-Code pair identifies the echo replies.
-> > So instead of adding a bool is_present value I hardcoded the info in
-> > the ID field making it always non null, at the expense of a possible
-> > collision, which is harmless.
->
-> Sorry, I feel that I'm missing something here.
->
-> My reading of the code above is that for the cased types above
-> (echo, echo reply, ...) the id is present. Otherwise it is not.
-> My idea would be to put a check for those types in a helper.
->
+On Fri, Oct 25, 2019 at 02:29:04AM +0300, Boaz Harrosh wrote:
+> On 25/10/2019 00:35, Dave Chinner wrote:
+> > On Thu, Oct 24, 2019 at 05:05:45PM +0300, Boaz Harrosh wrote:
+> > This isn't a theoretical problem - this is exactly the race
+> > condition that lead us to disabling the flag in the first place.
+> > There is no serialisation between the read and write parts of the
+> > page fault iand the filesystem changing the DAX flag and ops vector,
+> > and so fixing this problem requires hold yet more locks in the
+> > filesystem path to completely lock out page fault processing on the
+> > inode's mapping.
+> > 
+> 
+> Again sorry that I do not explain very good.
+> 
+> Already on the read fault we populate the xarray,
 
-Something like icmp_has_id(), I like it.
+On a write fault we can have an empty xarray slot so the write fault
+needs to both populate the xarray slot (read fault) and process the
+write fault.
 
-> I do agree that the override you have used is harmless enough
-> in the context of the only user of the id which appears in
-> the following patch of this series.
->
->
-> Some other things I noticed in this patch on a second pass:
->
-> * I think you can remove the icmp field from struct flow_dissector_key_po=
-rts
->
+> My point was that if I want to set the DAX mode I must enforce that
+> there are no other parallel users on my inode. The check that the
+> xarray is empty is my convoluted way to check that there are no other
+> users except me. If xarray is not empty I bail out with EBUISY
 
-You mean flow_dissector_key_icmp maybe?
+Checking the xarray being empty is racy. The moment you drop the
+mapping lock, the page fault can populate a slot in the mapping that
+you just checked was empty. And then you swap the aops between the
+population and the ->page-mkwrite() call in the page fault
+that is running, and things go boom.
 
-> * I think that adding icmp to struct flow_keys should be accompanied by
->   adding ICMP to flow_keys_dissector_symmetric_keys. But I think this is
->   not desirable outside of the bonding use-case and rather
->   the bonding driver should define its own structures that
->   includes the keys it needs - basically copies of struct flow_keys
->   and flow_keys_dissector_symmetric_keys with some modifications.
->
+Unless there's something new in the page fault path that nobody has
+noticed in the past couple of years, this TOCTOU race hasn't been
+solved....
 
-Just flow_keys_dissector_symmetric_keys or flow_keys_dissector_keys too?
-Anyway, it seems that the bonding uses the flow_dissector only when
-using encap2+3 or encap3+4 hashing, which means decap some known
-tunnels (mpls and gre and pppoe I think).
-For the other modes it just uses iph_to_flow_copy_v{4,6}addrs() and
-skb_flow_get_ports(), so maybe we can avoid copying that structure.
+> Perhaps we always go by the directory. And then do an mv dir_DAX/foo dir_NODAX/foo
 
-> * Modifying flow_keys_have_l4 affects the behaviour of
->   skb_get_hash_flowi6() but there is not a corresponding update
->   to flow_keys_have_l4(). I didn't look at all the other call sites
->   but it strikes me that this is a) a wide-spread behavioural change
->   and b) is perhaps not required for the bond-use case.
+The inode is instatiated before the rename is run, so it's set up
+with it's old dir config, not the new one. So this ends up with the
+same problem of haivng to change the S_DAX flag and aops vector
+dynamically on rename. Same problem, not a solution.
 
-Right, no need to alter flow_keys_have_l4() at all.
+> to have an effective change. In hard links the first one at iget time before populating
+> the inode cache takes affect.
 
-I'll send a v2 with those suggestions.
+If something like a find or backup program brings the inode into
+cache, the app may not even get the behaviour it wants, and it can't
+change it until the inode is evicted from cache, which may be never.
+Nobody wants implicit/random/uncontrollable/unchangeable behaviour
+like this.
 
-Thanks,
---
-Matteo Croce
-per aspera ad upstream
+> (And never change the flag on the fly)
+> (Just brain storming here)
 
+We went over all this ground when we disabled the flag in the first
+place. We disabled the flag because we couldn't come up with a sane
+way to flip the ops vector short of tracking the number of aops
+calls in progress at any given time. i.e. reference counting the
+aops structure, but that's hard to do with a const ops structure,
+and so it got disabled rather than allowing users to crash
+kernels....
+
+Cheers,
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
