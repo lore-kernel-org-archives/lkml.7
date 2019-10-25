@@ -2,176 +2,182 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E72CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53B1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7277621D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF37B21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vDPFHIw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439996AbfJYOjE (ORCPT
+        id S2440048AbfJYOjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:39:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44867 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439966AbfJYOjE (ORCPT
+        Fri, 25 Oct 2019 10:39:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40661 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440001AbfJYOjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:39:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id s71so1750796oih.11;
-        Fri, 25 Oct 2019 07:39:03 -0700 (PDT)
+        Fri, 25 Oct 2019 10:39:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o49so3546349qta.7
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=slfEvGT57OxIu3hX85oZQaDrJpmEdiqRD6KlxrAV7aQ=;
+        b=vDPFHIw23VXT1K87qQNIYWSLV8YkofOSlB9fDCEHicyXkAy08DbZp0GhqWm+9iAPAr
+         fLPI1Pxq/EAuNpiUQY2U6tuTEp5G4qXp1IF6mfDSC81rlR5DxfcB6A98G7Q4kV0yOCoR
+         SKYgt1IFrwURKElP0Fnsl9iad5j9+IaGVmn8Q+Y2uH61Fo+WxkgvpeyU5o1QdnFhXzjS
+         54ZRt5xW69LE8F6RGP16YYg53hX7SRHWraWPRbOxIem76r0oMaZ983/vo7ZBRYvi+uXr
+         1SzOz2hipaJN76BG3FP++IZ5l0w1ZVct0AvXl6x9YqroOeZqv+12eOI5mssXwqDdWfc3
+         XB4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MmrkU0EyW6ekd74l62CZisDPM7UJaBUWbHdpWgDUhRc=;
-        b=P/ZaKQtVUQtPsJBR3LvKqInCe/v796yn8hfq0L0soz+WNvFnzxVzRTzIdCUIZUe1+h
-         1on/i6g8HB9HmfLwHmfKbaXr5d0HFOguaWRFiM98qBRnbC8rnSiLyYKVYJICdMwzCsLK
-         itm7YsUY73pJ/294mR8m2apSf1S+hNjcjqsqRqp0ug0tJ9bjOkNZ+PLdi1ElphINGkfR
-         dCYRqqUU0eRwFpIILukXG4lywm9rclzBBMlg4EcmfkAJ2lOYbxQ+WVD3hLYCBHMP88no
-         WVbiUEdcA3xAGk7wZOTfCp4INRMqu8uQ+gjs7ghnV3hA5egVWYg3rj53j7PyBaYWWHGW
-         C4wg==
-X-Gm-Message-State: APjAAAUBWP1tHzERBkxkx/6OTsADKwahWsBOVZs+9d4z3WRipzoyw3sr
-        K9bTNSRRR2VPRwI1tMvRSfMuSoPxn+LeyVQqfE0=
-X-Google-Smtp-Source: APXvYqwhRBxv9rM/yx1rcpTcB+QkajxAgUw7yDwGw6rzxQ2fmvIxjybPL4JMRVrqcbBtMQbzzKKpmFPIWK0NqnHKKg8=
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr3195975oii.153.1572014342793;
- Fri, 25 Oct 2019 07:39:02 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=slfEvGT57OxIu3hX85oZQaDrJpmEdiqRD6KlxrAV7aQ=;
+        b=rif0ddzKEXsIrXO2ZvZE8j0YQm+8Z+b67CrXK83Q+i6UXDfSHZJaiIa/YgJLtFnRTE
+         y1VGzRwSZdHoStXRFGZEPN2Y1Jo4BiaZlkArZm514eJdU3C577uK0dwsPuHDtDxnUTHQ
+         /LS71nKn/7Nh/xZZ7+XflfvUZZW7khSujUN62AP6qBabdXP+rMnv67fYDvPAYhBUT0dS
+         BmEckU5QVufNjUGwfryDQlgzQo17qxPaHfXWqEgsbmfj830H6zfltfBjqf/t9nwKh6dr
+         OjF+BOOqHavq5U6opZUuYqqZwmSQdbnf53L2zpG+d2RN4h2DXGEInD9OqqwJiNCpici3
+         IGdQ==
+X-Gm-Message-State: APjAAAVns5ZmAIGZj2fcOGaGRRvnV5IRurebFmnRDqTOhUhAeu7C3W+o
+        Say4CD8PiOFPKG2HkaMDLCw=
+X-Google-Smtp-Source: APXvYqyPI4wuOct1wJbBgzl8PbW7g3PBp2o6LEacmWROsLX5BKzTuan6Rx50fWUu6ft3NiEEOAsHHg==
+X-Received: by 2002:aed:2986:: with SMTP id o6mr3204630qtd.320.1572014353350;
+        Fri, 25 Oct 2019 07:39:13 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id z12sm1355387qkg.97.2019.10.25.07.39.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 07:39:12 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AECB941199; Fri, 25 Oct 2019 11:39:10 -0300 (-03)
+Date:   Fri, 25 Oct 2019 11:39:10 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH 3/6] perf/probe: Fix to probe an inline function
+ which has no entry pc
+Message-ID: <20191025143910.GC15617@kernel.org>
+References: <157199317547.8075.1010940983970397945.stgit@devnote2>
+ <157199320336.8075.16189530425277588587.stgit@devnote2>
+ <20191025143513.GB15617@kernel.org>
 MIME-Version: 1.0
-References: <20190705164221.4462-1-robh@kernel.org> <20190705164221.4462-2-robh@kernel.org>
- <CAMuHMdW86UOVp5vjdFBzjbqsG_wemjZ77LyVnc+oZ6ZDccv_cA@mail.gmail.com> <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 25 Oct 2019 16:38:51 +0200
-Message-ID: <CAMuHMdU-ubE9y3V9W_ij5OFyxNLu0LmdrH88=vkkr6uSAJrTPA@mail.gmail.com>
-Subject: Re: [PATCH v3 01/13] dt-bindings: display: Convert common panel
- bindings to DT schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025143513.GB15617@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Em Fri, Oct 25, 2019 at 11:35:13AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Oct 25, 2019 at 05:46:43PM +0900, Masami Hiramatsu escreveu:
+> > Fix perf probe to probe an inlne function which has no entry pc
+> > or low pc but only has ranges attribute.
+> > 
+> > This seems very rare case, but I could find a few examples, as
+> > same as probe_point_search_cb(), use die_entrypc() to get the
+> > entry address in probe_point_inline_cb() too.
+> > 
+> > Without this patch,
+> >   # tools/perf/perf probe -D __amd_put_nb_event_constraints
+> >   Failed to get entry address of __amd_put_nb_event_constraints.
+> >   Probe point '__amd_put_nb_event_constraints' not found.
+> >     Error: Failed to add events.
+> > 
+> > With this patch,
+> >   # tools/perf/perf probe -D __amd_put_nb_event_constraints
+> >   p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
+> 
+> Here I got it slightly different:
+> 
+> Before:
+> 
+>   [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+>   Failed to get entry address of __amd_put_nb_event_constraints.
+>   Probe point '__amd_put_nb_event_constraints' not found.
+>     Error: Failed to add events.
+>   [root@quaco ~]#
+> 
+> After:
+> 
+>   [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+>   p:probe/__amd_put_nb_event_constraints _text+33789
+>   [root@quaco ~]#
+> 
+> 
+> ----
+> 
+> I'm now checking if this is because I applied patch 4/6 before 3/6
 
-On Fri, Oct 25, 2019 at 4:25 PM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Oct 25, 2019 at 8:07 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Fri, Jul 5, 2019 at 6:46 PM Rob Herring <robh@kernel.org> wrote:
-> > > Convert the common panel bindings to DT schema consolidating scattered
-> > > definitions to a single schema file.
-> > >
-> > > The 'simple-panel' binding just a collection of properties and not a
-> > > complete binding itself. All of the 'simple-panel' properties are
-> > > covered by the panel-common.txt binding with the exception of the
-> > > 'no-hpd' property, so add that to the schema.
-> > >
-> > > As there are lots of references to simple-panel.txt, just keep the file
-> > > with a reference to common.yaml for now until all the bindings are
-> > > converted.
-> > >
-> > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Cc: dri-devel@lists.freedesktop.org
-> > > Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> > > Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > Reviewed-by: Thierry Reding <treding@nvidia.com>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> >
-> > This is now commit 821a1f7171aeea5e ("dt-bindings: display: Convert
-> > common panel bindings to DT schema").
-> >
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> >
-> > > +  backlight:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > +    description:
-> > > +      For panels whose backlight is controlled by an external backlight
-> > > +      controller, this property contains a phandle that references the
-> > > +      controller.
-> >
-> > This paragraph seems to apply to all nodes named "backlight", causing
-> > e.g. (for ARCH=arm mach_shmobile_defconfig) "make dtbs_check
-> > DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/panel-common.yaml"
-> > to start complaining:
-> >
-> >     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
-> > {'compatible': ['pwm-backlight'], 'pwms': [[40, 2, 33333, 1]],
-> > 'brightness-levels': [[0, 1, 2, 4, 8, 16, 32, 64, 128, 255]],
-> > 'default-brightness-level': [[9]], 'pinctrl-0': [[41]],
-> > 'pinctrl-names': ['default'], 'power-supply': [[42]], 'enable-gpios':
-> > [[15, 61, 0]]} is not of type 'array'
-> >     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
-> > {'groups': ['tpu0_to2_1'], 'function': ['tpu0'], 'phandle': [[41]]} is
-> > not of type 'array'
-> >
-> > Do you know what's wrong?
->
-> I'm not seeing that. What does .../bindings/processed-schema.yaml look like?
+Nope, even then:
 
-I see it with both next-20191015 and v5.4-rc4.
+[root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+p:probe/__amd_put_nb_event_constraints _text+33789
+[root@quaco ~]# grep __amd_put_nb_event_constraints /proc/kallsyms
+[root@quaco ~]#
 
-- $filename: /scratch/geert/linux/linux-next/Documentation/devicetree/bindings/display/panel/panel-common.yaml
-  $id: http://devicetree.org/schemas/display/panel/panel-common.yaml#
-  $schema: http://devicetree.org/meta-schemas/core.yaml#
-  dependencies:
-    height-mm: [width-mm]
-    width-mm: [height-mm]
-  patternProperties: {'pinctrl-[0-9]+': true}
-  properties:
-    $nodename: true
-    backlight: {$ref: /schemas/types.yaml#/definitions/phandle}
-    ddc-i2c-bus: {$ref: /schemas/types.yaml#/definitions/phandle}
-    enable-gpios: {maxItems: 1, minItems: 1}
-    height-mm: {}
-    label: {}
-    no-hpd: {type: boolean}
-    panel-timing: {type: object}
-    phandle: true
-    pinctrl-names: true
-    port: {type: object}
-    ports: {type: object}
-    power-supply: {}
-    reset-gpios: {maxItems: 1, minItems: 1}
-    rotation:
-      allOf:
-      - {$ref: /schemas/types.yaml#/definitions/uint32}
-      - additionalItems: false
-        items:
-          additionalItems: false
-          items:
-            enum: [0, 90, 180, 270]
-          maxItems: 1
-          minItems: 1
-          type: array
-        maxItems: 1
-        minItems: 1
-        type: array
-    status: true
-    width-mm: {}
-  select:
-    properties: {$nodename: true}
-    required: [$nodename]
-  title: Common Properties for Display Panels
+Ok, maybe this may help:
 
-Gr{oetje,eeting}s,
+[root@quaco ~]# perf probe -v -D __amd_put_nb_event_constraints |& grep vmlinux
+Looking at the vmlinux_path (8 entries long)
+Using /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux for symbols
+Open Debuginfo file: /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux
+[root@quaco ~]#
 
-                        Geert
+[root@quaco ~]# readelf -wi /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux | grep __amd_put_nb_event_constraints -B1 -A7
+ <1><192640>: Abbrev Number: 123 (DW_TAG_subprogram)
+    <192641>   DW_AT_name        : (indirect string, offset: 0x299576): __amd_put_nb_event_constraints
+    <192645>   DW_AT_decl_file   : 1
+    <192646>   DW_AT_decl_line   : 361
+    <192648>   DW_AT_decl_column : 13
+    <192649>   DW_AT_prototyped  : 1
+    <192649>   DW_AT_inline      : 1	(inlined)
+    <19264a>   DW_AT_sibling     : <0x192700>
+ <2><19264e>: Abbrev Number: 38 (DW_TAG_formal_parameter)
+^C
+[root@quaco ~]#
+
+Continuing to process the other patches...
+
+- Arnaldo
+  
+> > Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  tools/perf/util/probe-finder.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> > index 71633f55f045..2fa932bcf960 100644
+> > --- a/tools/perf/util/probe-finder.c
+> > +++ b/tools/perf/util/probe-finder.c
+> > @@ -930,7 +930,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
+> >  		ret = find_probe_point_lazy(in_die, pf);
+> >  	else {
+> >  		/* Get probe address */
+> > -		if (dwarf_entrypc(in_die, &addr) != 0) {
+> > +		if (die_entrypc(in_die, &addr) != 0) {
+> >  			pr_warning("Failed to get entry address of %s.\n",
+> >  				   dwarf_diename(in_die));
+> >  			return -ENOENT;
+> 
+> -- 
+> 
+> - Arnaldo
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+- Arnaldo
