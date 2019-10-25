@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494FBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA76CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D33C21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEACC21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732945AbfJYSIe (ORCPT
+        id S1732875AbfJYSI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:34 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46786 "EHLO
+        Fri, 25 Oct 2019 14:08:29 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46914 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731436AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731497AbfJYSFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:44 -0400
+        Fri, 25 Oct 2019 14:05:45 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0008Ok-JQ; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xv-0008OP-QL; Fri, 25 Oct 2019 19:05:35 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001jK-R8; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xv-0001ib-DM; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Brian Norris" <briannorris@chromium.org>
-Date:   Fri, 25 Oct 2019 19:03:24 +0100
-Message-ID: <lsq.1572026582.851152814@decadent.org.uk>
+        "Lukas Wunner" <lukas@wunner.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>
+Date:   Fri, 25 Oct 2019 19:03:15 +0100
+Message-ID: <lsq.1572026582.9790124@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 23/47] mwifiex: fix 802.11n/WPA detection
+Subject: [PATCH 3.16 14/47] PCI: Do not poll for PME if the device is in
+ D3cold
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,50 +57,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Brian Norris <briannorris@chromium.org>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit df612421fe2566654047769c6852ffae1a31df16 upstream.
+commit 000dd5316e1c756a1c028f22e01d06a38249dd4d upstream.
 
-Commit 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant
-vendor IEs") adjusted the ieee_types_vendor_header struct, which
-inadvertently messed up the offsets used in
-mwifiex_is_wpa_oui_present(). Add that offset back in, mirroring
-mwifiex_is_rsn_oui_present().
+PME polling does not take into account that a device that is directly
+connected to the host bridge may go into D3cold as well. This leads to a
+situation where the PME poll thread reads from a config space of a
+device that is in D3cold and gets incorrect information because the
+config space is not accessible.
 
-As it stands, commit 63d7ef36103d breaks compatibility with WPA (not
-WPA2) 802.11n networks, since we hit the "info: Disable 11n if AES is
-not supported by AP" case in mwifiex_is_network_compatible().
+Here is an example from Intel Ice Lake system where two PCIe root ports
+are in D3cold (I've instrumented the kernel to log the PMCSR register
+contents):
 
-Fixes: 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant vendor IEs")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filenames, context]
+  [   62.971442] pcieport 0000:00:07.1: Check PME status, PMCSR=0xffff
+  [   62.971504] pcieport 0000:00:07.0: Check PME status, PMCSR=0xffff
+
+Since 0xffff is interpreted so that PME is pending, the root ports will
+be runtime resumed. This repeats over and over again essentially
+blocking all runtime power management.
+
+Prevent this from happening by checking whether the device is in D3cold
+before its PME status is read.
+
+Fixes: 71a83bd727cc ("PCI/PM: add runtime PM support to PCIe port")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/mwifiex/main.h | 1 +
- drivers/net/wireless/mwifiex/scan.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/wireless/mwifiex/main.h
-+++ b/drivers/net/wireless/mwifiex/main.h
-@@ -94,6 +94,7 @@ enum {
- 
- #define MWIFIEX_MIN_TX_PENDING_TO_CANCEL_SCAN		2
- 
-+#define WPA_GTK_OUI_OFFSET				2
- #define RSN_GTK_OUI_OFFSET				2
- 
- #define MWIFIEX_OUI_NOT_PRESENT			0
---- a/drivers/net/wireless/mwifiex/scan.c
-+++ b/drivers/net/wireless/mwifiex/scan.c
-@@ -151,7 +151,8 @@ mwifiex_is_wpa_oui_present(struct mwifie
- 	if (((bss_desc->bcn_wpa_ie) &&
- 	     ((*(bss_desc->bcn_wpa_ie)).vend_hdr.element_id ==
- 	      WLAN_EID_VENDOR_SPECIFIC))) {
--		iebody = (struct ie_body *) bss_desc->bcn_wpa_ie->data;
-+		iebody = (struct ie_body *)((u8 *)bss_desc->bcn_wpa_ie->data +
-+					    WPA_GTK_OUI_OFFSET);
- 		oui = &mwifiex_wpa_oui[cipher][0];
- 		ret = mwifiex_search_oui_in_ie(iebody, oui);
- 		if (ret)
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1680,6 +1680,13 @@ static void pci_pme_list_scan(struct wor
+ 			 */
+ 			if (bridge && bridge->current_state != PCI_D0)
+ 				continue;
++			/*
++			 * If the device is in D3cold it should not be
++			 * polled either.
++			 */
++			if (pme_dev->dev->current_state == PCI_D3cold)
++				continue;
++
+ 			pci_pme_wakeup(pme_dev->dev, NULL);
+ 		} else {
+ 			list_del(&pme_dev->list);
 
