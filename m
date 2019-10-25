@@ -2,213 +2,119 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F548CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A7ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A3C21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IC9iJxwh"
+	by mail.kernel.org (Postfix) with ESMTP id B805921D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571996695;
+	bh=q1UznsEKUTO8DreF7BRcK2/bVfkBTIWE2k+BAoSlRi0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Tnwpo/ImG21MLiuk4Hp0lWAFQQ2rK+CBJGk3h0Q/TOw52VZUj0QoFHBxmV/f8JK7+
+	 ZVMiY+DLmENneJL/xXacm8F9XPv2l3vxHXMJzOB9Kpa961d2hHBq4pYe5tqX/eonXn
+	 YgvBUNEIj+e0AIz7tf9UtdIR7k+/QevB1ArLyYHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438987AbfJYJop (ORCPT
+        id S2439037AbfJYJoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:44:45 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:40436 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393305AbfJYJoo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:44:44 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191025094442epoutp013d75578645b6d3151b6fedc0df36f7a9~Q2qd3bEFj1660016600epoutp01O
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 09:44:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191025094442epoutp013d75578645b6d3151b6fedc0df36f7a9~Q2qd3bEFj1660016600epoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1571996682;
-        bh=qpeQGHpxGTrmxefBXovAYXXe5I6YU+tTKK2JRPeQ7Ho=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=IC9iJxwhrT/9TAFYrxP7yrAhHKYTmT97JO3LjRwwHMhY0NPM20joDdOP3BUngUlxn
-         Saa8NFM4KcXiC3ion3h3ulE50zexfT8+6ajlHiRhgjVWfpLdzYRRzML5Bh4YlPkhLI
-         c9z6hqDejSZls7+qL2JUjC7ye1QeeQ/ML5uc/6Os=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20191025094442epcas5p2b383af783c4ba04b78dac81bedbacc25~Q2qdPUgiY1583915839epcas5p2C;
-        Fri, 25 Oct 2019 09:44:42 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4B.51.20293.904C2BD5; Fri, 25 Oct 2019 18:44:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191025094441epcas5p2bb257b84247491740cb08c788848327e~Q2qc_Rog_1583815838epcas5p2B;
-        Fri, 25 Oct 2019 09:44:41 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191025094441epsmtrp1a501d839d33d9aeb9c000b7b9d03aecb~Q2qc3u4jh1550015500epsmtrp1y;
-        Fri, 25 Oct 2019 09:44:41 +0000 (GMT)
-X-AuditID: b6c32a49-ffbff70000014f45-62-5db2c4098fba
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        44.F9.24756.904C2BD5; Fri, 25 Oct 2019 18:44:41 +0900 (KST)
-Received: from pankjsharma02 (unknown [107.111.84.17]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191025094439epsmtip2f78fc60f334b42c73cd3ce41043930ae~Q2qa6z1ty1329513295epsmtip2s;
-        Fri, 25 Oct 2019 09:44:39 +0000 (GMT)
-From:   "pankj.sharma" <pankj.sharma@samsung.com>
-To:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wg@grandegger.com>,
-        <mkl@pengutronix.de>
-Cc:     <davem@davemloft.net>, <eugen.hristev@microchip.com>,
-        <ludovic.desroches@microchip.com>, <pankaj.dubey@samsung.com>,
-        <rcsekar@samsung.com>, <jhofstee@victronenergy.com>,
-        <simon.horman@netronome.com>,
-        "'Sriram Dash'" <sriram.dash@samsung.com>
-In-Reply-To: <1571660016-29726-1-git-send-email-pankj.sharma@samsung.com>
-Subject: RE: [PATCH v2] can: m_can: add support for handling arbitration
- error
-Date:   Fri, 25 Oct 2019 15:14:38 +0530
-Message-ID: <000101d58b18$d3178e70$7946ab50$@samsung.com>
+        Fri, 25 Oct 2019 05:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438753AbfJYJoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:44:54 -0400
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C77121D7B;
+        Fri, 25 Oct 2019 09:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571996693;
+        bh=q1UznsEKUTO8DreF7BRcK2/bVfkBTIWE2k+BAoSlRi0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=j+4cL/VoDsMzQnNkvnWFhzyhskY08i846+9LMot9YhK5Si2KUxJomhBF7ay8BnXAf
+         oqAIGsXK+pMPjEkVcK49yAL2m7EjsSdVpc9rexdQZGi02Hy4P1NpHjWNUQx5q7oWVX
+         Jlg5ZvB94p6aFLiUaTA4BS+HKvumJ9FhRte/EFY0=
+Received: by mail-lj1-f175.google.com with SMTP id a22so1987535ljd.0;
+        Fri, 25 Oct 2019 02:44:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAXiv030t4yoPoDNs38/6uD9B6zomXoYzlHrqprrsi+hoKBlVBGI
+        EW8u+bNYvnNGDWVYCdsDg4L4p8RzFEfRKnEoNLA=
+X-Google-Smtp-Source: APXvYqwl+DBfLhBQ3kOA031iJfAqOQBIuEDEfqQNNhf7s01GbbN0ZPVErIek93n4uOnjRPsK+uuAcxbVUt9hgJE7Qb8=
+X-Received: by 2002:a2e:9e85:: with SMTP id f5mr1545540ljk.235.1571996691460;
+ Fri, 25 Oct 2019 02:44:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI3yvUU2phHfNfUXWQjh97goU7vHgHmcqhyppdn9mA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGKsWRmVeSWpSXmKPExsWy7bCmhi7XkU2xBof3M1rMOd/CYnHgx3EW
-        ixXv97FarPo+ldni8q45bBYv1l5ntVi/aAqLxbEFYhaLtn5ht5h1YQerxY2dnBY31rNbLL23
-        k9WB12PLyptMHh8v3Wb0uPNjKaPH9O6HzB79fw08+rasYvT4vEnOY9LBD+wBHFFcNimpOZll
-        qUX6dglcGX+3f2MseCJRMfnoc/YGxpUiXYycHBICJhJXOj+wdTFycQgJ7GaUOH10HjuE84lR
-        YsbztcwgVUIC3xgl3mzWgunYfWofVNFeRonpyyexQjivGSXatr9iA6liE9CXmNL0lwUkISLQ
-        xihx89FBMIdZ4DfQqMvbWUCqOAU8JRZffM4KYgsLBEi0L1jADmKzCKhKnJ+2BmwSr4ClROPZ
-        d6wQtqDEyZlPwHqZBbQlli18zQxxk4LEz6fLwGpEBKwkTr27yghRIy7x8ugRsFslBNaxS3Rs
-        ecQE0eAice0OTLOwxKvjW9ghbCmJl/1tUHa2xMLd/UDLOIDsCom2GcIQYXuJA1fmgIWZBTQl
-        1u/Sh1jFJ9H7+wkTRDWvREebEES1msTUp+8YIWwZiTuPNrNB2B4Sr9/MY53AqDgLyWOzkDw2
-        C8kDsxCWLWBkWcUomVpQnJueWmxaYJiXWq5XnJhbXJqXrpecn7uJEZzatDx3MM4653OIUYCD
-        UYmH90X/xlgh1sSy4srcQ4wSHMxKIry71YBCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeSexXo0R
-        EkhPLEnNTk0tSC2CyTJxcEo1MB5e+KXoq+OPos5q9gcuHB/vJi29I39MfaK5v//PK996fisv
-        t/A0/92v8WFBiFL+5INqurOnbhR7Nldh5c81jsu2lfSHr23PCj8VKzd1GcMpu1srmk1sHKbG
-        hars6evUcP9UFtixS8t+Zk1Pn5qR1cKIpg/r+XpmeHXHrmZkTHh34lSsDSuLoxJLcUaioRZz
-        UXEiAD7xcgVpAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsWy7bCSvC7nkU2xBqfvKljMOd/CYnHgx3EW
-        ixXv97FarPo+ldni8q45bBYv1l5ntVi/aAqLxbEFYhaLtn5ht5h1YQerxY2dnBY31rNbLL23
-        k9WB12PLyptMHh8v3Wb0uPNjKaPH9O6HzB79fw08+rasYvT4vEnOY9LBD+wBHFFcNimpOZll
-        qUX6dglcGftW3Gcv6JWo+HZ8BksD4wXhLkZODgkBE4ndp/axdzFycQgJ7GaU6Gq8wtTFyAGU
-        kJFY/LkaokZYYuW/51A1LxklFp6cwAaSYBPQl5jS9JcFxBYR6GGUeHwzCKSIWaCZSeL26yOs
-        IAkhgVmMEkc6HUFsTgFPicUXn4PFhQX8JPYs3MAIYrMIqEqcn7YGbCivgKVE49l3rBC2oMTJ
-        mU/AFjALaEs8vfkUzl628DUzxHUKEj+fLmOFOMJK4tS7q4wQNeISL48eYZ/AKDwLyahZSEbN
-        QjJqFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxgiNUS3MH4+Ul8YcYBTgY
-        lXh4X/RvjBViTSwrrsw9xCjBwawkwrtbDSjEm5JYWZValB9fVJqTWnyIUZqDRUmc92nesUgh
-        gfTEktTs1NSC1CKYLBMHp1QDY/3zJ59l926q3nn8/HcdUW7hZU/0o94W23UcMDARPF/JUrOn
-        Kkhng4XI3Btx/EKvJmbP41p/U/NFUJlCuon3nKuV6wQVFpin/z72N47F+av6mYeHnOb2XHh/
-        T3zF7Htvfx5OdTNZ/flJ2/pKJ8E6jsMT7v18t2HJg6OM9jvlZi+M/lI+a/Lv26FKLMUZiYZa
-        zEXFiQC1ZnzvzAIAAA==
-X-CMS-MailID: 20191025094441epcas5p2bb257b84247491740cb08c788848327e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191021121350epcas5p3313e54a3bc5c8600c52a6db299893f78
-References: <CGME20191021121350epcas5p3313e54a3bc5c8600c52a6db299893f78@epcas5p3.samsung.com>
-        <1571660016-29726-1-git-send-email-pankj.sharma@samsung.com>
+References: <20191025085617.23132-1-ribalda@kernel.org> <20191025094319.GO5433@paasikivi.fi.intel.com>
+In-Reply-To: <20191025094319.GO5433@paasikivi.fi.intel.com>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Fri, 25 Oct 2019 11:44:35 +0200
+X-Gmail-Original-Message-ID: <CAPybu_34jx0HBjnpS8hbwYniymG_E+SGf+ezZAusYhKhHqPEBQ@mail.gmail.com>
+Message-ID: <CAPybu_34jx0HBjnpS8hbwYniymG_E+SGf+ezZAusYhKhHqPEBQ@mail.gmail.com>
+Subject: Re: [PATCH v3] Documentation: media: *_DEFAULT targets for subdevs
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gentle Ping=21
+No, I am retarded on friday :)
 
-> From: Pankaj Sharma <pankj.sharma=40samsung.com>
-> Subject: =5BPATCH v2=5D can: m_can: add support for handling arbitration =
-error
->=20
-> The Bosch MCAN hardware (3.1.0 and above) supports interrupt flag to dete=
-ct
-> Protocol error in arbitration phase.
->=20
-> Transmit error statistics is currently not updated from the MCAN driver.
-> Protocol error in arbitration phase is a TX error and the network statist=
-ics should
-> be updated accordingly.
->=20
-> The member =22tx_error=22 of =22struct net_device_stats=22 should be incr=
-emented as
-> arbitration is a transmit protocol error. Also =22arbitration_lost=22 of =
-=22struct
-> can_device_stats=22 should be incremented to report arbitration lost.
->=20
-> Signed-off-by: Pankaj Sharma <pankj.sharma=40samsung.com>
-> Signed-off-by: Sriram Dash <sriram.dash=40samsung.com>
-> ---
->=20
-> changes in v2:
-> - common m_can_ prefix for is_protocol_err function
-> - handling stats even if the allocation of the skb fails
-> - resolving build errors on net-next branch
->=20
->  drivers/net/can/m_can/m_can.c =7C 37
-> +++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->=20
-> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.=
-c
-> index 75e7490c4299..a736297a875f 100644
-> --- a/drivers/net/can/m_can/m_can.c
-> +++ b/drivers/net/can/m_can/m_can.c
-> =40=40 -778,6 +778,38 =40=40 static inline bool is_lec_err(u32 psr)
->  	return psr && (psr =21=3D LEC_UNUSED);
->  =7D
->=20
-> +static inline bool m_can_is_protocol_err(u32 irqstatus) =7B
-> +	return irqstatus & IR_ERR_LEC_31X;
-> +=7D
-> +
-> +static int m_can_handle_protocol_error(struct net_device *dev, u32
-> +irqstatus) =7B
-> +	struct net_device_stats *stats =3D &dev->stats;
-> +	struct m_can_classdev *cdev =3D netdev_priv(dev);
-> +	struct can_frame *cf;
-> +	struct sk_buff *skb;
-> +
-> +	/* propagate the error condition to the CAN stack */
-> +	skb =3D alloc_can_err_skb(dev, &cf);
-> +	if (unlikely(=21skb)) =7B
-> +		netdev_dbg(dev, =22allocation of skb failed=5Cn=22);
-> +		stats->tx_errors++;
-> +		return 0;
-> +	=7D
-> +	if (cdev->version >=3D 31 && (irqstatus & IR_PEA)) =7B
-> +		netdev_dbg(dev, =22Protocol error in Arbitration fail=5Cn=22);
-> +		stats->tx_errors++;
-> +		cdev->can.can_stats.arbitration_lost++;
-> +		cf->can_id =7C=3D CAN_ERR_LOSTARB;
-> +		cf->data=5B0=5D =7C=3D CAN_ERR_LOSTARB_UNSPEC;
-> +	=7D
-> +
-> +	netif_receive_skb(skb);
-> +
-> +	return 1;
-> +=7D
-> +
->  static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus=
-,
->  				   u32 psr)
->  =7B
-> =40=40 -792,6 +824,11 =40=40 static int m_can_handle_bus_errors(struct ne=
-t_device
-> *dev, u32 irqstatus,
->  	    is_lec_err(psr))
->  		work_done +=3D m_can_handle_lec_err(dev, psr & LEC_UNUSED);
->=20
-> +	/* handle protocol errors in arbitration phase */
-> +	if ((cdev->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
-> +	    m_can_is_protocol_err(irqstatus))
-> +		work_done +=3D m_can_handle_protocol_error(dev, irqstatus);
-> +
->  	/* other unproccessed error interrupts */
->  	m_can_handle_other_err(dev, irqstatus);
->=20
+Sorry about that
+
+On Fri, Oct 25, 2019 at 11:43 AM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> On Fri, Oct 25, 2019 at 10:56:16AM +0200, Ricardo Ribalda Delgado wrote:
+> > Some sensors have optical blanking areas, this is, pixels that are
+> > painted and do not account for light, only noise.
+> >
+> > These special pixels are very useful for calibrating the sensor, but
+> > should not be displayed on a DEFAULT target.
+> >
+> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >  Documentation/media/uapi/v4l/v4l2-selection-targets.rst | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> > index f74f239b0510..a69571308a45 100644
+> > --- a/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> > +++ b/Documentation/media/uapi/v4l/v4l2-selection-targets.rst
+> > @@ -38,8 +38,10 @@ of the two interfaces they are used.
+> >      * - ``V4L2_SEL_TGT_CROP_DEFAULT``
+> >        - 0x0001
+> >        - Suggested cropping rectangle that covers the "whole picture".
+> > +        This includes only active pixels and excludes other non-active
+> > +        pixels such as black pixels.
+> > +      - Yes
+> >        - Yes
+> > -      - No
+> >      * - ``V4L2_SEL_TGT_CROP_BOUNDS``
+> >        - 0x0002
+> >        - Bounds of the crop rectangle. All valid crop rectangles fit inside
+> > @@ -60,8 +62,8 @@ of the two interfaces they are used.
+> >      * - ``V4L2_SEL_TGT_COMPOSE_DEFAULT``
+> >        - 0x0101
+> >        - Suggested composition rectangle that covers the "whole picture".
+> > -      - Yes
+> >        - No
+> > +      - Yes
+>
+> Was this intended?
+>
+> v4?
+>
+> >      * - ``V4L2_SEL_TGT_COMPOSE_BOUNDS``
+> >        - 0x0102
+> >        - Bounds of the compose rectangle. All valid compose rectangles fit
+>
 > --
-> 2.17.1
-
-
+> Sakari Ailus
