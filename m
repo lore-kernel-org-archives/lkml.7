@@ -2,121 +2,109 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A515CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CB8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAEC222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012065;
-	bh=+F0pkVj7I5n+RegaCo0C9K6X3YZYlP9VUdh+KIbm/AQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpnfUSqpFu3zov6a83ma00XuxafFjgbPt9SS0FQWrnQ5+CKBOrOK3DEmxDFULpD9t
-	 y1ZBVIB8VaDLtDOXKUW1Pp60LtCr7wugmUdpYr28KL6Qo5FvNMgTMOW1x7uzTcNZ5w
-	 i2BUo17HP8g5XUwe1UTFvXfg1KfdP7K7ZqTL/l9A=
+	by mail.kernel.org (Postfix) with ESMTP id 9DD70222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dTbh5kRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394924AbfJYOBE (ORCPT
+        id S2394938AbfJYOBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505586AbfJYN6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:30 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D88121E6F;
-        Fri, 25 Oct 2019 13:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011910;
-        bh=+F0pkVj7I5n+RegaCo0C9K6X3YZYlP9VUdh+KIbm/AQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmyIfyo9Kwo6QCcMXgvxYwfvwpR2D+eZYzt5NT6/gIZzGiBPlOdPZjHcRtmtJCxc5
-         X3I50nFe3qmkW3e7XSJGyCSYh9C1POftIG3YJc6jznM+UlJ0UMCevLImp96SedytmI
-         CqY9nHZBJ43EAFnhjNOWYBnpCGUBLL9RtSVe+/Zc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chandan Rajendra <chandan@linux.ibm.com>,
-        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/20] jbd2: flush_descriptor(): Do not decrease buffer head's ref count
-Date:   Fri, 25 Oct 2019 09:57:54 -0400
-Message-Id: <20191025135801.25739-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
-References: <20191025135801.25739-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Fri, 25 Oct 2019 10:01:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36189 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394907AbfJYOBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:01:02 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u16so1864833lfq.3
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=e7m0bUbtXBnv2hG0jP20Z7UVOAvXLu5pS/p16iFFTtw=;
+        b=dTbh5kRFKAeUJ02fzEg55m56Or2mkpSYde3jDq4pzWcZwd6/SrI4odBoyFcvBrKJad
+         MhcMpgr3O0oAZZi3DXy8C0rzsg1+6LGICBjQjKU9L00oBicm1Z89mTIIXksUId9S1nrk
+         f0ixzXz/Y1sx/3389MQyaVOt7o0opef11dj2UdvvbBPYnplJrsC/0VDqJ6NTQNo3L0iu
+         t7yKps03RIs8WKtfmgDnJx//L7LHMLWvUXeEMbDR3ZWw4zmUjuz8pdCI0eiPyMU/zoQq
+         fgvKgJJAa95yE98rAMyuhS+Swp+ffMkPcZ3ANDoHaotRv6M0wyQfAxr7PL7oQu8sazyp
+         QDcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=e7m0bUbtXBnv2hG0jP20Z7UVOAvXLu5pS/p16iFFTtw=;
+        b=gkYOQfhV0Yt1abgtpO46woh2gyyQQ5qc/9bJDXeERBXiYy+RL/jgPOsze57xEWavM4
+         a2ze8HNbI8NsMyGFpImjZ48XBkxrnpEq889WxlN/Bebp8twhOhA/IUhEmfUcyMXJDaCu
+         IDgJAPVnkQMgdZu7aVWHD85+75/Lq/Akk5izDTrzMiy0Bp+S430RVtNsGjzFa4N7gcU1
+         PkqyCwKyCLh6hP4NkKY9Xx03AJ3IOYXq91zkGUzHXEsY1D5EMFxxwNFP7nw5oSP5k7zq
+         P1pBID/lHeUrAYHUtMuwgx90qKTUGvuzXMTQuV5h0BUtObITuH48d/9rf5dVA7J5CfSZ
+         haoQ==
+X-Gm-Message-State: APjAAAWhAz05zlzkyvGVnp6WxEFCNwmqXlcuOfVSj7+/8NOlsyDDhk8h
+        JtW0gvHNq9Sf5jNpwMNmB0WwQQ==
+X-Google-Smtp-Source: APXvYqzUu4gv63DpUe1KdnUYahz+kl9nNDKPV19VnKiZ/1tr8k6IFuBIcP79aFsZaoepqv8RnWLI1Q==
+X-Received: by 2002:ac2:5108:: with SMTP id q8mr2996751lfb.150.1572012059852;
+        Fri, 25 Oct 2019 07:00:59 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id x17sm811970lji.62.2019.10.25.07.00.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 07:00:59 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.4-rc5
+Date:   Fri, 25 Oct 2019 16:00:58 +0200
+Message-Id: <20191025140058.10668-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chandan Rajendra <chandan@linux.ibm.com>
+Hi Linus,
 
-[ Upstream commit 547b9ad698b434eadca46319cb47e5875b55ef03 ]
+Here's a PR with a couple of MMC fixes intended for v5.4-rc5. Details about the
+highlights are as usual found in the signed tag.
 
-When executing generic/388 on a ppc64le machine, we notice the following
-call trace,
+Please pull this in!
 
-VFS: brelse: Trying to free free buffer
-WARNING: CPU: 0 PID: 6637 at /root/repos/linux/fs/buffer.c:1195 __brelse+0x84/0xc0
+Kind regards
+Ulf Hansson
 
-Call Trace:
- __brelse+0x80/0xc0 (unreliable)
- invalidate_bh_lru+0x78/0xc0
- on_each_cpu_mask+0xa8/0x130
- on_each_cpu_cond_mask+0x130/0x170
- invalidate_bh_lrus+0x44/0x60
- invalidate_bdev+0x38/0x70
- ext4_put_super+0x294/0x560
- generic_shutdown_super+0xb0/0x170
- kill_block_super+0x38/0xb0
- deactivate_locked_super+0xa4/0xf0
- cleanup_mnt+0x164/0x1d0
- task_work_run+0x110/0x160
- do_notify_resume+0x414/0x460
- ret_from_except_lite+0x70/0x74
 
-The warning happens because flush_descriptor() drops bh reference it
-does not own. The bh reference acquired by
-jbd2_journal_get_descriptor_buffer() is owned by the log_bufs list and
-gets released when this list is processed. The reference for doing IO is
-only acquired in write_dirty_buffer() later in flush_descriptor().
+The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
 
-Reported-by: Harish Sriram <harish@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Chandan Rajendra <chandan@linux.ibm.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/jbd2/revoke.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
 
-diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
-index 3cd73059da9a4..bf2e164d341aa 100644
---- a/fs/jbd2/revoke.c
-+++ b/fs/jbd2/revoke.c
-@@ -637,10 +637,8 @@ static void flush_descriptor(journal_t *journal,
- {
- 	jbd2_journal_revoke_header_t *header;
- 
--	if (is_journal_aborted(journal)) {
--		put_bh(descriptor);
-+	if (is_journal_aborted(journal))
- 		return;
--	}
- 
- 	header = (jbd2_journal_revoke_header_t *)descriptor->b_data;
- 	header->r_count = cpu_to_be32(offset);
--- 
-2.20.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.4-rc4
+
+for you to fetch changes up to 2bb9f7566ba7ab3c2154964461e37b52cdc6b91b:
+
+  mmc: mxs: fix flags passed to dmaengine_prep_slave_sg (2019-10-21 16:16:38 +0200)
+
+----------------------------------------------------------------
+MMC host:
+ - mxs: Fix flags passed to dmaengine_prep_slave_sg
+ - cqhci: Add a missing memory barrier
+ - sdhci-omap: Fix tuning procedure for temperatures < -20C
+
+----------------------------------------------------------------
+Faiz Abbas (2):
+      mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
+      mmc: cqhci: Commit descriptors before setting the doorbell
+
+Sascha Hauer (1):
+      mmc: mxs: fix flags passed to dmaengine_prep_slave_sg
+
+ drivers/mmc/host/cqhci.c      | 3 ++-
+ drivers/mmc/host/mxs-mmc.c    | 7 ++++---
+ drivers/mmc/host/sdhci-omap.c | 2 +-
+ 3 files changed, 7 insertions(+), 5 deletions(-)
