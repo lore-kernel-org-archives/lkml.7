@@ -2,150 +2,99 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ECCCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6061ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC7D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571988395;
-	bh=TSFGiHWRUc3xSrPTpBpDB4fKT4eQ5jGJrJBfjnEzAiQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HxNnN8MD4lqTFPmmee/WwNe0hLFJ02tnXTQ5/vdrpZdk+vZok+XKZYcV2klbwxmxx
-	 e7n12WizyeD5OI60YfKKLMQct9UpDo/mrmCVC6AyqdsMBDxmlFM8BmgbGzoBLirryt
-	 5URwVeKNSemN6dkbidtLZWitPKrtvpUxdp3+1cEY=
+	by mail.kernel.org (Postfix) with ESMTP id 40D89206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436594AbfJYH0d (ORCPT
+        id S2394242AbfJYH1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:26:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51874 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436532AbfJYH0c (ORCPT
+        Fri, 25 Oct 2019 03:27:12 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:46869 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389667AbfJYH1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:26:32 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q70so905073wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 00:26:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6pRXYeWKUORo8utPtv70wDXbv/nqcWSG3JUe6r/PfEI=;
-        b=YYlLYoDROqbWwUtfTPNjepxcl8HiTTjq5OIslAlcY4i1JtM2Veu/FyZJRtpqTpSiMe
-         1TleEkPufyv41ZtdooikuHD97vptVcZ1YyUYgasNn7hQ9VNXoTzP5084+6yF74jSe03l
-         5hYNuR1/n+QFteqaOoM0ohdoWkU7hMjdzRJcGokVDkC4imte9om91uKM36IJv2niDzlH
-         GasMWrE5K1mC0iEJFe3zuy2tOCsO5ubGrB+xjajoIXhgqlCgl/OgvX733B6i+59wxksH
-         jXVR96nxhkqAz2gU34tW180p00ElVE5geNNre8egTS21Mz8xPew3lmjpcLWR5AybSb02
-         8AQA==
-X-Gm-Message-State: APjAAAXDyRTVPNjGszozn2xUjQnZsgNGekYqbzER0LWway/AoM9519yG
-        rBnb36kKWWMEgprSCjAZoZw=
-X-Google-Smtp-Source: APXvYqzgotUGDCUQZwM9Vsb9uUsTRPRHVKF/iMxe3DUbcp0XuhY2DFbbJPpjicLQ/VwOXq0aoTMlFw==
-X-Received: by 2002:a7b:c925:: with SMTP id h5mr1832355wml.61.1571988389054;
-        Fri, 25 Oct 2019 00:26:29 -0700 (PDT)
-Received: from tiehlicka.microfocus.com (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id x21sm1482446wmj.42.2019.10.25.00.26.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 00:26:28 -0700 (PDT)
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH 2/2] mm, vmstat: reduce zone->lock holding time by /proc/pagetypeinfo
-Date:   Fri, 25 Oct 2019 09:26:10 +0200
-Message-Id: <20191025072610.18526-3-mhocko@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191025072610.18526-1-mhocko@kernel.org>
-References: <20191025072610.18526-1-mhocko@kernel.org>
+        Fri, 25 Oct 2019 03:27:11 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MNbxN-1id7L519cB-00P8aS; Fri, 25 Oct 2019 09:27:00 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mao Wenan <maowenan@huawei.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH net] net: dsa: sja1105: improve NET_DSA_SJA1105_TAS dependency
+Date:   Fri, 25 Oct 2019 09:26:35 +0200
+Message-Id: <20191025072654.2860705-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:h1VgGfUU1DXRVft0/mll3FnC14dAvqdBRJeJvlRH1rdPVsMM8yi
+ 5dtnnHHNpUPBqqkmxSQr5LrHBaHbneRyL5yGl0ewMVCu6LVEiIleuNU0KL0PDrcXtxGG4S+
+ nLon47qtOU3fdT3x8RVTEo4Yx3XUDq3NM8wToKW5QA9UF3VP9IuTwr9zpC0S0jN78F1ABla
+ 2f8KMxSIqWHP/ztB1IAZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:C7X5cOwiq2o=:ImT0kAVjbWxKk5ZyNCvp+O
+ nhZsqKrVFJskLQCL+6miXsnb2XuGevt4LXVWuQZ/XtiYXfhgdMJhUpfHtRUrFQftsdTmTnEsT
+ hx7J4qyyaytoPF/FKCP/KCFwlFBrxGq+L6KNAL4rB/PHh8JCHZSixx5lwe+2bJ7P/OaKhFSG8
+ 2MRIoZcvfq2wS5Pnf4e0QxhtqEK7uv+3Ej9fS0qTvWwaFS9jC97gBKgFaIrefdCxAaWuRVP96
+ xa2DwfaJKOigQtU/fjih+t39yky9KRWjjM9GTtdabE2mTMVi45ItWw8ySqLm2PDzsIie6aTbI
+ wTGinSFvzcGBBDMta9gx/xeS9OgHKvu9wsQ935H1ggurJYVb0US/5+Et55eRXaL0WoIoo/Hpn
+ XZHwTTzByNXw6wJFxOktaEltvckO2HsEKH3GL6VQAvcIUWbcxYCr8A56Gugit3HofzwChHptX
+ /CGDSFUdKhD4Gu2zFDG/FbHkpM9Xzylz+xTTvTwjIVkJeGoshSWcXHnURbOHefR7cUTOTkyks
+ kPiIQxxmopwQOG9jwZ8Mw7pEfNViX67tDGAxWKBXwjgLi5ocSII0QV0/QjIicEwisajk5dSeK
+ 1d4cmoieptP1SyJ0qdKY0ZNmIRIr4ccV1UqKRfDIaqGRnSmoBWPBYi1bluDNrq+ImJHBHBpJY
+ 2rVcqWiR1ZugemGTlWNNGtz61ngECNyyLmD43f4twAhhhPK4ekygvavglOZGjcwZH0SEqYJqz
+ vpO+S3sZyKpRx328QmemIVml0DRgJEEsOZHX6keYl9lVW3LxlQAH7OukTVTHQWMiBGNWhOLgE
+ 97A8Bk2a5+rICdVoinXlRnADJwelwLmBqsYkEZMVQZHxt2sSj4Gjh2BRfS+q8D1QLRzPz65rr
+ aCr328awhq71stCyuQdA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
+An earlier bugfix introduced a dependency on CONFIG_NET_SCH_TAPRIO,
+but this missed the case of NET_SCH_TAPRIO=m and NET_DSA_SJA1105=y,
+which still causes a link error:
 
-pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
-This is not really nice because it blocks both any interrupts on that
-cpu and the page allocator. On large machines this might even trigger
-the hard lockup detector.
+drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_setup_tc_taprio':
+sja1105_tas.c:(.text+0x5c): undefined reference to `taprio_offload_free'
+sja1105_tas.c:(.text+0x3b4): undefined reference to `taprio_offload_get'
+drivers/net/dsa/sja1105/sja1105_tas.o: In function `sja1105_tas_teardown':
+sja1105_tas.c:(.text+0x6ec): undefined reference to `taprio_offload_free'
 
-Considering the pagetypeinfo is a debugging tool we do not really need
-exact numbers here. The primary reason to look at the outuput is to see
-how pageblocks are spread among different migratetypes and low number of
-pages is much more interesting therefore putting a bound on the number
-of pages on the free_list sounds like a reasonable tradeoff.
+Change the dependency to only allow selecting the TAS code when it
+can link against the taprio code.
 
-The new output will simply tell
-[...]
-Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >100000  41019  31560  23996  10054   3229    983    648
-
-instead of
-Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  41019  31560  23996  10054   3229    983    648
-
-The limit has been chosen arbitrary and it is a subject of a future
-change should there be a need for that.
-
-While we are at it, also drop the zone lock after each free_list
-iteration which will help with the IRQ and page allocator responsiveness
-even further as the IRQ lock held time is always bound to those 100k
-pages.
-
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Michal Hocko <mhocko@suse.com>
+Fixes: a8d570de0cc6 ("net: dsa: sja1105: Add dependency for NET_DSA_SJA1105_TAS")
+Fixes: 317ab5b86c8e ("net: dsa: sja1105: Configure the Time-Aware Scheduler via tc-taprio offload")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- mm/vmstat.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ drivers/net/dsa/sja1105/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 4e885ecd44d1..ddb89f4e0486 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1383,12 +1383,29 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
- 			unsigned long freecount = 0;
- 			struct free_area *area;
- 			struct list_head *curr;
-+			bool overflow = false;
+diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
+index f40b248f0b23..ffac0ea4e8d5 100644
+--- a/drivers/net/dsa/sja1105/Kconfig
++++ b/drivers/net/dsa/sja1105/Kconfig
+@@ -26,8 +26,8 @@ config NET_DSA_SJA1105_PTP
  
- 			area = &(zone->free_area[order]);
- 
--			list_for_each(curr, &area->free_list[mtype])
--				freecount++;
--			seq_printf(m, "%6lu ", freecount);
-+			list_for_each(curr, &area->free_list[mtype]) {
-+				/*
-+				 * Cap the free_list iteration because it might
-+				 * be really large and we are under a spinlock
-+				 * so a long time spent here could trigger a
-+				 * hard lockup detector. Anyway this is a
-+				 * debugging tool so knowing there is a handful
-+				 * of pages in this order should be more than
-+				 * sufficient
-+				 */
-+				if (++freecount >= 100000) {
-+					overflow = true;
-+					break;
-+				}
-+			}
-+			seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
-+			spin_unlock_irq(&zone->lock);
-+			cond_resched();
-+			spin_lock_irq(&zone->lock);
- 		}
- 		seq_putc(m, '\n');
- 	}
+ config NET_DSA_SJA1105_TAS
+ 	bool "Support for the Time-Aware Scheduler on NXP SJA1105"
+-	depends on NET_DSA_SJA1105
+-	depends on NET_SCH_TAPRIO
++	depends on NET_DSA_SJA1105 && NET_SCH_TAPRIO
++	depends on NET_SCH_TAPRIO=y || NET_DSA_SJA1105=m
+ 	help
+ 	  This enables support for the TTEthernet-based egress scheduling
+ 	  engine in the SJA1105 DSA driver, which is controlled using a
 -- 
-2.20.1
+2.20.0
 
