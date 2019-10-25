@@ -2,94 +2,136 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ACFCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9D0CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80EA21929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675C121929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408742AbfJYJOf (ORCPT
+        id S2408763AbfJYJOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:14:35 -0400
-Received: from mga12.intel.com ([192.55.52.136]:37634 "EHLO mga12.intel.com"
+        Fri, 25 Oct 2019 05:14:54 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39273 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408664AbfJYJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:14:34 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S2408744AbfJYJOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:14:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 02:14:33 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 02:14:53 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="201757442"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 25 Oct 2019 02:14:31 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iNvfy-0002j6-Lk; Fri, 25 Oct 2019 12:14:30 +0300
-Date:   Fri, 25 Oct 2019 12:14:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andrey Zhizhikin <andrey.z@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>, lgirdwood@gmail.com,
-        broonie@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Subject: Re: [PATCH 1/2] regulator: add support for Intel Cherry Whiskey Cove
- regulator
-Message-ID: <20191025091430.GJ32742@smile.fi.intel.com>
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191024142939.25920-2-andrey.zhizhikin@leica-geosystems.com>
- <20191025080129.GE32742@smile.fi.intel.com>
- <CAHtQpK7e-W9cGyCan=yxM7sSN=L_SKaFy8DSNE4vQGrc_pFdQw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHtQpK7e-W9cGyCan=yxM7sSN=L_SKaFy8DSNE4vQGrc_pFdQw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+   d="scan'208";a="400050841"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Oct 2019 02:14:50 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Brent Lu <brent.lu@intel.com>,
+        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Naveen M <naveen.m@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: eve: implement set_bias_level function for rt5514
+Date:   Fri, 25 Oct 2019 17:11:31 +0800
+Message-Id: <1571994691-20199-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 10:58:05AM +0200, Andrey Zhizhikin wrote:
-> On Fri, Oct 25, 2019 at 10:01 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Thu, Oct 24, 2019 at 02:29:38PM +0000, Andrey Zhizhikin wrote:
-> > > Add regulator driver for Intel Cherry Trail Whiskey Cove PMIC, which
-> > > supplies various voltage rails.
-> > >
-> > > This initial version supports only vsdio, which is required to source
-> > > vqmmc for sd card interface.
-> >
-> > This patch has some style issues. I will wait for Adrian and Hans to comment on
-> > the approach as a whole and then we will see how to improve the rest.
-> 
-> Agreed, styling issues are coming from definition of CHT_WC_REGULATOR
-> elements in regulators_info array, and they are mainly related to 80
-> characters per line. I decided to leave it like this since it is more
-> readable. But if the 80 characters rule is to be enforced here - I can
-> go with something like this for every element:
-> CHT_WC_REGULATOR(V3P3A,    3000, 3350, 0x00, 0x07,\
->                                      50, 0x01, 0x01, 0x0, true,  NULL),
+The first DMIC capture always fail (zero sequence data from PCM port)
+after using DSP hotwording function (i.e. Google assistant).
 
-No, I'm not talking about these. Actually I hate this 80 limit in 21st century.
-But let's not discuss it right now.
+This rt5514 codec requires to control mclk directly in the set_bias_level
+function. Implement this function in machine driver to control the
+ssp1_mclk clock explicitly could fix this issue.
 
-> Let's wait for other people's comments here and I can then come up
-> with v2 of this patch.
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+---
+ .../soc/intel/boards/kbl_rt5663_rt5514_max98927.c  | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-Exactly!
-
+diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+index dc09a85..b546de8 100644
+--- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
++++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+@@ -653,6 +653,55 @@ static struct snd_soc_dai_link kabylake_dais[] = {
+ 	},
+ };
+ 
++static int kabylake_set_bias_level(struct snd_soc_card *card,
++	struct snd_soc_dapm_context *dapm, enum snd_soc_bias_level level)
++{
++	struct snd_soc_component *component = dapm->component;
++	struct kbl_codec_private *priv = snd_soc_card_get_drvdata(card);
++	int ret = 0;
++
++	if (!component || strcmp(component->name, RT5514_DEV_NAME))
++		return 0;
++
++	if (IS_ERR(priv->mclk))
++		return 0;
++
++	/*
++	 * It's required to control mclk directly in the set_bias_level
++	 * function for rt5514 codec or the recording function could
++	 * break.
++	 */
++	switch (level) {
++	case SND_SOC_BIAS_PREPARE:
++		if (dapm->bias_level == SND_SOC_BIAS_ON) {
++			dev_dbg(card->dev, "Disable mclk");
++			clk_disable_unprepare(priv->mclk);
++		} else {
++			dev_dbg(card->dev, "Enable mclk");
++			ret = clk_set_rate(priv->mclk, 24000000);
++			if (ret) {
++				dev_err(card->dev, "Can't set rate for mclk, err: %d\n",
++					ret);
++				return ret;
++			}
++
++			ret = clk_prepare_enable(priv->mclk);
++			if (ret) {
++				dev_err(card->dev, "Can't enable mclk, err: %d\n",
++					ret);
++
++				/* mclk is already enabled in FW */
++				ret = 0;
++			}
++		}
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
+ static int kabylake_card_late_probe(struct snd_soc_card *card)
+ {
+ 	struct kbl_codec_private *ctx = snd_soc_card_get_drvdata(card);
+@@ -692,6 +741,7 @@ static struct snd_soc_card kabylake_audio_card = {
+ 	.owner = THIS_MODULE,
+ 	.dai_link = kabylake_dais,
+ 	.num_links = ARRAY_SIZE(kabylake_dais),
++	.set_bias_level = kabylake_set_bias_level,
+ 	.controls = kabylake_controls,
+ 	.num_controls = ARRAY_SIZE(kabylake_controls),
+ 	.dapm_widgets = kabylake_widgets,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.7.4
 
