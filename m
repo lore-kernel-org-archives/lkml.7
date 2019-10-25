@@ -2,148 +2,101 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C96CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BD5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7752321D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7C42070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=plexistor-com.20150623.gappssmtp.com header.i=@plexistor-com.20150623.gappssmtp.com header.b="F7CvUN1n"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="deTeqY3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388560AbfJYBPt (ORCPT
+        id S2388616AbfJYBQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 21:15:49 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39911 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388530AbfJYBPs (ORCPT
+        Thu, 24 Oct 2019 21:16:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34546 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388515AbfJYBQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 21:15:48 -0400
-Received: by mail-ed1-f66.google.com with SMTP id l25so505173edt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 18:15:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=plexistor-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H1GaUvponGzx8dfabBhKW2OqVVQdC3N0IbNOHN+GfyA=;
-        b=F7CvUN1nPbeQ3ofUpTfw3ik8aSK5aNiLPnsPsnj56b2FzDgopyq8dS+4OdywSY3cRK
-         Eb7pBK79RZCAqa7dMaDNiALdZ1Q3F4Qp1fNImEMnjWIyz47c4BHaKK+WCMwcPVNBfHiN
-         xknjfj8h/cTsqLjN1CpurQu9NYku85BMGiwf+6d9S5cE50PlssibV/Qo7E4k6g+D1o7G
-         BXtMdHwxSZDmgNJWJzqGOPCg0ZODwFjbIvuczE7ACnosAFZZhRB0n7cefeG6+aipnjAf
-         ijbC86raCT7G6EcIKb+iSX/posRmH1Oq7/anIPBl3mwLVo+v+cMt72aXJqlVakb/ePHY
-         pyYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H1GaUvponGzx8dfabBhKW2OqVVQdC3N0IbNOHN+GfyA=;
-        b=ln5JF4QaRak84pDVshpRKbYvXpaoRBNGjAkNbBLaBs8IIxRwnXgxYxIREsjLzHm53S
-         LwGA96GL2DnJppc3VxY9lBGMZJg7IGbFpibnL3vELHyet7pS5lr5IaFz+xb1qquE50Wp
-         //aSPPxmKXSUhSuMs01PfcsLZ8WxbR+A85qAKbw4P5DPQ9HQF+u+aAsPhrXE9EAmSvin
-         16NxpoxwmohiXHW2MT0hlvYbSDflLrfkQ3zcAcGOa+X4q5cFt6GghvFQNR0upS+9rnJv
-         dY4NZeQZqxZiS1SnGD2FTaXcxWu7C9Q2896L9p6+8LVK+kPYpxMb4IT+eQW04jzXXLfo
-         r7rw==
-X-Gm-Message-State: APjAAAVxcm96nCVtO1o6fqPNWwSWQf5YtOzKitPcj19JOsiSYjB7YWOu
-        V/xABY1p7JBmYHw46cwCnFsmyQ==
-X-Google-Smtp-Source: APXvYqz6czjRAMv/BeSl0ugHesI8gzA5oRUMvzQQRtKwlS9OjlmuA9FEFIHOOZH28oxILnBJQbs9HQ==
-X-Received: by 2002:a50:cbc2:: with SMTP id l2mr1201839edi.304.1571966147286;
-        Thu, 24 Oct 2019 18:15:47 -0700 (PDT)
-Received: from [10.68.217.182] ([217.70.210.43])
-        by smtp.googlemail.com with ESMTPSA id gj14sm1695ejb.62.2019.10.24.18.15.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2019 18:15:46 -0700 (PDT)
-Subject: Re: [PATCH 0/5] Enable per-file/directory DAX operations
-To:     Dave Chinner <david@fromorbit.com>,
-        Boaz Harrosh <boaz@plexistor.com>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191020155935.12297-1-ira.weiny@intel.com>
- <b7849297-e4a4-aaec-9a64-2b481663588b@plexistor.com>
- <b883142c-ecfe-3c5b-bcd9-ebe4ff28d852@plexistor.com>
- <20191023221332.GE2044@dread.disaster.area>
- <efffc9e7-8948-a117-dc7f-e394e50606ab@plexistor.com>
- <20191024073446.GA4614@dread.disaster.area>
- <fb4f8be7-bca6-733a-7f16-ced6557f7108@plexistor.com>
- <20191024213508.GB4614@dread.disaster.area>
- <ab101f90-6ec1-7527-1859-5f6309640cfa@plexistor.com>
- <20191025003603.GE4614@dread.disaster.area>
-From:   Boaz Harrosh <boaz@plexistor.com>
-Message-ID: <9ffbc2a5-c85b-3633-1ad5-a9a3fe33cd2e@plexistor.com>
-Date:   Fri, 25 Oct 2019 04:15:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 24 Oct 2019 21:16:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1E1n0120894;
+        Fri, 25 Oct 2019 01:16:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=AbepHJYRFeSdhP/8TwPby8wa7p9KL6DyyeYknaFGBMA=;
+ b=deTeqY3WlGZw6r8S401Fx/EGPyOCmrGR9Zn//QDZpxfEuDWNBbRmQDj4YeuuE1QDkb6l
+ /AR8tDRsisfHVdKu7c+gbGdFGCXzW35SSchaibNY7pkbW4YiNhvfHGHhxdX6R92jIfMX
+ yBA2dWl+fq98+rfJXAj6l2HumdojtREav9foyVictSHTNP0hR8r1BmmWSzKlJT7wEKjW
+ LE7P1Ve3v8pQyUwqqaCYMlvhaAXJnBGlqiFVqWrDVa/oooaIR7OOlFGtzS4sNCCTpQL3
+ +QtRRB58MgS6GmKB6TvcpOul8wVKpQ/pV7+yK6rxouhlhv/2GrIiodwFA+jX+ktW33vf qg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vqteq75ta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 01:16:15 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1CrbN181742;
+        Fri, 25 Oct 2019 01:16:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vunbk5ydd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 01:16:15 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9P1G9r0024360;
+        Fri, 25 Oct 2019 01:16:09 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 24 Oct 2019 18:16:08 -0700
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <kxie@chelsio.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <bvanassche@acm.org>,
+        <davem@davemloft.net>, <tglx@linutronix.de>, <info@metux.net>,
+        <kstewart@linuxfoundation.org>, <varun@chelsio.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <target-devel@vger.kernel.org>
+Subject: Re: [PATCH -next] scsi: cxgb4i: remove set but not used variable 'ppmax'
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191021142042.30964-1-yuehaibing@huawei.com>
+Date:   Thu, 24 Oct 2019 21:16:05 -0400
+In-Reply-To: <20191021142042.30964-1-yuehaibing@huawei.com>
+        (yuehaibing@huawei.com's message of "Mon, 21 Oct 2019 22:20:42 +0800")
+Message-ID: <yq1lft9bp62.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191025003603.GE4614@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=951
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910250011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910250011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/10/2019 03:36, Dave Chinner wrote:
-> On Fri, Oct 25, 2019 at 02:29:04AM +0300, Boaz Harrosh wrote:
-<>
 
->> Perhaps we always go by the directory. And then do an mv dir_DAX/foo dir_NODAX/foo
-> 
-> The inode is instatiated before the rename is run, so it's set up
-> with it's old dir config, not the new one. So this ends up with the
-> same problem of haivng to change the S_DAX flag and aops vector
-> dynamically on rename. Same problem, not a solution.
-> 
+YueHaibing,
 
-Yes Admin needs a inode-drop_caches after the mv if she/he wants an effective
-change.
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:2076:15:
+>  warning: variable ppmax set but not used [-Wunused-but-set-variable]
+> drivers/target/iscsi/cxgbit/cxgbit_ddp.c:300:15:
+>  warning: variable ppmax set but not used [-Wunused-but-set-variable]
 
->> to have an effective change. In hard links the first one at iget time before populating
->> the inode cache takes affect.
-> 
-> If something like a find or backup program brings the inode into
-> cache, the app may not even get the behaviour it wants, and it can't
-> change it until the inode is evicted from cache, which may be never.
+Applied to 5.5/scsi-queue, thanks!
 
-inode-drop-caches. (echo 2 > /proc/sys/vm/drop_caches)
-
-> Nobody wants implicit/random/uncontrollable/unchangeable behaviour
-> like this.
-> 
-
-You mean in the case of hard links between different mode directories?
-I agree it is not so good. I do not like it too.
-
-<>
-> We went over all this ground when we disabled the flag in the first
-> place. We disabled the flag because we couldn't come up with a sane
-> way to flip the ops vector short of tracking the number of aops
-> calls in progress at any given time. i.e. reference counting the
-> aops structure, but that's hard to do with a const ops structure,
-> and so it got disabled rather than allowing users to crash
-> kernels....
-> 
-
-Do you mean dropping this patchset all together? I missed that.
-
-Current patchset with the i_size == 0 thing is really bad I think.
-Its the same has dropping the direct change all together and only
-supporting inheritance from parent.
-[Which again for me is really not interesting]
-
-> Cheers,
-> -Dave.
-
-Lets sleep on it. Please remind me if xfs supports clone + DAX
-
-Thanks Dave
-Boaz
+-- 
+Martin K. Petersen	Oracle Linux Engineering
