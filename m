@@ -2,230 +2,199 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70497CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DADCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB6121D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6152621D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JhPv5ImW"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="gabbmsE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438025AbfJYI13 (ORCPT
+        id S2407022AbfJYIaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:27:29 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23456 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437964AbfJYI12 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:27:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571992047;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qcI5t6CsVJQabA12BdZ1TYYosDenntzCg3SsjvCibXY=;
-        b=JhPv5ImWGuCDMRheD6A3eWczLHOSi1FyBaB9mBHTG2Yn2o0CY42HMH4x9Cswj8/WEQrGlx
-        2l6Pid07J3l5WlGGpu7LRqlKGXC7fkkn9rTmNWBlyxkiB5kkhcV47TjBaCN/3asObIOiiw
-        JkQDTe8OUU2iX8Z7CxzCok06QwoEpto=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-17-5c6reNZEMcu2u6L7u5k0yQ-1; Fri, 25 Oct 2019 04:27:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D615B1800E00;
-        Fri, 25 Oct 2019 08:27:18 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B8291194B6;
-        Fri, 25 Oct 2019 08:27:14 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 10:27:14 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 6/9] perf tools: add destructors for parse event terms
-Message-ID: <20191025082714.GH31679@krava>
-References: <20191023005337.196160-1-irogers@google.com>
- <20191024190202.109403-1-irogers@google.com>
- <20191024190202.109403-7-irogers@google.com>
-MIME-Version: 1.0
-In-Reply-To: <20191024190202.109403-7-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 5c6reNZEMcu2u6L7u5k0yQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+        Fri, 25 Oct 2019 04:30:08 -0400
+Received: from mail-eopbgr710058.outbound.protection.outlook.com ([40.107.71.58]:59413
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405636AbfJYIaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:30:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kOelbG6e/Z1PQ/7IvBRUE0TVnKMwXmXmBQpxFVbqS+xJRL5ySPiCEFV0pKkDs2U+UcwZeS7JsbrCBEhnywogT/+I679YyAcT6gPf3KoVUv9gzmkrkv3C2STGqqGWbk8sR39x1PCDRoYj7hEvP9pX+5nyo1/r3lRonWtv6exiL1M/qkXXMVX0EdcOkyRYL44iYl5dqCFMjZur4kC/8uZH5A0iq9IPWXvtO27zAMAEc06JQdGF0PjgHLLpU1ZFUgo88qELHNqj+63VBIagBTBBWlUVEA+TWdDo4DtBv1l3mvTCgaAf08VrRA4s0lBZsH8JMdZ66htYlpg7sAjcCXQ2pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Rz61GbAT0OTk7i8YWkOocfdCkMQDbXHTVweKERoYgc=;
+ b=KNyYIBmtVi9lIgKI0PllKLwcIvTOFFn0jswJHhzoL1Qoil3zB70sxetAjqMK2aXSTvjoFIM7y+a8hAO6SM02ioXpEwS+JHP/flNyAmwCG7gwC9F90toVc57qFgAbmebVzWweO+4WUeAyyGZdl892YNGc3aNsJfIlEw7NWx2kN/pHEuCypB8x6M9EUIoZv0v3GR4/B43RhbCfSimc7zJiRmMkximQEuCffC3A3R84xqENy0VvNtKnwu4UyyUDGYymFEjGQp8sfw4v5FIOnoUmD3jAkbGlLN+Mx4mTLSo6U6Oa9xDuYzP1LhLYvnFPzzzKiGA3ffOlex4oReCH3XrYDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Rz61GbAT0OTk7i8YWkOocfdCkMQDbXHTVweKERoYgc=;
+ b=gabbmsE5lmWNd3VogQPNIAj8rc/JgegBRuM9UeEATIWTHna1NPQXhbDJ6Xfph8jb09o29AIyoZcX2ubFb2VzYtHlMN5w6pe5GFwCyhoixiJaD/6SzD26/mwtaXor56oltvs21/C/eyufRM24OmaoOjDRBr9y5FDzeUKQRh8UwiU=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3751.namprd13.prod.outlook.com (20.180.14.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.17; Fri, 25 Oct 2019 08:30:03 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::c069:f0c7:760b:faba]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::c069:f0c7:760b:faba%3]) with mapi id 15.20.2387.021; Fri, 25 Oct 2019
+ 08:30:03 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     "Paul Walmsley ( Sifive)" <paul.walmsley@g.sifive.com>,
+        "Palmer Dabbelt ( Sifive)" <palmer@g.sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "will@kernel.org" <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Anup.Patel@wdc.com" <Anup.Patel@wdc.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        Greentime Hu <greentime.hu@g.sifive.com>,
+        "alex@ghiti.fr" <alex@ghiti.fr>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        "sorear2@gmail.com" <sorear2@gmail.com>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2] RISC-V: Add PCIe I/O BAR memory mapping
+Thread-Topic: [PATCH v2] RISC-V: Add PCIe I/O BAR memory mapping
+Thread-Index: AQHViw5l0jY9JQhUEkq6xffYZOywOQ==
+Date:   Fri, 25 Oct 2019 08:30:03 +0000
+Message-ID: <1571992163-6811-1-git-send-email-yash.shah@sifive.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR0101CA0053.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:20::15) To CH2PR13MB3368.namprd13.prod.outlook.com
+ (2603:10b6:610:2c::26)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0a7ae2d2-c919-40fa-f1ad-08d75925883d
+x-ms-traffictypediagnostic: CH2PR13MB3751:
+x-ms-exchange-purlcount: 1
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB3751CBC90393882C168AD8B58C650@CH2PR13MB3751.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(39850400004)(366004)(136003)(189003)(199004)(71200400001)(54906003)(2201001)(6486002)(86362001)(7416002)(8676002)(26005)(476003)(966005)(186003)(2616005)(486006)(5660300002)(50226002)(81166006)(81156014)(8936002)(2906002)(66066001)(305945005)(7736002)(6116002)(3846002)(99286004)(6436002)(256004)(52116002)(14444005)(110136005)(6306002)(6512007)(14454004)(102836004)(2501003)(386003)(6506007)(478600001)(36756003)(66556008)(4326008)(64756008)(66946007)(66446008)(44832011)(25786009)(66476007)(71190400001)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3751;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gOyqL0Cve8csClrQKW6vUZDFgCnceY2KvKaoeGiTQ23lt4YgrrtNHgvMYcSiXFkX1+7qsUKJukHeBsaTM9o6yxkpElDi+seTOLxJN4lbaLpofhQ5NQCAV47/kxoSAFV2gDDY580dfFHS6x2u08qS7wNV7/4jGXzrcalbmq0O285lK6pBqWRjZvOTpqS+SuieK1lvhSYNTJiPSCut2dDb6x8VxeOeAqWVJUB4/GaP2nZbmFGUfcTtaewdtDoT/E7jF0VRhfpeLUH8GbGrRnratOlsV1d7nTYp9XzSamJn/5hP3pFZT+Y92y5JBWTKxcdWdvbsf+YnHJSB7EDsYik7+cskKGOWXHjpugi5kXYtSV4xljNjZuNHf/TH5BKEI00kk0qOFwYUmg+gJVgEPZ8vJuF9mUVRoqc7wBFuPiwNDDTIcKqcAKb2o2d/BAkQpW5UkbGrvIUoLqI+2SpVZO969hzV4n1qbDT3tpYnrHtGgFE=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+MIME-Version: 1.0
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a7ae2d2-c919-40fa-f1ad-08d75925883d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 08:30:03.3485
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HatxEUj1ucorqSu81h1KbG3ZjGuZwsR04wB3M/1skUGejBRW2qDhhYRslUafvndgijKgEDlahVmeoUytpclx0w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3751
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:01:59PM -0700, Ian Rogers wrote:
-> If parsing fails then destructors are ran to clean the up the stack.
-> Rename the head union member to make the term and evlist use cases more
-> distinct, this simplifies matching the correct destructor.
+For legacy I/O BARs (non-MMIO BARs) to work correctly on RISC-V Linux,
+we need to establish a reserved memory region for them, so that drivers
+that wish to use the legacy I/O BARs can issue reads and writes against
+a memory region that is mapped to the host PCIe controller's I/O BAR
+mapping.
 
-nice did not know about this.. looks like it's been in bison for some time,=
- right?
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
 
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.y | 69 +++++++++++++++++++++++-----------
->  1 file changed, 48 insertions(+), 21 deletions(-)
->=20
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-event=
-s.y
-> index 545ab7cefc20..4725b14b9db4 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -12,6 +12,7 @@
->  #include <stdio.h>
->  #include <linux/compiler.h>
->  #include <linux/types.h>
-> +#include <linux/zalloc.h>
->  #include "pmu.h"
->  #include "evsel.h"
->  #include "parse-events.h"
-> @@ -37,6 +38,25 @@ static struct list_head* alloc_list()
->  =09return list;
->  }
-> =20
-> +static void free_list_evsel(struct list_head* list_evsel)
-> +{
-> +=09struct perf_evsel *pos, *tmp;
-> +
-> +=09list_for_each_entry_safe(pos, tmp, list_evsel, node) {
-> +=09=09list_del_init(&pos->node);
-> +=09=09perf_evsel__delete(pos);
-> +=09}
-> +=09free(list_evsel);
+Changes in v2:
+- update patch description as per Paul's suggestion
+https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1910240937350.2001=
+0@viisi.sifive.com/
 
-I think you need to iterate 'struct evsel' in here, not 'struct perf_evsel'
+---
+ arch/riscv/include/asm/io.h      | 7 +++++++
+ arch/riscv/include/asm/pgtable.h | 7 ++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-should be:
-
-=09struct evsel *evsel, *tmp;
-
-=09list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
-=09=09list_del_init(&evsel->core.node);
-=09=09evsel__delete(evsel);
-=09}
-
-thanks,
-jirka
-
-> +}
-> +
-> +static void free_term(struct parse_events_term *term)
-> +{
-> +=09if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_STR)
-> +=09=09free(term->val.str);
-> +=09zfree(&term->array.ranges);
-> +=09free(term);
-> +}
-> +
->  static void inc_group_count(struct list_head *list,
->  =09=09       struct parse_events_state *parse_state)
->  {
-> @@ -66,6 +86,7 @@ static void inc_group_count(struct list_head *list,
->  %type <num> PE_VALUE_SYM_TOOL
->  %type <num> PE_RAW
->  %type <num> PE_TERM
-> +%type <num> value_sym
->  %type <str> PE_NAME
->  %type <str> PE_BPF_OBJECT
->  %type <str> PE_BPF_SOURCE
-> @@ -76,37 +97,43 @@ static void inc_group_count(struct list_head *list,
->  %type <str> PE_EVENT_NAME
->  %type <str> PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_KERNEL_PMU_EVENT
->  %type <str> PE_DRV_CFG_TERM
-> -%type <num> value_sym
-> -%type <head> event_config
-> -%type <head> opt_event_config
-> -%type <head> opt_pmu_config
-> +%destructor { free ($$); } <str>
->  %type <term> event_term
-> -%type <head> event_pmu
-> -%type <head> event_legacy_symbol
-> -%type <head> event_legacy_cache
-> -%type <head> event_legacy_mem
-> -%type <head> event_legacy_tracepoint
-> +%destructor { free_term ($$); } <term>
-> +%type <list_terms> event_config
-> +%type <list_terms> opt_event_config
-> +%type <list_terms> opt_pmu_config
-> +%destructor { parse_events_terms__delete ($$); } <list_terms>
-> +%type <list_evsel> event_pmu
-> +%type <list_evsel> event_legacy_symbol
-> +%type <list_evsel> event_legacy_cache
-> +%type <list_evsel> event_legacy_mem
-> +%type <list_evsel> event_legacy_tracepoint
-> +%type <list_evsel> event_legacy_numeric
-> +%type <list_evsel> event_legacy_raw
-> +%type <list_evsel> event_bpf_file
-> +%type <list_evsel> event_def
-> +%type <list_evsel> event_mod
-> +%type <list_evsel> event_name
-> +%type <list_evsel> event
-> +%type <list_evsel> events
-> +%type <list_evsel> group_def
-> +%type <list_evsel> group
-> +%type <list_evsel> groups
-> +%destructor { free_list_evsel ($$); } <list_evsel>
->  %type <tracepoint_name> tracepoint_name
-> -%type <head> event_legacy_numeric
-> -%type <head> event_legacy_raw
-> -%type <head> event_bpf_file
-> -%type <head> event_def
-> -%type <head> event_mod
-> -%type <head> event_name
-> -%type <head> event
-> -%type <head> events
-> -%type <head> group_def
-> -%type <head> group
-> -%type <head> groups
-> +%destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
->  %type <array> array
->  %type <array> array_term
->  %type <array> array_terms
-> +%destructor { free ($$.ranges); } <array>
-> =20
->  %union
->  {
->  =09char *str;
->  =09u64 num;
-> -=09struct list_head *head;
-> +=09struct list_head *list_evsel;
-> +=09struct list_head *list_terms;
->  =09struct parse_events_term *term;
->  =09struct tracepoint_name {
->  =09=09char *sys;
-> --=20
-> 2.23.0.866.gb869b98d4c-goog
->=20
+diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
+index fc1189a..3ba4d93 100644
+--- a/arch/riscv/include/asm/io.h
++++ b/arch/riscv/include/asm/io.h
+@@ -13,6 +13,7 @@
+=20
+ #include <linux/types.h>
+ #include <asm/mmiowb.h>
++#include <asm/pgtable.h>
+=20
+ extern void __iomem *ioremap(phys_addr_t offset, unsigned long size);
+=20
+@@ -162,6 +163,12 @@ static inline u64 __raw_readq(const volatile void __io=
+mem *addr)
+ #endif
+=20
+ /*
++ *  I/O port access constants.
++ */
++#define IO_SPACE_LIMIT		(PCI_IO_SIZE - 1)
++#define PCI_IOBASE		((void __iomem *)PCI_IO_START)
++
++/*
+  * Emulation routines for the port-mapped IO space used by some PCI driver=
+s.
+  * These are defined as being "fully synchronous", but also "not guarantee=
+d to
+  * be fully ordered with respect to other memory and I/O operations".  We'=
+re
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgta=
+ble.h
+index 7fc5e4a..d78cc74 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -7,6 +7,7 @@
+ #define _ASM_RISCV_PGTABLE_H
+=20
+ #include <linux/mmzone.h>
++#include <linux/sizes.h>
+=20
+ #include <asm/pgtable-bits.h>
+=20
+@@ -88,6 +89,7 @@ extern pgd_t swapper_pg_dir[];
+ #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+ #define VMALLOC_END      (PAGE_OFFSET - 1)
+ #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
++#define PCI_IO_SIZE      SZ_16M
+=20
+ /*
+  * Roughly size the vmemmap space to be large enough to fit enough
+@@ -102,7 +104,10 @@ extern pgd_t swapper_pg_dir[];
+=20
+ #define vmemmap		((struct page *)VMEMMAP_START)
+=20
+-#define FIXADDR_TOP      (VMEMMAP_START)
++#define PCI_IO_END       VMEMMAP_START
++#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
++#define FIXADDR_TOP      PCI_IO_START
++
+ #ifdef CONFIG_64BIT
+ #define FIXADDR_SIZE     PMD_SIZE
+ #else
+--=20
+2.7.4
 
