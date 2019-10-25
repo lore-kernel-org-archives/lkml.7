@@ -2,142 +2,113 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9C8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE18CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E358206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F42206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:30:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ehnPVjuY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uwRBtnrt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394254AbfJYH3B (ORCPT
+        id S2436697AbfJYHaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:29:01 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:12073 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJYH3B (ORCPT
+        Fri, 25 Oct 2019 03:30:03 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41784 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393141AbfJYHaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:29:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5db2a4450000>; Fri, 25 Oct 2019 00:29:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 25 Oct 2019 00:29:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 25 Oct 2019 00:29:00 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 25 Oct
- 2019 07:29:00 +0000
-Received: from [10.21.133.51] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 25 Oct
- 2019 07:28:59 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Subject: [REGRESSION v5.3] SUNRPC: Replace the queue timer with a delayed work
- function (7e0a0e38fcfe)
-Message-ID: <271ff39f-1f44-b201-6274-85f1085bfc16@nvidia.com>
-Date:   Fri, 25 Oct 2019 08:28:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 03:30:03 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P7TuEW083485;
+        Fri, 25 Oct 2019 02:29:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571988596;
+        bh=1cUSfoEykjjueYG50S/BGu6RsBmbXbVHtUUcLABJHMI=;
+        h=From:To:CC:Subject:Date;
+        b=uwRBtnrtb3CFRjtSl0++4rf3rnturX1wqc1+D9oes00aGejogJ7GbOKKslvkEwjjV
+         I19AB807gOyTl43CB3aaKU3+cqj9tPekh9xEGcOm4Neu3Fxr5ZNPZI5wvP4SoIy8fi
+         HUJdRg1i7p0Xh/lnJgDVLAQIOr7UifrA2flW/vfU=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9P7TuIY094281
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 25 Oct 2019 02:29:56 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
+ Oct 2019 02:29:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 25 Oct 2019 02:29:44 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7Tr4F103329;
+        Fri, 25 Oct 2019 02:29:53 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH v5 0/3] dmaengine: bindings/edma: dma-channel-mask to array
+Date:   Fri, 25 Oct 2019 10:30:53 +0300
+Message-ID: <20191025073056.25450-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1571988549; bh=oA1xY6WGO+YbrmP0Bs3pvIsu3O7VlCxPiPqvKf8AA3A=;
-        h=X-PGP-Universal:To:From:Subject:Message-ID:Date:User-Agent:
-         MIME-Version:X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Language:Content-Transfer-Encoding;
-        b=ehnPVjuYCX8OWxsuuALJqjRf9gfryALS5XTI0uWyavaixJ4klOrGajRRy692X4YrO
-         EtOOAzq7fNhanOpw8+0dNLRVeXjQS7QsfYXl9q1x+QDTzrTLkjz75BbaKC54aCDva2
-         ey04zQ8VtJJrLFLDMGCbo03Vp0xlbTUKCiPSUj8IRY79+rlzq6WGx4JWHPbjBTeiee
-         FTdZZVOSBNvwwb6vvc9QD1bBRsd5yuFl9XQGlOvWSMeCcM7GEMO9ArFvnB5IrV/Seh
-         kligc3+ZGZH5S/6nNTjBJz9IYuKdU+xaU4acOwif2/datDMR81ckNX6XijDNnLO8+q
-         /Cp4srDWGWJYA==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Trond,
+Hi,
 
-Similar to the change 431235818bc3 ("SUNRPC: Declare RPC timers as
-TIMER_DEFERRABLE") I have been tracking down another suspend/NFS related
-issue where again I am seeing random delays exiting suspend. The delays
-can be up to a couple minutes in the worst case and this is causing a
-suspend test we have to fail. For example, with this change I see ...
+Changes since v4:
+- Rebased on next to make it apply cleanly
+- Added Reviewed-by from Rob for the DT documentation patches
 
-[  130.599520] PM: suspend entry (deep)
+Changes since v3:
+- Update the dma-common.yaml and edma binding documentation according to Rob's
+  suggestion
 
-[  130.607267] Filesystems sync: 0.000 seconds
+Changes since v2:
+- Fix dma-common.yaml documentation patch and extend the description of the
+  dma-channel-mask array
+- The edma documentation now includes information on the dma-channel-mask array
+  size for EDMAs with 32 or 64 channels
 
-[  130.615800] Freezing user space processes ... (elapsed 0.001 seconds) done.
+Changes since v1:
+- Extend the common dma-channel-mask to uint32-array to be usable for
+  controllers with more than 32 channels
+- Use the dma-channel-mask instead custom property for available channels for
+  EDMA.
 
-[  130.628247] OOM killer disabled.
+The original patch was part of the EDMA multicore usage series.
 
-[  130.635382] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
+needs to be an array to be usable for the driver.
 
-[  130.648052] printk: Suspending console(s) (use no_console_suspend to debug)
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  dt-bindings: dmaengine: dma-common: Change dma-channel-mask to
+    uint32-array
+  dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
+  dmaengine: ti: edma: Add support for handling reserved channels
 
-[  130.686015] Disabling non-boot CPUs ...
-
-[  130.689568] IRQ 17: no longer affine to CPU2
-
-[  130.693435] Entering suspend state LP1
-
-[  130.693489] Enabling non-boot CPUs ...
-
-[  130.697108] CPU1 is up
-
-[  130.700602] CPU2 is up
-
-[  130.704338] CPU3 is up
-
-[  130.781259] mmc1: queuing unknown CIS tuple 0x80 (50 bytes)
-
-[  130.789742] mmc1: queuing unknown CIS tuple 0x80 (7 bytes)
-
-[  130.792793] mmc1: queuing unknown CIS tuple 0x80 (7 bytes)
-
-[  130.820913] mmc1: queuing unknown CIS tuple 0x02 (1 bytes)
-
-[  131.345569] OOM killer enabled.
-
-[  131.352643] Restarting tasks ... done.
-
-[  131.365480] PM: suspend exit
-
-[  134.524261] asix 1-1:1.0 eth0: link up, 100Mbps, full-duplex, lpa 0xCDE1
-
-[  243.745788] nfs: server 192.168.99.1 not responding, still trying
-
-[  243.745811] nfs: server 192.168.99.1 not responding, still trying
-
-[  243.767939] nfs: server 192.168.99.1 not responding, still trying
-
-[  243.778233] nfs: server 192.168.99.1 OK
-
-[  243.787058] nfs: server 192.168.99.1 OK
-
-[  243.787542] nfs: server 192.168.99.1 OK
-
-
-Running a git bisect I was able to track it down to the commit referenced
-in the $subject. Reverting this on top of the current mainline fixes the
-problem and I no longer see these long delays.
-
-Cheers
-Jon
+ .../devicetree/bindings/dma/dma-common.yaml   |  9 ++-
+ .../devicetree/bindings/dma/ti-edma.txt       |  8 +++
+ drivers/dma/ti/edma.c                         | 59 +++++++++++++++++--
+ 3 files changed, 69 insertions(+), 7 deletions(-)
 
 -- 
-nvpublic
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
