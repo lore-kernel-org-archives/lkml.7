@@ -2,146 +2,109 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A799BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4F4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D5221E6F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9691F21E6F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfJYUZu (ORCPT
+        id S1728395AbfJYU0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:25:50 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:35314 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728279AbfJYUZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:25:46 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iO69R-00078e-Ir; Fri, 25 Oct 2019 14:25:39 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1iO69Q-000392-RZ; Fri, 25 Oct 2019 14:25:36 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri, 25 Oct 2019 14:25:35 -0600
-Message-Id: <20191025202535.12036-4-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191025202535.12036-1-logang@deltatee.com>
-References: <20191025202535.12036-1-logang@deltatee.com>
+        Fri, 25 Oct 2019 16:26:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51100 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728279AbfJYU0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:26:03 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PKMEO3059721
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 16:26:02 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vv59cn3td-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 16:26:01 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Fri, 25 Oct 2019 21:25:59 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 25 Oct 2019 21:25:56 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PKPtPX44630456
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 20:25:55 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D5D72A4040;
+        Fri, 25 Oct 2019 20:25:55 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3F3AFA404D;
+        Fri, 25 Oct 2019 20:25:55 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.205.37])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 25 Oct 2019 20:25:55 +0000 (GMT)
+Date:   Fri, 25 Oct 2019 23:25:53 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     corbet@lwn.net, willy@infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] docs/core-api: memory-allocation: minor cleanups
+References: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [RFC PATCH 3/3] nvme: Introduce nvme_execute_passthru_rq_nowait()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024195016.11054-1-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19102520-4275-0000-0000-00000377AF9E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102520-4276-0000-0000-0000388ADE63
+Message-Id: <20191025202552.GC8710@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910250186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is similar to nvme_execute_passthru_rq() but does
-not wait and will call a callback when the request is complete.
+On Fri, Oct 25, 2019 at 08:50:13AM +1300, Chris Packham wrote:
+> Clean up some formatting and add references to helpers for calculating sizes
+> safely.
+> 
+> This series is based of v5.4-rc4.
+> 
+> There was a merge conflict with commit 59bb47985c1d ("mm, sl[aou]b: guarantee
+> natural alignment for kmalloc(power-of-two)") and the c:func: patch is
+> dependent on the typo fix. The former was resolved with a rebase, the latter by
+> actually sending it as part of the series.
+> 
+> Chris Packham (3):
+>   docs/core-api: memory-allocation: fix typo
+>   docs/core-api: memory-allocation: remove uses of c:func:
+>   docs/core-api: memory-allocation: mention size helpers
 
-The new function can also be called in interrupt context, so if there
-are side effects, the request will be executed in a work queue to
-avoid sleeping.
+For the series:
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/host/core.c | 42 ++++++++++++++++++++++++++++++++++++++++
- drivers/nvme/host/nvme.h |  7 +++++++
- 2 files changed, 49 insertions(+)
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+ 
+>  Documentation/core-api/memory-allocation.rst | 50 ++++++++++----------
+>  1 file changed, 24 insertions(+), 26 deletions(-)
+> 
+> -- 
+> 2.23.0
+> 
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 2b4f0ea55f8d..6d3cade0e63d 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4211,6 +4211,48 @@ void nvme_sync_queues(struct nvme_ctrl *ctrl)
- }
- EXPORT_SYMBOL_GPL(nvme_sync_queues);
- 
-+#ifdef CONFIG_NVME_TARGET_PASSTHRU
-+static void nvme_execute_passthru_rq_work(struct work_struct *w)
-+{
-+	struct nvme_request *req = container_of(w, struct nvme_request, work);
-+	struct request *rq = blk_mq_rq_from_pdu(req);
-+	rq_end_io_fn *done = rq->end_io;
-+	void *end_io_data = rq->end_io_data;
-+
-+	nvme_execute_passthru_rq(rq);
-+
-+	if (done) {
-+		rq->end_io_data = end_io_data;
-+		done(rq, 0);
-+	}
-+}
-+
-+void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn *done)
-+{
-+	struct nvme_command *cmd = nvme_req(rq)->cmd;
-+	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
-+	struct nvme_ns *ns = rq->q->queuedata;
-+	struct gendisk *disk = ns ? ns->disk : NULL;
-+	u32 effects;
-+
-+	/*
-+	 * This function may be called in interrupt context, so we cannot sleep
-+	 * but nvme_passthru_[start|end]() may sleep so we need to execute
-+	 * the command in a work queue.
-+	 */
-+	effects = nvme_command_effects(ctrl, ns, cmd->common.opcode);
-+	if (effects) {
-+		rq->end_io = done;
-+		INIT_WORK(&nvme_req(rq)->work, nvme_execute_passthru_rq_work);
-+		queue_work(nvme_wq, &nvme_req(rq)->work);
-+		return;
-+	}
-+
-+	blk_execute_rq_nowait(rq->q, disk, rq, 0, done);
-+}
-+EXPORT_SYMBOL_GPL(nvme_execute_passthru_rq_nowait);
-+#endif /* CONFIG_NVME_TARGET_PASSTHRU */
-+
- /*
-  * Check we didn't inadvertently grow the command structure sizes:
-  */
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 22e8401352c2..9523779de662 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -128,6 +128,9 @@ struct nvme_request {
- 	u8			flags;
- 	u16			status;
- 	struct nvme_ctrl	*ctrl;
-+#ifdef CONFIG_NVME_TARGET_PASSTHRU
-+	struct work_struct	work;
-+#endif
- };
- 
- /*
-@@ -652,4 +655,8 @@ static inline struct nvme_ns *nvme_get_ns_from_dev(struct device *dev)
- 	return dev_to_disk(dev)->private_data;
- }
- 
-+#ifdef CONFIG_NVME_TARGET_PASSTHRU
-+void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn *done);
-+#endif /* CONFIG_NVME_TARGET_PASSTHRU */
-+
- #endif /* _NVME_H */
 -- 
-2.20.1
+Sincerely yours,
+Mike.
 
