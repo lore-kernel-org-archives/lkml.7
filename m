@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89614CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56249CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB06222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA70222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011829;
-	bh=qrgMHvYkNzV/6Kpc4eHMvhYOFkbPtSxCvDcXEAj+KRg=;
+	s=default; t=1572011831;
+	bh=lLl/382NG8pDVJRx0pzc1ZEuxoHjguG+r8UTBHq+76s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qWpx/KfLVn7ieSeqeK8RmU7/9LC9pv7BkPgSA6grm9SCk1/Ox2WM4ebx3sqngUUQM
-	 IhQpzC8P8c03++5YQxSyqQbbKET1wWHI1ypJbvau/PgjmnK2xSmXcmTEBzL9E8k7wU
-	 GEi2CrNwXxr9pXCt45GttwrCfX3lepd5KosyhD6o=
+	b=PoM6tI2Y8J2yUg2nP93keAfxVkL49l5hjKMYh/90RD6xkYCYdGjZdhIrJaWsXf3/6
+	 sFXj7fTId0jObB3P+NVYKOr/k/HoALksBUUY9GZKouV0p7+KUP43pBg+03Dzraq20s
+	 iG+vZPgy6EM/oQvXuYvVAh7X0td7hQ17NBO8YXLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394804AbfJYN5H (ORCPT
+        id S2505278AbfJYN5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394777AbfJYN5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:03 -0400
+        id S2394797AbfJYN5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 181A1222CD;
-        Fri, 25 Oct 2019 13:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E5521E6F;
+        Fri, 25 Oct 2019 13:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011822;
-        bh=qrgMHvYkNzV/6Kpc4eHMvhYOFkbPtSxCvDcXEAj+KRg=;
+        s=default; t=1572011826;
+        bh=lLl/382NG8pDVJRx0pzc1ZEuxoHjguG+r8UTBHq+76s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9kNWArI3e/CJzrRPskENrm4T5/c8okqCw24bB2wiQNr2NMfd8cDpaqRs9snfMhJ5
-         XOjllWKYlIf4IIXM66cSgqJn8hfvPTOuF7noCsJXPCSY0lf9uoBkXW5BMnZduTuDT/
-         FEZrbMRXe2sQFyLEEodYgJ1U8taXd3lwA9gvdfa0=
+        b=YyITTS1GBtMEPt6oj5R13jY3BqHEx3rtH0SIA3td2rlICIkboWxbVOWTnsZL54w4e
+         kFG6BT2NWP/Q5IO9agejJG9OfqcFwHuPFHhBYr2sTFFwkqliBLZGLf/ENz/mybFs/C
+         +YgdknK0kGw+nvU9pjwj70ZSvoCvuDItsZE2fKCQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 33/37] ubi: ubi_wl_get_peb: Increase the number of attempts while getting PEB
-Date:   Fri, 25 Oct 2019 09:55:57 -0400
-Message-Id: <20191025135603.25093-33-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 35/37] ipv6: Handle race in addrconf_dad_work
+Date:   Fri, 25 Oct 2019 09:55:59 -0400
+Message-Id: <20191025135603.25093-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
@@ -59,98 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 8615b94f029a4fb4306d3512aaf1c45f5fc24d4b ]
+[ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
 
-Running stress test io_paral (A pressure ubi test in mtd-utils) on an
-UBI device with fewer PEBs (fastmap enabled) may cause ENOSPC errors and
-make UBI device read-only, but there are still free PEBs on the UBI
-device. This problem can be easily reproduced by performing the following
-steps on a 2-core machine:
-  $ modprobe nandsim first_id_byte=0x20 second_id_byte=0x33 parts=80
-  $ modprobe ubi mtd="0,0" fm_autoconvert
-  $ ./io_paral /dev/ubi0
+Rajendra reported a kernel panic when a link was taken down:
 
-We may see the following verbose:
-(output)
-  [io_paral] update_volume():108: failed to write 380 bytes at offset
-  95920 of volume 2
-  [io_paral] update_volume():109: update: 97088 bytes
-  [io_paral] write_thread():227: function pwrite() failed with error 28
-  (No space left on device)
-  [io_paral] write_thread():229: cannot write 15872 bytes to offs 31744,
-  wrote -1
-(dmesg)
-  ubi0 error: ubi_wl_get_peb [ubi]: Unable to get a free PEB from user WL
-  pool
-  ubi0 warning: ubi_eba_write_leb [ubi]: switch to read-only mode
-  CPU: 0 PID: 2027 Comm: io_paral Not tainted 5.3.0-rc2-00001-g5986cd0 #9
-  ubi0 warning: try_write_vid_and_data [ubi]: failed to write VID header
-  to LEB 2:5, PEB 18
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
-  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-  Call Trace:
-    dump_stack+0x85/0xba
-    ubi_eba_write_leb+0xa1e/0xa40 [ubi]
-    vol_cdev_write+0x307/0x520 [ubi]
-    vfs_write+0xfa/0x280
-    ksys_pwrite64+0xc5/0xe0
-    __x64_sys_pwrite64+0x22/0x30
-    do_syscall_64+0xbf/0x440
+[ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
+[ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
 
-In function ubi_wl_get_peb, the operation of filling the pool
-(ubi_update_fastmap) with free PEBs and fetching a free PEB from the pool
-is not atomic. After thread A filling the pool with free PEB, free PEB may
-be taken away by thread B. When thread A checks the expression again, the
-condition is still unsatisfactory. At this time, there may still be free
-PEBs on UBI that can be filled into the pool.
+<snip>
 
-This patch increases the number of attempts to obtain PEB. An extreme
-case (No free PEBs left after creating test volumes) has been tested on
-different type of machines for 100 times. The biggest number of attempts
-are shown below:
+[ 6870.570501] Call Trace:
+[ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
+[ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
+[ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
+[ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
+[ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
+[ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
+[ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
+[ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
+[ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
+[ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
+[ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
 
-             x86_64     arm64
-  2-core        4         4
-  4-core        8         4
-  8-core        4         4
+addrconf_dad_work is kicked to be scheduled when a device is brought
+up. There is a race between addrcond_dad_work getting scheduled and
+taking the rtnl lock and a process taking the link down (under rtnl).
+The latter removes the host route from the inet6_addr as part of
+addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
+to use the host route in ipv6_ifa_notify. If the down event removes
+the host route due to the race to the rtnl, then the BUG listed above
+occurs.
 
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+This scenario does not occur when the ipv6 address is not kept
+(net.ipv6.conf.all.keep_addr_on_down = 0) as addrconf_ifdown sets the
+state of the ifp to DEAD. Handle when the addresses are kept by checking
+IF_READY which is reset by addrconf_ifdown.
+
+The 'dead' flag for an inet6_addr is set only under rtnl, in
+addrconf_ifdown and it means the device is getting removed (or IPv6 is
+disabled). The interesting cases for changing the idev flag are
+addrconf_notify (NETDEV_UP and NETDEV_CHANGE) and addrconf_ifdown
+(reset the flag). The former does not have the idev lock - only rtnl;
+the latter has both. Based on that the existing dead + IF_READY check
+can be moved to right after the rtnl_lock in addrconf_dad_work.
+
+Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
+Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/fastmap-wl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/ipv6/addrconf.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mtd/ubi/fastmap-wl.c b/drivers/mtd/ubi/fastmap-wl.c
-index 98f7d6be8d1fc..e091017d85f6a 100644
---- a/drivers/mtd/ubi/fastmap-wl.c
-+++ b/drivers/mtd/ubi/fastmap-wl.c
-@@ -205,7 +205,7 @@ static int produce_free_peb(struct ubi_device *ubi)
-  */
- int ubi_wl_get_peb(struct ubi_device *ubi)
- {
--	int ret, retried = 0;
-+	int ret, attempts = 0;
- 	struct ubi_fm_pool *pool = &ubi->fm_pool;
- 	struct ubi_fm_pool *wl_pool = &ubi->fm_wl_pool;
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index d2968a79abea8..75f520db6a6db 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -3974,6 +3974,12 @@ static void addrconf_dad_work(struct work_struct *w)
  
-@@ -230,12 +230,12 @@ int ubi_wl_get_peb(struct ubi_device *ubi)
+ 	rtnl_lock();
  
- 	if (pool->used == pool->size) {
- 		spin_unlock(&ubi->wl_lock);
--		if (retried) {
-+		attempts++;
-+		if (attempts == 10) {
- 			ubi_err(ubi, "Unable to get a free PEB from user WL pool");
- 			ret = -ENOSPC;
- 			goto out;
- 		}
--		retried = 1;
- 		up_read(&ubi->fm_eba_sem);
- 		ret = produce_free_peb(ubi);
- 		if (ret < 0) {
++	/* check if device was taken down before this delayed work
++	 * function could be canceled
++	 */
++	if (idev->dead || !(idev->if_flags & IF_READY))
++		goto out;
++
+ 	spin_lock_bh(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_PREDAD) {
+ 		action = DAD_BEGIN;
+@@ -4019,11 +4025,6 @@ static void addrconf_dad_work(struct work_struct *w)
+ 		goto out;
+ 
+ 	write_lock_bh(&idev->lock);
+-	if (idev->dead || !(idev->if_flags & IF_READY)) {
+-		write_unlock_bh(&idev->lock);
+-		goto out;
+-	}
+-
+ 	spin_lock(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_DEAD) {
+ 		spin_unlock(&ifp->lock);
 -- 
 2.20.1
 
