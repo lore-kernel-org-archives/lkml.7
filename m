@@ -2,110 +2,106 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13352CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C820BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA7420663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="OEkUCuCs"
+	by mail.kernel.org (Postfix) with ESMTP id A969621E6F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503666AbfJYP6m (ORCPT
+        id S2503708AbfJYP6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 25 Oct 2019 11:58:44 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:47772 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2503625AbfJYP6m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 11:58:42 -0400
-Received: from mout.gmx.net ([212.227.15.19]:46101 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbfJYP6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:58:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572019109;
-        bh=eNYeWKDIB22/x3+hJ1wYKceqzT/kR7P9oYg/eZ1Fqww=;
-        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
-         References;
-        b=OEkUCuCspvUNR0kn5yFz1mMXNQhBcBvCEzIFXsgcy9rp46FQqTqk2aqXlKPWYL6n2
-         NDU8x3LDJ0Gix3DpA8rHig+fra8dqMUAr+vc57wOEg4+kg4XD6T/MEEiPseSW3DicS
-         Hi/mt12e3GN3jSJhWSnFsHuDYffTA0Y7usEbOh50=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M3UZ6-1iNTkd3Fis-000enE; Fri, 25
- Oct 2019 17:58:29 +0200
-Message-ID: <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-From:   Robert Stupp <snazy@gmx.de>
-Reply-To: snazy@snazy.de
-To:     Michal Hocko <mhocko@kernel.org>, snazy@snazy.de
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Date:   Fri, 25 Oct 2019 17:58:28 +0200
-In-Reply-To: <20191025140029.GL17610@dhcp22.suse.cz>
-References: <20191025092143.GE658@dhcp22.suse.cz>
-         <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
-         <20191025114633.GE17610@dhcp22.suse.cz>
-         <d740f26ea94f9f1c2fc0530c1ea944f8e59aad85.camel@gmx.de>
-         <20191025120505.GG17610@dhcp22.suse.cz>
-         <20191025121104.GH17610@dhcp22.suse.cz>
-         <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
-         <20191025132700.GJ17610@dhcp22.suse.cz>
-         <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
-         <20191025135749.GK17610@dhcp22.suse.cz>
-         <20191025140029.GL17610@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TgBMTJi_1572019105;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TgBMTJi_1572019105)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 25 Oct 2019 23:58:28 +0800
+Subject: Re: [PATCH] mm: thp: clear PageDoubleMap flag when the last PMD map
+ gone
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1571938066-29031-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20191025153618.ajcecye3bjm5abax@box>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <74becfc0-3c34-bdd2-02cd-25b763c92f3b@linux.alibaba.com>
+Date:   Fri, 25 Oct 2019 08:58:22 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:8k2hW5NuA1biyDwFEWxoiO3W0XVbwSBLRBjQSA+bqybFSFXtRzO
- fitmfcOpKDDj8s1Yhvst2xIsD6Xv/Kz3Ilyem7Us1oKc0C52meIfEHKCdYw3SZQia6wWT/p
- fSzzIsWMyovVleoQdb06hgfyrTSID6iBKx1o6FZ/fk6gFUTAUP9wf/KNEN7YloWeXeKsEtZ
- HIHDD5R+hYUKTc6UbG9fA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9Y10tAzUers=:WWHIy8YxpWIn3qV2z7BFYn
- 9TkMWv4IZA1WB610G20wZb1T1gz9agd694E/Y+uX9JVVHzqMxJaDevVLw9yQ7jJwEORICIX4Z
- Vi/PzPlkFWclaV5qm8MyvXQwJ33EMtSjpmGXLiPt3hf5TUnOtMiTExYukHa1JQAXXbU8FBHNV
- fEdBIkemc03EaImNMtfnDUIPQ5bxo3eoFyRNINYd7ErgUO2Rb7ZZeG8GUwqb50QIAxQblRRyY
- +A+pEzGKTid4aBdAC6Ts4OZenJcePmWBw18FI2I/PAjPaD+kN60ZFI6sSwIFupLip5lRYPK96
- umuHuoQa6qEHfsPmN61wFjW5BDqjoZbp5Skk8zwlyqCNy6qfHQH9s8hQr/FTTLjBtkbrq+ifS
- WShVkdz5DMw6AgVKlbBt0r6quRwt+YcR9j4t87SOZNzHXUU8KBPk+Qv2zPWUl8pOlj8J1MYP0
- C3fCdePq9l8VrieTh30rK/JrFotedZgfSdVZ2k6rp+9WD9Wg2cGTqW6tT+f6SASk/GCw98M/Q
- gTmMDHUjAgzFNlUCddUAIIW6ACwSfGeiX4wsI3cVBZMEQCJUJrqoNaJMIIvQzlpUNLTXowGSs
- 2jUGmkTmGw42N7M+ko/Fx1ez9G2GCwxW4IPKoOpctLXVDEbpj+vH4/14HUnTMrMuMrn2wrXs4
- 9YUOzM3jEQZRMyDmEERuzfga5NB/r3bdwHGWrzKjJ+Ysv+MVIY1Vl8rUZ+fZVcFPVD2uQ770t
- 0CvDaxcRojA9TJWbqLhDTPl6ppdFlYMt/HTmp/W7dVPrYSrhhUJyFtv4G209Ri9UzsccY9rKp
- 47wcatiHuFKLxJemsAwVO74nqYGBqC7oTsnIZe3bj3mF3U6N7Gy0H40d3wGbgow/8KMR6q9/Z
- jbC9FH2b1NSKxKdacDFQSA2kWaNXG4u00i2ZBQObM/0qUBKqB2bCOs6XQ35pgnSev5JWjgYqv
- w5G1y4KlbMITY64dQW8SlfLVzwtJ8Zny3b3PNw4Adhl4mszkJ12e/comCbDSYxjqkZzLvmEdC
- NilZAzqPRpfiU1Hf5zA8ZBIj2uvsFT8aP3gZsYR4P7/Lq7A/sUQSwyNXPq+l2rCk9mz/Q+GOo
- hjuJODvk8yCtHVUhEW4enyLVairB9BZr50467XQ7WAhpM/waxPG5ZHDtLSg4FLnHPolz4FD6W
- YP06VpUOi9BdKeKB7Y7vl8gPYBkybgoBHo7kowmLPXYQ2UnrVto2mstHQRFRflE8X3l+jJKGz
- Ugs+CEDnk2QRpl+g8nblUobCOABJl2zC5yAcjZg==
+In-Reply-To: <20191025153618.ajcecye3bjm5abax@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 16:00 +0200, Michal Hocko wrote:
-> And one more thing. Considering that you are able to reproduce and
-> you
-> have a working kernel, could you try to bisect this?
 
-Yikes - running self-built kernels brings back a lot of memories ;)
 
-Anyway, going this route (using the `config` from Ubuntu 5.1.x as a
-base and accepting the defaults for `make oldconfig`):
+On 10/25/19 8:36 AM, Kirill A. Shutemov wrote:
+> On Fri, Oct 25, 2019 at 01:27:46AM +0800, Yang Shi wrote:
+>> File THP sets PageDoubleMap flag when the first it gets PTE mapped, but
+>> the flag is never cleared until the THP is freed.  This result in
+>> unbalanced state although it is not a big deal.
+>>
+>> Clear the flag when the last compound_mapcount is gone.  It should be
+>> cleared when all the PTE maps are gone (become PMD mapped only) as well,
+>> but this needs check all subpage's _mapcount every time any subpage's
+>> rmap is removed, the overhead may be not worth.  The anonymous THP also
+>> just clears PageDoubleMap flag when the last PMD map is gone.
+> NAK, sorry.
+>
+> The key difference with anon THP that file THP can be mapped again with
+> PMD after all PMD (or all) mappings are gone.
+>
+> Your patch breaks the case when you map the page with PMD again while the
+> page is still mapped with PTEs. Who would set PageDoubleMap() in this
+> case?
 
-git checkout v5.1-rc1
-git bisect start
-git bisect bad
-git bisect good v5.0
+Aha, yes, you are right. I missed that point. However, I'm wondering we 
+might move this up a little bit like this:
 
-... first try @ e266ca36da7de45b64b05698e98e04b578a88888 is a `git
-bisect good`
+diff --git a/mm/rmap.c b/mm/rmap.c
+index d17cbf3..ac046fd 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1230,15 +1230,17 @@ static void page_remove_file_rmap(struct page 
+*page, bool compound)
+                         if (atomic_add_negative(-1, &page[i]._mapcount))
+                                 nr++;
+                 }
++
++               /* No PTE map anymore */
++               if (nr == HPAGE_PMD_NR)
++                       ClearPageDoubleMap(compound_head(page));
++
+                 if (!atomic_add_negative(-1, compound_mapcount_ptr(page)))
+                         goto out;
+                 if (PageSwapBacked(page))
+                         __dec_node_page_state(page, NR_SHMEM_PMDMAPPED);
+                 else
+                         __dec_node_page_state(page, NR_FILE_PMDMAPPED);
+-
+-               /* The last PMD map is gone */
+-               ClearPageDoubleMap(compound_head(page));
+         } else {
+                 if (!atomic_add_negative(-1, &page->_mapcount))
+                         goto out;
 
-Will report back, when I've got a result...
 
+This should guarantee no PTE map anymore, it should be safe to clear the 
+flag.
+
+>
 
