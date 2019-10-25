@@ -2,111 +2,82 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FC3CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21F7C47E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BB92070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C865A2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437271AbfJYHsN (ORCPT
+        id S2437299AbfJYHuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:48:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42380 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727275AbfJYHsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:48:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 00:48:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
-   d="scan'208";a="349954678"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 25 Oct 2019 00:48:09 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iNuKP-0001e9-Ew; Fri, 25 Oct 2019 10:48:09 +0300
-Date:   Fri, 25 Oct 2019 10:48:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] ACPI / PMIC: Add byt prefix to Crystal Cove PMIC
- OpRegion driver
-Message-ID: <20191025074809.GB32742@smile.fi.intel.com>
-References: <20191024213827.144974-1-hdegoede@redhat.com>
- <20191024213827.144974-3-hdegoede@redhat.com>
- <20191025074154.GX32742@smile.fi.intel.com>
+        Fri, 25 Oct 2019 03:50:54 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38199 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbfJYHux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:50:53 -0400
+X-Originating-IP: 92.137.17.54
+Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F10A6240013;
+        Fri, 25 Oct 2019 07:50:50 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "kernelci.org bot" <bot@kernelci.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO CS
+In-Reply-To: <20191024193225.GM46373@sirena.co.uk>
+References: <20191024141309.22434-1-gregory.clement@bootlin.com> <20191024193225.GM46373@sirena.co.uk>
+Date:   Fri, 25 Oct 2019 09:50:50 +0200
+Message-ID: <87woctp8kl.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025074154.GX32742@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 10:41:54AM +0300, Andy Shevchenko wrote:
-> On Thu, Oct 24, 2019 at 11:38:25PM +0200, Hans de Goede wrote:
-> > Our current Crystal Cove OpRegion driver is only valid for the
-> > Crystal Cove PMIC variant found on Bay Trail (BYT) boards,
-> > Cherry Trail (CHT) based boards use another variant.
-> > 
-> > At least the regulator registers are different on CHT and these registers
-> > are one of the things controlled by the custom PMIC OpRegion.
-> > 
-> > Commit 4d9ed62ab142 ("mfd: intel_soc_pmic: Export separate mfd-cell
-> > configs for BYT and CHT") has disabled the intel_pmic_crc.c code for CHT
-> > devices by removing the "crystal_cove_pmic" MFD cell on CHT devices.
-> > 
-> > This commit renames the intel_pmic_crc.c driver and the cell to be
-> > prefixed with "byt" to indicate that this code is for BYT devices only.
-> > 
-> > This is a preparation patch for adding a separate PMIC OpRegion
-> > driver for the CHT variant of the Crystal Cove PMIC (sometimes called
-> > Crystal Cove Plus in Android kernel sources).
-> 
-> >  .../acpi/pmic/{intel_pmic_crc.c => intel_pmic_bytcrc.c}    | 4 ++--
-> >  drivers/mfd/intel_soc_pmic_crc.c                           | 2 +-
-> 
-> I would go with previously established pattern, i.e. intel_pmic_bytcc.c.
+Hi Mark,
 
-That said you may use mine
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> On Thu, Oct 24, 2019 at 04:13:09PM +0200, Gregory CLEMENT wrote:
+>> Even if the flag use_gpio_descriptors is set, it is possible that
+>> cs_gpiods was not allocated, which leads to a kernel crash:
+>> 
+>> Unable to handle kernel NULL pointer dereference at virtual address 00000000
+>> pgd = (ptrval)
+>> [00000000] *pgd=00000000
+>> Internal error: Oops: 5 [#1] ARM
+>> Modules linked in:
+>> CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.4.0-rc3 #1
+>> Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+>> PC is at of_register_spi_device+0x20c/0x38c
+>> LR is at __of_find_property+0x3c/0x60
+>> pc : [<c09b45dc>]    lr : [<c0c47a98>]    psr: 20000013
+>
+> Please think hard before including complete backtraces in upstream
+> reports, they are very large and contain almost no useful information
+> relative to their size so often obscure the relevant content in your
+> message. If part of the backtrace is usefully illustrative then it's
+> usually better to pull out the relevant sections.
 
-> 
-> > +++ b/drivers/mfd/intel_soc_pmic_crc.c
-> > @@ -75,7 +75,7 @@ static struct mfd_cell crystal_cove_byt_dev[] = {
-> >  		.resources = gpio_resources,
-> >  	},
-> >  	{
-> > -		.name = "crystal_cove_pmic",
-> > +		.name = "byt_crystal_cove_pmic",
-> >  	},
-> >  	{
-> >  		.name = "crystal_cove_pwm",
-> 
-> I'm wondering shouldn't we rename the PWM and GPIO for the sake of consistency?
-> Yes, if a driver is used on both CHT and BYT, let it provide two names.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+You can remove it while applying it, or I can send a v2.
+
+Actually I thought you would squash it with the initial patch to avoid
+the bisectability break.
+
+Gregory
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
