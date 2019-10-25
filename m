@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10A4CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFBFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8FA21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAC02070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388382AbfJYSOh (ORCPT
+        id S2388204AbfJYSO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:14:37 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12175 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388217AbfJYSO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:14:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:21876 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732284AbfJYSOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 14:14:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 11:14:25 -0700
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 11:14:25 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,229,1569308400"; 
-   d="scan'208";a="400193953"
+   d="scan'208";a="224001625"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Oct 2019 11:14:24 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 25 Oct 2019 11:14:24 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id D7F2B300B2B; Fri, 25 Oct 2019 11:14:24 -0700 (PDT)
+        id CB2443000FA; Fri, 25 Oct 2019 11:14:24 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, eranian@google.com, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v3 3/7] perf evsel: Add iterator to iterate over events ordered by CPU
-Date:   Fri, 25 Oct 2019 11:14:13 -0700
-Message-Id: <20191025181417.10670-4-andi@firstfloor.org>
+Subject: [PATCH v3 1/7] perf pmu: Use file system cache to optimize sysfs access
+Date:   Fri, 25 Oct 2019 11:14:11 -0700
+Message-Id: <20191025181417.10670-2-andi@firstfloor.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191025181417.10670-1-andi@firstfloor.org>
 References: <20191025181417.10670-1-andi@firstfloor.org>
@@ -49,109 +49,286 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add some common code that is needed to iterate over all events
-in CPU order. Used in followon patches
+pmu.c does a lot of redundant /sys accesses while parsing aliases
+and probing for PMUs. On large systems with a lot of PMUs this
+can get expensive (>2s):
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 27.25    1.227847           8    160888     16976 openat
+ 26.42    1.190481           7    164224    164077 stat
+
+Add a cache to remember if specific file names exist or don't
+exist, which eliminates most of this overhead.
+
+Also optimize some stat() calls to be slightly cheaper access()
+
+Resulting in:
+
+  0.18    0.004166           2      1851       305 open
+  0.08    0.001970           2       829       622 access
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 
-v2: Add cpumap__for_each_cpu macro to factor out some common code
+v2: Use single lookup function as API (Jiri)
 ---
- tools/perf/util/cpumap.h |  8 ++++++++
- tools/perf/util/evlist.c | 33 +++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h |  4 ++++
- tools/perf/util/evsel.h  |  1 +
- 4 files changed, 46 insertions(+)
+ tools/perf/util/Build     |  1 +
+ tools/perf/util/fncache.c | 63 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/fncache.h |  7 +++++
+ tools/perf/util/pmu.c     | 34 +++++++--------------
+ tools/perf/util/srccode.c |  9 +-----
+ 5 files changed, 83 insertions(+), 31 deletions(-)
+ create mode 100644 tools/perf/util/fncache.c
+ create mode 100644 tools/perf/util/fncache.h
 
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 2553bef1279d..a9b13d72fd29 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -60,4 +60,12 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
- 
- int cpu_map__cpu(struct perf_cpu_map *cpus, int idx);
- bool cpu_map__has(struct perf_cpu_map *cpus, int cpu);
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 39814b1806a6..2c1504fe924c 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -48,6 +48,7 @@ perf-y += header.o
+ perf-y += callchain.o
+ perf-y += values.o
+ perf-y += debug.o
++perf-y += fncache.o
+ perf-y += machine.o
+ perf-y += map.o
+ perf-y += pstack.o
+diff --git a/tools/perf/util/fncache.c b/tools/perf/util/fncache.c
+new file mode 100644
+index 000000000000..5afcd7edbe7a
+--- /dev/null
++++ b/tools/perf/util/fncache.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Manage a cache of file names' existence */
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <linux/list.h>
++#include "fncache.h"
 +
-+#define __cpumap__for_each_cpu(cpus, index, cpu, maxcpu)\
-+	for ((index) = 0; 				\
-+	     (cpu) = (index) < (maxcpu) ? (cpus)->map[index] : -1, (index) < (maxcpu); \
-+	     (index)++)
-+#define cpumap__for_each_cpu(cpus, index, cpu) \
-+	__cpumap__for_each_cpu(cpus, index, cpu, (cpus)->nr)
++struct fncache {
++	struct hlist_node nd;
++	bool res;
++	char name[];
++};
 +
- #endif /* __PERF_CPUMAP_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index fdce590d2278..da3c8f8ef68e 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -342,6 +342,39 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
- 		return perf_thread_map__nr(evlist->core.threads);
- }
- 
-+struct perf_cpu_map *evlist__cpu_iter_start(struct evlist *evlist)
++#define FNHSIZE 61
++
++static struct hlist_head fncache_hash[FNHSIZE];
++
++unsigned shash(const unsigned char *s)
 +{
-+	struct perf_cpu_map *cpus;
-+	struct evsel *pos;
-+
-+	/*
-+	 * evlist->cpus is not necessarily a superset of all the
-+	 * event's cpus, so compute our own super set. This
-+	 * assume that there is a super set
-+	 */
-+	cpus = evlist->core.cpus;
-+	evlist__for_each_entry(evlist, pos) {
-+		pos->cpu_index = 0;
-+		if (pos->core.cpus->nr > cpus->nr)
-+			cpus = pos->core.cpus;
-+	}
-+	return cpus;
++	unsigned h = 0;
++	while (*s)
++		h = 65599 * h + *s++;
++	return h ^ (h >> 16);
 +}
 +
-+bool evlist__cpu_iter_skip(struct evsel *ev, int cpu)
++static bool lookup_fncache(const char *name, bool *res)
 +{
-+	if (ev->cpu_index >= ev->core.cpus->nr)
-+		return true;
-+	if (cpu >= 0 && ev->core.cpus->map[ev->cpu_index] != cpu)
-+		return true;
++	int h = shash((const unsigned char *)name) % FNHSIZE;
++	struct fncache *n;
++
++	hlist_for_each_entry (n, &fncache_hash[h], nd) {
++		if (!strcmp(n->name, name)) {
++			*res = n->res;
++			return true;
++		}
++	}
 +	return false;
 +}
 +
-+void evlist__cpu_iter_next(struct evsel *ev)
++static void update_fncache(const char *name, bool res)
 +{
-+	ev->cpu_index++;
++	struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
++	int h = shash((const unsigned char *)name) % FNHSIZE;
++
++	if (!n)
++		return;
++	strcpy(n->name, name);
++	n->res = res;
++	hlist_add_head(&n->nd, &fncache_hash[h]);
 +}
 +
- void evlist__disable(struct evlist *evlist)
- {
- 	struct evsel *pos;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 13051409fd22..c1deb8ebdcea 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -336,6 +336,10 @@ void perf_evlist__to_front(struct evlist *evlist,
- void perf_evlist__set_tracking_event(struct evlist *evlist,
- 				     struct evsel *tracking_evsel);
- 
-+struct perf_cpu_map *evlist__cpu_iter_start(struct evlist *evlist);
-+bool evlist__cpu_iter_skip(struct evsel *ev, int cpu);
-+void evlist__cpu_iter_next(struct evsel *ev);
++/* No LRU, only use when bounded in some other way. */
++bool file_available(const char *name)
++{
++	bool res;
 +
- struct evsel *
- perf_evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
++	if (lookup_fncache(name, &res))
++		return res;
++	res = access(name, R_OK) == 0;
++	update_fncache(name, res);
++	return res;
++}
+diff --git a/tools/perf/util/fncache.h b/tools/perf/util/fncache.h
+new file mode 100644
+index 000000000000..fe020beaefb1
+--- /dev/null
++++ b/tools/perf/util/fncache.h
+@@ -0,0 +1,7 @@
++#ifndef _FCACHE_H
++#define _FCACHE_H 1
++
++unsigned shash(const unsigned char *s);
++bool file_available(const char *name);
++
++#endif
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index adbe97e941dd..81357cc3d59a 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -24,6 +24,7 @@
+ #include "pmu-events/pmu-events.h"
+ #include "string2.h"
+ #include "strbuf.h"
++#include "fncache.h"
  
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index ddc5ee6f6592..cf90019ae744 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -95,6 +95,7 @@ struct evsel {
- 	bool			collect_stat;
- 	bool			weak_group;
- 	bool			percore;
-+	int			cpu_index;
- 	const char		*pmu_name;
- 	struct {
- 		perf_evsel__sb_cb_t	*cb;
+ struct perf_pmu_format {
+ 	char *name;
+@@ -82,7 +83,6 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
+  */
+ static int pmu_format(const char *name, struct list_head *format)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -92,8 +92,8 @@ static int pmu_format(const char *name, struct list_head *format)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
+-		return 0;	/* no error if format does not exist */
++	if (!file_available(path))
++		return 0;
+ 
+ 	if (perf_pmu__format_parse(path, format))
+ 		return -1;
+@@ -475,7 +475,6 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
+  */
+ static int pmu_aliases(const char *name, struct list_head *head)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -485,8 +484,8 @@ static int pmu_aliases(const char *name, struct list_head *head)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s/bus/event_source/devices/%s/events", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
+-		return 0;	 /* no error if 'events' does not exist */
++	if (!file_available(path))
++		return 0;
+ 
+ 	if (pmu_aliases_parse(path, head))
+ 		return -1;
+@@ -525,7 +524,6 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
+  */
+ static int pmu_type(const char *name, __u32 *type)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	FILE *file;
+ 	int ret = 0;
+@@ -537,7 +535,7 @@ static int pmu_type(const char *name, __u32 *type)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
++	if (access(path, R_OK) < 0)
+ 		return -1;
+ 
+ 	file = fopen(path, "r");
+@@ -628,14 +626,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
+ static bool pmu_is_uncore(const char *name)
+ {
+ 	char path[PATH_MAX];
+-	struct perf_cpu_map *cpus;
+-	const char *sysfs = sysfs__mountpoint();
++	const char *sysfs;
+ 
++	sysfs = sysfs__mountpoint();
+ 	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
+-	cpus = __pmu_cpumask(path);
+-	perf_cpu_map__put(cpus);
+-
+-	return !!cpus;
++	return file_available(path);
+ }
+ 
+ /*
+@@ -645,7 +640,6 @@ static bool pmu_is_uncore(const char *name)
+  */
+ static int is_arm_pmu_core(const char *name)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -655,10 +649,7 @@ static int is_arm_pmu_core(const char *name)
+ 	/* Look for cpu sysfs (specific to arm) */
+ 	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
+ 				sysfs, name);
+-	if (stat(path, &st) == 0)
+-		return 1;
+-
+-	return 0;
++	return file_available(path);
+ }
+ 
+ static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
+@@ -1528,7 +1519,6 @@ bool pmu_have_event(const char *pname, const char *name)
+ 
+ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs;
+ 
+@@ -1538,10 +1528,8 @@ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+ 
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
+-
+-	if (stat(path, &st) < 0)
++	if (!file_available(path))
+ 		return NULL;
+-
+ 	return fopen(path, "r");
+ }
+ 
+diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
+index d84ed8b6caaa..c29edaaca863 100644
+--- a/tools/perf/util/srccode.c
++++ b/tools/perf/util/srccode.c
+@@ -16,6 +16,7 @@
+ #include "srccode.h"
+ #include "debug.h"
+ #include <internal/lib.h> // page_size
++#include "fncache.h"
+ 
+ #define MAXSRCCACHE (32*1024*1024)
+ #define MAXSRCFILES     64
+@@ -36,14 +37,6 @@ static LIST_HEAD(srcfile_list);
+ static long map_total_sz;
+ static int num_srcfiles;
+ 
+-static unsigned shash(unsigned char *s)
+-{
+-	unsigned h = 0;
+-	while (*s)
+-		h = 65599 * h + *s++;
+-	return h ^ (h >> 16);
+-}
+-
+ static int countlines(char *map, int maplen)
+ {
+ 	int numl;
 -- 
 2.21.0
 
