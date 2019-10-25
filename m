@@ -2,154 +2,144 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73DECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4871ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9B1206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF1521929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AtqC8MCW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437581AbfJYIBr (ORCPT
+        id S2437609AbfJYIB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:01:47 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46021 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730337AbfJYIBr (ORCPT
+        Fri, 25 Oct 2019 04:01:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41072 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2437584AbfJYIBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:01:47 -0400
-X-Originating-IP: 86.202.229.42
-Received: from localhost (lfbn-lyo-1-146-42.w86-202.abo.wanadoo.fr [86.202.229.42])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 28521FF811;
-        Fri, 25 Oct 2019 08:01:41 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 10:01:36 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org,
-        mark.rutland@arm.com, nicolas.ferre@microchip.com,
-        ludovic.desroches@microchip.com, arnd@arndb.de,
-        Tudor.Ambarus@microchip.com
-Subject: Re: [PATCH 2/2] hwrng: atmel: add new platform support for sam9x60
-Message-ID: <20191025080136.GA3125@piout.net>
-References: <20191024170452.2145-1-codrin.ciubotariu@microchip.com>
- <20191024170452.2145-2-codrin.ciubotariu@microchip.com>
+        Fri, 25 Oct 2019 04:01:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571990513;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=otCDV1QKx3d7IK+sWoEGFb/N0+D+qi80epo1tUZLYdM=;
+        b=AtqC8MCWMDWZTD854HIWbUeizBluIKajJr6IDeSl/XUgGggungQbTnwwBlO8qrn6Z+fWPd
+        WYyfz4al1ixvxUOc2l2WfEF2gEVtVAAbS1ha5aOIJ8GlOTSP5da8w1CSatndfIGcFjg3BT
+        bcCfojpcxswdE7uUo2tH+1WUWjiHrwI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-ETcj03UuP5WCRQnyylt_tg-1; Fri, 25 Oct 2019 04:01:50 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DE76107AD31;
+        Fri, 25 Oct 2019 08:01:47 +0000 (UTC)
+Received: from krava (unknown [10.43.17.61])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 1BCBF60852;
+        Fri, 25 Oct 2019 08:01:42 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 10:01:42 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3 2/9] perf tools: splice events onto evlist even on
+ error
+Message-ID: <20191025080142.GF31679@krava>
+References: <20191023005337.196160-1-irogers@google.com>
+ <20191024190202.109403-1-irogers@google.com>
+ <20191024190202.109403-3-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024170452.2145-2-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20191024190202.109403-3-irogers@google.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: ETcj03UuP5WCRQnyylt_tg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/10/2019 20:04:52+0300, Codrin Ciubotariu wrote:
-> Add platform support for the new IP found on sam9x60 SoC. For this
-> version, if the peripheral clk is above 100MHz, the HALFR bit must be
-> set. This bit is available only if the IP can generate a random number
-> every 168 cycles (instead of 84).
-> 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+On Thu, Oct 24, 2019 at 12:01:55PM -0700, Ian Rogers wrote:
+> If event parsing fails the event list is leaked, instead splice the list
+> onto the out result and let the caller cleanup.
+>=20
+> An example input for parse_events found by libFuzzer that reproduces
+> this memory leak is 'm{'.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  drivers/char/hw_random/atmel-rng.c | 39 ++++++++++++++++++++++++++++--
->  1 file changed, 37 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/char/hw_random/atmel-rng.c b/drivers/char/hw_random/atmel-rng.c
-> index e55705745d5e..0aa9425e6c3e 100644
-> --- a/drivers/char/hw_random/atmel-rng.c
-> +++ b/drivers/char/hw_random/atmel-rng.c
-> @@ -14,14 +14,22 @@
->  #include <linux/clk.h>
->  #include <linux/io.h>
->  #include <linux/hw_random.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  
->  #define TRNG_CR		0x00
-> +#define TRNG_MR		0x04
->  #define TRNG_ISR	0x1c
->  #define TRNG_ODATA	0x50
->  
->  #define TRNG_KEY	0x524e4700 /* RNG */
->  
-> +#define TRNG_HALFR	BIT(0) /* generate RN every 168 cycles */
+>  tools/perf/util/parse-events.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index edb3ae76777d..f0d50f079d2f 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1968,15 +1968,20 @@ int parse_events(struct evlist *evlist, const cha=
+r *str,
+> =20
+>  =09ret =3D parse_events__scanner(str, &parse_state, PE_START_EVENTS);
+>  =09perf_pmu__parse_cleanup();
 > +
-> +struct atmel_trng_pdata {
+> +=09if (!ret && list_empty(&parse_state.list)) {
+> +=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> +=09=09return -1;
+> +=09}
+> +
+> +=09/*
+> +=09 * Add list to the evlist even with errors to allow callers to clean =
+up.
+> +=09 */
+> +=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
 
-Could that be just atmel_trng_data?
+I still dont understand this one.. if there was an error, the list
+should be empty, right? also if there's an error and there's something
+on the list, what is it? how it gets deleted?
 
-There is no platform data in this driver and it is DT only.
+thanks,
+jirka
 
-> +	bool has_half_rate;
-> +};
 > +
->  struct atmel_trng {
->  	struct clk *clk;
->  	void __iomem *base;
-> @@ -63,6 +71,7 @@ static int atmel_trng_probe(struct platform_device *pdev)
->  {
->  	struct atmel_trng *trng;
->  	struct resource *res;
-> +	const struct atmel_trng_pdata *pdata;
->  	int ret;
->  
->  	trng = devm_kzalloc(&pdev->dev, sizeof(*trng), GFP_KERNEL);
-> @@ -77,6 +86,17 @@ static int atmel_trng_probe(struct platform_device *pdev)
->  	trng->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(trng->clk))
->  		return PTR_ERR(trng->clk);
-> +	pdata = of_device_get_match_data(&pdev->dev);
-> +	if (!pdata)
-> +		return -ENODEV;
-> +
-> +	if (pdata->has_half_rate) {
-> +		unsigned long rate = clk_get_rate(trng->clk);
-> +
-> +		/* if peripheral clk is above 100MHz, set HALFR */
-> +		if (rate > 100000000)
-> +			writel(TRNG_HALFR, trng->base + TRNG_MR);
-> +	}
->  
->  	ret = clk_prepare_enable(trng->clk);
->  	if (ret)
-> @@ -141,9 +161,24 @@ static const struct dev_pm_ops atmel_trng_pm_ops = {
->  };
->  #endif /* CONFIG_PM */
->  
-> +static struct atmel_trng_pdata at91sam9g45_config = {
-> +	.has_half_rate = false,
-> +};
-> +
-> +static struct atmel_trng_pdata sam9x60_config = {
-> +	.has_half_rate = true,
-> +};
-> +
->  static const struct of_device_id atmel_trng_dt_ids[] = {
-> -	{ .compatible = "atmel,at91sam9g45-trng" },
-> -	{ /* sentinel */ }
-> +	{
-> +		.compatible = "atmel,at91sam9g45-trng",
-> +		.data = &at91sam9g45_config,
-> +	}, {
-> +		.compatible = "microchip,sam9x60-trng",
-> +		.data = &sam9x60_config,
-> +	}, {
-> +		/* sentinel */
-> +	}
->  };
->  MODULE_DEVICE_TABLE(of, atmel_trng_dt_ids);
->  
-> -- 
-> 2.20.1
-> 
+>  =09if (!ret) {
+>  =09=09struct evsel *last;
+> =20
+> -=09=09if (list_empty(&parse_state.list)) {
+> -=09=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
+> -=09=09=09return -1;
+> -=09=09}
+> -
+> -=09=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
+>  =09=09evlist->nr_groups +=3D parse_state.nr_groups;
+>  =09=09last =3D evlist__last(evlist);
+>  =09=09last->cmdline_group_boundary =3D true;
+> --=20
+> 2.23.0.866.gb869b98d4c-goog
+>=20
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
