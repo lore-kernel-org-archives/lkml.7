@@ -2,867 +2,204 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E674CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FB9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F18921D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF9D20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="U0yk0JYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439470AbfJYKa0 (ORCPT
+        id S2391340AbfJYKfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:30:26 -0400
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:46379 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438845AbfJYKaY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:30:24 -0400
-Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id x9PATsr6052377
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 25 Oct 2019 18:29:54 +0800 (CST)
-        (envelope-from Chunyan.Zhang@unisoc.com)
-Received: from localhost (10.0.74.79) by BJMBX01.spreadtrum.com (10.0.64.7)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 25 Oct 2019 18:29:54
- +0800
-From:   Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <devicetree@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH 3/3] arm64: dts: Add Unisoc's SC9863A SoC support
-Date:   Fri, 25 Oct 2019 18:29:15 +0800
-Message-ID: <20191025102915.23677-4-chunyan.zhang@unisoc.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191025102915.23677-1-chunyan.zhang@unisoc.com>
-References: <20191025102915.23677-1-chunyan.zhang@unisoc.com>
+        Fri, 25 Oct 2019 06:35:41 -0400
+Received: from mail-eopbgr780052.outbound.protection.outlook.com ([40.107.78.52]:34571
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730471AbfJYKfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:35:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i4bHzkR3IViX7H2yHG91gSygmK0sVbhs9ubJQdgf8uA0bZNnUN577SrQFYVKzCmX99eT5HLGB072nymWjjZexGj2eaupuK2TMjTWD7G/jeguICgxPIayywKG96ngiA13X6XCKLnRTTlMalK6eEOeqffmGS0l/IFXzIa7JO4pXTazNLK5jJImFwKOPhqhfSpm/aKnFVKXaWJB6mKdCukBmRbCtuXawhk07v31+JsBLMkA1iKVxWp5B7D87oIW5+9jNPn5Cfe/gPJuWb5dUnN16bjA08DTGDZsd3x9FeMCrGy94anpyl73CqiSQanNaWTsTOYMYTXqxRUJYBrZB87OIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SComKLtQjpuNMeXa6WRzQlaWeDY0C4UQcKo06oI7xeg=;
+ b=NMn3RPBsxBZNCAuHsiQjMNpfIq/aefyT+bo3kUaIalNFfSQpHyg0wvGHbdJp89vnPk4JNMGC+SCvu9Av0twkp5oKCUk+ZdMA39O/XxkzZXfO3j/g0p/oNi3Z0/SXKpD5kJ4bvUkE6KyTfLiNetfOHmz//e86MT7+yB9Wv36i5zbNsQ0HPUwLKLRCao2bLRNaTw9odM8dT9tUnKEFTGzcGo0YqdElKwcUY+rf/ehouuhB3DJQvLuCIXBftVhXU4dXSxwGVCYhn7//uAgRjxY92Ne1bBdnv+3EJZ4Y8j1Fseh1jr/jG2v2XpfNiekeen0PVUziYVhfYaRA9iel9b6cuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SComKLtQjpuNMeXa6WRzQlaWeDY0C4UQcKo06oI7xeg=;
+ b=U0yk0JYWl6cJxczxjxXb7GRg4xz8WENScnwJgFaiuFN9ii6v7ftnDjXwuJw+OgBMRaWdBtZut7bASD1S7ebUsx3/M4TFmtgE6UAYC47pLWNmBnEqD4FcPWdyjEtVHP1nn9KYZE5wODPfcoqR9amm7zllEwWYVAdIeDK4BMapmNQ=
+Received: from BN6PR12MB1699.namprd12.prod.outlook.com (10.175.97.148) by
+ BN6PR12MB1201.namprd12.prod.outlook.com (10.168.229.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.24; Fri, 25 Oct 2019 10:34:49 +0000
+Received: from BN6PR12MB1699.namprd12.prod.outlook.com
+ ([fe80::bde7:9044:dcdb:4b67]) by BN6PR12MB1699.namprd12.prod.outlook.com
+ ([fe80::bde7:9044:dcdb:4b67%7]) with mapi id 15.20.2347.029; Fri, 25 Oct 2019
+ 10:34:49 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Steven Price <steven.price@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>
+CC:     Sharat Masetty <smasetty@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Erico Nunes <nunes.erico@gmail.com>
+Subject: Re: [RESEND PATCH v4] drm: Don't free jobs in
+ wait_event_interruptible()
+Thread-Topic: [RESEND PATCH v4] drm: Don't free jobs in
+ wait_event_interruptible()
+Thread-Index: AQHVioeeWUPlfPdq20eM0BhRAkUxUKdrHcsAgAAKlYCAAAIxgA==
+Date:   Fri, 25 Oct 2019 10:34:49 +0000
+Message-ID: <4ca8b788-57b6-92e9-ab94-a39057320ee2@amd.com>
+References: <20191024162424.38548-1-steven.price@arm.com>
+ <02be6c7e-eda9-2a5b-f553-8d82fcd84b47@amd.com>
+ <fdaebd89-ddc5-83da-687e-acf295007f31@arm.com>
+In-Reply-To: <fdaebd89-ddc5-83da-687e-acf295007f31@arm.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: AM4PR0902CA0022.eurprd09.prod.outlook.com
+ (2603:10a6:200:9b::32) To BN6PR12MB1699.namprd12.prod.outlook.com
+ (2603:10b6:404:ff::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 628d9d27-3ba6-46c8-c75f-08d75936f64a
+x-ms-traffictypediagnostic: BN6PR12MB1201:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR12MB120173F9B7FACBAE51E7997B83650@BN6PR12MB1201.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(39860400002)(396003)(199004)(189003)(81166006)(81156014)(6512007)(6486002)(8936002)(7736002)(8676002)(186003)(14454004)(31686004)(65806001)(65956001)(446003)(11346002)(46003)(476003)(6246003)(4326008)(6436002)(305945005)(486006)(2616005)(229853002)(6306002)(86362001)(6116002)(2906002)(386003)(31696002)(52116002)(71190400001)(71200400001)(478600001)(102836004)(6506007)(53546011)(5660300002)(76176011)(316002)(66556008)(58126008)(66476007)(64756008)(66446008)(36756003)(66946007)(99286004)(966005)(256004)(14444005)(110136005)(54906003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR12MB1201;H:BN6PR12MB1699.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: leci9ZAGMcqj2Qe6ZGqx+VmMYkwU5gVGLu6DbbTKCKrq7aZwCH1f9PXXYjHk3K3r0Y8C29L+gQeXPZly9Z9N4Rd/VYrMYwsJ6Ijya/sZEx5w5bGMxTSDPWxwhCcoPbuKGKSlT86VSYZggi54JuAnf2lWukvnswVEX3l77tpZzuWtteolyUdn4+wzBKdjyWGe/5ZWJXxzu8jr1fJJw5ARR4ZTZtj7tYwvzX97CFPDNgy8oWn/yz9uogOiZntjVr1V/w64uyPA+q+Dii5H/GXTURuzk6V0q0MziVWoMGxmWYrMQuQ3BXYrT9V9AG3ZaF+HJ0ziTiBKbvdh48qFuXDjoE9E69btsLWl4ONiRy5m4NYkIS5HaEz5pNXM2dT+9RLoR9ZaXSDxL7sM3Pc53aZMYPjLntnOLvjLPfBwa6FCZhbjpsn4INITLus+6fmKWPUOYuU8vx1pbsZs+16kwNRFJRlGWKsZYFtQ1Ox5GNerZlY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FD0AA77C3A5DB9439F04731CBE08862B@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.0.74.79]
-X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL: SHSQR01.spreadtrum.com x9PATsr6052377
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 628d9d27-3ba6-46c8-c75f-08d75936f64a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 10:34:49.3850
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xlLvLEBLm60M4eRKrLGKZdJAf0TVJXPP4uH0Lk8uTlL1RcRtYslolwM3bduBUm6V
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Add basic DT to support Unisoc's SC9863A, with this patch,
-the board sp9863a-1h10 can run into console.
-
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- arch/arm64/boot/dts/sprd/Makefile         |   3 +-
- arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 536 ++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl3.dtsi     | 188 ++++++++
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  40 ++
- 4 files changed, 766 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-
-diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
-index 2bdc23804f40..f4f1f5148cc2 100644
---- a/arch/arm64/boot/dts/sprd/Makefile
-+++ b/arch/arm64/boot/dts/sprd/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
--			sp9860g-1h10.dtb
-+			sp9860g-1h10.dtb	\
-+			sp9863a-1h10.dtb
-diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-new file mode 100644
-index 000000000000..578d71a932d9
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-@@ -0,0 +1,536 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SC9863A SoC DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Communications Inc.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "sharkl3.dtsi"
-+
-+/ {
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&CPU0>;
-+				};
-+				core1 {
-+					cpu = <&CPU1>;
-+				};
-+				core2 {
-+					cpu = <&CPU2>;
-+				};
-+				core3 {
-+					cpu = <&CPU3>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&CPU4>;
-+				};
-+				core1 {
-+					cpu = <&CPU5>;
-+				};
-+				core2 {
-+					cpu = <&CPU6>;
-+				};
-+				core3 {
-+					cpu = <&CPU7>;
-+				};
-+			};
-+		};
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x200>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x300>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU4: cpu@400 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x400>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU5: cpu@500 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x500>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU6: cpu@600 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x600>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU7: cpu@700 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x700>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+	};
-+
-+	idle-states {
-+		entry-method = "arm,psci";
-+		CORE_PD: core_pd {
-+			compatible = "arm,idle-state";
-+			entry-latency-us = <4000>;
-+			exit-latency-us = <4000>;
-+			min-residency-us = <10000>;
-+			local-timer-stop;
-+			arm,psci-suspend-param = <0x00010000>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@14000000 {
-+		compatible = "arm,gic-v3";
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		redistributor-stride = <0x0 0x20000>;	/* 128KB stride */
-+		#redistributor-regions = <1>;
-+		interrupt-controller;
-+		reg = <0x0 0x14000000 0 0x20000>,	/* GICD */
-+		      <0x0 0x14040000 0 0x100000>;	/* GICR */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		v2m_0: v2m@0 {
-+			compatible = "arm,gic-v2m-frame";
-+			msi-controller;
-+			reg = <0 0 0 0x1000>;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>, /* Physical Secure PPI */
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>, /* Physical Non-Secure PPI */
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>, /* Virtual PPI */
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>; /* Hipervisor PPI */
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	soc {
-+		funnel@10001000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x10001000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_soc_out_port: endpoint {
-+						remote-endpoint = <&etb_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_soc_in_port: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etb@10003000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x10003000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			in-ports {
-+				port {
-+					etb_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_soc_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12001000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12001000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_little_out_port: endpoint {
-+						remote-endpoint =
-+						<&etf_little_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_little_in_port0: endpoint {
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_little_in_port1: endpoint {
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel_little_in_port2: endpoint {
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					funnel_little_in_port3: endpoint {
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@12002000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x12002000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_little_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_in_port0>;
-+					};
-+				};
-+			};
-+
-+			in-port {
-+				port {
-+					etf_little_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@12003000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x12003000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_big_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_in_port1>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					etf_big_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12004000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12004000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_ca55_out_port: endpoint {
-+						remote-endpoint =
-+						<&funnel_soc_in_port>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_ca55_in_port0: endpoint {
-+						remote-endpoint =
-+						<&etf_little_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_ca55_in_port1: endpoint {
-+						remote-endpoint =
-+						<&etf_big_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12005000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12005000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_big_out_port: endpoint {
-+						remote-endpoint =
-+						<&etf_big_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_big_in_port0: endpoint {
-+						remote-endpoint = <&etm4_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_big_in_port1: endpoint {
-+						remote-endpoint = <&etm5_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel_big_in_port2: endpoint {
-+						remote-endpoint = <&etm6_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					funnel_big_in_port3: endpoint {
-+						remote-endpoint = <&etm7_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13040000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13040000 0 0x1000>;
-+			cpu = <&CPU0>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm0_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13140000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13140000 0 0x1000>;
-+			cpu = <&CPU1>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm1_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13240000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13240000 0 0x1000>;
-+			cpu = <&CPU2>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm2_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13340000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13340000 0 0x1000>;
-+			cpu = <&CPU3>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm3_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port3>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13440000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13440000 0 0x1000>;
-+			cpu = <&CPU4>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm4_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13540000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13540000 0 0x1000>;
-+			cpu = <&CPU5>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm5_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13640000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13640000 0 0x1000>;
-+			cpu = <&CPU6>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm6_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13740000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13740000 0 0x1000>;
-+			cpu = <&CPU7>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm7_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port3>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sharkl3.dtsi b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-new file mode 100644
-index 000000000000..3ef233f70dc4
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc Sharkl3 platform DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Communications Inc.
-+ */
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ap_ahb_regs: syscon@20e00000 {
-+			compatible = "syscon";
-+			reg = <0 0x20e00000 0 0x10000>;
-+		};
-+
-+		pub_apb_regs: syscon@300e0000 {
-+			compatible = "syscon";
-+			reg = <0 0x300e0000 0 0x10000>;
-+		};
-+
-+		pub_ahb_regs: syscon@300f0000 {
-+			compatible = "syscon";
-+			reg = <0 0x300f0000 0 0x10000>;
-+		};
-+
-+		aon_intc_regs: syscon@40200000 {
-+			compatible = "syscon";
-+			reg = <0 0x40200000 0 0x10000>;
-+		};
-+
-+		pmu_regs: syscon@402b0000 {
-+			compatible = "syscon";
-+			reg = <0 0x402b0000 0 0x10000>;
-+		};
-+
-+		aon_apb_regs: syscon@402e0000 {
-+			compatible = "syscon";
-+			reg = <0 0x402e0000 0 0x10000>;
-+		};
-+
-+		anlg_phy_g1_regs: syscon@40350000 {
-+			compatible = "syscon";
-+			reg = <0 0x40350000 0 0x3000>;
-+		};
-+
-+		anlg_phy_g2_regs: syscon@40353000 {
-+			compatible = "syscon";
-+			reg = <0 0x40353000 0 0x6000>;
-+		};
-+
-+		anlg_phy_g4_regs: syscon@40359000 {
-+			compatible = "syscon";
-+			reg = <0 0x40359000 0 0x3000>;
-+		};
-+
-+		anlg_phy_g5_regs: syscon@4035c000 {
-+			compatible = "syscon";
-+			reg = <0 0x4035c000 0 0x3000>;
-+		};
-+
-+		anlg_phy_g7_regs: syscon@40363000 {
-+			compatible = "syscon";
-+			reg = <0 0x40363000 0 0x3000>;
-+		};
-+
-+		anlg_wrap_wcn_regs: syscon@40366000 {
-+			compatible = "syscon";
-+			reg = <0 0x40366000 0 0x3000>;
-+		};
-+
-+		wcn_regs: syscon@403a0000 {
-+			compatible = "syscon";
-+			reg = <0 0x403a0000 0 0x10000>;
-+		};
-+
-+		ap_intc0_regs: syscon@40500000 {
-+			compatible = "syscon";
-+			reg = <0 0x40500000 0 0x10000>;
-+		};
-+
-+		ap_intc1_regs: syscon@40510000 {
-+			compatible = "syscon";
-+			reg = <0 0x40510000 0 0x10000>;
-+		};
-+
-+		ap_intc2_regs: syscon@40520000 {
-+			compatible = "syscon";
-+			reg = <0 0x40520000 0 0x10000>;
-+		};
-+
-+		ap_intc3_regs: syscon@40530000 {
-+			compatible = "syscon";
-+			reg = <0 0x40530000 0 0x10000>;
-+		};
-+
-+		ap_intc4_regs: syscon@40540000 {
-+			compatible = "syscon";
-+			reg = <0 0x40540000 0 0x10000>;
-+		};
-+
-+		ap_intc5_regs: syscon@40550000 {
-+			compatible = "syscon";
-+			reg = <0 0x40550000 0 0x10000>;
-+		};
-+
-+		mm_ahb_regs: syscon@60800000 {
-+			compatible = "syscon";
-+			reg = <0 0x60800000 0 0x10000>;
-+		};
-+
-+		mm_vsp_ahb_regs: syscon@62000000 {
-+			compatible = "syscon";
-+			reg = <0 0x62000000 0 0x10000>;
-+		};
-+
-+		ap_apb_regs: syscon@71300000 {
-+			compatible = "syscon";
-+			reg = <0 0x71300000 0 0x40000>;
-+		};
-+
-+		ap-apb {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x0 0x70000000 0x10000000>;
-+
-+			uart0: serial@0 {
-+				compatible = "sprd,sc9863-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x0 0x100>;
-+				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart1: serial@100000 {
-+				compatible = "sprd,sc9863-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x100000 0x100>;
-+				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart2: serial@200000 {
-+				compatible = "sprd,sc9863-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x200000 0x100>;
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart3: serial@300000 {
-+				compatible = "sprd,sc9863-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x300000 0x100>;
-+				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart4: serial@400000 {
-+				compatible = "sprd,sc9863-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x400000 0x100>;
-+				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+		};
-+	};
-+
-+	ext_26m: ext-26m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <26000000>;
-+		clock-output-names = "ext-26m";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-new file mode 100644
-index 000000000000..b6fbb5ca37e1
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SP9863A-1h10 boards DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Communications Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sc9863a.dtsi"
-+
-+/ {
-+	model = "Spreadtrum SP9863A-1H10 Board";
-+
-+	compatible = "sprd,sp9863a-1h10", "sprd,sc9863a";
-+
-+	sprd,sc-id = <9863 1 0x20000>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x80000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
--- 
-2.20.1
-
-
+QW0gMjUuMTAuMTkgdW0gMTI6MjYgc2NocmllYiBTdGV2ZW4gUHJpY2U6DQo+IE9uIDI1LzEwLzIw
+MTkgMTA6NDksIEtvZW5pZywgQ2hyaXN0aWFuIHdyb3RlOg0KPj4gQW0gMjQuMTAuMTkgdW0gMTg6
+MjQgc2NocmllYiBTdGV2ZW4gUHJpY2U6DQo+Pj4gZHJtX3NjaGVkX2NsZWFudXBfam9icygpIGF0
+dGVtcHRzIHRvIGZyZWUgZmluaXNoZWQgam9icywgaG93ZXZlciBiZWNhdXNlDQo+Pj4gaXQgaXMg
+Y2FsbGVkIGFzIHRoZSBjb25kaXRpb24gb2Ygd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkgaXQg
+bXVzdCBub3QNCj4+PiBzbGVlcC4gVW5mb3J0dWFudGx5IHNvbWUgZnJlZSBjYWxsYmFja3MgKG5v
+dGlibHkgZm9yIFBhbmZyb3N0KSBkbyBzbGVlcC4NCj4+Pg0KPj4+IEluc3RlYWQgbGV0J3MgcmVu
+YW1lIGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoKSB0bw0KPj4+IGRybV9zY2hlZF9nZXRfY2xlYW51
+cF9qb2IoKSBhbmQgc2ltcGx5IHJldHVybiBhIGpvYiBmb3IgcHJvY2Vzc2luZyBpZg0KPj4+IHRo
+ZXJlIGlzIG9uZS4gVGhlIGNhbGxlciBjYW4gdGhlbiBjYWxsIHRoZSBmcmVlX2pvYigpIGNhbGxi
+YWNrIG91dHNpZGUNCj4+PiB0aGUgd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkgd2hlcmUgc2xl
+ZXBpbmcgaXMgcG9zc2libGUgYmVmb3JlDQo+Pj4gcmUtY2hlY2tpbmcgYW5kIHJldHVybmluZyB0
+byBzbGVlcCBpZiBuZWNlc3NhcnkuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBTdGV2ZW4gUHJp
+Y2UgPHN0ZXZlbi5wcmljZUBhcm0uY29tPg0KPj4+IC0tLQ0KPj4+IFByZXZpb3VzIHBvc3Rpbmc6
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTA5MjYxNDE2MzAuMTQyNTgtMS1zdGV2
+ZW4ucHJpY2VAYXJtLmNvbS8NCj4+Pg0KPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIv
+c2NoZWRfbWFpbi5jIHwgNDUgKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4+PiAgICAxIGZp
+bGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRpb25zKC0pDQo+Pj4NCj4+PiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPj4+IGluZGV4IDlhMGVlNzRkODJk
+Yy4uMTQ4NDY4NDQ3YmE5IDEwMDY0NA0KPj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVs
+ZXIvc2NoZWRfbWFpbi5jDQo+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hl
+ZF9tYWluLmMNCj4+PiBAQCAtNjIyLDQzICs2MjIsNDEgQEAgc3RhdGljIHZvaWQgZHJtX3NjaGVk
+X3Byb2Nlc3Nfam9iKHN0cnVjdCBkbWFfZmVuY2UgKmYsIHN0cnVjdCBkbWFfZmVuY2VfY2IgKmNi
+KQ0KPj4+ICAgIH0NCj4+PiAgICANCj4+PiAgICAvKioNCj4+PiAtICogZHJtX3NjaGVkX2NsZWFu
+dXBfam9icyAtIGRlc3Ryb3kgZmluaXNoZWQgam9icw0KPj4+ICsgKiBkcm1fc2NoZWRfZ2V0X2Ns
+ZWFudXBfam9iIC0gZmV0Y2ggdGhlIG5leHQgZmluaXNoZWQgam9iIHRvIGJlIGRlc3Ryb3llZA0K
+Pj4+ICAgICAqDQo+Pj4gICAgICogQHNjaGVkOiBzY2hlZHVsZXIgaW5zdGFuY2UNCj4+PiAgICAg
+Kg0KPj4+IC0gKiBSZW1vdmUgYWxsIGZpbmlzaGVkIGpvYnMgZnJvbSB0aGUgbWlycm9yIGxpc3Qg
+YW5kIGRlc3Ryb3kgdGhlbS4NCj4+PiArICogUmV0dXJucyB0aGUgbmV4dCBmaW5pc2hlZCBqb2Ig
+ZnJvbSB0aGUgbWlycm9yIGxpc3QgKGlmIHRoZXJlIGlzIG9uZSkNCj4+PiArICogcmVhZHkgZm9y
+IGl0IHRvIGJlIGRlc3Ryb3llZC4NCj4+PiAgICAgKi8NCj4+PiAtc3RhdGljIHZvaWQgZHJtX3Nj
+aGVkX2NsZWFudXBfam9icyhzdHJ1Y3QgZHJtX2dwdV9zY2hlZHVsZXIgKnNjaGVkKQ0KPj4+ICtz
+dGF0aWMgc3RydWN0IGRybV9zY2hlZF9qb2IgKg0KPj4+ICtkcm1fc2NoZWRfZ2V0X2NsZWFudXBf
+am9iKHN0cnVjdCBkcm1fZ3B1X3NjaGVkdWxlciAqc2NoZWQpDQo+Pj4gICAgew0KPj4+ICsJc3Ry
+dWN0IGRybV9zY2hlZF9qb2IgKmpvYiA9IE5VTEw7DQo+PiBQbGVhc2UgZG9uJ3QgaW5pdGlhbGl6
+ZSBqb2IgaGVyZS4NCj4gR29vZCBzcG90LCB3aWxsIGZpeC4NCj4NCj4+PiAgICAJdW5zaWduZWQg
+bG9uZyBmbGFnczsNCj4+PiAgICANCj4+PiAgICAJLyogRG9uJ3QgZGVzdHJveSBqb2JzIHdoaWxl
+IHRoZSB0aW1lb3V0IHdvcmtlciBpcyBydW5uaW5nICovDQo+Pj4gICAgCWlmIChzY2hlZC0+dGlt
+ZW91dCAhPSBNQVhfU0NIRURVTEVfVElNRU9VVCAmJg0KPj4+ICAgIAkgICAgIWNhbmNlbF9kZWxh
+eWVkX3dvcmsoJnNjaGVkLT53b3JrX3RkcikpDQo+Pj4gLQkJcmV0dXJuOw0KPj4+IC0NCj4+PiAr
+CQlyZXR1cm4gTlVMTDsNCj4+PiAgICANCj4+PiAtCXdoaWxlICghbGlzdF9lbXB0eSgmc2NoZWQt
+PnJpbmdfbWlycm9yX2xpc3QpKSB7DQo+Pj4gLQkJc3RydWN0IGRybV9zY2hlZF9qb2IgKmpvYjsN
+Cj4+PiArCXNwaW5fbG9ja19pcnFzYXZlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0K
+Pj4+ICAgIA0KPj4+IC0JCWpvYiA9IGxpc3RfZmlyc3RfZW50cnkoJnNjaGVkLT5yaW5nX21pcnJv
+cl9saXN0LA0KPj4+ICsJam9iID0gbGlzdF9maXJzdF9lbnRyeV9vcl9udWxsKCZzY2hlZC0+cmlu
+Z19taXJyb3JfbGlzdCwNCj4+PiAgICAJCQkJICAgICAgIHN0cnVjdCBkcm1fc2NoZWRfam9iLCBu
+b2RlKTsNCj4+PiAtCQlpZiAoIWRtYV9mZW5jZV9pc19zaWduYWxlZCgmam9iLT5zX2ZlbmNlLT5m
+aW5pc2hlZCkpDQo+Pj4gLQkJCWJyZWFrOw0KPj4+ICAgIA0KPj4+IC0JCXNwaW5fbG9ja19pcnFz
+YXZlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPj4+ICsJaWYgKGpvYiAmJiBkbWFf
+ZmVuY2VfaXNfc2lnbmFsZWQoJmpvYi0+c19mZW5jZS0+ZmluaXNoZWQpKSB7DQo+Pj4gICAgCQkv
+KiByZW1vdmUgam9iIGZyb20gcmluZ19taXJyb3JfbGlzdCAqLw0KPj4+ICAgIAkJbGlzdF9kZWxf
+aW5pdCgmam9iLT5ub2RlKTsNCj4+PiAtCQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZzY2hlZC0+
+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPj4+IC0NCj4+PiAtCQlzY2hlZC0+b3BzLT5mcmVlX2pv
+Yihqb2IpOw0KPj4+ICsJfSBlbHNlIHsNCj4+PiArCQlqb2IgPSBOVUxMOw0KPj4+ICsJCS8qIHF1
+ZXVlIHRpbWVvdXQgZm9yIG5leHQgam9iICovDQo+Pj4gKwkJZHJtX3NjaGVkX3N0YXJ0X3RpbWVv
+dXQoc2NoZWQpOw0KPj4+ICAgIAl9DQo+Pj4gICAgDQo+Pj4gLQkvKiBxdWV1ZSB0aW1lb3V0IGZv
+ciBuZXh0IGpvYiAqLw0KPj4+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJnNjaGVkLT5qb2JfbGlzdF9s
+b2NrLCBmbGFncyk7DQo+Pj4gLQlkcm1fc2NoZWRfc3RhcnRfdGltZW91dChzY2hlZCk7DQo+Pj4g
+ICAgCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnNjaGVkLT5qb2JfbGlzdF9sb2NrLCBmbGFncyk7
+DQo+Pj4gICAgDQo+Pj4gKwlyZXR1cm4gam9iOw0KPj4+ICAgIH0NCj4+PiAgICANCj4+PiAgICAv
+KioNCj4+PiBAQCAtNjk4LDEyICs2OTYsMjEgQEAgc3RhdGljIGludCBkcm1fc2NoZWRfbWFpbih2
+b2lkICpwYXJhbSkNCj4+PiAgICAJCXN0cnVjdCBkcm1fc2NoZWRfZmVuY2UgKnNfZmVuY2U7DQo+
+Pj4gICAgCQlzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqc2NoZWRfam9iOw0KPj4+ICAgIAkJc3RydWN0
+IGRtYV9mZW5jZSAqZmVuY2U7DQo+Pj4gKwkJc3RydWN0IGRybV9zY2hlZF9qb2IgKmNsZWFudXBf
+am9iID0gTlVMTDsNCj4+PiAgICANCj4+PiAgICAJCXdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZShz
+Y2hlZC0+d2FrZV91cF93b3JrZXIsDQo+Pj4gLQkJCQkJIChkcm1fc2NoZWRfY2xlYW51cF9qb2Jz
+KHNjaGVkKSwNCj4+PiArCQkJCQkgKGNsZWFudXBfam9iID0gZHJtX3NjaGVkX2dldF9jbGVhbnVw
+X2pvYihzY2hlZCkpIHx8DQo+Pj4gICAgCQkJCQkgKCFkcm1fc2NoZWRfYmxvY2tlZChzY2hlZCkg
+JiYNCj4+PiAgICAJCQkJCSAgKGVudGl0eSA9IGRybV9zY2hlZF9zZWxlY3RfZW50aXR5KHNjaGVk
+KSkpIHx8DQo+Pj4gLQkJCQkJIGt0aHJlYWRfc2hvdWxkX3N0b3AoKSkpOw0KPj4+ICsJCQkJCSBr
+dGhyZWFkX3Nob3VsZF9zdG9wKCkpOw0KPj4+ICsNCj4+PiArCQl3aGlsZSAoY2xlYW51cF9qb2Ip
+IHsNCj4+IEJldHRlciBtYWtlIHRoaXMganVzdCAiaWYgKGNsZWFudXBfam9iKSIuLi4gdG8gbWFr
+ZSBzdXJlIHRoYXQgd2Ugc3RvcA0KPj4gaW1tZWRpYXRlbHkgd2hlbiB0aGUgdGhyZWFkIHNob3Vs
+ZCBzdG9wLg0KPiBPaywgbm8gcHJvYmxlbS4gTm90ZSB0aGF0IHRoaXMgaXMgYSBjaGFuZ2UgaW4g
+YmVoYXZpb3VyIChwcmV2aW91c2x5DQo+IGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoKSB3YXMgY2Fs
+bGVkICpiZWZvcmUqIGNoZWNraW5nDQo+IGt0aHJlYWRfc2hvdWxkX3N0b3AoKSkuIEJ1dCBJIGNh
+bid0IHNlZSB0aGUgaGFybS4NCg0KWWVhaCwgYnV0IHRoaXMgaXMgYWN0dWFsbHkgYSByYXRoZXIg
+bmljZSBpbXByb3ZlbWVudC4NCg0KV2hlbiB3ZSBzYXkgdGhhdCB0aGUgdGhyZWFkIHNob3VsZCBz
+dG9wIHRoZW4gdGhhdCBzaG91bGQgaGFwcGVuIA0KaW1tZWRpYXRlbHkgYW5kIG5vdCBjbGVhbnVw
+IHRoZSBqb2JzIGZpcnN0Lg0KDQpDaHJpc3RpYW4uDQoNCj4NCj4gU3RldmUNCj4NCj4+IEFwYXJ0
+IGZyb20gdGhhdCBsb29rcyBnb29kIHRvIG1lIG5vdywNCj4+IENocmlzdGlhbi4NCj4+DQo+Pj4g
+KwkJCXNjaGVkLT5vcHMtPmZyZWVfam9iKGNsZWFudXBfam9iKTsNCj4+PiArCQkJLyogcXVldWUg
+dGltZW91dCBmb3IgbmV4dCBqb2IgKi8NCj4+PiArCQkJZHJtX3NjaGVkX3N0YXJ0X3RpbWVvdXQo
+c2NoZWQpOw0KPj4+ICsNCj4+PiArCQkJY2xlYW51cF9qb2IgPSBkcm1fc2NoZWRfZ2V0X2NsZWFu
+dXBfam9iKHNjaGVkKTsNCj4+PiArCQl9DQo+Pj4gICAgDQo+Pj4gICAgCQlpZiAoIWVudGl0eSkN
+Cj4+PiAgICAJCQljb250aW51ZTsNCj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fDQo+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0DQo+PiBkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA0KPj4NCg0K
