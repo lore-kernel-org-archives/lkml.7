@@ -2,52 +2,57 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF534CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6104ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F94222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359A5222BD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011726;
-	bh=v1re1H3/74TaiMVYydodnkYdWu+iJf5Xyyhswcr6RRg=;
+	s=default; t=1572011733;
+	bh=Y4a8nZRLPZyWJewIpXd7KkVvD4okkKWNtoDmdd8Yyx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YcMVLRfzBLaKIGh74iRiMTD5cHPlCCOa+HGfKEcwysGrnzqGA4ZaulOrVvsMFF+PR
-	 qSKCSrCkviSLrh2XliCE3/aOjR6sAAaHPIfZuw79VcGTtD1m2csfMD6YIo545kWOzf
-	 RTGJ9tQsfVGUInLSj8ZK8LVqYjx1ykFc1rMMx4AY=
+	b=djlf3aVxReSFgTWQekG7x+r2FhytuNx8Q/q7yZ7o9VkOqOpDp2+R9GorUDyi7pKCp
+	 r3Kyh3GJNosc9oqtsR9bSmxDEGUobRyDOtMF1yUeUiMO3DosUEiPDAcTZhgfXx4P2e
+	 2UGzIdqgMxtFAepE1uZ/Jls8rHBGunnqeAv89eHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505047AbfJYNzZ (ORCPT
+        id S2505085AbfJYNzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:55:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49248 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505026AbfJYNzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:55:23 -0400
+        id S2505056AbfJYNz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:55:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA87121D7F;
-        Fri, 25 Oct 2019 13:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F233121D82;
+        Fri, 25 Oct 2019 13:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011721;
-        bh=v1re1H3/74TaiMVYydodnkYdWu+iJf5Xyyhswcr6RRg=;
+        s=default; t=1572011727;
+        bh=Y4a8nZRLPZyWJewIpXd7KkVvD4okkKWNtoDmdd8Yyx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QwsWTEgJQYvc4Z529NTCtSJTujtWPNq9IMFvJA7OvvycMKnJDOaDw4CMEj4G9rvyY
-         PcpgTaNQ5k60k/oSr7Ee70ba65+s/8LCULfiVDfCwY8RjHH1mTOvlhoVsZyPAoFv+Z
-         nLyulSRnIk9RDE+/QELAfM7eyDkAwj8fJq/Dd1Ew=
+        b=IduWuBUyf3I2mIkFgQYTow9XquYBsn4oR64N0PKdIt4tW94Xptv0xSILX9fCAoRSf
+         eFb17qpPXIM1O635buGE10cWelzdBZx8t6vzrSuVM4gbEobO8f22I1X/AYIXeFCkxk
+         /hZtOaGsGwUamMMY/7MTbw+LYIrq/tbYvEUGeG90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+6b825a6494a04cc0e3f7@syzkaller.appspotmail.com,
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 08/33] llc: fix sk_buff leak in llc_conn_service()
-Date:   Fri, 25 Oct 2019 09:54:40 -0400
-Message-Id: <20191025135505.24762-8-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 11/33] netfilter: conntrack: avoid possible false sharing
+Date:   Fri, 25 Oct 2019 09:54:43 -0400
+Message-Id: <20191025135505.24762-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -60,193 +65,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit b74555de21acd791f12c4a1aeaf653dd7ac21133 ]
+[ Upstream commit e37542ba111f3974dc622ae0a21c1787318de500 ]
 
-syzbot reported:
+As hinted by KCSAN, we need at least one READ_ONCE()
+to prevent a compiler optimization.
 
-    BUG: memory leak
-    unreferenced object 0xffff88811eb3de00 (size 224):
-       comm "syz-executor559", pid 7315, jiffies 4294943019 (age 10.300s)
-       hex dump (first 32 bytes):
-         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-         00 a0 38 24 81 88 ff ff 00 c0 f2 15 81 88 ff ff  ..8$............
-       backtrace:
-         [<000000008d1c66a1>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
-         [<000000008d1c66a1>] slab_post_alloc_hook mm/slab.h:439 [inline]
-         [<000000008d1c66a1>] slab_alloc_node mm/slab.c:3269 [inline]
-         [<000000008d1c66a1>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-         [<00000000447d9496>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-         [<000000000cdbf82f>] alloc_skb include/linux/skbuff.h:1058 [inline]
-         [<000000000cdbf82f>] llc_alloc_frame+0x66/0x110 net/llc/llc_sap.c:54
-         [<000000002418b52e>] llc_conn_ac_send_sabme_cmd_p_set_x+0x2f/0x140  net/llc/llc_c_ac.c:777
-         [<000000001372ae17>] llc_exec_conn_trans_actions net/llc/llc_conn.c:475  [inline]
-         [<000000001372ae17>] llc_conn_service net/llc/llc_conn.c:400 [inline]
-         [<000000001372ae17>] llc_conn_state_process+0x1ac/0x640  net/llc/llc_conn.c:75
-         [<00000000f27e53c1>] llc_establish_connection+0x110/0x170  net/llc/llc_if.c:109
-         [<00000000291b2ca0>] llc_ui_connect+0x10e/0x370 net/llc/af_llc.c:477
-         [<000000000f9c740b>] __sys_connect+0x11d/0x170 net/socket.c:1840
-         [...]
+More details on :
+https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE#it-may-improve-performance
 
-The bug is that most callers of llc_conn_send_pdu() assume it consumes a
-reference to the skb, when actually due to commit b85ab56c3f81 ("llc:
-properly handle dev_queue_xmit() return value") it doesn't.
+sysbot report :
+BUG: KCSAN: data-race in __nf_ct_refresh_acct / __nf_ct_refresh_acct
 
-Revert most of that commit, and instead make the few places that need
-llc_conn_send_pdu() to *not* consume a reference call skb_get() before.
+read to 0xffff888123eb4f08 of 4 bytes by interrupt on cpu 0:
+ __nf_ct_refresh_acct+0xd4/0x1b0 net/netfilter/nf_conntrack_core.c:1796
+ nf_ct_refresh_acct include/net/netfilter/nf_conntrack.h:201 [inline]
+ nf_conntrack_tcp_packet+0xd40/0x3390 net/netfilter/nf_conntrack_proto_tcp.c:1161
+ nf_conntrack_handle_packet net/netfilter/nf_conntrack_core.c:1633 [inline]
+ nf_conntrack_in+0x410/0xaa0 net/netfilter/nf_conntrack_core.c:1727
+ ipv4_conntrack_in+0x27/0x40 net/netfilter/nf_conntrack_proto.c:178
+ nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+ nf_hook_slow+0x83/0x160 net/netfilter/core.c:512
+ nf_hook include/linux/netfilter.h:260 [inline]
+ NF_HOOK include/linux/netfilter.h:303 [inline]
+ ip_rcv+0x12f/0x1a0 net/ipv4/ip_input.c:523
+ __netif_receive_skb_one_core+0xa7/0xe0 net/core/dev.c:5004
+ __netif_receive_skb+0x37/0xf0 net/core/dev.c:5118
+ netif_receive_skb_internal+0x59/0x190 net/core/dev.c:5208
+ napi_skb_finish net/core/dev.c:5671 [inline]
+ napi_gro_receive+0x28f/0x330 net/core/dev.c:5704
+ receive_buf+0x284/0x30b0 drivers/net/virtio_net.c:1061
+ virtnet_receive drivers/net/virtio_net.c:1323 [inline]
+ virtnet_poll+0x436/0x7d0 drivers/net/virtio_net.c:1428
+ napi_poll net/core/dev.c:6352 [inline]
+ net_rx_action+0x3ae/0xa50 net/core/dev.c:6418
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
 
-Fixes: b85ab56c3f81 ("llc: properly handle dev_queue_xmit() return value")
-Reported-by: syzbot+6b825a6494a04cc0e3f7@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+write to 0xffff888123eb4f08 of 4 bytes by task 7191 on cpu 1:
+ __nf_ct_refresh_acct+0xfb/0x1b0 net/netfilter/nf_conntrack_core.c:1797
+ nf_ct_refresh_acct include/net/netfilter/nf_conntrack.h:201 [inline]
+ nf_conntrack_tcp_packet+0xd40/0x3390 net/netfilter/nf_conntrack_proto_tcp.c:1161
+ nf_conntrack_handle_packet net/netfilter/nf_conntrack_core.c:1633 [inline]
+ nf_conntrack_in+0x410/0xaa0 net/netfilter/nf_conntrack_core.c:1727
+ ipv4_conntrack_local+0xbe/0x130 net/netfilter/nf_conntrack_proto.c:200
+ nf_hook_entry_hookfn include/linux/netfilter.h:135 [inline]
+ nf_hook_slow+0x83/0x160 net/netfilter/core.c:512
+ nf_hook include/linux/netfilter.h:260 [inline]
+ __ip_local_out+0x1f7/0x2b0 net/ipv4/ip_output.c:114
+ ip_local_out+0x31/0x90 net/ipv4/ip_output.c:123
+ __ip_queue_xmit+0x3a8/0xa40 net/ipv4/ip_output.c:532
+ ip_queue_xmit+0x45/0x60 include/net/ip.h:236
+ __tcp_transmit_skb+0xdeb/0x1cd0 net/ipv4/tcp_output.c:1158
+ __tcp_send_ack+0x246/0x300 net/ipv4/tcp_output.c:3685
+ tcp_send_ack+0x34/0x40 net/ipv4/tcp_output.c:3691
+ tcp_cleanup_rbuf+0x130/0x360 net/ipv4/tcp.c:1575
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 7191 Comm: syz-fuzzer Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: cc16921351d8 ("netfilter: conntrack: avoid same-timeout update")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
+Cc: Florian Westphal <fw@strlen.de>
+Acked-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/llc_conn.h |  2 +-
- net/llc/llc_c_ac.c     |  8 ++++++--
- net/llc/llc_conn.c     | 32 +++++++++-----------------------
- 3 files changed, 16 insertions(+), 26 deletions(-)
+ net/netfilter/nf_conntrack_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/llc_conn.h b/include/net/llc_conn.h
-index df528a6235487..ea985aa7a6c5e 100644
---- a/include/net/llc_conn.h
-+++ b/include/net/llc_conn.h
-@@ -104,7 +104,7 @@ void llc_sk_reset(struct sock *sk);
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 81a8ef42b88d3..56b1cf82ed3aa 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1793,8 +1793,8 @@ void __nf_ct_refresh_acct(struct nf_conn *ct,
+ 	if (nf_ct_is_confirmed(ct))
+ 		extra_jiffies += nfct_time_stamp;
  
- /* Access to a connection */
- int llc_conn_state_process(struct sock *sk, struct sk_buff *skb);
--int llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb);
-+void llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb);
- void llc_conn_rtn_pdu(struct sock *sk, struct sk_buff *skb);
- void llc_conn_resend_i_pdu_as_cmd(struct sock *sk, u8 nr, u8 first_p_bit);
- void llc_conn_resend_i_pdu_as_rsp(struct sock *sk, u8 nr, u8 first_f_bit);
-diff --git a/net/llc/llc_c_ac.c b/net/llc/llc_c_ac.c
-index 4d78375f9872d..647c0554d04cd 100644
---- a/net/llc/llc_c_ac.c
-+++ b/net/llc/llc_c_ac.c
-@@ -372,6 +372,7 @@ int llc_conn_ac_send_i_cmd_p_set_1(struct sock *sk, struct sk_buff *skb)
- 	llc_pdu_init_as_i_cmd(skb, 1, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
-+		skb_get(skb);
- 		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
-@@ -389,7 +390,8 @@ static int llc_conn_ac_send_i_cmd_p_set_0(struct sock *sk, struct sk_buff *skb)
- 	llc_pdu_init_as_i_cmd(skb, 0, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
--		rc = llc_conn_send_pdu(sk, skb);
-+		skb_get(skb);
-+		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
- 	return rc;
-@@ -406,6 +408,7 @@ int llc_conn_ac_send_i_xxx_x_set_0(struct sock *sk, struct sk_buff *skb)
- 	llc_pdu_init_as_i_cmd(skb, 0, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
-+		skb_get(skb);
- 		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
-@@ -916,7 +919,8 @@ static int llc_conn_ac_send_i_rsp_f_set_ackpf(struct sock *sk,
- 	llc_pdu_init_as_i_cmd(skb, llc->ack_pf, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
--		rc = llc_conn_send_pdu(sk, skb);
-+		skb_get(skb);
-+		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
- 	return rc;
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index 4ff89cb7c86f7..ed2aca12460ca 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -30,7 +30,7 @@
- #endif
- 
- static int llc_find_offset(int state, int ev_type);
--static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *skb);
-+static void llc_conn_send_pdus(struct sock *sk);
- static int llc_conn_service(struct sock *sk, struct sk_buff *skb);
- static int llc_exec_conn_trans_actions(struct sock *sk,
- 				       struct llc_conn_state_trans *trans,
-@@ -193,11 +193,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	return rc;
- }
- 
--int llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb)
-+void llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb)
- {
- 	/* queue PDU to send to MAC layer */
- 	skb_queue_tail(&sk->sk_write_queue, skb);
--	return llc_conn_send_pdus(sk, skb);
-+	llc_conn_send_pdus(sk);
- }
- 
- /**
-@@ -255,7 +255,7 @@ void llc_conn_resend_i_pdu_as_cmd(struct sock *sk, u8 nr, u8 first_p_bit)
- 	if (howmany_resend > 0)
- 		llc->vS = (llc->vS + 1) % LLC_2_SEQ_NBR_MODULO;
- 	/* any PDUs to re-send are queued up; start sending to MAC */
--	llc_conn_send_pdus(sk, NULL);
-+	llc_conn_send_pdus(sk);
- out:;
- }
- 
-@@ -296,7 +296,7 @@ void llc_conn_resend_i_pdu_as_rsp(struct sock *sk, u8 nr, u8 first_f_bit)
- 	if (howmany_resend > 0)
- 		llc->vS = (llc->vS + 1) % LLC_2_SEQ_NBR_MODULO;
- 	/* any PDUs to re-send are queued up; start sending to MAC */
--	llc_conn_send_pdus(sk, NULL);
-+	llc_conn_send_pdus(sk);
- out:;
- }
- 
-@@ -340,16 +340,12 @@ int llc_conn_remove_acked_pdus(struct sock *sk, u8 nr, u16 *how_many_unacked)
- /**
-  *	llc_conn_send_pdus - Sends queued PDUs
-  *	@sk: active connection
-- *	@hold_skb: the skb held by caller, or NULL if does not care
-  *
-- *	Sends queued pdus to MAC layer for transmission. When @hold_skb is
-- *	NULL, always return 0. Otherwise, return 0 if @hold_skb is sent
-- *	successfully, or 1 for failure.
-+ *	Sends queued pdus to MAC layer for transmission.
-  */
--static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *hold_skb)
-+static void llc_conn_send_pdus(struct sock *sk)
- {
- 	struct sk_buff *skb;
--	int ret = 0;
- 
- 	while ((skb = skb_dequeue(&sk->sk_write_queue)) != NULL) {
- 		struct llc_pdu_sn *pdu = llc_pdu_sn_hdr(skb);
-@@ -361,20 +357,10 @@ static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *hold_skb)
- 			skb_queue_tail(&llc_sk(sk)->pdu_unack_q, skb);
- 			if (!skb2)
- 				break;
--			dev_queue_xmit(skb2);
--		} else {
--			bool is_target = skb == hold_skb;
--			int rc;
--
--			if (is_target)
--				skb_get(skb);
--			rc = dev_queue_xmit(skb);
--			if (is_target)
--				ret = rc;
-+			skb = skb2;
- 		}
-+		dev_queue_xmit(skb);
- 	}
--
--	return ret;
- }
- 
- /**
+-	if (ct->timeout != extra_jiffies)
+-		ct->timeout = extra_jiffies;
++	if (READ_ONCE(ct->timeout) != extra_jiffies)
++		WRITE_ONCE(ct->timeout, extra_jiffies);
+ acct:
+ 	if (do_acct)
+ 		nf_ct_acct_update(ct, ctinfo, skb->len);
 -- 
 2.20.1
 
