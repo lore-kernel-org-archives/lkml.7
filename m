@@ -2,104 +2,216 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6453CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF5ECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1A5205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BBE20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:45:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PdQxnVIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440494AbfJYOnR (ORCPT
+        id S2394012AbfJYOpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:43:17 -0400
-Received: from mga11.intel.com ([192.55.52.93]:59704 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436853AbfJYOnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:43:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 07:43:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="228921327"
-Received: from pgsmsx107.gar.corp.intel.com ([10.221.44.105])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Oct 2019 07:43:14 -0700
-Received: from pgsmsx108.gar.corp.intel.com ([169.254.8.51]) by
- PGSMSX107.gar.corp.intel.com ([169.254.7.221]) with mapi id 14.03.0439.000;
- Fri, 25 Oct 2019 22:43:13 +0800
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "M, Naveen" <naveen.m@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [alsa-devel] [PATCH] ASoC: eve: implement set_bias_level
- function for rt5514
-Thread-Topic: [alsa-devel] [PATCH] ASoC: eve: implement set_bias_level
- function for rt5514
-Thread-Index: AQHVixSpuo5KyaaW0kmhCX7+/fo7hqdq3ikAgACJfMA=
-Date:   Fri, 25 Oct 2019 14:43:12 +0000
-Message-ID: <CF33C36214C39B4496568E5578BE70C740320822@PGSMSX108.gar.corp.intel.com>
-References: <1571994691-20199-1-git-send-email-brent.lu@intel.com>
- <3ce80285-ddb5-653d-cf60-febc9fd0bdee@linux.intel.com>
-In-Reply-To: <3ce80285-ddb5-653d-cf60-febc9fd0bdee@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiM2M5NGUzY2ItYWE2Mi00M2I1LWE3ZTgtZGY4N2NjOWQ0N2NlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYmw5bnFvdWdlOWk0RG9KZXN1SE9lZ0RjbUJ1R0IwTWo3M2djNU05dE1wd0w0OTlFNXcwZUF1UUdMNm9HdGt3NyJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 25 Oct 2019 10:45:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40270 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390195AbfJYOps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:45:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o28so2641823wro.7
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vr0bpY5XiQgKH5yHxxQmNnY3l1za/pKuxujllgRhHY4=;
+        b=PdQxnVIB/OemOgkjykEs810YH+ZoF6rY9/akWnuAm0NwVLHBGe3YCNfidtVsREx28z
+         8KgEWYPnnqW5105DGSSKf5hxdrmnvh+YiaExOy8/Irtrr6XNs8AhnF+Mo4eO/dpoUTru
+         awf177XI8+CNZvzdXqgRkPRemCJoPqI92rCBT6Ef+A/6oKR8YYQ6jTk0pW14Iekb7AKH
+         OGD49ty85In/RxZoPvfpuYr9ixu+im1w+C0csC7pu/qDifiH3uwvFjF7vaAkKQDngkmt
+         9Xsq0HN/YQXLQyVZi/dZZBdCnb06eWeMJiHKH1Lx++5P+yJSWyc2Izy7N3R2qUKdRE72
+         T+8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vr0bpY5XiQgKH5yHxxQmNnY3l1za/pKuxujllgRhHY4=;
+        b=dTTRkXabldHKHcsHDt5LdbQ4ciGbLy4+Bf9aLMo36s+rhfWky4tS9/HOkb7nW9Wda2
+         OM1OoROZgP5W/baASnl7sf8NVfdvDUEZIUhhsfVeMckIL00/DDfsLBbINvkAQssciJZj
+         DO8NeiSOapA7Rbqw7h6Wpu+5q5o9182EEaE0kCIH/cHlDcqoXwOObIg7tgaNvoO3TKiw
+         skW42iIeRSa2SB5WSTljunfbxVnkm4/qRtJ57+w2vebY4O0OcUlISuDrQNKcGaLLd3KI
+         sWIgM7FWDrYtcnWRcD/Z6DHIWwk8f4ied1SBE2R0Mh37iaHAXeNtg6nJo2HE0qr+AM6n
+         LOMQ==
+X-Gm-Message-State: APjAAAVfTmSlol4nHqUEaAusnNO1p9P+3s17CzQ0hZsTFG5Qtve5t477
+        VNXiwp9TP90cH7+Vr7KqjqDJC3awvQc=
+X-Google-Smtp-Source: APXvYqxo3SGeQBwv4sTQyFPAvuBbcdXigZvamWZajMf3PTsWPl0wiNT+VJk+qYfKcM7sIpWeEL097w==
+X-Received: by 2002:adf:e34b:: with SMTP id n11mr3283199wrj.250.1572014743760;
+        Fri, 25 Oct 2019 07:45:43 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:b088:1a1b:9603:fa54? ([2a01:e34:ed2f:f020:b088:1a1b:9603:fa54])
+        by smtp.googlemail.com with ESMTPSA id y3sm3916705wro.36.2019.10.25.07.45.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 07:45:42 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] thermal/drivers/cpu_cooling: Introduce the cpu
+ idle cooling driver
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        viresh.kumar@linaro.org, leo.yan@linaro.org, edubezval@gmail.com,
+        vincent.guittot@linaro.org, javi.merino@kernel.org,
+        rui.zhang@intel.com, daniel.thompson@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <34b1ed94-1223-60ec-ac4f-0b32be67eab2@linaro.org>
+ <20191025112255.9253-1-martin.kepplinger@puri.sm>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
+ CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
+ zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
+ ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
+ 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
+ YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
+ Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
+ Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
+ heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
+ A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
+ fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
+ mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
+ Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
+ QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
+ uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
+ KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
+ VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
+ Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
+ c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
+ WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
+ xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
+ RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
+ Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
+ F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
+ 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
+ 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
+ /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
+ zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
+ BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
+ EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
+ cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
+ IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
+ 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
+ BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
+ LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
+ a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
+ tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
+ qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
+ iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
+ adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
+ CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
+ 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+XrkBDQRb/80VAQgA8QHL8REXb0Cy
+ 79EKg2lmFl/Vp14kb2yNssurgDbi/+lslAifbBP8uwqkOZ9QAq/DKuF6dfoXoceWjQFbm+Yx
+ 0VICaLdsCdm+QTjZCpqTE/FTg53Ur6GHDKlMurxaT+ItFC2uRGhuog+roLSGBzECfRG0VgPz
+ 5KxiwDl2lXtzE4AQOPzoh8nW7ibvWJ13r7H8h1VkaJRLbGi+hWJ10PYm44ar9ozCLe9/vfdz
+ +t9Z1MYyvHCnzeaej5G2O00jNGuXPjmSgz6nagFVO6RYxt3J6Ru3Xfz7T3FGlCJuGtvejo4K
+ fQb5DRNRsZp3my/qE0ixh2lio79giWTR6dURdYXWGwARAQABiQI2BBgBCAAgFiEEJNYm8lO+
+ nofmzlv0j/S40nFnVScFAlv/zRUCGyAACgkQj/S40nFnVSdS0g//a5ahjaIt6hbDKb/gmBHO
+ FuB9M/IIU/Ee+tXToWw1igxfXdP+CGS5BGR+myCyDejNilYypm4tQRyPYpNvXjwHFlzvvhNc
+ VkWJeTRx778eyZcx441DgfbQpH3U9OYSg9cobchn7OPiy1gQRNAROb004m0jwk4yldbCmWS6
+ ovmJkRsdBcyRmpRE4644bbFMULGfPkB9mN3OHPTiUIulLlyXt5PPX68wA4UVjR3vKPAoJekx
+ ulW043tveaNktIhOeObwaJIKaqMvr6EuB9h9akqEAcjAZ/4Y21wawb5aAB9eyx07OdsRZRnV
+ yrfuDuwdn8yDNEyLdVQPcHC2T0eGuiJEDpPGiOtC6XOi+u8AWygw1NaltVyjW1zZt4fu4z5S
+ uRccMjf84wsbC9K9vplNJmgM2c2qvvgn19Lfofw4SIX0BMhpnkKrRMx19wAG0PwrRiS0JVsI
+ op7JpZPGVNqCnAgGujh9ZgvSJchJ2RFXY3jJCq/C/E3venVGlqDprU61Ot1moaBD1Q5igmlT
+ GZae2XlFWBEWfqX3hb8fJbEGIWTRWz0uR2WroDg7vG3k+iLkqQfp61rsVzJNzeF/nGFr1AYg
+ D53Es2aGJyrAeHWCnk9vzsPJoI5k5P1yNjgjA+W6tnOj8Kdpo//uKMYXV6hXkEAtyap6ggsw
+ PASsWZc3OelnWN2JAq0EGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCB
+ CRCP9LjScWdVJ3YgBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIACgkQ3uar
+ Ti9/eqZ2RgD9HN1UWo90QRDlBisR83Lte2VJyKCS46R3ZDXwZ1lPflIA/28E8ROelnfJEGdn
+ tlE8uATPPdOxbCYAECy+LQ9mGYIMkJoP/RhDJ9TOOlHUacJKRtothMRSzJoe5Y8j+5KkpO1x
+ u22li/5CZiwjAP3wJ4ffPBjReX/V8T0fLn3PpXG/1hVqkvHSc8M4DXMNU2rYye63Edvy34ia
+ PPgRELHKyq19iu+BqjcT+HRzxIR6H5uHkySPCZTwLBnd2hbKJV1QsoRJ7v8azk66EXNoNU8K
+ lZ2wp0IAbJS4//6pFbAoZWlY/RGu3oxMrbght67fERk7xzdc4Rcfl32d/phGoEQiLMB5ygKv
+ TQT1z7oGVFLQCpE5ALf8ybuta1yjf5Y6uJ2pVeSSj0BxnwCIzme7QXwCpgYqDTLu+QvYs4/y
+ 6zzkvSnnsyohHW6AOchOVNjTHhFhFYn36TuV53laydaXK/zgo3NsOpATFObyK3N5lhb1G9tN
+ Lrev/4WVxNr0LPXl9bdCbQGzIQK+kAPcg8u9f2MMhHQiQX8FAjhP3wtACRhfUz9RaQykxiwv
+ y0s5uI05ZSXhqFs9iLlh3zNU1i6J1cdzA8BReoa3cKz4UiGKEffT857iMvT/ZmgSdYY57EgV
+ UWm57SN2ok2Ii8AXlanH5SJPkbwJZhiB7kO0cjebmoA/1SA+5yTc3zEKKFuxcpfiXxt0d/OJ
+ om6jCJ5/uKB5Cz9bJj0WdlvS2Xb11Jrs90MoVa74H5me4jOw7m9Yyg3qExOFOXUPFL6N
+Message-ID: <13c20cd3-7e08-6d90-148d-67aaf5a6ad31@linaro.org>
+Date:   Fri, 25 Oct 2019 16:45:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191025112255.9253-1-martin.kepplinger@puri.sm>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiAxMC8yNS8xOSA0OjExIEFNLCBCcmVudCBMdSB3cm90ZToNCj4gPiBUaGUgZmlyc3QgRE1J
-QyBjYXB0dXJlIGFsd2F5cyBmYWlsICh6ZXJvIHNlcXVlbmNlIGRhdGEgZnJvbSBQQ00gcG9ydCkN
-Cj4gPiBhZnRlciB1c2luZyBEU1AgaG90d29yZGluZyBmdW5jdGlvbiAoaS5lLiBHb29nbGUgYXNz
-aXN0YW50KS4NCj4gDQo+IENhbiB5b3UgY2xhcmlmeSB3aGVyZSB0aGUgRFNQIGhvdHdvcmRpbmcg
-aXMgZG9uZT8gSW50ZWwgRFNQIG9yIHJ0NTUxND8NCj4gDQo+IFR1cm5pbmcgb24gdGhlIE1DTEsg
-d2l0aCB0aGUgQklBUyBpbmZvIG1pZ2h0IGZvcmNlIHRoZSBJbnRlbCBEU1AgdG8gcmVtYWluDQo+
-IG9uLCB3aGljaCB3b3VsZCBpbXBhY3QgcG93ZXIgY29uc3VtcHRpb24gaWYgaXQgd2FzIHN1cHBv
-c2VkIHRvIHJlbWFpbiBvZmYuDQo+IA0KDQpIaSBQaWVycmUsDQoNCkl0J3MgZG9uZSBpbiBydDU1
-MTQncyBEU1AgYW5kIHRoZSBpbnRlcmZhY2UgaXMgU1BJIGluc3RlYWQgb2YgSTJTIGZvciB0aGUg
-dm9pY2Ugd2FrZSANCnVwIGZ1bmN0aW9uLg0KDQpUaGVyZSBpcyBhIGRyaXZlciBydDU1MTQtc3Bp
-LmMgd2hpY2ggcHJvdmlkZXMgcGxhdGZvcm0gZHJpdmVyIGFuZCBEQUkuIFVzZXIgc3BhY2UgDQph
-cHBsaWNhdGlvbiBmaXJzdCB1c2VzIHRoZSBtaXhlciB0byB0dXJuIG9uIHRoZSB2b2ljZSB3YWtl
-IHVwIGZ1bmN0aW9uOg0KDQphbWl4ZXIgLWMwIGNzZXQgbmFtZT0nRFNQIFZvaWNlIFdha2UgVXAn
-IG9uDQoNClRoZW4gb3BlbiBhbmQgcmVhZCBkYXRhIGZyb20gdGhlIFBDTSBwb3J0IHdoaWNoIGdv
-ZXMgdG8gdGhlIFNQSSBwbGF0Zm9ybSBhbmQgDQpkYWkgY29kZS4gRmluYWxseSBpdCB1c2VzIHNh
-bWUgbWl4ZXIgdG8gdHVybiBvZmYgdGhlIGZ1bmN0aW9uIGFuZCByZXR1cm4gdG8gbm9ybWFsIA0K
-Y29kZWMgbW9kZS4gVGhlIERNSUMgcmVjb3JkaW5nIChmcm9tIEkyUykgYW5kIHRoZSB2b2ljZSB3
-YWtlIG9uIGZ1bmN0aW9uIHNob3VsZCANCmJlIG11dHVhbGx5IGV4Y2x1c2l2ZSBhY2NvcmRpbmcg
-dG8gdGhlIGRyaXZlciBkZXNpZ24uDQoNCkluIHRoZSBjb2RlYyBkcml2ZXIgcnQ1NTE0LmMgdGhl
-cmUgaXMgYSBydDU1MTRfc2V0X2JpYXNfbGV2ZWwgZnVuY3Rpb24uIEl0J3MgZXhwZWN0ZWQgdG8g
-DQp0dXJuIG9uL29mZiBtY2xrIGhlcmUgYWNjb3JkaW5nIHRvIFJlYWx0ZWsgcGVvcGxlJ3Mgc2F5
-IGJ1dCBvdXIgc3NwIGNsb2NrIHJlcXVpcmVzIHNldCANCnJhdGUgZnVuY3Rpb24gdG8gYmUgY2Fs
-bGVkIGluIGFkdmFuY2Ugc28gSSBpbXBsZW1lbnQgdGhlIGNvZGUgaW4gbWFjaGluZSBkcml2ZXIu
-DQoNCg0KUmVnYXJkcywNCkJyZW50DQo+ID4gVGhpcyBydDU1MTQgY29kZWMgcmVxdWlyZXMgdG8g
-Y29udHJvbCBtY2xrIGRpcmVjdGx5IGluIHRoZQ0KPiA+IHNldF9iaWFzX2xldmVsIGZ1bmN0aW9u
-LiBJbXBsZW1lbnQgdGhpcyBmdW5jdGlvbiBpbiBtYWNoaW5lIGRyaXZlciB0bw0KPiA+IGNvbnRy
-b2wgdGhlIHNzcDFfbWNsayBjbG9jayBleHBsaWNpdGx5IGNvdWxkIGZpeCB0aGlzIGlzc3VlLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQnJlbnQgTHUgPGJyZW50Lmx1QGludGVsLmNvbT4NCg0K
+
+Hi Martin,
+
+On 25/10/2019 13:22, Martin Kepplinger wrote:
+> Hi Daniel,
+> 
+> Quick note: You're missing a kref_init() in this version of the cooling driver.
+> 
+> Also, as already mentioned, set_freezable() doesn't seem to work without
+> supporting suspend/resume.
+
+Right, it is removed.
+
+> And since cpuidle got somewhat completely reworked in 5.4, could you create
+> a new, rebased version of this? Let me know in case I missed an earlier update.
+
+Yes, I'm on it. There is a bug in the cpuidle registering I'm
+investigating right now. If you want I can put a branch with the idle
+injection cooling device as soon as it is fixed.
+
+Note most of the patches are now merged. The cpuidle cooling device was
+split into the idle injection mechanism in the drivers/powercap [1] and
+the cooling device initialization which is the part to be merged.
+
+The idle injection resolution was increased [2].
+
+The idle state injection selection is currently in the review process [3].
+
+The remaining part is the thermal cooling device itself which is a
+separated cooling device from the existing cpu one.
+
+  -- Daniel
+
+[1] https://lwn.net/Articles/757393/
+[2] https://patchwork.kernel.org/patch/11074003/
+[3] https://lkml.org/lkml/2019/9/9/447
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
