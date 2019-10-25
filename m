@@ -2,108 +2,99 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B02CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2DBCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E23521929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:39:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bgXAqRKD"
+	by mail.kernel.org (Postfix) with ESMTP id 7193F2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407271AbfJYHjX (ORCPT
+        id S2407336AbfJYHl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:39:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34619 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2406055AbfJYHjW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:39:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571989161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r+zKTTNYokGo3jjaOtJP2IS26NDhOn6xEP3f396BOyI=;
-        b=bgXAqRKDTjD5VbdBaOh3aYCKrtpa9jIIRmJYPu7aqCrc/Fno2CKyizGkSkHXg8N0wXs4nE
-        79nztyPfPXo+ytdG2RVOcvd+hvy1ojVM9/XeVslTgGt7LZ4ZQASdooU5FQ4jKFyrtuCGAj
-        4/huK6fDU1kA4lexQCnc6QC+MbQIT/Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-DuC5qt3xO06PfITR1Pe6sA-1; Fri, 25 Oct 2019 03:39:17 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 290C547B;
-        Fri, 25 Oct 2019 07:39:16 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C8FE160BE0;
-        Fri, 25 Oct 2019 07:39:13 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 09:39:13 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Hewenliang <hewenliang4@huawei.com>
-Cc:     peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        ilubashe@akamai.com, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org, hushiyuan@huawei.com,
-        linfeilong@huawei.com
-Subject: Re: [PATCH] perf tools: Call closedir to release the resource before
- we return
-Message-ID: <20191025073913.GC31679@krava>
-References: <20191025031605.23658-1-hewenliang4@huawei.com>
+        Fri, 25 Oct 2019 03:41:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:33424 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406055AbfJYHl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:41:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 00:41:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
+   d="scan'208";a="349953315"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 25 Oct 2019 00:41:54 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iNuEM-0001YM-6m; Fri, 25 Oct 2019 10:41:54 +0300
+Date:   Fri, 25 Oct 2019 10:41:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] ACPI / PMIC: Add byt prefix to Crystal Cove PMIC
+ OpRegion driver
+Message-ID: <20191025074154.GX32742@smile.fi.intel.com>
+References: <20191024213827.144974-1-hdegoede@redhat.com>
+ <20191024213827.144974-3-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025031605.23658-1-hewenliang4@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: DuC5qt3xO06PfITR1Pe6sA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191024213827.144974-3-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 11:16:05PM -0400, Hewenliang wrote:
-> We should close the directory on pattern failure before the return
-> of rm_rf_depth_pat.
->=20
-> Fixes: cdb6b0235f170 ("perf tools: Add pattern name checking to rm_rf")
-> Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+On Thu, Oct 24, 2019 at 11:38:25PM +0200, Hans de Goede wrote:
+> Our current Crystal Cove OpRegion driver is only valid for the
+> Crystal Cove PMIC variant found on Bay Trail (BYT) boards,
+> Cherry Trail (CHT) based boards use another variant.
+> 
+> At least the regulator registers are different on CHT and these registers
+> are one of the things controlled by the custom PMIC OpRegion.
+> 
+> Commit 4d9ed62ab142 ("mfd: intel_soc_pmic: Export separate mfd-cell
+> configs for BYT and CHT") has disabled the intel_pmic_crc.c code for CHT
+> devices by removing the "crystal_cove_pmic" MFD cell on CHT devices.
+> 
+> This commit renames the intel_pmic_crc.c driver and the cell to be
+> prefixed with "byt" to indicate that this code is for BYT devices only.
+> 
+> This is a preparation patch for adding a separate PMIC OpRegion
+> driver for the CHT variant of the Crystal Cove PMIC (sometimes called
+> Crystal Cove Plus in Android kernel sources).
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+>  .../acpi/pmic/{intel_pmic_crc.c => intel_pmic_bytcrc.c}    | 4 ++--
+>  drivers/mfd/intel_soc_pmic_crc.c                           | 2 +-
 
-thanks,
-jirka
+I would go with previously established pattern, i.e. intel_pmic_bytcc.c.
 
-> ---
->  tools/perf/util/util.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-> index 5eda6e19c947..1aadca8c43f3 100644
-> --- a/tools/perf/util/util.c
-> +++ b/tools/perf/util/util.c
-> @@ -154,8 +154,10 @@ static int rm_rf_depth_pat(const char *path, int dep=
-th, const char **pat)
->  =09=09if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."))
->  =09=09=09continue;
-> =20
-> -=09=09if (!match_pat(d->d_name, pat))
-> +=09=09if (!match_pat(d->d_name, pat)) {
-> +=09=09=09closedir(dir);
->  =09=09=09return -2;
-> +=09=09}
-> =20
->  =09=09scnprintf(namebuf, sizeof(namebuf), "%s/%s",
->  =09=09=09  path, d->d_name);
-> --=20
-> 2.19.1
->=20
+> +++ b/drivers/mfd/intel_soc_pmic_crc.c
+> @@ -75,7 +75,7 @@ static struct mfd_cell crystal_cove_byt_dev[] = {
+>  		.resources = gpio_resources,
+>  	},
+>  	{
+> -		.name = "crystal_cove_pmic",
+> +		.name = "byt_crystal_cove_pmic",
+>  	},
+>  	{
+>  		.name = "crystal_cove_pwm",
+
+I'm wondering shouldn't we rename the PWM and GPIO for the sake of consistency?
+Yes, if a driver is used on both CHT and BYT, let it provide two names.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
