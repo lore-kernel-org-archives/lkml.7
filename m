@@ -2,141 +2,94 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CF6CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164A2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3873221D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:48:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OPNp118P"
+	by mail.kernel.org (Postfix) with ESMTP id D73EB206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572018550;
+	bh=yjAaE0xQhH20vJrkI1srEKz9AtxqLuI40WnRKCUXgj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zUTTPz9abo3Ng2L+BThSI64cl8M1kzgB+Ifa0LRtwvm58c9Z0HltqGXDACpmuv21q
+	 bAUegWU4tmF75ZYjBD2m+BA09mVcYo2BX9P/VMbgZcZrKo6BrVpnUL+eNPVOmgwty2
+	 CwPbgI42vLwwcXQMIG9L65xVoDIv6032XkUpvnD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502192AbfJYPsn (ORCPT
+        id S2502263AbfJYPtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:48:43 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:34442 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502051AbfJYPsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:48:42 -0400
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B10032010AC4;
-        Fri, 25 Oct 2019 08:48:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B10032010AC4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572018520;
-        bh=VqpwUPOPMcK+Zifw/xr8/Sr04QZ7T6h/gmJp30tzyqQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OPNp118PxVVoYe9hxq8LDH2b5gGiYI3BrcLqcP5ow+qfbj84HwK8kQHca0Q0qmLGa
-         7FUDodUbpcpbEDMYUvdQFvZoYoCQPYV/9Az8TJGuNT1rrgmr+SGjZZdi56xFsuAPE1
-         VteNvsPaXnA0WBZGAWcyEXbVzX0GCwBOTIrdSzxM=
-Subject: Re: [PATCH v5 1/4] powerpc/powernv: Add OPAL API interface to access
- secure variable
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>
-References: <20191025004729.4452-1-nayna@linux.ibm.com>
- <20191025004729.4452-2-nayna@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <6ccea081-12a5-302f-331b-29ac06f3b228@linux.microsoft.com>
-Date:   Fri, 25 Oct 2019 08:48:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 11:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502051AbfJYPtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:49:05 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F39206DD;
+        Fri, 25 Oct 2019 15:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572018545;
+        bh=yjAaE0xQhH20vJrkI1srEKz9AtxqLuI40WnRKCUXgj8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0cgKbZZFBv4uMey3849inISOi+o8JI/NP51o1L8I+z1XUhBRwjCrkqDC7OKZ2wpue
+         5uHXeoI08lQR31eMc4qNzUO+kgiEFikYiwzmbTzR+To6Itq+Q5QHFTxWU9zp0JlKCF
+         RkFlUdCpVDOuS+vNw3wOE0etJU5F0p6s7wp/Pp7U=
+Date:   Fri, 25 Oct 2019 11:49:03 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mahesh Bandewar <maheshb@google.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.3 12/33] blackhole_netdev: fix syzkaller
+ reported issue
+Message-ID: <20191025154903.GH31224@sasha-vm>
+References: <20191025135505.24762-1-sashal@kernel.org>
+ <20191025135505.24762-12-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191025004729.4452-2-nayna@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191025135505.24762-12-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/24/19 5:47 PM, Nayna Jain wrote:
+On Fri, Oct 25, 2019 at 09:54:44AM -0400, Sasha Levin wrote:
+>From: Mahesh Bandewar <maheshb@google.com>
+>
+>[ Upstream commit b0818f80c8c1bc215bba276bd61c216014fab23b ]
+>
+>While invalidating the dst, we assign backhole_netdev instead of
+>loopback device. However, this device does not have idev pointer
+>and hence no ip6_ptr even if IPv6 is enabled. Possibly this has
+>triggered the syzbot reported crash.
+>
+>The syzbot report does not have reproducer, however, this is the
+>only device that doesn't have matching idev created.
+>
+>Crash instruction is :
+>
+>static inline bool ip6_ignore_linkdown(const struct net_device *dev)
+>{
+>        const struct inet6_dev *idev = __in6_dev_get(dev);
+>
+>        return !!idev->cnf.ignore_routes_with_linkdown; <= crash
+>}
+>
+>Also ipv6 always assumes presence of idev and never checks for it
+>being NULL (as does the above referenced code). So adding a idev
+>for the blackhole_netdev to avoid this class of crashes in the future.
+>
+>Signed-off-by: David S. Miller <davem@davemloft.net>
+>Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-> 
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index 378e3997845a..c1f25a760eb1 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -211,7 +211,10 @@
->   #define OPAL_MPIPL_UPDATE			173
->   #define OPAL_MPIPL_REGISTER_TAG			174
->   #define OPAL_MPIPL_QUERY_TAG			175
-> -#define OPAL_LAST				175
-> +#define OPAL_SECVAR_GET				176
-> +#define OPAL_SECVAR_GET_NEXT			177
-> +#define OPAL_SECVAR_ENQUEUE_UPDATE		178
-> +#define OPAL_LAST				178
+I've dropped this patch.
 
-Adjust indentation in the above #defines.
-
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index a0cf8fba4d12..9986ac34b8e2 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -298,6 +298,13 @@ int opal_sensor_group_clear(u32 group_hndl, int token);
->   int opal_sensor_group_enable(u32 group_hndl, int token, bool enable);
->   int opal_nx_coproc_init(uint32_t chip_id, uint32_t ct);
->   
-> +int opal_secvar_get(const char *key, uint64_t key_len, u8 *data,
-> +		    uint64_t *data_size);
-> +int opal_secvar_get_next(const char *key, uint64_t *key_len,
-> +			 uint64_t key_buf_size);
-> +int opal_secvar_enqueue_update(const char *key, uint64_t key_len, u8 *data,
-> +			       uint64_t data_size);
-> +
-Fix alignment of the parameters in the 2nd line.
-Same comment in a few other files in this change set.
-
-
-> +
-> +static int opal_get_variable(const char *key, uint64_t ksize,
-> +			     u8 *data, uint64_t *dsize)
-> +{
-> +	int rc;
-> +
-> +	if (!key || !dsize)
-> +		return -EINVAL;
-> +
-> +	*dsize = cpu_to_be64(*dsize);
-> +
-> +	rc = opal_secvar_get(key, ksize, data, dsize);
-> +
-> +	*dsize = be64_to_cpu(*dsize);
-
-Is it ok to update dsize even if return code (rc) from opal_secvar_get 
-is an error? Just wanted to confirm.
-
-> +
-> +	*keylen = cpu_to_be64(*keylen);
-> +
-> +	rc = opal_secvar_get_next(key, keylen, keybufsize);
-> +
-> +	*keylen = be64_to_cpu(*keylen);
-Same comment as above.
-
-> +
-> +	set_secvar_ops(&opal_secvar_ops);
-Does this set function return status?
-
-> +
-> +	return 0;
-> +}
+-- 
+Thanks,
+Sasha
