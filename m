@@ -2,171 +2,364 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E0DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02479CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE94020679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CCB20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:27:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="tHFH25Sm";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="t/tGWGOl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5CNyEH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440718AbfJYP06 (ORCPT
+        id S2440730AbfJYP1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:26:58 -0400
-Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:40846
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731226AbfJYP05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:26:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jEMOYudQG+nLvsttJlkqDHuWmer+vdugxtk1eGnhU9w=;
- b=tHFH25SmX3ftm4Mobwja+YhuKAPsMtnMYiX8oKRqGRar5DKk3n7KQGmIVYaG3OIc5xuDy6qpwm792bHVrxfB8lqmsrzllFx0cfEyBgj9Y+SmdOndCIED+0WxaMcn3QWqecQLftACPzCYoYAgiT0oQ3mK8UBNsYZJvflvVPz3vs4=
-Received: from DB6PR0802CA0045.eurprd08.prod.outlook.com (2603:10a6:4:a3::31)
- by DB8PR08MB5530.eurprd08.prod.outlook.com (2603:10a6:10:11f::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.23; Fri, 25 Oct
- 2019 15:26:52 +0000
-Received: from DB5EUR03FT050.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::209) by DB6PR0802CA0045.outlook.office365.com
- (2603:10a6:4:a3::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20 via Frontend
- Transport; Fri, 25 Oct 2019 15:26:52 +0000
-Authentication-Results: spf=fail (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
- designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT050.mail.protection.outlook.com (10.152.21.128) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.23 via Frontend Transport; Fri, 25 Oct 2019 15:26:52 +0000
-Received: ("Tessian outbound 0939a6bab6b1:v33"); Fri, 25 Oct 2019 15:26:50 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: ed44c5c205ac56a0
-X-CR-MTA-TID: 64aa7808
-Received: from 99db361510f5.2 (cr-mta-lb-1.cr-mta-net [104.47.10.58])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 26A60225-7EFD-485C-9E29-428FD083DB6D.1;
-        Fri, 25 Oct 2019 15:26:45 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2058.outbound.protection.outlook.com [104.47.10.58])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 99db361510f5.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Fri, 25 Oct 2019 15:26:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RrmuYg6Djxikh9DYTVtD6B48hVt1Ke1DWh4DCTKfOb4/9QUdQn2XPo0zDohTENIfCJzg0GIgKIRPggToVRguhyjb972uR3i8fhCorzPLdkaf7ggNOQMYn5inbwV0IhiQrv1LrimoraZHatmOzcnB+iLrKbQyB57WiIgMsnPZf9d14XAv2SzqVexyVtIFfS1cfzAplaRNGFfNOcoTFmtyi8BhjxfhNBYA9WZ7O/3Dbcp/T7nUArEkCkGzpzdXlVwdjGIy1aKGa9xLSbtU2Dk3L7Wd+Eyp2AHoxdHHtUbBrgii7Cc3oijJwZSrP0KHiVPSVGQT3HbmE9Jo5oo4eunTTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zFXPIm8P1frjD8BOUeLbyPNn3sTeS8tO0e5x7XbdKyQ=;
- b=WjjAUd71427ZK6JWxBs/AqjdWl7O+XsZ8jvHVqpCyNG6hwFhSaCaAt0hNfdcSsuV3+FZHFt5ImIGgIkneihOazVFqz0JLvj6TlM6QmBasitJihTWGP6NNVe/vaAVDU5FXAuQXwuhfkhXBEsxdbjFFE1jNIqVM4fZm8X7e9wia9Te2GgEGMhQUguOUIlasvjJ8Yb7bUY1ADqR9lf9MD6/UXbfrBGbBlIoALsiUffpxqKbE9wEonh2nuQyZIgta59c5DMJdRUbQA/Pcom0HL9z8I4AwMi8NR7/ct8xiCLwWNv2pGyBw8e25MABN2YBComDTNEcl+NjDDUI8rKeb5ifrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zFXPIm8P1frjD8BOUeLbyPNn3sTeS8tO0e5x7XbdKyQ=;
- b=t/tGWGOlJNujtSEir4EPkwtyEJ1Phgds38QlFk/SR0jjxGDpRHskXRJ7ijLqvK3197blILbH6ARofnRdkXzsXHpywsffqeWRXgwJ2eU+mCygq+J22gfEJylSsJMg7yHKlR6nuGHTQ3evyTnuGeQK34tYrpRMKrlOwOwv2NPcuRI=
-Received: from VI1PR0801MB1790.eurprd08.prod.outlook.com (10.168.67.143) by
- VI1PR0801MB1885.eurprd08.prod.outlook.com (10.173.71.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2367.24; Fri, 25 Oct 2019 15:26:43 +0000
-Received: from VI1PR0801MB1790.eurprd08.prod.outlook.com
- ([fe80::7ca1:beb:8a1f:607b]) by VI1PR0801MB1790.eurprd08.prod.outlook.com
- ([fe80::7ca1:beb:8a1f:607b%3]) with mapi id 15.20.2387.025; Fri, 25 Oct 2019
- 15:26:43 +0000
-From:   Valentin Schneider <Valentin.Schneider@arm.com>
-To:     Zhihao Cheng <chengzhihao1@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Patrick Bellasi <Patrick.Bellasi@arm.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-Subject: Re: [QUESTION] Hung task warning while running syzkaller test
-Thread-Topic: [QUESTION] Hung task warning while running syzkaller test
-Thread-Index: AQHVgl11bWBDyU55z0yIxPyV+36p6adp71sAgAFxbACAACuwAA==
-Date:   Fri, 25 Oct 2019 15:26:43 +0000
-Message-ID: <1e247b1f-74cf-dab3-05c1-36adc411478d@arm.com>
-References: <0d7aa66d-d2b9-775c-56b3-543d132fdb84@huawei.com>
- <1693d19e-56c7-9d6f-8e80-10fe82101cff@arm.com>
- <aa5d0f35-e707-f5e3-251e-f940c0b0232b@huawei.com>
-In-Reply-To: <aa5d0f35-e707-f5e3-251e-f940c0b0232b@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [78.146.242.238]
-x-clientproxiedby: LO2P265CA0083.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8::23) To VI1PR0801MB1790.eurprd08.prod.outlook.com
- (2603:10a6:800:5b::15)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Valentin.Schneider@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0fab7103-4a3d-4014-59a1-08d7595fc2de
-X-MS-TrafficTypeDiagnostic: VI1PR0801MB1885:|DB8PR08MB5530:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR08MB553066F357B14B4396C7E8A38F650@DB8PR08MB5530.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
-x-forefront-prvs: 02015246A9
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(54094003)(199004)(189003)(36756003)(86362001)(99286004)(7736002)(66066001)(66446008)(44832011)(64756008)(6486002)(66556008)(2906002)(26005)(2501003)(52116002)(6116002)(229853002)(102836004)(5660300002)(386003)(76176011)(53546011)(6506007)(486006)(14454004)(478600001)(31686004)(4744005)(2616005)(446003)(476003)(11346002)(110136005)(186003)(66946007)(6246003)(66476007)(54906003)(8676002)(3846002)(6512007)(316002)(71200400001)(256004)(81166006)(8936002)(81156014)(71190400001)(6436002)(4326008)(31696002)(25786009)(5024004)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0801MB1885;H:VI1PR0801MB1790.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: Hno3LUw0ipxWzMedHZF9Vn3pKlESqzuAzbVT4OOWZ2zRmA3N7LBRfUviMAvtxwR/gTu6IoxLgn21OUBCMLhMFRv16cxTDdISCAo+S+sT5l47Meg5gObkkJDCRypo9yTwULUu09suSKX9rx/12uXbrao8DNFoMxNHQRhKpoMrCNNOJDlNm4tjQmRH3IaerP8eMMfjhkJtpiExZSjsJsgA67emCUioxjtDMWsPUPXeRQ1IgcUOBmWBm7mz6yHiXeOa8qg5XsURCF1Klon5mexc6Ipjzp/n9YGdy6KCOmY1noUPko4um772wZJjsj4daF1VtJRyrXXud9C4zyrZTU4/NH8hWrpEyLNzo+9JakRlezSWZp8pkyNE8Mk4YIgWPz8KCM1AGqLAeHIUl3N5TThh/rthgEeDdy7cAWK311Zwnt10/ndAANEoVJOVS35J34MO
-Content-Type: text/plain; charset="gb2312"
-Content-ID: <A86E952E3EAE9A4F8FC0F90B65FF5A90@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 25 Oct 2019 11:27:12 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51713 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440654AbfJYP1L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:27:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q70so2595255wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LCss/7sQ1HSQl3wdXs28HsmigxCT/sGmn1VxblcDWXM=;
+        b=M5CNyEH1B6nmtZ81nmXhqnFcgegp3RnjyMLBute0xecp1fqzIGe5xWc+z4IZbSy/3J
+         SW3Zj0eyCAkNFX5wwIBb+bEz5SxYHgr6L5c+QVnMRz9i1c9itrLlDiE1hB6NynVIWsaU
+         KX3SEaUtdVk7ALfufiNqFlxTUkDixKyxhuTBzyj+at8wdAh2h/AmJuwoQfEefOp8MgLf
+         wxwzcXDnW53J6OE17VC8knXIJ67SI4GHDbXMk4alKysghqdTvC7yiMJYjuujWfPT/hEJ
+         zoqSTwzpQYt6PK58CYh4u6+OsNlZBE7GLYZasDw1OJrMJ2bPmusiGbTUXe1CJCfICzZZ
+         BkNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LCss/7sQ1HSQl3wdXs28HsmigxCT/sGmn1VxblcDWXM=;
+        b=tecND9dfqD4hjnT5MOIy76H7pJu80yoPZWUHUmBbUP1mpXqr9P0Isl+Bq/GxFyDqQ7
+         8Rk62I+wG+pSdSnarkU57iEg62dU1ULGB1q6Zp2tq3hr6IYq1FTH3AM7df2VcqIfipRa
+         tOoGEbQFyzVXJ1K8VBua+1IWAZgmRGkDZCkVsa/3d8EifIUWICxsAr2KX6w3JISQSaeD
+         GS3TB0b2ozmhdrpB8l6FwtF7h9a1J9mbCKjT3bpGMU9j6dPsO/5a4OtLcxcB1rsTVQRI
+         f6fX9c9A/x55X3EitQGr4u3lVsu2kXz7sPLAP3iEuAyXTMUq7NLg5ju9zFUVqEt05M2w
+         Goog==
+X-Gm-Message-State: APjAAAU2hSzqHg68T8O/L61uIW2WGem3diZZOp/JSURve+u6VpFA86fo
+        i3YUa44trwj5ycX56c4L1L4S6qxTCP3PjB3Ajto=
+X-Google-Smtp-Source: APXvYqwoGUe7u+dXsWJItWQDokq3RCnotk8ohfPs7jL3je17F27nCi8iQK7nc7QplUsoLhf+L4T5gPMcWdapR+l/NWM=
+X-Received: by 2002:a1c:1d53:: with SMTP id d80mr3135648wmd.88.1572017227113;
+ Fri, 25 Oct 2019 08:27:07 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0801MB1885
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Valentin.Schneider@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT050.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(346002)(396003)(1110001)(339900001)(199004)(189003)(54094003)(40434004)(99286004)(478600001)(66066001)(6246003)(229853002)(26005)(8936002)(110136005)(54906003)(186003)(356004)(316002)(305945005)(6486002)(6512007)(102836004)(336012)(107886003)(47136003)(31686004)(76176011)(105606002)(76130400001)(3846002)(6506007)(53546011)(4326008)(6116002)(436003)(386003)(5660300002)(22756006)(4744005)(50466002)(23696002)(486006)(7736002)(14454004)(446003)(2501003)(476003)(81166006)(47776003)(126002)(31696002)(86362001)(81156014)(8676002)(2616005)(5024004)(11346002)(14444005)(70206006)(25786009)(70586007)(48336001)(26826003)(2906002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR08MB5530;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: a61823ad-2e0c-40f1-784f-08d7595fbd9b
-X-Forefront-PRVS: 02015246A9
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zCLtVXdN5jsQCNDN+PchO6tY8vD4wME2J3hqEmZsGekU19dPt6+oLiDFldhnO/779WMUZ6nixttZcC+otQ/aVGpYTVNnocZwXxeZza2cWlHO/LCGoj24slOwZfktmdjnAR5WUxBYfI2MXZSDSoBDy35PkC7GWXuJPIG9DgwYudNZYh0l+l6nMoSIQ/FfNre4s1bJNpyuq9/vEuTFJy97D6S6T6VZlhLUvl50hYyqeh/M393SFxcPwjkE3SznBhfz0E9nuncfwQIP8p/HN0Zbo6UpgHytbJr4pndWG/Vd0BtTNwfQN70RK9TBx4S4TUgyMY10Rt7srZ2fFwERI+/pKZ2k1DnyJCQSons8u+dpRqWBFHoTUabtyS8bNzxFHInIws3LRiXWMrq8pGan6EJFAFjpwFAI804HbTIp4SAOPXDDKRmHKgXCmxzpKu/XRqD2
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2019 15:26:52.1821
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fab7103-4a3d-4014-59a1-08d7595fc2de
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5530
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191024142939.25920-2-andrey.zhizhikin@leica-geosystems.com> <20191025121737.GC4568@sirena.org.uk>
+In-Reply-To: <20191025121737.GC4568@sirena.org.uk>
+From:   Andrey Zhizhikin <andrey.z@gmail.com>
+Date:   Fri, 25 Oct 2019 17:26:56 +0200
+Message-ID: <CAHtQpK60d_GT4JMBBwGc2q1FqVT7NNhK5T7rSY0GL288ukUc1A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] regulator: add support for Intel Cherry Whiskey Cove regulator
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjUvMTAvMjAxOSAxMzo1MCwgWmhpaGFvIENoZW5nIHdyb3RlOg0KPiBJIGFkZGVkIGNvbmZp
-ZyBpbiBhdHRhY2htZW50Lg0KPg0KPiBJdCB3aWxsIHRha2UgNS0xMCBtaW51dGVzIHRvIHJlcHJv
-ZHVjZSBvbiB0aGUga2VybmVsIG9mIHRoZSBsb3dlciB2ZXJzaW9uKGZvciBleGFtcGxlLCB2NC40
-KS4gQW5kIGZ0cmFjZSBtYXkgbmVlZCB0byBiZSBlbmFibGVkIGZvciB0aGUgbGF0ZXN0IG1haW5s
-aW5lIHRvIHJlcHJvZHVjZSBodW5nX3Rhc2ssIGl0IHdpbGwgdGFrZSBzZXZlcmFsIGhvdXJzLg0K
-Pg0KDQpUaGF0IHNvdW5kcyBmdW4uIEknbGwgdHJ5IHRvIGdldCB0aGF0IHJ1bm5pbmcgb3Zlcm5p
-Z2h0IHNvbWVkYXkgSSdtIG5vdA0KcnVubmluZyBvdGhlciBzdHVmZiwgdGhvdWdoIFRCSCBzZWVp
-bmcgYXMgdGhlIGZyZWV6ZXIgaXMgaW52b2x2ZWQgSSB3b25kZXIgaWYNCml0IGlzbid0IGp1c3Qg
-c3l6a2FsbGVyIGtlZXBpbmcgc3R1ZmYgZnJvemVuIGZvciB0b28gbG9uZy4NCklNUE9SVEFOVCBO
-T1RJQ0U6IFRoZSBjb250ZW50cyBvZiB0aGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJl
-IGNvbmZpZGVudGlhbCBhbmQgbWF5IGFsc28gYmUgcHJpdmlsZWdlZC4gSWYgeW91IGFyZSBub3Qg
-dGhlIGludGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGltbWVkaWF0
-ZWx5IGFuZCBkbyBub3QgZGlzY2xvc2UgdGhlIGNvbnRlbnRzIHRvIGFueSBvdGhlciBwZXJzb24s
-IHVzZSBpdCBmb3IgYW55IHB1cnBvc2UsIG9yIHN0b3JlIG9yIGNvcHkgdGhlIGluZm9ybWF0aW9u
-IGluIGFueSBtZWRpdW0uIFRoYW5rIHlvdS4NCg==
+Something went wrong (mainly with me pressing wrong buttons), so I
+managed to pull the conversation off the list. I'd duplicate my
+answers here with comments from Mark, first being:
+
+On Fri, Oct 25, 2019 at 4:43 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, Oct 25, 2019 at 03:55:17PM +0200, Andrey Zhizhikin wrote:
+> > On Fri, Oct 25, 2019 at 2:17 PM Mark Brown <broonie@kernel.org> wrote:
+> > > On Thu, Oct 24, 2019 at 02:29:38PM +0000, Andrey Zhizhikin wrote:
+>
+> Please don't take things off-list unless there is a really strong reason
+> to do so.  Sending things to the list ensures that everyone gets a
+> chance to read and comment on things.  (From some of the things
+> in your mail I think this might've been unintentional.)
+>
+
+Sorry for mess, sometimes it happens but I try not to create it...
+
+On Fri, Oct 25, 2019 at 2:17 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Oct 24, 2019 at 02:29:38PM +0000, Andrey Zhizhikin wrote:
+>
+> > +       Only select this regulator driver if the MFD part is selected
+> > +       in the Kernel configuration, it is meant to be operable as a cell.
+>
+> This i what Kconfig dependencies are for.
+
+True, would re-phrase to description.
+
+>
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * intel-cht-wc-regulator.c - CherryTrail regulator driver
+> > + *
+>
+> Please use C++ style for the entire comment so things look more
+> consistent.
+
+This is what I'm puzzled about - which style to use for the file
+header since the introduction of SPDX and a rule that it should be
+"C++ style" commented for source files and "C style" for header files.
+After this introduction, should the more-or-less standard header be
+also done in C++ style? I saw different source files are doing
+different things... But all-in-all I would follow you advise here with
+converting entire block to C++.
+
+[Mark]: The only thing SPDX cares about is the first line, the making
+the rest of the block a C++ one is mostly a preference I have.
+
+Got it, would be done!
+
+>
+> > +#define CHT_WC_VPROG1A_VRANGE        53
+> > +#define CHT_WC_VPROG1B_VRANGE        53
+> > +#define CHT_WC_VPROG1F_VRANGE        53
+> > +#define CHT_WC_V1P8SX_VRANGE 53
+> > +#define CHT_WC_V1P2SX_VRANGE 53
+> > +#define CHT_WC_V1P2A_VRANGE  53
+> > +#define CHT_WC_VSDIO_VRANGE  53
+> > +#define CHT_WC_V2P8SX_VRANGE 53
+> > +#define CHT_WC_V3P3SD_VRANGE 53
+> > +#define CHT_WC_VPROG2D_VRANGE        53
+> > +#define CHT_WC_VPROG3A_VRANGE        53
+> > +#define CHT_WC_VPROG3B_VRANGE        53
+> > +#define CHT_WC_VPROG4A_VRANGE        53
+> > +#define CHT_WC_VPROG4B_VRANGE        53
+> > +#define CHT_WC_VPROG4C_VRANGE        53
+> > +#define CHT_WC_VPROG4D_VRANGE        53
+> > +#define CHT_WC_VPROG5A_VRANGE        53
+> > +#define CHT_WC_VPROG5B_VRANGE        53
+> > +#define CHT_WC_VPROG6A_VRANGE        53
+> > +#define CHT_WC_VPROG6B_VRANGE        53
+>
+> These appear to be identical - is this not just a bunch of
+> instantiations of the same IPs
+
+That was done for "macro convenience". I would definitely re-work this part.
+
+>
+> > +/* voltage tables */
+> > +static unsigned int CHT_WC_V3P3A_VSEL_TABLE[CHT_WC_V3P3A_VRANGE],
+> > +                 CHT_WC_V1P8A_VSEL_TABLE[CHT_WC_V1P8A_VRANGE],
+> > +                 CHT_WC_V1P05A_VSEL_TABLE[CHT_WC_V1P05A_VRANGE],
+> > +                 CHT_WC_VDDQ_VSEL_TABLE[CHT_WC_VDDQ_VRANGE],
+> > +                 CHT_WC_V1P8SX_VSEL_TABLE[CHT_WC_V1P8SX_VRANGE],
+> > +                 CHT_WC_V1P2SX_VSEL_TABLE[CHT_WC_V1P2SX_VRANGE],
+> > +                 CHT_WC_V1P2A_VSEL_TABLE[CHT_WC_V1P2A_VRANGE],
+> > +                 CHT_WC_V2P8SX_VSEL_TABLE[CHT_WC_V2P8SX_VRANGE],
+> > +                 CHT_WC_V3P3SD_VSEL_TABLE[CHT_WC_V3P3SD_VRANGE],
+> > +                 CHT_WC_VPROG1A_VSEL_TABLE[CHT_WC_VPROG1A_VRANGE],
+> > +                 CHT_WC_VPROG1B_VSEL_TABLE[CHT_WC_VPROG1B_VRANGE],
+> > +                 CHT_WC_VPROG1F_VSEL_TABLE[CHT_WC_VPROG1F_VRANGE],
+> > +                 CHT_WC_VPROG2D_VSEL_TABLE[CHT_WC_VPROG2D_VRANGE],
+> > +                 CHT_WC_VPROG3A_VSEL_TABLE[CHT_WC_VPROG3A_VRANGE],
+> > +                 CHT_WC_VPROG3B_VSEL_TABLE[CHT_WC_VPROG3B_VRANGE],
+> > +                 CHT_WC_VPROG4A_VSEL_TABLE[CHT_WC_VPROG4A_VRANGE],
+> > +                 CHT_WC_VPROG4B_VSEL_TABLE[CHT_WC_VPROG4B_VRANGE],
+> > +                 CHT_WC_VPROG4C_VSEL_TABLE[CHT_WC_VPROG4C_VRANGE],
+> > +                 CHT_WC_VPROG4D_VSEL_TABLE[CHT_WC_VPROG4D_VRANGE],
+> > +                 CHT_WC_VPROG5A_VSEL_TABLE[CHT_WC_VPROG5A_VRANGE],
+> > +                 CHT_WC_VPROG5B_VSEL_TABLE[CHT_WC_VPROG5B_VRANGE],
+> > +                 CHT_WC_VPROG6A_VSEL_TABLE[CHT_WC_VPROG6A_VRANGE],
+> > +                 CHT_WC_VPROG6B_VSEL_TABLE[CHT_WC_VPROG6B_VRANGE];
+>
+> Please write a series of individual variable declarations, the
+> above way of writing things is very unusual and hence confusing
+> to read.  Though like I say it looks like the tables are mostly
+> identical so you probably only need a much smaller number of
+> tables, one per IP.
+
+Agreed, would be re-worked as well.
+
+>
+> > +/*
+> > + * The VSDIO regulator should only support 1.8V and 3.3V. All other
+> > + * voltages are invalid for sd card, so disable them here.
+> > + */
+> > +static unsigned int CHT_WC_VSDIO_VSEL_TABLE[CHT_WC_VSDIO_VRANGE] = {
+> > +     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+> > +     0, 0, 0, 0, 0, 0, 0, 0, 1800000, 0, 0, 0,
+> > +     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+> > +     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+> > +     0, 0, 3300000, 0, 0
+> > +};
+>
+> Is this really a limitation of the *regulator* or is it a
+> limitation of the consumer?  The combination of the way this is
+> written and the register layout makes it look like it's a
+> consumer limitation in which case leave it up to the consumer to
+> figure out what constraints it has.
+
+This is a tricky point. Since there is no datasheet available from
+Intel on this IP - I went with a safe option of taking this part from
+original Intel patch, which they did for Aero board as the range was
+described there in exactly this way. I am totally unsure if the
+regulator does not provide all voltages, or this limit is purely
+artificial here. Nevertheless, according to SD specification this
+regulator should only operate with only those two voltage levels: 1v8
+and 3v3 and consumers (mmc) should be well aware of this.
+
+[Mark]: There's always the possibility that someone builds a board
+with something else attached to the regulator if they don't want to
+use SD cards for example.
+
+I would re-work this to map all voltage ranges here properly, so there
+would be no further confusions.
+
+[Mark]: OK
+
+>
+> > +/* List the SD card interface as a consumer of vqmmc voltage source from VSDIO
+> > + * regulator. This is the only interface that requires this source on Cherry
+> > + * Trail to operate with UHS-I cards.
+> > + */
+> > +static struct regulator_consumer_supply cht_wc_vqmmc_supply_consumer[] = {
+> > +     REGULATOR_SUPPLY("vqmmc", "80860F14:02"),
+> > +};
+>
+> This looks like board specific configuration so should be defined
+> in the board.
+>
+> > +static struct regulator_init_data vqmmc_init_data = {
+> > +     .constraints = {
+> > +             .min_uV                 = 1800000,
+> > +             .max_uV                 = 3300000,
+> > +             .valid_ops_mask         = REGULATOR_CHANGE_VOLTAGE |
+> > +                                     REGULATOR_CHANGE_STATUS,
+> > +             .valid_modes_mask       = REGULATOR_MODE_NORMAL,
+> > +             .settling_time          = 20000,
+> > +     },
+> > +     .num_consumer_supplies  = ARRAY_SIZE(cht_wc_vqmmc_supply_consumer),
+> > +     .consumer_supplies      = cht_wc_vqmmc_supply_consumer,
+> > +};
+>
+> This *definitely* appears to be board specific configuration and
+> should be defined for the board.
+
+Above those two points above: I totally agree this is not the
+regulator configuration but rather a specific board one. The only
+thing I was not able to locate is a correct board file to put this
+into.
+
+Maybe you or Hans can guide me here on where to have this code as best?
+
+[Mark]: I *think* drivers/platform/x86 might be what you're looking
+for but I'm not super familiar with x86.  There's also
+arch/x86/platform but I think they're also trying to push things out
+of arch/.
+
+>
+> > +static int cht_wc_regulator_enable(struct regulator_dev *rdev)
+> > +{
+> > +     struct ch_wc_regulator_info *pmic_info = rdev_get_drvdata(rdev);
+>
+> regulator_enable_regmap()
+
+Agreed, would re-work this.
+
+>
+> > +static int cht_wc_regulator_disable(struct regulator_dev *rdev)
+> > +{
+> > +     struct ch_wc_regulator_info *pmic_info = rdev_get_drvdata(rdev);
+>
+> regulator_disable_regmap()
+
+... and this as well.
+
+>
+> > +static int cht_wc_regulator_is_enabled(struct regulator_dev *rdev)
+> > +{
+> > +     struct ch_wc_regulator_info *pmic_info = rdev_get_drvdata(rdev);
+> > +     int rval;
+>
+> This looks like it's a get_status() operation (reading back the
+> actual staus of the regulator rather than if we asked for it to
+> be enabled or disabled).
+
+Yes, this is actually a get_status. Would re-work it.
+
+>
+> > +static int cht_wc_regulator_read_voltage_sel(struct regulator_dev *rdev)
+> > +{
+>
+> regulator_get_voltage_sel_regmap()
+>
+> > +static int cht_wc_regulator_set_voltage_sel(struct regulator_dev *rdev,
+> > +             unsigned int selector)
+>
+> regulator_set_voltage_sel_regmap()
+
+I'd revise the whole regulator core API usage from comments above, as
+I see now the driver code could be simplified dramatically.
+
+>
+> > +static void initialize_vtable(struct ch_wc_regulator_info *reg_info)
+> > +{
+> > +     unsigned int i, volt;
+> > +
+> > +     if (reg_info->runtime_table == true) {
+> > +             for (i = 0; i < reg_info->nvolts; i++) {
+> > +                     volt = reg_info->min_mV + (i * reg_info->scale);
+> > +                     if (volt < reg_info->min_mV)
+> > +                             volt = reg_info->min_mV;
+> > +                     if (volt > reg_info->max_mV)
+> > +                             volt = reg_info->max_mV;
+> > +                     /* set value in uV */
+> > +                     reg_info->vtable[i] = volt*1000;
+> > +             }
+> > +     }
+> > +     reg_info->desc.volt_table = reg_info->vtable;
+> > +     reg_info->desc.n_voltages = reg_info->nvolts;
+> > +}
+>
+> This looks like you've got a linear range so you should be using
+> regulator_map_voltage_linear and regulator_list_voltage_linear.
+
+Yes, you're absolutely right, I've missed this one out. Would use a
+proper API here as well.
+
+>
+> > +     regulator->rdev = regulator_register(&reg_info->desc, &config);
+>
+> devm_regulator_register()
+
+Yeap, and consecutively devm_regulator_unregister() in
+cht_wc_regulator_remove call.
+
+[Mark]: With devm_ you don't even need to explicitly unregister so the
+entire remove function can go.
+
+>
+> > +static int __init cht_wc_regulator_init(void)
+> > +{
+> > +     return platform_driver_register(&cht_wc_regulator_driver);
+> > +}
+> > +subsys_initcall_sync(cht_wc_regulator_init);
+>
+> Why subsys_initcall() and not just module_platform_driver?
+> Deferred probe should work fine for regulators.
+
+Got it, would correct this as well.
+
+Overall, I would definitely work on a v2 here for both the regulator
+and mfd cell part. If anyone has additional comment - please share
+them here so I would gladly take them in!
+
+Thanks a lot to all of you for reviewing this set!
+
+--
+Regards,
+Andrey.
