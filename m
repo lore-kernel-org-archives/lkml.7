@@ -2,144 +2,92 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4871ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088C8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF1521929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AtqC8MCW"
+	by mail.kernel.org (Postfix) with ESMTP id DC076206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437609AbfJYIB4 (ORCPT
+        id S2437618AbfJYICd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:01:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41072 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2437584AbfJYIBz (ORCPT
+        Fri, 25 Oct 2019 04:02:33 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:51757 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437508AbfJYICd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:01:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571990513;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=otCDV1QKx3d7IK+sWoEGFb/N0+D+qi80epo1tUZLYdM=;
-        b=AtqC8MCWMDWZTD854HIWbUeizBluIKajJr6IDeSl/XUgGggungQbTnwwBlO8qrn6Z+fWPd
-        WYyfz4al1ixvxUOc2l2WfEF2gEVtVAAbS1ha5aOIJ8GlOTSP5da8w1CSatndfIGcFjg3BT
-        bcCfojpcxswdE7uUo2tH+1WUWjiHrwI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-ETcj03UuP5WCRQnyylt_tg-1; Fri, 25 Oct 2019 04:01:50 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DE76107AD31;
-        Fri, 25 Oct 2019 08:01:47 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1BCBF60852;
-        Fri, 25 Oct 2019 08:01:42 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 10:01:42 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 2/9] perf tools: splice events onto evlist even on
- error
-Message-ID: <20191025080142.GF31679@krava>
-References: <20191023005337.196160-1-irogers@google.com>
- <20191024190202.109403-1-irogers@google.com>
- <20191024190202.109403-3-irogers@google.com>
-MIME-Version: 1.0
-In-Reply-To: <20191024190202.109403-3-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: ETcj03UuP5WCRQnyylt_tg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Fri, 25 Oct 2019 04:02:33 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Tg8vqiB_1571990545;
+Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0Tg8vqiB_1571990545)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 25 Oct 2019 16:02:29 +0800
+From:   Hui Zhu <teawaterz@linux.alibaba.com>
+To:     sjenning@redhat.com, ddstreet@ieee.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Hui Zhu <teawaterz@linux.alibaba.com>
+Subject: [PATCH] zswap: Add shrink_enabled that can disable swap shrink to increase store performance
+Date:   Fri, 25 Oct 2019 16:02:18 +0800
+Message-Id: <1571990538-6133-1-git-send-email-teawaterz@linux.alibaba.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:01:55PM -0700, Ian Rogers wrote:
-> If event parsing fails the event list is leaked, instead splice the list
-> onto the out result and let the caller cleanup.
->=20
-> An example input for parse_events found by libFuzzer that reproduces
-> this memory leak is 'm{'.
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
->=20
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index edb3ae76777d..f0d50f079d2f 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1968,15 +1968,20 @@ int parse_events(struct evlist *evlist, const cha=
-r *str,
-> =20
->  =09ret =3D parse_events__scanner(str, &parse_state, PE_START_EVENTS);
->  =09perf_pmu__parse_cleanup();
-> +
-> +=09if (!ret && list_empty(&parse_state.list)) {
-> +=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
-> +=09=09return -1;
-> +=09}
-> +
-> +=09/*
-> +=09 * Add list to the evlist even with errors to allow callers to clean =
-up.
-> +=09 */
-> +=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
+zswap will try to shrink pool when zswap is full.
+This commit add shrink_enabled that can disable swap shrink to increase
+store performance.  User can disable swap shrink if care about the store
+performance.
 
-I still dont understand this one.. if there was an error, the list
-should be empty, right? also if there's an error and there's something
-on the list, what is it? how it gets deleted?
+For example in a VM with 1 CPU 1G memory 4G swap:
+echo lz4 > /sys/module/zswap/parameters/compressor
+echo z3fold > /sys/module/zswap/parameters/zpool
+echo 0 > /sys/module/zswap/parameters/same_filled_pages_enabled
+echo 1 > /sys/module/zswap/parameters/enabled
+usemem -a -n 1 $((4000 * 1024 * 1024))
+4718592000 bytes / 114937822 usecs = 40091 KB/s
+101700 usecs to free memory
+echo 0 > /sys/module/zswap/parameters/shrink_enabled
+usemem -a -n 1 $((4000 * 1024 * 1024))
+4718592000 bytes / 8837320 usecs = 521425 KB/s
+129577 usecs to free memory
 
-thanks,
-jirka
+The store speed increased when zswap shrink disabled.
 
-> +
->  =09if (!ret) {
->  =09=09struct evsel *last;
-> =20
-> -=09=09if (list_empty(&parse_state.list)) {
-> -=09=09=09WARN_ONCE(true, "WARNING: event parser found nothing\n");
-> -=09=09=09return -1;
-> -=09=09}
-> -
-> -=09=09perf_evlist__splice_list_tail(evlist, &parse_state.list);
->  =09=09evlist->nr_groups +=3D parse_state.nr_groups;
->  =09=09last =3D evlist__last(evlist);
->  =09=09last->cmdline_group_boundary =3D true;
-> --=20
-> 2.23.0.866.gb869b98d4c-goog
->=20
+Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+---
+ mm/zswap.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 46a3223..731e3d1e 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -114,6 +114,10 @@ static bool zswap_same_filled_pages_enabled = true;
+ module_param_named(same_filled_pages_enabled, zswap_same_filled_pages_enabled,
+ 		   bool, 0644);
+ 
++/* Enable/disable zswap shrink (enabled by default) */
++static bool zswap_shrink_enabled = true;
++module_param_named(shrink_enabled, zswap_shrink_enabled, bool, 0644);
++
+ /*********************************
+ * data structures
+ **********************************/
+@@ -947,6 +951,9 @@ static int zswap_shrink(void)
+ 	struct zswap_pool *pool;
+ 	int ret;
+ 
++	if (!zswap_shrink_enabled)
++		return -EPERM;
++
+ 	pool = zswap_pool_last_get();
+ 	if (!pool)
+ 		return -ENOENT;
+-- 
+2.7.4
 
