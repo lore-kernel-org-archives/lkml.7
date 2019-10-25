@@ -2,91 +2,126 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546EFCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351A6CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDC92070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA732070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D8BWFPd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408390AbfJYIml (ORCPT
+        id S2408413AbfJYInN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:42:41 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46712 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407876AbfJYImk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:42:40 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C757820043F;
-        Fri, 25 Oct 2019 10:42:38 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E27720006D;
-        Fri, 25 Oct 2019 10:42:31 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7D3DB402BC;
-        Fri, 25 Oct 2019 16:42:22 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, Anson.Huang@nxp.com, ping.bai@nxp.com,
-        jun.li@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        daniel.lezcano@linaro.org, shengjiu.wang@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM64: imx8mm: Change compatible string for sdma
-Date:   Fri, 25 Oct 2019 16:39:23 +0800
-Message-Id: <1571992763-31339-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 25 Oct 2019 04:43:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58154 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408361AbfJYInN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:43:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/9XjHHhi9cmHqBCDafIhrq5RljTOrxtN4eiY5hNBvRw=; b=D8BWFPd3KhZg5ubJIgIjUHoO6
+        7lbcZxfhDOuR8J8Ne1ba5PEghIoeC8Bq3rNF+b+jNOirqQx2WARbWho8w7sy+gPTIO+p5snNBPLh9
+        +ASQb/C6jqvqsZzs1Vaf0bB7xzqbUxwTiPH24ze2HDrSN4+0xSLcdzX1H/opAcBt6Z9Sf9/5R7p3b
+        dmNYaMTXq4uPTT6mgRHd4LrLoPiYFjkY8sSt4WP4jWDyu1pTITquH/+Ch/uFABr0QuVlJqtPxAROB
+        arFPZQIfT1JXQAyhJ+TW+DYMM14fPcwZ+N7fE4ClKRf0rHBrPxntz089yDd5Q2DbE0u0PWgQhqBFT
+        Z+bgFkw/w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iNvBW-0004YE-JM; Fri, 25 Oct 2019 08:43:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 91DF9303DA1;
+        Fri, 25 Oct 2019 10:42:01 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 64768201A660C; Fri, 25 Oct 2019 10:43:00 +0200 (CEST)
+Date:   Fri, 25 Oct 2019 10:43:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jeyu@kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v4 15/16] module: Move where we mark modules RO,X
+Message-ID: <20191025084300.GG4131@hirez.programming.kicks-ass.net>
+References: <20191018073525.768931536@infradead.org>
+ <20191018074634.801435443@infradead.org>
+ <20191021135312.jbbxsuipxldocdjk@treble>
+ <20191021141402.GI1817@hirez.programming.kicks-ass.net>
+ <20191023114835.GT1817@hirez.programming.kicks-ass.net>
+ <20191023170025.f34g3vxaqr4f5gqh@treble>
+ <20191024131634.GC4131@hirez.programming.kicks-ass.net>
+ <20191025064456.6jjrngm4m3mspaxw@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025064456.6jjrngm4m3mspaxw@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SDMA in i.MX8MM should use same configuration as i.MX8MQ
-So need to change compatible string to be "fsl,imx8mq-sdma".
+On Fri, Oct 25, 2019 at 08:44:56AM +0200, Petr Mladek wrote:
+> On Thu 2019-10-24 15:16:34, Peter Zijlstra wrote:
+> > On Wed, Oct 23, 2019 at 12:00:25PM -0500, Josh Poimboeuf wrote:
+> > 
+> > > > This then raises a number of questions:
+> > > > 
+> > > >  1) why is that RELA (that obviously does not depend on any module)
+> > > >     applied so late?
+> > > 
+> > > Good question.  The 'pv_ops' symbol is exported by the core kernel, so I
+> > > can't see any reason why we'd need to apply that rela late.  In theory,
+> > > kpatch-build isn't supposed to convert that to a klp rela.  Maybe
+> > > something went wrong in the patch creation code.
+> > > 
+> > > I'm also questioning why we even need to apply the parainstructions
+> > > section late.  Maybe we can remove that apply_paravirt() call
+> > > altogether, along with .klp.arch.parainstruction sections.
+> 
+> Hmm, the original bug report against livepatching was actually about
+> paravirt ops, see below.
 
-Fixes: a05ea40eb384 ("arm64: dts: imx: Add i.mx8mm dtsi support")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Yes, I found that.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 2139c0a9c495..6a54d2a3b19b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -394,7 +394,7 @@
- 			};
- 
- 			sdma2: dma-controller@302c0000 {
--				compatible = "fsl,imx8mm-sdma", "fsl,imx7d-sdma";
-+				compatible = "fsl,imx8mm-sdma", "fsl,imx8mq-sdma";
- 				reg = <0x302c0000 0x10000>;
- 				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_SDMA2_ROOT>,
-@@ -405,7 +405,7 @@
- 			};
- 
- 			sdma3: dma-controller@302b0000 {
--				compatible = "fsl,imx8mm-sdma", "fsl,imx7d-sdma";
-+				compatible = "fsl,imx8mm-sdma", "fsl,imx8mq-sdma";
- 				reg = <0x302b0000 0x10000>;
- 				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_SDMA3_ROOT>,
-@@ -741,7 +741,7 @@
- 			};
- 
- 			sdma1: dma-controller@30bd0000 {
--				compatible = "fsl,imx8mm-sdma", "fsl,imx7d-sdma";
-+				compatible = "fsl,imx8mm-sdma", "fsl,imx8mq-sdma";
- 				reg = <0x30bd0000 0x10000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MM_CLK_SDMA1_ROOT>,
--- 
-2.21.0
+> > > I'm not sure about alternatives, but maybe we can enforce such
+> > > limitations with tooling and/or kernel checks.
+> > 
+> > Right, so on IRC you implied you might have some additional details on
+> > how alternatives were affected; did you manage to dig that up?
+> 
+> I am not sure what Josh had in mind. But the problem with livepatches,
+> paravort ops, and alternatives was described in the related patchset, see
+> https://lkml.kernel.org/r/1471481911-5003-1-git-send-email-jeyu@redhat.com
 
+Yes, and my complaint there is that that thread is void of useful
+content.
+
+> The original bug report is
+> https://lkml.kernel.org/r/20160329120518.GA21252@canonical.com
+
+I found the github (*groan*) link in the thread above.
+
+From all that I could only make that the paravirt stuff is just doing it
+wrong (see earlier emails, core-kernel RELAs really should be applied at
+the time of patch-module load, there's no excuse for them to be delayed
+to the .klp.rela. section) at which point paravirt will also magically
+work.
+
+But none of that explains why apply_alternatives() is also delayed.
+
+So I'm very tempted to just revert that patchset for doing it all
+wrong.
