@@ -2,82 +2,80 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFE8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAACCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6F22166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A380D2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571973474;
+	bh=QuOpuTEqghbYbDPXBE0/lyFy+emlMYI74JUhK1F3hPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rkqz5hw1QP45rHpF7b3eKxkpNlll8QoNzBt7keXZy5h7CWlj1UmkCyZwWCs4+YdJu
+	 ve7NZuT+wifWbuyrIV4g/t7bGmOsymimospslf3Ppbr7koIhugcQZiyO8ZDtc5RWuN
+	 qyTC4VeHfygjRZQ8cQHEU6Q6G1zu12lWzuRH24uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404002AbfJYDQo (ORCPT
+        id S2404053AbfJYDRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 23:16:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5177 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732607AbfJYDQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 23:16:43 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A3AF0F5503DC8BE0E7AE;
-        Fri, 25 Oct 2019 11:16:40 +0800 (CST)
-Received: from [127.0.0.1] (10.133.219.218) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 11:16:40 +0800
-Message-ID: <5DB26917.7010606@huawei.com>
-Date:   Fri, 25 Oct 2019 11:16:39 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Thu, 24 Oct 2019 23:17:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbfJYDRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 23:17:53 -0400
+Received: from localhost (unknown [38.98.37.137])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B4E2166E;
+        Fri, 25 Oct 2019 03:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571973472;
+        bh=QuOpuTEqghbYbDPXBE0/lyFy+emlMYI74JUhK1F3hPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iZYuuaJcMIZ5wXZd8dRwccdFHUfkYYxyC3E8cKNjjyDRG9kywRVxGAjiUp/4oUgEy
+         DuYo+JNscpJ5ueO5X+GjXcjVp5hFaD/2T/iBAJWY4u1wGPNY5uLYZU95kX386Wu/6D
+         WfsW4X044JCqufauc4LP2vJzftBYMKUW/Kw8Go2Q=
+Date:   Thu, 24 Oct 2019 23:17:01 -0400
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Samuil Ivanov <samuil.ivanovbg@gmail.com>
+Cc:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Staging: qlge: Rename of function prefix ql_ to qlge_
+Message-ID: <20191025031701.GA535333@kroah.com>
+References: <20191024212941.28149-1-samuil.ivanovbg@gmail.com>
 MIME-Version: 1.0
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: rtl8723bs: remove an redundant null check before
- kfree()
-References: <1571211506-19005-1-git-send-email-zhongjiang@huawei.com> <20191025024216.GB331827@kroah.com>
-In-Reply-To: <20191025024216.GB331827@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.219.218]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191024212941.28149-1-samuil.ivanovbg@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/10/25 10:42, Greg KH wrote:
-> On Wed, Oct 16, 2019 at 03:38:26PM +0800, zhong jiang wrote:
->> kfree() has taken null pointer into account. hence it is safe to remove
->> the unnecessary check.
->>
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->> ---
->>  drivers/staging/rtl8723bs/core/rtw_xmit.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
->> index 7011c2a..4597f4f 100644
->> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
->> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
->> @@ -2210,8 +2210,7 @@ void rtw_free_hwxmits(struct adapter *padapter)
->>  	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
->>  
->>  	hwxmits = pxmitpriv->hwxmits;
->> -	if (hwxmits)
->> -		kfree(hwxmits);
->> +	kfree(hwxmits);
->>  }
->>  
->>  void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry)
->> -- 
->> 1.7.12.4
->>
-> Patch does not apply to my tree :(
->
-> .
->
-But I do not see other mantainer take the patch so far.
+On Fri, Oct 25, 2019 at 12:29:38AM +0300, Samuil Ivanov wrote:
+> In terms of namespace, the driver uses either qlge_, ql_ (used by
+> other qlogic drivers, with clashes, ex: ql_sem_spinlock) or nothing (with
+> clashes, ex: struct ob_mac_iocb_req). Rename everything to use the "qlge_"
+> prefix.
+> 
+> So I renamed three functions to the prefered namespace "qlge",
+> and updated the occurrences in the driver.
+> 
+> Samuil Ivanov (3):
+>   Staging: qlge: Rename prefix of a function to qlge
+>   Staging: qlge: Rename prefix of a function to qlge
+>   Staging: qlge: Rename prefix of a function to qlge
 
-Thanks,
-zhong jiang
+You sent 3 patches that do different things, yet have the same identical
+subject line :(
 
+Please fix up and resend the series.
+
+thanks,
+
+greg k-h
