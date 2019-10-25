@@ -2,118 +2,184 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83BBCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A668CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E19621D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIRKYTaB"
+	by mail.kernel.org (Postfix) with ESMTP id 1DB60222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437269AbfJYIvk (ORCPT
+        id S2437447AbfJYIvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 25 Oct 2019 04:51:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60588 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726986AbfJYIvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 04:51:40 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37632 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733259AbfJYIvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:51:36 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q130so1157682wme.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aMQiRvfvzltgh99VMklkfKOfsR6mD4ds3sE5X/Su2O8=;
-        b=TIRKYTaBshWTPJj4UWu519prJLZg9t6m71FKYN77RqdVJbA6wswRsoDddyDRllrah9
-         eLJ3ZX1U4jp5zVDyhyakhz/h9viCJIKMk5e+zoedFAa6MS3btKN3u9No0budl9ClmrlA
-         omN6AAfjUcChu8sDFXBzSTwu5dL8CNs49ncvElnoIN28khvj/Y/ZE2uOo4BtoIrCU1US
-         E77RHhb6oKvX4/M+nYwCG/kFefGqMwUp0YwFG21cyaPOv93dMr9pScAm3j1wNMd1HkLg
-         37EdA8Ii06PBPKCqELNApcGdvtq1xTGtSGKw36wBnrK4qlMwycpOMVtKMxWizxSwsOhq
-         ePww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aMQiRvfvzltgh99VMklkfKOfsR6mD4ds3sE5X/Su2O8=;
-        b=MltvLQd/9Bj0LQkRA0A4FAnyPOjxRUKEI0diHpfk09ACtQVFuJzuy8Defa4OrjVgwC
-         1NQ+xT+0yu0HA3/nGbHVrydltiLjUC1b8pwt1tV/kcRB9aNogFS6LKLX1Sc1MNH/SLsK
-         R7Q+t6tNW7TAT8EudzlubOOBA/QreYyGZ9YLY0odNOfZQRKrnmqb8ntuDKGmu5/pfnEW
-         8TGx0ivWKn1KamDpZcCGOZii2Z/oT3WKiw9qrV9b+7pNsHIHTiFMcTNuJ7K9OQ2np3Jy
-         EVW0+xL2GbSH6sDd1OeWmIlGcwv1H5VbwvacKrAopmj/GXloauf/Q2F3hLrC7voLJdS/
-         fjJQ==
-X-Gm-Message-State: APjAAAXkAtVboTsuXdfJf43Xrd88kpjRBoBpMx0tzxUcExmXDzRz6X/g
-        iUI4kB+iesa3sA8VaL37qM5N42hJ18ivEE9yO1BbLalj9BQ=
-X-Google-Smtp-Source: APXvYqwXe4RLnYUEE5xCp6/dPcTi6vC7x27ZS6aisYOk3qLPoJRv2XdeWFAUsCJ7MCm/WyUwKOMjpH4VuQ/H0xMKp0o=
-X-Received: by 2002:a1c:b4c1:: with SMTP id d184mr2266482wmf.37.1571993494613;
- Fri, 25 Oct 2019 01:51:34 -0700 (PDT)
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B505B3ABD47898223926;
+        Fri, 25 Oct 2019 16:51:34 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
+ 16:51:34 +0800
+Subject: Re: [PATCH] PCI: Warn about host bridge device when its numa node is
+ NO_NODE
+To:     Michal Hocko <mhocko@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     <peterz@infradead.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robin.murphy@arm.com>,
+        <geert@linux-m68k.org>, <gregkh@linuxfoundation.org>,
+        <paul.burton@mips.com>
+References: <20191024092013.GW17610@dhcp22.suse.cz>
+ <20191024174013.GA149516@google.com> <20191025081617.GA17610@dhcp22.suse.cz>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <19540a07-b035-1159-64f5-c8a700a05788@huawei.com>
+Date:   Fri, 25 Oct 2019 16:51:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
- <20191025075335.GC32742@smile.fi.intel.com> <20191025075540.GD32742@smile.fi.intel.com>
-In-Reply-To: <20191025075540.GD32742@smile.fi.intel.com>
-From:   Andrey Zhizhikin <andrey.z@gmail.com>
-Date:   Fri, 25 Oct 2019 10:51:23 +0200
-Message-ID: <CAHtQpK5ue=6u9ABugyQgzZODt9XuOyW-H4VvcZV3Vmacx8a6pg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
- Trail Whiskey Cove PMIC
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>, lgirdwood@gmail.com,
-        broonie@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191025081617.GA17610@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 9:55 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Oct 25, 2019 at 10:53:35AM +0300, Andy Shevchenko wrote:
-> > On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
-> > > This patchset introduces additional regulator driver for Intel Cherry
-> > > Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
-> > > PMIC, which is used to instantiate this regulator.
-> > >
-> > > Regulator support for this PMIC was present in kernel release from Intel
-> > > targeted Aero platform, but was not entirely ported upstream and has
-> > > been omitted in mainline kernel releases. Consecutively, absence of
-> > > regulator caused the SD Card interface not to be provided with Vqcc
-> > > voltage source needed to operate with UHS-I cards.
-> > >
-> > > Following patches are addessing this issue and making sd card interface
-> > > to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
-> > > of the SD Card interface in consumers and exposes optional "vqmmc"
-> > > voltage source, which mmc driver uses to switch signalling voltages
-> > > between 1.8V and 3.3V.
-> > >
-> > > This set contains of 2 patches: one is implementing the regulator driver
-> > > (based on a non upstreamed version from Intel Aero), and another patch
-> > > registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
-> >
-> > Thank you.
-> > Hans, Cc'ed, has quite interested in these kind of patches.
-> > Am I right, Hans?
->
-> Since it's about UHS/SD, Cc to Adrian as well.
+On 2019/10/25 16:16, Michal Hocko wrote:
+> On Thu 24-10-19 12:40:13, Bjorn Helgaas wrote:
+>> On Thu, Oct 24, 2019 at 11:20:13AM +0200, Michal Hocko wrote:
+>>> On Wed 23-10-19 12:10:39, Bjorn Helgaas wrote:
+>>>> On Wed, Oct 23, 2019 at 04:22:43PM +0800, Yunsheng Lin wrote:
+>>>>> On 2019/10/23 5:04, Bjorn Helgaas wrote:
+>>>>>> On Sat, Oct 19, 2019 at 02:45:43PM +0800, Yunsheng Lin wrote:
+>>>>
+>>>>>> I think the underlying problem you're addressing is that:
+>>>>>>
+>>>>>>   - NUMA_NO_NODE == -1,
+>>>>>>   - dev_to_node(dev) may return NUMA_NO_NODE,
+>>>>>>   - kmalloc(dev) relies on cpumask_of_node(dev_to_node(dev)), and
+>>>>>>   - cpumask_of_node(NUMA_NO_NODE) makes an invalid array reference
+>>>>>>
+>>>>>> For example, on arm64, mips loongson, s390, and x86,
+>>>>>> cpumask_of_node(node) returns "node_to_cpumask_map[node]", and -1 is
+>>>>>> an invalid array index.
+>>>>>
+>>>>> The invalid array index of -1 is the underlying problem here when
+>>>>> cpumask_of_node(dev_to_node(dev)) is called and cpumask_of_node()
+>>>>> is not NUMA_NO_NODE aware yet.
+>>>>>
+>>>>> In the "numa: make node_to_cpumask_map() NUMA_NO_NODE aware" thread
+>>>>> disscusion, it is requested that it is better to warn about the pcie
+>>>>> device without a node assigned by the firmware before making the
+>>>>> cpumask_of_node() NUMA_NO_NODE aware, so that the system with pci
+>>>>> devices of "NUMA_NO_NODE" node can be fixed by their vendor.
+>>>>>
+>>>>> See: https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+>>>>
+>>>> Right.  We should warn if the NUMA node number would help us but DT or
+>>>> the firmware didn't give us one.
+>>>>
+>>>> But we can do that independently of any cpumask_of_node() changes.
+>>>> There's no need to do one patch before the other.  Even if you make
+>>>> cpumask_of_node() tolerate NUMA_NO_NODE, we'll still get the warning
+>>>> because we're not actually changing any node assignments.
+>>>
+>>> Agreed. And this has been proposed previously I believe but my
+>>> understanding was that Petr was against that.
+>>
+>> I don't think Peter was opposed to a warning.
+> 
+> Now, he was opposed to cpumask_of_node handling IIRC.
 
-Thanks for looking into this, and including also interested people
-here. I've included only maintainers, but all interested parties are
-also very welcomed.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+That was my understanding too.
 
--- 
-Regards,
-Andrey.
+But I am not sure if Peter is still opposed to cpumask_of_node() after
+the pcie device without node affinity is warned in this patch.
+
+
+From previous discussion [1]:
+
+>Yunsheng> But I failed to see why the above is related to making node_to_cpumask_map()
+>Yunsheng> NUMA_NO_NODE aware?
+
+Peter> Your initial bug is for hns3, which is a PCI device, which really _MUST_
+Peter> have a node assigned.
+
+Peter> It not having one, is a straight up bug. We must not silently accept
+Peter> NO_NODE there, ever."
+
+I think Peter is not opposed to cpumask_of_node() after this patch if I
+understand it correctly.
+
+
+[1] https://lore.kernel.org/lkml/20191011111539.GX2311@hirez.programming.kicks-ass.net/
+
+> 
+>> I assume you're
+>> referring to [1], which is about how cpumask_of_node() should work.
+>> That's not my area, so I don't have a strong opinion.  From that
+>> discussion:
+>>
+>> Yunsheng> From what I can see, the problem can be fixed in three
+>> Yunsheng> place:
+>> Yunsheng> 1. Make user dev_to_node return a valid node id
+>> Yunsheng>    even when proximity domain is not set by bios(or node id
+>> Yunsheng>    set by buggy bios is not valid), which may need info from
+>> Yunsheng>    the numa system to make sure it will return a valid node.
+>> Yunsheng>
+>> Yunsheng> 2. User that call cpumask_of_node should ensure the node
+>> Yunsheng>    id is valid before calling cpumask_of_node, and user also
+>> Yunsheng>    need some info to make ensure node id is valid.
+>> Yunsheng>
+>> Yunsheng> 3. Make sure cpumask_of_node deal with invalid node id as
+>> Yunsheng>    this patchset.
+>>
+>> Peter> 1) because even it is not set, the device really does belong
+>> Peter> to a node.  It is impossible a device will have magic
+>> Peter> uniform access to memory when CPUs cannot.
+>> Peter> 
+>> Peter> 2) is already true today, cpumask_of_node() requires a valid
+>> Peter> node_id.
+>> Peter> 
+>> Peter> 3) is just wrong and increases overhead for everyone.
+>>
+>> I think Peter is advocating (1), i.e., if firmware doesn't tell us a
+>> node ID, we just pick one.  We can certainly do that in *addition* to
+>> adding a warning.  I'd like it to be a separate patch because I think
+>> we want the warning no matter what so users have some clue that
+>> performance could be better.
+> 
+> Yes, those should be two different patches.
+> 
+>> If we pick one, I guess we either assign some default, like node 0, to
+>> everything; or we somehow pick a random node to assign.
+> 
+> I have tried to explain that picking a default node is tricky because
+> node 0 is not generally available and you never know when a node might
+> just disappear if the device is not bound to it.
+
+Maybe the example you already mentioned in previous discussion may help
+here:
+
+3e8589963773 ("memcg: make it work on sparse non-0-node systems")
+
+
+> 
+> I really do not see why the proposed online_cpu_mask for that case is
+> such a big deal. It will likely lead to suboptimal performance but what
+> do you expect from a suboptimal HW description. There is no question
+> that the proper node affinity should be set and the warning might really
+> help here but trying to be clever and find a replacement sounds like
+> potential for more subtly broken results than doing a straightforward
+> thing.
+> 
+> But I will just go silent now because I am just repeating myself.
+> 
+
