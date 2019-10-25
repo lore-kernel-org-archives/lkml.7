@@ -2,127 +2,77 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E886CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A514CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3371321D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ox4psQ+D"
+	by mail.kernel.org (Postfix) with ESMTP id 2B46221D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394242AbfJYJeF (ORCPT
+        id S2394277AbfJYJea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:34:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35412 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393324AbfJYJeE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:34:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l10so1514159wrb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 02:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Nj5N0cwuIEfdMyg4o69ezEPhKqrHPL5y4BGXRPhXkhM=;
-        b=Ox4psQ+D9Aon5jdFqP9hZAU82dvvqpHrYlyw1U71YdGwg1ruw6T2nWCIDV4SZumlwX
-         NZ50aLRBjXgS1ghIkZsObVYJ62kO9cvgpblReUZhnmntfLFV0tc6BiJQ9XyR02IB6r9u
-         /Q5mpSe9QXoW9+9u5R43BJbM/yHZ0JjD0H2GSLc1VG7zCILBp809QfnMmNGinZmYnmKk
-         o/LMQpNWraMOwpVTCvuO40hRfXkaamdRFPRKoUX1gA4pPqBRRiQpznj5xEcwnwCeFu7F
-         Fy+KAVNBkiqo+vb6X+kweV2j8YipD6rKUqTvqJTVe+njLmcFoehYsFtf856upd7U2TfA
-         gskw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Nj5N0cwuIEfdMyg4o69ezEPhKqrHPL5y4BGXRPhXkhM=;
-        b=l/6AfppZCKbkHxOOCLPAHw7dU59RBws9lwNZqhWroj0txlEVh7yY6YZ8ECpJaf7ukk
-         JQfQiSUbw5D3qfqP0fUJezYhTBIpZM9NBB1rSLqL2wBv+Q9JavocVxk0Yhy4UaC3Em+8
-         EmV/DjE6L0IC1ir4O3Z/UMSiES3EY0vkPZjIZJeV+HlF4e3kXpcRrlClnopvQOD05PZC
-         BDWiqn+JefYcGxVLOf7E3nCv5EjlMrb2lKu2Ku5k3SMi+FThL7tndeTw3rGNHYe4yP7y
-         1Ef2ssPLyTvzIj5FelZo03a/GpmuhJi6eyd0tb29Mi+7du1Y5Tr/HiRMicBjPdgQtm/2
-         /UWQ==
-X-Gm-Message-State: APjAAAVTRcVrTEqEyHpRCN1bftM2v22aR5bXtVc3bWsCyoxYmbk7bQ1v
-        gCZqpDe08LySvdThgJdoWAKgvBsBGulDucEUUn2JzA==
-X-Google-Smtp-Source: APXvYqx/qJsN2qz7jYls/SoGQQO+isaqWDMB07jXtWfBz9ISudc2jhfrz0asa6LRApcE6FDYxSoqV1eqqsfc1d1djcM=
-X-Received: by 2002:adf:f685:: with SMTP id v5mr2135586wrp.246.1571996042197;
- Fri, 25 Oct 2019 02:34:02 -0700 (PDT)
+        Fri, 25 Oct 2019 05:34:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55002 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730207AbfJYJe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:34:29 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5DC944AADF4BD93F2232;
+        Fri, 25 Oct 2019 17:34:27 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
+ 17:34:17 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <agross@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] clk: qcom: remove unneeded semicolon
+Date:   Fri, 25 Oct 2019 17:33:32 +0800
+Message-ID: <20191025093332.27592-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <78b1532c-f8bf-48e4-d0a7-30ea0137d408@huawei.com>
-In-Reply-To: <78b1532c-f8bf-48e4-d0a7-30ea0137d408@huawei.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 25 Oct 2019 11:33:59 +0200
-Message-ID: <CAKv+Gu_MVe8mEeC-fVVbbLfUv-rEEk5_eoxfHjTCMgAFmSHrJw@mail.gmail.com>
-Subject: Re: [PATCH] crypto: qat - remove redundant condition accel_dev->is_vf
-To:     Yunfeng Ye <yeyunfeng@huawei.com>
-Cc:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, qat-linux@intel.com,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 25 Oct 2019 at 09:24, Yunfeng Ye <yeyunfeng@huawei.com> wrote:
->
-> Warning is found by the code analysis tool:
->   "Redundant condition: accel_dev->is_vf"
->
-> So remove the redundant condition accel_dev->is_vf.
->
-> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-> ---
->  drivers/crypto/qat/qat_common/adf_dev_mgr.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/crypto/qat/qat_common/adf_dev_mgr.c b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
-> index 2d06409bd3c4..b54b8850fe20 100644
-> --- a/drivers/crypto/qat/qat_common/adf_dev_mgr.c
-> +++ b/drivers/crypto/qat/qat_common/adf_dev_mgr.c
-> @@ -196,7 +196,7 @@ int adf_devmgr_add_dev(struct adf_accel_dev *accel_dev,
->         atomic_set(&accel_dev->ref_count, 0);
->
->         /* PF on host or VF on guest */
-> -       if (!accel_dev->is_vf || (accel_dev->is_vf && !pf)) {
-> +       if (!accel_dev->is_vf || !pf) {
+remove unneeded semicolon.
 
-I disagree with this change. There is no bug here, and the way the
-condition is formulated self-documents the code, i.e.,
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/clk/qcom/clk-rcg2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-IF NOT is_vf
-OR (is_vf BUT NOT pf)
-
-Using an automated tool to reduce every boolean expression to its
-minimal representation doesn't seem that useful to me, since the
-compiler is perfectly capable of doing that when generating the object
-code.
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index b98b81e..99c4bfa 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -206,7 +206,7 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+ 		break;
+ 	default:
+ 		return -EINVAL;
+-	};
++	}
+ 
+ 	if (!f)
+ 		return -EINVAL;
+@@ -319,7 +319,7 @@ static int __clk_rcg2_set_rate(struct clk_hw *hw, unsigned long rate,
+ 		break;
+ 	default:
+ 		return -EINVAL;
+-	};
++	}
+ 
+ 	if (!f)
+ 		return -EINVAL;
+-- 
+2.7.4
 
 
-
-
->                 struct vf_id_map *map;
->
->                 list_for_each(itr, &accel_table) {
-> @@ -292,7 +292,7 @@ void adf_devmgr_rm_dev(struct adf_accel_dev *accel_dev,
->                        struct adf_accel_dev *pf)
->  {
->         mutex_lock(&table_lock);
-> -       if (!accel_dev->is_vf || (accel_dev->is_vf && !pf)) {
-> +       if (!accel_dev->is_vf || !pf) {
->                 id_map[accel_dev->accel_id] = 0;
->                 num_devices--;
->         } else if (accel_dev->is_vf && pf) {
-> --
-> 2.7.4
->
