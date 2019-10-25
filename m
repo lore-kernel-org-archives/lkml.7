@@ -2,192 +2,117 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07388CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0E5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D447520867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A0A21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:35:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eMiPHVZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407039AbfJYHfI (ORCPT
+        id S2407079AbfJYHfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:35:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38966 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390611AbfJYHfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:35:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C31ECAC84;
-        Fri, 25 Oct 2019 07:35:05 +0000 (UTC)
-Subject: Re: [PATCH 2/2] mm, vmstat: reduce zone->lock holding time by
- /proc/pagetypeinfo
-To:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Waiman Long <longman@redhat.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jann Horn <jannh@google.com>, Song Liu <songliubraving@fb.com>,
+        Fri, 25 Oct 2019 03:35:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38382 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406923AbfJYHfn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:35:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v9so1094898wrq.5
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 00:35:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6A6igi+iIahcN2i7nqFwvDHaOIrrC7kc9SulvaWb1t0=;
+        b=eMiPHVZUMZHiiC3b4wO8fkj4sOT4J8cQT/B7pTI+nYvnYmtef30uo9xxiPHTDLQ5OH
+         p1K+uv8OkW0Z4+Kk0Tns6Ry1uk+qekivivWeZV5mil3cYc2J06xyu99Q13F36NeSDlFJ
+         rCwL2/2JJ/GHtnlog9n0EAP+hWde6vBnc1/wchD+xtgxxg/12KbLv8zkavTCEwK2iFsA
+         euMXFexUNw+UqcOh1hGHC/S+9XxBlELQihI0O1c3+IXjt7+5Y8y1iS2pCgejUvYGtOiv
+         tec/DUnVsEEciNCVkbSGwBxfjhhW+CVVJyU6ZIQEf0ECvNkxNj+Dx6J4dObCthj1q831
+         QgUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6A6igi+iIahcN2i7nqFwvDHaOIrrC7kc9SulvaWb1t0=;
+        b=WOQazdEy+gAjxRFn0506mXOr42CC+EBQ1gyKZGbngseEVWN+/QE5ONE0loFbrzYhgf
+         gGjyLXALcI7IrDR/LlXTe7yIvTp7YAXoEIpoIRgk9hMgWHGqv6Mrvfl8TRNVvj7jOu2a
+         GzGCWbvgkRk89u9s0gRx9RwAWiDL3RLwQVp6FUQOyn+5pznvP7P/vdVt0foHE1vsPdWX
+         54KDeUhyu19bGmJvCvyrX+t5RQ6YJyDbLMOcsOJJLC+xVSWpXcGKHJYaV1YdlwugS7J5
+         5A2yTJPWvZawPKQUkswxfl8fu+9SXfYbFI5Xs019Gm4oO80CLqYp6lX55F9hbydjPn/0
+         ftRA==
+X-Gm-Message-State: APjAAAX9pfOdhUAaMu7mPO52gvkwaELCpaAPjYa1jzvimscavn1wVz5b
+        3fXzcszxtEQoNonyI4eJYrVbBw==
+X-Google-Smtp-Source: APXvYqzgAol3HSs41oKRVvqmVFgjk39bV/r9jrrjPaqODAkY5xGnPUDMWeb/ek0hQto/lg9GZ4rVNg==
+X-Received: by 2002:adf:a50b:: with SMTP id i11mr1590050wrb.308.1571988941205;
+        Fri, 25 Oct 2019 00:35:41 -0700 (PDT)
+Received: from lophozonia ([85.195.192.192])
+        by smtp.gmail.com with ESMTPSA id l26sm592473wmg.3.2019.10.25.00.35.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 00:35:40 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 09:35:38 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     "zhangfei.gao@foxmail.com" <zhangfei.gao@foxmail.com>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Aquini <aquini@redhat.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-References: <20191025072610.18526-1-mhocko@kernel.org>
- <20191025072610.18526-3-mhocko@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a6c08a4b-f8a4-1223-c897-3ee2267ac24a@suse.cz>
-Date:   Fri, 25 Oct 2019 09:35:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH v6 2/3] uacce: add uacce driver
+Message-ID: <20191025073538.GC503659@lophozonia>
+References: <1571214873-27359-1-git-send-email-zhangfei.gao@linaro.org>
+ <1571214873-27359-3-git-send-email-zhangfei.gao@linaro.org>
+ <20191016172802.GA1533448@lophozonia>
+ <5da9a9cd.1c69fb81.9f8e8.60faSMTPIN_ADDED_BROKEN@mx.google.com>
+ <20191023074227.GA264888@lophozonia>
+ <5db25e56.1c69fb81.4fe57.380cSMTPIN_ADDED_BROKEN@mx.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025072610.18526-3-mhocko@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5db25e56.1c69fb81.4fe57.380cSMTPIN_ADDED_BROKEN@mx.google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 9:26 AM, Michal Hocko wrote:
-> From: Michal Hocko <mhocko@suse.com>
-> 
-> pagetypeinfo_showfree_print is called by zone->lock held in irq mode.
-> This is not really nice because it blocks both any interrupts on that
-> cpu and the page allocator. On large machines this might even trigger
-> the hard lockup detector.
-> 
-> Considering the pagetypeinfo is a debugging tool we do not really need
-> exact numbers here. The primary reason to look at the outuput is to see
-> how pageblocks are spread among different migratetypes and low number of
-> pages is much more interesting therefore putting a bound on the number
-> of pages on the free_list sounds like a reasonable tradeoff.
-> 
-> The new output will simply tell
-> [...]
-> Node    6, zone   Normal, type      Movable >100000 >100000 >100000 >100000  41019  31560  23996  10054   3229    983    648
-> 
-> instead of
-> Node    6, zone   Normal, type      Movable 399568 294127 221558 102119  41019  31560  23996  10054   3229    983    648
-> 
-> The limit has been chosen arbitrary and it is a subject of a future
-> change should there be a need for that.
-> 
-> While we are at it, also drop the zone lock after each free_list
-> iteration which will help with the IRQ and page allocator responsiveness
-> even further as the IRQ lock held time is always bound to those 100k
-> pages.
-> 
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Reviewed-by: Waiman Long <longman@redhat.com>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+On Fri, Oct 25, 2019 at 10:28:30AM +0800, zhangfei.gao@foxmail.com wrote:
+> > Something else I noticed is uacce_idr isn't currently protected. The IDR
+> > API expected the caller to use its own locking scheme. You could replace
+> > it with an xarray, which I think is preferred to IDR now and provides a
+> > xa_lock.
+> Currently  idr_alloc and idr_remove are simply protected by uacce_mutex,
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Ah right, but idr_find() also needs to be protected? 
 
-> ---
->  mm/vmstat.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 4e885ecd44d1..ddb89f4e0486 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1383,12 +1383,29 @@ static void pagetypeinfo_showfree_print(struct seq_file *m,
->  			unsigned long freecount = 0;
->  			struct free_area *area;
->  			struct list_head *curr;
-> +			bool overflow = false;
->  
->  			area = &(zone->free_area[order]);
->  
-> -			list_for_each(curr, &area->free_list[mtype])
-> -				freecount++;
-> -			seq_printf(m, "%6lu ", freecount);
-> +			list_for_each(curr, &area->free_list[mtype]) {
-> +				/*
-> +				 * Cap the free_list iteration because it might
-> +				 * be really large and we are under a spinlock
-> +				 * so a long time spent here could trigger a
-> +				 * hard lockup detector. Anyway this is a
-> +				 * debugging tool so knowing there is a handful
-> +				 * of pages in this order should be more than
-> +				 * sufficient
-> +				 */
-> +				if (++freecount >= 100000) {
-> +					overflow = true;
-> +					break;
-> +				}
-> +			}
-> +			seq_printf(m, "%s%6lu ", overflow ? ">" : "", freecount);
-> +			spin_unlock_irq(&zone->lock);
-> +			cond_resched();
-> +			spin_lock_irq(&zone->lock);
->  		}
->  		seq_putc(m, '\n');
->  	}
-> 
+> Will check xarray, looks it is more complicated then idr.
 
+Having tried both, it can easily replace idr. For uacce I think it could
+be something like (locking included):
+
+	static DEFINE_XARRAY_ALLOC(uacce_xa);
+
+	uacce = xa_load(&uacce_xa, iminor(inode));
+
+	ret = xa_alloc(&uacce_xa, &uacce->dev_id, uacce, xa_limit_32b,
+		       GFP_KERNEL);
+
+	xa_erase(&uacce_xa, uacce->dev_id);
+
+Thanks,
+Jean
