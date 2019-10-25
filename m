@@ -2,80 +2,80 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC38CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4988CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A178621D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C8F21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1571993737;
+	bh=5i3d+HY/V9+fI+uU7h1tX+fWD57IhBHMQfmMyo6jW0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yUE7Gb1kLfORk3QupC6wyzrZYWQXF0DtFZjbnHVpcWOjrNYsDVhEQ4gLYGuStN1a7
+	 pOIGNdgSiez4otmZmzHKwQvQihpB2NVjUZWan7FhnfnpTdgx9t6Wbd/Uw37lcGBoIM
+	 e+j3Ntvwp5su90brsYmH+hK8fJUXII40q9mCc8k4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438063AbfJYIzc (ORCPT
+        id S2392763AbfJYIzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:55:32 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:61072 "EHLO mxhk.zte.com.cn"
+        Fri, 25 Oct 2019 04:55:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437607AbfJYIzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:55:32 -0400
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 1E91D67EC5D1120E5763;
-        Fri, 25 Oct 2019 16:55:28 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x9P8sScR049383;
-        Fri, 25 Oct 2019 16:54:28 +0800 (GMT-8)
-        (envelope-from zhang.lin16@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019102516550472-127499 ;
-          Fri, 25 Oct 2019 16:55:04 +0800 
-From:   zhanglin <zhang.lin16@zte.com.cn>
-To:     dan.j.williams@intel.com
-Cc:     akpm@linux-foundation.org, jgg@ziepe.ca, mingo@kernel.org,
-        dave.hansen@linux.intel.com, namit@vmware.com, bp@suse.de,
-        christophe.leroy@c-s.fr, rdunlap@infradead.org, osalvador@suse.de,
-        richardw.yang@linux.intel.com, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        jiang.xuexin@zte.com.cn, zhanglin <zhang.lin16@zte.com.cn>
-Subject: [PATCH] kernel: Restrict permissions of /proc/iomem.
-Date:   Fri, 25 Oct 2019 16:56:41 +0800
-Message-Id: <1571993801-12665-1-git-send-email-zhang.lin16@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-10-25 16:55:04,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-10-25 16:54:34,
-        Serialize complete at 2019-10-25 16:54:34
-X-MAIL: mse-fl2.zte.com.cn x9P8sScR049383
+        id S2437607AbfJYIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:55:34 -0400
+Received: from dragon (li937-157.members.linode.com [45.56.119.157])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45D2521D7B;
+        Fri, 25 Oct 2019 08:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571993734;
+        bh=5i3d+HY/V9+fI+uU7h1tX+fWD57IhBHMQfmMyo6jW0g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FIQ/dERdy5OkfSnkwC/QgV1xafO+vBptMDHo96N++fPAbjhSmlkAGTYvw3jNb1VFi
+         S7bP4XDAcKBi1T5YIgLuBu8vztAbKdPBY4ZeZ2/wEoYtZJxRlqFZ3bdlB1F17+zKeE
+         pfirmEbL1hEYAsGqA5dT8DKdV+kpfLy+KRJlkJdo=
+Date:   Fri, 25 Oct 2019 16:55:17 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2] dts: Disable DMA support on the BK4 vf610 device's
+ fsl_lpuart driver
+Message-ID: <20191025085515.GH3208@dragon>
+References: <20191010090802.16383-1-lukma@denx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191010090802.16383-1-lukma@denx.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The permissions of /proc/iomem currently are -r--r--r--. Everyone can
-see its content. As iomem contains information about the physical memory
-content of the device, restrict the information only to root.
+On Thu, Oct 10, 2019 at 11:08:02AM +0200, Lukasz Majewski wrote:
+> This change disables the DMA support (RX/TX) on the NXP's fsl_lpuart
+> driver - the PIO mode is used instead. This change is necessary for better
+> robustness of BK4's device use cases with many potentially interrupted
+> short serial transfers.
+> 
+> Without it the driver hangs when some distortion happens on UART lines.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
 
-Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
----
- kernel/resource.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Subject prefix should be 'ARM: dts: ...'.  I fixed it up and applied the
+patch.
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 30e1bc6..844456e 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -139,7 +139,8 @@ static int __init ioresources_init(void)
- {
- 	proc_create_seq_data("ioports", 0, NULL, &resource_op,
- 			&ioport_resource);
--	proc_create_seq_data("iomem", 0, NULL, &resource_op, &iomem_resource);
-+	proc_create_seq_data("iomem", S_IRUSR, NULL, &resource_op,
-+			&iomem_resource);
- 	return 0;
- }
- __initcall(ioresources_init);
--- 
-2.15.2
-
+Shawn
