@@ -2,130 +2,365 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D78CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A6FCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD0F21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572013560;
-	bh=DU7fSFJ7Tbm2ALQlO0YChij89rQy5SaOWUBg7BPLtqY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EgkVUsketM/HA/bhRBy9P9pOqbtE+LEVwSwG19xs9kxMhga4Vr0GkerUOlULtsuXS
-	 zM3cL49I/LsfWFxzIZA3MLj5ff2eWRo7c3UOO+NTdDYlrrG/fCeYghvuWJ4D0ddTk6
-	 RSIMsRvr5M6c5l+EPGfphD5I9Zar9WbJw1Ox1vps=
+	by mail.kernel.org (Postfix) with ESMTP id D32D421655
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395373AbfJYOZ7 (ORCPT
+        id S2405273AbfJYO0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:26:02 -0400
+Received: from smtp3-1.goneo.de ([85.220.129.38]:34359 "EHLO smtp3-1.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395358AbfJYOZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:25:54 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21D6222C1;
-        Fri, 25 Oct 2019 14:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572013552;
-        bh=DU7fSFJ7Tbm2ALQlO0YChij89rQy5SaOWUBg7BPLtqY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lls4C6GhAMZkjiMHxUNM8e3MpVtTjHRcp7rtbeWxNU6wPCOgmjE3zkRA3BaLtvaMu
-         Ik1lbhOO5WwIWedKrjVgJYkBqK0RyKpoQxLvxyz5dqKrbrzgU/En4i9HWrJoKn8Xec
-         mU9sGQ/QhVMGbMoSZaRbAqSBj0FGKs5gqZfGPCOg=
-Received: by mail-qt1-f171.google.com with SMTP id r5so3545969qtd.0;
-        Fri, 25 Oct 2019 07:25:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAWv9kXSGcLQHmxNmIBYseNidlOOwCLmGapkoXxClHjEZYBO6900
-        TRXOLZtPVMHe/Oe1LSWC/PhVaxt+5HYrQcBPdQ==
-X-Google-Smtp-Source: APXvYqyHGFuHzLeeCiWmC38AWf47YzHtjUGWCvnVQnR7njmNGQzh6atSkOGaDQVT1lTzgwxR3JWh+i3JbBURQZyByQQ=
-X-Received: by 2002:a05:6214:1552:: with SMTP id t18mr3275282qvw.136.1572013551842;
- Fri, 25 Oct 2019 07:25:51 -0700 (PDT)
+        id S2395341AbfJYO0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:26:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id AEE3423EFDE;
+        Fri, 25 Oct 2019 16:25:56 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HWq4WWy5liEI; Fri, 25 Oct 2019 16:25:54 +0200 (CEST)
+Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
+        by smtp3.goneo.de (Postfix) with ESMTPA id 431F724004E;
+        Fri, 25 Oct 2019 16:25:54 +0200 (CEST)
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     Lars Poeschel <poeschel@lemonage.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Johan Hovold <johan@kernel.org>,
+        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Subject: [PATCH v10 4/7] nfc: pn533: Split pn533 init & nfc_register
+Date:   Fri, 25 Oct 2019 16:25:18 +0200
+Message-Id: <20191025142521.22695-5-poeschel@lemonage.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191025142521.22695-1-poeschel@lemonage.de>
+References: <20191025142521.22695-1-poeschel@lemonage.de>
 MIME-Version: 1.0
-References: <20190705164221.4462-1-robh@kernel.org> <20190705164221.4462-2-robh@kernel.org>
- <CAMuHMdW86UOVp5vjdFBzjbqsG_wemjZ77LyVnc+oZ6ZDccv_cA@mail.gmail.com>
-In-Reply-To: <CAMuHMdW86UOVp5vjdFBzjbqsG_wemjZ77LyVnc+oZ6ZDccv_cA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 25 Oct 2019 09:25:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
-Message-ID: <CAL_JsqJA_ZZ5CjoGrB4NofAcwMPXhnC0ddWZqZ9SXSTNAWB3cQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/13] dt-bindings: display: Convert common panel
- bindings to DT schema
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 8:07 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Rob,
->
-> On Fri, Jul 5, 2019 at 6:46 PM Rob Herring <robh@kernel.org> wrote:
-> > Convert the common panel bindings to DT schema consolidating scattered
-> > definitions to a single schema file.
-> >
-> > The 'simple-panel' binding just a collection of properties and not a
-> > complete binding itself. All of the 'simple-panel' properties are
-> > covered by the panel-common.txt binding with the exception of the
-> > 'no-hpd' property, so add that to the schema.
-> >
-> > As there are lots of references to simple-panel.txt, just keep the file
-> > with a reference to common.yaml for now until all the bindings are
-> > converted.
-> >
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> > Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Reviewed-by: Thierry Reding <treding@nvidia.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
->
-> This is now commit 821a1f7171aeea5e ("dt-bindings: display: Convert
-> common panel bindings to DT schema").
->
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
->
-> > +  backlight:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description:
-> > +      For panels whose backlight is controlled by an external backlight
-> > +      controller, this property contains a phandle that references the
-> > +      controller.
->
-> This paragraph seems to apply to all nodes named "backlight", causing
-> e.g. (for ARCH=arm mach_shmobile_defconfig) "make dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/panel-common.yaml"
-> to start complaining:
->
->     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
-> {'compatible': ['pwm-backlight'], 'pwms': [[40, 2, 33333, 1]],
-> 'brightness-levels': [[0, 1, 2, 4, 8, 16, 32, 64, 128, 255]],
-> 'default-brightness-level': [[9]], 'pinctrl-0': [[41]],
-> 'pinctrl-names': ['default'], 'power-supply': [[42]], 'enable-gpios':
-> [[15, 61, 0]]} is not of type 'array'
->     arch/arm/boot/dts/r8a7740-armadillo800eva.dt.yaml: backlight:
-> {'groups': ['tpu0_to2_1'], 'function': ['tpu0'], 'phandle': [[41]]} is
-> not of type 'array'
->
-> Do you know what's wrong?
+There is a problem in the initialisation and setup of the pn533: It
+registers with nfc too early. It could happen, that it finished
+registering with nfc and someone starts using it. But setup of the pn533
+is not yet finished. Bad or at least unintended things could happen.
+So I split out nfc registering (and unregistering) to seperate functions
+that have to be called late in probe then.
+i2c requires a bit more love: i2c requests an irq in it's probe
+function. 'Commit 32ecc75ded72 ("NFC: pn533: change order operations in
+dev registation")' shows, this can not happen too early. An irq can be
+served before structs are fully initialized. The way chosen to prevent
+this is to request the irq after nfc_alloc_device initialized the
+structs, but before nfc_register_device. So there is now this
+pn532_i2c_nfc_alloc function.
 
-I'm not seeing that. What does .../bindings/processed-schema.yaml look like?
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v10:
+- Special case for initialisation for i2c: nfc_alloc_device and
+  nfc_register_device is split with requesting irq inbetween.
+- Fix style (parameters of pn53x_common_init on opening parenthesis)
+- Rebased the patch series on net-next 'Commit 503a64635d5e ("Merge
+  branch 'DPAA-Ethernet-changes'")'
 
-Rob
+Changes in v9:
+- Rebased the patch series on v5.4-rc2
+
+Changes in v7:
+- Remove an unneeded rc variable initialization
+- Corrected goto error to err_clean in pn533_usb_probe
+
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
+
+Changes in v5:
+- This patch is new in v5
+
+ drivers/nfc/pn533/i2c.c   | 27 +++++++++-----
+ drivers/nfc/pn533/pn533.c | 76 ++++++++++++++++++++++-----------------
+ drivers/nfc/pn533/pn533.h | 13 ++++---
+ drivers/nfc/pn533/usb.c   | 16 +++++----
+ 4 files changed, 80 insertions(+), 52 deletions(-)
+
+diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
+index 1abd40398a5a..7507176cca0a 100644
+--- a/drivers/nfc/pn533/i2c.c
++++ b/drivers/nfc/pn533/i2c.c
+@@ -193,12 +193,10 @@ static int pn533_i2c_probe(struct i2c_client *client,
+ 	phy->i2c_dev = client;
+ 	i2c_set_clientdata(client, phy);
+ 
+-	priv = pn533_register_device(PN533_DEVICE_PN532,
+-				     PN533_NO_TYPE_B_PROTOCOLS,
+-				     PN533_PROTO_REQ_ACK_RESP,
+-				     phy, &i2c_phy_ops, NULL,
+-				     &phy->i2c_dev->dev,
+-				     &client->dev);
++	priv = pn53x_common_init(PN533_DEVICE_PN532,
++				PN533_PROTO_REQ_ACK_RESP,
++				phy, &i2c_phy_ops, NULL,
++				&phy->i2c_dev->dev);
+ 
+ 	if (IS_ERR(priv)) {
+ 		r = PTR_ERR(priv);
+@@ -206,6 +204,9 @@ static int pn533_i2c_probe(struct i2c_client *client,
+ 	}
+ 
+ 	phy->priv = priv;
++	r = pn532_i2c_nfc_alloc(priv, PN533_NO_TYPE_B_PROTOCOLS, &client->dev);
++	if (r)
++		goto nfc_alloc_err;
+ 
+ 	r = request_threaded_irq(client->irq, NULL, pn533_i2c_irq_thread_fn,
+ 				IRQF_TRIGGER_FALLING |
+@@ -220,13 +221,20 @@ static int pn533_i2c_probe(struct i2c_client *client,
+ 	if (r)
+ 		goto fn_setup_err;
+ 
+-	return 0;
++	r = nfc_register_device(priv->nfc_dev);
++	if (r)
++		goto fn_setup_err;
++
++	return r;
+ 
+ fn_setup_err:
+ 	free_irq(client->irq, phy);
+ 
+ irq_rqst_err:
+-	pn533_unregister_device(phy->priv);
++	nfc_free_device(priv->nfc_dev);
++
++nfc_alloc_err:
++	pn53x_common_clean(phy->priv);
+ 
+ 	return r;
+ }
+@@ -239,7 +247,8 @@ static int pn533_i2c_remove(struct i2c_client *client)
+ 
+ 	free_irq(client->irq, phy);
+ 
+-	pn533_unregister_device(phy->priv);
++	pn53x_unregister_nfc(phy->priv);
++	pn53x_common_clean(phy->priv);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/nfc/pn533/pn533.c b/drivers/nfc/pn533/pn533.c
+index 64836c727aee..e185dc5f12b9 100644
+--- a/drivers/nfc/pn533/pn533.c
++++ b/drivers/nfc/pn533/pn533.c
+@@ -2590,14 +2590,12 @@ int pn533_finalize_setup(struct pn533 *dev)
+ }
+ EXPORT_SYMBOL_GPL(pn533_finalize_setup);
+ 
+-struct pn533 *pn533_register_device(u32 device_type,
+-				u32 protocols,
++struct pn533 *pn53x_common_init(u32 device_type,
+ 				enum pn533_protocol_type protocol_type,
+ 				void *phy,
+ 				struct pn533_phy_ops *phy_ops,
+ 				struct pn533_frame_ops *fops,
+-				struct device *dev,
+-				struct device *parent)
++				struct device *dev)
+ {
+ 	struct pn533 *priv;
+ 	int rc = -ENOMEM;
+@@ -2638,43 +2636,18 @@ struct pn533 *pn533_register_device(u32 device_type,
+ 	skb_queue_head_init(&priv->fragment_skb);
+ 
+ 	INIT_LIST_HEAD(&priv->cmd_queue);
+-
+-	priv->nfc_dev = nfc_allocate_device(&pn533_nfc_ops, protocols,
+-					   priv->ops->tx_header_len +
+-					   PN533_CMD_DATAEXCH_HEAD_LEN,
+-					   priv->ops->tx_tail_len);
+-	if (!priv->nfc_dev) {
+-		rc = -ENOMEM;
+-		goto destroy_wq;
+-	}
+-
+-	nfc_set_parent_dev(priv->nfc_dev, parent);
+-	nfc_set_drvdata(priv->nfc_dev, priv);
+-
+-	rc = nfc_register_device(priv->nfc_dev);
+-	if (rc)
+-		goto free_nfc_dev;
+-
+ 	return priv;
+ 
+-free_nfc_dev:
+-	nfc_free_device(priv->nfc_dev);
+-
+-destroy_wq:
+-	destroy_workqueue(priv->wq);
+ error:
+ 	kfree(priv);
+ 	return ERR_PTR(rc);
+ }
+-EXPORT_SYMBOL_GPL(pn533_register_device);
++EXPORT_SYMBOL_GPL(pn53x_common_init);
+ 
+-void pn533_unregister_device(struct pn533 *priv)
++void pn53x_common_clean(struct pn533 *priv)
+ {
+ 	struct pn533_cmd *cmd, *n;
+ 
+-	nfc_unregister_device(priv->nfc_dev);
+-	nfc_free_device(priv->nfc_dev);
+-
+ 	flush_delayed_work(&priv->poll_work);
+ 	destroy_workqueue(priv->wq);
+ 
+@@ -2689,8 +2662,47 @@ void pn533_unregister_device(struct pn533 *priv)
+ 
+ 	kfree(priv);
+ }
+-EXPORT_SYMBOL_GPL(pn533_unregister_device);
++EXPORT_SYMBOL_GPL(pn53x_common_clean);
++
++int pn532_i2c_nfc_alloc(struct pn533 *priv, u32 protocols,
++			struct device *parent)
++{
++	priv->nfc_dev = nfc_allocate_device(&pn533_nfc_ops, protocols,
++					   priv->ops->tx_header_len +
++					   PN533_CMD_DATAEXCH_HEAD_LEN,
++					   priv->ops->tx_tail_len);
++	if (!priv->nfc_dev)
++		return -ENOMEM;
++
++	nfc_set_parent_dev(priv->nfc_dev, parent);
++	nfc_set_drvdata(priv->nfc_dev, priv);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pn532_i2c_nfc_alloc);
++
++int pn53x_register_nfc(struct pn533 *priv, u32 protocols,
++			struct device *parent)
++{
++	int rc;
++
++	rc = pn532_i2c_nfc_alloc(priv, protocols, parent);
++	if (rc)
++		return rc;
++
++	rc = nfc_register_device(priv->nfc_dev);
++	if (rc)
++		nfc_free_device(priv->nfc_dev);
++
++	return rc;
++}
++EXPORT_SYMBOL_GPL(pn53x_register_nfc);
+ 
++void pn53x_unregister_nfc(struct pn533 *priv)
++{
++	nfc_unregister_device(priv->nfc_dev);
++	nfc_free_device(priv->nfc_dev);
++}
++EXPORT_SYMBOL_GPL(pn53x_unregister_nfc);
+ 
+ MODULE_AUTHOR("Lauro Ramos Venancio <lauro.venancio@openbossa.org>");
+ MODULE_AUTHOR("Aloisio Almeida Jr <aloisio.almeida@openbossa.org>");
+diff --git a/drivers/nfc/pn533/pn533.h b/drivers/nfc/pn533/pn533.h
+index 570ee0a3e832..984f79fef59e 100644
+--- a/drivers/nfc/pn533/pn533.h
++++ b/drivers/nfc/pn533/pn533.h
+@@ -219,18 +219,21 @@ struct pn533_phy_ops {
+ };
+ 
+ 
+-struct pn533 *pn533_register_device(u32 device_type,
+-				u32 protocols,
++struct pn533 *pn53x_common_init(u32 device_type,
+ 				enum pn533_protocol_type protocol_type,
+ 				void *phy,
+ 				struct pn533_phy_ops *phy_ops,
+ 				struct pn533_frame_ops *fops,
+-				struct device *dev,
+-				struct device *parent);
++				struct device *dev);
+ 
+ int pn533_finalize_setup(struct pn533 *dev);
+-void pn533_unregister_device(struct pn533 *priv);
++void pn53x_common_clean(struct pn533 *priv);
+ void pn533_recv_frame(struct pn533 *dev, struct sk_buff *skb, int status);
++int pn532_i2c_nfc_alloc(struct pn533 *priv, u32 protocols,
++			struct device *parent);
++int pn53x_register_nfc(struct pn533 *priv, u32 protocols,
++			struct device *parent);
++void pn53x_unregister_nfc(struct pn533 *priv);
+ 
+ bool pn533_rx_frame_is_cmd_response(struct pn533 *dev, void *frame);
+ bool pn533_rx_frame_is_ack(void *_frame);
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index e897e4d768ef..4590fbf82dc2 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -534,9 +534,9 @@ static int pn533_usb_probe(struct usb_interface *interface,
+ 		goto error;
+ 	}
+ 
+-	priv = pn533_register_device(id->driver_info, protocols, protocol_type,
++	priv = pn53x_common_init(id->driver_info, protocol_type,
+ 					phy, &usb_phy_ops, fops,
+-					&phy->udev->dev, &interface->dev);
++					&phy->udev->dev);
+ 
+ 	if (IS_ERR(priv)) {
+ 		rc = PTR_ERR(priv);
+@@ -547,14 +547,17 @@ static int pn533_usb_probe(struct usb_interface *interface,
+ 
+ 	rc = pn533_finalize_setup(priv);
+ 	if (rc)
+-		goto err_deregister;
++		goto err_clean;
+ 
+ 	usb_set_intfdata(interface, phy);
++	rc = pn53x_register_nfc(priv, protocols, &interface->dev);
++	if (rc)
++		goto err_clean;
+ 
+ 	return 0;
+ 
+-err_deregister:
+-	pn533_unregister_device(phy->priv);
++err_clean:
++	pn53x_common_clean(priv);
+ error:
+ 	usb_kill_urb(phy->in_urb);
+ 	usb_kill_urb(phy->out_urb);
+@@ -577,7 +580,8 @@ static void pn533_usb_disconnect(struct usb_interface *interface)
+ 	if (!phy)
+ 		return;
+ 
+-	pn533_unregister_device(phy->priv);
++	pn53x_unregister_nfc(phy->priv);
++	pn53x_common_clean(phy->priv);
+ 
+ 	usb_set_intfdata(interface, NULL);
+ 
+-- 
+2.23.0
+
