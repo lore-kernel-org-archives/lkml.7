@@ -2,192 +2,94 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FD3CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615CECA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4816D21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324CC21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572009862;
-	bh=mWAKcl8j7ZnGOrbpPiW78OchysSg/HKo2c9XWvB5EtU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XT+jpGbXJ3zBVEzWE99qMFZnhwICmCXL8FbydcHEqwJNF1gRsTG382LW++outwbYO
-	 j1jdJUXQ7/tj1OdMGZ3YqdL32BhDOGAIGbtN1pzeNJi/HBnTjgjUuagNyz5i+5mRpN
-	 ntTnS1fla0CvcVgkgL+W+GGwBoCfAv3ePvUJEUmI=
+	s=default; t=1572010024;
+	bh=wWtJyuS7Y6pDd2zj78ezeFYBGJ+IyV5IyE4gOB6/Cck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KkNjkIM6nGU8g1yqGfiPILsvR93K2ivwzbc93FUIVJg3h59Hvtk1jK3YO8gwg9Tw9
+	 tYojvQgyztth6fGVRtgdxI1Xax9P8xLtyxgWH5KYE29IK8A0FgMh+cuMPIV73ASx4X
+	 eFvra5CyLU4MQxy6n5CoqBrKtLTnNU4sKUTQRytM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394613AbfJYNYV (ORCPT
+        id S2394624AbfJYN1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394578AbfJYNYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:24:20 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E46BF222BD;
-        Fri, 25 Oct 2019 13:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572009859;
-        bh=mWAKcl8j7ZnGOrbpPiW78OchysSg/HKo2c9XWvB5EtU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YMIPgc49yX3gYacnLbiWqvug4Q8RWRPmKnZshdGxr5phXajKJn5DxRTt5aAzO5eTo
-         hipdnVdMLXV/m1+knse4yLsfK/7ZwgQ7hcwalL44+1/yxnE3P+wtrYeV0/fBz+SJ5X
-         ur7b35aj4UvNL7XVjvOu0PG1Fps0K9FG56PNWUdc=
-Received: by mail-qk1-f170.google.com with SMTP id u184so1718269qkd.4;
-        Fri, 25 Oct 2019 06:24:18 -0700 (PDT)
-X-Gm-Message-State: APjAAAV+s4BO2zlbGNDJjc119otuYLo0FcQDc9IrPSvCELAHWY41MXtB
-        X7JCjr+eDod8p/eJHTN6OrwpbHFYFBXe9JTVkQ==
-X-Google-Smtp-Source: APXvYqzqnjSuL+nQCZRV4ooRoAY+3zZp/h5akD70DbbH7oGFcdnkzZuXx2zJdKpRv9szbVoxI6wymR1ZnJa629mpPss=
-X-Received: by 2002:a05:620a:344:: with SMTP id t4mr2680325qkm.393.1572009857854;
- Fri, 25 Oct 2019 06:24:17 -0700 (PDT)
+        Fri, 25 Oct 2019 09:27:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50466 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726259AbfJYN1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:27:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1D5D0AD3A;
+        Fri, 25 Oct 2019 13:27:01 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 15:27:00 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     snazy@snazy.de
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+Message-ID: <20191025132700.GJ17610@dhcp22.suse.cz>
+References: <4576b336-66e6-e2bb-cd6a-51300ed74ab8@snazy.de>
+ <b8ff71f5-2d9c-7ebb-d621-017d4b9bc932@infradead.org>
+ <20191025092143.GE658@dhcp22.suse.cz>
+ <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
+ <20191025114633.GE17610@dhcp22.suse.cz>
+ <d740f26ea94f9f1c2fc0530c1ea944f8e59aad85.camel@gmx.de>
+ <20191025120505.GG17610@dhcp22.suse.cz>
+ <20191025121104.GH17610@dhcp22.suse.cz>
+ <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
 MIME-Version: 1.0
-References: <cover.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <af1fb3e010d5f34502d354369b88fa28639f587d.1571302099.git.matti.vaittinen@fi.rohmeurope.com>
- <c1e41315-42ad-fb9b-c9db-8b07d4293166@ti.com> <fbd4960b219099b7a48ef24019ba829f866edb3b.camel@fi.rohmeurope.com>
- <4570db9c-7bc8-f131-269a-248b87e25e38@gmail.com> <201df0f7319b94eb581a040a2b1b07dbfed12e94.camel@fi.rohmeurope.com>
- <c5761d78-3334-adaa-b871-cb6da356483b@gmail.com> <8974a3974377d0623ed968563b035e701191440e.camel@fi.rohmeurope.com>
- <e9d1c529-90ef-34bf-d893-02a109ba19ba@gmail.com> <c35a2bca83c711bd7b19c8a99798374388705bfc.camel@fi.rohmeurope.com>
- <06b3909a-b3ff-2c0e-d1df-a475a69951ed@gmail.com> <d43d06dbaa0df204fff0194be57d6cd3b832addd.camel@fi.rohmeurope.com>
-In-Reply-To: <d43d06dbaa0df204fff0194be57d6cd3b832addd.camel@fi.rohmeurope.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 25 Oct 2019 08:24:06 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK7fYYdobOrgxFaMOy+uONCV-i0aOiBQ9oOc4OOPLR8cw@mail.gmail.com>
-Message-ID: <CAL_JsqK7fYYdobOrgxFaMOy+uONCV-i0aOiBQ9oOc4OOPLR8cw@mail.gmail.com>
-Subject: Re: [RFC PATCH 11/13] led: bd71828: Support LED outputs on ROHM
- BD71828 PMIC
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 2:07 AM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
->
-> Hi Again Jacek,
->
-> This has been a nice conversation. I guess I have learned something
-> from this all but I think this is no longer going forward too much :)
-> I'll cook up second version - where I add LEDs to DT (even if I don't
-> see the value for it now). I won't add own compatible for the LED (for
-> now) - as it is part of MFD - and I'll add the LEDs also to binding
-> docs. I think that will get the attention from Lee/Rob better than the
-> LED driver discussion. We can continue discussion there. I hope this is
-> Ok to you. (And then just few compulsory notes about my view on your
-> replies - after all, I can't let you to have the final say xD - you can
-> ignore them or respond just as you like)
->
-> On Fri, 2019-10-25 at 00:04 +0200, Jacek Anaszewski wrote:
-> > Hi Matti,
-> >
-> > On 10/24/19 10:15 AM, Vaittinen, Matti wrote:
-> > > Hello Jacek,
-> > >
-> > > On Wed, 2019-10-23 at 23:59 +0200, Jacek Anaszewski wrote:
-> > > > On 10/23/19 10:37 AM, Vaittinen, Matti wrote:
-> > > > > On Tue, 2019-10-22 at 19:40 +0200, Jacek Anaszewski wrote:
-> > > > > > On 10/22/19 2:40 PM, Vaittinen, Matti wrote:
-> > > > > > > On Mon, 2019-10-21 at 21:09 +0200, Jacek Anaszewski wrote:
-> > > > > > > > On 10/21/19 10:00 AM, Vaittinen, Matti wrote:
-> > > > > > > > > Hello Dan,
-> > > > > > > > >
-> > > > > > > > > Thanks for taking the time to check my driver :) I
-> > > > > > > > > truly
-> > > > > > > > > appreciate
-> > > > > > > > > all
-> > > > > > > > > the help!
-> > > > > > > > >
-> > > > > > > > > A "fundamental question" regarding these review
-> > > > > > > > > comments is
-> > > > > > > > > whether
-> > > > > > > > > I
-> > > > > > > > > should add DT entries for these LEDs or not. I thought
-> > > > > > > > > I
-> > > > > > > > > shouldn't
-> > > > > > > > > but
-> > > > > > > > > I would like to get a comment from Rob regarding it.
-> > > > > > > >
-> > > > > > > > If the LED controller is a part of MFD device probed from
-> > > > > > > > DT
-> > > > > > > > then
-> > > > > > > > there is no doubt it should have corresponding DT sub-
-> > > > > > > > node.
-
-Agreed.
-
+On Fri 25-10-19 15:10:39, Robert Stupp wrote:
 [...]
+> cat /proc/$(pidof test)/smaps
 
-> > > Right. Or at first it might be enough (and simplest) to assume that
-> > > if
-> > > LEDs are used via this driver, then colour for both LEDs is set
-> > > explicitly by user-space. I wouldn't try guessing if sibling LED
-> > > state
-> > > changes to OFF when one LED is turned ON - or if LED states change
-> > > to
-> > > ON if both are turned OFF. This would require exporting interfaces
-> > > from
-> > > power-supply driver - and it would still be racy. The thing is that
-> > > when both LEDs are on board they are both either under HW or SW
-> > > control. So it makes no sense to control only one LED in such case.
-> > > Thus I think it is Ok if this LED driver is registering both class
-> > > devices at one probe. No need to instantiate own platform devices
-> > > for
-> > > both of the LEDs.
-> >
-> > We always register all LEDs originating from the same device in one
-> > probe.
-> >
->
-> Then I see little benefit from of_compatible or leds subnode for MFD
-> devices with many LEDs. The driver or core must in any ways parse the
-> DT in order to find the sub nodes with information for individual LEDs.
-> I don't think that would be much different from just using the MFD node
-> as controller node and walking through the MFD child nodes to locate
-> LED sub nodes (at least for MFDs with simple LED controller).
+Nothing really unusual that would jump at me except for
+> 7f8be90ed000-7f8be9265000 r-xp 00025000 103:02
+> 44307431                  /lib/x86_64-linux-gnu/libc-2.30.so
+> Size:               1504 kB
+> KernelPageSize:        4 kB
+> MMUPageSize:           4 kB
+> Rss:                 832 kB
+> Pss:                   5 kB
+> Shared_Clean:        832 kB
+> Shared_Dirty:          0 kB
+> Private_Clean:         0 kB
+> Private_Dirty:         0 kB
+> Referenced:          832 kB
+> Anonymous:             0 kB
+> LazyFree:              0 kB
+> AnonHugePages:         0 kB
+> ShmemPmdMapped:        0 kB
+> Shared_Hugetlb:        0 kB
+> Private_Hugetlb:       0 kB
+> Swap:                  0 kB
+> SwapPss:               0 kB
+> Locked:                5 kB
 
-The cases for not having child nodes are when you have child nodes
-with nothing more than a compatible and possibly provider properties
-(e.g. #gpio-cells for gpio providers). If you have other resource
-dependencies (e.g. clocks) or data to define (e.g. voltages for
-regulators), then child nodes absolutely make sense. Once we have
-child nodes, then generally it is easier for every function to be a
-child node and not mix the two. I'm sure I have told people
-incorrectly to not do child nodes because they define incomplete
-bindings.
+Huh, 5kB, is this really the case or some copy&paste error?
+How can we end up with !pagesize multiple here?
 
-I would group the led nodes under an led-controller node (with a
-compatible). The simple reason is each level only has one
-number/address space and you can't mix different ones. You're not
-numbering the leds here, but could you (with numbers that correspond
-to something in the h/w, not just 0..N)? The other reason is modern
-LED bindings define a controller node for the controller and led nodes
-for the actual led on the board. While the MFD node could be the
-controller node, that gets into mixing.
-
-Rob
+> THPeligible:		0
+> VmFlags: rd ex mr mw me lo sd
+-- 
+Michal Hocko
+SUSE Labs
