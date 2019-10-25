@@ -2,70 +2,75 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC2CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556DFCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CAE2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BE2205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="czTwe7iE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOxfDy9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbfJYSCs (ORCPT
+        id S1731293AbfJYSDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:02:48 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55672 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731197AbfJYSCr (ORCPT
+        Fri, 25 Oct 2019 14:03:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34818 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731263AbfJYSDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:02:47 -0400
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 35AE72010AC6;
-        Fri, 25 Oct 2019 11:02:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 35AE72010AC6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1572026566;
-        bh=7hGCl+P0baIDKMMzceGB2joTvpQFYOW1rsl65AwaESg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=czTwe7iEXiYO6JkheRJPPNMnL5Cbg61vTN7/+dfgsvKoyQ7DzcAkTVmgEHaD44Y/h
-         jbDjF2ZBpVUKnbsyoUyslQapQJhi9p/QuR0SQXCtdREc4TW2b9zURqy/JaFZ00xmBr
-         UuMXyYCz38KvLS+eL4dyR4/GY0NDH+IiFMK2xe2E=
-Subject: Re: [PATCH v9 2/8] powerpc/ima: add support to initialize ima policy
- rules
-To:     Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
- <20191024034717.70552-3-nayna@linux.ibm.com>
- <dd7e04fc-25e8-280f-b565-bdb031939655@linux.microsoft.com>
- <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <482b2f08-f810-6ed0-4b32-0d5e64246ece@linux.microsoft.com>
-Date:   Fri, 25 Oct 2019 11:03:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 25 Oct 2019 14:03:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l10so3361724wrb.2;
+        Fri, 25 Oct 2019 11:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sRSIHOYVf7qsnfaK43V65CarnMxSZE8djVm9tqub2po=;
+        b=UOxfDy9ZzHGAxhNjRVvaf0zjdR6eD0x87dUCgE/m3lOw8syrbLC0jl6VTQAuAd0ajR
+         sU6K5U6RmcCdPEwdWbOYTyN57Zr5igBt1h17+uNappPUeBSms0Cf7DBAVCJMIdpu3gDY
+         lTHkMThgdz+wvmS0YmRDl1dOfJFZNQOaRC6mXfFMvLnQPutF17vMJ8QEu67M6jhwO51Z
+         6Xz0oy05cwgQO06HJS925Jq4KcDAo8Gddpuj0W8qvf7DhP5tPrW8i+o/ODPoTorI6H7p
+         VNeyeRHmw8oLr+SQusaGAzd2JzOC/QzWKxcoo5tdRjEsY7K+/1XJCA5V3rNKhiGw4e/6
+         rWYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sRSIHOYVf7qsnfaK43V65CarnMxSZE8djVm9tqub2po=;
+        b=Xxa9Sds1WHaquAmfk/6OIhiboOSwKeARlMhVvvjN0XOowT5JOa3my73vcbrLKnTy28
+         5RtiV3Lw3kShClp0F3EYSXwHGQJeuCDt3/C79yzLHY1I99B53i89vD2sGzDM29FpVclw
+         N9KyKuHBKFQgj6drtHiFPt5Gkg7Oi/N1OYL/WP3ZbKw7mgYTW1e6UWYGCqAKnWrNGg//
+         0QlBFPsevrhT3pbU4QSBUVZNE/sEcmlUwXj26KV1AAsPZFGv+2NsQR3XAzNZWDuzyCoj
+         P4FgqwgSx85sZ6A/kOQV9QVZJ4fCjVNib89Fxxn/nOGJWrrINkaI2emn2Bde/Kcw+4qA
+         vYPA==
+X-Gm-Message-State: APjAAAXs23/qluFd/9WeSLkHEkLuAqaz0DJqzUlydKrun6B+7VbF3nx/
+        28KR4jtSgt2Vm+4i2QiWEk+9mn67
+X-Google-Smtp-Source: APXvYqwkRYq2HbhgxrRAmcfZOalDe3reg9s9NfmT4jljb9+TLvoLV1/HugYILjPVCiYVeX2qzzOhJQ==
+X-Received: by 2002:adf:ffc5:: with SMTP id x5mr1090391wrs.93.1572026593089;
+        Fri, 25 Oct 2019 11:03:13 -0700 (PDT)
+Received: from [10.69.45.46] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z189sm4141012wmc.25.2019.10.25.11.03.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 11:03:12 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the scsi-mkp tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191025140736.0c9e9d64@canb.auug.org.au>
+From:   James Smart <jsmart2021@gmail.com>
+Message-ID: <13203518-3fc5-bce9-3ed7-9487cd81a9f9@gmail.com>
+Date:   Fri, 25 Oct 2019 11:03:09 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <27dbe08e-5473-4dd0-d2ad-2df591e23f5e@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191025140736.0c9e9d64@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,54 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/2019 10:02 AM, Nayna Jain wrote:
+On 10/24/2019 8:07 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the scsi-mkp tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_release':
+> drivers/scsi/lpfc/lpfc_debugfs.c:2109:2: error: implicit declaration of function 'vfree'; did you mean 'kvfree'? [-Werror=implicit-function-declaration]
+>   2109 |  vfree(debug->buffer);
+>        |  ^~~~~
+>        |  kvfree
+> drivers/scsi/lpfc/lpfc_debugfs.c: In function 'lpfc_debugfs_ras_log_open':
+> drivers/scsi/lpfc/lpfc_debugfs.c:2150:18: error: implicit declaration of function 'vmalloc'; did you mean 'kvmalloc'? [-Werror=implicit-function-declaration]
+>   2150 |  debug->buffer = vmalloc(size);
+>        |                  ^~~~~~~
+>        |                  kvmalloc
+> drivers/scsi/lpfc/lpfc_debugfs.c:2150:16: warning: assignment to 'char *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>   2150 |  debug->buffer = vmalloc(size);
+>        |                ^
+> 
+> Caused by commit
+> 
+>    95bfc6d8ad86 ("scsi: lpfc: Make FW logging dynamically configurable")
+> 
+> I have used the scsi-mkp tree from next-20191024 for today.
+> 
 
- >> Is there any way to not use conditional compilation in
- >> the above array definition? Maybe define different functions to get
- >> "secure_rules" for when CONFIG_MODULE_SIG_FORCE is defined and when
- >> it is not defined.
- >
- > How will you decide which function to be called ?
+I will resolve this quickly...
 
-Define the array in the C file:
-
-const char *const secure_rules_kernel_check[] = {
-    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-    NULL
-};
-
-const char *const secure_rules_kernel_module_check[] = {
-    "appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-    "appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-    NULL
-};
-
-And, in the header file :
-
-extern const char *const secure_rules_kernel_check;
-extern const char *const secure_rules_kernel_module_check;
-
-#ifdef CONFIG_MODULE_SIG_FORCE
-const char *secure_rules() { return secure_rules_kernel_check; }
-#else
-const char *secure_rules() { return secure_rules_kernel_module_check;}
-#endif // #ifdef CONFIG_MODULE_SIG_FORCE
-
-If you want to avoid duplication, secure_rules_kernel_check and 
-secure_rules_kernel_module_check could be defined in separate C files 
-and conditionally compiled (in Makefile).
-
-
-I was just trying to suggest the guidelines given in
-"Section 21) Conditional Compilation" in coding-style.rst.
-
-It says:
-Whenever possible don't use preprocessor conditionals (#ifdef, #if) in 
-.c files;...
-
-Feel free to do what you think is appropriate.
-
-thanks,
-  -lakshmi
-
-
+-- james
