@@ -2,87 +2,155 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12715CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08907CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27C5222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=digitalsocialweb-com.20150623.gappssmtp.com header.i=@digitalsocialweb-com.20150623.gappssmtp.com header.b="TyEQEU94"
+	by mail.kernel.org (Postfix) with ESMTP id CE260222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572011974;
+	bh=yu2re7QlOLOylGKR+ttvD8dXbCgph8uPZ6I6K2Me1Uk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q+lUXXKn9LYrQsVwk/+H6BJNZWUUZcnBl+BY0N7hzLgCyGC9nbJefYZJCHzLoPUGN
+	 BdLb5Ykr8XTNXNsQZLeIw/QzbIZdjQ+Lu213GkH6TC4C6ENFQWnM1HAhbYceFw1wKt
+	 vScAAYaE0kJzeRsj5UaELjWZRostH5hlYB45VWjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632927AbfJYN7K (ORCPT
+        id S2632986AbfJYN7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 25 Oct 2019 09:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2632919AbfJYN7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 09:59:10 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33756 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505705AbfJYN7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:59:05 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a22so2880934ljd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 06:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalsocialweb-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:reply-to:to:subject:content-transfer-encoding
-         :date:message-id;
-        bh=BIrXkQbz0VOKYBZ72WJMNAib3nvrsy3PYgyT1Ms+edA=;
-        b=TyEQEU94d1/B6cdSlaMb+pF22gJrFGiSFogZhiEHW++m8p1+4uXsjo5x/X9h4MyiOl
-         p05QeiNpCfmEaUAUzI69hxLpn4ddW9T+fKQDS4+lYooQuArwbr/8nmn1jGJFfIRDD2Jr
-         U0BkdEnj/e5IStkwuweYnv83xDwh20QVkJFQ4sp8olNfVyhfqTUO4DHZu1jD86U7OGNO
-         J0QUR6s4Ncm75z6tLitbRtAiVHifL2ZOPioqmjNyxpEMOPL0gBpT4llhNLmdBWECyvez
-         JZGTdNCnNdrzduJES/z7kSpxkhatH7ckgCL2t3fo6nDTn3kC9KBvSTCtxuIbOYweCFQk
-         +PyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:reply-to:to:subject
-         :content-transfer-encoding:date:message-id;
-        bh=BIrXkQbz0VOKYBZ72WJMNAib3nvrsy3PYgyT1Ms+edA=;
-        b=Nqi13/1URE8pLV6D6XGWwCnvxK/nKjXJbT71DXR80FiDtLuevEeg3ULomyO7bACXc1
-         qejAAddy5eIM49Wacd5wct5q/BPEI/8xADI7xVWkPptxMt/NFiItPK9kJxyCXZu3XHYw
-         h7aOoXf5OB1tNgeYroSLGZpVTn5lzPVT1s3q4zTIwVCzsytI27+AfE8Lyf/25cmdRR9K
-         Oy93cEpTgNMTdpZY7o4dmyvh9IXCwgniFstVGPqT+Um0odXGEm62XoS8U9iZOl9Hek8V
-         6qnWatbFPtDN3CEToW/qlBB8yM7gCileI/ufHVXc+ctG6qk7ctTLf2DG/y1+bZNs9pCb
-         7wYw==
-X-Gm-Message-State: APjAAAWV1SpQ8eIYFmW3R7g0CD/dmZQIrmi96QwKK8FVpkYLzUqA0Zdp
-        O09IQ4jY7MjNTgvUjX/MT+C3pCyLyfo=
-X-Google-Smtp-Source: APXvYqwywo3woV9+nN5vXnirm1Nv5GbLNzgdbvaAFUOJHSzOrK2CJRDVgP5l+agHLMCl6GcNQSN9wQ==
-X-Received: by 2002:a2e:9dca:: with SMTP id x10mr2326834ljj.112.1572011942762;
-        Fri, 25 Oct 2019 06:59:02 -0700 (PDT)
-Received: from 72.255.54.232 ([72.255.54.232])
-        by smtp.gmail.com with ESMTPSA id k7sm764879lja.19.2019.10.25.06.59.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 25 Oct 2019 06:59:02 -0700 (PDT)
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C205C22470;
+        Fri, 25 Oct 2019 13:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572011949;
+        bh=yu2re7QlOLOylGKR+ttvD8dXbCgph8uPZ6I6K2Me1Uk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EEK4FY52csoGVpLw4snk84ha26Lg4mkY1e0kwrSrN3r2FJymPErETz6pIjxQebJan
+         899tuC/P7I/w3CYTH6KW8XLu9iK+lwsbWVxjnZG7G4eI+ZbS0NpPGRpnvsxls3uYHR
+         OUIIQdL3gby8HdlF0PWSGBrqcIU2JS8NpJxm5Fio=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 14/16] ubi: ubi_wl_get_peb: Increase the number of attempts while getting PEB
+Date:   Fri, 25 Oct 2019 09:58:38 -0400
+Message-Id: <20191025135842.25977-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191025135842.25977-1-sashal@kernel.org>
+References: <20191025135842.25977-1-sashal@kernel.org>
 MIME-Version: 1.0
-From:   "Gabriel Gonser" <gabriel@digitalsocialweb.com>
-Reply-To: gabriel@digitalsocialweb.com
-To:     linux-kernel@vger.kernel.org
-Subject: Paid Advertisement Request.
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Smart_Send_3_1_6
-Date:   Fri, 25 Oct 2019 18:58:57 +0500
-Message-ID: <53924095274721899428561@DESKTOP-L09MN1Q>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-=0AWe are a Guest Posting services provider and found your blog during our =
-outreach campaign.
-We can do a long-term relationship if you can allow us to post a unique, go=
-od quality and non-promotional articles on your website.=A0
-=0AWe have a team of US and UK native writers to research and write quality=
- articles that fit your blog niche.
-=0APlease let me know the price per guest post on your website; we can pay =
-you via PayPal for publishing unique articles on your website with one anch=
-or website.=A0=0AWill be waiting to have your very positive response!=A0
-=0A
-Best Regards,
-=0A
-Jason Dunlap.
+[ Upstream commit 8615b94f029a4fb4306d3512aaf1c45f5fc24d4b ]
+
+Running stress test io_paral (A pressure ubi test in mtd-utils) on an
+UBI device with fewer PEBs (fastmap enabled) may cause ENOSPC errors and
+make UBI device read-only, but there are still free PEBs on the UBI
+device. This problem can be easily reproduced by performing the following
+steps on a 2-core machine:
+  $ modprobe nandsim first_id_byte=0x20 second_id_byte=0x33 parts=80
+  $ modprobe ubi mtd="0,0" fm_autoconvert
+  $ ./io_paral /dev/ubi0
+
+We may see the following verbose:
+(output)
+  [io_paral] update_volume():108: failed to write 380 bytes at offset
+  95920 of volume 2
+  [io_paral] update_volume():109: update: 97088 bytes
+  [io_paral] write_thread():227: function pwrite() failed with error 28
+  (No space left on device)
+  [io_paral] write_thread():229: cannot write 15872 bytes to offs 31744,
+  wrote -1
+(dmesg)
+  ubi0 error: ubi_wl_get_peb [ubi]: Unable to get a free PEB from user WL
+  pool
+  ubi0 warning: ubi_eba_write_leb [ubi]: switch to read-only mode
+  CPU: 0 PID: 2027 Comm: io_paral Not tainted 5.3.0-rc2-00001-g5986cd0 #9
+  ubi0 warning: try_write_vid_and_data [ubi]: failed to write VID header
+  to LEB 2:5, PEB 18
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
+  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+    dump_stack+0x85/0xba
+    ubi_eba_write_leb+0xa1e/0xa40 [ubi]
+    vol_cdev_write+0x307/0x520 [ubi]
+    vfs_write+0xfa/0x280
+    ksys_pwrite64+0xc5/0xe0
+    __x64_sys_pwrite64+0x22/0x30
+    do_syscall_64+0xbf/0x440
+
+In function ubi_wl_get_peb, the operation of filling the pool
+(ubi_update_fastmap) with free PEBs and fetching a free PEB from the pool
+is not atomic. After thread A filling the pool with free PEB, free PEB may
+be taken away by thread B. When thread A checks the expression again, the
+condition is still unsatisfactory. At this time, there may still be free
+PEBs on UBI that can be filled into the pool.
+
+This patch increases the number of attempts to obtain PEB. An extreme
+case (No free PEBs left after creating test volumes) has been tested on
+different type of machines for 100 times. The biggest number of attempts
+are shown below:
+
+             x86_64     arm64
+  2-core        4         4
+  4-core        8         4
+  8-core        4         4
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mtd/ubi/fastmap-wl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/ubi/fastmap-wl.c b/drivers/mtd/ubi/fastmap-wl.c
+index 69dd21679a30c..99aa30b28e46e 100644
+--- a/drivers/mtd/ubi/fastmap-wl.c
++++ b/drivers/mtd/ubi/fastmap-wl.c
+@@ -205,7 +205,7 @@ static int produce_free_peb(struct ubi_device *ubi)
+  */
+ int ubi_wl_get_peb(struct ubi_device *ubi)
+ {
+-	int ret, retried = 0;
++	int ret, attempts = 0;
+ 	struct ubi_fm_pool *pool = &ubi->fm_pool;
+ 	struct ubi_fm_pool *wl_pool = &ubi->fm_wl_pool;
+ 
+@@ -230,12 +230,12 @@ int ubi_wl_get_peb(struct ubi_device *ubi)
+ 
+ 	if (pool->used == pool->size) {
+ 		spin_unlock(&ubi->wl_lock);
+-		if (retried) {
++		attempts++;
++		if (attempts == 10) {
+ 			ubi_err(ubi, "Unable to get a free PEB from user WL pool");
+ 			ret = -ENOSPC;
+ 			goto out;
+ 		}
+-		retried = 1;
+ 		up_read(&ubi->fm_eba_sem);
+ 		ret = produce_free_peb(ubi);
+ 		if (ret < 0) {
+-- 
+2.20.1
+
