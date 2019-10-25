@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE453CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91164CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9635C21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696F221D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012310;
-	bh=9/vkm3Y78cNIWiAMQU67klV1GtN9VnP93aVqpESH+Xg=;
+	s=default; t=1572012314;
+	bh=wmDM3AG/qEIJGIcgSaYNHZAHKaejfltQf3svsNxsYKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i3tjSU5dhobBXn6lcHEV0K1FqkCV+tqSg9KjsGp8dXNcb+vKGkP/Ef6FYG0GYuqWj
-	 M102+mEORE2jtWZjuWlWz07vOwwrmAa2YNNcuh+Sx9wxGIKnA+WNzURtWpC+tQLqo3
-	 qzup0sDMwcg4sl0RLanGeUxGjGTYe8CfJV1wod00=
+	b=I25VXv0fMusWWsWxUnZKbPMqkQ5PV6lHCYK/stEtJfqwwEjkkICFSFo7qQQvTYLs3
+	 plSrP+/7vbGH8T5oJ+wiu5t4OjcdNF9UGLjv4jjWles3YyZZTx0DONJwliGNHdYW1L
+	 Xl8tdRhdSGMqBnPSCWYw2k6Jt861OeQaKKM24S+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505267AbfJYN40 (ORCPT
+        id S2505250AbfJYN4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632805AbfJYN4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:20 -0400
+        id S2632795AbfJYN4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED9FA222BE;
-        Fri, 25 Oct 2019 13:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3FAA22459;
+        Fri, 25 Oct 2019 13:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011779;
-        bh=9/vkm3Y78cNIWiAMQU67klV1GtN9VnP93aVqpESH+Xg=;
+        s=default; t=1572011776;
+        bh=wmDM3AG/qEIJGIcgSaYNHZAHKaejfltQf3svsNxsYKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FXKDE6KWNp6l3rtQtTGuvQW3gvNE1MKiNdk+zm3j683+UIkWuHASswvoFCmLfqqRH
-         9lzw8R2uCs3s2HI5cScDIg050lkZpbV999sJqoDgmO3Gs6/GBD/5pxRDKk2YATH7AA
-         moStjZ1FrF6KBC9JbkVzHtokKu8YAh70N/u4dOfg=
+        b=b3/PNdQ2q96mZ0C/6VCVZNH9xrNJAZ//TqG/OOv0D1IFFvFVO1xKR8/ij0x7xqssU
+         IaPKofa6y7TZGRQgXngqYNZoWQ1eAiMW9SclCANY/Q4rf15ixd6aRQ1E76BlwPxzsu
+         lRDwEIukzpSRF71VLP9DueD3/9wJQjZk0adDaD5w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chad Dupuis <cdupuis@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/37] scsi: qedf: Do not retry ELS request if qedf_alloc_cmd fails
-Date:   Fri, 25 Oct 2019 09:55:33 -0400
-Message-Id: <20191025135603.25093-9-sashal@kernel.org>
+Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 06/37] ALSA: hda: Fix race between creating and refreshing sysfs entries
+Date:   Fri, 25 Oct 2019 09:55:30 -0400
+Message-Id: <20191025135603.25093-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
 References: <20191025135603.25093-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,91 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chad Dupuis <cdupuis@marvell.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit f1c43590365bac054d753d808dbbd207d09e088d ]
+[ Upstream commit ed180abba7f1fc3cf04ffa27767b1bcc8e8c842a ]
 
-If we cannot allocate an ELS middlepath request, simply fail instead of
-trying to delay and then reallocate.  This delay logic is causing soft
-lockup messages:
+hda_widget_sysfs_reinit() can free underlying codec->widgets structure
+on which widget_tree_create() operates. Add locking to prevent such
+issues from happening.
 
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [kworker/2:1:7639]
-Modules linked in: xt_CHECKSUM ipt_MASQUERADE nf_nat_masquerade_ipv4 tun devlink ip6t_rpfilter ipt_REJECT nf_reject_ipv4 ip6t_REJECT nf_reject_ipv6 xt_conntrack ip_set nfnetlink ebtable_nat ebtable_broute bridge stp llc ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_security ip6table_raw iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack iptable_mangle iptable_security iptable_raw ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter dm_service_time vfat fat rpcrdma sunrpc ib_isert iscsi_target_mod ib_iser libiscsi scsi_transport_iscsi ib_srpt target_core_mod ib_srp scsi_transport_srp ib_ipoib rdma_ucm ib_ucm ib_uverbs ib_umad rdma_cm ib_cm iw_cm sb_edac intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm
-irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd iTCO_wdt iTCO_vendor_support qedr(OE) ib_core joydev ipmi_ssif pcspkr hpilo hpwdt sg ipmi_si ipmi_devintf ipmi_msghandler ioatdma shpchp lpc_ich wmi dca acpi_power_meter dm_multipath ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic qedf(OE) libfcoe mgag200 libfc i2c_algo_bit drm_kms_helper scsi_transport_fc qede(OE) syscopyarea sysfillrect sysimgblt fb_sys_fops ttm qed(OE) drm crct10dif_pclmul e1000e crct10dif_common crc32c_intel scsi_tgt hpsa i2c_core ptp scsi_transport_sas pps_core dm_mirror dm_region_hash dm_log dm_mod
-CPU: 2 PID: 7639 Comm: kworker/2:1 Kdump: loaded Tainted: G           OEL ------------   3.10.0-861.el7.x86_64 #1
-Hardware name: HP ProLiant DL580 Gen9/ProLiant DL580 Gen9, BIOS U17 07/21/2016
-Workqueue: qedf_2_dpc qedf_handle_rrq [qedf]
-task: ffff959edd628fd0 ti: ffff959ed6f08000 task.ti: ffff959ed6f08000
-RIP: 0010:[<ffffffff8355913a>]  [<ffffffff8355913a>] delay_tsc+0x3a/0x60
-RSP: 0018:ffff959ed6f0bd30  EFLAGS: 00000246
-RAX: 000000008ef5f791 RBX: 5f646d635f666465 RCX: 0000025b8ededa2f
-RDX: 000000000000025b RSI: 0000000000000002 RDI: 0000000000217d1e
-RBP: ffff959ed6f0bd30 R08: ffffffffc079aae8 R09: 0000000000000200
-R10: ffffffffc07952c6 R11: 0000000000000000 R12: 6c6c615f66646571
-R13: ffff959ed6f0bcc8 R14: ffff959ed6f0bd08 R15: ffff959e00000028
-FS:  0000000000000000(0000) GS:ffff959eff480000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f4117fa1eb0 CR3: 0000002039e66000 CR4: 00000000003607e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-[<ffffffff8355907d>] __const_udelay+0x2d/0x30
-[<ffffffffc079444a>] qedf_initiate_els+0x13a/0x450 [qedf]
-[<ffffffffc0794210>] ? qedf_srr_compl+0x2a0/0x2a0 [qedf]
-[<ffffffffc0795337>] qedf_send_rrq+0x127/0x230 [qedf]
-[<ffffffffc078ed55>] qedf_handle_rrq+0x15/0x20 [qedf]
-[<ffffffff832b2dff>] process_one_work+0x17f/0x440
-[<ffffffff832b3ac6>] worker_thread+0x126/0x3c0
-[<ffffffff832b39a0>] ? manage_workers.isra.24+0x2a0/0x2a0
-[<ffffffff832bae31>] kthread+0xd1/0xe0
-[<ffffffff832bad60>] ? insert_kthread_work+0x40/0x40
-[<ffffffff8391f637>] ret_from_fork_nospec_begin+0x21/0x21
-[<ffffffff832bad60>] ? insert_kthread_work+0x40/0x40
-
-Signed-off-by: Chad Dupuis <cdupuis@marvell.com>
-Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=110382
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedf/qedf_els.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ include/sound/hdaudio.h | 1 +
+ sound/hda/hdac_device.c | 7 +++++++
+ sound/hda/hdac_sysfs.c  | 3 +++
+ 3 files changed, 11 insertions(+)
 
-diff --git a/drivers/scsi/qedf/qedf_els.c b/drivers/scsi/qedf/qedf_els.c
-index 04f0c4d2e256e..5178cd03666a6 100644
---- a/drivers/scsi/qedf/qedf_els.c
-+++ b/drivers/scsi/qedf/qedf_els.c
-@@ -23,8 +23,6 @@ static int qedf_initiate_els(struct qedf_rport *fcport, unsigned int op,
- 	int rc = 0;
- 	uint32_t did, sid;
- 	uint16_t xid;
--	uint32_t start_time = jiffies / HZ;
--	uint32_t current_time;
- 	struct fcoe_wqe *sqe;
- 	unsigned long flags;
- 	u16 sqe_idx;
-@@ -59,18 +57,12 @@ static int qedf_initiate_els(struct qedf_rport *fcport, unsigned int op,
- 		goto els_err;
+diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
+index cd1773d0e08f0..0c68783be26fc 100644
+--- a/include/sound/hdaudio.h
++++ b/include/sound/hdaudio.h
+@@ -82,6 +82,7 @@ struct hdac_device {
+ 	bool  link_power_control:1;
+ 
+ 	/* sysfs */
++	struct mutex widget_lock;
+ 	struct hdac_widget_tree *widgets;
+ 
+ 	/* regmap */
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index dbf02a3a8d2f2..020fbbbcf6f5c 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -55,6 +55,7 @@ int snd_hdac_device_init(struct hdac_device *codec, struct hdac_bus *bus,
+ 	codec->bus = bus;
+ 	codec->addr = addr;
+ 	codec->type = HDA_DEV_CORE;
++	mutex_init(&codec->widget_lock);
+ 	pm_runtime_set_active(&codec->dev);
+ 	pm_runtime_get_noresume(&codec->dev);
+ 	atomic_set(&codec->in_pm, 0);
+@@ -141,7 +142,9 @@ int snd_hdac_device_register(struct hdac_device *codec)
+ 	err = device_add(&codec->dev);
+ 	if (err < 0)
+ 		return err;
++	mutex_lock(&codec->widget_lock);
+ 	err = hda_widget_sysfs_init(codec);
++	mutex_unlock(&codec->widget_lock);
+ 	if (err < 0) {
+ 		device_del(&codec->dev);
+ 		return err;
+@@ -158,7 +161,9 @@ EXPORT_SYMBOL_GPL(snd_hdac_device_register);
+ void snd_hdac_device_unregister(struct hdac_device *codec)
+ {
+ 	if (device_is_registered(&codec->dev)) {
++		mutex_lock(&codec->widget_lock);
+ 		hda_widget_sysfs_exit(codec);
++		mutex_unlock(&codec->widget_lock);
+ 		device_del(&codec->dev);
+ 		snd_hdac_bus_remove_device(codec->bus, codec);
+ 	}
+@@ -404,7 +409,9 @@ int snd_hdac_refresh_widgets(struct hdac_device *codec, bool sysfs)
  	}
  
--retry_els:
- 	els_req = qedf_alloc_cmd(fcport, QEDF_ELS);
- 	if (!els_req) {
--		current_time = jiffies / HZ;
--		if ((current_time - start_time) > 10) {
--			QEDF_INFO(&(qedf->dbg_ctx), QEDF_LOG_ELS,
--				   "els: Failed els 0x%x\n", op);
--			rc = -ENOMEM;
--			goto els_err;
--		}
--		mdelay(20 * USEC_PER_MSEC);
--		goto retry_els;
-+		QEDF_INFO(&qedf->dbg_ctx, QEDF_LOG_ELS,
-+			  "Failed to alloc ELS request 0x%x\n", op);
-+		rc = -ENOMEM;
-+		goto els_err;
+ 	if (sysfs) {
++		mutex_lock(&codec->widget_lock);
+ 		err = hda_widget_sysfs_reinit(codec, start_nid, nums);
++		mutex_unlock(&codec->widget_lock);
+ 		if (err < 0)
+ 			return err;
  	}
+diff --git a/sound/hda/hdac_sysfs.c b/sound/hda/hdac_sysfs.c
+index fb2aa344981e6..909d5ef1179c9 100644
+--- a/sound/hda/hdac_sysfs.c
++++ b/sound/hda/hdac_sysfs.c
+@@ -395,6 +395,7 @@ static int widget_tree_create(struct hdac_device *codec)
+ 	return 0;
+ }
  
- 	QEDF_INFO(&(qedf->dbg_ctx), QEDF_LOG_ELS, "initiate_els els_req = "
++/* call with codec->widget_lock held */
+ int hda_widget_sysfs_init(struct hdac_device *codec)
+ {
+ 	int err;
+@@ -411,11 +412,13 @@ int hda_widget_sysfs_init(struct hdac_device *codec)
+ 	return 0;
+ }
+ 
++/* call with codec->widget_lock held */
+ void hda_widget_sysfs_exit(struct hdac_device *codec)
+ {
+ 	widget_tree_free(codec);
+ }
+ 
++/* call with codec->widget_lock held */
+ int hda_widget_sysfs_reinit(struct hdac_device *codec,
+ 			    hda_nid_t start_nid, int num_nodes)
+ {
 -- 
 2.20.1
 
