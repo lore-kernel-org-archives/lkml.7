@@ -2,99 +2,126 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C79CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B47CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBDF21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768A021D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="TkkERhIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732365AbfJYSIB (ORCPT
+        id S2388096AbfJYSKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46822 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731456AbfJYSFo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:44 -0400
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Fri, 25 Oct 2019 14:10:39 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:58994 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732355AbfJYSIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 14:08:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ukusdiIWPioOyFF8K+EMog1oWe2UbKn/QGBiyiSBlcI=; b=TkkERhIk8BBAwoGeaxAN1ziqjG
+        l+PP57GcZFlFrZe+8Ex1cit7g7VgrEpsXkPptk1n8IbWDzMu4ghOXS5+62xp6kJ68ILnVYvF6h+T/
+        HtNN8wIp29Z8E9XjPQBeBDXoJGiW4TzIZZPdYPZ+jLas/GjF5jghcn34foMfTYFkiKO8=;
+Received: from p200300ccff09ca001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff09:ca00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0008Oq-ME; Fri, 25 Oct 2019 19:05:36 +0100
-Received: from ben by deadeye with local (Exim 4.92.2)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001jP-S1; Fri, 25 Oct 2019 19:05:35 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        (envelope-from <andreas@kemnade.info>)
+        id 1iO401-0005qr-ID; Fri, 25 Oct 2019 20:07:45 +0200
+Date:   Fri, 25 Oct 2019 20:07:43 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        j.neuschaefer@gmx.net,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] ARM: dts: imx: add devicetree for Kobo Clara HD
+Message-ID: <20191025200743.48455cc9@aktux>
+In-Reply-To: <20191025134621.GN3208@dragon>
+References: <20191010192357.27884-1-andreas@kemnade.info>
+        <20191010192357.27884-4-andreas@kemnade.info>
+        <20191025134621.GN3208@dragon>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Boris Brezillon" <boris.brezillon@collabora.com>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
-Date:   Fri, 25 Oct 2019 19:03:25 +0100
-Message-ID: <lsq.1572026582.555569129@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 24/47] media: v4l2: Test type instead of cfg->type in
- v4l2_ctrl_new_custom()
-In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.76-rc1 review patch.  If anyone has any objections, please let me know.
+Hi,
 
-------------------
+On Fri, 25 Oct 2019 21:46:24 +0800
+Shawn Guo <shawnguo@kernel.org> wrote:
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+[...]
+> > +
+> > +		pinctrl_wifi_reset: wifi_reset_grp {
+> > +			fsl,pins = <
+> > +				MX6SLL_PAD_SD2_DATA7__GPIO5_IO00	0x10059		/* WIFI_RST */
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_wifi_power: wifi_power_grp {  
+> 
+> I guess you can have one pinctrl node to include both reset and power
+> pins?  Also, to be consistent with other pinctrl nodes on naming, the
+> node name should probably be wifigrp.
+> 
+well, the problems they are used in different nodes, so I cannot do
+that:
 
-commit 07d89227a983df957a6a7c56f7c040cde9ac571f upstream.
+       reg_wifi: regulator-wifi {
+                compatible = "regulator-fixed";
+                pinctrl-names = "default";
+                pinctrl-0 = <&pinctrl_wifi_power>;
+                regulator-name = "SD3_SPWR";
+                regulator-min-microvolt = <3000000>;
+                regulator-max-microvolt = <3000000>;
+                gpio = <&gpio4 29 GPIO_ACTIVE_HIGH>;
+                enable-active-high;
+        };
 
-cfg->type can be overridden by v4l2_ctrl_fill() and the new value is
-stored in the local type var. Fix the tests to use this local var.
+        wifi_pwrseq: wifi_pwrseq {
+                compatible = "mmc-pwrseq-simple";
+                pinctrl-names = "default";
+                pinctrl-0 = <&pinctrl_wifi_reset>;
+                post-power-on-delay-ms = <20>;
+                reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+        };
 
-Fixes: 0996517cf8ea ("V4L/DVB: v4l2: Add new control handling framework")
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-[hverkuil-cisco@xs4all.nl: change to !qmenu and !qmenu_int (checkpatch)]
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/media/v4l2-core/v4l2-ctrls.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+So having them combined breaks the mux where you use it rule.
+I got in earlier mails:
 
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1747,16 +1747,15 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(s
- 		v4l2_ctrl_fill(cfg->id, &name, &type, &min, &max, &step,
- 								&def, &flags);
- 
--	is_menu = (cfg->type == V4L2_CTRL_TYPE_MENU ||
--		   cfg->type == V4L2_CTRL_TYPE_INTEGER_MENU);
-+	is_menu = (type == V4L2_CTRL_TYPE_MENU ||
-+		   type == V4L2_CTRL_TYPE_INTEGER_MENU);
- 	if (is_menu)
- 		WARN_ON(step);
- 	else
- 		WARN_ON(cfg->menu_skip_mask);
--	if (cfg->type == V4L2_CTRL_TYPE_MENU && qmenu == NULL)
-+	if (type == V4L2_CTRL_TYPE_MENU && !qmenu) {
- 		qmenu = v4l2_ctrl_get_menu(cfg->id);
--	else if (cfg->type == V4L2_CTRL_TYPE_INTEGER_MENU &&
--		 qmenu_int == NULL) {
-+	} else if (type == V4L2_CTRL_TYPE_INTEGER_MENU && !qmenu_int) {
- 		handler_set_err(hdl, -EINVAL);
- 		return NULL;
- 	}
+> > +	wifi_pwrseq: wifi_pwrseq {
+> > +		compatible = "mmc-pwrseq-simple";
+> > +		post-power-on-delay-ms = <20>;
+> > +		reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;  
 
+> Can you add a pinctrl-entry here please? The general rule is to mux
+> things where you use it
+[...]
+> > +			compatible = "regulator-fixed";
+> > +			regulator-name = "SD3_SPWR";
+> > +			regulator-min-microvolt = <3000000>;
+> > +			regulator-max-microvolt = <3000000>;
+> > +
+> > +			gpio = <&gpio4 29 GPIO_ACTIVE_HIGH>;  
+
+> Please add a pinctrl here to mux this gpio.
+
+Regards,
+Andreas
