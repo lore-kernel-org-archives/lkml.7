@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ADECA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EBBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E862070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C03222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732862AbfJYSIb (ORCPT
+        id S1733017AbfJYSIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:31 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46776 "EHLO
+        Fri, 25 Oct 2019 14:08:38 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46884 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731426AbfJYSFo (ORCPT
+        by vger.kernel.org with ESMTP id S1731495AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0008OO-PW; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xx-0008PC-1x; Fri, 25 Oct 2019 19:05:37 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001iW-Bi; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xw-0001kJ-8Y; Fri, 25 Oct 2019 19:05:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nicolas Dichtel" <nicolas.dichtel@6wind.com>,
-        "Steffen Klassert" <steffen.klassert@secunet.com>,
-        "Anirudh Gupta" <anirudh.gupta@sophos.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>
-Date:   Fri, 25 Oct 2019 19:03:14 +0100
-Message-ID: <lsq.1572026582.942700400@decadent.org.uk>
+        "Jay Vosburgh" <j.vosburgh@gmail.com>,
+        "Andy Gospodarek" <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Cong Wang" <xiyou.wangcong@gmail.com>,
+        "Veaceslav Falico" <vfalico@gmail.com>
+Date:   Fri, 25 Oct 2019 19:03:36 +0100
+Message-ID: <lsq.1572026582.768948953@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 13/47] xfrm: fix sa selector validation
+Subject: [PATCH 3.16 35/47] bonding: validate ip header before check
+ IPPROTO_IGMP
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,38 +59,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee upstream.
+commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c upstream.
 
-After commit b38ff4075a80, the following command does not work anymore:
-$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
-  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
-  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
+bond_xmit_roundrobin() checks for IGMP packets but it parses
+the IP header even before checking skb->protocol.
 
-In fact, the selector is not mandatory, allow the user to provide an empty
-selector.
+We should validate the IP header with pskb_may_pull() before
+using iph->protocol.
 
-Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
-CC: Anirudh Gupta <anirudh.gupta@sophos.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
+Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Cc: Veaceslav Falico <vfalico@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16:
+ - Keep using ACCESS_ONCE(), dev_kfree_skb_any(), …_can_tx()
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/xfrm/xfrm_user.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/bonding/bond_main.c | 37 ++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -165,6 +165,9 @@ static int verify_newsa_info(struct xfrm
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3700,8 +3700,8 @@ static u32 bond_rr_gen_slave_id(struct b
+ static int bond_xmit_roundrobin(struct sk_buff *skb, struct net_device *bond_dev)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	struct iphdr *iph = ip_hdr(skb);
+ 	struct slave *slave;
++	int slave_cnt;
+ 	u32 slave_id;
+ 
+ 	/* Start with the curr_active_slave that joined the bond as the
+@@ -3710,23 +3710,32 @@ static int bond_xmit_roundrobin(struct s
+ 	 * send the join/membership reports.  The curr_active_slave found
+ 	 * will send all of this type of traffic.
+ 	 */
+-	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
+-		slave = rcu_dereference(bond->curr_active_slave);
+-		if (slave && bond_slave_can_tx(slave))
+-			bond_dev_queue_xmit(bond, skb, slave->dev);
+-		else
+-			bond_xmit_slave_id(bond, skb, 0);
+-	} else {
+-		int slave_cnt = ACCESS_ONCE(bond->slave_cnt);
++	if (skb->protocol == htons(ETH_P_IP)) {
++		int noff = skb_network_offset(skb);
++		struct iphdr *iph;
++
++		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
++			goto non_igmp;
+ 
+-		if (likely(slave_cnt)) {
+-			slave_id = bond_rr_gen_slave_id(bond);
+-			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
+-		} else {
+-			dev_kfree_skb_any(skb);
++		iph = ip_hdr(skb);
++		if (iph->protocol == IPPROTO_IGMP) {
++			slave = rcu_dereference(bond->curr_active_slave);
++			if (slave && bond_slave_can_tx(slave))
++				bond_dev_queue_xmit(bond, skb, slave->dev);
++			else
++				bond_xmit_slave_id(bond, skb, 0);
++			return NETDEV_TX_OK;
+ 		}
  	}
  
- 	switch (p->sel.family) {
-+	case AF_UNSPEC:
-+		break;
-+
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
++non_igmp:
++	slave_cnt = ACCESS_ONCE(bond->slave_cnt);
++	if (likely(slave_cnt)) {
++		slave_id = bond_rr_gen_slave_id(bond);
++		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
++	} else {
++		dev_kfree_skb_any(skb);
++	}
+ 	return NETDEV_TX_OK;
+ }
+ 
 
