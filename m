@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D48CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F284CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EF2205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E4D205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732669AbfJYSIT (ORCPT
+        id S1732635AbfJYSIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:19 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46596 "EHLO
+        Fri, 25 Oct 2019 14:08:17 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46584 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731335AbfJYSFk (ORCPT
+        by vger.kernel.org with ESMTP id S1731309AbfJYSFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 14:05:40 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0008OT-Vu; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xv-0008OF-KG; Fri, 25 Oct 2019 19:05:35 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0001ir-JT; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xu-0001hn-TI; Fri, 25 Oct 2019 19:05:34 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ravi Bangoria" <ravi.bangoria@linux.ibm.com>,
-        "Michael Ellerman" <mpe@ellerman.id.au>
-Date:   Fri, 25 Oct 2019 19:03:18 +0100
-Message-ID: <lsq.1572026582.203708098@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Christophe Leroy" <christophe.leroy@c-s.fr>
+Date:   Fri, 25 Oct 2019 19:03:05 +0100
+Message-ID: <lsq.1572026582.61489952@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 17/47] powerpc/watchpoint: Restore NV GPRs while
- returning from exception
+Subject: [PATCH 3.16 04/47] tty: serial: cpm_uart - fix init when SMC is
+ relocated
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,113 +56,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit f474c28fbcbe42faca4eb415172c07d76adcb819 upstream.
+commit 06aaa3d066db87e8478522d910285141d44b1e58 upstream.
 
-powerpc hardware triggers watchpoint before executing the instruction.
-To make trigger-after-execute behavior, kernel emulates the
-instruction. If the instruction is 'load something into non-volatile
-register', exception handler should restore emulated register state
-while returning back, otherwise there will be register state
-corruption. eg, adding a watchpoint on a list can corrput the list:
+SMC relocation can also be activated earlier by the bootloader,
+so the driver's behaviour cannot rely on selected kernel config.
 
-  # cat /proc/kallsyms | grep kthread_create_list
-  c00000000121c8b8 d kthread_create_list
+When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
 
-Add watchpoint on kthread_create_list->prev:
+But the only thing CPM_CR_INIT_TRX does is to clear the
+rstate and tstate registers, so this can be done manually,
+even when SMC is not relocated.
 
-  # perf record -e mem:0xc00000000121c8c0
-
-Run some workload such that new kthread gets invoked. eg, I just
-logged out from console:
-
-  list_add corruption. next->prev should be prev (c000000001214e00), \
-	but was c00000000121c8b8. (next=c00000000121c8b8).
-  WARNING: CPU: 59 PID: 309 at lib/list_debug.c:25 __list_add_valid+0xb4/0xc0
-  CPU: 59 PID: 309 Comm: kworker/59:0 Kdump: loaded Not tainted 5.1.0-rc7+ #69
-  ...
-  NIP __list_add_valid+0xb4/0xc0
-  LR __list_add_valid+0xb0/0xc0
-  Call Trace:
-  __list_add_valid+0xb0/0xc0 (unreliable)
-  __kthread_create_on_node+0xe0/0x260
-  kthread_create_on_node+0x34/0x50
-  create_worker+0xe8/0x260
-  worker_thread+0x444/0x560
-  kthread+0x160/0x1a0
-  ret_from_kernel_thread+0x5c/0x70
-
-List corruption happened because it uses 'load into non-volatile
-register' instruction:
-
-Snippet from __kthread_create_on_node:
-
-  c000000000136be8:     addis   r29,r2,-19
-  c000000000136bec:     ld      r29,31424(r29)
-        if (!__list_add_valid(new, prev, next))
-  c000000000136bf0:     mr      r3,r30
-  c000000000136bf4:     mr      r5,r28
-  c000000000136bf8:     mr      r4,r29
-  c000000000136bfc:     bl      c00000000059a2f8 <__list_add_valid+0x8>
-
-Register state from WARN_ON():
-
-  GPR00: c00000000059a3a0 c000007ff23afb50 c000000001344e00 0000000000000075
-  GPR04: 0000000000000000 0000000000000000 0000001852af8bc1 0000000000000000
-  GPR08: 0000000000000001 0000000000000007 0000000000000006 00000000000004aa
-  GPR12: 0000000000000000 c000007ffffeb080 c000000000137038 c000005ff62aaa00
-  GPR16: 0000000000000000 0000000000000000 c000007fffbe7600 c000007fffbe7370
-  GPR20: c000007fffbe7320 c000007fffbe7300 c000000001373a00 0000000000000000
-  GPR24: fffffffffffffef7 c00000000012e320 c000007ff23afcb0 c000000000cb8628
-  GPR28: c00000000121c8b8 c000000001214e00 c000007fef5b17e8 c000007fef5b17c0
-
-Watchpoint hit at 0xc000000000136bec.
-
-  addis   r29,r2,-19
-   => r29 = 0xc000000001344e00 + (-19 << 16)
-   => r29 = 0xc000000001214e00
-
-  ld      r29,31424(r29)
-   => r29 = *(0xc000000001214e00 + 31424)
-   => r29 = *(0xc00000000121c8c0)
-
-0xc00000000121c8c0 is where we placed a watchpoint and thus this
-instruction was emulated by emulate_step. But because handle_dabr_fault
-did not restore emulated register state, r29 still contains stale
-value in above register state.
-
-Fixes: 5aae8a5370802 ("powerpc, hw_breakpoints: Implement hw_breakpoints for 64-bit server processors")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1630,7 +1630,7 @@ handle_page_fault:
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_page_fault
- 	cmpdi	r3,0
--	beq+	12f
-+	beq+	ret_from_except_lite
- 	bl	save_nvgprs
- 	mr	r5,r3
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
-@@ -1645,7 +1645,12 @@ handle_dabr_fault:
- 	ld      r5,_DSISR(r1)
- 	addi    r3,r1,STACK_FRAME_OVERHEAD
- 	bl      do_break
--12:	b       ret_from_except_lite
-+	/*
-+	 * do_break() may have changed the NV GPRS while handling a breakpoint.
-+	 * If so, we need to restore them with their updated values. Don't use
-+	 * ret_from_except_lite here.
-+	 */
-+	b       ret_from_except
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -420,7 +420,16 @@ static int cpm_uart_startup(struct uart_
+ 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
+ 		}
+ 		cpm_uart_initbd(pinfo);
+-		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		if (IS_SMC(pinfo)) {
++			out_be32(&pinfo->smcup->smc_rstate, 0);
++			out_be32(&pinfo->smcup->smc_tstate, 0);
++			out_be16(&pinfo->smcup->smc_rbptr,
++				 in_be16(&pinfo->smcup->smc_rbase));
++			out_be16(&pinfo->smcup->smc_tbptr,
++				 in_be16(&pinfo->smcup->smc_tbase));
++		} else {
++			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		}
+ 	}
+ 	/* Install interrupt handler. */
+ 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
+@@ -871,16 +880,14 @@ static void cpm_uart_init_smc(struct uar
+ 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
  
+ /*
+- *  In case SMC1 is being relocated...
++ *  In case SMC is being relocated...
+  */
+-#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
+ 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
+ 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
+ 	out_be32(&up->smc_rstate, 0);
+ 	out_be32(&up->smc_tstate, 0);
+ 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
+ 	out_be16(&up->smc_brkec, 0);
+-#endif
  
- /* We have a page fault that hash_page could handle but HV refused
+ 	/* Set up the uart parameters in the
+ 	 * parameter ram.
+@@ -894,8 +901,6 @@ static void cpm_uart_init_smc(struct uar
+ 	out_be16(&up->smc_brkec, 0);
+ 	out_be16(&up->smc_brkcr, 1);
+ 
+-	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
+-
+ 	/* Set UART mode, 8 bit, no parity, one stop.
+ 	 * Enable receive and transmit.
+ 	 */
 
