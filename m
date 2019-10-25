@@ -2,249 +2,136 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20324CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADD2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30B8206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A5E206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bj3nTKvG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dXuRuvvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437853AbfJYILB (ORCPT
+        id S2437875AbfJYILO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:11:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42275 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2437822AbfJYIK7 (ORCPT
+        Fri, 25 Oct 2019 04:11:14 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46027 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437822AbfJYILN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:10:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571991057;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2GGf2kVG8CsLtd6hgKY+4sDM4eKzor9fLrdBz5qU+cg=;
-        b=Bj3nTKvGwHPkPD4jrVg3BjUfhYb8dOwoBszVV8xE8oGHRpyf0igjG7A+6An6lLaX7VBoPk
-        xjdgSJ1PffuTz76Cf1G5Dj/bjbKL416Sc73xSvR2nXC/gnlr6mB4b9Pb9lc6FhGEUU63dI
-        LB3+MHZg6H2Izqs8ptCXNu/Qg4mgdUU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-SakRCyxTNi2Z0gepaWe5QA-1; Fri, 25 Oct 2019 04:10:53 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 104BD1005500;
-        Fri, 25 Oct 2019 08:10:51 +0000 (UTC)
-Received: from krava (unknown [10.43.17.61])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0F03B5D712;
-        Fri, 25 Oct 2019 08:10:46 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 10:10:46 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 3/9] perf tools: ensure config and str in terms are
- unique
-Message-ID: <20191025081046.GG31679@krava>
-References: <20191023005337.196160-1-irogers@google.com>
- <20191024190202.109403-1-irogers@google.com>
- <20191024190202.109403-4-irogers@google.com>
+        Fri, 25 Oct 2019 04:11:13 -0400
+Received: by mail-pg1-f196.google.com with SMTP id r1so1015554pgj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:11:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MvC1xa/Yv2E+4rHJhqnHKwrOhUrxM0nH05PTERSBhFE=;
+        b=dXuRuvvKfs4ccP/XEcohv6Of8V/+kMjvnucXJZpVOSjyHYKF5oMlvOKWUw+8MN+d3D
+         bZqgOp4WN+aR0zPuV4cKr/oPywRltjzEzOrMR9Lhq0TjxbRsqgYp2ZEgO1MiCiH0+JO7
+         C1MLs96IFAevoXXT/ypKlC/Ydq9YELaRfq+qWlQ5JQ8ugPLa3smzDm0Gm2x6x9masAVC
+         VqzGLKYJfdn6QIWUcMjO9ZNvIEU5utMRlOpGUk+q0+ySbs03YOsmaN4/reDnkshoEgyR
+         X4jFBlH58xAx+2ry3+aiL9rX+tyC17TSqSqFhdTVtkFx7at4WVkA4AJwx7MxifdXxdNa
+         fDNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MvC1xa/Yv2E+4rHJhqnHKwrOhUrxM0nH05PTERSBhFE=;
+        b=QeWb8mv1+3WrgR1X5GhxURACg2CVSxWc8ViHCh004QbRKE/mTFsWzvRCjjUQD58faj
+         4yQBxSH+j58DGAlNRK8HNnHAaVrWkDFQFnRb05cqYfzB57SNvJ6dMxEDnjhWP0thR27p
+         BeIIyvza4x2l3YNls/0JG/05th7P6/apO2eGBKqYdPTwH0Y08rle72pn5YEb7jF15ijS
+         8DTsd3O0uwdXpFgdQOOZPPI19VBzqht2bmlOwFtKwVFAHJpM8uOzejyWA0KEEw4e7bvN
+         rod79fYerWvtqBOHYzzAeScbMP0wnsD8UyMfN2a6Yj007/8IV9FpmVYU4gUFwaBqP/Vd
+         64tA==
+X-Gm-Message-State: APjAAAVSzknWEfH5/1leAiIxqRArar6+DrYQnnAT5clv1X7zxAKKYSk8
+        1CerVnjdhL6m0/EZm/4rS1YrTw==
+X-Google-Smtp-Source: APXvYqxGmwDVbpVbBPzldrNQ8sCg81PVOoWWJ8GUohKjD2EZ2a9Wd8Hq7QYgLa4AM5/Sl4RGA5aJgw==
+X-Received: by 2002:aa7:9aa2:: with SMTP id x2mr2711820pfi.103.1571991072328;
+        Fri, 25 Oct 2019 01:11:12 -0700 (PDT)
+Received: from localhost ([122.172.151.112])
+        by smtp.gmail.com with ESMTPSA id l93sm1438985pjb.6.2019.10.25.01.11.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 01:11:11 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 13:41:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Parth Shah <parth@linux.ibm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Make sched-idle cpu selection consistent
+ throughout
+Message-ID: <20191025081108.6gaprbwm5fvokun6@vireshk-i7>
+References: <5eba2fb4af9ebc7396101bb9bd6c8aa9c8af0710.1571899508.git.viresh.kumar@linaro.org>
+ <7d3a1549-a99c-ae42-6074-8ed2ecd7074f@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191024190202.109403-4-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: SakRCyxTNi2Z0gepaWe5QA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <7d3a1549-a99c-ae42-6074-8ed2ecd7074f@linux.ibm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 12:01:56PM -0700, Ian Rogers wrote:
-> Make it easier to release memory associated with parse event terms by
-> duplicating the string for the config name and ensuring the val string
-> is a duplicate.
->=20
-> Currently the parser may memory leak terms and this is addressed in a
-> later patch.
+On 25-10-19, 12:13, Parth Shah wrote:
+> Hi Viresh,
+> 
+> On 10/24/19 12:15 PM, Viresh Kumar wrote:
+> > There are instances where we keep searching for an idle CPU despite
+> > having a sched-idle cpu already (in find_idlest_group_cpu(),
+> > select_idle_smt() and select_idle_cpu() and then there are places where
+> > we don't necessarily do that and return a sched-idle cpu as soon as we
+> > find one (in select_idle_sibling()). This looks a bit inconsistent and
+> > it may be worth having the same policy everywhere.
+> > 
+> > On the other hand, choosing a sched-idle cpu over a idle one shall be
+> > beneficial from performance point of view as well, as we don't need to
+> > get the cpu online from a deep idle state which is quite a time
+> > consuming process and delays the scheduling of the newly wakeup task.
+> > 
+> > This patch tries to simplify code around sched-idle cpu selection and
+> > make it consistent throughout.
+> > 
+> > FWIW, tests were done with the help of rt-app (8 SCHED_OTHER and 5
+> > SCHED_IDLE tasks, not bound to any cpu) on ARM platform (octa-core), and
+> > no significant difference in scheduling latency of SCHED_OTHER tasks was
+> > found.
+> > 
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> 
+> [...]
+> 
+> > @@ -5755,13 +5749,11 @@ static int select_idle_smt(struct task_struct *p, int target)
+> >  	for_each_cpu(cpu, cpu_smt_mask(target)) {
+> >  		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+> >  			continue;
+> > -		if (available_idle_cpu(cpu))
+> > +		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
+> >  			return cpu;
+> 
+> I guess this is a correct approach, but just wondering what if we still
+> keep searching for a sched_idle CPU even though we have found an
+> available_idle CPU?
 
-please move that patch before this one=20
+I do believe selecting a sched-idle CPU should almost always be better
+(performance wise), unless we have a strong argument against it. And
+anyway, the load balancer will get triggered at a later point of time
+and will pull away these newly wakeup tasks to idle CPUs. The
+advantage we get out of it is that the tasks get serviced a bit
+earlier when they first get queued.
 
-thanks,
-jirka
+It is really up to the maintainers to see what kind of policy do we
+want to adapt here and not a choice I can make :)
 
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/parse-events.c | 51 ++++++++++++++++++++++++++++------
->  tools/perf/util/parse-events.y |  4 ++-
->  2 files changed, 45 insertions(+), 10 deletions(-)
->=20
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index f0d50f079d2f..dc5862a663b5 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -1430,7 +1430,6 @@ int parse_events_add_pmu(struct parse_events_state =
-*parse_state,
->  int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->  =09=09=09       char *str, struct list_head **listp)
->  {
-> -=09struct list_head *head;
->  =09struct parse_events_term *term;
->  =09struct list_head *list;
->  =09struct perf_pmu *pmu =3D NULL;
-> @@ -1447,19 +1446,30 @@ int parse_events_multi_pmu_add(struct parse_event=
-s_state *parse_state,
-> =20
->  =09=09list_for_each_entry(alias, &pmu->aliases, list) {
->  =09=09=09if (!strcasecmp(alias->name, str)) {
-> +=09=09=09=09struct list_head *head;
-> +=09=09=09=09char *config;
-> +
->  =09=09=09=09head =3D malloc(sizeof(struct list_head));
->  =09=09=09=09if (!head)
->  =09=09=09=09=09return -1;
->  =09=09=09=09INIT_LIST_HEAD(head);
-> -=09=09=09=09if (parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_US=
-ER,
-> -=09=09=09=09=09=09=09   str, 1, false, &str, NULL) < 0)
-> +=09=09=09=09config =3D strdup(str);
-> +=09=09=09=09if (!config)
-> +=09=09=09=09=09return -1;
-> +=09=09=09=09if (parse_events_term__num(&term,
-> +=09=09=09=09=09=09   PARSE_EVENTS__TERM_TYPE_USER,
-> +=09=09=09=09=09=09   config, 1, false, &config,
-> +=09=09=09=09=09=09   NULL) < 0) {
-> +=09=09=09=09=09free(list);
-> +=09=09=09=09=09free(config);
->  =09=09=09=09=09return -1;
-> +=09=09=09=09}
->  =09=09=09=09list_add_tail(&term->list, head);
-> =20
->  =09=09=09=09if (!parse_events_add_pmu(parse_state, list,
->  =09=09=09=09=09=09=09  pmu->name, head,
->  =09=09=09=09=09=09=09  true, true)) {
-> -=09=09=09=09=09pr_debug("%s -> %s/%s/\n", str,
-> +=09=09=09=09=09pr_debug("%s -> %s/%s/\n", config,
->  =09=09=09=09=09=09 pmu->name, alias->str);
->  =09=09=09=09=09ok++;
->  =09=09=09=09}
-> @@ -1468,8 +1478,10 @@ int parse_events_multi_pmu_add(struct parse_events=
-_state *parse_state,
->  =09=09=09}
->  =09=09}
->  =09}
-> -=09if (!ok)
-> +=09if (!ok) {
-> +=09=09free(list);
->  =09=09return -1;
-> +=09}
->  =09*listp =3D list;
->  =09return 0;
->  }
-> @@ -2764,30 +2776,51 @@ int parse_events_term__sym_hw(struct parse_events=
-_term **term,
->  =09=09=09      char *config, unsigned idx)
->  {
->  =09struct event_symbol *sym;
-> +=09char *str;
->  =09struct parse_events_term temp =3D {
->  =09=09.type_val  =3D PARSE_EVENTS__TERM_TYPE_STR,
->  =09=09.type_term =3D PARSE_EVENTS__TERM_TYPE_USER,
-> -=09=09.config    =3D config ?: (char *) "event",
-> +=09=09.config    =3D config,
->  =09};
-> =20
-> +=09if (!temp.config) {
-> +=09=09temp.config =3D strdup("event");
-> +=09=09if (!temp.config)
-> +=09=09=09return -ENOMEM;
-> +=09}
->  =09BUG_ON(idx >=3D PERF_COUNT_HW_MAX);
->  =09sym =3D &event_symbols_hw[idx];
-> =20
-> -=09return new_term(term, &temp, (char *) sym->symbol, 0);
-> +=09str =3D strdup(sym->symbol);
-> +=09if (!str)
-> +=09=09return -ENOMEM;
-> +=09return new_term(term, &temp, str, 0);
->  }
-> =20
->  int parse_events_term__clone(struct parse_events_term **new,
->  =09=09=09     struct parse_events_term *term)
->  {
-> +=09char *str;
->  =09struct parse_events_term temp =3D {
->  =09=09.type_val  =3D term->type_val,
->  =09=09.type_term =3D term->type_term,
-> -=09=09.config    =3D term->config,
-> +=09=09.config    =3D NULL,
->  =09=09.err_term  =3D term->err_term,
->  =09=09.err_val   =3D term->err_val,
->  =09};
-> =20
-> -=09return new_term(new, &temp, term->val.str, term->val.num);
-> +=09if (term->config) {
-> +=09=09temp.config =3D strdup(term->config);
-> +=09=09if (!temp.config)
-> +=09=09=09return -ENOMEM;
-> +=09}
-> +=09if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM)
-> +=09=09return new_term(new, &temp, NULL, term->val.num);
-> +
-> +=09str =3D strdup(term->val.str);
-> +=09if (!str)
-> +=09=09return -ENOMEM;
-> +=09return new_term(new, &temp, str, 0);
->  }
-> =20
->  int parse_events_copy_term_list(struct list_head *old,
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-event=
-s.y
-> index 48126ae4cd13..27d6b187c9b1 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -644,9 +644,11 @@ PE_NAME array '=3D' PE_VALUE
->  PE_DRV_CFG_TERM
->  {
->  =09struct parse_events_term *term;
-> +=09char *config =3D strdup($1);
-> =20
-> +=09ABORT_ON(!config);
->  =09ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_DRV_CF=
-G,
-> -=09=09=09=09=09$1, $1, &@1, NULL));
-> +=09=09=09=09=09config, $1, &@1, NULL));
->  =09$$ =3D term;
->  }
-> =20
-> --=20
-> 2.23.0.866.gb869b98d4c-goog
->=20
-
+-- 
+viresh
