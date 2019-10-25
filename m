@@ -2,104 +2,111 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FC7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F50CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD29D21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571993235;
-	bh=039HuaFgcdGT65Y6FWPIC8uOq0spz2Q7eWMRchOOfPs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=je4uYF1wL5FlT1zLmghrmDFWv+HtWyxSd8tC1q0iL0TmaRxh0yzwfSwM259rpFR/D
-	 /8+3LYEckr99KyavpvS9QJZEaMGrNdeNmHOQv3vVmQybaLkY63HG8sd8AOZFtOBpGA
-	 TbaPtRoYLIw80PX4SxbwH7zr6VUQ/Cig82mx/B2s=
+	by mail.kernel.org (Postfix) with ESMTP id 7979021D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436905AbfJYIrP (ORCPT
+        id S2393100AbfJYIso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408325AbfJYIrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:47:14 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81A7821D7B;
-        Fri, 25 Oct 2019 08:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571993233;
-        bh=039HuaFgcdGT65Y6FWPIC8uOq0spz2Q7eWMRchOOfPs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbQPyi/hluNPR0aOxEgL6H+rBFTtk94aHiaqS1B5VaB+7TDmu9i+Do4uVGlmFFekt
-         9X+Bp+pMdZ0P0z5SE53nBG/KQojohc2qDKKj8MZloAd1dlKCERUKqHEJc78Q0AOXRE
-         gfEg2owzK0aJaA9gmL7LPgYGaiacvIdrG+oCcwNU=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [BUGFIX PATCH 6/6] perf/probe: Fix to show ranges of variables in functions without entry_pc
-Date:   Fri, 25 Oct 2019 17:47:10 +0900
-Message-Id: <157199323018.8075.8179744380479673672.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157199317547.8075.1010940983970397945.stgit@devnote2>
-References: <157199317547.8075.1010940983970397945.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 25 Oct 2019 04:48:44 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42741 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389425AbfJYIso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:48:44 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i185so1050033oif.9;
+        Fri, 25 Oct 2019 01:48:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uA6lSNHDRCatiJVJ/bgW4yuf0LByUeyt0njk9B4ukrc=;
+        b=pB1+s7USrm2jK85Akcv2CH3fUw/7POfgi/pgDdjS44HoqmOwhRJtXlOBQHZ2MEEmZz
+         zu9xxhWTFFKoHoaQMdR60oyEToi9uPlwzM1BBa2FNJ2D58lrim6ylC/Z1eY04ZZg6Fi4
+         yXdYkFlm7DbQBtjVP2+uFUxx+0qkSBCyk3gYQuXKGl/yTFANNMvx1reHErjCeQePx++4
+         8wY3yEAY+hSwF4/cEGQxXi8/Q6yJIXeITmGmxUARPAP4I+TM3sLtu3MgrZmOM1wpvbQg
+         FtcJRprTvebpzrS4IP17JXY7ad5Vw6O52Pjz8/W6o05yoDGNbPO3HcFv+5oFuSAfmDwv
+         K69A==
+X-Gm-Message-State: APjAAAXd7HRybCHuKR49gUG/tXaXd9tT+IRTL99HwWmVJ6M1pCcKlTS7
+        cJgcweT4SFuFCbApgqlqv7rlhXFWaEQDhZF7W+c=
+X-Google-Smtp-Source: APXvYqy3g9SYZvOxsJVmghtKOBqa12cq3/vF5Q6/wloURwxegziLuCjjGM4yxIDdlwF02aQ5tVVijREi3KOgNM/I0d4=
+X-Received: by 2002:aca:882:: with SMTP id 124mr2027997oii.54.1571993322988;
+ Fri, 25 Oct 2019 01:48:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20191024152201.29868-1-geert+renesas@glider.be>
+ <878spaqg2k.fsf@kamboji.qca.qualcomm.com> <20191024.095709.187911510311520475.davem@davemloft.net>
+In-Reply-To: <20191024.095709.187911510311520475.davem@davemloft.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 25 Oct 2019 10:48:31 +0200
+Message-ID: <CAMuHMdXLyoxpjYYVhnZ35hwD25+MPXkte5QV_YYOadPVTf9_zA@mail.gmail.com>
+Subject: Re: [PATCH v2] [trivial] net: Fix misspellings of "configure" and "configuration"
+To:     David Miller <davem@davemloft.net>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jiri Kosina <trivial@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to show ranges of variables (--range and --vars option) in
-functions which DIE has only ranges but no entry_pc attribute.
+Hi David,
 
-Without this fix,
-  # tools/perf/perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-  	@<clear_tasks_mm_cpumask+0>
-  		(No matched variables)
+On Thu, Oct 24, 2019 at 6:57 PM David Miller <davem@davemloft.net> wrote:
+> From: Kalle Valo <kvalo@codeaurora.org>
+> Date: Thu, 24 Oct 2019 19:11:15 +0300
+>
+> > Geert Uytterhoeven <geert+renesas@glider.be> writes:
+> >
+> >> Fix various misspellings of "configuration" and "configure".
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> ---
+> >> v2:
+> >>   - Merge
+> >>     [trivial] net/mlx5e: Spelling s/configuraiton/configuration/
+> >>     [trivial] qed: Spelling s/configuraiton/configuration/
+> >>   - Fix typo in subject,
+> >>   - Extend with various other similar misspellings.
+> >> ---
+> >>  drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c | 2 +-
+> >>  drivers/net/ethernet/qlogic/qed/qed_int.h                | 4 ++--
+> >>  drivers/net/ethernet/qlogic/qed/qed_sriov.h              | 2 +-
+> >>  drivers/net/ethernet/qlogic/qede/qede_filter.c           | 2 +-
+> >>  drivers/net/wireless/ath/ath9k/ar9003_hw.c               | 2 +-
+> >>  drivers/net/wireless/intel/iwlwifi/iwl-fh.h              | 2 +-
+> >>  drivers/net/wireless/ti/wlcore/spi.c                     | 2 +-
+> >>  include/uapi/linux/dcbnl.h                               | 2 +-
+> >>  8 files changed, 9 insertions(+), 9 deletions(-)
+> >
+> > I hope this goes to net-next? Easier to handle possible conflicts that
+> > way.
+> >
+> > For the wireless part:
+> >
+> > Acked-by: Kalle Valo <kvalo@codeaurora.org>
+>
+> Yeah I can take it if that's easier.
 
-With this fix,
-  # tools/perf/perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-	@<clear_tasks_mm_cpumask+0>
-		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
+That would be great, thanks!
 
-Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/perf/util/dwarf-aux.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index e0c507d6b3b4..ac82fd937e4b 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1019,7 +1019,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
- 
-@@ -1082,7 +1082,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
- 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
