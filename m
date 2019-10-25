@@ -2,87 +2,134 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395C2C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FF9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 021B020684
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572034226;
-	bh=6FDizwZ3MQTwoS4h+bYYVMkIgdMsbhU5jZT9IMpj0lU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Mvw2kebrncd1TOODT49LphvJj/u7clhOvHKqlJ8bry821jwJ6xq8uUAY/G7QVCjRp
-	 qaCKcBuQRl4nIxkCSB0HCEv9bAWGXEw+01kDsvQ2I1tMFqFquadgj3QwWOdiOTYbmI
-	 OgvI7zIrnKMyfjK50oNKglrCZvPdBdjWc8BvGfzQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8FDCD21872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfJYUKZ (ORCPT
+        id S1728017AbfJYUM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:10:25 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39187 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfJYUKY (ORCPT
+        Fri, 25 Oct 2019 16:12:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63836 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726472AbfJYUMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:10:24 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v138so2424521oif.6;
-        Fri, 25 Oct 2019 13:10:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E0aSqqQFk6FlgluTswnJmfefV24lB3iric22ShoTlBg=;
-        b=og3+YXwYri52qPiyrZclCqtkRW4UZpbMTlXnFUvzpMwn1Ly331SfWq5Eg0RumAIrgs
-         4RiMGHYBcAn0xDrDYVSwHB8YRBs8nbUyJoB7SOH42Oy0URHgjl6TM/4CIs/Mk2BHydkJ
-         tWMMZAbrUCmM1TTToMiRUQhARl0+fJvobt7SLFjRP3FEeKdwIvsoF67Zy4FR2FYhBQoh
-         VnEhpUO6yY6s84Ca1xYYTQQEhrkh2hfI0OXw/hx5zw4iEyAXzp5QXRi2Cs57yI6rQS+w
-         pYHADuUKgw7Sxjj3XTjKBnaoYy4TO0ndE6fgrHIu3ekVJu3XDPnEwvYZIjcjc3LoE7GR
-         R+3A==
-X-Gm-Message-State: APjAAAW71xKelnKt4qG9jKp60PC7alTRjmXLH7f5xUq42cPbXdWZG8k+
-        uALc/DXrfuWOYo8L8puGq/tpmOo=
-X-Google-Smtp-Source: APXvYqy/HeraBjME9wYcyWenGUt9mnz1kGw6zr3COTFo8MFtdYiDJEIygclcgNx9MS4BUfE0lclDBg==
-X-Received: by 2002:aca:5116:: with SMTP id f22mr4629829oib.30.1572034223854;
-        Fri, 25 Oct 2019 13:10:23 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v6sm855896oie.4.2019.10.25.13.10.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 13:10:23 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 15:10:22 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     felipe.balbi@linux.intel.com, gregkh@linuxfoundation.org,
-        pawell@cadence.com, peter.chen@nxp.com, nsekhar@ti.com,
-        kurahul@cadence.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: Add binding for the TI wrapper
- for Cadence USB3 controller
-Message-ID: <20191025201022.GA28229@bogus>
-References: <20191024114717.30984-1-rogerq@ti.com>
- <20191024114717.30984-2-rogerq@ti.com>
+        Fri, 25 Oct 2019 16:12:55 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PKC1tl009126
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 16:12:54 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vusu9gtvs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 16:12:54 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Fri, 25 Oct 2019 21:12:52 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 25 Oct 2019 21:12:47 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PKCkce60948514
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 20:12:46 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A351B5204F;
+        Fri, 25 Oct 2019 20:12:46 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.205.37])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 54F7C5204E;
+        Fri, 25 Oct 2019 20:12:45 +0000 (GMT)
+Date:   Fri, 25 Oct 2019 23:12:43 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Jann Horn <jannh@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/7] Add a UFFD_SECURE flag to the userfaultfd API.
+References: <20191012191602.45649-1-dancol@google.com>
+ <20191012191602.45649-4-dancol@google.com>
+ <CALCETrVZHd+csdRL-uKbVN3Z7yeNNtxiDy-UsutMi=K3ZgCiYw@mail.gmail.com>
+ <CAKOZuevUqs_Oe1UEwguQK7Ate3ai1DSVSij=0R=vmz9LzX4k6Q@mail.gmail.com>
+ <CALCETrUyq=J37gU-MYXqLdoi7uH7iNNVRjvcGUT11JA1QuTFyg@mail.gmail.com>
+ <CAG48ez3P27-xqdjKLqfP_0Q_v9K92CgEjU4C=kob2Ax7=NoZbA@mail.gmail.com>
+ <20191023190959.GA9902@redhat.com>
+ <20191024090258.GA9802@linux.ibm.com>
+ <20191024151054.GJ9902@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024114717.30984-2-rogerq@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191024151054.GJ9902@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19102520-0016-0000-0000-000002BDA4DB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102520-0017-0000-0000-0000331EF01D
+Message-Id: <20191025201242.GA8710@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=747 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910250184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 24 Oct 2019 14:47:16 +0300, Roger Quadros wrote:
-> TI platforms have a wrapper module around the Cadence USB3
-> controller. Add binding information for that.
+Hi,
+
+On Thu, Oct 24, 2019 at 11:10:54AM -0400, Andrea Arcangeli wrote:
+> Hello,
 > 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Cc: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/usb/ti,j721e-usb.yaml | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+> On Thu, Oct 24, 2019 at 12:02:59PM +0300, Mike Rapoport wrote:
+> > That's no the reason that UFFD_FEATURE_EVENT_FORK does not show up in
+> > Debian code search, CRIU simply is not there. Debian packages CRIU only in
+> > experimental and I believe that's not indexed by the code search.
+> > 
+> > As for the limitations, the races were fixed, I just forgot to update the
+> > wiki. As for the supported memory types and COW pages, these only affect
+> > efficiency of post-copy, but not the correctness.
+> 
+> That's what I was hoping for. If the wiki information is stale and
+> there are no races it is totally plausible that it's being actively
+> used in production so we need to fix the kernel bug. I was just
+> checking because I wasn't sure anymore of the status after I read the
+> wiki.
+> 
+> If the CRIU initialization code that issues the uffd syscall runs as
+> global root the ABI breaking permission check from Andy sounds the
+> simplest for a short term fix, because it will be unnoticed by any
+> production usage with CIRU --lazy-pages.
+ 
+In general, criu can run as non-root, but such use of criu has limitations,
+so allowing criu --lazy-pages only for root sounds reasonable as a short
+term solution.
+
+> Then later we could add a UFFD_FEATURE_EVENT_FORK2 that will not
+> require root permission.
+
+Agree.
+
+> Thanks,
+> Andrea
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+-- 
+Sincerely yours,
+Mike.
+
