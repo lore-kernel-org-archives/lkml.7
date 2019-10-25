@@ -2,99 +2,60 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4A0CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F43CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECA120679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7182070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409253AbfJYLVv (ORCPT
+        id S2410339AbfJYLXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:21:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56776 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726298AbfJYLVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 07:21:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5885EB19E;
-        Fri, 25 Oct 2019 11:21:48 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linux-scsi@vger.kernel.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 0/7] Fix cdrom autoclose
-Date:   Fri, 25 Oct 2019 13:21:37 +0200
-Message-Id: <cover.1572002144.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+        Fri, 25 Oct 2019 07:23:12 -0400
+Received: from comms.puri.sm ([159.203.221.185]:48150 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfJYLXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 07:23:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 2785FDFFDB;
+        Fri, 25 Oct 2019 04:23:11 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id n3Wpa7Rk3YNc; Fri, 25 Oct 2019 04:23:10 -0700 (PDT)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
+        leo.yan@linaro.org, edubezval@gmail.com,
+        vincent.guittot@linaro.org, javi.merino@kernel.org,
+        rui.zhang@intel.com, daniel.thompson@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: Re: [PATCH v3 6/7] thermal/drivers/cpu_cooling: Introduce the cpu idle cooling driver
+Date:   Fri, 25 Oct 2019 13:22:55 +0200
+Message-Id: <20191025112255.9253-1-martin.kepplinger@puri.sm>
+In-Reply-To: <34b1ed94-1223-60ec-ac4f-0b32be67eab2@linaro.org>
+References: <34b1ed94-1223-60ec-ac4f-0b32be67eab2@linaro.org>
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Daniel,
 
-there is cdrom autoclose feature that is supposed to close the tray,
-wait for the disc to become ready, and then open the device.
+Quick note: You're missing a kref_init() in this version of the cooling driver.
 
-This used to work in ancient times. Then in old times there was a hack
-in util-linux which worked around the breakage which probably resulted
-from switching to scsi emulation.
+Also, as already mentioned, set_freezable() doesn't seem to work without
+supporting suspend/resume.
 
-Currently util-linux maintainer refuses to merge another hack on the
-basis that kernel still has the feature so it should be fixed there.
-The code needs not be replicated in every userspace utility like mount
-or dd which has no business knowing which devices are CD-roms and where
-the autoclose setting is in the kernel.
+And since cpuidle got somewhat completely reworked in 5.4, could you create
+a new, rebased version of this? Let me know in case I missed an earlier update.
 
-Link: https://lore.kernel.org/lkml/cover.1513263482.git.msuchanek@suse.de/
-Link: https://lore.kernel.org/lkml/cover.1571834862.git.msuchanek@suse.de/
+thanks,
 
-v3:
-- change the VMware workaround to use blacklist flag
-- use exported function instead of ioctl
+                              martin
 
-Michal Suchanek (7):
-  cdrom: add poll_event_interruptible
-  cdrom: factor out common open_for_* code
-  cdrom: wait for the tray to close
-  cdrom: export autoclose logic as a separate function
-  bdev: add open_finish.
-  scsi: blacklist: add VMware ESXi cdrom - broken tray emulation.
-  scsi: sr: wait for the medium to become ready
 
- Documentation/filesystems/locking.rst |   2 +
- drivers/cdrom/cdrom.c                 | 192 ++++++++++++++------------
- drivers/scsi/scsi_devinfo.c           |  15 +-
- drivers/scsi/sr.c                     |  60 ++++++--
- fs/block_dev.c                        |  21 ++-
- include/linux/blkdev.h                |   1 +
- include/linux/cdrom.h                 |   1 +
- include/scsi/scsi_devinfo.h           |   7 +-
- 8 files changed, 191 insertions(+), 108 deletions(-)
-
--- 
-2.23.0
-
+---
