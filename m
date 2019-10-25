@@ -2,295 +2,239 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5273ACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8861CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2894121E6F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572022437;
-	bh=fsHsWmueo57IH1wETZ7WAHsXk4L6wK+OvtErXxuZ8tw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=st4LPl+G3t/DEjAOntLGOsgQP6tDW2KYzwxmY1oV2cqSJ7EhZCy5rUsBWAthpbZ6e
-	 H78bGEuAppaKpVB6LexxiA698x+KvJ+bkqxUN7mb0V4PGWVQphn/+qV7uBRgBgfAf8
-	 gWWK+KOfeZz40/zI4+KhFqaRQ3m6GppcTLQApze8=
+	by mail.kernel.org (Postfix) with ESMTP id 8AE4721D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikG+Qy7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505761AbfJYQx4 (ORCPT
+        id S2505753AbfJYQzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 12:53:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45018 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502610AbfJYQxz (ORCPT
+        Fri, 25 Oct 2019 12:55:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40318 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731452AbfJYQzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:53:55 -0400
-Received: by mail-oi1-f196.google.com with SMTP id s71so2033111oih.11;
-        Fri, 25 Oct 2019 09:53:55 -0700 (PDT)
+        Fri, 25 Oct 2019 12:55:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o28so3121303wro.7;
+        Fri, 25 Oct 2019 09:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=+26/Ar9cTG9Hh1vjUEV5zDdPiLg86ysd6ifDvgpwm3M=;
+        b=ikG+Qy7ITFbLrrZn/9iW/ypSgP4djjAtm1hxQ4rGsM+XLNKzQGEnf+tQ7TW4uY3nmo
+         bYdFBdUfQ792TFaAOagBY/FViUdcxdAx72EoKAXJXBaKO0PyQn7UQFfvkRRB9QEGd0rx
+         CIJglX93xT9JqYXZz4bMMqcsM0DvyYrqzX0ymqwn42w87CCFhC+eQcA74HhHOOdOnmIx
+         H35BRpnchLnmOW8riYlybpGzidLtrOerrMnUaHq7bxYoPd1DlLGBBzibtDIj632Aow8b
+         FVlUXGgM7aotdperwAtysk6wdwJgbAYMe/Y8AWo1wMvqE0aV2UzLHk719xJBMN5moYnr
+         9Oig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=icjpLxHFOmLwGX3PIdb6QE5jh9DXyIm3EA+j6DEnq+s=;
-        b=Z01QM47ZO3lVzwL+cr6zBorBCvWXLaen+AjfPE7y1tp42V+A689sPAU7mWK5jKQJp/
-         1csyHEgXJ4uuNxvWA4hSiGVZ6fYP2yWj8RUjD5HO/hjtg1mtZMjituA865Rsg4Q69sVX
-         sAQrGLqeD4nIYYKcsxQGt1dXhUG7IVTPeKzzOdF6aXlrffCa2jnBjKjyWom+6AM1bRj1
-         AfhHBupReE64vDv995pow0ad1uEv+l0c2YGnuR0m5QkVhkbXBWVryYmI6PHSOXFADtya
-         1iahEP6/uaWnIdedzAzX5tBTHcOBU8G7iy0P6VfhwHURVLtD1wyU6MIdzfe2ufmqfRYE
-         2nOA==
-X-Gm-Message-State: APjAAAXzIFOmCb67vjnpXcsNyr8AdjkXVzv0js19XohmvKP8yuwVtOfO
-        mwkd/QdS7o9M17hD0Uw84A==
-X-Google-Smtp-Source: APXvYqwlusvuRVtlD/XuJYr4K4iyWb6z0on18g6/SENicyigu+soJlyojXsozYn5fYjb1Tf38IS1tA==
-X-Received: by 2002:aca:210e:: with SMTP id 14mr3904071oiz.62.1572022434687;
-        Fri, 25 Oct 2019 09:53:54 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w26sm876453otm.52.2019.10.25.09.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 09:53:53 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 11:53:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, andrew.murray@arm.com,
-        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v4 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-Message-ID: <20191025165352.GA30602@bogus>
-References: <cover.1571638827.git.eswara.kota@linux.intel.com>
- <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=+26/Ar9cTG9Hh1vjUEV5zDdPiLg86ysd6ifDvgpwm3M=;
+        b=Z1/rI/c/c7lFA8PE+NjNosyWQnyTWXQ0FGKAbiGX62s8veD06MwpbBM3kgZ8pC3uSw
+         QKh8CICH0EYvbMldAZWNn/DQk9JpH3auUKcB+D8cMaF6JBl4MDLOE8+OEWWdjZcvCNuP
+         pGcnacpfDFzEHMFeZ3jw/KBeqsat6iVe2hHJke/06DkT5SWLM6RyIOvc2W30KaJKkEKV
+         q+EwppgF9aZesFSuIXa9fiEgqKIHYQT2Bp65ZcZOkmNqug2i2i1ab7MSc8lcgcLzOjtY
+         iNmhjdda1kWZRI7BeVS1nXhcH10i7BJKnfww2B4A73j4ATfyURFY9ap+ucvRGDMlgz6g
+         D2dw==
+X-Gm-Message-State: APjAAAWmxg9lPyN4gAIP6FWgJ4RVJlWPB3p9BwvGqyu2aQMsMqJZ9soj
+        gmw8IRw1j/mjO49dLlHGejCV5XI9
+X-Google-Smtp-Source: APXvYqxSlB1UfwYIGCdCW9zl+vlOMKOl1LNevgy3Q/JP1gE3gqV/ZZnHW3WG5W7WFdRUkldSpxqqWQ==
+X-Received: by 2002:adf:dd87:: with SMTP id x7mr3881514wrl.278.1572022529490;
+        Fri, 25 Oct 2019 09:55:29 -0700 (PDT)
+Received: from [192.168.43.159] ([109.126.132.16])
+        by smtp.gmail.com with ESMTPSA id h205sm2950531wmf.35.2019.10.25.09.55.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Oct 2019 09:55:28 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
+ <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
+ <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
+ <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
+ <df3b9edd-86ad-5460-b61b-66707c0fb630@kernel.dk>
+ <31a7765b-bb6d-985a-454d-d998678100d1@gmail.com>
+ <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [BUG] io_uring: defer logic based on shared data
+Message-ID: <e5a6f77a-3404-0dc8-ac6e-584737d71a33@gmail.com>
+Date:   Fri, 25 Oct 2019 19:55:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <710257e49c4b3d07fa98b3e5a829b807f74b54d7.1571638827.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 02:39:18PM +0800, Dilip Kota wrote:
-> Add YAML shcemas for PCIe RC controller on Intel Gateway SoCs
-> which is Synopsys DesignWare based PCIe core.
-> 
-> changes on v4:
-> 	Add "snps,dw-pcie" compatible.
-> 	Rename phy-names property value to pcie.
-> 	And maximum and minimum values to num-lanes.
-> 	Add ref for reset-assert-ms entry and update the
-> 	 description for easy understanding.
-> 	Remove pcie core interrupt entry.
-> 
-> changes on v3:
->         Add the appropriate License-Identifier
->         Rename intel,rst-interval to 'reset-assert-us'
->         Add additionalProperties: false
->         Rename phy-names to 'pciephy'
->         Remove the dtsi node split of SoC and board in the example
->         Add #interrupt-cells = <1>; or else interrupt parsing will fail
->         Name yaml file with compatible name
-> 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 135 +++++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4
+Content-Type: multipart/mixed; boundary="8cbjtZu6nsSd9Z3jIXL0K8ax2yTdepJFD";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <e5a6f77a-3404-0dc8-ac6e-584737d71a33@gmail.com>
+Subject: Re: [BUG] io_uring: defer logic based on shared data
+References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
+ <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
+ <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
+ <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
+ <df3b9edd-86ad-5460-b61b-66707c0fb630@kernel.dk>
+ <31a7765b-bb6d-985a-454d-d998678100d1@gmail.com>
+ <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
+In-Reply-To: <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
 
-Fails to validate:
+--8cbjtZu6nsSd9Z3jIXL0K8ax2yTdepJFD
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Error: Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dts:38.27-28 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:321: recipe for target 'Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml' failed
+On 25/10/2019 19:44, Jens Axboe wrote:
+> On 10/25/19 10:40 AM, Pavel Begunkov wrote:
+>> On 25/10/2019 19:32, Jens Axboe wrote:
+>>> On 10/25/19 10:27 AM, Jens Axboe wrote:
+>>>> On 10/25/19 10:21 AM, Pavel Begunkov wrote:
+>>>>> On 25/10/2019 19:03, Jens Axboe wrote:
+>>>>>> On 10/25/19 3:55 AM, Pavel Begunkov wrote:
+>>>>>>> I found 2 problems with __io_sequence_defer().
+>>>>>>>
+>>>>>>> 1. it uses @sq_dropped, but doesn't consider @cq_overflow
+>>>>>>> 2. @sq_dropped and @cq_overflow are write-shared with userspace, =
+so
+>>>>>>> it can be maliciously changed.
+>>>>>>>
+>>>>>>> see sent liburing test (test/defer *_hung()), which left an unkil=
+lable
+>>>>>>> process for me
+>>>>>>
+>>>>>> OK, how about the below. I'll split this in two, as it's really tw=
+o
+>>>>>> separate fixes.
+>>>>> cached_sq_dropped is good, but I was concerned about cached_cq_over=
+flow.
+>>>>> io_cqring_fill_event() can be called in async, so shouldn't we do s=
+ome
+>>>>> synchronisation then?
+>>>>
+>>>> We should probably make it an atomic just to be on the safe side, I'=
+ll
+>>>> update the series.
+>>>
+>>> Here we go, patch 1:
+>>>
+>>> http://git.kernel.dk/cgit/linux-block/commit/?h=3Dfor-linus&id=3Df2a2=
+41f596ed9e12b7c8f960e79ccda8053ea294
+>>>
+>>> patch 2:
+>>>
+>>> http://git.kernel.dk/cgit/linux-block/commit/?h=3Dfor-linus&id=3Db7d0=
+297d2df5bfa0d1ecf9d6c66d23676751ef6a
+>>>
+>> 1. submit rqs (not yet completed)
+>> 2. poll_list is empty, inflight =3D 0
+>> 3. async completed and placed into poll_list
+>>
+>> So, poll_list is not empty, but we won't get to polling again.
+>> At least until someone submitted something.
+>=20
+> But if they are issued, the will sit in ->poll_list as well. That list
+> holds both "submitted, but pending" and completed entries.
+>=20
+Missed it, then should work. Thanks!
 
-Please run 'make -k dt_binding_check' (-k because there are some 
-unrelated failures).
+> + ret =3D iters =3D 0;
+A small suggestion, could we just initialise it in declaration
+to be a bit more concise?
+e.g. int ret =3D 0, iters =3D 0;=20
 
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> new file mode 100644
-> index 000000000000..49dd87ec1e3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe RC controller on Intel Gateway SoCs
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: intel,lgm-pcie
-> +      - const: snps,dw-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe configuration registers.
-> +      - description: Controller application registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: app
-> +
-> +  ranges:
-> +    description: Ranges for the PCI memory and I/O regions.
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+And let me test it as both patches are ready.
 
-How many entries do you expect? Add a 'maxItems' to define.
+--=20
+Yours sincerely,
+Pavel Begunkov
 
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: PCIe registers interface clock.
 
-How many clocks?
+--8cbjtZu6nsSd9Z3jIXL0K8ax2yTdepJFD--
 
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  num-lanes:
-> +    minimum: 1
-> +    maximum: 2
-> +    description: Number of lanes to use for this port.
-> +
-> +  linux,pci-domain:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: PCI domain ID.
+--meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Just a value of 'true' is fine here.
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  max-link-speed:
-> +    description: Specify PCI Gen for link capability.
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2zKPEACgkQWt5b1Glr
++6WY9xAApA/8lOF88RBWaaOKQJ6/xNjJZp+POTQp6hqDYumk1KyxZTCUOOuj4BuI
+2GFfKoYAHdvy3AhqNMnD+DtL7PKV0kzBqjwfs6iO8Glhhe/Ex7ec9/Ix+CV6taCJ
+MTrF6zLQ4UbaWKOuMuAPiEmiEMvLrZxoT6723S71mH2RKWQGf7A3BTLNa1lwsKLl
+GEGnukBB3iLhs4p2rwCfJoodeA5dkwE6E/RhCJCTQJ0EWSw3vToz+IEHSOhnarc4
+7P61D4LEoKHAh4d4aXP2LCRX3e1JSIPybWnJPV/Vy3TD1BfaCyj2et47xhmc6CwT
+9fW8XLFHV+dWHFI0KFwi1uXB48hxEsqmCggS2HzvFhEtHjvwX7QcDv/wUrb4pPWq
+72TVOPrChPHOdm98k7wrs/HDQN4xvR+clYHcoV0ec/KOUJ9TCsf6nMinpHCtI6g7
+XSgNTxP1NsAlk1gcvKfonj0MO60tDocFSeg8OEgMVBw8CjgSLAfwh/AKBAk4bFIV
+L6T2dlJZarg0XAE8o4eKYhIig2HBFH4Yb2UjsoyTI5xr2Q076633/BotVgy9/Dw2
+RXe+wRSyg8rLJPnF1Abq9ZNg8yO5YknCLDf20cP4bELJPBqO8xff3u+2sd8RPiVt
+zv7NqBE1IC6kHtNQLQpvz01NKtmtK0lIOZMlcDVYWm6F4+4pncA=
+=NA7N
+-----END PGP SIGNATURE-----
 
-Allowed values? Default?
-
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  reset-assert-ms:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Don't need a type for standard units.
-
-> +    description: |
-> +      Delay after asserting reset to the PCIe device.
-> +      Some devices need an interval upto 500ms. By default it is 100ms.
-
-Express as a schema:
-
-maximum: 500
-default: 100
-
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-
-Shouldn't be required. It should have a default.
-
-> +  - linux,pci-domain
-
-Is this really required? AIUI, domains are optional and only used if 
-you have more than one host.
-
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-
-space         ^
-
-> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <0xd0e00000 0x1000>,
-> +            <0xd2000000 0x800000>,
-> +            <0xd0a41000 0x1000>;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-> +      resets = <&rcu0 0x50 0>;
-> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-
-You need to include any defines you use. That's why the example fails to 
-build.
-
-> +      phys = <&cb0phy0>;
-> +      phy-names = "pcie";
-> +      status = "okay";
-
-Don't show status in examples.
-
-> +      reset-assert-ms = <500>;
-> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-> +      num-lanes = <2>;
-> +    };
-> -- 
-> 2.11.0
-> 
+--meSF8ThqZLkwy3XjkXPmjBCU4HBc6zfU4--
