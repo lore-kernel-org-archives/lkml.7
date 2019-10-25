@@ -2,182 +2,356 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53B1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A73CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF37B21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04498205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vDPFHIw2"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="RpckThTA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440048AbfJYOjQ (ORCPT
+        id S2440445AbfJYOls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:39:16 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40661 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440001AbfJYOjQ (ORCPT
+        Fri, 25 Oct 2019 10:41:48 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33574 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440001AbfJYOls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:39:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o49so3546349qta.7
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:39:14 -0700 (PDT)
+        Fri, 25 Oct 2019 10:41:48 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c184so1733339pfb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=slfEvGT57OxIu3hX85oZQaDrJpmEdiqRD6KlxrAV7aQ=;
-        b=vDPFHIw23VXT1K87qQNIYWSLV8YkofOSlB9fDCEHicyXkAy08DbZp0GhqWm+9iAPAr
-         fLPI1Pxq/EAuNpiUQY2U6tuTEp5G4qXp1IF6mfDSC81rlR5DxfcB6A98G7Q4kV0yOCoR
-         SKYgt1IFrwURKElP0Fnsl9iad5j9+IaGVmn8Q+Y2uH61Fo+WxkgvpeyU5o1QdnFhXzjS
-         54ZRt5xW69LE8F6RGP16YYg53hX7SRHWraWPRbOxIem76r0oMaZ983/vo7ZBRYvi+uXr
-         1SzOz2hipaJN76BG3FP++IZ5l0w1ZVct0AvXl6x9YqroOeZqv+12eOI5mssXwqDdWfc3
-         XB4A==
+        bh=zopk2n3INMhAt+O7dZr5myyb00sMWX6MG5l0pp/KS1g=;
+        b=RpckThTACjR1E23JjStH5lRdoWr3JL+WZmPTnKi9fI3UV/UaYWg1Syjrb7WJtSWp0l
+         ggj+G7TxRvUcfX1v9IgCWcabopmvjAOQeqkAXHVysYefzXOwNyuqfLEBJxOmnMViORNY
+         J8aiyBw9bi0gTIX/c1GLURyuB5BUGQinTNAU/nUEyggHWgK1oX1/3L9nWmlM5q+pdJKi
+         R8r2JrPJPkJBlzBa/O1HRz1H0aNIwJiBlflMjpuCZ8zxBauEnw6jefVaJ6DtaSLZ6IY0
+         +VlCR9UaEukANTXAHuv/+iDjvaTqOPuGrpE0bR3iUZk4//KDJjZxIiFuUJ+toM2AOolh
+         gyRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=slfEvGT57OxIu3hX85oZQaDrJpmEdiqRD6KlxrAV7aQ=;
-        b=rif0ddzKEXsIrXO2ZvZE8j0YQm+8Z+b67CrXK83Q+i6UXDfSHZJaiIa/YgJLtFnRTE
-         y1VGzRwSZdHoStXRFGZEPN2Y1Jo4BiaZlkArZm514eJdU3C577uK0dwsPuHDtDxnUTHQ
-         /LS71nKn/7Nh/xZZ7+XflfvUZZW7khSujUN62AP6qBabdXP+rMnv67fYDvPAYhBUT0dS
-         BmEckU5QVufNjUGwfryDQlgzQo17qxPaHfXWqEgsbmfj830H6zfltfBjqf/t9nwKh6dr
-         OjF+BOOqHavq5U6opZUuYqqZwmSQdbnf53L2zpG+d2RN4h2DXGEInD9OqqwJiNCpici3
-         IGdQ==
-X-Gm-Message-State: APjAAAVns5ZmAIGZj2fcOGaGRRvnV5IRurebFmnRDqTOhUhAeu7C3W+o
-        Say4CD8PiOFPKG2HkaMDLCw=
-X-Google-Smtp-Source: APXvYqyPI4wuOct1wJbBgzl8PbW7g3PBp2o6LEacmWROsLX5BKzTuan6Rx50fWUu6ft3NiEEOAsHHg==
-X-Received: by 2002:aed:2986:: with SMTP id o6mr3204630qtd.320.1572014353350;
-        Fri, 25 Oct 2019 07:39:13 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id z12sm1355387qkg.97.2019.10.25.07.39.12
+        bh=zopk2n3INMhAt+O7dZr5myyb00sMWX6MG5l0pp/KS1g=;
+        b=Ec/SjjWmrOEVhbXGWU+orbuuvFUlkcCZu1Gvdk5EwqN0dGYRWjnwa+bw0bw4pjNzmM
+         IBltEru4HSMHstDEL+IjJiJIMdNg1+xIMyypLdeqHqdwZw7r7AniXXZoBB7w1zbObTPE
+         w+MX6Ds7m64cGUbOreIphtdao1Wmt6mpwI6mN1+Yu3DT5/c02EbSRkXJCiwtgezsBY1W
+         v2wJnEm46yc1SN8dM9r342hT8uKBsuTMJKjbSzbM8VKz3dBnJmAXjPERY9jik5lCrY57
+         EY213elueDVzbJpMebQK/RpcTRCEaup4Da1sPGgcYpQji1PSFa8519XfsS6I0wMo10aG
+         moOg==
+X-Gm-Message-State: APjAAAVB0iRsWQ4p4PGg4UERjiwJVGYLP1Z/+5BnkKd2Zdth79+G0fot
+        Mlp7FtskP3J+z4HVRB/4LJrWPA==
+X-Google-Smtp-Source: APXvYqx86q+aCN1lktyEZI9aPO+E6UdsgrtsR3ns5lxuyvWEJVJEU2ZbOpkrSPwdtkiva6CbcH9XTA==
+X-Received: by 2002:a17:90a:6305:: with SMTP id e5mr4582313pjj.24.1572014507264;
+        Fri, 25 Oct 2019 07:41:47 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:180::553e])
+        by smtp.gmail.com with ESMTPSA id j11sm2575271pgk.3.2019.10.25.07.41.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 07:39:12 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AECB941199; Fri, 25 Oct 2019 11:39:10 -0300 (-03)
-Date:   Fri, 25 Oct 2019 11:39:10 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH 3/6] perf/probe: Fix to probe an inline function
- which has no entry pc
-Message-ID: <20191025143910.GC15617@kernel.org>
-References: <157199317547.8075.1010940983970397945.stgit@devnote2>
- <157199320336.8075.16189530425277588587.stgit@devnote2>
- <20191025143513.GB15617@kernel.org>
+        Fri, 25 Oct 2019 07:41:46 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 10:41:44 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 8/8] mm: vmscan: harmonize writeback congestion tracking
+ for nodes & memcgs
+Message-ID: <20191025144144.GB386981@cmpxchg.org>
+References: <20191022144803.302233-1-hannes@cmpxchg.org>
+ <20191022144803.302233-9-hannes@cmpxchg.org>
+ <20191022210352.GB24142@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025143513.GB15617@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191022210352.GB24142@tower.DHCP.thefacebook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Oct 25, 2019 at 11:35:13AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Oct 25, 2019 at 05:46:43PM +0900, Masami Hiramatsu escreveu:
-> > Fix perf probe to probe an inlne function which has no entry pc
-> > or low pc but only has ranges attribute.
+On Tue, Oct 22, 2019 at 09:03:57PM +0000, Roman Gushchin wrote:
+> On Tue, Oct 22, 2019 at 10:48:03AM -0400, Johannes Weiner wrote:
+> > The current writeback congestion tracking has separate flags for
+> > kswapd reclaim (node level) and cgroup limit reclaim (memcg-node
+> > level). This is unnecessarily complicated: the lruvec is an existing
+> > abstraction layer for that node-memcg intersection.
 > > 
-> > This seems very rare case, but I could find a few examples, as
-> > same as probe_point_search_cb(), use die_entrypc() to get the
-> > entry address in probe_point_inline_cb() too.
-> > 
-> > Without this patch,
-> >   # tools/perf/perf probe -D __amd_put_nb_event_constraints
-> >   Failed to get entry address of __amd_put_nb_event_constraints.
-> >   Probe point '__amd_put_nb_event_constraints' not found.
-> >     Error: Failed to add events.
-> > 
-> > With this patch,
-> >   # tools/perf/perf probe -D __amd_put_nb_event_constraints
-> >   p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
+> > Introduce lruvec->flags and LRUVEC_CONGESTED. Then track that at the
+> > reclaim root level, which is either the NUMA node for global reclaim,
+> > or the cgroup-node intersection for cgroup reclaim.
 > 
-> Here I got it slightly different:
+> Good idea!
 > 
-> Before:
-> 
->   [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
->   Failed to get entry address of __amd_put_nb_event_constraints.
->   Probe point '__amd_put_nb_event_constraints' not found.
->     Error: Failed to add events.
->   [root@quaco ~]#
-> 
-> After:
-> 
->   [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
->   p:probe/__amd_put_nb_event_constraints _text+33789
->   [root@quaco ~]#
-> 
-> 
-> ----
-> 
-> I'm now checking if this is because I applied patch 4/6 before 3/6
+> Reviewed-by: Roman Gushchin <guro@fb.com>
 
-Nope, even then:
+Thank you.
 
-[root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-p:probe/__amd_put_nb_event_constraints _text+33789
-[root@quaco ~]# grep __amd_put_nb_event_constraints /proc/kallsyms
-[root@quaco ~]#
+The suggested cleanup fixlet for patch 7 causes conflicts in this
+one. Here is the rebased version:
 
-Ok, maybe this may help:
+---
 
-[root@quaco ~]# perf probe -v -D __amd_put_nb_event_constraints |& grep vmlinux
-Looking at the vmlinux_path (8 entries long)
-Using /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux for symbols
-Open Debuginfo file: /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux
-[root@quaco ~]#
+From 253729a7639780508b166e547d13fa7894987a87 Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Mon, 11 Mar 2019 15:43:44 -0400
+Subject: [PATCH] mm: vmscan: harmonize writeback congestion tracking for
+ nodes & memcgs
 
-[root@quaco ~]# readelf -wi /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux | grep __amd_put_nb_event_constraints -B1 -A7
- <1><192640>: Abbrev Number: 123 (DW_TAG_subprogram)
-    <192641>   DW_AT_name        : (indirect string, offset: 0x299576): __amd_put_nb_event_constraints
-    <192645>   DW_AT_decl_file   : 1
-    <192646>   DW_AT_decl_line   : 361
-    <192648>   DW_AT_decl_column : 13
-    <192649>   DW_AT_prototyped  : 1
-    <192649>   DW_AT_inline      : 1	(inlined)
-    <19264a>   DW_AT_sibling     : <0x192700>
- <2><19264e>: Abbrev Number: 38 (DW_TAG_formal_parameter)
-^C
-[root@quaco ~]#
+The current writeback congestion tracking has separate flags for
+kswapd reclaim (node level) and cgroup limit reclaim (memcg-node
+level). This is unnecessarily complicated: the lruvec is an existing
+abstraction layer for that node-memcg intersection.
 
-Continuing to process the other patches...
+Introduce lruvec->flags and LRUVEC_CONGESTED. Then track that at the
+reclaim root level, which is either the NUMA node for global reclaim,
+or the cgroup-node intersection for cgroup reclaim.
 
-- Arnaldo
-  
-> > Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  tools/perf/util/probe-finder.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> > index 71633f55f045..2fa932bcf960 100644
-> > --- a/tools/perf/util/probe-finder.c
-> > +++ b/tools/perf/util/probe-finder.c
-> > @@ -930,7 +930,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
-> >  		ret = find_probe_point_lazy(in_die, pf);
-> >  	else {
-> >  		/* Get probe address */
-> > -		if (dwarf_entrypc(in_die, &addr) != 0) {
-> > +		if (die_entrypc(in_die, &addr) != 0) {
-> >  			pr_warning("Failed to get entry address of %s.\n",
-> >  				   dwarf_diename(in_die));
-> >  			return -ENOENT;
-> 
-> -- 
-> 
-> - Arnaldo
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ include/linux/memcontrol.h |  6 +--
+ include/linux/mmzone.h     | 11 +++--
+ mm/vmscan.c                | 84 ++++++++++++--------------------------
+ 3 files changed, 37 insertions(+), 64 deletions(-)
 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 498cea07cbb1..d8ffcf60440c 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -133,9 +133,6 @@ struct mem_cgroup_per_node {
+ 	unsigned long		usage_in_excess;/* Set to the value by which */
+ 						/* the soft limit is exceeded*/
+ 	bool			on_tree;
+-	bool			congested;	/* memcg has many dirty pages */
+-						/* backed by a congested BDI */
+-
+ 	struct mem_cgroup	*memcg;		/* Back pointer, we cannot */
+ 						/* use container_of	   */
+ };
+@@ -412,6 +409,9 @@ static inline struct lruvec *mem_cgroup_lruvec(struct mem_cgroup *memcg,
+ 		goto out;
+ 	}
+ 
++	if (!memcg)
++		memcg = root_mem_cgroup;
++
+ 	mz = mem_cgroup_nodeinfo(memcg, pgdat->node_id);
+ 	lruvec = &mz->lruvec;
+ out:
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 449a44171026..c04b4c1f01fa 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -296,6 +296,12 @@ struct zone_reclaim_stat {
+ 	unsigned long		recent_scanned[2];
+ };
+ 
++enum lruvec_flags {
++	LRUVEC_CONGESTED,		/* lruvec has many dirty pages
++					 * backed by a congested BDI
++					 */
++};
++
+ struct lruvec {
+ 	struct list_head		lists[NR_LRU_LISTS];
+ 	struct zone_reclaim_stat	reclaim_stat;
+@@ -303,6 +309,8 @@ struct lruvec {
+ 	atomic_long_t			inactive_age;
+ 	/* Refaults at the time of last reclaim cycle */
+ 	unsigned long			refaults;
++	/* Various lruvec state flags (enum lruvec_flags) */
++	unsigned long			flags;
+ #ifdef CONFIG_MEMCG
+ 	struct pglist_data *pgdat;
+ #endif
+@@ -572,9 +580,6 @@ struct zone {
+ } ____cacheline_internodealigned_in_smp;
+ 
+ enum pgdat_flags {
+-	PGDAT_CONGESTED,		/* pgdat has many dirty pages backed by
+-					 * a congested BDI
+-					 */
+ 	PGDAT_DIRTY,			/* reclaim scanning has recently found
+ 					 * many dirty file pages at the tail
+ 					 * of the LRU.
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 6199692af434..47b5c5548f3a 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -267,29 +267,6 @@ static bool writeback_throttling_sane(struct scan_control *sc)
+ #endif
+ 	return false;
+ }
+-
+-static void set_memcg_congestion(pg_data_t *pgdat,
+-				struct mem_cgroup *memcg,
+-				bool congested)
+-{
+-	struct mem_cgroup_per_node *mn;
+-
+-	if (!memcg)
+-		return;
+-
+-	mn = mem_cgroup_nodeinfo(memcg, pgdat->node_id);
+-	WRITE_ONCE(mn->congested, congested);
+-}
+-
+-static bool memcg_congested(pg_data_t *pgdat,
+-			struct mem_cgroup *memcg)
+-{
+-	struct mem_cgroup_per_node *mn;
+-
+-	mn = mem_cgroup_nodeinfo(memcg, pgdat->node_id);
+-	return READ_ONCE(mn->congested);
+-
+-}
+ #else
+ static int prealloc_memcg_shrinker(struct shrinker *shrinker)
+ {
+@@ -309,18 +286,6 @@ static bool writeback_throttling_sane(struct scan_control *sc)
+ {
+ 	return true;
+ }
+-
+-static inline void set_memcg_congestion(struct pglist_data *pgdat,
+-				struct mem_cgroup *memcg, bool congested)
+-{
+-}
+-
+-static inline bool memcg_congested(struct pglist_data *pgdat,
+-			struct mem_cgroup *memcg)
+-{
+-	return false;
+-
+-}
+ #endif
+ 
+ /*
+@@ -2716,12 +2681,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+ 	return inactive_lru_pages > pages_for_compaction;
+ }
+ 
+-static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
+-{
+-	return test_bit(PGDAT_CONGESTED, &pgdat->flags) ||
+-		(memcg && memcg_congested(pgdat, memcg));
+-}
+-
+ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+ {
+ 	struct mem_cgroup *target_memcg = sc->target_mem_cgroup;
+@@ -2783,10 +2742,12 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ {
+ 	struct reclaim_state *reclaim_state = current->reclaim_state;
+-	struct mem_cgroup *target_memcg = sc->target_mem_cgroup;
+ 	unsigned long nr_reclaimed, nr_scanned;
++	struct lruvec *target_lruvec;
+ 	bool reclaimable = false;
+ 
++	target_lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup, pgdat);
++
+ again:
+ 	memset(&sc->nr, 0, sizeof(sc->nr));
+ 
+@@ -2801,7 +2762,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 	}
+ 
+ 	/* Record the subtree's reclaim efficiency */
+-	vmpressure(sc->gfp_mask, target_memcg, true,
++	vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
+ 		   sc->nr_scanned - nr_scanned,
+ 		   sc->nr_reclaimed - nr_reclaimed);
+ 
+@@ -2829,14 +2790,6 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 		if (sc->nr.writeback && sc->nr.writeback == sc->nr.taken)
+ 			set_bit(PGDAT_WRITEBACK, &pgdat->flags);
+ 
+-		/*
+-		 * Tag a node as congested if all the dirty pages
+-		 * scanned were backed by a congested BDI and
+-		 * wait_iff_congested will stall.
+-		 */
+-		if (sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
+-			set_bit(PGDAT_CONGESTED, &pgdat->flags);
+-
+ 		/* Allow kswapd to start writing pages during reclaim.*/
+ 		if (sc->nr.unqueued_dirty == sc->nr.file_taken)
+ 			set_bit(PGDAT_DIRTY, &pgdat->flags);
+@@ -2852,12 +2805,17 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 	}
+ 
+ 	/*
++	 * Tag a node/memcg as congested if all the dirty pages
++	 * scanned were backed by a congested BDI and
++	 * wait_iff_congested will stall.
++	 *
+ 	 * Legacy memcg will stall in page writeback so avoid forcibly
+ 	 * stalling in wait_iff_congested().
+ 	 */
+-	if (cgroup_reclaim(sc) && writeback_throttling_sane(sc) &&
++	if ((current_is_kswapd() ||
++	     (cgroup_reclaim(sc) && writeback_throttling_sane(sc))) &&
+ 	    sc->nr.dirty && sc->nr.dirty == sc->nr.congested)
+-		set_memcg_congestion(pgdat, target_memcg, true);
++		set_bit(LRUVEC_CONGESTED, &target_lruvec->flags);
+ 
+ 	/*
+ 	 * Stall direct reclaim for IO completions if underlying BDIs
+@@ -2865,9 +2823,9 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 	 * starts encountering unqueued dirty pages or cycling through
+ 	 * the LRU too quickly.
+ 	 */
+-	if (!sc->hibernation_mode && !current_is_kswapd() &&
+-	    current_may_throttle() &&
+-	    pgdat_memcg_congested(pgdat, target_memcg))
++	if (!current_is_kswapd() && current_may_throttle() &&
++	    !sc->hibernation_mode &&
++	    test_bit(LRUVEC_CONGESTED, &target_lruvec->flags))
+ 		wait_iff_congested(BLK_RW_ASYNC, HZ/10);
+ 
+ 	if (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
+@@ -3081,8 +3039,16 @@ static unsigned long do_try_to_free_pages(struct zonelist *zonelist,
+ 		if (zone->zone_pgdat == last_pgdat)
+ 			continue;
+ 		last_pgdat = zone->zone_pgdat;
++
+ 		snapshot_refaults(sc->target_mem_cgroup, zone->zone_pgdat);
+-		set_memcg_congestion(last_pgdat, sc->target_mem_cgroup, false);
++
++		if (cgroup_reclaim(sc)) {
++			struct lruvec *lruvec;
++
++			lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup,
++						   zone->zone_pgdat);
++			clear_bit(LRUVEC_CONGESTED, &lruvec->flags);
++		}
+ 	}
+ 
+ 	delayacct_freepages_end();
+@@ -3462,7 +3428,9 @@ static bool pgdat_balanced(pg_data_t *pgdat, int order, int classzone_idx)
+ /* Clear pgdat state for congested, dirty or under writeback. */
+ static void clear_pgdat_congested(pg_data_t *pgdat)
+ {
+-	clear_bit(PGDAT_CONGESTED, &pgdat->flags);
++	struct lruvec *lruvec = mem_cgroup_lruvec(NULL, pgdat);
++
++	clear_bit(LRUVEC_CONGESTED, &lruvec->flags);
+ 	clear_bit(PGDAT_DIRTY, &pgdat->flags);
+ 	clear_bit(PGDAT_WRITEBACK, &pgdat->flags);
+ }
 -- 
+2.23.0
 
-- Arnaldo
+
