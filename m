@@ -2,170 +2,122 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D72CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65695CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7E2205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36386205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn8L72Zt"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b4k6pMTq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505911AbfJYRbq (ORCPT
+        id S2505930AbfJYRch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:31:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37692 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505882AbfJYRbo (ORCPT
+        Fri, 25 Oct 2019 13:32:37 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44696 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505918AbfJYRcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 13:31:44 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p13so1596860pll.4;
-        Fri, 25 Oct 2019 10:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GnT6FwiHwead4VOZNmhBSr7ANR+aaNkYQiIOZPp8rq4=;
-        b=Rn8L72ZtqYgKPeYtAFmvVLHs3nC5fJjz+0PUfwpGaSgE1722NOOl7L91urX0fJ6N6i
-         b+FTMITlHxMnKVcC7rswIYvOf6I1xmTE35htnCpHkERWaKjhzCklnPP7W/TEHuQK8Xct
-         QfnvUU3Mu6lOMav3YgKcS4FTmE0s6kaoYjGowYRB86oO4XTb27XLeFS/O+njazHh+3Jb
-         LImib3Qn/Q9vUk2XZejM9l5gXnTPDT/DGXHEyhvua8D98WZ4JfXAdYnjtdTqwEi5x64h
-         sBJkibu5NZKovxdZKnrMLvUcZquGJZJJoOXK71rwjj9s24OHhg1OfZ6pvh0HfCvXQx0r
-         Akdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GnT6FwiHwead4VOZNmhBSr7ANR+aaNkYQiIOZPp8rq4=;
-        b=jqDUrN8m2a4nC2kupPEyPiuUvrFXCPzTyZNmlua4o7Ix7hSrUzxWoBhJvvR9eujS79
-         IC/KFzHqE+JT+N/5IKt5t7r1WcuUlq5SJDF6qpQv21+67YqhiB3PWj7rgdkKgOUJakWE
-         VmNLcOgBRv/rGmV/2+gvBDs20JutKvQj83bfK/34LScOM+pzPiLtYmoQGtE5nKDFXhiL
-         +KuWJD6LoXmhJFFKROyJX9gDbRvfQgAWK9/+JjmhY+FonCm9zKHqrDKvpuE0Mp9984yk
-         MYDXp7P8a33szBVV8+foz0b3NzVEkpKEvHqC52/n64Vzz5/5UqfX66qZ0is92dsB1qI3
-         YpJA==
-X-Gm-Message-State: APjAAAVA2J7QruOZC5qVpNm9XWGu5HayshiJH3IONP/BhRj2wRGYZzL/
-        P9Fr34iPqi6ynWT1wjlviUA=
-X-Google-Smtp-Source: APXvYqwydM0+1e5/QHpMzyIncTA89uP4w6jdFp+a8+6qamGM8TW/ebqbIv5KTaTwl0doE7h2/mqbAg==
-X-Received: by 2002:a17:902:b095:: with SMTP id p21mr5031126plr.159.1572024703643;
-        Fri, 25 Oct 2019 10:31:43 -0700 (PDT)
-Received: from [172.16.1.40] ([131.107.147.218])
-        by smtp.gmail.com with ESMTPSA id b14sm2897182pfi.95.2019.10.25.10.31.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 10:31:43 -0700 (PDT)
-Subject: Re: [PATCH v6 1/2] dt-bindings: edac: arm-dmc520.txt
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "hangl@microsoft.com" <hangl@microsoft.com>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        "ruizhao@microsoft.com" <ruizhao@microsoft.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>,
-        "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
-        "wangglei@gmail.com" <wangglei@gmail.com>, leiwang_git@outlook.com
-References: <BY5PR04MB6599EAA659A53B2331CB812586890@BY5PR04MB6599.namprd04.prod.outlook.com>
- <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
-From:   Lei Wang <wangglei@gmail.com>
-Message-ID: <f4b2c4b9-4999-6736-31eb-a63781013664@gmail.com>
-Date:   Fri, 25 Oct 2019 10:31:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 13:32:36 -0400
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 842D42010AC6;
+        Fri, 25 Oct 2019 10:32:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 842D42010AC6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1572024755;
+        bh=iHY0BIhRWj4FzzaW9EX78Sx4D3Z7kMMY/gOg/k9uflQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=b4k6pMTqdO0i5AHVntdRqb4yi/qWfuDe297Y4pVfsE9IwlqDobrs/tLPUl+9ivN5b
+         zC09JHzsrtGqzkxAf1TyRDOKYDtFhWkiwt8kKCn6n+8juEF+oUKh/Xre6rTa7V7oqx
+         gXpCwzYTGfcDpRGf+rPMrMDWxHAqu7BtE/1yEZ+s=
+Subject: Re: [PATCH v9 5/8] ima: make process_buffer_measurement() generic
+To:     Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Prakhar Srivastava <prsriva02@gmail.com>
+References: <20191024034717.70552-1-nayna@linux.ibm.com>
+ <20191024034717.70552-6-nayna@linux.ibm.com>
+ <1ae56786-4d5c-ba8e-e30c-ced1e15ccb9c@linux.microsoft.com>
+ <24cf44d5-a1f0-f59e-9884-c026b1ee2d3b@linux.vnet.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <8a97301a-0e25-2718-bd81-d778cb58e1d3@linux.microsoft.com>
+Date:   Fri, 25 Oct 2019 10:32:53 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJxcUr06+O_Ht5Kw0KXCWfSVC+6WMQqNxt-JehHh874hw@mail.gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <24cf44d5-a1f0-f59e-9884-c026b1ee2d3b@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks James/Rob/Borislav for pointing out the email list issue. My work 
-email does not work good either for this exercise. Going forward I'll 
-switch to my gmail account.
 
-And Thanks Rob for reviewing! Please see below.
 
->> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
->> @@ -0,0 +1,26 @@
->> +* ARM DMC-520 EDAC node
->> +
->> +Required properties:
->> +- compatible           : "brcm,dmc-520", "arm,dmc-520".
->> +- reg                  : Address range of the DMC-520 registers.
->> +- interrupts           : DMC-520 interrupt numbers. The example below specifies
->> +                         two interrupt lines for dram_ecc_errc_int and
->> +                         dram_ecc_errd_int.
->> +- interrupt-config     : This is an array of interrupt masks. For each of the
+On 10/25/2019 10:24 AM, Nayna Jain wrote:
 > 
-> Not a standard property, so would need a vendor prefix...
-
-Would dmc-interrupt-config as the property name work? Thanks!
-
+> On 10/24/19 10:20 AM, Lakshmi Ramasubramanian wrote:
+>> On 10/23/19 8:47 PM, Nayna Jain wrote:
+>>
+>> Hi Nayna,
+>>
+>>> +void process_buffer_measurement(const void *buf, int size,
+>>> +                const char *eventname, enum ima_hooks func,
+>>> +                int pcr)
+>>>   {
+>>>       int ret = 0;
+>>>       struct ima_template_entry *entry = NULL;
+>>
+>>> +    if (func) {
+>>> +        security_task_getsecid(current, &secid);
+>>> +        action = ima_get_action(NULL, current_cred(), secid, 0, func,
+>>> +                    &pcr, &template);
+>>> +        if (!(action & IMA_MEASURE))
+>>> +            return;
+>>> +    }
+>>
+>> In your change set process_buffer_measurement is called with NONE for 
+>> the parameter func. So ima_get_action (the above if block) will not be 
+>> executed.
+>>
+>> Wouldn't it better to update ima_get_action (and related functions) to 
+>> handle the ima policy (func param)?
 > 
->> +                         above interrupt line, add one interrupt mask element to
->> +                         it. That is, there is a 1:1 mapping from each interrupt
->> +                         line to an interrupt mask. An interrupt mask can represent
->> +                         multiple interrupts being enabled. Refer to interrupt_control
->> +                         register in DMC-520 TRM for interrupt mapping. In the example
->> +                         below, the interrupt configuration enables dram_ecc_errc_int
->> +                         and dram_ecc_errd_int. And each interrupt is connected to
->> +                         a separate interrupt line.
 > 
-> I've gone and read thru the TRM some. This binding doesn't seem to
-> correspond to the TRM at all. There are a bunch of interrupts and a
-> combined interrupt, and then there's the same set for 'overflow'
-> interrupts.
-> 
-> There's only one 'interrupt_control' reg. How do you have more that 1
-> 32-bit value?
+> The idea is to use ima-buf template for the auxiliary measurement 
+> record. The auxiliary measurement record is an additional record to the 
+> one already created based on the existing policy. When func is passed as 
+> NONE, it represents it is an additional record. I am not sure what you 
+> mean by updating ima_get_action, it is already handling the ima policy.
+>
 
-There is only one 'interrupt_control' register, for multiple interrupt 
-sources. Then depending on platform hardware design, these interrupt 
-sources can be wired to different physical interrupt lines.
+I was referring to using "func" in process_buffer_measurement to 
+determine ima action. In my opinion, process_buffer_measurement should 
+be generic.
 
-That is, it is possible to mux interrupt sources into  interrupt lines 
-for dmc520 in different ways. For example, in this particular brcm 
-implementation,
+ima_get_action() should instead determine the required ima action, 
+template, pcr, etc. based on "func" passed to it.
 
-Line 841: source dram_ecc_errc_int
-Line 843: source dram_ecc_errd_int
-Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
-
-There are two possibilities for implementing ecc counts for ce/ue. And 
-we chose to use the single source line: as below, two interrupt lines 
-0x349 and 0x34B, with interrupt masks 0x4 and 0x8 respectively.
-
-Also, it's possible to implement using the combined-source line too: 
-that would be one interrupt line 0x347, with interrupt mask 0xC.
-
-This dt binding can support both by modifying the properties, without 
-having to modify driver code.
-
- >> +
- >> +Example:
- >> +
- >> +dmc0: dmc@200000 {
- >> +       compatible = "brcm,dmc-520", "arm,dmc-520";
- >> +       reg = <0x200000 0x80000>;
- >> +       interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
- >> +       interrupt-config = <0x4>, <0x8>;
- >> +};
- >> --
- >> 2.17.1
-
-Thanks!
-
--Lei
+thanks,
+  -lakshmi
 
