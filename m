@@ -2,97 +2,104 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C6CCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241EF21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572015385;
-	bh=aF6JPZTJ/gBdIJwVCjuZWdvm5qo4nqf8GBjBjU4VHfM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rSw/eTDyWgvlnkP8hrDYii97mR5fYHC6NB5n6iBdHvfSlGgZYX4mBOX7pdKUFa5aS
-	 HxuSMEhHSu5sdcWmfExo0QVRTMrnWyKZ05/jDpMptWb9ljIoHehbDHruSMlkKKa4wA
-	 V8fp7HqDbkfdyQtKVqglOPHOrom8TA+DXob5LuMk=
+	by mail.kernel.org (Postfix) with ESMTP id 7C55B21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iEocMA83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440534AbfJYO4Y (ORCPT
+        id S2440554AbfJYO6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:56:24 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35222 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440507AbfJYO4X (ORCPT
+        Fri, 25 Oct 2019 10:58:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50496 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437476AbfJYO6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:56:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aF6JPZTJ/gBdIJwVCjuZWdvm5qo4nqf8GBjBjU4VHfM=; b=KhSrz89GlOX23Pdcc/m/CEld3
-        js2tGCBFwjdMJJ34KizZkriCuEs4NYx5Ro5d1rNJ46rh8JBbTBv6pFyOMal5DlyU5GMO4Y0rIho2S
-        bxS3FKE8dzctMQEiLrCHnnYT5RqBoJcg0csb+wB6zSoSWXrJOd9CcxKeM9J0iHNnbCQFg=;
-Received: from host86-174-61-171.range86-174.btcentralplus.com ([86.174.61.171] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iO10k-00075b-CM; Fri, 25 Oct 2019 14:56:18 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id B0C42D020AD; Fri, 25 Oct 2019 15:56:17 +0100 (BST)
-Date:   Fri, 25 Oct 2019 15:56:17 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     daniel.thompson@linaro.org, arnd@arndb.de,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, baohua@kernel.org,
-        stephan@gerhold.net
-Subject: Re: [PATCH v3 10/10] mfd: mfd-core: Move pdev->mfd_cell creation
- back into mfd_add_device()
-Message-ID: <20191025145617.GI4568@sirena.org.uk>
-References: <20191024163832.31326-1-lee.jones@linaro.org>
- <20191024163832.31326-11-lee.jones@linaro.org>
+        Fri, 25 Oct 2019 10:58:14 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9PEmvJN049894;
+        Fri, 25 Oct 2019 14:58:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=8akM3Zo80mA5RvA40djKzIs5p/MWfdT9Yde14KUY/UA=;
+ b=iEocMA83Pj8LY9Zd/2uc485IY6Do1XL8o5fnGFNh6ZbuhiOoUwpYh1jHzaXkUQs4Fskj
+ 1E2ojgsrHBjs87M84qgW/pobc6G4LL+U85T1N3ES/eIqmzm2bygs0nkZMjDZuGiBj7eR
+ DR1X9Oc6+sLhixukV7bgw6teFqA/PVwiAlz82pOtVlwqv0UnQQslSBUkKIrAKHV1EfJ2
+ frLP4pLCGZkU97m34GfbujQKnpo70a/6zXS08MGWMlVf/Ss6/VBlqZteF3YdHaT8Vu44
+ hWxCE7FVp8jvvFDxA/KFUp8aMSfNijkQpuRlz9wlKKuAosXZODxbLukGp11dcmbYLvX5 gQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2vqswu3rss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 14:58:07 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9PEnCUH167954;
+        Fri, 25 Oct 2019 14:56:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vunbmjw9d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 14:56:06 +0000
+Received: from abhmp0021.oracle.com (abhmp0021.oracle.com [141.146.116.27])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9PEu6Qq000476;
+        Fri, 25 Oct 2019 14:56:06 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 25 Oct 2019 14:56:05 +0000
+Date:   Fri, 25 Oct 2019 17:55:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Samuil Ivanov <samuil.ivanovbg@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        netdev@vger.kernel.org, GR-Linux-NIC-Dev@marvell.com,
+        linux-kernel@vger.kernel.org, manishc@marvell.com
+Subject: Re: [PATCH 1/3] Staging: qlge: Rename prefix of a function to qlge
+Message-ID: <20191025145554.GB7244@kadam>
+References: <20191024212941.28149-1-samuil.ivanovbg@gmail.com>
+ <20191024212941.28149-2-samuil.ivanovbg@gmail.com>
+ <20191025101705.GM24678@kadam>
+ <20191025142842.GA10016@sivanov-pc>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NzX0AQGjRQPusK/O"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024163832.31326-11-lee.jones@linaro.org>
-X-Cookie: Keep out of the sunlight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191025142842.GA10016@sivanov-pc>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=641
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910250142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=727 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910250142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 25, 2019 at 05:28:42PM +0300, Samuil Ivanov wrote:
+> Dan you are correct it is a bit of a hodge podge :)
+> I think that it is better to have a bigger patches that will rename
+> more functions, but I don't this it is good to have all the
+> functions renamed in one patch.
+> 
+> Just in the header file I counted around 55 function definitions,
+> and in the source files there are some more.
+> So that will make one huge patch.
+> 
 
---NzX0AQGjRQPusK/O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't really have a problem if you rename everything at once.  Or if
+you want to rename all of them in a 55 patch patchset that's also fine
+with me...
 
-On Thu, Oct 24, 2019 at 05:38:32PM +0100, Lee Jones wrote:
-> Most of the complexity of mfd_platform_add_cell() has been removed. The
-> only functionality left duplicates cell memory into the child's platform
-> device. Since it's only a few lines, moving it to the main thread and
-> removing the superfluous function makes sense.
+regards,
+dan carpenter
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---NzX0AQGjRQPusK/O
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2zDRAACgkQJNaLcl1U
-h9DO/Af/VagCkEQfGNe1Ncjxx+a7IFEhDSC4yzx8fMlWxETMK9yPwOBSBkR89NQZ
-pzaIK3X35Zh9LM/H8ptRf7FeKzJ8BeO3j0ck1uCAcJrvT3O4vzso8kdC1jwVQ/O0
-hHd/+39lnnDfsP3OhZjMtAGu9EZy9klwIrHmj7PKXtJ2Cn3jXUlb4qUSBujNtEHY
-TXtxGhUrHPpJBEjchkG/36VYbRhG241EBxxPriQ5vRC5dm4YIbdpkeiYLQhB0Js2
-tYQPsXSkGg7flTuGEtPZMhKXHt2TnzzKPmUcK3R4ikyCvO8Lt9g6VDIUiaeRM+jS
-wb1JBPSFwuy5dYVsQ9L1Til/GDq6Aw==
-=LFpK
------END PGP SIGNATURE-----
-
---NzX0AQGjRQPusK/O--
