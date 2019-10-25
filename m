@@ -2,141 +2,116 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC57CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1DACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7099121D82
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:55:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W91zWNO0"
+	by mail.kernel.org (Postfix) with ESMTP id 38E8B21D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfJYVz3 (ORCPT
+        id S1726686AbfJYVze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:55:29 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44463 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfJYVz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:55:27 -0400
-Received: by mail-pl1-f193.google.com with SMTP id q16so1727828pll.11
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 14:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K331SMUfGTuS8ssrt07hRRxTGZ3R118eP6RXl//v6II=;
-        b=W91zWNO0MDSC1dSM2VGEKxLvXO0mToeYff7TkuRAsvGaadnLdl7Y+QZ16oulP7Phsn
-         8Gm3ofi3Mz9bM551jBJMnJKjqu55+dvZ3oc0ncqhsilhHKnU6rJfmptOwqboZAJ5Xg7e
-         mF+MNIu6oVNi+YuJcPMckBLbLAl2P0oH7vzWU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K331SMUfGTuS8ssrt07hRRxTGZ3R118eP6RXl//v6II=;
-        b=CGkq4SmsbeGdponMHVwECejj9CjQ7TQyE3tY4ZJmH3KxbVnLxbnCtyr2r8ibbrWAyF
-         yW9hekwGVjVTNP6dFrEwfL8JVRSEPGaSJVRue40w1V9WI+zz+ErjxpV3P2I8b2FFRo0O
-         rsTA0Rc9whmD48VgQfgd/BRM401VO2A//mQk+xPsTe7ujFsvsnXs7Pv0/zrJaevy67LC
-         XZt4BxN2gBg8CKGEJfxtvLGwrxSIscAW34ezR7IIcW5OR3+I1vWmReDBlC8sF55c6BMS
-         ROtdZpR7QkPtcf7YbemTOUxk1MC2KtZrOOAUet0x8j/rIJnMF/wBG+0Fn6LL1og2hr8I
-         uxUQ==
-X-Gm-Message-State: APjAAAWS009VOiRnPTg62JZd9UrO7ftHp66KHTtpJdn5QPpcW+aFmiKr
-        22Ooklyiok93KQTX9i42hYUhPw==
-X-Google-Smtp-Source: APXvYqziGJoT8eB5mWgoF5H55wPj/L28gCK25N9WuVU5NVdJh4xWElDTVc5K92fYMgo4YDhheRExMQ==
-X-Received: by 2002:a17:902:9689:: with SMTP id n9mr6365578plp.222.1572040526517;
-        Fri, 25 Oct 2019 14:55:26 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id y80sm3815110pfc.30.2019.10.25.14.55.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:55:26 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] ARM: dts: rockchip: Add brcm bluetooth module on uart0
-Date:   Fri, 25 Oct 2019 14:54:28 -0700
-Message-Id: <20191025215428.31607-4-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-In-Reply-To: <20191025215428.31607-1-abhishekpandit@chromium.org>
-References: <20191025215428.31607-1-abhishekpandit@chromium.org>
+        Fri, 25 Oct 2019 17:55:34 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:36700 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbfJYVzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 17:55:33 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1iO7YI-0008W9-RF; Fri, 25 Oct 2019 15:55:23 -0600
+To:     Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20191025202535.12036-1-logang@deltatee.com>
+ <20191025202535.12036-4-logang@deltatee.com>
+ <28b40ab8-c695-784e-3f52-03a18b891d25@grimberg.me>
+ <11006dd2-718f-b569-4ef3-c01232354d5f@deltatee.com>
+ <952c93fa-ef69-e113-a285-b1e9a0ddcafc@grimberg.me>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <55aaecf5-e094-1ef6-e4ac-3460d5eaf02c@deltatee.com>
+Date:   Fri, 25 Oct 2019 15:55:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <952c93fa-ef69-e113-a285-b1e9a0ddcafc@grimberg.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, Chaitanya.Kulkarni@wdc.com, hch@lst.de, maxg@mellanox.com, kbusch@kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, sagi@grimberg.me
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 3/3] nvme: Introduce nvme_execute_passthru_rq_nowait()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables the Broadcom uart bluetooth driver on uart0 and gives it
-ownership of its gpios. In order to use this, you must enable the
-following kconfig options:
-  - CONFIG_BT_HCIUART_BCM
-  - CONFIG_SERIAL_DEV
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
 
- arch/arm/boot/dts/rk3288-veyron.dtsi | 31 +++++++---------------------
- 1 file changed, 7 insertions(+), 24 deletions(-)
+On 2019-10-25 3:40 p.m., Sagi Grimberg wrote:
+>> Hmm, that's going to be a bit tricky. Seeing the work_struct belongs
+>> potentially to a number of different requests, we can't just flush the
+>> individual work items. I think we'd have to create a work-queue per ctrl
+>> and flush that. Any objections to that?
+> 
+> I'd object to that overhead...
+> 
+> How about marking the request if the workqueue path is taken and
+> in nvme_stop_ctrl you add a blk_mq_tagset_busy_iter and cancel
+> it in the callback?
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 7525e3dd1fc1..8c9f91ba6f57 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -23,30 +23,6 @@
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
- 
--	bt_activity: bt-activity {
--		compatible = "gpio-keys";
--		pinctrl-names = "default";
--		pinctrl-0 = <&bt_host_wake>;
--
--		/*
--		 * HACK: until we have an LPM driver, we'll use an
--		 * ugly GPIO key to allow Bluetooth to wake from S3.
--		 * This is expected to only be used by BT modules that
--		 * use UART for comms.  For BT modules that talk over
--		 * SDIO we should use a wakeup mechanism related to SDIO.
--		 *
--		 * Use KEY_RESERVED here since that will work as a wakeup but
--		 * doesn't get reported to higher levels (so doesn't confuse
--		 * Chrome).
--		 */
--		bt-wake {
--			label = "BT Wakeup";
--			gpios = <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
--			linux,code = <KEY_RESERVED>;
--			wakeup-source;
--		};
--
--	};
- 
- 	power_button: power-button {
- 		compatible = "gpio-keys";
-@@ -434,6 +410,13 @@
- 	/* Pins don't include flow control by default; add that in */
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43540-bt";
-+		host-wakeup-gpios	= <&gpio4 RK_PD7 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios		= <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;
-+		device-wakeup-gpios	= <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-+	};
- };
- 
- &uart1 {
--- 
-2.24.0.rc0.303.g954a862665-goog
+Oh, cool. That looks great, I'll do that. Thanks!
 
+Logan
+
+> Something like:
+> -- 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> index fa7ba09dca77..13dbbec5497d 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -3955,12 +3955,33 @@ void nvme_complete_async_event(struct nvme_ctrl
+> *ctrl, __le16 status,
+>  }
+>  EXPORT_SYMBOL_GPL(nvme_complete_async_event);
+> 
+> +static bool nvme_flush_async_passthru_request(struct request *rq,
+> +               void *data, bool reserved)
+> +{
+> +       if (!(nvme_req(rq)->flags & NVME_REQ_ASYNC_PASSTHRU))
+> +               return true;
+> +
+> +       dev_dbg_ratelimited(((struct nvme_ctrl *) data)->device,
+> +                               "Cancelling passthru I/O %d", req->tag);
+> +       flush_work(&nvme_req(rq)->work);
+> +       return true;
+> +}
+> +
+> +static void nvme_flush_async_passthru_requests(struct nvme_ctrl *ctrl)
+> +{
+> +       blk_mq_tagset_busy_iter(ctrl->tagset,
+> +               nvme_flush_async_passthru_request, ctrl);
+> +       blk_mq_tagset_busy_iter(ctrl->admin_tagset,
+> +               nvme_flush_async_passthru_request, ctrl);
+> +}
+> +
+>  void nvme_stop_ctrl(struct nvme_ctrl *ctrl)
+>  {
+>         nvme_mpath_stop(ctrl);
+>         nvme_stop_keep_alive(ctrl);
+>         flush_work(&ctrl->async_event_work);
+>         cancel_work_sync(&ctrl->fw_act_work);
+> +       nvme_flush_async_passthru_requests(ctrl);
+>  }
+>  EXPORT_SYMBOL_GPL(nvme_stop_ctrl);
+> -- 
