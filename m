@@ -2,116 +2,111 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AFACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F91CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DB521D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C273B21D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504700AbfJYNBb (ORCPT
+        id S2440284AbfJYNF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:01:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41239 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504684AbfJYNB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:01:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 06:01:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="201802389"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.55])
-  by orsmga003.jf.intel.com with ESMTP; 25 Oct 2019 06:01:23 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 5/6] perf auxtrace: Add auxtrace_cache__remove()
-Date:   Fri, 25 Oct 2019 15:59:59 +0300
-Message-Id: <20191025130000.13032-6-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191025130000.13032-1-adrian.hunter@intel.com>
-References: <20191025130000.13032-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Fri, 25 Oct 2019 09:05:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36596 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2439284AbfJYNF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:05:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4D95CAFA8;
+        Fri, 25 Oct 2019 13:05:26 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <ukernel@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH v2] ceph: Fix use-after-free in __ceph_remove_cap
+Date:   Fri, 25 Oct 2019 14:05:24 +0100
+Message-Id: <20191025130524.31755-1-lhenriques@suse.com>
+In-Reply-To: <9c1fe73500ca7dece15c73d7534b9e0ec417c83a.camel@kernel.org>
+References: <9c1fe73500ca7dece15c73d7534b9e0ec417c83a.camel@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add auxtrace_cache__remove(). Intel PT uses an auxtrace_cache to store the
-results of code-walking, so that the same block of instructions does not
-have to be decoded repeatedly. However, when there are text poke events,
-the associated cache entries need to be removed.
+KASAN reports a use-after-free when running xfstest generic/531, with the
+following trace:
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+[  293.903362]  kasan_report+0xe/0x20
+[  293.903365]  rb_erase+0x1f/0x790
+[  293.903370]  __ceph_remove_cap+0x201/0x370
+[  293.903375]  __ceph_remove_caps+0x4b/0x70
+[  293.903380]  ceph_evict_inode+0x4e/0x360
+[  293.903386]  evict+0x169/0x290
+[  293.903390]  __dentry_kill+0x16f/0x250
+[  293.903394]  dput+0x1c6/0x440
+[  293.903398]  __fput+0x184/0x330
+[  293.903404]  task_work_run+0xb9/0xe0
+[  293.903410]  exit_to_usermode_loop+0xd3/0xe0
+[  293.903413]  do_syscall_64+0x1a0/0x1c0
+[  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This happens because __ceph_remove_cap() may queue a cap release
+(__ceph_queue_cap_release) which can be scheduled before that cap is
+removed from the inode list with
+
+	rb_erase(&cap->ci_node, &ci->i_caps);
+
+And, when this finally happens, the use-after-free will occur.
+
+This can be fixed by removing the cap from the inode list before being
+removed from the session list, and thus eliminating the risk of an UAF.
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
 ---
- tools/perf/util/auxtrace.c | 28 ++++++++++++++++++++++++++++
- tools/perf/util/auxtrace.h |  1 +
- 2 files changed, 29 insertions(+)
+Hi!
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 8470dfe9fe97..c555c3ccd79d 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1457,6 +1457,34 @@ int auxtrace_cache__add(struct auxtrace_cache *c, u32 key,
- 	return 0;
- }
- 
-+static struct auxtrace_cache_entry *auxtrace_cache__rm(struct auxtrace_cache *c,
-+						       u32 key)
-+{
-+	struct auxtrace_cache_entry *entry;
-+	struct hlist_head *hlist;
-+	struct hlist_node *n;
-+
-+	if (!c)
-+		return NULL;
-+
-+	hlist = &c->hashtable[hash_32(key, c->bits)];
-+	hlist_for_each_entry_safe(entry, n, hlist, hash) {
-+		if (entry->key == key) {
-+			hlist_del(&entry->hash);
-+			return entry;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+void auxtrace_cache__remove(struct auxtrace_cache *c, u32 key)
-+{
-+	struct auxtrace_cache_entry *entry = auxtrace_cache__rm(c, key);
-+
-+	auxtrace_cache__free_entry(c, entry);
-+}
-+
- void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key)
- {
- 	struct auxtrace_cache_entry *entry;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index f201f36bc35f..3f4aa5427d76 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -489,6 +489,7 @@ void *auxtrace_cache__alloc_entry(struct auxtrace_cache *c);
- void auxtrace_cache__free_entry(struct auxtrace_cache *c, void *entry);
- int auxtrace_cache__add(struct auxtrace_cache *c, u32 key,
- 			struct auxtrace_cache_entry *entry);
-+void auxtrace_cache__remove(struct auxtrace_cache *c, u32 key);
- void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key);
- 
- struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
--- 
-2.17.1
+So, after spending some time trying to find possible races throught code
+review and testing, I modified the fix according to Jeff's suggestion.
 
+Cheers,
+Luis
+
+fs/ceph/caps.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index d3b9c9d5c1bd..a9ce858c37d0 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1058,6 +1058,11 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+ 
+ 	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
+ 
++	/* remove from inode list */
++	rb_erase(&cap->ci_node, &ci->i_caps);
++	if (ci->i_auth_cap == cap)
++		ci->i_auth_cap = NULL;
++
+ 	/* remove from session list */
+ 	spin_lock(&session->s_cap_lock);
+ 	if (session->s_cap_iterator == cap) {
+@@ -1091,11 +1096,6 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
+ 
+ 	spin_unlock(&session->s_cap_lock);
+ 
+-	/* remove from inode list */
+-	rb_erase(&cap->ci_node, &ci->i_caps);
+-	if (ci->i_auth_cap == cap)
+-		ci->i_auth_cap = NULL;
+-
+ 	if (removed)
+ 		ceph_put_cap(mdsc, cap);
+ 
