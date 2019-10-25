@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7818CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75162CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5AF222CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3CE222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011882;
-	bh=VxAENRe8KXE3KAQSm0XpFg7pqpD9WQdNEuOUOrj6zvg=;
+	s=default; t=1572011884;
+	bh=5mE6OzLGrrycxdes0Is7V01InxLIU/ke8n3+7PpvcVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S3FfNRE8o4i7urbJuG71QydfY8wO4lTqQNT6iSrcbwIVtxOaWdQNDPEEPYrANuGYU
-	 ZigVe+fBpWmrC0ces2JPRxC7cEnBBcy7bfxWh7l3w6Qx+0F1hgMoF2BcM7J6SVL+C5
-	 g5vBScn7GeX5Ru94k3wUKaiKEQP8JbjWJ8/5vM+g=
+	b=uUM2nT0k8i4hBhdOCSKle8loWvHDgvTDQXnu3NfvFAodL/oyi725KoaAcAtB3Rukb
+	 yxeQeJGvinndQj2qZUpctaIfqNx2peCmxMHSlEtM46iDWT3dO1TTGLlprJPFZ3H1M9
+	 jJZJ/Y3t3QVkw4aqPHS4Qzj8CGzsjJGLWTBjT9dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505449AbfJYN6B (ORCPT
+        id S2505459AbfJYN6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52838 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505381AbfJYN5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:57:50 -0400
+        id S2505420AbfJYN56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:57:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC8B821E6F;
-        Fri, 25 Oct 2019 13:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF47D222CB;
+        Fri, 25 Oct 2019 13:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011869;
-        bh=VxAENRe8KXE3KAQSm0XpFg7pqpD9WQdNEuOUOrj6zvg=;
+        s=default; t=1572011876;
+        bh=5mE6OzLGrrycxdes0Is7V01InxLIU/ke8n3+7PpvcVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSg8ZIpkQUKp2HfodOtYBEC6rZyLMQ8jYc4wCixiicVkoOQRMBR4bv2HWsZybj8Pp
-         ppIThQ3I0bkwWMqWmHlZX6LiElJUsd0vsryXKH4GP2qHv8Wt1r9Keae2PKQKIXd9gj
-         RSfgaLWvzKHdgGNvuV3JZKRauXUcBmuscsL/HCsU=
+        b=xXMmsAyoDngbTdk5dFH/0mPnw1J8SAYaBjir2YE5xRjIzLPRqgetMQ+tBPPAhWuL6
+         h23+nrLw+vWZv7C/BjZv3WGQFctE+eP2o4Edo7RjtUiP5Dot09Jn9zaALgWSdk9ADd
+         /59M5EbEkZQ0DWTHpzxT1XWcAQPAgG2yS091iImI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chandan Rajendra <chandan@linux.ibm.com>,
-        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/25] jbd2: flush_descriptor(): Do not decrease buffer head's ref count
-Date:   Fri, 25 Oct 2019 09:57:07 -0400
-Message-Id: <20191025135715.25468-19-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 24/25] ipv6: Handle race in addrconf_dad_work
+Date:   Fri, 25 Oct 2019 09:57:12 -0400
+Message-Id: <20191025135715.25468-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135715.25468-1-sashal@kernel.org>
 References: <20191025135715.25468-1-sashal@kernel.org>
@@ -60,63 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chandan Rajendra <chandan@linux.ibm.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 547b9ad698b434eadca46319cb47e5875b55ef03 ]
+[ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
 
-When executing generic/388 on a ppc64le machine, we notice the following
-call trace,
+Rajendra reported a kernel panic when a link was taken down:
 
-VFS: brelse: Trying to free free buffer
-WARNING: CPU: 0 PID: 6637 at /root/repos/linux/fs/buffer.c:1195 __brelse+0x84/0xc0
+[ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
+[ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
 
-Call Trace:
- __brelse+0x80/0xc0 (unreliable)
- invalidate_bh_lru+0x78/0xc0
- on_each_cpu_mask+0xa8/0x130
- on_each_cpu_cond_mask+0x130/0x170
- invalidate_bh_lrus+0x44/0x60
- invalidate_bdev+0x38/0x70
- ext4_put_super+0x294/0x560
- generic_shutdown_super+0xb0/0x170
- kill_block_super+0x38/0xb0
- deactivate_locked_super+0xa4/0xf0
- cleanup_mnt+0x164/0x1d0
- task_work_run+0x110/0x160
- do_notify_resume+0x414/0x460
- ret_from_except_lite+0x70/0x74
+<snip>
 
-The warning happens because flush_descriptor() drops bh reference it
-does not own. The bh reference acquired by
-jbd2_journal_get_descriptor_buffer() is owned by the log_bufs list and
-gets released when this list is processed. The reference for doing IO is
-only acquired in write_dirty_buffer() later in flush_descriptor().
+[ 6870.570501] Call Trace:
+[ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
+[ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
+[ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
+[ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
+[ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
+[ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
+[ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
+[ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
+[ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
+[ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
+[ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
 
-Reported-by: Harish Sriram <harish@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Chandan Rajendra <chandan@linux.ibm.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+addrconf_dad_work is kicked to be scheduled when a device is brought
+up. There is a race between addrcond_dad_work getting scheduled and
+taking the rtnl lock and a process taking the link down (under rtnl).
+The latter removes the host route from the inet6_addr as part of
+addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
+to use the host route in ipv6_ifa_notify. If the down event removes
+the host route due to the race to the rtnl, then the BUG listed above
+occurs.
+
+This scenario does not occur when the ipv6 address is not kept
+(net.ipv6.conf.all.keep_addr_on_down = 0) as addrconf_ifdown sets the
+state of the ifp to DEAD. Handle when the addresses are kept by checking
+IF_READY which is reset by addrconf_ifdown.
+
+The 'dead' flag for an inet6_addr is set only under rtnl, in
+addrconf_ifdown and it means the device is getting removed (or IPv6 is
+disabled). The interesting cases for changing the idev flag are
+addrconf_notify (NETDEV_UP and NETDEV_CHANGE) and addrconf_ifdown
+(reset the flag). The former does not have the idev lock - only rtnl;
+the latter has both. Based on that the existing dead + IF_READY check
+can be moved to right after the rtnl_lock in addrconf_dad_work.
+
+Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
+Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/revoke.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/ipv6/addrconf.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
-index f9aefcda58541..cc7d1f094393a 100644
---- a/fs/jbd2/revoke.c
-+++ b/fs/jbd2/revoke.c
-@@ -637,10 +637,8 @@ static void flush_descriptor(journal_t *journal,
- {
- 	jbd2_journal_revoke_header_t *header;
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index a81201dd3a1a5..57bc05ff88d34 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -3908,6 +3908,12 @@ static void addrconf_dad_work(struct work_struct *w)
  
--	if (is_journal_aborted(journal)) {
--		put_bh(descriptor);
-+	if (is_journal_aborted(journal))
- 		return;
+ 	rtnl_lock();
+ 
++	/* check if device was taken down before this delayed work
++	 * function could be canceled
++	 */
++	if (idev->dead || !(idev->if_flags & IF_READY))
++		goto out;
++
+ 	spin_lock_bh(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_PREDAD) {
+ 		action = DAD_BEGIN;
+@@ -3953,11 +3959,6 @@ static void addrconf_dad_work(struct work_struct *w)
+ 		goto out;
+ 
+ 	write_lock_bh(&idev->lock);
+-	if (idev->dead || !(idev->if_flags & IF_READY)) {
+-		write_unlock_bh(&idev->lock);
+-		goto out;
 -	}
- 
- 	header = (jbd2_journal_revoke_header_t *)descriptor->b_data;
- 	header->r_count = cpu_to_be32(offset);
+-
+ 	spin_lock(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_DEAD) {
+ 		spin_unlock(&ifp->lock);
 -- 
 2.20.1
 
