@@ -2,129 +2,187 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C23CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950DCC47E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7674921D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C2921D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572034790;
-	bh=0zDH0Fbrijq1CDlKb/eS9UolHwf/vrJ4mzyY2QBJsBI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Nau5oTtmcLkG14DJfAaFTwAZ1K9TBFnh6iRSrDXqVND0Yxh/+IEuHMgOd90sQnMQY
-	 cqynNh9jZkFlsRSzdFKX4Kxao+2qDXmafbi6Nn6AMl5AV9SjVtbFN+gTKDvFFz3Osf
-	 haYIpN3lVOLCMbOduLXp8fdpM5bLt9CLXJ2H07Fk=
+	s=default; t=1572034819;
+	bh=n6IuL5NT84NRdDBMzq5N2XWRhRMjsUq7P3Szh+BtIGc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=fCEfY8+r4qAxiKDAm9xr4WG04h0FrpnR4dncvWzrBmIkpXRdqzrDC8Wmwxo27DjK4
+	 572qpdKiTtkDGKdFuo3rXXEDxa8I+1qKTfYAVS3OEgCid3WkE55kUZErS5mrWSM+U3
+	 79rvkvghWC4pOBdkSSQrK6EKhBjMbFm4cdJ3wByo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfJYUTt (ORCPT
+        id S1728145AbfJYUUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 16:20:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbfJYUTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:19:49 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726589AbfJYUUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:20:18 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CE3821E6F;
-        Fri, 25 Oct 2019 20:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC94D21D81;
+        Fri, 25 Oct 2019 20:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572034787;
-        bh=0zDH0Fbrijq1CDlKb/eS9UolHwf/vrJ4mzyY2QBJsBI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UqeviibTuNZv2SaUyRGiB0nQifeY/W01PGm9s6G/Tvxny0L1/LfoH23izCCNYZcPU
-         N82wKD6IFXMHPN6icjNVj+/HPv5IvXnZjRkL3mPFMBg5rHzQXVlCi3b+e7zr8iW165
-         vpp9AXWeviqIGQAfeFQvRZ278d69OpkhbTEl6dWg=
-Received: by mail-qt1-f182.google.com with SMTP id c21so5112295qtj.12;
-        Fri, 25 Oct 2019 13:19:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAUMHNP+4F0vMMQKYK+CBVCz7wIWoPhTwNvp4YBih4N0z5/9LaHR
-        e7MflwU6HuxzYtGWS1blDElI/9EGEyumbHIHfA==
-X-Google-Smtp-Source: APXvYqzLV0DNiSIgrqSeSFTkfH8awvr/ASCKRP7JD+/ltAUIM+wC1d0zfF+U7OiEUa1J3NlXBL4cFdbcYR0OTsXOWoQ=
-X-Received: by 2002:ad4:518d:: with SMTP id b13mr356862qvp.79.1572034786614;
- Fri, 25 Oct 2019 13:19:46 -0700 (PDT)
+        s=default; t=1572034816;
+        bh=n6IuL5NT84NRdDBMzq5N2XWRhRMjsUq7P3Szh+BtIGc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gJ+2dxRDAfY9Kig49YlagePxiTr7gkDHH0fmrpH6UslJwD9yt26aEXnsJdGr0Rt3z
+         TQPk/R0YYQ/PE2arNWMMM2yRacdmPkP/icnRG+HLt+TyuGx9lE3Y+03gyMhYbG4qy/
+         ruUgemKAkWRE/TynwQ3uHOFmC2/Dc5aPVc5a8R2k=
+Date:   Fri, 25 Oct 2019 15:20:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/DPC: Add pcie_ports=dpc-native parameter to bring
+ back old behavior
+Message-ID: <20191025202004.GA147688@google.com>
 MIME-Version: 1.0
-References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
- <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
- <20191014173900.GA6886@bogus> <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
-In-Reply-To: <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 25 Oct 2019 15:19:35 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
-Message-ID: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: power: add Amlogic secure
- power domains bindings
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023192205.97024-1-olof@lixom.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 6:26 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote=
-:
->
-> Hi Rob,
->
-> On 2019/10/15 1:39, Rob Herring wrote:
-> > On Thu, Oct 10, 2019 at 04:21:15AM -0400, Jianxin Pan wrote:
-> >> Add the bindings for the Amlogic Secure power domains, controlling the
-> >> secure power domains.
-> >>
-> >> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which t=
-he
-> >> power domain registers are in secure world.
-> >>
-> >> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> >> ---
-> >>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 +++++++++++++=
-+++++++++
-> >>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++=
-++++
-> >>  2 files changed, 74 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,me=
-son-sec-pwrc.yaml
-> >> +
-> >> +  secure-monitor:
-> >> +    description: phandle to the secure-monitor node
-> >> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >
-> > Why not just a child node of this node?
-> >
-> Thanks for the review.
->
-> I followed the style of the previous series of meson=EF=BC=9A
->
->   46         efuse: efuse {
->   47                 compatible =3D "amlogic,meson-gxbb-efuse";
->   48                 clocks =3D <&clkc CLKID_EFUSE>;
->   49                 #address-cells =3D <1>;
->   50                 #size-cells =3D <1>;
->   51                 read-only;
->   52                 secure-monitor =3D <&sm>;
->   53         };
+On Wed, Oct 23, 2019 at 12:22:05PM -0700, Olof Johansson wrote:
+> In commit eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+> the behavior was changed such that native (kernel) handling of DPC
+> got tied to whether the kernel also handled AER. While this is what
+> the standard recommends, there are BIOSes out there that lack the DPC
+> handling since it was never required in the past.
 
-Looks like that was not reviewed by me and is only in linux-next.
-Please make functions exposed by secure world a child of the secure
-firmware node.
+Some systems do not grant OS control of AER via _OSC.  I guess the
+problem is that on those systems, the OS DPC driver used to work, but
+after eed85ff4c0da7, it does not.  Right?
 
-Really for power domains, you only need to add a '#power-domain-cells'
-property to the secure monitor node.
+We should also update negotiate_os_control() to request control of DPC
+via _OSC.  Kuppuswamy's patch [1] does that but hasn't been merged
+yet.  That will conflict with this, but I can resolve that.
 
-Rob
+I applied this as below (with the nits Keith noticed) to pci/aer for
+v5.5, thanks!
+
+[1] https://lore.kernel.org/r/b638cbd3e122b4c7a58b949d7224230d2c4b34d4.1570145778.git.sathyanarayanan.kuppuswamy@linux.intel.com
+
+commit 35a0b2378c19
+Author: Olof Johansson <olof@lixom.net>
+Date:   Wed Oct 23 12:22:05 2019 -0700
+
+    PCI/DPC: Add "pcie_ports=dpc-native" to allow DPC without AER control
+    
+    Prior to eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+    Linux handled DPC events regardless of whether firmware had granted it
+    ownership of AER or DPC, e.g., via _OSC.
+    
+    PCIe r5.0, sec 6.2.10, recommends that the OS link control of DPC to
+    control of AER, so after eed85ff4c0da7, Linux handles DPC events only if it
+    has control of AER.
+    
+    On platforms that do not grant OS control of AER via _OSC, Linux DPC
+    handling worked before eed85ff4c0da7 but not after.
+    
+    To make Linux DPC handling work on those platforms the same way they did
+    before, add a "pcie_ports=dpc-native" kernel parameter that makes Linux
+    handle DPC events regardless of whether it has control of AER.
+    
+    [bhelgaas: commit log, move pcie_ports_dpc_native to drivers/pci/]
+    Link: https://lore.kernel.org/r/20191023192205.97024-1-olof@lixom.net
+    Signed-off-by: Olof Johansson <olof@lixom.net>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c7ac2f3ac99f..806c89f79be8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3540,6 +3540,8 @@
+ 			even if the platform doesn't give the OS permission to
+ 			use them.  This may cause conflicts if the platform
+ 			also tries to use these services.
++		dpc-native	Use native PCIe service for DPC only.  May
++				cause conflicts if firmware uses AER or DPC.
+ 		compat	Disable native PCIe services (PME, AER, DPC, PCIe
+ 			hotplug).
+ 
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a32ec3487a8d..e06f42f58d3d 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -291,7 +291,7 @@ static int dpc_probe(struct pcie_device *dev)
+ 	int status;
+ 	u16 ctl, cap;
+ 
+-	if (pcie_aer_get_firmware_first(pdev))
++	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+ 		return -ENOTSUPP;
+ 
+ 	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index 944827a8c7d3..1e673619b101 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -25,6 +25,8 @@
+ 
+ #define PCIE_PORT_DEVICE_MAXSERVICES   5
+ 
++extern bool pcie_ports_dpc_native;
++
+ #ifdef CONFIG_PCIEAER
+ int pcie_aer_init(void);
+ #else
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 1b330129089f..5075cb9e850c 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -250,8 +250,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 		pcie_pme_interrupt_enable(dev, false);
+ 	}
+ 
++	/*
++	 * With dpc-native, allow Linux to use DPC even if it doesn't have
++	 * permission to use AER.
++	 */
+ 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+-	    pci_aer_available() && services & PCIE_PORT_SERVICE_AER)
++	    pci_aer_available() &&
++	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+ 		services |= PCIE_PORT_SERVICE_DPC;
+ 
+ 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 0a87091a0800..160d67c59310 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -29,12 +29,20 @@ bool pcie_ports_disabled;
+  */
+ bool pcie_ports_native;
+ 
++/*
++ * If the user specified "pcie_ports=dpc-native", use the Linux DPC PCIe
++ * service even if the platform hasn't given us permission.
++ */
++bool pcie_ports_dpc_native;
++
+ static int __init pcie_port_setup(char *str)
+ {
+ 	if (!strncmp(str, "compat", 6))
+ 		pcie_ports_disabled = true;
+ 	else if (!strncmp(str, "native", 6))
+ 		pcie_ports_native = true;
++	else if (!strncmp(str, "dpc-native", 10))
++		pcie_ports_dpc_native = true;
+ 
+ 	return 1;
+ }
