@@ -2,153 +2,137 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C22CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6D9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF3E21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:59:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkAEZa1v"
+	by mail.kernel.org (Postfix) with ESMTP id 6503721D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408511AbfJYI7N (ORCPT
+        id S2408587AbfJYI75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:59:13 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36849 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407620AbfJYI7N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:59:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571993951;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cEfAMrGGJdre6q5960sJV82kiqLRtWiqhggy8x2XByk=;
-        b=dkAEZa1vmRqorgjqBp1iBnvrmf2fOZM6LsxyPCSh0pJfc/sIH45zot3I18SZUu6NaqxHGa
-        Zo3MTYayuhszbXAgqa6ghhJHfK5gfbH3yOQ8baD9KcGQTj/DQMrdKzmPvT9wuzf60qjfzB
-        F51Y0mlA9WUwrWS/Aw0/2Q+vgzLWPpk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-Lfw5pdjXMEqwhHG1Vxy9YQ-1; Fri, 25 Oct 2019 04:59:10 -0400
-Received: by mail-wr1-f72.google.com with SMTP id h4so684399wrx.15
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 01:59:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rw+NkxbACn9hciv6WEMv7l0zZ0kLC27u/GkuGUvdJJs=;
-        b=HUCNLJ5VNqk1OoUHdnVnY40lPA3ngWcRPm3M5edWyM2ISCbx6HS4YqVdfI89dwc+GE
-         Ud7n8Q2+LqMd4qHyI1LXwJgBS1cA4pwLDKDOi46bXsPxIJaUcfLfjG86CtDvrcoUrSBG
-         Eo5vm1+5MIIyguqn1u+sx4Tmwmub+kjZhp0TLw8jYp/RWNsk8/M6pcKDUcr479KR9xiQ
-         5a7dwDdAZi93egvjMCX2BRce8BeizMISPNgnyAIKgDcxU/B86h/k0QwvR7aGknhEpm4c
-         8p/eX5q+x8DSLsJw8s8QXTRoVz7i/okXvPq3BvZ5PcScXXuTH1+RXbuVSmnZpVsV8tpL
-         veoA==
-X-Gm-Message-State: APjAAAURn9T+D0Z2oRgkXgj0eitNetUZdBdztADvXV923qtHzerRbB9S
-        Eq/kzpSs1yNX+O/WBBiyvpw9tMq0xbhXVccNNCrd9iz3eLVy69UJdypjSezQcnIVdTLyVrp/89J
-        lt5aAWQrabop++xEoKySplLoN
-X-Received: by 2002:adf:e805:: with SMTP id o5mr2008918wrm.223.1571993948472;
-        Fri, 25 Oct 2019 01:59:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx2KbwzkROwYeADYLzyzJJATVkZ+ZEbGR5TPyEOXAq9XM/sAeNbXmJtO++ErjZ+kJbNgSDC5Q==
-X-Received: by 2002:adf:e805:: with SMTP id o5mr2008895wrm.223.1571993948246;
-        Fri, 25 Oct 2019 01:59:08 -0700 (PDT)
-Received: from shalem.localdomain (2001-1c00-0c14-2800-ec23-a060-24d5-2453.cable.dynamic.v6.ziggo.nl. [2001:1c00:c14:2800:ec23:a060:24d5:2453])
-        by smtp.gmail.com with ESMTPSA id r2sm1837777wma.1.2019.10.25.01.59.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2019 01:59:07 -0700 (PDT)
-Subject: Re: [PATCH 2/4] ACPI / PMIC: Add byt prefix to Crystal Cove PMIC
- OpRegion driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191024213827.144974-1-hdegoede@redhat.com>
- <20191024213827.144974-3-hdegoede@redhat.com>
- <20191025074154.GX32742@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <49aa39b7-d457-1140-afdb-2a154278b29f@redhat.com>
-Date:   Fri, 25 Oct 2019 10:59:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 25 Oct 2019 04:59:57 -0400
+Received: from mga17.intel.com ([192.55.52.151]:38719 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405717AbfJYI74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:59:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 01:59:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="210337097"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Oct 2019 01:59:56 -0700
+Received: from [10.125.252.238] (abudanko-mobl.ccr.corp.intel.com [10.125.252.238])
+        by linux.intel.com (Postfix) with ESMTP id 791B458042B;
+        Fri, 25 Oct 2019 01:59:53 -0700 (PDT)
+Subject: [PATCH v5 3/4] perf/x86/intel: implement LBR callstacks context
+ synchronization
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <6fa20503-b5ad-16c7-260e-5243509176bc@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <a1384d27-a205-cb00-7cff-bff60a79a671@linux.intel.com>
+Date:   Fri, 25 Oct 2019 11:59:52 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191025074154.GX32742@smile.fi.intel.com>
+In-Reply-To: <6fa20503-b5ad-16c7-260e-5243509176bc@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MC-Unique: Lfw5pdjXMEqwhHG1Vxy9YQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 25-10-2019 09:41, Andy Shevchenko wrote:
-> On Thu, Oct 24, 2019 at 11:38:25PM +0200, Hans de Goede wrote:
->> Our current Crystal Cove OpRegion driver is only valid for the
->> Crystal Cove PMIC variant found on Bay Trail (BYT) boards,
->> Cherry Trail (CHT) based boards use another variant.
->>
->> At least the regulator registers are different on CHT and these register=
-s
->> are one of the things controlled by the custom PMIC OpRegion.
->>
->> Commit 4d9ed62ab142 ("mfd: intel_soc_pmic: Export separate mfd-cell
->> configs for BYT and CHT") has disabled the intel_pmic_crc.c code for CHT
->> devices by removing the "crystal_cove_pmic" MFD cell on CHT devices.
->>
->> This commit renames the intel_pmic_crc.c driver and the cell to be
->> prefixed with "byt" to indicate that this code is for BYT devices only.
->>
->> This is a preparation patch for adding a separate PMIC OpRegion
->> driver for the CHT variant of the Crystal Cove PMIC (sometimes called
->> Crystal Cove Plus in Android kernel sources).
->=20
->>   .../acpi/pmic/{intel_pmic_crc.c =3D> intel_pmic_bytcrc.c}    | 4 ++--
->>   drivers/mfd/intel_soc_pmic_crc.c                           | 2 +-
->=20
-> I would go with previously established pattern, i.e. intel_pmic_bytcc.c.
+Implement intel_pmu_lbr_swap_task_ctx() method updating counters
+of the events that requested LBR callstack data on a sample.
 
-Well that would be consistent with the chtwc for the Whiskey Cove, but
-Crystal Cove related files are shortened to crc in many places already:
+The counter can be zero for the case when task context belongs to
+a thread that has just come from a block on a futex and the context
+contains saved (lbr_stack_state == LBR_VALID) LBR register values.
 
-Filenames before this patch:
-drivers/acpi/pmic/intel_pmic_crc.c
-drivers/pwm/pwm-crc.c
-drivers/mfd/intel_soc_pmic_crc.c
+For the values to be restored at LBR registers on the next thread's
+switch-in event it swaps the counter value with the one that is
+expected to be non zero at the previous equivalent task perf event
+context.
 
-And to me "cc" stands for the Type-C cc lines, or for Cc: from email,
-so IMHO it is best to stick with crc here.
+Swap operation type ensures the previous task perf event context
+stays consistent with the amount of events that requested LBR
+callstack data on a sample.
 
->> +++ b/drivers/mfd/intel_soc_pmic_crc.c
->> @@ -75,7 +75,7 @@ static struct mfd_cell crystal_cove_byt_dev[] =3D {
->>   =09=09.resources =3D gpio_resources,
->>   =09},
->>   =09{
->> -=09=09.name =3D "crystal_cove_pmic",
->> +=09=09.name =3D "byt_crystal_cove_pmic",
->>   =09},
->>   =09{
->>   =09=09.name =3D "crystal_cove_pwm",
->=20
-> I'm wondering shouldn't we rename the PWM and GPIO for the sake of consis=
-tency?
-> Yes, if a driver is used on both CHT and BYT, let it provide two names.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ arch/x86/events/intel/lbr.c  | 23 +++++++++++++++++++++++
+ arch/x86/events/perf_event.h |  3 +++
+ 2 files changed, 26 insertions(+)
 
-I believe it is fine to keep the blocks which are identical between
-the 2 versions as just "crystal_cove_foo", but renaming them is fine with m=
-e
-too, but that follows outside the scope of this series and should be
-done in a follow-up series IMHO.
-
-Regards,
-
-Hans
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index ea54634eabf3..534c76606049 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -417,6 +417,29 @@ static void __intel_pmu_lbr_save(struct x86_perf_task_context *task_ctx)
+ 	cpuc->last_log_id = ++task_ctx->log_id;
+ }
+ 
++void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
++				 struct perf_event_context *next)
++{
++	struct x86_perf_task_context *prev_ctx_data, *next_ctx_data;
++
++	swap(prev->task_ctx_data, next->task_ctx_data);
++
++	/*
++	 * Architecture specific synchronization makes sense in
++	 * case both prev->task_ctx_data and next->task_ctx_data
++	 * pointers are allocated.
++	 */
++
++	prev_ctx_data = next->task_ctx_data;
++	next_ctx_data = prev->task_ctx_data;
++
++	if (!prev_ctx_data || !next_ctx_data)
++		return;
++
++	swap(prev_ctx_data->lbr_callstack_users,
++	     next_ctx_data->lbr_callstack_users);
++}
++
+ void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 5384317eaa16..930611db8f9a 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1024,6 +1024,9 @@ void intel_pmu_store_pebs_lbrs(struct pebs_lbr *lbr);
+ 
+ void intel_ds_init(void);
+ 
++void intel_pmu_lbr_swap_task_ctx(struct perf_event_context *prev,
++				 struct perf_event_context *next);
++
+ void intel_pmu_lbr_sched_task(struct perf_event_context *ctx, bool sched_in);
+ 
+ u64 lbr_from_signext_quirk_wr(u64 val);
+-- 
+2.20.1
 
