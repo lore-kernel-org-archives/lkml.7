@@ -2,124 +2,192 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9FACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D65CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1187321929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571997357;
-	bh=ODPZ0B8QcACz9iU//RW/5fZJOr6PxCo2bGYxQ6t9jgc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QikBvQErFjnXqcwEIcrfBI/jAag++hZaTvCkN4c9w9tO++JUJQX35WgrpjRenYKXB
-	 jt3r3kJZVXddNMK7hziwRbnx6ixc+nJKPGlCDUfi1ynL3anazwQTSCm0maDHSOZg5M
-	 H5o+IWVYGinYdVPdaeOX3B4jOvGXucKf9L+rE/5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 5353E21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408972AbfJYJz4 (ORCPT
+        id S2408993AbfJYJ4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:55:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38020 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408923AbfJYJzz (ORCPT
+        Fri, 25 Oct 2019 05:56:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40638 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408934AbfJYJ4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:55:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8Q43EHgrQ37XLYLMbydJx8zVprEj7FoK+fTwNtZOM/Y=; b=slcb1nAzCdIMLaTfciUUpmtL3
-        UtW/UtgdkrOEMOD4V8k5X59TpPHtK83Z9BbIavVhsYLtLLNTcH1kOv93zoz4b6zFeIuKCOs21zbm3
-        N0PWYo7RE9p5HvAXdtViv1AWSPufgvAdvxSuvIdly5H/8g7yaFPcxEET2W/DMCeS3qhJw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iNwJm-0006bs-G2; Fri, 25 Oct 2019 09:55:38 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 73CAA274326E; Fri, 25 Oct 2019 10:55:37 +0100 (BST)
-Date:   Fri, 25 Oct 2019 10:55:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     vishnu <vravulap@amd.com>
-Cc:     "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
-        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "Mehta, Sanju" <Sanju.Mehta@amd.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/7] ASoC: amd: Enabling I2S instance in DMA and DAI
-Message-ID: <20191025095537.GB4209@sirena.co.uk>
-References: <1571432760-3008-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1571432760-3008-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <20191024114015.GG5207@sirena.co.uk>
- <3aed0c75-80e7-cc9d-59f9-6ef29b665efc@amd.com>
+        Fri, 25 Oct 2019 05:56:54 -0400
+Received: from [185.240.52.243] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iNwKw-00077y-MR; Fri, 25 Oct 2019 09:56:50 +0000
+Date:   Fri, 25 Oct 2019 11:56:49 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: clone3() example code
+Message-ID: <20191025095647.ga74uchqhflpliec@wittgenstein>
+References: <CAKgNAkgKX1Z6Uns3pAvXe-JMSmWqo2PrqeoS65aEriZsV35QmA@mail.gmail.com>
+ <20191025084142.jpwypkyczehylhgv@wittgenstein>
+ <20191025094956.hvr44v2lbfxf7dfs@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tjCHc7DPkfUGtrlw"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3aed0c75-80e7-cc9d-59f9-6ef29b665efc@amd.com>
-X-Cookie: Power is poison.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191025094956.hvr44v2lbfxf7dfs@yavin.dot.cyphar.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 25, 2019 at 08:49:56PM +1100, Aleksa Sarai wrote:
+> On 2019-10-25, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
+> > 
+> > int main(int argc, char *argv[])
+> > {
+> > 	int pidfd = -1;
+> > 	pid_t parent_tid = -1, pid = -1;
+> > 	struct clone_args args = {0};
+> > 
+> > 	args.parent_tid = ptr_to_u64(&parent_tid); /* CLONE_PARENT_SETTID */
+> > 	args.pidfd = ptr_to_u64(&pidfd); /* CLONE_PIDFD */
+> > 	args.flags = CLONE_PIDFD | CLONE_PARENT_SETTID;
+> > 	args.exit_signal = SIGCHLD;
+> > 
+> > 	pid = sys_clone3(&args);
+> 
+> I'd suggest that
+> 
+> 	struct clone_args args = {
+> 		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
+> 		.parent_tid = ptr_to_u64(&parent_tid), /* CLONE_PARENT_SETTID */
+> 		.pidfd = ptr_to_u64(&pidfd),           /* CLONE_PIDFD */
+> 		.exit_signal = SIGCHLD,
+> 	};
+> 
+> or alternatively
+> 
+> 	pid = sys_clone3(&(struct clone_args) {
+> 		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
+> 		.parent_tid = ptr_to_u64(&parent_tid), /* CLONE_PARENT_SETTID */
+> 		.pidfd = ptr_to_u64(&pidfd),           /* CLONE_PIDFD */
+> 		.exit_signal = SIGCHLD,
+> 	});
+> 
+> are easier to read.
 
---tjCHc7DPkfUGtrlw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That was an accident. I posted from the wrong file. The correct code is:
 
-On Fri, Oct 25, 2019 at 06:53:16AM +0000, vishnu wrote:
-> On 24/10/19 5:10 PM, Mark Brown wrote:
-> > On Sat, Oct 19, 2019 at 02:35:41AM +0530, Ravulapati Vishnu vardhan rao=
- wrote:
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE 1
+#endif
+#include <errno.h>
+#include <linux/sched.h>
+#include <linux/types.h>
+#include <sched.h>
+#include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
-> >> +		case I2S_BT_INSTANCE:
-> >> +			val =3D rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-> >> +			val =3D val | (rtd->xfer_resolution  << 3);
-> >> +			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-> >> +		break;
+#ifndef CLONE_PIDFD
+#define CLONE_PIDFD 0x00001000
+#endif
 
-> > For some reason the break; isn't indented with the rest of the block.
-> > I'm fairly sure I've mentioned this before...
+#ifndef __NR_clone3
+#define __NR_clone3 -1
+struct clone_args {
+	__aligned_u64 flags;
+	__aligned_u64 pidfd;
+	__aligned_u64 child_tid;
+	__aligned_u64 parent_tid;
+	__aligned_u64 exit_signal;
+	__aligned_u64 stack;
+	__aligned_u64 stack_size;
+	__aligned_u64 tls;
+};
+#endif
 
-> Sorry for this but I am not able to find indentation.I have tested with=
-=20
-> scripts/checkpatch.pl. It shows no warnings.
+static pid_t sys_clone3(struct clone_args *args)
+{
+	return syscall(__NR_clone3, args, sizeof(struct clone_args));
+}
 
-The break should be aligned with the rest of the block like I said, an
-extra tab in - you can see lots of examples of break statements in the
-kernel.
+static int wait_for_pid(pid_t pid)
+{
+	int status, ret;
 
---tjCHc7DPkfUGtrlw
-Content-Type: application/pgp-signature; name="signature.asc"
+again:
+	ret = waitpid(pid, &status, 0);
+	if (ret == -1) {
+		if (errno == EINTR)
+			goto again;
 
------BEGIN PGP SIGNATURE-----
+		return -1;
+	}
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2yxpgACgkQJNaLcl1U
-h9D2EAf/WSOT4sEicM8hxRm4Afv0zc8QzmWWpk3kpMbsbHCyqGcZi3zLh98kr8lD
-u47RPeWzylVb9VRl9y+sPxFSijyTtzN/QAbhGjEkK4hqE+q6mqsawKdKljlMdFUR
-tx8E1yWONkYobWTs94EYAwP2gg6fsQs6qaUTqQWaZB2E5yvxjFsJWNoIpICxVYOR
-oGFZzwW/ly8/taJtA5Q5310KIsLxmnl+HcJXQmZpRnZj3pdSUTKj3z9ukwgy9I9U
-v1yBS4ghFDjZod4vkFjPEJZpScJLabIrgXFgGI/PCHvy7fkvB8Wz9IabAyfWMmVr
-3kT2BFuIxxgXp2xDYxHDxFeahLzuMg==
-=fpuJ
------END PGP SIGNATURE-----
+	if (ret != pid)
+		goto again;
 
---tjCHc7DPkfUGtrlw--
+	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+		return -1;
+
+	return 0;
+}
+
+#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
+
+int main(int argc, char *argv[])
+{
+	int pidfd = -1;
+	pid_t parent_tid = -1, pid = -1;
+	struct clone_args args = {
+		/* CLONE_PARENT_SETTID */
+		.parent_tid = ptr_to_u64(&parent_tid),
+		/* CLONE_PIDFD */
+		.pidfd = ptr_to_u64(&pidfd),
+		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
+		.exit_signal = SIGCHLD,
+	};
+
+	pid = sys_clone3(&args);
+	if (pid < 0) {
+		fprintf(stderr, "%s - Failed to create new process\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid == 0) {
+		printf("Child process with pid %d\n", getpid());
+		exit(EXIT_SUCCESS);
+	}
+
+	printf("Parent process received child's pid %d as return value\n", pid);
+	printf("Parent process received child's pidfd %d\n", pidfd);
+	printf("Parent process received child's pid %d as return argument\n",
+	       *(pid_t *)args.parent_tid);
+
+	if (wait_for_pid(pid)) {
+		fprintf(stderr, "Failed to wait on child process\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid != parent_tid)
+		exit(EXIT_FAILURE);
+
+	close(pidfd);
+
+	return 0;
+}
