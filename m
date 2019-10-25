@@ -6,59 +6,62 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CD7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EF5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31E921655
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0527E21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395179AbfJYOZp (ORCPT
+        id S2395348AbfJYOZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:25:45 -0400
-Received: from smtp3-1.goneo.de ([85.220.129.38]:36156 "EHLO smtp3-1.goneo.de"
+        Fri, 25 Oct 2019 10:25:50 -0400
+Received: from smtp3-1.goneo.de ([85.220.129.38]:54079 "EHLO smtp3-1.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfJYOZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:25:45 -0400
+        id S1725825AbfJYOZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:25:48 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id B82AF23F192;
-        Fri, 25 Oct 2019 16:25:41 +0200 (CEST)
+        by smtp3.goneo.de (Postfix) with ESMTP id 88006240028;
+        Fri, 25 Oct 2019 16:25:45 +0200 (CEST)
 X-Virus-Scanned: by goneo
 Received: from smtp3.goneo.de ([127.0.0.1])
         by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qHJpvpA6h8Rq; Fri, 25 Oct 2019 16:25:40 +0200 (CEST)
+        with ESMTP id 4Ze3M7UwdCJi; Fri, 25 Oct 2019 16:25:44 +0200 (CEST)
 Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp3.goneo.de (Postfix) with ESMTPA id E16892400D4;
-        Fri, 25 Oct 2019 16:25:39 +0200 (CEST)
+        by smtp3.goneo.de (Postfix) with ESMTPA id 99DED23EFDE;
+        Fri, 25 Oct 2019 16:25:43 +0200 (CEST)
 From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Lars Poeschel <poeschel@lemonage.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steve Winslow <swinslow@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+To:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lars Poeschel <poeschel@lemonage.de>,
         netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
-Subject: [PATCH v10 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
-Date:   Fri, 25 Oct 2019 16:25:15 +0200
-Message-Id: <20191025142521.22695-2-poeschel@lemonage.de>
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Cc:     Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v10 2/7] nfc: pn532: Add uart phy docs and rename it
+Date:   Fri, 25 Oct 2019 16:25:16 +0200
+Message-Id: <20191025142521.22695-3-poeschel@lemonage.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191025142521.22695-1-poeschel@lemonage.de>
 References: <20191025142521.22695-1-poeschel@lemonage.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is favourable to have one unified compatible string for devices that
-have multiple interfaces. So this adds simply "pn532" as the devicetree
-binding compatible string and makes a note that the old ones are
-deprecated.
+This adds documentation about the uart phy to the pn532 binding doc. As
+the filename "pn533-i2c.txt" is not appropriate any more, rename it to
+the more general "pn532.txt".
+This also documents the deprecation of the compatible strings ending
+with "...-i2c".
 
 Cc: Johan Hovold <johan@kernel.org>
 Cc: Simon Horman <horms@verge.net.au>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 ---
 Changes in v10:
@@ -67,32 +70,87 @@ Changes in v10:
 
 Changes in v9:
 - Rebased the patch series on v5.4-rc2
+- Produce patch with -M4 to git format-patch to detect the rename
+- Change DT node name from pn532@24 to nfc@24 in example
+
+Changes in v8:
+- Update existing binding doc instead of adding a new one:
+  - Add uart phy example
+  - Add general "pn532" compatible string
+  - Deprecate "...-i2c" compatible strings
+  - Rename file to a more general filename
+- Intentionally drop Rob's Reviewed-By as I guess this rather big change
+  requires a new review
+
+Changes in v7:
+- Accidentally lost Rob's Reviewed-By
 
 Changes in v6:
 - Rebased the patch series on v5.3-rc5
+- Picked up Rob's Reviewed-By
+
+Changes in v4:
+- Add documentation about reg property in case of i2c
 
 Changes in v3:
-- This patch is new in v3
+- seperate binding doc instead of entry in trivial-devices.txt
 
- drivers/nfc/pn533/i2c.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../net/nfc/{pn533-i2c.txt => pn532.txt}      | 25 ++++++++++++++++---
+ 1 file changed, 21 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
 
-diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
-index 1832cd921ea7..1abd40398a5a 100644
---- a/drivers/nfc/pn533/i2c.c
-+++ b/drivers/nfc/pn533/i2c.c
-@@ -245,6 +245,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
- }
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+similarity index 42%
+rename from Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
+rename to Documentation/devicetree/bindings/net/nfc/pn532.txt
+index 2efe3886b95b..a5507dc499bc 100644
+--- a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
++++ b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+@@ -1,9 +1,16 @@
+ * NXP Semiconductors PN532 NFC Controller
  
- static const struct of_device_id of_pn533_i2c_match[] = {
-+	{ .compatible = "nxp,pn532", },
-+	/*
-+	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
-+	 * deprecated and will be removed.
-+	 */
- 	{ .compatible = "nxp,pn533-i2c", },
- 	{ .compatible = "nxp,pn532-i2c", },
- 	{},
+ Required properties:
+-- compatible: Should be "nxp,pn532-i2c" or "nxp,pn533-i2c".
++- compatible: Should be
++    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
++                  where the NFC chip is connected to.
++                  Currently the kernel has phy bindings for uart and i2c.
++    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
++    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
++
++Required properties if connected on i2c:
+ - clock-frequency: I²C work frequency.
+-- reg: address on the bus
++- reg: for the I²C bus address. This is fixed at 0x24 for the PN532.
+ - interrupts: GPIO interrupt to which the chip is connected
+ 
+ Optional SoC Specific Properties:
+@@ -15,9 +22,9 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ &i2c2 {
+ 
+ 
+-	pn532: pn532@24 {
++	pn532: nfc@24 {
+ 
+-		compatible = "nxp,pn532-i2c";
++		compatible = "nxp,pn532";
+ 
+ 		reg = <0x24>;
+ 		clock-frequency = <400000>;
+@@ -27,3 +34,13 @@ Example (for ARM-based BeagleBone with PN532 on I2C2):
+ 
+ 	};
+ };
++
++Example (for PN532 connected via uart):
++
++uart4: serial@49042000 {
++        compatible = "ti,omap3-uart";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++        };
++};
 -- 
 2.23.0
 
