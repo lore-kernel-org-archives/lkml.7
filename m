@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92892CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE8ACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E08C222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C06222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011952;
-	bh=DIjrOnr7kfdm4xYsvwdGU6zs/QWN6SAvm9PrhWuoFBM=;
+	s=default; t=1572011957;
+	bh=WO055rew6vXiNWAIz24yB6BtLbtJIvjJYo9zKPqhmYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJs8V+IzYOfL9Gdaq1vjhj1rCVBW6PY62dyEdxD14gpMr4JSgObMtn459rtYZ3Cqm
-	 5nRtQQyAqomAkJ/ETpJrh05F/UuvnC6cfw1VD3eQTfBiK53jRIZGy2Bh84szTh0REX
-	 XXiqse/OZwrKq3ITaOWTm61MLOO69Sq/WYmlrDGo=
+	b=P2RuNCA0Cm9sUrUgmev4HlpfxtNxi/DiaT0qiYAWiMKzoUrEAo3pRNojhrqvlyTk5
+	 kuevEcEoSN3u4w4raWm9fQ0O1rhRlNRX/tHRXKlop178XNuSIMA5x3jVMwQyNWGcWQ
+	 hP3rWH2EIlQM04LNbdTCVn/e/IsxoEcU6EI1lMTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632938AbfJYN7L (ORCPT
+        id S2632963AbfJYN7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632900AbfJYN7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:59:06 -0400
+        id S2632943AbfJYN7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:59:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B377222C9;
-        Fri, 25 Oct 2019 13:59:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15DBE222BE;
+        Fri, 25 Oct 2019 13:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011946;
-        bh=DIjrOnr7kfdm4xYsvwdGU6zs/QWN6SAvm9PrhWuoFBM=;
+        s=default; t=1572011951;
+        bh=WO055rew6vXiNWAIz24yB6BtLbtJIvjJYo9zKPqhmYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2JGhiQlwdDT6H2g0kk5UMlk+KAVvPTHNWaw+iKQFIXUwglgzGIY+FlR3/7tlb9jL
-         IqlaVQfFyPHm2T+H75YWI7r0bdKst6txAfDNTvynL2ikCc5PsXPzgp0oYC5YMUzQxw
-         PehtwyurH0VYeb/sE1TzorY4+FhGHiXxMNc9TJIY=
+        b=elG18VWlZ35ElTF9UXtTdJqQi6PE6XUZFEBVMOAMrWMNdUpJ1WybccMgelOzrYNv9
+         MtyZKtUTmbr2JOX9U2oOdvKm87YflApSTE4Ml58VUHeiekMPMKo+L29EyvGm011Unl
+         eu6WH3lU6q2P8y0/ABi0cLGaDPEXc5gttlV1B0RY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chandan Rajendra <chandan@linux.ibm.com>,
-        Harish Sriram <harish@linux.ibm.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/16] jbd2: flush_descriptor(): Do not decrease buffer head's ref count
-Date:   Fri, 25 Oct 2019 09:58:35 -0400
-Message-Id: <20191025135842.25977-11-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 15/16] RDMA/iwcm: Fix a lock inversion issue
+Date:   Fri, 25 Oct 2019 09:58:39 -0400
+Message-Id: <20191025135842.25977-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135842.25977-1-sashal@kernel.org>
 References: <20191025135842.25977-1-sashal@kernel.org>
@@ -60,63 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chandan Rajendra <chandan@linux.ibm.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 547b9ad698b434eadca46319cb47e5875b55ef03 ]
+[ Upstream commit b66f31efbdad95ec274345721d99d1d835e6de01 ]
 
-When executing generic/388 on a ppc64le machine, we notice the following
-call trace,
+This patch fixes the lock inversion complaint:
 
-VFS: brelse: Trying to free free buffer
-WARNING: CPU: 0 PID: 6637 at /root/repos/linux/fs/buffer.c:1195 __brelse+0x84/0xc0
+============================================
+WARNING: possible recursive locking detected
+5.3.0-rc7-dbg+ #1 Not tainted
+--------------------------------------------
+kworker/u16:6/171 is trying to acquire lock:
+00000000035c6e6c (&id_priv->handler_mutex){+.+.}, at: rdma_destroy_id+0x78/0x4a0 [rdma_cm]
 
+but task is already holding lock:
+00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&id_priv->handler_mutex);
+  lock(&id_priv->handler_mutex);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by kworker/u16:6/171:
+ #0: 00000000e2eaa773 ((wq_completion)iw_cm_wq){+.+.}, at: process_one_work+0x472/0xac0
+ #1: 000000001efd357b ((work_completion)(&work->work)#3){+.+.}, at: process_one_work+0x476/0xac0
+ #2: 00000000bc7c307d (&id_priv->handler_mutex){+.+.}, at: iw_conn_req_handler+0x151/0x680 [rdma_cm]
+
+stack backtrace:
+CPU: 3 PID: 171 Comm: kworker/u16:6 Not tainted 5.3.0-rc7-dbg+ #1
+Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+Workqueue: iw_cm_wq cm_work_handler [iw_cm]
 Call Trace:
- __brelse+0x80/0xc0 (unreliable)
- invalidate_bh_lru+0x78/0xc0
- on_each_cpu_mask+0xa8/0x130
- on_each_cpu_cond_mask+0x130/0x170
- invalidate_bh_lrus+0x44/0x60
- invalidate_bdev+0x38/0x70
- ext4_put_super+0x294/0x560
- generic_shutdown_super+0xb0/0x170
- kill_block_super+0x38/0xb0
- deactivate_locked_super+0xa4/0xf0
- cleanup_mnt+0x164/0x1d0
- task_work_run+0x110/0x160
- do_notify_resume+0x414/0x460
- ret_from_except_lite+0x70/0x74
+ dump_stack+0x8a/0xd6
+ __lock_acquire.cold+0xe1/0x24d
+ lock_acquire+0x106/0x240
+ __mutex_lock+0x12e/0xcb0
+ mutex_lock_nested+0x1f/0x30
+ rdma_destroy_id+0x78/0x4a0 [rdma_cm]
+ iw_conn_req_handler+0x5c9/0x680 [rdma_cm]
+ cm_work_handler+0xe62/0x1100 [iw_cm]
+ process_one_work+0x56d/0xac0
+ worker_thread+0x7a/0x5d0
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
 
-The warning happens because flush_descriptor() drops bh reference it
-does not own. The bh reference acquired by
-jbd2_journal_get_descriptor_buffer() is owned by the log_bufs list and
-gets released when this list is processed. The reference for doing IO is
-only acquired in write_dirty_buffer() later in flush_descriptor().
+This is not a bug as there are actually two lock classes here.
 
-Reported-by: Harish Sriram <harish@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Chandan Rajendra <chandan@linux.ibm.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20190930231707.48259-3-bvanassche@acm.org
+Fixes: de910bd92137 ("RDMA/cma: Simplify locking needed for serialization of callbacks")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/revoke.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/infiniband/core/cma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
-index 705ae577882b1..8ad752c4bee31 100644
---- a/fs/jbd2/revoke.c
-+++ b/fs/jbd2/revoke.c
-@@ -658,10 +658,8 @@ static void flush_descriptor(journal_t *journal,
- {
- 	jbd2_journal_revoke_header_t *header;
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 1454290078def..8ad9c6b04769d 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -1976,9 +1976,10 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
+ 		conn_id->cm_id.iw = NULL;
+ 		cma_exch(conn_id, RDMA_CM_DESTROYING);
+ 		mutex_unlock(&conn_id->handler_mutex);
++		mutex_unlock(&listen_id->handler_mutex);
+ 		cma_deref_id(conn_id);
+ 		rdma_destroy_id(&conn_id->id);
+-		goto out;
++		return ret;
+ 	}
  
--	if (is_journal_aborted(journal)) {
--		put_bh(descriptor);
-+	if (is_journal_aborted(journal))
- 		return;
--	}
- 
- 	header = (jbd2_journal_revoke_header_t *)descriptor->b_data;
- 	header->r_count = cpu_to_be32(offset);
+ 	mutex_unlock(&conn_id->handler_mutex);
 -- 
 2.20.1
 
