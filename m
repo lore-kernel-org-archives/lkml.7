@@ -2,101 +2,92 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BD5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2CFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7C42070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:16:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="deTeqY3W"
+	by mail.kernel.org (Postfix) with ESMTP id AD75C21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 01:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388616AbfJYBQo (ORCPT
+        id S2388636AbfJYBRm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 21:16:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34546 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388515AbfJYBQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 21:16:44 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1E1n0120894;
-        Fri, 25 Oct 2019 01:16:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=AbepHJYRFeSdhP/8TwPby8wa7p9KL6DyyeYknaFGBMA=;
- b=deTeqY3WlGZw6r8S401Fx/EGPyOCmrGR9Zn//QDZpxfEuDWNBbRmQDj4YeuuE1QDkb6l
- /AR8tDRsisfHVdKu7c+gbGdFGCXzW35SSchaibNY7pkbW4YiNhvfHGHhxdX6R92jIfMX
- yBA2dWl+fq98+rfJXAj6l2HumdojtREav9foyVictSHTNP0hR8r1BmmWSzKlJT7wEKjW
- LE7P1Ve3v8pQyUwqqaCYMlvhaAXJnBGlqiFVqWrDVa/oooaIR7OOlFGtzS4sNCCTpQL3
- +QtRRB58MgS6GmKB6TvcpOul8wVKpQ/pV7+yK6rxouhlhv/2GrIiodwFA+jX+ktW33vf qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2vqteq75ta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 01:16:15 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9P1CrbN181742;
-        Fri, 25 Oct 2019 01:16:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2vunbk5ydd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 01:16:15 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9P1G9r0024360;
-        Fri, 25 Oct 2019 01:16:09 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 24 Oct 2019 18:16:08 -0700
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <kxie@chelsio.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <bvanassche@acm.org>,
-        <davem@davemloft.net>, <tglx@linutronix.de>, <info@metux.net>,
-        <kstewart@linuxfoundation.org>, <varun@chelsio.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <target-devel@vger.kernel.org>
-Subject: Re: [PATCH -next] scsi: cxgb4i: remove set but not used variable 'ppmax'
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191021142042.30964-1-yuehaibing@huawei.com>
-Date:   Thu, 24 Oct 2019 21:16:05 -0400
-In-Reply-To: <20191021142042.30964-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Mon, 21 Oct 2019 22:20:42 +0800")
-Message-ID: <yq1lft9bp62.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 24 Oct 2019 21:17:42 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:27930 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388515AbfJYBRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 24 Oct 2019 21:17:42 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id BC3DD28BE11A04C8D11B;
+        Fri, 25 Oct 2019 09:17:40 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x9P1HJub089559;
+        Fri, 25 Oct 2019 09:17:19 +0800 (GMT-8)
+        (envelope-from zhong.shiqi@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102509175316-119804 ;
+          Fri, 25 Oct 2019 09:17:53 +0800 
+From:   zhongshiqi <zhong.shiqi@zte.com.cn>
+To:     Julia.Lawall@lip6.fr
+Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
+        zhongshiqi <zhong.shiqi@zte.com.cn>
+Subject: [PATCH v3] coccicheck: Support search for SmPL scripts within selected directory hierarchy
+Date:   Fri, 25 Oct 2019 09:19:34 +0800
+Message-Id: <1571966374-42566-1-git-send-email-zhong.shiqi@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=951
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910250011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9420 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910250011
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-25 09:17:53,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-25 09:17:24
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl2.zte.com.cn x9P1HJub089559
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Allow defining COCCI as a directory to search SmPL scripts. Start a
+corresponding file determination if the environment variable “COCCI”
+contains an acceptable path.
 
-YueHaibing,
+Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
+---
+Changes in v3:
+	1:rewrite change description
+	2:fix patch subject
+	3:modify commit log
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:2076:15:
->  warning: variable ppmax set but not used [-Wunused-but-set-variable]
-> drivers/target/iscsi/cxgbit/cxgbit_ddp.c:300:15:
->  warning: variable ppmax set but not used [-Wunused-but-set-variable]
+Changes in v2:
+	1.fix patch subject according to the reply by Markus
+	<Markus.Elfring@web.de>
+	2.change description in “imperative mood”
+ 
+ scripts/coccicheck | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Applied to 5.5/scsi-queue, thanks!
-
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e04d328..a1c4197 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -257,6 +257,10 @@ if [ "$COCCI" = "" ] ; then
+     for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f | sort`; do
+ 	coccinelle $f
+     done
++elif [ -d "$COCCI" ] ; then
++    for f in `find $COCCI/ -name '*.cocci' -type f | sort`; do
++	coccinelle $f
++    done
+ else
+     coccinelle $COCCI
+ fi
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.9.5
+
