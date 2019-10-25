@@ -2,83 +2,100 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965AECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981EECA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777EE21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671BF21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:27:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axFcfUgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409222AbfJYO0V (ORCPT
+        id S2436852AbfJYO1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:26:21 -0400
-Received: from smtp3-1.goneo.de ([85.220.129.38]:36414 "EHLO smtp3-1.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404022AbfJYO0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:26:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id F074B240028;
-        Fri, 25 Oct 2019 16:26:13 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8slKb-VbIwi3; Fri, 25 Oct 2019 16:26:12 +0200 (CEST)
-Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp3.goneo.de (Postfix) with ESMTPA id 89EDF23FF75;
-        Fri, 25 Oct 2019 16:26:12 +0200 (CEST)
-From:   Lars Poeschel <poeschel@lemonage.de>
-To:     Lars Poeschel <poeschel@lemonage.de>,
-        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Johan Hovold <johan@kernel.org>
-Subject: [PATCH v10 7/7] nfc: pn532_uart: Make use of pn532 autopoll
-Date:   Fri, 25 Oct 2019 16:25:21 +0200
-Message-Id: <20191025142521.22695-8-poeschel@lemonage.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191025142521.22695-1-poeschel@lemonage.de>
-References: <20191025142521.22695-1-poeschel@lemonage.de>
+        Fri, 25 Oct 2019 10:27:14 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31470 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436771AbfJYO1O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:27:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572013628;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lSGPuJMLYfDMnAmpDMOZktcz7mBfnLm8edFjjutXhg8=;
+        b=axFcfUgqHGkXrFMjIw7Wa/JtCSwtsvq9+LfA6SY7douMhyRfRi93+nkML6Jmxkt5xTZxc+
+        a+VzS4nEmF3TKQnlGQEgjhbhHM1oWnP6xsYnkQSmclevpdDPQFn+NcpoC2fL8N2el+dfaW
+        xYGOu21ZAQTvSnaCo0b4CGVqVUtzUYg=
+Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com
+ [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-cyvzJasVMjevxU9Coe2YZQ-1; Fri, 25 Oct 2019 10:27:00 -0400
+Received: by mail-yw1-f70.google.com with SMTP id b184so953993ywa.15
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 07:27:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lSGPuJMLYfDMnAmpDMOZktcz7mBfnLm8edFjjutXhg8=;
+        b=Lk3jkGnFZGn0qn7V7HcUCUbkRmAcdGmH6LrCGNAV1w46G9oji7gRroZXTwmGZ//PYO
+         Hh6x2OXCQIzSmranopbPZTmdtp6qQqJdxkmSEJV3J+j7l2fLsg8Nr6LDgQ7HFh0NF9FQ
+         RlygTAJwC1b1jYbupVDeDeLKEcpqAlNOb9wL+bUX9oXXf/Bhb595WkprFyylsi/7lqYJ
+         Ub6/4HCpQuREv3t1yAZAZOQqTPv0g69YybKfYjbKgphuRfKZGiBYuoW3sEtivamBoVhK
+         bIJNYvFYH/tQs8uSjb/zq7vXLdUHTP7gLG3+Q2mqwQP8G1TTuGSkc9Q6+fCtdmi3UntN
+         DxGQ==
+X-Gm-Message-State: APjAAAX4oGIw1mKzi6AVLUVszowb6viaCkUUBVyd/yaeMFl+lxMijSI0
+        tGgMvsNH3onRxR97Cn2QgFOFIPtN6+rilS9WtkzURdtfpFpEjAwq7HvwWJrSHOqxMjILzgC/pXt
+        1Ct6OLYn/CPKHqWs76snzgu+CbAdSFY142kixIdNZ
+X-Received: by 2002:a81:4784:: with SMTP id u126mr2442202ywa.349.1572013620404;
+        Fri, 25 Oct 2019 07:27:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxeLjnpJ8r6rblunofS7P6SYHd9DzfXkk/G7kqmKj6vgbeu2w6G6vCf29CxNnFugrVbxQIIC4KgRjCNmMCaKyA=
+X-Received: by 2002:a81:4784:: with SMTP id u126mr2442178ywa.349.1572013620104;
+ Fri, 25 Oct 2019 07:27:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACVy4SUkfn4642Vne=c1yuWhne=2cutPZQ5XeXz_QBz1g67CrA@mail.gmail.com>
+ <20191024103134.GD13225@gauss3.secunet.de> <ad094bfc-ebb3-012b-275b-05fb5a8f86e5@jv-coder.de>
+ <20191025094758.pchz4wupvo3qs6hy@linutronix.de> <202da67b-95c7-3355-1abc-f67a40a554e9@jv-coder.de>
+ <20191025102203.zmkqvvg5tofaqfw6@linutronix.de>
+In-Reply-To: <20191025102203.zmkqvvg5tofaqfw6@linutronix.de>
+From:   Tom Rix <trix@redhat.com>
+Date:   Fri, 25 Oct 2019 07:26:49 -0700
+Message-ID: <CACVy4SVAsG37n7q6jrRPSr-WV2QxSympuNQC2j+GJzBXqfwvtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] xfrm : lock input tasklet skb queue
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Joerg Vehlow <lkml@jv-coder.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-MC-Unique: cyvzJasVMjevxU9Coe2YZQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This switches the pn532 UART phy driver from manually polling to the new
-autopoll mechanism.
+I will work on refactoring the patch to v5.2-rt.
+trix
 
-Cc: Johan Hovold <johan@kernel.org>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
-Changes in v10:
-- Rebased the patch series on net-next 'Commit 503a64635d5e ("Merge
-  branch 'DPAA-Ethernet-changes'")'
-
-Changes in v9:
-- Rebased the patch series on v5.4-rc2
-
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
-
- drivers/nfc/pn533/uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nfc/pn533/uart.c b/drivers/nfc/pn533/uart.c
-index b408848e7779..5415ccc33ff0 100644
---- a/drivers/nfc/pn533/uart.c
-+++ b/drivers/nfc/pn533/uart.c
-@@ -261,7 +261,7 @@ static int pn532_uart_probe(struct serdev_device *serdev)
- 	serdev_device_set_flow_control(serdev, false);
- 	pn532->send_wakeup = PN532_SEND_WAKEUP;
- 	timer_setup(&pn532->cmd_timeout, pn532_cmd_timeout, 0);
--	priv = pn53x_common_init(PN533_DEVICE_PN532,
-+	priv = pn53x_common_init(PN533_DEVICE_PN532_AUTOPOLL,
- 				     PN533_PROTO_REQ_ACK_RESP,
- 				     pn532, &uart_phy_ops, NULL,
- 				     &pn532->serdev->dev);
--- 
-2.23.0
+On Fri, Oct 25, 2019 at 3:22 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2019-10-25 12:14:59 [+0200], Joerg Vehlow wrote:
+> > Here is one of the oops logs I still have:
+> >
+> > [  139.717273] CPU: 2 PID: 11987 Comm: netstress Not tainted
+> > 4.19.59-rt24-preemt-rt #1
+>
+> could you retry with the latest v5.2-RT, please? qemu should boot fine=E2=
+=80=A6
+>
+> Sebastian
 
