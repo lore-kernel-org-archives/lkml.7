@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DADCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A29CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5574120663
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1747720663
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012428;
-	bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
+	s=default; t=1572012436;
+	bh=0meya3MA2lOI1CtkbdB1xT+Fow3FlBRZRoOpoYC2tGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgtIXCMvG1mpJXY7FvpAJVOPubMBoVEkuyDpMLVrYpIPiInyQFFx0nuEWl5i15rAh
-	 egYq1X+Hnrwf5DZmLaglup6QHrFUmQk8bYTi5peoMkm78VSG5PLb9fyPLMpzq13OBm
-	 OxAP+vwVKq5oBprumCyji/YdC5DFBslOVQzY9POA=
+	b=p1q1H5RvPMFO/kwfVscUEn3YI5gI1sud9N+WDAkOPtqak3fs7diDuAfVBuvEBxA6/
+	 3QTA9/LNXNRS+iJutI9OwtNcHN40uxMi6fXGgQnpMJ7qw0MkQBSJVhrfLSwILGwdTM
+	 FdpRA4kpzmvruNjvSKpCvHtBfoAFaNsXnNM6ZYUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505111AbfJYNzf (ORCPT
+        id S2436820AbfJYOHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49456 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 10:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505083AbfJYNzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:55:31 -0400
+        id S2502362AbfJYNzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:55:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDB420679;
-        Fri, 25 Oct 2019 13:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CC821D81;
+        Fri, 25 Oct 2019 13:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011730;
-        bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
+        s=default; t=1572011732;
+        bh=0meya3MA2lOI1CtkbdB1xT+Fow3FlBRZRoOpoYC2tGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hb4gnpL3439t+4wd2yE4+MTDvR7QzxLYPov89HFW3itLisjc+p3lpTUUkU32kjyZk
-         8IQqMONps4cglNIX4qYN919tUBdoDXhtDHCFuO0eMAd13iFZSHQfeaVsghwMZtCpap
-         fQaQXfMjnoOcEZuouEOz4mXl34chbGkPXGK6FDao=
+        b=pvImXxN/rEO3FEDo4W2/oXdgjFoX8LhWLhE7EmK1oGGrwqrxV/D2ztznAi7vAowmq
+         MYETiI02tmxffPSlUmF8fJUPzw/iKh99dZ9v8JlBFRFugGAHKg9JXH3Rsm8beU0Fmf
+         eXYTQIbp6QLiTFGjyVnLN0vWHi90/SJU617ZVI4Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 13/33] net: usb: sr9800: fix uninitialized local variable
-Date:   Fri, 25 Oct 2019 09:54:45 -0400
-Message-Id: <20191025135505.24762-13-sashal@kernel.org>
+Cc:     Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 14/33] scsi: qla2xxx: Fix different size DMA Alloc/Unmap
+Date:   Fri, 25 Oct 2019 09:54:46 -0400
+Message-Id: <20191025135505.24762-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -61,34 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
+[ Upstream commit d376dbda187317d06d3a2d495b43a7983e4a3250 ]
 
-Make sure res does not contain random value if the call to
-sr_read_cmd fails for some reason.
+[   17.177276] qla2xxx 0000:05:00.0: DMA-API: device driver frees DMA memory
+    with different size [device address=0x00000006198b0000] [map size=32784 bytes]
+    [unmap size=8208 bytes]
+[   17.177390] RIP: 0010:check_unmap+0x7a2/0x1750
+[   17.177425] Call Trace:
+[   17.177438]  debug_dma_free_coherent+0x1b5/0x2d5
+[   17.177470]  dma_free_attrs+0x7f/0x140
+[   17.177489]  qla24xx_sp_unmap+0x1e2/0x610 [qla2xxx]
+[   17.177509]  qla24xx_async_gnnft_done+0x9c6/0x17d0 [qla2xxx]
+[   17.177535]  qla2x00_do_work+0x514/0x2200 [qla2xxx]
 
-Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b5f3bc39a0e8 ("scsi: qla2xxx: Fix inconsistent DMA mem alloc/free")
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 2 +-
+ drivers/scsi/qla2xxx/qla_gs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index 35f39f23d8814..8f8c9ede88c26 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
- static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
- {
- 	struct usbnet *dev = netdev_priv(net);
--	__le16 res;
-+	__le16 res = 0;
- 
- 	mutex_lock(&dev->phy_mutex);
- 	sr_set_sw_mii(dev);
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index 9f58e591666da..ebf223cfebbc5 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -4152,7 +4152,7 @@ int qla24xx_async_gpnft(scsi_qla_host_t *vha, u8 fc4_type, srb_t *sp)
+ 								rspsz,
+ 								&sp->u.iocb_cmd.u.ctarg.rsp_dma,
+ 								GFP_KERNEL);
+-		sp->u.iocb_cmd.u.ctarg.rsp_allocated_size = sizeof(struct ct_sns_pkt);
++		sp->u.iocb_cmd.u.ctarg.rsp_allocated_size = rspsz;
+ 		if (!sp->u.iocb_cmd.u.ctarg.rsp) {
+ 			ql_log(ql_log_warn, vha, 0xffff,
+ 			    "Failed to allocate ct_sns request.\n");
 -- 
 2.20.1
 
