@@ -2,87 +2,129 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA290CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C23CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808B221D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:18:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0nQZAXIl"
+	by mail.kernel.org (Postfix) with ESMTP id 7674921D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:19:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572034790;
+	bh=0zDH0Fbrijq1CDlKb/eS9UolHwf/vrJ4mzyY2QBJsBI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Nau5oTtmcLkG14DJfAaFTwAZ1K9TBFnh6iRSrDXqVND0Yxh/+IEuHMgOd90sQnMQY
+	 cqynNh9jZkFlsRSzdFKX4Kxao+2qDXmafbi6Nn6AMl5AV9SjVtbFN+gTKDvFFz3Osf
+	 haYIpN3lVOLCMbOduLXp8fdpM5bLt9CLXJ2H07Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfJYUSu (ORCPT
+        id S1728121AbfJYUTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:18:50 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37670 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfJYUSt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:18:49 -0400
-Received: by mail-io1-f65.google.com with SMTP id 1so3846282iou.4
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 13:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NCBR5U51gx0BTu0sLmcRSqq7M5vsvlw0CMPTVtehGiQ=;
-        b=0nQZAXIlVAaMPPzGgxQhpfchTqE26pjejpXPTSGSN7CHE0o2ppqAheUHgpP0/Lkiwc
-         uzZ1+tPrglbLBheeXZo37Sp+o/Azjk5vB+awBhvtt982W9WxqqpTVXivEvja/SpJMrPw
-         W7FednO0xXko+SgBCTyKgSL6Rd/QSo6NPodO7Zv//YALXskWApdR9TKbisfBaZ0y/cXQ
-         2d7yT7/i6LYyQuKyzXIxLhUjF90VYOO2G8cuzu2dkJSDbK4Knk2KZS8AKg1lPQfOx9xr
-         TvK4GF4xcawobM1OqgTTZ+Ep+dsVRIqHIw0dPPscb16eIQNsWZ899IDDYGSVL2usXd38
-         Tr2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NCBR5U51gx0BTu0sLmcRSqq7M5vsvlw0CMPTVtehGiQ=;
-        b=TsdMvSK6m2PvDbRyH2hTwjivyQ7tyfWpiXBWPpnALDyYXvrf2bCS7YbhnTP6lFoz/E
-         veH3TEbTk5fwFNTyEOiJj1fyx3Fq5MvfS2UdgqaM+1WuoTiYBzaUCsmZUg9b2fRi+O8Z
-         YQsUqiJT0pq1X2pf+oECPQDiWTI5h6P+cDSFA93vcyieahfuJP3lSxdePW7RAiP4NSc5
-         6wUWSOudGnzaI85QSru4lI4RIRHK1ZZjdtf8V6SRIi5vkgCFfZy9NXJ3dc+Iu4fdrvEr
-         +f7DgnC1hj2XP7SrTXrtN2u+7RGzgCTKV3JXjWuJqzoSAzgkW377fmJ0y3RkGSTVEH/G
-         hkQA==
-X-Gm-Message-State: APjAAAVqKnDJEevlhNOphknlUdxlpdV8uZzOcI7ULl+qOX5ruWei0vPB
-        dbupdEoRJ4mIzuRMcS9ZUn4QLQ==
-X-Google-Smtp-Source: APXvYqzDQfuwNIymKXRFdVnTtyxH/JBiiT9sPS2lDsn1w4inXNY9A2HUaR3nUZNWJQcQyvmwOGVlmA==
-X-Received: by 2002:a02:a414:: with SMTP id c20mr5770951jal.91.1572034728986;
-        Fri, 25 Oct 2019 13:18:48 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c73sm384696ila.9.2019.10.25.13.18.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 13:18:48 -0700 (PDT)
-Subject: Re: [PATCH v3 1/1] blk-mq: fill header with kernel-doc
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kernel@collabora.com, krisman@collabora.com
-References: <20191022000724.32746-1-andrealmeid@collabora.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <199aef1f-1956-afbc-9ccb-e9d057ea2d27@kernel.dk>
-Date:   Fri, 25 Oct 2019 14:18:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 16:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbfJYUTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 16:19:49 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE3821E6F;
+        Fri, 25 Oct 2019 20:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572034787;
+        bh=0zDH0Fbrijq1CDlKb/eS9UolHwf/vrJ4mzyY2QBJsBI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UqeviibTuNZv2SaUyRGiB0nQifeY/W01PGm9s6G/Tvxny0L1/LfoH23izCCNYZcPU
+         N82wKD6IFXMHPN6icjNVj+/HPv5IvXnZjRkL3mPFMBg5rHzQXVlCi3b+e7zr8iW165
+         vpp9AXWeviqIGQAfeFQvRZ278d69OpkhbTEl6dWg=
+Received: by mail-qt1-f182.google.com with SMTP id c21so5112295qtj.12;
+        Fri, 25 Oct 2019 13:19:47 -0700 (PDT)
+X-Gm-Message-State: APjAAAUMHNP+4F0vMMQKYK+CBVCz7wIWoPhTwNvp4YBih4N0z5/9LaHR
+        e7MflwU6HuxzYtGWS1blDElI/9EGEyumbHIHfA==
+X-Google-Smtp-Source: APXvYqzLV0DNiSIgrqSeSFTkfH8awvr/ASCKRP7JD+/ltAUIM+wC1d0zfF+U7OiEUa1J3NlXBL4cFdbcYR0OTsXOWoQ=
+X-Received: by 2002:ad4:518d:: with SMTP id b13mr356862qvp.79.1572034786614;
+ Fri, 25 Oct 2019 13:19:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20191022000724.32746-1-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com>
+ <1570695678-42623-2-git-send-email-jianxin.pan@amlogic.com>
+ <20191014173900.GA6886@bogus> <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
+In-Reply-To: <622c7785-8254-5473-6b35-7287830f3c60@amlogic.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 25 Oct 2019 15:19:35 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+Message-ID: <CAL_Jsq+F9EGv2jEWw2BrmH0NDKMRt6=pG6LSHL8UYH9G+-OeMw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: power: add Amlogic secure
+ power domains bindings
+To:     Jianxin Pan <jianxin.pan@amlogic.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/21/19 6:07 PM, André Almeida wrote:
-> Insert documentation for structs, enums and functions at header file.
-> Format existing and new comments at struct blk_mq_ops as
-> kernel-doc comments.
+On Wed, Oct 16, 2019 at 6:26 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote=
+:
+>
+> Hi Rob,
+>
+> On 2019/10/15 1:39, Rob Herring wrote:
+> > On Thu, Oct 10, 2019 at 04:21:15AM -0400, Jianxin Pan wrote:
+> >> Add the bindings for the Amlogic Secure power domains, controlling the
+> >> secure power domains.
+> >>
+> >> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which t=
+he
+> >> power domain registers are in secure world.
+> >>
+> >> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> >> ---
+> >>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 42 +++++++++++++=
++++++++++
+> >>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++=
+++++
+> >>  2 files changed, 74 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,me=
+son-sec-pwrc.yaml
+> >> +
+> >> +  secure-monitor:
+> >> +    description: phandle to the secure-monitor node
+> >> +    $ref: /schemas/types.yaml#/definitions/phandle
+> >
+> > Why not just a child node of this node?
+> >
+> Thanks for the review.
+>
+> I followed the style of the previous series of meson=EF=BC=9A
+>
+>   46         efuse: efuse {
+>   47                 compatible =3D "amlogic,meson-gxbb-efuse";
+>   48                 clocks =3D <&clkc CLKID_EFUSE>;
+>   49                 #address-cells =3D <1>;
+>   50                 #size-cells =3D <1>;
+>   51                 read-only;
+>   52                 secure-monitor =3D <&sm>;
+>   53         };
 
-Applied, thanks.
+Looks like that was not reviewed by me and is only in linux-next.
+Please make functions exposed by secure world a child of the secure
+firmware node.
 
--- 
-Jens Axboe
+Really for power domains, you only need to add a '#power-domain-cells'
+property to the secure monitor node.
 
+Rob
