@@ -2,255 +2,143 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6249ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEBFCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2609C20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A1E20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E6h0jEnq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uX/O7oxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfJYTU4 (ORCPT
+        id S1727018AbfJYTWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:20:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35761 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfJYTU4 (ORCPT
+        Fri, 25 Oct 2019 15:22:48 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55223 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfJYTWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:20:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572031253;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=b4AyKgmfE6msyrF0y4ZsMwrJUW61YLBt7GbBRKBk9yQ=;
-        b=E6h0jEnqGKHB8JNHajuVJ016YRWwPt/gwS1aEZyAvAhbsQzXH/qyGMSdOioF3S8DEsHvlP
-        MCtODMdArSaeZKf5R9a0xKJGcLmuueiGzm3IhHhD2EjUN7oVTcuOeWz79SuEipkZ3EAJ4E
-        zlpASkIBIjBwOd3w2KuFsER3kfeYPLA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-RryGXTfiNLSng7gCOjlTfA-1; Fri, 25 Oct 2019 15:20:50 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DF7480183E;
-        Fri, 25 Oct 2019 19:20:48 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8614660167;
-        Fri, 25 Oct 2019 19:20:34 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 15:20:31 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com, Dan Walsh <dwalsh@redhat.com>,
-        mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 08/21] audit: add contid support for signalling
- the audit daemon
-Message-ID: <20191025192031.ul3yjy2q57vsvier@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <0850eaa785e2ff30c8c4818fd53e9544b34ed884.1568834524.git.rgb@redhat.com>
- <CAHC9VhQoFFaQACbV4QHG_NPUCJu1+V=x3=i-yyGjbsYq8HuPtg@mail.gmail.com>
+        Fri, 25 Oct 2019 15:22:47 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g7so3330792wmk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ONdJaD+Bko4M9q05H7rLbK8ydzxyE4q+FendoDuboxU=;
+        b=uX/O7oxqqh7F4O9wnJBwUlX/CUtM9dn/fvRUDEU5S4QgaxgaeuLIQL1qo0Sn2bfYQn
+         +/frRViCfkeBSick98mDdTsVlgnxWhRgt0rg1TKvdBIj9XZHKR+DuC+Udnm9PdmPBZvm
+         CSR11UVhOaOCQtTnLyILGcvXJjvARnpcgBQbgVhG3ATjwVwEsgFxW3ps0nDjnryeFXS7
+         UHSE2gTXXJTAXzJlLW6Ne4SGkyUzO/NgbhUt26vyBstyphO9uBeH394CTVGU4F4Nkl77
+         OPuLp6ScT0+KhydYku6a7MApIQ+c9yGF6XQ7zNWo6RYYGoVfDbKbBiHhZfAasZPaMsl+
+         M/vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ONdJaD+Bko4M9q05H7rLbK8ydzxyE4q+FendoDuboxU=;
+        b=UWhxmT2s2gPUnn0FVpqNu/mKaGSz4QEIHoOsIRnFJZSEtQN4tmWfY7FefAG5Y8c1Nf
+         qdUatiyTwMbdnkOo5v/w3PbWY9Ofld8Fp4FfLlZo15JRB1dABvjKhv/pKjheHB0TSTx1
+         ufuzYmH5RPPfkWKH3DQ12QjzKM7hEo4vBW12zS7KVh33kwOL/o7Lopa6KfpsV8P8i8OE
+         jO29hrupwQbNK119cX4VGKe+8z/gn4Aq/Rp0xIeoKyWWdns62xmGIKkYU7J/kOF6S8km
+         ZhRwU1BQ/vT5WgfECImEVVDJnEMrOrs3a3nQDdSbNUkAXmesMxDi7vvXcTQXzc1sigtj
+         XJQA==
+X-Gm-Message-State: APjAAAVoYp9aGN75JoQ2c4C56Ax5Ais049KjuH91YZxbRqlkSE10f28a
+        HihcYVoHDJxY+8PZZqiE1gGXNSlL46yLM2NEr2c=
+X-Google-Smtp-Source: APXvYqwRv2/iWy/fTGJpjOGuyEoghj6/BcbdM2Z5bEz8jJLxdknf1fD8L9wYYYjuszJyRc5rN8V3iF64UUqAQW73Yo4=
+X-Received: by 2002:a1c:2008:: with SMTP id g8mr4569469wmg.34.1572031363694;
+ Fri, 25 Oct 2019 12:22:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhQoFFaQACbV4QHG_NPUCJu1+V=x3=i-yyGjbsYq8HuPtg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: RryGXTfiNLSng7gCOjlTfA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <1571455431-104881-1-git-send-email-chenwandun@huawei.com>
+In-Reply-To: <1571455431-104881-1-git-send-email-chenwandun@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 25 Oct 2019 15:22:31 -0400
+Message-ID: <CADnq5_NiuOrH48a9qscT60kzhcSCgmRF8dmBj4Ga9Lkh_L1+4w@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: remove gcc warning Wunused-but-set-variable
+To:     Chen Wandun <chenwandun@huawei.com>
+Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        "Cheng, Tony" <Tony.Cheng@amd.com>, abdoulaye.berthe@amd.com,
+        Thomas Lim <Thomas.Lim@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-10 20:39, Paul Moore wrote:
-> On Wed, Sep 18, 2019 at 9:25 PM Richard Guy Briggs <rgb@redhat.com> wrote=
-:
-> > Add audit container identifier support to the action of signalling the
-> > audit daemon.
-> >
-> > Since this would need to add an element to the audit_sig_info struct,
-> > a new record type AUDIT_SIGNAL_INFO2 was created with a new
-> > audit_sig_info2 struct.  Corresponding support is required in the
-> > userspace code to reflect the new record request and reply type.
-> > An older userspace won't break since it won't know to request this
-> > record type.
-> >
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  include/linux/audit.h       |  7 +++++++
-> >  include/uapi/linux/audit.h  |  1 +
-> >  kernel/audit.c              | 28 ++++++++++++++++++++++++++++
-> >  kernel/audit.h              |  1 +
-> >  security/selinux/nlmsgtab.c |  1 +
-> >  5 files changed, 38 insertions(+)
-> >
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 0c18d8e30620..7b640c4da4ee 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -23,6 +23,13 @@ struct audit_sig_info {
-> >         char            ctx[0];
-> >  };
-> >
-> > +struct audit_sig_info2 {
-> > +       uid_t           uid;
-> > +       pid_t           pid;
-> > +       u64             cid;
-> > +       char            ctx[0];
-> > +};
-> > +
-> >  struct audit_buffer;
-> >  struct audit_context;
-> >  struct inode;
-> > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> > index 4ed080f28b47..693ec6e0288b 100644
-> > --- a/include/uapi/linux/audit.h
-> > +++ b/include/uapi/linux/audit.h
-> > @@ -72,6 +72,7 @@
-> >  #define AUDIT_SET_FEATURE      1018    /* Turn an audit feature on or =
-off */
-> >  #define AUDIT_GET_FEATURE      1019    /* Get which features are enabl=
-ed */
-> >  #define AUDIT_CONTAINER_OP     1020    /* Define the container id and =
-info */
-> > +#define AUDIT_SIGNAL_INFO2     1021    /* Get info auditd signal sende=
-r */
-> >
-> >  #define AUDIT_FIRST_USER_MSG   1100    /* Userspace messages mostly un=
-interesting to kernel */
-> >  #define AUDIT_USER_AVC         1107    /* We filter this differently *=
-/
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index adfb3e6a7f0c..df3db29f5a8a 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -125,6 +125,7 @@ struct audit_net {
-> >  kuid_t         audit_sig_uid =3D INVALID_UID;
-> >  pid_t          audit_sig_pid =3D -1;
-> >  u32            audit_sig_sid =3D 0;
-> > +u64            audit_sig_cid =3D AUDIT_CID_UNSET;
-> >
-> >  /* Records can be lost in several ways:
-> >     0) [suppressed in audit_alloc]
-> > @@ -1094,6 +1095,7 @@ static int audit_netlink_ok(struct sk_buff *skb, =
-u16 msg_type)
-> >         case AUDIT_ADD_RULE:
-> >         case AUDIT_DEL_RULE:
-> >         case AUDIT_SIGNAL_INFO:
-> > +       case AUDIT_SIGNAL_INFO2:
-> >         case AUDIT_TTY_GET:
-> >         case AUDIT_TTY_SET:
-> >         case AUDIT_TRIM:
-> > @@ -1257,6 +1259,7 @@ static int audit_receive_msg(struct sk_buff *skb,=
- struct nlmsghdr *nlh)
-> >         struct audit_buffer     *ab;
-> >         u16                     msg_type =3D nlh->nlmsg_type;
-> >         struct audit_sig_info   *sig_data;
-> > +       struct audit_sig_info2  *sig_data2;
-> >         char                    *ctx =3D NULL;
-> >         u32                     len;
-> >
-> > @@ -1516,6 +1519,30 @@ static int audit_receive_msg(struct sk_buff *skb=
-, struct nlmsghdr *nlh)
-> >                                  sig_data, sizeof(*sig_data) + len);
-> >                 kfree(sig_data);
-> >                 break;
-> > +       case AUDIT_SIGNAL_INFO2:
-> > +               len =3D 0;
-> > +               if (audit_sig_sid) {
-> > +                       err =3D security_secid_to_secctx(audit_sig_sid,=
- &ctx, &len);
-> > +                       if (err)
-> > +                               return err;
-> > +               }
-> > +               sig_data2 =3D kmalloc(sizeof(*sig_data2) + len, GFP_KER=
-NEL);
-> > +               if (!sig_data2) {
-> > +                       if (audit_sig_sid)
-> > +                               security_release_secctx(ctx, len);
-> > +                       return -ENOMEM;
-> > +               }
-> > +               sig_data2->uid =3D from_kuid(&init_user_ns, audit_sig_u=
-id);
-> > +               sig_data2->pid =3D audit_sig_pid;
-> > +               if (audit_sig_sid) {
-> > +                       memcpy(sig_data2->ctx, ctx, len);
-> > +                       security_release_secctx(ctx, len);
-> > +               }
-> > +               sig_data2->cid =3D audit_sig_cid;
-> > +               audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO2, 0, 0,
-> > +                                sig_data2, sizeof(*sig_data2) + len);
-> > +               kfree(sig_data2);
-> > +               break;
-> >         case AUDIT_TTY_GET: {
-> >                 struct audit_tty_status s;
-> >                 unsigned int t;
-> > @@ -2384,6 +2411,7 @@ int audit_signal_info(int sig, struct task_struct=
- *t)
-> >                 else
-> >                         audit_sig_uid =3D uid;
-> >                 security_task_getsecid(current, &audit_sig_sid);
-> > +               audit_sig_cid =3D audit_get_contid(current);
-> >         }
->=20
-> I've been wondering something as I've been working my way through
-> these patches and this patch seems like a good spot to discuss this
-> ... Now that we have the concept of an audit container ID "lifetime"
-> in the kernel, when do we consider the ID gone?  Is it when the last
-> process in the container exits, or is it when we generate the last
-> audit record which could possibly contain the audit container ID?
-> This patch would appear to support the former, but if we wanted the
-> latter we would need to grab a reference to the audit container ID
-> struct so it wouldn't "die" on us before we could emit the signal info
-> record.
+On Sat, Oct 19, 2019 at 8:07 PM Chen Wandun <chenwandun@huawei.com> wrote:
+>
+> From: Chenwandun <chenwandun@huawei.com>
+>
+> drivers/gpu/drm/amd/display/dc/dce/dce_aux.c: In function dce_aux_configure_timeout:
+> drivers/gpu/drm/amd/display/dc/dce/dce_aux.c: warning: variable timeout set but not used [-Wunused-but-set-variable]
+>
+> Signed-off-by: Chenwandun <chenwandun@huawei.com>
 
-Are you concerned with the availability of the data when the audit
-signal info record is generated, when the kernel last deals with a
-particular contid or when userspace thinks there will be no more
-references to it?
+Applied.  Thanks!
 
-I've got a bit of a dilemma with this one...
+Alex
 
-In fact, the latter situation you describe isn't a concern at present to
-be able to deliver the information since the value is copied into the
-audit signal global internal variables before the signalling task dies
-and the audit signal info record is created from those copied (cached)
-values when requested from userspace.
-
-So the issue raised above I don't think is a problem.  However, patch 18
-(which wasn't reviewed because it was a patch to a number of preceeding
-patches) changes the reporting approach to give a chain of nested
-contids which isn't reflected in the same level of reporting for the
-audit signal patch/mechanism.  Solving this is a bit more complex.  We
-could have the audit signal internal caching store a pointer to the
-relevant container object and bump its refcount to ensure it doesn't
-vanish until we are done with it, but the audit signal info binary
-record format already has a variable length due to the selinux context
-at the end of that struct and adding a second variable length element to
-it would make it more complicated (but not impossible) to handle.
-
-> paul moore
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+> ---
+>  drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 5 -----
+>  1 file changed, 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+> index 976bd49..739f8e2 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+> @@ -432,7 +432,6 @@ static bool dce_aux_configure_timeout(struct ddc_service *ddc,
+>  {
+>         uint32_t multiplier = 0;
+>         uint32_t length = 0;
+> -       uint32_t timeout = 0;
+>         struct ddc *ddc_pin = ddc->ddc_pin;
+>         struct dce_aux *aux_engine = ddc->ctx->dc->res_pool->engines[ddc_pin->pin_data->en];
+>         struct aux_engine_dce110 *aux110 = FROM_AUX_ENGINE(aux_engine);
+> @@ -446,25 +445,21 @@ static bool dce_aux_configure_timeout(struct ddc_service *ddc,
+>                 length = timeout_in_us/TIME_OUT_MULTIPLIER_8;
+>                 if (timeout_in_us % TIME_OUT_MULTIPLIER_8 != 0)
+>                         length++;
+> -               timeout = length * TIME_OUT_MULTIPLIER_8;
+>         } else if (timeout_in_us <= 2 * TIME_OUT_INCREMENT) {
+>                 multiplier = 1;
+>                 length = timeout_in_us/TIME_OUT_MULTIPLIER_16;
+>                 if (timeout_in_us % TIME_OUT_MULTIPLIER_16 != 0)
+>                         length++;
+> -               timeout = length * TIME_OUT_MULTIPLIER_16;
+>         } else if (timeout_in_us <= 4 * TIME_OUT_INCREMENT) {
+>                 multiplier = 2;
+>                 length = timeout_in_us/TIME_OUT_MULTIPLIER_32;
+>                 if (timeout_in_us % TIME_OUT_MULTIPLIER_32 != 0)
+>                         length++;
+> -               timeout = length * TIME_OUT_MULTIPLIER_32;
+>         } else if (timeout_in_us > 4 * TIME_OUT_INCREMENT) {
+>                 multiplier = 3;
+>                 length = timeout_in_us/TIME_OUT_MULTIPLIER_64;
+>                 if (timeout_in_us % TIME_OUT_MULTIPLIER_64 != 0)
+>                         length++;
+> -               timeout = length * TIME_OUT_MULTIPLIER_64;
+>         }
+>
+>         length = (length < MAX_TIMEOUT_LENGTH) ? length : MAX_TIMEOUT_LENGTH;
+> --
+> 2.7.4
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
