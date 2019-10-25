@@ -2,146 +2,131 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1646ACA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4938BCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6EE21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E39D21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 08:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571993191;
-	bh=Gvb98PJETYX9GpmeqEuHdbiUs9kyH1iaCUHLRsAXHn8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNluNnou68TRyhWWJx50BrlAHK5BnUSCuJkAoh600XChXYti1n3QsmWgANbx8YGZP
-	 Dg4QwFn+UBwwOu3i9h/QcC00EgUWsEXK80D2+I+hAArlPWXbT9XBASebFxu3qw8eEb
-	 SVMQ+6WttpNxthc77ltNbEHA1WsdlHTxeBzr2C+o=
+	s=default; t=1571993200;
+	bh=MCZtNVEVAlg+pt/9N372PqqnrAnm6QyM0o7RgI8cWF4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SdDdsYz76+czUg1MTRXzzBwUip61LN2JmCDB/NbURslku6NVdYvTVd5KxKTkM8xoL
+	 vOprN89QcIZcXH4wj+wueZ8dNhmhKbtmzcpCu+0T1zdIH4ag51qgGDVpgY9JXcXvlX
+	 Xedgq8jLkquiYeI2Ua65ovyoL2mbSv4Y7+5Zl1JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408473AbfJYIqb (ORCPT
+        id S2408495AbfJYIqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 04:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733196AbfJYIqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:46:30 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C5921D7F;
-        Fri, 25 Oct 2019 08:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571993189;
-        bh=Gvb98PJETYX9GpmeqEuHdbiUs9kyH1iaCUHLRsAXHn8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdm3+QE27kVFsON2vrBu62dsmP1qflPcqS9I7/xT36lP/qEOD0lsv9Xe/Ofw5HcYo
-         7Jw5Oz243Pd3yxeolZxUWWbI3Km9OLQmfvoKd9dZJBbnT5R9uscjoHixe24jFOJzp7
-         saOCT0l6YIXK/eikaquDgcdxKoPWxUV9zRTsUsrw=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [BUGFIX PATCH 1/6] perf/probe: Fix wrong address verification
-Date:   Fri, 25 Oct 2019 17:46:25 +0900
-Message-Id: <157199318513.8075.10463906803299647907.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157199317547.8075.1010940983970397945.stgit@devnote2>
-References: <157199317547.8075.1010940983970397945.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Fri, 25 Oct 2019 04:46:38 -0400
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:39667 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733196AbfJYIqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:46:37 -0400
+Received: by mail-ot1-f53.google.com with SMTP id s22so1481502otr.6;
+        Fri, 25 Oct 2019 01:46:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=otxxqPgprKIYLEC3VNtxVjP3ezUj30jnhVcDZmes+Yo=;
+        b=Nq0nY2DzEwJYkedwhV7kR4qwWW/wKTvb1DY8Vm/XAjU5v0/XupV1neSpS+iUUaiQkd
+         CLapJ5yPYK9NnnCOcCSV6yFY2fvjhkN156Xys36FtY+mqErT5X8eEw8rTXcU5PY7Jwpg
+         uCDnMz1D1Ru9jDnkm+LAvxpUUFrr1sjaqfsmCSvYyDRJlX3W0gyM8QQjl1SLiUzvut8J
+         woGiny3Wqs1IB+5ttLv6AC+w9WhdnkZiwxv1KBcIgQ+wtFiR2RJkVISJd0OvvU94GMam
+         0tPYqad5aAf9+P7F+RxN5YhcRZ4/tI0bgmbG6vVUNcczmdHY0hhwFKPHUy1I0nU76Nyf
+         d2kQ==
+X-Gm-Message-State: APjAAAUjCba0Nz4IfXqYo1JuwF05txFJGsQFlGXpShFJKBfmv0XHdwyg
+        N0/q/QQKyjyg8G+4eIKTAp52nWHTkqMfA/C2Jyg=
+X-Google-Smtp-Source: APXvYqxrZPK5Xbm7wOodsn5y/Q4/paFEf7kNviIbVLCjlal3rZGpiBuAgJQ5f2XRmFqIA/1p13DXVtXIBmWKDP/Tj44=
+X-Received: by 2002:a9d:664:: with SMTP id 91mr1748665otn.189.1571993196583;
+ Fri, 25 Oct 2019 01:46:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <2435090.1mJ0fSsrDY@kreacher> <20191025025343.tyihliza45os3e4r@vireshk-i7>
+ <CAJZ5v0hyAX6zpr+2EzURg7ACmaXhbTAc7mBnr9ep11LkF1EBOg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hyAX6zpr+2EzURg7ACmaXhbTAc7mBnr9ep11LkF1EBOg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 25 Oct 2019 10:46:25 +0200
+Message-ID: <CAJZ5v0hWN4-HCts+CoGm01kRHc05m9BxCA0CYfionJJBsHG7oA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: processor: Add QoS requests for all CPUs
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there are some DIE which has only ranges instead of the
-combination of entrypc/highpc, address verification must use
-dwarf_haspc() instead of dwarf_entrypc/dwarf_highpc.
+On Fri, Oct 25, 2019 at 10:17 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Fri, Oct 25, 2019 at 4:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 25-10-19, 02:41, Rafael J. Wysocki wrote:
+> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >
+> > > The _PPC change notifications from the platform firmware are per-CPU,
+> > > so acpi_processor_ppc_init() needs to add a frequency QoS request
+> > > for each CPU covered by a cpufreq policy to take all of them into
+> > > account.
+> > >
+> > > Even though ACPI thermal control of CPUs sets frequency limits
+> > > per processor package, it also needs a frequency QoS request for each
+> > > CPU in a cpufreq policy in case some of them are taken offline and
+> > > the frequency limit needs to be set through the remaining online
+> > > ones (this is slightly excessive, because all CPUs covered by one
+> > > cpufreq policy will set the same frequency limit through their QoS
+> > > requests, but it is not incorrect).
+> > >
+> > > Modify the code in accordance with the above observations.
+> >
+> > I am not sure if I understood everything you just said, but I don't
+> > see how things can break with the current code we have.
+> >
+> > Both acpi_thermal_cpufreq_init() and acpi_processor_ppc_init() are
+> > called from acpi_processor_notifier() which is registered as a policy
+> > notifier and is called when a policy is created or removed. Even if
+> > some CPUs of a policy go offline, it won't matter as the request for
+> > the policy stays and it will be dropped only when all the CPUs of a
+> > policy go offline.
+> >
+> > What am I missing ?
+>
+> The way the request is used.
+>
+> Say there are two CPUs, A and B, in the same policy.  A is
+> policy->cpu, so acpi_processor_ppc_init() adds a QoS request for A
+> only (note that the B's QoS request, B->perflib_req, remains
+> inactive).
+>
+> Now, some time later, the platform firmware notifies the OS of a _PPC
+> change for B.  That means acpi_processor_notify() is called and it
+> calls acpi_processor_ppc_has_changed(B) and that invokes
+> acpi_processor_get_platform_limit(B), which in turn looks at the B's
+> QoS request (B->perflib_req) and sees that it is inactive, so 0 is
+> returned without doing anything.  However, *some* QoS request should
+> be updated then.
+>
+> Would it be correct to update the A's QoS request in that case?  No,
+> because the _PPC limit for A may be different that the _PPC limit for
+> B in principle.
+>
+> The thermal case is not completely analogous, because
+> cpufreq_set_cur_state() finds online CPUs in the same package as the
+> target one and tries to update the QoS request for each of them, which
+> will include the original policy->cpu, whose QoS request has been
+> registered by acpi_thermal_cpufreq_init(), as long as it is online.
+> If it is offline, it will be skipped and there is no easy way to find
+> a "previous policy->cpu".  It is possible to do that, but IMO it is
+> more straightforward to have a request for each CPU added.
 
-Also, the ranges only DIE will have a partial code in different
-section (e.g. unlikely code will be in text.unlikely as "FUNC.cold"
-symbol). In that case, we can not use dwarf_entrypc() or
-die_entrypc(), because the offset from original DIE can be
-a minus value.
-
-Instead, this simply gets the symbol and offset from symtab.
-
-Without this patch;
-  # tools/perf/perf probe -D clear_tasks_mm_cpumask:1
-  Failed to get entry address of clear_tasks_mm_cpumask
-    Error: Failed to add events.
-
-And with this patch
-  # tools/perf/perf probe -D clear_tasks_mm_cpumask:1
-  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
-  p:probe/clear_tasks_mm_cpumask_1 clear_tasks_mm_cpumask+5
-  p:probe/clear_tasks_mm_cpumask_2 clear_tasks_mm_cpumask+8
-  p:probe/clear_tasks_mm_cpumask_3 clear_tasks_mm_cpumask+16
-  p:probe/clear_tasks_mm_cpumask_4 clear_tasks_mm_cpumask+82
-
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Fixes: 576b523721b7 ("perf probe: Fix probing symbols with optimization suffix")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/perf/util/probe-finder.c |   32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
-
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index cd9f95e5044e..2b6513e5725c 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -604,38 +604,26 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
- 				  const char *function,
- 				  struct probe_trace_point *tp)
- {
--	Dwarf_Addr eaddr, highaddr;
-+	Dwarf_Addr eaddr;
- 	GElf_Sym sym;
- 	const char *symbol;
- 
- 	/* Verify the address is correct */
--	if (dwarf_entrypc(sp_die, &eaddr) != 0) {
--		pr_warning("Failed to get entry address of %s\n",
--			   dwarf_diename(sp_die));
--		return -ENOENT;
--	}
--	if (dwarf_highpc(sp_die, &highaddr) != 0) {
--		pr_warning("Failed to get end address of %s\n",
--			   dwarf_diename(sp_die));
--		return -ENOENT;
--	}
--	if (paddr > highaddr) {
--		pr_warning("Offset specified is greater than size of %s\n",
-+	if (!dwarf_haspc(sp_die, paddr)) {
-+		pr_warning("Specified offset is out of %s\n",
- 			   dwarf_diename(sp_die));
- 		return -EINVAL;
- 	}
- 
--	symbol = dwarf_diename(sp_die);
-+	/* Try to get actual symbol name from symtab */
-+	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
- 	if (!symbol) {
--		/* Try to get the symbol name from symtab */
--		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
--		if (!symbol) {
--			pr_warning("Failed to find symbol at 0x%lx\n",
--				   (unsigned long)paddr);
--			return -ENOENT;
--		}
--		eaddr = sym.st_value;
-+		pr_warning("Failed to find symbol at 0x%lx\n",
-+			   (unsigned long)paddr);
-+		return -ENOENT;
- 	}
-+	eaddr = sym.st_value;
-+
- 	tp->offset = (unsigned long)(paddr - eaddr);
- 	tp->address = (unsigned long)paddr;
- 	tp->symbol = strdup(symbol);
-
+BTW, IMO processor_thremal can be changed to use one frequency QoS
+request per policy on top of this, but I'd rather take one step at a
+time. :-)
