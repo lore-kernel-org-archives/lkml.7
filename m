@@ -2,157 +2,176 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8E4CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E218CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9540206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:31:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsRQtSYw"
+	by mail.kernel.org (Postfix) with ESMTP id 045452054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572031953;
+	bh=Te9FZpyFy/Wz5Tfmhe54F9bcA0PBB78RSH6dJ6BIUNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tt+vBZm8HfQJHXwn9tbzu6CUxlgzlY0/C+wnIrWsMxjlDVwMdQzMJarUzPyiTpkv8
+	 wgTlaZn4Q6VOLFlpIHpDEMyOFbTVbUEAg5ZNYthJNdFR+Dxct0nvFjyfQIgyeRLLE7
+	 OsTY4b11/gA9B7fs1rpXGZ/d30KSO/j7a956XKao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfJYTbQ (ORCPT
+        id S1727242AbfJYTcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:31:16 -0400
-Received: from mail-lj1-f179.google.com ([209.85.208.179]:34470 "EHLO
-        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfJYTbO (ORCPT
+        Fri, 25 Oct 2019 15:32:31 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33701 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfJYTca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:31:14 -0400
-Received: by mail-lj1-f179.google.com with SMTP id 139so3821276ljf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=lvFlsS5TAetH+Eayr5diNLg/TJmy49QuVl3DajZzA6Y=;
-        b=dsRQtSYw/eltA2XHa3cHZVV2aj9px75LTI6GQOS4GtXoEbj7RgjGfq2SZaz1AK1pCd
-         q+ue+WZLlZMtSSL6f0MRgyws23C1qOJQ8w+7CHy5rZs2xkkfJE3Wl35HvBF/Wy45URDQ
-         hQeAdvn65AAr2TZvOH9se8c24P6K30ZHmOIVxtOX+DE3s45wn7VUZGBDNS2a5Wx/Vf8s
-         JgNSNU47eQZTI0ESZmuw1nt5Naw1YroDEOV5HUABiXEztQO4OZ7ndw5m7WzFeSuV0k3Y
-         pSQ2PXS6W3GSVJ9FJwW3qMoe57wpji0feKOWpM5lTT1aQ3dhKK1XcADvjxuJCFzCxtUY
-         mMEw==
+        Fri, 25 Oct 2019 15:32:30 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a15so2377864oic.0;
+        Fri, 25 Oct 2019 12:32:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=lvFlsS5TAetH+Eayr5diNLg/TJmy49QuVl3DajZzA6Y=;
-        b=BgopkvScIaQ/eUoizoHRXeBE87e7Q/4ILJ+i9j4wWLFia+UWhxiuGcoG+FlyJf1CcU
-         GXQFZV1BwJERy9adrNAOj2qudrmMQt8L7g7CBZTnvTUzK9TVAZlqZbNPPPXUzJATJ4qa
-         p+Z+UPRH7qvyKPXsB08UFaJ6L4Uhd69Yt355uv/f+ddCTXh7AZCjPBFB/pibcmHmV+tP
-         +Ymia8PIfnMSM/FCcp1/jQajPpKc49ll0XGqoozMn5RTqeZxwNceYnmgm58LQ3e/FCxz
-         qCOOYu0P5F/7pdXvd2oqPnJKNlYRczRGBafQ+GGQyYosQKarr8xxpUzTGPW2XIFjzrQf
-         E5iQ==
-X-Gm-Message-State: APjAAAUimKBE9GRwrja2wBk5rR5Os9dfGpIKCxc17++f7+Gb2KtUou0y
-        Th0XDlArj+zq78NuSQ4Ewm3AnuSsn3iiihG4Lsk=
-X-Google-Smtp-Source: APXvYqyqqD3ACPca4rjEI84rjyrLDtaG0pwgRuDnX0vYmfm/K1da9nX/3D4bl432oXUfo3eSWfEPfrJPfXQ0UcAWq54=
-X-Received: by 2002:a2e:9691:: with SMTP id q17mr3605856lji.223.1572031872763;
- Fri, 25 Oct 2019 12:31:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mXGKxFl6d9Tad1bXOR5KQzZcHvU397AW0AArFi6DfxM=;
+        b=WVEnLj2o706lId/1UETsUawHM2H2f2qjEep5xS/nnW9Y++hm4UBhVxl993EH9EbfF/
+         K7zV14M4qUT8YappXTAE0RR/90F2hVWrv8IHBzb+DjXgLy3Nd3/vcVQjMVWSzixcPQ77
+         pRZQRiVLyPI92lFGlArtThV9DkiG38Jrb1RRRXGpYWmTdJ5AwFsAEtY+SGcyRRppKcai
+         CXCjchzj5pEnbvoAQDw0WWt2O3McJr6kJZVfDSmoVm+Q4YzuHaJoojLTMvV4xZtn36Qd
+         xN9ASpHsyopqsG2c1A5DyOVBsuyhfNTswGPLu6FU4Jljti5gV7X+eCXgailG7N4VYAre
+         4gGA==
+X-Gm-Message-State: APjAAAWv6XCa2hmZSTA3KxPlvsi5b8B0D8bMYkiUw8Z67zgWQ2zcEFz4
+        mIh/XOu3uOsj+0z6G5VP6O/i38s=
+X-Google-Smtp-Source: APXvYqz471H2Ocr7A2/odSeE1SFq90vFIedMYY4Lihx8KArdbgC7Ngmc9bPTrZmbPIh8cFpnZHPH3w==
+X-Received: by 2002:aca:b841:: with SMTP id i62mr4248024oif.123.1572031949663;
+        Fri, 25 Oct 2019 12:32:29 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t18sm990562otm.8.2019.10.25.12.32.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 12:32:29 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 14:32:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     vincent.cheng.xh@renesas.com
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch, mark.rutland@arm.com,
+        richardcochran@gmail.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: ptp: Add bindings doc for IDT
+ ClockMatrix based PTP clock
+Message-ID: <20191025193228.GA31398@bogus>
+References: <1571687868-22834-1-git-send-email-vincent.cheng.xh@renesas.com>
 MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Sat, 26 Oct 2019 05:31:01 +1000
-Message-ID: <CAPM=9twWc0UkE53E5JDV_SW4R-4YFxvDBD2n_Cx_vHr0vj0zqw@mail.gmail.com>
-Subject: [git pull] drm fixes for 5.4-rc5
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571687868-22834-1-git-send-email-vincent.cheng.xh@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, Oct 21, 2019 at 03:57:47PM -0400, vincent.cheng.xh@renesas.com wrote:
+> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+> 
+> Add device tree binding doc for the IDT ClockMatrix PTP clock.
+> 
+> Co-developed-by: Richard Cochran <richardcochran@gmail.com>
+> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+> ---
+> 
+> Changes since v2:
+>  - As suggested by Rob Herring:
+>    1. Replace with DT schema
+>    2. Remove '-ptp' from compatible string
+>    3. Replace wildcard 'x' with the part numbers.
+> 
+> Changes since v1:
+>  - No changes
+> ---
+>  .../devicetree/bindings/ptp/ptp-idtcm.yaml         | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml b/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+> new file mode 100644
+> index 0000000..d3771e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ptp/ptp-idtcm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: IDT ClockMatrix (TM) PTP Clock Device Tree Bindings
+> +
+> +maintainers:
+> +  - Vincent Cheng <vincent.cheng.xh@renesas.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      # For System Synchronizer
+> +      - idt,8a34000
+> +      - idt,8a34001
+> +      - idt,8a34002
+> +      - idt,8a34003
+> +      - idt,8a34004
+> +      - idt,8a34005
+> +      - idt,8a34006
+> +      - idt,8a34007
+> +      - idt,8a34008
+> +      - idt,8a34009
+> +      # For Port Synchronizer
+> +      - idt,8a34010
+> +      - idt,8a34011
+> +      - idt,8a34012
+> +      - idt,8a34013
+> +      - idt,8a34014
+> +      - idt,8a34015
+> +      - idt,8a34016
+> +      - idt,8a34017
+> +      - idt,8a34018
+> +      - idt,8a34019
+> +      # For Universal Frequency Translator (UFT)
+> +      - idt,8a34040
+> +      - idt,8a34041
+> +      - idt,8a34042
+> +      - idt,8a34043
+> +      - idt,8a34044
+> +      - idt,8a34045
+> +      - idt,8a34046
+> +      - idt,8a34047
+> +      - idt,8a34048
+> +      - idt,8a34049
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      I2C slave address of the device.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    phc@5b {
 
-Quiet week this week, which I suspect means some people just didn't
-get around to sending me fixes pulls in time. This has 2 komeda and a
-bunch of amdgpu fixes in it.
+ptp@5b
 
-Thanks,
-Dave.
+Examples are built now and this fails:
 
-drm-fixes-2019-10-25:
-drm fixes for v5.4-rc5
+Documentation/devicetree/bindings/ptp/ptp-idtcm.example.dts:19.15-28: 
+Warning (reg_format): /example-0/phc@5b:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
 
-komeda:
-- typo fixes
-- flushing pipes fix
+The problem is i2c devices need to be shown under an i2c bus node.
 
-amdgpu:
-- Fix suspend/resume issue related to multi-media engines
-- Fix memory leak in user ptr code related to hmm conversion
-- Fix possible VM faults when allocating page table memory
-- Fix error handling in bo list ioctl
-The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241=
-:
-
-  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-10-25
-
-for you to fetch changes up to 2a3608409f46e0bae5b6b1a77ddf4c42116698da:
-
-  Merge tag 'drm-fixes-5.4-2019-10-23' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes (2019-10-25
-14:48:53 +1000)
-
-----------------------------------------------------------------
-drm fixes for v5.4-rc5
-
-komeda:
-- typo fixes
-- flushing pipes fix
-
-amdgpu:
-- Fix suspend/resume issue related to multi-media engines
-- Fix memory leak in user ptr code related to hmm conversion
-- Fix possible VM faults when allocating page table memory
-- Fix error handling in bo list ioctl
-
-----------------------------------------------------------------
-Alex Deucher (4):
-      drm/amdgpu/uvd6: fix allocation size in enc ring test (v2)
-      drm/amdgpu/uvd7: fix allocation size in enc ring test (v2)
-      drm/amdgpu/vcn: fix allocation size in enc ring test
-      drm/amdgpu/vce: fix allocation size in enc ring test
-
-Christian K=C3=B6nig (2):
-      drm/amdgpu: fix potential VM faults
-      drm/amdgpu: fix error handling in amdgpu_bo_list_create
-
-Dave Airlie (2):
-      Merge tag 'drm-misc-fixes-2019-10-23' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-      Merge tag 'drm-fixes-5.4-2019-10-23' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
-
-Mihail Atanassov (2):
-      drm/komeda: Don't flush inactive pipes
-      drm/komeda: Fix typos in komeda_splitter_validate
-
-Philip Yang (1):
-      drm/amdgpu: user pages array memory leak fix
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c        |  7 ++++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c             |  8 ++---
- drivers/gpu/drm/amd/amdgpu/amdgpu_object.c         |  3 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c            | 20 +++++++++----
- drivers/gpu/drm/amd/amdgpu/amdgpu_vce.h            |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c            | 35 ++++++++++++++----=
-----
- drivers/gpu/drm/amd/amdgpu/uvd_v6_0.c              | 31 ++++++++++++------=
--
- drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c              | 33 +++++++++++++-----=
---
- drivers/gpu/drm/arm/display/komeda/komeda_kms.c    |  3 +-
- .../drm/arm/display/komeda/komeda_pipeline_state.c |  4 +--
- 10 files changed, 96 insertions(+), 49 deletions(-)
+> +          compatible = "idt,8a34000";
+> +          reg = <0x5b>;
+> +    };
+> -- 
+> 2.7.4
+> 
