@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1282ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FA4CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4EF2205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3E2205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731734AbfJYSHB (ORCPT
+        id S1731803AbfJYSHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:07:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46698 "EHLO
+        Fri, 25 Oct 2019 14:07:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46564 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731405AbfJYSFm (ORCPT
+        by vger.kernel.org with ESMTP id S1731349AbfJYSFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:42 -0400
+        Fri, 25 Oct 2019 14:05:40 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xz-0008Ov-FF; Fri, 25 Oct 2019 19:05:39 +0100
+        id 1iO3xv-0008OH-QA; Fri, 25 Oct 2019 19:05:35 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xw-0001ks-Eg; Fri, 25 Oct 2019 19:05:36 +0100
+        id 1iO3xu-0001hx-WB; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,22 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mikko Rapeli" <mikko.rapeli@iki.fi>,
-        "Fabian Frederick" <fabf@skynet.be>,
-        "Zhouyang Jia" <jiazhouyang09@gmail.com>,
-        "Yann Droneaud" <ydroneaud@opteya.com>,
-        "Sam Protsenko" <semen.protsenko@linaro.org>,
-        "David Howells" <dhowells@redhat.com>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "Jan Harkes" <jaharkes@cs.cmu.edu>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>
-Date:   Fri, 25 Oct 2019 19:03:43 +0100
-Message-ID: <lsq.1572026582.453051988@decadent.org.uk>
+        "Anirudh Gupta" <anirudhrudr@gmail.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Steffen Klassert" <steffen.klassert@secunet.com>,
+        "Anirudh Gupta" <anirudh.gupta@sophos.com>
+Date:   Fri, 25 Oct 2019 19:03:07 +0100
+Message-ID: <lsq.1572026582.828367920@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 42/47] coda: pass the host file in vma->vm_file on mmap
+Subject: [PATCH 3.16 06/47] xfrm: Fix xfrm sel prefix length validation
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -64,165 +57,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Harkes <jaharkes@cs.cmu.edu>
+From: Anirudh Gupta <anirudhrudr@gmail.com>
 
-commit 7fa0a1da3dadfd9216df7745a1331fdaa0940d1c upstream.
+commit b38ff4075a80b4da5cb2202d7965332ca0efb213 upstream.
 
-Patch series "Coda updates".
+Family of src/dst can be different from family of selector src/dst.
+Use xfrm selector family to validate address prefix length,
+while verifying new sa from userspace.
 
-The following patch series is a collection of various fixes for Coda,
-most of which were collected from linux-fsdevel or linux-kernel but
-which have as yet not found their way upstream.
+Validated patch with this command:
+ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
+reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
+0x1111016400000000000000000000000044440001 128 \
+sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
 
-This patch (of 22):
-
-Various file systems expect that vma->vm_file points at their own file
-handle, several use file_inode(vma->vm_file) to get at their inode or
-use vma->vm_file->private_data.  However the way Coda wrapped mmap on a
-host file broke this assumption, vm_file was still pointing at the Coda
-file and the host file systems would scribble over Coda's inode and
-private file data.
-
-This patch fixes the incorrect expectation and wraps vm_ops->open and
-vm_ops->close to allow Coda to track when the vm_area_struct is
-destroyed so we still release the reference on the Coda file handle at
-the right time.
-
-Link: http://lkml.kernel.org/r/0e850c6e59c0b147dc2dcd51a3af004c948c3697.1558117389.git.jaharkes@cs.cmu.edu
-Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Fabian Frederick <fabf@skynet.be>
-Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
-Cc: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Yann Droneaud <ydroneaud@opteya.com>
-Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 3.16: Keep calling file_operations::mmap directly]
+Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
+Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/coda/file.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 68 insertions(+), 2 deletions(-)
+ net/xfrm/xfrm_user.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/fs/coda/file.c
-+++ b/fs/coda/file.c
-@@ -26,6 +26,13 @@
- #include "coda_linux.h"
- #include "coda_int.h"
- 
-+struct coda_vm_ops {
-+	atomic_t refcnt;
-+	struct file *coda_file;
-+	const struct vm_operations_struct *host_vm_ops;
-+	struct vm_operations_struct vm_ops;
-+};
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -150,6 +150,22 @@ static int verify_newsa_info(struct xfrm
+ 	err = -EINVAL;
+ 	switch (p->family) {
+ 	case AF_INET:
++		break;
 +
- static ssize_t
- coda_file_read(struct file *coda_file, char __user *buf, size_t count, loff_t *ppos)
- {
-@@ -93,6 +100,34 @@ coda_file_write(struct file *coda_file,
- 	return ret;
- }
- 
-+static void
-+coda_vm_open(struct vm_area_struct *vma)
-+{
-+	struct coda_vm_ops *cvm_ops =
-+		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++	case AF_INET6:
++#if IS_ENABLED(CONFIG_IPV6)
++		break;
++#else
++		err = -EAFNOSUPPORT;
++		goto out;
++#endif
 +
-+	atomic_inc(&cvm_ops->refcnt);
-+
-+	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->open)
-+		cvm_ops->host_vm_ops->open(vma);
-+}
-+
-+static void
-+coda_vm_close(struct vm_area_struct *vma)
-+{
-+	struct coda_vm_ops *cvm_ops =
-+		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
-+
-+	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->close)
-+		cvm_ops->host_vm_ops->close(vma);
-+
-+	if (atomic_dec_and_test(&cvm_ops->refcnt)) {
-+		vma->vm_ops = cvm_ops->host_vm_ops;
-+		fput(cvm_ops->coda_file);
-+		kfree(cvm_ops);
++	default:
++		goto out;
 +	}
-+}
 +
- static int
- coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
- {
-@@ -100,6 +135,8 @@ coda_file_mmap(struct file *coda_file, s
- 	struct coda_inode_info *cii;
- 	struct file *host_file;
- 	struct inode *coda_inode, *host_inode;
-+	struct coda_vm_ops *cvm_ops;
-+	int ret;
++	switch (p->sel.family) {
++	case AF_INET:
+ 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+ 			goto out;
  
- 	cfi = CODA_FTOC(coda_file);
- 	BUG_ON(!cfi || cfi->cfi_magic != CODA_MAGIC);
-@@ -108,6 +145,13 @@ coda_file_mmap(struct file *coda_file, s
- 	if (!host_file->f_op->mmap)
- 		return -ENODEV;
- 
-+	if (WARN_ON(coda_file != vma->vm_file))
-+		return -EIO;
-+
-+	cvm_ops = kmalloc(sizeof(struct coda_vm_ops), GFP_KERNEL);
-+	if (!cvm_ops)
-+		return -ENOMEM;
-+
- 	coda_inode = file_inode(coda_file);
- 	host_inode = file_inode(host_file);
- 
-@@ -121,6 +165,7 @@ coda_file_mmap(struct file *coda_file, s
- 	 * the container file on us! */
- 	else if (coda_inode->i_mapping != host_inode->i_mapping) {
- 		spin_unlock(&cii->c_lock);
-+		kfree(cvm_ops);
- 		return -EBUSY;
- 	}
- 
-@@ -129,7 +174,29 @@ coda_file_mmap(struct file *coda_file, s
- 	cfi->cfi_mapcount++;
- 	spin_unlock(&cii->c_lock);
- 
--	return host_file->f_op->mmap(host_file, vma);
-+	vma->vm_file = get_file(host_file);
-+	ret = host_file->f_op->mmap(host_file, vma);
-+
-+	if (ret) {
-+		/* if ->mmap fails, our caller will put coda_file so we
-+		 * should drop the reference to the host_file that we got.
-+		 */
-+		fput(host_file);
-+		kfree(cvm_ops);
-+	} else {
-+		/* here we add redirects for the open/close vm_operations */
-+		cvm_ops->host_vm_ops = vma->vm_ops;
-+		if (vma->vm_ops)
-+			cvm_ops->vm_ops = *vma->vm_ops;
-+
-+		cvm_ops->vm_ops.open = coda_vm_open;
-+		cvm_ops->vm_ops.close = coda_vm_close;
-+		cvm_ops->coda_file = coda_file;
-+		atomic_set(&cvm_ops->refcnt, 1);
-+
-+		vma->vm_ops = &cvm_ops->vm_ops;
-+	}
-+	return ret;
- }
- 
- int coda_open(struct inode *coda_inode, struct file *coda_file)
-@@ -239,4 +306,3 @@ const struct file_operations coda_file_o
- 	.fsync		= coda_fsync,
- 	.splice_read	= coda_file_splice_read,
- };
--
 
