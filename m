@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E31BCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EDBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5A721D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6977220679
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1571998343;
-	bh=ZqvKv4DJnU3ajM4K1ySMFbJhed57e+ZSryrSplrlzwY=;
+	s=default; t=1571998346;
+	bh=/Xv+a/P/5t0alIgaTI0QGGeODoB5360h/ExCX6Fkt9M=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=kX8nUqjmk+b4UoDAtKHH0/0Y66n277+2/oDwJDWalPkmdpKk3l1BIj86qq2aZRO2j
-	 cu3Vxc1Sg4I61tkX2lJoFEkw+DAZ8tzhUSgzbkJ72hgOvWrpHTtL1m4ogSy2cqYzqa
-	 RMKZa8Y+MbB38ST4J2Na7laQudbF3/7LXKNHharY=
+	b=PBnSuTu8ojV89abi3ANGw+hEnlhunino9oYkMzGQZcZZIEXj0HbIN064VhwmBNi7Q
+	 +ZH+HzuCI+/eO/p0KjUEwRfLeCm2+YU+92PMaIf2yZNUBvoeUENC2I6lJtVujagc5R
+	 RroaOLoU/L6FM8N7PMupzqa/zvpguVSFcSzih1Qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409080AbfJYKMW (ORCPT
+        id S2409104AbfJYKMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:12:22 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37652 "EHLO
+        Fri, 25 Oct 2019 06:12:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37732 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409011AbfJYKMV (ORCPT
+        with ESMTP id S2409011AbfJYKMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:12:21 -0400
+        Fri, 25 Oct 2019 06:12:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Mfwi8AbI+njv6OXBWSEU3ESst6lzCiQazpD9WrFtGOs=; b=PejzMVlZbUqx
-        fSWESryCFXJJPU17sFwlk8S7+h3cO3184RFLTHRDblukpGYd9k6aH+GZ92FC7DUHc/FverGf3dyhE
-        11xAB+QcwD6u3+XkSgQ+ZsuE7z8ez8yPINS6cItdVxMHrr29OdjzG9Ncm+6mzIx6ULE8NaXmNJWy9
-        2yxTc=;
+        List-Archive; bh=UIHdbuehA4W5cQC/qzKEDI4VtUGGKof8itjs+eOyx+E=; b=JF2doRefoXnQ
+        lWBOkJj9/uB6Rh/B2njgORKwRLWda76rcCGjW5aM/TE7Pb8uf+ma1bvwawEJiBBbk4x8pN4jUK+7n
+        05AiVkU+lfk5wAB/2Auucd0ZxvxZUApFlrhkCcfc1x5y7o/iZYpShdZ5K0dZPqiZ132ufI1RuPzZ0
+        6iw98=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iNwZo-0006dx-NU; Fri, 25 Oct 2019 10:12:12 +0000
+        id 1iNwZp-0006eG-Ph; Fri, 25 Oct 2019 10:12:13 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 251942743267; Fri, 25 Oct 2019 11:12:12 +0100 (BST)
+        id 3AA502743273; Fri, 25 Oct 2019 11:12:13 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     alsa-devel@alsa-project.org, Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
         Jaroslav Kysela <perex@perex.cz>,
-        Jiri Kosina <trivial@kernel.org>,
+        kernel-janitors@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Oder Chiou <oder_chiou@realtek.com>,
         Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: pxa: poodle: Spelling s/enpoints/endpoints/, s/connetion/connection/" to the asoc tree
-In-Reply-To: <20191024153130.31082-1-geert+renesas@glider.be>
+Subject: Applied "ASoC: rt5677: Add missing null check for failed allocation of rt5677_dsp" to the asoc tree
+In-Reply-To: <20191024124610.18182-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191025101212.251942743267@ypsilon.sirena.org.uk>
-Date:   Fri, 25 Oct 2019 11:12:12 +0100 (BST)
+Message-Id: <20191025101213.3AA502743273@ypsilon.sirena.org.uk>
+Date:   Fri, 25 Oct 2019 11:12:13 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: pxa: poodle: Spelling s/enpoints/endpoints/, s/connetion/connection/
+   ASoC: rt5677: Add missing null check for failed allocation of rt5677_dsp
 
 has been applied to the asoc tree at
 
@@ -93,34 +93,37 @@ to this mail.
 Thanks,
 Mark
 
-From 16c33235321d5ce3463ebefc205d7cf11929d59f Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Thu, 24 Oct 2019 17:31:30 +0200
-Subject: [PATCH] ASoC: pxa: poodle: Spelling s/enpoints/endpoints/,
- s/connetion/connection/
+From f8a60435703bdde8f8a0ceb1aa8dad59df821583 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Thu, 24 Oct 2019 13:46:10 +0100
+Subject: [PATCH] ASoC: rt5677: Add missing null check for failed allocation of
+ rt5677_dsp
 
-Fix misspelling of "endpoints" and "connection".
+The allocation of rt5677_dsp can potentially fail and return null, so add
+a null check and return -ENOMEM on a memory allocation failure.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191024153130.31082-1-geert+renesas@glider.be
+Addresses-Coverity: ("Dereference null return")
+Fixes: a0e0d135427c ("ASoC: rt5677: Add a PCM device for streaming hotword via SPI")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20191024124610.18182-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/pxa/poodle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/rt5677-spi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/pxa/poodle.c b/sound/soc/pxa/poodle.c
-index 48d5c2252b10..59ef04d0467a 100644
---- a/sound/soc/pxa/poodle.c
-+++ b/sound/soc/pxa/poodle.c
-@@ -56,7 +56,7 @@ static void poodle_ext_control(struct snd_soc_dapm_context *dapm)
- 		snd_soc_dapm_disable_pin(dapm, "Headphone Jack");
- 	}
+diff --git a/sound/soc/codecs/rt5677-spi.c b/sound/soc/codecs/rt5677-spi.c
+index 36c02d200cfc..3a17643fcd9f 100644
+--- a/sound/soc/codecs/rt5677-spi.c
++++ b/sound/soc/codecs/rt5677-spi.c
+@@ -376,6 +376,8 @@ static int rt5677_spi_pcm_probe(struct snd_soc_component *component)
  
--	/* set the enpoints to their new connetion states */
-+	/* set the endpoints to their new connection states */
- 	if (poodle_spk_func == POODLE_SPK_ON)
- 		snd_soc_dapm_enable_pin(dapm, "Ext Spk");
- 	else
+ 	rt5677_dsp = devm_kzalloc(component->dev, sizeof(*rt5677_dsp),
+ 			GFP_KERNEL);
++	if (!rt5677_dsp)
++		return -ENOMEM;
+ 	rt5677_dsp->dev = &g_spi->dev;
+ 	mutex_init(&rt5677_dsp->dma_lock);
+ 	INIT_DELAYED_WORK(&rt5677_dsp->copy_work, rt5677_spi_copy_work);
 -- 
 2.20.1
 
