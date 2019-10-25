@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8480CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062E1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A75BF2084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4ACE222D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011769;
-	bh=c0TQ9TU8D9mzimPcnMDQ6JW2zlHSnWl8KaABvWCTNr0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hOkChkeEkHp0kzWU0bubUIia7xIyu8KVxVOt+jbAUenzBgeGWt7owBuLaSgmz7iUJ
-	 XzfmcAjncUyTLt+/uYv6eHVyZyM9UcbMvnwigrszrzpPLmrN85OGn3baEUfF+hh8V8
-	 t7Lzo5twMGyOfkH3v6QbEard0dBxBC65uEEM77zE=
+	s=default; t=1572011772;
+	bh=pMRvbdDCb4dImnhTz2eaL8s9Wnfeqq0pbrx6tQqzFUM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Gs2OdTM8mmLGm8Pwb0eISr8tf0HV8p98zOrbtzq/rbWqKcdeNheW3zIaK6/j/w69o
+	 ePNuLaqwk8OlfgK0icUkfo6aomclVxuLiPL21a/W558+MKSgT+czOagFLiBPPIH60Q
+	 LLNeQckDjyhUJsh+vWmIKxK6g9As2fM4fJP4ike4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505241AbfJYN4I (ORCPT
+        id S2632789AbfJYN4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:56:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2632773AbfJYN4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:56:05 -0400
+        id S2505244AbfJYN4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:56:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747FB2084C;
-        Fri, 25 Oct 2019 13:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2094C222C4;
+        Fri, 25 Oct 2019 13:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011765;
-        bh=c0TQ9TU8D9mzimPcnMDQ6JW2zlHSnWl8KaABvWCTNr0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GMcrN1P4H7MIZdZC/VJOwpK7qwW2IyFb8BUyraLaqo7e47gQgjNDg/Bm/BYpt6isW
-         MXneFBSL3bzvpajNKazOsG4U6Vwd+CVuVicrYwJEmPB+FMO7iJiZyFg07LUaCQBaRx
-         S9r1A2Nlww1+ZBeWPuqYdiar4EeuLKX3mjljirCI=
+        s=default; t=1572011768;
+        bh=pMRvbdDCb4dImnhTz2eaL8s9Wnfeqq0pbrx6tQqzFUM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vH9YQTXkSLH0RSFM9TnDV3JA9GtB38aOiz87Ldl2whCttA+57qH7d+Ta3Lgm1ORMv
+         i2iLjyC1WfdHKrIgikNxDuijt4IlU64RtJeOv/Mq1mmUpDTdRzo7Y0ILprjkOzEPGe
+         2wpyIyeoTgRJ1vckmil5ALNHNOdv+fO22UmgNgtM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Talbert <ptalbert@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/37] PCI/ASPM: Do not initialize link state when aspm_disabled is set
-Date:   Fri, 25 Oct 2019 09:55:25 -0400
-Message-Id: <20191025135603.25093-1-sashal@kernel.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/37] ACPI: video: Use vendor backlight on Sony VPCEH3U1E
+Date:   Fri, 25 Oct 2019 09:55:27 -0400
+Message-Id: <20191025135603.25093-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191025135603.25093-1-sashal@kernel.org>
+References: <20191025135603.25093-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,45 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Talbert <ptalbert@redhat.com>
+From: Zhang Rui <rui.zhang@intel.com>
 
-[ Upstream commit 17c91487364fb33797ed84022564ee7544ac4945 ]
+[ Upstream commit aefa763b18a220f5fc1d5ab02af09158b6cc36ea ]
 
-Now that ASPM is configured for *all* PCIe devices at boot, a problem is
-seen with systems that set the FADT NO_ASPM bit.  This bit indicates that
-the OS should not alter the ASPM state, but when
-pcie_aspm_init_link_state() runs it only checks for !aspm_support_enabled.
-This misses the ACPI_FADT_NO_ASPM case because that is setting
-aspm_disabled.
+On Sony Vaio VPCEH3U1E, ACPI backlight control does not work, and native
+backlight works. Thus force use vendor backlight control on this system.
 
-The result is systems may hang at boot after 1302fcf; avoidable if they
-boot with pcie_aspm=off (sets !aspm_support_enabled).
-
-Fix this by having aspm_init_link_state() check for either
-!aspm_support_enabled or acpm_disabled.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201001
-Fixes: 1302fcf0d03e ("PCI: Configure *all* devices, not just hot-added ones")
-Signed-off-by: Patrick Talbert <ptalbert@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202401
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/video_detect.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 1117b25fbe0bb..ce218b32724db 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -912,7 +912,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
- 	struct pcie_link_state *link;
- 	int blacklist = !!pcie_aspm_sanity_check(pdev);
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 43587ac680e47..0e0a3929e34e2 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -141,6 +141,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "UL30A"),
+ 		},
+ 	},
++	{
++	.callback = video_detect_force_vendor,
++	.ident = "Sony VPCEH3U1E",
++	.matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "Sony Corporation"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "VPCEH3U1E"),
++		},
++	},
  
--	if (!aspm_support_enabled)
-+	if (!aspm_support_enabled || aspm_disabled)
- 		return;
- 
- 	if (pdev->link_state)
+ 	/*
+ 	 * These models have a working acpi_video backlight control, and using
 -- 
 2.20.1
 
