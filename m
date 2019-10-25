@@ -2,70 +2,91 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F74CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EFBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB4920867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAAC20867
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 04:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388011AbfJYEfa (ORCPT
+        id S2388978AbfJYEhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 00:35:30 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5178 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727103AbfJYEfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 00:35:30 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 11C5A2DF14389737C171;
-        Fri, 25 Oct 2019 12:35:26 +0800 (CST)
-Received: from huawei.com (10.175.104.225) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 25 Oct 2019
- 12:35:15 +0800
-From:   Hewenliang <hewenliang4@huawei.com>
-To:     <valentina.manea.m@gmail.com>, <shuah@kernel.org>,
-        <gregkh@linuxfoundation.org>, <allison@lohutok.net>,
-        <swinslow@gmail.com>, <tglx@linutronix.de>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <linfeilong@huawei.com>, <hewenliang4@huawei.com>
-Subject: [PATCH] usbip: tools: fix fd leakage in the function of read_attr_usbip_status
-Date:   Fri, 25 Oct 2019 00:35:15 -0400
-Message-ID: <20191025043515.20053-1-hewenliang4@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Fri, 25 Oct 2019 00:37:36 -0400
+Received: from proxima.lasnet.de ([78.47.171.185]:48255 "EHLO
+        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388369AbfJYEhg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 00:37:36 -0400
+Received: from PC192.168.2.106 (p4FE7198A.dip0.t-ipconnect.de [79.231.25.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: stefan@datenfreihafen.org)
+        by proxima.lasnet.de (Postfix) with ESMTPSA id CE58CC1BBA;
+        Fri, 25 Oct 2019 06:37:33 +0200 (CEST)
+Subject: Re: [PATCH net-next] ieee802154: remove set but not used variable
+ 'status'
+To:     YueHaibing <yuehaibing@huawei.com>, varkabhadram@gmail.com,
+        alex.aring@gmail.com, davem@davemloft.net
+Cc:     linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191023070618.30044-1-yuehaibing@huawei.com>
+From:   Stefan Schmidt <stefan@datenfreihafen.org>
+Message-ID: <aadfdcc0-06df-5c17-dc14-11d54ac8b65f@datenfreihafen.org>
+Date:   Fri, 25 Oct 2019 06:37:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.225]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191023070618.30044-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should close the fd before the return of read_attr_usbip_status.
+Hello.
 
-Fixes: 3391ba0e279 ("usbip: tools: Extract generic code to be shared with vudc backend")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
----
- tools/usb/usbip/libsrc/usbip_host_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 23.10.19 09:06, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/net/ieee802154/cc2520.c:221:5: warning:
+>   variable status set but not used [-Wunused-but-set-variable]
+> 
+> It is never used, so can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/net/ieee802154/cc2520.c | 3 ---
+>   1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/net/ieee802154/cc2520.c b/drivers/net/ieee802154/cc2520.c
+> index 4350694..89c046b 100644
+> --- a/drivers/net/ieee802154/cc2520.c
+> +++ b/drivers/net/ieee802154/cc2520.c
+> @@ -218,7 +218,6 @@ static int
+>   cc2520_cmd_strobe(struct cc2520_private *priv, u8 cmd)
+>   {
+>   	int ret;
+> -	u8 status = 0xff;
+>   	struct spi_message msg;
+>   	struct spi_transfer xfer = {
+>   		.len = 0,
+> @@ -236,8 +235,6 @@ cc2520_cmd_strobe(struct cc2520_private *priv, u8 cmd)
+>   		 priv->buf[0]);
+>   
+>   	ret = spi_sync(priv->spi, &msg);
+> -	if (!ret)
+> -		status = priv->buf[0];
+>   	dev_vdbg(&priv->spi->dev,
+>   		 "buf[0] = %02x\n", priv->buf[0]);
+>   	mutex_unlock(&priv->buffer_mutex);
+> 
 
-diff --git a/tools/usb/usbip/libsrc/usbip_host_common.c b/tools/usb/usbip/libsrc/usbip_host_common.c
-index 2813aa821c82..d1d8ba2a4a40 100644
---- a/tools/usb/usbip/libsrc/usbip_host_common.c
-+++ b/tools/usb/usbip/libsrc/usbip_host_common.c
-@@ -57,7 +57,7 @@ static int32_t read_attr_usbip_status(struct usbip_usb_device *udev)
- 	}
- 
- 	value = atoi(status);
--
-+	close(fd);
- 	return value;
- }
- 
--- 
-2.19.1
+Applied to wpan-next. Thanks!
 
+regards
+Stefan Schmidt
