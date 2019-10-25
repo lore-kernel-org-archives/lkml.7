@@ -2,122 +2,130 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E08BCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFC9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8F2206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E681C206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im4eTYKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfJYStk (ORCPT
+        id S1727322AbfJYSve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:49:40 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:38365 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726079AbfJYStj (ORCPT
+        Fri, 25 Oct 2019 14:51:34 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50980 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfJYSve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:49:39 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01451;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TgBtoWc_1572029368;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TgBtoWc_1572029368)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 26 Oct 2019 02:49:31 +0800
-Subject: Re: [PATCH] mm: thp: clear PageDoubleMap flag when the last PMD map
- gone
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1571938066-29031-1-git-send-email-yang.shi@linux.alibaba.com>
- <20191025153618.ajcecye3bjm5abax@box>
- <74becfc0-3c34-bdd2-02cd-25b763c92f3b@linux.alibaba.com>
- <20191025163233.myl7kcgz25qsbnwm@box> <20191025163955.qsvkqic2hrorvdzj@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <2171f0a9-d01a-e863-2009-3f1bfa249d6c@linux.alibaba.com>
-Date:   Fri, 25 Oct 2019 11:49:26 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 25 Oct 2019 14:51:34 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 11so3258641wmk.0;
+        Fri, 25 Oct 2019 11:51:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jvqQFCdyN1pvYkijOxdEJawR4E6xBqBcwTGJlgojr5g=;
+        b=im4eTYKNwnTjGuMqDlkPm3KlXWA2QgSKIB+DHkleGEiwYAAmqYdF7EJZdj8t9vgr94
+         wtiO7VxLajV8qhV7v9t0a3K/YLWXRalXFjhRVPLdvVxl74NNVfh4/72byFQqf9uSOIXN
+         W8ZVqTbBMd/sSWM9zZw1lqjnuYgHea4ipFfhSVvgJvPKrI4TgnhGMhN8F0FdkdVMZVqi
+         U5Ly/6nIl8APyPbmZ73izwKEiD5//P1cIKz/a3nk1yC2CW+Ajx3PLhZN00e+0p0dcW0E
+         +F+TFk/u+y0Z0CpTzEKazN85/G5EmsF+HTU43OSIKd9oks3GleaokGC0JbgFOW/whtTM
+         6uRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jvqQFCdyN1pvYkijOxdEJawR4E6xBqBcwTGJlgojr5g=;
+        b=Uf33/dk08QQwEU1MYEHoHSlWGgqG4RD3sdNCZ7RVESNSyWxdR+5e9Jufy/ejdjht4u
+         +wSFCHEbeRWU2gPITuLnuoKYSFowwBJ03PXHLkiIBenvngnZWnPNPRg7q+w7ZY/SWJLK
+         HTZlGO7d/gYfaWSq1N73GaL113Af4ChRfDRxcWe/cQnnqwKdnu+Jn2m4jahEXT42vqrC
+         eTCyuX6bcW98wD1gPLtuxuzdv5MI99nkl8vZ2pfd+cnaz4QXW5SEFd/liuFq6opMZjvG
+         5OAITIJNPqbrI97AxQdgHPZvQukar3dhKU3jysUNUJRNzb/mQPgAqDHupQw6eIXVzfNv
+         h7zA==
+X-Gm-Message-State: APjAAAWO8udTqa1aFT+9aszxSlnMdLI/3PqwU+74j9zQMmqdqEdynCqY
+        KK+qkBxP3AD/oUFXv8oNR9R6PYPy
+X-Google-Smtp-Source: APXvYqyJDmSMjXoIhZz7YYzF4aHENSS3QLnhmaaCUjWpRIvnUzpNbYBNijclpFIwtDgTNKamg23phw==
+X-Received: by 2002:a1c:e912:: with SMTP id q18mr4908766wmc.29.1572029492174;
+        Fri, 25 Oct 2019 11:51:32 -0700 (PDT)
+Received: from Red.localdomain (lfbn-1-7036-79.w90-116.abo.wanadoo.fr. [90.116.209.79])
+        by smtp.googlemail.com with ESMTPSA id l22sm4821683wrb.45.2019.10.25.11.51.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 11:51:31 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 0/4] crypto: add sun8i-ss driver for Allwinner Security System
+Date:   Fri, 25 Oct 2019 20:51:24 +0200
+Message-Id: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191025163955.qsvkqic2hrorvdzj@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello
 
+This patch serie adds support for the second version of Allwinner Security System.
+The first generation of the Security System is already handled by the sun4i-ss driver.
+Due to major change, the first driver cannot handle the second one.
+This new Security System is present on A80 and A83T SoCs.
 
-On 10/25/19 9:39 AM, Kirill A. Shutemov wrote:
-> On Fri, Oct 25, 2019 at 07:32:33PM +0300, Kirill A. Shutemov wrote:
->> On Fri, Oct 25, 2019 at 08:58:22AM -0700, Yang Shi wrote:
->>>
->>> On 10/25/19 8:36 AM, Kirill A. Shutemov wrote:
->>>> On Fri, Oct 25, 2019 at 01:27:46AM +0800, Yang Shi wrote:
->>>>> File THP sets PageDoubleMap flag when the first it gets PTE mapped, but
->>>>> the flag is never cleared until the THP is freed.  This result in
->>>>> unbalanced state although it is not a big deal.
->>>>>
->>>>> Clear the flag when the last compound_mapcount is gone.  It should be
->>>>> cleared when all the PTE maps are gone (become PMD mapped only) as well,
->>>>> but this needs check all subpage's _mapcount every time any subpage's
->>>>> rmap is removed, the overhead may be not worth.  The anonymous THP also
->>>>> just clears PageDoubleMap flag when the last PMD map is gone.
->>>> NAK, sorry.
->>>>
->>>> The key difference with anon THP that file THP can be mapped again with
->>>> PMD after all PMD (or all) mappings are gone.
->>>>
->>>> Your patch breaks the case when you map the page with PMD again while the
->>>> page is still mapped with PTEs. Who would set PageDoubleMap() in this
->>>> case?
->>> Aha, yes, you are right. I missed that point. However, I'm wondering we
->>> might move this up a little bit like this:
->>>
->>> diff --git a/mm/rmap.c b/mm/rmap.c
->>> index d17cbf3..ac046fd 100644
->>> --- a/mm/rmap.c
->>> +++ b/mm/rmap.c
->>> @@ -1230,15 +1230,17 @@ static void page_remove_file_rmap(struct page *page,
->>> bool compound)
->>>                          if (atomic_add_negative(-1, &page[i]._mapcount))
->>>                                  nr++;
->>>                  }
->>> +
->>> +               /* No PTE map anymore */
->>> +               if (nr == HPAGE_PMD_NR)
->>> +                       ClearPageDoubleMap(compound_head(page));
->>> +
->>>                  if (!atomic_add_negative(-1, compound_mapcount_ptr(page)))
->>>                          goto out;
->>>                  if (PageSwapBacked(page))
->>>                          __dec_node_page_state(page, NR_SHMEM_PMDMAPPED);
->>>                  else
->>>                          __dec_node_page_state(page, NR_FILE_PMDMAPPED);
->>> -
->>> -               /* The last PMD map is gone */
->>> -               ClearPageDoubleMap(compound_head(page));
->>>          } else {
->>>                  if (!atomic_add_negative(-1, &page->_mapcount))
->>>                          goto out;
->>>
->>>
->>> This should guarantee no PTE map anymore, it should be safe to clear the
->>> flag.
->> At first glance looks safe, but let me think more about it. I didn't
->> expect it be that easy :P
-> How do you protect from races? What prevents other thread/process to map
-> the page as PTE after you've calculated 'nr'?
->
-> I don't remember the code that well, but I believe we don't require
-> PageLock for all cases... Or do we?
+For the moment, the driver support only DES3/AES in ECB/CBC mode.
+Patchs for CTR/CTS, RSA and RNGs will came later.
 
-No, page lock is required by adding PTE rmap, but not required when 
-removing rmap, i.e. huge pmd split. It looks we can't prevent from the 
-races for processes, threads are protected by ptl.
+This serie is tested with CRYPTO_MANAGER_EXTRA_TESTS
+and tested on:
+sun8i-a83t-bananapi-m3
+sun9i-a80-cubieboard4
 
->
+This serie is based on top of the "crypto: add sun8i-ce driver for
+Allwinner crypto engine" serie.
+
+Regards
+
+Changes since v2:
+- Made the reset mandatory
+- Removed reset-names
+
+Changes since v1:
+- fixed uninitialized err in sun8i_ss_allocate_chanlist
+- Added missing commit description on DT Documentation patch
+
+Corentin Labbe (4):
+  crypto: Add Allwinner sun8i-ss cryptographic offloader
+  dt-bindings: crypto: Add DT bindings documentation for sun8i-ss
+    Security System
+  ARM: dts: sun8i: a83t: Add Security System node
+  ARM: dts: sun9i: a80: Add Security System node
+
+ .../bindings/crypto/allwinner,sun8i-ss.yaml   |  61 ++
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |   9 +
+ arch/arm/boot/dts/sun9i-a80.dtsi              |   9 +
+ drivers/crypto/allwinner/Kconfig              |  28 +
+ drivers/crypto/allwinner/Makefile             |   1 +
+ drivers/crypto/allwinner/sun8i-ss/Makefile    |   2 +
+ .../allwinner/sun8i-ss/sun8i-ss-cipher.c      | 438 ++++++++++++
+ .../crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 642 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h  | 218 ++++++
+ 9 files changed, 1408 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ss.yaml
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ss/sun8i-ss.h
+
+-- 
+2.21.0
 
