@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF65CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F13CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F198F222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A939C222D0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011917;
-	bh=luNhTd4Wph/2JoBgh1xl7TIz2ZYbQxAZF6SRn6Jv7ng=;
+	s=default; t=1572011919;
+	bh=yu2re7QlOLOylGKR+ttvD8dXbCgph8uPZ6I6K2Me1Uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HZ8tfW8J1cjQ/cvoCoz88VpilE68LbembY8QWee8jfVR98O332qXQ7aEAZiGq9UMp
-	 usCql8kQRwbz7iyUtbLT/rZ5YarXZ/kLX2jeOMlYB5JBYBoIBUJZbXKqbKMK4FSjaC
-	 NHATaDkdr/TjBhCEuuvuHiY5doW6l1L/VF9wkH2Q=
+	b=Dy7C3zJlhkiaSbwxYZPE6W1kGar1Oke9e+aIWM8by+nbejxpdZFUPxPVH7huwYFFV
+	 +olf/xCuZX/Nuq9gamaHlTP9ChXGIuooa4qgtEevCGHalFbDQuLwLvhGccQFKdwJ/g
+	 ibbsbp8GxlnrbBjUEHbb+GoCwXlJs6ATIJJMpho8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505622AbfJYN6f (ORCPT
+        id S2505636AbfJYN6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:58:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53856 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:58:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505583AbfJYN63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:29 -0400
+        id S2505612AbfJYN6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34576222C4;
-        Fri, 25 Oct 2019 13:58:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C9E222CE;
+        Fri, 25 Oct 2019 13:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011909;
-        bh=luNhTd4Wph/2JoBgh1xl7TIz2ZYbQxAZF6SRn6Jv7ng=;
+        s=default; t=1572011913;
+        bh=yu2re7QlOLOylGKR+ttvD8dXbCgph8uPZ6I6K2Me1Uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=roiNtfXwAdVws01VZTSxheCoMCIx0m+hicEoqxNfTni7cyAyeuxrXNiUPbqbKGNgc
-         CVA4i6QEXKVz4VRcTrJZg8qEvl4oybIJLFxHv9OHuIo/5vB48SsrEqEzef0vrMhL5F
-         uvE53m693SGwY2KyDVFkFYCRfnoBqqJ3oFK/4ilM=
+        b=ZutflNzE1EANqJ7jXPIMUOz587O2CQfow4DpptNpSHyFWWoGUEXtVJ00MVuaYtI1X
+         0o+HvhtP9277UiThN/XRbLTV48YrKvPZMUrtYsoL8lxJ9TErOtvm5pf5xeh8JhjpRn
+         7bdpXKDNR3rD7Rec2FoQsQ6Yp/UFNyXepc/+FvJY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/20] net: usb: sr9800: fix uninitialized local variable
-Date:   Fri, 25 Oct 2019 09:57:53 -0400
-Message-Id: <20191025135801.25739-13-sashal@kernel.org>
+Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 17/20] ubi: ubi_wl_get_peb: Increase the number of attempts while getting PEB
+Date:   Fri, 25 Oct 2019 09:57:57 -0400
+Message-Id: <20191025135801.25739-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
 References: <20191025135801.25739-1-sashal@kernel.org>
@@ -61,34 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
+[ Upstream commit 8615b94f029a4fb4306d3512aaf1c45f5fc24d4b ]
 
-Make sure res does not contain random value if the call to
-sr_read_cmd fails for some reason.
+Running stress test io_paral (A pressure ubi test in mtd-utils) on an
+UBI device with fewer PEBs (fastmap enabled) may cause ENOSPC errors and
+make UBI device read-only, but there are still free PEBs on the UBI
+device. This problem can be easily reproduced by performing the following
+steps on a 2-core machine:
+  $ modprobe nandsim first_id_byte=0x20 second_id_byte=0x33 parts=80
+  $ modprobe ubi mtd="0,0" fm_autoconvert
+  $ ./io_paral /dev/ubi0
 
-Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We may see the following verbose:
+(output)
+  [io_paral] update_volume():108: failed to write 380 bytes at offset
+  95920 of volume 2
+  [io_paral] update_volume():109: update: 97088 bytes
+  [io_paral] write_thread():227: function pwrite() failed with error 28
+  (No space left on device)
+  [io_paral] write_thread():229: cannot write 15872 bytes to offs 31744,
+  wrote -1
+(dmesg)
+  ubi0 error: ubi_wl_get_peb [ubi]: Unable to get a free PEB from user WL
+  pool
+  ubi0 warning: ubi_eba_write_leb [ubi]: switch to read-only mode
+  CPU: 0 PID: 2027 Comm: io_paral Not tainted 5.3.0-rc2-00001-g5986cd0 #9
+  ubi0 warning: try_write_vid_and_data [ubi]: failed to write VID header
+  to LEB 2:5, PEB 18
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0
+  -0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+    dump_stack+0x85/0xba
+    ubi_eba_write_leb+0xa1e/0xa40 [ubi]
+    vol_cdev_write+0x307/0x520 [ubi]
+    vfs_write+0xfa/0x280
+    ksys_pwrite64+0xc5/0xe0
+    __x64_sys_pwrite64+0x22/0x30
+    do_syscall_64+0xbf/0x440
+
+In function ubi_wl_get_peb, the operation of filling the pool
+(ubi_update_fastmap) with free PEBs and fetching a free PEB from the pool
+is not atomic. After thread A filling the pool with free PEB, free PEB may
+be taken away by thread B. When thread A checks the expression again, the
+condition is still unsatisfactory. At this time, there may still be free
+PEBs on UBI that can be filled into the pool.
+
+This patch increases the number of attempts to obtain PEB. An extreme
+case (No free PEBs left after creating test volumes) has been tested on
+different type of machines for 100 times. The biggest number of attempts
+are shown below:
+
+             x86_64     arm64
+  2-core        4         4
+  4-core        8         4
+  8-core        4         4
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/ubi/fastmap-wl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index 004c955c1fd1b..da0ae16f5c74c 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
- static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
+diff --git a/drivers/mtd/ubi/fastmap-wl.c b/drivers/mtd/ubi/fastmap-wl.c
+index 69dd21679a30c..99aa30b28e46e 100644
+--- a/drivers/mtd/ubi/fastmap-wl.c
++++ b/drivers/mtd/ubi/fastmap-wl.c
+@@ -205,7 +205,7 @@ static int produce_free_peb(struct ubi_device *ubi)
+  */
+ int ubi_wl_get_peb(struct ubi_device *ubi)
  {
- 	struct usbnet *dev = netdev_priv(net);
--	__le16 res;
-+	__le16 res = 0;
+-	int ret, retried = 0;
++	int ret, attempts = 0;
+ 	struct ubi_fm_pool *pool = &ubi->fm_pool;
+ 	struct ubi_fm_pool *wl_pool = &ubi->fm_wl_pool;
  
- 	mutex_lock(&dev->phy_mutex);
- 	sr_set_sw_mii(dev);
+@@ -230,12 +230,12 @@ int ubi_wl_get_peb(struct ubi_device *ubi)
+ 
+ 	if (pool->used == pool->size) {
+ 		spin_unlock(&ubi->wl_lock);
+-		if (retried) {
++		attempts++;
++		if (attempts == 10) {
+ 			ubi_err(ubi, "Unable to get a free PEB from user WL pool");
+ 			ret = -ENOSPC;
+ 			goto out;
+ 		}
+-		retried = 1;
+ 		up_read(&ubi->fm_eba_sem);
+ 		ret = produce_free_peb(ubi);
+ 		if (ret < 0) {
 -- 
 2.20.1
 
