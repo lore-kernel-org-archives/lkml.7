@@ -2,139 +2,141 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94ACCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DC9CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B593221872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005F421872
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 17:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409956AbfJYRZV (ORCPT
+        id S2502758AbfJYR0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 13:25:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388862AbfJYRZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 13:25:20 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PHGptb026689;
-        Fri, 25 Oct 2019 13:24:52 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vv4b0t3rg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 13:24:52 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9PHHnoQ029356;
-        Fri, 25 Oct 2019 13:24:51 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vv4b0t3r2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 13:24:51 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9PHNsFF009592;
-        Fri, 25 Oct 2019 17:24:51 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 2vqt48a6nx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Oct 2019 17:24:50 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PHOnL462587380
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Oct 2019 17:24:49 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C49BC6059;
-        Fri, 25 Oct 2019 17:24:49 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7DE4C6057;
-        Fri, 25 Oct 2019 17:24:46 +0000 (GMT)
-Received: from [9.85.155.79] (unknown [9.85.155.79])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Oct 2019 17:24:46 +0000 (GMT)
-Subject: Re: [PATCH v9 5/8] ima: make process_buffer_measurement() generic
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>
-References: <20191024034717.70552-1-nayna@linux.ibm.com>
- <20191024034717.70552-6-nayna@linux.ibm.com>
- <1ae56786-4d5c-ba8e-e30c-ced1e15ccb9c@linux.microsoft.com>
-From:   Nayna Jain <nayna@linux.vnet.ibm.com>
-Message-ID: <24cf44d5-a1f0-f59e-9884-c026b1ee2d3b@linux.vnet.ibm.com>
-Date:   Fri, 25 Oct 2019 12:24:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 13:26:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:29899 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388862AbfJYR0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 13:26:08 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 534CBC057EC6
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 17:26:07 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id s9so1582811wrw.23
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 10:26:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=40gRyfBb4ps5SH5tASPj5Wk8vxcVXH98oDEoIsITulQ=;
+        b=Iq8p9lSq514zu0mqD4Lm1rPAn8blJg2n+9Ik3K45ZyvQCsD6XG5/hLbcR9tlHIf7ez
+         5GMf0fDUclk8MO/uWSqKxtuOLqD930T4CkpTORt4fjBUU2CR5YZg9Ss9YjO5fZTHshTa
+         XHjIJd49zo/4zDPmCaY34RDz+YHAE4r/ykGPxLtXlvg039VAPg+wF+15mBHufQXoxuwM
+         TBEHU7xII7rNyAg74XlFscQfB/coHwnF+dq2U9PbXhEOjx2TkoImdId0mY3QtD/snUY/
+         sgYkYWaSg7hvKaoSRawF2uYWFgYGpDJeeibGS0QlxBTLrH5SNDXV8AEMk3NdPGgoYEDs
+         q5CA==
+X-Gm-Message-State: APjAAAUyA3B4ZKaNWKsJT2iuAn4uonlgpsfgXJRv56nqEotBFGLxbqbP
+        hvdRb3kWQtDQKKScAGCY/TBXzx1VYj2lCk9nMfTT8QDjK5KIHRw9s5XHSJzS2kfpeJH9AFYiVZZ
+        qcznKY6focHaiA0TQPOtmpzZO
+X-Received: by 2002:a7b:cf30:: with SMTP id m16mr4608865wmg.89.1572024366074;
+        Fri, 25 Oct 2019 10:26:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxN6NZZxBLFYMg5YHl9+sqn9c0uaU2sjYqWfRCptqslqcRU1mKlyZb4SjVt3gCTKPUbIwuexA==
+X-Received: by 2002:a7b:cf30:: with SMTP id m16mr4608851wmg.89.1572024365828;
+        Fri, 25 Oct 2019 10:26:05 -0700 (PDT)
+Received: from vitty.brq.redhat.com ([95.82.135.134])
+        by smtp.gmail.com with ESMTPSA id z189sm3996981wmc.25.2019.10.25.10.26.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 10:26:05 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Joe Perches <joe@perches.com>
+Subject: RE: [PATCH v2] x86/hyper-v: micro-optimize send_ipi_one case
+In-Reply-To: <DM5PR21MB013707183D9E271E60FBD435D7650@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20191025131546.18794-1-vkuznets@redhat.com> <DM5PR21MB013707183D9E271E60FBD435D7650@DM5PR21MB0137.namprd21.prod.outlook.com>
+Date:   Fri, 25 Oct 2019 19:26:03 +0200
+Message-ID: <877e4sbutw.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1ae56786-4d5c-ba8e-e30c-ced1e15ccb9c@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910250158
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Michael Kelley <mikelley@microsoft.com> writes:
 
-On 10/24/19 10:20 AM, Lakshmi Ramasubramanian wrote:
-> On 10/23/19 8:47 PM, Nayna Jain wrote:
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> 
+>> When sending an IPI to a single CPU there is no need to deal with cpumasks.
+>> With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+>> cycles) improvement with smp_call_function_single() loop benchmark. The
+>> optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+>> important for PV spinlock kick.
+>> 
+>> I was also wondering if it would make sense to switch to using regular
+>> APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
+>> cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+>> vector)).
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>> Changes since v1:
+>>  - Style changes [Roman, Joe]
+>> ---
+>>  arch/x86/hyperv/hv_apic.c           | 13 ++++++++++---
+>>  arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
+>>  2 files changed, 25 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+>> index e01078e93dd3..fd17c6341737 100644
+>> --- a/arch/x86/hyperv/hv_apic.c
+>> +++ b/arch/x86/hyperv/hv_apic.c
+>> @@ -194,10 +194,17 @@ static bool __send_ipi_mask(const struct cpumask *mask, int
+>> vector)
+>> 
+>>  static bool __send_ipi_one(int cpu, int vector)
+>>  {
+>> -	struct cpumask mask = CPU_MASK_NONE;
+>> +	trace_hyperv_send_ipi_one(cpu, vector);
+>> 
+>> -	cpumask_set_cpu(cpu, &mask);
+>> -	return __send_ipi_mask(&mask, vector);
+>> +	if (!hv_hypercall_pg || (vector < HV_IPI_LOW_VECTOR) ||
+>> +	    (vector > HV_IPI_HIGH_VECTOR))
+>> +		return false;
+>> +
+>> +	if (cpu >= 64)
+>> +		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
 >
-> Hi Nayna,
+> The above test should be checking the VP number, not the CPU
+> number,
+
+Oops, of course, thanks for catching this! v3 is coming!
+
+>  since the VP number is used to form the bitmap argument
+> to the hypercall.  In all current implementations of Hyper-V, the CPU number
+> and VP number are the same as far as I am aware, but that's not guaranteed in 
+> the future.
 >
->> +void process_buffer_measurement(const void *buf, int size,
->> +                const char *eventname, enum ima_hooks func,
->> +                int pcr)
->>   {
->>       int ret = 0;
->>       struct ima_template_entry *entry = NULL;
+> Michael
 >
->> +    if (func) {
->> +        security_task_getsecid(current, &secid);
->> +        action = ima_get_action(NULL, current_cred(), secid, 0, func,
->> +                    &pcr, &template);
->> +        if (!(action & IMA_MEASURE))
->> +            return;
->> +    }
->
-> In your change set process_buffer_measurement is called with NONE for 
-> the parameter func. So ima_get_action (the above if block) will not be 
-> executed.
->
-> Wouldn't it better to update ima_get_action (and related functions) to 
-> handle the ima policy (func param)?
+>> +
+>> +	return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector,
+>> +			       BIT_ULL(hv_cpu_number_to_vp_number(cpu)));
+>>  }
+>> 
 
-
-The idea is to use ima-buf template for the auxiliary measurement 
-record. The auxiliary measurement record is an additional record to the 
-one already created based on the existing policy. When func is passed as 
-NONE, it represents it is an additional record. I am not sure what you 
-mean by updating ima_get_action, it is already handling the ima policy.
-
-Thanks & Regards,
-
-     - Nayna
-
+-- 
+Vitaly
