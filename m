@@ -2,34 +2,34 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16706CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8549CCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE5E21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590562084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 11:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503389AbfJYLIs (ORCPT
+        id S2439562AbfJYLJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 07:08:48 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:36612 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503174AbfJYLIr (ORCPT
+        Fri, 25 Oct 2019 07:09:16 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:55422 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503261AbfJYLIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 07:08:47 -0400
 Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id Hn8b2100e5USYZQ01n8bmB; Fri, 25 Oct 2019 13:08:46 +0200
+        by baptiste.telenet-ops.be with bizsmtp
+        id Hn8b210045USYZQ01n8b1h; Fri, 25 Oct 2019 13:08:46 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNxSN-0003rD-Iz; Fri, 25 Oct 2019 13:08:35 +0200
+        id 1iNxSN-0003rD-1k; Fri, 25 Oct 2019 13:08:35 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iNw6A-0006mq-Ia; Fri, 25 Oct 2019 11:41:34 +0200
+        id 1iNw6A-0006nA-Oz; Fri, 25 Oct 2019 11:41:34 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -45,75 +45,42 @@ Cc:     linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
         linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/7] debugfs: Add and use debugfs_create_xul()
-Date:   Fri, 25 Oct 2019 11:41:23 +0200
-Message-Id: <20191025094130.26033-1-geert+renesas@glider.be>
+Subject: [PATCH v2 7/7] mmc: dw_mmc: Remove superfluous cast in debugfs_create_u32() call
+Date:   Fri, 25 Oct 2019 11:41:30 +0200
+Message-Id: <20191025094130.26033-8-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191025094130.26033-1-geert+renesas@glider.be>
+References: <20191025094130.26033-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-        Hi all,
+"dw_mci.state" is an enum, which is compatible with u32, so there is no
+need to cast its address, preventing further compiler checks.
 
-The existing debugfs_create_ulong() function supports objects of
-type "unsigned long", which are 32-bit or 64-bit depending on the
-platform, in decimal form.  To format objects in hexadecimal, various
-debugfs_create_x*() functions exist, but all of them take fixed-size
-types. 
-  
-To work around this, some drivers call one of debugfs_create_x{32,64}(),
-depending on the size of unsigned long.
-Other drivers just cast the value pointer to "u32 *" or "u64 *",
-introducing portability bugs or data leaks in the process.
- 
-Hence this patch series adds a debugfs helper for "unsigned long"
-objects in hexadecimal format, and converts drivers to make use of it.
-It also contains two cleanups removing superfluous casts, which I added
-to this series to avoid conflicts.
- 
-Changes compared to v1[1]:
-  - Add kerneldoc,
-  - Update Documentation/filesystems/debugfs.txt,
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+v2:
   - Add Acked-by.
+---
+ drivers/mmc/host/dw_mmc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Dependencies:
-  - The first patch now depends on "Documentation: debugfs: Document
-    debugfs helper for unsigned long values"[2], which Jon said he
-    applied to his tree.
-
-Thanks!
-
-[1] https://lore.kernel.org/lkml/20191021143742.14487-1-geert+renesas@glider.be/
-[2] https://lore.kernel.org/lkml/20191021150645.32440-1-geert+renesas@glider.be/
-
-Geert Uytterhoeven (7):
-  debugfs: Add debugfs_create_xul() for hexadecimal unsigned long
-  mac80211: Use debugfs_create_xul() helper
-  net: caif: Fix debugfs on 64-bit platforms
-  mmc: atmel-mci: Fix debugfs on 64-bit platforms
-  mmc: atmel-mci: Remove superfluous cast in debugfs_create_u32() call
-  mmc: dw_mmc: Fix debugfs on 64-bit platforms
-  mmc: dw_mmc: Remove superfluous cast in debugfs_create_u32() call
-
- Documentation/filesystems/debugfs.txt |  5 ++++-
- drivers/mmc/host/atmel-mci.c          | 10 +++++-----
- drivers/mmc/host/dw_mmc.c             | 10 +++++-----
- drivers/net/caif/caif_serial.c        |  4 ++--
- include/linux/debugfs.h               | 21 +++++++++++++++++++++
- net/mac80211/debugfs_sta.c            | 17 +++--------------
- 6 files changed, 40 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index b4c4a9cd6365f122..fc9d4d000f97e434 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -176,7 +176,7 @@ static void dw_mci_init_debugfs(struct dw_mci_slot *slot)
+ 
+ 	debugfs_create_file("regs", S_IRUSR, root, host, &dw_mci_regs_fops);
+ 	debugfs_create_file("req", S_IRUSR, root, slot, &dw_mci_req_fops);
+-	debugfs_create_u32("state", S_IRUSR, root, (u32 *)&host->state);
++	debugfs_create_u32("state", S_IRUSR, root, &host->state);
+ 	debugfs_create_xul("pending_events", S_IRUSR, root,
+ 			   &host->pending_events);
+ 	debugfs_create_xul("completed_events", S_IRUSR, root,
 -- 
 2.17.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
