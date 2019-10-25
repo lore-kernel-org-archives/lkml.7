@@ -2,110 +2,284 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15F2CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00BDCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC00C20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C982084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:43:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572036223;
+	bh=hu4VLaDjKj6lGmFjXK1RC/8V6q+VCqABNWHMZDyZFJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G/on1JBg70gPB4v1jUqop44kxoexjNEPyH8wxTmOwdUBFUQiZ1u2KJaWK6Ue4fzL6
+	 lVs8J7WiJrTHVJDjtWKyuFMUibrro6P2YKlw4G/qu/kQBCGux8aBe6ojd0DKAKVZbD
+	 og4SCfcoXVwHugb45orv1GPUZoPHFmrlohiRdHBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfJYUlL (ORCPT
+        id S1728718AbfJYUnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:41:11 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35833 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfJYUlK (ORCPT
+        Fri, 25 Oct 2019 16:43:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36093 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfJYUnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:41:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l10so3802322wrb.2
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 13:41:08 -0700 (PDT)
+        Fri, 25 Oct 2019 16:43:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c7so2965183otm.3;
+        Fri, 25 Oct 2019 13:43:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WxaN07sSqtpOjQ8EKnsRqm+aBhSXVnsjsX8SbYw017g=;
-        b=KwWG+VxbBI5FBvOHzKQF4ipS9SbYvXZop0Lw/lNfmP9o5SqXqv64uBXDD8bnjDdG/Y
-         oIjA8Mzb+3lZd3QmfA2gJdZXz9SSWrnkE8YT/o0VEoFgPFRBvk5m5G2l/URmOpdh9q/5
-         Tfk7kiyWdzKIOtjQZJi0DStmeoFbpe/BDExssn6OdNm07KSMDjv1XscaeQLvs9Ri8sdl
-         xf2qb7oclZiB1unkup+d60eG0pHg4MgFDin86Y9zINmzB4JZbGHlekHTRoHXIqYnN70d
-         y0Wa75WQ1UIe5/3byHXVjku8rcTCgO4oQsUUy29njosbORGr4wy43BP+DkB8claociMy
-         OFjg==
-X-Gm-Message-State: APjAAAVlZKV58YPrcW6diBex+UEt3kt/ctJ04iI8kEwEL1vqNRnja51A
-        n2PuRfy/9jNjVinxRQDbF1E=
-X-Google-Smtp-Source: APXvYqwv23KqkZ9Ld6EaW+bnb9urb/8b9uYNk1FAv2FBIqFRCly/KVqtj4SN6aURgHksLgo6LzXPMQ==
-X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr4844042wru.25.1572036067285;
-        Fri, 25 Oct 2019 13:41:07 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id u1sm2725219wmc.38.2019.10.25.13.41.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 13:41:06 -0700 (PDT)
-Subject: Re: [RFC PATCH 3/3] nvme: Introduce nvme_execute_passthru_rq_nowait()
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20191025202535.12036-1-logang@deltatee.com>
- <20191025202535.12036-4-logang@deltatee.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <28b40ab8-c695-784e-3f52-03a18b891d25@grimberg.me>
-Date:   Fri, 25 Oct 2019 13:41:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mY7W9Qwoy2hYsmzd/xysMomRgnBoZZlGLUvtU9rwd9Y=;
+        b=XEUUEBkvFzqf1YBNMq3MwFmqad2yZIMj7V6eHvCAtgO0HoGWwHxJQvnD+tFhfgq83c
+         4fB1yiRBs0pX8V6jvKYNJFrY64aEwNL2kdzV6Ou/R9WLFv96xr/Bx63OqtKYjNDghoXX
+         LK5cxtZMlBqLcFrjEfvPPt/MIbHnOv6x2yOrj2Sn1KOmy/tkdjdNXjZoNOXk7VFMo9U3
+         QCNntRLKL98EGT4AeFB6NjfafWvn6KZnAVIXevb/3UUMgJE3+kSsa6ZX4DeNivrE5Kh5
+         Y7zYdRzOW6j8jxuP52DuDT0USGOxThXkH/fw5TlguPlld6kYR39wjo8kXgarKLH+h9D0
+         NRLQ==
+X-Gm-Message-State: APjAAAUmKa2pK8pYM779goNTWeRTc+7K3vnnWfecjvASBT92vKC+dd+2
+        dyY4qIFPkPIOeWX4dGvjhg==
+X-Google-Smtp-Source: APXvYqwi5q9kWQoXbZEj5r4KamsevqICE/6M+McbMMUn5YYDFa3NKCPG3yUwt8kDDdHYKaPW7z/tuA==
+X-Received: by 2002:a9d:5a0b:: with SMTP id v11mr4410792oth.274.1572036219985;
+        Fri, 25 Oct 2019 13:43:39 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s6sm1056766otr.5.2019.10.25.13.43.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 13:43:39 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 15:43:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+Message-ID: <20191025204338.GA25892@bogus>
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191025202535.12036-4-logang@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191018001849.27205-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +#ifdef CONFIG_NVME_TARGET_PASSTHRU
-> +static void nvme_execute_passthru_rq_work(struct work_struct *w)
-> +{
-> +	struct nvme_request *req = container_of(w, struct nvme_request, work);
-> +	struct request *rq = blk_mq_rq_from_pdu(req);
-> +	rq_end_io_fn *done = rq->end_io;
-> +	void *end_io_data = rq->end_io_data;
+On Fri, Oct 18, 2019 at 01:18:39AM +0100, Srinivas Kandagatla wrote:
+> This patch adds bindings for wcd9340/wcd9341 audio codec which can
+> support both SLIMbus and I2S/I2C interface.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/sound/qcom,wcd934x.yaml          | 169 ++++++++++++++++++
+>  1 file changed, 169 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> new file mode 100644
+> index 000000000000..299d6b96c339
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> @@ -0,0 +1,169 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+> +  It has in-built Soundwire controller, pin controller, interrupt mux and
+> +  supports both I2S/I2C and SLIMbus audio interfaces.
+> +
+> +properties:
+> +  compatible:
+> +    const: slim217,250
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: GPIO spec for reset line to use
+> +    maxItems: 1
+> +
+> +  slim-ifc-dev:
+> +    description: SLIMBus Interface device phandle
 
-Why is end_io_data stored to a local variable here? where is it set?
+phandle or...
+
+> +    maxItems: 1
+
+array?
+
+Needs a type if a phandle.
 
 > +
-> +	nvme_execute_passthru_rq(rq);
+> +  clocks:
+> +    maxItems: 1
 > +
-> +	if (done) {
-> +		rq->end_io_data = end_io_data;
-> +		done(rq, 0);
-> +	}
-> +}
+> +  clock-names:
+> +    const: extclk
 > +
-> +void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn *done)
-> +{
-> +	struct nvme_command *cmd = nvme_req(rq)->cmd;
-> +	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
-> +	struct nvme_ns *ns = rq->q->queuedata;
-> +	struct gendisk *disk = ns ? ns->disk : NULL;
-> +	u32 effects;
+> +  vdd-buck-supply:
+> +    description: A reference to the 1.8V buck supply
 > +
-> +	/*
-> +	 * This function may be called in interrupt context, so we cannot sleep
-> +	 * but nvme_passthru_[start|end]() may sleep so we need to execute
-> +	 * the command in a work queue.
-> +	 */
-> +	effects = nvme_command_effects(ctrl, ns, cmd->common.opcode);
-> +	if (effects) {
-> +		rq->end_io = done;
-> +		INIT_WORK(&nvme_req(rq)->work, nvme_execute_passthru_rq_work);
-> +		queue_work(nvme_wq, &nvme_req(rq)->work);
+> +  vdd-buck-sido-supply:
+> +    description: A reference to the 1.8V SIDO buck supply
+> +
+> +  vdd-rx-supply:
+> +    description: A reference to the 1.8V rx supply
+> +
+> +  vdd-tx-supply:
+> +    description: A reference to the 1.8V tx supply
+> +
+> +  vdd-vbat-supply:
+> +    description: A reference to the vbat supply
+> +
+> +  vdd-io-supply:
+> +    description: A reference to the 1.8V I/O supply
+> +
+> +  vdd-micbias-supply:
+> +    description: A reference to the micbias supply
+> +
+> +  qcom,micbias1-millivolt:
 
-This work will need to be flushed when in nvme_stop_ctrl. That is
-assuming that it will fail-fast and not hang (which it should given
-that its a passthru command that is allocated via nvme_alloc_request).
+The standard unit is '-microvolt' 
+
+> +    description: Voltage betwee 1800mv-2850mv for micbias1 output
+
+typo...
+
+Sounds like constraints.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+
+With standard units, you can drop the type.
+
+> +
+> +  qcom,micbias2-millivolt:
+> +    description: Voltage betwee 1800mv-2850mv for micbias2 output
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,micbias3-millivolt:
+> +    description: Voltage betwee 1800mv-2850mv for micbias3 output
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  qcom,micbias4-millivolt:
+> +    description: Voltage betwee 1800mv-2850mv for micbias4 output
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  clock-output-names:
+> +    const: mclk
+> +
+> +  clock-frequency:
+> +    description: Clock frequency of output clk in Hz
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  '#sound-dai-cells':
+> +    const: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^.*@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      WCD934x subnode for each slave devices. Bindings of each subnodes
+> +      depends on the specific driver providing the functionality and
+> +      documented in there respective bindings.
+
+s/there/their/
+
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
+> +  - slim-ifc-dev
+> +  - interrupts
+> +  - interrupt-controller
+> +  - clock-frequency
+> +  - clock-output-names
+> +  - qcom,micbias1-millivolt
+> +  - qcom,micbias2-millivolt
+> +  - qcom,micbias3-millivolt
+> +  - qcom,micbias4-millivolt
+> +  - "#interrupt-cells"
+> +  - "#clock-cells"
+> +  - "#sound-dai-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    codec@1,0{
+> +        compatible = "slim217,250";
+> +        reg  = <1 0>;
+> +        reset-gpios = <&tlmm 64 0>;
+> +        slim-ifc-dev  = <&wcd9340_ifd>;
+> +        #sound-dai-cells = <1>;
+> +        interrupt-parent = <&tlmm>;
+> +        interrupts = <54 4>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +        #clock-cells = <0>;
+> +        clock-frequency = <9600000>;
+> +        clock-output-names = "mclk";
+> +        qcom,micbias1-millivolt = <1800>;
+> +        qcom,micbias2-millivolt = <1800>;
+> +        qcom,micbias3-millivolt = <1800>;
+> +        qcom,micbias4-millivolt = <1800>;
+> +        clock-names = "extclk";
+> +        clocks = <&rpmhcc 2>;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        wcdpinctrl@42 {
+> +            reg = <0x42 0x2>;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+> 
