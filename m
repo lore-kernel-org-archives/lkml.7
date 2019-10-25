@@ -2,209 +2,152 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82FACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7EECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A059E20867
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A9F21D71
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 06:47:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nNTG6fyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405504AbfJYGr2 (ORCPT
+        id S2405570AbfJYGrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 02:47:28 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:59973 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405056AbfJYGr1 (ORCPT
+        Fri, 25 Oct 2019 02:47:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46869 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405515AbfJYGrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 02:47:27 -0400
-Received: from [10.28.19.114] (10.28.19.114) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 25 Oct
- 2019 14:47:37 +0800
-Subject: Re: [PATCH v2 2/3] clk: meson: add support for A1 PLL clock ops
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <1571382865-41978-1-git-send-email-jian.hu@amlogic.com>
- <1571382865-41978-3-git-send-email-jian.hu@amlogic.com>
- <1jtv82bai3.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <77eb8a68-f5b5-357b-f71c-e22337d88a39@amlogic.com>
-Date:   Fri, 25 Oct 2019 14:47:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 02:47:31 -0400
+Received: by mail-io1-f65.google.com with SMTP id c6so1122513ioo.13
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 23:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FMGu1n8QDQXe7AgLj4DxpaYTvWlcS+srDbrNrliLgPc=;
+        b=nNTG6fyOcQo7NQ1rdd1b0CiDebI15NvnXi3ZsV/JBm6CT2uZ9HvA/DuJRGRmGcY/EK
+         Hpx+uS9geVDmKyp4YPzDtU4WPioOK0VBJgaFG4tHtQ0wlFPoreS5IiCxz7xPx3N7VPki
+         tbqJDSr+UM6a7Ty6xwKIRROtO3orSO0eKRytOp7vGlScG5Oz+vhMQRvuronjn9UUYjZJ
+         5Kx/u/5Dt1e91jJjjr+9OHgbrUAfEOm2HMdovOUFIIQE+DfLR0Ye+8Yk+13uJBxjSoNs
+         n3yjYt/tonPA4rFIF2+5bboppjgf0wemnXmdv3LMy8nUYfRieIYdGW9Cyceq0LDi23FP
+         ebYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FMGu1n8QDQXe7AgLj4DxpaYTvWlcS+srDbrNrliLgPc=;
+        b=oozYNR4dL5g76dq5iBYYNfpsh1RT2NY00eYA1VQd7CqsJgXvbRdFD3YbY7yrlOzTXf
+         rDAtRJ71OTZIhl09SDnfrTKLM4z6cmTuaruHZNPFjbn3O6jsLJE6Yxo5b1uhaxVdFcBE
+         7u8C1ajk7HZ+o+DwcztHbwswCmrYESCtAzmcWMpbdTjNqFH25uIMUbJtTBVpJPvPRxVS
+         v0BVJdnOjFf8+nVphIt3aSFFmOlr3PiPuJy3v7bppkOIfDueDERkyZJcUCp3UnlUnryR
+         pN4LgUqnH7TwEQ9MOgT/CKjii5of/bUY6/Rt1PSMtJM+JShFkLw4RH11B9kwKMMlwU8B
+         e5wA==
+X-Gm-Message-State: APjAAAURpbS8rchcDgheZu9O4ifeo2wvh7a4d5vzOcyKepDaYXFEYHSJ
+        wEHWsZC59etVALTz0yNCo+WeDQ/WJciinexnFgmxBQ==
+X-Google-Smtp-Source: APXvYqwhspaNevR5WIUbk2S64QS6sKv09/9BGDd5Svp5tyDQlxLwttxMpz8aj5eYsEfBMoTFtJb2genRYVLO64i0I60=
+X-Received: by 2002:a5e:c303:: with SMTP id a3mr2046955iok.175.1571986050284;
+ Thu, 24 Oct 2019 23:47:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1jtv82bai3.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.19.114]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+References: <20191022085924.92783-1-pumahsu@google.com> <20191023083221.GB8828@kuha.fi.intel.com>
+ <644d890b-86e8-f05a-cd4c-32937d971a45@roeck-us.net> <20191023142900.GA15396@kuha.fi.intel.com>
+ <20191023150126.GA16612@roeck-us.net> <20191023155757.GB15396@kuha.fi.intel.com>
+ <CAGCq0LZGz04JCTEJXrBqs4ENybQih6zKWTacq9T9DKPNOQAfMw@mail.gmail.com> <20191024120346.GC15396@kuha.fi.intel.com>
+In-Reply-To: <20191024120346.GC15396@kuha.fi.intel.com>
+From:   Puma Hsu <pumahsu@google.com>
+Date:   Fri, 25 Oct 2019 14:46:54 +0800
+Message-ID: <CAGCq0LZcZUD6jUhcnRTQqtoO2MzCuv8hUndkv5Ekcq=sX7oT4w@mail.gmail.com>
+Subject: Re: [PATCH V2] usb: typec: Add sysfs node to show connector orientation
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Kyle Tso <kyletso@google.com>,
+        Albert Wang <albertccwang@google.com>,
+        Chien Kun Niu <rickyniu@google.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jerome
+Hi Heikki,
 
-On 2019/10/21 19:31, Jerome Brunet wrote:
-> 
-> On Fri 18 Oct 2019 at 09:14, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> The A1 PLL design is different with previous SoCs. The PLL
->> internal analog modules Power-on sequence is different
->> with previous, and thus requires a strict register sequence to
->> enable the PLL. Unlike the previous series, the maximum frequency
->> is 6G in G12A, for A1 the maximum is 1536M.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   drivers/clk/meson/clk-pll.c | 66 ++++++++++++++++++++++++++++++++++++++++-----
->>   drivers/clk/meson/clk-pll.h |  1 +
->>   2 files changed, 61 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->> index ddb1e56..b440e62 100644
->> --- a/drivers/clk/meson/clk-pll.c
->> +++ b/drivers/clk/meson/clk-pll.c
->> @@ -349,6 +349,56 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
->>   	meson_parm_write(clk->map, &pll->en, 0);
->>   }
->>   
->> +/*
->> + * The A1 design is different with previous SoCs.The PLL
->> + * internal analog modules Power-on sequence is different with
->> + * previous, different PLL has the different sequence, and
->> + * thus requires a strict register sequence to enable the PLL.
->> + * When set a new target frequency, the sequence should keep
->> + * the same with the initial sequence. Unlike the previous series,
->> + * the maximum frequency is 6G in G12A, for A1 the maximum
->> + * is 1536M.
-> 
-> The comment about the max frequency belongs in your a1 driver, not in
-> the PLL driver
-> 
-OK, I will remove the max frequency comments
->> + */
->> +static void meson_params_update_with_init_seq(struct clk_regmap *clk,
->> +				       struct meson_clk_pll_data *pll,
->> +				       unsigned int m, unsigned int n,
->> +				       unsigned int frac)
->> +{
->> +	struct parm *pm = &pll->m;
->> +	struct parm *pn = &pll->n;
->> +	struct parm *pfrac = &pll->frac;
->> +	const struct reg_sequence *init_regs = pll->init_regs;
->> +	unsigned int i, val;
->> +
->> +	for (i = 0; i < pll->init_count; i++) {
->> +		if (pn->reg_off == init_regs[i].reg) {
->> +			/* Clear M N bits and Update M N value */
->> +			val = init_regs[i].def;
->> +			val &= CLRPMASK(pn->width, pn->shift);
->> +			val &= CLRPMASK(pm->width, pm->shift);
->> +			val |= n << pn->shift;
->> +			val |= m << pm->shift;
->> +			regmap_write(clk->map, pn->reg_off, val);
->> +		} else if (MESON_PARM_APPLICABLE(&pll->frac) &&
->> +			   (pfrac->reg_off == init_regs[i].reg)) {
->> +			/* Clear Frac bits and Update Frac value */
->> +			val = init_regs[i].def;
->> +			val &= CLRPMASK(pfrac->width, pfrac->shift);
->> +			val |= frac << pfrac->shift;
->> +			regmap_write(clk->map, pfrac->reg_off, val);
->> +		} else {
->> +			/*
->> +			 * According to the PLL hardware constraint,
->> +			 * the left registers should be setted again.
->> +			 */
->> +			val = init_regs[i].def;
->> +			regmap_write(clk->map, init_regs[i].reg, val);
->> +		}
->> +		if (init_regs[i].delay_us)
->> +			udelay(init_regs[i].delay_us);
->> +	}
-> 
-> So:
-> 
-> 1) All the code above this there make the PLL lock, IOW enable the
-> PLL. It does not belong in the set_rate() callback but in enable() or
-> prepare() maybe.
-> 
-> 2) All the above is works but it is a bit over complicated for what it
-> does. From the a1_hifi_init_regs I see, all you really need to do is
->    * toggle BIT(6) in CTRL2
->    * toggle BIT(28) in CTRL0 (enable PARM)
->    * toggle BIT(26) in CTRL0
-> 
-> You could use PARM 'rst' for one them and introduce another parm for the
-> other one. You would not need to repoke the whole sequence this way.
-> 
-OK, I have realized as you suggested. I will send it in the V3 patch.
->> +}
->> +
->>   static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
->>   				  unsigned long parent_rate)
->>   {
->> @@ -366,16 +416,20 @@ static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
->>   	if (ret)
->>   		return ret;
->>   
->> +	if (MESON_PARM_APPLICABLE(&pll->frac))
->> +		frac = __pll_params_with_frac(rate, parent_rate, m, n, pll);
->> +
->>   	enabled = meson_parm_read(clk->map, &pll->en);
->>   	if (enabled)
->>   		meson_clk_pll_disable(hw);
->>   
->> -	meson_parm_write(clk->map, &pll->n, n);
->> -	meson_parm_write(clk->map, &pll->m, m);
->> -
->> -	if (MESON_PARM_APPLICABLE(&pll->frac)) {
->> -		frac = __pll_params_with_frac(rate, parent_rate, m, n, pll);
->> -		meson_parm_write(clk->map, &pll->frac, frac);
->> +	if (pll->strict_sequence)
->> +		meson_params_update_with_init_seq(clk, pll, m, n, frac);
->> +	else {
->> +		meson_parm_write(clk->map, &pll->n, n);
->> +		meson_parm_write(clk->map, &pll->m, m);
->> +		if (MESON_PARM_APPLICABLE(&pll->frac))
->> +			meson_parm_write(clk->map, &pll->frac, frac);
->>   	}
->>   
->>   	/* If the pll is stopped, bail out now */
->> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
->> index 367efd0..d5789cef 100644
->> --- a/drivers/clk/meson/clk-pll.h
->> +++ b/drivers/clk/meson/clk-pll.h
->> @@ -41,6 +41,7 @@ struct meson_clk_pll_data {
->>   	const struct pll_params_table *table;
->>   	const struct pll_mult_range *range;
->>   	u8 flags;
->> +	bool strict_sequence;
-> 
-> Don't introduce parameter for this We have ops to tune the behavior of
-> the clock driver. Properly refactor the code if some of it is common.
-> 
-remove the strict_sequence.
->>   };
->>   
->>   extern const struct clk_ops meson_clk_pll_ro_ops;
-> 
-> .
-> 
+Sure, I will check about this.
+Thanks for advising me.
+
+Thanks in advance.
+Puma Hsu
+
+
+
+On Thu, Oct 24, 2019 at 8:06 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Hi,
+>
+> On Thu, Oct 24, 2019 at 05:02:18PM +0800, Puma Hsu wrote:
+> > Yes, generally this might be purely informational or be a dynamically
+> > debuggable
+> > mechanism for end user as I mentioned in previous discussion
+> > thread(https://lkml.org/lkml/2019/10/22/198).
+> > Could I know if it is not suitable that we expose a file for
+> > informational usage?
+> >
+> > If everyone agreed above, about the definition of =E2=80=9Cunknown=E2=
+=80=9D and the condition
+> > =E2=80=9Cdon=E2=80=99t know the orientation=E2=80=9D, what about adding=
+ additional return value?
+> >   1. For original =E2=80=9Cunknown=E2=80=9D, it is a generic unknown st=
+ate which can
+> > indicate no
+> >       matter connector is disconnected, cannot specify which cc side
+> > is configured(such as Ra-Ra),
+> >       or even driver can not know the orientation.
+> >   2. New additional value =E2=80=9Cunavailable=E2=80=9D, it can be used=
+ to
+> > specifically explicate that
+> >       driver can not know the orientation.
+> > Take UCSI as example, it can use generic =E2=80=9Cunknown=E2=80=9D or =
+=E2=80=9Cunavailable=E2=80=9D if
+> > it wants.
+> > But if it exposes =E2=80=9Cunavailable=E2=80=9D, then application in us=
+er space can
+> > know that this attribute is not useful.
+> >
+> > I summarize the proposal definition below:
+> >  - unknown (generic unknown. driver don=E2=80=99t or can=E2=80=99t know=
+ the polarity,
+> >                       e.g. disconnected, both cc1 and cc2 are the same,=
+ )
+> >  - normal (configured in cc1 side)
+> >  - reversed (configured in cc2 side)
+> >  - unavailable (not support the polarity detection)
+>
+> Now the attribute would be supplying two types of information:
+>
+>         1) Does the driver know the orientation
+>         2) The current orientation
+>
+> Let's not do that! If you really need this, then just implement the
+> ".is_visible" callback with it. You just need to add a flag to the
+> struct typec_capability that tells does the driver know the
+> orientation or not. Something like:
+>
+>         unsigned int orientation_aware:1;
+>
+> We already "hide" the identity information if the underlying driver
+> is unable to supply it. By making this attribute optional as well (by
+> hiding it when it's not known), the style of exposing the information
+> is kept the same throughout the class.
+>
+> thanks,
+>
+> --
+> heikki
