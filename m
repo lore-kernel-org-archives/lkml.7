@@ -2,179 +2,87 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BD1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA290CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968C521D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808B221D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 20:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i/au+bB/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0nQZAXIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfJYUQH (ORCPT
+        id S1728010AbfJYUSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 16:16:07 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35430 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728045AbfJYUQD (ORCPT
+        Fri, 25 Oct 2019 16:18:50 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37670 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfJYUSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 16:16:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572034561;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A1a57DeVhAkVte8e6LqvN0c6Mg7Eg5WPxMLsoZ4fAsE=;
-        b=i/au+bB/MFX9XuXU6SGq3MMFm2iyV+bE3gUB2f8XjJcUjKUlHsWDKXoQ43+bfJFvb7DNnG
-        hQ+0hUvd1T4TtCw/oGH4slN7JJa1+huvDF159++1jQW8jnjEFwURIoe/YVA+ioHSVEay/C
-        jB/+ErVB0mbRGHqHiH7qT8GYOBo3eUw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-dacuketPPimuhQzfeX5muQ-1; Fri, 25 Oct 2019 16:15:55 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD8EA107AD31;
-        Fri, 25 Oct 2019 20:15:53 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CFF5600D1;
-        Fri, 25 Oct 2019 20:15:42 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 16:15:39 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
-        dwalsh@redhat.com, mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 06/21] audit: contid limit of 32k imposed to
- avoid DoS
-Message-ID: <20191025201539.5nvjg3x7zshoqjwl@madcap2.tricolour.ca>
-References: <cover.1568834524.git.rgb@redhat.com>
- <230e91cd3e50a3d8015daac135c24c4c58cf0a21.1568834524.git.rgb@redhat.com>
- <20190927125142.GA25764@hmswarspite.think-freely.org>
+        Fri, 25 Oct 2019 16:18:49 -0400
+Received: by mail-io1-f65.google.com with SMTP id 1so3846282iou.4
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 13:18:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NCBR5U51gx0BTu0sLmcRSqq7M5vsvlw0CMPTVtehGiQ=;
+        b=0nQZAXIlVAaMPPzGgxQhpfchTqE26pjejpXPTSGSN7CHE0o2ppqAheUHgpP0/Lkiwc
+         uzZ1+tPrglbLBheeXZo37Sp+o/Azjk5vB+awBhvtt982W9WxqqpTVXivEvja/SpJMrPw
+         W7FednO0xXko+SgBCTyKgSL6Rd/QSo6NPodO7Zv//YALXskWApdR9TKbisfBaZ0y/cXQ
+         2d7yT7/i6LYyQuKyzXIxLhUjF90VYOO2G8cuzu2dkJSDbK4Knk2KZS8AKg1lPQfOx9xr
+         TvK4GF4xcawobM1OqgTTZ+Ep+dsVRIqHIw0dPPscb16eIQNsWZ899IDDYGSVL2usXd38
+         Tr2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NCBR5U51gx0BTu0sLmcRSqq7M5vsvlw0CMPTVtehGiQ=;
+        b=TsdMvSK6m2PvDbRyH2hTwjivyQ7tyfWpiXBWPpnALDyYXvrf2bCS7YbhnTP6lFoz/E
+         veH3TEbTk5fwFNTyEOiJj1fyx3Fq5MvfS2UdgqaM+1WuoTiYBzaUCsmZUg9b2fRi+O8Z
+         YQsUqiJT0pq1X2pf+oECPQDiWTI5h6P+cDSFA93vcyieahfuJP3lSxdePW7RAiP4NSc5
+         6wUWSOudGnzaI85QSru4lI4RIRHK1ZZjdtf8V6SRIi5vkgCFfZy9NXJ3dc+Iu4fdrvEr
+         +f7DgnC1hj2XP7SrTXrtN2u+7RGzgCTKV3JXjWuJqzoSAzgkW377fmJ0y3RkGSTVEH/G
+         hkQA==
+X-Gm-Message-State: APjAAAVqKnDJEevlhNOphknlUdxlpdV8uZzOcI7ULl+qOX5ruWei0vPB
+        dbupdEoRJ4mIzuRMcS9ZUn4QLQ==
+X-Google-Smtp-Source: APXvYqzDQfuwNIymKXRFdVnTtyxH/JBiiT9sPS2lDsn1w4inXNY9A2HUaR3nUZNWJQcQyvmwOGVlmA==
+X-Received: by 2002:a02:a414:: with SMTP id c20mr5770951jal.91.1572034728986;
+        Fri, 25 Oct 2019 13:18:48 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c73sm384696ila.9.2019.10.25.13.18.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 25 Oct 2019 13:18:48 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] blk-mq: fill header with kernel-doc
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel@collabora.com, krisman@collabora.com
+References: <20191022000724.32746-1-andrealmeid@collabora.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <199aef1f-1956-afbc-9ccb-e9d057ea2d27@kernel.dk>
+Date:   Fri, 25 Oct 2019 14:18:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190927125142.GA25764@hmswarspite.think-freely.org>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: dacuketPPimuhQzfeX5muQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191022000724.32746-1-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-27 08:51, Neil Horman wrote:
-> On Wed, Sep 18, 2019 at 09:22:23PM -0400, Richard Guy Briggs wrote:
-> > Set an arbitrary limit on the number of audit container identifiers to
-> > limit abuse.
-> >=20
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  kernel/audit.c | 8 ++++++++
-> >  kernel/audit.h | 4 ++++
-> >  2 files changed, 12 insertions(+)
-> >=20
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index 53d13d638c63..329916534dd2 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -139,6 +139,7 @@ struct audit_net {
-> >  struct list_head audit_inode_hash[AUDIT_INODE_BUCKETS];
-> >  /* Hash for contid-based rules */
-> >  struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
-> > +int audit_contid_count =3D 0;
-> > =20
-> >  static struct kmem_cache *audit_buffer_cache;
-> > =20
-> > @@ -2384,6 +2385,7 @@ void audit_cont_put(struct audit_cont *cont)
-> >  =09=09put_task_struct(cont->owner);
-> >  =09=09list_del_rcu(&cont->list);
-> >  =09=09kfree_rcu(cont, rcu);
-> > +=09=09audit_contid_count--;
-> >  =09}
-> >  }
-> > =20
-> > @@ -2456,6 +2458,11 @@ int audit_set_contid(struct task_struct *task, u=
-64 contid)
-> >  =09=09=09=09=09goto conterror;
-> >  =09=09=09=09}
-> >  =09=09=09}
-> > +=09=09/* Set max contids */
-> > +=09=09if (audit_contid_count > AUDIT_CONTID_COUNT) {
-> > +=09=09=09rc =3D -ENOSPC;
-> > +=09=09=09goto conterror;
-> > +=09=09}
-> You should check for audit_contid_count =3D=3D AUDIT_CONTID_COUNT here, n=
-o?
-> or at least >=3D, since you increment it below.  Otherwise its possible
-> that you will exceed it by one in the full condition.
+On 10/21/19 6:07 PM, André Almeida wrote:
+> Insert documentation for structs, enums and functions at header file.
+> Format existing and new comments at struct blk_mq_ops as
+> kernel-doc comments.
 
-Yes, agreed.
+Applied, thanks.
 
-> >  =09=09if (!newcont) {
-> >  =09=09=09newcont =3D kmalloc(sizeof(struct audit_cont), GFP_ATOMIC);
-> >  =09=09=09if (newcont) {
-> > @@ -2465,6 +2472,7 @@ int audit_set_contid(struct task_struct *task, u6=
-4 contid)
-> >  =09=09=09=09newcont->owner =3D current;
-> >  =09=09=09=09refcount_set(&newcont->refcount, 1);
-> >  =09=09=09=09list_add_rcu(&newcont->list, &audit_contid_hash[h]);
-> > +=09=09=09=09audit_contid_count++;
-> >  =09=09=09} else {
-> >  =09=09=09=09rc =3D -ENOMEM;
-> >  =09=09=09=09goto conterror;
-> > diff --git a/kernel/audit.h b/kernel/audit.h
-> > index 162de8366b32..543f1334ba47 100644
-> > --- a/kernel/audit.h
-> > +++ b/kernel/audit.h
-> > @@ -219,6 +219,10 @@ static inline int audit_hash_contid(u64 contid)
-> >  =09return (contid & (AUDIT_CONTID_BUCKETS-1));
-> >  }
-> > =20
-> > +extern int audit_contid_count;
-> > +
-> > +#define AUDIT_CONTID_COUNT=091 << 16
-> > +
-> Just to ask the question, since it wasn't clear in the changelog, what
-> abuse are you avoiding here?  Ostensibly you should be able to create as
-> many container ids as you have space for, and the simple creation of
-> container ids doesn't seem like the resource strain I would be concerned
-> about here, given that an orchestrator can still create as many
-> containers as the system will otherwise allow, which will consume
-> significantly more ram/disk/etc.
-
-Agreed.  I'm not a huge fan of this, but included it as an optional
-patch to address resource abuse concerns of Eric Beiderman.  I'll push
-it to the end of the patchset and make it clear it is optional unless I
-hear a compelling reason to keep it.
-
-A similar argument was used to make the audit queue length tunable
-parameter unlimited.
-
-> >  /* Indicates that audit should log the full pathname. */
-> >  #define AUDIT_NAME_FULL -1
-> > =20
-> > --=20
-> > 1.8.3.1
-
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+-- 
+Jens Axboe
 
