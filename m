@@ -2,81 +2,190 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64322CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F83CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D29421872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572020293;
-	bh=zsbdQvfJ8+q2pzusFNOjjDgO2fdiHgeruyB2BpqAhfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oNuF9QhWUBhqfxfOtzhlmkwpFPt2+QxQs9A5QYK/oNH2F5Nanaiakb2QUKJkWVAI1
-	 3qy9rivIyYCOL+yrrQyelrNRU9k6qlgw/rJaK4CC2q1GgqwZWisACOa9UzVArWkFZB
-	 1A4hr0hKu2qc7UttXUAXtBYTrw7JicT/YJpa1NaM=
+	by mail.kernel.org (Postfix) with ESMTP id 7FE442070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 16:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505397AbfJYQSL (ORCPT
+        id S2505479AbfJYQTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 12:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502249AbfJYQSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 12:18:10 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD2C52070B;
-        Fri, 25 Oct 2019 16:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572020290;
-        bh=zsbdQvfJ8+q2pzusFNOjjDgO2fdiHgeruyB2BpqAhfI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xZzvdjENaVD+2lcGJUR9ncW0e/IAWYPqJbGh8SjuU974cfTjPci7a1yS7CbMd1/wW
-         OxngfQ0N1MCIciK9J5iEWHkLlUnuii6I/QMRQ73fJf4JWT0jxhWvyPNN+nna6rVeuQ
-         S2hUAUno8hbubl5rLAD8IF9rI4t2+Ney4qYUA7Io=
-Date:   Fri, 25 Oct 2019 17:18:05 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
-Cc:     amd-gfx@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Nicolas Waisman <nico@semmle.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH] drm/radeon: Handle workqueue allocation failure
-Message-ID: <20191025161804.GA12335@willie-the-truck>
-References: <20191025110450.10474-1-will@kernel.org>
- <5d6a88a2-2719-a859-04df-10b0d893ff39@daenzer.net>
+        Fri, 25 Oct 2019 12:19:02 -0400
+Received: from smtp4.emailarray.com ([65.39.216.22]:60041 "EHLO
+        smtp4.emailarray.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505248AbfJYQTB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 12:19:01 -0400
+Received: (qmail 62457 invoked by uid 89); 25 Oct 2019 16:12:21 -0000
+Received: from unknown (HELO ?172.20.54.239?) (amxlbW9uQGZsdWdzdmFtcC5jb21AMTk5LjIwMS42NC4xMjk=) (POLARISLOCAL)  
+  by smtp4.emailarray.com with (AES256-GCM-SHA384 encrypted) SMTP; 25 Oct 2019 16:12:21 -0000
+From:   "Jonathan Lemon" <jlemon@flugsvamp.com>
+To:     "Laurentiu Tudor" <laurentiu.tudor@nxp.com>
+Cc:     hch@lst.de, joro@8bytes.org,
+        "Ioana Ciocoi Radulescu" <ruxandra.radulescu@nxp.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, "Ioana Ciornei" <ioana.ciornei@nxp.com>,
+        "Leo Li" <leoyang.li@nxp.com>, robin.murphy@arm.com,
+        "Diana Madalina Craciun" <diana.craciun@nxp.com>,
+        davem@davemloft.net, "Madalin Bucur" <madalin.bucur@nxp.com>
+Subject: Re: [PATCH v2 3/3] dpaa2_eth: use new unmap and sync dma api variants
+Date:   Fri, 25 Oct 2019 09:12:15 -0700
+X-Mailer: MailMate (1.13r5655)
+Message-ID: <BC2F1623-D8A5-4A6E-BAF4-5C551637E472@flugsvamp.com>
+In-Reply-To: <20191024124130.16871-4-laurentiu.tudor@nxp.com>
+References: <20191024124130.16871-1-laurentiu.tudor@nxp.com>
+ <20191024124130.16871-4-laurentiu.tudor@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d6a88a2-2719-a859-04df-10b0d893ff39@daenzer.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 06:06:26PM +0200, Michel Dänzer wrote:
-> On 2019-10-25 1:04 p.m., Will Deacon wrote:
-> > In the highly unlikely event that we fail to allocate the "radeon-crtc"
-> > workqueue, we should bail cleanly rather than blindly march on with a
-> > NULL pointer installed for the 'flip_queue' field of the 'radeon_crtc'
-> > structure.
-> > 
-> > This was reported previously by Nicolas, but I don't think his fix was
-> > correct:
-> 
-> Neither is this one I'm afraid. See my feedback on
-> https://patchwork.freedesktop.org/patch/331534/ .
 
-Thanks. Although I agree with you wrt the original patch, I don't think
-the workqueue allocation failure is distinguishable from the CRTC allocation
-failure with my patch. Are you saying that the error path there is broken
-too?
 
-Will
+On 24 Oct 2019, at 5:41, Laurentiu Tudor wrote:
+
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>
+> Convert this driver to usage of the newly introduced dma unmap and
+> sync DMA APIs. This will get rid of the unsupported direct usage of
+> iommu_iova_to_phys() API.
+>
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> ---
+>  .../net/ethernet/freescale/dpaa2/dpaa2-eth.c  | 40 
+> +++++++------------
+>  .../net/ethernet/freescale/dpaa2/dpaa2-eth.h  |  1 -
+>  2 files changed, 15 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c 
+> b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+> index 19379bae0144..8c3391e6e598 100644
+> --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+> +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+> @@ -29,16 +29,6 @@ MODULE_LICENSE("Dual BSD/GPL");
+>  MODULE_AUTHOR("Freescale Semiconductor, Inc");
+>  MODULE_DESCRIPTION("Freescale DPAA2 Ethernet Driver");
+>
+> -static void *dpaa2_iova_to_virt(struct iommu_domain *domain,
+> -				dma_addr_t iova_addr)
+> -{
+> -	phys_addr_t phys_addr;
+> -
+> -	phys_addr = domain ? iommu_iova_to_phys(domain, iova_addr) : 
+> iova_addr;
+> -
+> -	return phys_to_virt(phys_addr);
+> -}
+> -
+>  static void validate_rx_csum(struct dpaa2_eth_priv *priv,
+>  			     u32 fd_status,
+>  			     struct sk_buff *skb)
+> @@ -85,9 +75,10 @@ static void free_rx_fd(struct dpaa2_eth_priv *priv,
+>  	sgt = vaddr + dpaa2_fd_get_offset(fd);
+>  	for (i = 1; i < DPAA2_ETH_MAX_SG_ENTRIES; i++) {
+>  		addr = dpaa2_sg_get_addr(&sgt[i]);
+> -		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
+> -		dma_unmap_page(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
+> -			       DMA_BIDIRECTIONAL);
+> +		sg_vaddr = page_to_virt
+> +				(dma_unmap_page_desc(dev, addr,
+> +						    DPAA2_ETH_RX_BUF_SIZE,
+> +						    DMA_BIDIRECTIONAL));
+
+This is doing virt -> page -> virt.  Why not just have the new
+function return the VA corresponding to the addr, which would
+match the other functions?
+-- 
+Jonathan
+
+
+>
+>  		free_pages((unsigned long)sg_vaddr, 0);
+>  		if (dpaa2_sg_is_final(&sgt[i]))
+> @@ -143,9 +134,10 @@ static struct sk_buff *build_frag_skb(struct 
+> dpaa2_eth_priv *priv,
+>
+>  		/* Get the address and length from the S/G entry */
+>  		sg_addr = dpaa2_sg_get_addr(sge);
+> -		sg_vaddr = dpaa2_iova_to_virt(priv->iommu_domain, sg_addr);
+> -		dma_unmap_page(dev, sg_addr, DPAA2_ETH_RX_BUF_SIZE,
+> -			       DMA_BIDIRECTIONAL);
+> +		sg_vaddr = page_to_virt
+> +				(dma_unmap_page_desc(dev, sg_addr,
+> +						    DPAA2_ETH_RX_BUF_SIZE,
+> +						    DMA_BIDIRECTIONAL));
+>
+>  		sg_length = dpaa2_sg_get_len(sge);
+>
+> @@ -210,9 +202,9 @@ static void free_bufs(struct dpaa2_eth_priv *priv, 
+> u64 *buf_array, int count)
+>  	int i;
+>
+>  	for (i = 0; i < count; i++) {
+> -		vaddr = dpaa2_iova_to_virt(priv->iommu_domain, buf_array[i]);
+> -		dma_unmap_page(dev, buf_array[i], DPAA2_ETH_RX_BUF_SIZE,
+> -			       DMA_BIDIRECTIONAL);
+> +		vaddr = page_to_virt(dma_unmap_page_desc(dev, buf_array[i],
+> +							 DPAA2_ETH_RX_BUF_SIZE,
+> +							 DMA_BIDIRECTIONAL));
+>  		free_pages((unsigned long)vaddr, 0);
+>  	}
+>  }
+> @@ -369,9 +361,8 @@ static void dpaa2_eth_rx(struct dpaa2_eth_priv 
+> *priv,
+>  	/* Tracing point */
+>  	trace_dpaa2_rx_fd(priv->net_dev, fd);
+>
+> -	vaddr = dpaa2_iova_to_virt(priv->iommu_domain, addr);
+> -	dma_sync_single_for_cpu(dev, addr, DPAA2_ETH_RX_BUF_SIZE,
+> -				DMA_BIDIRECTIONAL);
+> +	vaddr = dma_sync_single_for_cpu_desc(dev, addr, 
+> DPAA2_ETH_RX_BUF_SIZE,
+> +					     DMA_BIDIRECTIONAL);
+>
+>  	fas = dpaa2_get_fas(vaddr, false);
+>  	prefetch(fas);
+> @@ -682,7 +673,8 @@ static void free_tx_fd(const struct dpaa2_eth_priv 
+> *priv,
+>  	u32 fd_len = dpaa2_fd_get_len(fd);
+>
+>  	fd_addr = dpaa2_fd_get_addr(fd);
+> -	buffer_start = dpaa2_iova_to_virt(priv->iommu_domain, fd_addr);
+> +	buffer_start = dma_sync_single_for_cpu_desc(dev, fd_addr, 
+> sizeof(*swa),
+> +						    DMA_BIDIRECTIONAL);
+>  	swa = (struct dpaa2_eth_swa *)buffer_start;
+>
+>  	if (fd_format == dpaa2_fd_single) {
+> @@ -3448,8 +3440,6 @@ static int dpaa2_eth_probe(struct fsl_mc_device 
+> *dpni_dev)
+>  	priv = netdev_priv(net_dev);
+>  	priv->net_dev = net_dev;
+>
+> -	priv->iommu_domain = iommu_get_domain_for_dev(dev);
+> -
+>  	/* Obtain a MC portal */
+>  	err = fsl_mc_portal_allocate(dpni_dev, 
+> FSL_MC_IO_ATOMIC_CONTEXT_PORTAL,
+>  				     &priv->mc_io);
+> diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h 
+> b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
+> index 8a0e65b3267f..4e5183617ebd 100644
+> --- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
+> +++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
+> @@ -374,7 +374,6 @@ struct dpaa2_eth_priv {
+>
+>  	struct fsl_mc_device *dpbp_dev;
+>  	u16 bpid;
+> -	struct iommu_domain *iommu_domain;
+>
+>  	bool tx_tstamp; /* Tx timestamping enabled */
+>  	bool rx_tstamp; /* Rx timestamping enabled */
+> -- 
+> 2.17.1
