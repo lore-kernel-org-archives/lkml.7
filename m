@@ -2,115 +2,149 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3B1CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC843CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429D321D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572006999;
-	bh=1/5YHQsc66zmvjaX31kfgULr4Oo/gRl4TrpUnyLQbaw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Wa1fqiQGBmFbzTR+iBN6a2nxhJDWB0rkGCOyhF5e3KQHXqaYgx1sVXemk7qpvDuVx
-	 T7k65uV61Dv6qPBPPr5HVtjxgL/eZ9+mI5JvjTazG4bTPpUx1o7mxBujiCvpZUAh23
-	 e75Tyu1CwpHJY4enpv/iBx/OC37ZMeTdkJ5qcHQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 7824721D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 12:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gr43qyfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440271AbfJYMgi (ORCPT
+        id S2440293AbfJYMlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 08:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbfJYMgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 08:36:37 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47B3621D71;
-        Fri, 25 Oct 2019 12:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572006997;
-        bh=1/5YHQsc66zmvjaX31kfgULr4Oo/gRl4TrpUnyLQbaw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=l41oh5ljOHQdCIQIKsWnO0H6yP+2lD8S9+YXMYs9lUKX5Rdxl0U0lH0QzZIZm0RLP
-         Glg3J00eyn7XfcY9K8qDXGJN3bAfbVUCtpMyuYkAOxkwdJCsvgZ/q315UmDH7/pbbd
-         ukcycuHQI8EUwdU/9EYgi+x29GfrVEnNSdtqfd80=
-Date:   Fri, 25 Oct 2019 21:36:33 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BUGFIX PATCH 1/6] perf/probe: Fix wrong address verification
-Message-Id: <20191025213633.b1227d0721b97edc8e8f9335@kernel.org>
-In-Reply-To: <20191025121448.GC23511@kernel.org>
-References: <157199317547.8075.1010940983970397945.stgit@devnote2>
-        <157199318513.8075.10463906803299647907.stgit@devnote2>
-        <20191025121448.GC23511@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 25 Oct 2019 08:41:06 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35473 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440272AbfJYMlG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 08:41:06 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y6so1634758lfj.2
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 05:41:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nNhTW3U2Xf+f8X6ztyGJ0vdPsrVEzgnkoLb09kGESGY=;
+        b=gr43qyfKeoGH65CYsJHoPG+YL9Tx4hVUZVoQzYzb9XsMqHySY57WJtUCKdPh98abFb
+         978lBekDEIJw3ctIHrCrHNrnVte3xIHmGJW9xZwa+BVM8YrwNCtva1EUvT8mgMQ0+NIk
+         RMH0xuXFjObqrkldH+wRmh6xxURbjD8yMaUAw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nNhTW3U2Xf+f8X6ztyGJ0vdPsrVEzgnkoLb09kGESGY=;
+        b=XzUzr919OZknlvE5P6YaiIaOVdZwh5aSXN7yI8LxQtDL7t2+wKyf5WRjjgyPnqP0sk
+         li5doorAnrRnBo+8HVqA3NQWeg5YlNmxgnxMZDQyjgk+R9RwbYbblELJDY1g5/6+HNNz
+         hf5uYMqgo3vOBr/EUq2V12SXHa9DIwxuUjGp9sTzt4eZQHKpEyq2ehO+HE2QsLFJXbfu
+         jFwDEFn1w3Dzq/UOS9MQofUpndRLIW3vVOdGmyKYFejg4WXu7WOY7kTFPe2Rjij6kY7A
+         fCPGiVbAujVNPu1TzBYOg3O+G4oz/gavlx1CfE37ig5UU19zbSoTrgEJV4YRvkLNrxmu
+         Sw5A==
+X-Gm-Message-State: APjAAAVOq/dFOBv/WdPEqM5Jui0/HHEXOk6jcgt2Wkg/4Hxuyog7RTG0
+        7YvFtETyZMcRZw4JW6Qzu6WFjg==
+X-Google-Smtp-Source: APXvYqzI54y0qXty0REj/t8bh97dPNgFy2YQ0TG2aFgxJMZvmcPNDi0C+wUJpvWYRj3db7mvv6qlJw==
+X-Received: by 2002:ac2:4d04:: with SMTP id r4mr2706461lfi.136.1572007262270;
+        Fri, 25 Oct 2019 05:41:02 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id 10sm821028lfy.57.2019.10.25.05.41.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 05:41:01 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>,
+        Valentin Longchamp <valentin.longchamp@keymile.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v2 00/23] QUICC Engine support on ARM
+Date:   Fri, 25 Oct 2019 14:40:35 +0200
+Message-Id: <20191025124058.22580-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+There have been several attempts in the past few years to allow
+building the QUICC engine drivers for platforms other than PPC. This
+is yet another attempt.
 
-On Fri, 25 Oct 2019 09:14:48 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+In v2, I've fixed a few style issues. But more importantly, it now
+contains enough to actually remove the PPC32 dependency from
+CONFIG_QUICC_ENGINE, so that's what the last patch does.
 
-> Em Fri, Oct 25, 2019 at 05:46:25PM +0900, Masami Hiramatsu escreveu:
-> > Since there are some DIE which has only ranges instead of the
-> > combination of entrypc/highpc, address verification must use
-> > dwarf_haspc() instead of dwarf_entrypc/dwarf_highpc.
-> > 
-> > Also, the ranges only DIE will have a partial code in different
-> > section (e.g. unlikely code will be in text.unlikely as "FUNC.cold"
-> > symbol). In that case, we can not use dwarf_entrypc() or
-> > die_entrypc(), because the offset from original DIE can be
-> > a minus value.
-> > 
-> > Instead, this simply gets the symbol and offset from symtab.
-> > 
-> > Without this patch;
-> >   # tools/perf/perf probe -D clear_tasks_mm_cpumask:1
-> >   Failed to get entry address of clear_tasks_mm_cpumask
-> >     Error: Failed to add events.
-> > 
-> > And with this patch
-> >   # tools/perf/perf probe -D clear_tasks_mm_cpumask:1
-> >   p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
-> >   p:probe/clear_tasks_mm_cpumask_1 clear_tasks_mm_cpumask+5
-> >   p:probe/clear_tasks_mm_cpumask_2 clear_tasks_mm_cpumask+8
-> >   p:probe/clear_tasks_mm_cpumask_3 clear_tasks_mm_cpumask+16
-> >   p:probe/clear_tasks_mm_cpumask_4 clear_tasks_mm_cpumask+82
-> 
-> Ok, so this just asks for the definition, but doesn't try to actually
-> _use_ it, which I did and it fails:
-> 
-> [root@quaco tracebuffer]# perf probe -D clear_tasks_mm_cpumask:1
-> p:probe/clear_tasks_mm_cpumask _text+919968
-> p:probe/clear_tasks_mm_cpumask_1 _text+919973
-> p:probe/clear_tasks_mm_cpumask_2 _text+919976
-> [root@quaco tracebuffer]#
-> [root@quaco tracebuffer]# perf probe clear_tasks_mm_cpumask
-> Probe point 'clear_tasks_mm_cpumask' not found.
->   Error: Failed to add events.
-> [root@quaco tracebuffer]#
-> 
-> So I'll tentatively continue to apply the other patches in this series,
-> maybe one of them will fix this.
+I haven't found a way to address Christophe's concern over the
+performance impact of using the (on powerpc) out-of-line iowrite32be
+instead of out_be32. I could of course introduce some qe_ prefixed
+helpers (similar to the already added qe_clrsetbits ones) and make
+their definition dependent on PPC32 or not, but that seems to be a bit
+ugly.
 
-Yes, it should be fixed by [2/6] :)
+Rasmus Villemoes (23):
+  soc: fsl: qe: remove space-before-tab
+  soc: fsl: qe: drop volatile qualifier of struct qe_ic::regs
+  soc: fsl: qe: avoid ppc-specific io accessors
+  soc: fsl: qe: replace spin_event_timeout by readx_poll_timeout_atomic
+  soc: fsl: qe: qe.c: guard use of pvr_version_is() with CONFIG_PPC32
+  soc: fsl: qe: avoid tail comments in qe_ic.h
+  soc: fsl: qe: merge qe_ic.h into qe_ic.c
+  soc: fsl: qe: drop unneeded #includes
+  soc: fsl: qe: move qe_ic_cascade_* functions to qe_ic.c
+  soc: fsl: qe: use qe_ic_cascade_{low,high}_mpic also on 83xx
+  soc: fsl: qe: rename qe_ic_cascade_low_mpic -> qe_ic_cascade_low
+  soc: fsl: qe: drop assign-only high_active in qe_ic_init
+  soc: fsl: qe: remove pointless sysfs registration in qe_ic.c
+  soc: fsl: qe: move calls of qe_ic_init out of arch/powerpc/
+  powerpc/83xx: remove mpc83xx_ipic_and_qe_init_IRQ
+  powerpc/85xx: remove mostly pointless mpc85xx_qe_init()
+  soc: fsl: qe: make qe_ic_cascade_* static
+  soc: fsl: qe: remove unused qe_ic_set_* functions
+  net: ethernet: freescale: make UCC_GETH explicitly depend on PPC32
+  serial: make SERIAL_QE depend on PPC32
+  serial: ucc_uart.c: explicitly include asm/cpm.h
+  soc/fsl/qe/qe.h: remove include of asm/cpm.h
+  soc: fsl: qe: remove PPC32 dependency from CONFIG_QUICC_ENGINE
 
-Actually, a probe point with offset line and no-offset are handled
-a bit differently.
-
-Thank you,
+ arch/powerpc/platforms/83xx/km83xx.c          |   3 +-
+ arch/powerpc/platforms/83xx/misc.c            |  23 --
+ arch/powerpc/platforms/83xx/mpc832x_mds.c     |   3 +-
+ arch/powerpc/platforms/83xx/mpc832x_rdb.c     |   3 +-
+ arch/powerpc/platforms/83xx/mpc836x_mds.c     |   3 +-
+ arch/powerpc/platforms/83xx/mpc836x_rdk.c     |   3 +-
+ arch/powerpc/platforms/83xx/mpc83xx.h         |   7 -
+ arch/powerpc/platforms/85xx/common.c          |  23 --
+ arch/powerpc/platforms/85xx/corenet_generic.c |  12 -
+ arch/powerpc/platforms/85xx/mpc85xx.h         |   2 -
+ arch/powerpc/platforms/85xx/mpc85xx_mds.c     |  28 --
+ arch/powerpc/platforms/85xx/mpc85xx_rdb.c     |  18 --
+ arch/powerpc/platforms/85xx/twr_p102x.c       |  16 -
+ drivers/net/ethernet/freescale/Kconfig        |   1 +
+ drivers/soc/fsl/qe/Kconfig                    |   2 +-
+ drivers/soc/fsl/qe/gpio.c                     |  30 +-
+ drivers/soc/fsl/qe/qe.c                       |  59 ++--
+ drivers/soc/fsl/qe/qe_ic.c                    | 289 ++++++++++--------
+ drivers/soc/fsl/qe/qe_ic.h                    |  99 ------
+ drivers/soc/fsl/qe/qe_io.c                    |  42 ++-
+ drivers/soc/fsl/qe/qe_tdm.c                   |   8 +-
+ drivers/soc/fsl/qe/ucc.c                      |  16 +-
+ drivers/soc/fsl/qe/ucc_fast.c                 |  70 ++---
+ drivers/soc/fsl/qe/ucc_slow.c                 |  38 +--
+ drivers/soc/fsl/qe/usb.c                      |   2 +-
+ drivers/tty/serial/Kconfig                    |   1 +
+ drivers/tty/serial/ucc_uart.c                 |   1 +
+ include/soc/fsl/qe/qe.h                       |   1 -
+ include/soc/fsl/qe/qe_ic.h                    |  69 -----
+ 29 files changed, 299 insertions(+), 573 deletions(-)
+ delete mode 100644 drivers/soc/fsl/qe/qe_ic.h
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.23.0
+
