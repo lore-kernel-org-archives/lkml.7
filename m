@@ -2,122 +2,130 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259CDCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686C5CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4D821D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3952321D82
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 19:33:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="c1sbAsOY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5H+fdyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfJYTcr (ORCPT
+        id S1727295AbfJYTdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 15:32:47 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41606 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727250AbfJYTcq (ORCPT
+        Fri, 25 Oct 2019 15:33:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34556 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfJYTdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 15:32:46 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p10so2815611qkg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:32:44 -0700 (PDT)
+        Fri, 25 Oct 2019 15:33:03 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t16so3635202wrr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 12:33:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=iz1ZKgeeP9IMy1jysqX68USYM4mMvFqFgNxXC+uayME=;
-        b=c1sbAsOY9I0jzJgCr1l/kqQ+VtQvCVtPe7r2afQuXcUDwtiA5pMnNUsCNT1CXsaUss
-         +1nfSq02QINb5Fqu/sdAZCkiHEtQwGqG26VnnvLvIyrv8enGjT1JAgsKOWd8P0OOznn3
-         DXWy4OYWtH1Wyyv6LAz8sElnukuxF/Uz+0ntGWDcxuKTix34ZG6l+C5Wi2aLlV7LJSQR
-         MZL8dmwTHlkhSAjkw2AiFvrseEZZhJozEdvAoObH+vuvba/yhvDNEHRukJlWxf2QlbOs
-         4ADXV4nI1ryhZV2t7JXE3hwdmMXa9TtlqNN1LZCSitQF5F72chbKFbWjA4U4sxgs+DlL
-         QPww==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uj3oNCbFUUZSg5SH9RcrKbOYwaJ+AMwyoVWq4ZKhw90=;
+        b=K5H+fdyPluzKTE2fCyVVhR5WeN36L/uxO6n26MyMEw4EOTRng/4EWSJIsg0msXuwT9
+         mnnz5ptJvlXfKj96Gb4XbDUBuAnq1gZNbU2cVsl24SmNuhZA9NEkkIK8yPWFcH9vILpV
+         8shfJNID/vovLSsRmuNK03xRjZFmh/Rcs47OOlVQphRQCVXwv72SxyN2j4HbLD5kLzSo
+         KtRcYoMbf5kZvNXLLJ0LpyMI4P3OhslEbCEdkpetTizJ3qDUeDoT++4V3q5BS7s73chq
+         qkkskcT3cpcy5yTB/gqPFMToWX+FDW6EEQuqPLKZiaVHvJFw1Wy3zrUryemOEULbC8AU
+         P2cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=iz1ZKgeeP9IMy1jysqX68USYM4mMvFqFgNxXC+uayME=;
-        b=Tv27nICG3SepJ6Di/gpNER1emhfXioNYg7fZXS9LPzqOAJ9m4fzjTcjY8RV7c+/Gpj
-         zPXSQGayz4F2UwNBmOHElJX+VkPTrUgEj8qEQ8hlQNUUAHZRw7D2imyDlPfEVP7BjW4S
-         8sDcNZnE3mSYyMZT2r8IgBfFmzmZvU0sbj6qFKZPXaCOzrEW9KHMCsXeyJaPD5/2WzEC
-         z4dNtl9wdB7tm9ybwDZLooM0AKXYCjvmDzETEh26NuaXdUHIQfDnB8kAvKkzqB611Pvw
-         iphzrWb0EZI/s3+Yol5c2cD83iqVfzTlMCyM2/KI02sG7OPerpMF+GNHy995EyaWRSWt
-         /GSw==
-X-Gm-Message-State: APjAAAUGb6wViYf2oECMjWmygwVHw+ZSt4ciNMXLjqJpf8pPsKrL/AVM
-        u2rwQ5QPEn/ukAg5FYEJD/oVqA==
-X-Google-Smtp-Source: APXvYqwnox1bvRxbaAC3dNVKNlUpLPIQdPSHTrzN3ZgFbHEYJbFlmhocZZFdkqQoARkHnIOSh1I9jQ==
-X-Received: by 2002:a37:a391:: with SMTP id m139mr4751542qke.234.1572031964194;
-        Fri, 25 Oct 2019 12:32:44 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id q44sm2659476qtk.16.2019.10.25.12.32.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 25 Oct 2019 12:32:43 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iO5KF-0008P1-5P; Fri, 25 Oct 2019 16:32:43 -0300
-Date:   Fri, 25 Oct 2019 16:32:43 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH] tpm: Add major_version sysfs file
-Message-ID: <20191025193243.GI23952@ziepe.ca>
-References: <20191025142847.14931-1-jsnitsel@redhat.com>
- <1572027516.4532.41.camel@linux.ibm.com>
- <20191025184522.5txabdikcrn2dgvj@cantor>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uj3oNCbFUUZSg5SH9RcrKbOYwaJ+AMwyoVWq4ZKhw90=;
+        b=hFTDm6cqc2Jh0S+LyWNqpuFWqykmn9lbJMFfVb1j5pdlIw0pGp/2pvZarS4GU7DLTR
+         /e+yKsqxoDSJ7o4jNQckRVOpI+UyMRbaebzVBlk9g8afb7MMlfopX+mkFnzRzWJxu/AW
+         cXOTnvNpb7fvcViPSOFKzHJpxKUVr87bpyOuxoL5KlUBZ3vHxv22YEkR81DuHibaWLlP
+         P3KoAcIDNjHPf39cgPZkjtfHi8MzYI+Bqw4YGLcRKAmxy8akjpoqUvY2al2tBJgwOUtD
+         XVCq+AFc9YfOmdQnkE3X3xJtYpmpOOrGQ6SUzJeXRYM6MdIy4ZO4rPTkdtFt5qYivsiQ
+         q78Q==
+X-Gm-Message-State: APjAAAXwyMT8ZjWmIqySs9082L49SMjhCfZ/UMY6JJPs62NK3Bb59nru
+        vnLO1toZEtNHhXq+zRNSbLbAFZYVl1imV+RFvyw=
+X-Google-Smtp-Source: APXvYqyUNFhWEMvoMA8/aBmDOC8snwwEw3OnSJeXlmzAFKk6Aos8tJHIcV249WkqXX7cImJTsrdmhR2RpqHP0fc68gs=
+X-Received: by 2002:adf:ed02:: with SMTP id a2mr4395705wro.11.1572031981013;
+ Fri, 25 Oct 2019 12:33:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191025184522.5txabdikcrn2dgvj@cantor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1571819543-15676-1-git-send-email-zhong.shiqi@zte.com.cn> <fa46cad1-8845-78b7-eb6a-45942813020b@amd.com>
+In-Reply-To: <fa46cad1-8845-78b7-eb6a-45942813020b@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 25 Oct 2019 15:32:48 -0400
+Message-ID: <CADnq5_Nv9j5vDX5-Jkhy3TTiej7FcKBBOC8QQk59NQ=SsO-3pg@mail.gmail.com>
+Subject: Re: [PATCH] dc.c:use kzalloc without test
+To:     Harry Wentland <hwentlan@amd.com>
+Cc:     zhongshiqi <zhong.shiqi@zte.com.cn>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Lei, Jun" <Jun.Lei@amd.com>, "Koo, Anthony" <Anthony.Koo@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "David.Francis@amd.com" <David.Francis@amd.com>,
+        "Liu, Wenjing" <Wenjing.Liu@amd.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "cheng.shengyu@zte.com.cn" <cheng.shengyu@zte.com.cn>,
+        "wang.yi59@zte.com.cn" <wang.yi59@zte.com.cn>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Aidan.Wood@amd.com" <Aidan.Wood@amd.com>,
+        "xue.zhihong@zte.com.cn" <xue.zhihong@zte.com.cn>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Park, Chris" <Chris.Park@amd.com>,
+        "Yang, Eric" <Eric.Yang2@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 11:45:22AM -0700, Jerry Snitselaar wrote:
-> On Fri Oct 25 19, Mimi Zohar wrote:
-> > On Fri, 2019-10-25 at 07:28 -0700, Jerry Snitselaar wrote:
-> > > Easily determining what TCG version a tpm device implements
-> > > has been a pain point for userspace for a long time, so
-> > > add a sysfs file to report the tcg version of a tpm device.
-> > 
-> > Use "TCG" uppercase consistently.
-> >  
-> > > 
-> > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > Cc: linux-integrity@vger.kernel.org
-> > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > 
-> > thanks!
-> > 
-> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > 
-> > FYI, on my system(s) the new file is accessible as
-> > /sys/class/tpm/tpm0/version_major.  Does this need to be documented
-> > anywhere?
-> > 
-> > 
-> 
-> Yes, there should be an entry added to
-> Documentation/ABI/stable/sysfs-class-tpm.
-> I will fix that up and the TCG not being uppercase in a v2.
-> 
-> Should Documentation/ABI/stable/sysfs-class-tpm updated in
-> some way to reflect that those are all links under device
-> now and not actually there.
+Applied.  thanks!
 
-Applications should not use the link version, that path was a
-mistake. The link is for compatability with old userspace.
+Alex
 
-Jason
+On Wed, Oct 23, 2019 at 9:35 AM Harry Wentland <hwentlan@amd.com> wrote:
+>
+> On 2019-10-23 4:32 a.m., zhongshiqi wrote:
+> > dc.c:583:null check is needed after using kzalloc function
+> >
+> > Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
+>
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+>
+> Harry
+>
+> > ---
+> >  drivers/gpu/drm/amd/display/dc/core/dc.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> > index 5d1aded..4b8819c 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/core/dc.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+> > @@ -580,6 +580,10 @@ static bool construct(struct dc *dc,
+> >  #ifdef CONFIG_DRM_AMD_DC_DCN2_0
+> >       // Allocate memory for the vm_helper
+> >       dc->vm_helper = kzalloc(sizeof(struct vm_helper), GFP_KERNEL);
+> > +     if (!dc->vm_helper) {
+> > +             dm_error("%s: failed to create dc->vm_helper\n", __func__);
+> > +             goto fail;
+> > +     }
+> >
+> >  #endif
+> >       memcpy(&dc->bb_overrides, &init_params->bb_overrides, sizeof(dc->bb_overrides));
+> >
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
