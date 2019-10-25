@@ -2,129 +2,106 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21548CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336DECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAE121D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1412F21929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 09:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408627AbfJYJAl (ORCPT
+        id S2438234AbfJYJB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 05:00:41 -0400
-Received: from mga06.intel.com ([134.134.136.31]:14367 "EHLO mga06.intel.com"
+        Fri, 25 Oct 2019 05:01:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:37212 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407738AbfJYJAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 05:00:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 02:00:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
-   d="scan'208";a="201754021"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 25 Oct 2019 02:00:40 -0700
-Received: from [10.125.252.238] (abudanko-mobl.ccr.corp.intel.com [10.125.252.238])
-        by linux.intel.com (Postfix) with ESMTP id 013D958042B;
-        Fri, 25 Oct 2019 02:00:37 -0700 (PDT)
-Subject: [PATCH v5 4/4] perf/core,x86: synchronize PMU task contexts on
- optimized context switches
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <6fa20503-b5ad-16c7-260e-5243509176bc@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <df3be8d6-ebd0-924e-d852-fdc0a59c6cee@linux.intel.com>
-Date:   Fri, 25 Oct 2019 12:00:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2407770AbfJYJB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 05:01:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B74128;
+        Fri, 25 Oct 2019 02:01:25 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 143DB3F71F;
+        Fri, 25 Oct 2019 02:01:24 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 10:01:23 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+Message-ID: <20191025090122.GW47056@e119886-lin.cambridge.arm.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
+ <CH2PR12MB400751D01BCEE7ABB708280BDA690@CH2PR12MB4007.namprd12.prod.outlook.com>
+ <28b5a21b-b636-f7e4-2d27-23c5d900b0d3@linux.intel.com>
+ <e86116b7-b65f-f31e-abb7-a4533aa6d592@linux.intel.com>
+ <20191022114413.GG32742@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <6fa20503-b5ad-16c7-260e-5243509176bc@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191022114413.GG32742@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Oct 22, 2019 at 02:44:13PM +0300, andriy.shevchenko@intel.com wrote:
+> On Tue, Oct 22, 2019 at 06:18:57PM +0800, Dilip Kota wrote:
+> > On 10/21/2019 6:44 PM, Dilip Kota wrote:
+> > > On 10/21/2019 4:29 PM, Gustavo Pimentel wrote:
+> > > > On Mon, Oct 21, 2019 at 7:39:19, Dilip Kota
+> > > > <eswara.kota@linux.intel.com>
+> > > > wrote:
+> 
+> First of all, it's a good behaviour to avoid way long quoting.
+> 
+> > > > > +static void pcie_update_bits(void __iomem *base, u32 mask, u32
+> > > > > val, u32 ofs)
+> > > > > +{
+> > > > > +    u32 orig, tmp;
+> > > > > +
+> > > > > +    orig = readl(base + ofs);
+> > > > > +
+> > > > > +    tmp = (orig & ~mask) | (val & mask);
+> > > > > +
+> > > > > +    if (tmp != orig)
+> > > > > +        writel(tmp, base + ofs);
+> > > > > +}
+> > > > I'd suggest to the a take on FIELD_PREP() and FIELD_GET() and use more
+> > > > intuitive names such as new and old, instead of orig and tmp.
+> > > Sure, i will update it.
+> > I tried using FIELD_PREP and FIELD_GET but it is failing because FIELD_PREP
+> > and FIELD_GET
+> > are expecting mask should be constant macro. u32 or u32 const are not
+> > accepted.
+> 
+> If you look at bitfield.h carefully you may find in particular
+> u32_replace_bits().
 
-Install Intel specific PMU task context synchronization adapter and
-extend optimized context switch path with PMU specific task context
-synchronization to fix LBR callstack virtualization on context switches.
+Thanks Andy - I was looking for something like this when I was reviewing the
+patch but wasn't able to find it.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- arch/x86/events/intel/core.c |  7 +++++++
- kernel/events/core.c         | 13 ++++++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
+Andrew Murray
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index bbf6588d47ee..dc64b16e6b71 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3820,6 +3820,12 @@ static void intel_pmu_sched_task(struct perf_event_context *ctx,
- 	intel_pmu_lbr_sched_task(ctx, sched_in);
- }
- 
-+static void intel_pmu_swap_task_ctx(struct perf_event_context *prev,
-+				    struct perf_event_context *next)
-+{
-+	intel_pmu_lbr_swap_task_ctx(prev, next);
-+}
-+
- static int intel_pmu_check_period(struct perf_event *event, u64 value)
- {
- 	return intel_pmu_has_bts_period(event, value) ? -EINVAL : 0;
-@@ -3955,6 +3961,7 @@ static __initconst const struct x86_pmu intel_pmu = {
- 
- 	.guest_get_msrs		= intel_guest_get_msrs,
- 	.sched_task		= intel_pmu_sched_task,
-+	.swap_task_ctx		= intel_pmu_swap_task_ctx,
- 
- 	.check_period		= intel_pmu_check_period,
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f9a5d4356562..ed31aa849161 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3204,10 +3204,21 @@ static void perf_event_context_sched_out(struct task_struct *task, int ctxn,
- 		raw_spin_lock(&ctx->lock);
- 		raw_spin_lock_nested(&next_ctx->lock, SINGLE_DEPTH_NESTING);
- 		if (context_equiv(ctx, next_ctx)) {
-+			struct pmu *pmu = ctx->pmu;
-+
- 			WRITE_ONCE(ctx->task, next);
- 			WRITE_ONCE(next_ctx->task, task);
- 
--			swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
-+			/*
-+			 * PMU specific parts of task perf context can require
-+			 * additional synchronization. As an example of such
-+			 * synchronization see implementation details of Intel
-+			 * LBR call stack data profiling;
-+			 */
-+			if (pmu->swap_task_ctx)
-+				pmu->swap_task_ctx(ctx, next_ctx);
-+			else
-+				swap(ctx->task_ctx_data, next_ctx->task_ctx_data);
- 
- 			/*
- 			 * RCU_INIT_POINTER here is safe because we've not
--- 
-2.20.1
-
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
