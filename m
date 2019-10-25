@@ -2,96 +2,133 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4309CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493FFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD64A21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ark4hOE7"
+	by mail.kernel.org (Postfix) with ESMTP id 268D220867
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 03:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391940AbfJYDJo (ORCPT
+        id S2391977AbfJYDLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 24 Oct 2019 23:09:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38998 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfJYDJn (ORCPT
+        Thu, 24 Oct 2019 23:11:21 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:50495 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729283AbfJYDLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 24 Oct 2019 23:09:43 -0400
-Received: by mail-io1-f66.google.com with SMTP id y12so719286ioa.6
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 20:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=NDnBP4/LxhdGXSkB81z59K6SH35dARBNL26jgxKs1DU=;
-        b=Ark4hOE7lqn5cgq/Ov0R55L1DNSP47nM+/2lKqSaYlr/WWlTf3ju7IgIPjgTmpii/A
-         hALDty3X+F3p4kuLNe7SxZakxh/OnoIYX14cm2g3aeUL8r9kav7bIKNzKfJKEfdw+tNP
-         Ej3qXt9Zonj4wENgpQNwu9KuYvrc3Ec+cAPRZcUbxqpW3Jttr+ND4OrNkpFimhkVb+Z7
-         l8ImnHWofoJtjSU6dElBzmF6xcaCJXJ7J2cSY8/T9xg5pfhS9hvbHPKD0Ix+YT53mKlf
-         zE8Dqgbu/kVRb7r0sCsXmaQFxvlp4gMpY7fpAynPSaKrgCcNQGQcTO4shg8rOIK92I6n
-         XFLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=NDnBP4/LxhdGXSkB81z59K6SH35dARBNL26jgxKs1DU=;
-        b=Si+sdrXgxsiehyKao/kvTYBw0PMXmg0z+pm2opF+V31Ex1y8r9VnR0mcvGFIaiRUhF
-         GsZPXUBseK7OBq6VsvKbi6NrJdCUSDV4YCMJo/i3pBnnD1BsvSkzJlPPSFGMg0AT6pBA
-         IrDkbJdnP43jXn2hT2/2EeK/FpnvMjjEiUOxDXkvNJaZ6JmnxpzG9ohdhH4fZosxfMum
-         nqf2B89ubNcY/byoA3jVC++XbgsVtWDfs0iJIvA+nmgVvH8NVxo3iB2BKJmuEBRLfAEd
-         7rLxTc6wKOkuejRr3ii3Tp4N1kdj7AwFBpsE6ZaA5zhD6CRH3TeW+dN6isxFP/K3CNuS
-         aPiw==
-X-Gm-Message-State: APjAAAUlq1YT3L8jVB8FGoya6jQ9uP6sr/Zqe68pbCMcuHQ715tJuXJn
-        pqwjDP4KtErNImBz4A07TcalfQ==
-X-Google-Smtp-Source: APXvYqy0FbVU82h3B9ymHO5htMn2YmR821IaXarEdMsXRvsC8BJsi2gz+DV6xh78xXHlEDsYOjR82g==
-X-Received: by 2002:a6b:7d0b:: with SMTP id c11mr1526968ioq.236.1571972982795;
-        Thu, 24 Oct 2019 20:09:42 -0700 (PDT)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id d6sm173269ilc.39.2019.10.24.20.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2019 20:09:42 -0700 (PDT)
-Date:   Thu, 24 Oct 2019 20:09:40 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Atish Patra <atish.patra@wdc.com>
-cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Anup Patel <Anup.Patel@wdc.com>
-Subject: Re: [PATCH v4 0/3] Optimize tlbflush path
-In-Reply-To: <alpine.DEB.2.21.9999.1908301939300.16731@viisi.sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1910242001550.28076@viisi.sifive.com>
-References: <20190822075151.24838-1-atish.patra@wdc.com> <alpine.DEB.2.21.9999.1908301939300.16731@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 24 Oct 2019 23:11:20 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x9P3BEmp012087;
+        Fri, 25 Oct 2019 11:11:14 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 868335503C09C5A1BD4E;
+        Fri, 25 Oct 2019 11:11:14 +0800 (CST)
+In-Reply-To: <20191008092832.54492696@dhcp-172-31-174-146.wireless.concordia.ca>
+References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw> <1568793387-25199-3-git-send-email-masonccyang@mxic.com.tw>
+        <20191007104501.1b4ed8ed@xps13> <OF147D635A.8968CD6B-ON4825848D.00088AD5-4825848D.000B9D06@mxic.com.tw> <20191008092832.54492696@dhcp-172-31-174-146.wireless.concordia.ca>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, frieder.schrempf@kontron.de,
+        gregkh@linuxfoundation.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>, richard@nod.at,
+        tglx@linutronix.de, vigneshr@ti.com
+Subject: Re: [PATCH RFC 3/3] mtd: rawnand: Add support Macronix power down mode
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-KeepSent: DC1EA65D:196421DA-4825849E:000FBB73;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFDC1EA65D.196421DA-ON4825849E.000FBB73-4825849E.001181F2@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 25 Oct 2019 11:11:13 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/10/25 AM 11:11:14,
+        Serialize complete at 2019/10/25 AM 11:11:14
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x9P3BEmp012087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019, Paul Walmsley wrote:
 
-> On Thu, 22 Aug 2019, Atish Patra wrote:
+Hi Boris,
+
 > 
-> > This series adds few optimizations to reduce the trap cost in the tlb
-> > flush path. We should only make SBI calls to remote tlb flush only if
-> > absolutely required. 
+> Subject
 > 
-> The patches look great.  My understanding is that these optimization 
-> patches may actually be a partial workaround for the TLB flushing bug that 
-> we've been looking at for the last month or so, which can corrupt memory 
-> or crash the system.
+> Re: [PATCH RFC 3/3] mtd: rawnand: Add support Macronix power down mode
+> 
+> On Tue, 8 Oct 2019 10:06:50 +0800
+> masonccyang@mxic.com.tw wrote:
+> 
+> > > > +   nand_select_target(chip, 0); 
+> > > 
+> > > On several NAND controllers there is no way to act on the CS line
+> > > without actually writing bytes to the NAND chip. So basically this
+> > > is very likely to not work. 
+> > 
+> > any other way to make it work ? GPIO ?
+> > or just have some comments description here.
+> > i.e,.
+> > 
+> > /* The NAND chip will exit the deep power down mode with #CS toggling, 
 
-I don't think we're any closer to root-causing this issue.  Meanwhile, 
-OpenSBI has merged patches to work around it.  So since many of us have 
-looked at Atish's TLB optimization patches, and we all think they are 
-useful optimizations, let's plan to merge it for v5.5-rc1.
+> >  * please refer to datasheet for the timing requirement of tCRDP and 
+tRDP.
+> >  */
+> > 
+> 
+> Good luck with that. As Miquel said, on most NAND controllers
+> select_target() is a dummy operation that just assigns nand_chip->target
+> to the specified value but doesn't assert the CS line. You could send a
+> dummy command here, like a READ_ID, but I guess you need CS to be
+> asserted for at least 20ns before asserting any other signals (CLE/ALE)
+> which might be an issue.
+> 
+
+I have validated & checked w/ designer that NANDs device just need CS# 
+line
+toggling and don't care of CLE/WE#/RE#. That is raw NAND controller 
+sending
+a command nand_status_op() or nand_power_down_op() will exit the deep 
+power down too. The first command(just CS# line toggling) to NAND device 
+in deep power down mode will not be recognized. We may publish the 
+application notes or update the datasheet later.
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
 
-- Paul
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
