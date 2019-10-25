@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F284CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC430CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E4D205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81771205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732635AbfJYSIR (ORCPT
+        id S1732567AbfJYSIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:08:17 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46584 "EHLO
+        Fri, 25 Oct 2019 14:08:12 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46788 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731309AbfJYSFk (ORCPT
+        by vger.kernel.org with ESMTP id S1731437AbfJYSFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:05:40 -0400
+        Fri, 25 Oct 2019 14:05:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xv-0008OF-KG; Fri, 25 Oct 2019 19:05:35 +0100
+        id 1iO3xv-0008OS-Vw; Fri, 25 Oct 2019 19:05:36 +0100
 Received: from ben by deadeye with local (Exim 4.92.2)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iO3xu-0001hn-TI; Fri, 25 Oct 2019 19:05:34 +0100
+        id 1iO3xv-0001ik-Ha; Fri, 25 Oct 2019 19:05:35 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Christophe Leroy" <christophe.leroy@c-s.fr>
-Date:   Fri, 25 Oct 2019 19:03:05 +0100
-Message-ID: <lsq.1572026582.61489952@decadent.org.uk>
+        "Andreas Schwab" <schwab@linux-m68k.org>,
+        "Christophe Leroy" <christophe.leroy@c-s.fr>,
+        "Michael Ellerman" <mpe@ellerman.id.au>
+Date:   Fri, 25 Oct 2019 19:03:17 +0100
+Message-ID: <lsq.1572026582.906478485@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 04/47] tty: serial: cpm_uart - fix init when SMC is
- relocated
+Subject: [PATCH 3.16 16/47] powerpc/32s: fix suspend/resume when IBATs 4-7
+ are used
 In-Reply-To: <lsq.1572026581.992411028@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,70 +59,244 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 06aaa3d066db87e8478522d910285141d44b1e58 upstream.
+commit 6ecb78ef56e08d2119d337ae23cb951a640dc52d upstream.
 
-SMC relocation can also be activated earlier by the bootloader,
-so the driver's behaviour cannot rely on selected kernel config.
+Previously, only IBAT1 and IBAT2 were used to map kernel linear mem.
+Since commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
+STRICT_KERNEL_RWX"), we may have all 8 BATs used for mapping
+kernel text. But the suspend/restore functions only save/restore
+BATs 0 to 3, and clears BATs 4 to 7.
 
-When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
+Make suspend and restore functions respectively save and reload
+the 8 BATs on CPUs having MMU_FTR_USE_HIGH_BATS feature.
 
-But the only thing CPM_CR_INIT_TRX does is to clear the
-rstate and tstate registers, so this can be done manually,
-even when SMC is not relocated.
-
+Reported-by: Andreas Schwab <schwab@linux-m68k.org>
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/swsusp_32.S         | 73 ++++++++++++++++++++++---
+ arch/powerpc/platforms/powermac/sleep.S | 68 +++++++++++++++++++++--
+ 2 files changed, 128 insertions(+), 13 deletions(-)
 
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -420,7 +420,16 @@ static int cpm_uart_startup(struct uart_
- 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
- 		}
- 		cpm_uart_initbd(pinfo);
--		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		if (IS_SMC(pinfo)) {
-+			out_be32(&pinfo->smcup->smc_rstate, 0);
-+			out_be32(&pinfo->smcup->smc_tstate, 0);
-+			out_be16(&pinfo->smcup->smc_rbptr,
-+				 in_be16(&pinfo->smcup->smc_rbase));
-+			out_be16(&pinfo->smcup->smc_tbptr,
-+				 in_be16(&pinfo->smcup->smc_tbase));
-+		} else {
-+			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		}
- 	}
- 	/* Install interrupt handler. */
- 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
-@@ -871,16 +880,14 @@ static void cpm_uart_init_smc(struct uar
- 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
+--- a/arch/powerpc/kernel/swsusp_32.S
++++ b/arch/powerpc/kernel/swsusp_32.S
+@@ -23,11 +23,19 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_LR		0x70
+-#define SL_R12		0x74	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_LR		0xb0
++#define SL_R12		0xb4	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
  
- /*
-- *  In case SMC1 is being relocated...
-+ *  In case SMC is being relocated...
-  */
--#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
- 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
- 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
- 	out_be32(&up->smc_rstate, 0);
- 	out_be32(&up->smc_tstate, 0);
- 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
- 	out_be16(&up->smc_brkec, 0);
+ 	.section .data
+@@ -112,6 +120,41 @@ _GLOBAL(swsusp_arch_suspend)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r11)
+ 
++BEGIN_MMU_FTR_SECTION
++	mfspr	r4,SPRN_DBAT4U
++	stw	r4,SL_DBAT4(r11)
++	mfspr	r4,SPRN_DBAT4L
++	stw	r4,SL_DBAT4+4(r11)
++	mfspr	r4,SPRN_DBAT5U
++	stw	r4,SL_DBAT5(r11)
++	mfspr	r4,SPRN_DBAT5L
++	stw	r4,SL_DBAT5+4(r11)
++	mfspr	r4,SPRN_DBAT6U
++	stw	r4,SL_DBAT6(r11)
++	mfspr	r4,SPRN_DBAT6L
++	stw	r4,SL_DBAT6+4(r11)
++	mfspr	r4,SPRN_DBAT7U
++	stw	r4,SL_DBAT7(r11)
++	mfspr	r4,SPRN_DBAT7L
++	stw	r4,SL_DBAT7+4(r11)
++	mfspr	r4,SPRN_IBAT4U
++	stw	r4,SL_IBAT4(r11)
++	mfspr	r4,SPRN_IBAT4L
++	stw	r4,SL_IBAT4+4(r11)
++	mfspr	r4,SPRN_IBAT5U
++	stw	r4,SL_IBAT5(r11)
++	mfspr	r4,SPRN_IBAT5L
++	stw	r4,SL_IBAT5+4(r11)
++	mfspr	r4,SPRN_IBAT6U
++	stw	r4,SL_IBAT6(r11)
++	mfspr	r4,SPRN_IBAT6L
++	stw	r4,SL_IBAT6+4(r11)
++	mfspr	r4,SPRN_IBAT7U
++	stw	r4,SL_IBAT7(r11)
++	mfspr	r4,SPRN_IBAT7L
++	stw	r4,SL_IBAT7+4(r11)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++
+ #if  0
+ 	/* Backup various CPU config stuffs */
+ 	bl	__save_cpu_setup
+@@ -277,27 +320,41 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	mtibatu	3,r4
+ 	lwz	r4,SL_IBAT3+4(r11)
+ 	mtibatl	3,r4
 -#endif
- 
- 	/* Set up the uart parameters in the
- 	 * parameter ram.
-@@ -894,8 +901,6 @@ static void cpm_uart_init_smc(struct uar
- 	out_be16(&up->smc_brkec, 0);
- 	out_be16(&up->smc_brkcr, 1);
- 
--	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
 -
- 	/* Set UART mode, 8 bit, no parity, one stop.
- 	 * Enable receive and transmit.
- 	 */
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
++	lwz	r4,SL_DBAT4(r11)
+ 	mtspr	SPRN_DBAT4U,r4
++	lwz	r4,SL_DBAT4+4(r11)
+ 	mtspr	SPRN_DBAT4L,r4
++	lwz	r4,SL_DBAT5(r11)
+ 	mtspr	SPRN_DBAT5U,r4
++	lwz	r4,SL_DBAT5+4(r11)
+ 	mtspr	SPRN_DBAT5L,r4
++	lwz	r4,SL_DBAT6(r11)
+ 	mtspr	SPRN_DBAT6U,r4
++	lwz	r4,SL_DBAT6+4(r11)
+ 	mtspr	SPRN_DBAT6L,r4
++	lwz	r4,SL_DBAT7(r11)
+ 	mtspr	SPRN_DBAT7U,r4
++	lwz	r4,SL_DBAT7+4(r11)
+ 	mtspr	SPRN_DBAT7L,r4
++	lwz	r4,SL_IBAT4(r11)
+ 	mtspr	SPRN_IBAT4U,r4
++	lwz	r4,SL_IBAT4+4(r11)
+ 	mtspr	SPRN_IBAT4L,r4
++	lwz	r4,SL_IBAT5(r11)
+ 	mtspr	SPRN_IBAT5U,r4
++	lwz	r4,SL_IBAT5+4(r11)
+ 	mtspr	SPRN_IBAT5L,r4
++	lwz	r4,SL_IBAT6(r11)
+ 	mtspr	SPRN_IBAT6U,r4
++	lwz	r4,SL_IBAT6+4(r11)
+ 	mtspr	SPRN_IBAT6L,r4
++	lwz	r4,SL_IBAT7(r11)
+ 	mtspr	SPRN_IBAT7U,r4
++	lwz	r4,SL_IBAT7+4(r11)
+ 	mtspr	SPRN_IBAT7L,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++#endif
+ 
+ 	/* Flush all TLBs */
+ 	lis	r4,0x1000
+--- a/arch/powerpc/platforms/powermac/sleep.S
++++ b/arch/powerpc/platforms/powermac/sleep.S
+@@ -37,10 +37,18 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_R12		0x70	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_R12		0xb0	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
+ 
+ 	.section .text
+@@ -125,6 +133,41 @@ _GLOBAL(low_sleep_handler)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r1)
+ 
++BEGIN_MMU_FTR_SECTION
++	mfspr	r4,SPRN_DBAT4U
++	stw	r4,SL_DBAT4(r1)
++	mfspr	r4,SPRN_DBAT4L
++	stw	r4,SL_DBAT4+4(r1)
++	mfspr	r4,SPRN_DBAT5U
++	stw	r4,SL_DBAT5(r1)
++	mfspr	r4,SPRN_DBAT5L
++	stw	r4,SL_DBAT5+4(r1)
++	mfspr	r4,SPRN_DBAT6U
++	stw	r4,SL_DBAT6(r1)
++	mfspr	r4,SPRN_DBAT6L
++	stw	r4,SL_DBAT6+4(r1)
++	mfspr	r4,SPRN_DBAT7U
++	stw	r4,SL_DBAT7(r1)
++	mfspr	r4,SPRN_DBAT7L
++	stw	r4,SL_DBAT7+4(r1)
++	mfspr	r4,SPRN_IBAT4U
++	stw	r4,SL_IBAT4(r1)
++	mfspr	r4,SPRN_IBAT4L
++	stw	r4,SL_IBAT4+4(r1)
++	mfspr	r4,SPRN_IBAT5U
++	stw	r4,SL_IBAT5(r1)
++	mfspr	r4,SPRN_IBAT5L
++	stw	r4,SL_IBAT5+4(r1)
++	mfspr	r4,SPRN_IBAT6U
++	stw	r4,SL_IBAT6(r1)
++	mfspr	r4,SPRN_IBAT6L
++	stw	r4,SL_IBAT6+4(r1)
++	mfspr	r4,SPRN_IBAT7U
++	stw	r4,SL_IBAT7(r1)
++	mfspr	r4,SPRN_IBAT7L
++	stw	r4,SL_IBAT7+4(r1)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++
+ 	/* Backup various CPU config stuffs */
+ 	bl	__save_cpu_setup
+ 
+@@ -325,22 +368,37 @@ grackle_wake_up:
+ 	mtibatl	3,r4
+ 
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
++	lwz	r4,SL_DBAT4(r1)
+ 	mtspr	SPRN_DBAT4U,r4
++	lwz	r4,SL_DBAT4+4(r1)
+ 	mtspr	SPRN_DBAT4L,r4
++	lwz	r4,SL_DBAT5(r1)
+ 	mtspr	SPRN_DBAT5U,r4
++	lwz	r4,SL_DBAT5+4(r1)
+ 	mtspr	SPRN_DBAT5L,r4
++	lwz	r4,SL_DBAT6(r1)
+ 	mtspr	SPRN_DBAT6U,r4
++	lwz	r4,SL_DBAT6+4(r1)
+ 	mtspr	SPRN_DBAT6L,r4
++	lwz	r4,SL_DBAT7(r1)
+ 	mtspr	SPRN_DBAT7U,r4
++	lwz	r4,SL_DBAT7+4(r1)
+ 	mtspr	SPRN_DBAT7L,r4
++	lwz	r4,SL_IBAT4(r1)
+ 	mtspr	SPRN_IBAT4U,r4
++	lwz	r4,SL_IBAT4+4(r1)
+ 	mtspr	SPRN_IBAT4L,r4
++	lwz	r4,SL_IBAT5(r1)
+ 	mtspr	SPRN_IBAT5U,r4
++	lwz	r4,SL_IBAT5+4(r1)
+ 	mtspr	SPRN_IBAT5L,r4
++	lwz	r4,SL_IBAT6(r1)
+ 	mtspr	SPRN_IBAT6U,r4
++	lwz	r4,SL_IBAT6+4(r1)
+ 	mtspr	SPRN_IBAT6L,r4
++	lwz	r4,SL_IBAT7(r1)
+ 	mtspr	SPRN_IBAT7U,r4
++	lwz	r4,SL_IBAT7+4(r1)
+ 	mtspr	SPRN_IBAT7L,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 
 
