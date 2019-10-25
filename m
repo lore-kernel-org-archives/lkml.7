@@ -2,114 +2,97 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F1BCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CD7CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AE920684
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31E921655
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394939AbfJYOZi (ORCPT
+        id S2395179AbfJYOZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:25:38 -0400
-Received: from smtp3-1.goneo.de ([85.220.129.38]:52047 "EHLO smtp3-1.goneo.de"
+        Fri, 25 Oct 2019 10:25:45 -0400
+Received: from smtp3-1.goneo.de ([85.220.129.38]:36156 "EHLO smtp3-1.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393877AbfJYOZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:25:38 -0400
+        id S1725825AbfJYOZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:25:45 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id 7296923FF75;
-        Fri, 25 Oct 2019 16:25:34 +0200 (CEST)
+        by smtp3.goneo.de (Postfix) with ESMTP id B82AF23F192;
+        Fri, 25 Oct 2019 16:25:41 +0200 (CEST)
 X-Virus-Scanned: by goneo
 Received: from smtp3.goneo.de ([127.0.0.1])
         by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id eyTABLuGukdQ; Fri, 25 Oct 2019 16:25:33 +0200 (CEST)
+        with ESMTP id qHJpvpA6h8Rq; Fri, 25 Oct 2019 16:25:40 +0200 (CEST)
 Received: from lem-wkst-02.lemonage.de. (hq.lemonage.de [87.138.178.34])
-        by smtp3.goneo.de (Postfix) with ESMTPA id 0C88123F192;
-        Fri, 25 Oct 2019 16:25:31 +0200 (CEST)
+        by smtp3.goneo.de (Postfix) with ESMTPA id E16892400D4;
+        Fri, 25 Oct 2019 16:25:39 +0200 (CEST)
 From:   Lars Poeschel <poeschel@lemonage.de>
-Cc:     Lars Poeschel <poeschel@lemonage.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+To:     Lars Poeschel <poeschel@lemonage.de>,
         Jilayne Lovejoy <opensource@jilayne.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Steve Winslow <swinslow@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Allison Randal <allison@lohutok.net>,
-        Johan Hovold <johan@kernel.org>,
-        Simon Horman <horms@verge.net.au>
-Subject: [PATCH v10 0/7] nfc: pn533: add uart phy driver
-Date:   Fri, 25 Oct 2019 16:25:14 +0200
-Message-Id: <20191025142521.22695-1-poeschel@lemonage.de>
+        Steve Winslow <swinslow@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        netdev@vger.kernel.org (open list:NFC SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     Johan Hovold <johan@kernel.org>, Simon Horman <horms@verge.net.au>
+Subject: [PATCH v10 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
+Date:   Fri, 25 Oct 2019 16:25:15 +0200
+Message-Id: <20191025142521.22695-2-poeschel@lemonage.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191025142521.22695-1-poeschel@lemonage.de>
+References: <20191025142521.22695-1-poeschel@lemonage.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this patch series is to add a uart phy driver to the
-pn533 nfc driver.
-It first changes the dt strings and docs. The dt compatible strings
-need to change, because I would add "pn532-uart" to the already
-existing "pn533-i2c" one. These two are now unified into just
-"pn532". Then the neccessary changes to the pn533 core driver are
-made. Then the uart phy is added.
-As the pn532 chip supports a autopoll, I wanted to use this instead
-of the software poll loop in the pn533 core driver. It is added and
-activated by the last to patches.
-The way to add the autopoll later in seperate patches is chosen, to
-show, that the uart phy driver can also work with the software poll
-loop, if someone needs that for some reason.
+It is favourable to have one unified compatible string for devices that
+have multiple interfaces. So this adds simply "pn532" as the devicetree
+binding compatible string and makes a note that the old ones are
+deprecated.
 
-Cc: Lars Poeschel <poeschel@lemonage.de>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jilayne Lovejoy <opensource@jilayne.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Steve Winslow <swinslow@gmail.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Allison Randal <allison@lohutok.net>
 Cc: Johan Hovold <johan@kernel.org>
 Cc: Simon Horman <horms@verge.net.au>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v10:
+- Rebased the patch series on net-next 'Commit 503a64635d5e ("Merge
+  branch 'DPAA-Ethernet-changes'")'
 
-Lars Poeschel (7):
-  nfc: pn533: i2c: "pn532" as dt compatible string
-  nfc: pn532: Add uart phy docs and rename it
-  nfc: pn533: Add dev_up/dev_down hooks to phy_ops
-  nfc: pn533: Split pn533 init & nfc_register
-  nfc: pn533: add UART phy driver
-  nfc: pn533: Add autopoll capability
-  nfc: pn532_uart: Make use of pn532 autopoll
+Changes in v9:
+- Rebased the patch series on v5.4-rc2
 
- .../net/nfc/{pn533-i2c.txt => pn532.txt}      |  25 +-
- drivers/nfc/pn533/Kconfig                     |  11 +
- drivers/nfc/pn533/Makefile                    |   2 +
- drivers/nfc/pn533/i2c.c                       |  32 +-
- drivers/nfc/pn533/pn533.c                     | 281 +++++++++++++--
- drivers/nfc/pn533/pn533.h                     |  40 ++-
- drivers/nfc/pn533/uart.c                      | 323 ++++++++++++++++++
- drivers/nfc/pn533/usb.c                       |  16 +-
- 8 files changed, 667 insertions(+), 63 deletions(-)
- rename Documentation/devicetree/bindings/net/nfc/{pn533-i2c.txt => pn532.txt} (42%)
- create mode 100644 drivers/nfc/pn533/uart.c
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
 
+Changes in v3:
+- This patch is new in v3
+
+ drivers/nfc/pn533/i2c.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
+index 1832cd921ea7..1abd40398a5a 100644
+--- a/drivers/nfc/pn533/i2c.c
++++ b/drivers/nfc/pn533/i2c.c
+@@ -245,6 +245,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
+ }
+ 
+ static const struct of_device_id of_pn533_i2c_match[] = {
++	{ .compatible = "nxp,pn532", },
++	/*
++	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
++	 * deprecated and will be removed.
++	 */
+ 	{ .compatible = "nxp,pn533-i2c", },
+ 	{ .compatible = "nxp,pn532-i2c", },
+ 	{},
 -- 
 2.23.0
 
