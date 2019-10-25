@@ -2,145 +2,90 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FD3C47E49
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8415BCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C9B21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PDyWp4Dp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Auk8BWFr"
+	by mail.kernel.org (Postfix) with ESMTP id 5ABE72070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437380AbfJYHzC (ORCPT
+        id S2437436AbfJYHzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:55:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58910 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbfJYHzB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:55:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 66C8E60ECE; Fri, 25 Oct 2019 07:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571990100;
-        bh=U54r6LX0ssw+g8qjLKGHh1Yhi6Sj5o6iNs4ZAFLlmsk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PDyWp4DptCJ+c2ap2wzUz4fI0KeRZqy5pI23Xk5JUlPJrP1QjMto/IkhLFCBYatQe
-         w9j1qNCE8sTG1O267wV5k2aanJoSlQU6HvzIQmHDNe9rQ+lH/frXDVib9Vu+vmO2Lj
-         1ouHOhcYxMX8lur/8QIqJ/XkYdMk5DsdOufE5n3g=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 6AE8A60B19;
-        Fri, 25 Oct 2019 07:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1571990099;
-        bh=U54r6LX0ssw+g8qjLKGHh1Yhi6Sj5o6iNs4ZAFLlmsk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Auk8BWFrXU39kNQrasYkgigZIAjmQlNoLTm9OhiHh7ON9HRrMXwVZ1zo2+kF7gOH7
-         vmyStNYQg1UbT+vi7H36qwXpW0br4wfITh06/G/y9JqQU8CcKvhLcp0cSQ+TPcZRnr
-         AJc8dDV5IDC7u9vk4EFjf92fgq9TpZOBwHpCyQSo=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 25 Oct 2019 13:24:59 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Fri, 25 Oct 2019 03:55:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:50101 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437406AbfJYHzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:55:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 00:55:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
+   d="scan'208";a="188853263"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 25 Oct 2019 00:55:41 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iNuRg-0001jo-Ru; Fri, 25 Oct 2019 10:55:40 +0300
+Date:   Fri, 25 Oct 2019 10:55:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andrey Zhizhikin <andrey.z@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org,
         linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv2 0/3] Add LLCC support for SC7180 SoC
-In-Reply-To: <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-References: <cover.1571484439.git.saiprakash.ranjan@codeaurora.org>
- <20191021033220.GG4500@tuxbook-pro>
- <CAL_JsqLzRRQe8UZCxgXArVNhNry7PgMCthAR2aZNcm6CCEpvDA@mail.gmail.com>
- <2fbab8bc38be37fba976d34b2f89e720@codeaurora.org>
- <CAL_Jsq+5p7gQzDfGipNFr1ry-Pc3pDJpcXnAqdX9eo0HLETATQ@mail.gmail.com>
-Message-ID: <81f57dc623fe8705cea52b5cb2612b32@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Subject: Re: [PATCH 0/2] add regulator driver and mfd cell for Intel Cherry
+ Trail Whiskey Cove PMIC
+Message-ID: <20191025075540.GD32742@smile.fi.intel.com>
+References: <20191024142939.25920-1-andrey.zhizhikin@leica-geosystems.com>
+ <20191025075335.GC32742@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025075335.GC32742@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-25 04:03, Rob Herring wrote:
-> On Thu, Oct 24, 2019 at 6:00 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi Rob,
->> 
->> On 2019-10-24 01:19, Rob Herring wrote:
->> > On Sun, Oct 20, 2019 at 10:32 PM Bjorn Andersson
->> > <bjorn.andersson@linaro.org> wrote:
->> >>
->> >> On Sat 19 Oct 04:37 PDT 2019, Sai Prakash Ranjan wrote:
->> >>
->> >> > LLCC behaviour is controlled by the configuration data set
->> >> > in the llcc-qcom driver, add the same for SC7180 SoC.
->> >> > Also convert the existing bindings to json-schema and add
->> >> > the compatible for SC7180 SoC.
->> >> >
->> >>
->> >> Thanks for the patches and thanks for the review Stephen. Series
->> >> applied
->> >
->> > And they break dt_binding_check. Please fix.
->> >
->> 
->> I did check this and think that the error log from dt_binding_check is
->> not valid because it says cache-level is a required property [1], but
->> there is no such property in LLCC bindings.
+On Fri, Oct 25, 2019 at 10:53:35AM +0300, Andy Shevchenko wrote:
+> On Thu, Oct 24, 2019 at 02:29:37PM +0000, Andrey Zhizhikin wrote:
+> > This patchset introduces additional regulator driver for Intel Cherry
+> > Trail Whiskey Cove PMIC. It also adds a cell in mfd driver for this
+> > PMIC, which is used to instantiate this regulator.
+> > 
+> > Regulator support for this PMIC was present in kernel release from Intel
+> > targeted Aero platform, but was not entirely ported upstream and has
+> > been omitted in mainline kernel releases. Consecutively, absence of
+> > regulator caused the SD Card interface not to be provided with Vqcc
+> > voltage source needed to operate with UHS-I cards.
+> > 
+> > Following patches are addessing this issue and making sd card interface
+> > to be fully operable with UHS-I cards. Regulator driver lists an ACPI id
+> > of the SD Card interface in consumers and exposes optional "vqmmc"
+> > voltage source, which mmc driver uses to switch signalling voltages
+> > between 1.8V and 3.3V. 
+> > 
+> > This set contains of 2 patches: one is implementing the regulator driver
+> > (based on a non upstreamed version from Intel Aero), and another patch
+> > registers this driver as mfd cell in exising Whiskey Cove PMIC driver.
 > 
-> Then you should point out the issue and not just submit stuff ignoring
-> it. It has to be resolved one way or another.
-> 
+> Thank you.
+> Hans, Cc'ed, has quite interested in these kind of patches.
+> Am I right, Hans?
 
-I did not ignore it. When I ran the dt-binding check locally, it did not
-error out and just passed on [1] and it was my bad that I did not check
-the entire build logs to see if llcc dt binding check had some warning 
-or
-not. But this is the usual case where most of us don't look at the 
-entire
-build logs to check if there is a warning or not. We notice if there is 
-an
-immediate exit/fail in case of some warning/error. So it would be good 
-if
-we fail the dt-binding check build if there is some warning/error or 
-atleast
-provide some option to strict build to fail on warning, maybe there is 
-already
-a flag to do this?
-
-After submitting the patch, I noticed this build failure on
-patchwork.ozlabs.org and was waiting for your reply.
-
-[1] https://paste.ubuntu.com/p/jNK8yfVkMG/
-
-> If you refer to the DT spec[1], cache-level is required. The schema is
-> just enforcing that now. It's keying off the node name of
-> 'cache-controller'.
-> 
-
-This is not L2 or L3 cache, this is a system cache (last level cache) 
-shared by
-clients other than just CPU. So I don't know how do we specify 
-cache-level for
-this, let me know if you have some pointers.
-
--Sai
+Since it's about UHS/SD, Cc to Adrian as well.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
+
