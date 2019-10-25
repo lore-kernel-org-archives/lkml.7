@@ -2,113 +2,100 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D2CCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C200CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C3C21D7F
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572017623;
-	bh=H7fURjLkyZ1XV2iHKmY6CUs6YlFPI+akWYnt8ibppik=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=GROsxz7lTf4ay0qiUVIaSzVAzdWv0UpGFOaTmAorY1hMgaFJdSqI6J1hZAv7sxqvJ
-	 IaB5RfBGr9aN/sm5Yd7AtHx2ezmWTTOP2xA6SM2zgUuP3N8ZwIq5hikwR2b13fQxUu
-	 gf4WaCnz8RlzQRCUZZNm7HEORqM6F6hTyibfHjN8=
+	by mail.kernel.org (Postfix) with ESMTP id D7E5E21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:36:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="L75ud86K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395441AbfJYPdm (ORCPT
+        id S2395428AbfJYPgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:33:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395430AbfJYPdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:33:41 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3805021929;
-        Fri, 25 Oct 2019 15:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572017620;
-        bh=H7fURjLkyZ1XV2iHKmY6CUs6YlFPI+akWYnt8ibppik=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WVxU7e9XByy6NZTJWF5jfJgaNH9FoceabuNtEJyuSCiXjzbzuKkg2Ytii1fLoU+gx
-         xl7B5XtgkhBk1d2JtOTgucvx2vW6Pp3Ngs2UuGZFPSpz4JA/erwgPKkxroaa3dUvsq
-         ce92QC4I3jypxCLySUq8RVX784/cGMNibrYvI8UY=
-Subject: Re: [PATCHv2 2/3] cpupower: mperf_monitor: Introduce per_cpu_schedule
- flag
-To:     Thomas Renninger <trenn@suse.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Pu Wen <puwen@hygon.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Borislav Petkov <bp@suse.de>, shuah <shuah@kernel.org>
-References: <cover.1570819652.git.Janakarajan.Natarajan@amd.com>
- <bb4b0e4137b62651b9d028925fa8f09ca5fbd989.1570819652.git.Janakarajan.Natarajan@amd.com>
- <24194241.SRZ5kbjNg7@skinner.arch.suse.de>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e5c0ed24-6b2f-ea2f-6ce1-533f3727cb17@kernel.org>
-Date:   Fri, 25 Oct 2019 09:33:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 11:36:22 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40581 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbfJYPgW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:36:22 -0400
+Received: by mail-lj1-f193.google.com with SMTP id u22so3206469lji.7
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VlfRIm/IUQoWr2pXkJdNPTQB7pso0Fzi7iIhyuUYMCY=;
+        b=L75ud86KWGPHxPbqsE9fYUV589praE+7kUBzz8/hFeYfnkE8fGeAHqRdb8aN8jIm4w
+         zwageU2OR8t7hf7+ngdaTZtqyGunHZMDWOLObCvkvSlTGjc55LsULJyClg+ttQAlqI32
+         pLuSMdHO/IwduciZYA4QMk0OOMeuslnCC+VtWuqmJ6ntQHMdHyB4viEdkQ7PhNtp2e3W
+         fclXfviKT7AjiDJ7QddXszNO6UWj2BCAzJQFg+vFW6ZKUz5o/PrYPFOCggvaLqeniVjp
+         m7Pf3AW42s/vOFU0xM8h8oA+pYErBikv9SL3yl4hol4RbFGyh1714xhDJ/iWhHxm2uj3
+         cn1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VlfRIm/IUQoWr2pXkJdNPTQB7pso0Fzi7iIhyuUYMCY=;
+        b=t/1xKY22z0lP5TI1s0wugZPjLVbLxCejnUg76FHnvNk7T/evPlZsY8ED79OXMcy5Uu
+         riPuFUZcLsZpQKglaenGaIKGfSS0DewCGxQ9v+FRpjzgLw8JhXqt8M7qRIi1jF6T+/Fy
+         jjDbT7ptFHVaooZRUkrwh/p9MrWp0ksh5fbfGXaIW1T6ZXx+kP2LHX0XW7cFf/wz28aY
+         htJd10FX5UEIJNhg3v4uLJHLFbIVf4CqY6QSz07yR8RFlryQhCCOzvl0zRbgG19MyEEN
+         b3l5iGy3x4n7qWXx1BtN3IFTHNryWSo88qr347rOg3fdZO1YT39ytFJnOEWvo7TP7zBk
+         iL0w==
+X-Gm-Message-State: APjAAAXCc06M8TqulEz7OFxdmI2EqffVUaa8jrX6CK7QEXT/XRw6hK5+
+        ZPoHF5fxyDmsxbWhNzuKLKIE6A==
+X-Google-Smtp-Source: APXvYqxRA08GLyrFbHx8Xl51vJWvwsWvNv8hMTj3SCmTGJGUX46vOnxceXakMrAQ4rUIrnz2oASJvw==
+X-Received: by 2002:a2e:4e12:: with SMTP id c18mr3037222ljb.51.1572017780299;
+        Fri, 25 Oct 2019 08:36:20 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id b6sm1066987lfi.72.2019.10.25.08.36.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 08:36:19 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 04DB810267F; Fri, 25 Oct 2019 18:36:19 +0300 (+03)
+Date:   Fri, 25 Oct 2019 18:36:18 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     hughd@google.com, kirill.shutemov@linux.intel.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: thp: clear PageDoubleMap flag when the last PMD map
+ gone
+Message-ID: <20191025153618.ajcecye3bjm5abax@box>
+References: <1571938066-29031-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <24194241.SRZ5kbjNg7@skinner.arch.suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1571938066-29031-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 4:39 AM, Thomas Renninger wrote:
-> Hi Natarajan,
+On Fri, Oct 25, 2019 at 01:27:46AM +0800, Yang Shi wrote:
+> File THP sets PageDoubleMap flag when the first it gets PTE mapped, but
+> the flag is never cleared until the THP is freed.  This result in
+> unbalanced state although it is not a big deal. 
 > 
-> sorry for answering that late.
-> I post on top as it doesn't fit to the patch context:
-> 
-> While I like the 2 other patches, especially the first preparing for
-> a generic "ensure to always run on the measured CPU at measure time"
-> interface..., this patch does make use of it in a very static manner.
-> 
-> I then tried to get this more generic..., without any outcome for now.
-> 
-> If someone likes to play with this, my idea would be:
-> 
-> - the monitors need cpu_start() and cpu_stop() callbacks to register
-> - either start(), stop() and/or cpu_start(), cpu_stop() callbacks have to
->    be provided by a monitor.
-> - current behavior is only start/stop which means the whole per_cpu logic
->    resides inside the monitor
-> - if cpu_start/cpu_stop is provided, iterating over all cpus is done in
->    fork_it and general start/stop functions are an optionally entry point
->    before and after the per_cpu calls.
-> 
-> Then the cpu binding can be done from outside.
-> Another enhancement could be then to fork as many processes as there are CPUs
-> in case of per_cpu_schedule (or an extra param/flag) and then:
-> 
-> - Bind these forked processes to each cpu.
-> - Execute start measures via the forked processes on each cpu
-> - Execute test executable (which runs in yet another fork as done already)
-> - Execute stop measures via the forked processes on each cpu
-> 
-> This should be ideal environment to not interfere with the tested executable.
-> It would also allow a nicer program structure.
-> 
+> Clear the flag when the last compound_mapcount is gone.  It should be
+> cleared when all the PTE maps are gone (become PMD mapped only) as well,
+> but this needs check all subpage's _mapcount every time any subpage's
+> rmap is removed, the overhead may be not worth.  The anonymous THP also
+> just clears PageDoubleMap flag when the last PMD map is gone.
 
-It will be good to capture these ideas in the ToDo file.
+NAK, sorry.
 
-Natarajan! WOuld you like to send a patch updating the ToDo file with
-these ideas?
+The key difference with anon THP that file THP can be mapped again with
+PMD after all PMD (or all) mappings are gone.
 
-thanks,
--- Shuah
+Your patch breaks the case when you map the page with PMD again while the
+page is still mapped with PTEs. Who would set PageDoubleMap() in this
+case?
 
+-- 
+ Kirill A. Shutemov
