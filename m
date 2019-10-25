@@ -2,155 +2,290 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA863CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CCACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC602084C
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:18:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="icig6KsD"
+	by mail.kernel.org (Postfix) with ESMTP id C539D2084C
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 18:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572027546;
+	bh=QyxXeRhAn6IU09Yd9YgTaiSpiG5q2CrkU/Tx9usCv/Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XQLayIj+Ak5+JmRGq6jVczen+QsOZE++dc60PQ9NmGmvGTclqxOZS6I5SXuUGKesZ
+	 pYWMq+oldpQOv3NlEzhf88NT8lFQ7Dwf1nMhqw2rr5Hs/hzjY42Oaj07Zaf338Vk2T
+	 b0ZX9rLU0IoyJ/1yv6prVo3jJKH82fOhVGQfGGE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388536AbfJYSSP (ORCPT
+        id S2388562AbfJYSSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 14:18:15 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42328 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387489AbfJYSRk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 14:17:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id i26so3449294iog.9
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 11:17:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=cEp2IwZKQPQmmm2FW1iKbpwmFQ8Xs6tcg4OA6zfr4/M=;
-        b=icig6KsD2TpQ66Xr/S/wECboULwzQnRngVtCPdD1hQPltOc0nDqrUFCOWfzH/IJHq5
-         V8kUHDFd+o4xtXCPRL8oILKPDf0mFUYyV8n2m2g33KkkD5hxkP+TTvkv51hbep+S8yUC
-         kAxUR3dtNowOfrl/A1hBY4e0t0GlU+Jtfz+QHIzc3XsKZ+sUjME4J7xWsopxa139lln0
-         iyvVjNwQeZ25EUMxEJwbNvXX18nKPoFIpn4a1RxowHzurplABQ4AP9zMzQJ/3pi729I3
-         SCLgOH8O84N9NS+rBeK5wlvQ+VN55mblWwOlsaw4vTE4ovnQ2yJQymttUBdqwpySeiwR
-         Kpeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cEp2IwZKQPQmmm2FW1iKbpwmFQ8Xs6tcg4OA6zfr4/M=;
-        b=jiRV7YAjMp6dWeZMdDGJ7JvmBFZLUxjalMvhQ4OB26XYGVUT3E3vlSvcI0uS16IvhS
-         e2QaFBpxWzGDAxCUFu9oVj+Z8/+3jU6G+kBfd/8nDXofEOTsVBBGW4eD0NwWLbT45lpT
-         mAchDK5iQtmwnkinxlco1KU/QAPHRnHaaQAjVHLQtNz7nAOfe/8wdJ4ZGKa16atWIIf7
-         b+Ede6aJtqZUONYhSymJLLUVne7WDXuXy7xFLF3Acphfrlm6I/S9p2SURGXw54wqTBIW
-         KzphTRiJKHktM/+rLRD/hKcV5V/L9QBtUIV3E0jb2psFvGlmST/puUt32+B6lDuU1Dap
-         PM6Q==
-X-Gm-Message-State: APjAAAWDzjRJ0YBqoospiUGuVmGGTcHHM7mkjrKrvdaImhY1VqUu2bX9
-        BwwnN+8Jope2ppAclLnSPJ9sk3fvgjDkVA==
-X-Google-Smtp-Source: APXvYqysoFK5c7/3wdwPSUl84Q1Nx5uXQAZ2VHCAU284/KLJkgalKBQBScryp9skgcrtBxD+r2CHaQ==
-X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr5317901ioq.208.1572027457864;
-        Fri, 25 Oct 2019 11:17:37 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id y26sm341850ion.1.2019.10.25.11.17.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 11:17:36 -0700 (PDT)
-Subject: Re: [BUG] io_uring: defer logic based on shared data
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5badf1c0-9a7d-0950-2943-ff8db33e0929@gmail.com>
- <bfb58429-6abe-06f0-3fd8-14a0040cecf0@kernel.dk>
- <b44b0488-ba66-0187-2d9b-6949ceb613fb@gmail.com>
- <96446fe1-4f32-642b-7100-ebfa291d7127@kernel.dk>
- <df3b9edd-86ad-5460-b61b-66707c0fb630@kernel.dk>
- <31a7765b-bb6d-985a-454d-d998678100d1@gmail.com>
- <b4e1f03c-e044-b09f-d943-cad3ab5b4969@kernel.dk>
- <e5a6f77a-3404-0dc8-ac6e-584737d71a33@gmail.com>
- <a0d8a8e1-18dc-8090-037c-e5baf9bd45c3@kernel.dk>
- <436eb658-582d-c752-f20a-2f2c43d741a3@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f3b7a9fb-1a95-5419-3408-669d8b466d48@kernel.dk>
-Date:   Fri, 25 Oct 2019 12:17:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 14:18:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387489AbfJYSSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 14:18:22 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 405AA2084C;
+        Fri, 25 Oct 2019 18:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572027501;
+        bh=QyxXeRhAn6IU09Yd9YgTaiSpiG5q2CrkU/Tx9usCv/Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ezhSn5HfO4r0cAhH0IJtvehRat2I5cSuQBxn3isfnKr1bfDqKwf9QjbXGb+qVXnzT
+         JxXvO8gLaMmyVMNyWoB0pVza0/TGBaHuUZv14qJVwAkyM3ZsO8sDmh87Osb8heiI/N
+         +RUJAIkOoYgf1jlmLJoLwA/YucekNPanIs6N1CX8=
+Date:   Fri, 25 Oct 2019 11:18:20 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: support aligned pinned file
+Message-ID: <20191025181820.GA24183@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20191022171602.93637-1-jaegeuk@kernel.org>
+ <c916c749-0abe-a7b7-e748-f0c4d5599e4a@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <436eb658-582d-c752-f20a-2f2c43d741a3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c916c749-0abe-a7b7-e748-f0c4d5599e4a@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 12:13 PM, Pavel Begunkov wrote:
-> On 25/10/2019 19:57, Jens Axboe wrote:
->> On 10/25/19 10:55 AM, Pavel Begunkov wrote:
->>> On 25/10/2019 19:44, Jens Axboe wrote:
->>>> On 10/25/19 10:40 AM, Pavel Begunkov wrote:
->>>>> On 25/10/2019 19:32, Jens Axboe wrote:
->>>>>> On 10/25/19 10:27 AM, Jens Axboe wrote:
->>>>>>> On 10/25/19 10:21 AM, Pavel Begunkov wrote:
->>>>>>>> On 25/10/2019 19:03, Jens Axboe wrote:
->>>>>>>>> On 10/25/19 3:55 AM, Pavel Begunkov wrote:
->>>>>>>>>> I found 2 problems with __io_sequence_defer().
->>>>>>>>>>
->>>>>>>>>> 1. it uses @sq_dropped, but doesn't consider @cq_overflow
->>>>>>>>>> 2. @sq_dropped and @cq_overflow are write-shared with userspace, so
->>>>>>>>>> it can be maliciously changed.
->>>>>>>>>>
->>>>>>>>>> see sent liburing test (test/defer *_hung()), which left an unkillable
->>>>>>>>>> process for me
->>>>>>>>>
->>>>>>>>> OK, how about the below. I'll split this in two, as it's really two
->>>>>>>>> separate fixes.
->>>>>>>> cached_sq_dropped is good, but I was concerned about cached_cq_overflow.
->>>>>>>> io_cqring_fill_event() can be called in async, so shouldn't we do some
->>>>>>>> synchronisation then?
->>>>>>>
->>>>>>> We should probably make it an atomic just to be on the safe side, I'll
->>>>>>> update the series.
->>>>>>
->>>>>> Here we go, patch 1:
->>>>>>
->>>>>> http://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=f2a241f596ed9e12b7c8f960e79ccda8053ea294
->>>>>>
->>>>>> patch 2:
->>>>>>
->>>>>> http://git.kernel.dk/cgit/linux-block/commit/?h=for-linus&id=b7d0297d2df5bfa0d1ecf9d6c66d23676751ef6a
->>>>>>
->>>>> 1. submit rqs (not yet completed)
->>>>> 2. poll_list is empty, inflight = 0
->>>>> 3. async completed and placed into poll_list
->>>>>
->>>>> So, poll_list is not empty, but we won't get to polling again.
->>>>> At least until someone submitted something.
->>>>
->>>> But if they are issued, the will sit in ->poll_list as well. That list
->>>> holds both "submitted, but pending" and completed entries.
->>>>
->>> Missed it, then should work. Thanks!
->>
->> Glad we agree :-)
->>
->>>> + ret = iters = 0;
->>> A small suggestion, could we just initialise it in declaration
->>> to be a bit more concise?
->>> e.g. int ret = 0, iters = 0;
->>>
->>> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
->>> And let me test it as both patches are ready.
->>
->> Sure, I'll make that change and add your reviewed-by. Thanks!
->>
-> Stress tested, works well!
+On 10/24, Chao Yu wrote:
+> Hi Jaegeuk,
 > 
-> Tested-by: Pavel Begunkov <asml.silence@gmail.com>
+> On 2019/10/23 1:16, Jaegeuk Kim wrote:
+> > This patch supports 2MB-aligned pinned file, which can guarantee no GC at all
+> > by allocating fully valid 2MB segment.
+> > 
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> >  fs/f2fs/f2fs.h     |  4 +++-
+> >  fs/f2fs/file.c     | 39 ++++++++++++++++++++++++++++++++++-----
+> >  fs/f2fs/recovery.c |  2 +-
+> >  fs/f2fs/segment.c  | 21 ++++++++++++++++++++-
+> >  fs/f2fs/segment.h  |  2 ++
+> >  fs/f2fs/super.c    |  1 +
+> >  fs/f2fs/sysfs.c    |  2 ++
+> >  7 files changed, 63 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index ca342f4c7db1..c681f51e351b 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -890,6 +890,7 @@ enum {
+> >  	CURSEG_WARM_NODE,	/* direct node blocks of normal files */
+> >  	CURSEG_COLD_NODE,	/* indirect node blocks */
+> >  	NO_CHECK_TYPE,
+> > +	CURSEG_COLD_DATA_PINNED,/* cold data for pinned file */
+> >  };
+> >  
+> >  struct flush_cmd {
+> > @@ -1301,6 +1302,7 @@ struct f2fs_sb_info {
+> >  
+> >  	/* threshold for gc trials on pinned files */
+> >  	u64 gc_pin_file_threshold;
+> > +	struct rw_semaphore pin_sem;
+> >  
+> >  	/* maximum # of trials to find a victim segment for SSR and GC */
+> >  	unsigned int max_victim_search;
+> > @@ -3116,7 +3118,7 @@ void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
+> >  int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
+> >  void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+> >  					unsigned int start, unsigned int end);
+> > -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
+> > +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type);
+> >  int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
+> >  bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
+> >  					struct cp_control *cpc);
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index 29bc0a542759..f6c038e8a6a7 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -1545,12 +1545,41 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
+> >  	if (off_end)
+> >  		map.m_len++;
+> >  
+> > -	if (f2fs_is_pinned_file(inode))
+> > -		map.m_seg_type = CURSEG_COLD_DATA;
+> > +	if (!map.m_len)
+> > +		return 0;
+> > +
+> > +	if (f2fs_is_pinned_file(inode)) {
+> > +		block_t len = (map.m_len >> sbi->log_blocks_per_seg) <<
+> > +					sbi->log_blocks_per_seg;
+> > +		block_t done = 0;
+> > +
+> > +		if (map.m_len % sbi->blocks_per_seg)
+> > +			len += sbi->blocks_per_seg;
+> >  
+> > -	err = f2fs_map_blocks(inode, &map, 1, (f2fs_is_pinned_file(inode) ?
+> > -						F2FS_GET_BLOCK_PRE_DIO :
+> > -						F2FS_GET_BLOCK_PRE_AIO));
+> > +		map.m_len = sbi->blocks_per_seg;
+> > +next_alloc:
+> > +		mutex_lock(&sbi->gc_mutex);
+> > +		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
+> > +		if (err && err != -ENODATA && err != -EAGAIN)
+> > +			goto out_err;
+> 
+> To grab enough free space?
+> 
+> Shouldn't we call
+> 
+> 	if (has_not_enough_free_secs(sbi, 0, 0)) {
+> 		mutex_lock(&sbi->gc_mutex);
+> 		f2fs_gc(sbi, false, false, NULL_SEGNO);
+> 	}
 
-Great, thanks for finding these, sending patches, and testing the ones
-that I fixed!
+The above calls gc all the time. Do we need this?
 
--- 
-Jens Axboe
+> 
+> > +
+> > +		down_write(&sbi->pin_sem);
+> > +		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
+> > +		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
+> > +		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
+> > +		up_write(&sbi->pin_sem);
+> > +
+> > +		done += map.m_len;
+> > +		len -= map.m_len;
+> > +		map.m_lblk += map.m_len;
+> > +		if (!err && len)
+> > +			goto next_alloc;
+> > +
+> > +		map.m_len = done;
+> > +	} else {
+> > +		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
+> > +	}
+> > +out_err:
+> >  	if (err) {
+> >  		pgoff_t last_off;
+> >  
+> > diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+> > index 783773e4560d..76477f71d4ee 100644
+> > --- a/fs/f2fs/recovery.c
+> > +++ b/fs/f2fs/recovery.c
+> > @@ -711,7 +711,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+> >  		f2fs_put_page(page, 1);
+> >  	}
+> >  	if (!err)
+> > -		f2fs_allocate_new_segments(sbi);
+> > +		f2fs_allocate_new_segments(sbi, NO_CHECK_TYPE);
+> >  	return err;
+> >  }
+> >  
+> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > index 25c750cd0272..253d72c2663c 100644
+> > --- a/fs/f2fs/segment.c
+> > +++ b/fs/f2fs/segment.c
+> > @@ -2690,7 +2690,7 @@ void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+> >  	up_read(&SM_I(sbi)->curseg_lock);
+> >  }
+> >  
+> > -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
+> > +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type)
+> >  {
+> >  	struct curseg_info *curseg;
+> >  	unsigned int old_segno;
+> > @@ -2699,6 +2699,9 @@ void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
+> >  	down_write(&SIT_I(sbi)->sentry_lock);
+> >  
+> >  	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++) {
+> > +		if (type != NO_CHECK_TYPE && i != type)
+> > +			continue;
+> > +
+> >  		curseg = CURSEG_I(sbi, i);
+> >  		old_segno = curseg->segno;
+> >  		SIT_I(sbi)->s_ops->allocate_segment(sbi, i, true);
+> > @@ -3068,6 +3071,19 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+> >  {
+> >  	struct sit_info *sit_i = SIT_I(sbi);
+> >  	struct curseg_info *curseg = CURSEG_I(sbi, type);
+> > +	bool put_pin_sem = false;
+> > +
+> > +	if (type == CURSEG_COLD_DATA) {
+> > +		/* GC during CURSEG_COLD_DATA_PINNED allocation */
+> > +		if (down_read_trylock(&sbi->pin_sem)) {
+> > +			put_pin_sem = true;
+> > +		} else {
+> > +			type = CURSEG_WARM_DATA;
+> > +			curseg = CURSEG_I(sbi, type);
+> 
+> It will mix pending cold data into warm area... rather than recovering curseg to
+> write pointer of last cold segment?
+> 
+> I know maybe that fallocate aligned address could be corner case, but I guess
+> there should be some better solutions can handle race case more effectively.
+> 
+> One solution could be: allocating a virtual log header to select free segment as
+> 2m-aligned space target.
 
+I thought about that, but concluded to avoid too much changes.
+
+> 
+> Thanks,
+> 
+> > +		}
+> > +	} else if (type == CURSEG_COLD_DATA_PINNED) {
+> > +		type = CURSEG_COLD_DATA;
+> > +	}
+> >  
+> >  	down_read(&SM_I(sbi)->curseg_lock);
+> >  
+> > @@ -3133,6 +3149,9 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+> >  	mutex_unlock(&curseg->curseg_mutex);
+> >  
+> >  	up_read(&SM_I(sbi)->curseg_lock);
+> > +
+> > +	if (put_pin_sem)
+> > +		up_read(&sbi->pin_sem);
+> >  }
+> >  
+> >  static void update_device_state(struct f2fs_io_info *fio)
+> > diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> > index 325781a1ae4d..a95467b202ea 100644
+> > --- a/fs/f2fs/segment.h
+> > +++ b/fs/f2fs/segment.h
+> > @@ -313,6 +313,8 @@ struct sit_entry_set {
+> >   */
+> >  static inline struct curseg_info *CURSEG_I(struct f2fs_sb_info *sbi, int type)
+> >  {
+> > +	if (type == CURSEG_COLD_DATA_PINNED)
+> > +		type = CURSEG_COLD_DATA;
+> >  	return (struct curseg_info *)(SM_I(sbi)->curseg_array + type);
+> >  }
+> >  
+> > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> > index f320fd11db48..c02a47ce551b 100644
+> > --- a/fs/f2fs/super.c
+> > +++ b/fs/f2fs/super.c
+> > @@ -2853,6 +2853,7 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
+> >  	spin_lock_init(&sbi->dev_lock);
+> >  
+> >  	init_rwsem(&sbi->sb_lock);
+> > +	init_rwsem(&sbi->pin_sem);
+> >  }
+> >  
+> >  static int init_percpu_info(struct f2fs_sb_info *sbi)
+> > diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> > index b558b64a4c9c..f164959e4224 100644
+> > --- a/fs/f2fs/sysfs.c
+> > +++ b/fs/f2fs/sysfs.c
+> > @@ -154,6 +154,8 @@ static ssize_t features_show(struct f2fs_attr *a,
+> >  	if (f2fs_sb_has_casefold(sbi))
+> >  		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
+> >  				len ? ", " : "", "casefold");
+> > +	len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
+> > +				len ? ", " : "", "pin_file");
+> >  	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
+> >  	return len;
+> >  }
+> > 
