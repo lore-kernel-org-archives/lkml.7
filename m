@@ -2,126 +2,142 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A155CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7331ECA9EBC
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D002221872
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAEC2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 05:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OKzqqHnp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c83H9Xm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393918AbfJYFyU (ORCPT
+        id S2393966AbfJYF45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 01:54:20 -0400
-Received: from mail-eopbgr40075.outbound.protection.outlook.com ([40.107.4.75]:47334
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393790AbfJYFyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 01:54:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lu5s8fdMiZl6CBcn4sLITkygZCYvYpBiy1nzL/lz2gPHUD/bljk0qk2tQ8GqAPvfECH57iJHnkSwtMNikhzdn4SG+RdpAlhDfjDr9XquelKIKhdsNMyelnkC9o4Gs9khc53ptXtaoC+A4JPO1H/nbfhTO+l+RtyolN9vAJt9+bYBGSU/vRrkyNgckctM7FKsVqUjKaccxXMaBkYtsYQOtHZFOqM46Jv8Qh9X9kK9M1NRM6uGcgpfHo2PGVar+vcW5+GoF+8MvwqA6fFipJ6pEXvb7XH869GHk0HcS9eMwxzhUKeuCertZZqvA/kFWo/D+jB6YeEFOvbm+yQ6Gm/8oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5SqHbF3LA8xPTHfjfatUcWZN7IA4yK/a4GIsqIhdWRQ=;
- b=BYVvO0AqqjsHFA4OXLyB7Dcu71BrGdQ38sHFr9440Mn/5skTwe7d+d7O8Mi1THNsj15oBXWX4HLChVYo9sp6dEfrWlS59mUm8L3rcZKa0+xRr1QDMKbe9E+DqA7o9RTI1sh06phgF2wEybq0XljYeqRikfmWIUoE5I8RYaQSStp2ET5duVs1svYYFAHr5fq8AP1RzBhxWj9PcFjuLaPkgoy57ike1+HvDoLwqJQ1rOeowAK7JKimsXoubIi0Jnfqjl8xeZOUKy573ibPdcmtNe94JEdXcSIqtRiAXbMaLpWlvX3llRv2VXHU6+CzCoSLoVre35q4SndidPG//rlf1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5SqHbF3LA8xPTHfjfatUcWZN7IA4yK/a4GIsqIhdWRQ=;
- b=OKzqqHnpnH1EI0N3FS+cs2vjk6R2ewqB+di2G45qVBpPvt2YjV702LGXWXN5y/aTdzEkGKbOgOl3JWsg2mRQxRTx8kAQQV94rhaLaMcpw93tqULdWkJPlHjfFPr62JjEr9hYSCR9Jd2gkPL8kAASGTIYL4gz3YW4jg2bcqJaqTQ=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.232.225) by
- VE1PR04MB6557.eurprd04.prod.outlook.com (10.255.118.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.22; Fri, 25 Oct 2019 05:54:16 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::e052:9278:76a3:27c]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::e052:9278:76a3:27c%6]) with mapi id 15.20.2387.025; Fri, 25 Oct 2019
- 05:54:16 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: fsl_esai: Add spin lock to protect reset and stop
-Thread-Topic: [PATCH] ASoC: fsl_esai: Add spin lock to protect reset and stop
-Thread-Index: AdWK+HdhgLIuF2SMRlyd3wTM80COcg==
-Date:   Fri, 25 Oct 2019 05:54:16 +0000
-Message-ID: <VE1PR04MB6479F8937722C1FAC81C6623E3650@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 93d17133-584a-4940-b8a5-08d7590fc51c
-x-ms-traffictypediagnostic: VE1PR04MB6557:
-x-microsoft-antispam-prvs: <VE1PR04MB65571B034B6C41D5992772E6E3650@VE1PR04MB6557.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 02015246A9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(189003)(199004)(7696005)(6916009)(81166006)(66066001)(81156014)(66946007)(7416002)(66556008)(66446008)(64756008)(6436002)(5660300002)(4326008)(52536014)(76116006)(9686003)(66476007)(74316002)(4744005)(8676002)(54906003)(478600001)(316002)(55016002)(8936002)(25786009)(256004)(14444005)(71200400001)(71190400001)(6246003)(6116002)(102836004)(33656002)(3846002)(1411001)(186003)(86362001)(476003)(99286004)(7736002)(26005)(6506007)(486006)(305945005)(2906002)(229853002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6557;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fOUhRT42T8aC84f1t/qS3pDC/tFJFSlyQK2fyzB8jo2g50Tk2zQjEKLWSBmgr8MjbSE2+jaaHXtqJe/5tPg4VEsGdvArmnR0M70CoQw8AAN84iwDVkRvj6yhLZLLAdLnWZkxMq6y+kckQgFXqkUA9A+MTegzt5m8ZtesBbSZ0FRJPARVObLWFZAtU8LczzhHI96IHVwKC86J0wYmXkzdzfys44x4e+rGpFR//67u2Y5VowC2ZoKbovEuxqPYgTZyhu5uL7g/v4rRYfKK06Wmh1foCMq+ChzMCIJ5AkSIOCo3mbCUAPDUqKXuxHeIC6apQ7zaAqUBLLscgBEuHugywIAD0oYR5pO8CN13VijJDR60KghxL0nKZ8Xxu+e2KAgR5doZYg6pMIaz49udFcFdLbhYBbC+oe3QelIlySr5MYvOWWm+LjgZCxO2maeYNdZG
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 25 Oct 2019 01:56:57 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39975 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393713AbfJYF45 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 01:56:57 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d8so1144192otc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Oct 2019 22:56:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zThSuPucnYB11UxQ84T8AiU13at0QlBZrNas229mVK4=;
+        b=c83H9Xm7uwJMYI/yUjZRfhl0JIbApRXJSslgxBFnsu3+JNMmAMx7Vvqg79Mi6F5/T6
+         YA1unfPBbMrOhFSPnFZD9anMpGXO7as8l8PS3IU6UuRSTKTtHQRTeIQ5cnevXgD2hoQR
+         L0ZIv9KKe1hJr4+zMi9wkJlNvAqVxGIkipCP5TMv1G54C7Yvfa8pafyAv2nflkMDdISX
+         B2QPxwy33Po1tlfhJM858lU65nHQxQ1WeBZuvXvDX0IWU/0EVCywYRpPVABbk3oam2AI
+         lU8d5Q6W9avvustlUo+sDMgS/yqJ5T/Yq21JKWYu7JnDhMg35Fd522DIvy6agg0OXOi6
+         IImg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zThSuPucnYB11UxQ84T8AiU13at0QlBZrNas229mVK4=;
+        b=tKYUYinp55f2TPTcyVl2mEQZUZCb2Q3TtVmlY8Jp1S6zpXmIwYcCRQ4G+B7nHayDg8
+         8hRzKwMYFhXpq9KzZMByX7q0sxRfBkfwZHiXPAhtj3uOIbDisXe/JRPX8bjUWbuJ4wJP
+         VicAAD7lVTa56rXTm/dej3sIcEAobXLtZbsmxLt+ofrUgmZZVJdtrxKLOPm25P9U69wi
+         3pfOjhJiTPmiHXGbC9Ij3wuD9PXnv1bWHLe7pMJ1Qov4IzeSGxGWeZZNJuRf/aRGerb3
+         mCuKHiDO3xOnqpr+FVWY2NBhza+QVjhh0p6oeq769MuHvZRk9lYpmjiDOegrBVjYtlp8
+         NjLA==
+X-Gm-Message-State: APjAAAV/hqVA5IyoaN4LopM3A5nECi/2fa62g1pWmtVVEAfEd4DbqlAY
+        xA3Q6mEvM20hO8H0zP9Rq/8/w7cdTNKvU9smkgDLRA==
+X-Google-Smtp-Source: APXvYqw/DUlrRogzHWRrsD06nz/kflR9lP8eB8Uz45TB1T3cs5AdM0YleXz3T7NJw93Ak+GBflKz0IBcBroUy3HWdSA=
+X-Received: by 2002:a9d:2241:: with SMTP id o59mr1342045ota.224.1571983016328;
+ Thu, 24 Oct 2019 22:56:56 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93d17133-584a-4940-b8a5-08d7590fc51c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 05:54:16.0920
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kdygqKnUaOp26tpZrbhiyvUGfwrQC+tzFj1jRVUDPHnPgtWaZH4SWX4EY5OjBpJHVlGXIuw5pplZfv2b24Y99Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6557
+References: <20191021190310.85221-1-john.stultz@linaro.org>
+In-Reply-To: <20191021190310.85221-1-john.stultz@linaro.org>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Fri, 25 Oct 2019 11:26:44 +0530
+Message-ID: <CAO_48GHk8b=7Rs2CYZvnki2EMpeo_4FRy+_3F0Mv_nAK42MpgQ@mail.gmail.com>
+Subject: Re: [PATCH v13 0/5] DMA-BUF Heaps (destaging ION)
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi John,
 
-Hi
->=20
-> On Wed, Oct 23, 2019 at 03:29:49PM +0800, Shengjiu Wang wrote:
-> > xrun may happen at the end of stream, the
-> > trigger->fsl_esai_trigger_stop maybe called in the middle of
-> > fsl_esai_hw_reset, this may cause esai in wrong state after stop, and
-> > there may be endless xrun interrupt.
->=20
-> What about fsl_esai_trigger_start? It touches ESAI_xFCR_xFEN bit that is
-> being checked in the beginning of fsl_esai_hw_reset.
->=20
-> Could the scenario below be possible also?
->=20
-> 1) ESAI TX starts
-> 2) Xrun happens to TX
-> 3) Starting fsl_esai_hw_reset (enabled[TX] =3D true; enabled[RX] =3D fals=
-e)
-> 4) ESAI RX starts
-> 5) Finishing fsl_esai_hw_reset (enabled[RX] is still false)
->=20
->=20
-Good catch, this may possible.  Will update in v2.
+On Tue, 22 Oct 2019 at 00:33, John Stultz <john.stultz@linaro.org> wrote:
+>
+> Lucky number 13! :)
+>
+> Last week in v12 I had re-added some symbol exports to support
+> later patches I have pending to enable loading heaps from
+> modules. He reminded me that back around v3 (its been awhile!) I
+> had removed those exports due to concerns about the fact that we
+> don't support module removal.
+>
+> So I'm respinning the patches, removing the exports again. I'll
+> submit a patch to re-add them in a later series enabling moduels
+> which can be reviewed indepently.
 
-Best regards
-Wang shengjiu
+This looks good to me, and hasn't seen any more comments, so I am
+going to merge it via drm-misc-next today.
+>
+> With that done, lets get on to the boilerplate!
+>
+> The patchset implements per-heap devices which can be opened
+> directly and then an ioctl is used to allocate a dmabuf from the
+> heap.
+>
+> The interface is similar, but much simpler then IONs, only
+> providing an ALLOC ioctl.
+>
+> Also, I've provided relatively simple system and cma heaps.
+>
+> I've booted and tested these patches with AOSP on the HiKey960
+> using the kernel tree here:
+>   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/dma-buf-heap
+>
+> And the userspace changes here:
+>   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
+>
+> Compared to ION, this patchset is missing the system-contig,
+> carveout and chunk heaps, as I don't have a device that uses
+> those, so I'm unable to do much useful validation there.
+> Additionally we have no upstream users of chunk or carveout,
+> and the system-contig has been deprecated in the common/andoid-*
+> kernels, so this should be ok.
+>
+> I've also removed the stats accounting, since any such
+> accounting should be implemented by dma-buf core or the heaps
+> themselves.
+>
+> New in v13:
+> * Re-remove symbol exports, per discussion with Brian. I'll
+>   resubmit these separately in a later patch so they can be
+>   independently reviewed
+>
+> thanks
+> -john
+
+<snip>
+
+Best,
+Sumit.
