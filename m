@@ -2,97 +2,65 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C845CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320E3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1295D222C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAC6222BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012032;
-	bh=QVtj9yD9gM/Kn2BDw1bk2ZWLuSivu4VtM58leskAUQc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DbSwuiMvDfHsoD3+a1sw/srPl0L0GDw0Kw1+en3PzNU/ejFW8+prc5PNUsaOiyNof
-	 G7NPbYtrLPNEZNI3VuD8gxDOFdHjziIOLTHdvrZHqByu7DyVuIZLWfZTcDDB/WhAES
-	 5gKkGOD6a8qwIY7ks/FUArv/5RsjBdpf8Svbc9VE=
+	s=default; t=1572012037;
+	bh=gqcWKa5cLQe90gcPgIFByj9D6hhMPg+LCDLFYQP5lGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2h+8VjnNaZdr0l13bkBFGbkAGBvjOnba3D3MXOJkOCL8Kb62xLJQsnw8Xk0q1m8ao
+	 XS4oaxyzYx2qIGGmYTnoCXuC+erlgHbR6EcbZ/4BY83WuQs8VElci2w+EnUoTYGCQH
+	 OQmRKE8LQeOca3Rjj8FsqSIsHZdCQqbCTkSbm8Hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393912AbfJYOAa (ORCPT
+        id S2394859AbfJYOAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410378AbfJYN6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 09:58:45 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB847222CE;
-        Fri, 25 Oct 2019 13:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011925;
-        bh=QVtj9yD9gM/Kn2BDw1bk2ZWLuSivu4VtM58leskAUQc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cp02R1/v5+lL6OnIZ03S7LS7qF4lPm8htoOtHNaOU3xZrD1ihfg+2Xx7P6l/dA5aG
-         SKf1ewGKeOSWysejkqVHklbKkQ8e48kB6Y6p7K2DpKKU/fZo3TKYEmaTc/Lb8RS3ZM
-         yizQ5VZWXDtgnre+8DYwfsfQNNHBOuTOjPM4Pb/0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/16] ACPI: video: Use vendor backlight on Sony VPCEH3U1E
-Date:   Fri, 25 Oct 2019 09:58:26 -0400
-Message-Id: <20191025135842.25977-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191025135842.25977-1-sashal@kernel.org>
-References: <20191025135842.25977-1-sashal@kernel.org>
+        Fri, 25 Oct 2019 10:00:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37586 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393874AbfJYOAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 10:00:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C6889B97F;
+        Fri, 25 Oct 2019 14:00:29 +0000 (UTC)
+Date:   Fri, 25 Oct 2019 16:00:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     snazy@snazy.de
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+Message-ID: <20191025140029.GL17610@dhcp22.suse.cz>
+References: <20191025092143.GE658@dhcp22.suse.cz>
+ <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
+ <20191025114633.GE17610@dhcp22.suse.cz>
+ <d740f26ea94f9f1c2fc0530c1ea944f8e59aad85.camel@gmx.de>
+ <20191025120505.GG17610@dhcp22.suse.cz>
+ <20191025121104.GH17610@dhcp22.suse.cz>
+ <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
+ <20191025132700.GJ17610@dhcp22.suse.cz>
+ <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
+ <20191025135749.GK17610@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025135749.GK17610@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Rui <rui.zhang@intel.com>
-
-[ Upstream commit aefa763b18a220f5fc1d5ab02af09158b6cc36ea ]
-
-On Sony Vaio VPCEH3U1E, ACPI backlight control does not work, and native
-backlight works. Thus force use vendor backlight control on this system.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202401
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/acpi/video_detect.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 8c5503c0bad7c..3fc828e086b1e 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -135,6 +135,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "UL30A"),
- 		},
- 	},
-+	{
-+	.callback = video_detect_force_vendor,
-+	.ident = "Sony VPCEH3U1E",
-+	.matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Sony Corporation"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "VPCEH3U1E"),
-+		},
-+	},
- 
- 	/*
- 	 * These models have a working acpi_video backlight control, and using
+And one more thing. Considering that you are able to reproduce and you
+have a working kernel, could you try to bisect this?
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
