@@ -2,53 +2,53 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A2ECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FC3CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A96A20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BB92070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 07:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437229AbfJYHrl (ORCPT
+        id S2437271AbfJYHsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 03:47:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33872 "EHLO mga07.intel.com"
+        Fri, 25 Oct 2019 03:48:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42380 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727275AbfJYHrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 03:47:41 -0400
+        id S1727275AbfJYHsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 03:48:13 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 00:47:40 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 00:48:12 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,227,1569308400"; 
-   d="scan'208";a="201737589"
+   d="scan'208";a="349954678"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 25 Oct 2019 00:47:38 -0700
+  by orsmga004.jf.intel.com with ESMTP; 25 Oct 2019 00:48:09 -0700
 Received: from andy by smile with local (Exim 4.92.2)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iNuJt-0001d3-PY; Fri, 25 Oct 2019 10:47:37 +0300
-Date:   Fri, 25 Oct 2019 10:47:37 +0300
+        id 1iNuKP-0001e9-Ew; Fri, 25 Oct 2019 10:48:09 +0300
+Date:   Fri, 25 Oct 2019 10:48:09 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] mfd: intel_soc_pmic_crc: Add "cht_crystal_cove_pmic"
- cell to CHT cells
-Message-ID: <20191025074737.GA32742@smile.fi.intel.com>
+Subject: Re: [PATCH 2/4] ACPI / PMIC: Add byt prefix to Crystal Cove PMIC
+ OpRegion driver
+Message-ID: <20191025074809.GB32742@smile.fi.intel.com>
 References: <20191024213827.144974-1-hdegoede@redhat.com>
- <20191024213827.144974-5-hdegoede@redhat.com>
+ <20191024213827.144974-3-hdegoede@redhat.com>
+ <20191025074154.GX32742@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191024213827.144974-5-hdegoede@redhat.com>
+In-Reply-To: <20191025074154.GX32742@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,38 +56,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 11:38:27PM +0200, Hans de Goede wrote:
-> Add a "cht_crystal_cove_pmic" cell to the cells for the Cherry Trail
-> variant of the Crystal Cove PMIC. Adding this cell enables / hooks-up
-> the new Cherry Trail Crystal Cove PMIC OpRegion driver.
+On Fri, Oct 25, 2019 at 10:41:54AM +0300, Andy Shevchenko wrote:
+> On Thu, Oct 24, 2019 at 11:38:25PM +0200, Hans de Goede wrote:
+> > Our current Crystal Cove OpRegion driver is only valid for the
+> > Crystal Cove PMIC variant found on Bay Trail (BYT) boards,
+> > Cherry Trail (CHT) based boards use another variant.
+> > 
+> > At least the regulator registers are different on CHT and these registers
+> > are one of the things controlled by the custom PMIC OpRegion.
+> > 
+> > Commit 4d9ed62ab142 ("mfd: intel_soc_pmic: Export separate mfd-cell
+> > configs for BYT and CHT") has disabled the intel_pmic_crc.c code for CHT
+> > devices by removing the "crystal_cove_pmic" MFD cell on CHT devices.
+> > 
+> > This commit renames the intel_pmic_crc.c driver and the cell to be
+> > prefixed with "byt" to indicate that this code is for BYT devices only.
+> > 
+> > This is a preparation patch for adding a separate PMIC OpRegion
+> > driver for the CHT variant of the Crystal Cove PMIC (sometimes called
+> > Crystal Cove Plus in Android kernel sources).
 > 
+> >  .../acpi/pmic/{intel_pmic_crc.c => intel_pmic_bytcrc.c}    | 4 ++--
+> >  drivers/mfd/intel_soc_pmic_crc.c                           | 2 +-
+> 
+> I would go with previously established pattern, i.e. intel_pmic_bytcc.c.
 
-The code below is fine, although same wondering about naming scheme for PWM /
-GPIO.
-
+That said you may use mine
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/mfd/intel_soc_pmic_crc.c | 3 +++
->  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/mfd/intel_soc_pmic_crc.c b/drivers/mfd/intel_soc_pmic_crc.c
-> index ab09b8225b76..429efa1f8e55 100644
-> --- a/drivers/mfd/intel_soc_pmic_crc.c
-> +++ b/drivers/mfd/intel_soc_pmic_crc.c
-> @@ -88,6 +88,9 @@ static struct mfd_cell crystal_cove_cht_dev[] = {
->  		.num_resources = ARRAY_SIZE(gpio_resources),
->  		.resources = gpio_resources,
->  	},
-> +	{
-> +		.name = "cht_crystal_cove_pmic",
-> +	},
->  	{
->  		.name = "crystal_cove_pwm",
->  	},
+> > +++ b/drivers/mfd/intel_soc_pmic_crc.c
+> > @@ -75,7 +75,7 @@ static struct mfd_cell crystal_cove_byt_dev[] = {
+> >  		.resources = gpio_resources,
+> >  	},
+> >  	{
+> > -		.name = "crystal_cove_pmic",
+> > +		.name = "byt_crystal_cove_pmic",
+> >  	},
+> >  	{
+> >  		.name = "crystal_cove_pwm",
+> 
+> I'm wondering shouldn't we rename the PWM and GPIO for the sake of consistency?
+> Yes, if a driver is used on both CHT and BYT, let it provide two names.
+> 
 > -- 
-> 2.23.0
+> With Best Regards,
+> Andy Shevchenko
+> 
 > 
 
 -- 
