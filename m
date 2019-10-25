@@ -2,65 +2,143 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 320E3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B36CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAC6222BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2275222C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 14:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572012037;
-	bh=gqcWKa5cLQe90gcPgIFByj9D6hhMPg+LCDLFYQP5lGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2h+8VjnNaZdr0l13bkBFGbkAGBvjOnba3D3MXOJkOCL8Kb62xLJQsnw8Xk0q1m8ao
-	 XS4oaxyzYx2qIGGmYTnoCXuC+erlgHbR6EcbZ/4BY83WuQs8VElci2w+EnUoTYGCQH
-	 OQmRKE8LQeOca3Rjj8FsqSIsHZdCQqbCTkSbm8Hg=
+	s=default; t=1572012040;
+	bh=AytjIchaBIr4sz3xICcQ1VCmjTNHf8mIZKvLSnsnlns=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pIXpIJseXfnyQkUsfu3KBZlHO4KLWhLmwvwPH/trXCs8uUiEiknO1At5BtPBR+S7M
+	 SayQ3M/N7Z5Uh/yOND7d16S6s/nXTQWrElPlUdIGxxXn6EDEbgtoafx0wTeQyD46ZG
+	 8erapo7KtbMdKaLQdC9H+aLTltJo4Exy6X+DXS20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394859AbfJYOAf (ORCPT
+        id S2394870AbfJYOAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 10:00:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37586 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393874AbfJYOAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 10:00:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C6889B97F;
-        Fri, 25 Oct 2019 14:00:29 +0000 (UTC)
-Date:   Fri, 25 Oct 2019 16:00:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     snazy@snazy.de
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-Message-ID: <20191025140029.GL17610@dhcp22.suse.cz>
-References: <20191025092143.GE658@dhcp22.suse.cz>
- <70393308155182714dcb7485fdd6025c1fa59421.camel@gmx.de>
- <20191025114633.GE17610@dhcp22.suse.cz>
- <d740f26ea94f9f1c2fc0530c1ea944f8e59aad85.camel@gmx.de>
- <20191025120505.GG17610@dhcp22.suse.cz>
- <20191025121104.GH17610@dhcp22.suse.cz>
- <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
- <20191025132700.GJ17610@dhcp22.suse.cz>
- <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
- <20191025135749.GK17610@dhcp22.suse.cz>
+        Fri, 25 Oct 2019 10:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505638AbfJYN6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:58:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B586321E6F;
+        Fri, 25 Oct 2019 13:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572011919;
+        bh=AytjIchaBIr4sz3xICcQ1VCmjTNHf8mIZKvLSnsnlns=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yrR3e/jucl5Gdia5Vnnf+wGfnnnkAn5Voen9E7aOcMcVN0U316v9I9fG3IksFrZPN
+         QBhIoRZXvmk6lSjHDuYTUhWDOd410lNGe7IlclSW42Gr+/HlCdS+PtlBvvwdxnAKnb
+         0WuTSZ+USaxsnsJmDL6LU+0fYljKeYUgKWLNO+0c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.9 20/20] bdi: Do not use freezable workqueue
+Date:   Fri, 25 Oct 2019 09:58:00 -0400
+Message-Id: <20191025135801.25739-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191025135801.25739-1-sashal@kernel.org>
+References: <20191025135801.25739-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025135749.GK17610@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And one more thing. Considering that you are able to reproduce and you
-have a working kernel, could you try to bisect this?
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+[ Upstream commit a2b90f11217790ec0964ba9c93a4abb369758c26 ]
+
+A removable block device, such as NVMe or SSD connected over Thunderbolt
+can be hot-removed any time including when the system is suspended. When
+device is hot-removed during suspend and the system gets resumed, kernel
+first resumes devices and then thaws the userspace including freezable
+workqueues. What happens in that case is that the NVMe driver notices
+that the device is unplugged and removes it from the system. This ends
+up calling bdi_unregister() for the gendisk which then schedules
+wb_workfn() to be run one more time.
+
+However, since the bdi_wq is still frozen flush_delayed_work() call in
+wb_shutdown() blocks forever halting system resume process. User sees
+this as hang as nothing is happening anymore.
+
+Triggering sysrq-w reveals this:
+
+  Workqueue: nvme-wq nvme_remove_dead_ctrl_work [nvme]
+  Call Trace:
+   ? __schedule+0x2c5/0x630
+   ? wait_for_completion+0xa4/0x120
+   schedule+0x3e/0xc0
+   schedule_timeout+0x1c9/0x320
+   ? resched_curr+0x1f/0xd0
+   ? wait_for_completion+0xa4/0x120
+   wait_for_completion+0xc3/0x120
+   ? wake_up_q+0x60/0x60
+   __flush_work+0x131/0x1e0
+   ? flush_workqueue_prep_pwqs+0x130/0x130
+   bdi_unregister+0xb9/0x130
+   del_gendisk+0x2d2/0x2e0
+   nvme_ns_remove+0xed/0x110 [nvme_core]
+   nvme_remove_namespaces+0x96/0xd0 [nvme_core]
+   nvme_remove+0x5b/0x160 [nvme]
+   pci_device_remove+0x36/0x90
+   device_release_driver_internal+0xdf/0x1c0
+   nvme_remove_dead_ctrl_work+0x14/0x30 [nvme]
+   process_one_work+0x1c2/0x3f0
+   worker_thread+0x48/0x3e0
+   kthread+0x100/0x140
+   ? current_work+0x30/0x30
+   ? kthread_park+0x80/0x80
+   ret_from_fork+0x35/0x40
+
+This is not limited to NVMes so exactly same issue can be reproduced by
+hot-removing SSD (over Thunderbolt) while the system is suspended.
+
+Prevent this from happening by removing WQ_FREEZABLE from bdi_wq.
+
+Reported-by: AceLan Kao <acelan.kao@canonical.com>
+Link: https://marc.info/?l=linux-kernel&m=138695698516487
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=204385
+Link: https://lore.kernel.org/lkml/20191002122136.GD2819@lahna.fi.intel.com/#t
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/backing-dev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index 113b7d3170799..4e1809a2f3889 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -245,8 +245,8 @@ static int __init default_bdi_init(void)
+ {
+ 	int err;
+ 
+-	bdi_wq = alloc_workqueue("writeback", WQ_MEM_RECLAIM | WQ_FREEZABLE |
+-					      WQ_UNBOUND | WQ_SYSFS, 0);
++	bdi_wq = alloc_workqueue("writeback", WQ_MEM_RECLAIM | WQ_UNBOUND |
++				 WQ_SYSFS, 0);
+ 	if (!bdi_wq)
+ 		return -ENOMEM;
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
