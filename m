@@ -2,109 +2,74 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF65CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF1CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43CB21D71
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5D221929
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 10:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502574AbfJYKvJ (ORCPT
+        id S2502688AbfJYKx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 06:51:09 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:45981 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392198AbfJYKvJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 06:51:09 -0400
-Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mj831-1hlZxU1VH3-00fEqI; Fri, 25 Oct 2019 12:51:05 +0200
-Received: by mail-qk1-f181.google.com with SMTP id q70so1261022qke.12;
-        Fri, 25 Oct 2019 03:51:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAWA6fFViRcJqREnWWJ4XnLSnh9uc5TR3f3XkJRs4iop43nFUxmc
-        NGQ8ccT6lVNGOrvmjR3QEB2RQ+274bWdUrVtGAM=
-X-Google-Smtp-Source: APXvYqx2Oor6PcLHOX4Sy8TtHwX6a9dti7RuLVSJPm8RZ72aJo7WkeFnANJ7SePVIoWyJuP+ht+PknNC97FPJwMamtQ=
-X-Received: by 2002:a37:58d:: with SMTP id 135mr2252602qkf.394.1572000663226;
- Fri, 25 Oct 2019 03:51:03 -0700 (PDT)
+        Fri, 25 Oct 2019 06:53:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:54243 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2502594AbfJYKx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 06:53:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 03:53:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,228,1569308400"; 
+   d="scan'208";a="202576279"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 25 Oct 2019 03:53:57 -0700
+Received: from [10.125.252.238] (abudanko-mobl.ccr.corp.intel.com [10.125.252.238])
+        by linux.intel.com (Postfix) with ESMTP id A83995800FE;
+        Fri, 25 Oct 2019 03:53:54 -0700 (PDT)
+Subject: Re: [PATCH v5 0/4] perf/core: fix restoring of Intel LBR call stack
+ on a context switch
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <6fa20503-b5ad-16c7-260e-5243509176bc@linux.intel.com>
+ <20191025094630.GI4131@hirez.programming.kicks-ass.net>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <9ce22287-3bba-a95f-abe4-ba823af1dda0@linux.intel.com>
+Date:   Fri, 25 Oct 2019 13:53:53 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191018154052.1276506-1-arnd@arndb.de> <87v9slg9k5.fsf@belgarion.home>
- <CAK8P3a1JDtHsOW=iaxEycbJ4TBkR9MHUyDMeJnwxCtb=tefnBQ@mail.gmail.com>
- <CAK8P3a0376Anmoc8VWXcEBg+z2B+1vcxJoywYYROBQNxpVmZuA@mail.gmail.com>
- <87r239f2g8.fsf@belgarion.home> <87eez1rhqo.fsf@belgarion.home>
-In-Reply-To: <87eez1rhqo.fsf@belgarion.home>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 25 Oct 2019 12:50:46 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0L3_Hs48X5bh0UD2L_AaxLcUOQ_YS7ZpSd5W-8xcgAog@mail.gmail.com>
-Message-ID: <CAK8P3a0L3_Hs48X5bh0UD2L_AaxLcUOQ_YS7ZpSd5W-8xcgAog@mail.gmail.com>
-Subject: Re: [PATCH 00/46] ARM: pxa: towards multiplatform support
-To:     Robert Jarzmik <robert.jarzmik@free.fr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        IDE-ML <linux-ide@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        linux-leds@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:bBFl5bX9BqXoDP8OrdvcfGlrYLRY5B1GUhWZJswEMUsHfqL7ZPS
- wNKiBQqI9J4lWaKwMKWpeuRP8Q7gNW1Huux28MpdQbLQHsG8keYqULuxokAyz8cXvUuDQNr
- Y4OmkYoxdwxMOhV/OoYmkmbTVaeZ1jGsBbuhOyjPDaixMEDPYwwWYKYrS8WnrToePTYktVe
- isgPlih4bJp7b5na0cbDg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+amIHTsvEsM=:wxrSdcXp8fCl0WvOtbji8T
- eiMYbEG4cst6pRKOmo34ky4eqFrbI9L+1xHjnaiY+H7o5c4AvretiveY6HsD/8Q4GCTo+d4EF
- 6KHQlLX/3bCOUITQRQRqZXMcO8+d/5yBWQ4PLvO/++od9zW+FSeEXlBspQqZItGbvkewyaSgM
- V2RuqHgZsRHubh1xP1lsxIE2YLtSonVpvh2iNYDMLLKocefeURCWHULZHpLKqb637/1ILOFmh
- oY55eIQP5dCvyMde+02h4Sc41A/coK0VSMYnmjZbIdabokN8wJmd5BpuqN52whvBKMyQB7Drx
- +rJNk043np+L19CHym/KU1GD0+Jh/hYMmdbAesunIc/XFNfshrJppNPggA2jYuD+WHt0GoW0h
- vIRvBMeg6dWxtHSt5iN2OWe8YRwmJozAghx6eaxs/+mtKjhlwdb8pg8wgjMJTT4UVZPNck6ai
- ETIxAKLIg48ERY2PKPCwjHZWIF59mr9ihwrIm7/PoRVzhB2DgY1bXT+r0Xf1ifNLX95PYOB5M
- zAGClTyzoyjzTzKwNgwcV4nTh4Je81xIc8FEG8D5S5n2odlouWYtMUHvQkobX+2UgP+dk+Rdq
- Yf9piYlNy1SKL1OHQdycWsLTFQ3jMWeWKCJRb5PSzWdnYIqeBZU1jM0z+jjUqPYhNrA/3/oIY
- 6RHI26+ovszi6E37l9e4YOUqQLgkyayuNJDsaLxUKkKdzoog8Z1n6LZPKD/u4+MRIXZCKCrGx
- pWVDvdMh6MitMHpzAZXm52z3k1A8T63a1CoAVUlqw1z/kLR1+hrsr4BnhFtpR4HNXe8FSWIge
- SE0Vg8VrS1FRrUX3m8HXrRagLwmAmfEk5PCq5WPOx/NjbgPEUnw5nqQ9HVCS9jOGnKIZvBw5Z
- /NMhJY+Zi7eyYSpPjOOA==
+In-Reply-To: <20191025094630.GI4131@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 10:50 PM Robert Jarzmik <robert.jarzmik@free.fr> wrote:
-> Robert Jarzmik <robert.jarzmik@free.fr> writes:
-> >>> I've now pushed it to
-> >>>
-> >>> git://git.kernel.org:/pub/scm/linux/kernel/git/arnd/playground.git
-> >>> pxa-multiplatform
-> >>
-> >> Sorry for the duplication, I had some problems with email configuration
-> >> so my reply got rejected, let's see if it goes through this time.
-> > I have it now, thanks, I'll test and review as soon as I can.
-> >
-> > Cheers.
->
-> Ok Arnd, I have a preliminary test report.
->
-> I tested only the pxa27x (mioa701), which happens to have a lot of drivers, and
-> only the platform_data flavor (ie. no device-tree test yet). Apart a panic in
-> the regulator framework (which is a known issue [1]), your version seems
-> equivalent so far in terms of runtime to Linux 5.4-rc3).
->
-> The sound and RTC seem broken, but not by you ...
->
-> I'll continue the test onwards for pxa3xx and pxa2xx when I'll gather a bit of
-> time, and try to review as well the mach-pxa part.
+On 25.10.2019 12:46, Peter Zijlstra wrote:
+> On Fri, Oct 25, 2019 at 11:35:46AM +0300, Alexey Budankov wrote:
+> 
+> Is this the exact same version again? ISTR already having seen (and
+> picked up for testing) a v5.
 
-Awesome, thanks for testing so far and for the report!
+Observed the v5 committed to kernel/git/peterz/queue.git perf/core.
+Thanks for you support!
 
-        Arnd
+~Alexey
