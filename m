@@ -2,85 +2,142 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB34CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B648FCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF1720659
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572040147;
-	bh=9OocIlW3MdTggjKr6xrZoWrr6c8j+hbrcGG725i/W60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z39JeqzKu1ZW63cONaOMnlKJQGVkrYZ+yPCq/1Chw5XY8taHHUY3LLcFOJtYRGd0D
-	 LSCOR5pi6nZNFTu7+Zhi3NbCaZu+2TGIKpDY5ERXcnX6gxyrJ5wxqgi/v1ND+qoLEX
-	 ji65HrcZ67LWrZdt4jw4whuQS6Tt9BFG3tRRl8Yw=
+	by mail.kernel.org (Postfix) with ESMTP id 988A421D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 21:52:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Nqz1vrOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfJYVtG (ORCPT
+        id S1726217AbfJYVw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 17:49:06 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38913 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfJYVtF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 17:49:05 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v138so2577503oif.6;
-        Fri, 25 Oct 2019 14:49:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wGm3OSExE/97BmM29xjH36/abWZ9nPYDMo8RkVIn7DU=;
-        b=ISKp1hthhRab8G1/BzjmgcJCtX2BtVilxMqR/GAIdLmwh8PuNwXtbk5XC5KwSZWhO6
-         a0pU3jvTPSFQCBKO8Fsz+R8oqem9R4JsvriLiO1abdJ9xO7pl5/2te7H6vEmiQ5dV4iU
-         32/eu0DWGnl7JMvtUD4JnE5ZsUAcGOvGSDqI5uw+eqWedniSEMgIpEHZUzvljwuYaxL8
-         U4f21bXknCiJr0aocYIxj8x+sbU9TYqXfCo+9O11Yi56tBIJSRgFo/1T5EwXeSFqScps
-         cwoPB44//bZ7u5+/4I9FBfMUBbbAlkRx4aursLyRMfUfWlZwy0xKFhGbcJns6Ovs5Pr0
-         dTZQ==
-X-Gm-Message-State: APjAAAVKPO7Yy1y6MrZ7iSO9mjF1GE0nIY3vcJxgUgfHiufiM8mxh6ys
-        yAl6l3/SQb6roQikEQDjmA==
-X-Google-Smtp-Source: APXvYqwLbnmVyTEOV9qgJJFVyWAeKISdHnloLOn/3BypbMbjV29PEr1S6ftViDUyEbH+5o61CqsHSw==
-X-Received: by 2002:a05:6808:7d9:: with SMTP id f25mr4933670oij.69.1572040144629;
-        Fri, 25 Oct 2019 14:49:04 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 34sm1139469otf.55.2019.10.25.14.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 14:49:03 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 16:49:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, mturquette@baylibre.com,
-        sboyd@kernel.org, mark.rutland@arm.com, paul@crapouillou.net
-Subject: Re: [PATCH 1/2 v2] dt-bindings: clock: Add X1000 bindings.
-Message-ID: <20191025214903.GA14052@bogus>
-References: <1571421006-12771-1-git-send-email-zhouyanjie@zoho.com>
- <1571763389-43443-1-git-send-email-zhouyanjie@zoho.com>
- <1571763389-43443-2-git-send-email-zhouyanjie@zoho.com>
+        Fri, 25 Oct 2019 17:52:26 -0400
+Received: from mail-eopbgr1300123.outbound.protection.outlook.com ([40.107.130.123]:40384
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725801AbfJYVw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 17:52:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nR+lVvnZeD6OPFeOOr6oOJjCgD07rFzmDK/TmVfjC4xtX9Fdf6nnu41uchMiuYMawKWQjxOa5bXD1GH/gcuBAV3rLdGrWQxhk0sS/0LiAva1eNQkLxfhLffkU8HdHTrNqPJ3q7X8TXfSfBmrxzj+PdPoV+FDid4z3YQ16H/belm58XJj6gutrizQbtKZI57ZdSHf9lsiehdvBtjBm/stYUsnWGQOMgI23YuhAXErfV4BGplSg7LUpZo4SqJE+mhpKRpXnT4oSMq1ZKRcKL/bh/qz8RXJ5l5oknX0FDMqLLGOQZcgLdUe/3fhNz02NwVTgfChDfwHa5Twikc+xNtlHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a2YkTlNHjrUM0tNcfPKiDRKZEqFrkHlJG4nbc+ydIjY=;
+ b=EdjQEAW1vJKTJkQ3fgr3govBJpOOxDvoWSeoiRe/t4ESrDiB+pMwOXdXsCIhgy2OpbIexq+leC37rIqJKQRt2jQ12yE+zD+YsJIPYpHxDlWq2vBK2ghCRTVRK137nMatQ0l7MDcquv1E2pwmdgysxxUtfrpCYhXSfLaQw/iNzvCaKS4c/1GlPALpgxwX2rL8ywcTfJX0x8m6E8uNEwz5AJBEXovz6onkvCl4K7FExDwWWH2D258SLSc20ZSsTVnyQPD13BrA3ePjL/+QJTL+92O67EeNA62UkLiqRdmnVzkjwpIh6Z2O7kv1b39ifjSGInw/cd7GukeQps18LufLhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a2YkTlNHjrUM0tNcfPKiDRKZEqFrkHlJG4nbc+ydIjY=;
+ b=Nqz1vrOfzHlwdyg+QSWH2RdMBZ2kINgvUm2pt9au01P7KFfF/LWOCSUuvh+JlaOkzQL6TX57ucvcLQ2RjD3WAW/0HyUHZBhWMHrkGLt4Zoecy2cRmYnHOxPkOk064dcub6TE8C2ERVyPud7czNH6z65tgcCBP5D7mgxyvgWnRjw=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0123.APCP153.PROD.OUTLOOK.COM (10.170.188.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.9; Fri, 25 Oct 2019 21:52:16 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::69f1:c9:209a:1809]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::69f1:c9:209a:1809%2]) with mapi id 15.20.2408.008; Fri, 25 Oct 2019
+ 21:52:16 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     D Scott Phillips <d.scott.phillips@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        stuart hayes <stuart.w.hayes@gmail.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+Thread-Topic: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+Thread-Index: AQHVi112Ij26P7t3F0qnvWOXEr+vYKdr5XIg
+Date:   Fri, 25 Oct 2019 21:52:16 +0000
+Message-ID: <PU1P153MB0169DBCFF86599EEE2938A22BF650@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20191025175553.63271-1-d.scott.phillips@intel.com>
+In-Reply-To: <20191025175553.63271-1-d.scott.phillips@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-10-25T21:52:14.8429239Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=622db8f2-e53b-4511-bcd8-c76260883bbb;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:f5b6:b399:241c:9e4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c6810aa6-489a-42e5-9833-08d759959a36
+x-ms-traffictypediagnostic: PU1P153MB0123:
+x-microsoft-antispam-prvs: <PU1P153MB0123C44927B7E9346C8E287DBF650@PU1P153MB0123.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02015246A9
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(86362001)(25786009)(6246003)(7736002)(305945005)(476003)(81156014)(229853002)(8676002)(4326008)(14454004)(71200400001)(81166006)(110136005)(74316002)(71190400001)(33656002)(2906002)(6116002)(5660300002)(102836004)(66446008)(64756008)(66556008)(66476007)(66946007)(8936002)(76116006)(52536014)(478600001)(55016002)(10090500001)(256004)(53546011)(186003)(46003)(9686003)(76176011)(2501003)(6436002)(22452003)(446003)(316002)(486006)(11346002)(10290500003)(7696005)(6506007)(8990500004)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0123;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0lKhZRkAZbn9NYl6KdG30bx7Al3/3yi91qhV+Ztr1nSbkSCrPs/P+JeZzUcHn5rjkwa4iNN5/a3vetTaOANr2PAJ7XAckER8FnHIb/nTRL12RXLCxWz6SaDJnmn+rvCZ6V3WQgT82Uvn2HPgifvkA+lT1zTmA5p2QdkRiVdel+43C5oANOJXCSQtBZJ3WigjSqoRP+iHDCPC3P1EcWg1bE+3GF3qGG5MvULfVqOoSaxn6FFHnUZeFf7rJ06vA81+Pvpfcakwccv1E/MaTKKd458QKC5OOiWu+K7Gj9tDjlRD7ovubQqyrLTP6H9CKABgNC1abL1/gkF5r5Gc4+p/eLxJqLp/LSZ7tfWYPXReW1qNq42lI9WzZq655v+L312yn4cCHmcc1j2gourP+rvxBxaAG/XVK8j+tCO8sITawtxkPty8FItheIGcz5hQIeb4
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1571763389-43443-2-git-send-email-zhouyanjie@zoho.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6810aa6-489a-42e5-9833-08d759959a36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2019 21:52:16.4784
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lDlhOMl5xFad251j6s76NLzV72Mc+iipcDriGoiuNCTJAVzHaE8I00bfcN0oO8QntzBRRofwIF3fHRGy8S93bQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019 00:56:28 +0800, Zhou Yanjie wrote:
-> Add the clock bindings for the X1000 Soc from Ingenic.
-> 
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+> From: D Scott Phillips <d.scott.phillips@intel.com>
+> Sent: Friday, October 25, 2019 10:56 AM
+> To: Dan Williams <dan.j.williams@intel.com>; David Howells
+> <dhowells@redhat.com>; Dexuan Cui <decui@microsoft.com>; Jerry
+> Hoemann <jerry.hoemann@hpe.com>; stuart hayes
+> <stuart.w.hayes@gmail.com>; Toshi Kani <toshi.kani@hpe.com>; Vishal Verma
+> <vishal.l.verma@intel.com>; linux-nvdimm@lists.01.org
+> Cc: linux-kernel@vger.kernel.org
+> Subject: [PATCH] uapi: Add the BSD-2-Clause license to ndctl.h
+>=20
+> Allow ndctl.h to be licensed with BSD-2-Clause so that other
+> operating systems can provide the same user level interface.
 > ---
->  .../devicetree/bindings/clock/ingenic,cgu.txt      |  1 +
->  include/dt-bindings/clock/x1000-cgu.h              | 41 ++++++++++++++++++++++
->  2 files changed, 42 insertions(+)
->  create mode 100644 include/dt-bindings/clock/x1000-cgu.h
-> 
+>=20
+> I've been working on nvdimm support in FreeBSD and would like to
+> offer the same ndctl API there to ease porting of application
+> code. Here I'm proposing to add the BSD-2-Clause license to this
+> header file, so that it can later be copied into FreeBSD.
+>=20
+> I believe that all the authors of changes to this file (in the To:
+> list) would need to agree to this change before it could be
+> accepted, so any signed-off-by is intentionally ommited for now.
+> Thanks,
+>=20
+> Scott
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Scott,
+I agree to make the change if Dan and Vishal also agree. :-)
+
+Thanks,
+-- Dexuan
