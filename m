@@ -6,69 +6,67 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B96CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B0DCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA6320684
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E06E21D7F
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="h5cwpQZ7"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0dJBpJic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409431AbfJYPBV (ORCPT
+        id S2409455AbfJYPBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:01:21 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34313 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407863AbfJYPBV (ORCPT
+        Fri, 25 Oct 2019 11:01:39 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45523 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407863AbfJYPBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:01:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id q1so2792591ion.1
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:01:20 -0700 (PDT)
+        Fri, 25 Oct 2019 11:01:38 -0400
+Received: by mail-il1-f195.google.com with SMTP id b12so201676ilf.12
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:01:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=kj0Q87zyB0a/7QLfzAgAycchwCNPhaMuUvYcmDPD4qY=;
-        b=h5cwpQZ7+vwwuWTD2LhRfp4+b25WtDQ3PO3zK3Rx4C4yVWrXsEpkRK5/lb8RRk3teX
-         wpFIRU+ig4CCHgVnZ9ugIGM8XOjqHJqV+B45z7uVwEVjuN5HMzuoMqUvFvGdM9APyisr
-         YPhkU44gzZrQwd71VBJyqkqGgpVtAcZU154FLQd/wnHiGEVtjH3yhgrnT9XWMszT31uU
-         gV9JmWtgQLJ5oHDfLJr58xBU5CWdnmTjt5MBNUwRX7UPMtikYHXtoyDY/hlTx+0iD0q0
-         +i38lntd6U8xUr2aJO5kv94smH9mhACfLrotwNhx8F+JuoeEe7kwLIyeJfR/mdDpYv1r
-         XQTA==
+        bh=7GmtzZy7croPEQDptRcTsxKybbnF94HZTydxe9zCc/k=;
+        b=0dJBpJic3MXgTSdJXNYetPcb4q4ONYJKfPNQJoRzstIdGh4T9JwqtSh69qPj8r1Ubx
+         gZRwFpyritBdDGVxrYI/jhtkM4PkUXE3vq6P8GhebJnJpWTtf6bWXOMGB1wJKj1D3d13
+         XeuWZPfJGgQq8l3dH9OdfzIiet35lkNULVAYJL/OoXZX1DcBaINdR+wgTxMvjWdrVST2
+         Mth2O2/Rz2W7OiW2siRZrqhaZYbmVtfSYaD1//OJJma1IGs6qO+Thpc0XSE/Pg6cfti7
+         pGY0HlW93NGC+qBm30QJmW4ZFOVNvGQLpHbYUG5XuvoOMH8JRzO51kBERmObgyy0nfLF
+         mSAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=kj0Q87zyB0a/7QLfzAgAycchwCNPhaMuUvYcmDPD4qY=;
-        b=Clc8IYwy4ANj6pDO45rCkN/HYjz/1bESy4uNfsauhNzpW7QSwOauc3b+7yd7ffKkoy
-         74zx6H83eYQqxMP6QrdWp/aO84f3PGQ5OhAVuJVwg/bo8Z0sS0kNMnL9R+1S+OBJ4Vbs
-         nxvpMN9Ey18S04x20nDcGz1qMfwdcjgxsX87d8Y6NamhRodBd8lC2JndyNwDSFrtUtil
-         OHYGjT5vHzLM5Y7nPQjrN5ofUHR2YY7Rnrs1iLHJCITt9123CI4h2TsG3IE1wyYUUmuQ
-         CbNtQSTHKCqg/GlkNhjlPP7LRJvv2oKYZ0LBFCT05uGoSV9ZbuK5ufLIOVOVll5I8/4a
-         O8wg==
-X-Gm-Message-State: APjAAAXIB3s+r4IXNYv/Fq5Mx85E4rEDhf/ZNWRjYu3p3KasP/moC+kO
-        H0toNzTAp02Fz6OQ47l3WFxhj/fUEKb09g==
-X-Google-Smtp-Source: APXvYqzYQjMNPzo4l7Ej75h/9qnt7jeE0SNfKqIQDA0+djWIhVKQuQeelvR2jbFTEKqENGMdOXNKCA==
-X-Received: by 2002:a6b:c809:: with SMTP id y9mr4281840iof.232.1572015679139;
-        Fri, 25 Oct 2019 08:01:19 -0700 (PDT)
+        bh=7GmtzZy7croPEQDptRcTsxKybbnF94HZTydxe9zCc/k=;
+        b=iI9b9X1H12oTTaA9NnPrBgLJ6yakLrtI6Cnev6vqAS7+mGY5SuQYG9FvsRzTNJOMOh
+         by4pkGr8O59rh3pTPeWb7+eGh1bTxl1IHdXzDimoK5ZMFrjGxxEJPGxHDbVYkxWiG2q8
+         UQsqbdqwYep7WJ00wNN6QgX+AqeCxderHV43oPgjV7CYH2XKIFYET+uuLNEYWaHY/E4e
+         ivcD+98f2G1OuJxAJZD+4GG+xZM7V25sm+DQp4pLLMPb/PkPnyTGSrcjnwATT2UN9OlQ
+         hT4KmupKNPGO5DeiW8ZrNbdDcSvrR8hUYFlx3NY4rX+Q+BNa5Fh+Z8JHp2yrif1fmYV7
+         tXRA==
+X-Gm-Message-State: APjAAAUOFZqBYLE1egzYRXzJwB8dRLj2vPJrKyK/zj2oeVqpsEbvZmJv
+        5dL5sQ4jaJoNe2J02QSYyRlIaU9X6XnMXw==
+X-Google-Smtp-Source: APXvYqzlQ4CvNTlup/i4cwSXZVQKIgsf3HZXSuj/3e5HVWCQfg/08jMlWPGiL0FlU64xPBCkwfEk+A==
+X-Received: by 2002:a92:8dd9:: with SMTP id w86mr4360524ill.277.1572015697073;
+        Fri, 25 Oct 2019 08:01:37 -0700 (PDT)
 Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id n123sm287754iod.62.2019.10.25.08.01.17
+        by smtp.gmail.com with ESMTPSA id q17sm265612iob.20.2019.10.25.08.01.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 08:01:17 -0700 (PDT)
-Subject: Re: [PATCH 2/3] io_uring: Fix broken links with offloading
-To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Fri, 25 Oct 2019 08:01:35 -0700 (PDT)
+Subject: Re: [PATCH 0/3][for-linus] Fix bunch of bugs in io_uring
+To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
         linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <cover.1571991701.git.asml.silence@gmail.com>
- <bd0eaa7729e3b8b599a25167df0a4ee583da69cc.1571991701.git.asml.silence@gmail.com>
- <dd88f5be-930b-53e5-c3b6-12927d6634b1@gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0e6bdba3-d673-ed49-15da-51ac93af7a28@kernel.dk>
-Date:   Fri, 25 Oct 2019 09:01:16 -0600
+Message-ID: <b095f79a-9699-fcc2-83d3-434febcaaf14@kernel.dk>
+Date:   Fri, 25 Oct 2019 09:01:34 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <dd88f5be-930b-53e5-c3b6-12927d6634b1@gmail.com>
+In-Reply-To: <cover.1571991701.git.asml.silence@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -77,29 +75,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 3:36 AM, Pavel Begunkov wrote:
-> On 25/10/2019 12:31, Pavel Begunkov (Silence) wrote:
->> From: Pavel Begunkov <asml.silence@gmail.com>
->>
->> io_sq_thread() processes sqes by 8 without considering links. As a
->> result, links will be randomely subdivided.
->>
->> The easiest way to fix it is to call io_get_sqring() inside
->> io_submit_sqes() as do io_ring_submit().
->>
->> Downsides:
->> 1. This removes optimisation of not grabbing mm_struct for fixed files
->> 2. It submitting all sqes in one go, without finer-grained sheduling
->> with cq processing.
->>
-> Is this logic with not-grabbing mm and fixed files critical?
-> I want to put it back later after some cleanup.
+On 10/25/19 3:31 AM, Pavel Begunkov (Silence) wrote:
+> From: Pavel Begunkov <asml.silence@gmail.com>
+> 
+> The issues are mostly unrelated. The fixes are done with simplicity
+> and easiness to merge in mind. It may introduce a slight performance
+> regression, which I intend to address in following patches for-next.
+> 
+> Pavel Begunkov (3):
+>    io_uring: Fix corrupted user_data
+>    io_uring: Fix broken links with offloading
+>    io_uring: Fix race for sqes with userspace
+> 
+>   fs/io_uring.c | 67 ++++++++++++++++++++++++++++-----------------------
+>   1 file changed, 37 insertions(+), 30 deletions(-)
 
-Let's revisit that on top of the 5.5 branch of io_uring changes,
-as that is being reworked anyway. I'd say it's not super critical,
-as the hottest path should be polled IO with fixed buffers, and
-it won't really change that.
-
+These all look good, I'll apply them for 5.4. Thanks!
 
 -- 
 Jens Axboe
