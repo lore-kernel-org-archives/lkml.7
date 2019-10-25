@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03752CA9EBE
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03CBCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF214222BD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883C7222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 13:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572011744;
-	bh=jaoebFQ+mQjeTBDw9NyFsfRcNbaKuxfOprRtFceRTdE=;
+	s=default; t=1572011747;
+	bh=XjpNedrwZm6KtqHu3SS4Z9mz31dwRV9Q1vG0fT5cI7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ROYxeMlJz1cOvjyr8hIFDVUU4csIiyGmhVnrttHoHsk1CwMeYKa22TobQ7bTvQNg+
-	 sTDUwjCKPWBXujfRA/+OVlu9kNyqM7QuIqHApv0JRAL6qsc3rQaFISGPP4o+q2edKi
-	 DyBgYZxhti0bd0dHcbZX4jXJ9PsEDnxZjE+cWdNU=
+	b=omqbww+1OdIT27/T+ouw4dAfzDPYIAfqsAqB4XD2SwpkyNoH2IVlhceLoXh0naCbs
+	 OBVnmWlfV+D9Sma7SocIlwQuSrojZMfiQDO7iNq+jWJ9/xoekiLAwfW7j/bOC65cPG
+	 0zC+qVIcy3Xd+T/k4/T6/8wTILbM6LzeuUPFRD8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632753AbfJYNzn (ORCPT
+        id S2505143AbfJYNzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 09:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49566 "EHLO mail.kernel.org"
+        Fri, 25 Oct 2019 09:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505113AbfJYNzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2505121AbfJYNzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 25 Oct 2019 09:55:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3CC321D82;
-        Fri, 25 Oct 2019 13:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D928222C4;
+        Fri, 25 Oct 2019 13:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572011735;
-        bh=jaoebFQ+mQjeTBDw9NyFsfRcNbaKuxfOprRtFceRTdE=;
+        s=default; t=1572011736;
+        bh=XjpNedrwZm6KtqHu3SS4Z9mz31dwRV9Q1vG0fT5cI7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f+3TLgx3By4BpIl6Mjjfdsw5dEDzv+VPV4WAxcvMVhR8YOzZNzDll6HKt3/AZ2APi
-         GkdsE2KEQXTtmy+PyAVXz2CKs4B4AHCMTQ76UjiXX0kr00QUqtqM5RDJ3t/NppCcSM
-         TX0PYzjuGWTDO9kCsu8YGNgCAwXX4A3TwsePpHv8=
+        b=g+06tVg8qtEvGaobNrvB6aQuPinvMrBur0gt91D/UmjnIqIvMi3j2iAHhWXiG13GS
+         LCLjbDRV0a8dIf57g2ju/mGlt0lpG/zOTmuIo3c69CbKtJ7tOY+W+Iyw2ImJGdGC8d
+         zewv9umZZ7kSKMfpaRk57Kd3+VAs3UyTyPoEl+xs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 17/33] usb: typec: fusb302: Call fusb302_debugfs_init earlier
-Date:   Fri, 25 Oct 2019 09:54:49 -0400
-Message-Id: <20191025135505.24762-17-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.3 18/33] f2fs: fix to avoid discard command leak
+Date:   Fri, 25 Oct 2019 09:54:50 -0400
+Message-Id: <20191025135505.24762-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191025135505.24762-1-sashal@kernel.org>
 References: <20191025135505.24762-1-sashal@kernel.org>
@@ -61,80 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 1e296b5be40d309a1585c14bc55da6ff6a29ecf0 ]
+[ Upstream commit 04f9287ab395a5a279db44fb39de69b23640abb9 ]
 
-tcpm_register_port() will call some of the fusb302 code's callbacks
-wich in turn will call fusb302_log(). So we need to call
-fusb302_debugfs_init() before we call tcpm_register_port().
+ =============================================================================
+ BUG discard_cmd (Tainted: G    B      OE  ): Objects remaining in discard_cmd on __kmem_cache_shutdown()
+ -----------------------------------------------------------------------------
 
-This fixes the following warning, which was caused by the logbuffer_lock
-not yet being initialized (which is done by fusb302_debugfs_init):
-
- DEBUG_LOCKS_WARN_ON(lock->magic != lock)
- WARNING: CPU: 0 PID: 1306 at kernel/locking/mutex.c:912 __mutex_lock+0x978/0x9a0
- Modules linked in: fusb302(+) tcpm pi3usb30532 typec bq24190_charger snd_soc_sst_cht_bsw_rt5645 mei_hdcp dwc3 intel_rapl_msr udc_core ulpi gpio_keys intel_powerclamp coretemp kvm_intel brcmfmac kvm brcmutil joydev cfg80211 wdat_wdt irqbypass pcspkr intel_cstate extcon_intel_cht_wc i2c_cht_wc(E) snd_intel_sst_acpi snd_intel_sst_core snd_soc_rt5645 snd_soc_sst_atom_hifi2_platform snd_soc_acpi_intel_match snd_soc_rl6231 snd_soc_acpi intel_xhci_usb_role_switch roles hci_uart snd_soc_core btqca mei_txe btrtl processor_thermal_device mei snd_hdmi_lpe_audio lpc_ich snd_compress btbcm intel_rapl_common ac97_bus dwc3_pci snd_pcm_dmaengine intel_soc_dts_iosf btintel snd_seq bluetooth snd_seq_device snd_pcm intel_cht_int33fe_musb snd_timer intel_cht_int33fe_typec intel_hid intel_cht_int33fe_common sparse_keymap snd ecdh_generic goodix rfkill soundcore ecc spi_pxa2xx_platform max17042_battery dw_dmac int3406_thermal dptf_power acpi_pad soc_button_array int3400_thermal int3403_thermal
-  gpd_pocket_fan intel_int0002_vgpio int340x_thermal_zone acpi_thermal_rel dm_crypt mmc_block i915 crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel i2c_algo_bit drm_kms_helper drm video sdhci_acpi sdhci mmc_core pwm_lpss_platform pwm_lpss i2c_dev
- CPU: 0 PID: 1306 Comm: systemd-udevd Tainted: G            E     5.3.0-rc4+ #83
- Hardware name: Default string Default string/Default string, BIOS 5.11 06/28/2017
- RIP: 0010:__mutex_lock+0x978/0x9a0
- Code: c0 0f 84 26 f7 ff ff 44 8b 05 24 25 c8 00 45 85 c0 0f 85 16 f7 ff ff 48 c7 c6 da 55 2f ae 48 c7 c7 98 8c 2d ae e8 a0 f9 5c ff <0f> 0b e9 fc f6 ff ff 4c 89 f0 4d 89 fe 49 89 c7 e9 cf fa ff ff e8
- RSP: 0018:ffffb7a8c0523800 EFLAGS: 00010286
- RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
- RDX: 0000000000000002 RSI: 0000000000000001 RDI: 0000000000000246
- RBP: ffffb7a8c05238c0 R08: 0000000000000000 R09: 0000000000000000
- R10: ffffb7a8c0523648 R11: 0000000000000030 R12: 0000000000000000
- R13: ffffb7a8c0523990 R14: ffff9bf22f70c028 R15: ffff9bf22f70c360
- FS:  00007f39ca234940(0000) GS:ffff9bf237400000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007f1f108481a0 CR3: 0000000271f28000 CR4: 00000000001006f0
+ INFO: Slab 0xffffe1ac481d22c0 objects=36 used=2 fp=0xffff936b4748bf50 flags=0x2ffff0000000100
  Call Trace:
-  ? find_held_lock+0x39/0x90
-  ? _fusb302_log+0x81/0x1d0 [fusb302]
-  ? vsnprintf+0x3aa/0x4f0
-  ? _fusb302_log+0x81/0x1d0 [fusb302]
-  _fusb302_log+0x81/0x1d0 [fusb302]
- ...
+  dump_stack+0x63/0x87
+  slab_err+0xa1/0xb0
+  __kmem_cache_shutdown+0x183/0x390
+  shutdown_cache+0x14/0x110
+  kmem_cache_destroy+0x195/0x1c0
+  f2fs_destroy_segment_manager_caches+0x21/0x40 [f2fs]
+  exit_f2fs_fs+0x35/0x641 [f2fs]
+  SyS_delete_module+0x155/0x230
+  ? vtime_user_exit+0x29/0x70
+  do_syscall_64+0x6e/0x160
+  entry_SYSCALL64_slow_path+0x25/0x25
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20190817184340.64086-3-hdegoede@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ INFO: Object 0xffff936b4748b000 @offset=0
+ INFO: Object 0xffff936b4748b070 @offset=112
+ kmem_cache_destroy discard_cmd: Slab cache still has objects
+ Call Trace:
+  dump_stack+0x63/0x87
+  kmem_cache_destroy+0x1b4/0x1c0
+  f2fs_destroy_segment_manager_caches+0x21/0x40 [f2fs]
+  exit_f2fs_fs+0x35/0x641 [f2fs]
+  SyS_delete_module+0x155/0x230
+  do_syscall_64+0x6e/0x160
+  entry_SYSCALL64_slow_path+0x25/0x25
+
+Recovery can cache discard commands, so in error path of fill_super(),
+we need give a chance to handle them, otherwise it will lead to leak
+of discard_cmd slab cache.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/tcpm/fusb302.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/segment.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
-index c524088246ee3..2030ff8541783 100644
---- a/drivers/usb/typec/tcpm/fusb302.c
-+++ b/drivers/usb/typec/tcpm/fusb302.c
-@@ -1753,6 +1753,7 @@ static int fusb302_probe(struct i2c_client *client,
- 	INIT_WORK(&chip->irq_work, fusb302_irq_work);
- 	INIT_DELAYED_WORK(&chip->bc_lvl_handler, fusb302_bc_lvl_handler_work);
- 	init_tcpc_dev(&chip->tcpc_dev);
-+	fusb302_debugfs_init(chip);
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index a661ac32e829e..a1ece0caad788 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2084,6 +2084,13 @@ static void destroy_discard_cmd_control(struct f2fs_sb_info *sbi)
  
- 	if (client->irq) {
- 		chip->gpio_int_n_irq = client->irq;
-@@ -1778,7 +1779,6 @@ static int fusb302_probe(struct i2c_client *client,
- 		goto tcpm_unregister_port;
- 	}
- 	enable_irq_wake(chip->gpio_int_n_irq);
--	fusb302_debugfs_init(chip);
- 	i2c_set_clientdata(client, chip);
+ 	f2fs_stop_discard_thread(sbi);
  
- 	return ret;
-@@ -1786,6 +1786,7 @@ static int fusb302_probe(struct i2c_client *client,
- tcpm_unregister_port:
- 	tcpm_unregister_port(chip->tcpm_port);
- destroy_workqueue:
-+	fusb302_debugfs_exit(chip);
- 	destroy_workqueue(chip->wq);
- 
- 	return ret;
++	/*
++	 * Recovery can cache discard commands, so in error path of
++	 * fill_super(), it needs to give a chance to handle them.
++	 */
++	if (unlikely(atomic_read(&dcc->discard_cmd_cnt)))
++		f2fs_issue_discard_timeout(sbi);
++
+ 	kvfree(dcc);
+ 	SM_I(sbi)->dcc_info = NULL;
+ }
 -- 
 2.20.1
 
