@@ -2,133 +2,76 @@ Return-Path: <SRS0=54v9=YS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F7BCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A053FCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB62621929
-	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="F+4Nk17K"
+	by mail.kernel.org (Postfix) with ESMTP id 76F7121D7B
+	for <linux-kernel@archiver.kernel.org>; Fri, 25 Oct 2019 15:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572017564;
+	bh=0nyovhNiQQVYIxIcfWTgd7etJWK5tEiahN5tt+ZftH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M9M0GP3AqYFEQ7iWgcx0ofUUHXuS+GSISr+Sk86DIptCYkLpcZWpAnKbM7uaqvH1/
+	 8zAwO5GkGhTXpotiot1YERr/jv9zrlBCvAngGv60G84AP/25j2byeYJF/bHaDIaXc8
+	 RCYQVfcEWVe5nVPKykPrUoMZnlqB6wGzSePnIVgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395408AbfJYPcT (ORCPT
+        id S2395425AbfJYPcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 11:32:19 -0400
-Received: from mail-io1-f47.google.com ([209.85.166.47]:36261 "EHLO
-        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731226AbfJYPcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 11:32:18 -0400
-Received: by mail-io1-f47.google.com with SMTP id c16so2895639ioc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 08:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=9SGhr83kGhgMvdo0bnTpUhl94AG5c9MOBhWi01H1Iug=;
-        b=F+4Nk17KdT82i8j5y2iA+2wDLHVgdDsF5PCZ/vdSJhuRCz/ZUX5ixCLqiW5gGmqg3g
-         R0uKgNv2nFd+eMtDoadUcSBjm+CVzqchlyKso1bTnpiw17lLOQyjFYX6t6hksl7y1hKM
-         5pYyDOvRvcT4X26/pq6edwCh0UNQCCra+SqmY+yQym61QWEhAgWsLpM6heetTlv/cKk9
-         KrPpP/p9XSyn5XGJv7K6edxVuqD7kQKx41BgouHmk43pRrcsLAJX7Ey6IYcDgbxYeRk1
-         cHNZ8NWFDcNzxIDLZWuPRpka0bm8YilvouWZo3gQJTSimbN1tl6Jfjp4FN/guAtnEcuy
-         RdBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9SGhr83kGhgMvdo0bnTpUhl94AG5c9MOBhWi01H1Iug=;
-        b=n7Tz2fylvDWJ5foeZI4M+NFVjcW5/IuK5mxOZ+rf44KNtkAxIS+YWfN6Ojn3m2pQ99
-         ru6WZIT+SUEIGQ2BnS3akdwyQ0pBzDezHrB9rBwjPsFUykI0HtYvQ4W2SUX2gtS1wL9+
-         Acf16+PiCeCQ+KsL6FLAZH4tCADOQQmIml2dChqjBthldCOWxECJ/KwHz+kGDiLzpbmh
-         MCv6CMXAQspttN1lTsLwQEpbFKagfE6hTjHWsZSreJJLwoSvtHyesOR4N3waA+Nlf5QW
-         6DH+dEKpOP4ZfcSmIMORHMvPnIsN16DWTDX+dB5lK5SjP7tTlz5zimPiXpWOYvHYGvba
-         wcQg==
-X-Gm-Message-State: APjAAAUSPLgUJ7KQJsGxDEnN6cBcskmkpswvqCiDMUm/zY1LNu29pIru
-        unT3XE3Nm722+mwcDsvSpjroZRyhvk7cdQ==
-X-Google-Smtp-Source: APXvYqwWN4xdDosFK6XsmDmPL6Ua8uL4QwxiANjl9J1p/mLV6gwtbsWK7zVFaY9idQhPOH1IpRi3yw==
-X-Received: by 2002:a6b:e615:: with SMTP id g21mr4239446ioh.56.1572017536570;
-        Fri, 25 Oct 2019 08:32:16 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id s90sm392468ill.40.2019.10.25.08.32.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 08:32:15 -0700 (PDT)
-Subject: Re: [BUG][RFC] Miscalculated inflight counter in io_uring
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <bfecc5ba-274b-b2f7-52dc-8ac6e0fab352@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <539958bc-7010-c6dc-7647-b6632b37569c@kernel.dk>
-Date:   Fri, 25 Oct 2019 09:32:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 25 Oct 2019 11:32:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730267AbfJYPcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 11:32:42 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCAE921929;
+        Fri, 25 Oct 2019 15:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572017562;
+        bh=0nyovhNiQQVYIxIcfWTgd7etJWK5tEiahN5tt+ZftH0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EJDdGOXNjvx0GLM8SY8zPNoc8ck0G1QAJdgnw2KqTbivk0e1FBcUilc1qG6ZcFeKQ
+         a0BDEqzNBig9AOXuw61DTIEFYlFy2bkp3f+eIBn59zSqvhGFgqXXzg6o4OBHKRbe2X
+         1XzOizz0/Y8CmwKM6T6a0parDR9HFaIZuV5wLTSo=
+Date:   Fri, 25 Oct 2019 11:32:40 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.9 19/20] ipv6: Handle race in addrconf_dad_work
+Message-ID: <20191025153240.GG31224@sasha-vm>
+References: <20191025135801.25739-1-sashal@kernel.org>
+ <20191025135801.25739-19-sashal@kernel.org>
+ <f3c4a11c-b5b5-455a-6c88-83b8cc56623d@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <bfecc5ba-274b-b2f7-52dc-8ac6e0fab352@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <f3c4a11c-b5b5-455a-6c88-83b8cc56623d@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 3:48 AM, Pavel Begunkov wrote:
-> In case of IORING_SETUP_SQPOLL | IORING_SETUP_IOPOLL:
-> 
-> @inflight count returned by io_submit_sqes() is the number of entries
-> picked up from a sqring including already completed/failed. And
-> completed but not failed requests will be placed into @poll_list.
-> 
-> Then io_sq_thread() tries to poll @inflight events, even though failed
-> won't appear in @poll_list. Thus, it will think that there are always
-> something to poll (i.e. @inflight > 0)
-> 
-> There are several issues with this:
-> 1. io_sq_thread won't ever sleep
-> 2. io_sq_thread() may be left running and actively polling even after
-> user process is destroyed
-> 3. the same goes for mm_struct with all vmas of the user process
-> TL;DR;
-> awhile @inflight > 0, io_sq_thread won't put @cur_mm, so locking
-> recycling of vmas used for rings' mapping, which hold refcount of
-> io_uring's struct file. Thus, io_uring_release() won't be called, as
-> well as kthread_{park,stop}(). That's all in case when the user process
-> haven't unmapped rings.
-> 
-> 
-> I'm not sure how to fix it better:
-> 1. try to put failed into poll_list (grabbing mutex).
-> 
-> 2. test for zero-inflight case with comparing sq and cq. something like
-> ```
-> if (nr_polled == 0) {
-> 	lock(comp_lock);
-> 	if (cached_cq_head == cached_sq_tail)
-> 		inflight = 0;
-> 	unlock(comp_lock);
-> }
-> ```
-> But that's adds extra spinlock locking in fast-path. And that's unsafe
-> to use non-cached heads/tails, as it could be maliciously changed by
-> userspace.
-> 
-> 3. Do some counting of failed (probably needs atomic or synchronisation)
-> 
-> 4. something else?
+On Fri, Oct 25, 2019 at 08:22:59AM -0600, David Ahern wrote:
+>On 10/25/19 7:57 AM, Sasha Levin wrote:
+>> From: David Ahern <dsahern@gmail.com>
+>>
+>> [ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
+>>
+>
+>that patch was reverted in favor of a different solution. It should NOT
+>be backported to any releases.
 
-Can we just look at the completion count? Ala:
-
-prev_tail = ctx->cached_cq_tail;
-inflight += io_submit_sqes(ctx, to_submit, cur_mm != NULL,      
-                                             mm_fault);
-if (prev_tail != ctx->cached_cq_tail)
-	inflight -= (ctx->cached_cq_tail - prev_tail);
-
-or something like that.
+I'll drop it, thank you.
 
 -- 
-Jens Axboe
-
+Thanks,
+Sasha
