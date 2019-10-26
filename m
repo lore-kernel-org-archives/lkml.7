@@ -2,54 +2,54 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650AFCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF37CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDDC20867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C720020867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096953;
-	bh=n8LV+Zy/n4u8Rf26UdYHsaoqWPPxw9wALgq1SRMH8WM=;
+	s=default; t=1572096956;
+	bh=D4p/k8K+pcrKKBqKJkh62m+JChkk/cjGS2MuusHjUes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XkJAC/rTW1XwhGwCbJHyFLpUEwbN2mCJskxCMxDkPnqUgFVa5eYrw2rpzFAfF8AG/
-	 k/CPr5xsEgRYC/DIVbgDpNehIB67iMpEIkavOafdnstKmbusp3mtyoCewLA3pcCWdx
-	 1uDdIJBE0WwTWfi/RNYEjpWSisg1At7TwGjimuqI=
+	b=tgVnjqHpOLxfebxi1ANhwm91+mcfJz8DvYjtxc+K5ApdQFv+vLJIdMGGbp5TiCJzg
+	 C/2+Y9uwSyGzFXoKklJvcLGHXY23hVaNeaj7pQXqhfxD7TZp+BIaBBYHo0hZ1fVwSE
+	 rkNBHliFHwnrHbFhGo5+dqvshin7/exyZmwfS1eA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfJZNQ7 (ORCPT
+        id S1727615AbfJZNfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:16:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38484 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:35:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfJZNQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:55 -0400
+        id S1727075AbfJZNQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2C0321E6F;
-        Sat, 26 Oct 2019 13:16:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1790222CB;
+        Sat, 26 Oct 2019 13:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095814;
-        bh=n8LV+Zy/n4u8Rf26UdYHsaoqWPPxw9wALgq1SRMH8WM=;
+        s=default; t=1572095818;
+        bh=D4p/k8K+pcrKKBqKJkh62m+JChkk/cjGS2MuusHjUes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1a/0ZsceQky8W6QCWEgW84LbJjDzi3JLya3BftgEBM4OaYTkikAA+q6GeL1WsraKl
-         hljfG3VypbqlVymWI/DStb+Cqn3Tfe/EbjqUWASmV7dNgD7+ik1yMvEgRucMmFiF8x
-         kpTHUmWV1kAltRsEZSPFQluEeWzXeTd3COMdQgmE=
+        b=U4i4RYJwW7VO0nFDaeY+R+swtGjut0Ml6+Ip/hFjae/Psx5/9htURC/rhGvNy1get
+         DCoRFePHl7DzzWUqfCmnB5pMT5tMWJ/8xHFjtQ0PgdEOiZJ4MiJVwXdqAZf6Tz2QGa
+         izrMl6Gc/v2ifq7gIDioQPx8Ulq7SNQ+loaqHfFU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Benc <jbenc@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Petar Penkov <ppenkov@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 29/99] selftests/bpf: Set rp_filter in test_flow_dissector
-Date:   Sat, 26 Oct 2019 09:14:50 -0400
-Message-Id: <20191026131600.2507-29-sashal@kernel.org>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 32/99] net_sched: fix backward compatibility for TCA_ACT_KIND
+Date:   Sat, 26 Oct 2019 09:14:53 -0400
+Message-Id: <20191026131600.2507-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -62,41 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit fd418b01fe26c2430b1091675cceb3ab2b52e1e0 ]
+[ Upstream commit 4b793feccae3b06764268377a4030eb774ed924e ]
 
-Many distributions enable rp_filter. However, the flow dissector test
-generates packets that have 1.1.1.1 set as (inner) source address without
-this address being reachable. This causes the selftest to fail.
+For TCA_ACT_KIND, we have to keep the backward compatibility too,
+and rely on nla_strlcpy() to check and terminate the string with
+a NUL.
 
-The selftests should not assume a particular initial configuration. Switch
-off rp_filter.
+Note for TC actions, nla_strcmp() is already used to compare kind
+strings, so we don't need to fix other places.
 
-Fixes: 50b3ed57dee9 ("selftests/bpf: test bpf flow dissection")
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Petar Penkov <ppenkov@google.com>
-Link: https://lore.kernel.org/bpf/513a298f53e99561d2f70b2e60e2858ea6cda754.1570539863.git.jbenc@redhat.com
+Fixes: 199ce850ce11 ("net_sched: add policy validation for action attributes")
+Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_flow_dissector.sh | 3 +++
- 1 file changed, 3 insertions(+)
+ net/sched/act_api.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_flow_dissector.sh b/tools/testing/selftests/bpf/test_flow_dissector.sh
-index d23d4da66b834..e2d06191bd35c 100755
---- a/tools/testing/selftests/bpf/test_flow_dissector.sh
-+++ b/tools/testing/selftests/bpf/test_flow_dissector.sh
-@@ -63,6 +63,9 @@ fi
+diff --git a/net/sched/act_api.c b/net/sched/act_api.c
+index 2558f00f6b3ed..4e7429c6f8649 100644
+--- a/net/sched/act_api.c
++++ b/net/sched/act_api.c
+@@ -832,8 +832,7 @@ static struct tc_cookie *nla_memdup_cookie(struct nlattr **tb)
+ }
  
- # Setup
- tc qdisc add dev lo ingress
-+echo 0 > /proc/sys/net/ipv4/conf/default/rp_filter
-+echo 0 > /proc/sys/net/ipv4/conf/all/rp_filter
-+echo 0 > /proc/sys/net/ipv4/conf/lo/rp_filter
- 
- echo "Testing IPv4..."
- # Drops all IP/UDP packets coming from port 9
+ static const struct nla_policy tcf_action_policy[TCA_ACT_MAX + 1] = {
+-	[TCA_ACT_KIND]		= { .type = NLA_NUL_STRING,
+-				    .len = IFNAMSIZ - 1 },
++	[TCA_ACT_KIND]		= { .type = NLA_STRING },
+ 	[TCA_ACT_INDEX]		= { .type = NLA_U32 },
+ 	[TCA_ACT_COOKIE]	= { .type = NLA_BINARY,
+ 				    .len = TC_COOKIE_MAX_SIZE },
+@@ -865,8 +864,10 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
+ 			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
+ 			goto err_out;
+ 		}
+-		nla_strlcpy(act_name, kind, IFNAMSIZ);
+-
++		if (nla_strlcpy(act_name, kind, IFNAMSIZ) >= IFNAMSIZ) {
++			NL_SET_ERR_MSG(extack, "TC action name too long");
++			goto err_out;
++		}
+ 		if (tb[TCA_ACT_COOKIE]) {
+ 			cookie = nla_memdup_cookie(tb);
+ 			if (!cookie) {
 -- 
 2.20.1
 
