@@ -2,134 +2,105 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D08FCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 17:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F43CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30491214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 17:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B800E20863
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfJZRra (ORCPT
+        id S1726311AbfJZSAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 13:47:30 -0400
-Received: from mailoutvs36.siol.net ([185.57.226.227]:35681 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726474AbfJZRr1 (ORCPT
+        Sat, 26 Oct 2019 14:00:51 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53112 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726224AbfJZSAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 13:47:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 2D7AE523991;
-        Sat, 26 Oct 2019 19:47:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 78Q2iftWDMu5; Sat, 26 Oct 2019 19:47:23 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id CC977520606;
-        Sat, 26 Oct 2019 19:47:23 +0200 (CEST)
-Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 76B70523991;
-        Sat, 26 Oct 2019 19:47:21 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, paul.kocialkowski@bootlin.com
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org, p.zabel@pengutronix.de,
-        ezequiel@collabora.com, boris.brezillon@collabora.com,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 4/4] media: cedrus: hevc: Add support for multiple slices
-Date:   Sat, 26 Oct 2019 19:47:03 +0200
-Message-Id: <20191026174703.1120023-5-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191026174703.1120023-1-jernej.skrabec@siol.net>
-References: <20191026174703.1120023-1-jernej.skrabec@siol.net>
+        Sat, 26 Oct 2019 14:00:51 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iOQMq-0001IR-B5; Sat, 26 Oct 2019 19:00:48 +0100
+Received: from ben by deadeye with local (Exim 4.92.2)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iOQMq-0005oN-4t; Sat, 26 Oct 2019 19:00:48 +0100
+Message-ID: <40999dd0316512f9135040da5160785f79456cb3.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 00/47] 3.16.76-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Sat, 26 Oct 2019 19:00:37 +0100
+In-Reply-To: <c66efe1b-6a90-aedb-f854-615ec16c85f7@roeck-us.net>
+References: <lsq.1572026581.992411028@decadent.org.uk>
+         <c66efe1b-6a90-aedb-f854-615ec16c85f7@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-g6LJdgVcxBpObCFjkP2b"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that segment address is available, support for multi-slice frames
-can be easily added.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- .../staging/media/sunxi/cedrus/cedrus_h265.c  | 21 +++++++++++++++----
- .../staging/media/sunxi/cedrus/cedrus_video.c |  1 +
- 2 files changed, 18 insertions(+), 4 deletions(-)
+--=-g6LJdgVcxBpObCFjkP2b
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h265.c
-index 888bfd5ca224..e909adf6f30f 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-@@ -366,15 +366,28 @@ static void cedrus_h265_setup(struct cedrus_ctx *ct=
-x,
- 	reg =3D VE_DEC_H265_BITS_END_ADDR_BASE(src_buf_end_addr);
- 	cedrus_write(dev, VE_DEC_H265_BITS_END_ADDR, reg);
-=20
--	/* Coding tree block address: start at the beginning. */
-+	/* Coding tree block address */
- 	reg =3D VE_DEC_H265_DEC_CTB_ADDR_X(0) | VE_DEC_H265_DEC_CTB_ADDR_Y(0);
-+	if (!ctx->fh.m2m_ctx->new_frame) {
-+		unsigned int log2_max_luma_coding_block_size =3D
-+			sps->log2_min_luma_coding_block_size_minus3 + 3 +
-+			sps->log2_diff_max_min_luma_coding_block_size;
-+		unsigned int ctb_size_luma =3D
-+			1UL << log2_max_luma_coding_block_size;
-+		unsigned int width_in_ctb_luma =3D
-+			DIV_ROUND_UP(sps->pic_width_in_luma_samples, ctb_size_luma);
-+
-+		reg =3D VE_DEC_H265_DEC_CTB_ADDR_X(slice_params->slice_segment_addr % =
-width_in_ctb_luma);
-+		reg |=3D VE_DEC_H265_DEC_CTB_ADDR_Y(slice_params->slice_segment_addr /=
- width_in_ctb_luma);
-+	}
- 	cedrus_write(dev, VE_DEC_H265_DEC_CTB_ADDR, reg);
-=20
- 	cedrus_write(dev, VE_DEC_H265_TILE_START_CTB, 0);
- 	cedrus_write(dev, VE_DEC_H265_TILE_END_CTB, 0);
-=20
- 	/* Clear the number of correctly-decoded coding tree blocks. */
--	cedrus_write(dev, VE_DEC_H265_DEC_CTB_NUM, 0);
-+	if (ctx->fh.m2m_ctx->new_frame)
-+		cedrus_write(dev, VE_DEC_H265_DEC_CTB_NUM, 0);
-=20
- 	/* Initialize bitstream access. */
- 	cedrus_write(dev, VE_DEC_H265_TRIGGER, VE_DEC_H265_TRIGGER_INIT_SWDEC);
-@@ -523,8 +536,8 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
- 				V4L2_HEVC_PPS_FLAG_DEPENDENT_SLICE_SEGMENT,
- 				pps->flags);
-=20
--	/* FIXME: For multi-slice support. */
--	reg |=3D VE_DEC_H265_DEC_SLICE_HDR_INFO0_FLAG_FIRST_SLICE_SEGMENT_IN_PI=
-C;
-+	if (ctx->fh.m2m_ctx->new_frame)
-+		reg |=3D VE_DEC_H265_DEC_SLICE_HDR_INFO0_FLAG_FIRST_SLICE_SEGMENT_IN_P=
-IC;
-=20
- 	cedrus_write(dev, VE_DEC_H265_DEC_SLICE_HDR_INFO0, reg);
-=20
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/=
-staging/media/sunxi/cedrus/cedrus_video.c
-index 15cf1f10221b..497b1199d3fe 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -311,6 +311,7 @@ static int cedrus_s_fmt_vid_out(struct file *file, vo=
-id *priv,
-=20
- 	switch (ctx->src_fmt.pixelformat) {
- 	case V4L2_PIX_FMT_H264_SLICE:
-+	case V4L2_PIX_FMT_HEVC_SLICE:
- 		vq->subsystem_flags |=3D
- 			VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF;
- 		break;
+On Fri, 2019-10-25 at 18:35 -0700, Guenter Roeck wrote:
+> On 10/25/19 11:03 AM, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.76 release.
+> > There are 47 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Tue Oct 29 18:00:00 UTC 2019.
+> > Anything received after that time might be too late.
+> >=20
+>=20
+> Build results:
+> 	total: 136 pass: 136 fail: 0
+> Qemu test results:
+> 	total: 229 pass: 229 fail: 0
+
+Great, thanks for checking.
+
+Ben.
+
 --=20
-2.23.0
+Ben Hutchings
+Knowledge is power.  France is bacon.
 
+
+
+--=-g6LJdgVcxBpObCFjkP2b
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl20icUACgkQ57/I7JWG
+EQlckhAAvwrj6dGb/4/PgEtx1bGYU9WjjJ5VRiVMqrmL9huuLoKoqP91o66eDbSv
+9qetCw6BKFjGzdEe3u7B8M+fM4ETz//BFRaeNqj4Mn4SqiHB0acRxxS6XPqDJ7KP
+/qyaghKOG0e7WZnj+TP8yim1nuj74K2DXCNp23m64XJzQ+pCZYOatrZbvBlPvp6l
+Gvy4LKzxygoZ2cE+tIiKqXydq2gUe6kQje9MiQVmnxr85C+E+iDdZYQ5OaCFiD0e
+6offagwq0hWu4pq0h/23CM5nEDo6ZNZEN2QjdEW0yzZcIR/O4TgN08rNVk8hEuVA
+h7HH3asaWJ/tEjQiZpcWEYHkl09USfFL+LGjnn1u5cu2NV71x34HroaHiQjDCkxc
+jiR3/HbbpCf39ee7ZAheTNXNdonZ08I2+F61YzpiSsSJCRSeFj9x8n7g60whkqce
+p1q0S3rHfCSsPaEhISearXiCGei37+6lRsqjTO9uEFTMv/MZhBdX48xRoF0SAxLo
+adkJvVOuiFiRjRRVakLBdsjsm249Yey+blmOO9r6SaSvhEmM9hz+sEeSyj1Z9BOe
+RdXL6cqqsEkdTNAfoSB11z/vcU6+BbzfP4Zgxrq2JrCsP/+Tst16MiP7zRl5Hple
+8upkabeGntytgicyJLWgKS6gawNz/s68oVOvcYG+SsZc32F6Pi4=
+=fvyw
+-----END PGP SIGNATURE-----
+
+--=-g6LJdgVcxBpObCFjkP2b--
