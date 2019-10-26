@@ -2,68 +2,95 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D06CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 10:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE61CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 10:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E89820867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 10:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572086722;
-	bh=vuX0mLtS2i1js8YqglJXqcFvIBJ66VDQc0smN03qMZI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Y8DzyT7kDtIrkIFDn/wJ89OTsZs9r2lOOGBEux9PtywUSvo+bwLB7hR2nNhnDjm+h
-	 6Q2wYMAt6Oys8Hkjr2tB3AJCPAcnWPIzSYlX1MCJDexox0iVtx6n1vMGvjSwr9wfiH
-	 E8ty9gYJIX3SHWhE9Kyn287AJIwMxgzi4xww+wto=
+	by mail.kernel.org (Postfix) with ESMTP id DF1AA20863
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 10:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfJZKpJ (ORCPT
+        id S1726210AbfJZK5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 06:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfJZKpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 06:45:07 -0400
-Subject: Re: [GIT PULL] xen: patch for 5.4-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572086707;
-        bh=vuX0mLtS2i1js8YqglJXqcFvIBJ66VDQc0smN03qMZI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QxreTIiqgZvNZ0chewOHBcnm3hZt3+X+Vj0lBxuWtq57rT3iHlPYMUIpQwZHT50Ie
-         2E/011JN6C63RuzuE/tbjw94aNO5GL5+bGZXetF0/pnPXQbIraK1yPLzCzv1pY7B/Z
-         uXpMLj+ofmgMdn2wRWEjpeQwq6K7lztRcJXhcZYQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20191026090740.9581-1-jgross@suse.com>
-References: <20191026090740.9581-1-jgross@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20191026090740.9581-1-jgross@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
- for-linus-5.4-rc5-tag
-X-PR-Tracked-Commit-Id: 6ccae60d014d5d1f89c40e7e4b619f343ca24b03
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4fac2407f809e2ccc846bcce1d62ebbf7b0a1cd2
-Message-Id: <157208670702.20302.921862092816517381.pr-tracker-bot@kernel.org>
-Date:   Sat, 26 Oct 2019 10:45:07 +0000
-To:     Juergen Gross <jgross@suse.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
+        Sat, 26 Oct 2019 06:57:22 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4771 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726120AbfJZK5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 06:57:22 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1656D33C7A973CFD2ECF;
+        Sat, 26 Oct 2019 18:57:20 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sat, 26 Oct 2019
+ 18:57:11 +0800
+Subject: [PATCH v2] async: Using current_work() to implement
+ current_is_async()
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        <bhelgaas@google.com>, David Sterba <dsterba@suse.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        <sakari.ailus@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <0147097c-0ce2-5944-932a-8fd53eed4ff6@huawei.com>
+Message-ID: <a2896834-54c7-5842-d062-c19688b09fbb@huawei.com>
+Date:   Sat, 26 Oct 2019 18:56:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <0147097c-0ce2-5944-932a-8fd53eed4ff6@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 26 Oct 2019 11:07:40 +0200:
+current_is_async() can be implemented using current_work(), it's better
+not to be aware of the workqueue's internal information.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.4-rc5-tag
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+---
+v1 -> v2:
+ - add "Reviewed-by"
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4fac2407f809e2ccc846bcce1d62ebbf7b0a1cd2
+ kernel/async.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Thank you!
+diff --git a/kernel/async.c b/kernel/async.c
+index 1de270d..a849f98 100644
+--- a/kernel/async.c
++++ b/kernel/async.c
+@@ -53,8 +53,6 @@ asynchronous and synchronous parts of the kernel.
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
 
+-#include "workqueue_internal.h"
+-
+ static async_cookie_t next_cookie = 1;
+
+ #define MAX_WORK		32768
+@@ -327,8 +325,8 @@ EXPORT_SYMBOL_GPL(async_synchronize_cookie);
+  */
+ bool current_is_async(void)
+ {
+-	struct worker *worker = current_wq_worker();
++	struct work_struct *work = current_work();
+
+-	return worker && worker->current_func == async_run_entry_fn;
++	return work && work->func == async_run_entry_fn;
+ }
+ EXPORT_SYMBOL_GPL(current_is_async);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.7.4
+
+
