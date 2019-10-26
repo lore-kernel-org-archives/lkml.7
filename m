@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20538CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E8DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F8C21D7F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2FE214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095782;
-	bh=zsCfej5/3HVGt1LmhAowMZJP339FutiqxSS2vEQtYgc=;
+	s=default; t=1572095786;
+	bh=3LsTofZJFeV/FbQ/iHlTLgcU1JFfDIoVXRbXNihtrDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGYC8+uvIdR5VWi9WnZRDvH+FB6ab96DkmhCV5c63yzmzuYAmO+r3BuFjfBxTG8g5
-	 dUpqW+HBCKXq0Xa/Y0pRehW7ayTXG9LyPUUf4viCrU5Xx8l4y0+OYJ4QMQiCteNUOZ
-	 KdojfZ5orEG6CKaRG7L2E8WxbTjETX5Zpmf1W95Q=
+	b=Tp1jQVIg23ifwIBSL9dyPzqHJ+x98xVuHblLngr/FDbI7V0UgelQz9KpTRKH8qjdb
+	 UO4WbVnRNdkbkuMYJs8t1rhfDnnto1/DyZK/TlK0GG3WDEDbso0BgknofyUhu65QF1
+	 9tnACl3sangUQCnAGhzQIhi2CpsiQnaU3QVQcxvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfJZNQU (ORCPT
+        id S1726708AbfJZNQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfJZNQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:15 -0400
+        id S1726655AbfJZNQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B6FF2070B;
-        Sat, 26 Oct 2019 13:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDF54222BE;
+        Sat, 26 Oct 2019 13:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095775;
-        bh=zsCfej5/3HVGt1LmhAowMZJP339FutiqxSS2vEQtYgc=;
+        s=default; t=1572095781;
+        bh=3LsTofZJFeV/FbQ/iHlTLgcU1JFfDIoVXRbXNihtrDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V8fTheVabvwYpwr8jzwaKIJkJTTg0ZyHDfUKlRTf3kMV0G4uV5m9aH1sQnKkza768
-         iSS8Tmq3ZIBs6aTjLvASzCziRaeLgEwDO33cnDdZ9Eg9wAJ3TNhaivMN/kMCFw7eJR
-         ZEQG6ebBSMVkR8rOIBz5pcy27no2lCF8WZa3cpN4=
+        b=Oou+/3IHFsZ7BE9nO+pCYTcTcMms6lt9OjoQmfo7XvzbJ8LKciMKl66+EhGPl1/Et
+         1ZwlJL1Jg9Q1gW/4Xii7IG5RUrmU7IXwUIPupb9A+DdpFBlBLOibA3ERusaOL9FgmP
+         XFfu8gBQnK5xI9sjpN1KpqZQGuCpjdFxIflZIgO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Black <daniel@linux.ibm.com>, Tao Xu <tao3.xu@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 06/99] ACPI: HMAT: ACPI_HMAT_MEMORY_PD_VALID is deprecated since ACPI-6.3
-Date:   Sat, 26 Oct 2019 09:14:27 -0400
-Message-Id: <20191026131600.2507-6-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 12/99] net: stmmac: gmac4+: Not all Unicast addresses may be available
+Date:   Sat, 26 Oct 2019 09:14:33 -0400
+Message-Id: <20191026131600.2507-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,41 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Black <daniel@linux.ibm.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 35b9ad840892d979dbeffe702dae95a3cbefa07b ]
+[ Upstream commit 25683bab09a70542b9f8e3e28f79b3369e56701f ]
 
-ACPI-6.3 corresponds to when HMAT revision was bumped
-from 1 to 2. In this version ACPI_HMAT_MEMORY_PD_VALID
-was deprecated and made reserved.
+Some setups may not have all Unicast addresses filters available. Check
+the number of available filters before trying to setup it.
 
-As such in revision 2+ we shouldn't be testing this flag.
-
-This is as per ACPI-6.3, 5.2.27.3, Table 5-145
-"Memory Proximity Domain Attributes Structure"
-for Flags.
-
-Signed-off-by: Daniel Black <daniel@linux.ibm.com>
-Reviewed-by: Tao Xu <tao3.xu@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/hmat/hmat.c | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-index 96b7d39a97c65..e938e34673d98 100644
---- a/drivers/acpi/hmat/hmat.c
-+++ b/drivers/acpi/hmat/hmat.c
-@@ -382,7 +382,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
- 		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
- 			p->flags, p->processor_PD, p->memory_PD);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index fc9954e4a7729..feae3adc793c5 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -453,7 +453,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 	value |= GMAC_PACKET_FILTER_HPF;
  
--	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
-+	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
- 		target = find_mem_target(p->memory_PD);
- 		if (!target) {
- 			pr_debug("HMAT: Memory Domain missing from SRAT\n");
+ 	/* Handle multiple unicast addresses */
+-	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
++	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
+ 		/* Switch to promiscuous mode if more than 128 addrs
+ 		 * are required
+ 		 */
 -- 
 2.20.1
 
