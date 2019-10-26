@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2E4CA9EBE
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B988BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC6C221E6F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7B7214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095766;
-	bh=6ENN7JqKH0dafo1SdCaAf1Eq/G2mTYu6ydXeLUXURlM=;
+	s=default; t=1572095769;
+	bh=lOdJL/LUFTJZ8eR9zv4gZAu7pjGdv3hDBHXTMPM/GWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=elkbGzvQJpkJBvvJiDo6pG+eEJx7nDmI8q88JJF0KhlP1PBqKNxdAE+aEZKXBnqPM
-	 Ndp10BV2Y76b2PaF83Bldc/qMbQ2C9y4mAdyDBYZb68iz+sDTGnu490GJkry4fT3ux
-	 TBO8NpsECLhgm8RKyki+s+vTT4pOVZcF4vKiRbZk=
+	b=pbuO3OKBp6gD/kP7ET0BqGW15iP0VLUt/hNTaTKg/pUKBiC0uz4kAGo3hpOLA/jZ1
+	 cMxR/2i85Bm0LJMFA+sWnVir56GbItJZ1lTHBKhQhgAz4bb/RgtRK0XFdp6Ae+ugH9
+	 QsTXiFNoFlJXJrC3iMQfri3LSs3C3vLLhs1lMDpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfJZNQE (ORCPT
+        id S1726483AbfJZNQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:16:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37462 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfJZNQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:04 -0400
+        id S1726377AbfJZNQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E193B21655;
-        Sat, 26 Oct 2019 13:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05EE921897;
+        Sat, 26 Oct 2019 13:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095763;
-        bh=6ENN7JqKH0dafo1SdCaAf1Eq/G2mTYu6ydXeLUXURlM=;
+        s=default; t=1572095765;
+        bh=lOdJL/LUFTJZ8eR9zv4gZAu7pjGdv3hDBHXTMPM/GWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ui/Onh4qvlTZ0MnYSfBcn2ukjglC//JeFGIHLq8nnd5PFeqdp34Yd27bVv8/mNO9T
-         l0WdPFGipJW63HrkqszrRPZ5m+UTeAip6HkYMCpp823pwFnRPo9xCyo1ad6ce2RUyt
-         2aR3I2t0VBlkmZICrYiJhS2XmqNpgKVJEaWFfJ7g=
+        b=Wi+LNeXq2AjYGfD8TxuTxcPh/3e7BZ36z3Z44wTWOmMOILcWIq1erzYtplZWqiqWB
+         Zj2keJqmrm2TVOnnbggrpRjx+6givvw93MzVS1M7NhRUdaAdW2s4ferRrUom/38A2Z
+         X7yaHumLZVXqyp9ZLMZOufhlZ9ZMXasug3Su6taU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liu Xiang <liuxiang_1999@126.com>, Will Deacon <will@kernel.org>,
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Steven Price <steven.price@arm.com>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.3 02/99] iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
-Date:   Sat, 26 Oct 2019 09:14:23 -0400
-Message-Id: <20191026131600.2507-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 03/99] iommu/io-pgtable-arm: Correct Mali attributes
+Date:   Sat, 26 Oct 2019 09:14:24 -0400
+Message-Id: <20191026131600.2507-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,32 +62,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Xiang <liuxiang_1999@126.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 6db7bfb431220d78e34d2d0afdb7c12683323588 ]
+[ Upstream commit 52f325f4eb321ea2e8a0779f49a3866be58bc694 ]
 
-When alloc_io_pgtable_ops is failed, context bitmap which is just allocated
-by __arm_smmu_alloc_bitmap should be freed to release the resource.
+Whilst Midgard's MEMATTR follows a similar principle to the VMSA MAIR,
+the actual attribute values differ, so although it currently appears to
+work to some degree, we probably shouldn't be using our standard stage 1
+MAIR for that. Instead, generate a reasonable MEMATTR with attribute
+values borrowed from the kbase driver; at this point we'll be overriding
+or ignoring pretty much all of the LPAE config, so just implement these
+Mali details in a dedicated allocator instead of pretending to subclass
+the standard VMSA format.
 
-Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+Fixes: d08d42de6432 ("iommu: io-pgtable: Add ARM Mali midgard MMU page table format")
+Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/io-pgtable-arm.c | 53 +++++++++++++++++++++++++---------
+ 1 file changed, 40 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 64977c131ee62..523a641b6196f 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -936,6 +936,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 	return 0;
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index 161a7d56264d0..9e35cd991f065 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -167,6 +167,9 @@
+ #define ARM_MALI_LPAE_TTBR_READ_INNER	BIT(2)
+ #define ARM_MALI_LPAE_TTBR_SHARE_OUTER	BIT(4)
  
- out_clear_smmu:
-+	__arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
- 	smmu_domain->smmu = NULL;
- out_unlock:
- 	mutex_unlock(&smmu_domain->init_mutex);
++#define ARM_MALI_LPAE_MEMATTR_IMP_DEF	0x88ULL
++#define ARM_MALI_LPAE_MEMATTR_WRITE_ALLOC 0x8DULL
++
+ /* IOPTE accessors */
+ #define iopte_deref(pte,d) __va(iopte_to_paddr(pte, d))
+ 
+@@ -1013,27 +1016,51 @@ arm_32_lpae_alloc_pgtable_s2(struct io_pgtable_cfg *cfg, void *cookie)
+ static struct io_pgtable *
+ arm_mali_lpae_alloc_pgtable(struct io_pgtable_cfg *cfg, void *cookie)
+ {
+-	struct io_pgtable *iop;
++	struct arm_lpae_io_pgtable *data;
++
++	/* No quirks for Mali (hopefully) */
++	if (cfg->quirks)
++		return NULL;
+ 
+ 	if (cfg->ias != 48 || cfg->oas > 40)
+ 		return NULL;
+ 
+ 	cfg->pgsize_bitmap &= (SZ_4K | SZ_2M | SZ_1G);
+-	iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
+-	if (iop) {
+-		u64 mair, ttbr;
+ 
+-		/* Copy values as union fields overlap */
+-		mair = cfg->arm_lpae_s1_cfg.mair[0];
+-		ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
++	data = arm_lpae_alloc_pgtable(cfg);
++	if (!data)
++		return NULL;
+ 
+-		cfg->arm_mali_lpae_cfg.memattr = mair;
+-		cfg->arm_mali_lpae_cfg.transtab = ttbr |
+-			ARM_MALI_LPAE_TTBR_READ_INNER |
+-			ARM_MALI_LPAE_TTBR_ADRMODE_TABLE;
+-	}
++	/*
++	 * MEMATTR: Mali has no actual notion of a non-cacheable type, so the
++	 * best we can do is mimic the out-of-tree driver and hope that the
++	 * "implementation-defined caching policy" is good enough. Similarly,
++	 * we'll use it for the sake of a valid attribute for our 'device'
++	 * index, although callers should never request that in practice.
++	 */
++	cfg->arm_mali_lpae_cfg.memattr =
++		(ARM_MALI_LPAE_MEMATTR_IMP_DEF
++		 << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_NC)) |
++		(ARM_MALI_LPAE_MEMATTR_WRITE_ALLOC
++		 << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
++		(ARM_MALI_LPAE_MEMATTR_IMP_DEF
++		 << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
+ 
+-	return iop;
++	data->pgd = __arm_lpae_alloc_pages(data->pgd_size, GFP_KERNEL, cfg);
++	if (!data->pgd)
++		goto out_free_data;
++
++	/* Ensure the empty pgd is visible before TRANSTAB can be written */
++	wmb();
++
++	cfg->arm_mali_lpae_cfg.transtab = virt_to_phys(data->pgd) |
++					  ARM_MALI_LPAE_TTBR_READ_INNER |
++					  ARM_MALI_LPAE_TTBR_ADRMODE_TABLE;
++	return &data->iop;
++
++out_free_data:
++	kfree(data);
++	return NULL;
+ }
+ 
+ struct io_pgtable_init_fns io_pgtable_arm_64_lpae_s1_init_fns = {
 -- 
 2.20.1
 
