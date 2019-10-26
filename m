@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C225CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28448CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454A22070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6962070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096351;
-	bh=Vt7CJhpB0LiswZHCEHqxV9uDX/kHekbB8hF5SvXRc8U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nk7r/wt6ZmqIgRvKtahQ/kljV20N+JFJ1t0ARG/PGPAps2d+DiXRobtZIUr3oMABj
-	 xk+IEtInFcb+h6zQeYbmc8QzCM/yI16WfkFKVkdeDA2Qlzw55/hqtT80FfPwy4amEi
-	 p7gROdkPvYdqXGmo6hPwkKv4gGB1e12kDgu8bjAc=
+	s=default; t=1572096355;
+	bh=AEHVKj6xR5EIQiNGael2/JtYKeP2TrD4V/dfE8l7vvA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LmhBcX6DC35EPDTpZi6FGHAYrTS1VBioI4jhM7MibdXJ4Z06J+Orx65QJDfGGY79N
+	 aqUZ8nOlMvswHIvCieO7IiKxP0KD6RT6rlZQyURYEIt1b+TNZnqXB5djjpGQT1lLHz
+	 5VCAqD3q0dbsmSu4MS4oL03KekpsCBJ4JszUvWMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfJZNZt (ORCPT
+        id S1728497AbfJZNZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:25:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbfJZNWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:22:21 -0400
+        id S1727247AbfJZNWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFD8D222D1;
-        Sat, 26 Oct 2019 13:22:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1933214DA;
+        Sat, 26 Oct 2019 13:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096140;
-        bh=Vt7CJhpB0LiswZHCEHqxV9uDX/kHekbB8hF5SvXRc8U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pru1u12E1Gtx7A2BBWrKHt0E1oRUqyNDjIfjIaoNvhFhGy2vXHw8YXuB0P4pisiCg
-         Ag4bhYGVXhMv8/hqF2AlKkpAgOHpCq0pFAi9ZU/IHGGbw/KUum6NoOIZ6l/7KmFtvI
-         5dfZ5NxFxdrpnXk3arXlpZCjMniIlksJHGVeZENw=
+        s=default; t=1572096139;
+        bh=AEHVKj6xR5EIQiNGael2/JtYKeP2TrD4V/dfE8l7vvA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xFNNd6qjyMfEQ/BjJ8w5WYypNikoDH245i+REQqmx2khDZ5DUEQ6ekFNqrwxR9fdn
+         cK/DA3px3K3VHHFfMBmKFs4mz8IEM2rHjFdG81VKeHBPK5EpytkeTsI5Nmo3KhsWO+
+         tnMGRig0rL4nBE2gyr3qIfkzha6OUwRphVlm4CBs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Vassernis <michael.vassernis@tandemg.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Liu Xiang <liuxiang_1999@126.com>, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/21] mac80211_hwsim: fix incorrect dev_alloc_name failure goto
-Date:   Sat, 26 Oct 2019 09:21:58 -0400
-Message-Id: <20191026132217.4380-2-sashal@kernel.org>
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.9 01/21] iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
+Date:   Sat, 26 Oct 2019 09:21:57 -0400
+Message-Id: <20191026132217.4380-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026132217.4380-1-sashal@kernel.org>
-References: <20191026132217.4380-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,36 +57,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Vassernis <michael.vassernis@tandemg.com>
+From: Liu Xiang <liuxiang_1999@126.com>
 
-[ Upstream commit 313c3fe9c2348e7147eca38bb446f295b45403a0 ]
+[ Upstream commit 6db7bfb431220d78e34d2d0afdb7c12683323588 ]
 
-If dev_alloc_name fails, hwsim_mon's memory allocated in alloc_netdev
-needs to be freed.
-Change goto command in dev_alloc_name failure to out_free_mon in
-order to perform free_netdev.
+When alloc_io_pgtable_ops is failed, context bitmap which is just allocated
+by __arm_smmu_alloc_bitmap should be freed to release the resource.
 
-Signed-off-by: Michael Vassernis <michael.vassernis@tandemg.com>
-Link: https://lore.kernel.org/r/20191003073049.3760-1-michael.vassernis@tandemg.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mac80211_hwsim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/arm-smmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index e9ec1da9935d8..0651a323b64f1 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3502,7 +3502,7 @@ static int __init init_mac80211_hwsim(void)
- 	err = dev_alloc_name(hwsim_mon, hwsim_mon->name);
- 	if (err < 0) {
- 		rtnl_unlock();
--		goto out_free_radios;
-+		goto out_free_mon;
- 	}
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index f7ecb30a0bac8..5b3124eb184e7 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -968,6 +968,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 	return 0;
  
- 	err = register_netdevice(hwsim_mon);
+ out_clear_smmu:
++	__arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
+ 	smmu_domain->smmu = NULL;
+ out_unlock:
+ 	mutex_unlock(&smmu_domain->init_mutex);
 -- 
 2.20.1
 
