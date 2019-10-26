@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE956CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4614CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3812070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C73920867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096043;
-	bh=t60YEIkTPM+weChxBuQ9RL7zky9tW+NV2nEWVLpqr8o=;
+	s=default; t=1572096047;
+	bh=NLVxnA/jHpWXgDZIgCV3DQoDe2i1QLshxr5PWmUYvwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8XyyzFiQDgz59Hd1DBGMNv1ncx7JS5eh0lY1dCkGNqlUXl+BT9nVLwkjCfvDzZyA
-	 efIY2vPhTHJ+MYUYttqnqzNnRiVog7qfh6Dv2uyyVUjU6DTS1At/lELIfHCz3FDyve
-	 47JpkvhzQfSZ9HTrnjaS4D5aBpqVkjb6ja6qCFJY=
+	b=bwx9yMHwkLU4IfHtCCWd4h5+SIFQMYeHwTcVW6UANT2omVBw9yRP5fqiu0ra4EuUs
+	 lXjBWdYy8jgaOEZa1VCY1GyMtqPo0IW1eWc54SQ67vau7dzZjPojdkkWglDusfVNy+
+	 qEWx3ev5Df3LjGaNZcxhgTNqbQYsxpmYXkamufVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfJZNUm (ORCPT
+        id S1728682AbfJZNUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:20:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728608AbfJZNUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:25 -0400
+        id S1726712AbfJZNUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A44F02070B;
-        Sat, 26 Oct 2019 13:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496DD206DD;
+        Sat, 26 Oct 2019 13:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096024;
-        bh=t60YEIkTPM+weChxBuQ9RL7zky9tW+NV2nEWVLpqr8o=;
+        s=default; t=1572096030;
+        bh=NLVxnA/jHpWXgDZIgCV3DQoDe2i1QLshxr5PWmUYvwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOto8NhTURjLqudCTr+yqPs8SVm2XP8crAIvf6q08wyZYUPe5FCgyTXZuYF56hg5i
-         RPtT+0bG752i8ZrOZAzwMIW2MH0mErxWgt1NYOBsYNkZ4TqZ+F4OSo9GghsAZW/6tA
-         qfrsWPZUT+9cGQ2KoI2Cukt13HJM3IASugNZk6zU=
+        b=yr3beEE3oP5QW/WdGPJeIIB5vq33sTsvbb4WMLFuVLHFRBQtGdAAyzHJYIkjAKGsH
+         iEz1/HT7IFe0Cj0LTjmjSI5v3KLnkPPQV7PmU2Q5kvt9egOvnfEDG7GpfQQwog8OrK
+         9sX1ILUx+4BGnc2yyY0C1Z5PXKZ6S1nGdkVkuXys=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 37/59] net/smc: receive pending data after RCV_SHUTDOWN
-Date:   Sat, 26 Oct 2019 09:18:48 -0400
-Message-Id: <20191026131910.3435-37-sashal@kernel.org>
+Cc:     =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 40/59] net/ibmvnic: Fix EOI when running in XIVE mode.
+Date:   Sat, 26 Oct 2019 09:18:51 -0400
+Message-Id: <20191026131910.3435-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,75 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: Cédric Le Goater <clg@kaod.org>
 
-[ Upstream commit 107529e31a87acd475ff6a0f82745821b8f70fec ]
+[ Upstream commit 11d49ce9f7946dfed4dcf5dbde865c78058b50ab ]
 
-smc_rx_recvmsg() first checks if data is available, and then if
-RCV_SHUTDOWN is set. There is a race when smc_cdc_msg_recv_action() runs
-in between these 2 checks, receives data and sets RCV_SHUTDOWN.
-In that case smc_rx_recvmsg() would return from receive without to
-process the available data.
-Fix that with a final check for data available if RCV_SHUTDOWN is set.
-Move the check for data into a function and call it twice.
-And use the existing helper smc_rx_data_available().
+pSeries machines on POWER9 processors can run with the XICS (legacy)
+interrupt mode or with the XIVE exploitation interrupt mode. These
+interrupt contollers have different interfaces for interrupt
+management : XICS uses hcalls and XIVE loads and stores on a page.
+H_EOI being a XICS interface the enable_scrq_irq() routine can fail
+when the machine runs in XIVE mode.
 
-Fixes: 952310ccf2d8 ("smc: receive data from RMBE")
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fix that by calling the EOI handler of the interrupt chip.
+
+Fixes: f23e0643cd0b ("ibmvnic: Clear pending interrupt after device reset")
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_rx.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
-index 1ee5fdbf8284e..36340912df48a 100644
---- a/net/smc/smc_rx.c
-+++ b/net/smc/smc_rx.c
-@@ -262,6 +262,18 @@ static int smc_rx_recv_urg(struct smc_sock *smc, struct msghdr *msg, int len,
- 	return -EAGAIN;
- }
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index aa067a7a72d40..8fa14736449bc 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -2731,12 +2731,10 @@ static int enable_scrq_irq(struct ibmvnic_adapter *adapter,
  
-+static bool smc_rx_recvmsg_data_available(struct smc_sock *smc)
-+{
-+	struct smc_connection *conn = &smc->conn;
-+
-+	if (smc_rx_data_available(conn))
-+		return true;
-+	else if (conn->urg_state == SMC_URG_VALID)
-+		/* we received a single urgent Byte - skip */
-+		smc_rx_update_cons(smc, 0);
-+	return false;
-+}
-+
- /* smc_rx_recvmsg - receive data from RMBE
-  * @msg:	copy data to receive buffer
-  * @pipe:	copy data to pipe if set - indicates splice() call
-@@ -303,15 +315,18 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
- 		if (read_done >= target || (pipe && read_done))
- 			break;
+ 	if (adapter->resetting &&
+ 	    adapter->reset_reason == VNIC_RESET_MOBILITY) {
+-		u64 val = (0xff000000) | scrq->hw_irq;
++		struct irq_desc *desc = irq_to_desc(scrq->irq);
++		struct irq_chip *chip = irq_desc_get_chip(desc);
  
--		if (atomic_read(&conn->bytes_to_rcv))
-+		if (smc_rx_recvmsg_data_available(smc))
- 			goto copy;
--		else if (conn->urg_state == SMC_URG_VALID)
--			/* we received a single urgent Byte - skip */
--			smc_rx_update_cons(smc, 0);
+-		rc = plpar_hcall_norets(H_EOI, val);
+-		if (rc)
+-			dev_err(dev, "H_EOI FAILED irq 0x%llx. rc=%ld\n",
+-				val, rc);
++		chip->irq_eoi(&desc->irq_data);
+ 	}
  
- 		if (sk->sk_shutdown & RCV_SHUTDOWN ||
--		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
-+		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort) {
-+			/* smc_cdc_msg_recv_action() could have run after
-+			 * above smc_rx_recvmsg_data_available()
-+			 */
-+			if (smc_rx_recvmsg_data_available(smc))
-+				goto copy;
- 			break;
-+		}
- 
- 		if (read_done) {
- 			if (sk->sk_err ||
+ 	rc = plpar_hcall_norets(H_VIOCTL, adapter->vdev->unit_address,
 -- 
 2.20.1
 
