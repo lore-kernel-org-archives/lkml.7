@@ -2,110 +2,80 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3F8CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 09:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7A1CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 10:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B09206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 09:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572083413;
-	bh=6X+7o3nYmXTXsHrt3fJpGLQ4D2YmwYsckeqeO0iyPBE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EJUvMB6nwvua7koBkCXcmiaIXQusgQ3OiBgkFoKTOM3Qp4RWcM7Ko9BgodBMMHzdj
-	 IgcNCNydLopLBNh58rFy+pDK/MIC90FbwlAOecRGi8KBI4kdpx7Tu06PNeqsGwzVzW
-	 hMviBK8uJZEogbrWOVzgxZMhC9MIRg5fkfstYyyY=
+	by mail.kernel.org (Postfix) with ESMTP id 929B820863
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 10:13:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="USP3P3B2";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Md6Dg7kT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfJZJuF (ORCPT
+        id S1726202AbfJZKM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 05:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJZJuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 05:50:04 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688CA206DD;
-        Sat, 26 Oct 2019 09:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572083403;
-        bh=6X+7o3nYmXTXsHrt3fJpGLQ4D2YmwYsckeqeO0iyPBE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VRfM6GkFHiFz61bDBM1gZY69z7MtzF0lhmhYj/eXjcQ/3FGz6yMI0tMvsNaOG0r4T
-         tREbXMfsrNdWjxpN/sYtg/TanaasGqIJTPS0eCvYt/Y6Rw2lceE7UqFtQkXiXxeoFC
-         AxaPOhTjmcu1phFfy+9LUeH0rmHB/WGEyePbiXE0=
-Date:   Sat, 26 Oct 2019 17:49:49 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Wen He <wen.he_1@nxp.com>
-Cc:     linux-devel@linux.nxdi.nxp.com, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [v3] arm64: dts: ls1028a: Update the property of the DT node
- dpclk
-Message-ID: <20191026094948.GF14401@dragon>
-References: <20191014071327.28961-1-wen.he_1@nxp.com>
+        Sat, 26 Oct 2019 06:12:59 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55354 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfJZKM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 06:12:58 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1F6D760A61; Sat, 26 Oct 2019 10:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572084778;
+        bh=7I09K5+CmAYJ4+S3gYjmbFECynwUeOnBJfhDvdQI5to=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=USP3P3B2USPu6bSKWZYTpMAlcVA8OkWOIwx6TGwTA9C6p4WjZBwyXpV6Fk0+iFyil
+         asCpK1jJzEZFSHj1w3JwZDwdH0EXkOmoEoAFCSsvsebBM6cW3MPdhnoYV8gA8ytEQo
+         ZvEsfh6s6J5sBLP83tzVnTq3q/mNoS57KZ+ETFNA=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 4460560A61;
+        Sat, 26 Oct 2019 10:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572084777;
+        bh=7I09K5+CmAYJ4+S3gYjmbFECynwUeOnBJfhDvdQI5to=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Md6Dg7kTGuXVpqmAZfASuB5staSOsMUSox9FfGwfmr8hxY11PnlLPSFBcJdLiOtJU
+         mdT2cHbWERzIzgoBUNWQGgXxS2wswbCeNMuS7otPaViTsWBcSGTp61iIbgMQVknEic
+         h9a0ZkRJTCoymHHfGVpM9JOdL4p5RkqT+cpTbpvg=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014071327.28961-1-wen.he_1@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 26 Oct 2019 03:12:57 -0700
+From:   isaacm@codeaurora.org
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        joro@8bytes.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        will@kernel.org, pratikp@codeaurora.org, lmark@codeaurora.org
+Subject: Re: [PATCH] iommu/dma: Add support for DMA_ATTR_SYS_CACHE
+In-Reply-To: <20191026053026.GA14545@lst.de>
+References: <1572050616-6143-1-git-send-email-isaacm@codeaurora.org>
+ <20191026053026.GA14545@lst.de>
+Message-ID: <e5fe861d7d506eb41c23f3fc047efdfa@codeaurora.org>
+X-Sender: isaacm@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 03:13:27PM +0800, Wen He wrote:
-> Update the property #clock-cells = <1> to #clock-cells = <0> of the
-> dpclk, since the Display output pixel clock driver provides single
-> clock output.
-> 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
+On 2019-10-25 22:30, Christoph Hellwig wrote:
+> The definition makes very little sense.
+Can you please clarify what part doesn’t make sense, and why? This is 
+really just an extension of this patch that got mainlined, so that 
+clients that use the DMA API can use IOMMU_QCOM_SYS_CACHE as well: 
+https://patchwork.kernel.org/patch/10946099/
+>  Any without a user in the same series it is a complete no-go anyway.
+IOMMU_QCOM_SYS_CACHE does not have any current users in the mainline, 
+nor did it have it in the patch series in which it got merged, yet it is 
+still present? Furthermore, there are plans to upstream support for one 
+of our SoCs that may benefit from this, as seen here: 
+https://www.spinics.net/lists/iommu/msg39608.html.
 
-The patch subject can be more specific like:
-
-  arm64: dts: ls1028a: Update #clock-cells of dpclk node
-
-I updated it and applied patch.
-
-Shawn
-
-> ---
-> change in v3:
->         - according the maintainer correction node name
->         - update the commit message
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 51fa8f57fdac..616b150a15aa 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -82,7 +82,7 @@
->  	dpclk: clock-controller@f1f0000 {
->  		compatible = "fsl,ls1028a-plldig";
->  		reg = <0x0 0xf1f0000 0x0 0xffff>;
-> -		#clock-cells = <1>;
-> +		#clock-cells = <0>;
->  		clocks = <&osc_27m>;
->  	};
->  
-> @@ -665,7 +665,7 @@
->  		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
->  		interrupt-names = "DE", "SE";
-> -		clocks = <&dpclk 0>, <&clockgen 2 2>, <&clockgen 2 2>,
-> +		clocks = <&dpclk>, <&clockgen 2 2>, <&clockgen 2 2>,
->  			 <&clockgen 2 2>;
->  		clock-names = "pxlclk", "mclk", "aclk", "pclk";
->  		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
-> -- 
-> 2.17.1
-> 
+Thanks,
+Isaac
