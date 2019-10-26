@@ -7,56 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA5ACA9EB9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A320CA9EBD
 	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF422070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669DA20867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096505;
-	bh=nkP+P8YBBS9QDsDaMNe3U4+XclMdwFgTQYomNQMcBmM=;
+	s=default; t=1572096506;
+	bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iUOTGwcU2iImJHpiIN3fdpF0DMb6BnorF+A/maSFkI4Gk+18MNnnbBQyZPqneY1np
-	 ad+DO6u9zK4y2RAby/DuRU2M6951HCaWV466qulTuoSGNYTdRU6rh9FW+NBENKEabH
-	 tQidDDLqTu3XJGhViXw5+m9+wHKa15yUeuj3nYL0=
+	b=cGIx/U54g7lU/kf6I6QJcqByD+wpH2LnirqujuMn+dIl4K2vHpHQiMSAQ3+jrkg3u
+	 wg16AWcTj2beSsdHRMLkqjkyYOQG/sdiWa91yRLlbf/1JuWhIoL+B9DPvCvVR5qTr1
+	 RbWxekcNM6NNkuRIZzdX1s9fxrIZTusHG5BLDcs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfJZN2Y (ORCPT
+        id S1729514AbfJZN00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:28:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42782 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:26:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727634AbfJZNVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:06 -0400
+        id S1727207AbfJZNWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58D8321871;
-        Sat, 26 Oct 2019 13:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7245221E6F;
+        Sat, 26 Oct 2019 13:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096065;
-        bh=nkP+P8YBBS9QDsDaMNe3U4+XclMdwFgTQYomNQMcBmM=;
+        s=default; t=1572096121;
+        bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKEyCmxnj5McjCL3Q1xyDwJiwxsYRrH1lEqUxwwpmJDM1l4T/CgbvrRrvHHRVLwHy
-         3qS319xW/SsssdBPtWLPgX7BRqmqOEuDiLFm55U+dp85PP+tGFCPsdGx7ypaNuJK5j
-         eXkLrpe2GcLmUfmK8uOkk67aGpbFr44vLfmOhYBw=
+        b=Rb7efpcPlNKIn39U8nnCAbaaT6O/XWCe62FYqZplzk151TUehCyBVzJgcSaCDfqLN
+         e0444okMRshkXySF9FbDzGI/zY1D14uN4Lw6/a0+Q9lETLw1gFao/J+Fw0P/SgGM7N
+         ryqL7G+8IyEj2x5LCpOU2h6nciavcQ4fDTHvpWDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengguang Xu <cgxu519@mykernel.net>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 58/59] ocfs2: fix error handling in ocfs2_setattr()
-Date:   Sat, 26 Oct 2019 09:19:09 -0400
-Message-Id: <20191026131910.3435-58-sashal@kernel.org>
+Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 25/33] net: usb: sr9800: fix uninitialized local variable
+Date:   Sat, 26 Oct 2019 09:21:02 -0400
+Message-Id: <20191026132110.4026-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
-References: <20191026131910.3435-1-sashal@kernel.org>
+In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
+References: <20191026132110.4026-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,49 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 
-[ Upstream commit ce750f43f5790de74c1644c39d78f684071658d1 ]
+[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
 
-Should set transfer_to[USRQUOTA/GRPQUOTA] to NULL on error case before
-jumping to do dqput().
+Make sure res does not contain random value if the call to
+sr_read_cmd fails for some reason.
 
-Link: http://lkml.kernel.org/r/20191010082349.1134-1-cgxu519@mykernel.net
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/file.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/sr9800.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/file.c b/fs/ocfs2/file.c
-index 9fa35cb6f6e0b..02fe64ada0dbd 100644
---- a/fs/ocfs2/file.c
-+++ b/fs/ocfs2/file.c
-@@ -1240,6 +1240,7 @@ int ocfs2_setattr(struct dentry *dentry, struct iattr *attr)
- 			transfer_to[USRQUOTA] = dqget(sb, make_kqid_uid(attr->ia_uid));
- 			if (IS_ERR(transfer_to[USRQUOTA])) {
- 				status = PTR_ERR(transfer_to[USRQUOTA]);
-+				transfer_to[USRQUOTA] = NULL;
- 				goto bail_unlock;
- 			}
- 		}
-@@ -1249,6 +1250,7 @@ int ocfs2_setattr(struct dentry *dentry, struct iattr *attr)
- 			transfer_to[GRPQUOTA] = dqget(sb, make_kqid_gid(attr->ia_gid));
- 			if (IS_ERR(transfer_to[GRPQUOTA])) {
- 				status = PTR_ERR(transfer_to[GRPQUOTA]);
-+				transfer_to[GRPQUOTA] = NULL;
- 				goto bail_unlock;
- 			}
- 		}
+diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
+index 35f39f23d8814..8f8c9ede88c26 100644
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
+ static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
+ {
+ 	struct usbnet *dev = netdev_priv(net);
+-	__le16 res;
++	__le16 res = 0;
+ 
+ 	mutex_lock(&dev->phy_mutex);
+ 	sr_set_sw_mii(dev);
 -- 
 2.20.1
 
