@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23731CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D310CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A4A2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BCD206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096373;
-	bh=U6HFSLK8B3LhppeobNpVbWvQmbuqRJyH+5DZKjc7zO0=;
+	s=default; t=1572096384;
+	bh=xYfMvEeRT2yBPpjJP9K1yHlQM61MWrUW4oprOQp/Eoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D+UOWWeMYuOVXugCWJjEj8KNKvitpFYmBiLHXWwLV+NnHuE8r9ysak4JQlbRHpE7O
-	 dMZ1RIRK5KqZVFg9++cw5OOxSq2LVkT131W9Zd6igZGiyiZs5q4spvF0N88hGT3a68
-	 1xs5GwiX3EKRRQLhbMkFk3WYxZL1YxqQg8G1q/0Y=
+	b=w8PyMQ677Ixb+F3WejrN2xIrm2Y6uBFxhtLdNl5NUsWgXtBAuXo4/c5T6PhygLOpL
+	 3iuj/e5gYlTfU/sjjmWXbT/9BEe0Yw5qO+206YjnqyJLjmLXubJRnAVvNRgWbyjskZ
+	 glbrmJEWmNwK4HZIrTx7vcEyjh3gk6XclREqJk9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbfJZN0L (ORCPT
+        id S1727550AbfJZNWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43898 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729328AbfJZNWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:22:08 -0400
+        id S1727995AbfJZNV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 778CB222BE;
-        Sat, 26 Oct 2019 13:22:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B7F222BE;
+        Sat, 26 Oct 2019 13:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096127;
-        bh=U6HFSLK8B3LhppeobNpVbWvQmbuqRJyH+5DZKjc7zO0=;
+        s=default; t=1572096118;
+        bh=xYfMvEeRT2yBPpjJP9K1yHlQM61MWrUW4oprOQp/Eoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uE2ssZ7uMywAv3tiKOZwCSGAXIa4hP6Gcm8rGJNkDfylfoH+DL+sEjOosO/29usXq
-         keFfCVVgZOC5jdtoRmteTF6Ax2ShsV/LGhAqBbMvOoJTUvwzyrC+1zDGbcDVRkk2f3
-         yhwyVB0OBhmSqmA6pPYFIJ0uGIlfucUFSgqb42m0=
+        b=infSxXXzOn5JrtI/Pj/2EuK+mcDnTPmNJVi48sDT/q+wwmFpi3ur/+p3DHomMuEnr
+         ls060jZud7PUcoHvVVGfke4ah1TUs8iyawQqtEkfQ7H8Y+kXs3KjkiKA4OgvQqBYLI
+         zaqP4seX46N85Nw2nR2bbS+e0H7bsSwF34IhI+IA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Liu <wei.liu@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/33] x86/hyperv: Set pv_info.name to "Hyper-V"
-Date:   Sat, 26 Oct 2019 09:21:06 -0400
-Message-Id: <20191026132110.4026-29-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 24/33] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
+Date:   Sat, 26 Oct 2019 09:21:01 -0400
+Message-Id: <20191026132110.4026-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -62,49 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit f7c0f50f1857c1cf013466fcea4dc98d116bf456 ]
+[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
 
-Michael reported that the x86/hyperv initialization code prints the
-following dmesg when running in a VM on Hyper-V:
+The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
+became 6 for GENET v4 and above, account for that difference.
 
-  [    0.000738] Booting paravirtualized kernel on bare hardware
-
-Let the x86/hyperv initialization code set pv_info.name to "Hyper-V" so
-dmesg reports correctly:
-
-  [    0.000172] Booting paravirtualized kernel on Hyper-V
-
-[ tglx: Folded build fix provided by Yue ]
-
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.kernel.org/r/20191015103502.13156-1-parri.andrea@gmail.com
+Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h | 1 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index c0201b11e9e2a..4e7adccf812d4 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -171,6 +171,10 @@ static void __init ms_hyperv_init_platform(void)
- 	int hv_host_info_ecx;
- 	int hv_host_info_edx;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index 9d499c5c8f8aa..f176a0307f395 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -368,6 +368,7 @@ struct bcmgenet_mib_counters {
+ #define  EXT_PWR_DOWN_PHY_EN		(1 << 20)
  
-+#ifdef CONFIG_PARAVIRT
-+	pv_info.name = "Hyper-V";
-+#endif
-+
- 	/*
- 	 * Extract the features and hints
+ #define EXT_RGMII_OOB_CTRL		0x0C
++#define  RGMII_MODE_EN_V123		(1 << 0)
+ #define  RGMII_LINK			(1 << 4)
+ #define  OOB_DISABLE			(1 << 5)
+ #define  RGMII_MODE_EN			(1 << 6)
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index c421e2753c8ce..0d970e5cb9fd5 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -277,7 +277,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
  	 */
+ 	if (priv->ext_phy) {
+ 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
+-		reg |= RGMII_MODE_EN | id_mode_dis;
++		reg |= id_mode_dis;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			reg |= RGMII_MODE_EN_V123;
++		else
++			reg |= RGMII_MODE_EN;
+ 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
+ 	}
+ 
 -- 
 2.20.1
 
