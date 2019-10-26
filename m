@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0803DCA9EBE
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECE7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B406920863
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C4920863
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:11:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1bmO+67"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Alqdrmod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfJZML4 (ORCPT
+        id S1726489AbfJZML6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 08:11:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50652 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfJZMLz (ORCPT
+        Sat, 26 Oct 2019 08:11:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55889 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbfJZML4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 08:11:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 11so4860731wmk.0
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 05:11:54 -0700 (PDT)
+        Sat, 26 Oct 2019 08:11:56 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g24so4839528wmh.5
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 05:11:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vrtKL5FLpbI/Kv7Prf5m0FfT7aQNnb/mhwX9jm5QzjY=;
-        b=H1bmO+672auiRTfi8IzBBR6BG5Jt5CFw062RwUFwDum/lcoEs9XE23YdzDFaAqaMSF
-         YLMPnz5YbAcFNzy2VJFwAwhgFaQFMR5QpkPjN1b2id87MGj3/DstA3VA50XDtBjCuFoq
-         aI0uNLnmGn2o6unYPsaelDgvS1/DZz1862Pp5d02/mBSZw9uhTPU9Wulp7zovuiqg8Rb
-         VSxuJTfxuo0MpxvuhaK2oqEsFG7LScgAgh5KfS0FdipzVJDtJHHKAt/eQ5AyMUxtBDdn
-         b61wvgww0H06JQxW0nCPFlTIWf3zm66/ox5p4Nl3PMVFkBnCioiZF/Mc3lmHIdv5bRJO
-         pDrQ==
+        bh=ROdiUFie8VPool1pzj4M8/NsYOT7cWJYujn+QRdPF48=;
+        b=AlqdrmodfB2rBN9q1tTZv458MN/RslIaLRXFeOeGkRMKbPPh8TtPe0WKzfbkx4+iwM
+         f0u6I85jzwSn9dvT5uR2vB7b2BHORpvqGVKyc9+rSjipxzxzFYHQ4zGUHDTQ6cfW5I2Z
+         xfpP72Ue4kAkYBTarXmu2HAcGCx2pDOiN25WDcX+jAasFbhpqgO0A+en5B9PV/YWMPzW
+         A9e2QQw4bR9T+3cKAamNJtFUKSzquHuX/gyN6sQ/rw4ZcHDzzitvF2rXYZmYMLNnvDOl
+         4z841TP/fVrCLDaQ0SkaDmCl50k2V2pfzwaU4Pf7k9Z89Jxr7dTajxMOKeKvfdm5Abd0
+         Z10g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vrtKL5FLpbI/Kv7Prf5m0FfT7aQNnb/mhwX9jm5QzjY=;
-        b=m3t60BuTsa2vgCgOJvTzevDe5oeP0llQA+cmKKeASCNazHHZUC6PCdFMbwp2i1J7k+
-         75Iow5X++ElPr04EJN0jbWfJc7przCSpWKRQnQQd19Go8EV4yvnD+wt+j8JhJN+LjbkX
-         B7r1wxDQ9peWblQwX68U+vNz7h+sdOavW73DcqqycW2DKef7NrxbWMDKXUG+NXu9sVER
-         koPnFqdZpmRGFkPMRcRDGs8BqOyDUlRjOXGB5HzhNZpiu2Ik69u/7ci65aZm4GIe2UCp
-         V5j9Y/EnZK9vYsBmTWnDNA7inkJ7+sTmTx0Pw8DBGO2ReBtv5idMbsc8Cq2aRMigpG8p
-         0qaQ==
-X-Gm-Message-State: APjAAAXtpy/uMATJ9eIIb+TDfrnpOEpsh5tTIt9kSe02++o4kmFOl3Ny
-        Mdm6SAnpMZ+qG1gQEke+Xdk=
-X-Google-Smtp-Source: APXvYqxZ5yzfpPVbuUPCYjGomhgeFgFlBsrzZPBDEVPojOXP6teEwPbm5tR+XMI+HsB5KNkTFkZw0g==
-X-Received: by 2002:a1c:5459:: with SMTP id p25mr4218343wmi.109.1572091913616;
-        Sat, 26 Oct 2019 05:11:53 -0700 (PDT)
+        bh=ROdiUFie8VPool1pzj4M8/NsYOT7cWJYujn+QRdPF48=;
+        b=ZG8jgNm9a1kvnF24ClbwrutdlQ32NOKwBOQWqNyzXOtcmWa2GrGTm6gmue+gT+DDQC
+         8RmxjNg309p9GP2oIIztAkPuifN5/eVr1GlEJWkIc7fKCP7YDGEnalclaIhITucGs/+f
+         vg+lttor052xoQYIrI2dhfye2OgNNtDJ8YwF/D+uLMf9dqgqiyoLOv+q7SzbWlyOfvXd
+         iupghZ4gzUUDE6ZmCi3V1EAdCdRGWZNBHhQ9NObgPH0FCVEhprV+o8y7Z7tuLmp2RDUg
+         l74eTDMMLEWz0HmpltT8k+9lzQB+s49yiutkk+DuskxnZJdrslk02Erg1UU8GJtqyZhN
+         Tycw==
+X-Gm-Message-State: APjAAAUrQlUxxuWqZUTxd0Rhy5T+jciSH+u6OugtjCZQslEXLGdYU3oY
+        NWfywnI0TmN9NUPvV0ycgcE=
+X-Google-Smtp-Source: APXvYqxeTooQKZiEc2mBWfb+OQCbQqxGnXpC/cxWfdn7perNeBGaeYaAKOlietK+Z7Q0Lr9voDLU7Q==
+X-Received: by 2002:a05:600c:2487:: with SMTP id 7mr7812955wms.164.1572091914530;
+        Sat, 26 Oct 2019 05:11:54 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id v8sm5789906wra.79.2019.10.26.05.11.52
+        by smtp.gmail.com with ESMTPSA id v8sm5789906wra.79.2019.10.26.05.11.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2019 05:11:53 -0700 (PDT)
+        Sat, 26 Oct 2019 05:11:54 -0700 (PDT)
 From:   Michael Straube <straube.linux@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
         Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 3/7] staging: rtl8188eu: rename array bcast_addr
-Date:   Sat, 26 Oct 2019 14:11:31 +0200
-Message-Id: <20191026121135.181897-3-straube.linux@gmail.com>
+Subject: [PATCH 4/7] staging: rtl8188eu: convert rtw_access_ctrl to return bool
+Date:   Sat, 26 Oct 2019 14:11:32 +0200
+Message-Id: <20191026121135.181897-4-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191026121135.181897-1-straube.linux@gmail.com>
 References: <20191026121135.181897-1-straube.linux@gmail.com>
@@ -75,34 +75,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename array bcast_addr to be more consistent in variable naming.
-In other places in this file buffers for broadcast addresses are
-named bc_addr as well.
-
-bcast_addr -> bc_addr
+Function rtw_access_ctrl returns boolean values, so change the return
+type to bool. Also convert the local variables that are used for the
+return value from u8 to bool.
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 6 +++---
+ drivers/staging/rtl8188eu/include/sta_info.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-index 394b887a8bde..157ae2f355ff 100644
+index 157ae2f355ff..282c835a635c 100644
 --- a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
 +++ b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-@@ -450,10 +450,10 @@ u32 rtw_init_bcmc_stainfo(struct adapter *padapter)
+@@ -476,13 +476,13 @@ struct sta_info *rtw_get_bcmc_stainfo(struct adapter *padapter)
+ 	return rtw_get_stainfo(pstapriv, bc_addr);
+ }
+ 
+-u8 rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr)
++bool rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr)
  {
- 	struct sta_info *psta;
- 	u32 res = _SUCCESS;
--	u8 bcast_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-+	u8 bc_addr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+-	u8 res = true;
++	bool res = true;
+ #ifdef CONFIG_88EU_AP_MODE
+ 	struct list_head *plist, *phead;
+ 	struct rtw_wlan_acl_node *paclnode;
+-	u8 match = false;
++	bool match = false;
  	struct sta_priv *pstapriv = &padapter->stapriv;
+ 	struct wlan_acl_pool *pacl_list = &pstapriv->acl_list;
+ 	struct __queue *pacl_node_q = &pacl_list->acl_node_q;
+diff --git a/drivers/staging/rtl8188eu/include/sta_info.h b/drivers/staging/rtl8188eu/include/sta_info.h
+index dc685a14aeb8..6165adafc451 100644
+--- a/drivers/staging/rtl8188eu/include/sta_info.h
++++ b/drivers/staging/rtl8188eu/include/sta_info.h
+@@ -354,6 +354,6 @@ void rtw_free_all_stainfo(struct adapter *adapt);
+ struct sta_info *rtw_get_stainfo(struct sta_priv *stapriv, u8 *hwaddr);
+ u32 rtw_init_bcmc_stainfo(struct adapter *adapt);
+ struct sta_info *rtw_get_bcmc_stainfo(struct adapter *padapter);
+-u8 rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr);
++bool rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr);
  
--	psta = rtw_alloc_stainfo(pstapriv, bcast_addr);
-+	psta = rtw_alloc_stainfo(pstapriv, bc_addr);
- 
- 	if (!psta) {
- 		res = _FAIL;
+ #endif /* _STA_INFO_H_ */
 -- 
 2.23.0
 
