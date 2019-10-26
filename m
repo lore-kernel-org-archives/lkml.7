@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921FECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25201CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D5C222C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1640214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095901;
-	bh=Da2+BDVNfV3cOEI+tV/Lq5ouvPU5Dta7w1CoeLfooqw=;
+	s=default; t=1572095905;
+	bh=LqDGJdi5OWBQxcBO1AEODAmneVGL2UOiAb5nGZcb8dM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jHEynE9vDjl247Klyy3WtvzNcWJsca6C6NgE9ejDphJ3M5tG4klp5bjPjp9zbdmyG
-	 mrAwxW/JYv6JRJwxR4hACqBX4INsHoh4nBfYfnP+++sWZOnHpXpiOSU8F8rWCxlmk3
-	 D6BEyVIlnXEjd4Z/r6jg8oek5rbcwhUUCEmPzzLY=
+	b=Vu5+fgMwXPbsV6aCTqamOau92p7w6z+NEPctKyNMhS2nmKwwoUGKl1TM+WaTZEFDZ
+	 R1vC07pYJ88rVv9CPQbqKm4tImeJNb6PncmAIfjJ3Je+swSfo/S/mCUpCXVu124gen
+	 ke80SfXzYkJfr0VXikQaM+CA+V9wxvkgaNbbVfw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfJZNSU (ORCPT
+        id S1727799AbfJZNSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39954 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727757AbfJZNSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:16 -0400
+        id S1727781AbfJZNSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BECD721E6F;
-        Sat, 26 Oct 2019 13:18:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74589214DA;
+        Sat, 26 Oct 2019 13:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095895;
-        bh=Da2+BDVNfV3cOEI+tV/Lq5ouvPU5Dta7w1CoeLfooqw=;
+        s=default; t=1572095901;
+        bh=LqDGJdi5OWBQxcBO1AEODAmneVGL2UOiAb5nGZcb8dM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SXKOwjtgV7m3nBjnqmfJ2Gj46RhpBpsbzI9NF0ZlNKZZStGVlQc6eqYRHfjB68kqA
-         iuvUr+OpxX4g2BztYk6G7IpWB55DTkwX/jnrIDPRYOcYofyCwACkJ8f7PSg0nFCbNH
-         49MsK/zqi0rCt6Q6qYPmBfZyl+e1F44BQ1P1RYas=
+        b=o6HniNcBFMpFo8mVIRjcsXLLrNEa1VbctpCLW+ValVTmoq0Yt3Hoyxn2zC4Jeti6y
+         TjZAT/TywqIpQfUVbVLBlmEdytAQ+rpBMnVIUA8hEOz77I4A/W2KnsXqelGoTJnZ3r
+         FP1q/bwC//6pjaNlS/Xh5ka7kptPBDlUklvmSFOA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry V Levin <ldv@altlinux.org>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        Meelis Roos <mroos@linux.ee>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Miller <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 77/99] sparc64: disable fast-GUP due to unexplained oopses
-Date:   Sat, 26 Oct 2019 09:15:38 -0400
-Message-Id: <20191026131600.2507-77-sashal@kernel.org>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 78/99] net: i82596: fix dma_alloc_attr for sni_82596
+Date:   Sat, 26 Oct 2019 09:15:39 -0400
+Message-Id: <20191026131600.2507-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -63,55 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit 8e0d0ad206f08506c893326ca7c9c3d9cc042cef ]
+[ Upstream commit 61c1d33daf7b5146f44d4363b3322f8cda6a6c43 ]
 
-HAVE_FAST_GUP enables the lockless quick page table walker for simple
-cases, and is a nice optimization for some random loads that can then
-use get_user_pages_fast() rather than the more careful page walker.
+Commit 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
+switched dma allocation over to dma_alloc_attr, but didn't convert
+the SNI part to request consistent DMA memory. This broke sni_82596
+since driver doesn't do dma_cache_sync for performance reasons.
+Fix this by using different DMA_ATTRs for lasi_82596 and sni_82596.
 
-However, for some unexplained reason, it seems to be subtly broken on
-sparc64.  The breakage is only with some compiler versions and some
-hardware, and nobody seems to have figured out what triggers it,
-although there's a simple reprodicer for the problem when it does
-trigger.
-
-The problem was introduced with the conversion to the generic GUP code
-in commit 7b9afb86b632 ("sparc64: use the generic get_user_pages_fast
-code"), but nothing looks obviously wrong in that conversion.  It may be
-a compiler bug that just hits us with the code reorganization.  Or it
-may be something very specific to sparc64.
-
-This disables HAVE_FAST_GUP entirely.  That makes things like futexes a
-bit slower, but at least they work.  If we can figure out the trigger,
-that would be lovely, but it's been three months already..
-
-Link: https://lore.kernel.org/lkml/20190717215956.GA30369@altlinux.org/
-Fixes: 7b9afb86b632 ("sparc64: use the generic get_user_pages_fast code")
-Reported-by: Dmitry V Levin <ldv@altlinux.org>
-Reported-by: Anatoly Pugachev <matorola@gmail.com>
-Requested-by: Meelis Roos <mroos@linux.ee>
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Cc: David Miller <davem@davemloft.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/i825xx/lasi_82596.c | 4 +++-
+ drivers/net/ethernet/i825xx/lib82596.c   | 4 ++--
+ drivers/net/ethernet/i825xx/sni_82596.c  | 4 +++-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index 7926a2e11bdc2..6a31f240840d4 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -28,7 +28,6 @@ config SPARC
- 	select RTC_DRV_M48T59
- 	select RTC_SYSTOHC
- 	select HAVE_ARCH_JUMP_LABEL if SPARC64
--	select HAVE_FAST_GUP if SPARC64
- 	select GENERIC_IRQ_SHOW
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select GENERIC_PCI_IOMAP
+diff --git a/drivers/net/ethernet/i825xx/lasi_82596.c b/drivers/net/ethernet/i825xx/lasi_82596.c
+index 211c5f74b4c86..aec7e98bcc853 100644
+--- a/drivers/net/ethernet/i825xx/lasi_82596.c
++++ b/drivers/net/ethernet/i825xx/lasi_82596.c
+@@ -96,6 +96,8 @@
+ 
+ #define OPT_SWAP_PORT	0x0001	/* Need to wordswp on the MPU port */
+ 
++#define LIB82596_DMA_ATTR	DMA_ATTR_NON_CONSISTENT
++
+ #define DMA_WBACK(ndev, addr, len) \
+ 	do { dma_cache_sync((ndev)->dev.parent, (void *)addr, len, DMA_TO_DEVICE); } while (0)
+ 
+@@ -200,7 +202,7 @@ static int __exit lan_remove_chip(struct parisc_device *pdev)
+ 
+ 	unregister_netdev (dev);
+ 	dma_free_attrs(&pdev->dev, sizeof(struct i596_private), lp->dma,
+-		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
++		       lp->dma_addr, LIB82596_DMA_ATTR);
+ 	free_netdev (dev);
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/i825xx/lib82596.c b/drivers/net/ethernet/i825xx/lib82596.c
+index 1274ad24d6af1..f9742af7f142d 100644
+--- a/drivers/net/ethernet/i825xx/lib82596.c
++++ b/drivers/net/ethernet/i825xx/lib82596.c
+@@ -1065,7 +1065,7 @@ static int i82596_probe(struct net_device *dev)
+ 
+ 	dma = dma_alloc_attrs(dev->dev.parent, sizeof(struct i596_dma),
+ 			      &lp->dma_addr, GFP_KERNEL,
+-			      DMA_ATTR_NON_CONSISTENT);
++			      LIB82596_DMA_ATTR);
+ 	if (!dma) {
+ 		printk(KERN_ERR "%s: Couldn't get shared memory\n", __FILE__);
+ 		return -ENOMEM;
+@@ -1087,7 +1087,7 @@ static int i82596_probe(struct net_device *dev)
+ 	i = register_netdev(dev);
+ 	if (i) {
+ 		dma_free_attrs(dev->dev.parent, sizeof(struct i596_dma),
+-			       dma, lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
++			       dma, lp->dma_addr, LIB82596_DMA_ATTR);
+ 		return i;
+ 	}
+ 
+diff --git a/drivers/net/ethernet/i825xx/sni_82596.c b/drivers/net/ethernet/i825xx/sni_82596.c
+index 6eb6c2ff7f099..6436a98c5953f 100644
+--- a/drivers/net/ethernet/i825xx/sni_82596.c
++++ b/drivers/net/ethernet/i825xx/sni_82596.c
+@@ -24,6 +24,8 @@
+ 
+ static const char sni_82596_string[] = "snirm_82596";
+ 
++#define LIB82596_DMA_ATTR	0
++
+ #define DMA_WBACK(priv, addr, len)     do { } while (0)
+ #define DMA_INV(priv, addr, len)       do { } while (0)
+ #define DMA_WBACK_INV(priv, addr, len) do { } while (0)
+@@ -152,7 +154,7 @@ static int sni_82596_driver_remove(struct platform_device *pdev)
+ 
+ 	unregister_netdev(dev);
+ 	dma_free_attrs(dev->dev.parent, sizeof(struct i596_private), lp->dma,
+-		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
++		       lp->dma_addr, LIB82596_DMA_ATTR);
+ 	iounmap(lp->ca);
+ 	iounmap(lp->mpu_port);
+ 	free_netdev (dev);
 -- 
 2.20.1
 
