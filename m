@@ -2,54 +2,51 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF37CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0586CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C720020867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BC3214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096956;
-	bh=D4p/k8K+pcrKKBqKJkh62m+JChkk/cjGS2MuusHjUes=;
+	s=default; t=1572096963;
+	bh=lkdQvyDSW5WoJQUCp7sWmsbHlxWLMzLFiVYq31v6aFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgVnjqHpOLxfebxi1ANhwm91+mcfJz8DvYjtxc+K5ApdQFv+vLJIdMGGbp5TiCJzg
-	 C/2+Y9uwSyGzFXoKklJvcLGHXY23hVaNeaj7pQXqhfxD7TZp+BIaBBYHo0hZ1fVwSE
-	 rkNBHliFHwnrHbFhGo5+dqvshin7/exyZmwfS1eA=
+	b=kgLZ6MwmXs9dni2Koc+YNgS6lDe+rFwuAlKCFGhrPKDVny9lKX5ojkI5BNmRgpFXP
+	 ndA9rEGuZlSAX85rypK4YDo8abmv5lqQQpsZg2NlanxuKARFDnOeRxSKaVxL+G1QC8
+	 o4uru6mMhzJPjncUWRBPRTsGKft+XaxzZT+d4gW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfJZNfz (ORCPT
+        id S1727044AbfJZNQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:35:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727075AbfJZNQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:59 -0400
+        id S1727000AbfJZNQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1790222CB;
-        Sat, 26 Oct 2019 13:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D54BA21D80;
+        Sat, 26 Oct 2019 13:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095818;
-        bh=D4p/k8K+pcrKKBqKJkh62m+JChkk/cjGS2MuusHjUes=;
+        s=default; t=1572095813;
+        bh=lkdQvyDSW5WoJQUCp7sWmsbHlxWLMzLFiVYq31v6aFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4i4RYJwW7VO0nFDaeY+R+swtGjut0Ml6+Ip/hFjae/Psx5/9htURC/rhGvNy1get
-         DCoRFePHl7DzzWUqfCmnB5pMT5tMWJ/8xHFjtQ0PgdEOiZJ4MiJVwXdqAZf6Tz2QGa
-         izrMl6Gc/v2ifq7gIDioQPx8Ulq7SNQ+loaqHfFU=
+        b=e/EzQfzQKbG4u1zYL/fPaMpvMRAXR/uq5otJBYfjNx+g+cwBndqc1c+cdm+CM4gNB
+         4zty7TosjcnFO6H/2pyGfHqzAasYi/H1G63u9HxAONn/6eYP44UFb0Hubwqtn3hoP1
+         Vt6wnHNEnlpYy1nLt9bMAiBNz80KacEN1SzzhXC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
+Cc:     Eric Biggers <ebiggers@google.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 32/99] net_sched: fix backward compatibility for TCA_ACT_KIND
-Date:   Sat, 26 Oct 2019 09:14:53 -0400
-Message-Id: <20191026131600.2507-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 28/99] llc: fix sk_buff refcounting in llc_conn_state_process()
+Date:   Sat, 26 Oct 2019 09:14:49 -0400
+Message-Id: <20191026131600.2507-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -62,56 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 4b793feccae3b06764268377a4030eb774ed924e ]
+[ Upstream commit 36453c852816f19947ca482a595dffdd2efa4965 ]
 
-For TCA_ACT_KIND, we have to keep the backward compatibility too,
-and rely on nla_strlcpy() to check and terminate the string with
-a NUL.
+If llc_conn_state_process() sees that llc_conn_service() put the skb on
+a list, it will drop one fewer references to it.  This is wrong because
+the current behavior is that llc_conn_service() never consumes a
+reference to the skb.
 
-Note for TC actions, nla_strcmp() is already used to compare kind
-strings, so we don't need to fix other places.
+The code also makes the number of skb references being dropped
+conditional on which of ind_prim and cfm_prim are nonzero, yet neither
+of these affects how many references are *acquired*.  So there is extra
+code that tries to fix this up by sometimes taking another reference.
 
-Fixes: 199ce850ce11 ("net_sched: add policy validation for action attributes")
-Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Remove the unnecessary/broken refcounting logic and instead just add an
+skb_get() before the only two places where an extra reference is
+actually consumed.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_api.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/llc/llc_conn.c | 33 ++++++---------------------------
+ 1 file changed, 6 insertions(+), 27 deletions(-)
 
-diff --git a/net/sched/act_api.c b/net/sched/act_api.c
-index 2558f00f6b3ed..4e7429c6f8649 100644
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -832,8 +832,7 @@ static struct tc_cookie *nla_memdup_cookie(struct nlattr **tb)
- }
+diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
+index 0b0c6f12153b0..a79b739eb2236 100644
+--- a/net/llc/llc_conn.c
++++ b/net/llc/llc_conn.c
+@@ -64,12 +64,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 	struct llc_sock *llc = llc_sk(skb->sk);
+ 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
  
- static const struct nla_policy tcf_action_policy[TCA_ACT_MAX + 1] = {
--	[TCA_ACT_KIND]		= { .type = NLA_NUL_STRING,
--				    .len = IFNAMSIZ - 1 },
-+	[TCA_ACT_KIND]		= { .type = NLA_STRING },
- 	[TCA_ACT_INDEX]		= { .type = NLA_U32 },
- 	[TCA_ACT_COOKIE]	= { .type = NLA_BINARY,
- 				    .len = TC_COOKIE_MAX_SIZE },
-@@ -865,8 +864,10 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
- 			NL_SET_ERR_MSG(extack, "TC action kind must be specified");
- 			goto err_out;
- 		}
--		nla_strlcpy(act_name, kind, IFNAMSIZ);
+-	/*
+-	 * We have to hold the skb, because llc_conn_service will kfree it in
+-	 * the sending path and we need to look at the skb->cb, where we encode
+-	 * llc_conn_state_ev.
+-	 */
+-	skb_get(skb);
+ 	ev->ind_prim = ev->cfm_prim = 0;
+ 	/*
+ 	 * Send event to state machine
+@@ -77,21 +71,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 	rc = llc_conn_service(skb->sk, skb);
+ 	if (unlikely(rc != 0)) {
+ 		printk(KERN_ERR "%s: llc_conn_service failed\n", __func__);
+-		goto out_kfree_skb;
+-	}
 -
-+		if (nla_strlcpy(act_name, kind, IFNAMSIZ) >= IFNAMSIZ) {
-+			NL_SET_ERR_MSG(extack, "TC action name too long");
-+			goto err_out;
-+		}
- 		if (tb[TCA_ACT_COOKIE]) {
- 			cookie = nla_memdup_cookie(tb);
- 			if (!cookie) {
+-	if (unlikely(!ev->ind_prim && !ev->cfm_prim)) {
+-		/* indicate or confirm not required */
+-		if (!skb->next)
+-			goto out_kfree_skb;
+ 		goto out_skb_put;
+ 	}
+ 
+-	if (unlikely(ev->ind_prim && ev->cfm_prim)) /* Paranoia */
+-		skb_get(skb);
+-
+ 	switch (ev->ind_prim) {
+ 	case LLC_DATA_PRIM:
++		skb_get(skb);
+ 		llc_save_primitive(sk, skb, LLC_DATA_PRIM);
+ 		if (unlikely(sock_queue_rcv_skb(sk, skb))) {
+ 			/*
+@@ -108,6 +93,7 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 		 * skb->sk pointing to the newly created struct sock in
+ 		 * llc_conn_handler. -acme
+ 		 */
++		skb_get(skb);
+ 		skb_queue_tail(&sk->sk_receive_queue, skb);
+ 		sk->sk_state_change(sk);
+ 		break;
+@@ -123,7 +109,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 				sk->sk_state_change(sk);
+ 			}
+ 		}
+-		kfree_skb(skb);
+ 		sock_put(sk);
+ 		break;
+ 	case LLC_RESET_PRIM:
+@@ -132,14 +117,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 		 * RESET is not being notified to upper layers for now
+ 		 */
+ 		printk(KERN_INFO "%s: received a reset ind!\n", __func__);
+-		kfree_skb(skb);
+ 		break;
+ 	default:
+-		if (ev->ind_prim) {
++		if (ev->ind_prim)
+ 			printk(KERN_INFO "%s: received unknown %d prim!\n",
+ 				__func__, ev->ind_prim);
+-			kfree_skb(skb);
+-		}
+ 		/* No indication */
+ 		break;
+ 	}
+@@ -181,15 +163,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 		printk(KERN_INFO "%s: received a reset conf!\n", __func__);
+ 		break;
+ 	default:
+-		if (ev->cfm_prim) {
++		if (ev->cfm_prim)
+ 			printk(KERN_INFO "%s: received unknown %d prim!\n",
+ 					__func__, ev->cfm_prim);
+-			break;
+-		}
+-		goto out_skb_put; /* No confirmation */
++		/* No confirmation */
++		break;
+ 	}
+-out_kfree_skb:
+-	kfree_skb(skb);
+ out_skb_put:
+ 	kfree_skb(skb);
+ 	return rc;
 -- 
 2.20.1
 
