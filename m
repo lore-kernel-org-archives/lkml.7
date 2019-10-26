@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C35CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05C9CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5955F222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34A821D81
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095896;
-	bh=CVo0oWZV+4414TStO0duI+OdPoiIoY8ztX3k3RdMuxY=;
+	s=default; t=1572095898;
+	bh=vynhhrOIgD91jp8ZzJ4jb3KoxhLiUMc3HFR97hqu90M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZehHZNVvae457jKEuIs8A4Ghw5MbLSmJ7JXIY/WC/1QuHMB6G0g2l64R/SKE6RFl3
-	 /ZSBQb/CpMeuWQAT8R9fFu92UDkRPEHFr0+0hF67YXdStjWDnofmR7DySo0sQjoq5y
-	 uFtJcWXxHmUjVc5rvSzgUAwG1CasBhsw9Mishm+A=
+	b=SvI9OyzpmfxhqUnj/2jYDji4mqpv5Xjff+6L+DHmANtujZJkWw+XwKgLxhvVShlnk
+	 iLvb1S9ZwrtAGNpwI2ZSXEEftGWSBOIFGsGoQ04iNhHu69LazNz73eDVp1G9hhE3yr
+	 0jPBlsEEPMncplsi/uAuteGKsLSg7BrDIE4bQEz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfJZNSP (ORCPT
+        id S1727762AbfJZNSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39864 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbfJZNSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:12 -0400
+        id S1726428AbfJZNSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B64721D81;
-        Sat, 26 Oct 2019 13:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FEDF222C1;
+        Sat, 26 Oct 2019 13:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095892;
-        bh=CVo0oWZV+4414TStO0duI+OdPoiIoY8ztX3k3RdMuxY=;
+        s=default; t=1572095894;
+        bh=vynhhrOIgD91jp8ZzJ4jb3KoxhLiUMc3HFR97hqu90M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWHdc92A9mZKGAnNtBVkNROoSZBfce56rKB9GABzXK90bH3XaHrOVL9R/nl5TUV4S
-         tUNMAgiZ3dJ3hvZDpSPbxZOFz7U71XJJzXko61GgDRbuL7dC6jr/sVJZuJcyUyYhLe
-         iH7FSUNMiIHbDonE+6b5C3uC+8WQGERsfcDuEUSY=
+        b=DvepoksP4dQYGP7wo2QWJD/xSUCe3mk0BH7nb5eMzEl7k62rHWTMevb/Qd+Rs4SqH
+         f9zfrzvq6VQ7ITQW9+iL3d5ml6mV+pFh+6s03SZQhgXM1c3xnMPjy3bs2imIwEgp1p
+         8VpSbRG6d0HwuyNhM6FCTc8qoiU/7UrXPIXqc9Lo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 74/99] nvmet-loop: fix possible leakage during error flow
-Date:   Sat, 26 Oct 2019 09:15:35 -0400
-Message-Id: <20191026131600.2507-74-sashal@kernel.org>
+Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 76/99] rbd: cancel lock_dwork if the wait is interrupted
+Date:   Sat, 26 Oct 2019 09:15:37 -0400
+Message-Id: <20191026131600.2507-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,37 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
 
-[ Upstream commit 5812d04c4c7455627d8722e04ab99a737cfe9713 ]
+[ Upstream commit 25e6be21230d3208d687dad90b6e43419013c351 ]
 
-During nvme_loop_queue_rq error flow, one must call nvme_cleanup_cmd since
-it's symmetric to nvme_setup_cmd.
+There is a warning message in my test with below steps:
 
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+  # rbd bench --io-type write --io-size 4K --io-threads 1 --io-pattern rand test &
+  # sleep 5
+  # pkill -9 rbd
+  # rbd map test &
+  # sleep 5
+  # pkill rbd
+
+The reason is that the rbd_add_acquire_lock() is interruptable,
+that means, when we kill the waiting on ->acquire_wait, the lock_dwork
+could be still running.
+
+1. do_rbd_add()					2. lock_dwork
+rbd_add_acquire_lock()
+  - queue_delayed_work()
+						lock_dwork queued
+    - wait_for_completion_killable_timeout()  <-- kill happen
+rbd_dev_image_unlock()	<-- UNLOCKED now, nothing to do.
+rbd_dev_device_release()
+rbd_dev_image_release()
+  - ...
+						lock successed here
+     - cancel_delayed_work_sync(&rbd_dev->lock_dwork)
+
+Then when we reach the rbd_dev_free(), WARN_ON is triggered because
+lock_state is not RBD_LOCK_STATE_UNLOCKED.
+
+To fix it, this commit make sure the lock_dwork was finished before
+calling rbd_dev_image_unlock().
+
+On the other hand, this would not happend in do_rbd_remove(), because
+after rbd mapped, lock_dwork will only be queued for IO request, and
+request will continue unless lock_dwork finished. when we call
+rbd_dev_image_unlock() in do_rbd_remove(), all requests are done.
+That means, lock_state should not be locked again after
+rbd_dev_image_unlock().
+
+[ Cancel lock_dwork in rbd_add_acquire_lock(), only if the wait is
+  interrupted. ]
+
+Fixes: 637cd060537d ("rbd: new exclusive lock wait/wake code")
+Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/loop.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/block/rbd.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
-index 0940c5024a345..7b857c3f67879 100644
---- a/drivers/nvme/target/loop.c
-+++ b/drivers/nvme/target/loop.c
-@@ -157,8 +157,10 @@ static blk_status_t nvme_loop_queue_rq(struct blk_mq_hw_ctx *hctx,
- 		iod->sg_table.sgl = iod->first_sgl;
- 		if (sg_alloc_table_chained(&iod->sg_table,
- 				blk_rq_nr_phys_segments(req),
--				iod->sg_table.sgl, SG_CHUNK_SIZE))
-+				iod->sg_table.sgl, SG_CHUNK_SIZE)) {
-+			nvme_cleanup_cmd(req);
- 			return BLK_STS_RESOURCE;
-+		}
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index c8fb886aebd4e..e6369b9f33873 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -6632,10 +6632,13 @@ static int rbd_add_acquire_lock(struct rbd_device *rbd_dev)
+ 	queue_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork, 0);
+ 	ret = wait_for_completion_killable_timeout(&rbd_dev->acquire_wait,
+ 			    ceph_timeout_jiffies(rbd_dev->opts->lock_timeout));
+-	if (ret > 0)
++	if (ret > 0) {
+ 		ret = rbd_dev->acquire_err;
+-	else if (!ret)
+-		ret = -ETIMEDOUT;
++	} else {
++		cancel_delayed_work_sync(&rbd_dev->lock_dwork);
++		if (!ret)
++			ret = -ETIMEDOUT;
++	}
  
- 		iod->req.sg = iod->sg_table.sgl;
- 		iod->req.sg_cnt = blk_rq_map_sg(req->q, req, iod->sg_table.sgl);
+ 	if (ret) {
+ 		rbd_warn(rbd_dev, "failed to acquire exclusive lock: %ld", ret);
 -- 
 2.20.1
 
