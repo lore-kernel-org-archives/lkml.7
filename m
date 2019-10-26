@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2C1CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D00CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75B920867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15AFD2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096787;
-	bh=uV4JoVeDz4JFp0Ys7mmFR9mjnD6/HF9lsWxZg24i01Y=;
+	s=default; t=1572096792;
+	bh=5Lhv8LT6o/uLMEwxxa+2kMua+r7tRmSPQC1uJcqa5Mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eR/cJSKOCx0UVFFPm9WHxaCH2x5j4TYRI4gJvrwStn+Gev2Uk6TUsz/btgjF7qUvf
-	 H/Zvs4v8Tl1jlyqk5fWQCLUPbw4uPokjaX2xWSJ9SDhUpMsRnqA+LkS+Owg8ZZG4k6
-	 a8KsVqzEi54uDnjgqC59CuC7R4ObFOh3+ycDiofk=
+	b=v9EmYwmqyDLwHa3RVP+k95aBcP/pqcxKXZr6uhEKlDjpf326rjYW9L+fbXsSqqfkL
+	 JVfDQzGUCzDThUFndZnk5q5nufohsmQ0s4TfPxpSzUrc9HhjfwwlPWLOdo6zemXTfe
+	 G5+PquPeJqdxQ4fdpj6bUISGEx580Yu/VWhQvmx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfJZNdF (ORCPT
+        id S1728461AbfJZNdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbfJZNSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:13 -0400
+        id S1727709AbfJZNSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DA6D222C4;
-        Sat, 26 Oct 2019 13:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A635214DA;
+        Sat, 26 Oct 2019 13:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095893;
-        bh=uV4JoVeDz4JFp0Ys7mmFR9mjnD6/HF9lsWxZg24i01Y=;
+        s=default; t=1572095889;
+        bh=5Lhv8LT6o/uLMEwxxa+2kMua+r7tRmSPQC1uJcqa5Mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yuSxwXNApaTDQf/aaOK015jxfJZHHZ4JhaDqwf7ZK83tEA/gusYzFqo0fEIPZ3YLL
-         Tz5I/jC5GhJ/NGv07mIoON8+GNgZmCZER4u+3Z4bhk73T22vApUlUwLhJWuoPSSqk3
-         JwPKqVZTNgGyb6h5ev8t0pFQopsGORUPkb7AlwsE=
+        b=Zam3vE9VO7X13x60nL+snqv+Ro5LdjKPSR69CQCewXCw2Sw9wPdEbc2et5LrkQp/m
+         bRlUUBhPe+gavvKqSxAgiAbDpECINRjiVAfK9g6KlwNo5T3gjH3LWK03V4COwBFGlK
+         Q8bdabkpaDyq9QRxgYjVXZpDZXfUGXkysB56oCV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 75/99] nvme-tcp: fix possible leakage during error flow
-Date:   Sat, 26 Oct 2019 09:15:36 -0400
-Message-Id: <20191026131600.2507-75-sashal@kernel.org>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 72/99] arm64: hibernate: check pgd table allocation
+Date:   Sat, 26 Oct 2019 09:15:33 -0400
+Message-Id: <20191026131600.2507-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,33 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-[ Upstream commit 28a4cac48c7e897a0b4e7d79a53a8e4fe40337ae ]
+[ Upstream commit 8c551f919a73c1dfa690a70a691be1da394145e8 ]
 
-During nvme_tcp_setup_cmd_pdu error flow, one must call nvme_cleanup_cmd
-since it's symmetric to nvme_setup_cmd.
+There is a bug in create_safe_exec_page(), when page table is allocated
+it is not checked that table is allocated successfully:
 
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+But it is dereferenced in: pgd_none(READ_ONCE(*pgdp)).  Check that
+allocation was successful.
+
+Fixes: 82869ac57b5d ("arm64: kernel: Add support for hibernate/suspend-to-disk")
+Reviewed-by: James Morse <james.morse@arm.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/hibernate.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 606b13d35d16f..988a426169036 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -2093,6 +2093,7 @@ static blk_status_t nvme_tcp_setup_cmd_pdu(struct nvme_ns *ns,
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 9341fcc6e809b..dcbe2f1c8b2e2 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -201,6 +201,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 				 gfp_t mask)
+ {
+ 	int rc = 0;
++	pgd_t *trans_pgd;
+ 	pgd_t *pgdp;
+ 	pud_t *pudp;
+ 	pmd_t *pmdp;
+@@ -215,7 +216,13 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	memcpy((void *)dst, src_start, length);
+ 	__flush_icache_range(dst, dst + length);
  
- 	ret = nvme_tcp_map_data(queue, rq);
- 	if (unlikely(ret)) {
-+		nvme_cleanup_cmd(rq);
- 		dev_err(queue->ctrl->ctrl.device,
- 			"Failed to map data (%d)\n", ret);
- 		return ret;
+-	pgdp = pgd_offset_raw(allocator(mask), dst_addr);
++	trans_pgd = allocator(mask);
++	if (!trans_pgd) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+ 	if (pgd_none(READ_ONCE(*pgdp))) {
+ 		pudp = allocator(mask);
+ 		if (!pudp) {
 -- 
 2.20.1
 
