@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC821CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0B6CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B29222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A9D222C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096171;
-	bh=IYLRZXVr1ZdsXGls02rJqJNhCyoc6G9OMbjHBQBBjTQ=;
+	s=default; t=1572096176;
+	bh=7HyvC/lBMxpLlVbngviHNBqkN9JKVAgdgrbfC9IKURw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0atAa1qWXd3J11OeZgXvoOTNyRsedPAFvH/SEV0eZQ7tFs8EjNwH0qOpFdiI8kCp
-	 zxbKw6Emz12bRw0eBbTRdHEMcNIQPNic3Tv6Eqf9qSejxBdX/ulnxgXgnuEsSRTIog
-	 8PRVdUMU06kXZPTMaC+IgOVYWL3Z/0vo4ePcZSQs=
+	b=EzNjtcSPnq4ZLFnRLU4sdfXVRYbMMO7IOUwyi99wga5mvtNr+/0aYHvqaS81pUpFQ
+	 fpPA0pOrn53wlXcHOvGmk+W7PWz87nCt7Rc5+h6Od5s65KVsu8UFZfOQmmQopRJ3eE
+	 sHbgT86VyrZHGdp34Nkbee6cJjmw9W0vJxpXx934=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbfJZNWu (ORCPT
+        id S1727610AbfJZNWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfJZNWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:22:48 -0400
+        id S1729514AbfJZNWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1CEA20867;
-        Sat, 26 Oct 2019 13:22:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 541B5222C1;
+        Sat, 26 Oct 2019 13:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096167;
-        bh=IYLRZXVr1ZdsXGls02rJqJNhCyoc6G9OMbjHBQBBjTQ=;
+        s=default; t=1572096171;
+        bh=7HyvC/lBMxpLlVbngviHNBqkN9JKVAgdgrbfC9IKURw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEPyo07Om6KDPGlhoXDcYRCtbirdlQzNd/g/rPjMr+ZJhfxLFKJLiV/ZXdYJv3fNU
-         uZB1JyYk02C3x9Iq/R11MP4Og9NCFKVZMOYRP9h66I4I+rHr75bq+oxspSIBOK17JF
-         PTd7u3JoWkEfgmVa58EpnxkqYVOoZaYNrCKcr/+4=
+        b=V/sH6XTM4X00NO9DtWSeOSsgfdvLcRTLHKyjGV/HFbCmqQU6dTkTjTyOBciYTh8mA
+         MBVQNS0M+TAgAh83Dygj2ixV8Jjls6dPPUz6sEjJ5gU78WHnNpbATu9r+FtldderRx
+         btkxLj9PUnfk6HkAn+jxxq2OHh6fKwb5weAvV3Iw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 15/21] hrtimer: Annotate lockless access to timer->base
-Date:   Sat, 26 Oct 2019 09:22:11 -0400
-Message-Id: <20191026132217.4380-15-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/21] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
+Date:   Sat, 26 Oct 2019 09:22:13 -0400
+Message-Id: <20191026132217.4380-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132217.4380-1-sashal@kernel.org>
 References: <20191026132217.4380-1-sashal@kernel.org>
@@ -59,73 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit ff229eee3d897f52bd001c841f2d3cce8853ecdc ]
+[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
 
-Followup to commit dd2261ed45aa ("hrtimer: Protect lockless access
-to timer->base")
+The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
+became 6 for GENET v4 and above, account for that difference.
 
-lock_hrtimer_base() fetches timer->base without lock exclusion.
-
-Compiler is allowed to read timer->base twice (even if considered dumb)
-which could end up trying to lock migration_base and return
-&migration_base.
-
-  base = timer->base;
-  if (likely(base != &migration_base)) {
-
-       /* compiler reads timer->base again, and now (base == &migration_base)
-
-       raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
-       if (likely(base == timer->base))
-            return base; /* == &migration_base ! */
-
-Similarly the write sides must use WRITE_ONCE() to avoid store tearing.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191008173204.180879-1-edumazet@google.com
+Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/hrtimer.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h | 1 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index c93729661be0e..6be150f16539b 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -140,7 +140,7 @@ struct hrtimer_clock_base *lock_hrtimer_base(const struct hrtimer *timer,
- 	struct hrtimer_clock_base *base;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index 3f8858db12eb3..dcf10ea60e7fe 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -362,6 +362,7 @@ struct bcmgenet_mib_counters {
+ #define  EXT_ENERGY_DET_MASK		(1 << 12)
  
- 	for (;;) {
--		base = timer->base;
-+		base = READ_ONCE(timer->base);
- 		if (likely(base != &migration_base)) {
- 			raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
- 			if (likely(base == timer->base))
-@@ -232,7 +232,7 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
- 			return base;
+ #define EXT_RGMII_OOB_CTRL		0x0C
++#define  RGMII_MODE_EN_V123		(1 << 0)
+ #define  RGMII_LINK			(1 << 4)
+ #define  OOB_DISABLE			(1 << 5)
+ #define  RGMII_MODE_EN			(1 << 6)
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 9bd90a7c4d40f..c3ca0515c6a05 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -328,7 +328,11 @@ int bcmgenet_mii_config(struct net_device *dev)
+ 	 */
+ 	if (priv->ext_phy) {
+ 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
+-		reg |= RGMII_MODE_EN | id_mode_dis;
++		reg |= id_mode_dis;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			reg |= RGMII_MODE_EN_V123;
++		else
++			reg |= RGMII_MODE_EN;
+ 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
+ 	}
  
- 		/* See the comment in lock_hrtimer_base() */
--		timer->base = &migration_base;
-+		WRITE_ONCE(timer->base, &migration_base);
- 		raw_spin_unlock(&base->cpu_base->lock);
- 		raw_spin_lock(&new_base->cpu_base->lock);
- 
-@@ -241,10 +241,10 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
- 			raw_spin_unlock(&new_base->cpu_base->lock);
- 			raw_spin_lock(&base->cpu_base->lock);
- 			new_cpu_base = this_cpu_base;
--			timer->base = base;
-+			WRITE_ONCE(timer->base, base);
- 			goto again;
- 		}
--		timer->base = new_base;
-+		WRITE_ONCE(timer->base, new_base);
- 	} else {
- 		if (new_cpu_base != this_cpu_base &&
- 		    hrtimer_check_target(timer, new_base)) {
 -- 
 2.20.1
 
