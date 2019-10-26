@@ -2,123 +2,169 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE058CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8E7CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD19120663
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572115642;
-	bh=ko0i0zDpitgbOfxq/GRV2PdhwP/g81WtxSssjEN3BIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AwVPNWsGWLRnHQV8GRcH+VykQ3AqDaWH7bhoWMcNpxBh/S/VpvzJYqvLtLJ91M7vN
-	 Cyzql2cOSUonlWLb3qaQqvQJmj+R71s1wi/OOR909RbXbIw5BtkfKZrycwNBFlQyh+
-	 /V0y7qZnZeB6SkBbaqhGZwmfAv0/mFIfrh1IAXAg=
+	by mail.kernel.org (Postfix) with ESMTP id AB18C20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfJZSrV (ORCPT
+        id S1726483AbfJZSsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 14:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbfJZSrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 14:47:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F53820663;
-        Sat, 26 Oct 2019 18:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572115638;
-        bh=ko0i0zDpitgbOfxq/GRV2PdhwP/g81WtxSssjEN3BIY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UkK5VxEy1Nj3AdQCch7Ewa4Iw8T65kQqJwVhCpf/0LHsbV0MvQHXZA/Xjo84toKA7
-         HZoOEHkphNJIKRxtEARPs/eYIjnnP4ibZhe9grlPF2QyoM2enBxAffKuNG21Vcv1nt
-         kryuBnqUS8vhjvUCSN9Ab1pPeSS+/+5ilBsoQl0U=
-Date:   Sat, 26 Oct 2019 20:47:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        devel@driverdev.osuosl.org, outreachy-kernel@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH v2 0/5] Remove typedef declarations in
- staging: octeon
-Message-ID: <20191026184716.GA753584@kroah.com>
-References: <cover.1570821661.git.wambui.karugax@gmail.com>
- <alpine.DEB.2.21.1910122034390.3049@hadrien>
- <20191023174304.GD18977@darkstar.musicnaut.iki.fi>
+        Sat, 26 Oct 2019 14:48:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40264 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfJZSsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 14:48:41 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iOR6y-0000Kt-Pk; Sat, 26 Oct 2019 20:48:28 +0200
+Date:   Sat, 26 Oct 2019 20:48:27 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        vincenzo.frascino@arm.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
+In-Reply-To: <439bce37-9c2c-2afe-9c9e-2f500472f9f8@c-s.fr>
+Message-ID: <alpine.DEB.2.21.1910262026340.10190@nanos.tec.linutronix.de>
+References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr> <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de> <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr> <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr>
+ <alpine.DEB.2.21.1910261751140.10190@nanos.tec.linutronix.de> <439bce37-9c2c-2afe-9c9e-2f500472f9f8@c-s.fr>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023174304.GD18977@darkstar.musicnaut.iki.fi>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: multipart/mixed; boundary="8323329-2102536042-1572115708=:10190"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 08:43:04PM +0300, Aaro Koskinen wrote:
-> Hi,
-> 
-> On Sat, Oct 12, 2019 at 08:35:19PM +0200, Julia Lawall wrote:
-> > On Sat, 12 Oct 2019, Wambui Karuga wrote:
-> > > This patchset removes the addition of new typedefs data types in octeon,
-> > > along with replacing the previous uses with the new declaration format.
-> > >
-> > > v2 of the series removes the obsolete "_t" notation in the named types.
-> > >
-> > > Wambui Karuga (5):
-> > >   staging: octeon: remove typedef declaration for cvmx_wqe
-> > >   staging: octeon: remove typedef declaration for cvmx_helper_link_info
-> > >   staging: octeon: remove typedef declaration for cvmx_fau_reg_32
-> > >   staging: octeon: remove typedef declartion for cvmx_pko_command_word0
-> > >   staging: octeon: remove typedef declaration for cvmx_fau_op_size
-> > >
-> > >  drivers/staging/octeon/ethernet-mdio.c   |  6 +--
-> > >  drivers/staging/octeon/ethernet-rgmii.c  |  4 +-
-> > >  drivers/staging/octeon/ethernet-rx.c     |  6 +--
-> > >  drivers/staging/octeon/ethernet-tx.c     |  4 +-
-> > >  drivers/staging/octeon/ethernet.c        |  6 +--
-> > >  drivers/staging/octeon/octeon-ethernet.h |  2 +-
-> > >  drivers/staging/octeon/octeon-stubs.h    | 56 ++++++++++++------------
-> > >  7 files changed, 43 insertions(+), 41 deletions(-)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-2102536042-1572115708=:10190
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Sat, 26 Oct 2019, Christophe Leroy wrote:
+> Le 26/10/2019 à 17:53, Thomas Gleixner a écrit :
+> > > > > > gettimeofday:    vdso: 750 nsec/call
+> > > > > > 
+> > > > > > gettimeofday:    vdso: 1533 nsec/call
+> > > > 
+> > > > Small improvement (3%) with the proposed change:
+> > > > 
+> > > > gettimeofday:    vdso: 1485 nsec/call
+> > > 
+> > > By inlining do_hres() I get the following:
+> > > 
+> > > gettimeofday:    vdso: 1072 nsec/call
 > > 
-> > For the series:
+> > What's the effect for clock_gettime()?
 > > 
-> > Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+> > gettimeofday() is suboptimal vs. the PPC ASM variant due to an extra
+> > division, but clock_gettime() should be 1:1 comparable.
+> > 
 > 
-> This series breaks the build on MIPS/OCTEON (the only actual HW using this
-> driver):
+> Original PPC asm:
+> clock-gettime-realtime:    vdso: 928 nsec/call
 > 
-> $ make ARCH=mips CROSS_COMPILE=mips64-linux-gnu- cavium_octeon_defconfig
-> $ make ARCH=mips CROSS_COMPILE=mips64-linux-gnu-
-> [...]
->   CC      drivers/staging/octeon/ethernet.o
-> In file included from drivers/staging/octeon/ethernet.c:22:
-> drivers/staging/octeon/octeon-ethernet.h:94:12: warning: 'union cvmx_helper_link_info' declared inside parameter list will not be visible outside of this definition or declaration
->       union cvmx_helper_link_info li);  
->             ^~~~~~~~~~~~~~~~~~~~~
-> drivers/staging/octeon/ethernet.c: In function 'cvm_oct_free_work':
-> drivers/staging/octeon/ethernet.c:177:21: error: dereferencing pointer to incomplete type 'struct cvmx_wqe'
->   int segments = work->word2.s.bufs;
->                      ^~
-> drivers/staging/octeon/ethernet.c: In function 'cvm_oct_common_open':
-> drivers/staging/octeon/ethernet.c:463:30: error: storage size of 'link_info' isn't known
->   union cvmx_helper_link_info link_info;
->                               ^~~~~~~~~
+> My original RFC:
+> clock-gettime-realtime:    vdso: 1570 nsec/call
 > 
-> etc.
+> With your suggested vdso_calc_delta():
+> clock-gettime-realtime:    vdso: 1512 nsec/call
 > 
-> Probably all these patches need to be reverted.
+> With your vdso_calc_delta() and inlined do_hres():
+> clock-gettime-realtime:    vdso: 1302 nsec/call
 
-Ick :(
+That does not make any sense at all.
 
-What is the git commit ids here that should be reverted?
+gettimeofday() is basically the same as clock_gettime(REALTIME) and does
+an extra division. So I would expect it to be slower. 
 
-thanks,
+Let's look at the code:
 
-greg k-h
+__cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+{
+        const struct vdso_data *vd = __arch_get_vdso_data();
+
+        if (likely(tv != NULL)) {
+		struct __kernel_timespec ts;
+
+                if (do_hres(&vd[CS_HRES_COARSE], CLOCK_REALTIME, &ts))
+                        return gettimeofday_fallback(tv, tz);
+
+                tv->tv_sec = ts.tv_sec;
+                tv->tv_usec = (u32)ts.tv_nsec / NSEC_PER_USEC;
+
+IIRC PPC did some magic math tricks to avoid that. Could you just for the
+fun of it replace this division with
+
+       (u32)ts.tv_nsec >> 10;
+
+That's obviously incorrect, but it would tell us how heavy the division
+is. If that brings us close we might do something special for
+gettimeofday().
+
+OTOH, last time I checked clock_gettime() was by far more used than
+gettimeofday() but that obviously depends on the use cases.
+
+        }
+	...
+}
+
+and
+
+__cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
+{
+        const struct vdso_data *vd = __arch_get_vdso_data();
+        u32 msk;
+
+	/* Check for negative values or invalid clocks */
+        if (unlikely((u32) clock >= MAX_CLOCKS))
+                return -1;
+
+        /*
+         * Convert the clockid to a bitmask and use it to check which
+         * clocks are handled in the VDSO directly.
+         */
+        msk = 1U << clock;
+        if (likely(msk & VDSO_HRES)) {
+		return do_hres(&vd[CS_HRES_COARSE], clock, ts);
+
+So this is the extra code which is executed for clock_gettime(REAL) which
+is pure logic and certainly not as heavyweight as the division in the
+gettimeofday() code path.
+
+}
+
+static __maybe_unused int
+__cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
+{
+        int ret = __cvdso_clock_gettime_common(clock, ts);
+
+	if (unlikely(ret))
+                return clock_gettime_fallback(clock, ts);
+        return 0;
+}
+
+One thing which might be worth to try as well is to mark all functions in
+that file as inline. The speedup by the do_hres() inlining was impressive
+on PPC.
+
+Thanks,
+
+	tglx
+
+--8323329-2102536042-1572115708=:10190--
