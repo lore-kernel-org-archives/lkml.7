@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B78CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE74CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4806F20867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64DAA21E6F
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096095;
-	bh=yLvyAnHAEgczV4YdF+b+23Rh3pGAHOvTyZQMjPJaQYg=;
+	s=default; t=1572096100;
+	bh=Pj0u/Os+p43qj5e0aVyrext4aa0gjRxGiUUPq0BsjQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pfjHInwk3VTfKqD0KLe5zfaL1MxwFjKhvp4YZZPUmdzEcjR62o4pK+yKRub8yk4jk
-	 0exFoH23tdQU+oP36wFpSFg/V8Z5dppAhJzpMzxqwQB2c5d96n//rXErcC5DL90BcH
-	 imXyYeyw4Qo66XWoZ0ZNMfnzYtkAzXt6YHVPeet0=
+	b=vkvSeyKY1U/+GiDQrIyriWbVUnEf0t1fxwd/otcVL4Zf1M4FoqzbRq8Mv18n+QqCd
+	 ghWkttKWzb2mQZHtTW07QzZCE9r9n7qG8wqZ+c5WGWdqstUuRaIoP8bexMzDv5V3Lz
+	 IklE3xVUGK1T27HP7Q0g6N0rSN2nO+HVW9EimPZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfJZNVe (ORCPT
+        id S1727807AbfJZNVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43166 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbfJZNVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:22 -0400
+        id S1726976AbfJZNVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58227222BD;
-        Sat, 26 Oct 2019 13:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2452070B;
+        Sat, 26 Oct 2019 13:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096082;
-        bh=yLvyAnHAEgczV4YdF+b+23Rh3pGAHOvTyZQMjPJaQYg=;
+        s=default; t=1572096090;
+        bh=Pj0u/Os+p43qj5e0aVyrext4aa0gjRxGiUUPq0BsjQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPj8HEwwOXDgQItfVHyZjMdq/QRsiKVYCGdL5BI01i+c8DJ+LpUP0YQ/lKpA88fkS
-         q/8JL5163UfWVc3+6AS3SceOvTUEyEJdHaCgZofSmO6HqqAerM3C7lIg1/PziL6H4N
-         8Goa5OySd61h/vgRsz3Yx2Rnnn/u4E+e7i7qqPBo=
+        b=Bh4rgOCBVWhu5mXCf7/pCD3ffK1x+Yq2RWZ+Nal6oOeD8KfTaiBKZ5RZOXpm6h5x8
+         AmNCNRZPSHxyFfaoDwehw747M3+vZBwJgFJ+974xMUltV6KO/6oWgizQQhskZmQ+Wp
+         5V3ORcAk6jkJkvU1423/ivENGrFOYD9qeZm9vNGI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Eric Biggers <ebiggers@google.com>,
-        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
-        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/33] llc: fix sk_buff leak in llc_sap_state_process()
-Date:   Sat, 26 Oct 2019 09:20:45 -0400
-Message-Id: <20191026132110.4026-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 10/33] llc: fix another potential sk_buff leak in llc_ui_sendmsg()
+Date:   Sat, 26 Oct 2019 09:20:47 -0400
+Message-Id: <20191026132110.4026-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -63,133 +61,192 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit c6ee11c39fcc1fb55130748990a8f199e76263b4 ]
+[ Upstream commit fc8d5db10cbe1338a52ebc74e7feab9276721774 ]
 
-syzbot reported:
+All callers of llc_conn_state_process() except llc_build_and_send_pkt()
+(via llc_ui_sendmsg() -> llc_ui_send_data()) assume that it always
+consumes a reference to the skb.  Fix this caller to do the same.
 
-    BUG: memory leak
-    unreferenced object 0xffff888116270800 (size 224):
-       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
-       hex dump (first 32 bytes):
-         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
-       backtrace:
-         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
-         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
-         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
-         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
-         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
-         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
-         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
-         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
-         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-	 [...]
-
-The bug is that llc_sap_state_process() always takes an extra reference
-to the skb, but sometimes neither llc_sap_next_state() nor
-llc_sap_state_process() itself drops this reference.
-
-Fix it by changing llc_sap_next_state() to never consume a reference to
-the skb, rather than sometimes do so and sometimes not.  Then remove the
-extra skb_get() and kfree_skb() from llc_sap_state_process().
-
-Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
-Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
 Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_s_ac.c | 12 +++++++++---
- net/llc/llc_sap.c  | 23 ++++++++---------------
- 2 files changed, 17 insertions(+), 18 deletions(-)
+ net/llc/af_llc.c   | 34 ++++++++++++++++++++--------------
+ net/llc/llc_conn.c |  2 ++
+ net/llc/llc_if.c   | 12 ++++++++----
+ 3 files changed, 30 insertions(+), 18 deletions(-)
 
-diff --git a/net/llc/llc_s_ac.c b/net/llc/llc_s_ac.c
-index a94bd56bcac6f..7ae4cc684d3ab 100644
---- a/net/llc/llc_s_ac.c
-+++ b/net/llc/llc_s_ac.c
-@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sap *sap, struct sk_buff *skb)
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_ui_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
- 
-@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc_sap *sap, struct sk_buff *skb)
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
- 
-@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct llc_sap *sap, struct sk_buff *skb)
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_test_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
- 
-diff --git a/net/llc/llc_sap.c b/net/llc/llc_sap.c
-index d90928f502260..a7534950e60a1 100644
---- a/net/llc/llc_sap.c
-+++ b/net/llc/llc_sap.c
-@@ -197,29 +197,22 @@ static int llc_sap_next_state(struct llc_sap *sap, struct sk_buff *skb)
-  *	After executing actions of the event, upper layer will be indicated
-  *	if needed(on receiving an UI frame). sk can be null for the
-  *	datalink_proto case.
+diff --git a/net/llc/af_llc.c b/net/llc/af_llc.c
+index 2e472d5c3ea41..d552e88197133 100644
+--- a/net/llc/af_llc.c
++++ b/net/llc/af_llc.c
+@@ -113,22 +113,26 @@ static inline u8 llc_ui_header_len(struct sock *sk, struct sockaddr_llc *addr)
+  *
+  *	Send data via reliable llc2 connection.
+  *	Returns 0 upon success, non-zero if action did not succeed.
 + *
 + *	This function always consumes a reference to the skb.
   */
- static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
+ static int llc_ui_send_data(struct sock* sk, struct sk_buff *skb, int noblock)
  {
- 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
+ 	struct llc_sock* llc = llc_sk(sk);
+-	int rc = 0;
  
--	/*
--	 * We have to hold the skb, because llc_sap_next_state
--	 * will kfree it in the sending path and we need to
--	 * look at the skb->cb, where we encode llc_sap_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_cfm_flag = 0;
- 	llc_sap_next_state(sap, skb);
--	if (ev->ind_cfm_flag == LLC_IND) {
--		if (skb->sk->sk_state == TCP_LISTEN)
--			kfree_skb(skb);
--		else {
--			llc_save_primitive(skb->sk, skb, ev->prim);
+ 	if (unlikely(llc_data_accept_state(llc->state) ||
+ 		     llc->remote_busy_flag ||
+ 		     llc->p_flag)) {
+ 		long timeout = sock_sndtimeo(sk, noblock);
++		int rc;
  
--			/* queue skb to the user. */
--			if (sock_queue_rcv_skb(skb->sk, skb))
--				kfree_skb(skb);
--		}
-+	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
-+		llc_save_primitive(skb->sk, skb, ev->prim);
-+
-+		/* queue skb to the user. */
-+		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
-+			return;
+ 		rc = llc_ui_wait_for_busy_core(sk, timeout);
++		if (rc) {
++			kfree_skb(skb);
++			return rc;
++		}
  	}
- 	kfree_skb(skb);
+-	if (unlikely(!rc))
+-		rc = llc_build_and_send_pkt(sk, skb);
+-	return rc;
++	return llc_build_and_send_pkt(sk, skb);
  }
+ 
+ static void llc_ui_sk_init(struct socket *sock, struct sock *sk)
+@@ -900,7 +904,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	DECLARE_SOCKADDR(struct sockaddr_llc *, addr, msg->msg_name);
+ 	int flags = msg->msg_flags;
+ 	int noblock = flags & MSG_DONTWAIT;
+-	struct sk_buff *skb;
++	struct sk_buff *skb = NULL;
+ 	size_t size = 0;
+ 	int rc = -EINVAL, copied = 0, hdrlen;
+ 
+@@ -909,10 +913,10 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	lock_sock(sk);
+ 	if (addr) {
+ 		if (msg->msg_namelen < sizeof(*addr))
+-			goto release;
++			goto out;
+ 	} else {
+ 		if (llc_ui_addr_null(&llc->addr))
+-			goto release;
++			goto out;
+ 		addr = &llc->addr;
+ 	}
+ 	/* must bind connection to sap if user hasn't done it. */
+@@ -920,7 +924,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 		/* bind to sap with null dev, exclusive. */
+ 		rc = llc_ui_autobind(sock, addr);
+ 		if (rc)
+-			goto release;
++			goto out;
+ 	}
+ 	hdrlen = llc->dev->hard_header_len + llc_ui_header_len(sk, addr);
+ 	size = hdrlen + len;
+@@ -929,12 +933,12 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	copied = size - hdrlen;
+ 	rc = -EINVAL;
+ 	if (copied < 0)
+-		goto release;
++		goto out;
+ 	release_sock(sk);
+ 	skb = sock_alloc_send_skb(sk, size, noblock, &rc);
+ 	lock_sock(sk);
+ 	if (!skb)
+-		goto release;
++		goto out;
+ 	skb->dev      = llc->dev;
+ 	skb->protocol = llc_proto_type(addr->sllc_arphrd);
+ 	skb_reserve(skb, hdrlen);
+@@ -944,29 +948,31 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	if (sk->sk_type == SOCK_DGRAM || addr->sllc_ua) {
+ 		llc_build_and_send_ui_pkt(llc->sap, skb, addr->sllc_mac,
+ 					  addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	if (addr->sllc_test) {
+ 		llc_build_and_send_test_pkt(llc->sap, skb, addr->sllc_mac,
+ 					    addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	if (addr->sllc_xid) {
+ 		llc_build_and_send_xid_pkt(llc->sap, skb, addr->sllc_mac,
+ 					   addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	rc = -ENOPROTOOPT;
+ 	if (!(sk->sk_type == SOCK_STREAM && !addr->sllc_ua))
+ 		goto out;
+ 	rc = llc_ui_send_data(sk, skb, noblock);
++	skb = NULL;
+ out:
+-	if (rc) {
+-		kfree_skb(skb);
+-release:
++	kfree_skb(skb);
++	if (rc)
+ 		dprintk("%s: failed sending from %02X to %02X: %d\n",
+ 			__func__, llc->laddr.lsap, llc->daddr.lsap, rc);
+-	}
+ 	release_sock(sk);
+ 	return rc ? : copied;
+ }
+diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
+index 444c13e752a08..7340f23e16de3 100644
+--- a/net/llc/llc_conn.c
++++ b/net/llc/llc_conn.c
+@@ -55,6 +55,8 @@ int sysctl_llc2_busy_timeout = LLC2_BUSY_TIME * HZ;
+  *	(executing it's actions and changing state), upper layer will be
+  *	indicated or confirmed, if needed. Returns 0 for success, 1 for
+  *	failure. The socket lock has to be held before calling this function.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ {
+diff --git a/net/llc/llc_if.c b/net/llc/llc_if.c
+index 6daf391b3e847..fc4d2bd8816f5 100644
+--- a/net/llc/llc_if.c
++++ b/net/llc/llc_if.c
+@@ -38,6 +38,8 @@
+  *	closed and -EBUSY when sending data is not permitted in this state or
+  *	LLC has send an I pdu with p bit set to 1 and is waiting for it's
+  *	response.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
+ {
+@@ -46,20 +48,22 @@ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
+ 	struct llc_sock *llc = llc_sk(sk);
+ 
+ 	if (unlikely(llc->state == LLC_CONN_STATE_ADM))
+-		goto out;
++		goto out_free;
+ 	rc = -EBUSY;
+ 	if (unlikely(llc_data_accept_state(llc->state) || /* data_conn_refuse */
+ 		     llc->p_flag)) {
+ 		llc->failed_data_req = 1;
+-		goto out;
++		goto out_free;
+ 	}
+ 	ev = llc_conn_ev(skb);
+ 	ev->type      = LLC_CONN_EV_TYPE_PRIM;
+ 	ev->prim      = LLC_DATA_PRIM;
+ 	ev->prim_type = LLC_PRIM_TYPE_REQ;
+ 	skb->dev      = llc->dev;
+-	rc = llc_conn_state_process(sk, skb);
+-out:
++	return llc_conn_state_process(sk, skb);
++
++out_free:
++	kfree_skb(skb);
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
