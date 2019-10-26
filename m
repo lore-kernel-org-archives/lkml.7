@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C62CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A66CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC75221E6F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79502070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095986;
-	bh=0P9BcpGTjiTlvWRIBGOW4ovug3EeLWVynQqJgcKYs6w=;
+	s=default; t=1572095990;
+	bh=Le18mKrDHISF0w2bBo9xkGTAETMyYuS8pBBKnu/qdDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PQfr7hJcdCH6Jf4i0/FDv+WPVyeflQB6rie8pibIkc0INv4FxWojZG9+i49h8wmWo
-	 nV4AHT3gBlSOJAohhiz9AYpLfL11d2DbnDGOk2GvIrGbqbQGjPS+GLun0lG/7maCMP
-	 l9ZFv/xft0PT8lZDJgCSlReHeuLxnw2spskVXwiE=
+	b=NnC2yUXeQDxtHRJ1ZCcdfgw0Aw5gaBFpuQgYXtbotjA3sOCG5GHh/EGv7G3NqJ9h4
+	 65E760hVZe5H5osyMPk3oVxcTxXyZvGwDwt/Hac0zm50R9P0hDCWYyhggRr/lhKfOF
+	 Jgu8aQZcinOaJMvoL4Qsg8AOuTN+k3syvZg4ZU4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbfJZNTo (ORCPT
+        id S1728446AbfJZNTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:19:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbfJZNTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:32 -0400
+        id S1728415AbfJZNTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E127E21871;
-        Sat, 26 Oct 2019 13:19:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B355A2070B;
+        Sat, 26 Oct 2019 13:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095971;
-        bh=0P9BcpGTjiTlvWRIBGOW4ovug3EeLWVynQqJgcKYs6w=;
+        s=default; t=1572095983;
+        bh=Le18mKrDHISF0w2bBo9xkGTAETMyYuS8pBBKnu/qdDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHpRXCgK2ohLxyVq8mIStOCyW/Wd95Tw7bKSaVGA5hv0zPNaQbMN1sjBCHuMbE4nM
-         D9z5r38hHZiJVqGAjIMrMfRiY4F1KMcBpox07Ly+euTDjtX8X/WuYnRO2DpNBtXjwT
-         nstA/QCi26tqFARfwp5Pp4uO6ESbmce74iz+fmDo=
+        b=wK7K2CoOqFwQ7BdhdSLPKzpJvMM1hfQl61zXgkZmcaNg2hXlP62nlr5HEd/jbqMge
+         LKlvOaXxaAXt1wmxSzqSvnoZqwmuhYgKbhh+x4tvxMxufP+4lq/gYZTVq2D9dotAi5
+         cRDhs5ixtsUwuGKMA7kCLdPipHodwTYZ9PSbXzko=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Komisar <aaron.komisar@tandemg.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/59] mac80211: fix scan when operating on DFS channels in ETSI domains
-Date:   Sat, 26 Oct 2019 09:18:27 -0400
-Message-Id: <20191026131910.3435-16-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/59] llc: fix another potential sk_buff leak in llc_ui_sendmsg()
+Date:   Sat, 26 Oct 2019 09:18:30 -0400
+Message-Id: <20191026131910.3435-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -60,132 +59,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Komisar <aaron.komisar@tandemg.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit dc0c18ed229cdcca283dd78fefa38273ec37a42c ]
+[ Upstream commit fc8d5db10cbe1338a52ebc74e7feab9276721774 ]
 
-In non-ETSI regulatory domains scan is blocked when operating channel
-is a DFS channel. For ETSI, however, once DFS channel is marked as
-available after the CAC, this channel will remain available (for some
-time) even after leaving this channel.
+All callers of llc_conn_state_process() except llc_build_and_send_pkt()
+(via llc_ui_sendmsg() -> llc_ui_send_data()) assume that it always
+consumes a reference to the skb.  Fix this caller to do the same.
 
-Therefore a scan can be done without any impact on the availability
-of the DFS channel as no new CAC is required after the scan.
-
-Enable scan in mac80211 in these cases.
-
-Signed-off-by: Aaron Komisar <aaron.komisar@tandemg.com>
-Link: https://lore.kernel.org/r/1570024728-17284-1-git-send-email-aaron.komisar@tandemg.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/cfg80211.h |  8 ++++++++
- net/mac80211/scan.c    | 30 ++++++++++++++++++++++++++++--
- net/wireless/reg.c     |  1 +
- net/wireless/reg.h     |  8 --------
- 4 files changed, 37 insertions(+), 10 deletions(-)
+ net/llc/af_llc.c   | 34 ++++++++++++++++++++--------------
+ net/llc/llc_conn.c |  2 ++
+ net/llc/llc_if.c   | 12 ++++++++----
+ 3 files changed, 30 insertions(+), 18 deletions(-)
 
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index 468deae5d603e..e9e8ac4df36aa 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -4842,6 +4842,14 @@ const struct ieee80211_reg_rule *freq_reg_info(struct wiphy *wiphy,
-  */
- const char *reg_initiator_name(enum nl80211_reg_initiator initiator);
- 
-+/**
-+ * regulatory_pre_cac_allowed - check if pre-CAC allowed in the current regdom
-+ * @wiphy: wiphy for which pre-CAC capability is checked.
-+ *
-+ * Pre-CAC is allowed only in some regdomains (notable ETSI).
-+ */
-+bool regulatory_pre_cac_allowed(struct wiphy *wiphy);
-+
- /**
-  * DOC: Internal regulatory db functions
+diff --git a/net/llc/af_llc.c b/net/llc/af_llc.c
+index b99e73a7e7e0f..ce841d59bc72a 100644
+--- a/net/llc/af_llc.c
++++ b/net/llc/af_llc.c
+@@ -113,22 +113,26 @@ static inline u8 llc_ui_header_len(struct sock *sk, struct sockaddr_llc *addr)
   *
-diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
-index 5d2a11777718c..9121013cab9d5 100644
---- a/net/mac80211/scan.c
-+++ b/net/mac80211/scan.c
-@@ -501,10 +501,33 @@ static int ieee80211_start_sw_scan(struct ieee80211_local *local,
- 	return 0;
- }
- 
-+static bool __ieee80211_can_leave_ch(struct ieee80211_sub_if_data *sdata)
-+{
-+	struct ieee80211_local *local = sdata->local;
-+	struct ieee80211_sub_if_data *sdata_iter;
-+
-+	if (!ieee80211_is_radar_required(local))
-+		return true;
-+
-+	if (!regulatory_pre_cac_allowed(local->hw.wiphy))
-+		return false;
-+
-+	mutex_lock(&local->iflist_mtx);
-+	list_for_each_entry(sdata_iter, &local->interfaces, list) {
-+		if (sdata_iter->wdev.cac_started) {
-+			mutex_unlock(&local->iflist_mtx);
-+			return false;
-+		}
-+	}
-+	mutex_unlock(&local->iflist_mtx);
-+
-+	return true;
-+}
-+
- static bool ieee80211_can_scan(struct ieee80211_local *local,
- 			       struct ieee80211_sub_if_data *sdata)
- {
--	if (ieee80211_is_radar_required(local))
-+	if (!__ieee80211_can_leave_ch(sdata))
- 		return false;
- 
- 	if (!list_empty(&local->roc_list))
-@@ -610,7 +633,10 @@ static int __ieee80211_start_scan(struct ieee80211_sub_if_data *sdata,
- 
- 	lockdep_assert_held(&local->mtx);
- 
--	if (local->scan_req || ieee80211_is_radar_required(local))
-+	if (local->scan_req)
-+		return -EBUSY;
-+
-+	if (!__ieee80211_can_leave_ch(sdata))
- 		return -EBUSY;
- 
- 	if (!ieee80211_can_scan(local, sdata)) {
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index cccbf845079c8..e83e40764b0ab 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -3780,6 +3780,7 @@ bool regulatory_pre_cac_allowed(struct wiphy *wiphy)
- 
- 	return pre_cac_allowed;
- }
-+EXPORT_SYMBOL(regulatory_pre_cac_allowed);
- 
- void regulatory_propagate_dfs_state(struct wiphy *wiphy,
- 				    struct cfg80211_chan_def *chandef,
-diff --git a/net/wireless/reg.h b/net/wireless/reg.h
-index 9ceeb5f3a7cbc..af92612edd1e4 100644
---- a/net/wireless/reg.h
-+++ b/net/wireless/reg.h
-@@ -153,14 +153,6 @@ bool regulatory_indoor_allowed(void);
+  *	Send data via reliable llc2 connection.
+  *	Returns 0 upon success, non-zero if action did not succeed.
++ *
++ *	This function always consumes a reference to the skb.
   */
- #define REG_PRE_CAC_EXPIRY_GRACE_MS 2000
+ static int llc_ui_send_data(struct sock* sk, struct sk_buff *skb, int noblock)
+ {
+ 	struct llc_sock* llc = llc_sk(sk);
+-	int rc = 0;
  
--/**
-- * regulatory_pre_cac_allowed - if pre-CAC allowed in the current dfs domain
-- * @wiphy: wiphy for which pre-CAC capability is checked.
--
-- * Pre-CAC is allowed only in ETSI domain.
-- */
--bool regulatory_pre_cac_allowed(struct wiphy *wiphy);
--
- /**
-  * regulatory_propagate_dfs_state - Propagate DFS channel state to other wiphys
-  * @wiphy - wiphy on which radar is detected and the event will be propagated
+ 	if (unlikely(llc_data_accept_state(llc->state) ||
+ 		     llc->remote_busy_flag ||
+ 		     llc->p_flag)) {
+ 		long timeout = sock_sndtimeo(sk, noblock);
++		int rc;
+ 
+ 		rc = llc_ui_wait_for_busy_core(sk, timeout);
++		if (rc) {
++			kfree_skb(skb);
++			return rc;
++		}
+ 	}
+-	if (unlikely(!rc))
+-		rc = llc_build_and_send_pkt(sk, skb);
+-	return rc;
++	return llc_build_and_send_pkt(sk, skb);
+ }
+ 
+ static void llc_ui_sk_init(struct socket *sock, struct sock *sk)
+@@ -900,7 +904,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	DECLARE_SOCKADDR(struct sockaddr_llc *, addr, msg->msg_name);
+ 	int flags = msg->msg_flags;
+ 	int noblock = flags & MSG_DONTWAIT;
+-	struct sk_buff *skb;
++	struct sk_buff *skb = NULL;
+ 	size_t size = 0;
+ 	int rc = -EINVAL, copied = 0, hdrlen;
+ 
+@@ -909,10 +913,10 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	lock_sock(sk);
+ 	if (addr) {
+ 		if (msg->msg_namelen < sizeof(*addr))
+-			goto release;
++			goto out;
+ 	} else {
+ 		if (llc_ui_addr_null(&llc->addr))
+-			goto release;
++			goto out;
+ 		addr = &llc->addr;
+ 	}
+ 	/* must bind connection to sap if user hasn't done it. */
+@@ -920,7 +924,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 		/* bind to sap with null dev, exclusive. */
+ 		rc = llc_ui_autobind(sock, addr);
+ 		if (rc)
+-			goto release;
++			goto out;
+ 	}
+ 	hdrlen = llc->dev->hard_header_len + llc_ui_header_len(sk, addr);
+ 	size = hdrlen + len;
+@@ -929,12 +933,12 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	copied = size - hdrlen;
+ 	rc = -EINVAL;
+ 	if (copied < 0)
+-		goto release;
++		goto out;
+ 	release_sock(sk);
+ 	skb = sock_alloc_send_skb(sk, size, noblock, &rc);
+ 	lock_sock(sk);
+ 	if (!skb)
+-		goto release;
++		goto out;
+ 	skb->dev      = llc->dev;
+ 	skb->protocol = llc_proto_type(addr->sllc_arphrd);
+ 	skb_reserve(skb, hdrlen);
+@@ -944,29 +948,31 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	if (sk->sk_type == SOCK_DGRAM || addr->sllc_ua) {
+ 		llc_build_and_send_ui_pkt(llc->sap, skb, addr->sllc_mac,
+ 					  addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	if (addr->sllc_test) {
+ 		llc_build_and_send_test_pkt(llc->sap, skb, addr->sllc_mac,
+ 					    addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	if (addr->sllc_xid) {
+ 		llc_build_and_send_xid_pkt(llc->sap, skb, addr->sllc_mac,
+ 					   addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	rc = -ENOPROTOOPT;
+ 	if (!(sk->sk_type == SOCK_STREAM && !addr->sllc_ua))
+ 		goto out;
+ 	rc = llc_ui_send_data(sk, skb, noblock);
++	skb = NULL;
+ out:
+-	if (rc) {
+-		kfree_skb(skb);
+-release:
++	kfree_skb(skb);
++	if (rc)
+ 		dprintk("%s: failed sending from %02X to %02X: %d\n",
+ 			__func__, llc->laddr.lsap, llc->daddr.lsap, rc);
+-	}
+ 	release_sock(sk);
+ 	return rc ? : copied;
+ }
+diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
+index ed2aca12460ca..0b0c6f12153b0 100644
+--- a/net/llc/llc_conn.c
++++ b/net/llc/llc_conn.c
+@@ -55,6 +55,8 @@ int sysctl_llc2_busy_timeout = LLC2_BUSY_TIME * HZ;
+  *	(executing it's actions and changing state), upper layer will be
+  *	indicated or confirmed, if needed. Returns 0 for success, 1 for
+  *	failure. The socket lock has to be held before calling this function.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ {
+diff --git a/net/llc/llc_if.c b/net/llc/llc_if.c
+index 8db03c2d5440b..ad6547736c219 100644
+--- a/net/llc/llc_if.c
++++ b/net/llc/llc_if.c
+@@ -38,6 +38,8 @@
+  *	closed and -EBUSY when sending data is not permitted in this state or
+  *	LLC has send an I pdu with p bit set to 1 and is waiting for it's
+  *	response.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
+ {
+@@ -46,20 +48,22 @@ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
+ 	struct llc_sock *llc = llc_sk(sk);
+ 
+ 	if (unlikely(llc->state == LLC_CONN_STATE_ADM))
+-		goto out;
++		goto out_free;
+ 	rc = -EBUSY;
+ 	if (unlikely(llc_data_accept_state(llc->state) || /* data_conn_refuse */
+ 		     llc->p_flag)) {
+ 		llc->failed_data_req = 1;
+-		goto out;
++		goto out_free;
+ 	}
+ 	ev = llc_conn_ev(skb);
+ 	ev->type      = LLC_CONN_EV_TYPE_PRIM;
+ 	ev->prim      = LLC_DATA_PRIM;
+ 	ev->prim_type = LLC_PRIM_TYPE_REQ;
+ 	skb->dev      = llc->dev;
+-	rc = llc_conn_state_process(sk, skb);
+-out:
++	return llc_conn_state_process(sk, skb);
++
++out_free:
++	kfree_skb(skb);
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
