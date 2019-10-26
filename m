@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FB2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06544CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A600206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFEFB206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096539;
-	bh=bNC+TcN3IWRHEh9qOeVupKZeAl+zfDS1a3g66p+KHQk=;
+	s=default; t=1572096545;
+	bh=d+k+F8sEkdzwwKGHDr6Pgq1fJ05P427d/R561d/xQso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z9I3qP4TBOM7e6+3z4ZuXrDbLguTp9xBW+OFighlhkveu+42aff1+5ht3ctX0EdYY
-	 cp4ANP6aEAFasiYFRuHgi2tIxg44RR9zi7zv+GKnxh7vYTOEAgeiXKdUUh8klOvaWM
-	 UUbCrwATsmNdiEhAtIQUXnQchhi6adWXR8hceBBc=
+	b=tXwEkD2NOw6nlCQSUbsobmW3a1fKKtujyhOg+JP+iQuHlQhzht/tufZIwWYrfB3sw
+	 PnAcANGf6H08Qhgk59H2Ef2/mg6cAE0PvfKH0IZdj1aZwcz6yH9qvzHNuKKcHxPKTp
+	 VvmJOeXNhCurqDoEfwHB20ge4un3+LwoIUCVLWy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfJZNUt (ORCPT
+        id S1729230AbfJZN3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42294 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728650AbfJZNUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:32 -0400
+        id S1727498AbfJZNUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617AD21D7F;
-        Sat, 26 Oct 2019 13:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78C4D214DA;
+        Sat, 26 Oct 2019 13:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096032;
-        bh=bNC+TcN3IWRHEh9qOeVupKZeAl+zfDS1a3g66p+KHQk=;
+        s=default; t=1572096045;
+        bh=d+k+F8sEkdzwwKGHDr6Pgq1fJ05P427d/R561d/xQso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1OoDFULT7fwwBEkW1OuUXRyVMJNdYxWSKYWJXr4hexWG3XkHemiAOLnMr+uQbWKDw
-         WquJCSsxrefZN3+x3q93U3VIHU57Q3Fs0LalaBgWE9IhR1+u/OvIg/SW2Mx8N1MZl6
-         xakjrLDpr7TirJ8NULt5H0Knem5fHXm1g+rWzDmA=
+        b=G8xX7er4kXoe7oj8PqnLWsFnbhyT5BXXvf41Dl57xlylfAFsK36wGKk1mqu7GVOQx
+         WPwLwQHBJYVFn2J58k5XwcCsIWfAvAcGxc3T98CsZiDULgYiiClVGeZKPfRCRPxxH+
+         prgsbAtif3ikskhPWyTEmqbqAcxMLYsy/3DDfVV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Edmund Nadolski <edmund.nadolski@intel.com>,
-        James Smart <james.smart@broadcom.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 42/59] nvme-pci: Free tagset if no IO queues
-Date:   Sat, 26 Oct 2019 09:18:53 -0400
-Message-Id: <20191026131910.3435-42-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 48/59] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
+Date:   Sat, 26 Oct 2019 09:18:59 -0400
+Message-Id: <20191026131910.3435-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -62,60 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 770597ecb2075390c01c425b8b1f551347f1bd70 ]
+[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
 
-If a controller becomes degraded after a reset, we will not be able to
-perform any IO. We currently teardown previously created request
-queues and namespaces, but we had kept the unusable tagset. Free
-it after all queues using it have been released.
+The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
+became 6 for GENET v4 and above, account for that difference.
 
-Tested-by: Edmund Nadolski <edmund.nadolski@intel.com>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h | 1 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index fad75362fe84b..ef60c9f7f27be 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2221,14 +2221,20 @@ static void nvme_release_prp_pools(struct nvme_dev *dev)
- 	dma_pool_destroy(dev->prp_small_pool);
- }
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+index 14b49612aa863..4dabf37319c84 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -369,6 +369,7 @@ struct bcmgenet_mib_counters {
+ #define  EXT_PWR_DOWN_PHY_EN		(1 << 20)
  
-+static void nvme_free_tagset(struct nvme_dev *dev)
-+{
-+	if (dev->tagset.tags)
-+		blk_mq_free_tag_set(&dev->tagset);
-+	dev->ctrl.tagset = NULL;
-+}
-+
- static void nvme_pci_free_ctrl(struct nvme_ctrl *ctrl)
- {
- 	struct nvme_dev *dev = to_nvme_dev(ctrl);
+ #define EXT_RGMII_OOB_CTRL		0x0C
++#define  RGMII_MODE_EN_V123		(1 << 0)
+ #define  RGMII_LINK			(1 << 4)
+ #define  OOB_DISABLE			(1 << 5)
+ #define  RGMII_MODE_EN			(1 << 6)
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index de0e24d912fe9..7b2fbbc334639 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -261,7 +261,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ 	 */
+ 	if (priv->ext_phy) {
+ 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
+-		reg |= RGMII_MODE_EN | id_mode_dis;
++		reg |= id_mode_dis;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			reg |= RGMII_MODE_EN_V123;
++		else
++			reg |= RGMII_MODE_EN;
+ 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
+ 	}
  
- 	nvme_dbbuf_dma_free(dev);
- 	put_device(dev->dev);
--	if (dev->tagset.tags)
--		blk_mq_free_tag_set(&dev->tagset);
-+	nvme_free_tagset(dev);
- 	if (dev->ctrl.admin_q)
- 		blk_put_queue(dev->ctrl.admin_q);
- 	kfree(dev->queues);
-@@ -2341,6 +2347,7 @@ static void nvme_reset_work(struct work_struct *work)
- 		nvme_kill_queues(&dev->ctrl);
- 		nvme_remove_namespaces(&dev->ctrl);
- 		new_state = NVME_CTRL_ADMIN_ONLY;
-+		nvme_free_tagset(dev);
- 	} else {
- 		nvme_start_queues(&dev->ctrl);
- 		nvme_wait_freeze(&dev->ctrl);
 -- 
 2.20.1
 
