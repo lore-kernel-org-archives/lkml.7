@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBFCCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCF0CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446DB2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D982070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096673;
-	bh=jsZPOx60yyYquX2mfJXeJhv5RdUK3SaV53lgliB4a54=;
+	s=default; t=1572096679;
+	bh=b5S1CimdtMac2CG6pgbspaYcfNtzSd/dAadqA8JChxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s8svRwL30Gl819UPDYoesj7uxUw2xQbmfuZZj3tUrG7HvDB5sKALpkVlUVSKJ9uZZ
-	 GnxcaEyTwIedzKxNsa0kHp4Tzgm78AMGxsyjRGXQH5FRfsjGO7ZcylXAMVa4hWj/TE
-	 QbFkSL7G7ot9MGj40YGZbwPj9/HL5+QvvthWVYMQ=
+	b=USPk8nYbVbVmgTtAsrYJm48S+nwKDYpEpiT3nX8GgdtlnllEQyvcREk8exNwii3dp
+	 OTD8RO9sJBbCOVepcNPHsSBJXhXN2CSj55MRW6LBcS3NiO0blnwRsiJb1cWkNMczob
+	 79Xu7DeIDRMvN88njrfS1o269mqvE0+NGzbJ4O6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfJZNT3 (ORCPT
+        id S1728266AbfJZNT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41358 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:19:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfJZNTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:24 -0400
+        id S1728212AbfJZNTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9F3B2070B;
-        Sat, 26 Oct 2019 13:19:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81E521D7F;
+        Sat, 26 Oct 2019 13:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095963;
-        bh=jsZPOx60yyYquX2mfJXeJhv5RdUK3SaV53lgliB4a54=;
+        s=default; t=1572095961;
+        bh=b5S1CimdtMac2CG6pgbspaYcfNtzSd/dAadqA8JChxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRRpU6J3hi7KZyxOzvWjTxPA0mrysX56toY04EIaIadTIqpq3tQWygUXNp/x7PWzG
-         XuKcMyix2OnZ0ieyLEh09JPkhEoq6YVB7Sj4HqgzaFi7mBhHDJMBM8gw1zPdIwxqDS
-         BTIFvvXppEvJPb0AIcbGxAGGC1pD1L4pElorWylM=
+        b=K+q6gJE1u6/yX3ZttgS9msSgkQBgoHyxFF0DUUOCtwG0Xg5XpYS27+KpXwY/DXvcR
+         6CAm3LU+OGVT9RMmD4BTGOu+8rgAY0d4LqLjDXnFmoR/b1tVaQPgcAjtXG/vsUMP0F
+         TK6a5/fyn6awnHEManfVUzcIySCGlyWgdGZrfmsM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rander Wang <rander.wang@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 09/59] ALSA: hdac: clear link output stream mapping
-Date:   Sat, 26 Oct 2019 09:18:20 -0400
-Message-Id: <20191026131910.3435-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/59] ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360
+Date:   Sat, 26 Oct 2019 09:18:19 -0400
+Message-Id: <20191026131910.3435-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,59 +58,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@linux.intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 130bce3afbbbbe585cba8604f2124c28e8d86fb0 ]
+[ Upstream commit 1099f48457d06b816359fb43ac32a4a07e33219b ]
 
-Fix potential DMA hang upon starting playback on devices in HDA mode
-on Intel platforms (Gemini Lake/Whiskey Lake/Comet Lake/Ice Lake). It
-doesn't affect platforms before Gemini Lake or any Intel device in
-non-HDA mode.
+Headphone on XPS 9350/9360 produces a background white noise. The The
+noise level somehow correlates with "Headphone Mic Boost", when it sets
+to 1 the noise disappears. However, doing this has a side effect, which
+also decreases the overall headphone volume so I didn't send the patch
+upstream.
 
-The reset value for the LOSDIV register is all output streams valid.
-Clear this register to invalidate non-existent streams when the bus
-is powered up.
+The noise was bearable back then, but after commit 717f43d81afc ("ALSA:
+hda/realtek - Update headset mode for ALC256") the noise exacerbates to
+a point it starts hurting ears.
 
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190930142945.7805-1-pierre-louis.bossart@linux.intel.com
+So let's use the workaround to set "Headphone Mic Boost" to 1 and lock
+it so it's not touchable by userspace.
+
+Fixes: 717f43d81afc ("ALSA: hda/realtek - Update headset mode for ALC256")
+BugLink: https://bugs.launchpad.net/bugs/1654448
+BugLink: https://bugs.launchpad.net/bugs/1845810
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20191003043919.10960-1-kai.heng.feng@canonical.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/hda_register.h        | 3 +++
- sound/hda/ext/hdac_ext_controller.c | 5 +++++
- 2 files changed, 8 insertions(+)
+ sound/pci/hda/patch_realtek.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/include/sound/hda_register.h b/include/sound/hda_register.h
-index 2ab39fb52d7a1..b6bb93a641268 100644
---- a/include/sound/hda_register.h
-+++ b/include/sound/hda_register.h
-@@ -262,6 +262,9 @@ enum { SDI0, SDI1, SDI2, SDI3, SDO0, SDO1, SDO2, SDO3 };
- #define AZX_REG_ML_LOUTPAY		0x20
- #define AZX_REG_ML_LINPAY		0x30
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index e1b08d6f2a519..53f1bc0cf8b7a 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5250,6 +5250,17 @@ static void alc271_hp_gate_mic_jack(struct hda_codec *codec,
+ 	}
+ }
  
-+/* bit0 is reserved, with BIT(1) mapping to stream1 */
-+#define ML_LOSIDV_STREAM_MASK		0xFFFE
++static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
++						      const struct hda_fixup *fix,
++						      int action)
++{
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
 +
- #define ML_LCTL_SCF_MASK			0xF
- #define AZX_MLCTL_SPA				(0x1 << 16)
- #define AZX_MLCTL_CPA				(0x1 << 23)
-diff --git a/sound/hda/ext/hdac_ext_controller.c b/sound/hda/ext/hdac_ext_controller.c
-index 5bc4a1d587d4f..95cf5cf10ad2e 100644
---- a/sound/hda/ext/hdac_ext_controller.c
-+++ b/sound/hda/ext/hdac_ext_controller.c
-@@ -272,6 +272,11 @@ int snd_hdac_ext_bus_link_get(struct hdac_bus *bus,
- 
- 		ret = snd_hdac_ext_bus_link_power_up(link);
- 
-+		/*
-+		 * clear the register to invalidate all the output streams
-+		 */
-+		snd_hdac_updatew(link->ml_addr, AZX_REG_ML_LOSIDV,
-+				 ML_LOSIDV_STREAM_MASK, 0);
- 		/*
- 		 *  wait for 521usec for codec to report status
- 		 *  HDA spec section 4.3 - Codec Discovery
++	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
++	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
++}
++
+ static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
+ 					     const struct hda_fixup *fix,
+ 					     int action)
+@@ -5632,6 +5643,7 @@ enum {
+ 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
+ 	ALC275_FIXUP_DELL_XPS,
+ 	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
++	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
+ 	ALC293_FIXUP_LENOVO_SPK_NOISE,
+ 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
+ 	ALC255_FIXUP_DELL_SPK_NOISE,
+@@ -6348,6 +6360,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
+ 	},
++	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
++		.chained = true,
++		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
++	},
+ 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_disable_aamix,
+@@ -6781,17 +6799,17 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+-	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
+-	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
+ 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
 -- 
 2.20.1
 
