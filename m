@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857E0CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9629ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F0720867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C772070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096795;
-	bh=xxhDib96CAuu+qgU+FNLwIap1P+MIxRuHXvs11dU7e0=;
+	s=default; t=1572096798;
+	bh=ZRJ33FI0JuhaB3TyBKOicPCYQTmoLRc1gxv1NDHcnpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NEzvFNcGjTPLPbAE7nQj0ScgcROzz7J9egmG08yMvGQPEkLkMS6dKdPkBbgpj81ds
-	 kZGSzbPPAzXR1I+JDJxsD4CqmYmcrMfFGBBAMjqDsFjZiQl1alVwTZmA/m+c3CWrZa
-	 oxYZCUFv5hDAOkyF7vhNTctBUXcpK6u6GP8Dh8Fw=
+	b=PturRPu3SlFl9pxZU2RiVmEyzDjXoMsks74V0//o4yzOmTFcivCeLNJba+Ccc8veG
+	 37o0U1/n/BFa3ImQZKYFxJQbSy/wCIomtKmIQXwWQ768PqKOlfDAOfA2cgCpgtvSze
+	 mq9FmEjnzVRaST8pJH3dzBJIYld+DoG4rCbS3jRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfJZNSJ (ORCPT
+        id S1727690AbfJZNSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39748 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbfJZNSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:04 -0400
+        id S1727617AbfJZNSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E25BB21D80;
-        Sat, 26 Oct 2019 13:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72514222C1;
+        Sat, 26 Oct 2019 13:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095883;
-        bh=xxhDib96CAuu+qgU+FNLwIap1P+MIxRuHXvs11dU7e0=;
+        s=default; t=1572095881;
+        bh=ZRJ33FI0JuhaB3TyBKOicPCYQTmoLRc1gxv1NDHcnpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUhogE7LAVlFErCmLPPwC7cq2+Hr9qme7OmmxrAxnBLhKnp9trIG+y0s7FY4yf4as
-         F5C+KavuB/iZoNFOaKzK3E+M5bURh7T+ceh3HeZ2rdtXY5J0RSqBo6XmgOy9fkRi1p
-         xX+QG8c9HRcUB+mvP4AYvzJsyS15ivRrSS7yip0Q=
+        b=qjkYKbhaGNefcIIE/lCay19ryeaEJvKLv/eufoDnqVse0VOMM0qhBi+MqUi22PLCG
+         1DWG8sACtzUrloL+jxjGU+TpVI8CC20S273VkcL2RZ+VdaTdApPyonqMdbtL/H793A
+         s1v2tDjQByNpCxeO7wMgBHQV8MneBwz2GvWJq0us=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Russkikh <Igor.Russkikh@aquantia.com>,
-        =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= 
-        <holger@applied-asynchrony.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 69/99] net: aquantia: temperature retrieval fix
-Date:   Sat, 26 Oct 2019 09:15:30 -0400
-Message-Id: <20191026131600.2507-69-sashal@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.de>, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 68/99] firmware: dmi: Fix unlikely out-of-bounds read in save_mem_devices
+Date:   Sat, 26 Oct 2019 09:15:29 -0400
+Message-Id: <20191026131600.2507-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,37 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Russkikh <Igor.Russkikh@aquantia.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit 06b0d7fe7e5ff3ba4c7e265ef41135e8bcc232bb ]
+[ Upstream commit 81dde26de9c08bb04c4962a15608778aaffb3cf9 ]
 
-Chip temperature is a two byte word, colocated internally with cable
-length data. We do all readouts from HW memory by dwords, thus
-we should clear extra high bytes, otherwise temperature output
-gets weird as soon as we attach a cable to the NIC.
+Before reading the Extended Size field, we should ensure it fits in
+the DMI record. There is already a record length check but it does
+not cover that field.
 
-Fixes: 8f8940118654 ("net: aquantia: add infrastructure to readout chip temperature")
-Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It would take a seriously corrupted DMI table to hit that bug, so no
+need to worry, but we should still fix it.
+
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 6deae96b42eb ("firmware, DMI: Add function to look up a handle and return DIMM size")
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c   | 2 +-
+ drivers/firmware/dmi_scan.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-index da726489e3c8d..7bc51f8d6f2fc 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-@@ -337,7 +337,7 @@ static int aq_fw2x_get_phy_temp(struct aq_hw_s *self, int *temp)
- 	/* Convert PHY temperature from 1/256 degree Celsius
- 	 * to 1/1000 degree Celsius.
- 	 */
--	*temp = temp_res  * 1000 / 256;
-+	*temp = (temp_res & 0xFFFF) * 1000 / 256;
- 
- 	return 0;
- }
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index 35ed56b9c34f1..1e21fc3e9851a 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -408,7 +408,7 @@ static void __init save_mem_devices(const struct dmi_header *dm, void *v)
+ 		bytes = ~0ull;
+ 	else if (size & 0x8000)
+ 		bytes = (u64)(size & 0x7fff) << 10;
+-	else if (size != 0x7fff)
++	else if (size != 0x7fff || dm->length < 0x20)
+ 		bytes = (u64)size << 20;
+ 	else
+ 		bytes = (u64)get_unaligned((u32 *)&d[0x1C]) << 20;
 -- 
 2.20.1
 
