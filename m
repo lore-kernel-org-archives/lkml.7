@@ -2,101 +2,102 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D50ACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3F5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D1321E6F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/jZojJu"
+	by mail.kernel.org (Postfix) with ESMTP id 9F43421655
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfJZGoT (ORCPT
+        id S1726162AbfJZGw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 02:44:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52210 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfJZGoS (ORCPT
+        Sat, 26 Oct 2019 02:52:28 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:58690 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfJZGw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 02:44:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aiPSd/BZaq8mZvPjuhE4XI65j8OE7xLRgVlrgYKV6X8=; b=F/jZojJuWlmtYwiabWSCN61UA
-        DJTL0DKDCRX7BN+qAIbWIW+jalp4XIg7RqqpMFKWAIL/mWu2jghSkj2qPCYYZZVTynp1AhxZlzMEC
-        5CEaqn3UkS8suk+1IHtm1KeugWS7ohi18uMi3TB0S0K3ZNPNhjoJ1Gm4ryl+MZGrz8gt2FoEI0OSM
-        nCEY4LXt4xg21LC0vJk1U/1WBysEfj1A2GnytuxvgI++Gagou1GrLIdA1ILFw5rHWoVVLkycXCmiN
-        V8HiJ0HsLPFP6ZVtquvpFwy1vmdAy8v/83zH4KWCrK7ER1LJoSDlG2R/9bTULsTpS2qWJ6BCIFVtn
-        CDN4nubow==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iOFnR-0007qU-Gs; Sat, 26 Oct 2019 06:43:33 +0000
-Date:   Fri, 25 Oct 2019 23:43:33 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Hildenbrand <david@redhat.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        David Gibson <david@gibson.dropbear.id.au>, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 10/10] ocxl: Conditionally bind SCM devices to the
- generic OCXL driver
-Message-ID: <20191026064333.GA24422@infradead.org>
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
- <20191025044721.16617-11-alastair@au1.ibm.com>
+        Sat, 26 Oct 2019 02:52:28 -0400
+X-Greylist: delayed 372 seconds by postgrey-1.27 at vger.kernel.org; Sat, 26 Oct 2019 02:52:27 EDT
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id E98AF2A49A;
+        Sat, 26 Oct 2019 02:46:09 -0400 (EDT)
+Date:   Sat, 26 Oct 2019 17:46:08 +1100 (AEDT)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     =?ISO-8859-15?Q?Michal_Such=E1nek?= <msuchanek@suse.de>
+cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] cdrom: factor out common open_for_* code
+In-Reply-To: <20191025104230.GN938@kitsune.suse.cz>
+Message-ID: <alpine.LNX.2.21.1910261652580.8@nippy.intranet>
+References: <cover.1571834862.git.msuchanek@suse.de> <da032629db4a770a5f98ff400b91b44873cbdf46.1571834862.git.msuchanek@suse.de> <20191024021958.GA11485@infradead.org> <20191024085014.GF938@kitsune.suse.cz> <20191025023908.GB14108@infradead.org>
+ <20191025104230.GN938@kitsune.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025044721.16617-11-alastair@au1.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 03:47:05PM +1100, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Fri, 25 Oct 2019, Michal Such?nek wrote:
+
+> On Thu, Oct 24, 2019 at 07:39:08PM -0700, Christoph Hellwig wrote:
+> > On Thu, Oct 24, 2019 at 10:50:14AM +0200, Michal Such?nek wrote:
+> > > Then I will get complaints I do unrelated changes and it's hard to
+> > > review. The code gets removed later anyway.
+> > 
+> > If you refactor you you pretty much have a card blanche for the
+> > refactored code and the direct surroundings.
 > 
-> This patch allows the user to bind OpenCAPI SCM devices to the generic OCXL
-> driver.
+> This is different from what other reviewers say:
+> 
+> https://lore.kernel.org/lkml/1517245320.2687.14.camel@wdc.com/
+> 
 
-This completely misses any explanation of why you'd want that.  The
-what is rather obvious from the patch.
+I don't see any inconsistency there. Both reviews are valuable.
 
-> +config OCXL_SCM_GENERIC
-> +	bool "Treat OpenCAPI Storage Class Memory as a generic OpenCAPI device"
-> +	default n
+In general, different reviewers may give contradictory advice. Reviewers 
+probably even contradict themselves eventually. Yet it rarely happens that 
+the same patch gets contradictory reviews. If it did, you might well 
+complain.
 
-n is the default default.
+> Either way, this code is removed in a later patch so this discussion is
+> moot.
+> 
+> It makes sense to have a bisection point here in case something
+> goes wrong but it is pointless to argue about the code structure
+> inherited from the previous revision.
+
+A patch may refactor some code only to have the next patch remove that 
+code. This doesn't generally mean that the former patch is redundant.
+
+The latter patch may end up committed and subsequently reverted. The 
+latter patch may become easier to review because of the former. The former 
+patch may be eligible for -stable. The former patch may be the result of 
+an automatic process. And so on.
+
+I don't know what Christoph had in mind here but he's usually right, so 
+it's worth asking.
+
+-- 
+
+> 
+> Thanks
+> 
+> Michal
+> 
