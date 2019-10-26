@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47525CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E69CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110E3206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6D4206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096425;
-	bh=JQPnHHefjD50QpW9G8R7ACml4N1RMeIAqydYYqU13aM=;
+	s=default; t=1572096430;
+	bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2E4enBWDRAlPflfe4wL2GUObh4XOmzg0LYXqAJUxBsx6qakhHjL5aEya34ju2GN5f
-	 bsY/PTtYuRlf/7sFQM8iAaDHQOOJIfhMalPfvhqZg2NkS5dX8insdPn88Ojb1f/3l3
-	 4G4D53dbJVXycb2vLMfP7QajcFaXIhX31aB0ifVo=
+	b=UOBGtTH+NpSxKXa2CoVgjKdjaVwbwyyqmf11bUjerZTh6McKPLrsq2BrOhlSRJe/F
+	 r18L5KC3UQZnikOm4fRdYXB1olB9xk1rLRFKjoHZ+svIqLxidJcSNdx4RRqBvhiECx
+	 pfLLHHrpW4lmxRhKgmkOjxjACUmS/M7Nk70O/LF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbfJZN1D (ORCPT
+        id S1729127AbfJZNVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbfJZNVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 26 Oct 2019 09:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729049AbfJZNVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7689D222BE;
-        Sat, 26 Oct 2019 13:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24B0C2070B;
+        Sat, 26 Oct 2019 13:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096102;
-        bh=JQPnHHefjD50QpW9G8R7ACml4N1RMeIAqydYYqU13aM=;
+        s=default; t=1572096094;
+        bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aRjznIpWp+z8bDSGEhJ4Hk8kjoZCX2TIFoEdfUdk4qU1mStNGQd+tqe26gea004bI
-         oIf/9ZLXARaRFAB3wr36juZZ0ArqVKX5wm5Kz3FgJZRZDbIhoZSIih5u1v0uTJfsdb
-         owVDqWncYXBlRL+E2iMHOznnZdWxDn5TLcfwx9i8=
+        b=q91BbDVIvbzuECsa2oepatvAIsd14Yl/Bg5QuRVvKf/15kV6DGWmd5ravpFFISrSf
+         O3D/cNM1AWsp8Iezr+tbd/rb2xKfyjmOhWo2PpNCB29fiLMrtINol3uR4StrSV1nam
+         72eXvdDONbDD/02JaJVo4vh1VRuijelf+91mArqc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+Cc:     Johan Hovold <johan@kernel.org>,
+        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/33] net: usb: qmi_wwan: add Telit 0x1050 composition
-Date:   Sat, 26 Oct 2019 09:20:54 -0400
-Message-Id: <20191026132110.4026-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/33] NFC: pn533: fix use-after-free and memleaks
+Date:   Sat, 26 Oct 2019 09:20:49 -0400
+Message-Id: <20191026132110.4026-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,34 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit e0ae2c578d3909e60e9448207f5d83f785f1129f ]
+[ Upstream commit 6af3aa57a0984e061f61308fe181a9a12359fecc ]
 
-This patch adds support for Telit FN980 0x1050 composition
+The driver would fail to deregister and its class device and free
+related resources on late probe errors.
 
-0x1050: tty, adb, rmnet, tty, tty, tty, tty
-
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
+Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nfc/pn533/usb.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index e406a05e79dcd..57e9166b4bff3 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1252,6 +1252,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x2357, 0x0201, 4)},	/* TP-LINK HSUPA Modem MA180 */
- 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
- 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
-+	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1050, 2)},	/* Telit FN980 */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1200, 5)},	/* Telit LE920 */
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index 5d823e965883b..fcb57d64d97e6 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -559,18 +559,25 @@ static int pn533_usb_probe(struct usb_interface *interface,
+ 
+ 	rc = pn533_finalize_setup(priv);
+ 	if (rc)
+-		goto error;
++		goto err_deregister;
+ 
+ 	usb_set_intfdata(interface, phy);
+ 
+ 	return 0;
+ 
++err_deregister:
++	pn533_unregister_device(phy->priv);
+ error:
++	usb_kill_urb(phy->in_urb);
++	usb_kill_urb(phy->out_urb);
++	usb_kill_urb(phy->ack_urb);
++
+ 	usb_free_urb(phy->in_urb);
+ 	usb_free_urb(phy->out_urb);
+ 	usb_free_urb(phy->ack_urb);
+ 	usb_put_dev(phy->udev);
+ 	kfree(in_buf);
++	kfree(phy->ack_buffer);
+ 
+ 	return rc;
+ }
 -- 
 2.20.1
 
