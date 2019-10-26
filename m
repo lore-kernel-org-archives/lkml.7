@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BBCCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB28CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8249421655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26922070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095976;
-	bh=G4tKmQT91fdo3pi0ZcwYS2NIDzLCXtwTmvkJE5wHsbo=;
+	s=default; t=1572095981;
+	bh=aGP91nYaydYyiw1aEEPUAzgyU8YIqN75+zUdllje6y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeZFUyP0VzLseJXwp4D0CV2N7l8/rUERLFUDDqB7Qgc+EW52fIL+klY/IHwl0RwLE
-	 ilTTBU+1cMAjEACNjF9FToc8dnYGLvT/KZAdrI4dx3FRE7kD/lZxyEuHgcK1tfo5eN
-	 F/pJv2zR8k/zktPblWgFoMXKn3zieK4DYOrvi008=
+	b=tG6t8AItS5nK9ein04RT602CMBvUNCHrgHn4P9xhTsqlJz591PmH+e64fDgSpxxdl
+	 gTPkzfXNOj4lZ8bfXYM5m2w0xEHtypiLb839k7ivqqciWkMsa8h/W8JurWk+J+O+jF
+	 A4WCYo5y0YzQqMWTOuyLJdQ9odTXRWFUYvBA7stE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfJZNTf (ORCPT
+        id S1728397AbfJZNTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:19:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbfJZNT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:27 -0400
+        id S1728295AbfJZNTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49FE721D81;
-        Sat, 26 Oct 2019 13:19:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84152222BE;
+        Sat, 26 Oct 2019 13:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095967;
-        bh=G4tKmQT91fdo3pi0ZcwYS2NIDzLCXtwTmvkJE5wHsbo=;
+        s=default; t=1572095969;
+        bh=aGP91nYaydYyiw1aEEPUAzgyU8YIqN75+zUdllje6y8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9u4ZAmKfSCL+Dp0tJBwkuPZz5lclj0vmVHJpIlkJbrzIWqQUquXj+9DzkG5ahjhJ
-         1nWgVVYB7z+l2IkQLwYL/C7KMg2WYCI3Y+X1qr8gU8V751wADlV5a+BSzq2Gmz6fjH
-         o25/ngQFmZrJTFLNMBAlN/SraMoiMEOHri5TFYXo=
+        b=SBWS5ieZMfcGwNtWKQk1l+TMj01HwqDC4YLN56qubOwpIHKzPBN6nGashycK6LmSu
+         qU3crAWm9yVZ4qBkzduqivMdtWKPSg/EKQ7mxoV6wlahhYnYg69twQ6Am3NrWbTOfA
+         S5COWGJmKilTHw/kijT5ARDPgdKGbmDXtqRN5uyU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     David Howells <dhowells@redhat.com>,
+        syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/59] rxrpc: Fix trace-after-put looking at the put connection record
-Date:   Sat, 26 Oct 2019 09:18:23 -0400
-Message-Id: <20191026131910.3435-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 14/59] rxrpc: rxrpc_peer needs to hold a ref on the rxrpc_local record
+Date:   Sat, 26 Oct 2019 09:18:25 -0400
+Message-Id: <20191026131910.3435-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -61,170 +62,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 4c1295dccc0afe0905b6ca4c62ade7f2406f2cfb ]
+[ Upstream commit 9ebeddef58c41bd700419cdcece24cf64ce32276 ]
 
-rxrpc_put_*conn() calls trace_rxrpc_conn() after they have done the
-decrement of the refcount - which looks at the debug_id in the connection
-record.  But unless the refcount was reduced to zero, we no longer have the
-right to look in the record and, indeed, it may be deleted by some other
-thread.
+The rxrpc_peer record needs to hold a reference on the rxrpc_local record
+it points as the peer is used as a base to access information in the
+rxrpc_local record.
 
-Fix this by getting the debug_id out before decrementing the refcount and
-then passing that into the tracepoint.
+This can cause problems in __rxrpc_put_peer(), where we need the network
+namespace pointer, and in rxrpc_send_keepalive(), where we need to access
+the UDP socket, leading to symptoms like:
 
-Fixes: 363deeab6d0f ("rxrpc: Add connection tracepoint and client conn state tracepoint")
+    BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411
+    [inline]
+    BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0
+    net/rxrpc/peer_object.c:435
+    Read of size 8 at addr ffff888097ec0058 by task syz-executor823/24216
+
+Fix this by taking a ref on the local record for the peer record.
+
+Fixes: ace45bec6d77 ("rxrpc: Fix firewall route keepalive")
+Fixes: 2baec2c3f854 ("rxrpc: Support network namespacing")
+Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |  6 +++---
- net/rxrpc/call_accept.c      |  2 +-
- net/rxrpc/conn_client.c      |  6 ++++--
- net/rxrpc/conn_object.c      | 13 +++++++------
- net/rxrpc/conn_service.c     |  2 +-
- 5 files changed, 16 insertions(+), 13 deletions(-)
+ net/rxrpc/peer_object.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index a08916eb76152..0924119bcfa40 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -554,10 +554,10 @@ TRACE_EVENT(rxrpc_peer,
- 	    );
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index 72b4ad210426e..b91b090217cdb 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -220,7 +220,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
+ 	peer = kzalloc(sizeof(struct rxrpc_peer), gfp);
+ 	if (peer) {
+ 		atomic_set(&peer->usage, 1);
+-		peer->local = local;
++		peer->local = rxrpc_get_local(local);
+ 		INIT_HLIST_HEAD(&peer->error_targets);
+ 		peer->service_conns = RB_ROOT;
+ 		seqlock_init(&peer->service_conn_lock);
+@@ -311,7 +311,6 @@ void rxrpc_new_incoming_peer(struct rxrpc_sock *rx, struct rxrpc_local *local,
+ 	unsigned long hash_key;
  
- TRACE_EVENT(rxrpc_conn,
--	    TP_PROTO(struct rxrpc_connection *conn, enum rxrpc_conn_trace op,
-+	    TP_PROTO(unsigned int conn_debug_id, enum rxrpc_conn_trace op,
- 		     int usage, const void *where),
+ 	hash_key = rxrpc_peer_hash_key(local, &peer->srx);
+-	peer->local = local;
+ 	rxrpc_init_peer(rx, peer, hash_key);
  
--	    TP_ARGS(conn, op, usage, where),
-+	    TP_ARGS(conn_debug_id, op, usage, where),
+ 	spin_lock(&rxnet->peer_hash_lock);
+@@ -421,6 +420,7 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
+ 	list_del_init(&peer->keepalive_link);
+ 	spin_unlock_bh(&rxnet->peer_hash_lock);
  
- 	    TP_STRUCT__entry(
- 		    __field(unsigned int,	conn		)
-@@ -567,7 +567,7 @@ TRACE_EVENT(rxrpc_conn,
- 			     ),
- 
- 	    TP_fast_assign(
--		    __entry->conn = conn->debug_id;
-+		    __entry->conn = conn_debug_id;
- 		    __entry->op = op;
- 		    __entry->usage = usage;
- 		    __entry->where = where;
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index 8079aacaecace..c5566bc4aaca3 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -88,7 +88,7 @@ static int rxrpc_service_prealloc_one(struct rxrpc_sock *rx,
- 		smp_store_release(&b->conn_backlog_head,
- 				  (head + 1) & (size - 1));
- 
--		trace_rxrpc_conn(conn, rxrpc_conn_new_service,
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
- 				 atomic_read(&conn->usage), here);
- 	}
- 
-diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
-index c979a56faaef0..f16c7e913f50b 100644
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -217,7 +217,8 @@ rxrpc_alloc_client_connection(struct rxrpc_conn_parameters *cp, gfp_t gfp)
- 	rxrpc_get_local(conn->params.local);
- 	key_get(conn->params.key);
- 
--	trace_rxrpc_conn(conn, rxrpc_conn_new_client, atomic_read(&conn->usage),
-+	trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_client,
-+			 atomic_read(&conn->usage),
- 			 __builtin_return_address(0));
- 	trace_rxrpc_client(conn, -1, rxrpc_client_alloc);
- 	_leave(" = %p", conn);
-@@ -989,11 +990,12 @@ rxrpc_put_one_client_conn(struct rxrpc_connection *conn)
- void rxrpc_put_client_conn(struct rxrpc_connection *conn)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = conn->debug_id;
- 	int n;
- 
- 	do {
- 		n = atomic_dec_return(&conn->usage);
--		trace_rxrpc_conn(conn, rxrpc_conn_put_client, n, here);
-+		trace_rxrpc_conn(debug_id, rxrpc_conn_put_client, n, here);
- 		if (n > 0)
- 			return;
- 		ASSERTCMP(n, >=, 0);
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 885dae829f4a1..3d02636b8f856 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -272,7 +272,7 @@ bool rxrpc_queue_conn(struct rxrpc_connection *conn)
- 	if (n == 0)
- 		return false;
- 	if (rxrpc_queue_work(&conn->processor))
--		trace_rxrpc_conn(conn, rxrpc_conn_queued, n + 1, here);
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_queued, n + 1, here);
- 	else
- 		rxrpc_put_connection(conn);
- 	return true;
-@@ -287,7 +287,7 @@ void rxrpc_see_connection(struct rxrpc_connection *conn)
- 	if (conn) {
- 		int n = atomic_read(&conn->usage);
- 
--		trace_rxrpc_conn(conn, rxrpc_conn_seen, n, here);
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_seen, n, here);
- 	}
++	rxrpc_put_local(peer->local);
+ 	kfree_rcu(peer, rcu);
  }
  
-@@ -299,7 +299,7 @@ void rxrpc_get_connection(struct rxrpc_connection *conn)
- 	const void *here = __builtin_return_address(0);
- 	int n = atomic_inc_return(&conn->usage);
- 
--	trace_rxrpc_conn(conn, rxrpc_conn_got, n, here);
-+	trace_rxrpc_conn(conn->debug_id, rxrpc_conn_got, n, here);
+@@ -457,6 +457,7 @@ void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
+ 	if (n == 0) {
+ 		hash_del_rcu(&peer->hash_link);
+ 		list_del_init(&peer->keepalive_link);
++		rxrpc_put_local(peer->local);
+ 		kfree_rcu(peer, rcu);
+ 	}
  }
- 
- /*
-@@ -313,7 +313,7 @@ rxrpc_get_connection_maybe(struct rxrpc_connection *conn)
- 	if (conn) {
- 		int n = atomic_fetch_add_unless(&conn->usage, 1, 0);
- 		if (n > 0)
--			trace_rxrpc_conn(conn, rxrpc_conn_got, n + 1, here);
-+			trace_rxrpc_conn(conn->debug_id, rxrpc_conn_got, n + 1, here);
- 		else
- 			conn = NULL;
- 	}
-@@ -336,10 +336,11 @@ static void rxrpc_set_service_reap_timer(struct rxrpc_net *rxnet,
- void rxrpc_put_service_conn(struct rxrpc_connection *conn)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = conn->debug_id;
- 	int n;
- 
- 	n = atomic_dec_return(&conn->usage);
--	trace_rxrpc_conn(conn, rxrpc_conn_put_service, n, here);
-+	trace_rxrpc_conn(debug_id, rxrpc_conn_put_service, n, here);
- 	ASSERTCMP(n, >=, 0);
- 	if (n == 1)
- 		rxrpc_set_service_reap_timer(conn->params.local->rxnet,
-@@ -423,7 +424,7 @@ void rxrpc_service_connection_reaper(struct work_struct *work)
- 		 */
- 		if (atomic_cmpxchg(&conn->usage, 1, 0) != 1)
- 			continue;
--		trace_rxrpc_conn(conn, rxrpc_conn_reap_service, 0, NULL);
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_reap_service, 0, NULL);
- 
- 		if (rxrpc_conn_is_client(conn))
- 			BUG();
-diff --git a/net/rxrpc/conn_service.c b/net/rxrpc/conn_service.c
-index 80773a50c7551..6da7c4bf15e88 100644
---- a/net/rxrpc/conn_service.c
-+++ b/net/rxrpc/conn_service.c
-@@ -138,7 +138,7 @@ struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxn
- 		list_add_tail(&conn->proc_link, &rxnet->conn_proc_list);
- 		write_unlock(&rxnet->conn_lock);
- 
--		trace_rxrpc_conn(conn, rxrpc_conn_new_service,
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
- 				 atomic_read(&conn->usage),
- 				 __builtin_return_address(0));
- 	}
 -- 
 2.20.1
 
