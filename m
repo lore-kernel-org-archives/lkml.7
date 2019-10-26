@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B11CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A02CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E089821655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46EF222BE
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095804;
-	bh=D5MAHeyDcTYlwUrhihOy3TU+/cG5UlEbHY58W5ziSO4=;
+	s=default; t=1572095805;
+	bh=1z8sPM2iMelBgO7dSl9hmqwAIU8J4e69MNI8IY+DL3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pZOMNGKzxlgiyVFiJYJc0gDbTvU204QRvivFNxz25t7GUxaqWfnOM6dqqT8oL806M
-	 bFnhNgvj7kj6ZOlkXG/1IMV9SOQNUQ+EJWT31NKcVsCtfJQWiUD5uWbMQ62IJEAiq0
-	 QTrFll3A0W2YB/kwBMKNHddDHAD5LgOYeoBuhH7c=
+	b=Vv7TSyt9YZEeYaiB4IMdvYStFGC9wCarSN1HlKiQqZk5HpEBS5EBynht6gn3MBpeA
+	 dRxj/j7f3A0MuMTTAqHZBfzxi01e1Q0y3BAnSxm46Uqp815EiByA5ORyqbE+uVyZsC
+	 ovShmIT7sf3npuaR0TecaiixMt2EmR3jwjq0o8ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfJZNQm (ORCPT
+        id S1726945AbfJZNQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38148 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfJZNQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:36 -0400
+        id S1726883AbfJZNQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B3A0222C4;
-        Sat, 26 Oct 2019 13:16:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E67521E6F;
+        Sat, 26 Oct 2019 13:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095795;
-        bh=D5MAHeyDcTYlwUrhihOy3TU+/cG5UlEbHY58W5ziSO4=;
+        s=default; t=1572095797;
+        bh=1z8sPM2iMelBgO7dSl9hmqwAIU8J4e69MNI8IY+DL3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NBxF0+760NuqAo8yDFeGf3FX+66Ngza80PryGU1Oxb5yh77J5q1299PbCPAWJrWUg
-         MLjIvMfw6vJynhvuvg3Oi0G0rP7AczA1GYcFu1IgKp+egGe+u6CFvkDiYhGXyoLwbj
-         hB3Whm4zHg8ZMjZ5hEvCsHS2NwgSvvnw7bWtf4m0=
+        b=Qa4oZQTQbBW3foGP9IT9K5I9xRphkuQDlSF8h6ibWFdc60pOztc3qdClX299m3r29
+         pYyeNuKuAGRHG5FmyVWECDSLiQGbMtOITbistMdvoaQXmo3wDBoGscdomnRZM0Y8gu
+         v+LgwhqZhmRBJvfOpMR4hiymirp0wIFgf298cVGk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Aaron Komisar <aaron.komisar@tandemg.com>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 22/99] cfg80211: fix a bunch of RCU issues in multi-bssid code
-Date:   Sat, 26 Oct 2019 09:14:43 -0400
-Message-Id: <20191026131600.2507-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 24/99] mac80211: fix scan when operating on DFS channels in ETSI domains
+Date:   Sat, 26 Oct 2019 09:14:45 -0400
+Message-Id: <20191026131600.2507-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -61,102 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Aaron Komisar <aaron.komisar@tandemg.com>
 
-[ Upstream commit 461c4c2b4c0731d7452bad4e77c0cdbdcea1804c ]
+[ Upstream commit dc0c18ed229cdcca283dd78fefa38273ec37a42c ]
 
-cfg80211_update_notlisted_nontrans() leaves the RCU critical session
-too early, while still using nontrans_ssid which is RCU protected. In
-addition, it performs a bunch of RCU pointer update operations such
-as rcu_access_pointer and rcu_assign_pointer.
+In non-ETSI regulatory domains scan is blocked when operating channel
+is a DFS channel. For ETSI, however, once DFS channel is marked as
+available after the CAC, this channel will remain available (for some
+time) even after leaving this channel.
 
-The caller, cfg80211_inform_bss_frame_data(), also accesses the RCU
-pointer without holding the lock.
+Therefore a scan can be done without any impact on the availability
+of the DFS channel as no new CAC is required after the scan.
 
-Just wrap all of this with bss_lock.
+Enable scan in mac80211 in these cases.
 
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/20191004123706.15768-3-luca@coelho.fi
+Signed-off-by: Aaron Komisar <aaron.komisar@tandemg.com>
+Link: https://lore.kernel.org/r/1570024728-17284-1-git-send-email-aaron.komisar@tandemg.com
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/scan.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ include/net/cfg80211.h |  8 ++++++++
+ net/mac80211/scan.c    | 30 ++++++++++++++++++++++++++++--
+ net/wireless/reg.c     |  1 +
+ net/wireless/reg.h     |  8 --------
+ 4 files changed, 37 insertions(+), 10 deletions(-)
 
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index 27d76c4c5cea1..00f7a4630f45d 100644
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -1691,8 +1691,7 @@ cfg80211_parse_mbssid_frame_data(struct wiphy *wiphy,
- static void
- cfg80211_update_notlisted_nontrans(struct wiphy *wiphy,
- 				   struct cfg80211_bss *nontrans_bss,
--				   struct ieee80211_mgmt *mgmt, size_t len,
--				   gfp_t gfp)
-+				   struct ieee80211_mgmt *mgmt, size_t len)
- {
- 	u8 *ie, *new_ie, *pos;
- 	const u8 *nontrans_ssid, *trans_ssid, *mbssid;
-@@ -1703,6 +1702,8 @@ cfg80211_update_notlisted_nontrans(struct wiphy *wiphy,
- 	const struct cfg80211_bss_ies *old;
- 	u8 cpy_len;
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index 26e2ad2c70278..ce2659988a233 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -5446,6 +5446,14 @@ const struct ieee80211_reg_rule *freq_reg_info(struct wiphy *wiphy,
+  */
+ const char *reg_initiator_name(enum nl80211_reg_initiator initiator);
  
-+	lockdep_assert_held(&wiphy_to_rdev(wiphy)->bss_lock);
++/**
++ * regulatory_pre_cac_allowed - check if pre-CAC allowed in the current regdom
++ * @wiphy: wiphy for which pre-CAC capability is checked.
++ *
++ * Pre-CAC is allowed only in some regdomains (notable ETSI).
++ */
++bool regulatory_pre_cac_allowed(struct wiphy *wiphy);
 +
- 	ie = mgmt->u.probe_resp.variable;
- 
- 	new_ie_len = ielen;
-@@ -1719,23 +1720,22 @@ cfg80211_update_notlisted_nontrans(struct wiphy *wiphy,
- 	if (!mbssid || mbssid < trans_ssid)
- 		return;
- 	new_ie_len -= mbssid[1];
--	rcu_read_lock();
-+
- 	nontrans_ssid = ieee80211_bss_get_ie(nontrans_bss, WLAN_EID_SSID);
--	if (!nontrans_ssid) {
--		rcu_read_unlock();
-+	if (!nontrans_ssid)
- 		return;
--	}
-+
- 	new_ie_len += nontrans_ssid[1];
--	rcu_read_unlock();
- 
- 	/* generate new ie for nontrans BSS
- 	 * 1. replace SSID with nontrans BSS' SSID
- 	 * 2. skip MBSSID IE
- 	 */
--	new_ie = kzalloc(new_ie_len, gfp);
-+	new_ie = kzalloc(new_ie_len, GFP_ATOMIC);
- 	if (!new_ie)
- 		return;
--	new_ies = kzalloc(sizeof(*new_ies) + new_ie_len, gfp);
-+
-+	new_ies = kzalloc(sizeof(*new_ies) + new_ie_len, GFP_ATOMIC);
- 	if (!new_ies)
- 		goto out_free;
- 
-@@ -1895,6 +1895,8 @@ cfg80211_inform_bss_frame_data(struct wiphy *wiphy,
- 	cfg80211_parse_mbssid_frame_data(wiphy, data, mgmt, len,
- 					 &non_tx_data, gfp);
- 
-+	spin_lock_bh(&wiphy_to_rdev(wiphy)->bss_lock);
-+
- 	/* check if the res has other nontransmitting bss which is not
- 	 * in MBSSID IE
- 	 */
-@@ -1909,8 +1911,9 @@ cfg80211_inform_bss_frame_data(struct wiphy *wiphy,
- 		ies2 = rcu_access_pointer(tmp_bss->ies);
- 		if (ies2->tsf < ies1->tsf)
- 			cfg80211_update_notlisted_nontrans(wiphy, tmp_bss,
--							   mgmt, len, gfp);
-+							   mgmt, len);
- 	}
-+	spin_unlock_bh(&wiphy_to_rdev(wiphy)->bss_lock);
- 
- 	return res;
+ /**
+  * DOC: Internal regulatory db functions
+  *
+diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
+index adf94ba1ed77a..4d31d9688dc23 100644
+--- a/net/mac80211/scan.c
++++ b/net/mac80211/scan.c
+@@ -520,10 +520,33 @@ static int ieee80211_start_sw_scan(struct ieee80211_local *local,
+ 	return 0;
  }
+ 
++static bool __ieee80211_can_leave_ch(struct ieee80211_sub_if_data *sdata)
++{
++	struct ieee80211_local *local = sdata->local;
++	struct ieee80211_sub_if_data *sdata_iter;
++
++	if (!ieee80211_is_radar_required(local))
++		return true;
++
++	if (!regulatory_pre_cac_allowed(local->hw.wiphy))
++		return false;
++
++	mutex_lock(&local->iflist_mtx);
++	list_for_each_entry(sdata_iter, &local->interfaces, list) {
++		if (sdata_iter->wdev.cac_started) {
++			mutex_unlock(&local->iflist_mtx);
++			return false;
++		}
++	}
++	mutex_unlock(&local->iflist_mtx);
++
++	return true;
++}
++
+ static bool ieee80211_can_scan(struct ieee80211_local *local,
+ 			       struct ieee80211_sub_if_data *sdata)
+ {
+-	if (ieee80211_is_radar_required(local))
++	if (!__ieee80211_can_leave_ch(sdata))
+ 		return false;
+ 
+ 	if (!list_empty(&local->roc_list))
+@@ -630,7 +653,10 @@ static int __ieee80211_start_scan(struct ieee80211_sub_if_data *sdata,
+ 
+ 	lockdep_assert_held(&local->mtx);
+ 
+-	if (local->scan_req || ieee80211_is_radar_required(local))
++	if (local->scan_req)
++		return -EBUSY;
++
++	if (!__ieee80211_can_leave_ch(sdata))
+ 		return -EBUSY;
+ 
+ 	if (!ieee80211_can_scan(local, sdata)) {
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 36eba5804efe8..796b7b75acdd1 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -3866,6 +3866,7 @@ bool regulatory_pre_cac_allowed(struct wiphy *wiphy)
+ 
+ 	return pre_cac_allowed;
+ }
++EXPORT_SYMBOL(regulatory_pre_cac_allowed);
+ 
+ void regulatory_propagate_dfs_state(struct wiphy *wiphy,
+ 				    struct cfg80211_chan_def *chandef,
+diff --git a/net/wireless/reg.h b/net/wireless/reg.h
+index 504133d76de4d..dc8f689bd4690 100644
+--- a/net/wireless/reg.h
++++ b/net/wireless/reg.h
+@@ -155,14 +155,6 @@ bool regulatory_indoor_allowed(void);
+  */
+ #define REG_PRE_CAC_EXPIRY_GRACE_MS 2000
+ 
+-/**
+- * regulatory_pre_cac_allowed - if pre-CAC allowed in the current dfs domain
+- * @wiphy: wiphy for which pre-CAC capability is checked.
+-
+- * Pre-CAC is allowed only in ETSI domain.
+- */
+-bool regulatory_pre_cac_allowed(struct wiphy *wiphy);
+-
+ /**
+  * regulatory_propagate_dfs_state - Propagate DFS channel state to other wiphys
+  * @wiphy - wiphy on which radar is detected and the event will be propagated
 -- 
 2.20.1
 
