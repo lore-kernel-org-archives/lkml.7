@@ -2,53 +2,51 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4188ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F648CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B192070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14BA222C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096114;
-	bh=4Tkv1W4QD2J6bF4iRnIyhOwvGlVu8IP5XbcUcFzXYvE=;
+	s=default; t=1572096117;
+	bh=UVw5wCMe8nlRqLQdA7M/iefUaS6HfUfveFEn+roFtug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LlHRXOE3Xj3sN6OkYmeXwbvdza8uC/TgQ+S7i5TtTA46yFZtDhvAgsmu9hWRDdo/V
-	 nU3BUPdB0mHFNqZBGCf17tlF1sPhXJhPhhtV1teBqe6xKj4+Ot+94oDqoK6dGdFBGE
-	 dAMRKLWwkcGjj1Bjtc/Hd9suhCfB88cQp/mUmChM=
+	b=hmnphOGGWUPGat3aVgQsO+DNpk6dg4Nnjul7j/rwMSYhMIFnZSCyz5bC1+X9VEDO3
+	 IaDSeOeVOFXZvh12DPnX/yQnkU0b71YggBn70UFpNZyaCWiYAVTMrmHxbT3jxPs49e
+	 +6olZ6L5ub2uExTmiSazibB1C3zfsUnR1zZIlj+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfJZNVw (ORCPT
+        id S1729216AbfJZNVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43436 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbfJZNVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:41 -0400
+        id S1727828AbfJZNVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EBE420867;
-        Sat, 26 Oct 2019 13:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C354214DA;
+        Sat, 26 Oct 2019 13:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096100;
-        bh=4Tkv1W4QD2J6bF4iRnIyhOwvGlVu8IP5XbcUcFzXYvE=;
+        s=default; t=1572096104;
+        bh=UVw5wCMe8nlRqLQdA7M/iefUaS6HfUfveFEn+roFtug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T4ZqfeUqZQ0vIYU9Eu0EF2LmOm5LADzECawzODoZ7t8Sd0L7WBFMPa6boOEsdZOTO
-         AZtY3c4pb0HkyRNns9dcTwR0l5y6OYcANdwStSxHeuRmp9oXKXChyaVAhhMM7hkemi
-         KSSyfhEHgA+dVa18uSwT9aQMGi7ImJKiuVUlfHyw=
+        b=Sc6dTbvav1XgHigGi7VbJouI3T2N0KI2v2EDowTv8ZhV7bMWsAkY+OyH+kbzZ8xJm
+         uFV1jyhN6alye58TofDCpWYEkwVslplT84fOcEk2uQ0Kg768SEbDK5CNmHTtsa5gFV
+         35afzTxpvc74ObXunsRf/8wxr5HgeFBipboRgiDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Mahesh Bandewar <maheshb@google.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/33] bonding: fix potential NULL deref in bond_update_slave_arr
-Date:   Sat, 26 Oct 2019 09:20:52 -0400
-Message-Id: <20191026132110.4026-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 18/33] net: avoid possible false sharing in sk_leave_memory_pressure()
+Date:   Sat, 26 Oct 2019 09:20:55 -0400
+Message-Id: <20191026132110.4026-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -63,75 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit a7137534b597b7c303203e6bc3ed87e87a273bb8 ]
+[ Upstream commit 503978aca46124cd714703e180b9c8292ba50ba7 ]
 
-syzbot got a NULL dereference in bond_update_slave_arr() [1],
-happening after a failure to allocate bond->slave_arr
+As mentioned in https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE#it-may-improve-performance
+a C compiler can legally transform :
 
-A workqueue (bond_slave_arr_handler) is supposed to retry
-the allocation later, but if the slave is removed before
-the workqueue had a chance to complete, bond->slave_arr
-can still be NULL.
+if (memory_pressure && *memory_pressure)
+        *memory_pressure = 0;
 
-[1]
+to :
 
-Failed to build slave-array.
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-Modules linked in:
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:bond_update_slave_arr.cold+0xc6/0x198 drivers/net/bonding/bond_main.c:4039
-RSP: 0018:ffff88018fe33678 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000290b000
-RDX: 0000000000000000 RSI: ffffffff82b63037 RDI: ffff88019745ea20
-RBP: ffff88018fe33760 R08: ffff880170754280 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff88019745ea00 R14: 0000000000000000 R15: ffff88018fe338b0
-FS:  00007febd837d700(0000) GS:ffff8801dad00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004540a0 CR3: 00000001c242e005 CR4: 00000000001626f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- [<ffffffff82b5b45e>] __bond_release_one+0x43e/0x500 drivers/net/bonding/bond_main.c:1923
- [<ffffffff82b5b966>] bond_release drivers/net/bonding/bond_main.c:2039 [inline]
- [<ffffffff82b5b966>] bond_do_ioctl+0x416/0x870 drivers/net/bonding/bond_main.c:3562
- [<ffffffff83ae25f4>] dev_ifsioc+0x6f4/0x940 net/core/dev_ioctl.c:328
- [<ffffffff83ae2e58>] dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:495
- [<ffffffff83995ffd>] sock_do_ioctl+0x1bd/0x300 net/socket.c:1088
- [<ffffffff83996a80>] sock_ioctl+0x300/0x5d0 net/socket.c:1196
- [<ffffffff81b124db>] vfs_ioctl fs/ioctl.c:47 [inline]
- [<ffffffff81b124db>] file_ioctl fs/ioctl.c:501 [inline]
- [<ffffffff81b124db>] do_vfs_ioctl+0xacb/0x1300 fs/ioctl.c:688
- [<ffffffff81b12dc6>] SYSC_ioctl fs/ioctl.c:705 [inline]
- [<ffffffff81b12dc6>] SyS_ioctl+0xb6/0xe0 fs/ioctl.c:696
- [<ffffffff8101ccc8>] do_syscall_64+0x528/0x770 arch/x86/entry/common.c:305
- [<ffffffff84400091>] entry_SYSCALL_64_after_hwframe+0x42/0xb7
+if (memory_pressure)
+        *memory_pressure = 0;
 
-Fixes: ee6377147409 ("bonding: Simplify the xmit function for modes that use xmit_hash")
+Fixes: 0604475119de ("tcp: add TCPMemoryPressuresChrono counter")
+Fixes: 180d8cd942ce ("foundations of per-cgroup memory pressure controlling.")
+Fixes: 3ab224be6d69 ("[NET] CORE: Introducing new memory accounting interface.")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Mahesh Bandewar <maheshb@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/sock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index c1eeba1906fdb..1cc4c99aa504b 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3992,7 +3992,7 @@ int bond_update_slave_arr(struct bonding *bond, struct slave *skipslave)
- 		 * this to-be-skipped slave to send a packet out.
- 		 */
- 		old_arr = rtnl_dereference(bond->slave_arr);
--		for (idx = 0; idx < old_arr->count; idx++) {
-+		for (idx = 0; old_arr != NULL && idx < old_arr->count; idx++) {
- 			if (skipslave == old_arr->arr[idx]) {
- 				old_arr->arr[idx] =
- 				    old_arr->arr[old_arr->count-1];
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 5f466db916ee8..0ae37781848bd 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2165,8 +2165,8 @@ static void sk_leave_memory_pressure(struct sock *sk)
+ 	} else {
+ 		unsigned long *memory_pressure = sk->sk_prot->memory_pressure;
+ 
+-		if (memory_pressure && *memory_pressure)
+-			*memory_pressure = 0;
++		if (memory_pressure && READ_ONCE(*memory_pressure))
++			WRITE_ONCE(*memory_pressure, 0);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
