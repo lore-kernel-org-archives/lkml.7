@@ -2,68 +2,114 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D00EC47E49
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 02:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4301CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 03:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3958F21D7F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 02:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3C421872
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 03:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbfJZCvb (ORCPT
+        id S1726155AbfJZDSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 22:51:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52296 "EHLO huawei.com"
+        Fri, 25 Oct 2019 23:18:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4769 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725957AbfJZCva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 22:51:30 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AF52D9F0D7FC51A6691C;
-        Sat, 26 Oct 2019 10:51:26 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 26 Oct 2019 10:51:18 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Egor Pomozov <epomozov@marvell.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     YueHaibing <yuehaibing@huawei.com>, <netdev@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: aquantia: remove unused including <linux/version.h>
-Date:   Sat, 26 Oct 2019 02:51:09 +0000
-Message-ID: <20191026025109.75721-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1725996AbfJZDSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 23:18:01 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CBB23743F87458580549;
+        Sat, 26 Oct 2019 11:17:59 +0800 (CST)
+Received: from [127.0.0.1] (10.61.25.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Sat, 26 Oct 2019
+ 11:17:53 +0800
+Subject: Re: [PATCH][next] RDMA/hns: fix memory leak on 'context' on error
+ return path
+To:     Colin King <colin.king@canonical.com>,
+        Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Tao Tian <tiantao6@huawei.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Yangyang Li <liyangyang20@huawei.com>,
+        <linux-rdma@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191024131034.19989-1-colin.king@canonical.com>
+From:   oulijun <oulijun@huawei.com>
+Message-ID: <d3fefb17-e16f-bfe2-d244-d5a25309321f@huawei.com>
+Date:   Sat, 26 Oct 2019 11:17:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.0
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
+In-Reply-To: <20191024131034.19989-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.61.25.96]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove including <linux/version.h> that don't need it.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/aquantia/atlantic/aq_ptp.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.h b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.h
-index 3de4682f7c06..61486757c789 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.h
-@@ -9,7 +9,6 @@
- #define AQ_PTP_H
- 
- #include <linux/net_tstamp.h>
--#include <linux/version.h>
- 
- /* Common functions */
- int aq_ptp_init(struct aq_nic_s *aq_nic, unsigned int idx_vec);
+在 2019/10/24 21:10, Colin King 写道:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently, the error return path when the call to function
+> dev->dfx->query_cqc_info fails will leak object 'context'. Fix this
+> by making the error return path via 'err' return return codes rather
+> than -EMSGSIZE, set ret appropriately for all error return paths and
+> for the memory leak now return via 'err' with -EINVAL rather than
+> just returning without freeing context.
+>
+> Addresses-Coverity: ("Resource leak")
+> Fixes: e1c9a0dc2939 ("RDMA/hns: Dump detailed driver-specific CQ")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_restrack.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/infiniband/hw/hns/hns_roce_restrack.c b/drivers/infiniband/hw/hns/hns_roce_restrack.c
+> index a0d608ec81c1..7e4a91dd7329 100644
+> --- a/drivers/infiniband/hw/hns/hns_roce_restrack.c
+> +++ b/drivers/infiniband/hw/hns/hns_roce_restrack.c
+> @@ -94,15 +94,21 @@ static int hns_roce_fill_res_cq_entry(struct sk_buff *msg,
+>  		return -ENOMEM;
+>  
+>  	ret = hr_dev->dfx->query_cqc_info(hr_dev, hr_cq->cqn, (int *)context);
+> -	if (ret)
+> -		return -EINVAL;
+> +	if (ret) {
+> +		ret = -EINVAL;
+> +		goto err;
+Why not remove ret = -EINVAL?
+> +	}
+>  
+>  	table_attr = nla_nest_start(msg, RDMA_NLDEV_ATTR_DRIVER);
+> -	if (!table_attr)
+> +	if (!table_attr) {
+> +		ret = -EMSGSIZE;
+>  		goto err;
+> +	}
+>  
+> -	if (hns_roce_fill_cq(msg, context))
+> +	if (hns_roce_fill_cq(msg, context)) {
+> +		ret = -EMSGSIZE;
+>  		goto err_cancel_table;
+> +	}
+>  
+>  	nla_nest_end(msg, table_attr);
+>  	kfree(context);
+> @@ -113,7 +119,7 @@ static int hns_roce_fill_res_cq_entry(struct sk_buff *msg,
+>  	nla_nest_cancel(msg, table_attr);
+>  err:
+>  	kfree(context);
+> -	return -EMSGSIZE;
+> +	return ret;
+>  }
+>  
+>  int hns_roce_fill_res_entry(struct sk_buff *msg,
 
 
 
