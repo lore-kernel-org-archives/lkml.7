@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FCACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F9ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1549D206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183DC206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096822;
-	bh=ipbw6dH6lL0Urna0nXEc+8jJiysud2Vy0AV+ljGCwr8=;
+	s=default; t=1572096827;
+	bh=kmVncfly2vWIeyv7BplJGALq7v22BJfNdF0T4ZWr3zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZMe92gShMWcMhOtDunku4Q2iS6TWpA84CbOHk3GpeLoEpP3+fq51piLOL1+WCsed
-	 OWGqNPziBA93ayZSqUN7Gck5YnakGIl3lpTaFo18wLvDHjSR94ZWBjNEw7BUIDAnOB
-	 zzNOyoTAOfAhf+3FdRqTMc04UKVWVkJtxg07T7g8=
+	b=NuSzZ/dpkYp058/Y3FhO4X40Lb94G8SRPWRKvbZfISy4/4GSe9C8fskF9wojKJSzw
+	 ahPRc9+Id66FuPZ364WEYTGO/3tJ+RlviusRfcnVRnmUYXdJwjgmD4wbvgdzrmb3lK
+	 c38COjjQGKAnH9k6JmWPY7jUhUSojDBqQbUv0sPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfJZNdk (ORCPT
+        id S1728253AbfJZNdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39590 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727588AbfJZNR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:57 -0400
+        id S1727580AbfJZNRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:17:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBE03214DA;
-        Sat, 26 Oct 2019 13:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C14E221D80;
+        Sat, 26 Oct 2019 13:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095876;
-        bh=ipbw6dH6lL0Urna0nXEc+8jJiysud2Vy0AV+ljGCwr8=;
+        s=default; t=1572095875;
+        bh=kmVncfly2vWIeyv7BplJGALq7v22BJfNdF0T4ZWr3zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXGNnhC+lXVBtQWWfl8FvI/+pWQoSbMbPxXf28REOJ4SYZoGyz0rkOQNUlhiWXygl
-         aOKcvYat45j8+yDHv8MB4FFskUBnsB4mlXKdMKUfUgZ1BFhH/ie9KHINjYRlJdAjtR
-         z684yQ5thiJodFHDO6NoX0gb9GaQApeP8JIXAxVo=
+        b=fBVuRVd1vrzaYse+gySNRA6EyN+VfU85vAj3tR2kBG9GsQ6CPUbEvdLseP/7aOQOS
+         ffdIYEq4K0dVPKqMS+65gYsQEPr1+3VV7XxGHizCUC25XxmBZ6bm/sD9pcrc+hfUuU
+         J5+S+i/hrUyLV928CTLlmaxVTbpLZyJbi+W662U8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Edmund Nadolski <edmund.nadolski@intel.com>,
-        James Smart <james.smart@broadcom.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.3 65/99] nvme-pci: Free tagset if no IO queues
-Date:   Sat, 26 Oct 2019 09:15:26 -0400
-Message-Id: <20191026131600.2507-65-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 64/99] hrtimer: Annotate lockless access to timer->base
+Date:   Sat, 26 Oct 2019 09:15:25 -0400
+Message-Id: <20191026131600.2507-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -62,60 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 770597ecb2075390c01c425b8b1f551347f1bd70 ]
+[ Upstream commit ff229eee3d897f52bd001c841f2d3cce8853ecdc ]
 
-If a controller becomes degraded after a reset, we will not be able to
-perform any IO. We currently teardown previously created request
-queues and namespaces, but we had kept the unusable tagset. Free
-it after all queues using it have been released.
+Followup to commit dd2261ed45aa ("hrtimer: Protect lockless access
+to timer->base")
 
-Tested-by: Edmund Nadolski <edmund.nadolski@intel.com>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+lock_hrtimer_base() fetches timer->base without lock exclusion.
+
+Compiler is allowed to read timer->base twice (even if considered dumb)
+which could end up trying to lock migration_base and return
+&migration_base.
+
+  base = timer->base;
+  if (likely(base != &migration_base)) {
+
+       /* compiler reads timer->base again, and now (base == &migration_base)
+
+       raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
+       if (likely(base == timer->base))
+            return base; /* == &migration_base ! */
+
+Similarly the write sides must use WRITE_ONCE() to avoid store tearing.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191008173204.180879-1-edumazet@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ kernel/time/hrtimer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 48a71909763be..f94cc01e85a66 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2438,14 +2438,20 @@ static void nvme_release_prp_pools(struct nvme_dev *dev)
- 	dma_pool_destroy(dev->prp_small_pool);
- }
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 5ee77f1a8a925..e809868578e0c 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -159,7 +159,7 @@ struct hrtimer_clock_base *lock_hrtimer_base(const struct hrtimer *timer,
+ 	struct hrtimer_clock_base *base;
  
-+static void nvme_free_tagset(struct nvme_dev *dev)
-+{
-+	if (dev->tagset.tags)
-+		blk_mq_free_tag_set(&dev->tagset);
-+	dev->ctrl.tagset = NULL;
-+}
-+
- static void nvme_pci_free_ctrl(struct nvme_ctrl *ctrl)
- {
- 	struct nvme_dev *dev = to_nvme_dev(ctrl);
+ 	for (;;) {
+-		base = timer->base;
++		base = READ_ONCE(timer->base);
+ 		if (likely(base != &migration_base)) {
+ 			raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
+ 			if (likely(base == timer->base))
+@@ -239,7 +239,7 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
+ 			return base;
  
- 	nvme_dbbuf_dma_free(dev);
- 	put_device(dev->dev);
--	if (dev->tagset.tags)
--		blk_mq_free_tag_set(&dev->tagset);
-+	nvme_free_tagset(dev);
- 	if (dev->ctrl.admin_q)
- 		blk_put_queue(dev->ctrl.admin_q);
- 	kfree(dev->queues);
-@@ -2564,6 +2570,7 @@ static void nvme_reset_work(struct work_struct *work)
- 		nvme_kill_queues(&dev->ctrl);
- 		nvme_remove_namespaces(&dev->ctrl);
- 		new_state = NVME_CTRL_ADMIN_ONLY;
-+		nvme_free_tagset(dev);
+ 		/* See the comment in lock_hrtimer_base() */
+-		timer->base = &migration_base;
++		WRITE_ONCE(timer->base, &migration_base);
+ 		raw_spin_unlock(&base->cpu_base->lock);
+ 		raw_spin_lock(&new_base->cpu_base->lock);
+ 
+@@ -248,10 +248,10 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
+ 			raw_spin_unlock(&new_base->cpu_base->lock);
+ 			raw_spin_lock(&base->cpu_base->lock);
+ 			new_cpu_base = this_cpu_base;
+-			timer->base = base;
++			WRITE_ONCE(timer->base, base);
+ 			goto again;
+ 		}
+-		timer->base = new_base;
++		WRITE_ONCE(timer->base, new_base);
  	} else {
- 		nvme_start_queues(&dev->ctrl);
- 		nvme_wait_freeze(&dev->ctrl);
+ 		if (new_cpu_base != this_cpu_base &&
+ 		    hrtimer_check_target(timer, new_base)) {
 -- 
 2.20.1
 
