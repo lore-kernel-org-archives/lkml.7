@@ -2,88 +2,110 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4349BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 09:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3F8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 09:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAD42070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 09:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B09206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 09:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572083413;
+	bh=6X+7o3nYmXTXsHrt3fJpGLQ4D2YmwYsckeqeO0iyPBE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EJUvMB6nwvua7koBkCXcmiaIXQusgQ3OiBgkFoKTOM3Qp4RWcM7Ko9BgodBMMHzdj
+	 IgcNCNydLopLBNh58rFy+pDK/MIC90FbwlAOecRGi8KBI4kdpx7Tu06PNeqsGwzVzW
+	 hMviBK8uJZEogbrWOVzgxZMhC9MIRg5fkfstYyyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbfJZJjO (ORCPT
+        id S1726195AbfJZJuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 05:39:14 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:37506 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfJZJjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 05:39:13 -0400
-Received: from localhost.cn (unknown [10.20.42.25])
-        by mail (Coremail) with SMTP id QMiowPDxv186FLRdB3wYAA--.19S2;
-        Sat, 26 Oct 2019 17:39:06 +0800 (CST)
-From:   Xing Li <lixing@loongson.cn>
-To:     jhogan@kernel.org, paul.burton@mips.com, ralf@linux-mips.org
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Change KVM_ENTRYHI_ASID to cpu_asid_mask(&current_cpu_data)
-Date:   Sat, 26 Oct 2019 17:39:04 +0800
-Message-Id: <1572082744-15586-1-git-send-email-lixing@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: QMiowPDxv186FLRdB3wYAA--.19S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFWktw1rWw47uFW3ZF4xWFg_yoWkJFX_Z3
-        W7Zw4kur4fCrZFy39Iywn3WFWYgw1UWF92kr90gFyDu3sFyry5Wa9xJr9rAwsxuw4qyF4r
-        W34DJ34rZrnrGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbxkYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjcxG0xvY0x0EwIxGrVCF
-        72vEw4AK0wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v2
-        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8
-        tGYPUUUUU==
-X-CM-SenderInfo: pol0x03j6o00pqjv00gofq/
+        Sat, 26 Oct 2019 05:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfJZJuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 05:50:04 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688CA206DD;
+        Sat, 26 Oct 2019 09:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572083403;
+        bh=6X+7o3nYmXTXsHrt3fJpGLQ4D2YmwYsckeqeO0iyPBE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VRfM6GkFHiFz61bDBM1gZY69z7MtzF0lhmhYj/eXjcQ/3FGz6yMI0tMvsNaOG0r4T
+         tREbXMfsrNdWjxpN/sYtg/TanaasGqIJTPS0eCvYt/Y6Rw2lceE7UqFtQkXiXxeoFC
+         AxaPOhTjmcu1phFfy+9LUeH0rmHB/WGEyePbiXE0=
+Date:   Sat, 26 Oct 2019 17:49:49 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     linux-devel@linux.nxdi.nxp.com, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v3] arm64: dts: ls1028a: Update the property of the DT node
+ dpclk
+Message-ID: <20191026094948.GF14401@dragon>
+References: <20191014071327.28961-1-wen.he_1@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014071327.28961-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code in decode_config4 of arch/mips/kernel/cpu-probe.c
+On Mon, Oct 14, 2019 at 03:13:27PM +0800, Wen He wrote:
+> Update the property #clock-cells = <1> to #clock-cells = <0> of the
+> dpclk, since the Display output pixel clock driver provides single
+> clock output.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 
-        asid_mask = MIPS_ENTRYHI_ASID;
-        if (config4 & MIPS_CONF4_AE)
-                asid_mask |= MIPS_ENTRYHI_ASIDX;
-        set_cpu_asid_mask(c, asid_mask);
+The patch subject can be more specific like:
 
-set asid_mask to cpuinfo->asid_mask
+  arm64: dts: ls1028a: Update #clock-cells of dpclk node
 
-So KVM_ENTRYHI_ASID should change to cpu_asid_mask(&current_cpu_data).
+I updated it and applied patch.
 
-Signed-off-by: Xing Li <lixing@loongson.cn>
----
- arch/mips/include/asm/kvm_host.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Shawn
 
-diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-index 41204a4..6be70d5 100644
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -275,7 +275,7 @@ enum emulation_result {
- #define MIPS3_PG_FRAME		0x3fffffc0
- 
- #define VPN2_MASK		0xffffe000
--#define KVM_ENTRYHI_ASID	MIPS_ENTRYHI_ASID
-+#define KVM_ENTRYHI_ASID	cpu_asid_mask(&current_cpu_data)
- #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
- #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
- #define TLB_ASID(x)		((x).tlb_hi & KVM_ENTRYHI_ASID)
--- 
-2.1.0
-
-
+> ---
+> change in v3:
+>         - according the maintainer correction node name
+>         - update the commit message
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 51fa8f57fdac..616b150a15aa 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -82,7 +82,7 @@
+>  	dpclk: clock-controller@f1f0000 {
+>  		compatible = "fsl,ls1028a-plldig";
+>  		reg = <0x0 0xf1f0000 0x0 0xffff>;
+> -		#clock-cells = <1>;
+> +		#clock-cells = <0>;
+>  		clocks = <&osc_27m>;
+>  	};
+>  
+> @@ -665,7 +665,7 @@
+>  		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
+>  		interrupt-names = "DE", "SE";
+> -		clocks = <&dpclk 0>, <&clockgen 2 2>, <&clockgen 2 2>,
+> +		clocks = <&dpclk>, <&clockgen 2 2>, <&clockgen 2 2>,
+>  			 <&clockgen 2 2>;
+>  		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+>  		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+> -- 
+> 2.17.1
+> 
