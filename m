@@ -2,128 +2,179 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F20CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AEECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95002070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF47D20867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="5QzE+QYO"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VMwHltKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfJZLJq (ORCPT
+        id S1726272AbfJZLUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 07:09:46 -0400
-Received: from mail-eopbgr820051.outbound.protection.outlook.com ([40.107.82.51]:44069
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726162AbfJZLJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 07:09:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dK9Mkt74n3+KGM0A1dwzyJuV4M/x7v+2Km6CnCyHWWvRRsLm/rYUQnCFYYUicBz8StX0385vbJ1Wqp0k3Oq93wVsfy4J5UFAsKh2IB4K4wXcgrWTi3AVjg3rP5aF/Xkk/AkM5wDtgXdr5MhDTgha7Im86kFD/NztKXmc3Zr7h8eXuPhp0wx/1XQoLxHy3lxgXl0/nejihpX+Ccjj0XkbDhAu8I9HhZ9dxNh6mr7yBheM5F/zHDtTSMLeGk227EM32MOCwjP7xWkaKclBuNlcQrJcUcuKSgyohZEQaD2FiTDa4aItzQC4KN+VM8YG0UkRPqgKz2XLudqbkSJO+QF9Wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4EXVZ9+xyl243oTuIv1EgFYYXSA1uYpJKvLdC2Pl/cc=;
- b=LtRrFO9XRGb3w+Y9YlOtfLLDg5Z3zIHVQwJF5KGoKwsxPAka2UnCN1vOVNCa4vAtXlR554cnnTNXlm5yq2JJE/9aa1/xKCcCOXrPc2+Ud4grrDTntl9Wmvyj2a9/YPfkChayOFLuguYpfbxf5L2YB9+V57aVTC0K0ffbNHhWZuNxRSlCiTE09cWBt1jNejMVZqDouJf09BYvqFCSe9XIE7jevG3g1FFWRv2v90szFTZaDLol82l4yNTbPDa1MAPQbgYjtMR/V41T5/uLM9G1MiGzGpVO3KcPc3JCx9lxSnjln3f72N6s5MUl8oDckuk0+eYAkGp+0YjoYIbPI5C1cA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aquantia.com; dmarc=pass action=none header.from=aquantia.com;
- dkim=pass header.d=aquantia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4EXVZ9+xyl243oTuIv1EgFYYXSA1uYpJKvLdC2Pl/cc=;
- b=5QzE+QYOmxR/1ibcaEcJgjWec71fi5sMC0fX1NDxgLN1DI8cepdkQ6XBdfrSl6Tql0IJrawMSjkCfviSr/0019c5jc/MhcSurHQCAKGXAPGBO291zGJRoSfS4ccqzqWtvSboGdyjf5zHdMww629rxROU646PxsWy3DRLauwtmSg=
-Received: from BN8PR11MB3762.namprd11.prod.outlook.com (20.178.221.83) by
- BN8PR11MB3587.namprd11.prod.outlook.com (20.178.221.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Sat, 26 Oct 2019 11:09:42 +0000
-Received: from BN8PR11MB3762.namprd11.prod.outlook.com
- ([fe80::accc:44e2:f64d:f2f]) by BN8PR11MB3762.namprd11.prod.outlook.com
- ([fe80::accc:44e2:f64d:f2f%3]) with mapi id 15.20.2387.023; Sat, 26 Oct 2019
- 11:09:42 +0000
-From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
-To:     Yuehaibing <yuehaibing@huawei.com>,
-        Simon Horman <simon.horman@netronome.com>
-CC:     Egor Pomozov <epomozov@marvell.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Dmitry Bezrukov <Dmitry.Bezrukov@aquantia.com>,
-        Sergey Samoilenko <Sergey.Samoilenko@aquantia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH net-next] net: aquantia: Fix build error wihtout
- CONFIG_PTP_1588_CLOCK
-Thread-Topic: [EXT] Re: [PATCH net-next] net: aquantia: Fix build error
- wihtout CONFIG_PTP_1588_CLOCK
-Thread-Index: AQHVi+3ed0tWLuNdk0SV6APBpRGF5g==
-Date:   Sat, 26 Oct 2019 11:09:42 +0000
-Message-ID: <379afbe8-adb8-5209-ac65-8bb9fb92966a@aquantia.com>
-References: <20191025133726.31796-1-yuehaibing@huawei.com>
- <20191026080929.GD31244@netronome.com>
- <4edcf4c4-b8fc-00a1-5f13-6c41a27eb4a5@huawei.com>
-In-Reply-To: <4edcf4c4-b8fc-00a1-5f13-6c41a27eb4a5@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR1PR01CA0007.eurprd01.prod.exchangelabs.com
- (2603:10a6:102::20) To BN8PR11MB3762.namprd11.prod.outlook.com
- (2603:10b6:408:8d::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Igor.Russkikh@aquantia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [95.79.108.179]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3b67dfd8-cb2f-4002-6041-08d75a05006e
-x-ms-traffictypediagnostic: BN8PR11MB3587:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 83e2e134-991c-4ede-8ced-34d47e38e6b1,ExtFwd
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR11MB35876706AC6B4F8027EA630698640@BN8PR11MB3587.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0202D21D2F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39850400004)(346002)(396003)(376002)(366004)(199004)(189003)(386003)(6512007)(64756008)(66476007)(66946007)(110136005)(508600001)(6306002)(66446008)(3846002)(6116002)(36756003)(26005)(229853002)(76176011)(256004)(71190400001)(2906002)(71200400001)(99286004)(305945005)(66066001)(31686004)(6436002)(102836004)(6486002)(52116002)(86362001)(6506007)(31696002)(966005)(44832011)(316002)(4744005)(25786009)(8936002)(81156014)(8676002)(81166006)(5660300002)(476003)(2616005)(4326008)(54906003)(11346002)(486006)(6246003)(7736002)(446003)(186003)(14454004)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR11MB3587;H:BN8PR11MB3762.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: aquantia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: o2LcqlE7AluwnNhmkhmV75xHmvtquFu68OPrlmULNY48XlL2fVDnZ/M1eVmJ3rSwag5mHczaSn1Vk9dd1PLWnbVUsRoePOr1moGr7VMhJIxVUmjyHCGk1urXXTCAj6ND2TeKldmfLRkPKO5pvKGlO9M987HWqeIeZ2ua1S/1gu5t2ntQEv2m4uZL18wgtffWC813guvX+R0KimrYtElToDU5JDNJWyRZf+ujFhVGi/2389XED67RPutU36mTA0wsnaddxeuBIHyf9lSLCbHyk4tlR7JWDDKe59Tw3kcrF2mtLzfJsxIctMoJH/AiBjOl2kDn445FO+vSvth9tAM5MRmtHlg8kzkupBNOwGZocyrEMVe9VrlrCVBEduG7zfbpOPf2DW1EV7T1UVw+zElwvzUB5UOUPxf3NzXfS3BYMf+BWWTeN5Fzy+d4wrdwsDCSCUY6+JwLYhnNDGr1RqGnGYNcPjsmSeu4I0HOeb/7Lw0=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <37DC56B85AFE804EA363494B5A28D8AD@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Sat, 26 Oct 2019 07:20:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:21036 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbfJZLUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 07:20:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 470dn23HVBz9vBLY;
+        Sat, 26 Oct 2019 13:20:06 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=VMwHltKJ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 8T8h_3sGDPZb; Sat, 26 Oct 2019 13:20:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 470dn223dkz9vBLX;
+        Sat, 26 Oct 2019 13:20:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1572088806; bh=cuRzeOKlaXy8moZYsilOlogmoVgTxTKDrbJaqzMZyMA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VMwHltKJYJQdbu7PK4+xV1Dr9Besk731Q47erS5k6wafk2Ix2XG/xyFnG7Pvv7Pg5
+         SmFst9LS0rBqSvgtCWvAXLp7a5kvYO+9pNHWnD2vz3j6KcChDoxTB+LhKcXRTo1trv
+         k1eZFRaooVdUouwfdY+ERrKOEab8qufUfRYCusww=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F33F8B7A8;
+        Sat, 26 Oct 2019 13:20:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id F8WsoAjdIp8i; Sat, 26 Oct 2019 13:20:07 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BD48D8B787;
+        Sat, 26 Oct 2019 13:20:06 +0200 (CEST)
+Subject: Re: loop nesting in alignment exception and machine check
+To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Cc:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "alistair@popple.id.au" <alistair@popple.id.au>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Xiexiuqi <xiexiuqi@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "oss@buserror.net" <oss@buserror.net>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "Libin (Huawei)" <huawei.libin@huawei.com>,
+        "agust@denx.de" <agust@denx.de>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <D44062DC474617438D5181ADFE2B2C21016DE42A@dggemi529-mbs.china.huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <8215aeb3-57dd-223a-29d3-45ca22b0543c@c-s.fr>
+Date:   Sat, 26 Oct 2019 13:20:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: aquantia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b67dfd8-cb2f-4002-6041-08d75a05006e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2019 11:09:42.7343
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ymPd/620bwwT/tJLdWgRqsVvn5/aXzCRueAtISM7v8EuLyDyy9Z50iV1s91sxNdN9MMVvFgBsnatT4tBYrtpag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR11MB3587
+In-Reply-To: <D44062DC474617438D5181ADFE2B2C21016DE42A@dggemi529-mbs.china.huawei.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
->> Hi YueHaibing,
->>
->> thanks for your patch.
->>
->> What is the motivation for not using the existing copy of this function?
->=20
-> I'm not sure if PTP_1588_CLOCK is needed at this config,
-> using the existing function need to PTP_1588_CLOCK is selected.
+Le 26/10/2019 à 09:23, Wangshaobo (bobo) a écrit :
+> Hi,
+> 
+> I encountered a problem about a loop nesting occurred in manufacturing 
+> the alignment exception in machine check, trigger background is :
+> 
+> problem:
+> 
+> machine checkout or critical interrupt ->…->kbox_write[for recording 
+> last words] -> memcpy(irremap_addr, src,size):_GLOBAL(memcpy)…
+> 
+> when we enter memcpy,a command ‘dcbz r11,r6’ will cause a alignment 
+> exception, in this situation,r11 loads the ioremap address,which leads 
+> to the alignment exception,
 
-Hi YueHaibing,
+You can't use memcpy() on something else than memory.
 
-Please checkout this patch: https://patchwork.ozlabs.org/patch/1184620/
+For an ioremapped area, you have to use memcpy_toio()
 
-It fixes the problem without duplicating the function.
+Christophe
 
-Regards,
-  Igor
+> 
+> then the command can not be process successfully,as we still in machine 
+> check.at the end ,it triggers a new irq machine check in irq handler 
+> function,a loop nesting begins.
+> 
+> analysis:
+> 
+> We have analysed a lot,but it still can not come to a reasonable 
+> description,in common,the alignment triggered in machine check context 
+> can still be collected into the Kbox
+> 
+> after alignment exception be handled by handler function, but how does 
+> the machine checkout can be triggered in the handler fucntion for any 
+> causes? We print relevant registers
+> 
+> as follow when first enter machine check and alignment exception handler 
+> function:
+> 
+>           MSR:0x2      MSR:0x0
+> 
+>           SRR1:0x2      SRR1:0x21002
+> 
+>           But the manual says SRR1 should be set to MSR(0x2),why that 
+> happened ?
+> 
+>           Then a branch in handler function copy the SRR1 to MSR,this 
+> enble MSR[ME] and MSR[CE],system collapses.
+> 
+> Conclusion:
+> 
+>           1)  why the alignment exception can not be handled in machine 
+> check ?
+> 
+>           2)  besides memcpy,any other function can cause the alignment 
+> exception ?
+> 
+> We still recurrent it, the line as follows:
+> 
+>           Cpu dead lock->watch log->trigger 
+> fiq->kbox_write->memcpy->alignment exception->print last words.
+> 
+>           but for those problems as below,what the kbox printed is empty.
+> 
+> ------------------kbox restart:[   10.147594]----------------
+> 
+> kbox verify fs magic fail
+> 
+> kbox mem mabye destroyed, format it
+> 
+> kbox: load OK
+> 
+> lock-task: major[249] minor[0]
+> 
+> -----start show_destroyed_kbox_mem_head----
+> 
+> 00000000: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000010: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000020: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000030: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000040: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000050: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000060: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000070: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000080: 00000000 00000000 00000000 00000000  ................
+> 
+> 00000090: 00000000 00000000 00000000 00000000  ................
+> 
