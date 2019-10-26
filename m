@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84367CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F44AC47E49
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5BB214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9529214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096970;
-	bh=2Zr63LfHAD3BEw5wTukfWSw3Tffj2QuG/1gRpsOupMc=;
+	s=default; t=1572096984;
+	bh=i6OBQan2kKE6S0mHWye64Z4OOzcnSu3pGuUf59jIpnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qg0b8lcabp5DbWvy1LPIbde7jO49xGHa2cp+C/R283Jwz2noiw/+PZ9FkfaakXdfk
-	 2s0t6WnGykiHfWJBMNhagQMH7fCnJYv+kBkji/v0/DEvvCDX8sKqQao3yTzUt8pzQ5
-	 aZNqUfABe8GAgQc3dTCORpbITI+JO0YhQdcT8WC4=
+	b=Rq6e3XmI4ntbAzlQNGTEuto+zVM8A60FbRb9gKfphsFGOhRoaLZTLYlNwiIeDPhic
+	 fFEp2I8ZS0YFK5HkEbPD6Thi80G7Jx/Dykakj3TZy2QZcSKdp9mD8fa3ilpYa/TuaM
+	 HY2sjHZLPv61lOIpQzjvlBs3QcfGiD1Vo3WOwSjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfJZNgI (ORCPT
+        id S1726864AbfJZNQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38520 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfJZNQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:56 -0400
+        id S1726805AbfJZNQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B72921897;
-        Sat, 26 Oct 2019 13:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52572222C2;
+        Sat, 26 Oct 2019 13:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095816;
-        bh=2Zr63LfHAD3BEw5wTukfWSw3Tffj2QuG/1gRpsOupMc=;
+        s=default; t=1572095793;
+        bh=i6OBQan2kKE6S0mHWye64Z4OOzcnSu3pGuUf59jIpnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UY5Zm3IrybDhV81b8mQoRi4LNvyrBsg/2m8Pu0N5/7bSiZ3qPRNEVGxNx1a8ji6FT
-         Bh6aSXANeN7+RZYsg8PpTZRGIyq9R834/WHmX02oSLKNANPlhgdRAy3Fuw65Zj5JRJ
-         /cJL02CLyA6LfgQz5I1bALA0x7rPFvYCrP2SNZVc=
+        b=2bcGXzL6cq8pZ6bVAOo8c0vufFvwq1Ikxk3/qZ1RjIFPKPMCW37yWS1lUrIoGS/rF
+         36gANyfgfVzm3BoBj3ULSRy786R/3QZRdz/aPjd05+ATLCQtFRS+K4ThpmNjY6ck14
+         9RZznq7F5yWCymqmzveYRVgve6wqBbLXgiZqQsLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Benc <jbenc@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 30/99] selftests/bpf: More compatible nc options in test_lwt_ip_encap
-Date:   Sat, 26 Oct 2019 09:14:51 -0400
-Message-Id: <20191026131600.2507-30-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 20/99] rxrpc: rxrpc_peer needs to hold a ref on the rxrpc_local record
+Date:   Sat, 26 Oct 2019 09:14:41 -0400
+Message-Id: <20191026131600.2507-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -61,46 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 106c35dda32f8b63f88cad7433f1b8bb0056958a ]
+[ Upstream commit 9ebeddef58c41bd700419cdcece24cf64ce32276 ]
 
-Out of the three nc implementations widely in use, at least two (BSD netcat
-and nmap-ncat) do not support -l combined with -s. Modify the nc invocation
-to be accepted by all of them.
+The rxrpc_peer record needs to hold a reference on the rxrpc_local record
+it points as the peer is used as a base to access information in the
+rxrpc_local record.
 
-Fixes: 17a90a788473 ("selftests/bpf: test that GSO works in lwt_ip_encap")
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/9f177682c387f3f943bb64d849e6c6774df3c5b4.1570539863.git.jbenc@redhat.com
+This can cause problems in __rxrpc_put_peer(), where we need the network
+namespace pointer, and in rxrpc_send_keepalive(), where we need to access
+the UDP socket, leading to symptoms like:
+
+    BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411
+    [inline]
+    BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0
+    net/rxrpc/peer_object.c:435
+    Read of size 8 at addr ffff888097ec0058 by task syz-executor823/24216
+
+Fix this by taking a ref on the local record for the peer record.
+
+Fixes: ace45bec6d77 ("rxrpc: Fix firewall route keepalive")
+Fixes: 2baec2c3f854 ("rxrpc: Support network namespacing")
+Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_lwt_ip_encap.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/rxrpc/peer_object.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_lwt_ip_encap.sh b/tools/testing/selftests/bpf/test_lwt_ip_encap.sh
-index acf7a74f97cd9..59ea56945e6cd 100755
---- a/tools/testing/selftests/bpf/test_lwt_ip_encap.sh
-+++ b/tools/testing/selftests/bpf/test_lwt_ip_encap.sh
-@@ -314,15 +314,15 @@ test_gso()
- 	command -v nc >/dev/null 2>&1 || \
- 		{ echo >&2 "nc is not available: skipping TSO tests"; return; }
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index b700b7ecaa3d8..64830d8c1fdb5 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -216,7 +216,7 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
+ 	peer = kzalloc(sizeof(struct rxrpc_peer), gfp);
+ 	if (peer) {
+ 		atomic_set(&peer->usage, 1);
+-		peer->local = local;
++		peer->local = rxrpc_get_local(local);
+ 		INIT_HLIST_HEAD(&peer->error_targets);
+ 		peer->service_conns = RB_ROOT;
+ 		seqlock_init(&peer->service_conn_lock);
+@@ -307,7 +307,6 @@ void rxrpc_new_incoming_peer(struct rxrpc_sock *rx, struct rxrpc_local *local,
+ 	unsigned long hash_key;
  
--	# listen on IPv*_DST, capture TCP into $TMPFILE
-+	# listen on port 9000, capture TCP into $TMPFILE
- 	if [ "${PROTO}" == "IPv4" ] ; then
- 		IP_DST=${IPv4_DST}
- 		ip netns exec ${NS3} bash -c \
--			"nc -4 -l -s ${IPv4_DST} -p 9000 > ${TMPFILE} &"
-+			"nc -4 -l -p 9000 > ${TMPFILE} &"
- 	elif [ "${PROTO}" == "IPv6" ] ; then
- 		IP_DST=${IPv6_DST}
- 		ip netns exec ${NS3} bash -c \
--			"nc -6 -l -s ${IPv6_DST} -p 9000 > ${TMPFILE} &"
-+			"nc -6 -l -p 9000 > ${TMPFILE} &"
- 		RET=$?
- 	else
- 		echo "    test_gso: unknown PROTO: ${PROTO}"
+ 	hash_key = rxrpc_peer_hash_key(local, &peer->srx);
+-	peer->local = local;
+ 	rxrpc_init_peer(rx, peer, hash_key);
+ 
+ 	spin_lock(&rxnet->peer_hash_lock);
+@@ -417,6 +416,7 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
+ 	list_del_init(&peer->keepalive_link);
+ 	spin_unlock_bh(&rxnet->peer_hash_lock);
+ 
++	rxrpc_put_local(peer->local);
+ 	kfree_rcu(peer, rcu);
+ }
+ 
+@@ -453,6 +453,7 @@ void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
+ 	if (n == 0) {
+ 		hash_del_rcu(&peer->hash_link);
+ 		list_del_init(&peer->keepalive_link);
++		rxrpc_put_local(peer->local);
+ 		kfree_rcu(peer, rcu);
+ 	}
+ }
 -- 
 2.20.1
 
