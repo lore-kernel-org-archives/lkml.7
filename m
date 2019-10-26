@@ -2,79 +2,89 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBCECA9EBE
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 05:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DF5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 05:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487922084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 05:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8789E21655
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 05:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfJZF1G convert rfc822-to-8bit (ORCPT
+        id S1726233AbfJZF3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 01:27:06 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:51845 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfJZF1F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 01:27:05 -0400
-Received: from [172.20.19.11] (unknown [213.61.67.157])
-        by mail.holtmann.org (Postfix) with ESMTPSA id CC3E8CED0C;
-        Sat, 26 Oct 2019 07:36:03 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH 0/3] ARM: dts: rockchip: Use hci_bcm driver for bcm43540
- on Veyron devices
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191025215428.31607-1-abhishekpandit@chromium.org>
-Date:   Sat, 26 Oct 2019 07:27:02 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        dianders@chromium.org, devicetree <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <4680AA6A-599F-4D5E-9A96-0655569BAE94@holtmann.org>
-References: <20191025215428.31607-1-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3594.4.19)
+        Sat, 26 Oct 2019 01:29:00 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24207 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725858AbfJZF27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 01:28:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 22:28:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,230,1569308400"; 
+   d="scan'208";a="224122612"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Oct 2019 22:28:56 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iOEdE-000AqQ-6t; Sat, 26 Oct 2019 13:28:56 +0800
+Date:   Sat, 26 Oct 2019 13:28:36 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     kbuild-all@lists.01.org, pbonzini@redhat.com, peterz@infradead.org,
+        kvm@vger.kernel.org, like.xu@intel.com,
+        linux-kernel@vger.kernel.org, jmattson@google.com,
+        sean.j.christopherson@intel.com, wei.w.wang@intel.com,
+        kan.liang@intel.com
+Subject: [RFC PATCH] KVM: x86/vPMU: intel_msr_idx_to_pmc() can be static
+Message-ID: <20191026052836.ttzqfv336iuykjos@4978f4969bb8>
+References: <20191021160651.49508-5-like.xu@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021160651.49508-5-like.xu@linux.intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
 
-> This patch series enables using the Broadcom HCI UART driver with the
-> BCM43540 Wi-Fi + Bluetooth chip. This chip is used on a RK3288 based
-> board (Veyron) and these changes have been tested on the Minnie variant
-> of the board (i.e. rk3288-veyron-minnie.dts).
-> 
-> 
-> 
-> Abhishek Pandit-Subedi (3):
->  Bluetooth: hci_bcm: Add compatible string for BCM43540
->  dt-bindings: net: broadcom-bluetooth: Add BCM43540 compatible string
->  ARM: dts: rockchip: Add brcm bluetooth module on uart0
-> 
-> .../bindings/net/broadcom-bluetooth.txt       |  1 +
-> arch/arm/boot/dts/rk3288-veyron.dtsi          | 31 +++++--------------
-> drivers/bluetooth/hci_bcm.c                   |  1 +
-> 3 files changed, 9 insertions(+), 24 deletions(-)
+Fixes: 0ca8f3f79a8c ("KVM: x86/vPMU: Introduce a new kvm_pmu_ops->msr_idx_to_pmc callback")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ pmu_amd.c       |    2 +-
+ vmx/pmu_intel.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-patches 1 and 2 have been applied to bluetooth-next tree. I leave patch 3 to the appropriate ARM maintainer to pick up.
-
-Regards
-
-Marcel
-
+diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
+index 88fe3f5f5bd18..ce61d180cf70c 100644
+--- a/arch/x86/kvm/pmu_amd.c
++++ b/arch/x86/kvm/pmu_amd.c
+@@ -204,7 +204,7 @@ static bool amd_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 	return false;
+ }
+ 
+-struct kvm_pmc *amd_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
++static struct kvm_pmc *amd_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct kvm_pmc *pmc;
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 714afcd9244ca..95f0ff9e39f3c 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -162,7 +162,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 	return ret;
+ }
+ 
+-struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
++static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	struct kvm_pmc *pmc;
