@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05C9CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921FECA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34A821D81
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D5C222C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095898;
-	bh=vynhhrOIgD91jp8ZzJ4jb3KoxhLiUMc3HFR97hqu90M=;
+	s=default; t=1572095901;
+	bh=Da2+BDVNfV3cOEI+tV/Lq5ouvPU5Dta7w1CoeLfooqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SvI9OyzpmfxhqUnj/2jYDji4mqpv5Xjff+6L+DHmANtujZJkWw+XwKgLxhvVShlnk
-	 iLvb1S9ZwrtAGNpwI2ZSXEEftGWSBOIFGsGoQ04iNhHu69LazNz73eDVp1G9hhE3yr
-	 0jPBlsEEPMncplsi/uAuteGKsLSg7BrDIE4bQEz0=
+	b=jHEynE9vDjl247Klyy3WtvzNcWJsca6C6NgE9ejDphJ3M5tG4klp5bjPjp9zbdmyG
+	 mrAwxW/JYv6JRJwxR4hACqBX4INsHoh4nBfYfnP+++sWZOnHpXpiOSU8F8rWCxlmk3
+	 D6BEyVIlnXEjd4Z/r6jg8oek5rbcwhUUCEmPzzLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfJZNSR (ORCPT
+        id S1726476AbfJZNSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39916 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbfJZNSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:15 -0400
+        id S1727757AbfJZNSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FEDF222C1;
-        Sat, 26 Oct 2019 13:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BECD721E6F;
+        Sat, 26 Oct 2019 13:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095894;
-        bh=vynhhrOIgD91jp8ZzJ4jb3KoxhLiUMc3HFR97hqu90M=;
+        s=default; t=1572095895;
+        bh=Da2+BDVNfV3cOEI+tV/Lq5ouvPU5Dta7w1CoeLfooqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DvepoksP4dQYGP7wo2QWJD/xSUCe3mk0BH7nb5eMzEl7k62rHWTMevb/Qd+Rs4SqH
-         f9zfrzvq6VQ7ITQW9+iL3d5ml6mV+pFh+6s03SZQhgXM1c3xnMPjy3bs2imIwEgp1p
-         8VpSbRG6d0HwuyNhM6FCTc8qoiU/7UrXPIXqc9Lo=
+        b=SXKOwjtgV7m3nBjnqmfJ2Gj46RhpBpsbzI9NF0ZlNKZZStGVlQc6eqYRHfjB68kqA
+         iuvUr+OpxX4g2BztYk6G7IpWB55DTkwX/jnrIDPRYOcYofyCwACkJ8f7PSg0nFCbNH
+         49MsK/zqi0rCt6Q6qYPmBfZyl+e1F44BQ1P1RYas=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 76/99] rbd: cancel lock_dwork if the wait is interrupted
-Date:   Sat, 26 Oct 2019 09:15:37 -0400
-Message-Id: <20191026131600.2507-76-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dmitry V Levin <ldv@altlinux.org>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Meelis Roos <mroos@linux.ee>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Miller <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 77/99] sparc64: disable fast-GUP due to unexplained oopses
+Date:   Sat, 26 Oct 2019 09:15:38 -0400
+Message-Id: <20191026131600.2507-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -60,81 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 25e6be21230d3208d687dad90b6e43419013c351 ]
+[ Upstream commit 8e0d0ad206f08506c893326ca7c9c3d9cc042cef ]
 
-There is a warning message in my test with below steps:
+HAVE_FAST_GUP enables the lockless quick page table walker for simple
+cases, and is a nice optimization for some random loads that can then
+use get_user_pages_fast() rather than the more careful page walker.
 
-  # rbd bench --io-type write --io-size 4K --io-threads 1 --io-pattern rand test &
-  # sleep 5
-  # pkill -9 rbd
-  # rbd map test &
-  # sleep 5
-  # pkill rbd
+However, for some unexplained reason, it seems to be subtly broken on
+sparc64.  The breakage is only with some compiler versions and some
+hardware, and nobody seems to have figured out what triggers it,
+although there's a simple reprodicer for the problem when it does
+trigger.
 
-The reason is that the rbd_add_acquire_lock() is interruptable,
-that means, when we kill the waiting on ->acquire_wait, the lock_dwork
-could be still running.
+The problem was introduced with the conversion to the generic GUP code
+in commit 7b9afb86b632 ("sparc64: use the generic get_user_pages_fast
+code"), but nothing looks obviously wrong in that conversion.  It may be
+a compiler bug that just hits us with the code reorganization.  Or it
+may be something very specific to sparc64.
 
-1. do_rbd_add()					2. lock_dwork
-rbd_add_acquire_lock()
-  - queue_delayed_work()
-						lock_dwork queued
-    - wait_for_completion_killable_timeout()  <-- kill happen
-rbd_dev_image_unlock()	<-- UNLOCKED now, nothing to do.
-rbd_dev_device_release()
-rbd_dev_image_release()
-  - ...
-						lock successed here
-     - cancel_delayed_work_sync(&rbd_dev->lock_dwork)
+This disables HAVE_FAST_GUP entirely.  That makes things like futexes a
+bit slower, but at least they work.  If we can figure out the trigger,
+that would be lovely, but it's been three months already..
 
-Then when we reach the rbd_dev_free(), WARN_ON is triggered because
-lock_state is not RBD_LOCK_STATE_UNLOCKED.
-
-To fix it, this commit make sure the lock_dwork was finished before
-calling rbd_dev_image_unlock().
-
-On the other hand, this would not happend in do_rbd_remove(), because
-after rbd mapped, lock_dwork will only be queued for IO request, and
-request will continue unless lock_dwork finished. when we call
-rbd_dev_image_unlock() in do_rbd_remove(), all requests are done.
-That means, lock_state should not be locked again after
-rbd_dev_image_unlock().
-
-[ Cancel lock_dwork in rbd_add_acquire_lock(), only if the wait is
-  interrupted. ]
-
-Fixes: 637cd060537d ("rbd: new exclusive lock wait/wake code")
-Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Link: https://lore.kernel.org/lkml/20190717215956.GA30369@altlinux.org/
+Fixes: 7b9afb86b632 ("sparc64: use the generic get_user_pages_fast code")
+Reported-by: Dmitry V Levin <ldv@altlinux.org>
+Reported-by: Anatoly Pugachev <matorola@gmail.com>
+Requested-by: Meelis Roos <mroos@linux.ee>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Cc: David Miller <davem@davemloft.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/sparc/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index c8fb886aebd4e..e6369b9f33873 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -6632,10 +6632,13 @@ static int rbd_add_acquire_lock(struct rbd_device *rbd_dev)
- 	queue_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork, 0);
- 	ret = wait_for_completion_killable_timeout(&rbd_dev->acquire_wait,
- 			    ceph_timeout_jiffies(rbd_dev->opts->lock_timeout));
--	if (ret > 0)
-+	if (ret > 0) {
- 		ret = rbd_dev->acquire_err;
--	else if (!ret)
--		ret = -ETIMEDOUT;
-+	} else {
-+		cancel_delayed_work_sync(&rbd_dev->lock_dwork);
-+		if (!ret)
-+			ret = -ETIMEDOUT;
-+	}
- 
- 	if (ret) {
- 		rbd_warn(rbd_dev, "failed to acquire exclusive lock: %ld", ret);
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 7926a2e11bdc2..6a31f240840d4 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -28,7 +28,6 @@ config SPARC
+ 	select RTC_DRV_M48T59
+ 	select RTC_SYSTOHC
+ 	select HAVE_ARCH_JUMP_LABEL if SPARC64
+-	select HAVE_FAST_GUP if SPARC64
+ 	select GENERIC_IRQ_SHOW
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select GENERIC_PCI_IOMAP
 -- 
 2.20.1
 
