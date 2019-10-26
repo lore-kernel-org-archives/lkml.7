@@ -2,79 +2,101 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB29BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 05:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D50ACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A588921D81
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 05:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D1321E6F
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:44:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jvYPutk3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/jZojJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbfJZFpz (ORCPT
+        id S1726124AbfJZGoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 01:45:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50810 "EHLO
+        Sat, 26 Oct 2019 02:44:19 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52210 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfJZFpy (ORCPT
+        with ESMTP id S1726057AbfJZGoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 01:45:54 -0400
+        Sat, 26 Oct 2019 02:44:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+5wJzXbxCtQrwDXJERufHrvtviLSbDdpQ5zkUXtHDM8=; b=jvYPutk33nLzO4xA4Vlidwi/f5
-        UAGY171Z+5TWnFxLCnOY5/kamSI5NYbuCWKB+fxvnX8Wky7h9PNRx30ftSb/2St3cZezWNq+gTfxi
-        EZv2U3SHmkI3ci4WyYcYIpV5BTH5OSegZBTYr/8RD6HEFG1FCNcpxRGMp44JATFjpTi0RW8WtTYc/
-        /Fvc/+4pSutIo7Ba/lbk4bndvsQYg2vviwjIaeGCP7TLncb8tWFUsI9s/GttnLpPdlHd9AR3Lk1E6
-        SEOFYDz+x9/TCcVxPE54ufSPozof7kRkft+WHziQ7XhBMHFJBHJhybDyBghNd3AxRM5Z0u+VspdhI
-        tW6aPHgQ==;
-Received: from [2001:4bb8:184:47ee:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iOEtd-0007iR-Bq; Sat, 26 Oct 2019 05:45:53 +0000
-Date:   Sat, 26 Oct 2019 07:45:51 +0200
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aiPSd/BZaq8mZvPjuhE4XI65j8OE7xLRgVlrgYKV6X8=; b=F/jZojJuWlmtYwiabWSCN61UA
+        DJTL0DKDCRX7BN+qAIbWIW+jalp4XIg7RqqpMFKWAIL/mWu2jghSkj2qPCYYZZVTynp1AhxZlzMEC
+        5CEaqn3UkS8suk+1IHtm1KeugWS7ohi18uMi3TB0S0K3ZNPNhjoJ1Gm4ryl+MZGrz8gt2FoEI0OSM
+        nCEY4LXt4xg21LC0vJk1U/1WBysEfj1A2GnytuxvgI++Gagou1GrLIdA1ILFw5rHWoVVLkycXCmiN
+        V8HiJ0HsLPFP6ZVtquvpFwy1vmdAy8v/83zH4KWCrK7ER1LJoSDlG2R/9bTULsTpS2qWJ6BCIFVtn
+        CDN4nubow==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iOFnR-0007qU-Gs; Sat, 26 Oct 2019 06:43:33 +0000
+Date:   Fri, 25 Oct 2019 23:43:33 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] dma-mapping fix for 5.4-rc
-Message-ID: <20191026054551.GA5340@infradead.org>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org, Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Hildenbrand <david@redhat.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        David Gibson <david@gibson.dropbear.id.au>, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 10/10] ocxl: Conditionally bind SCM devices to the
+ generic OCXL driver
+Message-ID: <20191026064333.GA24422@infradead.org>
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+ <20191025044721.16617-11-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191025044721.16617-11-alastair@au1.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 0e2adab6cf285c41e825b6c74a3aa61324d1132c:
+On Fri, Oct 25, 2019 at 03:47:05PM +1100, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This patch allows the user to bind OpenCAPI SCM devices to the generic OCXL
+> driver.
 
-  Merge tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux (2019-10-17 17:00:14 -0700)
+This completely misses any explanation of why you'd want that.  The
+what is rather obvious from the patch.
 
-are available in the Git repository at:
+> +config OCXL_SCM_GENERIC
+> +	bool "Treat OpenCAPI Storage Class Memory as a generic OpenCAPI device"
+> +	default n
 
-  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.4-2
-
-for you to fetch changes up to 9c24eaf81cc44d4bb38081c99eafd72ed85cf7f3:
-
-  iommu/vt-d: Return the correct dma mask when we are bypassing the IOMMU (2019-10-18 17:19:20 +0200)
-
-----------------------------------------------------------------
-dma-mapping fix for 5.4
-
- - fix a regression in the intel-iommu get_required_mask conversion
-   (Arvind Sankar)
-
-----------------------------------------------------------------
-Arvind Sankar (1):
-      iommu/vt-d: Return the correct dma mask when we are bypassing the IOMMU
-
- drivers/iommu/intel-iommu.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+n is the default default.
