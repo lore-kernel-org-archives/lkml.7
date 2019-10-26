@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B83CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08E0CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6D220867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D486206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096410;
-	bh=HtL+lCOZsA0ZW34FVazRHijkWwrTjCjjW+sTlvrtEko=;
+	s=default; t=1572096412;
+	bh=rJ/lL4m4w1KTopWo0W1Sk5HqlrNqS6c9byRrO5s+47c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AHZSSSIK8+TcJK29/veTOmwMTSuU94zcDcR8iUNy6cgLjtIjQYSd79thLMPWEXV6y
-	 evPurCnRhBnMk98pqMHgtOJaz00bM08L5/DGfJo082sKoTEP86u4mM4aHpOOlXG99n
-	 dxTBtoaMeN6XfJwcexb/JhPIDTEWVMJTF/8buooI=
+	b=tvOuOzHqdYvkijkEC3iB24N7aLucpX+a1wgDMLo3wFBPmu3YVG4e7DM0FxyPgfIfu
+	 /1O2qTtgqbAq22BTsv9GurOmHT+1oo0VbIYN786TRQvMqkofOe2Yx3V0TKhqalrW74
+	 OPlnOh8Cpe1r45BJo9Rvf6OmFyIJ6To7XurqMN/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfJZN0s (ORCPT
+        id S1729196AbfJZNVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbfJZNVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 26 Oct 2019 09:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729111AbfJZNVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBCB7214DA;
-        Sat, 26 Oct 2019 13:21:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6647B222BD;
+        Sat, 26 Oct 2019 13:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096108;
-        bh=HtL+lCOZsA0ZW34FVazRHijkWwrTjCjjW+sTlvrtEko=;
+        s=default; t=1572096101;
+        bh=rJ/lL4m4w1KTopWo0W1Sk5HqlrNqS6c9byRrO5s+47c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c26+TM7wiZUUuWjtf/GfZqaJnfjDv1kP99y7AqrIVyqxGDxQxxa/It2wBcZqnKg4H
-         FCdmUrcSRN5ixZ1QU9Wx124ZKfatAugeZjUgnUYLeZF5o8voUVuNEpjiBz5AvlTf8W
-         7gza19vssvNFZB6hNbP9NcM3Sm2E6grhmMO1JT70=
+        b=JAcb5sq9pYbm1KmlrP2Yv9E4vEdI8u1pgSnZ65RBUDxgmOh7W0qpGL0EYcX52FSC5
+         W2kqziVJVS5tdeemL6TZY0/6FkDT8bR1xFqf9Fa0QfpIRec9i4PPxvRGKpc7H1Uu8i
+         fDdqn8/mhhr9ahpKONvR6Txwgjp4pgTCtzu7cI2s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Hai Li <hali@codeaurora.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 20/33] drm/msm/dsi: Implement reset correctly
-Date:   Sat, 26 Oct 2019 09:20:57 -0400
-Message-Id: <20191026132110.4026-20-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/33] act_mirred: Fix mirred_init_module error handling
+Date:   Sat, 26 Oct 2019 09:20:53 -0400
+Message-Id: <20191026132110.4026-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -61,71 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
+[ Upstream commit 11c9a7d38af524217efb7a176ad322b97ac2f163 ]
 
-On msm8998, vblank timeouts are observed because the DSI controller is not
-reset properly, which ends up stalling the MDP.  This is because the reset
-logic is not correct per the hardware documentation.
+If tcf_register_action failed, mirred_device_notifier
+should be unregistered.
 
-The documentation states that after asserting reset, software should wait
-some time (no indication of how long), or poll the status register until it
-returns 0 before deasserting reset.
-
-wmb() is insufficient for this purpose since it just ensures ordering, not
-timing between writes.  Since asserting and deasserting reset occurs on the
-same register, ordering is already guaranteed by the architecture, making
-the wmb extraneous.
-
-Since we would define a timeout for polling the status register to avoid a
-possible infinite loop, lets just use a static delay of 20 ms, since 16.666
-ms is the time available to process one frame at 60 fps.
-
-Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
-Cc: Hai Li <hali@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
-[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
+Fixes: 3b87956ea645 ("net sched: fix race in mirred device removal")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/sched/act_mirred.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index a9a0b56f1fbc5..b9cb7c09e05a6 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -34,6 +34,8 @@
- #include "dsi_cfg.h"
- #include "msm_kms.h"
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 529bb064c4a4d..dcfaa4f9c7c5b 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -371,7 +371,11 @@ static int __init mirred_init_module(void)
+ 		return err;
  
-+#define DSI_RESET_TOGGLE_DELAY_MS 20
+ 	pr_info("Mirror/redirect action on\n");
+-	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	if (err)
++		unregister_netdevice_notifier(&mirred_device_notifier);
 +
- static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
- {
- 	u32 ver;
-@@ -906,7 +908,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
- 	wmb(); /* clocks need to be enabled before reset */
- 
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb(); /* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
++	return err;
  }
  
-@@ -1288,7 +1290,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
- 
- 	/* dsi controller can only be reset while clocks are running */
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb();	/* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- 	wmb();	/* controller out of reset */
- 	dsi_write(msm_host, REG_DSI_CTRL, data0);
+ static void __exit mirred_cleanup_module(void)
 -- 
 2.20.1
 
