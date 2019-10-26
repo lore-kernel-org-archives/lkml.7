@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28448CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599F0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6962070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315FD2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096355;
-	bh=AEHVKj6xR5EIQiNGael2/JtYKeP2TrD4V/dfE8l7vvA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LmhBcX6DC35EPDTpZi6FGHAYrTS1VBioI4jhM7MibdXJ4Z06J+Orx65QJDfGGY79N
-	 aqUZ8nOlMvswHIvCieO7IiKxP0KD6RT6rlZQyURYEIt1b+TNZnqXB5djjpGQT1lLHz
-	 5VCAqD3q0dbsmSu4MS4oL03KekpsCBJ4JszUvWMc=
+	s=default; t=1572096364;
+	bh=ZnS8tGgolHcJyRZ+ULOW9N5wiHI8kazC/jtkn8jFGdY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=flaBIRTikg7gw7wz3rVI9dcEmVJQUfO4vr2qpM24YxN8mcOZ8b2rMWDbdt8NVCCC9
+	 D7Ilg+JWtHIpIhNmPBpp2vUB0MEm2FATJnIATw/V6VFQcXKDI9ryt3wroLhLZX9hor
+	 fPeAewRZM0VyQhzB2QNWQTgwVPO+2vZPlOkmpeQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfJZNZx (ORCPT
+        id S1729206AbfJZN0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:25:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbfJZNWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:22:20 -0400
+        id S1728095AbfJZNWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1933214DA;
-        Sat, 26 Oct 2019 13:22:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63C14214DA;
+        Sat, 26 Oct 2019 13:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096139;
-        bh=AEHVKj6xR5EIQiNGael2/JtYKeP2TrD4V/dfE8l7vvA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xFNNd6qjyMfEQ/BjJ8w5WYypNikoDH245i+REQqmx2khDZ5DUEQ6ekFNqrwxR9fdn
-         cK/DA3px3K3VHHFfMBmKFs4mz8IEM2rHjFdG81VKeHBPK5EpytkeTsI5Nmo3KhsWO+
-         tnMGRig0rL4nBE2gyr3qIfkzha6OUwRphVlm4CBs=
+        s=default; t=1572096132;
+        bh=ZnS8tGgolHcJyRZ+ULOW9N5wiHI8kazC/jtkn8jFGdY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wmTG+snGUAPUUzvQtn017GqX80O4gXK+Yj/A9a+BCzHOJMgAnYa3wZDxfxhAl5cFW
+         m8Y5iPrwCcKrZd1CUCO76/brxsKkDR0R0PICNUl4pkm9dx6/PtQCB/27eZB0jjQZEZ
+         9SvLUtzpD/sDYDc8InXUC0ao2FsAZH/aRsAdIV1A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liu Xiang <liuxiang_1999@126.com>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 01/21] iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
-Date:   Sat, 26 Oct 2019 09:21:57 -0400
-Message-Id: <20191026132217.4380-1-sashal@kernel.org>
+Cc:     Joel Colledge <joel.colledge@linbit.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 31/33] scripts/gdb: fix lx-dmesg when CONFIG_PRINTK_CALLER is set
+Date:   Sat, 26 Oct 2019 09:21:08 -0400
+Message-Id: <20191026132110.4026-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
+References: <20191026132110.4026-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,32 +63,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Xiang <liuxiang_1999@126.com>
+From: Joel Colledge <joel.colledge@linbit.com>
 
-[ Upstream commit 6db7bfb431220d78e34d2d0afdb7c12683323588 ]
+[ Upstream commit ca210ba32ef7537b02731bfe255ed8eb1e4e2b59 ]
 
-When alloc_io_pgtable_ops is failed, context bitmap which is just allocated
-by __arm_smmu_alloc_bitmap should be freed to release the resource.
+When CONFIG_PRINTK_CALLER is set, struct printk_log contains an
+additional member caller_id.  This affects the offset of the log text.
+Account for this by using the type information from gdb to determine all
+the offsets instead of using hardcoded values.
 
-Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+This fixes following error:
+
+  (gdb) lx-dmesg
+  Python Exception <class 'ValueError'> embedded null character:
+  Error occurred in Python command: embedded null character
+
+The read_u* utility functions now take an offset argument to make them
+easier to use.
+
+Link: http://lkml.kernel.org/r/20191011142500.2339-1-joel.colledge@linbit.com
+Signed-off-by: Joel Colledge <joel.colledge@linbit.com>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/gdb/linux/dmesg.py | 16 ++++++++++++----
+ scripts/gdb/linux/utils.py | 25 +++++++++++++------------
+ 2 files changed, 25 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index f7ecb30a0bac8..5b3124eb184e7 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -968,6 +968,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 	return 0;
+diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
+index 6d2e09a2ad2f9..2fa7bb83885f0 100644
+--- a/scripts/gdb/linux/dmesg.py
++++ b/scripts/gdb/linux/dmesg.py
+@@ -16,6 +16,8 @@ import sys
  
- out_clear_smmu:
-+	__arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
- 	smmu_domain->smmu = NULL;
- out_unlock:
- 	mutex_unlock(&smmu_domain->init_mutex);
+ from linux import utils
+ 
++printk_log_type = utils.CachedType("struct printk_log")
++
+ 
+ class LxDmesg(gdb.Command):
+     """Print Linux kernel log buffer."""
+@@ -42,9 +44,14 @@ class LxDmesg(gdb.Command):
+             b = utils.read_memoryview(inf, log_buf_addr, log_next_idx)
+             log_buf = a.tobytes() + b.tobytes()
+ 
++        length_offset = printk_log_type.get_type()['len'].bitpos // 8
++        text_len_offset = printk_log_type.get_type()['text_len'].bitpos // 8
++        time_stamp_offset = printk_log_type.get_type()['ts_nsec'].bitpos // 8
++        text_offset = printk_log_type.get_type().sizeof
++
+         pos = 0
+         while pos < log_buf.__len__():
+-            length = utils.read_u16(log_buf[pos + 8:pos + 10])
++            length = utils.read_u16(log_buf, pos + length_offset)
+             if length == 0:
+                 if log_buf_2nd_half == -1:
+                     gdb.write("Corrupted log buffer!\n")
+@@ -52,10 +59,11 @@ class LxDmesg(gdb.Command):
+                 pos = log_buf_2nd_half
+                 continue
+ 
+-            text_len = utils.read_u16(log_buf[pos + 10:pos + 12])
+-            text = log_buf[pos + 16:pos + 16 + text_len].decode(
++            text_len = utils.read_u16(log_buf, pos + text_len_offset)
++            text_start = pos + text_offset
++            text = log_buf[text_start:text_start + text_len].decode(
+                 encoding='utf8', errors='replace')
+-            time_stamp = utils.read_u64(log_buf[pos:pos + 8])
++            time_stamp = utils.read_u64(log_buf, pos + time_stamp_offset)
+ 
+             for line in text.splitlines():
+                 msg = u"[{time:12.6f}] {line}\n".format(
+diff --git a/scripts/gdb/linux/utils.py b/scripts/gdb/linux/utils.py
+index 50805874cfc38..802acfee6785a 100644
+--- a/scripts/gdb/linux/utils.py
++++ b/scripts/gdb/linux/utils.py
+@@ -91,15 +91,16 @@ def read_memoryview(inf, start, length):
+     return memoryview(inf.read_memory(start, length))
+ 
+ 
+-def read_u16(buffer):
++def read_u16(buffer, offset):
++    buffer_val = buffer[offset:offset + 2]
+     value = [0, 0]
+ 
+-    if type(buffer[0]) is str:
+-        value[0] = ord(buffer[0])
+-        value[1] = ord(buffer[1])
++    if type(buffer_val[0]) is str:
++        value[0] = ord(buffer_val[0])
++        value[1] = ord(buffer_val[1])
+     else:
+-        value[0] = buffer[0]
+-        value[1] = buffer[1]
++        value[0] = buffer_val[0]
++        value[1] = buffer_val[1]
+ 
+     if get_target_endianness() == LITTLE_ENDIAN:
+         return value[0] + (value[1] << 8)
+@@ -107,18 +108,18 @@ def read_u16(buffer):
+         return value[1] + (value[0] << 8)
+ 
+ 
+-def read_u32(buffer):
++def read_u32(buffer, offset):
+     if get_target_endianness() == LITTLE_ENDIAN:
+-        return read_u16(buffer[0:2]) + (read_u16(buffer[2:4]) << 16)
++        return read_u16(buffer, offset) + (read_u16(buffer, offset + 2) << 16)
+     else:
+-        return read_u16(buffer[2:4]) + (read_u16(buffer[0:2]) << 16)
++        return read_u16(buffer, offset + 2) + (read_u16(buffer, offset) << 16)
+ 
+ 
+-def read_u64(buffer):
++def read_u64(buffer, offset):
+     if get_target_endianness() == LITTLE_ENDIAN:
+-        return read_u32(buffer[0:4]) + (read_u32(buffer[4:8]) << 32)
++        return read_u32(buffer, offset) + (read_u32(buffer, offset + 4) << 32)
+     else:
+-        return read_u32(buffer[4:8]) + (read_u32(buffer[0:4]) << 32)
++        return read_u32(buffer, offset + 4) + (read_u32(buffer, offset) << 32)
+ 
+ 
+ target_arch = None
 -- 
 2.20.1
 
