@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71057CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A019CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A39206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B414206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096630;
-	bh=CW0U6OxZeP57JfVw3yQhUtuFdKqeIEOgsaW8QmdA7mo=;
+	s=default; t=1572096637;
+	bh=lkdQvyDSW5WoJQUCp7sWmsbHlxWLMzLFiVYq31v6aFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WVz2Vy0DMqKvQPib3/vvc2YOuHQuikLYDKO48KP1YsyEDeAc49yeq4zvx6wgUzT+c
-	 tjSgqv/Wr6R2RxcM/XyYA6b5m+35MWPb/dZZnsprxLi4mvSUk+kpr7le+qHiW3RBIt
-	 VZcu8HGlRMO07X2xIQE5ttJDq5tYqpk6Rq6PVIvM=
+	b=ENN5DVGYpZYH2/KTmKYkE86aJL+85W84KRaLkdDcqSBMicDAvyiGnLbIxvWDhGEG7
+	 WGR87S4KQ7dR3zDGC9nJmKNHJmp06WllUkNhfTOmPyiGa867RbT+3VCv1/wbiVyU3X
+	 PqUZW64ygoLDmuRRngXuRZQGtqULz0dUxEolEKwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfJZNa2 (ORCPT
+        id S1728451AbfJZNag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41722 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbfJZNTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:49 -0400
+        id S1728329AbfJZNTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4CF521E6F;
-        Sat, 26 Oct 2019 13:19:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3911921655;
+        Sat, 26 Oct 2019 13:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095989;
-        bh=CW0U6OxZeP57JfVw3yQhUtuFdKqeIEOgsaW8QmdA7mo=;
+        s=default; t=1572095985;
+        bh=lkdQvyDSW5WoJQUCp7sWmsbHlxWLMzLFiVYq31v6aFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2Pm5zT2tUYJbRjiq77osSOFSUQhJ66sCFfh8aOYvMwVxPwpBx7L3Y2n9KR00YGzu
-         gmSHgd4WNuYLiRYKGO6PMx6DweUo7ZKiO2xNo+wl9zJefA4weP0c0JgYBrG+uCLXUU
-         c5V1rcSN3ofv/Rdjvhbb0kJA9jKbbrMiyqWY+1QY=
+        b=Zz1z7kRGIekz6byQ0EduXxvEfXFAd43Vl/gwlPbBwHeVdCF+w16KRFHNqiHW+o/CZ
+         J4UMFTeEzgwFyuTcyUHXrEBbt6Z57qRDXkgrQF59lbb/BJt9SS0m9Z1AuCNl5aAntA
+         8LhRHN6uVKUVYKzT6pFGVPpikJQYRugMkDJptTP8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        William Tu <u9012063@gmail.com>,
+Cc:     Eric Biggers <ebiggers@google.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/59] ip6erspan: remove the incorrect mtu limit for ip6erspan
-Date:   Sat, 26 Oct 2019 09:18:33 -0400
-Message-Id: <20191026131910.3435-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/59] llc: fix sk_buff refcounting in llc_conn_state_process()
+Date:   Sat, 26 Oct 2019 09:18:31 -0400
+Message-Id: <20191026131910.3435-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -60,39 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 4123f637a5129470ff9d3cb00a5a4e213f2e15cc ]
+[ Upstream commit 36453c852816f19947ca482a595dffdd2efa4965 ]
 
-ip6erspan driver calls ether_setup(), after commit 61e84623ace3
-("net: centralize net_device min/max MTU checking"), the range
-of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
+If llc_conn_state_process() sees that llc_conn_service() put the skb on
+a list, it will drop one fewer references to it.  This is wrong because
+the current behavior is that llc_conn_service() never consumes a
+reference to the skb.
 
-It causes the dev mtu of the erspan device to not be greater
-than 1500, this limit value is not correct for ip6erspan tap
-device.
+The code also makes the number of skb references being dropped
+conditional on which of ind_prim and cfm_prim are nonzero, yet neither
+of these affects how many references are *acquired*.  So there is extra
+code that tries to fix this up by sometimes taking another reference.
 
-Fixes: 61e84623ace3 ("net: centralize net_device min/max MTU checking")
-Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Acked-by: William Tu <u9012063@gmail.com>
+Remove the unnecessary/broken refcounting logic and instead just add an
+skb_get() before the only two places where an extra reference is
+actually consumed.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_gre.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/llc/llc_conn.c | 33 ++++++---------------------------
+ 1 file changed, 6 insertions(+), 27 deletions(-)
 
-diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
-index a23516e220569..d16b19885d993 100644
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -2218,6 +2218,7 @@ static void ip6erspan_tap_setup(struct net_device *dev)
- {
- 	ether_setup(dev);
+diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
+index 0b0c6f12153b0..a79b739eb2236 100644
+--- a/net/llc/llc_conn.c
++++ b/net/llc/llc_conn.c
+@@ -64,12 +64,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 	struct llc_sock *llc = llc_sk(skb->sk);
+ 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
  
-+	dev->max_mtu = 0;
- 	dev->netdev_ops = &ip6erspan_netdev_ops;
- 	dev->needs_free_netdev = true;
- 	dev->priv_destructor = ip6gre_dev_free;
+-	/*
+-	 * We have to hold the skb, because llc_conn_service will kfree it in
+-	 * the sending path and we need to look at the skb->cb, where we encode
+-	 * llc_conn_state_ev.
+-	 */
+-	skb_get(skb);
+ 	ev->ind_prim = ev->cfm_prim = 0;
+ 	/*
+ 	 * Send event to state machine
+@@ -77,21 +71,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 	rc = llc_conn_service(skb->sk, skb);
+ 	if (unlikely(rc != 0)) {
+ 		printk(KERN_ERR "%s: llc_conn_service failed\n", __func__);
+-		goto out_kfree_skb;
+-	}
+-
+-	if (unlikely(!ev->ind_prim && !ev->cfm_prim)) {
+-		/* indicate or confirm not required */
+-		if (!skb->next)
+-			goto out_kfree_skb;
+ 		goto out_skb_put;
+ 	}
+ 
+-	if (unlikely(ev->ind_prim && ev->cfm_prim)) /* Paranoia */
+-		skb_get(skb);
+-
+ 	switch (ev->ind_prim) {
+ 	case LLC_DATA_PRIM:
++		skb_get(skb);
+ 		llc_save_primitive(sk, skb, LLC_DATA_PRIM);
+ 		if (unlikely(sock_queue_rcv_skb(sk, skb))) {
+ 			/*
+@@ -108,6 +93,7 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 		 * skb->sk pointing to the newly created struct sock in
+ 		 * llc_conn_handler. -acme
+ 		 */
++		skb_get(skb);
+ 		skb_queue_tail(&sk->sk_receive_queue, skb);
+ 		sk->sk_state_change(sk);
+ 		break;
+@@ -123,7 +109,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 				sk->sk_state_change(sk);
+ 			}
+ 		}
+-		kfree_skb(skb);
+ 		sock_put(sk);
+ 		break;
+ 	case LLC_RESET_PRIM:
+@@ -132,14 +117,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 		 * RESET is not being notified to upper layers for now
+ 		 */
+ 		printk(KERN_INFO "%s: received a reset ind!\n", __func__);
+-		kfree_skb(skb);
+ 		break;
+ 	default:
+-		if (ev->ind_prim) {
++		if (ev->ind_prim)
+ 			printk(KERN_INFO "%s: received unknown %d prim!\n",
+ 				__func__, ev->ind_prim);
+-			kfree_skb(skb);
+-		}
+ 		/* No indication */
+ 		break;
+ 	}
+@@ -181,15 +163,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ 		printk(KERN_INFO "%s: received a reset conf!\n", __func__);
+ 		break;
+ 	default:
+-		if (ev->cfm_prim) {
++		if (ev->cfm_prim)
+ 			printk(KERN_INFO "%s: received unknown %d prim!\n",
+ 					__func__, ev->cfm_prim);
+-			break;
+-		}
+-		goto out_skb_put; /* No confirmation */
++		/* No confirmation */
++		break;
+ 	}
+-out_kfree_skb:
+-	kfree_skb(skb);
+ out_skb_put:
+ 	kfree_skb(skb);
+ 	return rc;
 -- 
 2.20.1
 
