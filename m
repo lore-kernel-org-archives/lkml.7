@@ -2,75 +2,87 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E32CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD0ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACE62064A
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572090144;
-	bh=TpNJ9M/aHGKMeuV1K+J7ZHg5joOibP6ceb16GqldDXA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U/r7SRjd2BvIkKFRkn1LyM2WWOfBfJeWLIRKKjAX3Sg8AEGgn7+VpR1yL0UlQ1Lwb
-	 UTgig0uLKt7SspMV88PmzjJgqMqagClXNMfSlrM5AkPbaEW2KFCCuh487V6SNxvj4n
-	 iLqVhQNSlpllp1VHzRBddgy12anJuvcmoqdgFCjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3D7782070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:46:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W4ZHEiZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfJZLmX (ORCPT
+        id S1726246AbfJZLq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 07:42:23 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50207 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfJZLmX (ORCPT
+        Sat, 26 Oct 2019 07:46:27 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52839 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfJZLq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 07:42:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 11so4817717wmk.0
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 04:42:22 -0700 (PDT)
+        Sat, 26 Oct 2019 07:46:27 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p21so4814609wmg.2
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 04:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=WvV3v05v3ZEEVXEmLYdFb7lylJednPWrhNA9CKc5BuQ=;
+        b=W4ZHEiZIpNqE3hsCeGHeX4lyrYRkFJ8+N2pzP5EIW+H2uFC30kwXAhqq34aA7o+DDB
+         BmU1dchLy+sQVZesfH/mgQBQDsdBbSDqrjHp4rrvN/hygQxIKYOORGF6JIgpFkpPKVlt
+         UX1ZC79a1kG1Tb5S12311GoebWaT7Ub492bZ3+7A2UGgJVGEzG5ccbJhAnhhApB30gp6
+         2Yqv04+sNcM7GWXQPNdhpABEuHMIeuWBCyxbJaIKRZFaUFVHsK2SJ0wyxH1aC4ARqZoq
+         AL38hGrSHCxmYez764UcYWBgdjsfFclVsenwWzYKCLW3HlF04rxnTaEz+TXd8tgEc2TJ
+         nAKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QGGHrxvstYz8pQS+YAa540baDYCxlz4g7i+Hb7CCqdM=;
-        b=ccPwIMUEktLCO4qzCrz5Qyl21vYRHCdI7R+JonzV9tZnjeIU0/XVRP6AM3TtIu5bKM
-         Kl1l6PcuJ2KjfdHy92qbeVYaW23K42t1V1njTXOPt6KGB7V7+EjSjImBTC+Ys026yeCL
-         o9KlW/Cu72mbK3nDE0W8IudshOIQYg9EMqMQxFGZflAoAJVDFh2e8+8FqmdilUjoqBb3
-         GLxtQG/iepLAMfCQLRio2nhDfAtXBWOKDRa0kiR64lvwkwDhyWW4os+igdB2PkniYrxB
-         49PW720G5G4ocyEtZYBo+RYrkzkncCxH4SC0vav2UEiDizE9Bs4dz9FrtFx9H8bopNuW
-         eFBw==
-X-Gm-Message-State: APjAAAVfPtKEPF2TsxGbZfUTAn3LBTgtbyY3GWKgKCQT/yKequ9xSGqF
-        QdVRAY5E4yOHLsV4/v2rYbTPeaG0ZNZUge3Qxyo=
-X-Google-Smtp-Source: APXvYqwaaiyCROEKYfoRqFE7ch+aPnOsGCy/y8qykI5iISzl9tI9p3/Bmv9NxoR6B+ZhYx4NP8E1M7lAfI7g05pthCg=
-X-Received: by 2002:a1c:2d49:: with SMTP id t70mr7559068wmt.131.1572090141550;
- Sat, 26 Oct 2019 04:42:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=WvV3v05v3ZEEVXEmLYdFb7lylJednPWrhNA9CKc5BuQ=;
+        b=p2DkaTBqTJ9Ulz+BruQCHBUe4Xtp/v74qqPW1nzF+V7oPDqh66wqrUe9CCGuEyvbgk
+         kSLli93Y97npd0vQ9aeJL9oPLpmmoHwAW3vnm5W1iS/rWZjwQ5lCOIZYaFGmx/lPSWaa
+         QKnAwWfG96rAmw8A1adyVDX1te94WPqySltGJCI+v9j9/piTbqBSPxQjsrHTEouxT9NS
+         ZfmrWso3hLc7i8WN/XH6Xgd3pu6goCPSZnWI7XYiwilgEKy/O1aD2/b/8qq3g6AWbeta
+         m+1JJiCWe4j/xCB+vSRfyGt2lTB+HZWztAt9HGJLxcpxnIDp+EILYHO97Y5Jvu1KKrz2
+         L7lg==
+X-Gm-Message-State: APjAAAVBupRV3WYQg/xfTXoect3WGrTTkXHCI/vstzLWevtxJIg0Qx9Q
+        8UiaZLSTtUQHrUQTjQ+u9Ildfw==
+X-Google-Smtp-Source: APXvYqzIGA1fzbnD59EkfsIe3VNpri1WAOprW76nJRcZAdCg/+VTJ8MZ+ItfjZ0R+iC4V6eP5dKUrg==
+X-Received: by 2002:a05:600c:2387:: with SMTP id m7mr7366917wma.137.1572090385092;
+        Sat, 26 Oct 2019 04:46:25 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o73sm5340728wme.34.2019.10.26.04.46.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 26 Oct 2019 04:46:24 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Corentin Labbe <clabbe@baylibre.com>, davem@davemloft.net,
+        herbert@gondor.apana.org.au, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
+Subject: Re: [PATCH v3 4/4] ARM64: dts: amlogic: adds crypto hardware node
+In-Reply-To: <1571288786-34601-5-git-send-email-clabbe@baylibre.com>
+References: <1571288786-34601-1-git-send-email-clabbe@baylibre.com> <1571288786-34601-5-git-send-email-clabbe@baylibre.com>
+Date:   Sat, 26 Oct 2019 13:46:22 +0200
+Message-ID: <7ho8y3g25t.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20191016125019.157144-1-namhyung@kernel.org> <20191016125019.157144-2-namhyung@kernel.org>
- <20191024174433.GA3622521@devbig004.ftw2.facebook.com> <CAM9d7chWpj105TYR0qP3T8FJ=-2wjp+sh6Rk8zkvJb_ugtL3Dw@mail.gmail.com>
- <20191025110623.GH3622521@devbig004.ftw2.facebook.com> <20191025184714.GJ3622521@devbig004.ftw2.facebook.com>
-In-Reply-To: <20191025184714.GJ3622521@devbig004.ftw2.facebook.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 26 Oct 2019 20:42:10 +0900
-Message-ID: <CAM9d7cguuEC1bpYgqX58KqX-H9C2B=XQE+grkxdsG2MQ8WyJnA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cgroup: Add generation number with cgroup id
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Song Liu <liu.song.a23@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 3:47 AM Tejun Heo <tj@kernel.org> wrote:
-> So, something like the following.  Just to show the direction.  Only
-> compile tested and full of holes.  I'll see if I can get it working
-> over the weekend.
+Corentin Labbe <clabbe@baylibre.com> writes:
 
-Thanks a lot for doing this!
-Namhyung
+> This patch adds the GXL crypto hardware node for all GXL SoCs.
+>
+> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+
+Queued for v5.5,
+
+Thanks,
+
+Kevin
