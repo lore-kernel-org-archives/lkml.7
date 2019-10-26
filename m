@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECDACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCF1CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BE320578
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6F521655
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572097029;
-	bh=BXqBLPGdGnxVgd+zmeC5RQ/TxmA2uFnMJOFNT5NkNRQ=;
+	s=default; t=1572097036;
+	bh=RjBF98q9ZN4vfbuM2PfPKyAj1rMScuopJRkDJbQxx8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iZBWvh6bKIsE/pre2ULewYggU0WDS1MN91N9ILoVhvuTvbY1nE+I0krCmImckLnPz
-	 knHIoOAtNfFb3gbnU6Z9pF7/zuhwav56kUH1pVwF4kj0eCBvHB2tiBTJ6y+EC5VMXU
-	 FiN3PC5CQqjwOWms/MW+0UUVq35k2qBg6SBVdds8=
+	b=h/HIdIG+zbzuD5lUfU/2ndHFof953ask+pE839HFld6Lb2Ggp8fKO91YntcZHeC7c
+	 WF1k9qCJrSh5p9IWARMxfF4uOwF1BMtekAGluKGrHHueQ1a3ps+7gjkCMRVNkRuhKH
+	 qqERBy9wz3xRHpBNG7PJ/2KAx+NqVvj+8NDEMqOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfJZNhH (ORCPT
+        id S1727207AbfJZNhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:37:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37926 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:37:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbfJZNQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:23 -0400
+        id S1726646AbfJZNQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C9F222C1;
-        Sat, 26 Oct 2019 13:16:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2F342070B;
+        Sat, 26 Oct 2019 13:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095782;
-        bh=BXqBLPGdGnxVgd+zmeC5RQ/TxmA2uFnMJOFNT5NkNRQ=;
+        s=default; t=1572095780;
+        bh=RjBF98q9ZN4vfbuM2PfPKyAj1rMScuopJRkDJbQxx8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KOQCVbC9AuSgUUCpHwxpue7UBXJMTegYRg/gR/FyLysiUL9oI8oeKj8JnLJPHf5hc
-         cS9Yj9t36+f/X4nW6peCkLsd2aisRBJYGfSh002qPVOheuvlWFbrW3WjZeuaPHo0mo
-         GwYK5n9LDYyKF0GBqsVhkn4mOK+pDKb86rBz8TYU=
+        b=VDMtKsQtj5TrQmar12dlJ/jth7V1LDm6j157PttihKwWuABlw4h9w41BcFBvdQ52K
+         tIreZ9olTTAvh6bAekfPx8fYf7oarWJOalqF1Ct7yV79cufvGWwt4vk+FC/U7N9abi
+         z/Ef6FiMzHnWhqgVqZ+nsf+Z/1nnc19ikOX53ruk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 13/99] net: stmmac: selftests: Fix L2 Hash Filter test
-Date:   Sat, 26 Oct 2019 09:14:34 -0400
-Message-Id: <20191026131600.2507-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 11/99] net: stmmac: selftests: Check if filtering is available before running
+Date:   Sat, 26 Oct 2019 09:14:32 -0400
+Message-Id: <20191026131600.2507-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -61,35 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 2809fc13163f4946d7cde092807bea44bbae4478 ]
+[ Upstream commit b870b0f867c77b92d7fd17ace8421904270d3c6a ]
 
-With the current MAC addresses hard-coded in the test we can get some
-false positives as we use the Hash Filtering method. Let's change the
-MAC addresses in the tests to be unique when hashed.
+We need to check if the number of available Hash Filters is enough to
+run the test, otherwise we will get false failures.
 
 Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index f8915a62d6025..306657e295a2b 100644
+index a97b1ea76438e..f8915a62d6025 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -447,8 +447,8 @@ static int stmmac_filter_check(struct stmmac_priv *priv)
+@@ -456,6 +456,9 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
+ 	if (ret)
+ 		return ret;
  
- static int stmmac_test_hfilt(struct stmmac_priv *priv)
- {
--	unsigned char gd_addr[ETH_ALEN] = {0x01, 0x00, 0xcc, 0xcc, 0xdd, 0xdd};
--	unsigned char bd_addr[ETH_ALEN] = {0x09, 0x00, 0xaa, 0xaa, 0xbb, 0xbb};
-+	unsigned char gd_addr[ETH_ALEN] = {0x01, 0xee, 0xdd, 0xcc, 0xbb, 0xaa};
-+	unsigned char bd_addr[ETH_ALEN] = {0x01, 0x01, 0x02, 0x03, 0x04, 0x05};
- 	struct stmmac_packet_attrs attr = { };
- 	int ret;
++	if (netdev_mc_count(priv->dev) >= priv->hw->multicast_filter_bins)
++		return -EOPNOTSUPP;
++
+ 	ret = dev_mc_add(priv->dev, gd_addr);
+ 	if (ret)
+ 		return ret;
+@@ -533,6 +536,8 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
  
+ 	if (stmmac_filter_check(priv))
+ 		return -EOPNOTSUPP;
++	if (!priv->hw->multicast_filter_bins)
++		return -EOPNOTSUPP;
+ 
+ 	/* Remove all MC addresses */
+ 	__dev_mc_unsync(priv->dev, NULL);
+@@ -571,6 +576,8 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
+ 
+ 	if (stmmac_filter_check(priv))
+ 		return -EOPNOTSUPP;
++	if (!priv->hw->multicast_filter_bins)
++		return -EOPNOTSUPP;
+ 
+ 	/* Remove all UC addresses */
+ 	__dev_uc_unsync(priv->dev, NULL);
 -- 
 2.20.1
 
