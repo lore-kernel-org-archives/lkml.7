@@ -2,169 +2,118 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC50CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F445CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2F6205C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4506A206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfJZI4A convert rfc822-to-8bit (ORCPT
+        id S1726198AbfJZI5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 04:56:00 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2441 "EHLO huawei.com"
+        Sat, 26 Oct 2019 04:57:49 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5193 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbfJZI4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 04:56:00 -0400
-Received: from DGGEML404-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 9E6AC9D3645079E50F1F;
-        Sat, 26 Oct 2019 16:55:57 +0800 (CST)
-Received: from DGGEML424-HUB.china.huawei.com (10.1.199.41) by
- DGGEML404-HUB.china.huawei.com (10.3.17.39) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 26 Oct 2019 16:55:56 +0800
-Received: from DGGEML525-MBS.china.huawei.com ([169.254.4.36]) by
- dggeml424-hub.china.huawei.com ([10.1.199.41]) with mapi id 14.03.0439.000;
- Sat, 26 Oct 2019 16:55:50 +0800
-From:   "wubo (T)" <wubo40@huawei.com>
-To:     "lduncan@suse.com" <lduncan@suse.com>,
-        "cleech@redhat.com" <cleech@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>
-Subject: [PATCH] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Topic: [PATCH] scsi: avoid potential deadloop in iscsi_if_rx func
-Thread-Index: AdWL2reJ1uh470cQT+idNsWy+95OAQ==
-Date:   Sat, 26 Oct 2019 08:55:49 +0000
-Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915DE9E71@DGGEML525-MBS.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.252]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726010AbfJZI5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 04:57:49 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E1DEEA945B7A9401D90A;
+        Sat, 26 Oct 2019 16:57:46 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 26 Oct 2019
+ 16:57:45 +0800
+Subject: Re: [PATCH net-next] net: aquantia: Fix build error wihtout
+ CONFIG_PTP_1588_CLOCK
+To:     Simon Horman <simon.horman@netronome.com>
+References: <20191025133726.31796-1-yuehaibing@huawei.com>
+ <20191026080929.GD31244@netronome.com>
+CC:     <epomozov@marvell.com>, <igor.russkikh@aquantia.com>,
+        <davem@davemloft.net>, <dmitry.bezrukov@aquantia.com>,
+        <sergey.samoilenko@aquantia.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <4edcf4c4-b8fc-00a1-5f13-6c41a27eb4a5@huawei.com>
+Date:   Sat, 26 Oct 2019 16:57:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
+In-Reply-To: <20191026080929.GD31244@netronome.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo Wu <wubo40@huawei.com>
+On 2019/10/26 16:09, Simon Horman wrote:
+> On Fri, Oct 25, 2019 at 09:37:26PM +0800, YueHaibing wrote:
+>> If PTP_1588_CLOCK is n, building fails:
+>>
+>> drivers/net/ethernet/aquantia/atlantic/aq_ptp.c: In function aq_ptp_adjfine:
+>> drivers/net/ethernet/aquantia/atlantic/aq_ptp.c:279:11:
+>>  error: implicit declaration of function scaled_ppm_to_ppb [-Werror=implicit-function-declaration]
+>>            scaled_ppm_to_ppb(scaled_ppm));
+>>
+>> Just cp scaled_ppm_to_ppb() from ptp_clock.c to fix this.
+>>
+>> Fixes: 910479a9f793 ("net: aquantia: add basic ptp_clock callbacks")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Hi YueHaibing,
+> 
+> thanks for your patch.
+> 
+> What is the motivation for not using the existing copy of this function?
 
-In iscsi_if_rx func, after receiving one request through iscsi_if_recv_msg
-func,iscsi_if_send_reply will be called to try to reply the request in 
-do-loop. If the return of iscsi_if_send_reply func fails all the time, one
-deadloop will occur.
- 
-For example, a client only send msg without calling recvmsg func, then it
-will result in the watchdog soft lockup. The details are given as follows,
+I'm not sure if PTP_1588_CLOCK is needed at this config,
+using the existing function need to PTP_1588_CLOCK is selected.
 
-Details of the special case which can cause deadloop:
-sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI); 
-... 
-retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof (src_addr); 
-... 
-while (1) { 
-	state_smg = sendmsg(sock_fd, &msg, 0); 
-} 
-// Note: recvmsg (sock_fd, & msg, 0) is not processed here. 
-close(sock_fd); 
-
-watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305]
-Sample time: 4000897528 ns(HZ: 250)
-Sample stat: 
-curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
-deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0
-Sample softirq:
-	TIMER:        992
-	SCHED:          8
-Sample irqstat:
- irq    2: delta       1003, curr:    3103802, arch_timer
-CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE     
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40400005 (nZcv daif +PAN -UAO)
-pc : __alloc_skb+0x104/0x1b0
-lr : __alloc_skb+0x9c/0x1b0
-sp : ffff000033603a30
-x29: ffff000033603a30 x28: 00000000000002dd 
-x27: ffff800b34ced810 x26: ffff800ba7569f00 
-x25: 00000000ffffffff x24: 0000000000000000 
-x23: ffff800f7c43f600 x22: 0000000000480020 
-x21: ffff0000091d9000 x20: ffff800b34eff200 
-x19: ffff800ba7569f00 x18: 0000000000000000 
-x17: 0000000000000000 x16: 0000000000000000 
-x15: 0000000000000000 x14: 0001000101000100 
-x13: 0000000101010000 x12: 0101000001010100 
-x11: 0001010101010001 x10: 00000000000002dd 
-x9 : ffff000033603d58 x8 : ffff800b34eff400 
-x7 : ffff800ba7569200 x6 : ffff800b34eff400 
-x5 : 0000000000000000 x4 : 00000000ffffffff 
-x3 : 0000000000000000 x2 : 0000000000000001 
-x1 : ffff800b34eff2c0 x0 : 0000000000000300 
-Call trace:
-__alloc_skb+0x104/0x1b0
-iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
-netlink_unicast+0x1e0/0x258
-netlink_sendmsg+0x310/0x378
-sock_sendmsg+0x4c/0x70
-sock_write_iter+0x90/0xf0
-__vfs_write+0x11c/0x190
-vfs_write+0xac/0x1c0
-ksys_write+0x6c/0xd8
-__arm64_sys_write+0x24/0x30
-el0_svc_common+0x78/0x130
-el0_svc_handler+0x38/0x78
-el0_svc+0x8/0xc
-
-Here, we add one limit of retry times in do-loop to avoid the deadloop.
-
-Signed-off-by: Bo Wu <wubo40@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
----
- drivers/scsi/scsi_transport_iscsi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 417b868d8735..f377bfed6b0c 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -24,6 +24,8 @@
- 
- #define ISCSI_TRANSPORT_VERSION "2.0-870"
- 
-+#define ISCSI_SEND_MAX_ALLOWED     10
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/iscsi.h>
- 
-@@ -3682,6 +3684,7 @@ iscsi_if_rx(struct sk_buff *skb)
- 		struct nlmsghdr	*nlh;
- 		struct iscsi_uevent *ev;
- 		uint32_t group;
-+		int retries = ISCSI_SEND_MAX_ALLOWED;
- 
- 		nlh = nlmsg_hdr(skb);
- 		if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
-@@ -3710,8 +3713,11 @@ iscsi_if_rx(struct sk_buff *skb)
- 				break;
- 			if (ev->type == ISCSI_UEVENT_GET_CHAP && !err)
- 				break;
-+			if (retries <= 0)
-+				break;
- 			err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
- 						  ev, sizeof(*ev));
-+			retries--;
- 		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
- 		skb_pull(skb, rlen);
- 	}
--- 
-1.8.3.1
+> 
+>> ---
+>>  drivers/net/ethernet/aquantia/atlantic/aq_ptp.c | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
+>> index 3ec0841..80c001d 100644
+>> --- a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
+>> +++ b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
+>> @@ -262,6 +262,26 @@ static void aq_ptp_tx_timeout_check(struct aq_ptp_s *aq_ptp)
+>>  	}
+>>  }
+>>  
+>> +static s32 scaled_ppm_to_ppb(long ppm)
+>> +{
+>> +	/*
+>> +	 * The 'freq' field in the 'struct timex' is in parts per
+>> +	 * million, but with a 16 bit binary fractional field.
+>> +	 *
+>> +	 * We want to calculate
+>> +	 *
+>> +	 *    ppb = scaled_ppm * 1000 / 2^16
+>> +	 *
+>> +	 * which simplifies to
+>> +	 *
+>> +	 *    ppb = scaled_ppm * 125 / 2^13
+>> +	 */
+>> +	s64 ppb = 1 + ppm;
+>> +	ppb *= 125;
+>> +	ppb >>= 13;
+>> +	return (s32) ppb;
+>> +}
+>> +
+>>  /* aq_ptp_adjfine
+>>   * @ptp: the ptp clock structure
+>>   * @ppb: parts per billion adjustment from base
+>> -- 
+>> 2.7.4
+>>
+>>
+> 
+> .
+> 
 
