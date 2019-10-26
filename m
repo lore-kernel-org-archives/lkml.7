@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9E2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10975CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA3C2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D222B214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096457;
-	bh=fZ5b/0CjTl/y0q4mG/aNFlc0SydL+UI5brBMk+5wOI4=;
+	s=default; t=1572096458;
+	bh=DPX5Xd1J8hqUFZgtTHhYIe6T0e8+tX+LXmSYcR1K0nE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g8jCr0IGE8mvC18rngzn0OVUk5tZLkq2NYNkqlkxAiQeWryjIUk9Gi3KIhW84KkHW
-	 Ck2TeJsKpvMebtDuuPvF6zYPgGxt+86zawmYes+x0mHnVJdBTzp8avqatODjpU3WcG
-	 1Rp2hufPiAqyoean5NTqMWar6tjakYhQBCHYDQGQ=
+	b=uNFX9dNqmjhlPifb1jPWdz2o/g9EAtSYQ2ES8wzY7Wy1VgUaG3E36gfaxbKVdPj4f
+	 0gcXeyOu90SkEXlZX7lEWd1VdKXLG3tYAOhed0Qj+7fiRlKFg/ksMLOVkpd32XSPDS
+	 1aiZ9oXCRHpx7CEgrd0Mw9o64Bhos6DQ0b0uHCzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbfJZNVc (ORCPT
+        id S1728999AbfJZNV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43104 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbfJZNVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:19 -0400
+        id S1727725AbfJZNVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0BCF222BD;
-        Sat, 26 Oct 2019 13:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8B1720867;
+        Sat, 26 Oct 2019 13:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096078;
-        bh=fZ5b/0CjTl/y0q4mG/aNFlc0SydL+UI5brBMk+5wOI4=;
+        s=default; t=1572096077;
+        bh=DPX5Xd1J8hqUFZgtTHhYIe6T0e8+tX+LXmSYcR1K0nE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=udwb1UfGDwohNqRgye6PC04tzo9gr09nUKD99WwGimTCFoXMsRKH3jM+IkXmkeoXx
-         q+842h3dcN3uM5fn8mXqjk6NeKkzDfH19EHczxNnINnl4cN6oJCtN/dJ6xR6ikZK9P
-         Bq4n8RyI62O15o+qv/lYpCdavDiigFnZOzyFGClc=
+        b=eLNTm4MdYQyo1wBRyXY0+vBtK06vyNkjWwwlfiVil4Ap/FAEVClyOli+2gR87iZ3K
+         8OMFFjjMrSDW7tvsjvJtMRfL8TIC8qK1BtZ8TnhaXd14UuOH53Fl2te/Dsr3SNeYKL
+         sR7vfZqUiMdHY7ySfLK/mfgpHqdkNPd3+Lw5lCpk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/33] mac80211: accept deauth frames in IBSS mode
-Date:   Sat, 26 Oct 2019 09:20:44 -0400
-Message-Id: <20191026132110.4026-7-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/33] rxrpc: Fix call ref leak
+Date:   Sat, 26 Oct 2019 09:20:43 -0400
+Message-Id: <20191026132110.4026-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -60,47 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
+[ Upstream commit c48fc11b69e95007109206311b0187a3090591f3 ]
 
-We can process deauth frames and all, but we drop them very
-early in the RX path today - this could never have worked.
+When sendmsg() finds a call to continue on with, if the call is in an
+inappropriate state, it doesn't release the ref it just got on that call
+before returning an error.
 
-Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This causes the following symptom to show up with kasan:
+
+	BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940
+	net/rxrpc/output.c:635
+	Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
+
+where line 635 is:
+
+	whdr.epoch	= htonl(peer->local->rxnet->epoch);
+
+The local endpoint (which cannot be pinned by the call) has been released,
+but not the peer (which is pinned by the call).
+
+Fix this by releasing the call in the error path.
+
+Fixes: 37411cad633f ("rxrpc: Fix potential NULL-pointer exception")
+Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ net/rxrpc/sendmsg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 4a6b3c7b35e37..31000622376df 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -3227,9 +3227,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
- 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
- 		/* process for all: mesh, mlme, ibss */
- 		break;
-+	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
-+		if (is_multicast_ether_addr(mgmt->da) &&
-+		    !is_broadcast_ether_addr(mgmt->da))
-+			return RX_DROP_MONITOR;
-+
-+		/* process only for station/IBSS */
-+		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
-+		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
-+			return RX_DROP_MONITOR;
-+		break;
- 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
- 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
--	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
- 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
- 		if (is_multicast_ether_addr(mgmt->da) &&
- 		    !is_broadcast_ether_addr(mgmt->da))
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 016e293681b8c..a980b49d7a4f8 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -586,6 +586,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
+ 		case RXRPC_CALL_SERVER_PREALLOC:
+ 		case RXRPC_CALL_SERVER_SECURING:
+ 		case RXRPC_CALL_SERVER_ACCEPTING:
++			rxrpc_put_call(call, rxrpc_call_put);
+ 			ret = -EBUSY;
+ 			goto error_release_sock;
+ 		default:
 -- 
 2.20.1
 
