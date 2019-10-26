@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2C8CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D754CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D732070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0D6214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096286;
-	bh=YHZCMHMZ8f4+ss/9ljgSUznzGB3ZmURlqG0t/WHSxXs=;
+	s=default; t=1572096291;
+	bh=Z0gJqVSw8i32n2tCE6mp7fBTu8mTRvdwkrK+E9IxKU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qyzVKQcgfAwgAvLC7wOAByVRo//Ru6TKW79qyKflqrCrbJ7H4ospjGUozs7BK7JaQ
-	 gArY/aeNIF6B6S6+Ii5IzyTKjKPbyHaZuiFRTosFxdg95torR3P/Klx+ALsUKovoUg
-	 s/9PNaLt3g9oAuO9aI3l6jy7u22WBMzMnfUwy7XI=
+	b=apdBuv2jLIlzBWZDCkuitFQI+GCrn7u7JnVsWNV3GbEA0KHD6VL+8NFmgcVrSsB0p
+	 zog0yWTgz+H52kRMGEf62LWCbuXoyROrOmelbW/e9cp+ws4rHWy3viTNFcgr6iFVxw
+	 oXuXHXu7WtYp34dICNSTrccBt70n6yb3deWZ/7BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbfJZNYp (ORCPT
+        id S1729527AbfJZNWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:22:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729514AbfJZNW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:22:57 -0400
+        id S1729508AbfJZNWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23022070B;
-        Sat, 26 Oct 2019 13:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A89E2070B;
+        Sat, 26 Oct 2019 13:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096176;
-        bh=YHZCMHMZ8f4+ss/9ljgSUznzGB3ZmURlqG0t/WHSxXs=;
+        s=default; t=1572096169;
+        bh=Z0gJqVSw8i32n2tCE6mp7fBTu8mTRvdwkrK+E9IxKU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FjUyv0dSL/TkQeS3Jb0EMd+RxIMh0OfW2KPXsLsYgJOtzJ6oC2WQ5pN/erAPh/3yk
-         0CK6Dx90S7YkPmeQ88BxWSaeY8Wma3pOR1G8vFHSnyvo13N7HnFjL3IospBbyVmKEn
-         dPOJOuF4yY3RLEahAyhnO/j2/0oVwOTLIxL/gWeA=
+        b=B3tn4Wa68kQGZgRI7L6uyB1VgTEgBipTxMr2evZl/rz5gs6a3cZ/PuAGUkUt0u9GD
+         cV5WJfH/dXDZOm8JoGGoWvyeAvkbJ9goG79Wr1VhAvVvP9UnT4NDtbQAylzWbW76GF
+         KOao8K1r2+dgDakVCZLu6OesWq6d/pMyb4fmZi4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/21] usb: hso: obey DMA rules in tiocmget
-Date:   Sat, 26 Oct 2019 09:22:15 -0400
-Message-Id: <20191026132217.4380-19-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.9 16/21] xtensa: fix {get,put}_user() for 64bit values
+Date:   Sat, 26 Oct 2019 09:22:12 -0400
+Message-Id: <20191026132217.4380-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132217.4380-1-sashal@kernel.org>
 References: <20191026132217.4380-1-sashal@kernel.org>
@@ -60,80 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit af0de1303c4e8f44fadd7b4c593f09f22324b04f ]
+[ Upstream commit 6595d144decec396bf2e2efee27e50634a4b627f ]
 
-The serial state information must not be embedded into another
-data structure, as this interferes with cache handling for DMA
-on architectures without cache coherence..
-That would result in data corruption on some architectures
-Allocating it separately.
+First of all, on short copies __copy_{to,from}_user() return the amount
+of bytes left uncopied, *not* -EFAULT.  get_user() and put_user() are
+expected to return -EFAULT on failure.
 
-v2: fix syntax error
+Another problem is get_user(v32, (__u64 __user *)p); that should
+fetch 64bit value and the assign it to v32, truncating it in process.
+Current code, OTOH, reads 8 bytes of data and stores them at the
+address of v32, stomping on the 4 bytes that follow v32 itself.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/hso.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/xtensa/include/asm/uaccess.h | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index 27fc699d8be5b..e5d6a70c44db7 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -201,7 +201,7 @@ struct hso_tiocmget {
- 	int    intr_completed;
- 	struct usb_endpoint_descriptor *endp;
- 	struct urb *urb;
--	struct hso_serial_state_notification serial_state_notification;
-+	struct hso_serial_state_notification *serial_state_notification;
- 	u16    prev_UART_state_bitmap;
- 	struct uart_icount icount;
- };
-@@ -1447,7 +1447,7 @@ static int tiocmget_submit_urb(struct hso_serial *serial,
- 			 usb_rcvintpipe(usb,
- 					tiocmget->endp->
- 					bEndpointAddress & 0x7F),
--			 &tiocmget->serial_state_notification,
-+			 tiocmget->serial_state_notification,
- 			 sizeof(struct hso_serial_state_notification),
- 			 tiocmget_intr_callback, serial,
- 			 tiocmget->endp->bInterval);
-@@ -1494,7 +1494,7 @@ static void tiocmget_intr_callback(struct urb *urb)
- 	/* wIndex should be the USB interface number of the port to which the
- 	 * notification applies, which should always be the Modem port.
- 	 */
--	serial_state_notification = &tiocmget->serial_state_notification;
-+	serial_state_notification = tiocmget->serial_state_notification;
- 	if (serial_state_notification->bmRequestType != BM_REQUEST_TYPE ||
- 	    serial_state_notification->bNotification != B_NOTIFICATION ||
- 	    le16_to_cpu(serial_state_notification->wValue) != W_VALUE ||
-@@ -2580,6 +2580,8 @@ static void hso_free_tiomget(struct hso_serial *serial)
- 		usb_free_urb(tiocmget->urb);
- 		tiocmget->urb = NULL;
- 		serial->tiocmget = NULL;
-+		kfree(tiocmget->serial_state_notification);
-+		tiocmget->serial_state_notification = NULL;
- 		kfree(tiocmget);
- 	}
- }
-@@ -2630,10 +2632,13 @@ static struct hso_device *hso_create_bulk_serial_device(
- 		num_urbs = 2;
- 		serial->tiocmget = kzalloc(sizeof(struct hso_tiocmget),
- 					   GFP_KERNEL);
-+		serial->tiocmget->serial_state_notification
-+			= kzalloc(sizeof(struct hso_serial_state_notification),
-+					   GFP_KERNEL);
- 		/* it isn't going to break our heart if serial->tiocmget
- 		 *  allocation fails don't bother checking this.
- 		 */
--		if (serial->tiocmget) {
-+		if (serial->tiocmget && serial->tiocmget->serial_state_notification) {
- 			tiocmget = serial->tiocmget;
- 			tiocmget->endp = hso_get_ep(interface,
- 						    USB_ENDPOINT_XFER_INT,
+diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
+index 848a3d736bcbf..20b818db377d7 100644
+--- a/arch/xtensa/include/asm/uaccess.h
++++ b/arch/xtensa/include/asm/uaccess.h
+@@ -104,7 +104,7 @@ do {									\
+ 	case 4: __put_user_asm(x, ptr, retval, 4, "s32i", __cb); break;	\
+ 	case 8: {							\
+ 		     __typeof__(*ptr) __v64 = x;			\
+-		     retval = __copy_to_user(ptr, &__v64, 8);		\
++		     retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT : 0;	\
+ 		     break;						\
+ 	        }							\
+ 	default: __put_user_bad();					\
+@@ -203,7 +203,16 @@ do {									\
+ 	case 1: __get_user_asm(x, ptr, retval, 1, "l8ui", __cb);  break;\
+ 	case 2: __get_user_asm(x, ptr, retval, 2, "l16ui", __cb); break;\
+ 	case 4: __get_user_asm(x, ptr, retval, 4, "l32i", __cb);  break;\
+-	case 8: retval = __copy_from_user(&x, ptr, 8);    break;	\
++	case 8: {							\
++		u64 __x;						\
++		if (unlikely(__copy_from_user(&__x, ptr, 8))) {		\
++			retval = -EFAULT;				\
++			(x) = 0;					\
++		} else {						\
++			(x) = *(__force __typeof__((ptr)))&__x;		\
++		}							\
++		break;							\
++	}								\
+ 	default: (x) = __get_user_bad();				\
+ 	}								\
+ } while (0)
 -- 
 2.20.1
 
