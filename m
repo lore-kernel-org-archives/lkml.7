@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27863CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A876CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F1D222C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB702070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096074;
-	bh=sT9oGxFDElGkZpBJtg+vMBwQFwRn09b3hp6SSHi9yxk=;
+	s=default; t=1572096078;
+	bh=ZnS8tGgolHcJyRZ+ULOW9N5wiHI8kazC/jtkn8jFGdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8CBEaZs5Os0VykuvUBWtbDL+QBt9T23SOZLecaMHvspqLLA0sl7QaVofYnNcgWRh
-	 E1GRWPnaG87+6hc96BYj1KhEcOhJ2EOolJdUaHFQV4a4j7d+xy+loiGh8Xgdk4N9MB
-	 szLZCTTII8im4ykkWPvNjocN01ZnN4bQvcJteA6U=
+	b=kDbcx9gIpKpPIbTfvqqQHzOUSMjz+36WQLM1Wra7ITuIMbngsrnjLiDcxvccNNXkd
+	 OEPppY1TIB4LGnR+xSKLXqtdhFdc6duTVcWiseBOSDRDmyBuDo8gUx3Sxe3wGWE0Rw
+	 IOyM3Jom1jLqpa3477nbhmVm4cs0duetbO6EM1ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfJZNVM (ORCPT
+        id S1728865AbfJZNVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728757AbfJZNU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:59 -0400
+        id S1728690AbfJZNVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38A3821E6F;
-        Sat, 26 Oct 2019 13:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087632070B;
+        Sat, 26 Oct 2019 13:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096059;
-        bh=sT9oGxFDElGkZpBJtg+vMBwQFwRn09b3hp6SSHi9yxk=;
+        s=default; t=1572096064;
+        bh=ZnS8tGgolHcJyRZ+ULOW9N5wiHI8kazC/jtkn8jFGdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KC+N4/aC2kUGG8T18Mvm4CVFxR4hMdeScTQ25YXYSP7giTugnj7PrglAd6ik8gsH/
-         SUdYO4RkRM1drFFHb/eGcdHlKB02/dRzSr+8cQbrNBeiIFjfmcU4L+zQYGe3qT19jI
-         cqFD2oIhHxxRPZT+ZYNLsYZO8AZPL7uNHR6tx0lw=
+        b=U6/RZQPIfx6TwZtMqOxFFYXLFF+y+uQi3MoY0F79lwHDmf5CGmopeTGB+v7INUgyA
+         uRNKgYLobyJ1kWfsBErRZyHN7iKgDd655U/b6g1LTlHBjcAvcLsyfEN1z/4/LUF8XU
+         8BvfzMHJveSXIzPOBF+VM2L3J3h+WKhrVXlBDy/A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Liu <wei.liu@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 55/59] x86/hyperv: Set pv_info.name to "Hyper-V"
-Date:   Sat, 26 Oct 2019 09:19:06 -0400
-Message-Id: <20191026131910.3435-55-sashal@kernel.org>
+Cc:     Joel Colledge <joel.colledge@linbit.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 57/59] scripts/gdb: fix lx-dmesg when CONFIG_PRINTK_CALLER is set
+Date:   Sat, 26 Oct 2019 09:19:08 -0400
+Message-Id: <20191026131910.3435-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -62,49 +63,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com>
+From: Joel Colledge <joel.colledge@linbit.com>
 
-[ Upstream commit f7c0f50f1857c1cf013466fcea4dc98d116bf456 ]
+[ Upstream commit ca210ba32ef7537b02731bfe255ed8eb1e4e2b59 ]
 
-Michael reported that the x86/hyperv initialization code prints the
-following dmesg when running in a VM on Hyper-V:
+When CONFIG_PRINTK_CALLER is set, struct printk_log contains an
+additional member caller_id.  This affects the offset of the log text.
+Account for this by using the type information from gdb to determine all
+the offsets instead of using hardcoded values.
 
-  [    0.000738] Booting paravirtualized kernel on bare hardware
+This fixes following error:
 
-Let the x86/hyperv initialization code set pv_info.name to "Hyper-V" so
-dmesg reports correctly:
+  (gdb) lx-dmesg
+  Python Exception <class 'ValueError'> embedded null character:
+  Error occurred in Python command: embedded null character
 
-  [    0.000172] Booting paravirtualized kernel on Hyper-V
+The read_u* utility functions now take an offset argument to make them
+easier to use.
 
-[ tglx: Folded build fix provided by Yue ]
-
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.kernel.org/r/20191015103502.13156-1-parri.andrea@gmail.com
+Link: http://lkml.kernel.org/r/20191011142500.2339-1-joel.colledge@linbit.com
+Signed-off-by: Joel Colledge <joel.colledge@linbit.com>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ scripts/gdb/linux/dmesg.py | 16 ++++++++++++----
+ scripts/gdb/linux/utils.py | 25 +++++++++++++------------
+ 2 files changed, 25 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 852e74e48890b..1bec5e4bb1fa9 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -207,6 +207,10 @@ static void __init ms_hyperv_init_platform(void)
- 	int hv_host_info_ecx;
- 	int hv_host_info_edx;
+diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
+index 6d2e09a2ad2f9..2fa7bb83885f0 100644
+--- a/scripts/gdb/linux/dmesg.py
++++ b/scripts/gdb/linux/dmesg.py
+@@ -16,6 +16,8 @@ import sys
  
-+#ifdef CONFIG_PARAVIRT
-+	pv_info.name = "Hyper-V";
-+#endif
+ from linux import utils
+ 
++printk_log_type = utils.CachedType("struct printk_log")
 +
- 	/*
- 	 * Extract the features and hints
- 	 */
+ 
+ class LxDmesg(gdb.Command):
+     """Print Linux kernel log buffer."""
+@@ -42,9 +44,14 @@ class LxDmesg(gdb.Command):
+             b = utils.read_memoryview(inf, log_buf_addr, log_next_idx)
+             log_buf = a.tobytes() + b.tobytes()
+ 
++        length_offset = printk_log_type.get_type()['len'].bitpos // 8
++        text_len_offset = printk_log_type.get_type()['text_len'].bitpos // 8
++        time_stamp_offset = printk_log_type.get_type()['ts_nsec'].bitpos // 8
++        text_offset = printk_log_type.get_type().sizeof
++
+         pos = 0
+         while pos < log_buf.__len__():
+-            length = utils.read_u16(log_buf[pos + 8:pos + 10])
++            length = utils.read_u16(log_buf, pos + length_offset)
+             if length == 0:
+                 if log_buf_2nd_half == -1:
+                     gdb.write("Corrupted log buffer!\n")
+@@ -52,10 +59,11 @@ class LxDmesg(gdb.Command):
+                 pos = log_buf_2nd_half
+                 continue
+ 
+-            text_len = utils.read_u16(log_buf[pos + 10:pos + 12])
+-            text = log_buf[pos + 16:pos + 16 + text_len].decode(
++            text_len = utils.read_u16(log_buf, pos + text_len_offset)
++            text_start = pos + text_offset
++            text = log_buf[text_start:text_start + text_len].decode(
+                 encoding='utf8', errors='replace')
+-            time_stamp = utils.read_u64(log_buf[pos:pos + 8])
++            time_stamp = utils.read_u64(log_buf, pos + time_stamp_offset)
+ 
+             for line in text.splitlines():
+                 msg = u"[{time:12.6f}] {line}\n".format(
+diff --git a/scripts/gdb/linux/utils.py b/scripts/gdb/linux/utils.py
+index 50805874cfc38..802acfee6785a 100644
+--- a/scripts/gdb/linux/utils.py
++++ b/scripts/gdb/linux/utils.py
+@@ -91,15 +91,16 @@ def read_memoryview(inf, start, length):
+     return memoryview(inf.read_memory(start, length))
+ 
+ 
+-def read_u16(buffer):
++def read_u16(buffer, offset):
++    buffer_val = buffer[offset:offset + 2]
+     value = [0, 0]
+ 
+-    if type(buffer[0]) is str:
+-        value[0] = ord(buffer[0])
+-        value[1] = ord(buffer[1])
++    if type(buffer_val[0]) is str:
++        value[0] = ord(buffer_val[0])
++        value[1] = ord(buffer_val[1])
+     else:
+-        value[0] = buffer[0]
+-        value[1] = buffer[1]
++        value[0] = buffer_val[0]
++        value[1] = buffer_val[1]
+ 
+     if get_target_endianness() == LITTLE_ENDIAN:
+         return value[0] + (value[1] << 8)
+@@ -107,18 +108,18 @@ def read_u16(buffer):
+         return value[1] + (value[0] << 8)
+ 
+ 
+-def read_u32(buffer):
++def read_u32(buffer, offset):
+     if get_target_endianness() == LITTLE_ENDIAN:
+-        return read_u16(buffer[0:2]) + (read_u16(buffer[2:4]) << 16)
++        return read_u16(buffer, offset) + (read_u16(buffer, offset + 2) << 16)
+     else:
+-        return read_u16(buffer[2:4]) + (read_u16(buffer[0:2]) << 16)
++        return read_u16(buffer, offset + 2) + (read_u16(buffer, offset) << 16)
+ 
+ 
+-def read_u64(buffer):
++def read_u64(buffer, offset):
+     if get_target_endianness() == LITTLE_ENDIAN:
+-        return read_u32(buffer[0:4]) + (read_u32(buffer[4:8]) << 32)
++        return read_u32(buffer, offset) + (read_u32(buffer, offset + 4) << 32)
+     else:
+-        return read_u32(buffer[4:8]) + (read_u32(buffer[0:4]) << 32)
++        return read_u32(buffer, offset + 4) + (read_u32(buffer, offset) << 32)
+ 
+ 
+ target_arch = None
 -- 
 2.20.1
 
