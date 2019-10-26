@@ -2,109 +2,106 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E12CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 19:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85774CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 19:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0223721655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 19:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C57920867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 19:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBTyUjfF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="NtdFBzmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfJZTz6 (ORCPT
+        id S1726557AbfJZT6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 15:55:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46684 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfJZTz6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 15:55:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id q21so3227690plr.13;
-        Sat, 26 Oct 2019 12:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=MkzEl1t+VJR5731togH5vyJCMp2aTYclRaMcZX4VR7E=;
-        b=UBTyUjfFK287qETQ4VMBRVH6vXR7FWahDWc5pkpEDGYFHXyiunLExsxXWD5H4wLZN5
-         xwe5VbomkdfWyW5U58W18HuqWavutsdsw5Z8jhpuwQZ6czGxKq1UlsSv2g8ljEW4wc2g
-         uV40v5ajElxcpLLO5CGcY+kP2WRAFviU7OL0dIZhHeqPNl3qNY93C0VTXfTyoWLXv7bo
-         WDxzDAKaDTEFD9lfFmdawcHvsPBW6csqBxJMsGZ2jjKn9lpfC4G4+L1iCkBWrHbkH10Z
-         NoL16ONLqTOyC/QLU14asB0KxieoT8Nx+xpqQiMQ+WFyg5499KL3PhoLiY8Q+1dLMaSI
-         QOIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=MkzEl1t+VJR5731togH5vyJCMp2aTYclRaMcZX4VR7E=;
-        b=pf036SUD8ipqdSuYKnX8z7tQA06hnyg3aZOCZGWTa0UBwVkgpaIsfP1nEUwkZLthCX
-         YBZr2zwjUMfY37VnAeA2i4tqQnO86Ey0LUY/nuBAjFXgsN6UIPyoWb3MAcvkeiVa7I+e
-         vjceRbHmu07fHO0QBtD6WsLA6iRn5A7/fSwmk8R1z0zVa72TKI734NdHi4Wldhi0FsAw
-         182l76qlO10wCqgzRmgDLIL3qMRLsZlGIZoY1FwtFVUp1sEaiGC6CGY34hT5K6irb7Wk
-         API9eE4jZtnf0dbns9Xi0F1LjMWwRukbbMQ4rQtSdJ0xwQagWKKwemkis1uADflfM4o/
-         j7iA==
-X-Gm-Message-State: APjAAAUmH5QX+V9Ns9RdE4+Ke/KrSfPTjrq2VvWeuLJ3+dtqOyruvuEk
-        q+Ppf7xDd45KXad/VdTCYlk=
-X-Google-Smtp-Source: APXvYqxyJ468qOGZECo7TokvLMGUdvPKsmcOplGcvbCIhCpRij+550PPQaNMoZxjKAG7lyZ06JTcDg==
-X-Received: by 2002:a17:902:8305:: with SMTP id bd5mr11043039plb.184.1572119757257;
-        Sat, 26 Oct 2019 12:55:57 -0700 (PDT)
-Received: from aap-ubuntu (c-73-202-31-227.hsd1.ca.comcast.net. [73.202.31.227])
-        by smtp.gmail.com with ESMTPSA id d14sm7513407pfh.36.2019.10.26.12.55.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 26 Oct 2019 12:55:56 -0700 (PDT)
-Date:   Sat, 26 Oct 2019 12:55:54 -0700
-From:   Andre Azevedo <andre.azevedo@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Andre Azevedo <andre.azevedo@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org
-Subject: [PATCH] Documentation/scheduler: fix links in sched-stats
-Message-ID: <20191026195554.GA30903@aap-ubuntu>
+        Sat, 26 Oct 2019 15:58:09 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:50038 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfJZT6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 15:58:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=MQYRheoq8kp41zbJw1RTKir7qxVJ+jzxSDKzGZgQqFM=; b=NtdFBzmUapL3+gcLQuTuXMe1E3
+        VW/jHGS1wvnIabtSmGP66fv2aKqA4WJ79Do5B+JIOpUhQEi5B5au6soQM/7SJp/qlBx+JfH08+9SY
+        gLod2oHaAW4ad6wVWn5/04cnyUsF25iF6KG+O9/f2RkCgpqROTJxEYN0TI1yzCGLxdkI=;
+Received: from p5dc580b6.dip0.t-ipconnect.de ([93.197.128.182] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iOSC9-0006sE-5H; Sat, 26 Oct 2019 21:57:53 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iOSC8-0003pB-90; Sat, 26 Oct 2019 21:57:52 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
+        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v4 0/3] dts: ARM: add Kobo Clara HD eBook reader
+Date:   Sat, 26 Oct 2019 21:57:45 +0200
+Message-Id: <20191026195748.14562-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rain.com domain recently moved to pdxhosts.com, making the scheduler
-documentation point to broken links. Fix the links in the scheduler
-documentation.
+This adds a device tree for the Kobo Clara HD eBook reader.
+Name on mainboard is: 37NB-E60K00+4A4
+Serials start with: E60K02 (a number also seen in
+vendor kernel sources)
+These boards are also found in the Tolino Shine 3 reader
+but equipped with a i.MX6SL processor. Support for that
+device is planned to be added in a later patch series.
+To prepare for that the device tree is split up into
+a board file containing SoC-independent stuff and a
+file containing the SoC-dependent stuff.
 
-CC: Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Signed-off-by: Andre Azevedo <andre.azevedo@gmail.com>
----
- Documentation/scheduler/sched-stats.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Work is based on code from the vendor kernel at
+https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
+but things need to be heavily reworked due to
+incompatible bindings and to prepare for Tolino Shine 3
 
-diff --git a/Documentation/scheduler/sched-stats.rst b/Documentation/scheduler/sched-stats.rst
-index 0cb0aa714545..dd9b99a025f7 100644
---- a/Documentation/scheduler/sched-stats.rst
-+++ b/Documentation/scheduler/sched-stats.rst
-@@ -28,7 +28,7 @@ of these will need to start with a baseline observation and then calculate
- the change in the counters at each subsequent observation.  A perl script
- which does this for many of the fields is available at
- 
--    http://eaglet.rain.com/rick/linux/schedstat/
-+    http://eaglet.pdxhosts.com/rick/linux/schedstat/
- 
- Note that any such script will necessarily be version-specific, as the main
- reason to change versions is changes in the output format.  For those wishing
-@@ -164,4 +164,4 @@ report on how well a particular process or set of processes is faring
- under the scheduler's policies.  A simple version of such a program is
- available at
- 
--    http://eaglet.rain.com/rick/linux/schedstat/v12/latency.c
-+    http://eaglet.pdxhosts.com/rick/linux/schedstat/v12/latency.c
+Changes in v2:
+- reordered patches
+- various cleanups as suggested by Marco Felsch
+
+Changes in v3:
+- correct memory size
+- better name for led
+- comments about missing i2c devices
+
+Changes in v4:
+- various cleanups as requested by Shawn Guo
+
+Andreas Kemnade (3):
+  dt-bindings: arm: fsl: add compatible string for Kobo Clara HD
+  ARM: dts: add Netronix E60K02 board common file
+  ARM: dts: imx: add devicetree for Kobo Clara HD
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/e60k02.dtsi                 | 305 +++++++++++++++++
+ arch/arm/boot/dts/imx6sll-kobo-clarahd.dts    | 324 ++++++++++++++++++
+ 4 files changed, 632 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/e60k02.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6sll-kobo-clarahd.dts
+
 -- 
-2.17.1
+2.20.1
 
