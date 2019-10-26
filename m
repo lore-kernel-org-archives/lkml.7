@@ -2,87 +2,74 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD0ACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E6ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7782070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W4ZHEiZI"
+	by mail.kernel.org (Postfix) with ESMTP id 7A7D52070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 11:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572090546;
+	bh=HEElGzk65GBzExbILyhqFsb4zbZh3puZKjQps/d8zfU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AnUyf3AeLUmK32qJVGTJNoj9AcKF5VNLOLow0uKBCrmW0Wi1GpVHFde+9pQJZSVmz
+	 bkx1/5AbxQuMn2ltc23kI4U7jIJ6SwwR77dh50Qn+8bMjZymmYb+YjHcNNwdTKBglx
+	 t0SDz9E9ychC1YRsMhfoCfGhI9M/4n4jmqYUKTao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfJZLq1 (ORCPT
+        id S1726859AbfJZLtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 07:46:27 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52839 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfJZLq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 07:46:27 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p21so4814609wmg.2
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 04:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=WvV3v05v3ZEEVXEmLYdFb7lylJednPWrhNA9CKc5BuQ=;
-        b=W4ZHEiZIpNqE3hsCeGHeX4lyrYRkFJ8+N2pzP5EIW+H2uFC30kwXAhqq34aA7o+DDB
-         BmU1dchLy+sQVZesfH/mgQBQDsdBbSDqrjHp4rrvN/hygQxIKYOORGF6JIgpFkpPKVlt
-         UX1ZC79a1kG1Tb5S12311GoebWaT7Ub492bZ3+7A2UGgJVGEzG5ccbJhAnhhApB30gp6
-         2Yqv04+sNcM7GWXQPNdhpABEuHMIeuWBCyxbJaIKRZFaUFVHsK2SJ0wyxH1aC4ARqZoq
-         AL38hGrSHCxmYez764UcYWBgdjsfFclVsenwWzYKCLW3HlF04rxnTaEz+TXd8tgEc2TJ
-         nAKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=WvV3v05v3ZEEVXEmLYdFb7lylJednPWrhNA9CKc5BuQ=;
-        b=p2DkaTBqTJ9Ulz+BruQCHBUe4Xtp/v74qqPW1nzF+V7oPDqh66wqrUe9CCGuEyvbgk
-         kSLli93Y97npd0vQ9aeJL9oPLpmmoHwAW3vnm5W1iS/rWZjwQ5lCOIZYaFGmx/lPSWaa
-         QKnAwWfG96rAmw8A1adyVDX1te94WPqySltGJCI+v9j9/piTbqBSPxQjsrHTEouxT9NS
-         ZfmrWso3hLc7i8WN/XH6Xgd3pu6goCPSZnWI7XYiwilgEKy/O1aD2/b/8qq3g6AWbeta
-         m+1JJiCWe4j/xCB+vSRfyGt2lTB+HZWztAt9HGJLxcpxnIDp+EILYHO97Y5Jvu1KKrz2
-         L7lg==
-X-Gm-Message-State: APjAAAVBupRV3WYQg/xfTXoect3WGrTTkXHCI/vstzLWevtxJIg0Qx9Q
-        8UiaZLSTtUQHrUQTjQ+u9Ildfw==
-X-Google-Smtp-Source: APXvYqzIGA1fzbnD59EkfsIe3VNpri1WAOprW76nJRcZAdCg/+VTJ8MZ+ItfjZ0R+iC4V6eP5dKUrg==
-X-Received: by 2002:a05:600c:2387:: with SMTP id m7mr7366917wma.137.1572090385092;
-        Sat, 26 Oct 2019 04:46:25 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o73sm5340728wme.34.2019.10.26.04.46.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 26 Oct 2019 04:46:24 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Corentin Labbe <clabbe@baylibre.com>, davem@davemloft.net,
-        herbert@gondor.apana.org.au, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: Re: [PATCH v3 4/4] ARM64: dts: amlogic: adds crypto hardware node
-In-Reply-To: <1571288786-34601-5-git-send-email-clabbe@baylibre.com>
-References: <1571288786-34601-1-git-send-email-clabbe@baylibre.com> <1571288786-34601-5-git-send-email-clabbe@baylibre.com>
-Date:   Sat, 26 Oct 2019 13:46:22 +0200
-Message-ID: <7ho8y3g25t.fsf@baylibre.com>
+        Sat, 26 Oct 2019 07:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfJZLtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 07:49:05 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99275206DD;
+        Sat, 26 Oct 2019 11:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572090544;
+        bh=HEElGzk65GBzExbILyhqFsb4zbZh3puZKjQps/d8zfU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jLmWLLym75gW8Jo25Tvk5fVHa5fMRHTMyOj/gMC+LVOs8KG8JXO4uJ3VN0asmNDIz
+         iCOAU5/4sZGBuPAVVXL8/yqPv1IqDwSNNV42108h1vF8VMSCwjI+FUtvtE1aKUHusf
+         RNq8I3nHPI3hyS08mfn8MhioUPgp3btrhQKeTxY0=
+Date:   Sat, 26 Oct 2019 19:48:50 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: imx: gpc: fix initialiser format
+Message-ID: <20191026114849.GI14401@dragon>
+References: <20191015140909.778-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015140909.778-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Corentin Labbe <clabbe@baylibre.com> writes:
+On Tue, Oct 15, 2019 at 03:09:09PM +0100, Ben Dooks wrote:
+> Make the initialiers in imx_gpc_domains C99 format to fix the
+> following sparse warnings:
+> 
+> drivers/soc/imx/gpc.c:252:30: warning: obsolete array initializer, use C99 syntax
+> drivers/soc/imx/gpc.c:258:29: warning: obsolete array initializer, use C99 syntax
+> drivers/soc/imx/gpc.c:269:34: warning: obsolete array initializer, use C99 syntax
+> drivers/soc/imx/gpc.c:278:30: warning: obsolete array initializer, use C99 syntax
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 
-> This patch adds the GXL crypto hardware node for all GXL SoCs.
->
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-
-Queued for v5.5,
-
-Thanks,
-
-Kevin
+Applied, thanks.
