@@ -2,98 +2,106 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10882CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 02:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2D1CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 02:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB6E21D7B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 02:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7136421D7B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 02:11:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfxksKUJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfJZCIO (ORCPT
+        id S1726198AbfJZCLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 22:08:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5191 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfJZCIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 22:08:13 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5CE66EA7BB546D1EB6EE;
-        Sat, 26 Oct 2019 10:08:04 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 26 Oct 2019 10:07:57 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <epomozov@marvell.com>, <igor.russkikh@aquantia.com>,
-        <davem@davemloft.net>, <pavel.belous@aquantia.com>,
-        <dmitry.bezrukov@aquantia.com>, <dmitry.bogdanov@aquantia.com>,
-        <ndanilov@aquantia.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH -next] net: aquantia: make two symbols be static
-Date:   Sat, 26 Oct 2019 10:07:38 +0800
-Message-ID: <20191026020738.130606-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 25 Oct 2019 22:11:32 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43326 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfJZCLc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 22:11:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so4298447wrr.10;
+        Fri, 25 Oct 2019 19:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9ALQdhB5h3cKalAoVvOYU2qpe569Ks5R2FX4vQ5KEM0=;
+        b=LfxksKUJvXxznvcTIid8C09TRv1SJkXLT6K706LJCbwK/TUbqfTzijG0vqZ4Bx4Buc
+         qE0kRJT37SvRiWvnx6tw1TafGfA9AZXMHj4u44Hy3XwsRxo/TQuOCrSvbeOsLMutt4vw
+         HIfhktuA02JuxlizIP01M5kIXRNoo3kjbOZ6g3JkEE+WFVWT9179q0LXW8ykKc+u1sXD
+         iaZdHVrqDjqODrJE0m0KY9h0wwx9xy3l/xs8Zn1vMFhgjJ8EnDBNLUOmDb6Ph7cH1YtH
+         MS2Mb/T33eDeRGCGp7mQCALzFLOWPqp4mUm7RVsgQtH3gPCsTXVCFupKyZulzLfHm2WV
+         u9Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9ALQdhB5h3cKalAoVvOYU2qpe569Ks5R2FX4vQ5KEM0=;
+        b=lYvQL49eUhpcKr1F56EsjTcqphBxg021ZezNVHMTaaT3snNu+y66N17XWW5UzjRVBK
+         xql2bB82iiP8/8bs5c03tqtgCksrf1lmWuwNNGvLO1xhPk5OnCVWknFYqtZZ7rSxHhg3
+         7qjaVU/oTOXX67tmNMnAQ8+TMaNGuE6Q2ngEverEwV+JbtjRGCvmv7yH0z5Aj+y4R4gc
+         tgyZwO4+4+Jcs+1065K8DWZL/aaEk6lAQHJWYBw2Yn9G2IChUP8OsmLfJy6DxH/fZDsF
+         iHWH61MPLPS05DyIlvyID5YgpW4ZX2QyOFctB0EzqwE5qbmyoYLbP0TBgvvRbFEI0XcW
+         k2nw==
+X-Gm-Message-State: APjAAAXXYFvDXs8Wtby1fJvtHY/nUvUSqVUU7e0BcmBm10SbCYuUl6OE
+        fpeoDgOFnit3Fn8PEmikyGbs2WlPPqo8xmu6Qujmcw==
+X-Google-Smtp-Source: APXvYqy9WIvJ8mlOEnf1bsTVAEZqNwjann/RSa9Iiqk+fNe+gqyRdq1x/PwGQ7DH0ZwB9Oy00XC30ELcQR3QqRApCzg=
+X-Received: by 2002:adf:e403:: with SMTP id g3mr4931960wrm.128.1572055888508;
+ Fri, 25 Oct 2019 19:11:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <20191025102915.23677-1-chunyan.zhang@unisoc.com> <20191025102915.23677-2-chunyan.zhang@unisoc.com>
+In-Reply-To: <20191025102915.23677-2-chunyan.zhang@unisoc.com>
+From:   Orson Zhai <orsonzhai@gmail.com>
+Date:   Sat, 26 Oct 2019 10:11:17 +0800
+Message-ID: <CA+H2tpHkYwQLEO7ftLebErsEXBQnRS37gFOoKoG+_jnt5+0r-A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: serial: Add a new compatible string for SC9863A
+To:     Chunyan Zhang <chunyan.zhang@unisoc.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using ARCH=mips CROSS_COMPILE=mips-linux-gnu-
-to build drivers/net/ethernet/aquantia/atlantic/aq_ptp.o
-and drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.o,
-below errors can be seen:
-drivers/net/ethernet/aquantia/atlantic/aq_ptp.c:1378:6:
-warning: symbol 'aq_ptp_poll_sync_work_cb' was not declared.
-Should it be static?
+Hi Chunyan,
 
-drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c:1155:5:
-warning: symbol 'hw_atl_b0_ts_to_sys_clock' was not declared.
-Should it be static?
+On Fri, Oct 25, 2019 at 6:30 PM Chunyan Zhang <chunyan.zhang@unisoc.com> wrote:
+>
+>
+> SC9863A use the same serial device which SC9836 uses.
+>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  Documentation/devicetree/bindings/serial/sprd-uart.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> index 9607dc616205..0a9f8a7809e1 100644
+> --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  - compatible: must be one of:
+>    * "sprd,sc9836-uart"
+>    * "sprd,sc9860-uart", "sprd,sc9836-uart"
+> +  * "sprd,sc9863-uart", "sprd,sc9836-uart"
 
-This patch to make aq_ptp_poll_sync_work_cb and hw_atl_b0_ts_to_sys_clock
-be static to fix these warnings.
+Duplicated 9836 with above line?
 
-Fixes: 9c477032f7d0 ("net: aquantia: add support for PIN funcs")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/net/ethernet/aquantia/atlantic/aq_ptp.c           | 2 +-
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+-Orson
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
-index 3ec0841..d92d119 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
-@@ -1375,7 +1375,7 @@ static int aq_ptp_check_sync1588(struct aq_ptp_s *aq_ptp)
- 	return 0;
- }
- 
--void aq_ptp_poll_sync_work_cb(struct work_struct *w)
-+static void aq_ptp_poll_sync_work_cb(struct work_struct *w)
- {
- 	struct delayed_work *dw = to_delayed_work(w);
- 	struct aq_ptp_s *aq_ptp = container_of(dw, struct aq_ptp_s, poll_sync);
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-index 51ecf87..8f866c7 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -1152,7 +1152,7 @@ static int hw_atl_b0_set_sys_clock(struct aq_hw_s *self, u64 time, u64 ts)
- 	return hw_atl_b0_adj_sys_clock(self, delta);
- }
- 
--int hw_atl_b0_ts_to_sys_clock(struct aq_hw_s *self, u64 ts, u64 *time)
-+static int hw_atl_b0_ts_to_sys_clock(struct aq_hw_s *self, u64 ts, u64 *time)
- {
- 	*time = self->ptp_clk_offset + ts;
- 	return 0;
--- 
-2.7.4
-
+>
+>  - reg: offset and length of the register set for the device
+>  - interrupts: exactly one interrupt specifier
+> --
+> 2.20.1
+>
+>
