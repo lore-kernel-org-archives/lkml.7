@@ -2,86 +2,63 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D22CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B33CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7742E214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572113947;
-	bh=jdl0SJqKBenXqOsIi5R+H/0Mw0637lfkMVvmePr1Z0Y=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=oMOYi+IyOV6DOS84p/+J48Qf2SEUmaN+RFk6eLT2fCUVYbk005Y0eT/jAFPKvh8wr
-	 q1m13zjyxaNcSYqn2GSZASLINp7m2sIos3yOZQC1qTtokKB1ceYaFpk4OmzU+SFChe
-	 sEWhKg0zgzD4cvDQQ63A40fbgfYBgF1YmoXEq8h0=
+	by mail.kernel.org (Postfix) with ESMTP id D279520867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 18:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfJZSTG (ORCPT
+        id S1726476AbfJZSVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 14:19:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfJZSTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 14:19:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C9E20867;
-        Sat, 26 Oct 2019 18:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572113946;
-        bh=jdl0SJqKBenXqOsIi5R+H/0Mw0637lfkMVvmePr1Z0Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ES17A3lHCSGWD2siHt86OuDmikWQ4vk/MKBY2brTQQfGr9G+qr/pBKqr5SKPJZf8y
-         vNgIsH2V0EhyXIiV1aJwiln7aBycp3CeIOvajQ/tpJX4wDLgP5LVKaBL64W+mI9TXF
-         T0QQdUzKKijZxeYg6TjmJjoBVxsBSWir0LUMI7Dk=
-Date:   Sat, 26 Oct 2019 20:19:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jiri Slaby <jslaby@suse.cz>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [GIT PULL] TTY/Serial fix for 5.4-rc5
-Message-ID: <20191026181903.GA649190@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Sat, 26 Oct 2019 14:21:12 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:47790 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfJZSVM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 14:21:12 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7E13C14DE9788;
+        Sat, 26 Oct 2019 11:21:10 -0700 (PDT)
+Date:   Sat, 26 Oct 2019 11:21:06 -0700 (PDT)
+Message-Id: <20191026.112106.1243696018896349260.davem@davemloft.net>
+To:     zhang.lin16@zte.com.cn
+Cc:     ast@kernel.org, daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        hawk@kernel.org, john.fastabend@gmail.com, mkubecek@suse.cz,
+        jiri@mellanox.com, pablo@netfilter.org, f.fainelli@gmail.com,
+        maxime.chevallier@bootlin.com, lirongqing@baidu.com,
+        vivien.didelot@gmail.com, linyunsheng@huawei.com,
+        natechancellor@gmail.com, arnd@arndb.de, dan.carpenter@oracle.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        jiang.xuexin@zte.com.cn
+Subject: Re: [PATCH] net: Zeroing the structure ethtool_wolinfo in
+ ethtool_get_wol()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
+References: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 26 Oct 2019 11:21:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
+From: zhanglin <zhang.lin16@zte.com.cn>
+Date: Sat, 26 Oct 2019 15:54:16 +0800
 
-  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
+> memset() the structure ethtool_wolinfo that has padded bytes
+> but the padded bytes have not been zeroed out.
+> 
+> Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.4-rc5
-
-for you to fetch changes up to f50b6805dbb993152025ec04dea094c40cc93a0c:
-
-  8250-men-mcb: fix error checking when get_num_ports returns -ENODEV (2019-10-15 21:38:41 +0200)
-
-----------------------------------------------------------------
-TTY/Serial driver fix for 5.4-rc5
-
-Here is a single tty/serial driver fix for 5.4-rc5 that resolves a
-reported issue.
-
-It has been in linux-next for a while with no problems.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      8250-men-mcb: fix error checking when get_num_ports returns -ENODEV
-
- drivers/tty/serial/8250/8250_men_mcb.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Applied and queued up for -stable.
