@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE88ACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B16CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A585221E6F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978C5214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095891;
-	bh=WwaPMs6a0XVnuyot8vmAQRgX38Uz3dfCVG1j8TJ1ExI=;
+	s=default; t=1572095895;
+	bh=dLdwn7YwP9Q8YuRYcjz7At87CX/uoTurZZGIHkt97z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPSUamB5k7G1pc9zgmyjLdho9LziJst4o1caqpsDmDUR60mFuP6RrM9HlL/uKudyo
-	 5FET1hUiQeId40CaOodDjxCmC2XEZJnHaw+92K0B13XvNFohHrmxW7r8GQZGgNx4o4
-	 croNIXZEWn3M32PMS5wj3eEKmKlbb8eP419NMb5Q=
+	b=SmHppVBnLJQZyv1u2yeLV7WaZbNm4prxkGU5p1jWNxC9R1RsJV/Oz7jckxFAPIdqN
+	 kXfAcJMibYedL5Ed2aVWIGN7M/PLhwiS/szJ3yVQ+BwORqj9cMi2Bw8u2TWpAPg7ML
+	 +y+ZH5qyuZORYimzfc6gf2gIdCQ83EG+1kfwXMuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfJZNSK (ORCPT
+        id S1727733AbfJZNSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39794 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbfJZNSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:08 -0400
+        id S1727689AbfJZNSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6546222C1;
-        Sat, 26 Oct 2019 13:18:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 232A7222C1;
+        Sat, 26 Oct 2019 13:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095887;
-        bh=WwaPMs6a0XVnuyot8vmAQRgX38Uz3dfCVG1j8TJ1ExI=;
+        s=default; t=1572095891;
+        bh=dLdwn7YwP9Q8YuRYcjz7At87CX/uoTurZZGIHkt97z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5QrFRJ8zZrBnG49srjq5nUguepx4f34IL2vJycn1TsnEFUqtYfV7eJTU8ey6uoA4
-         +q9+KoT3GV4Z3RM5ixSmcvXoz4eb9vUdLr3MkqM3xyerFYNS8TfwxAdE+ZlILoP9dF
-         qiw4TsFTO21Z7Y6yTRG4bc0To57gzyuztFbUTThA=
+        b=AVgI1AFw2Zp7brB4Sd7T3yp58jZ2vndhxjwvD47T5mGbWKMi7xSCul28Y61PPRyJU
+         9RFYXCXkpSW4hW1aY7fv0u+6OlMD57RbesPALnGOQkF2qPFj+eZsagAkN4UWq7Ecb3
+         VbtbRK0v9He9buZOTHdnQm4MtNxhPd2v4rmm6zo8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 71/99] net: aquantia: correctly handle macvlan and multicast coexistence
-Date:   Sat, 26 Oct 2019 09:15:32 -0400
-Message-Id: <20191026131600.2507-71-sashal@kernel.org>
+Cc:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Gary R Hook <gary.hook@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.3 73/99] iommu/amd: Fix incorrect PASID decoding from event log
+Date:   Sat, 26 Oct 2019 09:15:34 -0400
+Message-Id: <20191026131600.2507-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -60,126 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+From: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
 
-[ Upstream commit 9f051db566da1e8110659ab4ab188af1c2510bb4 ]
+[ Upstream commit ec21f17a9437e11bb29e5fa375aa31b472793c15 ]
 
-macvlan and multicast handling is now mixed up.
-The explicit issue is that macvlan interface gets broken (no traffic)
-after clearing MULTICAST flag on the real interface.
+IOMMU Event Log encodes 20-bit PASID for events:
+    ILLEGAL_DEV_TABLE_ENTRY
+    IO_PAGE_FAULT
+    PAGE_TAB_HARDWARE_ERROR
+    INVALID_DEVICE_REQUEST
+as:
+    PASID[15:0]  = bit 47:32
+    PASID[19:16] = bit 19:16
 
-We now do separate logic and consider both ALLMULTI and MULTICAST
-flags on the device.
+Note that INVALID_PPR_REQUEST event has different encoding
+from the rest of the events as the following:
+    PASID[15:0]  = bit 31:16
+    PASID[19:16] = bit 45:42
 
-Fixes: 11ba961c9161 ("net: aquantia: Fix IFF_ALLMULTI flag functionality")
-Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So, fixes the decoding logic.
+
+Fixes: d64c0486ed50 ("iommu/amd: Update the PASID information printed to the system log")
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/aquantia/atlantic/aq_main.c  |  4 +--
- .../net/ethernet/aquantia/atlantic/aq_nic.c   | 32 +++++++++----------
- .../aquantia/atlantic/hw_atl/hw_atl_b0.c      |  7 ++--
- 3 files changed, 21 insertions(+), 22 deletions(-)
+ drivers/iommu/amd_iommu.c       | 5 +++--
+ drivers/iommu/amd_iommu_types.h | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_main.c b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-index b4a0fb281e69e..bb65dd39f8474 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-@@ -194,9 +194,7 @@ static void aq_ndev_set_multicast_settings(struct net_device *ndev)
- {
- 	struct aq_nic_s *aq_nic = netdev_priv(ndev);
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 3b1d7ae6f75e0..79b113a2b779e 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -560,7 +560,8 @@ static void iommu_print_event(struct amd_iommu *iommu, void *__evt)
+ retry:
+ 	type    = (event[1] >> EVENT_TYPE_SHIFT)  & EVENT_TYPE_MASK;
+ 	devid   = (event[0] >> EVENT_DEVID_SHIFT) & EVENT_DEVID_MASK;
+-	pasid   = PPR_PASID(*(u64 *)&event[0]);
++	pasid   = (event[0] & EVENT_DOMID_MASK_HI) |
++		  (event[1] & EVENT_DOMID_MASK_LO);
+ 	flags   = (event[1] >> EVENT_FLAGS_SHIFT) & EVENT_FLAGS_MASK;
+ 	address = (u64)(((u64)event[3]) << 32) | event[2];
  
--	aq_nic_set_packet_filter(aq_nic, ndev->flags);
--
--	aq_nic_set_multicast_list(aq_nic, ndev);
-+	(void)aq_nic_set_multicast_list(aq_nic, ndev);
- }
+@@ -593,7 +594,7 @@ static void iommu_print_event(struct amd_iommu *iommu, void *__evt)
+ 			address, flags);
+ 		break;
+ 	case EVENT_TYPE_PAGE_TAB_ERR:
+-		dev_err(dev, "Event logged [PAGE_TAB_HARDWARE_ERROR device=%02x:%02x.%x domain=0x%04x address=0x%llx flags=0x%04x]\n",
++		dev_err(dev, "Event logged [PAGE_TAB_HARDWARE_ERROR device=%02x:%02x.%x pasid=0x%04x address=0x%llx flags=0x%04x]\n",
+ 			PCI_BUS_NUM(devid), PCI_SLOT(devid), PCI_FUNC(devid),
+ 			pasid, address, flags);
+ 		break;
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index 64edd5a9694cc..5a698ad23d50f 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -130,8 +130,8 @@
+ #define EVENT_TYPE_INV_PPR_REQ	0x9
+ #define EVENT_DEVID_MASK	0xffff
+ #define EVENT_DEVID_SHIFT	0
+-#define EVENT_DOMID_MASK	0xffff
+-#define EVENT_DOMID_SHIFT	0
++#define EVENT_DOMID_MASK_LO	0xffff
++#define EVENT_DOMID_MASK_HI	0xf0000
+ #define EVENT_FLAGS_MASK	0xfff
+ #define EVENT_FLAGS_SHIFT	0x10
  
- static int aq_ndo_vlan_rx_add_vid(struct net_device *ndev, __be16 proto,
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 8f66e78178118..2a18439b36fbe 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -631,9 +631,12 @@ int aq_nic_set_packet_filter(struct aq_nic_s *self, unsigned int flags)
- 
- int aq_nic_set_multicast_list(struct aq_nic_s *self, struct net_device *ndev)
- {
--	unsigned int packet_filter = self->packet_filter;
-+	const struct aq_hw_ops *hw_ops = self->aq_hw_ops;
-+	struct aq_nic_cfg_s *cfg = &self->aq_nic_cfg;
-+	unsigned int packet_filter = ndev->flags;
- 	struct netdev_hw_addr *ha = NULL;
- 	unsigned int i = 0U;
-+	int err = 0;
- 
- 	self->mc_list.count = 0;
- 	if (netdev_uc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
-@@ -641,29 +644,26 @@ int aq_nic_set_multicast_list(struct aq_nic_s *self, struct net_device *ndev)
- 	} else {
- 		netdev_for_each_uc_addr(ha, ndev) {
- 			ether_addr_copy(self->mc_list.ar[i++], ha->addr);
--
--			if (i >= AQ_HW_MULTICAST_ADDRESS_MAX)
--				break;
- 		}
- 	}
- 
--	if (i + netdev_mc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
--		packet_filter |= IFF_ALLMULTI;
--	} else {
--		netdev_for_each_mc_addr(ha, ndev) {
--			ether_addr_copy(self->mc_list.ar[i++], ha->addr);
--
--			if (i >= AQ_HW_MULTICAST_ADDRESS_MAX)
--				break;
-+	cfg->is_mc_list_enabled = !!(packet_filter & IFF_MULTICAST);
-+	if (cfg->is_mc_list_enabled) {
-+		if (i + netdev_mc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
-+			packet_filter |= IFF_ALLMULTI;
-+		} else {
-+			netdev_for_each_mc_addr(ha, ndev) {
-+				ether_addr_copy(self->mc_list.ar[i++],
-+						ha->addr);
-+			}
- 		}
- 	}
- 
- 	if (i > 0 && i <= AQ_HW_MULTICAST_ADDRESS_MAX) {
--		packet_filter |= IFF_MULTICAST;
- 		self->mc_list.count = i;
--		self->aq_hw_ops->hw_multicast_list_set(self->aq_hw,
--						       self->mc_list.ar,
--						       self->mc_list.count);
-+		err = hw_ops->hw_multicast_list_set(self->aq_hw,
-+						    self->mc_list.ar,
-+						    self->mc_list.count);
- 	}
- 	return aq_nic_set_packet_filter(self, packet_filter);
- }
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-index 30f7fc4c97ff4..e6b5ab9b5bae7 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -818,14 +818,15 @@ static int hw_atl_b0_hw_packet_filter_set(struct aq_hw_s *self,
- 				     cfg->is_vlan_force_promisc);
- 
- 	hw_atl_rpfl2multicast_flr_en_set(self,
--					 IS_FILTER_ENABLED(IFF_ALLMULTI), 0);
-+					 IS_FILTER_ENABLED(IFF_ALLMULTI) &&
-+					 IS_FILTER_ENABLED(IFF_MULTICAST), 0);
- 
- 	hw_atl_rpfl2_accept_all_mc_packets_set(self,
--					       IS_FILTER_ENABLED(IFF_ALLMULTI));
-+					      IS_FILTER_ENABLED(IFF_ALLMULTI) &&
-+					      IS_FILTER_ENABLED(IFF_MULTICAST));
- 
- 	hw_atl_rpfl2broadcast_en_set(self, IS_FILTER_ENABLED(IFF_BROADCAST));
- 
--	cfg->is_mc_list_enabled = IS_FILTER_ENABLED(IFF_MULTICAST);
- 
- 	for (i = HW_ATL_B0_MAC_MIN; i < HW_ATL_B0_MAC_MAX; ++i)
- 		hw_atl_rpfl2_uc_flr_en_set(self,
 -- 
 2.20.1
 
