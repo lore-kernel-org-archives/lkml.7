@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE801CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA2CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC262070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED992070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096722;
-	bh=YvWtZhnjtHZ7QF965KDY5rJe3u/aaGvLwszQUSsca2U=;
+	s=default; t=1572096728;
+	bh=lNE/iFYTemrJ0U4ih+mPRuo3i1mqFeCu4YAsb3gOBHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQSfQVZAipsD2FlWjC8ic53olm5rvoK6zRbokZc8wCRCHRSielpYhkJPu70MG4WHA
-	 zwO8I59oSbAT9/kIbN5CsX2/UCN1EfbToanKgHePJ+zwTEdTNz585G/q/x0Ena4jaj
-	 kuT3q/E8wU9rzooLBTPRNvNeWATReuzUIGRIjOAQ=
+	b=TSGK+9mkNlcCKASciQXgXvdmigJ4inEHOFgqarAWVEq99y6OgDdqjZm87fUVPDHeq
+	 wANr95NnY9s1QutClhoPqlDaVB5s2Y3sGYGIjJ71k3JdyOI2u4usSOU0IRwoJ9j/i+
+	 KbL+XsplelwdfDka1p3WAbIikoIBfq7CV8Hf/glQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfJZNcB (ORCPT
+        id S1727986AbfJZNSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbfJZNSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 26 Oct 2019 09:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727880AbfJZNSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3582E222CD;
-        Sat, 26 Oct 2019 13:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE8F8222CD;
+        Sat, 26 Oct 2019 13:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095924;
-        bh=YvWtZhnjtHZ7QF965KDY5rJe3u/aaGvLwszQUSsca2U=;
+        s=default; t=1572095921;
+        bh=lNE/iFYTemrJ0U4ih+mPRuo3i1mqFeCu4YAsb3gOBHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ezm1FPf+kVB5xdqofFGbJYhHzqjjkWKkCLWKmORCKhFcMcTExr3LOEZ3TUl4AZyAX
-         Ou2+CgqEL1ofRQFGOjSVCj4M2SkKfhhPF9SZes8r2bNaluXeXIj8xxHiT5/Y8f/LBb
-         sfkVe9eWAVeeZCyGFKdQdBvgT4DDeuhSeifZMzok=
+        b=HIavvMqho5RPGtKrtlv5U4EWr01h8VxyQtRO+GbVJA/tJnMw7NY0RTwSDk8wYaCiw
+         6ZY8koUCBOqmEDg8Ol99xGAw8pKvrYEdfTE+/9QlzKSfrTqqDP9EOWfq8n45bdcymH
+         XNou+TDtD3IXZ55PnwkMqHrdmASPbpfCKZOkcAiw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Doug Berger <opendmb@gmail.com>,
@@ -46,9 +46,9 @@ Cc:     Doug Berger <opendmb@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
         bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 92/99] net: bcmgenet: reset 40nm EPHY on energy detect
-Date:   Sat, 26 Oct 2019 09:15:53 -0400
-Message-Id: <20191026131600.2507-92-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 90/99] net: bcmgenet: don't set phydev->link from MAC
+Date:   Sat, 26 Oct 2019 09:15:51 -0400
+Message-Id: <20191026131600.2507-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -63,66 +63,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 25382b991d252aed961cd434176240f9de6bb15f ]
+[ Upstream commit 7de48402faa32298c3551ea32c76ccb4f9d3025d ]
 
-The EPHY integrated into the 40nm Set-Top Box devices can falsely
-detect energy when connected to a disabled peer interface. When the
-peer interface is enabled the EPHY will detect and report the link
-as active, but on occasion may get into a state where it is not
-able to exchange data with the connected GENET MAC. This issue has
-not been observed when the link parameters are auto-negotiated;
-however, it has been observed with a manually configured link.
+When commit 28b2e0d2cd13 ("net: phy: remove parameter new_link from
+phy_mac_interrupt()") removed the new_link parameter it set the
+phydev->link state from the MAC before invoking phy_mac_interrupt().
 
-It has been empirically determined that issuing a soft reset to the
-EPHY when energy is detected prevents it from getting into this bad
-state.
+However, once commit 88d6272acaaa ("net: phy: avoid unneeded MDIO
+reads in genphy_read_status") was added this initialization prevents
+the proper determination of the connection parameters by the function
+genphy_read_status().
 
-Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
+This commit removes that initialization to restore the proper
+functionality.
+
+Fixes: 88d6272acaaa ("net: phy: avoid unneeded MDIO reads in genphy_read_status")
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index f7359d2271dfa..06e2581b28eaf 100644
+index b22196880d6d3..f7359d2271dfa 100644
 --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
 +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2018,6 +2018,8 @@ static void bcmgenet_link_intr_enable(struct bcmgenet_priv *priv)
- 	 */
- 	if (priv->internal_phy) {
- 		int0_enable |= UMAC_IRQ_LINK_EVENT;
-+		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-+			int0_enable |= UMAC_IRQ_PHY_DET_R;
- 	} else if (priv->ext_phy) {
- 		int0_enable |= UMAC_IRQ_LINK_EVENT;
- 	} else if (priv->phy_interface == PHY_INTERFACE_MODE_MOCA) {
-@@ -2616,9 +2618,14 @@ static void bcmgenet_irq_task(struct work_struct *work)
- 	priv->irq0_stat = 0;
+@@ -2617,10 +2617,8 @@ static void bcmgenet_irq_task(struct work_struct *work)
  	spin_unlock_irq(&priv->lock);
  
-+	if (status & UMAC_IRQ_PHY_DET_R &&
-+	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
-+		phy_init_hw(priv->dev->phydev);
-+
  	/* Link UP/DOWN event */
- 	if (status & UMAC_IRQ_LINK_EVENT)
+-	if (status & UMAC_IRQ_LINK_EVENT) {
+-		priv->dev->phydev->link = !!(status & UMAC_IRQ_LINK_UP);
++	if (status & UMAC_IRQ_LINK_EVENT)
  		phy_mac_interrupt(priv->dev->phydev);
-+
+-	}
  }
  
  /* bcmgenet_isr1: handle Rx and Tx priority queues */
-@@ -2713,7 +2720,7 @@ static irqreturn_t bcmgenet_isr0(int irq, void *dev_id)
- 	}
- 
- 	/* all other interested interrupts handled in bottom half */
--	status &= UMAC_IRQ_LINK_EVENT;
-+	status &= (UMAC_IRQ_LINK_EVENT | UMAC_IRQ_PHY_DET_R);
- 	if (status) {
- 		/* Save irq status for bottom-half processing. */
- 		spin_lock_irqsave(&priv->lock, flags);
 -- 
 2.20.1
 
