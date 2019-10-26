@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B988BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F552CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7B7214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C24B222CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095769;
-	bh=lOdJL/LUFTJZ8eR9zv4gZAu7pjGdv3hDBHXTMPM/GWs=;
+	s=default; t=1572095777;
+	bh=62QafBCYLVsAzcLcrBb5DjZ9s+goGqXlmmf7CSY/hzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbuO3OKBp6gD/kP7ET0BqGW15iP0VLUt/hNTaTKg/pUKBiC0uz4kAGo3hpOLA/jZ1
-	 cMxR/2i85Bm0LJMFA+sWnVir56GbItJZ1lTHBKhQhgAz4bb/RgtRK0XFdp6Ae+ugH9
-	 QsTXiFNoFlJXJrC3iMQfri3LSs3C3vLLhs1lMDpo=
+	b=mzFCA1/LA5Xn7Y7RYZLe0mQD8uotgfUsWCkEF5cQvI9l+O7jQ9odz1oV6PPfMvbBz
+	 pbECRBkX+uTQS2ksbONTfQoN1U7vAjsVgw6CwoATVhyDLK5Nj0rb/VNinCIpDgTqLl
+	 1UZ9DHXJxxBtbkYDYQ9LUmAMUlIsPC1dmASXoXGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfJZNQH (ORCPT
+        id S1726540AbfJZNQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfJZNQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:06 -0400
+        id S1726377AbfJZNQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05EE921897;
-        Sat, 26 Oct 2019 13:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7E6521D81;
+        Sat, 26 Oct 2019 13:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095765;
-        bh=lOdJL/LUFTJZ8eR9zv4gZAu7pjGdv3hDBHXTMPM/GWs=;
+        s=default; t=1572095767;
+        bh=62QafBCYLVsAzcLcrBb5DjZ9s+goGqXlmmf7CSY/hzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wi+LNeXq2AjYGfD8TxuTxcPh/3e7BZ36z3Z44wTWOmMOILcWIq1erzYtplZWqiqWB
-         Zj2keJqmrm2TVOnnbggrpRjx+6givvw93MzVS1M7NhRUdaAdW2s4ferRrUom/38A2Z
-         X7yaHumLZVXqyp9ZLMZOufhlZ9ZMXasug3Su6taU=
+        b=oxvO3fwWK9sYx1BO0q8s4J5Q1Aoy7SLaGJF13GBwuCHtNkqcOLGk3RxgyLm0vtydg
+         bDFedGa5AcslR2LCze2xvRb50LgSrX13LKHw9bZ7nmZfCN9ZEH7e6CK207kX4jNBjW
+         Y35Pb2U9YBdD2f7pVVCiftrxBgWxnqBLfwBiPAcE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Steven Price <steven.price@arm.com>,
-        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
+        Jonathan Liu <net147@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.3 03/99] iommu/io-pgtable-arm: Correct Mali attributes
-Date:   Sat, 26 Oct 2019 09:14:24 -0400
-Message-Id: <20191026131600.2507-3-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 05/99] rt2x00: initialize last_reset
+Date:   Sat, 26 Oct 2019 09:14:26 -0400
+Message-Id: <20191026131600.2507-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -62,109 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-[ Upstream commit 52f325f4eb321ea2e8a0779f49a3866be58bc694 ]
+[ Upstream commit c91a9cfe9f6d136172a52ff6e01b3f83ba850c19 ]
 
-Whilst Midgard's MEMATTR follows a similar principle to the VMSA MAIR,
-the actual attribute values differ, so although it currently appears to
-work to some degree, we probably shouldn't be using our standard stage 1
-MAIR for that. Instead, generate a reasonable MEMATTR with attribute
-values borrowed from the kbase driver; at this point we'll be overriding
-or ignoring pretty much all of the LPAE config, so just implement these
-Mali details in a dedicated allocator instead of pretending to subclass
-the standard VMSA format.
+Initialize last_reset variable to INITIAL_JIFFIES, otherwise it is not
+possible to test H/W reset for first 5 minutes of system run.
 
-Fixes: d08d42de6432 ("iommu: io-pgtable: Add ARM Mali midgard MMU page table format")
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: e403fa31ed71 ("rt2x00: add restart hw")
+Reported-and-tested-by: Jonathan Liu <net147@gmail.com>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm.c | 53 +++++++++++++++++++++++++---------
- 1 file changed, 40 insertions(+), 13 deletions(-)
+ drivers/net/wireless/ralink/rt2x00/rt2x00debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 161a7d56264d0..9e35cd991f065 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -167,6 +167,9 @@
- #define ARM_MALI_LPAE_TTBR_READ_INNER	BIT(2)
- #define ARM_MALI_LPAE_TTBR_SHARE_OUTER	BIT(4)
- 
-+#define ARM_MALI_LPAE_MEMATTR_IMP_DEF	0x88ULL
-+#define ARM_MALI_LPAE_MEMATTR_WRITE_ALLOC 0x8DULL
-+
- /* IOPTE accessors */
- #define iopte_deref(pte,d) __va(iopte_to_paddr(pte, d))
- 
-@@ -1013,27 +1016,51 @@ arm_32_lpae_alloc_pgtable_s2(struct io_pgtable_cfg *cfg, void *cookie)
- static struct io_pgtable *
- arm_mali_lpae_alloc_pgtable(struct io_pgtable_cfg *cfg, void *cookie)
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00debug.c b/drivers/net/wireless/ralink/rt2x00/rt2x00debug.c
+index ef5f515122125..faf588ce7bd5a 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00debug.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00debug.c
+@@ -575,7 +575,7 @@ static ssize_t rt2x00debug_write_restart_hw(struct file *file,
  {
--	struct io_pgtable *iop;
-+	struct arm_lpae_io_pgtable *data;
-+
-+	/* No quirks for Mali (hopefully) */
-+	if (cfg->quirks)
-+		return NULL;
+ 	struct rt2x00debug_intf *intf =	file->private_data;
+ 	struct rt2x00_dev *rt2x00dev = intf->rt2x00dev;
+-	static unsigned long last_reset;
++	static unsigned long last_reset = INITIAL_JIFFIES;
  
- 	if (cfg->ias != 48 || cfg->oas > 40)
- 		return NULL;
- 
- 	cfg->pgsize_bitmap &= (SZ_4K | SZ_2M | SZ_1G);
--	iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
--	if (iop) {
--		u64 mair, ttbr;
- 
--		/* Copy values as union fields overlap */
--		mair = cfg->arm_lpae_s1_cfg.mair[0];
--		ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
-+	data = arm_lpae_alloc_pgtable(cfg);
-+	if (!data)
-+		return NULL;
- 
--		cfg->arm_mali_lpae_cfg.memattr = mair;
--		cfg->arm_mali_lpae_cfg.transtab = ttbr |
--			ARM_MALI_LPAE_TTBR_READ_INNER |
--			ARM_MALI_LPAE_TTBR_ADRMODE_TABLE;
--	}
-+	/*
-+	 * MEMATTR: Mali has no actual notion of a non-cacheable type, so the
-+	 * best we can do is mimic the out-of-tree driver and hope that the
-+	 * "implementation-defined caching policy" is good enough. Similarly,
-+	 * we'll use it for the sake of a valid attribute for our 'device'
-+	 * index, although callers should never request that in practice.
-+	 */
-+	cfg->arm_mali_lpae_cfg.memattr =
-+		(ARM_MALI_LPAE_MEMATTR_IMP_DEF
-+		 << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_NC)) |
-+		(ARM_MALI_LPAE_MEMATTR_WRITE_ALLOC
-+		 << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
-+		(ARM_MALI_LPAE_MEMATTR_IMP_DEF
-+		 << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
- 
--	return iop;
-+	data->pgd = __arm_lpae_alloc_pages(data->pgd_size, GFP_KERNEL, cfg);
-+	if (!data->pgd)
-+		goto out_free_data;
-+
-+	/* Ensure the empty pgd is visible before TRANSTAB can be written */
-+	wmb();
-+
-+	cfg->arm_mali_lpae_cfg.transtab = virt_to_phys(data->pgd) |
-+					  ARM_MALI_LPAE_TTBR_READ_INNER |
-+					  ARM_MALI_LPAE_TTBR_ADRMODE_TABLE;
-+	return &data->iop;
-+
-+out_free_data:
-+	kfree(data);
-+	return NULL;
- }
- 
- struct io_pgtable_init_fns io_pgtable_arm_64_lpae_s1_init_fns = {
+ 	if (!rt2x00_has_cap_restart_hw(rt2x00dev))
+ 		return -EOPNOTSUPP;
 -- 
 2.20.1
 
