@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8197BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945D9CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53165206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9152070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096661;
-	bh=QpdTIUoHXnQ//a5FIK2xqAkhXc25r9Ym7Ua1sb3vdPw=;
+	s=default; t=1572096667;
+	bh=1oQgUWXsnyNQ3oyHEoHZ3MyPQnHIg/LZon8cKAsd5ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=07zUiK+GlAW4r5hnVfI3K6Rl2xo9DnF3VsJwfKvtt+O8e9FO8I0u+2WjjjHE+Rktk
-	 wca6uOLrVDqS0MYAFilw2OG3CXE0dxr2Owf1N8CM0Z/fdkqTqDSe1k1AiLfCdVSTx3
-	 6ZgIR+HgQRZ1xfJOSTKjq95nge6kaQ7ydKv+pGrc=
+	b=RtDA/lgfywpj+dpStxXs9Hg88WaW2PX60/INEvELs3L35CZoRGy4Ag3AjqAXNryXs
+	 gdv44De1PWitsF5s36ke+QlZ/hQJJWx3z5kxPD9Rl1BEa98UjZK8h2gH+WnEx3E98r
+	 cG8Lwo2SMX0i/Qe4kd8bYqWkKNGS9OALi3+zmIB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfJZNTe (ORCPT
+        id S1728326AbfJZNTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41416 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:19:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbfJZNT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:26 -0400
+        id S1728238AbfJZNTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085C721655;
-        Sat, 26 Oct 2019 13:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4BC321D7F;
+        Sat, 26 Oct 2019 13:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095965;
-        bh=QpdTIUoHXnQ//a5FIK2xqAkhXc25r9Ym7Ua1sb3vdPw=;
+        s=default; t=1572095964;
+        bh=1oQgUWXsnyNQ3oyHEoHZ3MyPQnHIg/LZon8cKAsd5ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jrZdBXPDKboFd8M1wzPqeovYIBJC10STc1EFPn5Yifh3Vc5nzWXReoIixd2oyfyCW
-         1nV7jn1wu86HOhsHbNxf8OpwbLxi6V5Bc8nP5JQtyU1wFT4S0S4YQhHG49dj2u7KLN
-         Qf9ikqlemY+lUJCXgjEkLdM2KNXEc1HOt7qb4c8o=
+        b=H3Y35YkpgbGlAO4dCf4S8wLzw2qPzlQpF6FiQWLmu97VbOr5N6Bw+h+UapzlY14LO
+         UPI/ieB/Gjmp2EkFfyG0aHF6UOmeFeBXi1m1hIRlK0IJ/L4tsVLx66EA44v5J0mRY2
+         G/Lm3aB7Db+RSGGHSOwqodLQ3d2nDQjfncVQu21I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     David Howells <dhowells@redhat.com>,
-        syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com,
+        syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/59] rxrpc: Fix trace-after-put looking at the put peer record
-Date:   Sat, 26 Oct 2019 09:18:22 -0400
-Message-Id: <20191026131910.3435-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/59] rxrpc: Fix call ref leak
+Date:   Sat, 26 Oct 2019 09:18:21 -0400
+Message-Id: <20191026131910.3435-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -62,109 +62,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 55f6c98e3674ce16038a1949c3f9ca5a9a99f289 ]
+[ Upstream commit c48fc11b69e95007109206311b0187a3090591f3 ]
 
-rxrpc_put_peer() calls trace_rxrpc_peer() after it has done the decrement
-of the refcount - which looks at the debug_id in the peer record.  But
-unless the refcount was reduced to zero, we no longer have the right to
-look in the record and, indeed, it may be deleted by some other thread.
+When sendmsg() finds a call to continue on with, if the call is in an
+inappropriate state, it doesn't release the ref it just got on that call
+before returning an error.
 
-Fix this by getting the debug_id out before decrementing the refcount and
-then passing that into the tracepoint.
+This causes the following symptom to show up with kasan:
 
-This can cause the following symptoms:
+	BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940
+	net/rxrpc/output.c:635
+	Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
 
-    BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411
-    [inline]
-    BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0
-    net/rxrpc/peer_object.c:435
-    Read of size 8 at addr ffff888097ec0058 by task syz-executor823/24216
+where line 635 is:
 
-Fixes: 1159d4b496f5 ("rxrpc: Add a tracepoint to track rxrpc_peer refcounting")
-Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
+	whdr.epoch	= htonl(peer->local->rxnet->epoch);
+
+The local endpoint (which cannot be pinned by the call) has been released,
+but not the peer (which is pinned by the call).
+
+Fix this by releasing the call in the error path.
+
+Fixes: 37411cad633f ("rxrpc: Fix potential NULL-pointer exception")
+Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |  6 +++---
- net/rxrpc/peer_object.c      | 11 +++++++----
- 2 files changed, 10 insertions(+), 7 deletions(-)
+ net/rxrpc/sendmsg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 0fe169c6afd84..a08916eb76152 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -527,10 +527,10 @@ TRACE_EVENT(rxrpc_local,
- 	    );
- 
- TRACE_EVENT(rxrpc_peer,
--	    TP_PROTO(struct rxrpc_peer *peer, enum rxrpc_peer_trace op,
-+	    TP_PROTO(unsigned int peer_debug_id, enum rxrpc_peer_trace op,
- 		     int usage, const void *where),
- 
--	    TP_ARGS(peer, op, usage, where),
-+	    TP_ARGS(peer_debug_id, op, usage, where),
- 
- 	    TP_STRUCT__entry(
- 		    __field(unsigned int,	peer		)
-@@ -540,7 +540,7 @@ TRACE_EVENT(rxrpc_peer,
- 			     ),
- 
- 	    TP_fast_assign(
--		    __entry->peer = peer->debug_id;
-+		    __entry->peer = peer_debug_id;
- 		    __entry->op = op;
- 		    __entry->usage = usage;
- 		    __entry->where = where;
-diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
-index 71547e8673b99..72b4ad210426e 100644
---- a/net/rxrpc/peer_object.c
-+++ b/net/rxrpc/peer_object.c
-@@ -386,7 +386,7 @@ struct rxrpc_peer *rxrpc_get_peer(struct rxrpc_peer *peer)
- 	int n;
- 
- 	n = atomic_inc_return(&peer->usage);
--	trace_rxrpc_peer(peer, rxrpc_peer_got, n, here);
-+	trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, n, here);
- 	return peer;
- }
- 
-@@ -400,7 +400,7 @@ struct rxrpc_peer *rxrpc_get_peer_maybe(struct rxrpc_peer *peer)
- 	if (peer) {
- 		int n = atomic_fetch_add_unless(&peer->usage, 1, 0);
- 		if (n > 0)
--			trace_rxrpc_peer(peer, rxrpc_peer_got, n + 1, here);
-+			trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, n + 1, here);
- 		else
- 			peer = NULL;
- 	}
-@@ -430,11 +430,13 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
- void rxrpc_put_peer(struct rxrpc_peer *peer)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id;
- 	int n;
- 
- 	if (peer) {
-+		debug_id = peer->debug_id;
- 		n = atomic_dec_return(&peer->usage);
--		trace_rxrpc_peer(peer, rxrpc_peer_put, n, here);
-+		trace_rxrpc_peer(debug_id, rxrpc_peer_put, n, here);
- 		if (n == 0)
- 			__rxrpc_put_peer(peer);
- 	}
-@@ -447,10 +449,11 @@ void rxrpc_put_peer(struct rxrpc_peer *peer)
- void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = peer->debug_id;
- 	int n;
- 
- 	n = atomic_dec_return(&peer->usage);
--	trace_rxrpc_peer(peer, rxrpc_peer_put, n, here);
-+	trace_rxrpc_peer(debug_id, rxrpc_peer_put, n, here);
- 	if (n == 0) {
- 		hash_del_rcu(&peer->hash_link);
- 		list_del_init(&peer->keepalive_link);
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 5d6ab4f6fd7ab..3e54ead1e921a 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -661,6 +661,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
+ 		case RXRPC_CALL_SERVER_PREALLOC:
+ 		case RXRPC_CALL_SERVER_SECURING:
+ 		case RXRPC_CALL_SERVER_ACCEPTING:
++			rxrpc_put_call(call, rxrpc_call_put);
+ 			ret = -EBUSY;
+ 			goto error_release_sock;
+ 		default:
 -- 
 2.20.1
 
