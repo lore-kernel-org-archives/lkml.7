@@ -2,98 +2,122 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98212CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1215ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6AC21D7F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2530214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JuXXaXhX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZRJSPMG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfJZD4u (ORCPT
+        id S1725996AbfJZEZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 23:56:50 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:53877 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfJZD4t (ORCPT
+        Sat, 26 Oct 2019 00:25:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39816 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJZEZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 23:56:49 -0400
-Received: by mail-pg1-f202.google.com with SMTP id r25so3304169pga.20
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 20:56:49 -0700 (PDT)
+        Sat, 26 Oct 2019 00:25:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id y12so4733425ioa.6;
+        Fri, 25 Oct 2019 21:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=b8LgIDS8uYjP7Q7TgawjsrLFtXCRjRoP6jkAJEh906U=;
-        b=JuXXaXhXi+nTGs7zojcMItpPlj49E0LFJQLKeN1yOcaR7vz5g8dsTeMg9BgpBWUoIr
-         u7cOunX1hTpkI877x2ozjmFSBInn+9P4xHvBtxutgJX+tCm+8T33NDevMD9NvSkeaqnZ
-         hkw22b/iTEpegxUYXDqkatzCgVNoYQrdl38bmcQfHJtPuZPicejyiRLy7OJpINQVVqiU
-         4IkGJQwVY4J3E9XfdBeyb95jUc1b43VpJ7/nFMiQbEdUDIOUNruBJ4lFGipoQWAb270l
-         CW/fIVe7BTSRvInBVpBfvckchZZCRfIvjMXKSYgG4UAh5CphaPqNY9i6P/6GSx7ki3sM
-         2j1w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rHeRkxrHD5GX5EWDlQ98vXy+a783uwWXtM2tQKGXdug=;
+        b=gZRJSPMGxM1UPw1FdEvVFtbG4SqDkm9JN/GP92+GDY/bQVm73xFX5T2lkdkRAXJ9uw
+         4K927+DEPOjX0v2NhbOsDZjCOyTgg/PgzXqgwivEM6QeBnGHV0CLxMfG1XeHJninS6Jn
+         d3HUaWWFRPVWG+u/urTqRNtrGbQyLiZdTXq6MhvYlWjtoC7vQBAz3Rn6Mb3cxkdt1/Po
+         nUZHC0Eiw1kMMsF1PkX5MSMnY53N8J0Q3vB8vM9pSuefryXU7vr8bduXoiI452R8NKud
+         SwAzjj4yI/LFANHdC8I/m+7ITtp+iUIKP8EtGIgHjMBdZ+gFerdXZYr/VS+jNVHKs/wb
+         4H6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=b8LgIDS8uYjP7Q7TgawjsrLFtXCRjRoP6jkAJEh906U=;
-        b=Gfgfxu9MUkS1OJGIuGka3g5i2/5UgyJ5X8qZDEqqBO4OF+6ZSN5VmO33hUiYYhK3sr
-         sjEjKL21kPCBr4uRJoQrXWP7f1u37sKHvnVoqHXlbwMmHU/94gR+BOTO/I3ROCFvvx3Z
-         STZZbu3tzKh2rbMCXqaqFprG6l6XJsM97Yr3QbqlP2oEW4aWq05VtFVfQ1NR7fZhRgVo
-         dnvKP838u0MeDT9Ob0q4VkgiUWzHeo21mFth+4CgXcYF4xnuVw0S+k3p6ZZCtFwzd/fm
-         bAiaHJQu063lS75eQ0/LnCJ2oanGjM1TndGwEv8VFM968W9jlRezU23JebkWSMWKGCS2
-         PgTA==
-X-Gm-Message-State: APjAAAXtUiJpva5x+5DfMQZA11Yg6KzjZOV6dXLwlKyoMvblZ+QBnsKH
-        8S9Rtgh09WI2jh34+Ce+xeQ7xCaH6J2k
-X-Google-Smtp-Source: APXvYqx1yy33o8DVIsHjxflPNZrSq5klgCFfoDCd6f3P7ruCHL+9fxCmvf16XQozmxgneRc9zEgPh0Ancsbw
-X-Received: by 2002:a63:1a51:: with SMTP id a17mr8083130pgm.449.1572062208614;
- Fri, 25 Oct 2019 20:56:48 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 20:56:44 -0700
-Message-Id: <20191026035644.217548-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.rc0.303.g954a862665-goog
-Subject: [PATCH] perf annotate: fix heap overflow
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rHeRkxrHD5GX5EWDlQ98vXy+a783uwWXtM2tQKGXdug=;
+        b=rmvfTdm1a2c7VtsnYWtlwVg0qyEMQfFGHxiXqosXXhCvs4pG3viSHpDl/L7hO5D8vW
+         dQcGRdXbXp09DBNImH0+Ka1jb9NMFWI/qHIkPGpS7KSGSDdwU8QeUNYgIX0noYfPKcA7
+         TZ/+5A1bq71UiD0TxzkFzz0Sf1YyV0062kXTqODma012h0JsRZJWXAqnIZMWPBYhc0XT
+         wq8nEpHrSbsVnsZ4J7uepehiKit4cZBeO3b/+C8pM7oenKxUCinlsc0k6S7dg91U23Pt
+         YT4o2uwqULKJg5PDsgM/av2rF2TEIKK0v5wF9bSxxZSJG/Pi9kVk7IIemdGfUuLWUgeb
+         nSVA==
+X-Gm-Message-State: APjAAAVbugq37hNXtDg5c6BJsnstHz6WGtZnDGYbutbq4CY9H6uzu1h2
+        j4qJrTldkr7FLixWGHJoECA=
+X-Google-Smtp-Source: APXvYqwyjakLVT85RTryWMHfy6AKHouMUXRj6cegqSHqrg9AmKKAZBYTX2iEX2LdU+HgQdpe1I/m7g==
+X-Received: by 2002:a5d:980a:: with SMTP id a10mr7426699iol.225.1572063932870;
+        Fri, 25 Oct 2019 21:25:32 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id n123sm452068iod.62.2019.10.25.21.25.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2019 21:25:32 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: aspeed-video: Fix memory leaks in aspeed_video_probe
+Date:   Fri, 25 Oct 2019 23:25:18 -0500
+Message-Id: <20191026042519.29446-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix expand_tabs that copies the source lines '\0' and then appends
-another '\0' at a potentially out of bounds address.
+In the implementation of aspeed_video_probe() the allocated memory for
+video should be released in case of failure. Release video if either
+devm_ioremap_resource() or aspeed_video_init() or
+aspeed_video_setup_video() fails.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/aspeed-video.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ef1866a902c4..bee0fee122f8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1892,7 +1892,7 @@ static char *expand_tabs(char *line, char **storage, size_t *storage_len)
- 	}
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index eb12f3793062..8c473356132d 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -1663,18 +1663,24 @@ static int aspeed_video_probe(struct platform_device *pdev)
  
- 	/* Expand the last region. */
--	len = line_len + 1 - src;
-+	len = line_len - src;
- 	memcpy(&new_line[dst], &line[src], len);
- 	dst += len;
- 	new_line[dst] = '\0';
+ 	video->base = devm_ioremap_resource(video->dev, res);
+ 
+-	if (IS_ERR(video->base))
+-		return PTR_ERR(video->base);
++	if (IS_ERR(video->base)) {
++		rc = PTR_ERR(video->base);
++		goto free_video;
++	}
+ 
+ 	rc = aspeed_video_init(video);
+ 	if (rc)
+-		return rc;
++		goto free_video;
+ 
+ 	rc = aspeed_video_setup_video(video);
+ 	if (rc)
+-		return rc;
++		goto free_video;
+ 
+ 	return 0;
++
++free_video:
++	kfree(video);
++	return rc;
+ }
+ 
+ static int aspeed_video_remove(struct platform_device *pdev)
 -- 
-2.24.0.rc0.303.g954a862665-goog
+2.17.1
 
