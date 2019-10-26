@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE14CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54634CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141D0206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE74206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096552;
-	bh=0gMrf58nyOQicRuJIsnB9fgJMehx9YiSuKXoMEcGI28=;
+	s=default; t=1572096559;
+	bh=ixFLvos1aJl7DrgTalODnZ5vGMYZq/u5taDo7azZAEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eKqQ01AbHWuAl5sAp5aHyHD/DqDD/8WkDf0ILU98+XlLKlFNPbTte016TcAcjRejo
-	 nB+Us0mVzx5qHTU8mTKcj3lHPeFtR56jjqMFfcxhUBM17eM9Zr9SHhIqqCBREmdUUI
-	 Q1q2L90fWx9EACtVdtlPsbIHQtwMSKUNAw0/oT3I=
+	b=MmbnuZoJOvjG3I4VXHXyqO2Dgk8dMmkFA7Ve6l5Kad+u3VSapKsgvykbxFuAUD1Lr
+	 QjdsxqatXh6SNItbgqKiLnay9R8AZdBoOVZv05GxtmAunZG08hB98fWZTesk4MWT8+
+	 3zd+cG0g0XksOiVguGmQaFf9pcX1pgVjndKyJCjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbfJZN3K (ORCPT
+        id S1729298AbfJZN3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:29:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42316 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfJZNUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:34 -0400
+        id S1728640AbfJZNUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3717222BD;
-        Sat, 26 Oct 2019 13:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69B332070B;
+        Sat, 26 Oct 2019 13:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096033;
-        bh=0gMrf58nyOQicRuJIsnB9fgJMehx9YiSuKXoMEcGI28=;
+        s=default; t=1572096031;
+        bh=ixFLvos1aJl7DrgTalODnZ5vGMYZq/u5taDo7azZAEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XvT2yo23keVe2VXfZamfI/l28P5t+AkUnBS+mUn4TKR05cpORLtWlk7y4SqRt0GlP
-         6EM5NC6jZLzY5wNCm/0msNPhnBGpAvyOb1DbG1C+bmzeDslCbWZ+GoWMfZrxyJqkhi
-         IKvN6YNW9I5A+kCK/p0fr0L0VaNIiH3/jOdPWSHo=
+        b=zvIxMJDU27cb2tLgy7jjV20LlymYphgTqwnrfwRznE27VyH+UoauIYu0gkBhNoLzy
+         XTPK9U1OtF6yM+12ZQmCz5xkRdXxrIWLyQkzlAPPNzrgU2eZKJNr//l9khJgYhJrOY
+         RqKq73Xkc6QwjVgyUrFxyKt5Sdrhqdspra0w/j8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Edmund Nadolski <edmund.nadolski@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 43/59] nvme: Prevent resets during paused controller state
-Date:   Sat, 26 Oct 2019 09:18:54 -0400
-Message-Id: <20191026131910.3435-43-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 41/59] hrtimer: Annotate lockless access to timer->base
+Date:   Sat, 26 Oct 2019 09:18:52 -0400
+Message-Id: <20191026131910.3435-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -60,83 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4c75f877853cfa81b12374a07208e07b077f39b8 ]
+[ Upstream commit ff229eee3d897f52bd001c841f2d3cce8853ecdc ]
 
-A paused controller is doing critical internal activation work in the
-background. Prevent subsequent controller resets from occurring during
-this period by setting the controller state to RESETTING first. A helper
-function, nvme_try_sched_reset_work(), is introduced for these paths so
-they may continue with scheduling the reset_work after they've completed
-their uninterruptible critical section.
+Followup to commit dd2261ed45aa ("hrtimer: Protect lockless access
+to timer->base")
 
-Tested-by: Edmund Nadolski <edmund.nadolski@intel.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+lock_hrtimer_base() fetches timer->base without lock exclusion.
+
+Compiler is allowed to read timer->base twice (even if considered dumb)
+which could end up trying to lock migration_base and return
+&migration_base.
+
+  base = timer->base;
+  if (likely(base != &migration_base)) {
+
+       /* compiler reads timer->base again, and now (base == &migration_base)
+
+       raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
+       if (likely(base == timer->base))
+            return base; /* == &migration_base ! */
+
+Similarly the write sides must use WRITE_ONCE() to avoid store tearing.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191008173204.180879-1-edumazet@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+ kernel/time/hrtimer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index ddd5c72a565ad..95d4f1a6dd795 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -126,6 +126,21 @@ static void nvme_queue_scan(struct nvme_ctrl *ctrl)
- 		queue_work(nvme_wq, &ctrl->scan_work);
- }
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index e1a549c9e3991..64d20241cf89f 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -169,7 +169,7 @@ struct hrtimer_clock_base *lock_hrtimer_base(const struct hrtimer *timer,
+ 	struct hrtimer_clock_base *base;
  
-+/*
-+ * Use this function to proceed with scheduling reset_work for a controller
-+ * that had previously been set to the resetting state. This is intended for
-+ * code paths that can't be interrupted by other reset attempts. A hot removal
-+ * may prevent this from succeeding.
-+ */
-+static int nvme_try_sched_reset(struct nvme_ctrl *ctrl)
-+{
-+	if (ctrl->state != NVME_CTRL_RESETTING)
-+		return -EBUSY;
-+	if (!queue_work(nvme_reset_wq, &ctrl->reset_work))
-+		return -EBUSY;
-+	return 0;
-+}
-+
- int nvme_reset_ctrl(struct nvme_ctrl *ctrl)
- {
- 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_RESETTING))
-@@ -3445,13 +3460,13 @@ static void nvme_fw_act_work(struct work_struct *work)
- 		if (time_after(jiffies, fw_act_timeout)) {
- 			dev_warn(ctrl->device,
- 				"Fw activation timeout, reset controller\n");
--			nvme_reset_ctrl(ctrl);
--			break;
-+			nvme_try_sched_reset(ctrl);
-+			return;
+ 	for (;;) {
+-		base = timer->base;
++		base = READ_ONCE(timer->base);
+ 		if (likely(base != &migration_base)) {
+ 			raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
+ 			if (likely(base == timer->base))
+@@ -249,7 +249,7 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
+ 			return base;
+ 
+ 		/* See the comment in lock_hrtimer_base() */
+-		timer->base = &migration_base;
++		WRITE_ONCE(timer->base, &migration_base);
+ 		raw_spin_unlock(&base->cpu_base->lock);
+ 		raw_spin_lock(&new_base->cpu_base->lock);
+ 
+@@ -258,10 +258,10 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
+ 			raw_spin_unlock(&new_base->cpu_base->lock);
+ 			raw_spin_lock(&base->cpu_base->lock);
+ 			new_cpu_base = this_cpu_base;
+-			timer->base = base;
++			WRITE_ONCE(timer->base, base);
+ 			goto again;
  		}
- 		msleep(100);
- 	}
- 
--	if (ctrl->state != NVME_CTRL_LIVE)
-+	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
- 		return;
- 
- 	nvme_start_queues(ctrl);
-@@ -3467,7 +3482,13 @@ static void nvme_handle_aen_notice(struct nvme_ctrl *ctrl, u32 result)
- 		nvme_queue_scan(ctrl);
- 		break;
- 	case NVME_AER_NOTICE_FW_ACT_STARTING:
--		queue_work(nvme_wq, &ctrl->fw_act_work);
-+		/*
-+		 * We are (ab)using the RESETTING state to prevent subsequent
-+		 * recovery actions from interfering with the controller's
-+		 * firmware activation.
-+		 */
-+		if (nvme_change_ctrl_state(ctrl, NVME_CTRL_RESETTING))
-+			queue_work(nvme_wq, &ctrl->fw_act_work);
- 		break;
- #ifdef CONFIG_NVME_MULTIPATH
- 	case NVME_AER_NOTICE_ANA:
+-		timer->base = new_base;
++		WRITE_ONCE(timer->base, new_base);
+ 	} else {
+ 		if (new_cpu_base != this_cpu_base &&
+ 		    hrtimer_check_target(timer, new_base)) {
 -- 
 2.20.1
 
