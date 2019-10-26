@@ -2,107 +2,98 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B2FCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 15:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 15:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48D120863
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 15:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D1820863
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 15:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfJZPwo (ORCPT
+        id S1726378AbfJZPxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 11:52:44 -0400
-Received: from smtprelay0139.hostedemail.com ([216.40.44.139]:42968 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726162AbfJZPwo (ORCPT
+        Sat, 26 Oct 2019 11:53:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40100 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfJZPxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 11:52:44 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 3BE0718002DDF;
-        Sat, 26 Oct 2019 15:52:42 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: edge41_171fe4bc67f48
-X-Filterd-Recvd-Size: 3064
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 26 Oct 2019 15:52:38 +0000 (UTC)
-Message-ID: <ec9c36dddd1fb3d7cf339bcfba006f15f51b9120.camel@perches.com>
-Subject: Re: [PATCH] net: Zeroing the structure ethtool_wolinfo in
- ethtool_get_wol()
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        zhanglin <zhang.lin16@zte.com.cn>
-Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, mkubecek@suse.cz, jiri@mellanox.com,
-        pablo@netfilter.org, f.fainelli@gmail.com,
-        maxime.chevallier@bootlin.com, lirongqing@baidu.com,
-        vivien.didelot@gmail.com, linyunsheng@huawei.com,
-        natechancellor@gmail.com, arnd@arndb.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        jiang.xuexin@zte.com.cn
-Date:   Sat, 26 Oct 2019 08:52:35 -0700
-In-Reply-To: <20191026142458.GJ23523@kadam>
-References: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
-         <20191026142458.GJ23523@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sat, 26 Oct 2019 11:53:49 -0400
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iOONj-0005yK-PO; Sat, 26 Oct 2019 17:53:35 +0200
+Date:   Sat, 26 Oct 2019 17:53:34 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        vincenzo.frascino@arm.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
+In-Reply-To: <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr>
+Message-ID: <alpine.DEB.2.21.1910261751140.10190@nanos.tec.linutronix.de>
+References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr> <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de> <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr> <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-537953535-1572105215=:10190"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-10-26 at 17:24 +0300, Dan Carpenter wrote:
-> On Sat, Oct 26, 2019 at 03:54:16PM +0800, zhanglin wrote:
-> > memset() the structure ethtool_wolinfo that has padded bytes
-> > but the padded bytes have not been zeroed out.
-[]
-> > diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-[]
-> > @@ -1471,11 +1471,13 @@ static int ethtool_reset(struct net_device *dev, char __user *useraddr)
-> >  
-> >  static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
-> >  {
-> > -	struct ethtool_wolinf wol = { .cmd = ETHTOOL_GWOL };
-> > +	struct ethtool_wolinfo wol;
-> >  
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-537953535-1572105215=:10190
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Tue, 22 Oct 2019, Christophe Leroy wrote:
+> Le 22/10/2019 à 11:01, Christophe Leroy a écrit :
+> > Le 21/10/2019 à 23:29, Thomas Gleixner a écrit :
+> > > On Mon, 21 Oct 2019, Christophe Leroy wrote:
+> > > 
+> > > > This is a tentative to switch powerpc/32 vdso to generic C
+> > > > implementation.
+> > > > It will likely not work on 64 bits or even build properly at the moment.
+> > > > 
+> > > > powerpc is a bit special for VDSO as well as system calls in the
+> > > > way that it requires setting CR SO bit which cannot be done in C.
+> > > > Therefore, entry/exit and fallback needs to be performed in ASM.
+> > > > 
+> > > > To allow that, C fallbacks just return -1 and the ASM entry point
+> > > > performs the system call when the C function returns -1.
+> > > > 
+> > > > The performance is rather disappoiting. That's most likely all
+> > > > calculation in the C implementation are based on 64 bits math and
+> > > > converted to 32 bits at the very end. I guess C implementation should
+> > > > use 32 bits math like the assembly VDSO does as of today.
+> > > 
+> > > > gettimeofday:    vdso: 750 nsec/call
+> > > > 
+> > > > gettimeofday:    vdso: 1533 nsec/call
+> > 
+> > Small improvement (3%) with the proposed change:
+> > 
+> > gettimeofday:    vdso: 1485 nsec/call
 > 
-> How did you detect that they weren't initialized?  Is this a KASAN
-> thing?
+> By inlining do_hres() I get the following:
 > 
-> Most of the time GCC will zero out the padding bytes when you have an
-> initializer like this, but sometimes it just makes the intialization a
-> series of assignments which leaves the holes uninitialized.  I wish I
-> knew the rules so that I could check for it in Smatch.  Or even better,
-> I wish that there were an option to always zero the holes in this
-> situation...
+> gettimeofday:    vdso: 1072 nsec/call
 
-The standard doesn't specify what happens to the padding so
-it's not just for gcc, it's compiler dependent.
+What's the effect for clock_gettime()?
 
-So anything that's used in a copy_to_user with any possible
-padding should either be zalloc'd or memset before assigned.
+gettimeofday() is suboptimal vs. the PPC ASM variant due to an extra
+division, but clock_gettime() should be 1:1 comparable.
 
-In this case:
+Thanks,
 
-include/uapi/linux/ethtool.h:#define SOPASS_MAX 6
-
-and
-
-include/uapi/linux/ethtool.h:struct ethtool_wolinfo {
-include/uapi/linux/ethtool.h-   __u32   cmd;
-include/uapi/linux/ethtool.h-   __u32   supported;
-include/uapi/linux/ethtool.h-   __u32   wolopts;
-include/uapi/linux/ethtool.h-   __u8    sopass[SOPASS_MAX];
-include/uapi/linux/ethtool.h-};
-
-so there's likely a couple bytes of trailing padding.
-
-
+	tglx
+--8323329-537953535-1572105215=:10190--
