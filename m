@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8564CCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCC6CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D599214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D8F2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096145;
-	bh=rXRtwToaCGuYjPFcWlslPVaS9rgJjmE4QAtIj0oVni0=;
+	s=default; t=1572096147;
+	bh=/188A5AV3dmrQIx72hiPDcmOUbywvXgwVDruUKUM3fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiTewzD2lSPBXP+7DfqGwKp2GSvRUmDSaYRKoAxuKo0M/6anVU74QXGB4+dIYkyot
-	 ruDmyrzRyd5f3O1XH/HXz2B5NkoAHtizYOXr1dupb1Yc43lMLyOlSb7OSEZDwtkauj
-	 Mc3iz6LI55Cei1FC61PKBaLfv2QapbbthY5cTrFs=
+	b=L8rsE8wt6aqcUQFK/L/3IbWnouaOzi3HZSnw22df4uWKENnNmeLzqNIKh4mJGoyiY
+	 /4r20D+P9x4l4AC61orQu73R986FXK0kJJsdaKh1+uJA23mP1LeOjV2R7ooLJCpNig
+	 StH3c4k26tpNcg3+kBsssxVSo6qViexEIKt4ZqxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfJZNWX (ORCPT
+        id S1729371AbfJZNW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbfJZNWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:22:17 -0400
+        id S1728258AbfJZNWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C0121E6F;
-        Sat, 26 Oct 2019 13:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15DB4222C1;
+        Sat, 26 Oct 2019 13:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096136;
-        bh=rXRtwToaCGuYjPFcWlslPVaS9rgJjmE4QAtIj0oVni0=;
+        s=default; t=1572096142;
+        bh=/188A5AV3dmrQIx72hiPDcmOUbywvXgwVDruUKUM3fk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hACumDE9ZmHq5/EsEYAFwnjbrl9H+xbYDDagIEtqNYFkI0f71S5C2/jCBXs/n2ZAp
-         lhA/Zl3G6Lbew2+elmjxLi5EZKOcXu4VXkTlth+RPJxa6LF+27h/KYJaP+LVnLevXt
-         zGMPk8ZgMNL8TcJy4YtMigUUTGMfLFTHNLaRurNM=
+        b=cJFJhtkJKhOphjn8a4KvqXSgtpIP2QsoloQa9EeOr7vrhh4I+DUR7g1WwuWVYknze
+         8mvQbq2q13EkG034J83pFLtTe4bBeH4Fyhei/p6v2aEi4JRHBNcqhEOArNJdM6C/OI
+         ZTMs7K840s28kBPYheImBeJdpSR/4obLG3cv/fjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 33/33] scripts/gdb: fix debugging modules on s390
-Date:   Sat, 26 Oct 2019 09:21:10 -0400
-Message-Id: <20191026132110.4026-33-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/21] net: stmmac: gmac4+: Not all Unicast addresses may be available
+Date:   Sat, 26 Oct 2019 09:22:00 -0400
+Message-Id: <20191026132217.4380-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
-References: <20191026132110.4026-1-sashal@kernel.org>
+In-Reply-To: <20191026132217.4380-1-sashal@kernel.org>
+References: <20191026132217.4380-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,66 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 585d730d41120926e3f79a601edad3930fa28366 ]
+[ Upstream commit 25683bab09a70542b9f8e3e28f79b3369e56701f ]
 
-Currently lx-symbols assumes that module text is always located at
-module->core_layout->base, but s390 uses the following layout:
+Some setups may not have all Unicast addresses filters available. Check
+the number of available filters before trying to setup it.
 
-  +------+  <- module->core_layout->base
-  | GOT  |
-  +------+  <- module->core_layout->base + module->arch->plt_offset
-  | PLT  |
-  +------+  <- module->core_layout->base + module->arch->plt_offset +
-  | TEXT |     module->arch->plt_size
-  +------+
-
-Therefore, when trying to debug modules on s390, all the symbol
-addresses are skewed by plt_offset + plt_size.
-
-Fix by adding plt_offset + plt_size to module_addr in
-load_module_symbols().
-
-Link: http://lkml.kernel.org/r/20191017085917.81791-1-iii@linux.ibm.com
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Kieran Bingham <kbingham@kernel.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gdb/linux/symbols.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-index 004b0ac7fa72d..d869e588f4ec4 100644
---- a/scripts/gdb/linux/symbols.py
-+++ b/scripts/gdb/linux/symbols.py
-@@ -15,7 +15,7 @@ import gdb
- import os
- import re
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index f46f2bfc2cc09..4216c0a5eaf5a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -168,7 +168,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 	}
  
--from linux import modules
-+from linux import modules, utils
- 
- 
- if hasattr(gdb, 'Breakpoint'):
-@@ -116,6 +116,12 @@ lx-symbols command."""
-             module_file = self._get_module_file(module_name)
- 
-         if module_file:
-+            if utils.is_target_arch('s390'):
-+                # Module text is preceded by PLT stubs on s390.
-+                module_arch = module['arch']
-+                plt_offset = int(module_arch['plt_offset'])
-+                plt_size = int(module_arch['plt_size'])
-+                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
-             gdb.write("loading @{addr}: {filename}\n".format(
-                 addr=module_addr, filename=module_file))
-             cmdline = "add-symbol-file {filename} {addr}{sections}".format(
+ 	/* Handle multiple unicast addresses */
+-	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
++	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
+ 		/* Switch to promiscuous mode if more than 128 addrs
+ 		 * are required
+ 		 */
 -- 
 2.20.1
 
