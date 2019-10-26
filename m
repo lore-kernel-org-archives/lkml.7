@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7390BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F662CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A08420867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9DA21D7F
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096081;
-	bh=rXRtwToaCGuYjPFcWlslPVaS9rgJjmE4QAtIj0oVni0=;
+	s=default; t=1572096086;
+	bh=HnPFZ02iVfbrTtvh0ZuA8QJY/hHOGIQtzcqYGZ1T/1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V1zPfq172NG5dss5u6rnDkkGymAeGafiHlimSDKWLjpMHxkKFAwavxgcRX3lvYQ2C
-	 c+iCdTOlUjB6ELvmG5JjqLiO3iJpPCH3aJds+ak/MOdN6UDJKrbc7UOPM4rN9Yxvnj
-	 ox3BhWz3W+O2/fg2tNGazVK1Y6ZcqDlGhcRWjCwk=
+	b=J2spAelMSh3q/4nmKeqR4gizOtbya949T+74IxilwZO/NNNMDGMXHWOdr8U2jhlQB
+	 YVr857c6eC+jcF5sznkOg9RoYet6rmmWpDS6Lu0U1bAeAY2n5ioOhCp7BouPIABsbs
+	 weGE8CcrGp02M+RJT9GTTc8YvAEw4YCeMhjA1hZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfJZNVU (ORCPT
+        id S1728953AbfJZNVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42828 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbfJZNVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:08 -0400
+        id S1728839AbfJZNVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A243222BE;
-        Sat, 26 Oct 2019 13:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EBB42070B;
+        Sat, 26 Oct 2019 13:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096068;
-        bh=rXRtwToaCGuYjPFcWlslPVaS9rgJjmE4QAtIj0oVni0=;
+        s=default; t=1572096075;
+        bh=HnPFZ02iVfbrTtvh0ZuA8QJY/hHOGIQtzcqYGZ1T/1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dnuer8fx1PJNtlTZqT6Tkq6xgnatK21pyhL+1lrVZs97MivtSa5KntPwIY/ozdj0z
-         JxXCm0r1uAyzbV5IJH3oV8I9NMZlV8Ae5CsTuU8taAmO+F+yRgrtgSyuOZgKqo+x+X
-         7K6DIbVXAQYCb8JCOoatz5xPskiUztor8Z4Z/iD4=
+        b=k5aJPvc7LGTIlfA6zBJNsMWYKPHCIO2LIy3YHcbyOB/qdL3BBbRMt3/H1UZ15juYB
+         ID5Fn8UXti5IS6z2Gnn94Ub1mj6Cw7grAmOXi2bm7H7Qs3plBdE2tGXx2kPDZSU6Nu
+         4+evbH3Cy0IUJ2rfEDfIv6m5BSH/8O8tN8FpLLwM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 59/59] scripts/gdb: fix debugging modules on s390
-Date:   Sat, 26 Oct 2019 09:19:10 -0400
-Message-Id: <20191026131910.3435-59-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Hubert Feurstein <h.feurstein@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/33] net: dsa: b53: Do not clear existing mirrored port mask
+Date:   Sat, 26 Oct 2019 09:20:41 -0400
+Message-Id: <20191026132110.4026-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
-References: <20191026131910.3435-1-sashal@kernel.org>
+In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
+References: <20191026132110.4026-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,66 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 585d730d41120926e3f79a601edad3930fa28366 ]
+[ Upstream commit c763ac436b668d7417f0979430ec0312ede4093d ]
 
-Currently lx-symbols assumes that module text is always located at
-module->core_layout->base, but s390 uses the following layout:
+Clearing the existing bitmask of mirrored ports essentially prevents us
+from capturing more than one port at any given time. This is clearly
+wrong, do not clear the bitmask prior to setting up the new port.
 
-  +------+  <- module->core_layout->base
-  | GOT  |
-  +------+  <- module->core_layout->base + module->arch->plt_offset
-  | PLT  |
-  +------+  <- module->core_layout->base + module->arch->plt_offset +
-  | TEXT |     module->arch->plt_size
-  +------+
-
-Therefore, when trying to debug modules on s390, all the symbol
-addresses are skewed by plt_offset + plt_size.
-
-Fix by adding plt_offset + plt_size to module_addr in
-load_module_symbols().
-
-Link: http://lkml.kernel.org/r/20191017085917.81791-1-iii@linux.ibm.com
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Kieran Bingham <kbingham@kernel.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Hubert Feurstein <h.feurstein@gmail.com>
+Fixes: ed3af5fd08eb ("net: dsa: b53: Add support for port mirroring")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/gdb/linux/symbols.py | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/dsa/b53/b53_common.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-index 004b0ac7fa72d..d869e588f4ec4 100644
---- a/scripts/gdb/linux/symbols.py
-+++ b/scripts/gdb/linux/symbols.py
-@@ -15,7 +15,7 @@ import gdb
- import os
- import re
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index acf64d4cd94cb..434e6dced6b7f 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1431,7 +1431,6 @@ int b53_mirror_add(struct dsa_switch *ds, int port,
+ 		loc = B53_EG_MIR_CTL;
  
--from linux import modules
-+from linux import modules, utils
+ 	b53_read16(dev, B53_MGMT_PAGE, loc, &reg);
+-	reg &= ~MIRROR_MASK;
+ 	reg |= BIT(port);
+ 	b53_write16(dev, B53_MGMT_PAGE, loc, reg);
  
- 
- if hasattr(gdb, 'Breakpoint'):
-@@ -116,6 +116,12 @@ lx-symbols command."""
-             module_file = self._get_module_file(module_name)
- 
-         if module_file:
-+            if utils.is_target_arch('s390'):
-+                # Module text is preceded by PLT stubs on s390.
-+                module_arch = module['arch']
-+                plt_offset = int(module_arch['plt_offset'])
-+                plt_size = int(module_arch['plt_size'])
-+                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
-             gdb.write("loading @{addr}: {filename}\n".format(
-                 addr=module_addr, filename=module_file))
-             cmdline = "add-symbol-file {filename} {addr}{sections}".format(
 -- 
 2.20.1
 
