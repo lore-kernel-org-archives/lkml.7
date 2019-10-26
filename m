@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107FCCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C05CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA75F20867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D965214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096689;
-	bh=1EsJ6qn9dEwaKmDyj1yN7qxoHEKJa6koM+zwdvlK2Y8=;
+	s=default; t=1572096699;
+	bh=J02sUj+m/UPBOLsmviY3nnf45uUHrYc2ULlOdHBWVlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q6Itn7PTGqS+yEBfIkGWlClrZtO6sSb3KZNNT5ZSqP+5+9eR8FvjhaMELcthRtnF2
-	 Sap2gpEMukXgoPHuHvfDTom5zILyKplj3kC0opoCxM5iQap2fo/wpZ1PjJUdXQxMsv
-	 yklaNsZ1wXJeRb0filjff9iMGfrUrdpWUuD8XXug=
+	b=ilGeFgEp+kaXxll2oMUQYDbP4uJSvecrXUGXGjtOe3Hxz7qpyNKE05FLnwSGL2NXv
+	 0Tsxk53SbcUuoCi8kC90ZmRr1KA+Hs6zgLJxe+DI1K+Cjs1b7EZwykU8zehT8HUa/6
+	 NeEnS7SxB0sId3ISJU8L+aRCbPBRDFA0XFQ+UY6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfJZNb2 (ORCPT
+        id S1728733AbfJZNbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728215AbfJZNTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:19 -0400
+        id S1726330AbfJZNTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E197222C1;
-        Sat, 26 Oct 2019 13:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF401222C9;
+        Sat, 26 Oct 2019 13:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095958;
-        bh=1EsJ6qn9dEwaKmDyj1yN7qxoHEKJa6koM+zwdvlK2Y8=;
+        s=default; t=1572095955;
+        bh=J02sUj+m/UPBOLsmviY3nnf45uUHrYc2ULlOdHBWVlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SYEf55dztb0rAa757BzsPFskNa5zBDuv0nwWreoEArlgyHWahoY4+qGsJ/XZ2+ICA
-         4UK5TvSUFU68I+Nn/9FSuFzBpTlqTraZgV/SCnEmccHSqumCGcXTePdLP3DD+sYbYN
-         zdyHA3izMQXh3+QoFKjrI1RmtIAG0IcGvx4KWNlQ=
+        b=dEplbGKybTebsDeLiGalxBAkO0CoSkzyGEDbm8jJrpb1zl4wirZW+tpV/lEl08LgB
+         3EjY3lOqKl784dpdzEWW9801ZZXs56pOsp0CpSC7O+WKQb/J7AZ24IiiL4kR5+aqvt
+         KoqzhX4pemOM27niBlr7mj7UIubDrOezoIzryAuk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/59] net: stmmac: gmac4+: Not all Unicast addresses may be available
-Date:   Sat, 26 Oct 2019 09:18:18 -0400
-Message-Id: <20191026131910.3435-7-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>,
+        Judy Brock <judy.brock@samsung.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 04/59] nvme: fix possible deadlock when nvme_update_formats fails
+Date:   Sat, 26 Oct 2019 09:18:15 -0400
+Message-Id: <20191026131910.3435-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,34 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 25683bab09a70542b9f8e3e28f79b3369e56701f ]
+[ Upstream commit 6abff1b9f7b8884a46b7bd80b49e7af0b5625aeb ]
 
-Some setups may not have all Unicast addresses filters available. Check
-the number of available filters before trying to setup it.
+nvme_update_formats may fail to revalidate the namespace and
+attempt to remove the namespace. This may lead to a deadlock
+as nvme_ns_remove will attempt to acquire the subsystem lock
+which is already acquired by the passthru command with effects.
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Move the invalid namepsace removal to after the passthru command
+releases the subsystem lock.
+
+Reported-by: Judy Brock <judy.brock@samsung.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 48cf5e2b24417..bc8871e7351f2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -443,7 +443,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 	}
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index ae0b01059fc6d..ddd5c72a565ad 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1201,8 +1201,6 @@ static void nvme_update_formats(struct nvme_ctrl *ctrl)
+ 		if (ns->disk && nvme_revalidate_disk(ns->disk))
+ 			nvme_set_queue_dying(ns);
+ 	up_read(&ctrl->namespaces_rwsem);
+-
+-	nvme_remove_invalid_namespaces(ctrl, NVME_NSID_ALL);
+ }
  
- 	/* Handle multiple unicast addresses */
--	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
-+	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
- 		/* Switch to promiscuous mode if more than 128 addrs
- 		 * are required
- 		 */
+ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+@@ -1218,6 +1216,7 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+ 		nvme_unfreeze(ctrl);
+ 		nvme_mpath_unfreeze(ctrl->subsys);
+ 		mutex_unlock(&ctrl->subsys->lock);
++		nvme_remove_invalid_namespaces(ctrl, NVME_NSID_ALL);
+ 		mutex_unlock(&ctrl->scan_lock);
+ 	}
+ 	if (effects & NVME_CMD_EFFECTS_CCC)
 -- 
 2.20.1
 
