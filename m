@@ -2,120 +2,213 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6168ECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 00:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE36ACA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 01:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3025B206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 00:43:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Vh0c6Dcg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MnOao79j"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB6F20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 01:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbfJZAn4 (ORCPT
+        id S1726079AbfJZBD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 20:43:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33844 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbfJZAn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 20:43:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6ADF160D52; Sat, 26 Oct 2019 00:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572050635;
-        bh=gOp7bQ1U59fV0k/2DQy6TdOt9caAaesaRY1XzyZQLVs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Vh0c6Dcg8c+yzCVre1dnWFc+tHk4i26zGkn7zokzBTZ+l4mKqJJAfYCx/ONJMCerV
-         qGVjl7kPSHE7BjaP/eqzpY+bgokFI4pDusa3XdBEiL4PLOiH6e2MX3SEPayuSHEPMx
-         3Fp6SW48c5sCyG8Giu/pEiHVjr6v+CQRrJ0z6Wuk=
-Received: from isaacm-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: isaacm@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EDD2160240;
-        Sat, 26 Oct 2019 00:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572050634;
-        bh=gOp7bQ1U59fV0k/2DQy6TdOt9caAaesaRY1XzyZQLVs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MnOao79jyuA6Yl413hUwILw4FIwIL/+LTvHhaeULPa49c62Ggu6LtqGgIgSauXZR1
-         6A5n4xSYOq4TM89S7YcU8n1KiuWywZCGArX9cBIH718RnPdYNTZG1F+cBdSsbe8ynl
-         daKkvUF8I4PBjKyWMnYB3+X2MWtYRNSSQUbc1Lno=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EDD2160240
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
-From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
-To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>, joro@8bytes.org,
-        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        will@kernel.org, pratikp@codeaurora.org, lmark@codeaurora.org
-Subject: [PATCH] iommu/dma: Add support for DMA_ATTR_SYS_CACHE
-Date:   Fri, 25 Oct 2019 17:43:36 -0700
-Message-Id: <1572050616-6143-1-git-send-email-isaacm@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 25 Oct 2019 21:03:29 -0400
+Received: from mga18.intel.com ([134.134.136.126]:19624 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbfJZBD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 25 Oct 2019 21:03:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Oct 2019 18:03:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,230,1569308400"; 
+   d="scan'208";a="224087883"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Oct 2019 18:03:25 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v7 08/11] iommu/vt-d: Misc macro clean up for SVM
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-9-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <c07409eb-83e1-58eb-92d9-7e3c8208d5b7@linux.intel.com>
+Date:   Sat, 26 Oct 2019 09:00:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1571946904-86776-9-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, IOMMU_QCOM_SYS_CACHE exists to allow non-coherent
-I/O masters on Qualcomm SoCs to upgrade to caching their
-buffers in the outer-level/system cache on these platforms.
-However, these masters are limited to managing the mapping
-of these buffers themselves through the IOMMU framework,
-as opposed to allowing the DMA-IOMMU framework to handle it,
-since there is no DMA attribute that maps to the
-IOMMU_QCOM_SYS_CACHE protection bit.
+Hi,
 
-Thus, introduce DMA_ATTR_SYS_CACHE so that clients
-can use the DMA-IOMMU layer to map their DMA buffers with
-the correct memory attributes to allow the buffers to be
-cached in the outer-level/system cache.
+On 10/25/19 3:55 AM, Jacob Pan wrote:
+> Use combined macros for_each_svm_dev() to simplify SVM device iteration
+> and error checking.
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> ---
+>   drivers/iommu/intel-svm.c | 89 ++++++++++++++++++++++-------------------------
+>   1 file changed, 42 insertions(+), 47 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index a9a7f85a09bc..a18b02a9709d 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -212,6 +212,10 @@ static const struct mmu_notifier_ops intel_mmuops = {
+>   static DEFINE_MUTEX(pasid_mutex);
+>   static LIST_HEAD(global_svm_list);
+>   
+> +#define for_each_svm_dev(svm, dev)			\
+> +	list_for_each_entry(sdev, &svm->devs, list)	\
+> +	if (dev == sdev->dev)				\
+> +
+>   int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_ops *ops)
+>   {
+>   	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> @@ -257,15 +261,13 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
+>   				goto out;
+>   			}
+>   
+> -			list_for_each_entry(sdev, &svm->devs, list) {
+> -				if (dev == sdev->dev) {
+> -					if (sdev->ops != ops) {
+> -						ret = -EBUSY;
+> -						goto out;
+> -					}
+> -					sdev->users++;
+> -					goto success;
+> +			for_each_svm_dev(svm, dev) {
+> +				if (sdev->ops != ops) {
+> +					ret = -EBUSY;
+> +					goto out;
+>   				}
+> +				sdev->users++;
+> +				goto success;
+>   			}
+>   
+>   			break;
+> @@ -402,50 +404,43 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
+>   		goto out;
+>   
+>   	svm = ioasid_find(NULL, pasid, NULL);
+> -	if (IS_ERR(svm)) {
+> +	if (IS_ERR_OR_NULL(svm)) {
+>   		ret = PTR_ERR(svm);
+>   		goto out;
+>   	}
+>   
+> -	if (!svm)
+> -		goto out;
 
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
----
- drivers/iommu/dma-iommu.c   | 2 ++
- include/linux/dma-mapping.h | 8 ++++++++
- 2 files changed, 10 insertions(+)
+If svm == NULL here, this function will return success. This isn't
+expected, right?
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index f321279..c433ece 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -369,6 +369,8 @@ static int dma_info_to_prot(enum dma_data_direction dir, bool coherent,
- 
- 	if (attrs & DMA_ATTR_PRIVILEGED)
- 		prot |= IOMMU_PRIV;
-+	if (attrs & DMA_ATTR_SYS_CACHE)
-+		prot |= IOMMU_QCOM_SYS_CACHE;
- 
- 	switch (dir) {
- 	case DMA_BIDIRECTIONAL:
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 4a1c4fc..bdd4dcf 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -71,6 +71,14 @@
- #define DMA_ATTR_PRIVILEGED		(1UL << 9)
- 
- /*
-+ * DMA_ATTR_SYS_CACHE: This is a hint that non-coherent masters can use to
-+ * tell the DMA-IOMMU layer to map their DMA buffers with the correct memory
-+ * attributes that allow these buffers to be cached in an outer-level/system
-+ * cache.
-+ */
-+#define DMA_ATTR_SYS_CACHE		(1UL << 10)
-+
-+/*
-  * A dma_addr_t can hold any valid DMA or bus address for the platform.
-  * It can be given to a device to use as a DMA source or target.  A CPU cannot
-  * reference a dma_addr_t directly because there may be translation between
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Others looks good to me.
 
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Best regards,
+baolu
+
+> -
+> -	list_for_each_entry(sdev, &svm->devs, list) {
+> -		if (dev == sdev->dev) {
+> -			ret = 0;
+> -			sdev->users--;
+> -			if (!sdev->users) {
+> -				list_del_rcu(&sdev->list);
+> -				/* Flush the PASID cache and IOTLB for this device.
+> -				 * Note that we do depend on the hardware *not* using
+> -				 * the PASID any more. Just as we depend on other
+> -				 * devices never using PASIDs that they have no right
+> -				 * to use. We have a *shared* PASID table, because it's
+> -				 * large and has to be physically contiguous. So it's
+> -				 * hard to be as defensive as we might like. */
+> -				intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
+> -				intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
+> -				kfree_rcu(sdev, rcu);
+> -
+> -				if (list_empty(&svm->devs)) {
+> -					/* Clear private data so that free pass check */
+> -					ioasid_set_data(svm->pasid, NULL);
+> -					ioasid_free(svm->pasid);
+> -					if (svm->mm)
+> -						mmu_notifier_unregister(&svm->notifier, svm->mm);
+> -
+> -					list_del(&svm->list);
+> -
+> -					/* We mandate that no page faults may be outstanding
+> -					 * for the PASID when intel_svm_unbind_mm() is called.
+> -					 * If that is not obeyed, subtle errors will happen.
+> -					 * Let's make them less subtle... */
+> -					memset(svm, 0x6b, sizeof(*svm));
+> -					kfree(svm);
+> -				}
+> +	for_each_svm_dev(svm, dev) {
+> +		ret = 0;
+> +		sdev->users--;
+> +		if (!sdev->users) {
+> +			list_del_rcu(&sdev->list);
+> +			/* Flush the PASID cache and IOTLB for this device.
+> +			 * Note that we do depend on the hardware *not* using
+> +			 * the PASID any more. Just as we depend on other
+> +			 * devices never using PASIDs that they have no right
+> +			 * to use. We have a *shared* PASID table, because it's
+> +			 * large and has to be physically contiguous. So it's
+> +			 * hard to be as defensive as we might like. */
+> +			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
+> +			intel_flush_svm_range_dev(svm, sdev, 0, -1, 0);
+> +			kfree_rcu(sdev, rcu);
+> +
+> +			if (list_empty(&svm->devs)) {
+> +				/* Clear private data so that free pass check */
+> +				ioasid_set_data(svm->pasid, NULL);
+> +				ioasid_free(svm->pasid);
+> +				if (svm->mm)
+> +					mmu_notifier_unregister(&svm->notifier, svm->mm);
+> +				list_del(&svm->list);
+> +				/* We mandate that no page faults may be outstanding
+> +				 * for the PASID when intel_svm_unbind_mm() is called.
+> +				 * If that is not obeyed, subtle errors will happen.
+> +				 * Let's make them less subtle... */
+> +				memset(svm, 0x6b, sizeof(*svm));
+> +				kfree(svm);
+>   			}
+> -			break;
+>   		}
+> +		break;
+>   	}
+>    out:
+>   	mutex_unlock(&pasid_mutex);
+> @@ -581,7 +576,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
+>   			 * to unbind the mm while any page faults are outstanding.
+>   			 * So we only need RCU to protect the internal idr code. */
+>   			rcu_read_unlock();
+> -			if (IS_ERR(svm) || !svm) {
+> +			if (IS_ERR_OR_NULL(svm)) {
+>   				pr_err("%s: Page request for invalid PASID %d: %08llx %08llx\n",
+>   				       iommu->name, req->pasid, ((unsigned long long *)req)[0],
+>   				       ((unsigned long long *)req)[1]);
+> 
