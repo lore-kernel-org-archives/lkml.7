@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BE2CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650AFCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B22821897
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDDC20867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096931;
-	bh=2t4kefleT8FFtV7eoVBTsdG7Vg2fUXwzYOT4ZkZ0+lU=;
+	s=default; t=1572096953;
+	bh=n8LV+Zy/n4u8Rf26UdYHsaoqWPPxw9wALgq1SRMH8WM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NAfXFs2P06JALs/DIJKx3vREbF1LAGuY869bvpCHmV1g9L58clViH0ZzrztgeMzmt
-	 EXK0CaSWtzAu1FcKfD8hs9i93/401G/lQ1e0Ktqs5VYEYa/5mcjzpCDnEB0potCNLV
-	 K5i2s87KtRuvFvI0KAyUlfmvmcRSUPv+nTotxptk=
+	b=XkJAC/rTW1XwhGwCbJHyFLpUEwbN2mCJskxCMxDkPnqUgFVa5eYrw2rpzFAfF8AG/
+	 k/CPr5xsEgRYC/DIVbgDpNehIB67iMpEIkavOafdnstKmbusp3mtyoCewLA3pcCWdx
+	 1uDdIJBE0WwTWfi/RNYEjpWSisg1At7TwGjimuqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbfJZNfa (ORCPT
+        id S1727078AbfJZNQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38760 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727209AbfJZNRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:12 -0400
+        id S1727001AbfJZNQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 965F321655;
-        Sat, 26 Oct 2019 13:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C0321E6F;
+        Sat, 26 Oct 2019 13:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095831;
-        bh=2t4kefleT8FFtV7eoVBTsdG7Vg2fUXwzYOT4ZkZ0+lU=;
+        s=default; t=1572095814;
+        bh=n8LV+Zy/n4u8Rf26UdYHsaoqWPPxw9wALgq1SRMH8WM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i/yaQMwH335Y0j7eqlc9BPB80bfBySTbrx9m398LEUzF5MUid/E0Rm0SQmIsUkC/5
-         f8Zt37a+V2/31jZmVJ3Y3bCq9BdJ48og0WjOsIMTJ9proqXVKBwr5phHJZOYfahAm5
-         LxCCFAtX+2TZC5RnjmNvUxHHQxxT2oC8yDNT0E3U=
+        b=1a/0ZsceQky8W6QCWEgW84LbJjDzi3JLya3BftgEBM4OaYTkikAA+q6GeL1WsraKl
+         hljfG3VypbqlVymWI/DStb+Cqn3Tfe/EbjqUWASmV7dNgD7+ik1yMvEgRucMmFiF8x
+         kpTHUmWV1kAltRsEZSPFQluEeWzXeTd3COMdQgmE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Jiri Benc <jbenc@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Petar Penkov <ppenkov@google.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 37/99] iwlwifi: pcie: fix memory leaks in iwl_pcie_ctxt_info_gen3_init
-Date:   Sat, 26 Oct 2019 09:14:58 -0400
-Message-Id: <20191026131600.2507-37-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 29/99] selftests/bpf: Set rp_filter in test_flow_dissector
+Date:   Sat, 26 Oct 2019 09:14:50 -0400
+Message-Id: <20191026131600.2507-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -60,101 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit 0f4f199443faca715523b0659aa536251d8b978f ]
+[ Upstream commit fd418b01fe26c2430b1091675cceb3ab2b52e1e0 ]
 
-In iwl_pcie_ctxt_info_gen3_init there are cases that the allocated dma
-memory is leaked in case of error.
+Many distributions enable rp_filter. However, the flow dissector test
+generates packets that have 1.1.1.1 set as (inner) source address without
+this address being reachable. This causes the selftest to fail.
 
-DMA memories prph_scratch, prph_info, and ctxt_info_gen3 are allocated
-and initialized to be later assigned to trans_pcie. But in any error case
-before such assignment the allocated memories should be released.
+The selftests should not assume a particular initial configuration. Switch
+off rp_filter.
 
-First of such error cases happens when iwl_pcie_init_fw_sec fails.
-Current implementation correctly releases prph_scratch. But in two
-sunsequent error cases where dma_alloc_coherent may fail, such
-releases are missing.
-
-This commit adds release for prph_scratch when allocation for
-prph_info fails, and adds releases for prph_scratch and prph_info when
-allocation for ctxt_info_gen3 fails.
-
-Fixes: 2ee824026288 ("iwlwifi: pcie: support context information for 22560 devices")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: 50b3ed57dee9 ("selftests/bpf: test bpf flow dissection")
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Petar Penkov <ppenkov@google.com>
+Link: https://lore.kernel.org/bpf/513a298f53e99561d2f70b2e60e2858ea6cda754.1570539863.git.jbenc@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../intel/iwlwifi/pcie/ctxt-info-gen3.c       | 36 +++++++++++++------
- 1 file changed, 25 insertions(+), 11 deletions(-)
+ tools/testing/selftests/bpf/test_flow_dissector.sh | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
-index 5e86783d616b6..ab48ed258b1d7 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
-@@ -107,13 +107,9 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
+diff --git a/tools/testing/selftests/bpf/test_flow_dissector.sh b/tools/testing/selftests/bpf/test_flow_dissector.sh
+index d23d4da66b834..e2d06191bd35c 100755
+--- a/tools/testing/selftests/bpf/test_flow_dissector.sh
++++ b/tools/testing/selftests/bpf/test_flow_dissector.sh
+@@ -63,6 +63,9 @@ fi
  
- 	/* allocate ucode sections in dram and set addresses */
- 	ret = iwl_pcie_init_fw_sec(trans, fw, &prph_scratch->dram);
--	if (ret) {
--		dma_free_coherent(trans->dev,
--				  sizeof(*prph_scratch),
--				  prph_scratch,
--				  trans_pcie->prph_scratch_dma_addr);
--		return ret;
--	}
-+	if (ret)
-+		goto err_free_prph_scratch;
-+
+ # Setup
+ tc qdisc add dev lo ingress
++echo 0 > /proc/sys/net/ipv4/conf/default/rp_filter
++echo 0 > /proc/sys/net/ipv4/conf/all/rp_filter
++echo 0 > /proc/sys/net/ipv4/conf/lo/rp_filter
  
- 	/* Allocate prph information
- 	 * currently we don't assign to the prph info anything, but it would get
-@@ -121,16 +117,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
- 	prph_info = dma_alloc_coherent(trans->dev, sizeof(*prph_info),
- 				       &trans_pcie->prph_info_dma_addr,
- 				       GFP_KERNEL);
--	if (!prph_info)
--		return -ENOMEM;
-+	if (!prph_info) {
-+		ret = -ENOMEM;
-+		goto err_free_prph_scratch;
-+	}
- 
- 	/* Allocate context info */
- 	ctxt_info_gen3 = dma_alloc_coherent(trans->dev,
- 					    sizeof(*ctxt_info_gen3),
- 					    &trans_pcie->ctxt_info_dma_addr,
- 					    GFP_KERNEL);
--	if (!ctxt_info_gen3)
--		return -ENOMEM;
-+	if (!ctxt_info_gen3) {
-+		ret = -ENOMEM;
-+		goto err_free_prph_info;
-+	}
- 
- 	ctxt_info_gen3->prph_info_base_addr =
- 		cpu_to_le64(trans_pcie->prph_info_dma_addr);
-@@ -186,6 +186,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
- 		iwl_set_bit(trans, CSR_GP_CNTRL, CSR_AUTO_FUNC_INIT);
- 
- 	return 0;
-+
-+err_free_prph_info:
-+	dma_free_coherent(trans->dev,
-+			  sizeof(*prph_info),
-+			prph_info,
-+			trans_pcie->prph_info_dma_addr);
-+
-+err_free_prph_scratch:
-+	dma_free_coherent(trans->dev,
-+			  sizeof(*prph_scratch),
-+			prph_scratch,
-+			trans_pcie->prph_scratch_dma_addr);
-+	return ret;
-+
- }
- 
- void iwl_pcie_ctxt_info_gen3_free(struct iwl_trans *trans)
+ echo "Testing IPv4..."
+ # Drops all IP/UDP packets coming from port 9
 -- 
 2.20.1
 
