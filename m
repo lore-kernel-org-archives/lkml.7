@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9496CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F4CCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F15B205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDCA21D7F
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572077804;
-	bh=GAJf0+ZsT9zLGFJe4VA1UIx4iLZZPPhj7MOQvVx/7gw=;
+	s=default; t=1572077839;
+	bh=z3MpLB+xELO0dgBsp/trPGrwsDL2LK34945azngzhgc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PmiOrVfHIuI+t8N1FZ4tVyIxwHMIcnmBMSnskM1tdqM9YkbnFVeYGQXPbhWItG1Ak
-	 0MT/fh37blvGl84HFAn23inMj+Ti0mcrB/ZdT6C3ZuMoXprCmarQu9ew/Eoapwyz47
-	 6/XkoGT9ITGECvK3XHZshOblVJ5fWRszt5wkDjOg=
+	b=c96Jx0WnxNqFqfozvObJX8v36VlohAl2XaiU6NvueJ+jmvkQFi6ckpCQMmoq+pz0N
+	 p/sVWuDPnpeekx6ggdWemmPDWmRSPmhnpWfWe8lCYur7P2EhrhdBgRZUOSFFXjhpxu
+	 7zxk6wt7javCv6wMWrwHD52/WjiyJjXLCu2h2324=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfJZIQn (ORCPT
+        id S1726214AbfJZIRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 04:16:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 04:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfJZIQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 04:16:42 -0400
+        id S1725996AbfJZIRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 04:17:18 -0400
 Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87EE121D7F;
-        Sat, 26 Oct 2019 08:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D054C205F4;
+        Sat, 26 Oct 2019 08:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572077802;
-        bh=GAJf0+ZsT9zLGFJe4VA1UIx4iLZZPPhj7MOQvVx/7gw=;
+        s=default; t=1572077837;
+        bh=z3MpLB+xELO0dgBsp/trPGrwsDL2LK34945azngzhgc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cGHdFdVpjZ6TFyXj2mLLzZnSb1d/zbaYiGMhJO9BxsomW3x+jE30Xxku2F1x+ZbsR
-         EBhVxNs/BYHM6s7D72V5dapQruo2Gdb79/GTnSeJIC7bbcdqPNNz5LKe692y9TxvTL
-         0J+tx83UdQ/w/QTFpJZVsCEYdN1f1H1j9MzaVtRo=
-Date:   Sat, 26 Oct 2019 16:16:26 +0800
+        b=rA20J243awBpAOyf+i9/SIbrZAqIvm3X/jw4VdNHLnf+jVhsx2r8rXDfExzGecFN3
+         HYvDNsvOIy9CF1Y80e3AR8L4hmBS0qwvy7iFPx2nmFqvCCxj9jOmGrlTrmY1sb2K+R
+         mRFaLo5Vq3F9hC8IgPQU3YFpo6OZLg35rG21czbw=
+Date:   Sat, 26 Oct 2019 16:17:00 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
@@ -47,25 +47,25 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
         gustavo@embeddedor.com, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Linux-imx@nxp.com
-Subject: Re: [PATCH V2] clk: imx7ulp: Correct system clock source option #7
-Message-ID: <20191026081625.GC14401@dragon>
-References: <1571014565-4807-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] clk: imx7ulp: Correct DDR clock mux options
+Message-ID: <20191026081658.GD14401@dragon>
+References: <1570784940-5965-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1571014565-4807-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1570784940-5965-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 08:56:05AM +0800, Anson Huang wrote:
-> In the latest reference manual Rev.0,06/2019, the SCS's option #7
-> is no longer from upll, it is reserved, update clock driver accordingly.
+On Fri, Oct 11, 2019 at 05:09:00PM +0800, Anson Huang wrote:
+> In the latest reference manual Rev.0,06/2019, the DDR clock mux
+> is extended to 2 bits, and the clock options are also changed,
+> correct them accordingly.
 > 
 > Fixes: b1260067ac3d ("clk: imx: add imx7ulp clk driver")
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
 Applied, thanks.
