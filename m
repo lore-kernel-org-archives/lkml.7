@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E8BCA9EBF
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EDDCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A3B2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D00222C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095916;
-	bh=bebExF6wLrezS/IsdwHyYqny+OFLq0wu+rB6JGGgIUc=;
+	s=default; t=1572095918;
+	bh=ZnwUf7S1kxzIWSSKaI2hTjSkgyg6l2w2zizALkYNYDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBjpRcCCTfxwDzT9D+OaOs2aG4uhrC+T8mil5F7rwW0ZsL/eusSiyz8JEbK29IyOj
-	 McQ5KOsde67BiXjxJtLfy3VvdXrjm56UcdxVKXxM0AuMqrzhKf3yLNufsJLO/8bQMG
-	 UMbPntERIPyVxnHohQxx1JcX5rFFuwvpK5K8yZC4=
+	b=YR/YS3anZsFt3MNjYJdkXS53cUPkzmuGdliieND4Y7h+S9DBMP39QaHnLH1b68a5a
+	 0NVfHTXWFU9msjJ19rfWdnSbiMl1Ah3Y30hJ5rxGjNcGAJ5dOCBjD4nQcIRTkLzypv
+	 J32aSC6AHKC8s9BOZJGV264T39IMciGVnTIdHh5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfJZNSf (ORCPT
+        id S1727918AbfJZNSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfJZNSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:33 -0400
+        id S1727880AbfJZNSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45E4D2245C;
-        Sat, 26 Oct 2019 13:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D0121655;
+        Sat, 26 Oct 2019 13:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095912;
-        bh=bebExF6wLrezS/IsdwHyYqny+OFLq0wu+rB6JGGgIUc=;
+        s=default; t=1572095914;
+        bh=ZnwUf7S1kxzIWSSKaI2hTjSkgyg6l2w2zizALkYNYDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4apdDivii+ZKwWGex7y2hu+cgJWZpM3eF1y/w+pSiyuvVbCV7+Dbq32jCxTgKa4Q
-         59S7HMtdGQ/+MJMyi+QtZ0AOLPGMB1jTE0JXYMbY9pHgXV58FBvrmneYnhIY8iHa4t
-         8fE+tedGQmjZmFMTpWf8MIIORXZ/A+6Zw8dupsR8=
+        b=SUcfKOStS2jbcM5FdrjfGZi2VpuyDVHDb57Q0WZ78xPASNxU3gIhzjkMIlV5GbFrQ
+         fiMKQ0SddSqfFWhSyjRCSqNfrARN77ck5HoVKRgCUeu1uvJRiqsG3ZmbalZt9Mt1E1
+         IsafR/Js4qD6POHZM5CPMT7E/JjKiddVM2hWf1Ic=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 84/99] usb: hso: obey DMA rules in tiocmget
-Date:   Sat, 26 Oct 2019 09:15:45 -0400
-Message-Id: <20191026131600.2507-84-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 86/99] net: stmmac: fix argument to stmmac_pcs_ctrl_ane()
+Date:   Sat, 26 Oct 2019 09:15:47 -0400
+Message-Id: <20191026131600.2507-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -60,80 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
 
-[ Upstream commit af0de1303c4e8f44fadd7b4c593f09f22324b04f ]
+[ Upstream commit c9ad4c1049f7e0e8d59e975963dda002af47d93e ]
 
-The serial state information must not be embedded into another
-data structure, as this interferes with cache handling for DMA
-on architectures without cache coherence..
-That would result in data corruption on some architectures
-Allocating it separately.
+The stmmac_pcs_ctrl_ane() expects a register address as
+argument 1, but for some reason the mac_device_info is
+being passed.
 
-v2: fix syntax error
+Fix the warning (and possible bug) from sparse:
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17: warning: incorrect type in argument 1 (different address spaces)
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17:    expected void [noderef] <asn:2> *ioaddr
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:2613:17:    got struct mac_device_info *hw
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/hso.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index a505b2ab88b8a..74849da031fab 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -186,7 +186,7 @@ struct hso_tiocmget {
- 	int    intr_completed;
- 	struct usb_endpoint_descriptor *endp;
- 	struct urb *urb;
--	struct hso_serial_state_notification serial_state_notification;
-+	struct hso_serial_state_notification *serial_state_notification;
- 	u16    prev_UART_state_bitmap;
- 	struct uart_icount icount;
- };
-@@ -1432,7 +1432,7 @@ static int tiocmget_submit_urb(struct hso_serial *serial,
- 			 usb_rcvintpipe(usb,
- 					tiocmget->endp->
- 					bEndpointAddress & 0x7F),
--			 &tiocmget->serial_state_notification,
-+			 tiocmget->serial_state_notification,
- 			 sizeof(struct hso_serial_state_notification),
- 			 tiocmget_intr_callback, serial,
- 			 tiocmget->endp->bInterval);
-@@ -1479,7 +1479,7 @@ static void tiocmget_intr_callback(struct urb *urb)
- 	/* wIndex should be the USB interface number of the port to which the
- 	 * notification applies, which should always be the Modem port.
- 	 */
--	serial_state_notification = &tiocmget->serial_state_notification;
-+	serial_state_notification = tiocmget->serial_state_notification;
- 	if (serial_state_notification->bmRequestType != BM_REQUEST_TYPE ||
- 	    serial_state_notification->bNotification != B_NOTIFICATION ||
- 	    le16_to_cpu(serial_state_notification->wValue) != W_VALUE ||
-@@ -2565,6 +2565,8 @@ static void hso_free_tiomget(struct hso_serial *serial)
- 		usb_free_urb(tiocmget->urb);
- 		tiocmget->urb = NULL;
- 		serial->tiocmget = NULL;
-+		kfree(tiocmget->serial_state_notification);
-+		tiocmget->serial_state_notification = NULL;
- 		kfree(tiocmget);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 374f9b49bcc14..2722778a50051 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2564,7 +2564,7 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
  	}
- }
-@@ -2615,10 +2617,13 @@ static struct hso_device *hso_create_bulk_serial_device(
- 		num_urbs = 2;
- 		serial->tiocmget = kzalloc(sizeof(struct hso_tiocmget),
- 					   GFP_KERNEL);
-+		serial->tiocmget->serial_state_notification
-+			= kzalloc(sizeof(struct hso_serial_state_notification),
-+					   GFP_KERNEL);
- 		/* it isn't going to break our heart if serial->tiocmget
- 		 *  allocation fails don't bother checking this.
- 		 */
--		if (serial->tiocmget) {
-+		if (serial->tiocmget && serial->tiocmget->serial_state_notification) {
- 			tiocmget = serial->tiocmget;
- 			tiocmget->endp = hso_get_ep(interface,
- 						    USB_ENDPOINT_XFER_INT,
+ 
+ 	if (priv->hw->pcs)
+-		stmmac_pcs_ctrl_ane(priv, priv->hw, 1, priv->hw->ps, 0);
++		stmmac_pcs_ctrl_ane(priv, priv->ioaddr, 1, priv->hw->ps, 0);
+ 
+ 	/* set TX and RX rings length */
+ 	stmmac_set_rings_length(priv);
 -- 
 2.20.1
 
