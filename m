@@ -2,51 +2,54 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA79ECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EBCCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CEE21D7F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA1821D7F
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095821;
-	bh=h2vkymS/vWVxcZUSLGA7gtfL+lrrGsTvUK/sGy3SxVQ=;
+	s=default; t=1572095824;
+	bh=CTxPRFMTqgXMeITV6UjE6o5IR2+8hVr3NsBOlG8dFbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SG6yZJTbXVwPlLAPrSThmB/TAx5XwJHwgfkOHud2HwucBIKilw1WOUx93eie1qvzc
-	 DPKObip38HOOk6MXnSKhcQXlRQA+ns6qob4cmTzLHUWbVkg968lIbwZZNEyNIi5V9I
-	 YmX5k+9mEVj/PVU1aDgUAFBnmeMRWRCYJUU2fU9g=
+	b=bwdflAgUNHuBR/1Xh6KBBfV8+ephW8CXmvPVSlUDp051fiY+SFeqqcFWP1H1hT19T
+	 293daCuobi7/cofoes8JPjmF5izysVdHCBPEyjp6MBxblMRzJa+P9vvopnmpJTfJJX
+	 NGI5srBFmk0Lxc4QcqwvTojD9+kPS9BGTV28mWm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfJZNRA (ORCPT
+        id S1727124AbfJZNRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38414 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726901AbfJZNQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:52 -0400
+        id S1727031AbfJZNQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E6F21655;
-        Sat, 26 Oct 2019 13:16:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80D9F21D80;
+        Sat, 26 Oct 2019 13:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095811;
-        bh=h2vkymS/vWVxcZUSLGA7gtfL+lrrGsTvUK/sGy3SxVQ=;
+        s=default; t=1572095817;
+        bh=CTxPRFMTqgXMeITV6UjE6o5IR2+8hVr3NsBOlG8dFbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CEgGAOfeZzeEhZXc5jT4cYykIf0u3VvOk1bsrnz8Hz1bQ627hhvVuCPD4cLjEDTR
-         KY6EAv0Q44M74nvPQFl6xbhhW8H5io0CtRIJrkHF/mB9LqDpqhsa7yDVPDoSt/YKyD
-         jlOc/ewEQOEUOwWsmNfFCv225ABXrhRYenN1dSIk=
+        b=pEPjsxXek2WHlYl/Fith7l/Yw5aYVj6AgOdEr152YnnMxvW+QgUAr5BDADOYzxQEE
+         htzqfl54Dlpi7gE3ralZlix7pzuEKqCn+UeUEfGjF0UbbkYnxs0vzz1tzpxMtIwLkF
+         4clmqQhgzwXmyej8XoPwkUeU/2+fzQIX/EjsBMrk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 27/99] llc: fix another potential sk_buff leak in llc_ui_sendmsg()
-Date:   Sat, 26 Oct 2019 09:14:48 -0400
-Message-Id: <20191026131600.2507-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 31/99] net_sched: fix backward compatibility for TCA_KIND
+Date:   Sat, 26 Oct 2019 09:14:52 -0400
+Message-Id: <20191026131600.2507-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,194 +62,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit fc8d5db10cbe1338a52ebc74e7feab9276721774 ]
+[ Upstream commit 6f96c3c6904c26cea9ca2726d5d8a9b0b8205b3c ]
 
-All callers of llc_conn_state_process() except llc_build_and_send_pkt()
-(via llc_ui_sendmsg() -> llc_ui_send_data()) assume that it always
-consumes a reference to the skb.  Fix this caller to do the same.
+Marcelo noticed a backward compatibility issue of TCA_KIND
+after we move from NLA_STRING to NLA_NUL_STRING, so it is probably
+too late to change it.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Instead, to make everyone happy, we can just insert a NUL to
+terminate the string with nla_strlcpy() like we do for TC actions.
+
+Fixes: 62794fc4fbf5 ("net_sched: add max len check for TCA_KIND")
+Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/af_llc.c   | 34 ++++++++++++++++++++--------------
- net/llc/llc_conn.c |  2 ++
- net/llc/llc_if.c   | 12 ++++++++----
- 3 files changed, 30 insertions(+), 18 deletions(-)
+ net/sched/cls_api.c | 36 +++++++++++++++++++++++++++++++++---
+ net/sched/sch_api.c |  3 +--
+ 2 files changed, 34 insertions(+), 5 deletions(-)
 
-diff --git a/net/llc/af_llc.c b/net/llc/af_llc.c
-index 2017b7d780f5a..c74f44dfaa22a 100644
---- a/net/llc/af_llc.c
-+++ b/net/llc/af_llc.c
-@@ -113,22 +113,26 @@ static inline u8 llc_ui_header_len(struct sock *sk, struct sockaddr_llc *addr)
-  *
-  *	Send data via reliable llc2 connection.
-  *	Returns 0 upon success, non-zero if action did not succeed.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- static int llc_ui_send_data(struct sock* sk, struct sk_buff *skb, int noblock)
- {
- 	struct llc_sock* llc = llc_sk(sk);
--	int rc = 0;
- 
- 	if (unlikely(llc_data_accept_state(llc->state) ||
- 		     llc->remote_busy_flag ||
- 		     llc->p_flag)) {
- 		long timeout = sock_sndtimeo(sk, noblock);
-+		int rc;
- 
- 		rc = llc_ui_wait_for_busy_core(sk, timeout);
-+		if (rc) {
-+			kfree_skb(skb);
-+			return rc;
-+		}
- 	}
--	if (unlikely(!rc))
--		rc = llc_build_and_send_pkt(sk, skb);
--	return rc;
-+	return llc_build_and_send_pkt(sk, skb);
+diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+index 9aef93300f1c1..6b12883e04b8f 100644
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -160,11 +160,22 @@ static inline u32 tcf_auto_prio(struct tcf_proto *tp)
+ 	return TC_H_MAJ(first);
  }
  
- static void llc_ui_sk_init(struct socket *sock, struct sock *sk)
-@@ -899,7 +903,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	DECLARE_SOCKADDR(struct sockaddr_llc *, addr, msg->msg_name);
- 	int flags = msg->msg_flags;
- 	int noblock = flags & MSG_DONTWAIT;
--	struct sk_buff *skb;
-+	struct sk_buff *skb = NULL;
- 	size_t size = 0;
- 	int rc = -EINVAL, copied = 0, hdrlen;
- 
-@@ -908,10 +912,10 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	lock_sock(sk);
- 	if (addr) {
- 		if (msg->msg_namelen < sizeof(*addr))
--			goto release;
-+			goto out;
- 	} else {
- 		if (llc_ui_addr_null(&llc->addr))
--			goto release;
-+			goto out;
- 		addr = &llc->addr;
- 	}
- 	/* must bind connection to sap if user hasn't done it. */
-@@ -919,7 +923,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 		/* bind to sap with null dev, exclusive. */
- 		rc = llc_ui_autobind(sock, addr);
- 		if (rc)
--			goto release;
-+			goto out;
- 	}
- 	hdrlen = llc->dev->hard_header_len + llc_ui_header_len(sk, addr);
- 	size = hdrlen + len;
-@@ -928,12 +932,12 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	copied = size - hdrlen;
- 	rc = -EINVAL;
- 	if (copied < 0)
--		goto release;
-+		goto out;
- 	release_sock(sk);
- 	skb = sock_alloc_send_skb(sk, size, noblock, &rc);
- 	lock_sock(sk);
- 	if (!skb)
--		goto release;
-+		goto out;
- 	skb->dev      = llc->dev;
- 	skb->protocol = llc_proto_type(addr->sllc_arphrd);
- 	skb_reserve(skb, hdrlen);
-@@ -943,29 +947,31 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	if (sk->sk_type == SOCK_DGRAM || addr->sllc_ua) {
- 		llc_build_and_send_ui_pkt(llc->sap, skb, addr->sllc_mac,
- 					  addr->sllc_sap);
-+		skb = NULL;
- 		goto out;
- 	}
- 	if (addr->sllc_test) {
- 		llc_build_and_send_test_pkt(llc->sap, skb, addr->sllc_mac,
- 					    addr->sllc_sap);
-+		skb = NULL;
- 		goto out;
- 	}
- 	if (addr->sllc_xid) {
- 		llc_build_and_send_xid_pkt(llc->sap, skb, addr->sllc_mac,
- 					   addr->sllc_sap);
-+		skb = NULL;
- 		goto out;
- 	}
- 	rc = -ENOPROTOOPT;
- 	if (!(sk->sk_type == SOCK_STREAM && !addr->sllc_ua))
- 		goto out;
- 	rc = llc_ui_send_data(sk, skb, noblock);
-+	skb = NULL;
- out:
--	if (rc) {
--		kfree_skb(skb);
--release:
-+	kfree_skb(skb);
-+	if (rc)
- 		dprintk("%s: failed sending from %02X to %02X: %d\n",
- 			__func__, llc->laddr.lsap, llc->daddr.lsap, rc);
--	}
- 	release_sock(sk);
- 	return rc ? : copied;
- }
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index ed2aca12460ca..0b0c6f12153b0 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -55,6 +55,8 @@ int sysctl_llc2_busy_timeout = LLC2_BUSY_TIME * HZ;
-  *	(executing it's actions and changing state), upper layer will be
-  *	indicated or confirmed, if needed. Returns 0 for success, 1 for
-  *	failure. The socket lock has to be held before calling this function.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- {
-diff --git a/net/llc/llc_if.c b/net/llc/llc_if.c
-index 8db03c2d5440b..ad6547736c219 100644
---- a/net/llc/llc_if.c
-+++ b/net/llc/llc_if.c
-@@ -38,6 +38,8 @@
-  *	closed and -EBUSY when sending data is not permitted in this state or
-  *	LLC has send an I pdu with p bit set to 1 and is waiting for it's
-  *	response.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
- {
-@@ -46,20 +48,22 @@ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
- 	struct llc_sock *llc = llc_sk(sk);
- 
- 	if (unlikely(llc->state == LLC_CONN_STATE_ADM))
--		goto out;
-+		goto out_free;
- 	rc = -EBUSY;
- 	if (unlikely(llc_data_accept_state(llc->state) || /* data_conn_refuse */
- 		     llc->p_flag)) {
- 		llc->failed_data_req = 1;
--		goto out;
-+		goto out_free;
- 	}
- 	ev = llc_conn_ev(skb);
- 	ev->type      = LLC_CONN_EV_TYPE_PRIM;
- 	ev->prim      = LLC_DATA_PRIM;
- 	ev->prim_type = LLC_PRIM_TYPE_REQ;
- 	skb->dev      = llc->dev;
--	rc = llc_conn_state_process(sk, skb);
--out:
-+	return llc_conn_state_process(sk, skb);
++static bool tcf_proto_check_kind(struct nlattr *kind, char *name)
++{
++	if (kind)
++		return nla_strlcpy(name, kind, IFNAMSIZ) >= IFNAMSIZ;
++	memset(name, 0, IFNAMSIZ);
++	return false;
++}
 +
-+out_free:
-+	kfree_skb(skb);
- 	return rc;
+ static bool tcf_proto_is_unlocked(const char *kind)
+ {
+ 	const struct tcf_proto_ops *ops;
+ 	bool ret;
+ 
++	if (strlen(kind) == 0)
++		return false;
++
+ 	ops = tcf_proto_lookup_ops(kind, false, NULL);
+ 	/* On error return false to take rtnl lock. Proto lookup/create
+ 	 * functions will perform lookup again and properly handle errors.
+@@ -1976,6 +1987,7 @@ static int tc_new_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ {
+ 	struct net *net = sock_net(skb->sk);
+ 	struct nlattr *tca[TCA_MAX + 1];
++	char name[IFNAMSIZ];
+ 	struct tcmsg *t;
+ 	u32 protocol;
+ 	u32 prio;
+@@ -2032,13 +2044,19 @@ static int tc_new_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ 	if (err)
+ 		return err;
+ 
++	if (tcf_proto_check_kind(tca[TCA_KIND], name)) {
++		NL_SET_ERR_MSG(extack, "Specified TC filter name too long");
++		err = -EINVAL;
++		goto errout;
++	}
++
+ 	/* Take rtnl mutex if rtnl_held was set to true on previous iteration,
+ 	 * block is shared (no qdisc found), qdisc is not unlocked, classifier
+ 	 * type is not specified, classifier is not unlocked.
+ 	 */
+ 	if (rtnl_held ||
+ 	    (q && !(q->ops->cl_ops->flags & QDISC_CLASS_OPS_DOIT_UNLOCKED)) ||
+-	    !tca[TCA_KIND] || !tcf_proto_is_unlocked(nla_data(tca[TCA_KIND]))) {
++	    !tcf_proto_is_unlocked(name)) {
+ 		rtnl_held = true;
+ 		rtnl_lock();
+ 	}
+@@ -2196,6 +2214,7 @@ static int tc_del_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ {
+ 	struct net *net = sock_net(skb->sk);
+ 	struct nlattr *tca[TCA_MAX + 1];
++	char name[IFNAMSIZ];
+ 	struct tcmsg *t;
+ 	u32 protocol;
+ 	u32 prio;
+@@ -2235,13 +2254,18 @@ static int tc_del_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ 	if (err)
+ 		return err;
+ 
++	if (tcf_proto_check_kind(tca[TCA_KIND], name)) {
++		NL_SET_ERR_MSG(extack, "Specified TC filter name too long");
++		err = -EINVAL;
++		goto errout;
++	}
+ 	/* Take rtnl mutex if flushing whole chain, block is shared (no qdisc
+ 	 * found), qdisc is not unlocked, classifier type is not specified,
+ 	 * classifier is not unlocked.
+ 	 */
+ 	if (!prio ||
+ 	    (q && !(q->ops->cl_ops->flags & QDISC_CLASS_OPS_DOIT_UNLOCKED)) ||
+-	    !tca[TCA_KIND] || !tcf_proto_is_unlocked(nla_data(tca[TCA_KIND]))) {
++	    !tcf_proto_is_unlocked(name)) {
+ 		rtnl_held = true;
+ 		rtnl_lock();
+ 	}
+@@ -2349,6 +2373,7 @@ static int tc_get_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ {
+ 	struct net *net = sock_net(skb->sk);
+ 	struct nlattr *tca[TCA_MAX + 1];
++	char name[IFNAMSIZ];
+ 	struct tcmsg *t;
+ 	u32 protocol;
+ 	u32 prio;
+@@ -2385,12 +2410,17 @@ static int tc_get_tfilter(struct sk_buff *skb, struct nlmsghdr *n,
+ 	if (err)
+ 		return err;
+ 
++	if (tcf_proto_check_kind(tca[TCA_KIND], name)) {
++		NL_SET_ERR_MSG(extack, "Specified TC filter name too long");
++		err = -EINVAL;
++		goto errout;
++	}
+ 	/* Take rtnl mutex if block is shared (no qdisc found), qdisc is not
+ 	 * unlocked, classifier type is not specified, classifier is not
+ 	 * unlocked.
+ 	 */
+ 	if ((q && !(q->ops->cl_ops->flags & QDISC_CLASS_OPS_DOIT_UNLOCKED)) ||
+-	    !tca[TCA_KIND] || !tcf_proto_is_unlocked(nla_data(tca[TCA_KIND]))) {
++	    !tcf_proto_is_unlocked(name)) {
+ 		rtnl_held = true;
+ 		rtnl_lock();
+ 	}
+diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
+index 81d58b2806122..1047825d9f48d 100644
+--- a/net/sched/sch_api.c
++++ b/net/sched/sch_api.c
+@@ -1390,8 +1390,7 @@ check_loop_fn(struct Qdisc *q, unsigned long cl, struct qdisc_walker *w)
  }
  
+ const struct nla_policy rtm_tca_policy[TCA_MAX + 1] = {
+-	[TCA_KIND]		= { .type = NLA_NUL_STRING,
+-				    .len = IFNAMSIZ - 1 },
++	[TCA_KIND]		= { .type = NLA_STRING },
+ 	[TCA_RATE]		= { .type = NLA_BINARY,
+ 				    .len = sizeof(struct tc_estimator) },
+ 	[TCA_STAB]		= { .type = NLA_NESTED },
 -- 
 2.20.1
 
