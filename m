@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D310CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB91CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BCD206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE0B206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096384;
-	bh=xYfMvEeRT2yBPpjJP9K1yHlQM61MWrUW4oprOQp/Eoo=;
+	s=default; t=1572096401;
+	bh=garN5p2scZ4cXCGLMOL3OpoSv6+hYK5CF8ujQq5Motk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w8PyMQ677Ixb+F3WejrN2xIrm2Y6uBFxhtLdNl5NUsWgXtBAuXo4/c5T6PhygLOpL
-	 3iuj/e5gYlTfU/sjjmWXbT/9BEe0Yw5qO+206YjnqyJLjmLXubJRnAVvNRgWbyjskZ
-	 glbrmJEWmNwK4HZIrTx7vcEyjh3gk6XclREqJk9Q=
+	b=SVH4YakrBSTy01FUji2bRXJnPfqU7Ym9ywu/yLRYu50Y2EbxYcYI33eCLDPrNTywq
+	 WLpBJqPE1/MieW/e+APOdxR9WsnDteAuQuFjut3fhpD2jmgtLsU3+C0/LGhWqPvagy
+	 /pO4KsDjIUbUXGZj6HxaUPYj5YgdATatbLmgPWig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfJZNWB (ORCPT
+        id S1727989AbfJZN0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:26:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727995AbfJZNV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:59 -0400
+        id S1727773AbfJZNVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7B7F222BE;
-        Sat, 26 Oct 2019 13:21:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E1C2214DA;
+        Sat, 26 Oct 2019 13:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096118;
-        bh=xYfMvEeRT2yBPpjJP9K1yHlQM61MWrUW4oprOQp/Eoo=;
+        s=default; t=1572096112;
+        bh=garN5p2scZ4cXCGLMOL3OpoSv6+hYK5CF8ujQq5Motk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=infSxXXzOn5JrtI/Pj/2EuK+mcDnTPmNJVi48sDT/q+wwmFpi3ur/+p3DHomMuEnr
-         ls060jZud7PUcoHvVVGfke4ah1TUs8iyawQqtEkfQ7H8Y+kXs3KjkiKA4OgvQqBYLI
-         zaqP4seX46N85Nw2nR2bbS+e0H7bsSwF34IhI+IA=
+        b=0taJYJmaqm5oBJgf7dKhXnCmpkq8VRyxow123+WNxzcv0x+gNBndLvOiDA2rSsgtP
+         JZyytGD5vnPS8yqTMd2P1NXwWgNkPz+uJbPsgcvcqLGArom+Do5VFi3DTg348ODP4s
+         3xCs4uVSxM1Ok2oy32HjHOZRFAkuuDjdZLr+0qGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 24/33] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
-Date:   Sat, 26 Oct 2019 09:21:01 -0400
-Message-Id: <20191026132110.4026-24-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.14 22/33] xtensa: fix {get,put}_user() for 64bit values
+Date:   Sat, 26 Oct 2019 09:20:59 -0400
+Message-Id: <20191026132110.4026-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -61,52 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
+[ Upstream commit 6595d144decec396bf2e2efee27e50634a4b627f ]
 
-The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
-became 6 for GENET v4 and above, account for that difference.
+First of all, on short copies __copy_{to,from}_user() return the amount
+of bytes left uncopied, *not* -EFAULT.  get_user() and put_user() are
+expected to return -EFAULT on failure.
 
-Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Another problem is get_user(v32, (__u64 __user *)p); that should
+fetch 64bit value and the assign it to v32, truncating it in process.
+Current code, OTOH, reads 8 bytes of data and stores them at the
+address of v32, stomping on the 4 bytes that follow v32 itself.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.h | 1 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c   | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/xtensa/include/asm/uaccess.h | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index 9d499c5c8f8aa..f176a0307f395 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -368,6 +368,7 @@ struct bcmgenet_mib_counters {
- #define  EXT_PWR_DOWN_PHY_EN		(1 << 20)
- 
- #define EXT_RGMII_OOB_CTRL		0x0C
-+#define  RGMII_MODE_EN_V123		(1 << 0)
- #define  RGMII_LINK			(1 << 4)
- #define  OOB_DISABLE			(1 << 5)
- #define  RGMII_MODE_EN			(1 << 6)
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index c421e2753c8ce..0d970e5cb9fd5 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -277,7 +277,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 	 */
- 	if (priv->ext_phy) {
- 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
--		reg |= RGMII_MODE_EN | id_mode_dis;
-+		reg |= id_mode_dis;
-+		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-+			reg |= RGMII_MODE_EN_V123;
-+		else
-+			reg |= RGMII_MODE_EN;
- 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
- 	}
- 
+diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
+index b8f152b6aaa50..c26478ab4d668 100644
+--- a/arch/xtensa/include/asm/uaccess.h
++++ b/arch/xtensa/include/asm/uaccess.h
+@@ -99,7 +99,7 @@ do {									\
+ 	case 4: __put_user_asm(x, ptr, retval, 4, "s32i", __cb); break;	\
+ 	case 8: {							\
+ 		     __typeof__(*ptr) __v64 = x;			\
+-		     retval = __copy_to_user(ptr, &__v64, 8);		\
++		     retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT : 0;	\
+ 		     break;						\
+ 	        }							\
+ 	default: __put_user_bad();					\
+@@ -198,7 +198,16 @@ do {									\
+ 	case 1: __get_user_asm(x, ptr, retval, 1, "l8ui", __cb);  break;\
+ 	case 2: __get_user_asm(x, ptr, retval, 2, "l16ui", __cb); break;\
+ 	case 4: __get_user_asm(x, ptr, retval, 4, "l32i", __cb);  break;\
+-	case 8: retval = __copy_from_user(&x, ptr, 8);    break;	\
++	case 8: {							\
++		u64 __x;						\
++		if (unlikely(__copy_from_user(&__x, ptr, 8))) {		\
++			retval = -EFAULT;				\
++			(x) = 0;					\
++		} else {						\
++			(x) = *(__force __typeof__((ptr)))&__x;		\
++		}							\
++		break;							\
++	}								\
+ 	default: (x) = __get_user_bad();				\
+ 	}								\
+ } while (0)
 -- 
 2.20.1
 
