@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFC9CA9EBF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1496CA9EBE
 	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B155F21D81
+	by mail.kernel.org (Postfix) with ESMTP id 904222084C
 	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfJZHu2 (ORCPT
+        id S1726245AbfJZHuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 03:50:28 -0400
-Received: from mailoutvs48.siol.net ([185.57.226.239]:60244 "EHLO
+        Sat, 26 Oct 2019 03:50:24 -0400
+Received: from mailoutvs35.siol.net ([185.57.226.226]:60171 "EHLO
         mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726171AbfJZHu0 (ORCPT
+        with ESMTP id S1726171AbfJZHuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 03:50:26 -0400
+        Sat, 26 Oct 2019 03:50:23 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 37E65521C52;
-        Sat, 26 Oct 2019 09:50:24 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTP id A32E6521CE2;
+        Sat, 26 Oct 2019 09:50:19 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
         by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id I7VrNZFJFTNh; Sat, 26 Oct 2019 09:50:24 +0200 (CEST)
+        with ESMTP id Ifw5_Als-dSp; Sat, 26 Oct 2019 09:50:19 +0200 (CEST)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id EF3EE521C51;
-        Sat, 26 Oct 2019 09:50:23 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPS id 30F70521C52;
+        Sat, 26 Oct 2019 09:50:19 +0200 (CEST)
 Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
         (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 9CA4F521D9E;
-        Sat, 26 Oct 2019 09:50:21 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPSA id D959C521CE2;
+        Sat, 26 Oct 2019 09:50:16 +0200 (CEST)
 From:   Jernej Skrabec <jernej.skrabec@siol.net>
 To:     mripard@kernel.org, paul.kocialkowski@bootlin.com
 Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
@@ -41,9 +41,9 @@ Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com
-Subject: [PATCH 3/3] media: cedrus: Increase maximum supported size
-Date:   Sat, 26 Oct 2019 09:49:59 +0200
-Message-Id: <20191026074959.1073512-4-jernej.skrabec@siol.net>
+Subject: [PATCH 1/3] media: cedrus: Properly signal size in mode register
+Date:   Sat, 26 Oct 2019 09:49:57 +0200
+Message-Id: <20191026074959.1073512-2-jernej.skrabec@siol.net>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191026074959.1073512-1-jernej.skrabec@siol.net>
 References: <20191026074959.1073512-1-jernej.skrabec@siol.net>
@@ -54,31 +54,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are few variations of 4k resolutions. The biggest one is
-4096x2304 which is also supported by HW. It has also nice property that
-both width and size are divisible by maximum HEVC CTB size, which is 64.
+Mode register also holds information if video width is bigger than 2048
+and if it is equal to 4096.
+
+Rework cedrus_engine_enable() to properly signal this properties.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus_video.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/media/sunxi/cedrus/cedrus_h264.c  | 2 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_h265.c  | 2 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_hw.c    | 9 +++++++--
+ drivers/staging/media/sunxi/cedrus/cedrus_hw.h    | 2 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c | 2 +-
+ drivers/staging/media/sunxi/cedrus/cedrus_regs.h  | 2 ++
+ 6 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/=
-staging/media/sunxi/cedrus/cedrus_video.c
-index cc15a5cf107d..15cf1f10221b 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -29,8 +29,8 @@
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_h264.c
+index 7487f6ab7576..d2c854ecdf15 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+@@ -485,7 +485,7 @@ static void cedrus_h264_setup(struct cedrus_ctx *ctx,
+ {
+ 	struct cedrus_dev *dev =3D ctx->dev;
 =20
- #define CEDRUS_MIN_WIDTH	16U
- #define CEDRUS_MIN_HEIGHT	16U
--#define CEDRUS_MAX_WIDTH	3840U
--#define CEDRUS_MAX_HEIGHT	2160U
-+#define CEDRUS_MAX_WIDTH	4096U
-+#define CEDRUS_MAX_HEIGHT	2304U
+-	cedrus_engine_enable(dev, CEDRUS_CODEC_H264);
++	cedrus_engine_enable(ctx, CEDRUS_CODEC_H264);
 =20
- static struct cedrus_format cedrus_formats[] =3D {
- 	{
+ 	cedrus_write(dev, VE_H264_SDROT_CTRL, 0);
+ 	cedrus_write(dev, VE_H264_EXTRA_BUFFER1,
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_h265.c
+index 9bc921866f70..6945dc74e1d7 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+@@ -276,7 +276,7 @@ static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+ 	}
+=20
+ 	/* Activate H265 engine. */
+-	cedrus_engine_enable(dev, CEDRUS_CODEC_H265);
++	cedrus_engine_enable(ctx, CEDRUS_CODEC_H265);
+=20
+ 	/* Source offset and length in bits. */
+=20
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/sta=
+ging/media/sunxi/cedrus/cedrus_hw.c
+index 570a9165dd5d..3acfa21bc124 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+@@ -30,7 +30,7 @@
+ #include "cedrus_hw.h"
+ #include "cedrus_regs.h"
+=20
+-int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec codec=
+)
++int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec=
+)
+ {
+ 	u32 reg =3D 0;
+=20
+@@ -58,7 +58,12 @@ int cedrus_engine_enable(struct cedrus_dev *dev, enum =
+cedrus_codec codec)
+ 		return -EINVAL;
+ 	}
+=20
+-	cedrus_write(dev, VE_MODE, reg);
++	if (ctx->src_fmt.width =3D=3D 4096)
++		reg |=3D VE_MODE_PIC_WIDTH_IS_4096;
++	if (ctx->src_fmt.width > 2048)
++		reg |=3D VE_MODE_PIC_WIDTH_MORE_2048;
++
++	cedrus_write(ctx->dev, VE_MODE, reg);
+=20
+ 	return 0;
+ }
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h b/drivers/sta=
+ging/media/sunxi/cedrus/cedrus_hw.h
+index 27d0882397aa..604ff932fbf5 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
+@@ -16,7 +16,7 @@
+ #ifndef _CEDRUS_HW_H_
+ #define _CEDRUS_HW_H_
+=20
+-int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec codec=
+);
++int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec=
+);
+ void cedrus_engine_disable(struct cedrus_dev *dev);
+=20
+ void cedrus_dst_format_set(struct cedrus_dev *dev,
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c b/drivers/=
+staging/media/sunxi/cedrus/cedrus_mpeg2.c
+index 13c34927bad5..8bcd6b8f9e2d 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
+@@ -96,7 +96,7 @@ static void cedrus_mpeg2_setup(struct cedrus_ctx *ctx, =
+struct cedrus_run *run)
+ 	quantization =3D run->mpeg2.quantization;
+=20
+ 	/* Activate MPEG engine. */
+-	cedrus_engine_enable(dev, CEDRUS_CODEC_MPEG2);
++	cedrus_engine_enable(ctx, CEDRUS_CODEC_MPEG2);
+=20
+ 	/* Set intra quantization matrix. */
+=20
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_regs.h
+index 4275a307d282..ace3d49fcd82 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+@@ -35,6 +35,8 @@
+=20
+ #define VE_MODE					0x00
+=20
++#define VE_MODE_PIC_WIDTH_IS_4096		BIT(22)
++#define VE_MODE_PIC_WIDTH_MORE_2048		BIT(21)
+ #define VE_MODE_REC_WR_MODE_2MB			(0x01 << 20)
+ #define VE_MODE_REC_WR_MODE_1MB			(0x00 << 20)
+ #define VE_MODE_DDR_MODE_BW_128			(0x03 << 16)
 --=20
 2.23.0
 
