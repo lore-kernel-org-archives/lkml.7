@@ -2,51 +2,51 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F648CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B4ACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D14BA222C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE087214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096117;
-	bh=UVw5wCMe8nlRqLQdA7M/iefUaS6HfUfveFEn+roFtug=;
+	s=default; t=1572096119;
+	bh=+IWg3EB+R+mCbKZulZ0ut1KEVsnhoJxdoVtemS/pqC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hmnphOGGWUPGat3aVgQsO+DNpk6dg4Nnjul7j/rwMSYhMIFnZSCyz5bC1+X9VEDO3
-	 IaDSeOeVOFXZvh12DPnX/yQnkU0b71YggBn70UFpNZyaCWiYAVTMrmHxbT3jxPs49e
-	 +6olZ6L5ub2uExTmiSazibB1C3zfsUnR1zZIlj+8=
+	b=Q+p/g7Iw2cVrKvNPpr7r6ROzfpm3UqpsAKEXGyubM1GR3uNxhffa7aFgpfrHMUaeD
+	 DtK00Np+ZSght654/7+W1zlsihwFPTjD34wmr6rqLbJG6C0agSTTy7JnwUvq5i8N+S
+	 uJqt2F8a9dIpGc70qXDXps5IY01Y00OJjsDuYYeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbfJZNVz (ORCPT
+        id S1729239AbfJZNV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43540 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfJZNVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:45 -0400
+        id S1729159AbfJZNVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C354214DA;
-        Sat, 26 Oct 2019 13:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2152070B;
+        Sat, 26 Oct 2019 13:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096104;
-        bh=UVw5wCMe8nlRqLQdA7M/iefUaS6HfUfveFEn+roFtug=;
+        s=default; t=1572096105;
+        bh=+IWg3EB+R+mCbKZulZ0ut1KEVsnhoJxdoVtemS/pqC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sc6dTbvav1XgHigGi7VbJouI3T2N0KI2v2EDowTv8ZhV7bMWsAkY+OyH+kbzZ8xJm
-         uFV1jyhN6alye58TofDCpWYEkwVslplT84fOcEk2uQ0Kg768SEbDK5CNmHTtsa5gFV
-         35afzTxpvc74ObXunsRf/8wxr5HgeFBipboRgiDA=
+        b=cAhFmke6OQCXGXotwSKAwEVXVikWSr7JWh+3wx3xiTteMxgtO2CsM9hAhqgO/r/SM
+         Ku0CuEmwUe9JS3gVK3B8c6Mn0sMvDe1GVMZfy3tipCszgl4tZBL8FktoHv57VsjfMv
+         5GxLrmLZagXmtsJsWVh6QuSaIMO8vfi+ko1dPQug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 18/33] net: avoid possible false sharing in sk_leave_memory_pressure()
-Date:   Sat, 26 Oct 2019 09:20:55 -0400
-Message-Id: <20191026132110.4026-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 19/33] net: add {READ|WRITE}_ONCE() annotations on ->rskq_accept_head
+Date:   Sat, 26 Oct 2019 09:20:56 -0400
+Message-Id: <20191026132110.4026-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -61,44 +61,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 503978aca46124cd714703e180b9c8292ba50ba7 ]
+[ Upstream commit 60b173ca3d1cd1782bd0096dc17298ec242f6fb1 ]
 
-As mentioned in https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE#it-may-improve-performance
-a C compiler can legally transform :
+reqsk_queue_empty() is called from inet_csk_listen_poll() while
+other cpus might write ->rskq_accept_head value.
 
-if (memory_pressure && *memory_pressure)
-        *memory_pressure = 0;
+Use {READ|WRITE}_ONCE() to avoid compiler tricks
+and potential KCSAN splats.
 
-to :
-
-if (memory_pressure)
-        *memory_pressure = 0;
-
-Fixes: 0604475119de ("tcp: add TCPMemoryPressuresChrono counter")
-Fixes: 180d8cd942ce ("foundations of per-cgroup memory pressure controlling.")
-Fixes: 3ab224be6d69 ("[NET] CORE: Introducing new memory accounting interface.")
+Fixes: fff1f3001cc5 ("tcp: add a spinlock to protect struct request_sock_queue")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sock.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/pvcalls-back.c      | 2 +-
+ include/net/request_sock.h      | 4 ++--
+ net/ipv4/inet_connection_sock.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 5f466db916ee8..0ae37781848bd 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2165,8 +2165,8 @@ static void sk_leave_memory_pressure(struct sock *sk)
- 	} else {
- 		unsigned long *memory_pressure = sk->sk_prot->memory_pressure;
+diff --git a/drivers/xen/pvcalls-back.c b/drivers/xen/pvcalls-back.c
+index abd6dbc29ac28..58be15c27b6d6 100644
+--- a/drivers/xen/pvcalls-back.c
++++ b/drivers/xen/pvcalls-back.c
+@@ -792,7 +792,7 @@ static int pvcalls_back_poll(struct xenbus_device *dev,
+ 	mappass->reqcopy = *req;
+ 	icsk = inet_csk(mappass->sock->sk);
+ 	queue = &icsk->icsk_accept_queue;
+-	data = queue->rskq_accept_head != NULL;
++	data = READ_ONCE(queue->rskq_accept_head) != NULL;
+ 	if (data) {
+ 		mappass->reqcopy.cmd = 0;
+ 		ret = 0;
+diff --git a/include/net/request_sock.h b/include/net/request_sock.h
+index 23e22054aa60d..04aa2c7d35c4e 100644
+--- a/include/net/request_sock.h
++++ b/include/net/request_sock.h
+@@ -181,7 +181,7 @@ void reqsk_fastopen_remove(struct sock *sk, struct request_sock *req,
  
--		if (memory_pressure && *memory_pressure)
--			*memory_pressure = 0;
-+		if (memory_pressure && READ_ONCE(*memory_pressure))
-+			WRITE_ONCE(*memory_pressure, 0);
- 	}
+ static inline bool reqsk_queue_empty(const struct request_sock_queue *queue)
+ {
+-	return queue->rskq_accept_head == NULL;
++	return READ_ONCE(queue->rskq_accept_head) == NULL;
  }
  
+ static inline struct request_sock *reqsk_queue_remove(struct request_sock_queue *queue,
+@@ -193,7 +193,7 @@ static inline struct request_sock *reqsk_queue_remove(struct request_sock_queue
+ 	req = queue->rskq_accept_head;
+ 	if (req) {
+ 		sk_acceptq_removed(parent);
+-		queue->rskq_accept_head = req->dl_next;
++		WRITE_ONCE(queue->rskq_accept_head, req->dl_next);
+ 		if (queue->rskq_accept_head == NULL)
+ 			queue->rskq_accept_tail = NULL;
+ 	}
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 9d6b172caf6cf..8d48f68e2a772 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -936,7 +936,7 @@ struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
+ 		req->sk = child;
+ 		req->dl_next = NULL;
+ 		if (queue->rskq_accept_head == NULL)
+-			queue->rskq_accept_head = req;
++			WRITE_ONCE(queue->rskq_accept_head, req);
+ 		else
+ 			queue->rskq_accept_tail->dl_next = req;
+ 		queue->rskq_accept_tail = req;
 -- 
 2.20.1
 
