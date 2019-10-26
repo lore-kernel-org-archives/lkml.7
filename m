@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99BDCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D60CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2DE20578
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB50205C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572097021;
-	bh=p0HHcBifrQYJhjYLaF0G02z99ymmBCH/m5amuEIZddM=;
+	s=default; t=1572097025;
+	bh=NQ0FnJ1VBANMVsMUTfmcHRHbQvXmLQjJYYhHODkSERc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9ZykxuZzHTqTjZdGbGjF7w1g3LGw6E13AM9GFE/OBBZgB5D51N7Pzy/gnEGHd025
-	 4VoVelL66NMW/Vz/OHqIf2JBg9c6JlOluSSLy7T+JqjK6YUhGvavbdfX+GWiN6UsCY
-	 DYlbVXQiR12DT1VnPmMJdfZyeCbNnFLiV+wehrEc=
+	b=T7UBCEn/JRM9wPRzXdqkSzjlZmXfJhj4Sxi8Vpr6NkR1alnLSpugquVO29mKyYi7T
+	 Tw5kcVauEx1xhCk99n7v63/5G6hxIdUlvko5kLyF4JiHSAt/weuWy88QbvzKwqYTot
+	 /nSgUHf52WcYMaWcT+6CzaIaNA+9VQEVZJW/v/GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfJZNhA (ORCPT
+        id S1726683AbfJZNQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:16:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfJZNQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:27 -0400
+        id S1726566AbfJZNQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F09121D7F;
-        Sat, 26 Oct 2019 13:16:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B83721897;
+        Sat, 26 Oct 2019 13:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095787;
-        bh=p0HHcBifrQYJhjYLaF0G02z99ymmBCH/m5amuEIZddM=;
+        s=default; t=1572095776;
+        bh=NQ0FnJ1VBANMVsMUTfmcHRHbQvXmLQjJYYhHODkSERc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOLxj6AedY5iZiCzS/j2axpPBq+kZvVgAkxwIwVCTbfrVHtaw/6wfdakWqpLaqoBx
-         QL2Ayw0geLRSYTfKWcda1pcLkt78GLuOQbNm9LUizSnC+i7g6ZWj+W/loTmKwsEGth
-         SFluw5zjj1gOkiwEfEqEe3+njdbRQpNd76JTN2kI=
+        b=p11wgfF/ez48B8UA/kQZYySvqHW6RAwkVFOSTsY3rlUY5sihPg3UiTzBUcp/XJvD/
+         KMzFKYcinGhAQ1NuzMWN0GY9AV/CdVPDERJx/JNxHZa06d65RZOW2HcgZQSl7Zialv
+         QYnBPx7CFfHU7iLJnYEpsy+jg7ZYP0zO0iVKwT54=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rander Wang <rander.wang@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 15/99] ALSA: hdac: clear link output stream mapping
-Date:   Sat, 26 Oct 2019 09:14:36 -0400
-Message-Id: <20191026131600.2507-15-sashal@kernel.org>
+Cc:     Michael Vassernis <michael.vassernis@tandemg.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 07/99] mac80211_hwsim: fix incorrect dev_alloc_name failure goto
+Date:   Sat, 26 Oct 2019 09:14:28 -0400
+Message-Id: <20191026131600.2507-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,59 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@linux.intel.com>
+From: Michael Vassernis <michael.vassernis@tandemg.com>
 
-[ Upstream commit 130bce3afbbbbe585cba8604f2124c28e8d86fb0 ]
+[ Upstream commit 313c3fe9c2348e7147eca38bb446f295b45403a0 ]
 
-Fix potential DMA hang upon starting playback on devices in HDA mode
-on Intel platforms (Gemini Lake/Whiskey Lake/Comet Lake/Ice Lake). It
-doesn't affect platforms before Gemini Lake or any Intel device in
-non-HDA mode.
+If dev_alloc_name fails, hwsim_mon's memory allocated in alloc_netdev
+needs to be freed.
+Change goto command in dev_alloc_name failure to out_free_mon in
+order to perform free_netdev.
 
-The reset value for the LOSDIV register is all output streams valid.
-Clear this register to invalidate non-existent streams when the bus
-is powered up.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190930142945.7805-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Michael Vassernis <michael.vassernis@tandemg.com>
+Link: https://lore.kernel.org/r/20191003073049.3760-1-michael.vassernis@tandemg.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/hda_register.h        | 3 +++
- sound/hda/ext/hdac_ext_controller.c | 5 +++++
- 2 files changed, 8 insertions(+)
+ drivers/net/wireless/mac80211_hwsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/sound/hda_register.h b/include/sound/hda_register.h
-index 0fd39295b426b..057d2a2d0bd05 100644
---- a/include/sound/hda_register.h
-+++ b/include/sound/hda_register.h
-@@ -264,6 +264,9 @@ enum { SDI0, SDI1, SDI2, SDI3, SDO0, SDO1, SDO2, SDO3 };
- #define AZX_REG_ML_LOUTPAY		0x20
- #define AZX_REG_ML_LINPAY		0x30
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 772e54f0696fd..141508e01c31f 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3929,7 +3929,7 @@ static int __init init_mac80211_hwsim(void)
+ 	err = dev_alloc_name(hwsim_mon, hwsim_mon->name);
+ 	if (err < 0) {
+ 		rtnl_unlock();
+-		goto out_free_radios;
++		goto out_free_mon;
+ 	}
  
-+/* bit0 is reserved, with BIT(1) mapping to stream1 */
-+#define ML_LOSIDV_STREAM_MASK		0xFFFE
-+
- #define ML_LCTL_SCF_MASK			0xF
- #define AZX_MLCTL_SPA				(0x1 << 16)
- #define AZX_MLCTL_CPA				(0x1 << 23)
-diff --git a/sound/hda/ext/hdac_ext_controller.c b/sound/hda/ext/hdac_ext_controller.c
-index 211ca85acd8c4..cfab60d88c921 100644
---- a/sound/hda/ext/hdac_ext_controller.c
-+++ b/sound/hda/ext/hdac_ext_controller.c
-@@ -270,6 +270,11 @@ int snd_hdac_ext_bus_link_get(struct hdac_bus *bus,
- 
- 		ret = snd_hdac_ext_bus_link_power_up(link);
- 
-+		/*
-+		 * clear the register to invalidate all the output streams
-+		 */
-+		snd_hdac_updatew(link->ml_addr, AZX_REG_ML_LOSIDV,
-+				 ML_LOSIDV_STREAM_MASK, 0);
- 		/*
- 		 *  wait for 521usec for codec to report status
- 		 *  HDA spec section 4.3 - Codec Discovery
+ 	err = register_netdevice(hwsim_mon);
 -- 
 2.20.1
 
