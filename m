@@ -7,71 +7,71 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A781CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 03:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461F8CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 03:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255E121872
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 03:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148F621872
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 03:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FxwxopXo"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="emoRtX2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfJZD1B (ORCPT
+        id S1726466AbfJZD1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 23:27:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60256 "EHLO
+        Fri, 25 Oct 2019 23:27:16 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60514 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfJZD1A (ORCPT
+        with ESMTP id S1726074AbfJZD1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 23:27:00 -0400
+        Fri, 25 Oct 2019 23:27:15 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9Q3Px3J037724;
-        Sat, 26 Oct 2019 03:26:44 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9Q3PxxT037712;
+        Sat, 26 Oct 2019 03:26:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=/mQmjb7wfSmaJZfljuRPQm0BzQAMo1phyWBvnl2e/u8=;
- b=FxwxopXoZNe4NZN3RE0JGJZWLe+/euuOfrtYMr6TcpdH5+eZcmemWv5hM89XTpufL9Gg
- XwRwg6PCGbqfjGBksooOYhApAMNy2iNFX87iue7Ma/r0CO8BnbkrBjL6oLI15RDwLFJ8
- PS99Q2wr6meUs9dTwFNAy+M/Aw7WygwJyeHzey+ZSCO4ED584nmYFqWyOFBN1L5HbX5R
- 9JQtIKDFvHEjqEsMDDJKeLPaElBELFnrSYiOvx/lVvjlBMjdZKLxHi6yBGT1/TOOmgjQ
- N+fHV4Z5PLJb2jE9EsAChkpNsd2eejy/faHfHRJu2+5Qwc/aWG46mgmXoMsr/FPmscQu TA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2vve3pr115-1
+ bh=GAD53LJIDAlRMuq0ujQb7sRDQvwZBR3lHpUfNYQyzRw=;
+ b=emoRtX2taVpbl0COt6aH3LFB8PSzDNJr81cNQFCgJYXe8nWJNDZfehs0pFe6xFYe5Rli
+ Y1GLydjtPXyWRd2/JkxeNDP2/vBLcPzNXyB809QF4sM8yHNQK0pSxe9E3lo7tOdUelCb
+ r16ywIz9HLWssPVMD06HQfj/nRuSzBYnCdvWdhlf0+zh9iBvmUxJZ5T66tDeM9x5NE5Y
+ DJvpIfd8zdEppGTobtCNa+MROE5Uw3/SoioeuL42lA2+IeNYTz9w4IHBTzae8z/ZcobH
+ pUuV0gwNZkepMmEDbQZJQW5Hkq7cR8FOomv+OzQFSXL3oQ61Id4HYwM05s4wtqiXmzdT sA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2vve3pr11k-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 26 Oct 2019 03:26:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9Q3O9NN018302;
-        Sat, 26 Oct 2019 03:24:44 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vvdymgd47-1
+        Sat, 26 Oct 2019 03:26:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9Q3OKvK082899;
+        Sat, 26 Oct 2019 03:24:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2vvc6mmwjw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 26 Oct 2019 03:24:43 +0000
+        Sat, 26 Oct 2019 03:24:48 +0000
 Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9Q3OhMd022224;
-        Sat, 26 Oct 2019 03:24:43 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x9Q3OmRc025649;
+        Sat, 26 Oct 2019 03:24:48 GMT
 Received: from z2.cn.oracle.com (/10.182.71.218)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 25 Oct 2019 20:24:43 -0700
+        with ESMTP ; Fri, 25 Oct 2019 20:24:47 -0700
 From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kvm@vger.kernel.org, mtosatti@redhat.com,
         joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
         rkrcmar@redhat.com, pbonzini@redhat.com,
         Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH 1/5] KVM: simplify branch check in host poll code
-Date:   Sat, 26 Oct 2019 11:23:55 +0800
-Message-Id: <1572060239-17401-2-git-send-email-zhenzhong.duan@oracle.com>
+Subject: [PATCH 3/5] KVM: ensure pool time is longer than block_ns
+Date:   Sat, 26 Oct 2019 11:23:57 +0800
+Message-Id: <1572060239-17401-4-git-send-email-zhenzhong.duan@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
 References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9421 signatures=668683
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=911
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1908290000 definitions=main-1910260033
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9421 signatures=668683
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=998 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
  definitions=main-1910260034
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,35 +79,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redundant check.
+When (block_ns == vcpu->halt_poll_ns), there is not a margin so that
+vCPU may still get into block state unnecessorily.
 
 Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
 ---
- virt/kvm/kvm_main.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 67ef3f2..2ca2979 100644
+index 1b6fe3b..48a1f1a 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -2366,13 +2366,12 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+@@ -2371,7 +2371,7 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+ 		if (!vcpu_valid_wakeup(vcpu)) {
+ 			shrink_halt_poll_ns(vcpu);
  		} else if (halt_poll_ns) {
- 			if (block_ns <= vcpu->halt_poll_ns)
+-			if (block_ns <= vcpu->halt_poll_ns)
++			if (block_ns < vcpu->halt_poll_ns)
  				;
--			/* we had a long block, shrink polling */
--			else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
--				shrink_halt_poll_ns(vcpu);
  			/* we had a short halt and our poll time is too small */
--			else if (vcpu->halt_poll_ns < halt_poll_ns &&
--				block_ns < halt_poll_ns)
-+			else if (block_ns < halt_poll_ns)
- 				grow_halt_poll_ns(vcpu);
-+			/* we had a long block, shrink polling */
-+			else if (vcpu->halt_poll_ns)
-+				shrink_halt_poll_ns(vcpu);
- 		} else {
- 			vcpu->halt_poll_ns = 0;
- 		}
+ 			else if (block_ns < halt_poll_ns)
 -- 
 1.8.3.1
 
