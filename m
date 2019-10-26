@@ -2,125 +2,133 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E2FCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 14:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA97ECA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 14:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD79021655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 14:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BQlez8em"
+	by mail.kernel.org (Postfix) with ESMTP id 9C0AC2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 14:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfJZO0X (ORCPT
+        id S1726262AbfJZOhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 10:26:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58780 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfJZO0X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 10:26:23 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9QEORdr139601;
-        Sat, 26 Oct 2019 14:25:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=g0EobvnuNtLD/kX6AGj4Z/TZ+7lRKu7nyaQLzoUBx5I=;
- b=BQlez8emRUWSibANBLQXkIRr+NQC5XfbrmMQf4rd3PBr0hHWd0cGYQ5Wgo22VVDH7WU5
- XYbo1LqrNUAUOfEH47zkqnmQ+Uu1v0YVOFHDxbP60xx7cqB7AJ8zHwhS+JqY3F0nzfyl
- T+hvFL1INqhN7UhL3/3sxumzqVCRiXlcrmiyy99fIVDluB7v5CHxVJVWSciqMd2w9IXG
- nCLUdGe1JXuPGTY1Qn7d54PYUmhjOMnTjo+jVr0QcAbCc3jKrR3f03bKQBe/EJh16g6B
- lQSLWGq5dzu0sntRKT8NdU23ACvKJxeuaR1eZHeGndyqXA43S70v51R9SU3CQzBeHPoy Fw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2vve3ptf4w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 26 Oct 2019 14:25:27 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9QEO9rj011950;
-        Sat, 26 Oct 2019 14:25:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2vvb8wkseq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 26 Oct 2019 14:25:27 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9QEPCHp031477;
-        Sat, 26 Oct 2019 14:25:12 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 26 Oct 2019 07:25:12 -0700
-Date:   Sat, 26 Oct 2019 17:24:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     zhanglin <zhang.lin16@zte.com.cn>
-Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, mkubecek@suse.cz, jiri@mellanox.com,
-        pablo@netfilter.org, f.fainelli@gmail.com,
-        maxime.chevallier@bootlin.com, lirongqing@baidu.com,
-        vivien.didelot@gmail.com, linyunsheng@huawei.com,
-        natechancellor@gmail.com, arnd@arndb.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        jiang.xuexin@zte.com.cn
-Subject: Re: [PATCH] net: Zeroing the structure ethtool_wolinfo in
- ethtool_get_wol()
-Message-ID: <20191026142458.GJ23523@kadam>
-References: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
+        Sat, 26 Oct 2019 10:37:02 -0400
+Received: from sauhun.de ([88.99.104.3]:47482 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfJZOhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 10:37:01 -0400
+Received: from localhost (p5486CC3E.dip0.t-ipconnect.de [84.134.204.62])
+        by pokefinder.org (Postfix) with ESMTPSA id DB1AA2C03C5;
+        Sat, 26 Oct 2019 16:36:58 +0200 (CEST)
+Date:   Sat, 26 Oct 2019 16:36:58 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.4
+Message-ID: <20191026143655.GA5216@kunai>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
 Content-Disposition: inline
-In-Reply-To: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9422 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910260146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9422 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910260146
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 03:54:16PM +0800, zhanglin wrote:
-> memset() the structure ethtool_wolinfo that has padded bytes
-> but the padded bytes have not been zeroed out.
-> 
-> Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
-> ---
->  net/core/ethtool.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> index aeabc48..563a845 100644
-> --- a/net/core/ethtool.c
-> +++ b/net/core/ethtool.c
-> @@ -1471,11 +1471,13 @@ static int ethtool_reset(struct net_device *dev, char __user *useraddr)
->  
->  static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
->  {
-> -	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
-> +	struct ethtool_wolinfo wol;
->  
 
-How did you detect that they weren't initialized?  Is this a KASAN
-thing?
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Most of the time GCC will zero out the padding bytes when you have an
-initializer like this, but sometimes it just makes the intialization a
-series of assignments which leaves the holes uninitialized.  I wish I
-knew the rules so that I could check for it in Smatch.  Or even better,
-I wish that there were an option to always zero the holes in this
-situation...
+Linus,
 
-regards,
-dan carpenter
+here are a few driver fixes for the I2C subsystem.
 
+Please pull.
+
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
+
+  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current-fixed
+
+for you to fetch changes up to 348e46fbb4cdb2aead79aee1fd8bb25ec5fd25db:
+
+  i2c: stm32f7: remove warning when compiling with W=1 (2019-10-24 20:52:21 +0200)
+
+----------------------------------------------------------------
+Alain Volmat (1):
+      i2c: stm32f7: remove warning when compiling with W=1
+
+Fabien Parent (1):
+      i2c: mt65xx: fix NULL ptr dereference
+
+Fabrice Gasnier (2):
+      i2c: stm32f7: fix first byte to send in slave mode
+      i2c: stm32f7: fix a race in slave mode with arbitration loss irq
+
+Jae Hyun Yoo (1):
+      i2c: aspeed: fix master pending state handling
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Brendan Higgins (1):
+      (Rev.) i2c: aspeed: fix master pending state handling
+
+Cengiz Can (1):
+      (Rev.) i2c: mt65xx: fix NULL ptr dereference
+
+Hsin-Yi Wang (1):
+      (Rev.) i2c: mt65xx: fix NULL ptr dereference
+
+Pierre-Yves MORDRET (3):
+      (Rev.) i2c: stm32f7: remove warning when compiling with W=1
+      (Rev.) i2c: stm32f7: fix a race in slave mode with arbitration loss irq
+      (Rev.) i2c: stm32f7: fix first byte to send in slave mode
+
+Tao Ren (1):
+      (Test) i2c: aspeed: fix master pending state handling
+
+Ulrich Hecht (1):
+      (Test) i2c: mt65xx: fix NULL ptr dereference
+
+ drivers/i2c/busses/i2c-aspeed.c  | 54 +++++++++++++++++++++++++---------------
+ drivers/i2c/busses/i2c-mt65xx.c  |  2 +-
+ drivers/i2c/busses/i2c-stm32f7.c | 21 ++++++++++------
+ 3 files changed, 48 insertions(+), 29 deletions(-)
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl20WgMACgkQFA3kzBSg
+KbZwPBAAq462lPIS4LKK7pQC8PkwkJNl7wlI1M+fg+ZWT0G89AEv8kuMMqz93NXV
+DtUnKp+e/98TvH28JUOnlhmsmrtoXK6v78HeNX8XKGZ+k0n6vQHSEC06DppfIqem
+VE6MazdLZKUkdtaQrLGiBzWSOAv0nlKqrVGoMZSiTF7R7wRy3ec0XIppLOFwwrpl
+e8I0cdtK1lQToiGCtn9PdhGuv6q9S0gMp2JLc976GQMBF/12HBhC18pmzLG7Ey5p
+anVP7JogyvAGWUnQBgzp0gDEykRFDRpOVrOUqSDgoK551F4ijdraIll770ouiCmB
+ypIGQhW7OMvbDm5c8ndWqiOuQDkfd2SNFW2f3PmyabId4wafdB5jbflgL26nWmek
+1Yxhcm6guAI3ty2eGUT+NitAfUUtcp1b7sRy44IPgWmLSdaZ8YddoKTT/z32ZSh6
+cLwZ+rv7CX5xMhvAzUUhIhhKbmdjqdLZH0L8gnJRoKjkqz5EmX6hxSK17ntTQlDh
+TGkfyDBOqSFnam/BVD1jPgf3aU2qzHwTZZyHW/D0OFQAtmv4I/tflmbdaXQoLYN/
+P69oAbn03S723IrgQq5/FuQmyS7szwPMXAaAPH++6Vl7la02LfebCZF0QjuUPyKo
+GFcYWWsCbAGJCBJMcaOIeK9oTTd2ekXCfop9yZk1flcbpERBgrw=
+=tsxo
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
