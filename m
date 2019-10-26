@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7339CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CF0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D53D222C2
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7623214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096220;
-	bh=/eRYkDadNPYvXA6E/tQcrOM9czvltO6wddzIyLxtzzM=;
+	s=default; t=1572096225;
+	bh=Yiod/UmnCXiAMYtJgu8iKS91LjH3bhMLvi22Vb4kw7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOOjmDnzCLhl3Ndzz/89WIvbFxbGOWLTuWtCMYBSRVU5D/UhXvyCbHCBLnDYyT0qZ
-	 /r3rvotbBRoT18/34bVGkYthXhbTM/JsZ1boE/rykJyazZaM5SdA2NVS+LXIWVLF+N
-	 GYlKDL6GUtdVaLZ0JqALPNtD/bPWe4m74JiAzswQ=
+	b=gbtXNrUq30+uu6AqI/NvCaeGu3mh+EGagJfoXrzBaUuzDGm7WVHdzDy3n9OhcKOpj
+	 YuUq16NIjW6sLjsO1ynzfMLAH+n6+I9wzIbie0ZYNgrqUmgfBoViKqjIZdHc595d/y
+	 PPiNlXco1C3BJmtxTqXBDklJXMaIvAIgBWhPIvaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbfJZNXi (ORCPT
+        id S1729978AbfJZNXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:23:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45318 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729850AbfJZNXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:23:31 -0400
+        id S1729948AbfJZNXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:23:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0596222C1;
-        Sat, 26 Oct 2019 13:23:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C3B0214DA;
+        Sat, 26 Oct 2019 13:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096210;
-        bh=/eRYkDadNPYvXA6E/tQcrOM9czvltO6wddzIyLxtzzM=;
+        s=default; t=1572096220;
+        bh=Yiod/UmnCXiAMYtJgu8iKS91LjH3bhMLvi22Vb4kw7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rt3Vyc0OvAqnw3YTWRFlclNpTWfbzNDJGgpUz6qwHYgb+rRzFl4JWLzovN3GlagRn
-         N4C+yTTTohX78Osib1do+65+SViZAKZRsXzXPWJSWs7moYoP+Hkgz2qAe+fc415fRp
-         cL7mnRv2B8Gr9p2q49kpd0yB4eUEGtilLSCXCtOk=
+        b=pdav4dBGAgdY50ngutUYtIkn5cgZA9uBcF3RocrZ8m4fYRj2Fnnv4w9YfNBoklGsu
+         3OLs2fktfn6VA6//9CI6atIlrelF6r86SYc+AiC26W8qBSwmv/4K5UHqtv6Ko9lxb8
+         0XOtWTnuY0J8h3OCOErZwv0c4UnIxN7HLNDZpORM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 13/17] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
-Date:   Sat, 26 Oct 2019 09:22:57 -0400
-Message-Id: <20191026132302.4622-13-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 17/17] scripts/gdb: fix debugging modules on s390
+Date:   Sat, 26 Oct 2019 09:23:01 -0400
+Message-Id: <20191026132302.4622-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132302.4622-1-sashal@kernel.org>
 References: <20191026132302.4622-1-sashal@kernel.org>
@@ -61,52 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
+[ Upstream commit 585d730d41120926e3f79a601edad3930fa28366 ]
 
-The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
-became 6 for GENET v4 and above, account for that difference.
+Currently lx-symbols assumes that module text is always located at
+module->core_layout->base, but s390 uses the following layout:
 
-Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  +------+  <- module->core_layout->base
+  | GOT  |
+  +------+  <- module->core_layout->base + module->arch->plt_offset
+  | PLT  |
+  +------+  <- module->core_layout->base + module->arch->plt_offset +
+  | TEXT |     module->arch->plt_size
+  +------+
+
+Therefore, when trying to debug modules on s390, all the symbol
+addresses are skewed by plt_offset + plt_size.
+
+Fix by adding plt_offset + plt_size to module_addr in
+load_module_symbols().
+
+Link: http://lkml.kernel.org/r/20191017085917.81791-1-iii@linux.ibm.com
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.h | 1 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c   | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ scripts/gdb/linux/symbols.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index ce20bc939b385..e651845c66050 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -362,6 +362,7 @@ struct bcmgenet_mib_counters {
- #define  EXT_ENERGY_DET_MASK		(1 << 12)
+diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
+index 627750cb420d0..54deae59869b5 100644
+--- a/scripts/gdb/linux/symbols.py
++++ b/scripts/gdb/linux/symbols.py
+@@ -15,7 +15,7 @@ import gdb
+ import os
+ import re
  
- #define EXT_RGMII_OOB_CTRL		0x0C
-+#define  RGMII_MODE_EN_V123		(1 << 0)
- #define  RGMII_LINK			(1 << 4)
- #define  OOB_DISABLE			(1 << 5)
- #define  RGMII_MODE_EN			(1 << 6)
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 0565efad6e6ea..01e6e6a36b9cf 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -328,7 +328,11 @@ int bcmgenet_mii_config(struct net_device *dev)
- 	 */
- 	if (priv->ext_phy) {
- 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
--		reg |= RGMII_MODE_EN | id_mode_dis;
-+		reg |= id_mode_dis;
-+		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-+			reg |= RGMII_MODE_EN_V123;
-+		else
-+			reg |= RGMII_MODE_EN;
- 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
- 	}
+-from linux import modules
++from linux import modules, utils
  
+ 
+ if hasattr(gdb, 'Breakpoint'):
+@@ -116,6 +116,12 @@ lx-symbols command."""
+             module_file = self._get_module_file(module_name)
+ 
+         if module_file:
++            if utils.is_target_arch('s390'):
++                # Module text is preceded by PLT stubs on s390.
++                module_arch = module['arch']
++                plt_offset = int(module_arch['plt_offset'])
++                plt_size = int(module_arch['plt_size'])
++                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
+             gdb.write("loading @{addr}: {filename}\n".format(
+                 addr=module_addr, filename=module_file))
+             cmdline = "add-symbol-file {filename} {addr}{sections}".format(
 -- 
 2.20.1
 
