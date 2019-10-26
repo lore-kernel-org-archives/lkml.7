@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C05CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41C8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D965214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25DF206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096699;
-	bh=J02sUj+m/UPBOLsmviY3nnf45uUHrYc2ULlOdHBWVlI=;
+	s=default; t=1572096706;
+	bh=M4BDqp+jaybyxjRpA8NRkwvztv6MOAjRnay/NpFZWJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ilGeFgEp+kaXxll2oMUQYDbP4uJSvecrXUGXGjtOe3Hxz7qpyNKE05FLnwSGL2NXv
-	 0Tsxk53SbcUuoCi8kC90ZmRr1KA+Hs6zgLJxe+DI1K+Cjs1b7EZwykU8zehT8HUa/6
-	 NeEnS7SxB0sId3ISJU8L+aRCbPBRDFA0XFQ+UY6s=
+	b=CGth/IDv9mE/TrbJsYx9Wiy16kwqeNu3TjOSXj4yp2/lkScenNB3/1jpL3cFBv8q2
+	 pSRTp+wzUGFgVY9JCPwyJEpIQDQ2VZL7Xxwh4SO3NKrJuTT7NKIb6fInLg9MkC1Hdt
+	 D/yoZ15TZrBEjZJq707NjSc3gEBb+txDD+8XDfhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfJZNbi (ORCPT
+        id S1728716AbfJZNbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41200 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfJZNTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:16 -0400
+        id S1728159AbfJZNTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF401222C9;
-        Sat, 26 Oct 2019 13:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C500222C2;
+        Sat, 26 Oct 2019 13:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095955;
-        bh=J02sUj+m/UPBOLsmviY3nnf45uUHrYc2ULlOdHBWVlI=;
+        s=default; t=1572095953;
+        bh=M4BDqp+jaybyxjRpA8NRkwvztv6MOAjRnay/NpFZWJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dEplbGKybTebsDeLiGalxBAkO0CoSkzyGEDbm8jJrpb1zl4wirZW+tpV/lEl08LgB
-         3EjY3lOqKl784dpdzEWW9801ZZXs56pOsp0CpSC7O+WKQb/J7AZ24IiiL4kR5+aqvt
-         KoqzhX4pemOM27niBlr7mj7UIubDrOezoIzryAuk=
+        b=YIt046ZgQedWdhyz/jFcjwa6yQ6IPQj7a5a2mnVv3dfLYg2jCLQPL8HdUfG4c+BBO
+         0hbxdICPUam8IJCK4la/b0I9CqNaD4l+8AdimYvqTYTiavpLDs7I4xfbKGZnVEbfHE
+         JKNzuNdsmdKaH0CR+2K7g9VN9b3Zv1NpJJxAJis8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Judy Brock <judy.brock@samsung.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 04/59] nvme: fix possible deadlock when nvme_update_formats fails
-Date:   Sat, 26 Oct 2019 09:18:15 -0400
-Message-Id: <20191026131910.3435-4-sashal@kernel.org>
+Cc:     Liu Xiang <liuxiang_1999@126.com>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 02/59] iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
+Date:   Sat, 26 Oct 2019 09:18:13 -0400
+Message-Id: <20191026131910.3435-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,46 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Liu Xiang <liuxiang_1999@126.com>
 
-[ Upstream commit 6abff1b9f7b8884a46b7bd80b49e7af0b5625aeb ]
+[ Upstream commit 6db7bfb431220d78e34d2d0afdb7c12683323588 ]
 
-nvme_update_formats may fail to revalidate the namespace and
-attempt to remove the namespace. This may lead to a deadlock
-as nvme_ns_remove will attempt to acquire the subsystem lock
-which is already acquired by the passthru command with effects.
+When alloc_io_pgtable_ops is failed, context bitmap which is just allocated
+by __arm_smmu_alloc_bitmap should be freed to release the resource.
 
-Move the invalid namepsace removal to after the passthru command
-releases the subsystem lock.
-
-Reported-by: Judy Brock <judy.brock@samsung.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iommu/arm-smmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index ae0b01059fc6d..ddd5c72a565ad 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1201,8 +1201,6 @@ static void nvme_update_formats(struct nvme_ctrl *ctrl)
- 		if (ns->disk && nvme_revalidate_disk(ns->disk))
- 			nvme_set_queue_dying(ns);
- 	up_read(&ctrl->namespaces_rwsem);
--
--	nvme_remove_invalid_namespaces(ctrl, NVME_NSID_ALL);
- }
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 0c3b8f1c7225e..cfd3428627243 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -915,6 +915,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 	return 0;
  
- static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
-@@ -1218,6 +1216,7 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
- 		nvme_unfreeze(ctrl);
- 		nvme_mpath_unfreeze(ctrl->subsys);
- 		mutex_unlock(&ctrl->subsys->lock);
-+		nvme_remove_invalid_namespaces(ctrl, NVME_NSID_ALL);
- 		mutex_unlock(&ctrl->scan_lock);
- 	}
- 	if (effects & NVME_CMD_EFFECTS_CCC)
+ out_clear_smmu:
++	__arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
+ 	smmu_domain->smmu = NULL;
+ out_unlock:
+ 	mutex_unlock(&smmu_domain->init_mutex);
 -- 
 2.20.1
 
