@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6776BCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBD1CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEE7206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071442070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096336;
-	bh=ZEQZaK7X3xLNh0B3h2Vr87ah+kdPyglD8gqGpmygO1E=;
+	s=default; t=1572096345;
+	bh=CBaszSDNlm5NoSx/zARR8prZi4DXJ4Y5llwvvqesr1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dlAcRUxAW1fDFsr533o+qB5VkOI1Za0awcqVfPtGIMvzOe42weR8uh/T4oWedWHS
-	 lPkax50kWN34TozYwGoP4KanNoVs1TLseYZNPsFcMNBd1stQCPhW0cGwu+BwIFP1PI
-	 b/sRl5vCRPnL2Q1EuuoYLMp5v/F83uNU7dOkLMqU=
+	b=UipfC4KnZVLlK2344OtB3XshbOG46AgLh9DubBjJQtAulhhgUn3/vtynqD65Zlz9u
+	 RV1F0H19iNssXgBby1DfLQSMoPMqeX+hDwfF1QeJlU++XA7JJesvOAAi7gpYUfn/jC
+	 fruhaFWUp3M9/7XTP4H+GqoT5p5+ON3cfDKbvJXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbfJZNZe (ORCPT
+        id S1727533AbfJZNZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44194 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729286AbfJZNWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:22:24 -0400
+        id S1727689AbfJZNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EE6A222D0;
-        Sat, 26 Oct 2019 13:22:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC5A222D4;
+        Sat, 26 Oct 2019 13:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096144;
-        bh=ZEQZaK7X3xLNh0B3h2Vr87ah+kdPyglD8gqGpmygO1E=;
+        s=default; t=1572096141;
+        bh=CBaszSDNlm5NoSx/zARR8prZi4DXJ4Y5llwvvqesr1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJoGuYOhFUfwaZnIMFCaEvvv3XJ/Hh0I5kRPsA/c7FkPc6F/98qAwYQ3rH343p7i/
-         J3j6MicCQiBjEZLoVr51OQE+vuwkTuRqaVqKd3E5cViMuv6fbJaRwKt4VgtYbrHbsT
-         vzKAzufxnAX65Rl2CMMqeM3kF0Cyt+q5GPgL+35o=
+        b=xHkJI+CslqXFQiUpxGblIJ/9XuO1/cBbkW74om+hCzNzCYDwvJmB7jm/Hi4FBlSLb
+         FG3vezNJvABf/7ab1TqXxnc3ZlGlUlrRbYEkwluTVQTu5gKYKc/crw8owuQ7xRZJB8
+         H4WfukXBICGAJmVt6XdteZGoPKwzl64hdkmo1aSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/21] mac80211: accept deauth frames in IBSS mode
-Date:   Sat, 26 Oct 2019 09:22:01 -0400
-Message-Id: <20191026132217.4380-5-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 03/21] nvme: retain split access workaround for capability reads
+Date:   Sat, 26 Oct 2019 09:21:59 -0400
+Message-Id: <20191026132217.4380-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132217.4380-1-sashal@kernel.org>
 References: <20191026132217.4380-1-sashal@kernel.org>
@@ -60,47 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
+[ Upstream commit 3a8ecc935efabdad106b5e06d07b150c394b4465 ]
 
-We can process deauth frames and all, but we drop them very
-early in the RX path today - this could never have worked.
+Commit 7fd8930f26be4
 
-Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+  "nvme: add a common helper to read Identify Controller data"
+
+has re-introduced an issue that we have attempted to work around in the
+past, in commit a310acd7a7ea ("NVMe: use split lo_hi_{read,write}q").
+
+The problem is that some PCIe NVMe controllers do not implement 64-bit
+outbound accesses correctly, which is why the commit above switched
+to using lo_hi_[read|write]q for all 64-bit BAR accesses occuring in
+the code.
+
+In the mean time, the NVMe subsystem has been refactored, and now calls
+into the PCIe support layer for NVMe via a .reg_read64() method, which
+fails to use lo_hi_readq(), and thus reintroduces the problem that the
+workaround above aimed to address.
+
+Given that, at the moment, .reg_read64() is only used to read the
+capability register [which is known to tolerate split reads], let's
+switch .reg_read64() to lo_hi_readq() as well.
+
+This fixes a boot issue on some ARM boxes with NVMe behind a Synopsys
+DesignWare PCIe host controller.
+
+Fixes: 7fd8930f26be4 ("nvme: add a common helper to read Identify Controller data")
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 3b423c50ec8fa..74652eb2f90fd 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -3205,9 +3205,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
- 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
- 		/* process for all: mesh, mlme, ibss */
- 		break;
-+	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
-+		if (is_multicast_ether_addr(mgmt->da) &&
-+		    !is_broadcast_ether_addr(mgmt->da))
-+			return RX_DROP_MONITOR;
-+
-+		/* process only for station/IBSS */
-+		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
-+		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
-+			return RX_DROP_MONITOR;
-+		break;
- 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
- 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
--	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
- 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
- 		if (is_multicast_ether_addr(mgmt->da) &&
- 		    !is_broadcast_ether_addr(mgmt->da))
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 1ac4cec5f4f7c..e2bce9385eda6 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1863,7 +1863,7 @@ static int nvme_pci_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
+ 
+ static int nvme_pci_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
+ {
+-	*val = readq(to_nvme_dev(ctrl)->bar + off);
++	*val = lo_hi_readq(to_nvme_dev(ctrl)->bar + off);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
