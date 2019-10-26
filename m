@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00285CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B580DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11D92070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87171206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096651;
-	bh=v4XNolINGmmhCLcQEr2RPFLn/beAvYiy47KnsHxry3c=;
+	s=default; t=1572096654;
+	bh=q1E0FxPMYC4aSCbIZPtT/+vHqf1AwqFt2itoITXyEh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hKSbtS3iZht/q60PvYfqhHZzx3sYZM74h0AnqYwQbY5g2TIfDpGQFzFlj3NiMcfNR
-	 lKxuZoBAvgScyU5FLJMt9yrw2diQLHjYfCgwPlU+m8uISP9U/f9Cr8CGWYajw1wQ5U
-	 BXKxgHSCfLnPgqEPeXjYJDGWc/r//N0qifM1MvFs=
+	b=j0tZ2HrU7iAfS9yjSuofGZTkNoewn796RcI/htC/T7l0Fk7ji4SaECZ6n5iMpLy+P
+	 z8SZA4qA08aU1oglbv8eDeWGaNlAx6dTV9TLwuMHsap63SbYQ5hyF7VtLoRof4ERb0
+	 bg+tClJjca8go68R90YUkh98Idy1yniOf3yne6Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfJZNTi (ORCPT
+        id S1728911AbfJZNax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41436 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbfJZNT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:29 -0400
+        id S1728374AbfJZNTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70CF021D7F;
-        Sat, 26 Oct 2019 13:19:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B882070B;
+        Sat, 26 Oct 2019 13:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095968;
-        bh=v4XNolINGmmhCLcQEr2RPFLn/beAvYiy47KnsHxry3c=;
+        s=default; t=1572095975;
+        bh=q1E0FxPMYC4aSCbIZPtT/+vHqf1AwqFt2itoITXyEh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T6pI3nkVF6kFftyvSeETPtfaC5ENGwNLV5kXAKSKpE7aHk1ueLeJ5NUkfZkpduu2l
-         XC77Oxwemhv/xRkKEJc4vTD+xTevom5nXSaUCa2twG/J5xATqP1a8GW7tncURg0VjB
-         iW6+C2oUXIYCXlVOqcZvq9iFyrSUQy/2GNyvdfRg=
+        b=oj4LIckoGadSvLshWYjLI7BsOfBWqsRX7cLx6JvTsFNEBMlCjZRU/8Cy9DTabaMt4
+         RZE5R9oKkiodR/UTSvuioxulOk7laVHfMXMacS9qXlHu+5iOUHRca5XBdj6NnoHrqm
+         5EnVvncG+1GKib6mP9plZ6MxsBrgNtUpYA7BJF4Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/59] rxrpc: Fix trace-after-put looking at the put call record
-Date:   Sat, 26 Oct 2019 09:18:24 -0400
-Message-Id: <20191026131910.3435-13-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
+        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/59] llc: fix sk_buff leak in llc_sap_state_process()
+Date:   Sat, 26 Oct 2019 09:18:28 -0400
+Message-Id: <20191026131910.3435-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,166 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 48c9e0ec7cbbb7370448f859ccc8e3b7eb69e755 ]
+[ Upstream commit c6ee11c39fcc1fb55130748990a8f199e76263b4 ]
 
-rxrpc_put_call() calls trace_rxrpc_call() after it has done the decrement
-of the refcount - which looks at the debug_id in the call record.  But
-unless the refcount was reduced to zero, we no longer have the right to
-look in the record and, indeed, it may be deleted by some other thread.
+syzbot reported:
 
-Fix this by getting the debug_id out before decrementing the refcount and
-then passing that into the tracepoint.
+    BUG: memory leak
+    unreferenced object 0xffff888116270800 (size 224):
+       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
+       hex dump (first 32 bytes):
+         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
+       backtrace:
+         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
+         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
+         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
+         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
+         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
+         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
+         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
+         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+	 [...]
 
-Fixes: e34d4234b0b7 ("rxrpc: Trace rxrpc_call usage")
-Signed-off-by: David Howells <dhowells@redhat.com>
+The bug is that llc_sap_state_process() always takes an extra reference
+to the skb, but sometimes neither llc_sap_next_state() nor
+llc_sap_state_process() itself drops this reference.
+
+Fix it by changing llc_sap_next_state() to never consume a reference to
+the skb, rather than sometimes do so and sometimes not.  Then remove the
+extra skb_get() and kfree_skb() from llc_sap_state_process().
+
+Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
+Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |  6 +++---
- net/rxrpc/call_accept.c      |  2 +-
- net/rxrpc/call_object.c      | 28 +++++++++++++++++-----------
- 3 files changed, 21 insertions(+), 15 deletions(-)
+ net/llc/llc_s_ac.c | 12 +++++++++---
+ net/llc/llc_sap.c  | 23 ++++++++---------------
+ 2 files changed, 17 insertions(+), 18 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 0924119bcfa40..d496794a8f59d 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -614,10 +614,10 @@ TRACE_EVENT(rxrpc_client,
- 	    );
- 
- TRACE_EVENT(rxrpc_call,
--	    TP_PROTO(struct rxrpc_call *call, enum rxrpc_call_trace op,
-+	    TP_PROTO(unsigned int call_debug_id, enum rxrpc_call_trace op,
- 		     int usage, const void *where, const void *aux),
- 
--	    TP_ARGS(call, op, usage, where, aux),
-+	    TP_ARGS(call_debug_id, op, usage, where, aux),
- 
- 	    TP_STRUCT__entry(
- 		    __field(unsigned int,		call		)
-@@ -628,7 +628,7 @@ TRACE_EVENT(rxrpc_call,
- 			     ),
- 
- 	    TP_fast_assign(
--		    __entry->call = call->debug_id;
-+		    __entry->call = call_debug_id;
- 		    __entry->op = op;
- 		    __entry->usage = usage;
- 		    __entry->where = where;
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index c5566bc4aaca3..47cf24630c708 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -101,7 +101,7 @@ static int rxrpc_service_prealloc_one(struct rxrpc_sock *rx,
- 	call->flags |= (1 << RXRPC_CALL_IS_SERVICE);
- 	call->state = RXRPC_CALL_SERVER_PREALLOC;
- 
--	trace_rxrpc_call(call, rxrpc_call_new_service,
-+	trace_rxrpc_call(call->debug_id, rxrpc_call_new_service,
- 			 atomic_read(&call->usage),
- 			 here, (const void *)user_call_ID);
- 
-diff --git a/net/rxrpc/call_object.c b/net/rxrpc/call_object.c
-index 215f4d98baa0f..f58e624490a97 100644
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -242,7 +242,8 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
- 	}
- 
- 	call->tx_total_len = p->tx_total_len;
--	trace_rxrpc_call(call, rxrpc_call_new_client, atomic_read(&call->usage),
-+	trace_rxrpc_call(call->debug_id, rxrpc_call_new_client,
-+			 atomic_read(&call->usage),
- 			 here, (const void *)p->user_call_ID);
- 
- 	/* We need to protect a partially set up call against the user as we
-@@ -292,8 +293,8 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
- 	if (ret < 0)
- 		goto error;
- 
--	trace_rxrpc_call(call, rxrpc_call_connected, atomic_read(&call->usage),
--			 here, NULL);
-+	trace_rxrpc_call(call->debug_id, rxrpc_call_connected,
-+			 atomic_read(&call->usage), here, NULL);
- 
- 	rxrpc_start_call_timer(call);
- 
-@@ -315,8 +316,8 @@ struct rxrpc_call *rxrpc_new_client_call(struct rxrpc_sock *rx,
- error:
- 	__rxrpc_set_call_completion(call, RXRPC_CALL_LOCAL_ERROR,
- 				    RX_CALL_DEAD, ret);
--	trace_rxrpc_call(call, rxrpc_call_error, atomic_read(&call->usage),
--			 here, ERR_PTR(ret));
-+	trace_rxrpc_call(call->debug_id, rxrpc_call_error,
-+			 atomic_read(&call->usage), here, ERR_PTR(ret));
- 	rxrpc_release_call(rx, call);
- 	mutex_unlock(&call->user_mutex);
- 	rxrpc_put_call(call, rxrpc_call_put);
-@@ -420,7 +421,8 @@ bool rxrpc_queue_call(struct rxrpc_call *call)
- 	if (n == 0)
- 		return false;
- 	if (rxrpc_queue_work(&call->processor))
--		trace_rxrpc_call(call, rxrpc_call_queued, n + 1, here, NULL);
-+		trace_rxrpc_call(call->debug_id, rxrpc_call_queued, n + 1,
-+				 here, NULL);
- 	else
- 		rxrpc_put_call(call, rxrpc_call_put_noqueue);
- 	return true;
-@@ -435,7 +437,8 @@ bool __rxrpc_queue_call(struct rxrpc_call *call)
- 	int n = atomic_read(&call->usage);
- 	ASSERTCMP(n, >=, 1);
- 	if (rxrpc_queue_work(&call->processor))
--		trace_rxrpc_call(call, rxrpc_call_queued_ref, n, here, NULL);
-+		trace_rxrpc_call(call->debug_id, rxrpc_call_queued_ref, n,
-+				 here, NULL);
- 	else
- 		rxrpc_put_call(call, rxrpc_call_put_noqueue);
- 	return true;
-@@ -450,7 +453,8 @@ void rxrpc_see_call(struct rxrpc_call *call)
- 	if (call) {
- 		int n = atomic_read(&call->usage);
- 
--		trace_rxrpc_call(call, rxrpc_call_seen, n, here, NULL);
-+		trace_rxrpc_call(call->debug_id, rxrpc_call_seen, n,
-+				 here, NULL);
- 	}
+diff --git a/net/llc/llc_s_ac.c b/net/llc/llc_s_ac.c
+index a94bd56bcac6f..7ae4cc684d3ab 100644
+--- a/net/llc/llc_s_ac.c
++++ b/net/llc/llc_s_ac.c
+@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sap *sap, struct sk_buff *skb)
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_ui_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
  }
  
-@@ -462,7 +466,7 @@ void rxrpc_get_call(struct rxrpc_call *call, enum rxrpc_call_trace op)
- 	const void *here = __builtin_return_address(0);
- 	int n = atomic_inc_return(&call->usage);
- 
--	trace_rxrpc_call(call, op, n, here, NULL);
-+	trace_rxrpc_call(call->debug_id, op, n, here, NULL);
+@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc_sap *sap, struct sk_buff *skb)
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
  }
  
- /*
-@@ -477,7 +481,8 @@ void rxrpc_release_call(struct rxrpc_sock *rx, struct rxrpc_call *call)
+@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct llc_sap *sap, struct sk_buff *skb)
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_test_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
  
- 	_enter("{%d,%d}", call->debug_id, atomic_read(&call->usage));
- 
--	trace_rxrpc_call(call, rxrpc_call_release, atomic_read(&call->usage),
-+	trace_rxrpc_call(call->debug_id, rxrpc_call_release,
-+			 atomic_read(&call->usage),
- 			 here, (const void *)call->flags);
- 
- 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
-@@ -625,12 +630,13 @@ void rxrpc_put_call(struct rxrpc_call *call, enum rxrpc_call_trace op)
+diff --git a/net/llc/llc_sap.c b/net/llc/llc_sap.c
+index a7f7b8ff47292..be419062e19a6 100644
+--- a/net/llc/llc_sap.c
++++ b/net/llc/llc_sap.c
+@@ -197,29 +197,22 @@ static int llc_sap_next_state(struct llc_sap *sap, struct sk_buff *skb)
+  *	After executing actions of the event, upper layer will be indicated
+  *	if needed(on receiving an UI frame). sk can be null for the
+  *	datalink_proto case.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
  {
- 	struct rxrpc_net *rxnet = call->rxnet;
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = call->debug_id;
- 	int n;
+ 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
  
- 	ASSERT(call != NULL);
+-	/*
+-	 * We have to hold the skb, because llc_sap_next_state
+-	 * will kfree it in the sending path and we need to
+-	 * look at the skb->cb, where we encode llc_sap_state_ev.
+-	 */
+-	skb_get(skb);
+ 	ev->ind_cfm_flag = 0;
+ 	llc_sap_next_state(sap, skb);
+-	if (ev->ind_cfm_flag == LLC_IND) {
+-		if (skb->sk->sk_state == TCP_LISTEN)
+-			kfree_skb(skb);
+-		else {
+-			llc_save_primitive(skb->sk, skb, ev->prim);
  
- 	n = atomic_dec_return(&call->usage);
--	trace_rxrpc_call(call, op, n, here, NULL);
-+	trace_rxrpc_call(debug_id, op, n, here, NULL);
- 	ASSERTCMP(n, >=, 0);
- 	if (n == 0) {
- 		_debug("call %d dead", call->debug_id);
+-			/* queue skb to the user. */
+-			if (sock_queue_rcv_skb(skb->sk, skb))
+-				kfree_skb(skb);
+-		}
++	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
++		llc_save_primitive(skb->sk, skb, ev->prim);
++
++		/* queue skb to the user. */
++		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
++			return;
+ 	}
+ 	kfree_skb(skb);
+ }
 -- 
 2.20.1
 
