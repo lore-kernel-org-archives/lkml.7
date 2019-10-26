@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C3ACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EB0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D5F20867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598D921E6F
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096125;
-	bh=L5zoxb0wbpj0jGsgu8jeGcj7RqnKzG1JmW48JRAly48=;
+	s=default; t=1572096133;
+	bh=oKR+MzhCfvePeBN6J6ZjftzLR2nZeiO8x81NetuLrnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MnDh6sUxfnTVbXuuRXQfVo5l4gCXsRVRqsGST5eYZ0Y8xKND81kVgHeCseaAwzguy
-	 WglZzY0lmEJ3XnySN0CokuCnM45oNe5KuWTjTHtY9npmcjE0QeCc6QNUPze+2eTFzu
-	 Yx2A6qVCSGN/Vpr6Eah3W1rr5jyWCWgA1REQZfwg=
+	b=KlJ0BiEdT6VPDOufrAfTBgwz/tBhd93OGBhKKfLkCzrlZCSHe1NWvuwIYoC8csRdW
+	 Pkup1rM9zu0mBT4GL8nbMeEisSzQopmkunZzloE3Av0XfelwYpv4FXHHHtQmkZ2Ugl
+	 s2RAZ7xTYGgPjr8W+a6Hggojvf2Gu1lQxvCqCVLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbfJZNWE (ORCPT
+        id S1728090AbfJZNWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:22:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729233AbfJZNV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:58 -0400
+        id S1729288AbfJZNWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:22:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B422121E6F;
-        Sat, 26 Oct 2019 13:21:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF9F0222BE;
+        Sat, 26 Oct 2019 13:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096117;
-        bh=L5zoxb0wbpj0jGsgu8jeGcj7RqnKzG1JmW48JRAly48=;
+        s=default; t=1572096123;
+        bh=oKR+MzhCfvePeBN6J6ZjftzLR2nZeiO8x81NetuLrnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0AfIi18ZZVgWFouDRGoeObT+BtlvU2BgyWtEwU1t3fPUj8NukuGw197Cmwqld3js
-         rWHKXJbZml18GcjGytIcHVdenU632HckeEGQSbMrV6GLSBThy6sqEfreIOPIH/G6y2
-         wqXHzPyqNg7zXVSE3QA0Dt+u7BcG33kx6AyCRI/4=
+        b=sAYSS6zN90j9896N/cRODi7WDN2lz/Q9ujvUKfRUNqhE1bF0svYfibQ05s3HY1GYX
+         tfhKqwBgfn6e9GxWFm9spp7JXy5aoXv0pnV1sicCv0kvpyNtTT/O790LmtKXyXPL1R
+         8T9jQkQpAFB48xaPLUmnsQH97Snkx+riEHx6jc6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+Cc:     Biao Huang <biao.huang@mediatek.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 23/33] net: i82596: fix dma_alloc_attr for sni_82596
-Date:   Sat, 26 Oct 2019 09:21:00 -0400
-Message-Id: <20191026132110.4026-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 27/33] net: stmmac: disable/enable ptp_ref_clk in suspend/resume flow
+Date:   Sat, 26 Oct 2019 09:21:04 -0400
+Message-Id: <20191026132110.4026-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -59,92 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Biao Huang <biao.huang@mediatek.com>
 
-[ Upstream commit 61c1d33daf7b5146f44d4363b3322f8cda6a6c43 ]
+[ Upstream commit e497c20e203680aba9ccf7bb475959595908ca7e ]
 
-Commit 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
-switched dma allocation over to dma_alloc_attr, but didn't convert
-the SNI part to request consistent DMA memory. This broke sni_82596
-since driver doesn't do dma_cache_sync for performance reasons.
-Fix this by using different DMA_ATTRs for lasi_82596 and sni_82596.
+disable ptp_ref_clk in suspend flow, and enable it in resume flow.
 
-Fixes: 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Fixes: f573c0b9c4e0 ("stmmac: move stmmac_clk, pclk, clk_ptp_ref and stmmac_rst to platform structure")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/i825xx/lasi_82596.c | 4 +++-
- drivers/net/ethernet/i825xx/lib82596.c   | 4 ++--
- drivers/net/ethernet/i825xx/sni_82596.c  | 4 +++-
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/i825xx/lasi_82596.c b/drivers/net/ethernet/i825xx/lasi_82596.c
-index b69c622ba8b2d..6f0e4019adefa 100644
---- a/drivers/net/ethernet/i825xx/lasi_82596.c
-+++ b/drivers/net/ethernet/i825xx/lasi_82596.c
-@@ -96,6 +96,8 @@
- 
- #define OPT_SWAP_PORT	0x0001	/* Need to wordswp on the MPU port */
- 
-+#define LIB82596_DMA_ATTR	DMA_ATTR_NON_CONSISTENT
-+
- #define DMA_WBACK(ndev, addr, len) \
- 	do { dma_cache_sync((ndev)->dev.parent, (void *)addr, len, DMA_TO_DEVICE); } while (0)
- 
-@@ -199,7 +201,7 @@ static int __exit lan_remove_chip(struct parisc_device *pdev)
- 
- 	unregister_netdev (dev);
- 	dma_free_attrs(&pdev->dev, sizeof(struct i596_private), lp->dma,
--		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+		       lp->dma_addr, LIB82596_DMA_ATTR);
- 	free_netdev (dev);
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/i825xx/lib82596.c b/drivers/net/ethernet/i825xx/lib82596.c
-index f00a1dc2128cb..da3758fdf025f 100644
---- a/drivers/net/ethernet/i825xx/lib82596.c
-+++ b/drivers/net/ethernet/i825xx/lib82596.c
-@@ -1065,7 +1065,7 @@ static int i82596_probe(struct net_device *dev)
- 
- 	dma = dma_alloc_attrs(dev->dev.parent, sizeof(struct i596_dma),
- 			      &lp->dma_addr, GFP_KERNEL,
--			      DMA_ATTR_NON_CONSISTENT);
-+			      LIB82596_DMA_ATTR);
- 	if (!dma) {
- 		printk(KERN_ERR "%s: Couldn't get shared memory\n", __FILE__);
- 		return -ENOMEM;
-@@ -1087,7 +1087,7 @@ static int i82596_probe(struct net_device *dev)
- 	i = register_netdev(dev);
- 	if (i) {
- 		dma_free_attrs(dev->dev.parent, sizeof(struct i596_dma),
--			       dma, lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+			       dma, lp->dma_addr, LIB82596_DMA_ATTR);
- 		return i;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index f4df9ab0aed5f..612773b94ae3c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4402,8 +4402,10 @@ int stmmac_suspend(struct device *dev)
+ 		priv->hw->mac->set_mac(priv->ioaddr, false);
+ 		pinctrl_pm_select_sleep_state(priv->device);
+ 		/* Disable clock in case of PWM is off */
+-		clk_disable(priv->plat->pclk);
+-		clk_disable(priv->plat->stmmac_clk);
++		if (priv->plat->clk_ptp_ref)
++			clk_disable_unprepare(priv->plat->clk_ptp_ref);
++		clk_disable_unprepare(priv->plat->pclk);
++		clk_disable_unprepare(priv->plat->stmmac_clk);
  	}
+ 	spin_unlock_irqrestore(&priv->lock, flags);
  
-diff --git a/drivers/net/ethernet/i825xx/sni_82596.c b/drivers/net/ethernet/i825xx/sni_82596.c
-index b2c04a789744f..43c1fd18670b0 100644
---- a/drivers/net/ethernet/i825xx/sni_82596.c
-+++ b/drivers/net/ethernet/i825xx/sni_82596.c
-@@ -23,6 +23,8 @@
- 
- static const char sni_82596_string[] = "snirm_82596";
- 
-+#define LIB82596_DMA_ATTR	0
-+
- #define DMA_WBACK(priv, addr, len)     do { } while (0)
- #define DMA_INV(priv, addr, len)       do { } while (0)
- #define DMA_WBACK_INV(priv, addr, len) do { } while (0)
-@@ -151,7 +153,7 @@ static int sni_82596_driver_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(dev);
- 	dma_free_attrs(dev->dev.parent, sizeof(struct i596_private), lp->dma,
--		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+		       lp->dma_addr, LIB82596_DMA_ATTR);
- 	iounmap(lp->ca);
- 	iounmap(lp->mpu_port);
- 	free_netdev (dev);
+@@ -4468,8 +4470,10 @@ int stmmac_resume(struct device *dev)
+ 	} else {
+ 		pinctrl_pm_select_default_state(priv->device);
+ 		/* enable the clk previously disabled */
+-		clk_enable(priv->plat->stmmac_clk);
+-		clk_enable(priv->plat->pclk);
++		clk_prepare_enable(priv->plat->stmmac_clk);
++		clk_prepare_enable(priv->plat->pclk);
++		if (priv->plat->clk_ptp_ref)
++			clk_prepare_enable(priv->plat->clk_ptp_ref);
+ 		/* reset the phy so that it's ready */
+ 		if (priv->mii)
+ 			stmmac_mdio_reset(priv->mii);
 -- 
 2.20.1
 
