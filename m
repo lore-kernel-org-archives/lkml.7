@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE0ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4A8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955DB2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E6C214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095994;
-	bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
+	s=default; t=1572096002;
+	bh=+RXZgY1pNTGvQ+1526ck6j6FRsdHz9lJ0dRvajUZKyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZ+0KJHtbuEZBsvOL1gHHvzTBJCR/TFhvYg/52J9U3KpADorPGk32idQlkhzjOlJp
-	 7wp1MRKTZggqxtfv6XYkRjCNMuh6CwQaj0/n62qpOAcVaOXW/m9BjA52AD06daytXT
-	 ZAzzrddekNB/bblhO6IO5nBlV3HRqNlq4XCfjH+k=
+	b=J+TiuFeqSaFWruN2jsuhWzFdiKEukttZYZ+Tf7CxkELBNSJoCskcTqPjHDGmMJ2bQ
+	 gJAal5J1PPeY1u5fIt9GZR/Q8DaVPHpGHLC6dplSXioIlPeBeZ151Xel+NqtCsuy/Z
+	 CJfWQAJj0231UrC3KFdg7RD1jZA0LOJtTU0LzMdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfJZNTv (ORCPT
+        id S1728537AbfJZNUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:19:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41686 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbfJZNTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:49 -0400
+        id S1728504AbfJZNT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42E82070B;
-        Sat, 26 Oct 2019 13:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C69392070B;
+        Sat, 26 Oct 2019 13:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095988;
-        bh=a+GKRQsj12e49IKqnLb4YIPS1p3NkJgRmAz+07Mktog=;
+        s=default; t=1572095997;
+        bh=+RXZgY1pNTGvQ+1526ck6j6FRsdHz9lJ0dRvajUZKyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M//wpeW/aNPe8n9TwYG+P1sAe0iUsZF/ISOBIgUhYZsUn+Fi/dfEUNvb4BRbozOoA
-         mTFwEca5NHBAHK/npaYoym5UI8VH5oe3KZtWu760kilvsd9/l7wqQlciFVUpjZbbFR
-         fw8pk+KcFHpFV/mi4T1C1Cg+cEhJHtCNumTrzRso=
+        b=v3v6Mc41BbEypAabo1yxtAw+6e6EMNi14jU0uBfrFJqEOa+Q2UsTQvucounAqySXx
+         y+0HWswF1xOI0hsDXMVsoVMFnP9map1xMFtGv7d1G026L4DowXUWEPRi/aeNSA6PDC
+         dS/yNFUT7HLiq4+kxVysLnVQBUc4CTglDHhN1AK0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/59] NFC: pn533: fix use-after-free and memleaks
-Date:   Sat, 26 Oct 2019 09:18:32 -0400
-Message-Id: <20191026131910.3435-21-sashal@kernel.org>
+Cc:     Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 25/59] iwlwifi: exclude GEO SAR support for 3168
+Date:   Sat, 26 Oct 2019 09:18:36 -0400
+Message-Id: <20191026131910.3435-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -60,53 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-[ Upstream commit 6af3aa57a0984e061f61308fe181a9a12359fecc ]
+[ Upstream commit 12e36d98d3e5acf5fc57774e0a15906d55f30cb9 ]
 
-The driver would fail to deregister and its class device and free
-related resources on late probe errors.
+We currently support two NICs in FW version 29, namely 7265D and 3168.
+Out of these, only 7265D supports GEO SAR, so adjust the function that
+checks for it accordingly.
 
-Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
-Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: f5a47fae6aa3 ("iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/pn533/usb.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
-index 5d823e965883b..fcb57d64d97e6 100644
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -559,18 +559,25 @@ static int pn533_usb_probe(struct usb_interface *interface,
- 
- 	rc = pn533_finalize_setup(priv);
- 	if (rc)
--		goto error;
-+		goto err_deregister;
- 
- 	usb_set_intfdata(interface, phy);
- 
- 	return 0;
- 
-+err_deregister:
-+	pn533_unregister_device(phy->priv);
- error:
-+	usb_kill_urb(phy->in_urb);
-+	usb_kill_urb(phy->out_urb);
-+	usb_kill_urb(phy->ack_urb);
-+
- 	usb_free_urb(phy->in_urb);
- 	usb_free_urb(phy->out_urb);
- 	usb_free_urb(phy->ack_urb);
- 	usb_put_dev(phy->udev);
- 	kfree(in_buf);
-+	kfree(phy->ack_buffer);
- 
- 	return rc;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 9cb9f0544c9b1..2eba6d6f367f8 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -843,15 +843,17 @@ static bool iwl_mvm_sar_geo_support(struct iwl_mvm *mvm)
+ 	 * firmware versions.  Unfortunately, we don't have a TLV API
+ 	 * flag to rely on, so rely on the major version which is in
+ 	 * the first byte of ucode_ver.  This was implemented
+-	 * initially on version 38 and then backported to29 and 17.
+-	 * The intention was to have it in 36 as well, but not all
+-	 * 8000 family got this feature enabled.  The 8000 family is
+-	 * the only one using version 36, so skip this version
+-	 * entirely.
++	 * initially on version 38 and then backported to 17.  It was
++	 * also backported to 29, but only for 7265D devices.  The
++	 * intention was to have it in 36 as well, but not all 8000
++	 * family got this feature enabled.  The 8000 family is the
++	 * only one using version 36, so skip this version entirely.
+ 	 */
+ 	return IWL_UCODE_SERIAL(mvm->fw->ucode_ver) >= 38 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 ||
+-	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17;
++	       IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 17 ||
++	       (IWL_UCODE_SERIAL(mvm->fw->ucode_ver) == 29 &&
++		((mvm->trans->hw_rev & CSR_HW_REV_TYPE_MSK) ==
++		 CSR_HW_REV_TYPE_7265D));
  }
+ 
+ int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
 -- 
 2.20.1
 
