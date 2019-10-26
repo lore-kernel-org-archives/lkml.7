@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06544CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE14CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEFB206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141D0206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096545;
-	bh=d+k+F8sEkdzwwKGHDr6Pgq1fJ05P427d/R561d/xQso=;
+	s=default; t=1572096552;
+	bh=0gMrf58nyOQicRuJIsnB9fgJMehx9YiSuKXoMEcGI28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXwEkD2NOw6nlCQSUbsobmW3a1fKKtujyhOg+JP+iQuHlQhzht/tufZIwWYrfB3sw
-	 PnAcANGf6H08Qhgk59H2Ef2/mg6cAE0PvfKH0IZdj1aZwcz6yH9qvzHNuKKcHxPKTp
-	 VvmJOeXNhCurqDoEfwHB20ge4un3+LwoIUCVLWy0=
+	b=eKqQ01AbHWuAl5sAp5aHyHD/DqDD/8WkDf0ILU98+XlLKlFNPbTte016TcAcjRejo
+	 nB+Us0mVzx5qHTU8mTKcj3lHPeFtR56jjqMFfcxhUBM17eM9Zr9SHhIqqCBREmdUUI
+	 Q1q2L90fWx9EACtVdtlPsbIHQtwMSKUNAw0/oT3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbfJZN3E (ORCPT
+        id S1729272AbfJZN3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42518 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbfJZNUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:45 -0400
+        id S1727127AbfJZNUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C4D214DA;
-        Sat, 26 Oct 2019 13:20:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3717222BD;
+        Sat, 26 Oct 2019 13:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096045;
-        bh=d+k+F8sEkdzwwKGHDr6Pgq1fJ05P427d/R561d/xQso=;
+        s=default; t=1572096033;
+        bh=0gMrf58nyOQicRuJIsnB9fgJMehx9YiSuKXoMEcGI28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8xX7er4kXoe7oj8PqnLWsFnbhyT5BXXvf41Dl57xlylfAFsK36wGKk1mqu7GVOQx
-         WPwLwQHBJYVFn2J58k5XwcCsIWfAvAcGxc3T98CsZiDULgYiiClVGeZKPfRCRPxxH+
-         prgsbAtif3ikskhPWyTEmqbqAcxMLYsy/3DDfVV4=
+        b=XvT2yo23keVe2VXfZamfI/l28P5t+AkUnBS+mUn4TKR05cpORLtWlk7y4SqRt0GlP
+         6EM5NC6jZLzY5wNCm/0msNPhnBGpAvyOb1DbG1C+bmzeDslCbWZ+GoWMfZrxyJqkhi
+         IKvN6YNW9I5A+kCK/p0fr0L0VaNIiH3/jOdPWSHo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 48/59] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
-Date:   Sat, 26 Oct 2019 09:18:59 -0400
-Message-Id: <20191026131910.3435-48-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Edmund Nadolski <edmund.nadolski@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 43/59] nvme: Prevent resets during paused controller state
+Date:   Sat, 26 Oct 2019 09:18:54 -0400
+Message-Id: <20191026131910.3435-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -61,52 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
+[ Upstream commit 4c75f877853cfa81b12374a07208e07b077f39b8 ]
 
-The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
-became 6 for GENET v4 and above, account for that difference.
+A paused controller is doing critical internal activation work in the
+background. Prevent subsequent controller resets from occurring during
+this period by setting the controller state to RESETTING first. A helper
+function, nvme_try_sched_reset_work(), is introduced for these paths so
+they may continue with scheduling the reset_work after they've completed
+their uninterruptible critical section.
 
-Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested-by: Edmund Nadolski <edmund.nadolski@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.h | 1 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c   | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index 14b49612aa863..4dabf37319c84 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -369,6 +369,7 @@ struct bcmgenet_mib_counters {
- #define  EXT_PWR_DOWN_PHY_EN		(1 << 20)
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index ddd5c72a565ad..95d4f1a6dd795 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -126,6 +126,21 @@ static void nvme_queue_scan(struct nvme_ctrl *ctrl)
+ 		queue_work(nvme_wq, &ctrl->scan_work);
+ }
  
- #define EXT_RGMII_OOB_CTRL		0x0C
-+#define  RGMII_MODE_EN_V123		(1 << 0)
- #define  RGMII_LINK			(1 << 4)
- #define  OOB_DISABLE			(1 << 5)
- #define  RGMII_MODE_EN			(1 << 6)
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index de0e24d912fe9..7b2fbbc334639 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -261,7 +261,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 	 */
- 	if (priv->ext_phy) {
- 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
--		reg |= RGMII_MODE_EN | id_mode_dis;
-+		reg |= id_mode_dis;
-+		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-+			reg |= RGMII_MODE_EN_V123;
-+		else
-+			reg |= RGMII_MODE_EN;
- 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
++/*
++ * Use this function to proceed with scheduling reset_work for a controller
++ * that had previously been set to the resetting state. This is intended for
++ * code paths that can't be interrupted by other reset attempts. A hot removal
++ * may prevent this from succeeding.
++ */
++static int nvme_try_sched_reset(struct nvme_ctrl *ctrl)
++{
++	if (ctrl->state != NVME_CTRL_RESETTING)
++		return -EBUSY;
++	if (!queue_work(nvme_reset_wq, &ctrl->reset_work))
++		return -EBUSY;
++	return 0;
++}
++
+ int nvme_reset_ctrl(struct nvme_ctrl *ctrl)
+ {
+ 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_RESETTING))
+@@ -3445,13 +3460,13 @@ static void nvme_fw_act_work(struct work_struct *work)
+ 		if (time_after(jiffies, fw_act_timeout)) {
+ 			dev_warn(ctrl->device,
+ 				"Fw activation timeout, reset controller\n");
+-			nvme_reset_ctrl(ctrl);
+-			break;
++			nvme_try_sched_reset(ctrl);
++			return;
+ 		}
+ 		msleep(100);
  	}
  
+-	if (ctrl->state != NVME_CTRL_LIVE)
++	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
+ 		return;
+ 
+ 	nvme_start_queues(ctrl);
+@@ -3467,7 +3482,13 @@ static void nvme_handle_aen_notice(struct nvme_ctrl *ctrl, u32 result)
+ 		nvme_queue_scan(ctrl);
+ 		break;
+ 	case NVME_AER_NOTICE_FW_ACT_STARTING:
+-		queue_work(nvme_wq, &ctrl->fw_act_work);
++		/*
++		 * We are (ab)using the RESETTING state to prevent subsequent
++		 * recovery actions from interfering with the controller's
++		 * firmware activation.
++		 */
++		if (nvme_change_ctrl_state(ctrl, NVME_CTRL_RESETTING))
++			queue_work(nvme_wq, &ctrl->fw_act_work);
+ 		break;
+ #ifdef CONFIG_NVME_MULTIPATH
+ 	case NVME_AER_NOTICE_ANA:
 -- 
 2.20.1
 
