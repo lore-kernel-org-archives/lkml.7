@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8909CCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966D3CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556B220867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD3220867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096522;
-	bh=UK7m25F9ZMBaMWRSv7Q+Giy/+sHLZXHNYPoDUZnqReA=;
+	s=default; t=1572096526;
+	bh=ZbaRqPpNCSUJatQuWjo3ZGisq+XCjNCR5k/e3FVr3B4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cGq/n53f0WO0zdN7cgA4IAhJ7IDoAoSP57Xj/OJewSeGQIMt5rf/qdTr3eTHc6MZ7
-	 9jdy5330ixxK6Dku0IhcaEULg/KIsJRMT8uEoQ94xQyMqiV/WVgPdUn+RjxqtHrbZR
-	 f2v9zfS6AYMh8caG8aNbSS12pkUM69187Or5WGww=
+	b=kMS8Oi+kbujIt+s+oCNFE1NSHs36r/qaHcyXOpIDm3jYbBPdfA/Wek2J1RlTI4Zpz
+	 +8FndT0CK2fGIBTqiOHjK4IPyE/i8HOH/+CPwllK7FxSur9jBen+GImaITKfD77isF
+	 wQn+4+m+DGdVWk8/VD3RScDW4t82Eh17SEe3oPhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfJZNUz (ORCPT
+        id S1728913AbfJZN2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42374 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728662AbfJZNUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:37 -0400
+        id S1727573AbfJZNUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0C2E214DA;
-        Sat, 26 Oct 2019 13:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECA8D206DD;
+        Sat, 26 Oct 2019 13:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096036;
-        bh=UK7m25F9ZMBaMWRSv7Q+Giy/+sHLZXHNYPoDUZnqReA=;
+        s=default; t=1572096052;
+        bh=ZbaRqPpNCSUJatQuWjo3ZGisq+XCjNCR5k/e3FVr3B4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mgYkX2l7l1I7nPvzxO5v8pnTrxrQvQ6wFf5BTQMtUAy32wW/SKq05NWcJTNH64+Mh
-         V/FkipgYTSKLbRqr1Ai0fsBGazX34UVuno6VQ3Sty/O8QKg16KpUNEUrko12ZhZDFp
-         EWMYUjkYGYPTfpOhwUeBGoJeWfn2L5lEPIkVASbk=
+        b=oiXaxECsqooSHFBzrssbij67lwOBn0rbb01w6GyZXzH3R5djcxa/jwXotgOHZrsxO
+         yXOWeliJmgrwa2KmhSsO2NidUPLAy4J43yWc9ujLMhZN8jSUdd5pjNDoW3scozJ6tq
+         ugvSbz+0qFmkRAghTnHDVnV7+BJk5FeD3H45NqxY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 45/59] firmware: dmi: Fix unlikely out-of-bounds read in save_mem_devices
-Date:   Sat, 26 Oct 2019 09:18:56 -0400
-Message-Id: <20191026131910.3435-45-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 52/59] usb: hso: obey DMA rules in tiocmget
+Date:   Sat, 26 Oct 2019 09:19:03 -0400
+Message-Id: <20191026131910.3435-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -58,39 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 81dde26de9c08bb04c4962a15608778aaffb3cf9 ]
+[ Upstream commit af0de1303c4e8f44fadd7b4c593f09f22324b04f ]
 
-Before reading the Extended Size field, we should ensure it fits in
-the DMI record. There is already a record length check but it does
-not cover that field.
+The serial state information must not be embedded into another
+data structure, as this interferes with cache handling for DMA
+on architectures without cache coherence..
+That would result in data corruption on some architectures
+Allocating it separately.
 
-It would take a seriously corrupted DMI table to hit that bug, so no
-need to worry, but we should still fix it.
+v2: fix syntax error
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Fixes: 6deae96b42eb ("firmware, DMI: Add function to look up a handle and return DIMM size")
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Borislav Petkov <bp@suse.de>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/dmi_scan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/hso.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-index f2483548cde92..0dc0c78f1fdb2 100644
---- a/drivers/firmware/dmi_scan.c
-+++ b/drivers/firmware/dmi_scan.c
-@@ -407,7 +407,7 @@ static void __init save_mem_devices(const struct dmi_header *dm, void *v)
- 		bytes = ~0ull;
- 	else if (size & 0x8000)
- 		bytes = (u64)(size & 0x7fff) << 10;
--	else if (size != 0x7fff)
-+	else if (size != 0x7fff || dm->length < 0x20)
- 		bytes = (u64)size << 20;
- 	else
- 		bytes = (u64)get_unaligned((u32 *)&d[0x1C]) << 20;
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index 5251c5f6f96ed..a7b612f6470cb 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -200,7 +200,7 @@ struct hso_tiocmget {
+ 	int    intr_completed;
+ 	struct usb_endpoint_descriptor *endp;
+ 	struct urb *urb;
+-	struct hso_serial_state_notification serial_state_notification;
++	struct hso_serial_state_notification *serial_state_notification;
+ 	u16    prev_UART_state_bitmap;
+ 	struct uart_icount icount;
+ };
+@@ -1446,7 +1446,7 @@ static int tiocmget_submit_urb(struct hso_serial *serial,
+ 			 usb_rcvintpipe(usb,
+ 					tiocmget->endp->
+ 					bEndpointAddress & 0x7F),
+-			 &tiocmget->serial_state_notification,
++			 tiocmget->serial_state_notification,
+ 			 sizeof(struct hso_serial_state_notification),
+ 			 tiocmget_intr_callback, serial,
+ 			 tiocmget->endp->bInterval);
+@@ -1493,7 +1493,7 @@ static void tiocmget_intr_callback(struct urb *urb)
+ 	/* wIndex should be the USB interface number of the port to which the
+ 	 * notification applies, which should always be the Modem port.
+ 	 */
+-	serial_state_notification = &tiocmget->serial_state_notification;
++	serial_state_notification = tiocmget->serial_state_notification;
+ 	if (serial_state_notification->bmRequestType != BM_REQUEST_TYPE ||
+ 	    serial_state_notification->bNotification != B_NOTIFICATION ||
+ 	    le16_to_cpu(serial_state_notification->wValue) != W_VALUE ||
+@@ -2579,6 +2579,8 @@ static void hso_free_tiomget(struct hso_serial *serial)
+ 		usb_free_urb(tiocmget->urb);
+ 		tiocmget->urb = NULL;
+ 		serial->tiocmget = NULL;
++		kfree(tiocmget->serial_state_notification);
++		tiocmget->serial_state_notification = NULL;
+ 		kfree(tiocmget);
+ 	}
+ }
+@@ -2629,10 +2631,13 @@ static struct hso_device *hso_create_bulk_serial_device(
+ 		num_urbs = 2;
+ 		serial->tiocmget = kzalloc(sizeof(struct hso_tiocmget),
+ 					   GFP_KERNEL);
++		serial->tiocmget->serial_state_notification
++			= kzalloc(sizeof(struct hso_serial_state_notification),
++					   GFP_KERNEL);
+ 		/* it isn't going to break our heart if serial->tiocmget
+ 		 *  allocation fails don't bother checking this.
+ 		 */
+-		if (serial->tiocmget) {
++		if (serial->tiocmget && serial->tiocmget->serial_state_notification) {
+ 			tiocmget = serial->tiocmget;
+ 			tiocmget->endp = hso_get_ep(interface,
+ 						    USB_ENDPOINT_XFER_INT,
 -- 
 2.20.1
 
