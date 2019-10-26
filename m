@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E846CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EC3CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CDD2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FD82070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096060;
-	bh=mthu+9IsgOkuPQMnDZv+GRWbBRAqPfBfJ9FHR+O9pv0=;
+	s=default; t=1572096068;
+	bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Onfl6uMBY6+qglk4m6Q3VZ7A0qFhCquXaQ9MNPGbsZKN/A8Sjli3mXEIpE8PIhq/k
-	 sywsYXsGH0H61LLxWUf5+6plvuBFD5ry7r8c/qomlR5AVetJDTkt/ib+hCH45gHTTy
-	 gqwlXnzoK/p2XIxKVXt/f3dep1yhRtejWfixCqcI=
+	b=eIU0sMZFHTR6qvK16MPO1gnDEUQl7Xz2w/Yhn01FGLgNlYxlkKUEdnW3rz63MJ0RP
+	 suhzVSIPnHHwoeyxNxAC0PDrbTjVJRmBFQ7U+mEK0HxrYYVN9kj+SGKJ5zZoeBDsi0
+	 k7W6ZWJpXM0Npsg513v4fQCEX0jpBaGn3LnW2LSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfJZNU7 (ORCPT
+        id S1728792AbfJZNVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42508 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728608AbfJZNUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:45 -0400
+        id S1726994AbfJZNUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E1EA206DD;
-        Sat, 26 Oct 2019 13:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B640206DD;
+        Sat, 26 Oct 2019 13:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096044;
-        bh=mthu+9IsgOkuPQMnDZv+GRWbBRAqPfBfJ9FHR+O9pv0=;
+        s=default; t=1572096048;
+        bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vh+nPxWm2G3zf0qarXanuHdMi9jzfj5RGLmrZVX5GWIL8HtXtT/pbJyhB6rjxP1XJ
-         CSxt2cN74hytZLSVLy5FW/t5+uEhVagWTQ/YZhAi+97+P2MIBJy8abDrxm8WlKYLck
-         AtgDjNwn2S4fm7Ao3H4bEb7MwqpSf/CFqSZg1BQI=
+        b=EvXUUjwgn+xZQsexqjnkAMFExGbhzAiJ8TGsWW2UO9Mu7yniWQdWbRXlApUHVdoDF
+         WPtr4AlV/c2idGHJ2GMWOL5IezRPYRZrRGgLELnvWx9nOfcfFIY650ySdUXfoawJMm
+         jc8zcboEgziMKG037nQOIaRxKVeqIVUWe+zgnR3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 47/59] net: i82596: fix dma_alloc_attr for sni_82596
-Date:   Sat, 26 Oct 2019 09:18:58 -0400
-Message-Id: <20191026131910.3435-47-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 49/59] net: usb: sr9800: fix uninitialized local variable
+Date:   Sat, 26 Oct 2019 09:19:00 -0400
+Message-Id: <20191026131910.3435-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,92 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 
-[ Upstream commit 61c1d33daf7b5146f44d4363b3322f8cda6a6c43 ]
+[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
 
-Commit 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
-switched dma allocation over to dma_alloc_attr, but didn't convert
-the SNI part to request consistent DMA memory. This broke sni_82596
-since driver doesn't do dma_cache_sync for performance reasons.
-Fix this by using different DMA_ATTRs for lasi_82596 and sni_82596.
+Make sure res does not contain random value if the call to
+sr_read_cmd fails for some reason.
 
-Fixes: 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/i825xx/lasi_82596.c | 4 +++-
- drivers/net/ethernet/i825xx/lib82596.c   | 4 ++--
- drivers/net/ethernet/i825xx/sni_82596.c  | 4 +++-
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/usb/sr9800.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/i825xx/lasi_82596.c b/drivers/net/ethernet/i825xx/lasi_82596.c
-index b69c622ba8b2d..6f0e4019adefa 100644
---- a/drivers/net/ethernet/i825xx/lasi_82596.c
-+++ b/drivers/net/ethernet/i825xx/lasi_82596.c
-@@ -96,6 +96,8 @@
+diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
+index 35f39f23d8814..8f8c9ede88c26 100644
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
+ static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
+ {
+ 	struct usbnet *dev = netdev_priv(net);
+-	__le16 res;
++	__le16 res = 0;
  
- #define OPT_SWAP_PORT	0x0001	/* Need to wordswp on the MPU port */
- 
-+#define LIB82596_DMA_ATTR	DMA_ATTR_NON_CONSISTENT
-+
- #define DMA_WBACK(ndev, addr, len) \
- 	do { dma_cache_sync((ndev)->dev.parent, (void *)addr, len, DMA_TO_DEVICE); } while (0)
- 
-@@ -199,7 +201,7 @@ static int __exit lan_remove_chip(struct parisc_device *pdev)
- 
- 	unregister_netdev (dev);
- 	dma_free_attrs(&pdev->dev, sizeof(struct i596_private), lp->dma,
--		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+		       lp->dma_addr, LIB82596_DMA_ATTR);
- 	free_netdev (dev);
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/i825xx/lib82596.c b/drivers/net/ethernet/i825xx/lib82596.c
-index 2f7ae118217fe..d0e8193ca4708 100644
---- a/drivers/net/ethernet/i825xx/lib82596.c
-+++ b/drivers/net/ethernet/i825xx/lib82596.c
-@@ -1065,7 +1065,7 @@ static int i82596_probe(struct net_device *dev)
- 
- 	dma = dma_alloc_attrs(dev->dev.parent, sizeof(struct i596_dma),
- 			      &lp->dma_addr, GFP_KERNEL,
--			      DMA_ATTR_NON_CONSISTENT);
-+			      LIB82596_DMA_ATTR);
- 	if (!dma) {
- 		printk(KERN_ERR "%s: Couldn't get shared memory\n", __FILE__);
- 		return -ENOMEM;
-@@ -1087,7 +1087,7 @@ static int i82596_probe(struct net_device *dev)
- 	i = register_netdev(dev);
- 	if (i) {
- 		dma_free_attrs(dev->dev.parent, sizeof(struct i596_dma),
--			       dma, lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+			       dma, lp->dma_addr, LIB82596_DMA_ATTR);
- 		return i;
- 	}
- 
-diff --git a/drivers/net/ethernet/i825xx/sni_82596.c b/drivers/net/ethernet/i825xx/sni_82596.c
-index b2c04a789744f..43c1fd18670b0 100644
---- a/drivers/net/ethernet/i825xx/sni_82596.c
-+++ b/drivers/net/ethernet/i825xx/sni_82596.c
-@@ -23,6 +23,8 @@
- 
- static const char sni_82596_string[] = "snirm_82596";
- 
-+#define LIB82596_DMA_ATTR	0
-+
- #define DMA_WBACK(priv, addr, len)     do { } while (0)
- #define DMA_INV(priv, addr, len)       do { } while (0)
- #define DMA_WBACK_INV(priv, addr, len) do { } while (0)
-@@ -151,7 +153,7 @@ static int sni_82596_driver_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(dev);
- 	dma_free_attrs(dev->dev.parent, sizeof(struct i596_private), lp->dma,
--		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+		       lp->dma_addr, LIB82596_DMA_ATTR);
- 	iounmap(lp->ca);
- 	iounmap(lp->mpu_port);
- 	free_netdev (dev);
+ 	mutex_lock(&dev->phy_mutex);
+ 	sr_set_sw_mii(dev);
 -- 
 2.20.1
 
