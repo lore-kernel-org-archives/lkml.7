@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6B7CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32655CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D549F21897
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31B1222C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095926;
-	bh=wKaFh3NjnC8o1ufB2KUd6hwbho16fOZEmMp8akNBREM=;
+	s=default; t=1572095929;
+	bh=Mm9kL3fTKhgVCOwa1CZY+whzW4MSgMeJVzsd4BL9wTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zSYnsSD5b2B1gm3DXervyK0wJZWvSTtdRP2eixpNpEHN2gU3R7jxG6cno8IY7AKLl
-	 1Op3dZ9VA+G7FfzjNwb0zbiq8HAjfV5P8+WcjesoaCiBdNKRixvzPl5YDszZjAT3zj
-	 SWB1dvL++cscKdXioB17MPuwxXwjQku8i1s34fek=
+	b=YDtON4Fn6G8XGSFpFiYgmVSJv31/yb94ZldslDDYtOyLJeKOqNTp2WzdrpHJ9BGKN
+	 2E6xIXwVJldUq/6YpZ3d76j/2EQjsEvPedMoZEafAy7/oZsybZMz4wP+gQDPq2WYVI
+	 QO1EGKupBce4wZ/sDqPCbo/XZTqPpThF+ovFjqdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfJZNSp (ORCPT
+        id S1728032AbfJZNSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40508 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbfJZNSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:41 -0400
+        id S1727977AbfJZNSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BADD214DA;
-        Sat, 26 Oct 2019 13:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FF8F222C3;
+        Sat, 26 Oct 2019 13:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095920;
-        bh=wKaFh3NjnC8o1ufB2KUd6hwbho16fOZEmMp8akNBREM=;
+        s=default; t=1572095922;
+        bh=Mm9kL3fTKhgVCOwa1CZY+whzW4MSgMeJVzsd4BL9wTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asisGJjbJQFX67UpDMOmp0Gl84Lx9WUNikJ49OR7pqyMM6Kg2nTggOoSA8TNs+0eT
-         RRuZSA6MnEB5Uh6A79WLOUmX/c6xPlsF1/EYqxdAKsHBIdjNOP7NmDHe6nsvM1R30f
-         nL+twHukKOtu3W7m8ECrF/OUEJF/diZs2+rlACLg=
+        b=avFUM/b1aPw+p3GL/waA+mwelUWoE0t4Fefb/ZjmxeiKMUj3Kc415QrIr1xPQ2QKw
+         tgEOu06vo1V5lfkP0xGiCwsURiCFnhG8+/L9vIxm4/jRE+t6ItvRXaiC585/US1yf5
+         i9SF9Prhnw7vzthlnNrOh5J9YZNFLs5YnrwYAWOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Liu <wei.liu@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 89/99] x86/hyperv: Set pv_info.name to "Hyper-V"
-Date:   Sat, 26 Oct 2019 09:15:50 -0400
-Message-Id: <20191026131600.2507-89-sashal@kernel.org>
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 91/99] net: phy: bcm7xxx: define soft_reset for 40nm EPHY
+Date:   Sat, 26 Oct 2019 09:15:52 -0400
+Message-Id: <20191026131600.2507-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -62,49 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit f7c0f50f1857c1cf013466fcea4dc98d116bf456 ]
+[ Upstream commit fe586b823372a9f43f90e2c6aa0573992ce7ccb7 ]
 
-Michael reported that the x86/hyperv initialization code prints the
-following dmesg when running in a VM on Hyper-V:
+The internal 40nm EPHYs use a "Workaround for putting the PHY in
+IDDQ mode." These PHYs require a soft reset to restore functionality
+after they are powered back up.
 
-  [    0.000738] Booting paravirtualized kernel on bare hardware
+This commit defines the soft_reset function to use genphy_soft_reset
+during phy_init_hw to accommodate this.
 
-Let the x86/hyperv initialization code set pv_info.name to "Hyper-V" so
-dmesg reports correctly:
-
-  [    0.000172] Booting paravirtualized kernel on Hyper-V
-
-[ tglx: Folded build fix provided by Yue ]
-
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.kernel.org/r/20191015103502.13156-1-parri.andrea@gmail.com
+Fixes: 6e2d85ec0559 ("net: phy: Stop with excessive soft reset")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/bcm7xxx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 062f77279ce3b..b3f164bf8eefa 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -215,6 +215,10 @@ static void __init ms_hyperv_init_platform(void)
- 	int hv_host_info_ecx;
- 	int hv_host_info_edx;
- 
-+#ifdef CONFIG_PARAVIRT
-+	pv_info.name = "Hyper-V";
-+#endif
-+
- 	/*
- 	 * Extract the features and hints
- 	 */
+diff --git a/drivers/net/phy/bcm7xxx.c b/drivers/net/phy/bcm7xxx.c
+index 8fc33867e524f..af8eabe7a6d44 100644
+--- a/drivers/net/phy/bcm7xxx.c
++++ b/drivers/net/phy/bcm7xxx.c
+@@ -572,6 +572,7 @@ static int bcm7xxx_28nm_probe(struct phy_device *phydev)
+ 	.name           = _name,					\
+ 	/* PHY_BASIC_FEATURES */					\
+ 	.flags          = PHY_IS_INTERNAL,				\
++	.soft_reset	= genphy_soft_reset,				\
+ 	.config_init    = bcm7xxx_config_init,				\
+ 	.suspend        = bcm7xxx_suspend,				\
+ 	.resume         = bcm7xxx_config_init,				\
 -- 
 2.20.1
 
