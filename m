@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41C8CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE801CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25DF206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC262070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096706;
-	bh=M4BDqp+jaybyxjRpA8NRkwvztv6MOAjRnay/NpFZWJ8=;
+	s=default; t=1572096722;
+	bh=YvWtZhnjtHZ7QF965KDY5rJe3u/aaGvLwszQUSsca2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CGth/IDv9mE/TrbJsYx9Wiy16kwqeNu3TjOSXj4yp2/lkScenNB3/1jpL3cFBv8q2
-	 pSRTp+wzUGFgVY9JCPwyJEpIQDQ2VZL7Xxwh4SO3NKrJuTT7NKIb6fInLg9MkC1Hdt
-	 D/yoZ15TZrBEjZJq707NjSc3gEBb+txDD+8XDfhc=
+	b=bQSfQVZAipsD2FlWjC8ic53olm5rvoK6zRbokZc8wCRCHRSielpYhkJPu70MG4WHA
+	 zwO8I59oSbAT9/kIbN5CsX2/UCN1EfbToanKgHePJ+zwTEdTNz585G/q/x0Ena4jaj
+	 kuT3q/E8wU9rzooLBTPRNvNeWATReuzUIGRIjOAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfJZNbp (ORCPT
+        id S1728764AbfJZNcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41142 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbfJZNTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:13 -0400
+        id S1727990AbfJZNSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C500222C2;
-        Sat, 26 Oct 2019 13:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3582E222CD;
+        Sat, 26 Oct 2019 13:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095953;
-        bh=M4BDqp+jaybyxjRpA8NRkwvztv6MOAjRnay/NpFZWJ8=;
+        s=default; t=1572095924;
+        bh=YvWtZhnjtHZ7QF965KDY5rJe3u/aaGvLwszQUSsca2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIt046ZgQedWdhyz/jFcjwa6yQ6IPQj7a5a2mnVv3dfLYg2jCLQPL8HdUfG4c+BBO
-         0hbxdICPUam8IJCK4la/b0I9CqNaD4l+8AdimYvqTYTiavpLDs7I4xfbKGZnVEbfHE
-         JKNzuNdsmdKaH0CR+2K7g9VN9b3Zv1NpJJxAJis8=
+        b=Ezm1FPf+kVB5xdqofFGbJYhHzqjjkWKkCLWKmORCKhFcMcTExr3LOEZ3TUl4AZyAX
+         Ou2+CgqEL1ofRQFGOjSVCj4M2SkKfhhPF9SZes8r2bNaluXeXIj8xxHiT5/Y8f/LBb
+         sfkVe9eWAVeeZCyGFKdQdBvgT4DDeuhSeifZMzok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liu Xiang <liuxiang_1999@126.com>, Will Deacon <will@kernel.org>,
+Cc:     Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 02/59] iommu/arm-smmu: Free context bitmap in the err path of arm_smmu_init_domain_context
-Date:   Sat, 26 Oct 2019 09:18:13 -0400
-Message-Id: <20191026131910.3435-2-sashal@kernel.org>
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 92/99] net: bcmgenet: reset 40nm EPHY on energy detect
+Date:   Sat, 26 Oct 2019 09:15:53 -0400
+Message-Id: <20191026131600.2507-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
-References: <20191026131910.3435-1-sashal@kernel.org>
+In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
+References: <20191026131600.2507-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,32 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Xiang <liuxiang_1999@126.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 6db7bfb431220d78e34d2d0afdb7c12683323588 ]
+[ Upstream commit 25382b991d252aed961cd434176240f9de6bb15f ]
 
-When alloc_io_pgtable_ops is failed, context bitmap which is just allocated
-by __arm_smmu_alloc_bitmap should be freed to release the resource.
+The EPHY integrated into the 40nm Set-Top Box devices can falsely
+detect energy when connected to a disabled peer interface. When the
+peer interface is enabled the EPHY will detect and report the link
+as active, but on occasion may get into a state where it is not
+able to exchange data with the connected GENET MAC. This issue has
+not been observed when the link parameters are auto-negotiated;
+however, it has been observed with a manually configured link.
 
-Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+It has been empirically determined that issuing a soft reset to the
+EPHY when energy is detected prevents it from getting into this bad
+state.
+
+Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 0c3b8f1c7225e..cfd3428627243 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -915,6 +915,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 	return 0;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index f7359d2271dfa..06e2581b28eaf 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -2018,6 +2018,8 @@ static void bcmgenet_link_intr_enable(struct bcmgenet_priv *priv)
+ 	 */
+ 	if (priv->internal_phy) {
+ 		int0_enable |= UMAC_IRQ_LINK_EVENT;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			int0_enable |= UMAC_IRQ_PHY_DET_R;
+ 	} else if (priv->ext_phy) {
+ 		int0_enable |= UMAC_IRQ_LINK_EVENT;
+ 	} else if (priv->phy_interface == PHY_INTERFACE_MODE_MOCA) {
+@@ -2616,9 +2618,14 @@ static void bcmgenet_irq_task(struct work_struct *work)
+ 	priv->irq0_stat = 0;
+ 	spin_unlock_irq(&priv->lock);
  
- out_clear_smmu:
-+	__arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
- 	smmu_domain->smmu = NULL;
- out_unlock:
- 	mutex_unlock(&smmu_domain->init_mutex);
++	if (status & UMAC_IRQ_PHY_DET_R &&
++	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
++		phy_init_hw(priv->dev->phydev);
++
+ 	/* Link UP/DOWN event */
+ 	if (status & UMAC_IRQ_LINK_EVENT)
+ 		phy_mac_interrupt(priv->dev->phydev);
++
+ }
+ 
+ /* bcmgenet_isr1: handle Rx and Tx priority queues */
+@@ -2713,7 +2720,7 @@ static irqreturn_t bcmgenet_isr0(int irq, void *dev_id)
+ 	}
+ 
+ 	/* all other interested interrupts handled in bottom half */
+-	status &= UMAC_IRQ_LINK_EVENT;
++	status &= (UMAC_IRQ_LINK_EVENT | UMAC_IRQ_PHY_DET_R);
+ 	if (status) {
+ 		/* Save irq status for bottom-half processing. */
+ 		spin_lock_irqsave(&priv->lock, flags);
 -- 
 2.20.1
 
