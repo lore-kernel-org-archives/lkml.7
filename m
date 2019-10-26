@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BC4CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADC2CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BD520867
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACFA21871
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096593;
-	bh=gt9bph1GrJGHkztpsT4H/EYp/BQ6SfJCH9lx63DYKUs=;
+	s=default; t=1572096600;
+	bh=/jb/StiBkQnNp1GN92R6qCVPT5kDpfSTD9GsgwK4vug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kyv/xAD2FcuvinMJhxM+ML+QrscO8pRPmI1PqaulzHae2tZ+QyoXr29FF70CKIONA
-	 NOOxoMP3tmemD25H+G595W43B0hEzjQKsIOHwnr01hA14ZZRcicLYSKNbUqI+rwACQ
-	 vfQpQxq9VmxMrJDKo8MG/GL1upevgXWj+BGxnJuw=
+	b=yqeKQZlG6rDfZkCdT9BPSUOKfLqbN7bm7JCBRRtwAW/IQn0F6/LoZQ0Db0jmexvPo
+	 +Hdsj4HcCFlbz6BUYYrfN1WZqJ4iyF8o0j6PsglZowXFr1uuxp/5cmM5Rl6Jqy1s5/
+	 pesUebYIMIUdXBk7AR1DFNAd7M4X5zuTKo/X6H1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfJZN3w (ORCPT
+        id S1728594AbfJZNUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:29:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:20:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfJZNUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:18 -0400
+        id S1728554AbfJZNUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C386320867;
-        Sat, 26 Oct 2019 13:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 495262070B;
+        Sat, 26 Oct 2019 13:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096017;
-        bh=gt9bph1GrJGHkztpsT4H/EYp/BQ6SfJCH9lx63DYKUs=;
+        s=default; t=1572096004;
+        bh=/jb/StiBkQnNp1GN92R6qCVPT5kDpfSTD9GsgwK4vug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+xn5Ik1plaOaeucdg7dFpOU+3OkGejM4cdKQ7VMRDZIVyYVFXLJTnk1LmK8s+Ik+
-         2jwe+A+Ml3XGFT1gKxej9KCy9Oe+GHk/PC3AQwM++uRQnZG7QWAG5aip8bEoZ1pO9d
-         hAafUYPekzTmOd7gaB8rBLva8Mkdxk9NpxUKw+No=
+        b=Jhbv/n13gadGqMpO3G5BWRS1SFk9k/GSFLN3DtWgxYkcRcqRnlBM1db76xwK3Oc0V
+         WUypMIMcGq+24Mh3ztNDiJ2hA+GY5ZHCqqEbDIpDjd/YlvJUKpl70odSrgQOrpasbO
+         scOxVzZF+5e8kzYj5fmS60j1+u5LX4mjTWWa1gt0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
+Cc:     Antonio Borneo <antonio.borneo@st.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 32/59] act_mirred: Fix mirred_init_module error handling
-Date:   Sat, 26 Oct 2019 09:18:43 -0400
-Message-Id: <20191026131910.3435-32-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 28/59] net: stmmac: fix disabling flexible PPS output
+Date:   Sat, 26 Oct 2019 09:18:39 -0400
+Message-Id: <20191026131910.3435-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,38 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-[ Upstream commit 11c9a7d38af524217efb7a176ad322b97ac2f163 ]
+[ Upstream commit 520cf6002147281d1e7b522bb338416b623dcb93 ]
 
-If tcf_register_action failed, mirred_device_notifier
-should be unregistered.
+Accordingly to Synopsys documentation [1] and [2], when bit PPSEN0
+in register MAC_PPS_CONTROL is set it selects the functionality
+command in the same register, otherwise selects the functionality
+control.
+Command functionality is required to either enable (command 0x2)
+and disable (command 0x5) the flexible PPS output, but the bit
+PPSEN0 is currently set only for enabling.
 
-Fixes: 3b87956ea645 ("net sched: fix race in mirred device removal")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Set the bit PPSEN0 to properly disable flexible PPS output.
+
+Tested on STM32MP15x, based on dwmac 4.10a.
+
+[1] DWC Ethernet QoS Databook 4.10a October 2014
+[2] DWC Ethernet QoS Databook 5.00a September 2017
+
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+Fixes: 9a8a02c9d46d ("net: stmmac: Add Flexible PPS support")
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_mirred.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
-index 399e3beae6cf4..a30c17a282819 100644
---- a/net/sched/act_mirred.c
-+++ b/net/sched/act_mirred.c
-@@ -445,7 +445,11 @@ static int __init mirred_init_module(void)
- 		return err;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+index 3f4f3132e16b3..e436fa160c7d6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+@@ -515,6 +515,7 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
  
- 	pr_info("Mirror/redirect action on\n");
--	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
-+	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
-+	if (err)
-+		unregister_netdevice_notifier(&mirred_device_notifier);
-+
-+	return err;
- }
- 
- static void __exit mirred_cleanup_module(void)
+ 	if (!enable) {
+ 		val |= PPSCMDx(index, 0x5);
++		val |= PPSEN0;
+ 		writel(val, ioaddr + MAC_PPS_CONTROL);
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
