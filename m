@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AD6CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FCACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AD9222BE
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1549D206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096817;
-	bh=gE4ymf6zHwL6N+dtVJnaBxxAtY4WkI95AJrq2UqkCYc=;
+	s=default; t=1572096822;
+	bh=ipbw6dH6lL0Urna0nXEc+8jJiysud2Vy0AV+ljGCwr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GrERx+b4URQWtZLDszjgUiq/iC+IlU+jzZrGLUPKyeAMt3oPYcVvs4aZaZQhMX70S
-	 3Pela2RxtxiVOFFLHabPyuYv1FFGaXoVy6aB0demIhxoSZ6cQF1gAxMe2vatEL4xnh
-	 v4hD3P3Qx3X41eZ4Lxb6NXS1VKrA8TOsLtZdx24k=
+	b=KZMe92gShMWcMhOtDunku4Q2iS6TWpA84CbOHk3GpeLoEpP3+fq51piLOL1+WCsed
+	 OWGqNPziBA93ayZSqUN7Gck5YnakGIl3lpTaFo18wLvDHjSR94ZWBjNEw7BUIDAnOB
+	 zzNOyoTAOfAhf+3FdRqTMc04UKVWVkJtxg07T7g8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfJZNSB (ORCPT
+        id S1727598AbfJZNdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39504 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbfJZNRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:53 -0400
+        id S1727588AbfJZNR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:17:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7494D21655;
-        Sat, 26 Oct 2019 13:17:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBE03214DA;
+        Sat, 26 Oct 2019 13:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095873;
-        bh=gE4ymf6zHwL6N+dtVJnaBxxAtY4WkI95AJrq2UqkCYc=;
+        s=default; t=1572095876;
+        bh=ipbw6dH6lL0Urna0nXEc+8jJiysud2Vy0AV+ljGCwr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3XSJwgOR5cZAujC/UTQZrGO0X0ucRYvozAecZYQhbLfkdm0MiFBzhvD1gq+zsKYr
-         cLWt/8dY53j8GVJrgZuWaZVrmF8N61Wg4EfmZPUYiRk+JhlOb5pudX15lMkkTxsNxL
-         V1yDtDYWNMCBMGa8UEz7tj0KAzKwwP4xDd1Ikh3M=
+        b=gXGNnhC+lXVBtQWWfl8FvI/+pWQoSbMbPxXf28REOJ4SYZoGyz0rkOQNUlhiWXygl
+         aOKcvYat45j8+yDHv8MB4FFskUBnsB4mlXKdMKUfUgZ1BFhH/ie9KHINjYRlJdAjtR
+         z684yQ5thiJodFHDO6NoX0gb9GaQApeP8JIXAxVo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 62/99] drm/ttm: fix handling in ttm_bo_add_mem_to_lru
-Date:   Sat, 26 Oct 2019 09:15:23 -0400
-Message-Id: <20191026131600.2507-62-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Edmund Nadolski <edmund.nadolski@intel.com>,
+        James Smart <james.smart@broadcom.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.3 65/99] nvme-pci: Free tagset if no IO queues
+Date:   Sat, 26 Oct 2019 09:15:26 -0400
+Message-Id: <20191026131600.2507-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,37 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 7fbc899ddeaa9aaef0ba646529089149572c84ee ]
+[ Upstream commit 770597ecb2075390c01c425b8b1f551347f1bd70 ]
 
-We should not add the BO to the swap LRU when the new mem is fixed and
-the TTM object about to be destroyed.
+If a controller becomes degraded after a reset, we will not be able to
+perform any IO. We currently teardown previously created request
+queues and namespaces, but we had kept the unusable tagset. Free
+it after all queues using it have been released.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Kevin Wang <kevin1.wang@amd.com>
-Link: https://patchwork.freedesktop.org/patch/335246/
+Tested-by: Edmund Nadolski <edmund.nadolski@intel.com>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ttm/ttm_bo.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/nvme/host/pci.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-index c2df735a8f82c..5d2ae69e8becc 100644
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@ -184,8 +184,9 @@ static void ttm_bo_add_mem_to_lru(struct ttm_buffer_object *bo,
- 	list_add_tail(&bo->lru, &man->lru[bo->priority]);
- 	kref_get(&bo->list_kref);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 48a71909763be..f94cc01e85a66 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2438,14 +2438,20 @@ static void nvme_release_prp_pools(struct nvme_dev *dev)
+ 	dma_pool_destroy(dev->prp_small_pool);
+ }
  
--	if (bo->ttm && !(bo->ttm->page_flags &
--			 (TTM_PAGE_FLAG_SG | TTM_PAGE_FLAG_SWAPPED))) {
-+	if (!(man->flags & TTM_MEMTYPE_FLAG_FIXED) && bo->ttm &&
-+	    !(bo->ttm->page_flags & (TTM_PAGE_FLAG_SG |
-+				     TTM_PAGE_FLAG_SWAPPED))) {
- 		list_add_tail(&bo->swap, &bdev->glob->swap_lru[bo->priority]);
- 		kref_get(&bo->list_kref);
- 	}
++static void nvme_free_tagset(struct nvme_dev *dev)
++{
++	if (dev->tagset.tags)
++		blk_mq_free_tag_set(&dev->tagset);
++	dev->ctrl.tagset = NULL;
++}
++
+ static void nvme_pci_free_ctrl(struct nvme_ctrl *ctrl)
+ {
+ 	struct nvme_dev *dev = to_nvme_dev(ctrl);
+ 
+ 	nvme_dbbuf_dma_free(dev);
+ 	put_device(dev->dev);
+-	if (dev->tagset.tags)
+-		blk_mq_free_tag_set(&dev->tagset);
++	nvme_free_tagset(dev);
+ 	if (dev->ctrl.admin_q)
+ 		blk_put_queue(dev->ctrl.admin_q);
+ 	kfree(dev->queues);
+@@ -2564,6 +2570,7 @@ static void nvme_reset_work(struct work_struct *work)
+ 		nvme_kill_queues(&dev->ctrl);
+ 		nvme_remove_namespaces(&dev->ctrl);
+ 		new_state = NVME_CTRL_ADMIN_ONLY;
++		nvme_free_tagset(dev);
+ 	} else {
+ 		nvme_start_queues(&dev->ctrl);
+ 		nvme_wait_freeze(&dev->ctrl);
 -- 
 2.20.1
 
