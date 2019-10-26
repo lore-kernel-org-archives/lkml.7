@@ -2,228 +2,168 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B170CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7B2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25DC721655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 06:59:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="PS+GP1qB"
+	by mail.kernel.org (Postfix) with ESMTP id BFA2220679
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfJZG7x (ORCPT
+        id S1726155AbfJZHFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 02:59:53 -0400
-Received: from cmta17.telus.net ([209.171.16.90]:40637 "EHLO cmta17.telus.net"
+        Sat, 26 Oct 2019 03:05:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:15719 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfJZG7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 02:59:52 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id OG34iQ0jPbg38OG36inJfv; Sat, 26 Oct 2019 00:59:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1572073190; bh=aNeAgRVxJMvpFDpvPSlcVC9IWfr9DUAcU3M0fLFw4nw=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=PS+GP1qBYbSm6ObNbnSsmFSBVXqKR7MqeC3+f2nMl1O1ycvz+XXlGGxNJxv3anHU1
-         F/8JXYAIWO0lcieu2rzbGwbCgOuIRAMjvCEU6l6biRqldHMPKjmzyHO6TgX4Q4JRyJ
-         RRA7MlFchxeI/gFW+e1rmPr4fY4bXpcYWoqOQiZwLgyR67OKzNLmfTjZ7EYebZIaas
-         VVtJpAWjcfHvcELqaGd+h4eMkEx90fsSAXTEPpCImPBbVQnXjIMzA7cmfVOpE8Tv7+
-         xKTbJQgMV0tc2k0X5zjdO+jzVFw6RmaWGwxrUd3ve3N8GCJg+X77Jwo4NY0hHjstMM
-         Xa27KusS+b3/g==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=O/1HQy1W c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=IkcTkHD0fZMA:10 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=fwyzoN0nAAAA:8
- a=aatUQebYAAAA:8 a=KKAkSRfTAAAA:8 a=JfrnYn6hAAAA:8 a=Z4Rwk6OoAAAA:8
- a=i0EeH86SAAAA:8 a=QyXUC8HyAAAA:8 a=dseLGN2P6mxj_P1ppjoA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=Sc3RvPAMVtkGz6dGeUiH:22 a=7715FyvI7WU-l6oqrZBK:22
- a=cvBusfyB2V15izCimMoJ:22 a=1CNFftbPRP8L7MoqJWF3:22 a=HkZW87K1Qel5hWWM3VKY:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Vincent Guittot'" <vincent.guittot@linaro.org>
-Cc:     "'linux-kernel'" <linux-kernel@vger.kernel.org>,
-        "'open list:THERMAL'" <linux-pm@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Ingo Molnar'" <mingo@kernel.org>,
-        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Sargun Dhillon'" <sargun@sargun.me>,
-        "'Tejun Heo'" <tj@kernel.org>, "'Xie XiuQi'" <xiexiuqi@huawei.com>,
-        <xiezhipeng1@huawei.com>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Rik van Riel'" <riel@surriel.com>
-References: <1572018904-5234-1-git-send-email-dsmythies@telus.net> <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com>
-In-Reply-To: <CAKfTPtDFAS3TiNaaPoEXFZbqdMt_-tfGm9ffVcQAN=Mu_KbRdQ@mail.gmail.com>
-Subject: RE: [PATCH] Revert "sched/fair: Fix O(nr_cgroups) in the load balancing path"
-Date:   Fri, 25 Oct 2019 23:59:41 -0700
-Message-ID: <000c01d58bca$f5709b30$e051d190$@net>
+        id S1726010AbfJZHFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 03:05:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Oct 2019 00:05:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,230,1569308400"; 
+   d="scan'208";a="224136893"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Oct 2019 00:05:37 -0700
+Cc:     baolu.lu@linux.intel.com, "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH v7 11/11] iommu/vt-d: Add svm/sva invalidate function
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+References: <1571946904-86776-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1571946904-86776-12-git-send-email-jacob.jun.pan@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D5CDE06@SHSMSX104.ccr.corp.intel.com>
+ <5e9d2372-a8b5-9a26-1438-c1a608bfad6d@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <d0375121-7893-bb06-45f3-209a0cff12de@linux.intel.com>
+Date:   Sat, 26 Oct 2019 15:03:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdWLVGs9CusObHsRSmCblhUnwqZNXwAKKLKg
-X-CMAE-Envelope: MS4wfN0lhk1RruJcql3NN6/TjzFHMeI4Z2aBD6dN1Tf+hjDFIT+IfUIMS2KCKeY0uJ1H00enT18NXMrxN04vxJRKJVYcFW3XQj5k4zI2Fiqb3PJzR5Cjtqky
- pPXuFgqEGqZBXn1H83wu4RkxXwNUXBTAq8jbcP6l3iFwyoaMU7IOh4AvMqKYtuQOoWSW/BiN8mVR5Y/RPcEQXoOHHEz3sLSjMicIsfj9Prgd80RO5Y7jph6E
- suXsDIjmqA0/LdhwJm/cCwHJBs+CYhFbO/F0TOo3i/7Lgsowh86wALC4QaPO0EbdUA1iys1ndU0cBAPYCDn0GSl9dqSEqZnwZ5ptWMM8vJKIUmyNBflTYM0p
- KLjLP07xGQ5dGBUlERuv46FMHopKv23tO6qfPImPiHc2SKM882NgIBmUY7tr9iqL7K4z+3nJ7w2WLMA7hOctO0ZDK1oE+KVqFG7dU5eMvDph0SxbJtVzTMYC
- +w+uznk4bQBDpzZt0rFMlPTZrDuDBPH7hGp1IVbZhG0BruCkprxS44a+naom8AnI0P5WcgSt/imeJsEiWavn9ztu5Oj51yr1t4hafA==
+In-Reply-To: <5e9d2372-a8b5-9a26-1438-c1a608bfad6d@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincent,
+Hi again,
 
-Thank you for your quick reply.
+On 10/26/19 10:40 AM, Lu Baolu wrote:
+> Hi,
+> 
+> On 10/25/19 3:27 PM, Tian, Kevin wrote:
+>>> From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
+>>> Sent: Friday, October 25, 2019 3:55 AM
+>>>
+>>> When Shared Virtual Address (SVA) is enabled for a guest OS via
+>>> vIOMMU, we need to provide invalidation support at IOMMU API and
+>>> driver
+>>> level. This patch adds Intel VT-d specific function to implement
+>>> iommu passdown invalidate API for shared virtual address.
+>>>
+>>> The use case is for supporting caching structure invalidation
+>>> of assigned SVM capable devices. Emulated IOMMU exposes queue
+>>> invalidation capability and passes down all descriptors from the guest
+>>> to the physical IOMMU.
+>>
+>> specifically you may clarify that only invalidations related to
+>> first-level page table is passed down, because it's guest
+>> structure being bound to the first-level. other descriptors
+>> are emulated or translated into other necessary operations.
+>>
+>>>
+>>> The assumption is that guest to host device ID mapping should be
+>>> resolved prior to calling IOMMU driver. Based on the device handle,
+>>> host IOMMU driver can replace certain fields before submit to the
+>>> invalidation queue.
+>>
+>> what is device ID? it's a bit confusing term here.
+>>
+>>>
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+>>> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+>>> ---
+>>>   drivers/iommu/intel-iommu.c | 170
+>>> ++++++++++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 170 insertions(+)
+>>>
+>>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>>> index 5fab32fbc4b4..a73e76d6457a 100644
+>>> --- a/drivers/iommu/intel-iommu.c
+>>> +++ b/drivers/iommu/intel-iommu.c
+>>> @@ -5491,6 +5491,175 @@ static void
+>>> intel_iommu_aux_detach_device(struct iommu_domain *domain,
+>>>       aux_domain_remove_dev(to_dmar_domain(domain), dev);
+>>>   }
+>>>
+>>> +/*
+>>> + * 2D array for converting and sanitizing IOMMU generic TLB 
+>>> granularity to
+>>> + * VT-d granularity. Invalidation is typically included in the unmap
+>>> operation
+>>> + * as a result of DMA or VFIO unmap. However, for assigned device where
+>>> guest
+>>> + * could own the first level page tables without being shadowed by 
+>>> QEMU.
+>>> In
+>>> + * this case there is no pass down unmap to the host IOMMU as a 
+>>> result of
+>>> unmap
+>>> + * in the guest. Only invalidations are trapped and passed down.
+>>> + * In all cases, only first level TLB invalidation (request with 
+>>> PASID) can be
+>>> + * passed down, therefore we do not include IOTLB granularity for 
+>>> request
+>>> + * without PASID (second level).
+>>> + *
+>>> + * For an example, to find the VT-d granularity encoding for IOTLB
+>>> + * type and page selective granularity within PASID:
+>>> + * X: indexed by iommu cache type
+>>> + * Y: indexed by enum iommu_inv_granularity
+>>> + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+>>> + *
+>>> + * Granu_map array indicates validity of the table. 1: valid, 0: 
+>>> invalid
+>>> + *
+>>> + */
+>>> +const static int
+>>> inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRAN
+>>> U_NR] = {
+>>> +    /* PASID based IOTLB, support PASID selective and page selective */
+>>> +    {0, 1, 1},
+>>> +    /* PASID based dev TLBs, only support all PASIDs or single PASID */
+>>> +    {1, 1, 0},
+>>
+>> I forgot previous discussion. is it necessary to pass down dev TLB 
+>> invalidation
+>> requests? Can it be handled by host iOMMU driver automatically?
+> 
+> On host SVA, when a memory is unmapped, driver callback will invalidate
+> dev IOTLB explicitly. So I guess we need to pass down it for guest case.
+> This is also required for guest iova over 1st level usage as far as can
+> see.
+> 
 
-On 2010.10.25 09:51 Vincent Guittot wrote:
-> On Fri, 25 Oct 2019 at 17:55, Doug Smythies <doug.smythies@gmail.com> wrote:
->>
->> This reverts commit 039ae8bcf7a5f4476f4487e6bf816885fb3fb617,
->> which, in turn, was a re-apply of
->> commit a9e7f6544b9c ("sched/fair: Fix O(nr_cgroups) in load balance path")
->> after it was reverted via
->> commit c40f7d74c741 ("sched/fair: Fix infinite loop in update_blocked_averages() by reverting a9e7f6544b9c")
->>
->> For an idle system, the cfs_rq_is_decayed function components can underflow to 0 and
->> incorrectly return TRUE, when the item should not be deleted from the list.
->
-> The patch from Rik solves the problem of cfs_rq_is_decayed wrongly returns true
-> https://lore.kernel.org/lkml/20190906191237.27006-6-riel@surriel.com/
+Sorry, I confused guest vIOVA and guest vSVA. For guest vIOVA, no device
+TLB invalidation pass down. But currently for guest vSVA, device TLB
+invalidation is passed down. Perhaps we can avoid passing down dev TLB
+flush just like what we are doing for guest IOVA.
 
-Not for my use case.
-
-I applied Rik's patch to kernel 5.4-rc2 (since all my other reference
-test data had been acquired against a base of 5.4-rc2). Tests results
-are similar to the non-reverted kernel (results added in-line
-below).
-
->>
->> Signed-off-by: Doug Smythies <dsmythies@telus.net>
->> Cc: Vincent Guittot <vincent.guittot@linaro.org>
->> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: sargun@sargun.me
->> Cc: tj@kernel.org
->> Cc: xiexiuqi@huawei.com
->> Cc: xiezhipeng1@huawei.com
->> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->>
->> ---
->> Note 1: Both this reversion and just deleting the cfs_rq_is_decayed function
->> and it's call and leaving the other changes have been tested. I do not know
->> which solution is better. (ie for the "list_for_each_entry_rcu" part of it.)
->>
->> Note 2: Previous controversy over this patch was based on heavy workloads,
->> but this is based on minimal or no workload, or "idle".
->> Where "idle" on my test server, with no gui and many services disabled,
->> tends to mean more "idle" than most systems.
->>
->> Note 3: While this supporting data only involves the intel_pstate CPU
->> frequency scaling driver as a casualty, it is beyond my capabilities
->> to determine what other tasks that should be running might be omitted.
->>
->> Use case example 1:
->> System Idle: The intel pstate CPU frequency scaling driver:
->> Mode: Active, non-hwp, powersave governor.
->> Expected behaviour: There is never ever a duration (time between calls to
->> the driver / per CPU) longer than 4 seconds (the watchdog time, I think).
->> Actual behaviour: There are long long gaps between calls to the driver:
->>
->> Kernel: 5.4-rc2 CPU:7
->> duration: 327.17 Seconds. (this is one of many hundreds of examples.)
->> mpref: 44023326
->> apref: 20716861
->> tsc: 1.11604E+12
->> load: 0
->> CPU frequency: 1.6053 GHz (average over this 327 second sample period).
->> old pstate: 16 (the lowest for my processor)
->> new pstate: 16
->>
->> Kernel: 5.4-rc2 + reversion (either method)
->> After several hours of testing, maximum durations were never more
->> than 4 seconds (well plus some jitter).
->> reversion method: max=4.07908 seconds
->> CPU:7
->> mperf: 492578
->> apref: 231813 (56,829 per second average is consistent with other tests)
->> tsc: 13914264074
->> load: 0
->> CPU frequency: 1.6052 GHz
->> old pstate: 16 (the lowest for my precessor)
->> new pstate: 16
->>
->> On average, the non-reverted kernel executes the driver 25% less
->> than the reverted kernel during idle.
-
-On (shorter)average, the Rik patched kernel executes the driver
-14% less than the reverted kernel during idle.
-
-Longer and repeated testing would be required to determine if
-this is a trend or simply non-repeatable noise.
-
->> O.K. so who cares, the requested pstate doesn't change?
->> First, one wonders if the math could overflow.
->> (although 7180ddd suggests maybe it won't)
->> Second, the sample is largely dominated by obsolete information.
->> Third, this can be problematic, and potentially wastes energy,
->> for the busy to idle transition.
->>
->> Use case example 2:
->> The busy to idle transition:
->>
->> Typically, the pstate request response to a busy to idle transition
->> is very slow because the duration suddenly goes from, typically,
->> 10 milliseconds to much much longer, up to 4 seconds. Transition
->> times to the system being fully idle, with all requested pstates
->> being at minimum, takes around 8 seconds with this reversion,
->> and, potentially, a very very long time (over 100 seconds has been
->> measured) without.
->>
->> Again, so who cares, if the processor is in a deep idle state anyway,
->> not consuming much energy? O.K. but what if it is in an idle state
->> where energy consumption is a function of the requested pstate?
->> For example, for my processor (i7-2600K), idle state 1, then processor
->> package energy can be over double what it should be for many 10s of
->> seconds.
->>
->> Experiment method:
->>
->> enable only idle state 1
->> Dountil stopped
->>   apply a 100% load (all CPUs)
->>   after awhile (about 50 seconds) remove the load.
->>   allow a short transient delay (1 second).
->>   measure the processor package joules used over the next 149 seconds.
->> Enduntil
->>
->> Kernel k5.4-rc2 + reversion (this method)
->> Average processor package power: 9.148 watts (128 samples, > 7 hours)
->> Minimum: 9.02 watts
->> Maximum: 9.29 watts
->> Note: outlyer data point group removed, as it was assumed the computer
->> had something to do and wasn't actually "idle".
->>
->> Kernel 5.4-rc2:
->> Average processor package power: 9.969 watts (150 samples, > 8 hours)
->> Or 9% more energy for the idle phases of the work load.
->> Minimum: 9.15 watts
->> Maximum: 13.79 watts (51% more power)
-
-Kernel 5.4-rc2 + Rik-patch:
-Average processor package power: 9.85 watts (53 samples, < 3 hours)
-Or 7.7% more energy for the idle phases of the work load.
-Minimum: 9.23 watts
-Maximum: 12.79 watts (40% more power)
-
-
-
+Best regards,
+baolu
