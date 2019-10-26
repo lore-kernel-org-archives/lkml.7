@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE74CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FE8CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DAA21E6F
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB9B20867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096100;
-	bh=Pj0u/Os+p43qj5e0aVyrext4aa0gjRxGiUUPq0BsjQs=;
+	s=default; t=1572096107;
+	bh=Xst7r6Og8CbzbfVwav+UJkWGXsNWcL/fy+F8I9Q6Ql0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkvSeyKY1U/+GiDQrIyriWbVUnEf0t1fxwd/otcVL4Zf1M4FoqzbRq8Mv18n+QqCd
-	 ghWkttKWzb2mQZHtTW07QzZCE9r9n7qG8wqZ+c5WGWdqstUuRaIoP8bexMzDv5V3Lz
-	 IklE3xVUGK1T27HP7Q0g6N0rSN2nO+HVW9EimPZY=
+	b=MEbRr/9ZvEEO5BCzAxRZZ4QdrfYOo99W+WB5ZZrksIIYRl9aYXQb9QnUFvkCOWlwo
+	 vo1tNFJUw5LHiEN048vearymNgnWgMjc3b3VX6sE3pYkc8Ex1Q6VEzif/xejit4U2t
+	 7qJb9rVzU+WJPMywDx9cbMcTB7FB5RpBGHpdJhNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfJZNVi (ORCPT
+        id S1727827AbfJZNVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726976AbfJZNVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:21:31 -0400
+        id S1729068AbfJZNVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:21:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C2452070B;
-        Sat, 26 Oct 2019 13:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 046D62070B;
+        Sat, 26 Oct 2019 13:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096090;
-        bh=Pj0u/Os+p43qj5e0aVyrext4aa0gjRxGiUUPq0BsjQs=;
+        s=default; t=1572096097;
+        bh=Xst7r6Og8CbzbfVwav+UJkWGXsNWcL/fy+F8I9Q6Ql0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bh4rgOCBVWhu5mXCf7/pCD3ffK1x+Yq2RWZ+Nal6oOeD8KfTaiBKZ5RZOXpm6h5x8
-         AmNCNRZPSHxyFfaoDwehw747M3+vZBwJgFJ+974xMUltV6KO/6oWgizQQhskZmQ+Wp
-         5V3ORcAk6jkJkvU1423/ivENGrFOYD9qeZm9vNGI=
+        b=vU9EFiZCsx8jyZlhQzPBEpM8zD1pZ7IJfkxI115Yor6OQvLKaNsjdQUSBwvv9HBdz
+         flIMHZh3yW8UU6HJ1FQgzF8i+awoD2Xxm9gvuujy6/M1qy5RrHySr3pn1KkWuMD+69
+         qywdzAVLQJEMIobQRs6uL9BQYgypp1nSKiGyDfZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/33] llc: fix another potential sk_buff leak in llc_ui_sendmsg()
-Date:   Sat, 26 Oct 2019 09:20:47 -0400
-Message-Id: <20191026132110.4026-10-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/33] iwlwifi: dbg_ini: fix memory leak in alloc_sgtable
+Date:   Sat, 26 Oct 2019 09:20:50 -0400
+Message-Id: <20191026132110.4026-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132110.4026-1-sashal@kernel.org>
 References: <20191026132110.4026-1-sashal@kernel.org>
@@ -59,194 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit fc8d5db10cbe1338a52ebc74e7feab9276721774 ]
+[ Upstream commit b4b814fec1a5a849383f7b3886b654a13abbda7d ]
 
-All callers of llc_conn_state_process() except llc_build_and_send_pkt()
-(via llc_ui_sendmsg() -> llc_ui_send_data()) assume that it always
-consumes a reference to the skb.  Fix this caller to do the same.
+In alloc_sgtable if alloc_page fails, the alocated table should be
+released.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/af_llc.c   | 34 ++++++++++++++++++++--------------
- net/llc/llc_conn.c |  2 ++
- net/llc/llc_if.c   | 12 ++++++++----
- 3 files changed, 30 insertions(+), 18 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/llc/af_llc.c b/net/llc/af_llc.c
-index 2e472d5c3ea41..d552e88197133 100644
---- a/net/llc/af_llc.c
-+++ b/net/llc/af_llc.c
-@@ -113,22 +113,26 @@ static inline u8 llc_ui_header_len(struct sock *sk, struct sockaddr_llc *addr)
-  *
-  *	Send data via reliable llc2 connection.
-  *	Returns 0 upon success, non-zero if action did not succeed.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- static int llc_ui_send_data(struct sock* sk, struct sk_buff *skb, int noblock)
- {
- 	struct llc_sock* llc = llc_sk(sk);
--	int rc = 0;
- 
- 	if (unlikely(llc_data_accept_state(llc->state) ||
- 		     llc->remote_busy_flag ||
- 		     llc->p_flag)) {
- 		long timeout = sock_sndtimeo(sk, noblock);
-+		int rc;
- 
- 		rc = llc_ui_wait_for_busy_core(sk, timeout);
-+		if (rc) {
-+			kfree_skb(skb);
-+			return rc;
-+		}
- 	}
--	if (unlikely(!rc))
--		rc = llc_build_and_send_pkt(sk, skb);
--	return rc;
-+	return llc_build_and_send_pkt(sk, skb);
- }
- 
- static void llc_ui_sk_init(struct socket *sock, struct sock *sk)
-@@ -900,7 +904,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	DECLARE_SOCKADDR(struct sockaddr_llc *, addr, msg->msg_name);
- 	int flags = msg->msg_flags;
- 	int noblock = flags & MSG_DONTWAIT;
--	struct sk_buff *skb;
-+	struct sk_buff *skb = NULL;
- 	size_t size = 0;
- 	int rc = -EINVAL, copied = 0, hdrlen;
- 
-@@ -909,10 +913,10 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	lock_sock(sk);
- 	if (addr) {
- 		if (msg->msg_namelen < sizeof(*addr))
--			goto release;
-+			goto out;
- 	} else {
- 		if (llc_ui_addr_null(&llc->addr))
--			goto release;
-+			goto out;
- 		addr = &llc->addr;
- 	}
- 	/* must bind connection to sap if user hasn't done it. */
-@@ -920,7 +924,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 		/* bind to sap with null dev, exclusive. */
- 		rc = llc_ui_autobind(sock, addr);
- 		if (rc)
--			goto release;
-+			goto out;
- 	}
- 	hdrlen = llc->dev->hard_header_len + llc_ui_header_len(sk, addr);
- 	size = hdrlen + len;
-@@ -929,12 +933,12 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	copied = size - hdrlen;
- 	rc = -EINVAL;
- 	if (copied < 0)
--		goto release;
-+		goto out;
- 	release_sock(sk);
- 	skb = sock_alloc_send_skb(sk, size, noblock, &rc);
- 	lock_sock(sk);
- 	if (!skb)
--		goto release;
-+		goto out;
- 	skb->dev      = llc->dev;
- 	skb->protocol = llc_proto_type(addr->sllc_arphrd);
- 	skb_reserve(skb, hdrlen);
-@@ -944,29 +948,31 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 	if (sk->sk_type == SOCK_DGRAM || addr->sllc_ua) {
- 		llc_build_and_send_ui_pkt(llc->sap, skb, addr->sllc_mac,
- 					  addr->sllc_sap);
-+		skb = NULL;
- 		goto out;
- 	}
- 	if (addr->sllc_test) {
- 		llc_build_and_send_test_pkt(llc->sap, skb, addr->sllc_mac,
- 					    addr->sllc_sap);
-+		skb = NULL;
- 		goto out;
- 	}
- 	if (addr->sllc_xid) {
- 		llc_build_and_send_xid_pkt(llc->sap, skb, addr->sllc_mac,
- 					   addr->sllc_sap);
-+		skb = NULL;
- 		goto out;
- 	}
- 	rc = -ENOPROTOOPT;
- 	if (!(sk->sk_type == SOCK_STREAM && !addr->sllc_ua))
- 		goto out;
- 	rc = llc_ui_send_data(sk, skb, noblock);
-+	skb = NULL;
- out:
--	if (rc) {
--		kfree_skb(skb);
--release:
-+	kfree_skb(skb);
-+	if (rc)
- 		dprintk("%s: failed sending from %02X to %02X: %d\n",
- 			__func__, llc->laddr.lsap, llc->daddr.lsap, rc);
--	}
- 	release_sock(sk);
- 	return rc ? : copied;
- }
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index 444c13e752a08..7340f23e16de3 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -55,6 +55,8 @@ int sysctl_llc2_busy_timeout = LLC2_BUSY_TIME * HZ;
-  *	(executing it's actions and changing state), upper layer will be
-  *	indicated or confirmed, if needed. Returns 0 for success, 1 for
-  *	failure. The socket lock has to be held before calling this function.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- {
-diff --git a/net/llc/llc_if.c b/net/llc/llc_if.c
-index 6daf391b3e847..fc4d2bd8816f5 100644
---- a/net/llc/llc_if.c
-+++ b/net/llc/llc_if.c
-@@ -38,6 +38,8 @@
-  *	closed and -EBUSY when sending data is not permitted in this state or
-  *	LLC has send an I pdu with p bit set to 1 and is waiting for it's
-  *	response.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
- {
-@@ -46,20 +48,22 @@ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
- 	struct llc_sock *llc = llc_sk(sk);
- 
- 	if (unlikely(llc->state == LLC_CONN_STATE_ADM))
--		goto out;
-+		goto out_free;
- 	rc = -EBUSY;
- 	if (unlikely(llc_data_accept_state(llc->state) || /* data_conn_refuse */
- 		     llc->p_flag)) {
- 		llc->failed_data_req = 1;
--		goto out;
-+		goto out_free;
- 	}
- 	ev = llc_conn_ev(skb);
- 	ev->type      = LLC_CONN_EV_TYPE_PRIM;
- 	ev->prim      = LLC_DATA_PRIM;
- 	ev->prim_type = LLC_PRIM_TYPE_REQ;
- 	skb->dev      = llc->dev;
--	rc = llc_conn_state_process(sk, skb);
--out:
-+	return llc_conn_state_process(sk, skb);
-+
-+out_free:
-+	kfree_skb(skb);
- 	return rc;
- }
- 
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+index 8390104172410..2ae5c831764a9 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -532,6 +532,7 @@ static struct scatterlist *alloc_sgtable(int size)
+ 				if (new_page)
+ 					__free_page(new_page);
+ 			}
++			kfree(table);
+ 			return NULL;
+ 		}
+ 		alloc_size = min_t(int, size, PAGE_SIZE);
 -- 
 2.20.1
 
