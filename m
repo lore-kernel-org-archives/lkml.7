@@ -2,371 +2,93 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2038CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 22:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA97CCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 23:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702EA20863
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 22:26:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="K/ajmzve";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JRdpZu9P"
+	by mail.kernel.org (Postfix) with ESMTP id 7D87D20873
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 23:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfJZW0L (ORCPT
+        id S1726552AbfJZXGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 18:26:11 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:42229 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726263AbfJZW0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 18:26:11 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 76EF12224E;
-        Sat, 26 Oct 2019 18:26:09 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Sat, 26 Oct 2019 18:26:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        pedrovanzella.com; h=from:to:cc:subject:date:message-id
-        :mime-version:content-transfer-encoding; s=fm1; bh=bIfn1on7Q+74f
-        5OZX7CRcXSOYAexcfaL98w0vIvtGp0=; b=K/ajmzveiRZ7bcLRgV2lb5v25zicJ
-        E09CXM7kvxlP0B03pVGsyHrR8mo8cBUkYqefEgoneHJaHpoe6gGpCSmRk0gTGtMJ
-        5Stw2OHb2siRw9LW7eqLGTiJQxHEzL2NmAecBMTxfZkurw6iizFgXUZN+pvzTl/F
-        aNqbgHo60L9wmNvjr2LpHsWQdVihr2xPa0vEkn9P/dkXtJCeKzNYNcgbcrwxnSk3
-        zn9NoEGkaxwBYknkBcW1DNGFBsgDWE1H1r5B9zi1FH+0I7PkgzmXNgsKsPVGskMP
-        99S2PrNnj387BNOf+HXh39bOXIEWzwoCCR20jhzDQrodh1qzimMhwHgbg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=bIfn1on7Q+74f5OZX
-        7CRcXSOYAexcfaL98w0vIvtGp0=; b=JRdpZu9PejU4Fb4G60IcNT5wdbxIdgFZT
-        1iWrG+lm7CIRYBfg9vOdycHcswgcLcw4LHqTUJ8n6MiicFQXKZaNUAx/e7qyo/2T
-        ZzocXhZg0p0lBNBxvXyW9f1kOwHy6FotnQA2wNCI2UZCjz998w3mZ33ClcglpvtE
-        zog4TQPnHJlurNZdJw3OETydaMJHaSb6OGjfyNvCd8ZFTtRiNpiKuatZO3bDjiDY
-        z6/VUji517O4Y26ionEVp/DbiRrIOZ0fWKAPBryAGrJu3v++3CQCz5ay0y4f3XEU
-        q7IZVwdr1mFjP6cgStQvehz92Pby8VT7llQ9aYpj+1hhykemH+heA==
-X-ME-Sender: <xms:AMi0XThompVgvtCosH4XbN7g7v4qhZZH8LmNV4T1L-_huFl_e4x0GA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrleeigdduudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheprfgvughrohcugggr
-    nhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomheqnecukf
-    hppedvtddurdekjedrvddthedrvdehgeenucfrrghrrghmpehmrghilhhfrhhomhepphgv
-    ughrohesphgvughrohhvrghniigvlhhlrgdrtghomhenucevlhhushhtvghrufhiiigvpe
-    dt
-X-ME-Proxy: <xmx:AMi0XfCY_cKq0YxP4WFsckX2RqnZKn2b-sHpTei8s-zbFEShEpMXIw>
-    <xmx:AMi0XfXeDm9g3OtNWIOf9gNmSx9SFUjvFVcS_D-HVwiFMmvlr4M3MA>
-    <xmx:AMi0XeRCPEhR28kKahECSGaAdln_fqtP8q2dvfKBWPEM5VmUT7h9Wg>
-    <xmx:Aci0XdnYPwWbPFrnTXF5xk9KkBlrSc6IaS73yJ0r4dQ_dLy-82OOeA>
-Received: from localhost (unknown [201.87.205.254])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 886B0D6005A;
-        Sat, 26 Oct 2019 18:26:08 -0400 (EDT)
-From:   Pedro Vanzella <pedro@pedrovanzella.com>
-To:     linux-input@vger.kernel.org
-Cc:     lains@archlinux.org, Pedro Vanzella <pedro@pedrovanzella.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6] hid-logitech-hidpp: read battery voltage from newer devices
-Date:   Sat, 26 Oct 2019 19:25:06 -0300
-Message-Id: <20191026222506.453481-1-pedro@pedrovanzella.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 26 Oct 2019 19:06:53 -0400
+Received: from gate.crashing.org ([63.228.1.57]:55397 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbfJZXGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 19:06:53 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9QN6B4B014950;
+        Sat, 26 Oct 2019 18:06:11 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x9QN69JB014947;
+        Sat, 26 Oct 2019 18:06:09 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Sat, 26 Oct 2019 18:06:09 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        luto@kernel.org, vincenzo.frascino@arm.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
+Message-ID: <20191026230609.GY28442@gate.crashing.org>
+References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr> <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de> <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr> <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr> <alpine.DEB.2.21.1910261751140.10190@nanos.tec.linutronix.de> <439bce37-9c2c-2afe-9c9e-2f500472f9f8@c-s.fr> <alpine.DEB.2.21.1910262026340.10190@nanos.tec.linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1910262026340.10190@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer Logitech mice report their battery voltage through feature 0x1001
-instead of the battery levels through feature 0x1000.
+On Sat, Oct 26, 2019 at 08:48:27PM +0200, Thomas Gleixner wrote:
+> On Sat, 26 Oct 2019, Christophe Leroy wrote:
+> Let's look at the code:
+> 
+> __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
+> {
+>         const struct vdso_data *vd = __arch_get_vdso_data();
+> 
+>         if (likely(tv != NULL)) {
+> 		struct __kernel_timespec ts;
+> 
+>                 if (do_hres(&vd[CS_HRES_COARSE], CLOCK_REALTIME, &ts))
+>                         return gettimeofday_fallback(tv, tz);
+> 
+>                 tv->tv_sec = ts.tv_sec;
+>                 tv->tv_usec = (u32)ts.tv_nsec / NSEC_PER_USEC;
+> 
+> IIRC PPC did some magic math tricks to avoid that. Could you just for the
+> fun of it replace this division with
+> 
+>        (u32)ts.tv_nsec >> 10;
 
-When the device is brought up and we try to query the battery, figure
-out if it supports the old or the new feature. If it supports the new
-feature, record the feature index and read the battery voltage and
-its charge status. The device will respond with three bytes: the first
-two are its voltage, and the last one is a bitset, reporting if the
-battery is charging, fast or slow, in critical level or discharging.
+On this particular CPU (the 885, right?) a division by 1000 is just 9
+cycles.  On other CPUs it can be more, say 19 cycles like on the 750; not
+cheap at all, but not hugely expensive either, comparatively.
 
-If everything went correctly, record the fact that we're capable
-of querying battery voltage.
+(A 64/32->32 division is expensive on all 32-bit PowerPC: there is no
+hardware help for it at all, so it's all done in software.)
 
-Note that the protocol only gives us the current voltage in mV.
-We store that as-is, but when queried, we report it in uV as
-expected by sysfs.
+Of course the compiler won't do a division by a constant with a division
+instruction at all, so it's somewhat cheaper even, 5 or 6 cycles or so.
 
-Like we do for other ways of interacting with the battery for other
-devices, refresh the battery status and notify the power supply
-subsystem of the changes in voltage and status.
+> One thing which might be worth to try as well is to mark all functions in
+> that file as inline. The speedup by the do_hres() inlining was impressive
+> on PPC.
 
-Since there are no known devices which implement both the old and the
-new battery feature, we make sure to try the newer feature first and
-only fall back to the old one if that fails.
+The hand-optimised asm code will pretty likely win handsomely, whatever
+you do.  Especially on cores like the 885 (no branch prediction, single
+issue, small caches, etc.: every instruction counts).
 
-Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
----
- drivers/hid/hid-logitech-hidpp.c | 172 ++++++++++++++++++++++++++++++-
- 1 file changed, 168 insertions(+), 4 deletions(-)
+Is there any reason to replace this hand-optimised code?  It was written
+for exacty this reason?  These functions are critical and should be as
+fast as possible.
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 0179f7ed77e5..959586dab535 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -87,6 +87,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
- #define HIDPP_CAPABILITY_HIDPP20_BATTERY	BIT(1)
- #define HIDPP_CAPABILITY_BATTERY_MILEAGE	BIT(2)
- #define HIDPP_CAPABILITY_BATTERY_LEVEL_STATUS	BIT(3)
-+#define HIDPP_CAPABILITY_BATTERY_VOLTAGE	BIT(4)
- 
- /*
-  * There are two hidpp protocols in use, the first version hidpp10 is known
-@@ -135,12 +136,15 @@ struct hidpp_report {
- struct hidpp_battery {
- 	u8 feature_index;
- 	u8 solar_feature_index;
-+	u8 voltage_feature_index;
- 	struct power_supply_desc desc;
- 	struct power_supply *ps;
- 	char name[64];
- 	int status;
- 	int capacity;
- 	int level;
-+	int voltage;
-+	int charge_type;
- 	bool online;
- };
- 
-@@ -1219,6 +1223,144 @@ static int hidpp20_battery_event(struct hidpp_device *hidpp,
- 	return 0;
- }
- 
-+/* -------------------------------------------------------------------------- */
-+/* 0x1001: Battery voltage                                                    */
-+/* -------------------------------------------------------------------------- */
-+
-+#define HIDPP_PAGE_BATTERY_VOLTAGE 0x1001
-+
-+#define CMD_BATTERY_VOLTAGE_GET_BATTERY_VOLTAGE 0x00
-+
-+#define EVENT_BATTERY_VOLTAGE_STATUS_BROADCAST 0x00
-+
-+static int hidpp20_battery_map_status_voltage(u8 data[3], int *voltage,
-+						int *level, int *charge_type)
-+{
-+	int status;
-+
-+	long charge_sts = (long)data[2];
-+
-+	*level = POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN;
-+	switch (data[2] & 0xe0) {
-+	case 0x00:
-+		status = POWER_SUPPLY_STATUS_CHARGING;
-+		break;
-+	case 0x20:
-+		status = POWER_SUPPLY_STATUS_FULL;
-+		*level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-+		break;
-+	case 0x40:
-+		status = POWER_SUPPLY_STATUS_DISCHARGING;
-+		break;
-+	case 0xe0:
-+		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
-+	default:
-+		status = POWER_SUPPLY_STATUS_UNKNOWN;
-+	}
-+
-+	*charge_type = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-+	if (test_bit(3, &charge_sts)) {
-+		*charge_type = POWER_SUPPLY_CHARGE_TYPE_FAST;
-+	}
-+	if (test_bit(4, &charge_sts)) {
-+		*charge_type = POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
-+	}
-+
-+	if (test_bit(5, &charge_sts)) {
-+		*level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
-+	}
-+
-+	*voltage = get_unaligned_be16(data);
-+
-+	return status;
-+}
-+
-+static int hidpp20_battery_get_battery_voltage(struct hidpp_device *hidpp,
-+						 u8 feature_index,
-+						 int *status, int *voltage,
-+						 int *level, int *charge_type)
-+{
-+	struct hidpp_report response;
-+	int ret;
-+	u8 *params = (u8 *)response.fap.params;
-+
-+	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
-+					  CMD_BATTERY_VOLTAGE_GET_BATTERY_VOLTAGE,
-+					  NULL, 0, &response);
-+
-+	if (ret > 0) {
-+		hid_err(hidpp->hid_dev, "%s: received protocol error 0x%02x\n",
-+			__func__, ret);
-+		return -EPROTO;
-+	}
-+	if (ret)
-+		return ret;
-+
-+	hidpp->capabilities |= HIDPP_CAPABILITY_BATTERY_VOLTAGE;
-+
-+	*status = hidpp20_battery_map_status_voltage(params, voltage,
-+						     level, charge_type);
-+
-+	return 0;
-+}
-+
-+static int hidpp20_query_battery_voltage_info(struct hidpp_device *hidpp)
-+{
-+	u8 feature_type;
-+	int ret;
-+	int status, voltage, level, charge_type;
-+
-+	if (hidpp->battery.voltage_feature_index == 0xff) {
-+		ret = hidpp_root_get_feature(hidpp, HIDPP_PAGE_BATTERY_VOLTAGE,
-+					     &hidpp->battery.voltage_feature_index,
-+					     &feature_type);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = hidpp20_battery_get_battery_voltage(hidpp,
-+						  hidpp->battery.voltage_feature_index,
-+						  &status, &voltage, &level, &charge_type);
-+
-+	if (ret)
-+		return ret;
-+
-+	hidpp->battery.status = status;
-+	hidpp->battery.voltage = voltage;
-+	hidpp->battery.level = level;
-+	hidpp->battery.charge_type = charge_type;
-+	hidpp->battery.online = status != POWER_SUPPLY_STATUS_NOT_CHARGING;
-+
-+	return 0;
-+}
-+
-+static int hidpp20_battery_voltage_event(struct hidpp_device *hidpp,
-+					    u8 *data, int size)
-+{
-+	struct hidpp_report *report = (struct hidpp_report *)data;
-+	int status, voltage, level, charge_type;
-+
-+	if (report->fap.feature_index != hidpp->battery.voltage_feature_index ||
-+		report->fap.funcindex_clientid != EVENT_BATTERY_VOLTAGE_STATUS_BROADCAST)
-+		return 0;
-+
-+	status = hidpp20_battery_map_status_voltage(report->fap.params, &voltage,
-+						    &level, &charge_type);
-+
-+	hidpp->battery.online = status != POWER_SUPPLY_STATUS_NOT_CHARGING;
-+
-+	if (voltage != hidpp->battery.voltage || status != hidpp->battery.status) {
-+		hidpp->battery.voltage = voltage;
-+		hidpp->battery.status = status;
-+		hidpp->battery.level = level;
-+		hidpp->battery.charge_type = charge_type;
-+		if (hidpp->battery.ps)
-+			power_supply_changed(hidpp->battery.ps);
-+	}
-+	return 0;
-+}
-+
- static enum power_supply_property hidpp_battery_props[] = {
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_STATUS,
-@@ -1228,6 +1370,7 @@ static enum power_supply_property hidpp_battery_props[] = {
- 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
- 	0, /* placeholder for POWER_SUPPLY_PROP_CAPACITY, */
- 	0, /* placeholder for POWER_SUPPLY_PROP_CAPACITY_LEVEL, */
-+	0, /* placeholder for POWER_SUPPLY_PROP_VOLTAGE_NOW, */
- };
- 
- static int hidpp_battery_get_property(struct power_supply *psy,
-@@ -1265,6 +1408,13 @@ static int hidpp_battery_get_property(struct power_supply *psy,
- 		case POWER_SUPPLY_PROP_SERIAL_NUMBER:
- 			val->strval = hidpp->hid_dev->uniq;
- 			break;
-+		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+			/* hardware reports voltage in in mV. sysfs expects uV */
-+			val->intval = hidpp->battery.voltage * 1000;
-+			break;
-+		case POWER_SUPPLY_PROP_CHARGE_TYPE:
-+			val->intval = hidpp->battery.charge_type;
-+			break;
- 		default:
- 			ret = -EINVAL;
- 			break;
-@@ -3083,6 +3233,9 @@ static int hidpp_raw_hidpp_event(struct hidpp_device *hidpp, u8 *data,
- 		ret = hidpp_solar_battery_event(hidpp, data, size);
- 		if (ret != 0)
- 			return ret;
-+		ret = hidpp20_battery_voltage_event(hidpp, data, size);
-+		if (ret != 0)
-+			return ret;
- 	}
- 
- 	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP10_BATTERY) {
-@@ -3204,12 +3357,16 @@ static int hidpp_initialize_battery(struct hidpp_device *hidpp)
- 
- 	hidpp->battery.feature_index = 0xff;
- 	hidpp->battery.solar_feature_index = 0xff;
-+	hidpp->battery.voltage_feature_index = 0xff;
- 
- 	if (hidpp->protocol_major >= 2) {
- 		if (hidpp->quirks & HIDPP_QUIRK_CLASS_K750)
- 			ret = hidpp_solar_request_battery_event(hidpp);
--		else
--			ret = hidpp20_query_battery_info(hidpp);
-+		else {
-+			ret = hidpp20_query_battery_voltage_info(hidpp);
-+			if (ret)
-+				ret = hidpp20_query_battery_info(hidpp);
-+		}
- 
- 		if (ret)
- 			return ret;
-@@ -3234,7 +3391,7 @@ static int hidpp_initialize_battery(struct hidpp_device *hidpp)
- 	if (!battery_props)
- 		return -ENOMEM;
- 
--	num_battery_props = ARRAY_SIZE(hidpp_battery_props) - 2;
-+	num_battery_props = ARRAY_SIZE(hidpp_battery_props) - 3;
- 
- 	if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_MILEAGE)
- 		battery_props[num_battery_props++] =
-@@ -3244,6 +3401,10 @@ static int hidpp_initialize_battery(struct hidpp_device *hidpp)
- 		battery_props[num_battery_props++] =
- 				POWER_SUPPLY_PROP_CAPACITY_LEVEL;
- 
-+	if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_VOLTAGE)
-+		battery_props[num_battery_props++] =
-+			POWER_SUPPLY_PROP_VOLTAGE_NOW;
-+
- 	battery = &hidpp->battery;
- 
- 	n = atomic_inc_return(&battery_no) - 1;
-@@ -3407,7 +3568,10 @@ static void hidpp_connect_event(struct hidpp_device *hidpp)
- 		else
- 			hidpp10_query_battery_status(hidpp);
- 	} else if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_BATTERY) {
--		hidpp20_query_battery_info(hidpp);
-+		if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_VOLTAGE)
-+			hidpp20_query_battery_voltage_info(hidpp);
-+		else
-+			hidpp20_query_battery_info(hidpp);
- 	}
- 	if (hidpp->battery.ps)
- 		power_supply_changed(hidpp->battery.ps);
--- 
-2.23.0
 
+Segher
