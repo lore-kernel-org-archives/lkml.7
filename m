@@ -2,349 +2,137 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE61CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 21:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7285CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 22:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB49206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 21:49:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pJ8SPO5v"
+	by mail.kernel.org (Postfix) with ESMTP id 79DEB2084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 22:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572128078;
+	bh=qNW2De2nnOaOHLics0z1LOmu66IaMhJRR9mrqaTZchw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=H5Yl4zjUNbJSRwAwQIRThxHZqvK+VAWahoRcCNFg4veplwHWoqiVd7O6MEHRZoEpR
+	 h30ljAd8F1PXVdmQKhav9cNZUZdfmYEXbRIb+YHwX2x9bcafKqoW//Ij9MscfruFnJ
+	 elAgysw+8aiul2IZasnjI7JtYoj5uD2kulbAhkHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfJZVrm (ORCPT
+        id S1726521AbfJZWOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 17:47:42 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40365 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfJZVrm (ORCPT
+        Sat, 26 Oct 2019 18:14:07 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40106 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfJZWOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 17:47:42 -0400
-Received: by mail-lj1-f193.google.com with SMTP id u22so7246762lji.7
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 14:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e/mhuncAKrnnVsq4GltYpK9AiZ+j5NBdfvqtLYw8+dg=;
-        b=pJ8SPO5vIsYIIkh+IDgOFvrxq+PrSi4QuXeUw9Qsyezf63gXTIhSPnqIeRrSye5hME
-         TnxWcW06pO3MR3po5mhaWfKoyTEclVmTDplrsvwtxqZ/JMBtveWpwhwY2lSr4cWeIVTW
-         eSrPcjC5YUx7+PGjNVNba14e5kCfTbORA7R0cEZPIq0Ac9EWXnOLxxdsaUA4HJj1bGdG
-         oXTf9GZiHafkU5Qw7ClBxQd3JmJfPbhDqW3ZUmJqbJHI6okI/n+1nYFpowgq12HUkLvJ
-         lLFIZ3064pd29FJg2SANi8ffNneiZ0MXe0tlP4OucVIMRHcivftTVHmJmMx2aS+nCL3e
-         eW6Q==
+        Sat, 26 Oct 2019 18:14:06 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x127so4090961pfb.7;
+        Sat, 26 Oct 2019 15:14:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e/mhuncAKrnnVsq4GltYpK9AiZ+j5NBdfvqtLYw8+dg=;
-        b=X6NAaCtdTIapvEyg5FX0jder/oNhlWrDID9rM65XxqyHlE+L8IVNCRZcACImg+/v7n
-         mqXCtTRtLv/jza6CdM//0wW5d1g9Qt/GJM/c3/Dx8mwI07/dt2uHSOvEBRcKaL+hH6yD
-         CjK24wDipXMn5lxIoMlV3mpNme9MRQaEZjp/4v5NzrWA0kWIr9aLADdS6M24hGwgEGI6
-         fbRzBRvg9a4TDGKMt+MqvWN+mS7/LRCJvXaey9hmj5Wewj6UO8j2IJ5hKUuiH8cvvE/g
-         g0QV2hPsfLigBmJWDqcdSZqs6KafLnCN0UjeeajhKWqZMUpjpwk3Lh+JPjkzjwaxMLVe
-         OWUQ==
-X-Gm-Message-State: APjAAAUM0voxJJPNtEcJsuYcVJzzuhG+aYjtciI+Ps2kpW3tc4NI9TYW
-        gFc00rassw4vuHienLMevkIjkQ==
-X-Google-Smtp-Source: APXvYqyDJTKiH26HYJ5K6aZpyJUvXRKPIVSqFSN9RNipRQ57SOC5q83JNfd6hT4t2arOIjdZs4m5Qw==
-X-Received: by 2002:a2e:8616:: with SMTP id a22mr5896892lji.30.1572126459123;
-        Sat, 26 Oct 2019 14:47:39 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-79c8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.200.121])
-        by smtp.gmail.com with ESMTPSA id z14sm2685309lfh.30.2019.10.26.14.47.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=bWLBC9U6OtWWaioI2/2fhcDSMynpWQ90v12Q5Y5oedc=;
+        b=jS1hpWYxVjgWxlz/zgXacY3mI3Vmsfeg1pEc4/QZvctb1iY+/lS7ODxH03jd2+s+E9
+         jpVy0u8TLmHUDnhvbk3TnKNIHe971W5+kyzpUKIZUktg5lFXw6ca+Z8a9G+8GEC0sie/
+         D/SWkcKrrgPo3Q97iQYGTpf8M0/i2KXHKVqHvN0Y2PKV+ZupGd88S676eBC2yDyk2DNA
+         qKzig4uU/NkYbh34k0idXT9bxT/Du8Zv13roU1e3DLyR/AVQiJ1n/ACh02ryA1ND7Ugp
+         fmXzNXu7oUZ0gI9A3x0aDX/vgeh4TNtlczQnPgn0Ow7eMP3c53dIFrRCwOe+aXqCFUKD
+         BqvA==
+X-Gm-Message-State: APjAAAV9fu7BSK6A7RLwGaE8qcg5juHylQQbuvuTSyYr/Ya5/PWJrP++
+        luu4d/LjCgNh2jXJpIMiT/Pp0u9rlvc=
+X-Google-Smtp-Source: APXvYqwSnYp0dw2siKPWnZehuE8AefGZHBTsa0i6lp0bVV0oatu+ACGZwN/WbhhAoF976GJ+Fd5h1w==
+X-Received: by 2002:aa7:8249:: with SMTP id e9mr12634355pfn.118.1572128045359;
+        Sat, 26 Oct 2019 15:14:05 -0700 (PDT)
+Received: from localhost ([2601:646:8a00:9810:9d6:9cca:ff8c:efe0])
+        by smtp.gmail.com with ESMTPSA id k7sm6252281pfk.55.2019.10.26.15.14.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2019 14:47:38 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH v3] mfd: db8500-prcmu: Support U8420-sysclk firmware
-Date:   Sat, 26 Oct 2019 23:47:32 +0200
-Message-Id: <20191026214732.17725-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Sat, 26 Oct 2019 15:14:04 -0700 (PDT)
+Date:   Sat, 26 Oct 2019 15:14:03 -0700
+From:   Paul Burton <paulburton@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [GIT PULL] MIPS fixes
+Message-ID: <20191026221403.mfcxqs6yxgkl5ufx@pburton-laptop>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7fafao3awoilacds"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a distinct version of the Ux500 U8420 variant
-with "sysclk", as can be seen from the vendor code that
-didn't make it upstream, this firmware lacks the
-ULPPLL (ultra-low power phase locked loop) which in
-effect means that the timer clock is instead wired to
-the 32768 Hz always-on clock.
 
-This has some repercussions when enabling the timer
-clock as the code as it stands will disable the timer
-clock on these platforms (lacking the so-called
-"doze mode") and obtaining the wrong rate of the timer
-clock.
+--7fafao3awoilacds
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The timer frequency is of course needed very early in
-the boot, and as a consequence, we need to shuffle
-around the early PRCMU init code: whereas in the past
-we did not need to look up the PRCMU firmware version
-in the early init, but now we need to know the version
-before the core system timers are registered so we
-restructure the platform callbacks to the PRCMU so as
-not to take any arguments and instead look up the
-resources it needs directly from the device tree
-when initializing.
+Hi Linus,
 
-As we do not yet support any platforms using this
-firmware it is not a regression, but as PostmarketOS
-is starting to support products with this firmware we
-need to fix this up.
+Here are a few small MIPS fixes; please pull.
 
-The low rate of 32kHz also makes the MTU timer unsuitable
-as delay timer but this needs to be fixed in a separate
-patch.
+Thanks,
+    Paul
 
-Cc: arm@kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v2->v3:
-- It's a bad idead to return -ENODEV in a function
-  that returns void.
-ChangeLog v1->v2:
-- Change the style of the ULPPLL check function (more
-  compact)
-- Fix a missing of_node_put() by actually returning
-  with -ENODEV on error.
 
-ARM SoC folks: as this mostly affects the MFD subsystems
-I think it'd be best if Lee can merge it, I do not
-plan any other changes to the ARM core files that the
-patch touches.
----
- arch/arm/mach-ux500/cpu-db8500.c |  2 +-
- drivers/mfd/db8500-prcmu.c       | 63 ++++++++++++++++++++++----------
- include/linux/mfd/db8500-prcmu.h |  4 +-
- include/linux/mfd/dbx500-prcmu.h |  7 ++--
- 4 files changed, 50 insertions(+), 26 deletions(-)
+The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
 
-diff --git a/arch/arm/mach-ux500/cpu-db8500.c b/arch/arm/mach-ux500/cpu-db8500.c
-index 3875027ef8fc..e929aaa744c0 100644
---- a/arch/arm/mach-ux500/cpu-db8500.c
-+++ b/arch/arm/mach-ux500/cpu-db8500.c
-@@ -84,6 +84,7 @@ static void __init ux500_init_irq(void)
- 	struct resource r;
- 
- 	irqchip_init();
-+	prcmu_early_init();
- 	np = of_find_compatible_node(NULL, NULL, "stericsson,db8500-prcmu");
- 	of_address_to_resource(np, 0, &r);
- 	of_node_put(np);
-@@ -91,7 +92,6 @@ static void __init ux500_init_irq(void)
- 		pr_err("could not find PRCMU base resource\n");
- 		return;
- 	}
--	prcmu_early_init(r.start, r.end-r.start);
- 	ux500_pm_init(r.start, r.end-r.start);
- 
- 	/* Unlock before init */
-diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
-index 9df365a15303..30f6558c691c 100644
---- a/drivers/mfd/db8500-prcmu.c
-+++ b/drivers/mfd/db8500-prcmu.c
-@@ -27,6 +27,7 @@
- #include <linux/bitops.h>
- #include <linux/fs.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/uaccess.h>
-@@ -668,6 +669,14 @@ struct prcmu_fw_version *prcmu_get_fw_version(void)
- 	return fw_info.valid ? &fw_info.version : NULL;
- }
- 
-+static bool prcmu_is_ulppll_disabled(void)
-+{
-+	struct prcmu_fw_version *ver;
-+
-+	ver = prcmu_get_fw_version();
-+	return ver && ver->project == PRCMU_FW_PROJECT_U8420_SYSCLK;
-+}
-+
- bool prcmu_has_arm_maxopp(void)
- {
- 	return (readb(tcdm_base + PRCM_AVS_VARM_MAX_OPP) &
-@@ -1308,10 +1317,23 @@ static int request_sysclk(bool enable)
- 
- static int request_timclk(bool enable)
- {
--	u32 val = (PRCM_TCR_DOZE_MODE | PRCM_TCR_TENSEL_MASK);
-+	u32 val;
-+
-+	/*
-+	 * On the U8420_CLKSEL firmware, the ULP (Ultra Low Power)
-+	 * PLL is disabled so we cannot use doze mode, this will
-+	 * stop the clock on this firmware.
-+	 */
-+	if (prcmu_is_ulppll_disabled())
-+		val = 0;
-+	else
-+		val = (PRCM_TCR_DOZE_MODE | PRCM_TCR_TENSEL_MASK);
- 
- 	if (!enable)
--		val |= PRCM_TCR_STOP_TIMERS;
-+		val |= PRCM_TCR_STOP_TIMERS |
-+			PRCM_TCR_DOZE_MODE |
-+			PRCM_TCR_TENSEL_MASK;
-+
- 	writel(val, PRCM_TCR);
- 
- 	return 0;
-@@ -1615,7 +1637,8 @@ unsigned long prcmu_clock_rate(u8 clock)
- 	if (clock < PRCMU_NUM_REG_CLOCKS)
- 		return clock_rate(clock);
- 	else if (clock == PRCMU_TIMCLK)
--		return ROOT_CLOCK_RATE / 16;
-+		return prcmu_is_ulppll_disabled() ?
-+			32768 : ROOT_CLOCK_RATE / 16;
- 	else if (clock == PRCMU_SYSCLK)
- 		return ROOT_CLOCK_RATE;
- 	else if (clock == PRCMU_PLLSOC0)
-@@ -2646,6 +2669,8 @@ static char *fw_project_name(u32 project)
- 		return "U8520 MBL";
- 	case PRCMU_FW_PROJECT_U8420:
- 		return "U8420";
-+	case PRCMU_FW_PROJECT_U8420_SYSCLK:
-+		return "U8420-sysclk";
- 	case PRCMU_FW_PROJECT_U9540:
- 		return "U9540";
- 	case PRCMU_FW_PROJECT_A9420:
-@@ -2693,27 +2718,18 @@ static int db8500_irq_init(struct device_node *np)
- 	return 0;
- }
- 
--static void dbx500_fw_version_init(struct platform_device *pdev,
--			    u32 version_offset)
-+static void dbx500_fw_version_init(struct device_node *np)
- {
--	struct resource *res;
- 	void __iomem *tcpm_base;
- 	u32 version;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--					   "prcmu-tcpm");
--	if (!res) {
--		dev_err(&pdev->dev,
--			"Error: no prcmu tcpm memory region provided\n");
--		return;
--	}
--	tcpm_base = ioremap(res->start, resource_size(res));
-+	tcpm_base = of_iomap(np, 1);
- 	if (!tcpm_base) {
--		dev_err(&pdev->dev, "no prcmu tcpm mem region provided\n");
-+		pr_err("no prcmu tcpm mem region provided\n");
- 		return;
- 	}
- 
--	version = readl(tcpm_base + version_offset);
-+	version = readl(tcpm_base + DB8500_PRCMU_FW_VERSION_OFFSET);
- 	fw_info.version.project = (version & 0xFF);
- 	fw_info.version.api_version = (version >> 8) & 0xFF;
- 	fw_info.version.func_version = (version >> 16) & 0xFF;
-@@ -2731,7 +2747,7 @@ static void dbx500_fw_version_init(struct platform_device *pdev,
- 	iounmap(tcpm_base);
- }
- 
--void __init db8500_prcmu_early_init(u32 phy_base, u32 size)
-+void __init db8500_prcmu_early_init(void)
- {
- 	/*
- 	 * This is a temporary remap to bring up the clocks. It is
-@@ -2740,9 +2756,17 @@ void __init db8500_prcmu_early_init(u32 phy_base, u32 size)
- 	 * clock driver can probe independently. An early initcall will
- 	 * still be needed, but it can be diverted into drivers/clk/ux500.
- 	 */
--	prcmu_base = ioremap(phy_base, size);
--	if (!prcmu_base)
-+	struct device_node *np;
-+
-+	np = of_find_compatible_node(NULL, NULL, "stericsson,db8500-prcmu");
-+	prcmu_base = of_iomap(np, 0);
-+	if (!prcmu_base) {
-+		of_node_put(np);
- 		pr_err("%s: ioremap() of prcmu registers failed!\n", __func__);
-+		return;
-+	}
-+	dbx500_fw_version_init(np);
-+	of_node_put(np);
- 
- 	spin_lock_init(&mb0_transfer.lock);
- 	spin_lock_init(&mb0_transfer.dbb_irqs_lock);
-@@ -3108,7 +3132,6 @@ static int db8500_prcmu_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 	init_prcm_registers();
--	dbx500_fw_version_init(pdev, DB8500_PRCMU_FW_VERSION_OFFSET);
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "prcmu-tcdm");
- 	if (!res) {
- 		dev_err(&pdev->dev, "no prcmu tcdm region provided\n");
-diff --git a/include/linux/mfd/db8500-prcmu.h b/include/linux/mfd/db8500-prcmu.h
-index 813710aa2cfd..1fc75d2b4a38 100644
---- a/include/linux/mfd/db8500-prcmu.h
-+++ b/include/linux/mfd/db8500-prcmu.h
-@@ -489,7 +489,7 @@ struct prcmu_auto_pm_config {
- 
- #ifdef CONFIG_MFD_DB8500_PRCMU
- 
--void db8500_prcmu_early_init(u32 phy_base, u32 size);
-+void db8500_prcmu_early_init(void);
- int prcmu_set_rc_a2p(enum romcode_write);
- enum romcode_read prcmu_get_rc_p2a(void);
- enum ap_pwrst prcmu_get_xp70_current_state(void);
-@@ -546,7 +546,7 @@ void db8500_prcmu_write_masked(unsigned int reg, u32 mask, u32 value);
- 
- #else /* !CONFIG_MFD_DB8500_PRCMU */
- 
--static inline void db8500_prcmu_early_init(u32 phy_base, u32 size) {}
-+static inline void db8500_prcmu_early_init(void) {}
- 
- static inline int prcmu_set_rc_a2p(enum romcode_write code)
- {
-diff --git a/include/linux/mfd/dbx500-prcmu.h b/include/linux/mfd/dbx500-prcmu.h
-index 238401a50d0b..e2571040c7e8 100644
---- a/include/linux/mfd/dbx500-prcmu.h
-+++ b/include/linux/mfd/dbx500-prcmu.h
-@@ -190,6 +190,7 @@ enum ddr_pwrst {
- #define PRCMU_FW_PROJECT_U8500_MBL2	12 /* Customer specific */
- #define PRCMU_FW_PROJECT_U8520		13
- #define PRCMU_FW_PROJECT_U8420		14
-+#define PRCMU_FW_PROJECT_U8420_SYSCLK	17
- #define PRCMU_FW_PROJECT_A9420		20
- /* [32..63] 9540 and derivatives */
- #define PRCMU_FW_PROJECT_U9540		32
-@@ -211,9 +212,9 @@ struct prcmu_fw_version {
- 
- #if defined(CONFIG_UX500_SOC_DB8500)
- 
--static inline void prcmu_early_init(u32 phy_base, u32 size)
-+static inline void prcmu_early_init(void)
- {
--	return db8500_prcmu_early_init(phy_base, size);
-+	return db8500_prcmu_early_init();
- }
- 
- static inline int prcmu_set_power_state(u8 state, bool keep_ulp_clk,
-@@ -401,7 +402,7 @@ static inline int prcmu_config_a9wdog(u8 num, bool sleep_auto_off)
- }
- #else
- 
--static inline void prcmu_early_init(u32 phy_base, u32 size) {}
-+static inline void prcmu_early_init(void) {}
- 
- static inline int prcmu_set_power_state(u8 state, bool keep_ulp_clk,
- 	bool keep_ap_pll)
--- 
-2.21.0
+  Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.4_3
+
+for you to fetch changes up to b42aa3fd5957e4daf4b69129e5ce752a2a53e7d6:
+
+  MIPS: tlbex: Fix build_restore_pagemask KScratch restore (2019-10-23 21:12:49 -0700)
+
+----------------------------------------------------------------
+A few MIPS fixes:
+
+- Fix VDSO time-related function behavior for systems where we need to
+  fall back to syscalls, but were instead returning bogus results.
+
+- A fix to TLB exception handlers for Cavium Octeon systems where they
+  would inadvertently clobber the $1/$at register.
+
+- A build fix for bcm63xx configurations.
+
+- Switch to using my @kernel.org email address.
+
+----------------------------------------------------------------
+Jonas Gorski (1):
+      MIPS: bmips: mark exception vectors as char arrays
+
+Paul Burton (2):
+      MAINTAINERS: Use @kernel.org address for Paul Burton
+      MIPS: tlbex: Fix build_restore_pagemask KScratch restore
+
+Vincenzo Frascino (1):
+      mips: vdso: Fix __arch_get_hw_counter()
+
+ .mailmap                                  |  3 ++-
+ MAINTAINERS                               | 10 +++++-----
+ arch/mips/bcm63xx/prom.c                  |  2 +-
+ arch/mips/include/asm/bmips.h             | 10 +++++-----
+ arch/mips/include/asm/vdso/gettimeofday.h |  4 +++-
+ arch/mips/kernel/smp-bmips.c              |  8 ++++----
+ arch/mips/mm/tlbex.c                      | 23 +++++++++++++++--------
+ 7 files changed, 35 insertions(+), 25 deletions(-)
+
+--7fafao3awoilacds
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQRgLjeFAZEXQzy86/s+p5+stXUA3QUCXbTFKwAKCRA+p5+stXUA
+3RTNAP4tmpgLLDHBKXYn5qWtfHoW/ctiZdSoeZhxnP9y79D9JAD9EIzhEkfvPgEH
+zKmSwtZbXLHW1m0+Lv+iKZJg9t3giAI=
+=tAQO
+-----END PGP SIGNATURE-----
+
+--7fafao3awoilacds--
