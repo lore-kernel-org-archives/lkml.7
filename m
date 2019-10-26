@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16825CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE3CCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2407222BD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7771E20867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096209;
-	bh=cXhWVoe8l7SesCfbvpKHyaadgu/BrM44Hjki1zDwezM=;
+	s=default; t=1572096211;
+	bh=iXKHg8AI2lhYsrb8qwRHgUKD5z5qP7ReisWmw8br7Zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUItyHLv4RcaEWNi5DfOwadMcW6BsuSInFOFJo/aw1dpw1e1NIGZaAaxsu7IjuO9Y
-	 hGefeBDCE54K0EcWzf5PYL+R5/DWDiOn+HakJ4F2tsWaCJ5RS948dYX8aeK2+q7v0C
-	 7O3G4ITv8U8cH/R4zZQcouZUA3mZBGCxuc/8jsQE=
+	b=UvK6MlFIGRFG6Ynf+A9VK1UpVpyJrveSqCrCxBm5ejUCtkSYEt1cQGwRKqpKq76Xs
+	 ew+OQw/nWl2oqSjQ6uM0mvWRMPYCnnkUFQpqiI+bzpUy2xy8niyvbWIpbPzD4lAgXc
+	 A6Gzgc1kXgQ+EUq5FBsGNoLdLy+M3xaq0G2W82LM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfJZNX1 (ORCPT
+        id S1729847AbfJZNXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45142 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726162AbfJZNXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:23:22 -0400
+        id S1726410AbfJZNXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:23:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FB6F21E6F;
-        Sat, 26 Oct 2019 13:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 355BF2070B;
+        Sat, 26 Oct 2019 13:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096202;
-        bh=cXhWVoe8l7SesCfbvpKHyaadgu/BrM44Hjki1zDwezM=;
+        s=default; t=1572096198;
+        bh=iXKHg8AI2lhYsrb8qwRHgUKD5z5qP7ReisWmw8br7Zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HghgRM5UOQNcJzXF93ri6TaFE474iwQAA8aE3L4UWv5pwUsQ2ys6K5EcA+cLv6AQV
-         N7gQHLYg95mmXhPsj8BAYfBQhWfbSZnCQ8L9MgeKHzLXRsEaNbhTzEfXQWHBq5j5DT
-         hPS2Y6P43MZo5axuHUtQM0u8V8LIDB3QYlQTS80Y=
+        b=rCToU86uosuVmuD5KD01hQaxntTLnvOEjg+xKXTb97BlLKYy07tlt2olz1nL4Gn+1
+         NPTPLSm22UVGpByb1Dvz5LbJberQbqq7+AXDPtcEqNZTk5a65L4JP9esYLksUqpN0H
+         zxTHs4DKhmtnPOwKdO/RclGpvIlJz1GM9Ocq7inQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Antonio Borneo <antonio.borneo@st.com>,
+Cc:     Eric Biggers <ebiggers@google.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/17] net: stmmac: fix length of PTP clock's name string
-Date:   Sat, 26 Oct 2019 09:22:52 -0400
-Message-Id: <20191026132302.4622-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 06/17] llc: fix another potential sk_buff leak in llc_ui_sendmsg()
+Date:   Sat, 26 Oct 2019 09:22:50 -0400
+Message-Id: <20191026132302.4622-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132302.4622-1-sashal@kernel.org>
 References: <20191026132302.4622-1-sashal@kernel.org>
@@ -59,49 +59,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 5da202c88f8c355ad79bc2e8eb582e6d433060e7 ]
+[ Upstream commit fc8d5db10cbe1338a52ebc74e7feab9276721774 ]
 
-The field "name" in struct ptp_clock_info has a fixed size of 16
-chars and is used as zero terminated string by clock_name_show()
-in drivers/ptp/ptp_sysfs.c
-The current initialization value requires 17 chars to fit also the
-null termination, and this causes overflow to the next bytes in
-the struct when the string is read as null terminated:
-	hexdump -C /sys/class/ptp/ptp0/clock_name
-	00000000  73 74 6d 6d 61 63 5f 70  74 70 5f 63 6c 6f 63 6b  |stmmac_ptp_clock|
-	00000010  a0 ac b9 03 0a                                    |.....|
-where the extra 4 bytes (excluding the newline) after the string
-represent the integer 0x03b9aca0 = 62500000 assigned to the field
-"max_adj" that follows "name" in the same struct.
+All callers of llc_conn_state_process() except llc_build_and_send_pkt()
+(via llc_ui_sendmsg() -> llc_ui_send_data()) assume that it always
+consumes a reference to the skb.  Fix this caller to do the same.
 
-There is no strict requirement for the "name" content and in the
-comment in ptp_clock_kernel.h it's reported it should just be 'A
-short "friendly name" to identify the clock'.
-Replace it with "stmmac ptp".
-
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Fixes: 92ba6888510c ("stmmac: add the support for PTP hw clock driver")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/llc/af_llc.c   | 34 ++++++++++++++++++++--------------
+ net/llc/llc_conn.c |  2 ++
+ net/llc/llc_if.c   | 12 ++++++++----
+ 3 files changed, 30 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-index 170a18b61281d..147c9f8cee7f7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-@@ -157,7 +157,7 @@ static int stmmac_enable(struct ptp_clock_info *ptp,
- /* structure describing a PTP hardware clock */
- static struct ptp_clock_info stmmac_ptp_clock_ops = {
- 	.owner = THIS_MODULE,
--	.name = "stmmac_ptp_clock",
-+	.name = "stmmac ptp",
- 	.max_adj = 62500000,
- 	.n_alarm = 0,
- 	.n_ext_ts = 0,
+diff --git a/net/llc/af_llc.c b/net/llc/af_llc.c
+index c153fc2883a86..69f1558dfcb74 100644
+--- a/net/llc/af_llc.c
++++ b/net/llc/af_llc.c
+@@ -111,22 +111,26 @@ static inline u8 llc_ui_header_len(struct sock *sk, struct sockaddr_llc *addr)
+  *
+  *	Send data via reliable llc2 connection.
+  *	Returns 0 upon success, non-zero if action did not succeed.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ static int llc_ui_send_data(struct sock* sk, struct sk_buff *skb, int noblock)
+ {
+ 	struct llc_sock* llc = llc_sk(sk);
+-	int rc = 0;
+ 
+ 	if (unlikely(llc_data_accept_state(llc->state) ||
+ 		     llc->remote_busy_flag ||
+ 		     llc->p_flag)) {
+ 		long timeout = sock_sndtimeo(sk, noblock);
++		int rc;
+ 
+ 		rc = llc_ui_wait_for_busy_core(sk, timeout);
++		if (rc) {
++			kfree_skb(skb);
++			return rc;
++		}
+ 	}
+-	if (unlikely(!rc))
+-		rc = llc_build_and_send_pkt(sk, skb);
+-	return rc;
++	return llc_build_and_send_pkt(sk, skb);
+ }
+ 
+ static void llc_ui_sk_init(struct socket *sock, struct sock *sk)
+@@ -896,7 +900,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	DECLARE_SOCKADDR(struct sockaddr_llc *, addr, msg->msg_name);
+ 	int flags = msg->msg_flags;
+ 	int noblock = flags & MSG_DONTWAIT;
+-	struct sk_buff *skb;
++	struct sk_buff *skb = NULL;
+ 	size_t size = 0;
+ 	int rc = -EINVAL, copied = 0, hdrlen;
+ 
+@@ -905,10 +909,10 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	lock_sock(sk);
+ 	if (addr) {
+ 		if (msg->msg_namelen < sizeof(*addr))
+-			goto release;
++			goto out;
+ 	} else {
+ 		if (llc_ui_addr_null(&llc->addr))
+-			goto release;
++			goto out;
+ 		addr = &llc->addr;
+ 	}
+ 	/* must bind connection to sap if user hasn't done it. */
+@@ -916,7 +920,7 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 		/* bind to sap with null dev, exclusive. */
+ 		rc = llc_ui_autobind(sock, addr);
+ 		if (rc)
+-			goto release;
++			goto out;
+ 	}
+ 	hdrlen = llc->dev->hard_header_len + llc_ui_header_len(sk, addr);
+ 	size = hdrlen + len;
+@@ -925,12 +929,12 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	copied = size - hdrlen;
+ 	rc = -EINVAL;
+ 	if (copied < 0)
+-		goto release;
++		goto out;
+ 	release_sock(sk);
+ 	skb = sock_alloc_send_skb(sk, size, noblock, &rc);
+ 	lock_sock(sk);
+ 	if (!skb)
+-		goto release;
++		goto out;
+ 	skb->dev      = llc->dev;
+ 	skb->protocol = llc_proto_type(addr->sllc_arphrd);
+ 	skb_reserve(skb, hdrlen);
+@@ -940,29 +944,31 @@ static int llc_ui_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	if (sk->sk_type == SOCK_DGRAM || addr->sllc_ua) {
+ 		llc_build_and_send_ui_pkt(llc->sap, skb, addr->sllc_mac,
+ 					  addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	if (addr->sllc_test) {
+ 		llc_build_and_send_test_pkt(llc->sap, skb, addr->sllc_mac,
+ 					    addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	if (addr->sllc_xid) {
+ 		llc_build_and_send_xid_pkt(llc->sap, skb, addr->sllc_mac,
+ 					   addr->sllc_sap);
++		skb = NULL;
+ 		goto out;
+ 	}
+ 	rc = -ENOPROTOOPT;
+ 	if (!(sk->sk_type == SOCK_STREAM && !addr->sllc_ua))
+ 		goto out;
+ 	rc = llc_ui_send_data(sk, skb, noblock);
++	skb = NULL;
+ out:
+-	if (rc) {
+-		kfree_skb(skb);
+-release:
++	kfree_skb(skb);
++	if (rc)
+ 		dprintk("%s: failed sending from %02X to %02X: %d\n",
+ 			__func__, llc->laddr.lsap, llc->daddr.lsap, rc);
+-	}
+ 	release_sock(sk);
+ 	return rc ? : copied;
+ }
+diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
+index d861b74ad068c..5d653f5261c55 100644
+--- a/net/llc/llc_conn.c
++++ b/net/llc/llc_conn.c
+@@ -55,6 +55,8 @@ int sysctl_llc2_busy_timeout = LLC2_BUSY_TIME * HZ;
+  *	(executing it's actions and changing state), upper layer will be
+  *	indicated or confirmed, if needed. Returns 0 for success, 1 for
+  *	failure. The socket lock has to be held before calling this function.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
+ {
+diff --git a/net/llc/llc_if.c b/net/llc/llc_if.c
+index 6daf391b3e847..fc4d2bd8816f5 100644
+--- a/net/llc/llc_if.c
++++ b/net/llc/llc_if.c
+@@ -38,6 +38,8 @@
+  *	closed and -EBUSY when sending data is not permitted in this state or
+  *	LLC has send an I pdu with p bit set to 1 and is waiting for it's
+  *	response.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
+ {
+@@ -46,20 +48,22 @@ int llc_build_and_send_pkt(struct sock *sk, struct sk_buff *skb)
+ 	struct llc_sock *llc = llc_sk(sk);
+ 
+ 	if (unlikely(llc->state == LLC_CONN_STATE_ADM))
+-		goto out;
++		goto out_free;
+ 	rc = -EBUSY;
+ 	if (unlikely(llc_data_accept_state(llc->state) || /* data_conn_refuse */
+ 		     llc->p_flag)) {
+ 		llc->failed_data_req = 1;
+-		goto out;
++		goto out_free;
+ 	}
+ 	ev = llc_conn_ev(skb);
+ 	ev->type      = LLC_CONN_EV_TYPE_PRIM;
+ 	ev->prim      = LLC_DATA_PRIM;
+ 	ev->prim_type = LLC_PRIM_TYPE_REQ;
+ 	skb->dev      = llc->dev;
+-	rc = llc_conn_state_process(sk, skb);
+-out:
++	return llc_conn_state_process(sk, skb);
++
++out_free:
++	kfree_skb(skb);
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
