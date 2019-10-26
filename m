@@ -4,253 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAB4CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B25CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F50A2084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349962084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfJZHu0 (ORCPT
+        id S1726325AbfJZHwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 03:50:26 -0400
-Received: from mailoutvs22.siol.net ([185.57.226.213]:60209 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725966AbfJZHuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 03:50:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 2AB2B521E31;
-        Sat, 26 Oct 2019 09:50:22 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Q-HjqDkWfWyo; Sat, 26 Oct 2019 09:50:21 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 970F8521C52;
-        Sat, 26 Oct 2019 09:50:21 +0200 (CEST)
-Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 34EFE521CAF;
-        Sat, 26 Oct 2019 09:50:19 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, paul.kocialkowski@bootlin.com
-Cc:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 2/3] media: cedrus: Fix H264 4k support
-Date:   Sat, 26 Oct 2019 09:49:58 +0200
-Message-Id: <20191026074959.1073512-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191026074959.1073512-1-jernej.skrabec@siol.net>
-References: <20191026074959.1073512-1-jernej.skrabec@siol.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Sat, 26 Oct 2019 03:52:21 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:60902 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725996AbfJZHwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 03:52:21 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id DAD3DE01D7A104C0546D;
+        Sat, 26 Oct 2019 15:52:16 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id x9Q7q3oK076541;
+        Sat, 26 Oct 2019 15:52:03 +0800 (GMT-8)
+        (envelope-from zhang.lin16@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102615524640-139284 ;
+          Sat, 26 Oct 2019 15:52:46 +0800 
+From:   zhanglin <zhang.lin16@zte.com.cn>
+To:     davem@davemloft.net
+Cc:     ast@kernel.org, daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        hawk@kernel.org, john.fastabend@gmail.com, mkubecek@suse.cz,
+        jiri@mellanox.com, pablo@netfilter.org, f.fainelli@gmail.com,
+        maxime.chevallier@bootlin.com, lirongqing@baidu.com,
+        vivien.didelot@gmail.com, linyunsheng@huawei.com,
+        natechancellor@gmail.com, arnd@arndb.de, dan.carpenter@oracle.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        jiang.xuexin@zte.com.cn, zhanglin <zhang.lin16@zte.com.cn>
+Subject: [PATCH] net: Zeroing the structure ethtool_wolinfo in ethtool_get_wol()
+Date:   Sat, 26 Oct 2019 15:54:16 +0800
+Message-Id: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-26 15:52:46,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-26 15:52:09,
+        Serialize complete at 2019-10-26 15:52:09
+X-MAIL: mse-fl2.zte.com.cn x9Q7q3oK076541
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-H264 decoder needs additional or bigger buffers in order to decode 4k
-videos.
+memset() the structure ethtool_wolinfo that has padded bytes
+but the padded bytes have not been zeroed out.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus.h   |  7 ++
- .../staging/media/sunxi/cedrus/cedrus_h264.c  | 83 +++++++++++++++++--
- .../staging/media/sunxi/cedrus/cedrus_regs.h  | 11 +++
- 3 files changed, 93 insertions(+), 8 deletions(-)
+ net/core/ethtool.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
-g/media/sunxi/cedrus/cedrus.h
-index c45fb9a7ad07..96765555ab8a 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
-@@ -116,8 +116,15 @@ struct cedrus_ctx {
- 			ssize_t		mv_col_buf_size;
- 			void		*pic_info_buf;
- 			dma_addr_t	pic_info_buf_dma;
-+			ssize_t		pic_info_buf_size;
- 			void		*neighbor_info_buf;
- 			dma_addr_t	neighbor_info_buf_dma;
-+			void		*deblk_buf;
-+			dma_addr_t	deblk_buf_dma;
-+			ssize_t		deblk_buf_size;
-+			void		*intra_pred_buf;
-+			dma_addr_t	intra_pred_buf_dma;
-+			ssize_t		intra_pred_buf_size;
- 		} h264;
- 		struct {
- 			void		*mv_col_buf;
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h264.c
-index d2c854ecdf15..19962f4213d4 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -39,7 +39,6 @@ struct cedrus_h264_sram_ref_pic {
- #define CEDRUS_H264_FRAME_NUM		18
-=20
- #define CEDRUS_NEIGHBOR_INFO_BUF_SIZE	(16 * SZ_1K)
--#define CEDRUS_PIC_INFO_BUF_SIZE	(128 * SZ_1K)
-=20
- static void cedrus_h264_write_sram(struct cedrus_dev *dev,
- 				   enum cedrus_h264_sram_off off,
-@@ -342,6 +341,20 @@ static void cedrus_set_params(struct cedrus_ctx *ctx=
-,
- 		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
- 		     VE_H264_VLD_ADDR_LAST);
-=20
-+	if (ctx->src_fmt.width > 2048) {
-+		cedrus_write(dev, VE_BUF_CTRL,
-+			     VE_BUF_CTRL_INTRAPRED_MIXED_RAM |
-+			     VE_BUF_CTRL_DBLK_MIXED_RAM);
-+		cedrus_write(dev, VE_DBLK_DRAM_BUF_ADDR,
-+			     ctx->codec.h264.deblk_buf_dma);
-+		cedrus_write(dev, VE_INTRAPRED_DRAM_BUF_ADDR,
-+			     ctx->codec.h264.intra_pred_buf_dma);
-+	} else {
-+		cedrus_write(dev, VE_BUF_CTRL,
-+			     VE_BUF_CTRL_INTRAPRED_INT_SRAM |
-+			     VE_BUF_CTRL_DBLK_INT_SRAM);
-+	}
-+
- 	/*
- 	 * FIXME: Since the bitstream parsing is done in software, and
- 	 * in userspace, this shouldn't be needed anymore. But it
-@@ -502,18 +515,28 @@ static void cedrus_h264_setup(struct cedrus_ctx *ct=
-x,
- static int cedrus_h264_start(struct cedrus_ctx *ctx)
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index aeabc48..563a845 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -1471,11 +1471,13 @@ static int ethtool_reset(struct net_device *dev, char __user *useraddr)
+ 
+ static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
  {
- 	struct cedrus_dev *dev =3D ctx->dev;
-+	unsigned int pic_info_size;
- 	unsigned int field_size;
- 	unsigned int mv_col_size;
- 	int ret;
-=20
-+	if (ctx->src_fmt.width > 2048)
-+		pic_info_size =3D CEDRUS_H264_FRAME_NUM * 0x4000;
-+	else
-+		pic_info_size =3D CEDRUS_H264_FRAME_NUM * 0x1000;
-+
- 	/*
--	 * FIXME: It seems that the H6 cedarX code is using a formula
--	 * here based on the size of the frame, while all the older
--	 * code is using a fixed size, so that might need to be
--	 * changed at some point.
-+	 * FIXME: If V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY is set,
-+	 * there is no need to multiply by 2.
- 	 */
-+	pic_info_size +=3D ctx->src_fmt.height * 2 * 64;
-+
-+	if (pic_info_size < 130 * SZ_1K)
-+		pic_info_size =3D 130 * SZ_1K;
-+
-+	ctx->codec.h264.pic_info_buf_size =3D pic_info_size;
- 	ctx->codec.h264.pic_info_buf =3D
--		dma_alloc_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-+		dma_alloc_coherent(dev->dev, ctx->codec.h264.pic_info_buf_size,
- 				   &ctx->codec.h264.pic_info_buf_dma,
- 				   GFP_KERNEL);
- 	if (!ctx->codec.h264.pic_info_buf)
-@@ -566,15 +589,51 @@ static int cedrus_h264_start(struct cedrus_ctx *ctx=
-)
- 		goto err_neighbor_buf;
- 	}
-=20
-+	if (ctx->src_fmt.width > 2048) {
-+		ctx->codec.h264.deblk_buf_size =3D
-+			ALIGN(ctx->src_fmt.width, 32) * 12;
-+		ctx->codec.h264.deblk_buf =3D
-+			dma_alloc_coherent(dev->dev,
-+					   ctx->codec.h264.deblk_buf_size,
-+					   &ctx->codec.h264.deblk_buf_dma,
-+					   GFP_KERNEL);
-+		if (!ctx->codec.h264.deblk_buf) {
-+			ret =3D -ENOMEM;
-+			goto err_mv_col_buf;
-+		}
-+
-+		ctx->codec.h264.intra_pred_buf_size =3D
-+			ALIGN(ctx->src_fmt.width, 64) * 5;
-+		ctx->codec.h264.intra_pred_buf =3D
-+			dma_alloc_coherent(dev->dev,
-+					   ctx->codec.h264.intra_pred_buf_size,
-+					   &ctx->codec.h264.intra_pred_buf_dma,
-+					   GFP_KERNEL);
-+		if (!ctx->codec.h264.intra_pred_buf) {
-+			ret =3D -ENOMEM;
-+			goto err_deblk_buf;
-+		}
-+	}
-+
- 	return 0;
-=20
-+err_deblk_buf:
-+	dma_free_coherent(dev->dev, ctx->codec.h264.deblk_buf_size,
-+			  ctx->codec.h264.deblk_buf,
-+			  ctx->codec.h264.deblk_buf_dma);
-+
-+err_mv_col_buf:
-+	dma_free_coherent(dev->dev, ctx->codec.h264.mv_col_buf_size,
-+			  ctx->codec.h264.mv_col_buf,
-+			  ctx->codec.h264.mv_col_buf_dma);
-+
- err_neighbor_buf:
- 	dma_free_coherent(dev->dev, CEDRUS_NEIGHBOR_INFO_BUF_SIZE,
- 			  ctx->codec.h264.neighbor_info_buf,
- 			  ctx->codec.h264.neighbor_info_buf_dma);
-=20
- err_pic_buf:
--	dma_free_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-+	dma_free_coherent(dev->dev, ctx->codec.h264.pic_info_buf_size,
- 			  ctx->codec.h264.pic_info_buf,
- 			  ctx->codec.h264.pic_info_buf_dma);
- 	return ret;
-@@ -590,9 +649,17 @@ static void cedrus_h264_stop(struct cedrus_ctx *ctx)
- 	dma_free_coherent(dev->dev, CEDRUS_NEIGHBOR_INFO_BUF_SIZE,
- 			  ctx->codec.h264.neighbor_info_buf,
- 			  ctx->codec.h264.neighbor_info_buf_dma);
--	dma_free_coherent(dev->dev, CEDRUS_PIC_INFO_BUF_SIZE,
-+	dma_free_coherent(dev->dev, ctx->codec.h264.pic_info_buf_size,
- 			  ctx->codec.h264.pic_info_buf,
- 			  ctx->codec.h264.pic_info_buf_dma);
-+	if (ctx->codec.h264.deblk_buf_size)
-+		dma_free_coherent(dev->dev, ctx->codec.h264.deblk_buf_size,
-+				  ctx->codec.h264.deblk_buf,
-+				  ctx->codec.h264.deblk_buf_dma);
-+	if (ctx->codec.h264.intra_pred_buf_size)
-+		dma_free_coherent(dev->dev, ctx->codec.h264.intra_pred_buf_size,
-+				  ctx->codec.h264.intra_pred_buf,
-+				  ctx->codec.h264.intra_pred_buf_dma);
- }
-=20
- static void cedrus_h264_trigger(struct cedrus_ctx *ctx)
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_regs.h
-index ace3d49fcd82..7beb03d3bb39 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-@@ -46,6 +46,17 @@
- #define VE_MODE_DEC_H264			(0x01 << 0)
- #define VE_MODE_DEC_MPEG			(0x00 << 0)
-=20
-+#define VE_BUF_CTRL				0x50
-+
-+#define VE_BUF_CTRL_INTRAPRED_EXT_RAM		(0x02 << 2)
-+#define VE_BUF_CTRL_INTRAPRED_MIXED_RAM		(0x01 << 2)
-+#define VE_BUF_CTRL_INTRAPRED_INT_SRAM		(0x00 << 2)
-+#define VE_BUF_CTRL_DBLK_EXT_RAM		(0x02 << 0)
-+#define VE_BUF_CTRL_DBLK_MIXED_RAM		(0x01 << 0)
-+#define VE_BUF_CTRL_DBLK_INT_SRAM		(0x00 << 0)
-+
-+#define VE_DBLK_DRAM_BUF_ADDR			0x54
-+#define VE_INTRAPRED_DRAM_BUF_ADDR		0x58
- #define VE_PRIMARY_CHROMA_BUF_LEN		0xc4
- #define VE_PRIMARY_FB_LINE_STRIDE		0xc8
-=20
---=20
-2.23.0
+-	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
++	struct ethtool_wolinfo wol;
+ 
+ 	if (!dev->ethtool_ops->get_wol)
+ 		return -EOPNOTSUPP;
+ 
++	memset(&wol, 0, sizeof(struct ethtool_wolinfo));
++	wol.cmd = ETHTOOL_GWOL;
+ 	dev->ethtool_ops->get_wol(dev, &wol);
+ 
+ 	if (copy_to_user(useraddr, &wol, sizeof(wol)))
+-- 
+2.15.2
 
