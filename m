@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D60CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECDACA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB50205C9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BE320578
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572097025;
-	bh=NQ0FnJ1VBANMVsMUTfmcHRHbQvXmLQjJYYhHODkSERc=;
+	s=default; t=1572097029;
+	bh=BXqBLPGdGnxVgd+zmeC5RQ/TxmA2uFnMJOFNT5NkNRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T7UBCEn/JRM9wPRzXdqkSzjlZmXfJhj4Sxi8Vpr6NkR1alnLSpugquVO29mKyYi7T
-	 Tw5kcVauEx1xhCk99n7v63/5G6hxIdUlvko5kLyF4JiHSAt/weuWy88QbvzKwqYTot
-	 /nSgUHf52WcYMaWcT+6CzaIaNA+9VQEVZJW/v/GI=
+	b=iZBWvh6bKIsE/pre2ULewYggU0WDS1MN91N9ILoVhvuTvbY1nE+I0krCmImckLnPz
+	 knHIoOAtNfFb3gbnU6Z9pF7/zuhwav56kUH1pVwF4kj0eCBvHB2tiBTJ6y+EC5VMXU
+	 FiN3PC5CQqjwOWms/MW+0UUVq35k2qBg6SBVdds8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfJZNQX (ORCPT
+        id S1728364AbfJZNhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:16:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37738 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:37:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfJZNQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:16:16 -0400
+        id S1726667AbfJZNQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:16:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B83721897;
-        Sat, 26 Oct 2019 13:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09C9F222C1;
+        Sat, 26 Oct 2019 13:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095776;
-        bh=NQ0FnJ1VBANMVsMUTfmcHRHbQvXmLQjJYYhHODkSERc=;
+        s=default; t=1572095782;
+        bh=BXqBLPGdGnxVgd+zmeC5RQ/TxmA2uFnMJOFNT5NkNRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p11wgfF/ez48B8UA/kQZYySvqHW6RAwkVFOSTsY3rlUY5sihPg3UiTzBUcp/XJvD/
-         KMzFKYcinGhAQ1NuzMWN0GY9AV/CdVPDERJx/JNxHZa06d65RZOW2HcgZQSl7Zialv
-         QYnBPx7CFfHU7iLJnYEpsy+jg7ZYP0zO0iVKwT54=
+        b=KOQCVbC9AuSgUUCpHwxpue7UBXJMTegYRg/gR/FyLysiUL9oI8oeKj8JnLJPHf5hc
+         cS9Yj9t36+f/X4nW6peCkLsd2aisRBJYGfSh002qPVOheuvlWFbrW3WjZeuaPHo0mo
+         GwYK5n9LDYyKF0GBqsVhkn4mOK+pDKb86rBz8TYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Vassernis <michael.vassernis@tandemg.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 07/99] mac80211_hwsim: fix incorrect dev_alloc_name failure goto
-Date:   Sat, 26 Oct 2019 09:14:28 -0400
-Message-Id: <20191026131600.2507-7-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 13/99] net: stmmac: selftests: Fix L2 Hash Filter test
+Date:   Sat, 26 Oct 2019 09:14:34 -0400
+Message-Id: <20191026131600.2507-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -60,36 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Vassernis <michael.vassernis@tandemg.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 313c3fe9c2348e7147eca38bb446f295b45403a0 ]
+[ Upstream commit 2809fc13163f4946d7cde092807bea44bbae4478 ]
 
-If dev_alloc_name fails, hwsim_mon's memory allocated in alloc_netdev
-needs to be freed.
-Change goto command in dev_alloc_name failure to out_free_mon in
-order to perform free_netdev.
+With the current MAC addresses hard-coded in the test we can get some
+false positives as we use the Hash Filtering method. Let's change the
+MAC addresses in the tests to be unique when hashed.
 
-Signed-off-by: Michael Vassernis <michael.vassernis@tandemg.com>
-Link: https://lore.kernel.org/r/20191003073049.3760-1-michael.vassernis@tandemg.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mac80211_hwsim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index 772e54f0696fd..141508e01c31f 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3929,7 +3929,7 @@ static int __init init_mac80211_hwsim(void)
- 	err = dev_alloc_name(hwsim_mon, hwsim_mon->name);
- 	if (err < 0) {
- 		rtnl_unlock();
--		goto out_free_radios;
-+		goto out_free_mon;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index f8915a62d6025..306657e295a2b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -447,8 +447,8 @@ static int stmmac_filter_check(struct stmmac_priv *priv)
  
- 	err = register_netdevice(hwsim_mon);
+ static int stmmac_test_hfilt(struct stmmac_priv *priv)
+ {
+-	unsigned char gd_addr[ETH_ALEN] = {0x01, 0x00, 0xcc, 0xcc, 0xdd, 0xdd};
+-	unsigned char bd_addr[ETH_ALEN] = {0x09, 0x00, 0xaa, 0xaa, 0xbb, 0xbb};
++	unsigned char gd_addr[ETH_ALEN] = {0x01, 0xee, 0xdd, 0xcc, 0xbb, 0xaa};
++	unsigned char bd_addr[ETH_ALEN] = {0x01, 0x01, 0x02, 0x03, 0x04, 0x05};
+ 	struct stmmac_packet_attrs attr = { };
+ 	int ret;
+ 
 -- 
 2.20.1
 
