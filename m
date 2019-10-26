@@ -2,104 +2,126 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295E7CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3F0CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F241620863
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:12:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMTXYAG2"
+	by mail.kernel.org (Postfix) with ESMTP id 31B67205C9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 12:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572092817;
+	bh=Tl/yYfCwTv1OF2qFO6c8Wx02cTYUgWo+y/EvJ8uVR2Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LhHwUWtvBTgSs0Rwi3isRqm2bWyKOyFaix8b1TrVVG/QJAiEnrYv9ys6vqdM6dEnS
+	 rUDSvqIBJOSsbRLxWiJQ8XX4v5gzs1jYe5TaOPqKFl0GsPYS36FUIKZWrZ/SeJO6tQ
+	 gjTGrIoOuwibD+dvJtVP0Uw6Je1aj1IjOaIeHjwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfJZMMH (ORCPT
+        id S1726395AbfJZM0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 08:12:07 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40474 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfJZML5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 08:11:57 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w9so4610878wmm.5
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 05:11:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sv48Bpld+S8ENWGw0IO9+9etbMm5gapIqiSKDckP1q0=;
-        b=PMTXYAG2F+dIWW1dp/rANy+vW/rCk05UQ4NxwIHricgk80t0jgrQwdrFVZC9xILtdL
-         DtY2BnQMx6/iAN/qcfVeusxe4whV7lbjZ5r8NgWWG6+MHAFTcyi8kmobRmGHGvM4OfKy
-         mhoBAPPGD+fw1d76X8dea9nFH4L+T1cxU7xsoxjzqQEEZyA2PHOpOGCMuO78rFgDdhHb
-         XvIizagsosP4iWNv6JVbGOimaI3dIclzOpR9udq5K3RyliiWp6wrm2kgW9b9JFOMLzvi
-         cCn32cpknHWjwTkIjxLaDOPvjz8G3VxCe1OMJzu/P3zuBHHUshu97hpmO6Td/hXlg8jl
-         qcIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sv48Bpld+S8ENWGw0IO9+9etbMm5gapIqiSKDckP1q0=;
-        b=MnM6UFnU7hpM+0PLX2yxev8MKGWS7w+RlM1T99StfXylrzUqMNiuqBM42VXJEBKRxz
-         n/ikvRObRRPY223i8eD6LoNhHWyPxz3s/BS/h3kAfP7TPstfpCmza/wdskyp5kpgdloj
-         /wQ44csIuhryVCLhQQLp5wZIdchgKIlPWbZ6pNgOJB1NLAveA22pJJOH6aLkIZs+bRVq
-         Pxn2OxbyAnibZ+3mFwFZFtShmHZW+DWc8p7+f2RR4jOPjwfH93nrkNIDZyMkACgjdENe
-         OpNlonIuvRsK1/vcUOvvCc+kvjcTtMrl7Sgh2SZllDYrgRaWau+b3n2V6Mw3vulRGyrd
-         rcZg==
-X-Gm-Message-State: APjAAAXyYq62tbd81m2CGRvg9leIk33fTQKHhm1cw95mO4V1hTkyaDit
-        y09irFHiT2Ce3yVNAsUjJyr2rnTq
-X-Google-Smtp-Source: APXvYqxoAC2iy/8fqgTsidv12j+N6zvpRu5Z6WZQ/dD7eJ73TYwYPSZ2XlM5Ro6No4yIPlUyakkMMQ==
-X-Received: by 2002:a1c:39c1:: with SMTP id g184mr7639457wma.75.1572091915456;
-        Sat, 26 Oct 2019 05:11:55 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
-        by smtp.gmail.com with ESMTPSA id v8sm5789906wra.79.2019.10.26.05.11.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2019 05:11:54 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 5/7] staging: rtl8188eu: remove ternary operator
-Date:   Sat, 26 Oct 2019 14:11:33 +0200
-Message-Id: <20191026121135.181897-5-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191026121135.181897-1-straube.linux@gmail.com>
-References: <20191026121135.181897-1-straube.linux@gmail.com>
+        Sat, 26 Oct 2019 08:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726257AbfJZM0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 08:26:49 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D368720578;
+        Sat, 26 Oct 2019 12:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572092808;
+        bh=Tl/yYfCwTv1OF2qFO6c8Wx02cTYUgWo+y/EvJ8uVR2Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pRBaZ7RxMMILSI/1tSzGhKjYreclSed8AELjJoTAcydP7ULUXQBxJ4a3GdbLwRG9G
+         zOJpD/YYw6T/R1dAypSwHOAz48Mx8sk1am3T5s6LRC/oOdbgmax92KSuNx1rL/Zh23
+         ZLToZMGahADs5BuA8ruf9j6b9ocddioNH2ondgms=
+Date:   Sat, 26 Oct 2019 20:26:32 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+Cc:     devicetree@vger.kernel.org, jerome.oufella@savoirfairelinux.com,
+        rennes@savoirfairelinux.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] ARM: dts: imx6qdl-rex: add gpio expander pca9535
+Message-ID: <20191026122630.GM14401@dragon>
+References: <20191016092255.19223-1-gilles.doffe@savoirfairelinux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191016092255.19223-1-gilles.doffe@savoirfairelinux.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using ternary operator to set variable res, use the value
-of variable match (or the negation) directly to simplify the code and
-improve readability.
+On Wed, Oct 16, 2019 at 11:22:55AM +0200, Gilles DOFFE wrote:
+> The pca9535 gpio expander is present on the Rex baseboard, but missing
+> from the dtsi.
+> The pca9535 is on i2c2 bus which is common to the three SOM
+> variants (Basic/Pro/Ultra), thus it is activated by default.
+> 
+> Add also the new gpio controller and the associated interrupt line
+> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
+> 
+> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+> index 97f1659144ea..305b57fadc60 100644
+> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
+> @@ -132,6 +132,19 @@
+>  	pinctrl-0 = <&pinctrl_i2c2>;
+>  	status = "okay";
+>  
+> +	pca9535: gpio-expander@27 {
+> +		compatible = "nxp,pca9535";
+> +		reg = <0x27>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pca9535>;
+> +		interrupt-parent = <&gpio6>;
+> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+>  	eeprom@57 {
+>  		compatible = "atmel,24c02";
+>  		reg = <0x57>;
+> @@ -237,6 +250,12 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_pca9535: pca9535 {
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For sake of consistency, the node name should be prefixed with 'grp',
+which tells this is a pinctrl group node.
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-index 282c835a635c..3cadc46836e1 100644
---- a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
-@@ -504,9 +504,9 @@ bool rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr)
- 	spin_unlock_bh(&pacl_node_q->lock);
- 
- 	if (pacl_list->mode == 1)/* accept unless in deny list */
--		res = (match) ? false : true;
-+		res = !match;
- 	else if (pacl_list->mode == 2)/* deny unless in accept list */
--		res = (match) ? true : false;
-+		res = match;
- 	else
- 		res = true;
- 
--- 
-2.23.0
+I fixed it up and applied the patch.
 
+Shawn
+
+> +			fsl,pins = <
+> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x17059
+> +		   >;
+> +		};
+> +
+>  		pinctrl_uart1: uart1grp {
+>  			fsl,pins = <
+>  				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+> -- 
+> 2.20.1
+> 
