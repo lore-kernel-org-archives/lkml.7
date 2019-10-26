@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F92CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 01:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BFECA9EA0
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 01:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5D921D7B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 01:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C0C20679
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 01:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnGWbjza"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MREXsrE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfJZBJp (ORCPT
+        id S1726232AbfJZBKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 25 Oct 2019 21:09:45 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37514 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfJZBJo (ORCPT
+        Fri, 25 Oct 2019 21:10:10 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40588 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfJZBKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 25 Oct 2019 21:09:44 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g50so6078269qtb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 18:09:43 -0700 (PDT)
+        Fri, 25 Oct 2019 21:10:10 -0400
+Received: by mail-qt1-f195.google.com with SMTP id o49so6049335qta.7
+        for <linux-kernel@vger.kernel.org>; Fri, 25 Oct 2019 18:10:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=4Z9OgauNAZlyv4DUV1e7z6dKzXgCBbvCPqc4vHiEOxo=;
-        b=SnGWbjzaNr2P+Am52dVGqNPCqNAgiY2/P/VjL8lAYUaQZS0Z+Lys2Qhj3gXqNRuz7G
-         90HaqVxLFi/rqBdIJeuNT2WdmR3rUGbiEXstI92PeWo+piUS8116bUFjXM7OQVhmlq6D
-         slmUe01EqObmxs5C4EotdrM56XfE4N61v1NLqb5OLjy2e3aHZUux5sjCNwya5h5l+mTv
-         Dipm+1BrOkmfsads+E4ijod5UaMBtAP/pfIKqrxZuZZ8rvZH+/2/Ho8LVFWvXEeCVDJS
-         58P+rTebn3D/AbL9SwC+az9z4sg3H3ZmyYFDUFzMIXCe3Fcg6zkG8sv/n6jYQHnyM6Kt
-         9niw==
+        bh=dp9VEiEAucRbcNWDDMXkM2Mcfldcw5lUeaorfPQjnfs=;
+        b=MREXsrE5nPyO+vke/p/zBd8AFyJGLo7wOjrZCig9R0YwNNXfFGAqyJOO2ywvg00lK8
+         lTd+M8efshpro1SFyqYKBRmXNP/GpStpF6jLUwP4pBRH1J6Qgs4iNGtK8RuW0o7kRvc6
+         PGC3IXXisYHQJ4AYk829Q9E1nXxneatjFakmejD+L6qO2Z7ZOJCWcTKexZZp84SAJJyW
+         FLTC0loQ0phF+UG2Ec+tU03RV2ODcnmY9FBLtsCNjcJlRpopl7Byi67BVGsm8RxKaMku
+         tiBSNrLLgHxg8QgBDVZJ70PCBbP4xWu6cC4+R9hLP3CDgc8acoGagOrI3vjhHTavk6hs
+         Pw8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Z9OgauNAZlyv4DUV1e7z6dKzXgCBbvCPqc4vHiEOxo=;
-        b=KSmrhdryORxZ03L8002GNpv1eUux7UKcVb5kXMHsii+vwHmBD3+FYshBv2I1q7SGPq
-         nC3vPeQ5VACcK62qGuAJSBfXj3PBl+gqmpsIyjJFrYLSVcGA6yxUeT8OxGTdVOaGldPQ
-         DZpweZWhgHAIeeEjxczteiYy6xAtvVwBszyES/CYCPBoEB3E5amB0UufmKXHxMtsp/6w
-         UUK53QqD3/b78Kc9of4ZIDmSZxhzn9v8HJm3WuLMNxoGsKVJskYC/4lzceTf1MluPraV
-         uudqoT18lTrs6l+f4PGwCMMvy+Dgvtp56IWNsDU71wwGOl/vokx3pfZB7aRtiMSUcUlc
-         thtQ==
-X-Gm-Message-State: APjAAAU6qmwXtJ26nHjUlQTDu/iMkY4P1RCPQGKjaLhGNgEDm2LxPimg
-        vrJbqQRkrhOGna+HtxEdi/4=
-X-Google-Smtp-Source: APXvYqzSoE8ns73HGN24PbteGpQ34K0LTLXnTOSigGmYM24ekdibECwSsRV009uIN2FT78IOlXJA3A==
-X-Received: by 2002:ac8:75cb:: with SMTP id z11mr6234596qtq.64.1572052183254;
-        Fri, 25 Oct 2019 18:09:43 -0700 (PDT)
+        bh=dp9VEiEAucRbcNWDDMXkM2Mcfldcw5lUeaorfPQjnfs=;
+        b=ivs87H0SDXYdG+lzYhbcz3y7PI5OwB/oSvIFaX1oGHMf4KaJH60LpU+tsyurV6oCxQ
+         mC6BbqLSZMfPrslCr9He20/UoUO6OiS/og3D3rWF6k0l7+oFH4mnNxR6A9UQFcriTOVy
+         F7V5Z7+uopeB+x8A3fNP7eg6ih35xwrCN5Hk0NhaFb/fqksMHKEx+Pa5W18xZ0pvx7Om
+         a/FQEmsNXSqP9N9A7MXG8Tp6lAEwZFlPSDxWS2yQwlf8A6vUtWs7ib7BmK5fgdFWOpNa
+         hpeSPjKpFxj9R8q74b1H4nv8UNTCsI8iKl/m+RKw8cBxUqXuQ9xf+7ki3iXizDMAmC1a
+         kWnw==
+X-Gm-Message-State: APjAAAXH+x3tuXPJILUbkbHt6Xp1mMz/Z5CMD4szl7z17Dibrh/l7jbB
+        nVeWvQK3piLfm+0Dq9LTHK0=
+X-Google-Smtp-Source: APXvYqytVxiRdo72TUn20/ChpM/MfBp9VIee/UBo/TYCi3RcuuQolwkzeKGazBEYn4tTmReSPKfH4Q==
+X-Received: by 2002:aed:3908:: with SMTP id l8mr6240757qte.383.1572052209133;
+        Fri, 25 Oct 2019 18:10:09 -0700 (PDT)
 Received: from cristiane-Inspiron-5420 ([131.100.148.220])
-        by smtp.gmail.com with ESMTPSA id g25sm2040226qtc.90.2019.10.25.18.09.40
+        by smtp.gmail.com with ESMTPSA id g10sm2113853qki.41.2019.10.25.18.10.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 25 Oct 2019 18:09:42 -0700 (PDT)
-Date:   Fri, 25 Oct 2019 22:09:38 -0300
+        Fri, 25 Oct 2019 18:10:08 -0700 (PDT)
+Date:   Fri, 25 Oct 2019 22:10:04 -0300
 From:   Cristiane Naves <cristianenavescardoso09@gmail.com>
 To:     outreachy-kernel@googlegroups.com
 Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
         Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH 1/2] staging: rtl8712: Fix Alignment of open
- parenthesis
-Message-ID: <e3842148b6dd01c47678f517a07772c75046c50f.1572051351.git.cristianenavescardoso09@gmail.com>
+Subject: [RESEND PATCH 2/2] staging: rtl8712: Remove lines before a close
+ brace
+Message-ID: <0bd6b897a5af322cf54d53bb68752d3667a7acb6.1572051351.git.cristianenavescardoso09@gmail.com>
 References: <cover.1572051351.git.cristianenavescardoso09@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -78,122 +78,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix alignment should match open parenthesis.Issue found by checkpatch.
+Fix Blank lines aren't necessary before a close brace '}'. Issue found
+by checkpatch.
 
 Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
 ---
- drivers/staging/rtl8712/rtl8712_recv.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/staging/rtl8712/rtl8712_recv.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
-index af12c16..12a3c64 100644
+index 12a3c64..09b461c 100644
 --- a/drivers/staging/rtl8712/rtl8712_recv.c
 +++ b/drivers/staging/rtl8712/rtl8712_recv.c
-@@ -61,13 +61,13 @@ void r8712_init_recv_priv(struct recv_priv *precvpriv,
- 		precvbuf->ref_cnt = 0;
- 		precvbuf->adapter = padapter;
- 		list_add_tail(&precvbuf->list,
--				 &(precvpriv->free_recv_buf_queue.queue));
-+			      &(precvpriv->free_recv_buf_queue.queue));
- 		precvbuf++;
- 	}
- 	precvpriv->free_recv_buf_queue_cnt = NR_RECVBUFF;
- 	tasklet_init(&precvpriv->recv_tasklet,
--	     (void(*)(unsigned long))recv_tasklet,
--	     (unsigned long)padapter);
-+		     (void(*)(unsigned long))recv_tasklet,
-+		     (unsigned long)padapter);
- 	skb_queue_head_init(&precvpriv->rx_skb_queue);
- 
- 	skb_queue_head_init(&precvpriv->free_recv_skb_queue);
-@@ -140,7 +140,7 @@ void r8712_free_recvframe(union recv_frame *precvframe,
- }
- 
- static void update_recvframe_attrib_from_recvstat(struct rx_pkt_attrib *pattrib,
--					   struct recv_stat *prxstat)
-+						  struct recv_stat *prxstat)
- {
- 	u16 drvinfo_sz;
- 
-@@ -177,7 +177,7 @@ static void update_recvframe_attrib_from_recvstat(struct rx_pkt_attrib *pattrib,
- 
- /*perform defrag*/
- static union recv_frame *recvframe_defrag(struct _adapter *adapter,
--				   struct  __queue *defrag_q)
-+					  struct  __queue *defrag_q)
- {
- 	struct list_head *plist, *phead;
- 	u8 wlanhdr_offset;
-@@ -379,7 +379,7 @@ static void amsdu_to_msdu(struct _adapter *padapter, union recv_frame *prframe)
- 		/* convert hdr + possible LLC headers into Ethernet header */
- 		eth_type = (sub_skb->data[6] << 8) | sub_skb->data[7];
- 		if (sub_skb->len >= 8 &&
--		   ((!memcmp(sub_skb->data, rfc1042_header, SNAP_SIZE) &&
-+		    ((!memcmp(sub_skb->data, rfc1042_header, SNAP_SIZE) &&
- 		   eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) ||
- 		   !memcmp(sub_skb->data, bridge_tunnel_header, SNAP_SIZE))) {
- 			/* remove RFC1042 or Bridge-Tunnel encapsulation and
-@@ -387,18 +387,18 @@ static void amsdu_to_msdu(struct _adapter *padapter, union recv_frame *prframe)
- 			 */
- 			skb_pull(sub_skb, SNAP_SIZE);
- 			memcpy(skb_push(sub_skb, ETH_ALEN), pattrib->src,
--				ETH_ALEN);
-+			       ETH_ALEN);
- 			memcpy(skb_push(sub_skb, ETH_ALEN), pattrib->dst,
--				ETH_ALEN);
-+			       ETH_ALEN);
- 		} else {
- 			__be16 len;
- 			/* Leave Ethernet header part of hdr and full payload */
- 			len = htons(sub_skb->len);
- 			memcpy(skb_push(sub_skb, 2), &len, 2);
- 			memcpy(skb_push(sub_skb, ETH_ALEN), pattrib->src,
--				ETH_ALEN);
-+			       ETH_ALEN);
- 			memcpy(skb_push(sub_skb, ETH_ALEN), pattrib->dst,
--				ETH_ALEN);
-+			       ETH_ALEN);
+@@ -289,7 +289,6 @@ union recv_frame *r8712_recvframe_chk_defrag(struct _adapter *padapter,
+ 			r8712_free_recvframe(precv_frame, pfree_recv_queue);
+ 			prtnframe = NULL;
  		}
- 		/* Indicate the packets to upper layer */
- 		if (sub_skb) {
-@@ -472,7 +472,7 @@ static int check_indicate_seq(struct recv_reorder_ctrl *preorder_ctrl,
+-
+ 	}
+ 	if ((ismfrag == 0) && (fragnum != 0)) {
+ 		/* the last fragment frame
+@@ -438,7 +437,6 @@ void r8712_rxcmd_event_hdl(struct _adapter *padapter, void *prxcmdbuf)
+ 		r8712_event_handle(padapter, (__le32 *)poffset);
+ 		poffset += (cmd_len + 8);/*8 bytes alignment*/
+ 	} while (le32_to_cpu(voffset) & BIT(31));
+-
  }
  
- static int enqueue_reorder_recvframe(struct recv_reorder_ctrl *preorder_ctrl,
--			      union recv_frame *prframe)
-+				     union recv_frame *prframe)
- {
- 	struct list_head *phead, *plist;
- 	union recv_frame *pnextrframe;
-@@ -499,8 +499,8 @@ static int enqueue_reorder_recvframe(struct recv_reorder_ctrl *preorder_ctrl,
- }
- 
- int r8712_recv_indicatepkts_in_order(struct _adapter *padapter,
--			       struct recv_reorder_ctrl *preorder_ctrl,
--			       int bforced)
-+				     struct recv_reorder_ctrl *preorder_ctrl,
-+				     int bforced)
- {
- 	struct list_head *phead, *plist;
- 	union recv_frame *prframe;
-@@ -555,7 +555,7 @@ int r8712_recv_indicatepkts_in_order(struct _adapter *padapter,
- }
- 
- static int recv_indicatepkt_reorder(struct _adapter *padapter,
--			     union recv_frame *prframe)
-+				    union recv_frame *prframe)
- {
- 	unsigned long irql;
- 	struct rx_pkt_attrib *pattrib = &prframe->u.hdr.attrib;
-@@ -624,7 +624,7 @@ void r8712_reordering_ctrl_timeout_handler(void *pcontext)
- }
- 
- static int r8712_process_recv_indicatepkts(struct _adapter *padapter,
--			      union recv_frame *prframe)
-+					   union recv_frame *prframe)
- {
- 	int retval = _SUCCESS;
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ static int check_indicate_seq(struct recv_reorder_ctrl *preorder_ctrl,
 -- 
 2.7.4
 
