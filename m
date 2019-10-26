@@ -2,89 +2,94 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DE6CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD6DCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C8C206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:50:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouYblJ5P"
+	by mail.kernel.org (Postfix) with ESMTP id B7292206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572098144;
+	bh=oS8AafU4UoR1Cdt5q1QkipV0ZVxN87r+AIY8DNgHUts=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YSPG10ZADHSo+PSAbEXHn6ENkICuiSmzq6Fl/MGfHiihc/NZynkTURe16F1yXFoZL
+	 qHvDbclWaCI2X/EkbdTlpBAv+dDXqp5MlP3Pq3Ochg1ubEGifJVa1FC0EHd9oVld8Q
+	 IMT1+BrUd0aGRGS2k2YSbgV6fTvYHp9HN+oeC5fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfJZNus (ORCPT
+        id S1726590AbfJZNzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:50:48 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:34427 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfJZNus (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:50:48 -0400
-Received: by mail-yb1-f196.google.com with SMTP id m1so2245654ybm.1;
-        Sat, 26 Oct 2019 06:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oJVQ7Mv09uXIyzKs7wvvXIukFTb4yLcpL99WuS5X+PA=;
-        b=ouYblJ5P3exdNPneKy0LQdLJ2nFgt2ffrWomDcmlW8pCIOG2kefa7xDF0XHJfPWhV0
-         jsEaCnQKfYbMSmnf9/C5Zd6pmbse0JijToddl3pRQQEvUJmuetf1QAkJe9rT9R20J7FK
-         dseET/3Kckitq+aaBY7yk4qSiULvSbbfRHRIBXra1XX6JF+3nNbNTe9rRZAFkzXlVRvH
-         CFREbaCnDVEcI2OLYQQ3Nyg2H2UUwU1f6bujAhYrbGuw2Fvv1QkWGp1osM7CWH+vKWN2
-         3xzP+Cs0oKZ1IFa5dmhptUTGY7tNk7E3MzpqkWcfVwhTTbatlVFm0QvAY5sJYE1OIJ03
-         cb8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oJVQ7Mv09uXIyzKs7wvvXIukFTb4yLcpL99WuS5X+PA=;
-        b=paLEUQ9ygZcH1Are1RkAwpLD8kn4CA6Eb+mSaffe2Pm3/6w00VFhUJwIoyDRzbWU6s
-         DFUxG8R6dlJCNORFsKC9n9ec2hh633ZoT++jfBsOzX5uYMg8zctu1PK3Xx3ODEbdEoz3
-         RoqSsqUTSy7DWVMeH7HDrIr6laHwZvQ9+wJwunv9A/mFUGw2QptRbyOexselRGlI7Y1a
-         JjjDWmKYf1ieHlMrOrwDt9SpiLbwJqOSrRwL+XYiLpuQDhTmHfWd0iajMBkQ5uLHqMMV
-         obq86Qxm1wgCoPjeHE6cgBNRp9Au4rLKKA21hpvNeo0Um79S512S4VWOF9FV/12DIU2c
-         8obg==
-X-Gm-Message-State: APjAAAXEemq1JsVJs0oEjY/+j7GEUGyqxDKENpAB35L7umZffcdJSFfe
-        HWbJZyVn8eHSuWb8yjOhjJpZnj9uXp14zni5VIU=
-X-Google-Smtp-Source: APXvYqw2bn2yJ4dFK6zr3Hlu16l33OFEV0IufFKMM0cFH1oFkBQZkL9mOnmytY6f3cGGelOryj7e6AQJEbsnTmux6Yo=
-X-Received: by 2002:a25:3744:: with SMTP id e65mr555429yba.126.1572097845998;
- Sat, 26 Oct 2019 06:50:45 -0700 (PDT)
+        Sat, 26 Oct 2019 09:55:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726256AbfJZNzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:55:41 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF8A621897
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 13:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572098141;
+        bh=oS8AafU4UoR1Cdt5q1QkipV0ZVxN87r+AIY8DNgHUts=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UdKa/EIasgUwWUWKLVUZjsocCCXKaIIKQvHCKkWsta4ac76dgl2yQ/T8MABrC3sI7
+         QT4WVsaHMploW8g3OvhBvq4nUFVqX2zrXBy68w8n3je7YCvffgOqbOQqcXWLA2hKIV
+         C5TuFXmNCXo9w+NkE8kU8xCo3ymWDEd1iMs2nCNo=
+Received: by mail-wr1-f53.google.com with SMTP id q13so5310888wrs.12
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 06:55:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAWhrBEXCMSFNbWiIKiWXrGk+FVTpaBjiPCAUStMrxG9DQcS3MQM
+        epN1Z2cMBNwZSp9ebYLeqfLGApXKxRJoRENgfBrsBA==
+X-Google-Smtp-Source: APXvYqwvksRrIQEjjgyaaAImviBGypA0F9sRduelJfzhcIHS0Kqw9RdPhWtrIf2y553xqjuua9wmwExmrcJ/9/9X9zs=
+X-Received: by 2002:adf:f04e:: with SMTP id t14mr7762143wro.106.1572098139231;
+ Sat, 26 Oct 2019 06:55:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191025112917.22518-1-mszeredi@redhat.com> <20191025112917.22518-5-mszeredi@redhat.com>
-In-Reply-To: <20191025112917.22518-5-mszeredi@redhat.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 26 Oct 2019 16:50:34 +0300
-Message-ID: <CAOQ4uxhRfDq49s-NCP5JK5VSYCZ+LXv2oMeyOReoLqq8LePkuQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/5] ovl: user xattr
-To:     Miklos Szeredi <mszeredi@redhat.com>
-Cc:     "Eric W . Biederman" <ebiederm@xmission.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr>
+ <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de>
+ <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr> <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr>
+In-Reply-To: <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 26 Oct 2019 06:55:28 -0700
+X-Gmail-Original-Message-ID: <CALCETrWEKrE6nhu2F9+V_8EhWKqyuq5Qit05Uj9V_TeBKZNJsw@mail.gmail.com>
+Message-ID: <CALCETrWEKrE6nhu2F9+V_8EhWKqyuq5Qit05Uj9V_TeBKZNJsw@mail.gmail.com>
+Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 10:54 PM Miklos Szeredi <mszeredi@redhat.com> wrote:
+On Tue, Oct 22, 2019 at 6:56 AM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
 >
-> Optionally allow using "user.overlay" namespace instead
-> of"trusted.overlay".
 >
-> This is necessary for overlayfs to be able to be mounted in an unprivileged
-> namepsace.
+> >>> The performance is rather disappoiting. That's most likely all
+> >>> calculation in the C implementation are based on 64 bits math and
+> >>> converted to 32 bits at the very end. I guess C implementation should
+> >>> use 32 bits math like the assembly VDSO does as of today.
+> >>
+> >>> gettimeofday:    vdso: 750 nsec/call
+> >>>
+> >>> gettimeofday:    vdso: 1533 nsec/call
+> >
+> > Small improvement (3%) with the proposed change:
+> >
+> > gettimeofday:    vdso: 1485 nsec/call
 >
-> Make the option explicit, since it makes the filesystem format be
-> incompatible.
+> By inlining do_hres() I get the following:
+>
+> gettimeofday:    vdso: 1072 nsec/call
 >
 
-Ach! this was tiring..
-If you get to resubmit, please consider separating the plumbing
-from the userxattr implementation.
-
-Thanks,
-Amir.
+A perf report might be informative.
