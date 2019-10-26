@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E17CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39789CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB552070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E6F214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096236;
-	bh=luNhTd4Wph/2JoBgh1xl7TIz2ZYbQxAZF6SRn6Jv7ng=;
+	s=default; t=1572096247;
+	bh=RZgYwf4dW4DVYCcsg1CIb7anwqRWL1dPYJyucHUDUEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pkrba3cQHAVZMPXNImjc1zdAwgpb0IJ0uGleFvqrsnXqKb3BUI6Y8GG4YcyuyCed7
-	 Gmx/oN128NyuJoBxF0CSGAS0/6bDxvoqoPgiJ70KqY1Dl2QR391/6mxwZ6yFQ7IaKr
-	 6Qrw+zwWOdKZqnT6q/wDYjj4kmBZyMddIrXYga4s=
+	b=rNbXwBYxmQ2PWJEPLmks5xnjw1mrE7yymoy2AaXdiQNq5WP0SDhRBFJW9xYP5NYpj
+	 tu7cS//0ivU6TGnkmL0RvUxQH1Pfi0ArVDsMFO8JI/tsYhOveZKxHLL4xTzUemXB/j
+	 NntI+7EevRGJi9FNJqZjOCvBv/lpCk6Ay/zeiomU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbfJZNXg (ORCPT
+        id S1727848AbfJZNYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45370 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbfJZNXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:23:34 -0400
+        id S1729844AbfJZNXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:23:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7692070B;
-        Sat, 26 Oct 2019 13:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCBC021D7F;
+        Sat, 26 Oct 2019 13:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096213;
-        bh=luNhTd4Wph/2JoBgh1xl7TIz2ZYbQxAZF6SRn6Jv7ng=;
+        s=default; t=1572096209;
+        bh=RZgYwf4dW4DVYCcsg1CIb7anwqRWL1dPYJyucHUDUEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6MquCZXtymXbq7NsdpGv/wzn/kazZMmonghFP5ZJgn8dQAdZ4AsbKSWpG6lFZf6v
-         kcGznqRbDK1izl9qphvzkECZWulcQZiDS6GfTRfiwYnYF445qwukojP8O0mmL1kxmY
-         fgCiMmSpQ1UV/CY8K8+pDB8yka/ioKcuR5hO5iB0=
+        b=T6SsebHH8cDRuPEAv02GZa1HdshS+UtwMoAqUglrqEhETh73cX20WkN+pQhW+hfFS
+         RYRSipeiTKNVQEF6ADblghFyrvcP1SVQpTOTfr0Oh7DvZfNKS8bpx5wdMkajf5pmt2
+         83PlBGjfD4fIuK2M553JfwQT6emq/FbdcLJ/Gg6E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 14/17] net: usb: sr9800: fix uninitialized local variable
-Date:   Sat, 26 Oct 2019 09:22:58 -0400
-Message-Id: <20191026132302.4622-14-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.4 12/17] xtensa: fix {get,put}_user() for 64bit values
+Date:   Sat, 26 Oct 2019 09:22:56 -0400
+Message-Id: <20191026132302.4622-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026132302.4622-1-sashal@kernel.org>
 References: <20191026132302.4622-1-sashal@kernel.org>
@@ -61,34 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
+[ Upstream commit 6595d144decec396bf2e2efee27e50634a4b627f ]
 
-Make sure res does not contain random value if the call to
-sr_read_cmd fails for some reason.
+First of all, on short copies __copy_{to,from}_user() return the amount
+of bytes left uncopied, *not* -EFAULT.  get_user() and put_user() are
+expected to return -EFAULT on failure.
 
-Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Another problem is get_user(v32, (__u64 __user *)p); that should
+fetch 64bit value and the assign it to v32, truncating it in process.
+Current code, OTOH, reads 8 bytes of data and stores them at the
+address of v32, stomping on the 4 bytes that follow v32 itself.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/include/asm/uaccess.h | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index 004c955c1fd1b..da0ae16f5c74c 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
- static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
- {
- 	struct usbnet *dev = netdev_priv(net);
--	__le16 res;
-+	__le16 res = 0;
- 
- 	mutex_lock(&dev->phy_mutex);
- 	sr_set_sw_mii(dev);
+diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
+index 147b26ed9c91f..42133985a19a1 100644
+--- a/arch/xtensa/include/asm/uaccess.h
++++ b/arch/xtensa/include/asm/uaccess.h
+@@ -245,7 +245,7 @@ do {									\
+ 	case 4: __put_user_asm(x, ptr, retval, 4, "s32i", __cb); break;	\
+ 	case 8: {							\
+ 		     __typeof__(*ptr) __v64 = x;			\
+-		     retval = __copy_to_user(ptr, &__v64, 8);		\
++		     retval = __copy_to_user(ptr, &__v64, 8) ? -EFAULT : 0;	\
+ 		     break;						\
+ 	        }							\
+ 	default: __put_user_bad();					\
+@@ -344,7 +344,16 @@ do {									\
+ 	case 1: __get_user_asm(x, ptr, retval, 1, "l8ui", __cb);  break;\
+ 	case 2: __get_user_asm(x, ptr, retval, 2, "l16ui", __cb); break;\
+ 	case 4: __get_user_asm(x, ptr, retval, 4, "l32i", __cb);  break;\
+-	case 8: retval = __copy_from_user(&x, ptr, 8);    break;	\
++	case 8: {							\
++		u64 __x;						\
++		if (unlikely(__copy_from_user(&__x, ptr, 8))) {		\
++			retval = -EFAULT;				\
++			(x) = 0;					\
++		} else {						\
++			(x) = *(__force __typeof__((ptr)))&__x;		\
++		}							\
++		break;							\
++	}								\
+ 	default: (x) = __get_user_bad();				\
+ 	}								\
+ } while (0)
 -- 
 2.20.1
 
