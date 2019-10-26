@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EC3CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0441C47E49
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FD82070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987E220867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096068;
-	bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
+	s=default; t=1572096070;
+	bh=x28+h5H5jHREltbJwUDghmna6hxRR603M3GxNdAR+JI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIU0sMZFHTR6qvK16MPO1gnDEUQl7Xz2w/Yhn01FGLgNlYxlkKUEdnW3rz63MJ0RP
-	 suhzVSIPnHHwoeyxNxAC0PDrbTjVJRmBFQ7U+mEK0HxrYYVN9kj+SGKJ5zZoeBDsi0
-	 k7W6ZWJpXM0Npsg513v4fQCEX0jpBaGn3LnW2LSQ=
+	b=CQoC3O8hyNLFKX9RQVcwLuSKjsRoRYVbkfMY0cr7Ku8N7OGMRvNhKGBWIz7Q1pKUk
+	 OKCO1sxl7r6Fn03O+HFA9OKt111TR/mSdqjALKwAIPoDmdk8pzS/2wF83uD/8CdIIV
+	 o62d84KKeoGoOd9a7IlnU60lZ6ROScj9dhBxZsak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfJZNVG (ORCPT
+        id S1728802AbfJZNVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42564 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbfJZNUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:20:48 -0400
+        id S1728737AbfJZNU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B640206DD;
-        Sat, 26 Oct 2019 13:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 068692070B;
+        Sat, 26 Oct 2019 13:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096048;
-        bh=ISAo5vn+007S4sNbFtUYwHTVpHMeCjtJiDa8U5Y8dL8=;
+        s=default; t=1572096056;
+        bh=x28+h5H5jHREltbJwUDghmna6hxRR603M3GxNdAR+JI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvXUUjwgn+xZQsexqjnkAMFExGbhzAiJ8TGsWW2UO9Mu7yniWQdWbRXlApUHVdoDF
-         WPtr4AlV/c2idGHJ2GMWOL5IezRPYRZrRGgLELnvWx9nOfcfFIY650ySdUXfoawJMm
-         jc8zcboEgziMKG037nQOIaRxKVeqIVUWe+zgnR3Y=
+        b=k+ediD9oPHIh/VNHIgl996EZUvgJavNSbHDUDD4KCuVZxkeecb1fBmF1/wruVaFwd
+         gGLb9C8ByQK13EHdfslBnXDHJT47keZQzT0bqKHqGWXpeadD+kvtGdUzMqQ9+twhTB
+         Dzl9HD1NNTVvVlSwIp21u0lcpd49V99iEGZqw9Ck=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
+Cc:     Florin Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 49/59] net: usb: sr9800: fix uninitialized local variable
-Date:   Sat, 26 Oct 2019 09:19:00 -0400
-Message-Id: <20191026131910.3435-49-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 53/59] dpaa2-eth: add irq for the dpmac connect/disconnect event
+Date:   Sat, 26 Oct 2019 09:19:04 -0400
+Message-Id: <20191026131910.3435-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -61,34 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+From: Florin Chiculita <florinlaurentiu.chiculita@nxp.com>
 
-[ Upstream commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 ]
+[ Upstream commit 8398b375a9e3f5e4bba9bcdfed152a8a247dee01 ]
 
-Make sure res does not contain random value if the call to
-sr_read_cmd fails for some reason.
+Add IRQ for the DPNI endpoint change event, resolving the issue
+when a dynamically created DPNI gets a randomly generated hw address
+when the endpoint is a DPMAC object.
 
-Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Signed-off-by: Florin Chiculita <florinlaurentiu.chiculita@nxp.com>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/sr9800.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/fsl-dpaa2/ethernet/dpaa2-eth.c | 6 +++++-
+ drivers/staging/fsl-dpaa2/ethernet/dpni.h      | 5 ++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/sr9800.c b/drivers/net/usb/sr9800.c
-index 35f39f23d8814..8f8c9ede88c26 100644
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_device *net)
- static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
- {
- 	struct usbnet *dev = netdev_priv(net);
--	__le16 res;
-+	__le16 res = 0;
+diff --git a/drivers/staging/fsl-dpaa2/ethernet/dpaa2-eth.c b/drivers/staging/fsl-dpaa2/ethernet/dpaa2-eth.c
+index 9329fcad95acd..ed78efd898c59 100644
+--- a/drivers/staging/fsl-dpaa2/ethernet/dpaa2-eth.c
++++ b/drivers/staging/fsl-dpaa2/ethernet/dpaa2-eth.c
+@@ -2400,6 +2400,9 @@ static irqreturn_t dpni_irq0_handler_thread(int irq_num, void *arg)
+ 	if (status & DPNI_IRQ_EVENT_LINK_CHANGED)
+ 		link_state_update(netdev_priv(net_dev));
  
- 	mutex_lock(&dev->phy_mutex);
- 	sr_set_sw_mii(dev);
++	if (status & DPNI_IRQ_EVENT_ENDPOINT_CHANGED)
++		set_mac_addr(netdev_priv(net_dev));
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -2425,7 +2428,8 @@ static int setup_irqs(struct fsl_mc_device *ls_dev)
+ 	}
+ 
+ 	err = dpni_set_irq_mask(ls_dev->mc_io, 0, ls_dev->mc_handle,
+-				DPNI_IRQ_INDEX, DPNI_IRQ_EVENT_LINK_CHANGED);
++				DPNI_IRQ_INDEX, DPNI_IRQ_EVENT_LINK_CHANGED |
++				DPNI_IRQ_EVENT_ENDPOINT_CHANGED);
+ 	if (err < 0) {
+ 		dev_err(&ls_dev->dev, "dpni_set_irq_mask(): %d\n", err);
+ 		goto free_irq;
+diff --git a/drivers/staging/fsl-dpaa2/ethernet/dpni.h b/drivers/staging/fsl-dpaa2/ethernet/dpni.h
+index b378a00c7c534..92a8bc0f3183f 100644
+--- a/drivers/staging/fsl-dpaa2/ethernet/dpni.h
++++ b/drivers/staging/fsl-dpaa2/ethernet/dpni.h
+@@ -133,9 +133,12 @@ int dpni_reset(struct fsl_mc_io	*mc_io,
+  */
+ #define DPNI_IRQ_INDEX				0
+ /**
+- * IRQ event - indicates a change in link state
++ * IRQ events:
++ *       indicates a change in link state
++ *       indicates a change in endpoint
+  */
+ #define DPNI_IRQ_EVENT_LINK_CHANGED		0x00000001
++#define DPNI_IRQ_EVENT_ENDPOINT_CHANGED		0x00000002
+ 
+ int dpni_set_irq_enable(struct fsl_mc_io	*mc_io,
+ 			u32			cmd_flags,
 -- 
 2.20.1
 
