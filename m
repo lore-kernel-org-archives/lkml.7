@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950C6C47E49
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2665BCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62AA0206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3966206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096835;
-	bh=e8P5zc33e5phKu6LdejVEInb2mZmqaRPq2wqjeZobb4=;
+	s=default; t=1572096839;
+	bh=Nw/PIM1BjEYj1uKwxNWpIozPv3bYm3XR3iJqsJno1EI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QvRyPt+BBMlissTKQUrDXrtspqdK3suFiVNYNGXVS4JNhvHnZoXNSTVKE54KGpP8e
-	 Qlv7J0ajqdACnw4lxTkzK73UR1EHb9LrlZsGEtQ7Ee14IcPRGyd4IaJMDNmjPIW/tQ
-	 EadxK3BrAm+1TqPg/k1Zswq2Sb4bvV6ICZ5D6QIM=
+	b=D8Fjr29OpsTipoSua8klXbcQVaxTFx5LOG6/s0M6OL+mHHSSkwv6nqSrPVOrX0HsD
+	 iuSIrmwwef5sTnpLwhd0byJyg2CKf1Gb3KSIg1k/vIaD1zmokdxqkV7B3FYA/OmVef
+	 cA/ZG3RN2lbMCXZ1t5IVtUPL2cPZeBoBWN20/W3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfJZNRv (ORCPT
+        id S1728546AbfJZNd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:17:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39368 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:33:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727503AbfJZNRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:47 -0400
+        id S1727531AbfJZNRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:17:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C42B21E6F;
-        Sat, 26 Oct 2019 13:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F60A21D80;
+        Sat, 26 Oct 2019 13:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095867;
-        bh=e8P5zc33e5phKu6LdejVEInb2mZmqaRPq2wqjeZobb4=;
+        s=default; t=1572095871;
+        bh=Nw/PIM1BjEYj1uKwxNWpIozPv3bYm3XR3iJqsJno1EI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pnri5QBo6pVruvY3Exmr4YCVsBwqvQCZUYM6XlHlVKJxwCQu4/fQZSnqTpVZ4T8fV
-         2i4bwQICZ9GXK+nwg0xtIigG8xr3ZiLhCyykmXzGojiABhZr2HONNNzNuzqLUM1yoV
-         NPwQUawce1CGjv1k0VouRr6HcY7RWb6jPQfcoV6A=
+        b=0vPu2tHzAruBId00QFJyMfZiEDGO6cPuhHnskQ3wISjBaEULY81dz9QJ6eeB1D/a3
+         +lXSfA27tKgPNGSwEt34fnL+deJK7il+gakcO9EvtAO4OzcCWiQd1s8CbF4JwX4nWE
+         XohtOPLhsAFZ2Eu94IntoSPN0hC/8GDP+fMUmhhs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 57/99] vhost/test: stop device before reset
-Date:   Sat, 26 Oct 2019 09:15:18 -0400
-Message-Id: <20191026131600.2507-57-sashal@kernel.org>
+Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 60/99] ath10k: fix latency issue for QCA988x
+Date:   Sat, 26 Oct 2019 09:15:21 -0400
+Message-Id: <20191026131600.2507-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,41 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit 245cdd9fbd396483d501db83047116e2530f245f ]
+[ Upstream commit d79749f7716d9dc32fa2d5075f6ec29aac63c76d ]
 
-When device stop was moved out of reset, test device wasn't updated to
-stop before reset, this resulted in a use after free.  Fix by invoking
-stop appropriately.
+(kvalo: cherry picked from commit 1340cc631bd00431e2f174525c971f119df9efa1 in
+wireless-drivers-next to wireless-drivers as this a frequently reported
+regression)
 
-Fixes: b211616d7125 ("vhost: move -net specific code out")
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Bad latency is found on QCA988x, the issue was introduced by
+commit 4504f0e5b571 ("ath10k: sdio: workaround firmware UART
+pin configuration bug"). If uart_pin_workaround is false, this
+change will set uart pin even if uart_print is false.
+
+Tested HW: QCA9880
+Tested FW: 10.2.4-1.0-00037
+
+Fixes: 4504f0e5b571 ("ath10k: sdio: workaround firmware UART pin configuration bug")
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/test.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/ath/ath10k/core.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-index 7804869c6a313..056308008288c 100644
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -161,6 +161,7 @@ static int vhost_test_release(struct inode *inode, struct file *f)
- 
- 	vhost_test_stop(n, &private);
- 	vhost_test_flush(n);
-+	vhost_dev_stop(&n->dev);
- 	vhost_dev_cleanup(&n->dev);
- 	/* We do an extra flush before freeing memory,
- 	 * since jobs can re-queue themselves. */
-@@ -237,6 +238,7 @@ static long vhost_test_reset_owner(struct vhost_test *n)
+diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
+index dc45d16e8d214..383d4fa555a88 100644
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -2118,12 +2118,15 @@ static int ath10k_init_uart(struct ath10k *ar)
+ 		return ret;
  	}
- 	vhost_test_stop(n, &priv);
- 	vhost_test_flush(n);
-+	vhost_dev_stop(&n->dev);
- 	vhost_dev_reset_owner(&n->dev, umem);
- done:
- 	mutex_unlock(&n->dev.mutex);
+ 
+-	if (!uart_print && ar->hw_params.uart_pin_workaround) {
+-		ret = ath10k_bmi_write32(ar, hi_dbg_uart_txpin,
+-					 ar->hw_params.uart_pin);
+-		if (ret) {
+-			ath10k_warn(ar, "failed to set UART TX pin: %d", ret);
+-			return ret;
++	if (!uart_print) {
++		if (ar->hw_params.uart_pin_workaround) {
++			ret = ath10k_bmi_write32(ar, hi_dbg_uart_txpin,
++						 ar->hw_params.uart_pin);
++			if (ret) {
++				ath10k_warn(ar, "failed to set UART TX pin: %d",
++					    ret);
++				return ret;
++			}
+ 		}
+ 
+ 		return 0;
 -- 
 2.20.1
 
