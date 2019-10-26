@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5695CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA919CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78292222C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D93222BD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095956;
-	bh=OIZ6EXwHD5c8//jk+AXuRD+N7T25MxUNW2lB0iTm3+I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2cJJSGB2Fm+ccK3CL1Zb1CKLoN8+ERBzonVgnAhSaRgUuHh+rwtL9rOdBrbz8N3SB
-	 /x7Mpc0tfOgdt1x1wdDC5MDw9lvWTEBzq/KrVgQQblz/FBBPlObhPgyhCWr+Jp+Zzi
-	 d+TeSDv5KGK64izwOBLqHGL1L+pQDAdsxbyGEKCg=
+	s=default; t=1572095959;
+	bh=9mXtzP+p0llKYfx5VXQp5/iyDRwdk9kjg2FJkbZ/jaE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Up7HWI3sdAvlLLCNZznZrsjhJBm/72ccE8q7GS/EWXTTXABdXjQ6M0hHDXU8oloTE
+	 MEyHxPsQ0218wLTfa0WUuUqjuLQo3IC3h/1MXUYED2b1L/txvMpccd2n2AnkahZmIX
+	 CQc8gJGSOkzQLwJ7SG949MwbNHNV6rSsKAQ8sH2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfJZNTP (ORCPT
+        id S1728213AbfJZNTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:19:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41118 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfJZNTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:12 -0400
+        id S1728176AbfJZNTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648F92070B;
-        Sat, 26 Oct 2019 13:19:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9E4121D7F;
+        Sat, 26 Oct 2019 13:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095952;
-        bh=OIZ6EXwHD5c8//jk+AXuRD+N7T25MxUNW2lB0iTm3+I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0ICES4KRgOu7rWK827qRoOmctrE7BQmBGlTeL2Na+VAjHkKnVs34uPZBy1QCVmk+x
-         Org01q//TpfDdbVjzdbgIMNuChrFrqJRsM5qhyPK5r0U9keEXhDULVBPiSOk0uU3ll
-         /4zoZyKegSFXgcTq9n+SDciwfMzlZ5diCZOeKYr0=
+        s=default; t=1572095954;
+        bh=9mXtzP+p0llKYfx5VXQp5/iyDRwdk9kjg2FJkbZ/jaE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AjM8rsPxKSDaQ/mJhq7lor1t9as7i2dx5+lmb8Rnjia+dMAC5dkomxa0tYUUKNFEF
+         8n1QNntGdFBCeA/pHaDWhbxEGa20t1ce4PlIp+Dp2z+gxgVuwPCRtV7sDHUfF4a7Dk
+         cXtB46nRrQ2acVF7NUQ5kE8HpGmgGJeSAny+7hOM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/59] tools: bpf: Use !building_out_of_srctree to determine srctree
-Date:   Sat, 26 Oct 2019 09:18:12 -0400
-Message-Id: <20191026131910.3435-1-sashal@kernel.org>
+Cc:     Michael Vassernis <michael.vassernis@tandemg.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/59] mac80211_hwsim: fix incorrect dev_alloc_name failure goto
+Date:   Sat, 26 Oct 2019 09:18:14 -0400
+Message-Id: <20191026131910.3435-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
+References: <20191026131910.3435-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,69 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Michael Vassernis <michael.vassernis@tandemg.com>
 
-[ Upstream commit 55d554f5d14071f7c2c5dbd88d0a2eb695c97d16 ]
+[ Upstream commit 313c3fe9c2348e7147eca38bb446f295b45403a0 ]
 
-make TARGETS=bpf kselftest fails with:
+If dev_alloc_name fails, hwsim_mon's memory allocated in alloc_netdev
+needs to be freed.
+Change goto command in dev_alloc_name failure to out_free_mon in
+order to perform free_netdev.
 
-Makefile:127: tools/build/Makefile.include: No such file or directory
-
-When the bpf tool make is invoked from tools Makefile, srctree is
-cleared and the current logic check for srctree equals to empty
-string to determine srctree location from CURDIR.
-
-When the build in invoked from selftests/bpf Makefile, the srctree
-is set to "." and the same logic used for srctree equals to empty is
-needed to determine srctree.
-
-Check building_out_of_srctree undefined as the condition for both
-cases to fix "make TARGETS=bpf kselftest" build failure.
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20190927011344.4695-1-skhan@linuxfoundation.org
+Signed-off-by: Michael Vassernis <michael.vassernis@tandemg.com>
+Link: https://lore.kernel.org/r/20191003073049.3760-1-michael.vassernis@tandemg.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/Makefile     | 6 +++++-
- tools/lib/bpf/Makefile | 6 +++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mac80211_hwsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 53b60ad452f5d..93a84965345dc 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -12,7 +12,11 @@ INSTALL ?= install
- CFLAGS += -Wall -O2
- CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index ce2dd06af62e8..fd7e43dfbb786 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3813,7 +3813,7 @@ static int __init init_mac80211_hwsim(void)
+ 	err = dev_alloc_name(hwsim_mon, hwsim_mon->name);
+ 	if (err < 0) {
+ 		rtnl_unlock();
+-		goto out_free_radios;
++		goto out_free_mon;
+ 	}
  
--ifeq ($(srctree),)
-+# This will work when bpf is built in tools env. where srctree
-+# isn't set and when invoked from selftests build, where srctree
-+# is set to ".". building_out_of_srctree is undefined for in srctree
-+# builds
-+ifndef building_out_of_srctree
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 3624557550a1f..5cd2786cc437c 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -7,7 +7,11 @@ BPF_EXTRAVERSION = 1
- 
- MAKEFLAGS += --no-print-directory
- 
--ifeq ($(srctree),)
-+# This will work when bpf is built in tools env. where srctree
-+# isn't set and when invoked from selftests build, where srctree
-+# is a ".". building_out_of_srctree is undefined for in srctree
-+# builds
-+ifndef building_out_of_srctree
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
+ 	err = register_netdevice(hwsim_mon);
 -- 
 2.20.1
 
