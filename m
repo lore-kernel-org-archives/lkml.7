@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216BFCA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BE2CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF48021897
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B22821897
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096921;
-	bh=/jb/StiBkQnNp1GN92R6qCVPT5kDpfSTD9GsgwK4vug=;
+	s=default; t=1572096931;
+	bh=2t4kefleT8FFtV7eoVBTsdG7Vg2fUXwzYOT4ZkZ0+lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IokvOk9i9zI1H3dU/4LvzgBff/pCm4Usc4ODmLKMHvI9018BajeSz3JD41ixzwaTZ
-	 8sUrRylXWtIlQqPIKsJL/d6JkKnqkg4ofvtsGMv1XKsEYgGa9FCW/9IpIOp7ifFWdR
-	 nYQi7ICdmeqp8yYM38bKISTOaHUYiVOlGNaxnreY=
+	b=NAfXFs2P06JALs/DIJKx3vREbF1LAGuY869bvpCHmV1g9L58clViH0ZzrztgeMzmt
+	 EXK0CaSWtzAu1FcKfD8hs9i93/401G/lQ1e0Ktqs5VYEYa/5mcjzpCDnEB0potCNLV
+	 K5i2s87KtRuvFvI0KAyUlfmvmcRSUPv+nTotxptk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbfJZNfT (ORCPT
+        id S1728426AbfJZNfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:35:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38956 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:35:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbfJZNRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:22 -0400
+        id S1727209AbfJZNRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:17:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB5A21D80;
-        Sat, 26 Oct 2019 13:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 965F321655;
+        Sat, 26 Oct 2019 13:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095841;
-        bh=/jb/StiBkQnNp1GN92R6qCVPT5kDpfSTD9GsgwK4vug=;
+        s=default; t=1572095831;
+        bh=2t4kefleT8FFtV7eoVBTsdG7Vg2fUXwzYOT4ZkZ0+lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IgqgraytvaZULJ/2jzCnez74z5/mqSZf5nT/5isqiOZu1+qEwZX53w7/wvjxzlkC4
-         Tpd8eqOer8lrctUFpNMACssMvo7Xkhy3T7N/hfmA1493AyKu8cqjyPFnDPOrsPTLB7
-         bHlk/VhgavfhGacXeeFRZNXMpLC5Cz57i/fRvOJo=
+        b=i/yaQMwH335Y0j7eqlc9BPB80bfBySTbrx9m398LEUzF5MUid/E0Rm0SQmIsUkC/5
+         f8Zt37a+V2/31jZmVJ3Y3bCq9BdJ48og0WjOsIMTJ9proqXVKBwr5phHJZOYfahAm5
+         LxCCFAtX+2TZC5RnjmNvUxHHQxxT2oC8yDNT0E3U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Antonio Borneo <antonio.borneo@st.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 41/99] net: stmmac: fix disabling flexible PPS output
-Date:   Sat, 26 Oct 2019 09:15:02 -0400
-Message-Id: <20191026131600.2507-41-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 37/99] iwlwifi: pcie: fix memory leaks in iwl_pcie_ctxt_info_gen3_init
+Date:   Sat, 26 Oct 2019 09:14:58 -0400
+Message-Id: <20191026131600.2507-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -59,45 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 520cf6002147281d1e7b522bb338416b623dcb93 ]
+[ Upstream commit 0f4f199443faca715523b0659aa536251d8b978f ]
 
-Accordingly to Synopsys documentation [1] and [2], when bit PPSEN0
-in register MAC_PPS_CONTROL is set it selects the functionality
-command in the same register, otherwise selects the functionality
-control.
-Command functionality is required to either enable (command 0x2)
-and disable (command 0x5) the flexible PPS output, but the bit
-PPSEN0 is currently set only for enabling.
+In iwl_pcie_ctxt_info_gen3_init there are cases that the allocated dma
+memory is leaked in case of error.
 
-Set the bit PPSEN0 to properly disable flexible PPS output.
+DMA memories prph_scratch, prph_info, and ctxt_info_gen3 are allocated
+and initialized to be later assigned to trans_pcie. But in any error case
+before such assignment the allocated memories should be released.
 
-Tested on STM32MP15x, based on dwmac 4.10a.
+First of such error cases happens when iwl_pcie_init_fw_sec fails.
+Current implementation correctly releases prph_scratch. But in two
+sunsequent error cases where dma_alloc_coherent may fail, such
+releases are missing.
 
-[1] DWC Ethernet QoS Databook 4.10a October 2014
-[2] DWC Ethernet QoS Databook 5.00a September 2017
+This commit adds release for prph_scratch when allocation for
+prph_info fails, and adds releases for prph_scratch and prph_info when
+allocation for ctxt_info_gen3 fails.
 
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Fixes: 9a8a02c9d46d ("net: stmmac: Add Flexible PPS support")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 2ee824026288 ("iwlwifi: pcie: support context information for 22560 devices")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../intel/iwlwifi/pcie/ctxt-info-gen3.c       | 36 +++++++++++++------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-index 3f4f3132e16b3..e436fa160c7d6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-@@ -515,6 +515,7 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
+index 5e86783d616b6..ab48ed258b1d7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
+@@ -107,13 +107,9 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
  
- 	if (!enable) {
- 		val |= PPSCMDx(index, 0x5);
-+		val |= PPSEN0;
- 		writel(val, ioaddr + MAC_PPS_CONTROL);
- 		return 0;
- 	}
+ 	/* allocate ucode sections in dram and set addresses */
+ 	ret = iwl_pcie_init_fw_sec(trans, fw, &prph_scratch->dram);
+-	if (ret) {
+-		dma_free_coherent(trans->dev,
+-				  sizeof(*prph_scratch),
+-				  prph_scratch,
+-				  trans_pcie->prph_scratch_dma_addr);
+-		return ret;
+-	}
++	if (ret)
++		goto err_free_prph_scratch;
++
+ 
+ 	/* Allocate prph information
+ 	 * currently we don't assign to the prph info anything, but it would get
+@@ -121,16 +117,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
+ 	prph_info = dma_alloc_coherent(trans->dev, sizeof(*prph_info),
+ 				       &trans_pcie->prph_info_dma_addr,
+ 				       GFP_KERNEL);
+-	if (!prph_info)
+-		return -ENOMEM;
++	if (!prph_info) {
++		ret = -ENOMEM;
++		goto err_free_prph_scratch;
++	}
+ 
+ 	/* Allocate context info */
+ 	ctxt_info_gen3 = dma_alloc_coherent(trans->dev,
+ 					    sizeof(*ctxt_info_gen3),
+ 					    &trans_pcie->ctxt_info_dma_addr,
+ 					    GFP_KERNEL);
+-	if (!ctxt_info_gen3)
+-		return -ENOMEM;
++	if (!ctxt_info_gen3) {
++		ret = -ENOMEM;
++		goto err_free_prph_info;
++	}
+ 
+ 	ctxt_info_gen3->prph_info_base_addr =
+ 		cpu_to_le64(trans_pcie->prph_info_dma_addr);
+@@ -186,6 +186,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
+ 		iwl_set_bit(trans, CSR_GP_CNTRL, CSR_AUTO_FUNC_INIT);
+ 
+ 	return 0;
++
++err_free_prph_info:
++	dma_free_coherent(trans->dev,
++			  sizeof(*prph_info),
++			prph_info,
++			trans_pcie->prph_info_dma_addr);
++
++err_free_prph_scratch:
++	dma_free_coherent(trans->dev,
++			  sizeof(*prph_scratch),
++			prph_scratch,
++			trans_pcie->prph_scratch_dma_addr);
++	return ret;
++
+ }
+ 
+ void iwl_pcie_ctxt_info_gen3_free(struct iwl_trans *trans)
 -- 
 2.20.1
 
