@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9B6CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971D9CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9305E21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A83421D7F
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572095922;
-	bh=hXaixYNIWyQ1j3DjWcDpKT80r+JhdM9KrYXg5LVe/gg=;
+	s=default; t=1572095914;
+	bh=TJk2tjIKr4Qqm72MXMCqDsEKOT5bNxsmulkSYmv9kmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KSIJh+T6ftriMMhkrCpHd8wSg74NohEpPF/jC2t7RSWefF98igvo4097QrFUmpUc0
-	 qTEVQ7uC3cY/hzGSei6KaS9LwTmgJhRwWQFGQSOQjTeDVC01gaIbc4BRI/NbvfuJS+
-	 PZGvNUGOW8hw1k+drlihwjj55ZHVYadOiivPfsgs=
+	b=boXGVgzCd1ZCTqj4WDy5Z9Ti29g/+TEDWrokvLKHrqQu1skgjkueUbv246u/0pYxk
+	 q3X7wM3Uc3Rv2U3f6geOW+8mwwmvs3H3lglPBRXBW9Zh01IjKTBuJmKPD1v0BZATEv
+	 Jdy5u3RFJNSjozLuWsXjvmInV8VmTh6+d/w2Scig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfJZNSl (ORCPT
+        id S1727866AbfJZNSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40478 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbfJZNSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:18:39 -0400
+        id S1727838AbfJZNSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:18:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4DD7222BD;
-        Sat, 26 Oct 2019 13:18:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF29A214DA;
+        Sat, 26 Oct 2019 13:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095919;
-        bh=hXaixYNIWyQ1j3DjWcDpKT80r+JhdM9KrYXg5LVe/gg=;
+        s=default; t=1572095909;
+        bh=TJk2tjIKr4Qqm72MXMCqDsEKOT5bNxsmulkSYmv9kmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rPxkaVZwrscuKI57+WhJMbeRQdiW9ntPicRG9TBeILw5hJ998Syarn2OOOTrJL0uW
-         5QYscTNtQot9Oo598IQikoSZQ7pdvi5HgXMY2BMmRqAXVZ9m7pvgbPR8Kspkyqx5V6
-         by4dRiFUH9QWGY6YNabuBuSkAX1/+SgiW3gkdUEQ=
+        b=E48f+eA3ADFoU60RTj9uwvKdzIVjFzDyul9QidPAxcyP5Oa4H2e8NqAF6sXuwYFaf
+         o0cFxQdTND14/njSmFQRg0uJKFXlLMGscnc5Uc824ot2e98TtfzCcBW/2u0jGu6uM0
+         fEKgD9jDntFRTsvgIa97UjM6+8hJaejCL0HIXM5s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        George McCollister <george.mccollister@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Sean Nyekjaer <sean.nyekjaer@prevas.dk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 88/99] net: phy: micrel: Update KSZ87xx PHY name
-Date:   Sat, 26 Oct 2019 09:15:49 -0400
-Message-Id: <20191026131600.2507-88-sashal@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Elver <elver@google.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 83/99] stop_machine: Avoid potential race behaviour
+Date:   Sat, 26 Oct 2019 09:15:44 -0400
+Message-Id: <20191026131600.2507-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -65,65 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 1d951ba3da67bbc7a9b0e05987e09552c2060e18 ]
+[ Upstream commit b1fc5833357524d5d342737913dbe32ff3557bc5 ]
 
-The KSZ8795 PHY ID is in fact used by KSZ8794/KSZ8795/KSZ8765 switches.
-Update the PHY ID and name to reflect that, as this family of switches
-is commonly refered to as KSZ87xx
+Both multi_cpu_stop() and set_state() access multi_stop_data::state
+racily using plain accesses. These are subject to compiler
+transformations which could break the intended behaviour of the code,
+and this situation is detected by KCSAN on both arm64 and x86 (splats
+below).
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: George McCollister <george.mccollister@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Sean Nyekjaer <sean.nyekjaer@prevas.dk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Improve matters by using READ_ONCE() and WRITE_ONCE() to ensure that the
+compiler cannot elide, replay, or tear loads and stores.
+
+In multi_cpu_stop() the two loads of multi_stop_data::state are expected to
+be a consistent value, so snapshot the value into a temporary variable to
+ensure this.
+
+The state transitions are serialized by atomic manipulation of
+multi_stop_data::num_threads, and other fields in multi_stop_data are not
+modified while subject to concurrent reads.
+
+KCSAN splat on arm64:
+
+| BUG: KCSAN: data-race in multi_cpu_stop+0xa8/0x198 and set_state+0x80/0xb0
+|
+| write to 0xffff00001003bd00 of 4 bytes by task 24 on cpu 3:
+|  set_state+0x80/0xb0
+|  multi_cpu_stop+0x16c/0x198
+|  cpu_stopper_thread+0x170/0x298
+|  smpboot_thread_fn+0x40c/0x560
+|  kthread+0x1a8/0x1b0
+|  ret_from_fork+0x10/0x18
+|
+| read to 0xffff00001003bd00 of 4 bytes by task 14 on cpu 1:
+|  multi_cpu_stop+0xa8/0x198
+|  cpu_stopper_thread+0x170/0x298
+|  smpboot_thread_fn+0x40c/0x560
+|  kthread+0x1a8/0x1b0
+|  ret_from_fork+0x10/0x18
+|
+| Reported by Kernel Concurrency Sanitizer on:
+| CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.3.0-00007-g67ab35a199f4-dirty #3
+| Hardware name: linux,dummy-virt (DT)
+
+KCSAN splat on x86:
+
+| write to 0xffffb0bac0013e18 of 4 bytes by task 19 on cpu 2:
+|  set_state kernel/stop_machine.c:170 [inline]
+|  ack_state kernel/stop_machine.c:177 [inline]
+|  multi_cpu_stop+0x1a4/0x220 kernel/stop_machine.c:227
+|  cpu_stopper_thread+0x19e/0x280 kernel/stop_machine.c:516
+|  smpboot_thread_fn+0x1a8/0x300 kernel/smpboot.c:165
+|  kthread+0x1b5/0x200 kernel/kthread.c:255
+|  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:352
+|
+| read to 0xffffb0bac0013e18 of 4 bytes by task 44 on cpu 7:
+|  multi_cpu_stop+0xb4/0x220 kernel/stop_machine.c:213
+|  cpu_stopper_thread+0x19e/0x280 kernel/stop_machine.c:516
+|  smpboot_thread_fn+0x1a8/0x300 kernel/smpboot.c:165
+|  kthread+0x1b5/0x200 kernel/kthread.c:255
+|  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:352
+|
+| Reported by Kernel Concurrency Sanitizer on:
+| CPU: 7 PID: 44 Comm: migration/7 Not tainted 5.3.0+ #1
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Marco Elver <elver@google.com>
+Link: https://lkml.kernel.org/r/20191007104536.27276-1-mark.rutland@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/micrel.c   | 4 ++--
- include/linux/micrel_phy.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ kernel/stop_machine.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index a0444e28c6e7c..63dedec0433de 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -395,7 +395,7 @@ static int ksz8061_config_init(struct phy_device *phydev)
- 
- static int ksz8795_match_phy_device(struct phy_device *phydev)
- {
--	return ksz8051_ksz8795_match_phy_device(phydev, PHY_ID_KSZ8795);
-+	return ksz8051_ksz8795_match_phy_device(phydev, PHY_ID_KSZ87XX);
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index b4f83f7bdf86c..a84d98dec504a 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -7,6 +7,7 @@
+  * Copyright (C) 2010		SUSE Linux Products GmbH
+  * Copyright (C) 2010		Tejun Heo <tj@kernel.org>
+  */
++#include <linux/compiler.h>
+ #include <linux/completion.h>
+ #include <linux/cpu.h>
+ #include <linux/init.h>
+@@ -167,7 +168,7 @@ static void set_state(struct multi_stop_data *msdata,
+ 	/* Reset ack counter. */
+ 	atomic_set(&msdata->thread_ack, msdata->num_threads);
+ 	smp_wmb();
+-	msdata->state = newstate;
++	WRITE_ONCE(msdata->state, newstate);
  }
  
- static int ksz9021_load_values_from_of(struct phy_device *phydev,
-@@ -1174,7 +1174,7 @@ static struct phy_driver ksphy_driver[] = {
- 	.suspend	= genphy_suspend,
- 	.resume		= genphy_resume,
- }, {
--	.name		= "Micrel KSZ8795",
-+	.name		= "Micrel KSZ87XX Switch",
- 	/* PHY_BASIC_FEATURES */
- 	.config_init	= kszphy_config_init,
- 	.config_aneg	= ksz8873mll_config_aneg,
-diff --git a/include/linux/micrel_phy.h b/include/linux/micrel_phy.h
-index ad24554f11f96..75f880c25bb86 100644
---- a/include/linux/micrel_phy.h
-+++ b/include/linux/micrel_phy.h
-@@ -31,7 +31,7 @@
- #define PHY_ID_KSZ886X		0x00221430
- #define PHY_ID_KSZ8863		0x00221435
- 
--#define PHY_ID_KSZ8795		0x00221550
-+#define PHY_ID_KSZ87XX		0x00221550
- 
- #define	PHY_ID_KSZ9477		0x00221631
- 
+ /* Last one to ack a state moves to the next state. */
+@@ -186,7 +187,7 @@ void __weak stop_machine_yield(const struct cpumask *cpumask)
+ static int multi_cpu_stop(void *data)
+ {
+ 	struct multi_stop_data *msdata = data;
+-	enum multi_stop_state curstate = MULTI_STOP_NONE;
++	enum multi_stop_state newstate, curstate = MULTI_STOP_NONE;
+ 	int cpu = smp_processor_id(), err = 0;
+ 	const struct cpumask *cpumask;
+ 	unsigned long flags;
+@@ -210,8 +211,9 @@ static int multi_cpu_stop(void *data)
+ 	do {
+ 		/* Chill out and ensure we re-read multi_stop_state. */
+ 		stop_machine_yield(cpumask);
+-		if (msdata->state != curstate) {
+-			curstate = msdata->state;
++		newstate = READ_ONCE(msdata->state);
++		if (newstate != curstate) {
++			curstate = newstate;
+ 			switch (curstate) {
+ 			case MULTI_STOP_DISABLE_IRQ:
+ 				local_irq_disable();
 -- 
 2.20.1
 
