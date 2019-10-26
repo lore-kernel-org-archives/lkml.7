@@ -2,111 +2,95 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FFACA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51F9CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237EB21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572075920;
-	bh=s7EeSH/whkZRbX7EQncmx/wuGx/KiZ/hnCC4ldgo68A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FrAo/PKU1XIjWbvjA6D3AhROLNRPJJYJJdI3zTLEsrVcvxBsY08CAg5Z7E9x6jxHP
-	 7s42kJ6+ou/PTOjQ48KsWfXwRL/FE+fTPoUCrFS9jZP41+nt/Bdv82SD91Q6UsQZqV
-	 1IsbPC3GBKLLGDNb/rxMsQ1WzausB7cU1cGecZGM=
+	by mail.kernel.org (Postfix) with ESMTP id A1A392084C
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfJZHov (ORCPT
+        id S1726150AbfJZHs5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 03:44:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 03:48:57 -0400
+Received: from mx7.zte.com.cn ([202.103.147.169]:35016 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbfJZHou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 03:44:50 -0400
-Received: from localhost (unknown [89.205.133.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9456E21655;
-        Sat, 26 Oct 2019 07:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572075889;
-        bh=s7EeSH/whkZRbX7EQncmx/wuGx/KiZ/hnCC4ldgo68A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DZeYBVZFS33GY85zsXOJ+OBeYKt0+FJqwXHoA0q0OGueUdnrRqnbs/Kb9BijDMFRP
-         a7VZe3hgv8ZocTHiWeL5Dp/683bdiU7Ovh5+AroZsu6Dq9pLPW1v7RuEhuMP+2h6jC
-         EVE2EQsqOzoBPZgP7HmYDcTTWEY3aAl70YFfGbAU=
-Date:   Sat, 26 Oct 2019 03:44:45 -0400
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Subject: Re: [PATCH AUTOSEL 4.19 10/37] driver core: platform: Fix the usage
- of platform device name(pdev->name)
-Message-ID: <20191026074445.GA553664@kroah.com>
-References: <20191025135603.25093-1-sashal@kernel.org>
- <20191025135603.25093-10-sashal@kernel.org>
+        id S1725966AbfJZHs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 03:48:56 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id DB9542FF0B0A63FAF0D5;
+        Sat, 26 Oct 2019 15:48:52 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x9Q7mZYT006117;
+        Sat, 26 Oct 2019 15:48:35 +0800 (GMT-8)
+        (envelope-from zhong.shiqi@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019102615491942-139233 ;
+          Sat, 26 Oct 2019 15:49:19 +0800 
+From:   zhongshiqi <zhong.shiqi@zte.com.cn>
+To:     Julia.Lawall@lip6.fr
+Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, cheng.shengyu@zte.com.cn,
+        zhongshiqi <zhong.shiqi@zte.com.cn>
+Subject: [PATCH v4] coccicheck: Support search for SmPL scripts within selected directory hierarchy
+Date:   Sat, 26 Oct 2019 15:50:48 +0800
+Message-Id: <1572076248-43770-1-git-send-email-zhong.shiqi@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025135603.25093-10-sashal@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-10-26 15:49:19,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-10-26 15:48:42
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse-fl1.zte.com.cn x9Q7mZYT006117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 09:55:34AM -0400, Sasha Levin wrote:
-> From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> 
-> [ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
-> 
-> Platform core is using pdev->name as the platform device name to do
-> the binding of the devices with the drivers. But, when the platform
-> driver overrides the platform device name with dev_set_name(),
-> the pdev->name is pointing to a location which is freed and becomes
-> an invalid parameter to do the binding match.
-> 
-> use-after-free instance:
-> 
-> [   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
-> [   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
-> [   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
-> 			G S      W  O      4.19.30+ #3
-> [   33.346835] Hardware name: MTP (DT)
-> [   33.350419] Call trace:
-> [   33.352941]  dump_backtrace+0x0/0x3b8
-> [   33.356713]  show_stack+0x24/0x30
-> [   33.360119]  dump_stack+0x160/0x1d8
-> [   33.363709]  print_address_description+0x84/0x2e0
-> [   33.368549]  kasan_report+0x26c/0x2d0
-> [   33.372322]  __asan_report_load1_noabort+0x2c/0x38
-> [   33.377248]  strcmp+0x8c/0xb0
-> [   33.380306]  platform_match+0x70/0x1f8
-> [   33.384168]  __driver_attach+0x78/0x3a0
-> [   33.388111]  bus_for_each_dev+0x13c/0x1b8
-> [   33.392237]  driver_attach+0x4c/0x58
-> [   33.395910]  bus_add_driver+0x350/0x560
-> [   33.399854]  driver_register+0x23c/0x328
-> [   33.403886]  __platform_driver_register+0xd0/0xe0
-> 
-> So, use dev_name(&pdev->dev), which fetches the platform device name from
-> the kobject(dev->kobj->name) of the device instead of the pdev->name.
-> 
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/base/platform.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+Allow defining the environment variable “COCCI” as a directory 
+to search SmPL scripts. Start a corresponding file determination
+if it contains an acceptable path.
 
-We had to revert this patch in commit 391c0325cc5f ("Revert "driver
-core: platform: Fix the usage of platform device name(pdev->name)"")
-so please do not backport it to any stable kernels.
+Signed-off-by: zhongshiqi <zhong.shiqi@zte.com.cn>
+---
+Changes in v4:
+	1:rewrite change description in another wording
 
-thanks,
+Changes in v3:
+	1:rewrite change description
+	2:fix patch subject
+	3:modify commit log
 
-greg k-h
+Changes in v2:
+	1.fix patch subject according to the reply by Markus
+	<Markus.Elfring@web.de>
+	2.change description in “imperative mood”
+ 
+ scripts/coccicheck | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e04d328..a1c4197 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -257,6 +257,10 @@ if [ "$COCCI" = "" ] ; then
+     for f in `find $srctree/scripts/coccinelle/ -name '*.cocci' -type f | sort`; do
+ 	coccinelle $f
+     done
++elif [ -d "$COCCI" ] ; then
++    for f in `find $COCCI/ -name '*.cocci' -type f | sort`; do
++	coccinelle $f
++    done
+ else
+     coccinelle $COCCI
+ fi
+-- 
+2.9.5
+
