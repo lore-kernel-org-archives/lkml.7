@@ -2,122 +2,107 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1215ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAF6CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2530214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:26:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZRJSPMG"
+	by mail.kernel.org (Postfix) with ESMTP id 1DA9A21D81
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 04:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725996AbfJZEZd (ORCPT
+        id S1726115AbfJZEns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 00:25:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39816 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJZEZd (ORCPT
+        Sat, 26 Oct 2019 00:43:48 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:8059 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726066AbfJZEns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 00:25:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id y12so4733425ioa.6;
-        Fri, 25 Oct 2019 21:25:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rHeRkxrHD5GX5EWDlQ98vXy+a783uwWXtM2tQKGXdug=;
-        b=gZRJSPMGxM1UPw1FdEvVFtbG4SqDkm9JN/GP92+GDY/bQVm73xFX5T2lkdkRAXJ9uw
-         4K927+DEPOjX0v2NhbOsDZjCOyTgg/PgzXqgwivEM6QeBnGHV0CLxMfG1XeHJninS6Jn
-         d3HUaWWFRPVWG+u/urTqRNtrGbQyLiZdTXq6MhvYlWjtoC7vQBAz3Rn6Mb3cxkdt1/Po
-         nUZHC0Eiw1kMMsF1PkX5MSMnY53N8J0Q3vB8vM9pSuefryXU7vr8bduXoiI452R8NKud
-         SwAzjj4yI/LFANHdC8I/m+7ITtp+iUIKP8EtGIgHjMBdZ+gFerdXZYr/VS+jNVHKs/wb
-         4H6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rHeRkxrHD5GX5EWDlQ98vXy+a783uwWXtM2tQKGXdug=;
-        b=rmvfTdm1a2c7VtsnYWtlwVg0qyEMQfFGHxiXqosXXhCvs4pG3viSHpDl/L7hO5D8vW
-         dQcGRdXbXp09DBNImH0+Ka1jb9NMFWI/qHIkPGpS7KSGSDdwU8QeUNYgIX0noYfPKcA7
-         TZ/+5A1bq71UiD0TxzkFzz0Sf1YyV0062kXTqODma012h0JsRZJWXAqnIZMWPBYhc0XT
-         wq8nEpHrSbsVnsZ4J7uepehiKit4cZBeO3b/+C8pM7oenKxUCinlsc0k6S7dg91U23Pt
-         YT4o2uwqULKJg5PDsgM/av2rF2TEIKK0v5wF9bSxxZSJG/Pi9kVk7IIemdGfUuLWUgeb
-         nSVA==
-X-Gm-Message-State: APjAAAVbugq37hNXtDg5c6BJsnstHz6WGtZnDGYbutbq4CY9H6uzu1h2
-        j4qJrTldkr7FLixWGHJoECA=
-X-Google-Smtp-Source: APXvYqwyjakLVT85RTryWMHfy6AKHouMUXRj6cegqSHqrg9AmKKAZBYTX2iEX2LdU+HgQdpe1I/m7g==
-X-Received: by 2002:a5d:980a:: with SMTP id a10mr7426699iol.225.1572063932870;
-        Fri, 25 Oct 2019 21:25:32 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id n123sm452068iod.62.2019.10.25.21.25.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2019 21:25:32 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: aspeed-video: Fix memory leaks in aspeed_video_probe
-Date:   Fri, 25 Oct 2019 23:25:18 -0500
-Message-Id: <20191026042519.29446-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Sat, 26 Oct 2019 00:43:48 -0400
+X-IronPort-AV: E=Sophos;i="5.68,230,1569276000"; 
+   d="scan'208";a="408354430"
+Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Oct 2019 06:43:46 +0200
+Date:   Sat, 26 Oct 2019 06:43:46 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Cristiane Naves <cristianenavescardoso09@gmail.com>
+cc:     outreachy-kernel@googlegroups.com,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>,
+        Ben Chan <benchan@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [RESEND PATCH] staging: gasket: Fix lines
+ ending with a '('
+In-Reply-To: <20191025232935.GA813@cristiane-Inspiron-5420>
+Message-ID: <alpine.DEB.2.21.1910260642250.2559@hadrien>
+References: <20191025232935.GA813@cristiane-Inspiron-5420>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of aspeed_video_probe() the allocated memory for
-video should be released in case of failure. Release video if either
-devm_ioremap_resource() or aspeed_video_init() or
-aspeed_video_setup_video() fails.
 
-Fixes: d2b4387f3bdf ("media: platform: Add Aspeed Video Engine driver")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/media/platform/aspeed-video.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index eb12f3793062..8c473356132d 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -1663,18 +1663,24 @@ static int aspeed_video_probe(struct platform_device *pdev)
- 
- 	video->base = devm_ioremap_resource(video->dev, res);
- 
--	if (IS_ERR(video->base))
--		return PTR_ERR(video->base);
-+	if (IS_ERR(video->base)) {
-+		rc = PTR_ERR(video->base);
-+		goto free_video;
-+	}
- 
- 	rc = aspeed_video_init(video);
- 	if (rc)
--		return rc;
-+		goto free_video;
- 
- 	rc = aspeed_video_setup_video(video);
- 	if (rc)
--		return rc;
-+		goto free_video;
- 
- 	return 0;
-+
-+free_video:
-+	kfree(video);
-+	return rc;
- }
- 
- static int aspeed_video_remove(struct platform_device *pdev)
--- 
-2.17.1
+On Fri, 25 Oct 2019, Cristiane Naves wrote:
 
+> Fix lines ending with a '('. Issue found by checkpatch.
+
+You sent another patch on this file (the one I acked) and they are notin a
+series, so Greg won't know how to apply them.  Please collect the whole
+thing again, and either put both changes in the same patch, or send a
+series with the different changes on this file.  You could put v2, so that
+Greg knows to ignore your other changes on the file.
+
+julia
+
+>
+> Signed-off-by: Cristiane Naves <cristianenavescardoso09@gmail.com>
+> ---
+>  drivers/staging/gasket/gasket_ioctl.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/staging/gasket/gasket_ioctl.c b/drivers/staging/gasket/gasket_ioctl.c
+> index d1b3e9a..e3047d3 100644
+> --- a/drivers/staging/gasket/gasket_ioctl.c
+> +++ b/drivers/staging/gasket/gasket_ioctl.c
+> @@ -54,9 +54,9 @@ static int gasket_read_page_table_size(struct gasket_dev *gasket_dev,
+>  	ibuf.size = gasket_page_table_num_entries(
+>  		gasket_dev->page_table[ibuf.page_table_index]);
+>
+> -	trace_gasket_ioctl_page_table_data(
+> -		ibuf.page_table_index, ibuf.size, ibuf.host_address,
+> -		ibuf.device_address);
+> +	trace_gasket_ioctl_page_table_data(ibuf.page_table_index, ibuf.size,
+> +					   ibuf.host_address,
+> +					   ibuf.device_address);
+>
+>  	if (copy_to_user(argp, &ibuf, sizeof(ibuf)))
+>  		return -EFAULT;
+> @@ -101,9 +101,9 @@ static int gasket_partition_page_table(struct gasket_dev *gasket_dev,
+>  	if (copy_from_user(&ibuf, argp, sizeof(struct gasket_page_table_ioctl)))
+>  		return -EFAULT;
+>
+> -	trace_gasket_ioctl_page_table_data(
+> -		ibuf.page_table_index, ibuf.size, ibuf.host_address,
+> -		ibuf.device_address);
+> +	trace_gasket_ioctl_page_table_data(ibuf.page_table_index, ibuf.size,
+> +					   ibuf.host_address,
+> +					   ibuf.device_address);
+>
+>  	if (ibuf.page_table_index >= gasket_dev->num_page_tables)
+>  		return -EFAULT;
+> --
+> 2.7.4
+>
+> --
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20191025232935.GA813%40cristiane-Inspiron-5420.
+>
