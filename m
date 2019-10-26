@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC97CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4E2CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8289E2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79D72070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096581;
-	bh=pmxV/SlpEYrr1w9y8sURiWSGLlr1WxFYesa/HfqsWRg=;
+	s=default; t=1572096586;
+	bh=dDcqdwzmfziiuG8Bhf21mdgTAguQoiR/ydOqSM8oWpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yHX/KPW9oJxnCPwJK1vzrSa8R5T+VI8PNVgEUZH4yuU7r8OtabZIcN3fb58EqK6l1
-	 lEXVN7aRzTbF9PFcuL9pgEhzKWbdofIVuQd3I4EgtB+YRHDrNcgSYw3WAvi0darMQq
-	 yrblPl9GiRjq1REcQ/+vrs28oZvAlh3SkmASFvY0=
+	b=at40Bj+OdPnUyyQhuGQYnLsn9ceIZHEWQNxK7Bv+kwfTbA7kBDQfXOtXnNRJSHNWq
+	 a/bKKQKZpIuTskTdGlthOmDw+JYj42miKd6akYkc4LQ+xo5/bdrKZoaQFrVedPXGd+
+	 xsTIpSz2J57yJ+91gJS31LfyLyYHUmOu+H/A0Adc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfJZN3k (ORCPT
+        id S1727154AbfJZNUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727224AbfJZNUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 26 Oct 2019 09:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726474AbfJZNUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D53121871;
-        Sat, 26 Oct 2019 13:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89FB9222C4;
+        Sat, 26 Oct 2019 13:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572096022;
-        bh=pmxV/SlpEYrr1w9y8sURiWSGLlr1WxFYesa/HfqsWRg=;
+        s=default; t=1572096015;
+        bh=dDcqdwzmfziiuG8Bhf21mdgTAguQoiR/ydOqSM8oWpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvJvnhi/UsL4uE+VfIw1uB+rAB23Tk+XSUqwy2daBaUTVXfGRqHmbcqePaXdFeBQr
-         0W7jWaJeugb5KhBnzTiKmHzsi99IpzcEEXqaV8BrURT6FcpKbDw2fFLZ6RotorbfqD
-         oGyfeecL5KMq9tPz7MetNT94YMW4YsxSKptKFb/w=
+        b=BGeurBm1rP3Ufggjp5m6CIlqf+LLvXb/NS4HTeIYN/w2/+wA3O+eQjJTRrIyrkqiA
+         SACNx4X8VvtK2Buq1K/6/m9Z4eNMxhkwCVlxPnrAjpuWfWMuInDdeAUjdSKHjibiiG
+         2rClICW6On4OWZU+cqmr0V81qYcUB0b/jQby7SXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
+Cc:     Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 35/59] net: add {READ|WRITE}_ONCE() annotations on ->rskq_accept_head
-Date:   Sat, 26 Oct 2019 09:18:46 -0400
-Message-Id: <20191026131910.3435-35-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 30/59] s390/qeth: Fix error handling during VNICC initialization
+Date:   Sat, 26 Oct 2019 09:18:41 -0400
+Message-Id: <20191026131910.3435-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,74 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-[ Upstream commit 60b173ca3d1cd1782bd0096dc17298ec242f6fb1 ]
+[ Upstream commit b528965bcc827dad32a8d21745feaacfc76c9703 ]
 
-reqsk_queue_empty() is called from inet_csk_listen_poll() while
-other cpus might write ->rskq_accept_head value.
+Smatch discovered the use of uninitialized variable sup_cmds
+in error paths.
 
-Use {READ|WRITE}_ONCE() to avoid compiler tricks
-and potential KCSAN splats.
-
-Fixes: fff1f3001cc5 ("tcp: add a spinlock to protect struct request_sock_queue")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/pvcalls-back.c      | 2 +-
- include/net/request_sock.h      | 4 ++--
- net/ipv4/inet_connection_sock.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/s390/net/qeth_l2_main.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/xen/pvcalls-back.c b/drivers/xen/pvcalls-back.c
-index d4ea33581ac26..b3fbfed28682f 100644
---- a/drivers/xen/pvcalls-back.c
-+++ b/drivers/xen/pvcalls-back.c
-@@ -784,7 +784,7 @@ static int pvcalls_back_poll(struct xenbus_device *dev,
- 	mappass->reqcopy = *req;
- 	icsk = inet_csk(mappass->sock->sk);
- 	queue = &icsk->icsk_accept_queue;
--	data = queue->rskq_accept_head != NULL;
-+	data = READ_ONCE(queue->rskq_accept_head) != NULL;
- 	if (data) {
- 		mappass->reqcopy.cmd = 0;
- 		ret = 0;
-diff --git a/include/net/request_sock.h b/include/net/request_sock.h
-index 347015515a7de..1653435f18f5c 100644
---- a/include/net/request_sock.h
-+++ b/include/net/request_sock.h
-@@ -183,7 +183,7 @@ void reqsk_fastopen_remove(struct sock *sk, struct request_sock *req,
- 
- static inline bool reqsk_queue_empty(const struct request_sock_queue *queue)
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index c1c35eccd5b65..e571129c364e4 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -2328,10 +2328,10 @@ static bool qeth_l2_vnicc_recover_char(struct qeth_card *card, u32 vnicc,
+ static void qeth_l2_vnicc_init(struct qeth_card *card)
  {
--	return queue->rskq_accept_head == NULL;
-+	return READ_ONCE(queue->rskq_accept_head) == NULL;
- }
+ 	u32 *timeout = &card->options.vnicc.learning_timeout;
++	bool enable, error = false;
+ 	unsigned int chars_len, i;
+ 	unsigned long chars_tmp;
+ 	u32 sup_cmds, vnicc;
+-	bool enable, error;
  
- static inline struct request_sock *reqsk_queue_remove(struct request_sock_queue *queue,
-@@ -195,7 +195,7 @@ static inline struct request_sock *reqsk_queue_remove(struct request_sock_queue
- 	req = queue->rskq_accept_head;
- 	if (req) {
- 		sk_acceptq_removed(parent);
--		queue->rskq_accept_head = req->dl_next;
-+		WRITE_ONCE(queue->rskq_accept_head, req->dl_next);
- 		if (queue->rskq_accept_head == NULL)
- 			queue->rskq_accept_tail = NULL;
+ 	QETH_CARD_TEXT(card, 2, "vniccini");
+ 	/* reset rx_bcast */
+@@ -2352,7 +2352,10 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ 	chars_len = sizeof(card->options.vnicc.sup_chars) * BITS_PER_BYTE;
+ 	for_each_set_bit(i, &chars_tmp, chars_len) {
+ 		vnicc = BIT(i);
+-		qeth_l2_vnicc_query_cmds(card, vnicc, &sup_cmds);
++		if (qeth_l2_vnicc_query_cmds(card, vnicc, &sup_cmds)) {
++			sup_cmds = 0;
++			error = true;
++		}
+ 		if (!(sup_cmds & IPA_VNICC_SET_TIMEOUT) ||
+ 		    !(sup_cmds & IPA_VNICC_GET_TIMEOUT))
+ 			card->options.vnicc.getset_timeout_sup &= ~vnicc;
+@@ -2361,8 +2364,8 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ 			card->options.vnicc.set_char_sup &= ~vnicc;
  	}
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index 15e7f7915a21e..2acee8ddf45ba 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -937,7 +937,7 @@ struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
- 		req->sk = child;
- 		req->dl_next = NULL;
- 		if (queue->rskq_accept_head == NULL)
--			queue->rskq_accept_head = req;
-+			WRITE_ONCE(queue->rskq_accept_head, req);
- 		else
- 			queue->rskq_accept_tail->dl_next = req;
- 		queue->rskq_accept_tail = req;
+ 	/* enforce assumed default values and recover settings, if changed  */
+-	error = qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
+-					      timeout);
++	error |= qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
++					       timeout);
+ 	chars_tmp = card->options.vnicc.wanted_chars ^ QETH_VNICC_DEFAULT;
+ 	chars_tmp |= QETH_VNICC_BRIDGE_INVISIBLE;
+ 	chars_len = sizeof(card->options.vnicc.wanted_chars) * BITS_PER_BYTE;
 -- 
 2.20.1
 
