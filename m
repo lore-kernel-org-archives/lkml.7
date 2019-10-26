@@ -2,136 +2,160 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AAACA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A027CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5903E214DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE70214DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="wDf/2Qxk"
+	dkim=pass (1024-bit key) header.d=jabil.com header.i=@jabil.com header.b="pA0SqOyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfJZIJg (ORCPT
+        id S1726193AbfJZILE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 04:09:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52473 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfJZIJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 04:09:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p21so4493795wmg.2
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 01:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M1jsTJqQrqJpNIMjJF4dpzKdXTPDMuQsKyFuLmv9Zrw=;
-        b=wDf/2Qxklu53OHTOjb7Q3ytidPVHX1uOZPtbA0h28ECfFyFoOlAoq9pBZintkYmOUj
-         9zJjyT+/JZdgxgv0bVIfwm7Yft9eaeWl0LKcEleW27Kc3i+I9Xhq6NrKH3CbnNb/Hpz2
-         Roaxz9QHwUwY0AqpGpwiwPH5k1fpoE5LkUBHKLTab1SbPwTrnk3FyAlYn+Wq8moPJq+w
-         PbK7rhQOZJdfo2mausMR0jrEVTDbESFLnqnbG/ZTINvej2i+e4LBMaB/eco9js4Y9+4a
-         ZXIErkvnBD2XTPilFCgLysdV8z69PY2t43Lrp8V5ZGvmUbGA5GROm+HhRYCMPGoZLRp8
-         vcxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M1jsTJqQrqJpNIMjJF4dpzKdXTPDMuQsKyFuLmv9Zrw=;
-        b=UT/gquVfQDJHp/A0usX5AOxgspAa31D6BtkQlvAFXikQL6qW99lhkkyK7yhkdJ1RkT
-         DgKz4L1pgfcIeEQ+1iEEOVhh5J2QRJH2FHy70acCjLiXfUh5OcNGxMfUp2Rit7lRr7P5
-         zhE3/cVGRKimTh33iS1GNH7LA5d6Q4Sr9+nNeaXZB2a+ZUTO+YHQ8Rho5ERNkQ61ihiH
-         VftV1TI+8TWJzemfrzm5sIxb/LA+0PhVx1qYLB3QzZa5pZD/DQBS4Lzr+dyaoGSTbwv/
-         zpsRBFrckbE17PMNs0uvOTYUbLaSmxMyOD5EdKa0+WP4fX7LnHtXLidyKYEk9g1QuAjv
-         suVQ==
-X-Gm-Message-State: APjAAAUZN5hmowmARSmLCCJiMwylooIsb41aCI4rkG+tSAMu0Zen8C4A
-        8Q9kmUP32lcJXC3jUP736T6WHg==
-X-Google-Smtp-Source: APXvYqyp/6rBvR7ThsZ6BJKtiqBJ+BtFnIVT3DF3ajYAXZJZ42T/DzY07kVVekQBw2JeUcgki+BxJA==
-X-Received: by 2002:a1c:814b:: with SMTP id c72mr7284441wmd.167.1572077371918;
-        Sat, 26 Oct 2019 01:09:31 -0700 (PDT)
-Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id r15sm4579844wro.20.2019.10.26.01.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2019 01:09:31 -0700 (PDT)
-Date:   Sat, 26 Oct 2019 10:09:30 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     epomozov@marvell.com, igor.russkikh@aquantia.com,
-        davem@davemloft.net, dmitry.bezrukov@aquantia.com,
-        sergey.samoilenko@aquantia.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: aquantia: Fix build error wihtout
- CONFIG_PTP_1588_CLOCK
-Message-ID: <20191026080929.GD31244@netronome.com>
-References: <20191025133726.31796-1-yuehaibing@huawei.com>
+        Sat, 26 Oct 2019 04:11:04 -0400
+Received: from mail-eopbgr750135.outbound.protection.outlook.com ([40.107.75.135]:37344
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725996AbfJZILD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 04:11:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TViaHqTZXJR0OEGGPN3JqkJ0hr7SMUrN4MR98gHBAn1So8YNoAxAKZ1HH1w5+i7UaOhYFR6YSftFKOTWditwD9BbqUOEBXj2aH1FlzCTKYZWBQVGluv3TC2w9BjgafGk69r//rpCVG/RGa8O3nPEYD1YWbrfC2AFKrV+ThoIVmN8ccEtMAhXOBzbwP+DxEZ3bCBAv6LI8y9O0yiZ8gZWOrr7R5002QSl+622/aU+4vYgh7T/eUay/QwjHLoUnMyIzImWCmKt47SApPBtH4rbwAfmB0D32r7O6//AsZqD9QJZ6FBTuPvQ53SIl92e27oWBxZw1Mlonh6CTCwxjamrUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2XFB6AhYhZzv1k4oQ9J6OWAkGMLH3JX/1RXqIVOvp0Q=;
+ b=b5Tg00hM1ACsdASPfzvAM7IxeoKkzbujcVhxYVENSW4O5ez7I2DivLK2bMvWT2hqANRqfa+jn3sJrq3UfP62zXacNl+0i3ZFZxm2EwmCyEqQ6bpMuVfyNVwVWB8BvKv/jW7D29fzKLnaGbsMIkSwycDp4lE1R8CBJb273hZIVe9WIXs75zv+PXt4m5d4B5JQNwRLAXD7KWpxpQQ326VDeud1LFd/ItzOVnlh1ISufW9rq+N9AtE30SGZ0o8QsOh0a/ynihaSvmxNIBHof2dKk9UZyQA8qEchhzRjcTvy9lnHP9EdkIQZgdeEJMQkyMxWU2WYxdsrcDZpEq2lS0RnFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=jabil.com; dmarc=pass action=none header.from=jabil.com;
+ dkim=pass header.d=jabil.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jabil.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2XFB6AhYhZzv1k4oQ9J6OWAkGMLH3JX/1RXqIVOvp0Q=;
+ b=pA0SqOyMx7fJY/VC1AMUoXhOGXIy8H8Ci5/q2EiBNZQBiX/UxrUNThEGGrClS5F9v4lk8lvc6/pCMIIetr+6JnAcvOV8iOb4zr/ZSphyTCK6q0eimlwD1QYITXvKcB0+Er7e9HwRM3+6ldw9GOkP2uYDMzb/+nYoX0//aqyp/6I=
+Received: from MN2PR02MB6703.namprd02.prod.outlook.com (52.135.48.83) by
+ MN2PR02MB6749.namprd02.prod.outlook.com (52.135.48.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2387.23; Sat, 26 Oct 2019 08:10:59 +0000
+Received: from MN2PR02MB6703.namprd02.prod.outlook.com
+ ([fe80::524:774a:6751:7177]) by MN2PR02MB6703.namprd02.prod.outlook.com
+ ([fe80::524:774a:6751:7177%5]) with mapi id 15.20.2387.023; Sat, 26 Oct 2019
+ 08:10:59 +0000
+From:   Rain Wang <Rain_Wang@Jabil.com>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] lm75: add lm75b detection
+Thread-Topic: [PATCH] lm75: add lm75b detection
+Thread-Index: AQHVi9TmDrxen4j80EuOn1QRxLtsQA==
+Date:   Sat, 26 Oct 2019 08:10:59 +0000
+Message-ID: <20191026081049.GA16839@rainw-fedora28-jabil.corp.JABIL.ORG>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [180.167.230.226]
+x-clientproxiedby: SG2PR0601CA0007.apcprd06.prod.outlook.com (2603:1096:3::17)
+ To MN2PR02MB6703.namprd02.prod.outlook.com (2603:10b6:208:1d2::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rain_Wang@Jabil.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9f9fff31-0937-433d-f856-08d759ec08f1
+x-ms-traffictypediagnostic: MN2PR02MB6749:|MN2PR02MB6749:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB6749C5970F45FB49AFA361138D640@MN2PR02MB6749.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0202D21D2F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(346002)(396003)(136003)(199004)(189003)(33656002)(66446008)(66476007)(71200400001)(6486002)(26005)(66946007)(4326008)(6436002)(6512007)(8936002)(186003)(25786009)(66066001)(478600001)(6116002)(3846002)(316002)(14454004)(7736002)(305945005)(110136005)(9686003)(102836004)(476003)(5660300002)(486006)(256004)(2906002)(14444005)(6506007)(86362001)(386003)(64756008)(66556008)(99286004)(71190400001)(52116002)(8676002)(81156014)(81166006)(1076003)(80792005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR02MB6749;H:MN2PR02MB6703.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: Jabil.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OdTtInM2I7dMsx/jtgR+xoheIR1n/aiUqbTVmkLKijqr8unWp8SyRPxnNOHG8iFQIHZDVn/cKQYraNFZz4uoBT7RBCpFX8DccpJpqfJWiBHPAaZGaHC+MxsDaJpx2l+R7uq56RUzbD0oFI2jMAewI6QvKx45Tj1ovPNVA2yJ73Noz52DvCRfOS5PQXinMJgceNgUbpYstgYvgZayabhHvyT59qILGJtTH3efNIOfbJCV5qskF4VCmBvYGsiLL09rcR4X+ErVudZRp19TvBQocHda1zpW1rFRX1Xw78ruseTkAnGqaeELG9q8vZWT2xAh0wKH6DDsQt9RvL1FI/GlZHXKmDUGc79wgs4f+4vJ/lvNqHuVRsygtXXqVn58DHVgBjFGcEFpzIlFnVPtUvnzbrHglw8tHiQ7iT/he98hSA4h2qtUuTfHL8fHt6MbcuNa
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B1E8AAFB53B8A7468CC39E72BE7607A8@namprd02.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025133726.31796-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: jabil.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f9fff31-0937-433d-f856-08d759ec08f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2019 08:10:59.6958
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bc876b21-f134-4c12-a265-8ed26b7f0f3b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rBeIysC68t0qBqgp5uo/xtdNLM4yX3h0wJhzdw6cGl7d7B2ZLjpEmvln1eiuxij2azmCtjg5Y9w9WHOgyeG9ng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6749
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 09:37:26PM +0800, YueHaibing wrote:
-> If PTP_1588_CLOCK is n, building fails:
-> 
-> drivers/net/ethernet/aquantia/atlantic/aq_ptp.c: In function aq_ptp_adjfine:
-> drivers/net/ethernet/aquantia/atlantic/aq_ptp.c:279:11:
->  error: implicit declaration of function scaled_ppm_to_ppb [-Werror=implicit-function-declaration]
->            scaled_ppm_to_ppb(scaled_ppm));
-> 
-> Just cp scaled_ppm_to_ppb() from ptp_clock.c to fix this.
-> 
-> Fixes: 910479a9f793 ("net: aquantia: add basic ptp_clock callbacks")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+The National Semiconductor LM75B is very similar as the
+LM75A, but it has no ID byte register 7, and unused registers
+return 0xff rather than the last read value like LM75A.
 
-Hi YueHaibing,
+Signed-off-by: Rain Wang <rain_wang@jabil.com>
+---
+ drivers/hwmon/lm75.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-thanks for your patch.
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index 5e6392294c03..a718f9eb4d72 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -760,6 +760,7 @@ static int lm75_detect(struct i2c_client *new_client,
+ 	int i;
+ 	int conf, hyst, os;
+ 	bool is_lm75a =3D 0;
++	bool is_lm75b =3D 0;
+=20
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA |
+ 				     I2C_FUNC_SMBUS_WORD_DATA))
+@@ -780,8 +781,12 @@ static int lm75_detect(struct i2c_client *new_client,
+ 	 * register 7, and unused registers return 0xff rather than the
+ 	 * last read value.
+ 	 *
++	 * The National Semiconductor LM75B is very similar as the
++	 * LM75A, but it has no ID byte register 7, and unused registers=20
++	 * return 0xff rather than the last read value like LM75A.
++	 *
+ 	 * Note that this function only detects the original National
+-	 * Semiconductor LM75 and the LM75A. Clones from other vendors
++	 * Semiconductor LM75 and the LM75A/B. Clones from other vendors
+ 	 * aren't detected, on purpose, because they are typically never
+ 	 * found on PC hardware. They are found on embedded designs where
+ 	 * they can be instantiated explicitly so detection is not needed.
+@@ -806,6 +811,13 @@ static int lm75_detect(struct i2c_client *new_client,
+ 		is_lm75a =3D 1;
+ 		hyst =3D i2c_smbus_read_byte_data(new_client, 2);
+ 		os =3D i2c_smbus_read_byte_data(new_client, 3);
++	} else if (i2c_smbus_read_byte_data(new_client, 4) =3D=3D 0xff
++		 && i2c_smbus_read_byte_data(new_client, 5) =3D=3D 0xff
++		 && i2c_smbus_read_byte_data(new_client, 6) =3D=3D 0xff) {
++		/* LM75B detection */
++		is_lm75b =3D 1;
++		hyst =3D i2c_smbus_read_byte_data(new_client, 2);
++		os =3D i2c_smbus_read_byte_data(new_client, 3);
+ 	} else { /* Traditional style LM75 detection */
+ 		/* Unused addresses */
+ 		hyst =3D i2c_smbus_read_byte_data(new_client, 2);
+@@ -839,7 +851,8 @@ static int lm75_detect(struct i2c_client *new_client,
+ 			return -ENODEV;
+ 	}
+=20
+-	strlcpy(info->type, is_lm75a ? "lm75a" : "lm75", I2C_NAME_SIZE);
++	strlcpy(info->type, is_lm75a ?=20
++		"lm75a" : (is_lm75b ? "lm75b" : "lm75"), I2C_NAME_SIZE);
+=20
+ 	return 0;
+ }
+--=20
+2.21.0
 
-What is the motivation for not using the existing copy of this function?
-
-> ---
->  drivers/net/ethernet/aquantia/atlantic/aq_ptp.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
-> index 3ec0841..80c001d 100644
-> --- a/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
-> +++ b/drivers/net/ethernet/aquantia/atlantic/aq_ptp.c
-> @@ -262,6 +262,26 @@ static void aq_ptp_tx_timeout_check(struct aq_ptp_s *aq_ptp)
->  	}
->  }
->  
-> +static s32 scaled_ppm_to_ppb(long ppm)
-> +{
-> +	/*
-> +	 * The 'freq' field in the 'struct timex' is in parts per
-> +	 * million, but with a 16 bit binary fractional field.
-> +	 *
-> +	 * We want to calculate
-> +	 *
-> +	 *    ppb = scaled_ppm * 1000 / 2^16
-> +	 *
-> +	 * which simplifies to
-> +	 *
-> +	 *    ppb = scaled_ppm * 125 / 2^13
-> +	 */
-> +	s64 ppb = 1 + ppm;
-> +	ppb *= 125;
-> +	ppb >>= 13;
-> +	return (s32) ppb;
-> +}
-> +
->  /* aq_ptp_adjfine
->   * @ptp: the ptp clock structure
->   * @ppb: parts per billion adjustment from base
-> -- 
-> 2.7.4
-> 
-> 
