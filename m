@@ -2,427 +2,92 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E36C47E49
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 19:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EFCCA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 20:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA97921655
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 19:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616D3206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 20:18:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ZzLvaals"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xFwlM8wU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfJZT6P (ORCPT
+        id S1726524AbfJZUKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 15:58:15 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:50028 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbfJZT6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 15:58:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rKL8JhLT8eWvEjGtjzygiNDahRVhixFttzlTops5r7E=; b=ZzLvaals3m4NANM1qYaT2tXxWK
-        WVROQX3m+MOSPXnqZMBJRhpU1ZHytAQ7IXvDpiL+YjsBo+PkV6BOgGDgA5o2GAAZlT24DvE+M45nh
-        /ix4co84FJaJimpBgQn08GBYplaEYlgS33F67Q2cU31rbVZSNRW1M57lqhNG+xgQHGWs=;
-Received: from p5dc580b6.dip0.t-ipconnect.de ([93.197.128.182] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iOSCA-0006sO-Be; Sat, 26 Oct 2019 21:57:54 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iOSC9-0003pK-SZ; Sat, 26 Oct 2019 21:57:53 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
-        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v4 3/3] ARM: dts: imx: add devicetree for Kobo Clara HD
-Date:   Sat, 26 Oct 2019 21:57:48 +0200
-Message-Id: <20191026195748.14562-4-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026195748.14562-1-andreas@kemnade.info>
-References: <20191026195748.14562-1-andreas@kemnade.info>
+        Sat, 26 Oct 2019 16:10:13 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:42898 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfJZUKN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 16:10:13 -0400
+Received: by mail-vs1-f65.google.com with SMTP id a143so2981199vsd.9
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 13:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oDEMq12+GoZjAjo4O+FCfz1yHRDZsbKXXPN9zoSDxK0=;
+        b=xFwlM8wUS/ocMSwnz7vYdPl97Jbn9Maggf3byK+zfxuQHkFDWaGGzoLtrI4gk/6lxj
+         IsVlIQdZ0dwVmDTTDAyZ9lX779AJvocr5BnS6QcsOBfLrk7hUf9rmnYUBgCU8pFQPPlS
+         HUXMH1PytYkVsWDqFRisFwhQ753ojWlkMkAKlWnhVZzeS0JBwje2pjL7DKfsq1YK65Un
+         NFueN3qUeY+NaR5Vw5FSnZfImXqviARWcVxUaaHiRmHYkjxccpdVS+Na4c7KHEIdxqq0
+         F3Emi448IoJIWAkWsfhtpPv9YdSne/i/qgf8kCWsNZqA8nmEbNavZBzi1OalOOPekIAN
+         5PZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oDEMq12+GoZjAjo4O+FCfz1yHRDZsbKXXPN9zoSDxK0=;
+        b=H/Nopij3sXDNxnQjFO9LKYy7PXaZ0dZCYkMZEIZisLsMcaTDXvlrlLLYlmVrg3KBlw
+         TdyvGinn/af+J1Hw+HQrveu1loqH9V5+2V3QKzsXoWuVF425D/VwtOmwkjJKliOYwmBu
+         WSoWFccOqYJQbL3PCVTH8ddEbM8Ufq33RnBPx6vbxb+DVVtzZWUlMlxgUT+tsvqWR7v0
+         rE67R8ay4FSSvtIHQaCy4ML+2PzSCi8mUCKo9ESaHwgKNJvbZZFXs2nE6CAk6Xdda/vX
+         l5Sw4wyPvMgrqMT7qaRHcupZOQ1Qwd+dm5jliYhXDtAa6VUQDfSnUYDZgXBhIu+gDYnY
+         we2Q==
+X-Gm-Message-State: APjAAAVs5jugaGo45rr/26xI06AEG92OKCTzv1pCfCO3mC234femgLih
+        zl+w0l5+wGSrlQXGD6mBFqrfsS1yWmJYn4PMWg1q5Q==
+X-Google-Smtp-Source: APXvYqxU920mp9qcwnk8ynkwv330PRbuxw9Ysgfc+fhsrvp9fxNiq55+PWi47/PAVLlBc9jwAMRFUojY3mp8eGZCNdI=
+X-Received: by 2002:a05:6102:2436:: with SMTP id l22mr5341278vsi.93.1572120612501;
+ Sat, 26 Oct 2019 13:10:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191026122708.12060-1-linus.walleij@linaro.org> <20191026143711.GA3195@gerhold.net>
+In-Reply-To: <20191026143711.GA3195@gerhold.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 26 Oct 2019 22:10:01 +0200
+Message-ID: <CACRpkdYQDkrRTzk5hrhvLhVZryHMH+Cqg6DVR6VAPG1DAdDesA@mail.gmail.com>
+Subject: Re: [PATCH] mfd: db8500-prcmu: Support U8420-sysclk firmware
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        arm-soc <arm@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a devicetree for the Kobo Clara HD Ebook reader. It
-is on based on boards called "e60k02". It is equipped with an
-imx6sll SoC.
+On Sat, Oct 26, 2019 at 4:37 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-- remove mux container
-- underscore -> hyphen in node names
-- reorder nodes
-- adding pinmux-* properties which are removed from the dtsi
+> >       irqchip_init();
+> > +     prcmu_early_init();
+> >       np = of_find_compatible_node(NULL, NULL, "stericsson,db8500-prcmu");
+>
+> Maybe it would make sense to give the struct device_node *np pointer as
+> parameter to prcmu_early_init() to avoid duplicating the lookup of the
+> device tree node there? But not sure if this is worth it.
 
- arch/arm/boot/dts/Makefile                 |   3 +-
- arch/arm/boot/dts/imx6sll-kobo-clarahd.dts | 324 +++++++++++++++++++++
- 2 files changed, 326 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/imx6sll-kobo-clarahd.dts
+I wanted to make the PRCMU driver more stand-alone, looking up
+its own resources etc, so I prefer to keep it like this. The other
+use in mach-ux500/cpu-db8500.c is the power domains that
+should ideally also become a separate driver.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9159fa2cea90..a8a235c74c37 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -551,7 +551,8 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
- 	imx6sl-warp.dtb
- dtb-$(CONFIG_SOC_IMX6SLL) += \
--	imx6sll-evk.dtb
-+	imx6sll-evk.dtb \
-+	imx6sll-kobo-clarahd.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-nitrogen6sx.dtb \
- 	imx6sx-sabreauto.dtb \
-diff --git a/arch/arm/boot/dts/imx6sll-kobo-clarahd.dts b/arch/arm/boot/dts/imx6sll-kobo-clarahd.dts
-new file mode 100644
-index 000000000000..7214d1c98249
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sll-kobo-clarahd.dts
-@@ -0,0 +1,324 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Device tree for the Kobo Clara HD ebook reader
-+ *
-+ * Name on mainboard is: 37NB-E60K00+4A4
-+ * Serials start with: E60K02 (a number also seen in
-+ * vendor kernel sources)
-+ *
-+ * This mainboard seems to be equipped with different SoCs.
-+ * In the Kobo Clara HD ebook reader it is an i.MX6SLL
-+ *
-+ * Copyright 2019 Andreas Kemnade
-+ * based on works
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "imx6sll.dtsi"
-+#include "e60k02.dtsi"
-+
-+/ {
-+	model = "Kobo Clara HD";
-+	compatible = "kobo,clarahd", "fsl,imx6sll";
-+};
-+
-+&clks {
-+	assigned-clocks = <&clks IMX6SLL_CLK_PLL4_AUDIO_DIV>;
-+	assigned-clock-rates = <393216000>;
-+};
-+
-+&cpu0 {
-+	arm-supply = <&dcdc3_reg>;
-+	soc-supply = <&dcdc1_reg>;
-+};
-+
-+&gpio_keys {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpio_keys>;
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default","sleep";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	pinctrl-1 = <&pinctrl_i2c1_sleep>;
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default","sleep";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	pinctrl-1 = <&pinctrl_i2c2_sleep>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_gpio_keys: gpio-keysgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_DATA1__GPIO5_IO08	0x17059	/* PWR_SW */
-+			MX6SLL_PAD_SD1_DATA4__GPIO5_IO12	0x17059	/* HALL_EN */
-+		>;
-+	};
-+
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_LCD_DATA00__GPIO2_IO20	0x79
-+			MX6SLL_PAD_LCD_DATA01__GPIO2_IO21	0x79
-+			MX6SLL_PAD_LCD_DATA02__GPIO2_IO22	0x79
-+			MX6SLL_PAD_LCD_DATA03__GPIO2_IO23	0x79
-+			MX6SLL_PAD_LCD_DATA04__GPIO2_IO24	0x79
-+			MX6SLL_PAD_LCD_DATA05__GPIO2_IO25	0x79
-+			MX6SLL_PAD_LCD_DATA06__GPIO2_IO26	0x79
-+			MX6SLL_PAD_LCD_DATA07__GPIO2_IO27	0x79
-+			MX6SLL_PAD_LCD_DATA08__GPIO2_IO28	0x79
-+			MX6SLL_PAD_LCD_DATA09__GPIO2_IO29	0x79
-+			MX6SLL_PAD_LCD_DATA10__GPIO2_IO30	0x79
-+			MX6SLL_PAD_LCD_DATA11__GPIO2_IO31	0x79
-+			MX6SLL_PAD_LCD_DATA12__GPIO3_IO00	0x79
-+			MX6SLL_PAD_LCD_DATA13__GPIO3_IO01	0x79
-+			MX6SLL_PAD_LCD_DATA14__GPIO3_IO02	0x79
-+			MX6SLL_PAD_LCD_DATA15__GPIO3_IO03	0x79
-+			MX6SLL_PAD_LCD_DATA16__GPIO3_IO04	0x79
-+			MX6SLL_PAD_LCD_DATA17__GPIO3_IO05	0x79
-+			MX6SLL_PAD_LCD_DATA18__GPIO3_IO06	0x79
-+			MX6SLL_PAD_LCD_DATA19__GPIO3_IO07	0x79
-+			MX6SLL_PAD_LCD_DATA20__GPIO3_IO08	0x79
-+			MX6SLL_PAD_LCD_DATA21__GPIO3_IO09	0x79
-+			MX6SLL_PAD_LCD_DATA22__GPIO3_IO10	0x79
-+			MX6SLL_PAD_LCD_DATA23__GPIO3_IO11	0x79
-+			MX6SLL_PAD_LCD_CLK__GPIO2_IO15		0x79
-+			MX6SLL_PAD_LCD_ENABLE__GPIO2_IO16	0x79
-+			MX6SLL_PAD_LCD_HSYNC__GPIO2_IO17	0x79
-+			MX6SLL_PAD_LCD_VSYNC__GPIO2_IO18	0x79
-+			MX6SLL_PAD_LCD_RESET__GPIO2_IO19	0x79
-+			MX6SLL_PAD_KEY_COL3__GPIO3_IO30		0x79
-+			MX6SLL_PAD_KEY_ROW7__GPIO4_IO07		0x79
-+			MX6SLL_PAD_ECSPI2_MOSI__GPIO4_IO13	0x79
-+			MX6SLL_PAD_KEY_COL5__GPIO4_IO02		0x79
-+			MX6SLL_PAD_KEY_ROW6__GPIO4_IO05		0x79
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_I2C1_SCL__I2C1_SCL	0x4001f8b1
-+			MX6SLL_PAD_I2C1_SDA__I2C1_SDA	0x4001f8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c1_sleep: i2c1grp-sleep {
-+		fsl,pins = <
-+			MX6SLL_PAD_I2C1_SCL__I2C1_SCL	0x400108b1
-+			MX6SLL_PAD_I2C1_SDA__I2C1_SDA	0x400108b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_I2C2_SCL__I2C2_SCL	0x4001f8b1
-+			MX6SLL_PAD_I2C2_SDA__I2C2_SDA	0x4001f8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2_sleep: i2c2grp-sleep {
-+		fsl,pins = <
-+			MX6SLL_PAD_I2C2_SCL__I2C2_SCL	0x400108b1
-+			MX6SLL_PAD_I2C2_SDA__I2C2_SDA	0x400108b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_REF_CLK_24M__I2C3_SCL 0x4001f8b1
-+			MX6SLL_PAD_REF_CLK_32K__I2C3_SDA 0x4001f8b1
-+		>;
-+	};
-+
-+	pinctrl_led: ledgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_DATA6__GPIO5_IO07 0x17059
-+		>;
-+	};
-+
-+	pinctrl_lm3630a_bl_gpio: lm3630a-bl-gpiogrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_EPDC_PWR_CTRL3__GPIO2_IO10	0x10059 /* HWEN */
-+		>;
-+	};
-+
-+	pinctrl_ricoh_gpio: ricoh-gpiogrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD1_CLK__GPIO5_IO15	0x1b8b1 /* ricoh619 chg */
-+			MX6SLL_PAD_SD1_DATA0__GPIO5_IO11 0x1b8b1 /* ricoh619 irq */
-+			MX6SLL_PAD_KEY_COL2__GPIO3_IO28	0x1b8b1 /* ricoh619 bat_low_int */
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_UART1_TXD__UART1_DCE_TX 0x1b0b1
-+			MX6SLL_PAD_UART1_RXD__UART1_DCE_RX 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x13059
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x17059
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x17059
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x17059
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp-100mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130b9
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170b9
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170b9
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170b9
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp-200mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170f9
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130f9
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170f9
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170f9
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170f9
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_sleep: usdhc2grp-sleep {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__GPIO5_IO04		0x100f9
-+			MX6SLL_PAD_SD2_CLK__GPIO5_IO05		0x100f9
-+			MX6SLL_PAD_SD2_DATA0__GPIO5_IO01	0x100f9
-+			MX6SLL_PAD_SD2_DATA1__GPIO4_IO30	0x100f9
-+			MX6SLL_PAD_SD2_DATA2__GPIO5_IO03	0x100f9
-+			MX6SLL_PAD_SD2_DATA3__GPIO4_IO28	0x100f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD3_CMD__SD3_CMD	0x11059
-+			MX6SLL_PAD_SD3_CLK__SD3_CLK	0x11059
-+			MX6SLL_PAD_SD3_DATA0__SD3_DATA0	0x11059
-+			MX6SLL_PAD_SD3_DATA1__SD3_DATA1	0x11059
-+			MX6SLL_PAD_SD3_DATA2__SD3_DATA2	0x11059
-+			MX6SLL_PAD_SD3_DATA3__SD3_DATA3	0x11059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD3_CMD__SD3_CMD	0x170b9
-+			MX6SLL_PAD_SD3_CLK__SD3_CLK	0x170b9
-+			MX6SLL_PAD_SD3_DATA0__SD3_DATA0	0x170b9
-+			MX6SLL_PAD_SD3_DATA1__SD3_DATA1	0x170b9
-+			MX6SLL_PAD_SD3_DATA2__SD3_DATA2	0x170b9
-+			MX6SLL_PAD_SD3_DATA3__SD3_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD3_CMD__SD3_CMD	0x170f9
-+			MX6SLL_PAD_SD3_CLK__SD3_CLK	0x170f9
-+			MX6SLL_PAD_SD3_DATA0__SD3_DATA0	0x170f9
-+			MX6SLL_PAD_SD3_DATA1__SD3_DATA1	0x170f9
-+			MX6SLL_PAD_SD3_DATA2__SD3_DATA2	0x170f9
-+			MX6SLL_PAD_SD3_DATA3__SD3_DATA3	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_sleep: usdhc3grp-sleep {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD3_CMD__GPIO5_IO21	0x100c1
-+			MX6SLL_PAD_SD3_CLK__GPIO5_IO18	0x100c1
-+			MX6SLL_PAD_SD3_DATA0__GPIO5_IO19	0x100c1
-+			MX6SLL_PAD_SD3_DATA1__GPIO5_IO20	0x100c1
-+			MX6SLL_PAD_SD3_DATA2__GPIO5_IO16	0x100c1
-+			MX6SLL_PAD_SD3_DATA3__GPIO5_IO17	0x100c1
-+		>;
-+	};
-+
-+	pinctrl_wifi_power: wifi-powergrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_DATA6__GPIO4_IO29	0x10059		/* WIFI_3V3_ON */
-+		>;
-+	};
-+
-+	pinctrl_wifi_reset: wifi-resetgrp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_DATA7__GPIO5_IO00	0x10059		/* WIFI_RST */
-+		>;
-+	};
-+};
-+
-+&leds {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_led>;
-+};
-+
-+&lm3630a {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lm3630a_bl_gpio>;
-+};
-+
-+&reg_wifi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wifi_power>;
-+};
-+
-+&ricoh619 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ricoh_gpio>;
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz","sleep";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-+	pinctrl-3 = <&pinctrl_usdhc2_sleep>;
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz","sleep";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	pinctrl-3 = <&pinctrl_usdhc3_sleep>;
-+};
-+
-+&wifi_pwrseq {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wifi_reset>;
-+};
--- 
-2.20.1
+This is called very early on init_IRQ() -> machine->init_irq()
+and I just don't know any better way to sneak in before
+init_time(), else I would use it...
 
+Fixed the rest!
+
+Thanks a lot,
+Linus Walleij
