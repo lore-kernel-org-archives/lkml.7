@@ -2,228 +2,189 @@ Return-Path: <SRS0=/o37=YT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B3ECA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209C5CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7335B2084C
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 07:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="eIOpy3LD"
+	by mail.kernel.org (Postfix) with ESMTP id D8C0220867
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 08:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572077085;
+	bh=0Ybg33h4Z4BRHS95I27jriTXQZvjzY59pizQbW6iyEA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YkKnv3LVl83SpDV5UHuNWRi7WyaCxPlhojHr52wR/k52RWFRK43MPVMGrCeT0NeXV
+	 jlhyT8xLM3cakK12t86yiftTf8ySfINy9zqZ4Vrw9chZ9fKWHt6v9XKf9c65Td6lcd
+	 /5nnDXYxg8jDX3RItf8YTcPIv9vtb07lI7T9FUiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfJZHz5 (ORCPT
+        id S1726124AbfJZIEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 03:55:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36803 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfJZHz4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 03:55:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c22so4243452wmd.1
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 00:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bqfjxb2UREomEKw3YgCsrCqVg3Fm6y255O+gDOqXdAc=;
-        b=eIOpy3LDx1qkmvWhElVW+5ivsqhE5cTyiG1DThw6oxO8azB1YHtf9G96k5g027wAiE
-         q1PnvPlS7YR0DHSdA0A7O79O9I0jplRgCCfkAyWpLFfWZ3Z0Zn7VOduK0s96fGPK3Ibs
-         ZQa/Ckgy5yIbS+snxpOrdIHc6ozulye7fImBhW5EdieEKTUOuB4jcf/Wu1D5K+hXUUWK
-         DHAG9JH4NxRZt11OfRXElHtxErNzEn+mnxzWmFzSEbgEgwwYyojuSqG/cAQVwsDYZqM8
-         mhPgJr86ukjsL4Ox+Eu1I8aWD3EgpB6fXHDgvc/ukYe+6M4Sqxhy7pOD54wRqInKrqmq
-         8OyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bqfjxb2UREomEKw3YgCsrCqVg3Fm6y255O+gDOqXdAc=;
-        b=fPaLosDGAGnR3CIugghOHOO+OnoxJB28uUlsLWxja/9PbXgjhrtYhJNL1xYBexoy/y
-         9sRNNTcM+MQlPEdMUzP/Wo/xmluP8VhTEyHBo6nBy1wnR9hq8wP6pWSN0giatkhQRi9M
-         U6Kjvl2x09C74zU4259VY3/klc+3RBRLuFfTPJKO0evIe76FeXGTSTN4Cc/qPLvoq5gD
-         cj742z2/zhl3GiQuzbBY7OXtjcMF/R5owWDV+5qrXb/2JXeO4081PmiyBUJwV7KccR59
-         dRzHzjHE/5fyQ8YPGF0xem62Ko51fbuCEhd7KG0XWO5QlRhT6dYiDa40yg/TDdUYJp04
-         kbKA==
-X-Gm-Message-State: APjAAAWERtu9GDWBW7hnsd+B0dWj/OxuLJ7D/xeypsHp4JPzq9F/n6AM
-        QTojYONjn/NOQbAUkQiafO4Q7g==
-X-Google-Smtp-Source: APXvYqz6vXX3kNbIhjpCaBbs9lB3H1Lc8718A2nPtRSCf9j4szxDGpxvTyCCKvmPIKxlh0eIhTRejg==
-X-Received: by 2002:a1c:b4c2:: with SMTP id d185mr6342082wmf.159.1572076552501;
-        Sat, 26 Oct 2019 00:55:52 -0700 (PDT)
-Received: from netronome.com (fred-musen.rivierenbuurt.horms.nl. [2001:470:7eb3:404:a2a4:c5ff:fe4c:9ce9])
-        by smtp.gmail.com with ESMTPSA id u68sm6887991wmu.12.2019.10.26.00.55.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Oct 2019 00:55:51 -0700 (PDT)
-Date:   Sat, 26 Oct 2019 09:55:50 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Blakey <paulb@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/4] flow_dissector: extract more ICMP
- information
-Message-ID: <20191026075549.GC31244@netronome.com>
-References: <20191021200948.23775-1-mcroce@redhat.com>
- <20191021200948.23775-4-mcroce@redhat.com>
- <20191023100009.GC8732@netronome.com>
- <CAGnkfhxg1sXkmiNS-+H184omQaKbp_+_Sy7Vi-9W9qLwGGPU6g@mail.gmail.com>
- <20191023175522.GB28355@netronome.com>
- <CAGnkfhyEB0JU7LPZfYxHiKkryrkzoOs3Krumt1Lph+Q=qx1s8A@mail.gmail.com>
- <20191025062856.GB7325@netronome.com>
- <CAGnkfhzN=P+j5n3A2RrRTseHgqMU1-5CsRd8xonZ2mLBtNoJ_g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGnkfhzN=P+j5n3A2RrRTseHgqMU1-5CsRd8xonZ2mLBtNoJ_g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 26 Oct 2019 04:04:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfJZIEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 04:04:42 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4A5214DA;
+        Sat, 26 Oct 2019 08:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572077081;
+        bh=0Ybg33h4Z4BRHS95I27jriTXQZvjzY59pizQbW6iyEA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vsZypVoptBxz6HEvwI6kexxRnSuXt9/2bsRHs8mj7s4nwmAhG4kdPGU2NAIk5vtnh
+         5EEaRLl5LufsbGWQqxcAdi0dHhIvahZjbwjQnWepvzrBnAKbFPuUaB9umg1Qfm+k46
+         pZxEapoo12arAQ/4u6QquHmnH0BuTMZuSldhKO3c=
+Date:   Sat, 26 Oct 2019 17:04:37 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH 3/6] perf/probe: Fix to probe an inline function
+ which has no entry pc
+Message-Id: <20191026170437.22719a025f59111c4213b701@kernel.org>
+In-Reply-To: <20191025143910.GC15617@kernel.org>
+References: <157199317547.8075.1010940983970397945.stgit@devnote2>
+        <157199320336.8075.16189530425277588587.stgit@devnote2>
+        <20191025143513.GB15617@kernel.org>
+        <20191025143910.GC15617@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 08:24:20PM +0200, Matteo Croce wrote:
-> On Fri, Oct 25, 2019 at 8:29 AM Simon Horman <simon.horman@netronome.com> wrote:
-> >
-> > On Fri, Oct 25, 2019 at 02:27:28AM +0200, Matteo Croce wrote:
-> > > On Wed, Oct 23, 2019 at 7:55 PM Simon Horman <simon.horman@netronome.com> wrote:
-> > > >
-> > > > On Wed, Oct 23, 2019 at 12:53:37PM +0200, Matteo Croce wrote:
-> > > > > On Wed, Oct 23, 2019 at 12:00 PM Simon Horman
-> > > > > <simon.horman@netronome.com> wrote:
-> > > > > > On Mon, Oct 21, 2019 at 10:09:47PM +0200, Matteo Croce wrote:
-> > > > > > > +     switch (ih->type) {
-> > > > > > > +     case ICMP_ECHO:
-> > > > > > > +     case ICMP_ECHOREPLY:
-> > > > > > > +     case ICMP_TIMESTAMP:
-> > > > > > > +     case ICMP_TIMESTAMPREPLY:
-> > > > > > > +     case ICMPV6_ECHO_REQUEST:
-> > > > > > > +     case ICMPV6_ECHO_REPLY:
-> > > > > > > +             /* As we use 0 to signal that the Id field is not present,
-> > > > > > > +              * avoid confusion with packets without such field
-> > > > > > > +              */
-> > > > > > > +             key_icmp->id = ih->un.echo.id ? : 1;
-> > > > > >
-> > > > > > Its not obvious to me why the kernel should treat id-zero as a special
-> > > > > > value if it is not special on the wire.
-> > > > > >
-> > > > > > Perhaps a caller who needs to know if the id is present can
-> > > > > > check the ICMP type as this code does, say using a helper.
-> > > > > >
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > The problem is that the 0-0 Type-Code pair identifies the echo replies.
-> > > > > So instead of adding a bool is_present value I hardcoded the info in
-> > > > > the ID field making it always non null, at the expense of a possible
-> > > > > collision, which is harmless.
-> > > >
-> > > > Sorry, I feel that I'm missing something here.
-> > > >
-> > > > My reading of the code above is that for the cased types above
-> > > > (echo, echo reply, ...) the id is present. Otherwise it is not.
-> > > > My idea would be to put a check for those types in a helper.
-> > > >
-> > >
-> > > Something like icmp_has_id(), I like it.
-> > >
-> > > > I do agree that the override you have used is harmless enough
-> > > > in the context of the only user of the id which appears in
-> > > > the following patch of this series.
-> > > >
-> > > >
-> > > > Some other things I noticed in this patch on a second pass:
-> > > >
-> > > > * I think you can remove the icmp field from struct flow_dissector_key_ports
-> > > >
-> > >
-> > > You mean flow_dissector_key_icmp maybe?
-> >
-> > Yes, sorry for the misinformation.
-> >
-> > > > * I think that adding icmp to struct flow_keys should be accompanied by
-> > > >   adding ICMP to flow_keys_dissector_symmetric_keys. But I think this is
-> > > >   not desirable outside of the bonding use-case and rather
-> > > >   the bonding driver should define its own structures that
-> > > >   includes the keys it needs - basically copies of struct flow_keys
-> > > >   and flow_keys_dissector_symmetric_keys with some modifications.
-> > > >
-> > >
-> > > Just flow_keys_dissector_symmetric_keys or flow_keys_dissector_keys too?
-> > > Anyway, it seems that the bonding uses the flow_dissector only when
-> > > using encap2+3 or encap3+4 hashing, which means decap some known
-> > > tunnels (mpls and gre and pppoe I think).
-> >
-> > That is the use case I noticed.
-> >
-> > In that case it uses skb_flow_dissect_flow_keys() which in turn
-> > uses struct flow_keys and flow_keys_basic_dissector_keys (which is
-> > assigned to flow_keys_dissector_keys.
-> >
-> > Sorry about mentioning flow_keys_dissector_symmetric_keys, I think
-> > that was a copy-paste-error on my side.
-> >
+Hi Arnaldo 
+
+On Fri, 25 Oct 2019 11:39:10 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Em Fri, Oct 25, 2019 at 11:35:13AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Fri, Oct 25, 2019 at 05:46:43PM +0900, Masami Hiramatsu escreveu:
+> > > Fix perf probe to probe an inlne function which has no entry pc
+> > > or low pc but only has ranges attribute.
+> > > 
+> > > This seems very rare case, but I could find a few examples, as
+> > > same as probe_point_search_cb(), use die_entrypc() to get the
+> > > entry address in probe_point_inline_cb() too.
+> > > 
+> > > Without this patch,
+> > >   # tools/perf/perf probe -D __amd_put_nb_event_constraints
+> > >   Failed to get entry address of __amd_put_nb_event_constraints.
+> > >   Probe point '__amd_put_nb_event_constraints' not found.
+> > >     Error: Failed to add events.
+> > > 
+> > > With this patch,
+> > >   # tools/perf/perf probe -D __amd_put_nb_event_constraints
+> > >   p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
+> > 
+> > Here I got it slightly different:
+> > 
+> > Before:
+> > 
+> >   [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+> >   Failed to get entry address of __amd_put_nb_event_constraints.
+> >   Probe point '__amd_put_nb_event_constraints' not found.
+> >     Error: Failed to add events.
+> >   [root@quaco ~]#
+> > 
+> > After:
+> > 
+> >   [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+> >   p:probe/__amd_put_nb_event_constraints _text+33789
+> >   [root@quaco ~]#
+
+Ah, sorry, it was my mistake, when I copy the command, I lacked -k option,
+which means using offline kernel image. I'll update the patch description
+and resend it.
+
+With online kernel (same buildid), perf-probe modifies the address with
+_text based offset for avoiding mixed up with same-name symbols. Even if
+there are several same-name symbols (like local functions),  the
+"_text + offset" expression can identify one of them.
+However, if the buildid of the given kernel image (specified by -k option)
+doesn't match, it generates event definition based on the symbol name.
+Hmm, I think we can use _text even with off-line kernel, I'll check it.
+
+> > 
+> > 
+> > ----
+> > 
+> > I'm now checking if this is because I applied patch 4/6 before 3/6
 > 
-> np
+> Nope, even then:
 > 
-> > In any case, my point is that if you update struct flow_keys then likely
-> > some corresponding change should also be made to one or more of
-> > *__dissector_keys. But such a change would have scope outside of bonding,
-> > which is perhaps undesirable. So it might be better to make local
-> > structures and call __skb_flow_dissect from within the bonding code.
-> >
+> [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+> p:probe/__amd_put_nb_event_constraints _text+33789
+> [root@quaco ~]# grep __amd_put_nb_event_constraints /proc/kallsyms
+> [root@quaco ~]#
+
+So, _text + offset is normal behavior. I'll try to renew the example
+with actual options. Sorry for confusing.
+
+Thank you,
+
+
 > 
-> What drawbacks will it have to have the ICMP dissector enabled with
-> flow_keys_dissector_keys?
-
-1. All callers of skb_flow_dissect_flow_keys() (and any other users of
-   flow_keys_dissector_keys) will incur the cost of extracting ICMP
-   headers for ICMP packets, this was not previously the case.
-
-2. The behaviour of callers of skb_flow_dissect_flow_keys() may change.
-   In particular ___skb_get_hash() will take into account ICMP headers
-   for ICMP packets, which was not previously the case.
-
-Perhaps other side affects for other users, I have not audited them.
-
-> I see three options here:
-> 1. add the ICMP key in flow_keys_dissector_keys and change the
-> flow_dissector behaviour, when dealing with echoes
-> 2. do a local copy in the bonding code
-> 3. leave flow_keys_dissector_keys as is, so the bonding will balance
-> echoes only when not decapping tunnels
-
-I'm not sure that I follow option 3.
-I think that option 1 is not preferable due to side effects on other
-users.
-
-> I don't really know if option 1 could be a bug or a feature, sure
-> option 2 is safer. That can be changed later easily anyway.
-
-I agree option 2 seems safer.
-
-> > As for other use cases, that do not currently use the dissector,
-> > I think you will need to update them too to get then desired new
-> > feature introduced in patch 4 for those use-cases, which I assume is
-> > desired. Perhaps converting those use-cases to use the flow dissector
-> > is a good way forwards. Perhaps not.
-> >
+> Ok, maybe this may help:
 > 
-> I don't really know why the bonding doesn't use the dissector.
-> Performance? Anyway, maybe converting the bonding to
-> the flow_dissector would make sense, this can be done in the future.
-> I have to talk with the bonding maintainers to understand what's
-> behind this choice.
+> [root@quaco ~]# perf probe -v -D __amd_put_nb_event_constraints |& grep vmlinux
+> Looking at the vmlinux_path (8 entries long)
+> Using /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux for symbols
+> Open Debuginfo file: /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux
+> [root@quaco ~]#
+> 
+> [root@quaco ~]# readelf -wi /usr/lib/debug/lib/modules/5.2.18-200.fc30.x86_64/vmlinux | grep __amd_put_nb_event_constraints -B1 -A7
+>  <1><192640>: Abbrev Number: 123 (DW_TAG_subprogram)
+>     <192641>   DW_AT_name        : (indirect string, offset: 0x299576): __amd_put_nb_event_constraints
+>     <192645>   DW_AT_decl_file   : 1
+>     <192646>   DW_AT_decl_line   : 361
+>     <192648>   DW_AT_decl_column : 13
+>     <192649>   DW_AT_prototyped  : 1
+>     <192649>   DW_AT_inline      : 1	(inlined)
+>     <19264a>   DW_AT_sibling     : <0x192700>
+>  <2><19264e>: Abbrev Number: 38 (DW_TAG_formal_parameter)
+> ^C
+> [root@quaco ~]#
+> 
+> Continuing to process the other patches...
+> 
+> - Arnaldo
+>   
+> > > Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > ---
+> > >  tools/perf/util/probe-finder.c |    2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> > > index 71633f55f045..2fa932bcf960 100644
+> > > --- a/tools/perf/util/probe-finder.c
+> > > +++ b/tools/perf/util/probe-finder.c
+> > > @@ -930,7 +930,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
+> > >  		ret = find_probe_point_lazy(in_die, pf);
+> > >  	else {
+> > >  		/* Get probe address */
+> > > -		if (dwarf_entrypc(in_die, &addr) != 0) {
+> > > +		if (die_entrypc(in_die, &addr) != 0) {
+> > >  			pr_warning("Failed to get entry address of %s.\n",
+> > >  				   dwarf_diename(in_die));
+> > >  			return -ENOENT;
+> > 
+> > -- 
+> > 
+> > - Arnaldo
+> 
+> -- 
+> 
+> - Arnaldo
 
-I am not sure either but I think that any change should check
-for performance regressions. I think there is also the issue of
-for which hashing options using ICMP fields is appropriate,
-but perhaps it is all of them.
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
