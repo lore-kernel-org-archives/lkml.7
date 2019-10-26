@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42145CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B45CA9EB9
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B10206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6129B206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096895;
-	bh=Ph+MD4ApYy6+DAW/A4Y17uNg9lVC/WHDzQkS5xsDw1o=;
+	s=default; t=1572096899;
+	bh=joTHe+yaRF3GKLhIBUmQA67eXqEKKEarIqHC+MsJ/94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvOVYM859XTOW3/9cgySUTv0kAAkSnNuqkqE469GD5agXs/rGp6PpyO2OBglr8rpt
-	 kgDvH6qTZKO1puelrDd6rjdFnm6S9klEUAF0cPj60TUQi9sflKGyr11BENShp/cwNX
-	 2zg4jX/C4MR0AAiU3b8v+6fehv96CphljJ4AfJSo=
+	b=qeZM/pIq3q0v3sTW57rK8ruMPgKFoseRZRqCN3BnH2uag8QtH7ZP31yQJSh/TjCEV
+	 1TxwIcBJ3mAYTATBk/XN1cKyV6pIlgSIpPffLZ6XtGzbuxpVNOHJQMKzYAELbOo5V8
+	 DLfPpyKSwF0L5cZslsTiAlHv+gDeje0YzosEp4Mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfJZNR2 (ORCPT
+        id S1728692AbfJZNe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39028 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:34:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbfJZNR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:26 -0400
+        id S1727338AbfJZNR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:17:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CD721D80;
-        Sat, 26 Oct 2019 13:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B37721D80;
+        Sat, 26 Oct 2019 13:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095845;
-        bh=Ph+MD4ApYy6+DAW/A4Y17uNg9lVC/WHDzQkS5xsDw1o=;
+        s=default; t=1572095847;
+        bh=joTHe+yaRF3GKLhIBUmQA67eXqEKKEarIqHC+MsJ/94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LM/JdjaPcRMFZ6+FMR+iLaJmsD8H+HSzU2glbb25cSv6Q2DdyHr0/jeLid3PaRgTo
-         ugvQ26Mco3tIK7N4pgvdle5Nr8mrR+zzTnRNbVQmdWmPCySXCoesGBxJfUPqnaXAKQ
-         mPIOCWNePqLRmuD8rRBxSyY/Eh7NrCrJII7s55pc=
+        b=2I+H/5RW9WNNaJvRGjrYEQDB7xda4DA8etSQfuKGFJqz7tOBnsH7T4XkaxfDdah38
+         9XXpX0Tv8vUXdSD+VSLnbNKmGNN79YRUtfwSpBGcxKJ38o7Fz+9JMZqYlb/fl/D7cp
+         xxwkmhgGUgm7rhWrhhXKeyS2Dpk7VGDdciYKb+0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 44/99] s390/qeth: Fix error handling during VNICC initialization
-Date:   Sat, 26 Oct 2019 09:15:05 -0400
-Message-Id: <20191026131600.2507-44-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 46/99] act_mirred: Fix mirred_init_module error handling
+Date:   Sat, 26 Oct 2019 09:15:07 -0400
+Message-Id: <20191026131600.2507-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -60,61 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandra Winter <wintera@linux.ibm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit b528965bcc827dad32a8d21745feaacfc76c9703 ]
+[ Upstream commit 11c9a7d38af524217efb7a176ad322b97ac2f163 ]
 
-Smatch discovered the use of uninitialized variable sup_cmds
-in error paths.
+If tcf_register_action failed, mirred_device_notifier
+should be unregistered.
 
-Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Fixes: 3b87956ea645 ("net sched: fix race in mirred device removal")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ net/sched/act_mirred.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index cbead3d1b2fd2..f011e2c43f00d 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -2035,10 +2035,10 @@ static bool qeth_l2_vnicc_recover_char(struct qeth_card *card, u32 vnicc,
- static void qeth_l2_vnicc_init(struct qeth_card *card)
- {
- 	u32 *timeout = &card->options.vnicc.learning_timeout;
-+	bool enable, error = false;
- 	unsigned int chars_len, i;
- 	unsigned long chars_tmp;
- 	u32 sup_cmds, vnicc;
--	bool enable, error;
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 9d1bf508075a8..11b826f1f5397 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -479,7 +479,11 @@ static int __init mirred_init_module(void)
+ 		return err;
  
- 	QETH_CARD_TEXT(card, 2, "vniccini");
- 	/* reset rx_bcast */
-@@ -2059,7 +2059,10 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
- 	chars_len = sizeof(card->options.vnicc.sup_chars) * BITS_PER_BYTE;
- 	for_each_set_bit(i, &chars_tmp, chars_len) {
- 		vnicc = BIT(i);
--		qeth_l2_vnicc_query_cmds(card, vnicc, &sup_cmds);
-+		if (qeth_l2_vnicc_query_cmds(card, vnicc, &sup_cmds)) {
-+			sup_cmds = 0;
-+			error = true;
-+		}
- 		if (!(sup_cmds & IPA_VNICC_SET_TIMEOUT) ||
- 		    !(sup_cmds & IPA_VNICC_GET_TIMEOUT))
- 			card->options.vnicc.getset_timeout_sup &= ~vnicc;
-@@ -2068,8 +2071,8 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
- 			card->options.vnicc.set_char_sup &= ~vnicc;
- 	}
- 	/* enforce assumed default values and recover settings, if changed  */
--	error = qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
--					      timeout);
-+	error |= qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
-+					       timeout);
- 	chars_tmp = card->options.vnicc.wanted_chars ^ QETH_VNICC_DEFAULT;
- 	chars_tmp |= QETH_VNICC_BRIDGE_INVISIBLE;
- 	chars_len = sizeof(card->options.vnicc.wanted_chars) * BITS_PER_BYTE;
+ 	pr_info("Mirror/redirect action on\n");
+-	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	if (err)
++		unregister_netdevice_notifier(&mirred_device_notifier);
++
++	return err;
+ }
+ 
+ static void __exit mirred_cleanup_module(void)
 -- 
 2.20.1
 
