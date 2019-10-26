@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A019CA9EB9
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA0CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B414206DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C091206DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 26 Oct 2019 13:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572096637;
-	bh=lkdQvyDSW5WoJQUCp7sWmsbHlxWLMzLFiVYq31v6aFI=;
+	s=default; t=1572096642;
+	bh=l7sfTKa4zeehDC6TY34c96HkC1AAaWqOrVcSqeuLV60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ENN5DVGYpZYH2/KTmKYkE86aJL+85W84KRaLkdDcqSBMicDAvyiGnLbIxvWDhGEG7
-	 WGR87S4KQ7dR3zDGC9nJmKNHJmp06WllUkNhfTOmPyiGa867RbT+3VCv1/wbiVyU3X
-	 PqUZW64ygoLDmuRRngXuRZQGtqULz0dUxEolEKwE=
+	b=voldislQbpPwgh39KKL3bVAAMyHiAxG93X9jSxjAgyku/JDLvKMxqj+SBPwfABhCY
+	 4ctciXS5COurfha+wVxIjidBM89l8UV3w2GYZLhig46dBM1EUyIgeVeN9sX5IDVcSb
+	 FUOEkLnvETn6+4qQUMZDJz5gADjQ4bjI6Tyr6h2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfJZNag (ORCPT
+        id S1728412AbfJZNTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 09:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41630 "EHLO mail.kernel.org"
+        Sat, 26 Oct 2019 09:19:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbfJZNTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:19:46 -0400
+        id S1726967AbfJZNTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:19:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3911921655;
-        Sat, 26 Oct 2019 13:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3D2321655;
+        Sat, 26 Oct 2019 13:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095985;
-        bh=lkdQvyDSW5WoJQUCp7sWmsbHlxWLMzLFiVYq31v6aFI=;
+        s=default; t=1572095970;
+        bh=l7sfTKa4zeehDC6TY34c96HkC1AAaWqOrVcSqeuLV60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zz1z7kRGIekz6byQ0EduXxvEfXFAd43Vl/gwlPbBwHeVdCF+w16KRFHNqiHW+o/CZ
-         J4UMFTeEzgwFyuTcyUHXrEBbt6Z57qRDXkgrQF59lbb/BJt9SS0m9Z1AuCNl5aAntA
-         8LhRHN6uVKUVYKzT6pFGVPpikJQYRugMkDJptTP8=
+        b=JJSJ881vRFQTH8/R/fgeU11+I8gyvcym4DuzocJxsfU/2I0oEiXc69ChJoEj9OPNx
+         PdeJGz3yFr7z3zmI91HCSjJ73vDjBTQLuOFOfsX/97nHKXM4QNwZDSoXWeRB61/nJn
+         m+zsAvmNQvXttgYGkQG2EiXv4ODDaf2B+zNiWsrc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/59] llc: fix sk_buff refcounting in llc_conn_state_process()
-Date:   Sat, 26 Oct 2019 09:18:31 -0400
-Message-Id: <20191026131910.3435-20-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/59] mac80211: accept deauth frames in IBSS mode
+Date:   Sat, 26 Oct 2019 09:18:26 -0400
+Message-Id: <20191026131910.3435-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
 References: <20191026131910.3435-1-sashal@kernel.org>
@@ -59,123 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 36453c852816f19947ca482a595dffdd2efa4965 ]
+[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
 
-If llc_conn_state_process() sees that llc_conn_service() put the skb on
-a list, it will drop one fewer references to it.  This is wrong because
-the current behavior is that llc_conn_service() never consumes a
-reference to the skb.
+We can process deauth frames and all, but we drop them very
+early in the RX path today - this could never have worked.
 
-The code also makes the number of skb references being dropped
-conditional on which of ind_prim and cfm_prim are nonzero, yet neither
-of these affects how many references are *acquired*.  So there is extra
-code that tries to fix this up by sometimes taking another reference.
-
-Remove the unnecessary/broken refcounting logic and instead just add an
-skb_get() before the only two places where an extra reference is
-actually consumed.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_conn.c | 33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
+ net/mac80211/rx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index 0b0c6f12153b0..a79b739eb2236 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -64,12 +64,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	struct llc_sock *llc = llc_sk(skb->sk);
- 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
- 
--	/*
--	 * We have to hold the skb, because llc_conn_service will kfree it in
--	 * the sending path and we need to look at the skb->cb, where we encode
--	 * llc_conn_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_prim = ev->cfm_prim = 0;
- 	/*
- 	 * Send event to state machine
-@@ -77,21 +71,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	rc = llc_conn_service(skb->sk, skb);
- 	if (unlikely(rc != 0)) {
- 		printk(KERN_ERR "%s: llc_conn_service failed\n", __func__);
--		goto out_kfree_skb;
--	}
--
--	if (unlikely(!ev->ind_prim && !ev->cfm_prim)) {
--		/* indicate or confirm not required */
--		if (!skb->next)
--			goto out_kfree_skb;
- 		goto out_skb_put;
- 	}
- 
--	if (unlikely(ev->ind_prim && ev->cfm_prim)) /* Paranoia */
--		skb_get(skb);
--
- 	switch (ev->ind_prim) {
- 	case LLC_DATA_PRIM:
-+		skb_get(skb);
- 		llc_save_primitive(sk, skb, LLC_DATA_PRIM);
- 		if (unlikely(sock_queue_rcv_skb(sk, skb))) {
- 			/*
-@@ -108,6 +93,7 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * skb->sk pointing to the newly created struct sock in
- 		 * llc_conn_handler. -acme
- 		 */
-+		skb_get(skb);
- 		skb_queue_tail(&sk->sk_receive_queue, skb);
- 		sk->sk_state_change(sk);
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index b12f23c996f4e..02d0b22d01141 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3391,9 +3391,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
+ 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
+ 		/* process for all: mesh, mlme, ibss */
  		break;
-@@ -123,7 +109,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 				sk->sk_state_change(sk);
- 			}
- 		}
--		kfree_skb(skb);
- 		sock_put(sk);
- 		break;
- 	case LLC_RESET_PRIM:
-@@ -132,14 +117,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * RESET is not being notified to upper layers for now
- 		 */
- 		printk(KERN_INFO "%s: received a reset ind!\n", __func__);
--		kfree_skb(skb);
- 		break;
- 	default:
--		if (ev->ind_prim) {
-+		if (ev->ind_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 				__func__, ev->ind_prim);
--			kfree_skb(skb);
--		}
- 		/* No indication */
- 		break;
- 	}
-@@ -181,15 +163,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		printk(KERN_INFO "%s: received a reset conf!\n", __func__);
- 		break;
- 	default:
--		if (ev->cfm_prim) {
-+		if (ev->cfm_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 					__func__, ev->cfm_prim);
--			break;
--		}
--		goto out_skb_put; /* No confirmation */
-+		/* No confirmation */
++	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
++		if (is_multicast_ether_addr(mgmt->da) &&
++		    !is_broadcast_ether_addr(mgmt->da))
++			return RX_DROP_MONITOR;
++
++		/* process only for station/IBSS */
++		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
++		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
++			return RX_DROP_MONITOR;
 +		break;
- 	}
--out_kfree_skb:
--	kfree_skb(skb);
- out_skb_put:
- 	kfree_skb(skb);
- 	return rc;
+ 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
+ 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
+-	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
+ 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
+ 		if (is_multicast_ether_addr(mgmt->da) &&
+ 		    !is_broadcast_ether_addr(mgmt->da))
 -- 
 2.20.1
 
