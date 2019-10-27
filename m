@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFBDCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106E5CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9773920679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A2F20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212066;
-	bh=lhAvbhfQlTnRyecNnxC92jiplQHtUjhVHPGI6Ea5VTo=;
+	s=default; t=1572212070;
+	bh=hOIWh6sD8eanVs3fL3OUNBF9iJgLBnjhqtR80HCmals=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YBJCWGmNb4MSLTQLvNH97LTlqdBaViO3gN+HjmOHmNnDh6PLXQCsInth8TYECzKw5
-	 sMpO6ionc2vZMw71NUCKYTB0z1QlvbyPUE3b0rCDkIS7a8Sz+Zf1hi7s0ZT7b7rQbv
-	 9snqRegOzEV1zvwEWnQF+cpvxj9895IFu0s+0Wp8=
+	b=mwP80+Em275n+igT9dlWxmVJ86r4rpB+WVHTQ0eFwYvLmsJxJ/Sf4n4afjOxmmAHy
+	 KaBjQaohjCzPCB2fvqcmhDNNGRwNO1zEF8qxllBWM0bp2m0FsvqHLU7dQBvlfIXBNS
+	 hzvdWYRwf0R9mx8TY3HQTrPwgEPYeoS5+NaosutY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732757AbfJ0VeZ (ORCPT
+        id S1728020AbfJ0VK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:34:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729803AbfJ0VLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:03 -0400
+        id S1729770AbfJ0VKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:10:52 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1893B214AF;
-        Sun, 27 Oct 2019 21:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52E4A214AF;
+        Sun, 27 Oct 2019 21:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210662;
-        bh=lhAvbhfQlTnRyecNnxC92jiplQHtUjhVHPGI6Ea5VTo=;
+        s=default; t=1572210650;
+        bh=hOIWh6sD8eanVs3fL3OUNBF9iJgLBnjhqtR80HCmals=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9+I40WPr+ElI5B84H/9DbhXw0c7hBxarILIDLr2YLBdjn0fmb+STnsFbc6H/zgab
-         UUdAyts3K5gKZjzr+KdUIlSOI8lQ6FSsh5rYK1LlgQMO15NlBzJ9jB4cKfin9Dfmsv
-         R1Lw3YuSLO4DEelMEM1OXIAGHBrGwfnG9pQOhIIA=
+        b=OYb7nFAvJOHztSbRt97DveTjzWxyDpjD5Z5oh4PD+Jt8TqOjsHkrdlpivDHKqKqGs
+         vgSBsQN1u7LqMhbM19OytTs3TPRYHs26xucEwVO/V8qy4yZIdUjWp3UlVT/Iw1J6rq
+         RiggwOEmLLdII8TtYCH8C0P6Zbib+FmxRBr8gcz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 091/119] Input: da9063 - fix capability and drop KEY_SLEEP
-Date:   Sun, 27 Oct 2019 22:01:08 +0100
-Message-Id: <20191027203348.385833199@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 088/119] scsi: core: save/restore command resid for error handling
+Date:   Sun, 27 Oct 2019 22:01:05 +0100
+Message-Id: <20191027203347.970364903@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -59,41 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit afce285b859cea91c182015fc9858ea58c26cd0e upstream.
+commit 8f8fed0cdbbd6cdbf28d9ebe662f45765d2f7d39 upstream.
 
-Since commit f889beaaab1c ("Input: da9063 - report KEY_POWER instead of
-KEY_SLEEP during power key-press") KEY_SLEEP isn't supported anymore. This
-caused input device to not generate any events if "dlg,disable-key-power"
-is set.
+When a non-passthrough command is terminated with CHECK CONDITION, request
+sense is executed by hijacking the command descriptor. Since
+scsi_eh_prep_cmnd() and scsi_eh_restore_cmnd() do not save/restore the
+original command resid, the value returned on failure of the original
+command is lost and replaced with the value set by the execution of the
+request sense command. This value may in many instances be unaligned to the
+device sector size, causing sd_done() to print a warning message about the
+incorrect unaligned resid before the command is retried.
 
-Fix this by unconditionally setting KEY_POWER capability, and not
-declaring KEY_SLEEP.
+Fix this problem by saving the original command residual in struct
+scsi_eh_save using scsi_eh_prep_cmnd() and restoring it in
+scsi_eh_restore_cmnd(). In addition, to make sure that the request sense
+command is executed with a correctly initialized command structure, also
+reset the residual to 0 in scsi_eh_prep_cmnd() after saving the original
+command value in struct scsi_eh_save.
 
-Fixes: f889beaaab1c ("Input: da9063 - report KEY_POWER instead of KEY_SLEEP during power key-press")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20191001074839.1994-1-damien.lemoal@wdc.com
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/misc/da9063_onkey.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/scsi/scsi_error.c |    3 +++
+ include/scsi/scsi_eh.h    |    1 +
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/input/misc/da9063_onkey.c
-+++ b/drivers/input/misc/da9063_onkey.c
-@@ -248,10 +248,7 @@ static int da9063_onkey_probe(struct pla
- 	onkey->input->phys = onkey->phys;
- 	onkey->input->dev.parent = &pdev->dev;
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -935,6 +935,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd
+ 	ses->sdb = scmd->sdb;
+ 	ses->next_rq = scmd->request->next_rq;
+ 	ses->result = scmd->result;
++	ses->resid_len = scmd->req.resid_len;
+ 	ses->underflow = scmd->underflow;
+ 	ses->prot_op = scmd->prot_op;
+ 	ses->eh_eflags = scmd->eh_eflags;
+@@ -946,6 +947,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd
+ 	memset(&scmd->sdb, 0, sizeof(scmd->sdb));
+ 	scmd->request->next_rq = NULL;
+ 	scmd->result = 0;
++	scmd->req.resid_len = 0;
  
--	if (onkey->key_power)
--		input_set_capability(onkey->input, EV_KEY, KEY_POWER);
--
--	input_set_capability(onkey->input, EV_KEY, KEY_SLEEP);
-+	input_set_capability(onkey->input, EV_KEY, KEY_POWER);
- 
- 	INIT_DELAYED_WORK(&onkey->work, da9063_poll_on);
- 
+ 	if (sense_bytes) {
+ 		scmd->sdb.length = min_t(unsigned, SCSI_SENSE_BUFFERSIZE,
+@@ -999,6 +1001,7 @@ void scsi_eh_restore_cmnd(struct scsi_cm
+ 	scmd->sdb = ses->sdb;
+ 	scmd->request->next_rq = ses->next_rq;
+ 	scmd->result = ses->result;
++	scmd->req.resid_len = ses->resid_len;
+ 	scmd->underflow = ses->underflow;
+ 	scmd->prot_op = ses->prot_op;
+ 	scmd->eh_eflags = ses->eh_eflags;
+--- a/include/scsi/scsi_eh.h
++++ b/include/scsi/scsi_eh.h
+@@ -32,6 +32,7 @@ extern int scsi_ioctl_reset(struct scsi_
+ struct scsi_eh_save {
+ 	/* saved state */
+ 	int result;
++	unsigned int resid_len;
+ 	int eh_eflags;
+ 	enum dma_data_direction data_direction;
+ 	unsigned underflow;
 
 
