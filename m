@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF819CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAA9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6822222BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895E421783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210224;
-	bh=7fAjbK0SIu6mwvNpnw29B0AVcrZ6A43tQQapzgn8thA=;
+	s=default; t=1572210227;
+	bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c13fOlracfmUF2IJM0friHCuKwMDwKkmSG0YfKBssmAEqf8ghKQWKQcmnbmCQufYC
-	 Sdf+BRQ5dSi4XNRldVC8bKxRf8xNw/oZ0wifCqBDFwS7icbOuJ/WE6xTjbXfnZ3WPN
-	 pS5YPEmSg13YecI/T+Vn1i6DdylgkVAfH7do8LZ4=
+	b=hGMV4AZ/gS4w0JfS2/b8lEOLo8H3W+pEb69JysYZGYj0V3ohF60K8Vfi11+l5ZQBr
+	 SMSEDOH1NDT+hxTpAsbeaSCsqDI2O+t5sBbwSNTjuBy0pHfC+g1y3joFuG4BRmqlRz
+	 gzqME7OflXT7WwhbN7Gvkd9ZILujsEo8fUh6Hxzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfJ0VDm (ORCPT
+        id S1728434AbfJ0VDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49010 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:03:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbfJ0VDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:03:40 -0400
+        id S1728421AbfJ0VDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:03:43 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BDA72064A;
-        Sun, 27 Oct 2019 21:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB0892064A;
+        Sun, 27 Oct 2019 21:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210219;
-        bh=7fAjbK0SIu6mwvNpnw29B0AVcrZ6A43tQQapzgn8thA=;
+        s=default; t=1572210222;
+        bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjZFPtEbE80WffQMO88C1w42RMKdtsPrXndGnVscwYKcV18p1P4BExjlkhPNk5usz
-         ZVatq0fq2h6ZOFsKIAo+mLhSAj4nzNHfSDpV33RqB0iTPEURf5HmjrnN74H83Q6l91
-         RB6Pld188IJZs95sEeXdbS1JQ+bavkj8NgS2WRLI=
+        b=PMFDrB8TX2V358/PWkdLH9c/u8RS+k70V0Q2SGTDk6BeEUxBIQao/BZejW4fQ8Ud1
+         Mt3yRqfTYsmonh3So6pe0jwCdnk4FAxumxUnRb8yvjIndG6INzO5CkgieNnGEDxkFA
+         NofOtwYnzYLZLa/G4FzPagdjUWgrHm3Lz5RPHtDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 08/41] net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
-Date:   Sun, 27 Oct 2019 22:00:46 +0100
-Message-Id: <20191027203105.686901159@linuxfoundation.org>
+Subject: [PATCH 4.4 09/41] namespace: fix namespace.pl script to support relative paths
+Date:   Sun, 27 Oct 2019 22:00:47 +0100
+Message-Id: <20191027203106.620485889@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
@@ -60,43 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Jacob Keller <jacob.e.keller@intel.com>
 
-[ Upstream commit 53de429f4e88f538f7a8ec2b18be8c0cd9b2c8e1 ]
+[ Upstream commit 82fdd12b95727640c9a8233c09d602e4518e71f7 ]
 
-In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
-uninitialized if regmap_read() fails. However, "reg_value" is used
-to decide the control flow later in the if statement, which is
-potentially unsafe.
+The namespace.pl script does not work properly if objtree is not set to
+an absolute path. The do_nm function is run from within the find
+function, which changes directories.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Because of this, appending objtree, $File::Find::dir, and $source, will
+return a path which is not valid from the current directory.
+
+This used to work when objtree was set to an absolute path when using
+"make namespacecheck". It appears to have not worked when calling
+./scripts/namespace.pl directly.
+
+This behavior was changed in 7e1c04779efd ("kbuild: Use relative path
+for $(objtree)", 2014-05-14)
+
+Rather than fixing the Makefile to set objtree to an absolute path, just
+fix namespace.pl to work when srctree and objtree are relative. Also fix
+the script to use an absolute path for these by default.
+
+Use the File::Spec module for this purpose. It's been part of perl
+5 since 5.005.
+
+The curdir() function is used to get the current directory when the
+objtree and srctree aren't set in the environment.
+
+rel2abs() is used to convert possibly relative objtree and srctree
+environment variables to absolute paths.
+
+Finally, the catfile() function is used instead of string appending
+paths together, since this is more robust when joining paths together.
+
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ scripts/namespace.pl | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index 6ff13c559e527..09fcc821b7da9 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -156,11 +156,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
- {
- 	u32 time_cnt;
- 	u32 reg_value;
-+	int ret;
+diff --git a/scripts/namespace.pl b/scripts/namespace.pl
+index a71be6b7cdec5..9a2a32ce8a3b4 100755
+--- a/scripts/namespace.pl
++++ b/scripts/namespace.pl
+@@ -65,13 +65,14 @@
+ require 5;	# at least perl 5
+ use strict;
+ use File::Find;
++use File::Spec;
  
- 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
+ my $nm = ($ENV{'NM'} || "nm") . " -p";
+ my $objdump = ($ENV{'OBJDUMP'} || "objdump") . " -s -j .comment";
+-my $srctree = "";
+-my $objtree = "";
+-$srctree = "$ENV{'srctree'}/" if (exists($ENV{'srctree'}));
+-$objtree = "$ENV{'objtree'}/" if (exists($ENV{'objtree'}));
++my $srctree = File::Spec->curdir();
++my $objtree = File::Spec->curdir();
++$srctree = File::Spec->rel2abs($ENV{'srctree'}) if (exists($ENV{'srctree'}));
++$objtree = File::Spec->rel2abs($ENV{'objtree'}) if (exists($ENV{'objtree'}));
  
- 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
--		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		if (ret)
-+			return ret;
-+
- 		reg_value &= st_msk;
- 		if ((!!check_st) == (!!reg_value))
- 			break;
+ if ($#ARGV != -1) {
+ 	print STDERR "usage: $0 takes no parameters\n";
+@@ -229,9 +230,9 @@ sub do_nm
+ 	}
+ 	($source = $basename) =~ s/\.o$//;
+ 	if (-e "$source.c" || -e "$source.S") {
+-		$source = "$objtree$File::Find::dir/$source";
++		$source = File::Spec->catfile($objtree, $File::Find::dir, $source)
+ 	} else {
+-		$source = "$srctree$File::Find::dir/$source";
++		$source = File::Spec->catfile($srctree, $File::Find::dir, $source)
+ 	}
+ 	if (! -e "$source.c" && ! -e "$source.S") {
+ 		# No obvious source, exclude the object if it is conglomerate
 -- 
 2.20.1
 
