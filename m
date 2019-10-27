@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759F5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7503CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5B5205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA15D205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211738;
-	bh=Cgywksyt4H2wmbf4RTwC80HR3uuAZ4hEsERpXkzJm8U=;
+	s=default; t=1572211741;
+	bh=snwh3EKd/53QyFR5k10t0nDsAEQGi5MWIG+F2BMIzEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XAmxV4SSs7rsjkdasQ1lFcb2EJK52b6hKUtS6lOkkaVPSzYr/rNh49jUXTF9d2fTE
-	 Gu0/27X7f6T7FoSv+/Cd0dAwZhonYh5KeP0CNKSJ41a2vB83Y8S6wrxsadGJIDdlOC
-	 OMeZS3Yv5RD9KxI/b+9QbOChas4HNBvtFKlBG6kU=
+	b=pRwh9gyhCQxxoB34CYa8rjVgSKBPjYC/3a1Zfa2khKJJUW81cUUSmnHsQjE663A8L
+	 abCDa15xcTNNSGyd1mu9zUahcrEcHtrvJPHxNeWAwk64ITk+Zm1bgV1liMMXmWdTcy
+	 T2UZpqP3BOONQkyW3X6ruY8+s8xUAl00gsRA/5b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbfJ0V25 (ORCPT
+        id S1730904AbfJ0VVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbfJ0VVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:44 -0400
+        id S1731938AbfJ0VVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:36 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76D64214E0;
-        Sun, 27 Oct 2019 21:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398CD205C9;
+        Sun, 27 Oct 2019 21:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211303;
-        bh=Cgywksyt4H2wmbf4RTwC80HR3uuAZ4hEsERpXkzJm8U=;
+        s=default; t=1572211295;
+        bh=snwh3EKd/53QyFR5k10t0nDsAEQGi5MWIG+F2BMIzEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6ybWOshaY1tuL92SH+TPyO49bfASwNjhrnd/1gVLXKBdJpFTOr6pHwxuHLBrJ0ho
-         yVK6VtSUEAHZGvw25skkuT4rvGOYa9NPS/JZDsyR1hVk3i0+9Ho44UVKLFotJTFf3U
-         uZ3Tg8kRX87a5lwS08vmq4EySpEX3jwSy+K9Kydk=
+        b=jwsngnimpoqV3Msu/DDMWAjQ6eIg6GZZlv2A97GXWhH9x8Rr6g63d0JVif5pj5dLL
+         1PabZPCNpQbxer6XV5Mjq1nHoR3FJl7Z6mf/UtXb7Zb3rS9POskVsmEYs2JhFo4aWx
+         VRyoTbytlUOxiDAzEW1JDrbeeDvgGk/7CSvPKV7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Horman <simon.horman@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Davide Caratti <dcaratti@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 087/197] net: avoid errors when trying to pop MLPS header on non-MPLS packets
-Date:   Sun, 27 Oct 2019 22:00:05 +0100
-Message-Id: <20191027203356.427262492@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 102/197] USB: serial: ti_usb_3410_5052: fix port-close races
+Date:   Sun, 27 Oct 2019 22:00:20 +0100
+Message-Id: <20191027203357.273938582@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,50 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit dedc5a08da07874c6e0d411e7f39c5c2cf137014 ]
+commit 6f1d1dc8d540a9aa6e39b9cb86d3a67bbc1c8d8d upstream.
 
-the following script:
+Fix races between closing a port and opening or closing another port on
+the same device which could lead to a failure to start or stop the
+shared interrupt URB. The latter could potentially cause a
+use-after-free or worse in the completion handler on driver unbind.
 
- # tc qdisc add dev eth0 clsact
- # tc filter add dev eth0 egress matchall action mpls pop
-
-implicitly makes the kernel drop all packets transmitted by eth0, if they
-don't have a MPLS header. This behavior is uncommon: other encapsulations
-(like VLAN) just let the packet pass unmodified. Since the result of MPLS
-'pop' operation would be the same regardless of the presence / absence of
-MPLS header(s) in the original packet, we can let skb_mpls_pop() return 0
-when dealing with non-MPLS packets.
-
-For the OVS use-case, this is acceptable because __ovs_nla_copy_actions()
-already ensures that MPLS 'pop' operation only occurs with packets having
-an MPLS Ethernet type (and there are no other callers in current code, so
-the semantic change should be ok).
-
-v2: better documentation of use-cases for skb_mpls_pop(), thanks to Simon
-    Horman
-
-Fixes: 2a2ea50870ba ("net: sched: add mpls manipulation actions to TC")
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: John Hurley <john.hurley@netronome.com>
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/skbuff.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5524,7 +5524,7 @@ int skb_mpls_pop(struct sk_buff *skb, __
- 	int err;
+---
+ drivers/usb/serial/ti_usb_3410_5052.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+--- a/drivers/usb/serial/ti_usb_3410_5052.c
++++ b/drivers/usb/serial/ti_usb_3410_5052.c
+@@ -776,7 +776,6 @@ static void ti_close(struct usb_serial_p
+ 	struct ti_port *tport;
+ 	int port_number;
+ 	int status;
+-	int do_unlock;
+ 	unsigned long flags;
  
- 	if (unlikely(!eth_p_mpls(skb->protocol)))
--		return -EINVAL;
-+		return 0;
+ 	tdev = usb_get_serial_data(port->serial);
+@@ -800,16 +799,13 @@ static void ti_close(struct usb_serial_p
+ 			"%s - cannot send close port command, %d\n"
+ 							, __func__, status);
  
- 	err = skb_ensure_writable(skb, skb->mac_len + MPLS_HLEN);
- 	if (unlikely(err))
+-	/* if mutex_lock is interrupted, continue anyway */
+-	do_unlock = !mutex_lock_interruptible(&tdev->td_open_close_lock);
++	mutex_lock(&tdev->td_open_close_lock);
+ 	--tport->tp_tdev->td_open_port_count;
+-	if (tport->tp_tdev->td_open_port_count <= 0) {
++	if (tport->tp_tdev->td_open_port_count == 0) {
+ 		/* last port is closed, shut down interrupt urb */
+ 		usb_kill_urb(port->serial->port[0]->interrupt_in_urb);
+-		tport->tp_tdev->td_open_port_count = 0;
+ 	}
+-	if (do_unlock)
+-		mutex_unlock(&tdev->td_open_close_lock);
++	mutex_unlock(&tdev->td_open_close_lock);
+ }
+ 
+ 
 
 
