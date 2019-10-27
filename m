@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87505CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E3CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48FFD205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5B32064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211303;
-	bh=gSQJtAxrFbMVdanez9BjPKXiMSWioG2yotDUzWuEOFU=;
+	s=default; t=1572211306;
+	bh=DioYuE2Fc1xH/kz026vrOKLVWTO8UGykrlspo4l5FX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ItYrGuO7e3DKjl4NqjrH4HiWh6B/xwIGAIjhPXkWiz0ySoo26tuI8A8uWPwhk9bUD
-	 wBIk1aRAOo5/Ks/Vmly8X/pBZIWp0SPvvHNZ+MRoMBL6v894/AgoMGyG3RmIoXovHu
-	 rZVbOfF3vHgp/gqJ4HhTNUYc0ELQxcQ5NeOv/haQ=
+	b=mDrek0Agsmxr710PRHNthqr1AifWC9uYBWnaNUHrBPoBuCoFL1DHjxfycmuTX22qk
+	 I/i+OH0goqwT2KrPFufREMlmhaKKGABDPmz65fEJdjJvKtkVkY5uToG6DOesV8pbvb
+	 enGPK/AcLEvhenINBvaxg7gTRZtx04+Rab7Bh2gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbfJ0VVl (ORCPT
+        id S1731989AbfJ0VVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42478 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730893AbfJ0VVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:34 -0400
+        id S1731332AbfJ0VVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:38 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F97208C0;
-        Sun, 27 Oct 2019 21:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA9422070B;
+        Sun, 27 Oct 2019 21:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211292;
-        bh=gSQJtAxrFbMVdanez9BjPKXiMSWioG2yotDUzWuEOFU=;
+        s=default; t=1572211298;
+        bh=DioYuE2Fc1xH/kz026vrOKLVWTO8UGykrlspo4l5FX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuIWn4IrRnkscYxTZI1jzFA4JKGwInC/OyeasFparISQXoiA7U6dQSC1X2Lt/tu90
-         e+oZmOqsXAc9Q5ChiMb/JHTn2bqNYo2bfmPrzkLGkmV2hN6mQOMpjddTOq30BHjXX/
-         LkkIdCRSSPuC8YUICU6CkqIqHpUwS857+bwpzv44=
+        b=HduiD5EZd6P9RI3Ehg1s9Ai9mAxsQQ2YsEyBE2AqkSHA2Do4it3T+RFnHK8chYcjn
+         aVqTl9DbWUvrbYe8jgTbTv5TgwKWmYCNrvHHGGt43kDicftgD3iZ+NR+/YXmv1latr
+         +XcOrRa+rHLS7qYkcK3C1Ih2TBJxm54kd4IHLYfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH 5.3 101/197] usb: udc: lpc32xx: fix bad bit shift operation
-Date:   Sun, 27 Oct 2019 22:00:19 +0100
-Message-Id: <20191027203357.217806484@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 103/197] USB: ldusb: fix memleak on disconnect
+Date:   Sun, 27 Oct 2019 22:00:21 +0100
+Message-Id: <20191027203357.324669754@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,48 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit b987b66ac3a2bc2f7b03a0ba48a07dc553100c07 upstream.
+commit b14a39048c1156cfee76228bf449852da2f14df8 upstream.
 
-It seems that the right variable to use in this case is *i*, instead of
-*n*, otherwise there is an undefined behavior when right shifiting by more
-than 31 bits when multiplying n by 8; notice that *n* can take values
-equal or greater than 4 (4, 8, 16, ...).
+If disconnect() races with release() after a process has been
+interrupted, release() could end up returning early and the driver would
+fail to free its driver data.
 
-Also, notice that under the current conditions (bl = 3), we are skiping
-the handling of bytes 3, 7, 31... So, fix this by updating this logic
-and limit *bl* up to 4 instead of up to 3.
-
-This fix is based on function udc_stuff_fifo().
-
-Addresses-Coverity-ID: 1454834 ("Bad bit shift operation")
-Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20191014191830.GA10721@embeddedor
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191010125835.27031-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/misc/ldusb.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -1180,11 +1180,11 @@ static void udc_pop_fifo(struct lpc32xx_
- 			tmp = readl(USBD_RXDATA(udc->udp_baseaddr));
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -380,10 +380,7 @@ static int ld_usb_release(struct inode *
+ 		goto exit;
+ 	}
  
- 			bl = bytes - n;
--			if (bl > 3)
--				bl = 3;
-+			if (bl > 4)
-+				bl = 4;
+-	if (mutex_lock_interruptible(&dev->mutex)) {
+-		retval = -ERESTARTSYS;
+-		goto exit;
+-	}
++	mutex_lock(&dev->mutex);
  
- 			for (i = 0; i < bl; i++)
--				data[n + i] = (u8) ((tmp >> (n * 8)) & 0xFF);
-+				data[n + i] = (u8) ((tmp >> (i * 8)) & 0xFF);
- 		}
- 		break;
- 
+ 	if (dev->open_count != 1) {
+ 		retval = -ENODEV;
 
 
