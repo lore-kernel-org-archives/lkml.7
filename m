@@ -2,92 +2,83 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EF2CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6D3CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBD2205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:32:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XglZzy/W"
+	by mail.kernel.org (Postfix) with ESMTP id 56F68205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 06:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfJ0Gcn (ORCPT
+        id S1726384AbfJ0GdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 02:32:43 -0400
-Received: from mout.gmx.net ([212.227.17.21]:58099 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfJ0Gcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 02:32:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572157953;
-        bh=URb4ktMfUpL1dbYIat3/0f/YdBmBlVy9KjAM/7UpLI0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=XglZzy/WMm59HtyMddVqjE6ZR2+RaxPmfwEmYCXzobfiJeL01Z4U7Obw90woqrfgb
-         U4GeXgWqrDWPrbBr+eMNLB+IHQEsYMZrhgincWFuJy401uyX7T8HutSvALTIyFQ8dK
-         tKIlCC23G/wAFx9sUPnqKvPQGmWMEAp2MU3Pddww=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.153.185] ([217.61.153.185]) by web-mail.gmx.net
- (3c-app-gmx-bap44.server.lan [172.19.172.114]) (via HTTP); Sun, 27 Oct 2019
- 07:32:32 +0100
+        Sun, 27 Oct 2019 02:33:04 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:53908 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfJ0GdD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 02:33:03 -0400
+Received: by mail-il1-f199.google.com with SMTP id a17so6555314ilb.20
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 23:33:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=lGwoFEs6atbJNjfwbsMMgVdENVRKdZeDwx59pl7Gnc0=;
+        b=puPLVexcd0QY89M7n1s5s4qPieUeR52gO6nJ9B08ot6SDZQ+98E+9yQjUV7u4cIHu4
+         3EoOWH6thDVVEEgHFaE9nXnkA4QVyjnyx2lfkGKMETruQnDM1/z/uMWdiZNGQujOGGep
+         5kerf/3S/f7iQcHaQAlE4CGoE2Fdfz1c3FJmfTOfslGT8UAQqgPYwhOVVVlnIJ8OrJeu
+         lkImlG473Tp9JEx/umG5dXMXjH5zUxNOn0sMeceZhEW50OLPy17WP9JaVhuQDs2nLm7M
+         Yqm5CH/GchDfeklxxMYgqAIhy+6YZc88oSZ6UPBPbQsTBxuFThQ2lSOuiPQf2ptGTY9S
+         IHhQ==
+X-Gm-Message-State: APjAAAWI840XPabWblqfCQdzfEl1PmlPBC0zGxhHTj9BGcLkfPzvUftp
+        QWl5ICdTHAJId/zO//9pFP4yzxXMKw5TjsEByJ2q+TtrHuTQ
+X-Google-Smtp-Source: APXvYqybyCpDlrzzUeGRwdrxvaNZyICTlgNIiEO6W6PPjlDKJOGQERHCbQp+yT2DLtml2AKv0s7y2mTm9ga/zJuCHcqdxwm21NZZ
 MIME-Version: 1.0
-Message-ID: <trinity-c8e754a2-3369-4915-91dd-4e328c8d8a54-1572157952924@3c-app-gmx-bap44>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Fabio Estevam" <festevam@gmail.com>
-Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Aw: Re: [PATCH, RESEND] serial: 8250-mtk: Ask for IRQ-count before
- request one
-Content-Type: text/plain; charset=UTF-8
-Date:   Sun, 27 Oct 2019 07:32:32 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <CAOMZO5Bb=1CUpw__xxS2N0w+ZP0+LnBBW9+JLVr03x6TC2Z7=g@mail.gmail.com>
-References: <20191026194522.28293-1-frank-w@public-files.de>
- <CAOMZO5Bb=1CUpw__xxS2N0w+ZP0+LnBBW9+JLVr03x6TC2Z7=g@mail.gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:ZwFWc4VD9dcVeZ8c7PaQyxCHzgAqT53gsWj2AJnSZjBgsFAC2j82vL5w/gSwf6To88DKA
- 0JVhXeQGn6v1xg0j6H+pFB8vA8+G3TYvM7Slk1tW8sLbSXnjKM8T+P7wBcDqXssvwR9ws1e+sTQe
- aJqoVJNc+XDlrH9pnB4HQeTnFTiiEP+UoM5ROLtw/5h8kkLPEbD+UxQrLCp8YTZ97jRaW5MJh0ZW
- bM4K1Wgk1DmIF2UCcsSQP8MQP3/WRsna/nRScowwiffo8+6oaCX4zehW3QPQlNUqjonbdPOZJk+w
- N0=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AFsynnJYb5U=:KBDbqLyPbYU5CLeqGZx3Vo
- Sfnot+l7NRHzME8agB4fxaK7Rf01wkVSaeg1QGQ+dzmIKGc0efJ/YlsvMg9TZZRiQfx4ej1V9
- Zo/2BChttYcdZZsI2tZheHb2tu0Izlf6WvHdTE6Dwi97qWNg7bPaHtgHuHwfFmpBNtJnHrpCG
- fr2tpnbNC2TOjr+Exx02YsaHbmmIRMPAWSuPDMuwjQXRvR4ffqa+BECFzZUhmYjzhbit36Qyt
- ZakEpDe9Kh9YUXJW9aXAJztfq+66NJJuZMzEYicOR9bGB2R+lhea04uxcnNhWKq6CB4q3zwq+
- GRX3mr+KdMgOKLhrahiMZ+8eugpCP3Ldrl0RY0hjPrXEKX6+De4W0n2saAfp9H45+uQTXPCzg
- BI1tfs7KMJG6kSsuKLInuWV5O2/b7pcM2pLXYbJNPDCUHc8kDFixkYrHBq10obM3MCW+w4/1K
- 11XyCKqW9iDB4HsGO2W/MsweDQ82iA+eRMe7XdX1xmJQmRfLLZaKHb6VEc69Mk4BPOMf/O1HP
- gstDfHykbv+cMcfOaTz4XFsMpb6T+KNeA2yPd2PTXAYyoadOusBMiPCRQhJvYSULYTLHu9J5w
- w/WboqFnJlp0Xvk2Ekh7KvzjsD0KhKJ37v6cpAlBsJr1E4efWL+3XcE/awA+s1KhFAB6LPo1W
- OFE9pK3qpw72iSLZJDdFmKl5quWbLc5xGULgM5MET6guvM5N/poP7PhPszZcKQaDM+3c=
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a6b:5503:: with SMTP id j3mr12197785iob.151.1572157980811;
+ Sat, 26 Oct 2019 23:33:00 -0700 (PDT)
+Date:   Sat, 26 Oct 2019 23:33:00 -0700
+In-Reply-To: <000000000000fbbe1e0595bac322@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fa2e630595de8d05@google.com>
+Subject: Re: KASAN: null-ptr-deref Write in io_wq_cancel_all
+From:   syzbot <syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, axboe@kernel.dk,
+        dan.j.williams@intel.com, dhowells@redhat.com, dvyukov@google.com,
+        gregkh@linuxfoundation.org, hannes@cmpxchg.org,
+        joel@joelfernandes.org, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mchehab+samsung@kernel.org, mingo@redhat.com,
+        patrick.bellasi@arm.com, rgb@redhat.com, rostedt@goodmis.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        yamada.masahiro@socionext.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+syzbot has bisected this bug to:
 
-thank you, seems to work too
+commit d5f773aba1186142d52aef8242a426310a39fa86
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Thu Oct 24 13:25:42 2019 +0000
 
-have posted v2 here: https://patchwork.kernel.org/patch/11213957/
+     io_uring: replace workqueue usage with io-wq
 
-regards Frank
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=142c6d18e00000
+start commit:   139c2d13 Add linux-next specific files for 20191025
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=162c6d18e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=122c6d18e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28fd7a693df38d29
+dashboard link: https://syzkaller.appspot.com/bug?extid=d958a65633ea70280b23
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160573c0e00000
 
-> Gesendet: Samstag, 26. Oktober 2019 um 21:31 Uhr
-> Von: "Fabio Estevam" <festevam@gmail.com>
+Reported-by: syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com
+Fixes: d5f773aba118 ("io_uring: replace workqueue usage with io-wq")
 
-> The solution that was accepted for this case was to use
-> platform_get_irq_optional() instead.
->
-> You could try using platform_get_irq_optional() here as well.
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
