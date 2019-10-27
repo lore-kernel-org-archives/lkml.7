@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1952BCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94330CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD6920873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628B6214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210467;
-	bh=MqNYDHsk36krU8V9zN8HmYB742svkN2NSnv3BuaBevE=;
+	s=default; t=1572210471;
+	bh=nGNn/6gbznVPvXy1bNaYHhiOgr7e4qFUEXEifg/wh/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nf8WaJW5wGWN41qFZFU6njNIC+YXQAJXkzGvKiq5COVcc948wMpUL8ClrE3UmKZL/
-	 cPlfH3fgh0idOWuCjbF5Ym9COa0eoo372QgB616SjoF8Glv0+UVrL5+8bHFGQ74aJ4
-	 rxVdNoxP91dUU60LQwT45OC7ILmRlQcAVvDrjYO0=
+	b=qNVup5kX7o63YdFoBBborHvIo1srHU+hjY2Ug+BBounosKqIp9tx08QDT/VykozRb
+	 EuHPTCywD9WzB9H3JDjW041DAxIesW8TU8p+5c9fDn7PGehwk3jZWWE9aBhBydfzpy
+	 CkOtCkNYA/bp9OYEEDR75WDjpI94y3SBRJy6qNfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfJ0VHq (ORCPT
+        id S1729270AbfJ0VHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729241AbfJ0VHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:07:43 -0400
+        id S1729259AbfJ0VHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:07:46 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57641214AF;
-        Sun, 27 Oct 2019 21:07:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07DEC21726;
+        Sun, 27 Oct 2019 21:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210462;
-        bh=MqNYDHsk36krU8V9zN8HmYB742svkN2NSnv3BuaBevE=;
+        s=default; t=1572210465;
+        bh=nGNn/6gbznVPvXy1bNaYHhiOgr7e4qFUEXEifg/wh/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lX2qwkYuX/orFICplBM4uLVEMuDdp11v7yJ4fTWnO9pDoEqr5zUyX+LDylFHgfqh3
-         Z1otHN753KkjTMAJWuTm8QJg4oIghHnKvDZqF7LEAyM+0J05wYnweLxWm4fpHHvfot
-         HDzFU3efi4+RoisP7Id3zfLZ0uhVwyvb5Oj/MBzs=
+        b=NWKYXF6nkV6Fr3s2X7TQj6V74sLXdx4TbpoouYHNYf2ghqiUw4/kaea/myW1xM0Jy
+         882lpG3H1rJgxxpiCR8s1TFfaSEASM8AEJ8qvEPrPH8kF5Dxny/6U62Y4YUqyeHn8x
+         qlN8Pseewt6jADsTdq3p9juf5qIrU7rR7BG0lJw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
+        stable@vger.kernel.org,
+        syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 023/119] net: stmmac: disable/enable ptp_ref_clk in suspend/resume flow
-Date:   Sun, 27 Oct 2019 22:00:00 +0100
-Message-Id: <20191027203306.906234535@linuxfoundation.org>
+Subject: [PATCH 4.14 024/119] sctp: change sctp_prot .no_autobind with true
+Date:   Sun, 27 Oct 2019 22:00:01 +0100
+Message-Id: <20191027203307.303661015@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -59,47 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit e497c20e203680aba9ccf7bb475959595908ca7e ]
+[ Upstream commit 63dfb7938b13fa2c2fbcb45f34d065769eb09414 ]
 
-disable ptp_ref_clk in suspend flow, and enable it in resume flow.
+syzbot reported a memory leak:
 
-Fixes: f573c0b9c4e0 ("stmmac: move stmmac_clk, pclk, clk_ptp_ref and stmmac_rst to platform structure")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+  BUG: memory leak, unreferenced object 0xffff888120b3d380 (size 64):
+  backtrace:
+
+    [...] slab_alloc mm/slab.c:3319 [inline]
+    [...] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
+    [...] sctp_bucket_create net/sctp/socket.c:8523 [inline]
+    [...] sctp_get_port_local+0x189/0x5a0 net/sctp/socket.c:8270
+    [...] sctp_do_bind+0xcc/0x200 net/sctp/socket.c:402
+    [...] sctp_bindx_add+0x4b/0xd0 net/sctp/socket.c:497
+    [...] sctp_setsockopt_bindx+0x156/0x1b0 net/sctp/socket.c:1022
+    [...] sctp_setsockopt net/sctp/socket.c:4641 [inline]
+    [...] sctp_setsockopt+0xaea/0x2dc0 net/sctp/socket.c:4611
+    [...] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3147
+    [...] __sys_setsockopt+0x10f/0x220 net/socket.c:2084
+    [...] __do_sys_setsockopt net/socket.c:2100 [inline]
+
+It was caused by when sending msgs without binding a port, in the path:
+inet_sendmsg() -> inet_send_prepare() -> inet_autobind() ->
+.get_port/sctp_get_port(), sp->bind_hash will be set while bp->port is
+not. Later when binding another port by sctp_setsockopt_bindx(), a new
+bucket will be created as bp->port is not set.
+
+sctp's autobind is supposed to call sctp_autobind() where it does all
+things including setting bp->port. Since sctp_autobind() is called in
+sctp_sendmsg() if the sk is not yet bound, it should have skipped the
+auto bind.
+
+THis patch is to avoid calling inet_autobind() in inet_send_prepare()
+by changing sctp_prot .no_autobind with true, also remove the unused
+.get_port.
+
+Reported-by: syzbot+d44f7bbebdea49dbc84a@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/sctp/socket.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4402,8 +4402,10 @@ int stmmac_suspend(struct device *dev)
- 		priv->hw->mac->set_mac(priv->ioaddr, false);
- 		pinctrl_pm_select_sleep_state(priv->device);
- 		/* Disable clock in case of PWM is off */
--		clk_disable(priv->plat->pclk);
--		clk_disable(priv->plat->stmmac_clk);
-+		if (priv->plat->clk_ptp_ref)
-+			clk_disable_unprepare(priv->plat->clk_ptp_ref);
-+		clk_disable_unprepare(priv->plat->pclk);
-+		clk_disable_unprepare(priv->plat->stmmac_clk);
- 	}
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
-@@ -4468,8 +4470,10 @@ int stmmac_resume(struct device *dev)
- 	} else {
- 		pinctrl_pm_select_default_state(priv->device);
- 		/* enable the clk previously disabled */
--		clk_enable(priv->plat->stmmac_clk);
--		clk_enable(priv->plat->pclk);
-+		clk_prepare_enable(priv->plat->stmmac_clk);
-+		clk_prepare_enable(priv->plat->pclk);
-+		if (priv->plat->clk_ptp_ref)
-+			clk_prepare_enable(priv->plat->clk_ptp_ref);
- 		/* reset the phy so that it's ready */
- 		if (priv->mii)
- 			stmmac_mdio_reset(priv->mii);
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -8313,7 +8313,7 @@ struct proto sctp_prot = {
+ 	.backlog_rcv =	sctp_backlog_rcv,
+ 	.hash        =	sctp_hash,
+ 	.unhash      =	sctp_unhash,
+-	.get_port    =	sctp_get_port,
++	.no_autobind =	true,
+ 	.obj_size    =  sizeof(struct sctp_sock),
+ 	.sysctl_mem  =  sysctl_sctp_mem,
+ 	.sysctl_rmem =  sysctl_sctp_rmem,
+@@ -8352,7 +8352,7 @@ struct proto sctpv6_prot = {
+ 	.backlog_rcv	= sctp_backlog_rcv,
+ 	.hash		= sctp_hash,
+ 	.unhash		= sctp_unhash,
+-	.get_port	= sctp_get_port,
++	.no_autobind	= true,
+ 	.obj_size	= sizeof(struct sctp6_sock),
+ 	.sysctl_mem	= sysctl_sctp_mem,
+ 	.sysctl_rmem	= sysctl_sctp_rmem,
 
 
