@@ -2,133 +2,122 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D03CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 22:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 22:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAAD214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 22:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A61E7LDk"
+	by mail.kernel.org (Postfix) with ESMTP id 1698F20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 22:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfJ0W11 (ORCPT
+        id S1728290AbfJ0Wr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 18:27:27 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34458 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726717AbfJ0W11 (ORCPT
+        Sun, 27 Oct 2019 18:47:29 -0400
+Received: from smtprelay0194.hostedemail.com ([216.40.44.194]:51510 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727085AbfJ0Wr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 18:27:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572215246;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wRHG8SDGIYgraIGReOni3E60U4X7OoMWr6f5ZsbvZJU=;
-        b=A61E7LDky5LozS2T248aVDpYauGsh09IaPeBDbRdWETm2mK3KG7boUYFykMCbYC4uieOMz
-        PUcOPVA5Dtzc+kZvRL11md0B9wPOthNBQX93QST6M1MX2vbbMTVmi3dHSjxdWMVNi/jrDt
-        PZFu2Pm71UcceNcLfbDhSW/hoHHFY2c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-N3mIgUl8NmS54_KnDVdKfQ-1; Sun, 27 Oct 2019 18:27:22 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7617476;
-        Sun, 27 Oct 2019 22:27:20 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-60.ams2.redhat.com [10.36.116.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D93519C68;
-        Sun, 27 Oct 2019 22:27:15 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v1] mm/memory_hotplug: Fix updating the node span
-Date:   Sun, 27 Oct 2019 23:27:14 +0100
-Message-Id: <20191027222714.5313-1-david@redhat.com>
+        Sun, 27 Oct 2019 18:47:29 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 4B0431802B56E;
+        Sun, 27 Oct 2019 22:47:28 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: nail45_410b47253ea55
+X-Filterd-Recvd-Size: 3138
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 27 Oct 2019 22:47:26 +0000 (UTC)
+Message-ID: <92212e57d45f4410be654183f5dcb1e98d636ef2.camel@perches.com>
+Subject: Re: [PATCH] kernel: sys.c: Avoid copying possible padding bytes in
+ copy_to_user
+From:   Joe Perches <joe@perches.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <error27@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        zhanglin <zhang.lin16@zte.com.cn>
+Date:   Sun, 27 Oct 2019 15:47:21 -0700
+In-Reply-To: <alpine.DEB.2.21.1910270644590.3186@hadrien>
+References: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
+         <alpine.DEB.2.21.1910270644590.3186@hadrien>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: N3mIgUl8NmS54_KnDVdKfQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We recently started updating the node span based on the zone span to
-avoid touching uninitialized memmaps.
+On Sun, 2019-10-27 at 06:47 +0100, Julia Lawall wrote:
+> 
+> On Sat, 26 Oct 2019, Joe Perches wrote:
+> 
+> > Initialization is not guaranteed to zero padding bytes so
+> > use an explicit memset instead to avoid leaking any kernel
+> > content in any possible padding bytes.
+> 
+> Here is an extract of an email that I sent to Kees at one point that left
+> me unsure about what should be done about these situations:
+> 
+> From Kees:
+> 
+>     The only way to correctly handle this is:
+> 
+>     memset(&instance, 0, sizeof(instance));
+>     instance.one = 1;
+> 
+> From me:
+> 
+> Actually, this document:
+> 
+> https://wiki.sei.cmu.edu/confluence/display/c/DCL39-C.+Avoid+information+leakage+when+passing+a+structure+across+a+trust+boundary
+> 
+> says that memset is a "noncompliant solution".  They suggest declaring the
+> structure as packed, as well as some other more unpleasant solutions.
+> Their point is that 1 will be sitting in a register, and the assignment at
+> least might copy the upper bytes of the register into the padding space.
 
-Currently, we will always detect the node span to start at 0, meaning a
-node can easily span too many pages. pgdat_is_empty() will still work
-correctly if all zones span no pages. We should skip over all zones without
-spanned pages and properly handle the first detected zone that spans pages.
+It took me a minute to understand why, but it
+is true and possible.
 
-Unfortunately, in contrast to the zone span (/proc/zoneinfo), the node span
-cannot easily be inspected and tested. The node span gives no real
-guarantees when an architecture supports memory hotplug, meaning it can
-easily contain holes or span pages of different nodes.
+> Is the memset solution nevertheless what is always wanted in the kernel
+> when there is padding?
 
-The node span is not really used after init on architectures that support
-memory hotplug. E.g., we use it in mm/memory_hotplug.c:try_offline_node()
-and in mm/kmemleak.c:kmemleak_scan(). These users seem to be fine.
+I think yes as at least it makes it consistent.
 
-Fixes: 00d6c019b5bc ("mm/memory_hotplug: don't access uninitialized memmaps=
- in shrink_pgdat_span()")
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
+From the link above, as I understand the __user
+gcc extension here
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c61f13eaa1ee17728c41370100d2d45c254ce76f
 
-Luckily, this patch made me realize that try_offline_node() is completely
-broken:
-- We easily touch the (garbage) memmap of offline sections
-- We will not properly handle the case where we have different NIDs within
-  a single section
-This needs proper fixing. We will have to look at the memory block nid
-of offline memory blocks and scan all pages (or rather pageblocks) of
-online memory blocks.
+gcc does not clear padding from initialized structs
+marked with __user.
 
----
- mm/memory_hotplug.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Perhaps adding yet another attribute to struct definitions
+and another gcc extension could help.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 561371ead39a..0140c20837b6 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -442,6 +442,14 @@ static void update_pgdat_span(struct pglist_data *pgda=
-t)
- =09=09=09=09=09     zone->spanned_pages;
-=20
- =09=09/* No need to lock the zones, they can't change. */
-+=09=09if (!zone->spanned_pages)
-+=09=09=09continue;
-+=09=09if (!node_end_pfn) {
-+=09=09=09node_start_pfn =3D zone->zone_start_pfn;
-+=09=09=09node_end_pfn =3D zone_end_pfn;
-+=09=09=09continue;
-+=09=09}
-+
- =09=09if (zone_end_pfn > node_end_pfn)
- =09=09=09node_end_pfn =3D zone_end_pfn;
- =09=09if (zone->zone_start_pfn < node_start_pfn)
---=20
-2.21.0
+Perhaps add something like
+
+	#define __uapi __attribute__((__uapi__))
+
+and mark the struct definitions in include/uapi like:
+
+struct ethtool_wolinfo {
+	__u32	cmd;
+	__u32	supported;
+	__u32	wolopts;
+	__u8	sopass[SOPASS_MAX];
+} __uapi;
+
+so that gcc could make sure any struct padding
+is also zeroed if initialized.
+
+Though that doesn't force the compiler to not
+perform the possible register optimization shown
+in the first document above.
 
