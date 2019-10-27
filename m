@@ -2,116 +2,116 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E033CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09821CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C9D21D81
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572187610;
-	bh=pp8mEgomz0M/3Mf8slxkJgXWUFwfKKHtSYQ1KzRKA6Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aHNl67oswhBMM9sEzxEquDFfcyaFDNBwhai1pEO664BSEAwEwqVE1IkCigMrEwRSc
-	 0QcEpJl3WgwWbyzp28kjumj1ugKcA5hj30nwFL3D1PCHhQ1i9mBWRBK+JgUsTEiFYu
-	 AnnIVNu4ZXOIRuiI+OXTz/hIHwH13au/H0it6mnA=
+	by mail.kernel.org (Postfix) with ESMTP id DE21C214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfJ0Oqt (ORCPT
+        id S1727276AbfJ0Ord (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726706AbfJ0Oqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:46:49 -0400
-Received: from localhost.localdomain (82-132-239-15.dab.02.net [82.132.239.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C805214AF;
-        Sun, 27 Oct 2019 14:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572187608;
-        bh=pp8mEgomz0M/3Mf8slxkJgXWUFwfKKHtSYQ1KzRKA6Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBhhm3h/XE4J3cnUJr7pE+fWIbdhvo4F5nJWn71/TxZizW3wQGEAtCS1iUPDNY6Jd
-         LCZlkagoWh87hwoViVTP9V+qVVvpDslC2AsKf/XhlI3qpL5VpXZKLKfZ8ANLjNlmZi
-         mfSCnruSN2kVJfwaUI4AQrCjMRkvzd5J2VAu6S+A=
-From:   Marc Zyngier <maz@kernel.org>
-To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Jayachandran C <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v2 36/36] KVM: arm64: GICv4.1: Expose HW-based SGIs in debugfs
-Date:   Sun, 27 Oct 2019 14:42:34 +0000
-Message-Id: <20191027144234.8395-37-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191027144234.8395-1-maz@kernel.org>
-References: <20191027144234.8395-1-maz@kernel.org>
-MIME-Version: 1.0
+        Sun, 27 Oct 2019 10:47:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12940 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726796AbfJ0Ord (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 10:47:33 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9REkeUF138989
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 10:47:31 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vw3rqwp6s-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 10:47:31 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 27 Oct 2019 14:47:29 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 27 Oct 2019 14:47:26 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9RElQtk38797364
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 27 Oct 2019 14:47:26 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7EF9A4053;
+        Sun, 27 Oct 2019 14:47:25 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C07AEA4040;
+        Sun, 27 Oct 2019 14:47:24 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.187.251])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 27 Oct 2019 14:47:24 +0000 (GMT)
+Subject: Re: [PATCH v2 1/4] KEYS: Defined an ima hook for measuring keys on
+ key create or update
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Sun, 27 Oct 2019 10:47:24 -0400
+In-Reply-To: <c1de8055-89a7-25dd-d99a-427e2c2c4c59@linux.microsoft.com>
+References: <20191023233950.22072-1-nramas@linux.microsoft.com>
+         <20191023233950.22072-2-nramas@linux.microsoft.com>
+         <1572032428.4532.72.camel@linux.ibm.com>
+         <c1de8055-89a7-25dd-d99a-427e2c2c4c59@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102714-0008-0000-0000-0000032813FF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102714-0009-0000-0000-00004A474F0A
+Message-Id: <1572187644.4532.211.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-27_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910270155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vgic-state debugfs file could do with showing the pending state
-of the HW-backed SGIs. Plug it into the low-level code.
+On Fri, 2019-10-25 at 15:28 -0700, Lakshmi Ramasubramanian wrote:
+> On 10/25/2019 12:40 PM, Mimi Zohar wrote:
+> 
+> >> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+> >> +				   unsigned long flags, bool create)
+> >> +{
+> >> +	const struct public_key *pk;
+> >> +
+> >> +	if (key->type != &key_type_asymmetric)
+> >> +		return;
+> >> +
+> >> +	if (!ima_initialized)
+> >> +		return;
+> > 
+> > There's no reason to define a new variable to determine if IMA is
+> > initialized.  Use ima_policy_flag.  
+> 
+> Please correct me if I am wrong -
+> 
+> ima_policy_flag will be set to 0 if IMA is not yet initialized
+> OR
+> IMA is initialized, but ima_policy_flag could be still set to 0 (say, 
+> due to the configured policy).
+> 
+> In the latter case the measurement request should be a NOP immediately.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- virt/kvm/arm/vgic/vgic-debug.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+I'm not sure.  The builtin keys most likely will be loaded prior to a
+custom IMA policy containing "keyring" rules are defined.
 
-diff --git a/virt/kvm/arm/vgic/vgic-debug.c b/virt/kvm/arm/vgic/vgic-debug.c
-index cc12fe9b2df3..98f3242a34a6 100644
---- a/virt/kvm/arm/vgic/vgic-debug.c
-+++ b/virt/kvm/arm/vgic/vgic-debug.c
-@@ -178,6 +178,8 @@ static void print_irq_state(struct seq_file *s, struct vgic_irq *irq,
- 			    struct kvm_vcpu *vcpu)
- {
- 	char *type;
-+	bool pending;
-+
- 	if (irq->intid < VGIC_NR_SGIS)
- 		type = "SGI";
- 	else if (irq->intid < VGIC_NR_PRIVATE_IRQS)
-@@ -190,6 +192,16 @@ static void print_irq_state(struct seq_file *s, struct vgic_irq *irq,
- 	if (irq->intid ==0 || irq->intid == VGIC_NR_PRIVATE_IRQS)
- 		print_header(s, irq, vcpu);
- 
-+	pending = irq->pending_latch;
-+	if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-+		int err;
-+
-+		err = irq_get_irqchip_state(irq->host_irq,
-+					    IRQCHIP_STATE_PENDING,
-+					    &pending);
-+		WARN_ON_ONCE(err);
-+	}
-+		
- 	seq_printf(s, "       %s %4d "
- 		      "    %2d "
- 		      "%d%d%d%d%d%d%d "
-@@ -201,7 +213,7 @@ static void print_irq_state(struct seq_file *s, struct vgic_irq *irq,
- 		      "\n",
- 			type, irq->intid,
- 			(irq->target_vcpu) ? irq->target_vcpu->vcpu_id : -1,
--			irq->pending_latch,
-+		   	pending,
- 			irq->line_level,
- 			irq->active,
- 			irq->enabled,
--- 
-2.20.1
+Mimi
 
