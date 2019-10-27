@@ -7,146 +7,287 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DE3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A09C47E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DFD20650
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A2B208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QCMlP2Di"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoDKsyHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfJ0T4G (ORCPT
+        id S1727205AbfJ0T72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 15:56:06 -0400
-Received: from mout.web.de ([212.227.15.4]:45547 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfJ0T4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 15:56:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1572206151;
-        bh=S+5gyOKr+ARwNkrg4UcLgqHG0pbtbH+v/M3v0ME89SU=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=QCMlP2DiqqfV1dHknpr7q4shXkfzMhxxrnOlLBv3WEsZuel6wC6izkjrzbo/IEq/r
-         HFXWNL7aL/X8QSt71+GjyTW5cZrz6ghaN0IENM6O41OWKe4GTzVVARJCQuiFLtmCof
-         AJ1NWyB4dfDgVuZ2vbgAm89senGrw1IFO6lnVyO4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.56.174]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LmxtE-1hmAVX0PTo-00h5Aa; Sun, 27
- Oct 2019 20:55:51 +0100
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <20191027173234.6449-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] drm/tinydrm: Fix memroy leak in hx8357d_probe
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        dri-devel@lists.freedesktop.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <85cb5ed9-66ba-3461-dd56-017b89ba70ce@web.de>
-Date:   Sun, 27 Oct 2019 20:55:48 +0100
+        Sun, 27 Oct 2019 15:59:28 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52803 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfJ0T71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 15:59:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p21so7296264wmg.2;
+        Sun, 27 Oct 2019 12:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=VKd7uUdXkNBUHQDeXQk53nwNyJLXkfZWDjObuvC3Axk=;
+        b=uoDKsyHygMSAlr790+tMA/Wyh+OUA5Yx1pgPoY0/0E33/gT/ghBSHdyaZOCrTtplZ3
+         vCSL0DJNkRHH6eTi3xdnyjoX1Y6ojoPPs5arCoSOObGE1WUGDudrJcsPvYZuHhQkRXRN
+         lKEiMP05NRXu8YGOvEdXoVTAfN9Kxh4HPpLl4nEQSVA0yMVGKzrbcjKmqvABd3Xx4ovP
+         m8XFfElVl5D4uFNQGdxna6RFeS/e7Wa0mHcv+KWL4g+B67RwWe7wtifjfGItqIHZvltJ
+         Fnh0zzqXIi0VWhliFdl5aVc1UT9nMiB/9nGE055vUimY8j6mzcEUnT624SX503KPZdAJ
+         dOIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=VKd7uUdXkNBUHQDeXQk53nwNyJLXkfZWDjObuvC3Axk=;
+        b=H+/mbLyiMNZ3HV1/h101XddikXnATBycILTxSul19NVNAb/vxCYwo2LRFLbFTWRfHG
+         xmxql3JuO7cgOgAiBE2F6wjnUpw+AHZr+Rr/a/PL75XTsOAH4uaz8YdVhhFXfQmV7sIg
+         Q8x7oZfD7hCrXNwKpLGgSjC+CwceWTl7ol2nZvINFHbCZQ3BYqtm2p/wH9wXNI9mqe/E
+         nnpAuOWLVHLrO6b2gtaZASlSZcf72LwXApAzG2DecPHNbLjHF8lCrAuaQuw9qgwJEvMg
+         O9cYGBe6cv1oRfbnKvIcE2BLmDHYlq7ubZrP9MPhXH56K8Xr85/zflTed3f+pjYhJqzo
+         E3tA==
+X-Gm-Message-State: APjAAAXvDumzy9VPR9Q6QF95jADshAM2q5oh+PNyIrALjVFIbmTnFQ8O
+        DK+PLGHZYa/JgiJsedup94MnLRe1
+X-Google-Smtp-Source: APXvYqzGkjFfG36XjBfTb/ypm4dB8+miuWXHAIrO23veBSZ4HMqYyrmJa8LI+E3EjojypcpVFNkS2w==
+X-Received: by 2002:a1c:234c:: with SMTP id j73mr13416640wmj.51.1572206362179;
+        Sun, 27 Oct 2019 12:59:22 -0700 (PDT)
+Received: from [192.168.43.222] ([109.126.132.16])
+        by smtp.gmail.com with ESMTPSA id z9sm9772435wrv.1.2019.10.27.12.59.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Oct 2019 12:59:21 -0700 (PDT)
+Subject: Re: [PATCH 0/2][for-next] cleanup submission path
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1572189860.git.asml.silence@gmail.com>
+ <666ed447-ba8f-29e7-237f-de8044aa63ea@kernel.dk>
+ <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
+ <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
+ <d39a878f-9dac-1457-6bba-01afc6268a84@kernel.dk>
+ <57db9960-0b31-9f40-c13b-1db6dcc88920@gmail.com>
+ <02a25d12-1f44-de18-f233-b5421c608469@kernel.dk>
+ <63f93f8a-4207-3ac4-a301-4907882009c9@gmail.com>
+ <728dec9c-465c-2341-d7b5-929a50400e9c@kernel.dk>
+ <3b8b84d0-cde2-6bb0-c903-a1d71f9b83e2@gmail.com>
+ <3957148b-0dac-a621-8f12-5d2d45557e24@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <1e0ae1a6-6b8b-a78e-8ec0-fb7aa5972d00@gmail.com>
+Date:   Sun, 27 Oct 2019 22:59:13 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191027173234.6449-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:V7MW5M8iAruKle95RqhSpVNYxM9qFqhKA4pmswLNyMDELGYxjx2
- vcslc4aHozqIpNn9WRRABQUfhBvsqUyFfQt2tWvRy3VfeMY3mESF+1I+7QRXu9DqW7ifDu4
- LtylbbROrEJFOHAm3I3YtR2dUL87ISo5a5N042i2cOCIPiu3hskW2qzCbvrhWAmLK1aMBma
- aZB/6u+bLCo/OGWaEL5+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lnrwGZG8EFg=:EoMYcfpeB0JPMDFX4gA8Sg
- moZvoe8BLN7e1FyVYeaozS6VOCup6q8cnrKKuOf1lgmqFZxIHXfU5QDB3x6F7mn7XJqmoCObO
- XbR8SwcIQWN68OvT3P4gesbbJTA5VROQu7AsR56G4jIYYSPvmHoSNTiWtBy11kRQZ/PWN8f5a
- kSjE3P1rZCjjl8ZC6nr4YBG0ZDzksj1sEdtB++DSPZmkEYOzg6sTlWbwVED5IOO2xck5PvYYW
- AjzQBvik3gFv+uF3/q8f2zJHQJdGQ/1uU3fY1gjVefNjR0r/I9iAwG8JTIF+t+dosC0YVqtWY
- jNOjV4gCB0ScYC1De66Mca1NWtcYzqmWP8WCJ3PmzbDI1ccS4xfRjUvo9TrQ/LssrEoly+kJh
- SFN4BmJyQBnVykdfZprk4YIuzcjZuiud6F0qUppnrgWRE+cayIPX/CbtOjONeC8LPhuDVoSjD
- najC84MbQphp/W5ycTLoeg95uP5FyIloKYYvVtsfb8HizoljK7Y3qCZ6AtRPU90Dv8+fPEvzm
- pVftWrHGwhlpZcn5grCSnFNxQHtrN/jySz/B1gb8+MA3hqhMZmQIJK3Tk0eFq1ckrMdJBxwya
- ME49rXbrvCZtHGHObpNxL9NNLFvceZYhUudRmDesR3s3s0OfOGXjt4bXif3qy4fzMOEgR3g/V
- nfbQI89B+Vl4d/EMoW42ZhvHJvUVo6JyHuDez2L08m2kiHnvaldaZn+BvjFkunZRlETKlQB7X
- OtmMw79XfIaRP9V0VOi82rzJQ+ivpQhNyaY57mmBHKG0FygPq+QkiRp08lwTeK3DbGvNLUXgG
- 32iO174qK+RyaQ1dsa3ZovzzO4UqyA2EUw+1KanyXYIopB8WLDbXO3eYT+8zPikMP6shx6ST2
- S6Uc2rbCsncEVqrAkABswMcE1R4QgUEYf97LtPe16koRk2Z5fqnZtwVJP9AoimROb+9v8LK+e
- HFL7/1pr3W+W2OT/Auz9PUozEGOn6mAz4f2Qp/SipXSBMr78NdBLNSxarmUK+uNawgS8lMhE2
- cgh6aDPQzhg1iD6uxE4xDaQ0VEqCernhtG88vFtTYraEoLUISMtAsmwTVgJBTJvFFGDgXhvX9
- J9umttKUYl21gs2GfX20f1oD3W0O6Qq6a2wmGXUJngVH5sL2vUJ/bcyIsauVRoKDAhbEQ1+0O
- Az5wfOEgAGRwlS3V4sYnBUEcaEPyhBmtQt1U5hqZKjqxYtf9jIi+FS67q66DwMc/tJyhuncRB
- 4mw5gdK9RtfCezryCOuGS2T2QAp5+5T0qyWbSG9BpzmpYmkeBIKev306pOFI=
+In-Reply-To: <3957148b-0dac-a621-8f12-5d2d45557e24@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="GObgO3sOgC8ah8HnT4oBuFA7qjQujGt2y"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/drivers/gpu/drm/tiny/hx8357d.c
-> @@ -232,44 +232,49 @@ static int hx8357d_probe(struct spi_device *spi)
-=E2=80=A6
-> +		goto free_dbidev;
->
->  	spi_set_drvdata(spi, drm);
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GObgO3sOgC8ah8HnT4oBuFA7qjQujGt2y
+Content-Type: multipart/mixed; boundary="98fVirafzizKudZWDtPLXNCuHEz27QghD";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <1e0ae1a6-6b8b-a78e-8ec0-fb7aa5972d00@gmail.com>
+Subject: Re: [PATCH 0/2][for-next] cleanup submission path
+References: <cover.1572189860.git.asml.silence@gmail.com>
+ <666ed447-ba8f-29e7-237f-de8044aa63ea@kernel.dk>
+ <5ec9bd14-d8f2-32e6-7f25-0ca7256c408a@gmail.com>
+ <aac65fe2-6c51-3baf-eee7-af5a8f633bf2@kernel.dk>
+ <d39a878f-9dac-1457-6bba-01afc6268a84@kernel.dk>
+ <57db9960-0b31-9f40-c13b-1db6dcc88920@gmail.com>
+ <02a25d12-1f44-de18-f233-b5421c608469@kernel.dk>
+ <63f93f8a-4207-3ac4-a301-4907882009c9@gmail.com>
+ <728dec9c-465c-2341-d7b5-929a50400e9c@kernel.dk>
+ <3b8b84d0-cde2-6bb0-c903-a1d71f9b83e2@gmail.com>
+ <3957148b-0dac-a621-8f12-5d2d45557e24@kernel.dk>
+In-Reply-To: <3957148b-0dac-a621-8f12-5d2d45557e24@kernel.dk>
 
-I got another development concern here.
-Can it make sense to pass the variable =E2=80=9Cdbidev=E2=80=9D instead of=
- =E2=80=9Cdrm=E2=80=9D?
+--98fVirafzizKudZWDtPLXNCuHEz27QghD
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 27/10/2019 22:51, Jens Axboe wrote:
+> On 10/27/19 1:17 PM, Pavel Begunkov wrote:
+>> On 27/10/2019 22:02, Jens Axboe wrote:
+>>> On 10/27/19 12:56 PM, Pavel Begunkov wrote:
+>>>> On 27/10/2019 20:26, Jens Axboe wrote:
+>>>>> On 10/27/19 11:19 AM, Pavel Begunkov wrote:
+>>>>>> On 27/10/2019 19:56, Jens Axboe wrote:
+>>>>>>> On 10/27/19 10:49 AM, Jens Axboe wrote:
+>>>>>>>> On 10/27/19 10:44 AM, Pavel Begunkov wrote:
+>>>>>>>>> On 27/10/2019 19:32, Jens Axboe wrote:
+>>>>>>>>>> On 10/27/19 9:35 AM, Pavel Begunkov wrote:
+>>>>>>>>>>> A small cleanup of very similar but diverged io_submit_sqes()=
+ and
+>>>>>>>>>>> io_ring_submit()
+>>>>>>>>>>>
+>>>>>>>>>>> Pavel Begunkov (2):
+>>>>>>>>>>>         io_uring: handle mm_fault outside of submission
+>>>>>>>>>>>         io_uring: merge io_submit_sqes and io_ring_submit
+>>>>>>>>>>>
+>>>>>>>>>>>        fs/io_uring.c | 116 ++++++++++++++--------------------=
+----------------
+>>>>>>>>>>>        1 file changed, 33 insertions(+), 83 deletions(-)
+>>>>>>>>>>
+>>>>>>>>>> I like the cleanups here, but one thing that seems off is the
+>>>>>>>>>> assumption that io_sq_thread() always needs to grab the mm. If=
+
+>>>>>>>>>> the sqes processed are just READ/WRITE_FIXED, then it never ne=
+eds
+>>>>>>>>>> to grab the mm.
+>>>>>>>>>> Yeah, we removed it to fix bugs. Personally, I think it would =
+be
+>>>>>>>>> clearer to do lazy grabbing conditionally, rather than have two=
+
+>>>>>>>>> functions. And in this case it's easier to do after merging.
+>>>>>>>>>
+>>>>>>>>> Do you prefer to return it back first?
+>>>>>>>>
+>>>>>>>> Ah I see, no I don't care about that.
+>>>>>>>
+>>>>>>> OK, looked at the post-patches state. It's still not correct. You=
+ are
+>>>>>>> grabbing the mm from io_sq_thread() unconditionally. We should no=
+t do
+>>>>>>> that, only if the sqes we need to submit need mm context.
+>>>>>>>
+>>>>>> That's what my question to the fix was about :)
+>>>>>> 1. Then, what the case it could fail?
+>>>>>> 2. Is it ok to hold it while polling? It could keep it for quite
+>>>>>> a long time if host is swift, e.g. submit->poll->submit->poll-> ..=
+=2E
+>>>>>>
+>>>>>> Anyway, I will add it back and resend the patchset.
+>>>>>
+>>>>> If possible in a simple way, I'd prefer if we do it as a prep patch=
+ and
+>>>>> then queue that up for 5.4 since we now lost that optimization.  Th=
+en
+>>>>> layer the other 2 on top of that, since I'll just rebase the 5.5 st=
+uff
+>>>>> on top of that.
+>>>>>
+>>>>> If not trivially possible for 5.4, then we'll just have to leave wi=
+th it
+>>>>> in that release. For that case, you can fold the change in with the=
+se
+>>>>> two patches.
+>>>>>
+>>>> Hmm, what's the semantics? I think we should fail only those who nee=
+d
+>>>> mm, but can't get it. The alternative is to fail all subsequent afte=
+r
+>>>> the first mm_fault.
+>>>
+>>> For the sqthread setup, there's no notion of "do this many". It just
+>>> grabs whatever it can and issues it. This means that the mm assign
+>>> is really per-sqe. What we did before, with the batching, just optimi=
+zed
+>>> it so we'd only grab it for one batch IFF at least one sqe in that ba=
+tch
+>>> needed the mm.
+>>>
+>>> Since you've killed the batching, I think the logic should be somethi=
+ng
+>>> ala:
+>>>
+>>> if (io_sqe_needs_user(sqe) && !cur_mm)) {
+>>> 	if (already_attempted_mmget_and_failed_ {
+>>> 		-EFAULT end sqe
+>>> 	} else {
+>>> 		do mm_get and mmuse dance
+>>> 	}
+>>> }
+>>>
+>>> Hence if the sqe doesn't need the mm, doesn't matter if we previously=
+
+>>> failed. If we need the mm and previously failed, -EFAULT.
+>>>
+>> That makes sense, but a bit hard to implement honoring links and drain=
+s
+>=20
+> If it becomes too complicated or convoluted, just drop it. It's not
+> worth spending that much time on.
+>=20
+I've already done it more or less elegantly, just prefer to test commits
+before sending.
+
+--=20
+Yours sincerely,
+Pavel Begunkov
 
 
-=E2=80=A6
-> +free_dbidev:
-> +	kfree(dbidev);
-=E2=80=A6
+--98fVirafzizKudZWDtPLXNCuHEz27QghD--
 
-I became curious if there is a need for such a memory release at another p=
-lace.
-How do you think about to add this function call also to the implementatio=
-n
-of the function =E2=80=9Chx8357d_remove=E2=80=9D?
+--GObgO3sOgC8ah8HnT4oBuFA7qjQujGt2y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Regards,
-Markus
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl219xUACgkQWt5b1Glr
++6X0sA//V+BYQKiamHWh1HPokONtr05Z/HWGZ0EgdLJQ6qtvgVEZgzgfCFBKgfpy
+F04f4ok66I881D5iA7sRWP5lCDi/+mVzGPUPkG05MSwfR3UXEi3uryPcbCWCdFvi
+9mZjET8cV2WfBesN+Ag5rVIw0EK840ngMoIXCA+78zNzbJ6zzU92x7vIodpb+SKw
+hULhcatfUR0PmkGq1u+bs3AWC9NC6rhMGD2H94XFVbSw/Q6K9EX+e0Th/ylSy5uG
+RAI4Ft6c6mYY7EgWVnwaBr+zwCZdFDQaj6HdFr75r1crHklRtwDdI7hC4IRwUXK3
+z0uW8TTb45GCpaLF33RrdClCTyhJeyARBdrmHOxFQlArUNojpT1j3pnH9hEIntBE
+v9HHuBPyyTlNGiUPcxtyNXfkNCiPaVcsxoI6/5My7Znj36hdSSLVrqhpkL0g4QVP
+3e9SeQuenn7FxFhWgA9XDfgM3MBy6UQ22x7P8EG3LH37WZOM++Dc//zDPac/ipo4
+jxAfpWlUGWme3GSi+m7DMduYdwRMCHuZMrR4HAO1PO+uMW2mheH5bp1BEn2CCZpb
+ksHakwY6ZQz26agfd4L6IBeGjMWHdA//nJxmLyVupYhBmBKYm6RlDUQQf/FZJGPM
+ibDKaG5NJKWVpK6pDUL9/0XSHSNGWc0YxhJXyOMd1PlNez5BHss=
+=QojS
+-----END PGP SIGNATURE-----
+
+--GObgO3sOgC8ah8HnT4oBuFA7qjQujGt2y--
