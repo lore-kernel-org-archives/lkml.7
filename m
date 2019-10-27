@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3F9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D6ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F55B205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EADE208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212245;
-	bh=jaFWRWvDjERps60GVLlTLwEplN6HE8jKwC+u84gwQCo=;
+	s=default; t=1572212254;
+	bh=OCtxOBfUNqUfdyo4QTi6W5P3JVdilBukGXrbpspuus8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jecj2A8xs45z4r6mrQBppBn2QzLxsNVckpxejINnR8a63Lle3P88W9j/YjzYokAiS
-	 dLAKa9ogAGnh1kWXUSrugapSsia/LjaivhjtdzLCoLn8UW7LNCYESS7Oyhkt/q410W
-	 +aY1DXM2YgZXbCB9tgHM/CaJq+umpOAHzHmocFpw=
+	b=Szbj5xDkxrlQBCfHbat+ZGI4AGDywQDeepkQ/bnCM3b8Vx4IV1RNfhSvz5TBSC/Zl
+	 E9BEhxefaF6C5jszeNuHSxKlL5Uyz8vpmXf6HdWYq5CWhntqXwu5c5hk04qTy2SvMz
+	 wMwp/WPZ0gp+AL7HL9lRjwJSWDXWOZ0u0HOpN4k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfJ0VhY (ORCPT
+        id S1727458AbfJ0VFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbfJ0VF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:27 -0400
+        id S1728723AbfJ0VE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:04:58 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C256208C0;
-        Sun, 27 Oct 2019 21:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744D320B7C;
+        Sun, 27 Oct 2019 21:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210326;
-        bh=jaFWRWvDjERps60GVLlTLwEplN6HE8jKwC+u84gwQCo=;
+        s=default; t=1572210298;
+        bh=OCtxOBfUNqUfdyo4QTi6W5P3JVdilBukGXrbpspuus8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S5Q5hBXDSPdrK9yZGmDqNVuHZdlzLUIeLh3Ggp1HXWqtH0FHipObs4B43N2f08FXp
-         2+4LuvGRShhNlWrklpXUUZDf3c6w8XhchvyXnBtCSyCutGqQCiaCi3iAv2wuiXt2Mm
-         ZEsgov/8DNIE5TwMTLRoEMU8x5Dnlq+Qn58kLt5o=
+        b=xCtejVnq2C+HbpJ58dcLWiD/q0k2kFn93JqT4iXn1+Nu8ZRfYvJ4V/efs1Dlx44/f
+         yb8/lAYbl1eEP1CKqYGbaCtsILfunfAgQqN4aHE9421dwZiGO4RkhNFxBZHocGU+rr
+         WdTmn82A7n0B2bWxX+BP0NdhvRBJeKGlmBmsLDlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 26/49] USB: serial: ti_usb_3410_5052: fix port-close races
-Date:   Sun, 27 Oct 2019 22:01:04 +0100
-Message-Id: <20191027203139.262412564@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 17/49] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
+Date:   Sun, 27 Oct 2019 22:00:55 +0100
+Message-Id: <20191027203131.963597767@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -58,53 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 6f1d1dc8d540a9aa6e39b9cb86d3a67bbc1c8d8d upstream.
+[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
 
-Fix races between closing a port and opening or closing another port on
-the same device which could lead to a failure to start or stop the
-shared interrupt URB. The latter could potentially cause a
-use-after-free or worse in the completion handler on driver unbind.
+The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
+became 6 for GENET v4 and above, account for that difference.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/ti_usb_3410_5052.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h |    1 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   |    6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/ti_usb_3410_5052.c
-+++ b/drivers/usb/serial/ti_usb_3410_5052.c
-@@ -778,7 +778,6 @@ static void ti_close(struct usb_serial_p
- 	struct ti_port *tport;
- 	int port_number;
- 	int status;
--	int do_unlock;
- 	unsigned long flags;
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
+@@ -362,6 +362,7 @@ struct bcmgenet_mib_counters {
+ #define  EXT_ENERGY_DET_MASK		(1 << 12)
  
- 	tdev = usb_get_serial_data(port->serial);
-@@ -802,16 +801,13 @@ static void ti_close(struct usb_serial_p
- 			"%s - cannot send close port command, %d\n"
- 							, __func__, status);
- 
--	/* if mutex_lock is interrupted, continue anyway */
--	do_unlock = !mutex_lock_interruptible(&tdev->td_open_close_lock);
-+	mutex_lock(&tdev->td_open_close_lock);
- 	--tport->tp_tdev->td_open_port_count;
--	if (tport->tp_tdev->td_open_port_count <= 0) {
-+	if (tport->tp_tdev->td_open_port_count == 0) {
- 		/* last port is closed, shut down interrupt urb */
- 		usb_kill_urb(port->serial->port[0]->interrupt_in_urb);
--		tport->tp_tdev->td_open_port_count = 0;
+ #define EXT_RGMII_OOB_CTRL		0x0C
++#define  RGMII_MODE_EN_V123		(1 << 0)
+ #define  RGMII_LINK			(1 << 4)
+ #define  OOB_DISABLE			(1 << 5)
+ #define  RGMII_MODE_EN			(1 << 6)
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -328,7 +328,11 @@ int bcmgenet_mii_config(struct net_devic
+ 	 */
+ 	if (priv->ext_phy) {
+ 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
+-		reg |= RGMII_MODE_EN | id_mode_dis;
++		reg |= id_mode_dis;
++		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
++			reg |= RGMII_MODE_EN_V123;
++		else
++			reg |= RGMII_MODE_EN;
+ 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
  	}
--	if (do_unlock)
--		mutex_unlock(&tdev->td_open_close_lock);
-+	mutex_unlock(&tdev->td_open_close_lock);
- }
- 
  
 
 
