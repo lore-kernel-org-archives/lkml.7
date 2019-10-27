@@ -2,83 +2,138 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90555CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4860CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659F321850
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A37B21850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dUZFeTqf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpzaTN65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfJ0PWa (ORCPT
+        id S1727303AbfJ0PXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 11:22:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43966 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfJ0PWa (ORCPT
+        Sun, 27 Oct 2019 11:23:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42272 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfJ0PX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 11:22:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ABDhaHUlk58M0GS8x0OMrJzxXgr2v5RmyRmLK7Waq+g=; b=dUZFeTqfxrYApphqMY5veHBsj
-        A+RBT+sV9JAtjLVJ+WGOvwNXNw/oX5Nmdvk/AvVWpQtUikMzhdcFtLs1khOn6BULZkyos9EyCedJ5
-        hnt6JriZauG8vb9KgHx/w5MlX/0VsPY2qith2hEChaeTwdY1U4gqTqvfXNegsgqDSyxL508wE6OTp
-        rSaIg8nxkLmtsXAZhqw2s7U224aDC3inBSdoJfjj10LxclpiVy3dsmRybQQ2cjBiPNh9YfQem1O52
-        i64kZVSne/xbFmaWrYMJPXP1/NB8tION2wFu8JyUehQlS7P6++7uDvnUPpIJ80aCkyA7RRWHTg8rb
-        VpLLc/GSg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iOkN5-0005Zc-Hn; Sun, 27 Oct 2019 15:22:23 +0000
-Date:   Sun, 27 Oct 2019 08:22:23 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 11/10] pipe: Add fsync() support [ver #2]
-Message-ID: <20191027152223.GA21194@infradead.org>
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <30394.1571936252@warthog.procyon.org.uk>
+        Sun, 27 Oct 2019 11:23:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r1so7274644wrs.9;
+        Sun, 27 Oct 2019 08:23:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6igW15FTNZ7FtCx0WIgyCMA7DFyAcrqLMXtjwXRNmLA=;
+        b=IpzaTN653x/VMl1PRi17h+qZEKf0SkYms86/7yjWeyCLKorH0aA4rIJZCOEtoKR7hs
+         zXrChV5UqjC6nwsIt8LeW3HgC7I/FAAQwcftiLpA88QJp7Dt/j/0XSsWXC6/kffekQ33
+         b4bHt4zO7n/L0w6m7irP8CA50P0yGXoyQTigACshScNaWvf65llgJp1MYokVU1l5wKzQ
+         td4WcUNEzvSZyU9tgSrCNxod3e6IJg45eGAt9p5cJtn/KaRUyr5/IKeMxs2gKQHjoyfC
+         tE/WhkzB9IFfyFXbE+k0F3GHieLdiFZSKc/eu639a1+DK/RhB3AJMyZFcpykePl+CuFz
+         A5ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=6igW15FTNZ7FtCx0WIgyCMA7DFyAcrqLMXtjwXRNmLA=;
+        b=a7I6mdG2Ii8T6JZwmVObw1kt8jpLpX+AmEVyfNmbxwPkTPuDHanA6GriDwvt9s6A2e
+         DoJrRKubbGprhe7Wcita7Dc18RVoH8E0y2Wx7KPK4ZHYv1efbIh34nWOpwPBBs/dVbfc
+         ao/T8xGLQdxXgbWyCsIoUW/XEE+MkC8uYhIJngvU4g1HuG4ch9+lx8w0Mg1EPHOWfoTt
+         AWaJmOuNjPXhmpway7XEYLaUK1AF/lVvmJc8AlWu341x7FuF+MJibEHUBcYHArnSor74
+         QvPqJlPJ3mvxd0YGtL3uLX2Vcf0gfJEW/oYjrTqSm/SxUIgMEkt8VRDXiKsmWIbW1WMT
+         pXNQ==
+X-Gm-Message-State: APjAAAU/oWc0kr74xNqEAkyJXGgjQ/2JPp3+tO21+5rnEyvfeH31E52B
+        6qVCYummTVXdEyeoOQvsZDL8frQt
+X-Google-Smtp-Source: APXvYqyUIc8eYKFqH39Ikktps0DnWgYsp2ek8Y5cJ/Z2DcRo5ITOuExB++Squxhm8XxeSkzWItMuWw==
+X-Received: by 2002:adf:f4cb:: with SMTP id h11mr12546506wrp.260.1572189806902;
+        Sun, 27 Oct 2019 08:23:26 -0700 (PDT)
+Received: from localhost.localdomain (mob-2-43-145-251.net.vodafone.it. [2.43.145.251])
+        by smtp.gmail.com with ESMTPSA id z15sm8490315wrr.19.2019.10.27.08.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 08:23:26 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH] KVM: vmx, svm: always run with EFER.NXE=1 when shadow paging is active
+Date:   Sun, 27 Oct 2019 16:23:23 +0100
+Message-Id: <20191027152323.24326-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30394.1571936252@warthog.procyon.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 05:57:32PM +0100, David Howells wrote:
-> pipe: Add fsync() support
-> 
-> The keyrings testsuite needs the ability to wait for all the outstanding
-> notifications in the queue to have been processed so that it can then go
-> through them to find out whether the notifications it expected have been
-> emitted.
-> 
-> Implement fsync() support for pipes to provide this.  The tailmost buffer
-> at the point of calling is marked and fsync adds itself to the list of
-> waiters, noting the tail position to be waited for and marking the buffer
-> as no longer mergeable.  Then when the buffer is consumed, if the flag is
-> set, any matching waiters are woken up.
+VMX already does so if the host has SMEP, in order to support the combination of
+CR0.WP=1 and CR4.SMEP=1.  However, it is perfectly safe to always do so, and in
+fact VMX already ends up running with EFER.NXE=1 on old processors that lack the
+"load EFER" controls, because it may help avoiding a slow MSR write.  Removing
+all the conditionals simplifies the code.
 
-I am _really_ worried about overloading fsync for this behavior.  fsync
-hasn't done anything for 50 years, and suddenly adding any action
-is not helpful.  If you can't use FIONREAD please add a new ioctls
-instead, and document it properly.
+SVM does not have similar code, but it should since recent AMD processors do
+support SMEP.  So this patch also makes the code for the two vendors more similar
+while fixing NPT=0, CR0.WP=1 and CR4.SMEP=1 on AMD processors.
+
+Cc: stable@vger.kernel.org
+Cc: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/svm.c     | 10 ++++++++--
+ arch/x86/kvm/vmx/vmx.c | 14 +++-----------
+ 2 files changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index b6feb6a11a8d..2c452293c7cc 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -732,8 +732,14 @@ static int get_npt_level(struct kvm_vcpu *vcpu)
+ static void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+ 	vcpu->arch.efer = efer;
+-	if (!npt_enabled && !(efer & EFER_LMA))
+-		efer &= ~EFER_LME;
++
++	if (!npt_enabled) {
++		/* Shadow paging assumes NX to be available.  */
++		efer |= EFER_NX;
++
++		if (!(efer & EFER_LMA))
++			efer &= ~EFER_LME;
++	}
+ 
+ 	to_svm(vcpu)->vmcb->save.efer = efer | EFER_SVME;
+ 	mark_dirty(to_svm(vcpu)->vmcb, VMCB_CR);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 2a2ba277c676..e191d41afb34 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -896,17 +896,9 @@ static bool update_transition_efer(struct vcpu_vmx *vmx, int efer_offset)
+ 	u64 guest_efer = vmx->vcpu.arch.efer;
+ 	u64 ignore_bits = 0;
+ 
+-	if (!enable_ept) {
+-		/*
+-		 * NX is needed to handle CR0.WP=1, CR4.SMEP=1.  Testing
+-		 * host CPUID is more efficient than testing guest CPUID
+-		 * or CR4.  Host SMEP is anyway a requirement for guest SMEP.
+-		 */
+-		if (boot_cpu_has(X86_FEATURE_SMEP))
+-			guest_efer |= EFER_NX;
+-		else if (!(guest_efer & EFER_NX))
+-			ignore_bits |= EFER_NX;
+-	}
++	/* Shadow paging assumes NX to be available.  */
++	if (!enable_ept)
++		guest_efer |= EFER_NX;
+ 
+ 	/*
+ 	 * LMA and LME handled by hardware; SCE meaningless outside long mode.
+-- 
+2.21.0
+
