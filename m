@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FD7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D36BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA9720873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFBC2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210356;
-	bh=ssAzw6BWhGL2G6UWNKMpXMhinAanx/MjgAnixJgzSCs=;
+	s=default; t=1572210359;
+	bh=E1p83cVGBh/VObNOpqqftqKRBwPpNj8M5LZKNYhZfR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGdtDo47gs0jKRT/N/8zwrv/aszqppyJ5+kjhP48YfcxwRCdrPXwH91HTxlevkOs2
-	 weRcEgjv7aqAVZzu8uwlnEfw97LCph8IYCHiEfsOPzPnRMvgeBUQjGKEmKVowgrlJA
-	 P2vJvUOrcvuBvuxrbUbwB1CodVdvqikeQu7NQifY=
+	b=aZZNv0hk+i6+LA+O51tWYd9c41hjUCWLXIarwDAUowdGQmKiIegxYtS3gUj/odjHY
+	 lMYCkHVpVXsb+J0I2x/ZHdZJmXcmUMtrtYwsTFOroN//xGuuIcskn1MQtehWz9SVyf
+	 4x9g3pZfmYJm6kGak1OJokcNjG0D4lFbKm752Zz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfJ0VFy (ORCPT
+        id S1728389AbfJ0VF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:05:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51690 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbfJ0VFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:50 -0400
+        id S1727455AbfJ0VFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:52 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3666E2064A;
-        Sun, 27 Oct 2019 21:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 410A22064A;
+        Sun, 27 Oct 2019 21:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210348;
-        bh=ssAzw6BWhGL2G6UWNKMpXMhinAanx/MjgAnixJgzSCs=;
+        s=default; t=1572210351;
+        bh=E1p83cVGBh/VObNOpqqftqKRBwPpNj8M5LZKNYhZfR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aW8RnGzonDuxSUefqEYwRAxnpDw8lDPfJHye5banmbXcTm/MPmSOG7O2PSJZgVwWD
-         hMhrbnp9cUdZVV7jUudeb/Li3visYDCoHKNdiHtC5l4ABFYW5efZ1lu/9xcm3HcANm
-         Cx1lvieGnO6s4yblucQTg6VSdW+4wf8C/rRREGYU=
+        b=lvJKi1elFRAEMngVuB8ImAKXjcyUcKpq2mbxyM3fwrTDMyOKLl3yrv2nrkXsiKWjB
+         5Q4ijinWjtBNvlhgUKfXaE0EKiVn1yGDhXPfPdIRq1ezesfJ2wnzlURbI6IeWDyM4U
+         e1UKyxPwSu41B1LtapgovOl7jv61AWjeQsr8z/3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 05/49] ARM: dts: am4372: Set memory bandwidth limit for DISPC
-Date:   Sun, 27 Oct 2019 22:00:43 +0100
-Message-Id: <20191027203123.017822699@linuxfoundation.org>
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 06/49] MIPS: dts: ar9331: fix interrupt-controller size
+Date:   Sun, 27 Oct 2019 22:00:44 +0100
+Message-Id: <20191027203123.338204502@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -61,37 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit f90ec6cdf674248dcad85bf9af6e064bf472b841 ]
+[ Upstream commit 0889d07f3e4b171c453b2aaf2b257f9074cdf624 ]
 
-Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
-avoid underflow errors due to the bandwidth needs of higher resolutions.
+It is two registers each of 4 byte.
 
-am43xx can not provide enough bandwidth to DISPC to correctly handle
-'high' resolutions.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am4372.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index c9c9a47446e8e..56224aa5e83ee 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -1117,6 +1117,8 @@
- 				ti,hwmods = "dss_dispc";
- 				clocks = <&disp_clk>;
- 				clock-names = "fck";
-+
-+				max-memory-bandwidth = <230000000>;
- 			};
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index cf47ed4d85694..1fda24fc18606 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -98,7 +98,7 @@
  
- 			rfbi: rfbi@4832a800 {
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
+ 
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
 -- 
 2.20.1
 
