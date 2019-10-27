@@ -2,145 +2,267 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAA9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025BBCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895E421783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE054208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210227;
-	bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGMV4AZ/gS4w0JfS2/b8lEOLo8H3W+pEb69JysYZGYj0V3ohF60K8Vfi11+l5ZQBr
-	 SMSEDOH1NDT+hxTpAsbeaSCsqDI2O+t5sBbwSNTjuBy0pHfC+g1y3joFuG4BRmqlRz
-	 gzqME7OflXT7WwhbN7Gvkd9ZILujsEo8fUh6Hxzw=
+	s=default; t=1572210229;
+	bh=u5RG92b4Q/dlgOtWm5/mKfmwRpm7C73H80D+iV1C9R8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0zSgCP44WFw8f2uSOhKwsO+Pr+Wms0qiyozQAHUcktnzpDcWoKC1lZ6FJcaRDF85C
+	 5APDu6ideWxOztZS8Xbcu9uflod9YRH2FuKvsYlG7KmRjR+Xun1yaEr2uHB73VUb9K
+	 AXfnHLXh+eomKnfPLXicfUh1PkC6L+kqj/noSFkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbfJ0VDq (ORCPT
+        id S1728448AbfJ0VDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49048 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbfJ0VDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:03:43 -0400
+        id S1728427AbfJ0VDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:03:46 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0892064A;
-        Sun, 27 Oct 2019 21:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A55C720B7C;
+        Sun, 27 Oct 2019 21:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210222;
-        bh=7//GOyKEzo7xrJIfyzR+9RrVrjKnqDbQZAYgTiMrUSY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PMFDrB8TX2V358/PWkdLH9c/u8RS+k70V0Q2SGTDk6BeEUxBIQao/BZejW4fQ8Ud1
-         Mt3yRqfTYsmonh3So6pe0jwCdnk4FAxumxUnRb8yvjIndG6INzO5CkgieNnGEDxkFA
-         NofOtwYnzYLZLa/G4FzPagdjUWgrHm3Lz5RPHtDM=
+        s=default; t=1572210225;
+        bh=u5RG92b4Q/dlgOtWm5/mKfmwRpm7C73H80D+iV1C9R8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xKlE9yK5dUpyJLay2JcpdTGKXfsgvM/6Z917Mnh7gVf3rcp668wE3FfJUreqMFRHf
+         7Zo2xQPhEdp9VOUDySRTBVZ0qKzBzpW69V5kx2pC71dsZIA60Lnm7pYf1v7Wd/iDb6
+         3pWKGkpWidn7G7wQfsk86KrutPTwAuZBM+m/81Xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/41] namespace: fix namespace.pl script to support relative paths
-Date:   Sun, 27 Oct 2019 22:00:47 +0100
-Message-Id: <20191027203106.620485889@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 00/41] 4.4.198-stable review
+Date:   Sun, 27 Oct 2019 22:00:38 +0100
+Message-Id: <20191027203056.220821342@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
-References: <20191027203056.220821342@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.198-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.198-rc1
+X-KernelTest-Deadline: 2019-10-29T20:31+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+This is the start of the stable review cycle for the 4.4.198 release.
+There are 41 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 82fdd12b95727640c9a8233c09d602e4518e71f7 ]
+Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+Anything received after that time might be too late.
 
-The namespace.pl script does not work properly if objtree is not set to
-an absolute path. The do_nm function is run from within the find
-function, which changes directories.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.198-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+and the diffstat can be found below.
 
-Because of this, appending objtree, $File::Find::dir, and $source, will
-return a path which is not valid from the current directory.
+thanks,
 
-This used to work when objtree was set to an absolute path when using
-"make namespacecheck". It appears to have not worked when calling
-./scripts/namespace.pl directly.
+greg k-h
 
-This behavior was changed in 7e1c04779efd ("kbuild: Use relative path
-for $(objtree)", 2014-05-14)
+-------------
+Pseudo-Shortlog of commits:
 
-Rather than fixing the Makefile to set objtree to an absolute path, just
-fix namespace.pl to work when srctree and objtree are relative. Also fix
-the script to use an absolute path for these by default.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.4.198-rc1
 
-Use the File::Spec module for this purpose. It's been part of perl
-5 since 5.005.
+Greg KH <gregkh@linuxfoundation.org>
+    RDMA/cxgb4: Do not dma memory off of the stack
 
-The curdir() function is used to get the current directory when the
-objtree and srctree aren't set in the environment.
+Kees Cook <keescook@chromium.org>
+    net: sched: Fix memory exposure from short TCA_U32_SEL
 
-rel2abs() is used to convert possibly relative objtree and srctree
-environment variables to absolute paths.
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    PCI: PM: Fix pci_power_up()
 
-Finally, the catfile() function is used instead of string appending
-paths together, since this is more robust when joining paths together.
+Juergen Gross <jgross@suse.com>
+    xen/netback: fix error path of xenvif_connect_data()
 
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/namespace.pl | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
 
-diff --git a/scripts/namespace.pl b/scripts/namespace.pl
-index a71be6b7cdec5..9a2a32ce8a3b4 100755
---- a/scripts/namespace.pl
-+++ b/scripts/namespace.pl
-@@ -65,13 +65,14 @@
- require 5;	# at least perl 5
- use strict;
- use File::Find;
-+use File::Spec;
- 
- my $nm = ($ENV{'NM'} || "nm") . " -p";
- my $objdump = ($ENV{'OBJDUMP'} || "objdump") . " -s -j .comment";
--my $srctree = "";
--my $objtree = "";
--$srctree = "$ENV{'srctree'}/" if (exists($ENV{'srctree'}));
--$objtree = "$ENV{'objtree'}/" if (exists($ENV{'objtree'}));
-+my $srctree = File::Spec->curdir();
-+my $objtree = File::Spec->curdir();
-+$srctree = File::Spec->rel2abs($ENV{'srctree'}) if (exists($ENV{'srctree'}));
-+$objtree = File::Spec->rel2abs($ENV{'objtree'}) if (exists($ENV{'objtree'}));
- 
- if ($#ARGV != -1) {
- 	print STDERR "usage: $0 takes no parameters\n";
-@@ -229,9 +230,9 @@ sub do_nm
- 	}
- 	($source = $basename) =~ s/\.o$//;
- 	if (-e "$source.c" || -e "$source.S") {
--		$source = "$objtree$File::Find::dir/$source";
-+		$source = File::Spec->catfile($objtree, $File::Find::dir, $source)
- 	} else {
--		$source = "$srctree$File::Find::dir/$source";
-+		$source = File::Spec->catfile($srctree, $File::Find::dir, $source)
- 	}
- 	if (! -e "$source.c" && ! -e "$source.S") {
- 		# No obvious source, exclude the object if it is conglomerate
--- 
-2.20.1
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    memstick: jmb38x_ms: Fix an error handling path in 'jmb38x_ms_probe()'
 
+Qu Wenruo <wqu@suse.com>
+    btrfs: block-group: Fix a memory leak due to missing btrfs_put_block_group()
+
+Roberto Bergantinos Corpas <rbergant@redhat.com>
+    CIFS: avoid using MID 0xFFFF
+
+Helge Deller <deller@gmx.de>
+    parisc: Fix vmap memory leak in ioremap()/iounmap()
+
+Max Filippov <jcmvbkbc@gmail.com>
+    xtensa: drop EXPORT_SYMBOL for outs*/ins*
+
+Qian Cai <cai@lca.pw>
+    mm/slub: fix a deadlock in show_slab_objects()
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: fix reaction on bit error threshold notification
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
+
+Will Deacon <will@kernel.org>
+    mac80211: Reject malformed SSID elements
+
+Will Deacon <will@kernel.org>
+    cfg80211: wext: avoid copying malformed SSIDs
+
+Junya Monden <jmonden@jp.adit-jv.com>
+    ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
+
+Yufen Yu <yuyufen@huawei.com>
+    scsi: core: try to get module before removing device
+
+Johan Hovold <johan@kernel.org>
+    USB: ldusb: fix read info leaks
+
+Johan Hovold <johan@kernel.org>
+    USB: usblp: fix use-after-free on disconnect
+
+Johan Hovold <johan@kernel.org>
+    USB: ldusb: fix memleak on disconnect
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: ti_usb_3410_5052: fix port-close races
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    usb: udc: lpc32xx: fix bad bit shift operation
+
+Johan Hovold <johan@kernel.org>
+    USB: legousbtower: fix memleak on disconnect
+
+Matthew Wilcox (Oracle) <willy@infradead.org>
+    memfd: Fix locking when tagging pins
+
+Stefano Brivio <sbrivio@redhat.com>
+    ipv4: Return -ENETUNREACH if we can't create route but saddr is valid
+
+Eric Dumazet <edumazet@google.com>
+    net: avoid potential infinite loop in tc_ctl_action()
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: change sctp_prot .no_autobind with true
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: bcmgenet: Set phydev->dev_flags only for internal PHYs
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
+
+Alessio Balsini <balsini@android.com>
+    loop: Add LOOP_SET_DIRECT_IO to compat ioctl
+
+Jiaxun Yang <jiaxun.yang@flygoat.com>
+    MIPS: elf_hwcap: Export userspace ASEs
+
+Jiaxun Yang <jiaxun.yang@flygoat.com>
+    MIPS: Treat Loongson Extensions as ASEs
+
+Jacob Keller <jacob.e.keller@intel.com>
+    namespace: fix namespace.pl script to support relative paths
+
+Yizhuo <yzhai003@ucr.edu>
+    net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    mips: Loongson: Fix the link time qualifier of 'serial_exit()'
+
+Miaoqing Pan <miaoqing@codeaurora.org>
+    nl80211: fix null pointer dereference
+
+Peter Ujfalusi <peter.ujfalusi@ti.com>
+    ARM: dts: am4372: Set memory bandwidth limit for DISPC
+
+Tony Lindgren <tony@atomide.com>
+    ARM: OMAP2+: Fix missing reset done flag for am3 and am43
+
+Quinn Tran <qutran@marvell.com>
+    scsi: qla2xxx: Fix unbound sleep in fcport delete path.
+
+Xiang Chen <chenxiang66@hisilicon.com>
+    scsi: megaraid: disable device when probe failed after enabled device
+
+Stanley Chu <stanley.chu@mediatek.com>
+    scsi: ufs: skip shutdown if hba is not powered
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 ++--
+ arch/arm/boot/dts/am4372.dtsi                      |  2 ++
+ .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c |  3 ++-
+ arch/mips/include/asm/cpu-features.h               |  8 +++++++
+ arch/mips/include/asm/cpu.h                        |  2 ++
+ arch/mips/include/uapi/asm/hwcap.h                 | 11 +++++++++
+ arch/mips/kernel/cpu-probe.c                       | 27 +++++++++++++++++++++
+ arch/mips/kernel/proc.c                            |  2 ++
+ arch/mips/loongson64/common/serial.c               |  2 +-
+ arch/parisc/mm/ioremap.c                           | 12 ++++++----
+ arch/xtensa/kernel/xtensa_ksyms.c                  |  7 ------
+ drivers/base/core.c                                |  3 +++
+ drivers/block/loop.c                               |  1 +
+ drivers/cpufreq/cpufreq.c                          | 10 --------
+ drivers/gpu/drm/drm_edid.c                         |  3 +++
+ drivers/infiniband/hw/cxgb4/mem.c                  | 28 +++++++++++++---------
+ drivers/memstick/host/jmb38x_ms.c                  |  2 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  1 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c       | 11 ++++++---
+ drivers/net/ethernet/hisilicon/hns_mdio.c          |  6 ++++-
+ drivers/net/xen-netback/interface.c                |  1 -
+ drivers/pci/pci.c                                  | 24 +++++++++----------
+ drivers/s390/scsi/zfcp_fsf.c                       | 16 ++++++++++---
+ drivers/scsi/megaraid.c                            |  4 ++--
+ drivers/scsi/qla2xxx/qla_target.c                  |  4 ++++
+ drivers/scsi/scsi_sysfs.c                          | 11 ++++++++-
+ drivers/scsi/ufs/ufshcd.c                          |  3 +++
+ drivers/usb/class/usblp.c                          |  4 +++-
+ drivers/usb/gadget/udc/lpc32xx_udc.c               |  6 ++---
+ drivers/usb/misc/ldusb.c                           | 20 +++++++++-------
+ drivers/usb/misc/legousbtower.c                    |  5 +---
+ drivers/usb/serial/ti_usb_3410_5052.c              | 10 +++-----
+ fs/btrfs/extent-tree.c                             |  1 +
+ fs/cifs/smb1ops.c                                  |  3 +++
+ mm/shmem.c                                         | 20 +++++++++-------
+ mm/slub.c                                          | 13 ++++++++--
+ net/ipv4/route.c                                   |  9 ++++---
+ net/mac80211/mlme.c                                |  5 ++--
+ net/sched/act_api.c                                | 12 ++++++----
+ net/sched/cls_u32.c                                |  8 +++++--
+ net/sctp/socket.c                                  |  4 ++--
+ net/wireless/nl80211.c                             |  3 +++
+ net/wireless/wext-sme.c                            |  8 +++++--
+ scripts/namespace.pl                               | 13 +++++-----
+ sound/soc/sh/rcar/core.c                           |  1 +
+ 45 files changed, 235 insertions(+), 118 deletions(-)
 
 
