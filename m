@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685F5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12646CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2FD21783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA07C214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210670;
-	bh=T2VXMJEEF5VewS/d6qbaXswVhPVAXowOG6CDtgu0xpE=;
+	s=default; t=1572210673;
+	bh=69DDgvLNjQaegHdlogZNII2BcNevXnAIUPumxsH1M+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/flTT8balS6nHPjs3TUU75tu6oFqbzt4BvG+/KtLeMIFg5V365Gh2am6FSOpqDPt
-	 9BuUfW4vnZP5JiQa2bEQrYIwDlG9i9mqYsyHll1tTX1wlA0yOo2JzOsV73ihSfLBMU
-	 Dyw29YmIkID8GCIlDOx5vHQbCNO4zSDBGCE4t4UU=
+	b=kYWJNJDAnExxA/cw5odeKHDnzoRouxvf/OjN34yUvFAynYJQrz4pnReVAOufqfmsX
+	 SqCmiaQHIqpuq9yy82c9E98APyHrx960IK3Ov+tI4xWzKPWGsvSFHs7gh9+3zxpPXD
+	 sGtPu0MVIbf3p+EncfwhgdbBJRqp4bRho89HAQyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfJ0VLJ (ORCPT
+        id S1729854AbfJ0VLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57586 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728282AbfJ0VLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:05 -0400
+        id S1729835AbfJ0VLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:09 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05E321783;
-        Sun, 27 Oct 2019 21:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE76F214AF;
+        Sun, 27 Oct 2019 21:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210665;
-        bh=T2VXMJEEF5VewS/d6qbaXswVhPVAXowOG6CDtgu0xpE=;
+        s=default; t=1572210668;
+        bh=69DDgvLNjQaegHdlogZNII2BcNevXnAIUPumxsH1M+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IqeLLvKzwOi5Eg25t2gKQLbcUDGk3pp/UThMqQqWoENdTPyg2QstyrnIfqg6ggKCv
-         VSlOK9YLlSdoQzkDq704JbjAca8XeaI41Nramk5YbUtmMB6HxKHW5PMUHtz5R78KM/
-         udCv+Q/FB98jjscII0ZN37eLiICcRoie58b6W4xM=
+        b=aZ5I6sFuNsJMovYhjRkEs0GubVV0eYn5YpiYznskEmVM3hU2u4W0vwE0MGf2BU1zL
+         JmSnivdVxNwemAx7+nzdFeJL+ZwdcxaMLxeMgdUEcXsXmAPremJeaMBVBAESUd2HdU
+         +jQut8FNy4CQn/7eGnlz2iPuSmjEmJp1BUu+GYwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Andrew Duggan <aduggan@synaptics.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 092/119] Input: synaptics-rmi4 - avoid processing unknown IRQs
-Date:   Sun, 27 Oct 2019 22:01:09 +0100
-Message-Id: <20191027203348.466103985@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Timo Wischer <twischer@de.adit-jv.com>,
+        Junya Monden <jmonden@jp.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 093/119] ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
+Date:   Sun, 27 Oct 2019 22:01:10 +0100
+Message-Id: <20191027203348.526362178@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -60,68 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Junya Monden <jmonden@jp.adit-jv.com>
 
-commit 363c53875aef8fce69d4a2d0873919ccc7d9e2ad upstream.
+commit 22e58665a01006d05f0239621f7d41cacca96cc4 upstream.
 
-rmi_process_interrupt_requests() calls handle_nested_irq() for
-each interrupt status bit it finds. If the irq domain mapping for
-this bit had not yet been set up, then it ends up calling
-handle_nested_irq(0), which causes a NULL pointer dereference.
+Unlike other format-related DAI parameters, rdai->bit_clk_inv flag
+is not properly re-initialized when setting format for new stream
+processing. The inversion, if requested, is then applied not to default,
+but to a previous value, which leads to SCKP bit in SSICR register being
+set incorrectly.
+Fix this by re-setting the flag to its initial value, determined by format.
 
-There's already code that masks the irq_status bits coming out of the
-hardware with current_irq_mask, presumably to avoid this situation.
-However current_irq_mask seems to more reflect the actual mask set
-in the hardware rather than the IRQs software has set up and registered
-for. For example, in rmi_driver_reset_handler(), the current_irq_mask
-is initialized based on what is read from the hardware. If the reset
-value of this mask enables IRQs that Linux has not set up yet, then
-we end up in this situation.
-
-There appears to be a third unused bitmask that used to serve this
-purpose, fn_irq_bits. Use that bitmask instead of current_irq_mask
-to avoid calling handle_nested_irq() on IRQs that have not yet been
-set up.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Andrew Duggan <aduggan@synaptics.com>
-Link: https://lore.kernel.org/r/20191008223657.163366-1-evgreen@chromium.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 1a7889ca8aba3 ("ASoC: rsnd: fixup SND_SOC_DAIFMT_xB_xF behavior")
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc: Jiada Wang <jiada_wang@mentor.com>
+Cc: Timo Wischer <twischer@de.adit-jv.com>
+Cc: stable@vger.kernel.org # v3.17+
+Signed-off-by: Junya Monden <jmonden@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20191016124255.7442-1-erosca@de.adit-jv.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/rmi4/rmi_driver.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/soc/sh/rcar/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -165,7 +165,7 @@ static int rmi_process_interrupt_request
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -676,6 +676,7 @@ static int rsnd_soc_dai_set_fmt(struct s
  	}
  
- 	mutex_lock(&data->irq_mutex);
--	bitmap_and(data->irq_status, data->irq_status, data->current_irq_mask,
-+	bitmap_and(data->irq_status, data->irq_status, data->fn_irq_bits,
- 	       data->irq_count);
- 	/*
- 	 * At this point, irq_status has all bits that are set in the
-@@ -412,6 +412,8 @@ static int rmi_driver_set_irq_bits(struc
- 	bitmap_copy(data->current_irq_mask, data->new_irq_mask,
- 		    data->num_of_irq_regs);
- 
-+	bitmap_or(data->fn_irq_bits, data->fn_irq_bits, mask, data->irq_count);
-+
- error_unlock:
- 	mutex_unlock(&data->irq_mutex);
- 	return error;
-@@ -425,6 +427,8 @@ static int rmi_driver_clear_irq_bits(str
- 	struct device *dev = &rmi_dev->dev;
- 
- 	mutex_lock(&data->irq_mutex);
-+	bitmap_andnot(data->fn_irq_bits,
-+		      data->fn_irq_bits, mask, data->irq_count);
- 	bitmap_andnot(data->new_irq_mask,
- 		  data->current_irq_mask, mask, data->irq_count);
- 
+ 	/* set format */
++	rdai->bit_clk_inv = 0;
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+ 		rdai->sys_delay = 0;
 
 
