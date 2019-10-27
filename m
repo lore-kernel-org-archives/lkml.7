@@ -2,77 +2,90 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C9DCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 09:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB9CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 10:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B293D21928
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 09:59:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572170396;
-	bh=0y0SRx8HR9EiEmSNyoLk6vVHSMKEaoqC8szmDK7YJpc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jp4VzLCBM8TnygzEyhkLq/poTFudHb7/AzLxCbT+clMDpi2OxFqD6lf/TiRBueWSa
-	 Zvl0oljeGBdQ46hgQpPkJf3LgfDJsX2jhv7KZ9RtujBwnCwK5BcJqUDSVgFsDtHSK3
-	 6mLByk7R6TFI2sikRcuDBgSsDl2L7Vv5OE6nO56Y=
+	by mail.kernel.org (Postfix) with ESMTP id 9FD7621928
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 10:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfJ0J7z (ORCPT
+        id S1726731AbfJ0KC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 05:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 06:02:56 -0400
+Received: from mga17.intel.com ([192.55.52.151]:34003 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbfJ0J7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 05:59:55 -0400
-Received: from localhost (lfbn-1-17239-195.w86-248.abo.wanadoo.fr [86.248.61.195])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D198C2067B;
-        Sun, 27 Oct 2019 09:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572170394;
-        bh=0y0SRx8HR9EiEmSNyoLk6vVHSMKEaoqC8szmDK7YJpc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yYJF8+CAHm6PzevDJyBnQR1Pt3MpZLE+pd1H5sKxWhCAvVjXPwfh7mH1GYzrIU/aE
-         4EM3NyYuC6hPIRf6uYUfQsHuV3P3E1davO/gnBHj1F1CMa4tn+bu1FETFB/aRBhJOK
-         z5rq957YoPIS2LV72SDJZGG/6+zD2E7f0OwzFmTM=
-Date:   Sun, 27 Oct 2019 10:59:31 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, p.zabel@pengutronix.de, robh+dt@kernel.org,
-        wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 2/4] dt-bindings: crypto: Add DT bindings
- documentation for sun8i-ss Security System
-Message-ID: <20191027095931.lruqnzw2gluwfkrz@hendrix>
-References: <20191025185128.24068-1-clabbe.montjoie@gmail.com>
- <20191025185128.24068-3-clabbe.montjoie@gmail.com>
+        id S1726369AbfJ0KC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 06:02:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 03:02:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,235,1569308400"; 
+   d="scan'208";a="202243670"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 27 Oct 2019 03:02:52 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iOfNs-000Doh-1K; Sun, 27 Oct 2019 18:02:52 +0800
+Date:   Sun, 27 Oct 2019 18:02:05 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v5 net-next 01/12] net: ethernet: ti: cpsw: allow
+ untagged traffic on host port
+Message-ID: <201910271709.5w7JExAE%lkp@intel.com>
+References: <20191024100914.16840-2-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191025185128.24068-3-clabbe.montjoie@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191024100914.16840-2-grygorii.strashko@ti.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Grygorii,
 
-On Fri, Oct 25, 2019 at 08:51:26PM +0200, Corentin Labbe wrote:
-> This patch adds documentation for Device-Tree bindings of the
-> Security System cryptographic offloader driver.
->
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+I love your patch! Perhaps something to improve:
 
-This patch and the previous one are:
-Acked-by: Maxime Ripard <mripard@kernel.org>
+[auto build test WARNING on net-next/master]
 
-I'll apply the DT patches when Herbert will apply the first two.
+url:    https://github.com/0day-ci/linux/commits/Grygorii-Strashko/net-ethernet-ti-introduce-new-cpsw-switchdev-based-driver/20191027-143414
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 503a64635d5ef7351657c78ad77f8b5ff658d5fc
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Maxime
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/net/ethernet/ti/cpsw_ale.c:420:6: sparse: sparse: symbol 'cpsw_ale_set_vlan_untag' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
