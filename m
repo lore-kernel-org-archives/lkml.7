@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D30ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E76FCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DBF21D7F
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0208A222BD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211543;
-	bh=eRXpJNeQCyyCD23nmN3XQx5ovGSGyho2lmGLOeVxShs=;
+	s=default; t=1572211551;
+	bh=ZG4fvG6/pBhwAx90RYqOxWzvTqywXWxlTO+YY/Ewd98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFbmmQgGBb8ncL4gcnBPzyN2+r1M4LTqY+x1o0iLb/oSsl8IMGOjjks9ZvtzI/EuZ
-	 618Wb9+w5LYNwzo7AvuJSRxzhb0lhm1KnieAnOTF1x768RgyzuVXE7NgFLCUMtFaP9
-	 CH327Qfb6BbkUWZtCShTztm+wkMKmYpzGD8vHAlM=
+	b=gBDERBHoxpLP54c9S7KR5xSsAIC39KxNUyPMJjE9zMO0HjAdOCwAlGed0v/HpmB4g
+	 iMMUX9MXvUEBLV6+b/f/rZpsOHBk0WpDcyxzJfSLBf8V7xnl8fRyMSyFNMubW9MM2w
+	 /zF2YoX/6G8Iu/WL1TQKzWPn7lXf7b/p7SPavUr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfJ0VZm (ORCPT
+        id S1732806AbfJ0VZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47504 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732779AbfJ0VZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:38 -0400
+        id S1732184AbfJ0VZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:43 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B347421850;
-        Sun, 27 Oct 2019 21:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2859721850;
+        Sun, 27 Oct 2019 21:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211537;
-        bh=eRXpJNeQCyyCD23nmN3XQx5ovGSGyho2lmGLOeVxShs=;
+        s=default; t=1572211542;
+        bh=ZG4fvG6/pBhwAx90RYqOxWzvTqywXWxlTO+YY/Ewd98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0T7+Cz2DlLAg90wg2cdVIprHqVdSRtTOjubwZlP5ObUqcjMmJftgEzCSlVeZJBCFI
-         6y5c1PIdLOkKu/QxGOnq+oo/Z3/TWJ+2TR4vy2//47C0ovnQzSkg3PGMg+3u9QW2Sc
-         ju9sUNpwFIarZZkU+t3o5X5QQgoEHM+dgqg8s3H0=
+        b=MjXjskCvp6QpC38mWV9EIN3NScCgyENVqkdzJcmg6Z74m+16I6yzoh+UDZ9pWk0iF
+         NWxG8VBrDsVdphDEd8OJVrPa+Gl43/LwjPJg0h6sAngtsjO+xRmr5zKXPtvh21zth/
+         oyi+tAjjiKGhN2cshYnYigayjR/Zl5EhymfxEMzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        James Zhu <James.Zhu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 132/197] drm/amdgpu/vcn: fix allocation size in enc ring test
-Date:   Sun, 27 Oct 2019 22:00:50 +0100
-Message-Id: <20191027203358.845695967@linuxfoundation.org>
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.3 189/197] memstick: jmb38x_ms: Fix an error handling path in jmb38x_ms_probe()
+Date:   Sun, 27 Oct 2019 22:01:47 +0100
+Message-Id: <20191027203406.691983355@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,132 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit c81fffc2c9450750dd7a54a36a788a860ab0425d upstream.
+commit 28c9fac09ab0147158db0baeec630407a5e9b892 upstream.
 
-We need to allocate a large enough buffer for the
-session info, otherwise the IB test can overwrite
-other memory.
+If 'jmb38x_ms_count_slots()' returns 0, we must undo the previous
+'pci_request_regions()' call.
 
-- Session info is 128K according to mesa
-- Use the same session info for create and destroy
+Goto 'err_out_int' to fix it.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=204241
-Acked-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: James Zhu <James.Zhu@amd.com>
-Tested-by: James Zhu <James.Zhu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 60fdd931d577 ("memstick: add support for JMicron jmb38x MemoryStick host controller")
 Cc: stable@vger.kernel.org
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c |   35 +++++++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 12 deletions(-)
+ drivers/memstick/host/jmb38x_ms.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-@@ -517,13 +517,14 @@ int amdgpu_vcn_enc_ring_test_ring(struct
- }
+--- a/drivers/memstick/host/jmb38x_ms.c
++++ b/drivers/memstick/host/jmb38x_ms.c
+@@ -941,7 +941,7 @@ static int jmb38x_ms_probe(struct pci_de
+ 	if (!cnt) {
+ 		rc = -ENODEV;
+ 		pci_dev_busy = 1;
+-		goto err_out;
++		goto err_out_int;
+ 	}
  
- static int amdgpu_vcn_enc_get_create_msg(struct amdgpu_ring *ring, uint32_t handle,
--			      struct dma_fence **fence)
-+					 struct amdgpu_bo *bo,
-+					 struct dma_fence **fence)
- {
- 	const unsigned ib_size_dw = 16;
- 	struct amdgpu_job *job;
- 	struct amdgpu_ib *ib;
- 	struct dma_fence *f = NULL;
--	uint64_t dummy;
-+	uint64_t addr;
- 	int i, r;
- 
- 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
-@@ -531,14 +532,14 @@ static int amdgpu_vcn_enc_get_create_msg
- 		return r;
- 
- 	ib = &job->ibs[0];
--	dummy = ib->gpu_addr + 1024;
-+	addr = amdgpu_bo_gpu_offset(bo);
- 
- 	ib->length_dw = 0;
- 	ib->ptr[ib->length_dw++] = 0x00000018;
- 	ib->ptr[ib->length_dw++] = 0x00000001; /* session info */
- 	ib->ptr[ib->length_dw++] = handle;
--	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
--	ib->ptr[ib->length_dw++] = dummy;
-+	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
-+	ib->ptr[ib->length_dw++] = addr;
- 	ib->ptr[ib->length_dw++] = 0x0000000b;
- 
- 	ib->ptr[ib->length_dw++] = 0x00000014;
-@@ -569,13 +570,14 @@ err:
- }
- 
- static int amdgpu_vcn_enc_get_destroy_msg(struct amdgpu_ring *ring, uint32_t handle,
--				struct dma_fence **fence)
-+					  struct amdgpu_bo *bo,
-+					  struct dma_fence **fence)
- {
- 	const unsigned ib_size_dw = 16;
- 	struct amdgpu_job *job;
- 	struct amdgpu_ib *ib;
- 	struct dma_fence *f = NULL;
--	uint64_t dummy;
-+	uint64_t addr;
- 	int i, r;
- 
- 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
-@@ -583,14 +585,14 @@ static int amdgpu_vcn_enc_get_destroy_ms
- 		return r;
- 
- 	ib = &job->ibs[0];
--	dummy = ib->gpu_addr + 1024;
-+	addr = amdgpu_bo_gpu_offset(bo);
- 
- 	ib->length_dw = 0;
- 	ib->ptr[ib->length_dw++] = 0x00000018;
- 	ib->ptr[ib->length_dw++] = 0x00000001;
- 	ib->ptr[ib->length_dw++] = handle;
--	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
--	ib->ptr[ib->length_dw++] = dummy;
-+	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
-+	ib->ptr[ib->length_dw++] = addr;
- 	ib->ptr[ib->length_dw++] = 0x0000000b;
- 
- 	ib->ptr[ib->length_dw++] = 0x00000014;
-@@ -623,13 +625,20 @@ err:
- int amdgpu_vcn_enc_ring_test_ib(struct amdgpu_ring *ring, long timeout)
- {
- 	struct dma_fence *fence = NULL;
-+	struct amdgpu_bo *bo = NULL;
- 	long r;
- 
--	r = amdgpu_vcn_enc_get_create_msg(ring, 1, NULL);
-+	r = amdgpu_bo_create_reserved(ring->adev, 128 * 1024, PAGE_SIZE,
-+				      AMDGPU_GEM_DOMAIN_VRAM,
-+				      &bo, NULL, NULL);
-+	if (r)
-+		return r;
-+
-+	r = amdgpu_vcn_enc_get_create_msg(ring, 1, bo, NULL);
- 	if (r)
- 		goto error;
- 
--	r = amdgpu_vcn_enc_get_destroy_msg(ring, 1, &fence);
-+	r = amdgpu_vcn_enc_get_destroy_msg(ring, 1, bo, &fence);
- 	if (r)
- 		goto error;
- 
-@@ -641,6 +650,8 @@ int amdgpu_vcn_enc_ring_test_ib(struct a
- 
- error:
- 	dma_fence_put(fence);
-+	amdgpu_bo_unreserve(bo);
-+	amdgpu_bo_unref(&bo);
- 	return r;
- }
- 
+ 	jm = kzalloc(sizeof(struct jmb38x_ms)
 
 
