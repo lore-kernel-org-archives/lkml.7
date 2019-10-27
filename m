@@ -7,54 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F761CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142F6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07C620717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F82205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211932;
-	bh=e0KjGw4Rm5fqqqiU9czU4vgofrmX3pia851pvyeqFeg=;
+	s=default; t=1572211937;
+	bh=r4HFxDYR4Z4juqFTrB3NjZiIWIW0taMejDXfi8NvtIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QLjdqX2VFFkYhrDqkVOHEfaP1+j+sFPzsbiTig+zXFR5FZGQxAEDj/yGCiOqpdPyf
-	 0BfoyY2GYsrtcWAvWWszIYXWP9vw3bDAtOwv59L2MRmmrHk9AzxzT3vz6OaoxmuWN5
-	 ZZOlho89R0mIq0gLCoCSm+JCZwfwUs2gQ5iT8Js0=
+	b=Y6nmQHrEr2ITuo+QP2nsZOtCX3kRxL2u5V9W366qmJf+IkZR49W0i31581ciov1Ak
+	 2MLL/oau3dYqNzkbVu+sjdeDG7rEmAORV6CXsqvf99xlptGEefcmvYcjDQithEU1ig
+	 tE3u3W1hlVUbpqP8G/35A3ZYfAx6vPRpQIijDKng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732054AbfJ0VcK (ORCPT
+        id S1731947AbfJ0VcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:32:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34966 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730063AbfJ0VPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:15:35 -0400
+        id S1730652AbfJ0VPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:15:24 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68527208C0;
-        Sun, 27 Oct 2019 21:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CAD205C9;
+        Sun, 27 Oct 2019 21:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210934;
-        bh=e0KjGw4Rm5fqqqiU9czU4vgofrmX3pia851pvyeqFeg=;
+        s=default; t=1572210923;
+        bh=r4HFxDYR4Z4juqFTrB3NjZiIWIW0taMejDXfi8NvtIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fOFF1OdF3Y0qMnGX17IBY6KR3+v7hMCAL1jO5qyOxqLM5Nuwze/MBYfU0bey7Drd
-         +JrJfZIaArgG4kNPWYke1opdRdCD/NeZQsxSz5HGFI9kelt2YnFmE+NfhzdalY5nB1
-         rcDCIfVnl39AHgniMJTkksLAxljxi1tmltqPtkZE=
+        b=H6EIM5A+fN87/yZsrqmGeXLXEp+s5CuVo4GJpABUS0v4auFJfBGl61nHGIA6vD36d
+         bOh9tCrKq9SXVNdWGpBRTwm0xj69bTlwRjNkXMF3yilb5/thZZuuwTaW5eJTbJ/Ws+
+         eR/Tz4F6tkuGf6MVcT8qBrvJzYB+h4vYzkk29qjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miles Chen <miles.chen@mediatek.com>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        Pankaj gupta <pagupta@redhat.com>,
         Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 67/93] mm/page_owner: dont access uninitialized memmaps when reading /proc/pagetypeinfo
-Date:   Sun, 27 Oct 2019 22:01:19 +0100
-Message-Id: <20191027203307.845806193@linuxfoundation.org>
+Subject: [PATCH 4.19 63/93] fs/proc/page.c: dont access uninitialized memmaps in fs/proc/page.c
+Date:   Sun, 27 Oct 2019 22:01:15 +0100
+Message-Id: <20191027203306.401002911@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -67,83 +69,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: David Hildenbrand <david@redhat.com>
 
-commit a26ee565b6cd8dc2bf15ff6aa70bbb28f928b773 upstream.
+commit aad5f69bc161af489dbb5934868bd347282f0764 upstream.
 
-Uninitialized memmaps contain garbage and in the worst case trigger
-kernel BUGs, especially with CONFIG_PAGE_POISONING.  They should not get
-touched.
+There are three places where we access uninitialized memmaps, namely:
+- /proc/kpagecount
+- /proc/kpageflags
+- /proc/kpagecgroup
 
-For example, when not onlining a memory block that is spanned by a zone
-and reading /proc/pagetypeinfo with CONFIG_DEBUG_VM_PGFLAGS and
-CONFIG_PAGE_POISONING, we can trigger a kernel BUG:
+We have initialized memmaps either when the section is online or when the
+page was initialized to the ZONE_DEVICE.  Uninitialized memmaps contain
+garbage and in the worst case trigger kernel BUGs, especially with
+CONFIG_PAGE_POISONING.
 
-  :/# echo 1 > /sys/devices/system/memory/memory40/online
-  :/# echo 1 > /sys/devices/system/memory/memory42/online
-  :/# cat /proc/pagetypeinfo > test.file
-   page:fffff2c585200000 is uninitialized and poisoned
-   raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-   raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-   page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-   There is not page extension available.
-   ------------[ cut here ]------------
-   kernel BUG at include/linux/mm.h:1107!
-   invalid opcode: 0000 [#1] SMP NOPTI
+For example, not onlining a DIMM during boot and calling /proc/kpagecount
+with CONFIG_PAGE_POISONING:
 
-Please note that this change does not affect ZONE_DEVICE, because
-pagetypeinfo_showmixedcount_print() is called from
-mm/vmstat.c:pagetypeinfo_showmixedcount() only for populated zones, and
-ZONE_DEVICE is never populated (zone->present_pages always 0).
+  :/# cat /proc/kpagecount > tmp.test
+  BUG: unable to handle page fault for address: fffffffffffffffe
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
+  Oops: 0000 [#1] SMP NOPTI
+  CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
+  RIP: 0010:kpagecount_read+0xce/0x1e0
+  Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
+  RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
+  RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
+  RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
+  RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
+  R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
+  FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
+  Call Trace:
+   proc_reg_read+0x3c/0x60
+   vfs_read+0xc5/0x180
+   ksys_read+0x68/0xe0
+   do_syscall_64+0x5c/0xa0
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-[david@redhat.com: move check to outer loop, add comment, rephrase description]
-Link: http://lkml.kernel.org/r/20191011140638.8160-1-david@redhat.com
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online") # visible after d0dc12e86b319
-Signed-off-by: Qian Cai <cai@lca.pw>
+For now, let's drop support for ZONE_DEVICE from the three pseudo files
+in order to fix this.  To distinguish offline memory (with garbage
+memmap) from ZONE_DEVICE memory with properly initialized memmaps, we
+would have to check get_dev_pagemap() and pfn_zone_device_reserved()
+right now.  The usage of both (especially, special casing devmem) is
+frowned upon and needs to be reworked.
+
+The fundamental issue we have is:
+
+	if (pfn_to_online_page(pfn)) {
+		/* memmap initialized */
+	} else if (pfn_valid(pfn)) {
+		/*
+		 * ???
+		 * a) offline memory. memmap garbage.
+		 * b) devmem: memmap initialized to ZONE_DEVICE.
+		 * c) devmem: reserved for driver. memmap garbage.
+		 * (d) devmem: memmap currently initializing - garbage)
+		 */
+	}
+
+We'll leave the pfn_zone_device_reserved() check in stable_page_flags()
+in place as that function is also used from memory failure.  We now no
+longer dump information about pages that are not in use anymore -
+offline.
+
+Link: http://lkml.kernel.org/r/20191009142435.3975-2-david@redhat.com
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
 Signed-off-by: David Hildenbrand <david@redhat.com>
+Reported-by: Qian Cai <cai@lca.pw>
 Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Miles Chen <miles.chen@mediatek.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Cc: Pankaj gupta <pagupta@redhat.com>
 Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 Cc: <stable@vger.kernel.org>	[4.13+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_owner.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/proc/page.c |   28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -273,7 +273,8 @@ void pagetypeinfo_showmixedcount_print(s
- 	 * not matter as the mixed block count will still be correct
- 	 */
- 	for (; pfn < end_pfn; ) {
--		if (!pfn_valid(pfn)) {
-+		page = pfn_to_online_page(pfn);
-+		if (!page) {
- 			pfn = ALIGN(pfn + 1, MAX_ORDER_NR_PAGES);
- 			continue;
- 		}
-@@ -281,13 +282,13 @@ void pagetypeinfo_showmixedcount_print(s
- 		block_end_pfn = ALIGN(pfn + 1, pageblock_nr_pages);
- 		block_end_pfn = min(block_end_pfn, end_pfn);
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -42,10 +42,12 @@ static ssize_t kpagecount_read(struct fi
+ 		return -EINVAL;
  
--		page = pfn_to_page(pfn);
- 		pageblock_mt = get_pageblock_migratetype(page);
+ 	while (count > 0) {
+-		if (pfn_valid(pfn))
+-			ppage = pfn_to_page(pfn);
+-		else
+-			ppage = NULL;
++		/*
++		 * TODO: ZONE_DEVICE support requires to identify
++		 * memmaps that were actually initialized.
++		 */
++		ppage = pfn_to_online_page(pfn);
++
+ 		if (!ppage || PageSlab(ppage))
+ 			pcount = 0;
+ 		else
+@@ -216,10 +218,11 @@ static ssize_t kpageflags_read(struct fi
+ 		return -EINVAL;
  
- 		for (; pfn < block_end_pfn; pfn++) {
- 			if (!pfn_valid_within(pfn))
- 				continue;
+ 	while (count > 0) {
+-		if (pfn_valid(pfn))
+-			ppage = pfn_to_page(pfn);
+-		else
+-			ppage = NULL;
++		/*
++		 * TODO: ZONE_DEVICE support requires to identify
++		 * memmaps that were actually initialized.
++		 */
++		ppage = pfn_to_online_page(pfn);
  
-+			/* The pageblock is online, no need to recheck. */
- 			page = pfn_to_page(pfn);
+ 		if (put_user(stable_page_flags(ppage), out)) {
+ 			ret = -EFAULT;
+@@ -261,10 +264,11 @@ static ssize_t kpagecgroup_read(struct f
+ 		return -EINVAL;
  
- 			if (page_zone(page) != zone)
+ 	while (count > 0) {
+-		if (pfn_valid(pfn))
+-			ppage = pfn_to_page(pfn);
+-		else
+-			ppage = NULL;
++		/*
++		 * TODO: ZONE_DEVICE support requires to identify
++		 * memmaps that were actually initialized.
++		 */
++		ppage = pfn_to_online_page(pfn);
+ 
+ 		if (ppage)
+ 			ino = page_cgroup_ino(ppage);
 
 
