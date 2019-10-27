@@ -2,54 +2,54 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECFDCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E414ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3332064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5924214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210523;
-	bh=sZk67HLjrgXpirIOaPWbDB2dGtoSAtvE4M5NOkvG/pQ=;
+	s=default; t=1572210527;
+	bh=8aKOuuqY5V4XqPQXlPH6ZYhPGkDDwBA5ONjdJGBW6rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uAVuYHU4WRe3UNIMUOcEsbdsJxn1rpi7tAtrSMlBLmjp0sPXfzdcXbgrC8hjWCYx6
-	 c5PtOTInftdqkTL08raL7OHCmpGsxGEtG7PLlCU5OoqYczE+vaGw93HWq6beL3uELW
-	 nK//U4pvhp1ST7jgfA0aQg2LO7J7LI1BVntM3fs0=
+	b=Oy8XT01QdUcYR4ATttxKInSXzTliBmSBumGb63IyjPAYRlLh2EaTZzBUnt3xxT4Ii
+	 CHk6NSmk6hmHRxaYhZ2eRoJJUK+OZIj2puFlWNTMx6bQTZ6s1PnPOktK9wBhg/f/EP
+	 vXGZoFE+hlR/H+x6r3UTPILT7U9Nq/G9s9uPf7f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfJ0VIl (ORCPT
+        id S1729394AbfJ0VIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:08:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728809AbfJ0VIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:08:35 -0400
+        id S1728847AbfJ0VIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:08:43 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA75D2064A;
-        Sun, 27 Oct 2019 21:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F27A20B7C;
+        Sun, 27 Oct 2019 21:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210514;
-        bh=sZk67HLjrgXpirIOaPWbDB2dGtoSAtvE4M5NOkvG/pQ=;
+        s=default; t=1572210522;
+        bh=8aKOuuqY5V4XqPQXlPH6ZYhPGkDDwBA5ONjdJGBW6rw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=izHqWapfoJ1t2uy94Ycl4PRWYQT6wJC4hmSMtchv8cdNGYEmd1CE01wFGzBk5t+av
-         EocKaFdzlTkES7w1KXKR56+wECWD7igjvkY/FPGu3kNuJ62F/fKSd66MC8OD0nEk/O
-         aUuYfWGiHScz+Y4CTkG2lcgqXr0wg0+QUkyADTA8=
+        b=bKtDbg1a6Qz0/4PZBzMPg36VoHjXw4PzKFLtAhz+dxD95Su7CDuk/9Ccr+dih0FG/
+         g/UmVCQD7RtY1BgLBK2ZWRjwoqReSujxIYNSrSbDJLRJoko6xB4+u4/HadpWgDFdu8
+         O+IMjlnrWJqa+9H8WW3tsqWuY2o7FwRoe3ST4BDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Dongjiu Geng <gengdongjiu@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 040/119] arm64: v8.4: Support for new floating point multiplication instructions
-Date:   Sun, 27 Oct 2019 22:00:17 +0100
-Message-Id: <20191027203314.480084740@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 007/119] net: dsa: qca8k: Use up to 7 ports for all operations
+Date:   Sun, 27 Oct 2019 21:59:44 +0100
+Message-Id: <20191027203301.305547161@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -62,95 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongjiu Geng <gengdongjiu@huawei.com>
+From: Michal Vokáč <michal.vokac@ysoft.com>
 
-[ Upstream commit 3b3b681097fae73b7f5dcdd42db6cfdf32943d4c ]
+[ Upstream commit 7ae6d93c8f052b7a77ba56ed0f654e22a2876739 ]
 
-ARM v8.4 extensions add new neon instructions for performing a
-multiplication of each FP16 element of one vector with the corresponding
-FP16 element of a second vector, and to add or subtract this without an
-intermediate rounding to the corresponding FP32 element in a third vector.
+The QCA8K family supports up to 7 ports. So use the existing
+QCA8K_NUM_PORTS define to allocate the switch structure and limit all
+operations with the switch ports.
 
-This patch detects this feature and let the userspace know about it via a
-HWCAP bit and MRS emulation.
+This was not an issue until commit 0394a63acfe2 ("net: dsa: enable and
+disable all ports") disabled all unused ports. Since the unused ports 7-11
+are outside of the correct register range on this switch some registers
+were rewritten with invalid content.
 
-Cc: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
-Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-[ardb: fix up for missing SVE in context]
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
+Fixes: a0c02161ecfc ("net: dsa: variable number of ports")
+Fixes: 0394a63acfe2 ("net: dsa: enable and disable all ports")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm64/cpu-feature-registers.txt |    4 +++-
- arch/arm64/include/asm/sysreg.h               |    1 +
- arch/arm64/include/uapi/asm/hwcap.h           |    2 ++
- arch/arm64/kernel/cpufeature.c                |    2 ++
- arch/arm64/kernel/cpuinfo.c                   |    2 ++
- 5 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/dsa/qca8k.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/Documentation/arm64/cpu-feature-registers.txt
-+++ b/Documentation/arm64/cpu-feature-registers.txt
-@@ -110,7 +110,9 @@ infrastructure:
-      x--------------------------------------------------x
-      | Name                         |  bits   | visible |
-      |--------------------------------------------------|
--     | RES0                         | [63-48] |    n    |
-+     | RES0                         | [63-52] |    n    |
-+     |--------------------------------------------------|
-+     | FHM                          | [51-48] |    y    |
-      |--------------------------------------------------|
-      | DP                           | [47-44] |    y    |
-      |--------------------------------------------------|
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -375,6 +375,7 @@
- #define SCTLR_EL1_BUILD_BUG_ON_MISSING_BITS	BUILD_BUG_ON((SCTLR_EL1_SET ^ SCTLR_EL1_CLEAR) != ~0)
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index c3c9d7e33bd6c..8e49974ffa0ed 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -551,7 +551,7 @@ qca8k_setup(struct dsa_switch *ds)
+ 		    BIT(0) << QCA8K_GLOBAL_FW_CTRL1_UC_DP_S);
  
- /* id_aa64isar0 */
-+#define ID_AA64ISAR0_FHM_SHIFT		48
- #define ID_AA64ISAR0_DP_SHIFT		44
- #define ID_AA64ISAR0_SM4_SHIFT		40
- #define ID_AA64ISAR0_SM3_SHIFT		36
---- a/arch/arm64/include/uapi/asm/hwcap.h
-+++ b/arch/arm64/include/uapi/asm/hwcap.h
-@@ -42,5 +42,7 @@
- #define HWCAP_SM4		(1 << 19)
- #define HWCAP_ASIMDDP		(1 << 20)
- #define HWCAP_SHA512		(1 << 21)
-+#define HWCAP_SVE		(1 << 22)
-+#define HWCAP_ASIMDFHM		(1 << 23)
+ 	/* Setup connection between CPU port & user ports */
+-	for (i = 0; i < DSA_MAX_PORTS; i++) {
++	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
+ 		/* CPU port gets connected to all user ports of the switch */
+ 		if (dsa_is_cpu_port(ds, i)) {
+ 			qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(QCA8K_CPU_PORT),
+@@ -900,7 +900,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
+ 	if (id != QCA8K_ID_QCA8337)
+ 		return -ENODEV;
  
- #endif /* _UAPI__ASM_HWCAP_H */
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -107,6 +107,7 @@ cpufeature_pan_not_uao(const struct arm6
-  * sync with the documentation of the CPU feature register ABI.
-  */
- static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_FHM_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_DP_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_SM4_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_SM3_SHIFT, 4, 0),
-@@ -1052,6 +1053,7 @@ static const struct arm64_cpu_capabiliti
- 	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SM3_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_SM3),
- 	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SM4_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_SM4),
- 	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_DP_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_ASIMDDP),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_FHM_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_ASIMDFHM),
- 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_FP),
- 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, FTR_SIGNED, 1, CAP_HWCAP, HWCAP_FPHP),
- 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_ASIMD_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_ASIMD),
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -74,6 +74,8 @@ static const char *const hwcap_str[] = {
- 	"sm4",
- 	"asimddp",
- 	"sha512",
-+	"sve",
-+	"asimdfhm",
- 	NULL
- };
+-	priv->ds = dsa_switch_alloc(&mdiodev->dev, DSA_MAX_PORTS);
++	priv->ds = dsa_switch_alloc(&mdiodev->dev, QCA8K_NUM_PORTS);
+ 	if (!priv->ds)
+ 		return -ENOMEM;
  
+-- 
+2.20.1
+
 
 
