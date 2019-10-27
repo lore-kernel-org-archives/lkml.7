@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B572ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C38CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87EB5222BD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7121A222C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211608;
-	bh=9h/RnN+31F61XmTHgeWk3oVUfOUBhXTEkAkGYkmFMAU=;
+	s=default; t=1572211611;
+	bh=ZxgU/YgKJ6fIPV5HOHALJbrAr0Tnr4KLl5w4qmP1CEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpTzz3q1eZVXSMWgKgiaTcw7ZjsZ5uVU3vvY3WR0V+PM4CIuJxUcFKKS0bYGX5H5L
-	 Xv/OuEX+g1cHXAcmxfFNBB7CsQQRO4jWizrBLy1YxK7Wbod6NcgStC7On/FTYoUYdf
-	 CHd8vWwYW+ZlDxfcXNo539Yd7noj/zrzDghGpIi8=
+	b=J57cNTN4FX3eGeJmi74AO+NsWTedkQgDW/XGwcjeTnnTaDqQXtdh+qu1XDPJQwRLp
+	 3IhGnDimiDc5nrp0ilgIUz2EWGh5ZsKPmaN11WZEFPNxNgPCp5MnzI6Jr9GE4ctWAm
+	 MhZPjRBuJ8axxtkryAIZrum3+Tjke2C8ohp1fT/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732875AbfJ0V0J (ORCPT
+        id S1732856AbfJ0V0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:26:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732860AbfJ0V0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:26:06 -0400
+        id S1732841AbfJ0V0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:26:00 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248C521D80;
-        Sun, 27 Oct 2019 21:26:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE41B21D80;
+        Sun, 27 Oct 2019 21:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211565;
-        bh=9h/RnN+31F61XmTHgeWk3oVUfOUBhXTEkAkGYkmFMAU=;
+        s=default; t=1572211560;
+        bh=ZxgU/YgKJ6fIPV5HOHALJbrAr0Tnr4KLl5w4qmP1CEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cfFFrQRjje/MPyHFug2BQxplD5zlQsltzby1O0kG/Unj8EQ9SmtXInIShbvFMh+kl
-         MM9zWHsGxhhTLb6c2ErVCKDSuslCe6pu+mUaC8+oAHTe3uIudEpjHSfyQhDUfeAGDK
-         ZC+1U5GEXtpmac3krYnRuu3VygGIJPk03x0pR0No=
+        b=IqpOG4881ltMl+IxgQxVEtLhVgkpnyjPfy2Mogyh6NaCANHqp0+CPgDn90M8mg+6M
+         aMmEZRRB4ZT+7sQPAG82bAiLNTqFHpcvyWlrNBgJlpn1NuxY7y9AfDCRPO78xRl9At
+         F/BjKgW26Cj/bOePuxfhuYh7KYXEqpfWVZBGh0UY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Waisman <nico@semmle.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.3 197/197] RDMA/cxgb4: Do not dma memory off of the stack
-Date:   Sun, 27 Oct 2019 22:01:55 +0100
-Message-Id: <20191027203407.117597471@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Goldsworthy <cgoldswo@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.3 195/197] of: reserved_mem: add missing of_node_put() for proper ref-counting
+Date:   Sun, 27 Oct 2019 22:01:53 +0100
+Message-Id: <20191027203407.014246162@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,104 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg KH <gregkh@linuxfoundation.org>
+From: Chris Goldsworthy <cgoldswo@codeaurora.org>
 
-commit 3840c5b78803b2b6cc1ff820100a74a092c40cbb upstream.
+commit 5dba51754b04a941a1064f584e7a7f607df3f9bc upstream.
 
-Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
-which is generally considered a very bad thing.  On some architectures it
-could be a security problem, but odds are none of them actually run this
-driver, so it's just a "normal" bug.
+Commit d698a388146c ("of: reserved-memory: ignore disabled memory-region
+nodes") added an early return in of_reserved_mem_device_init_by_idx(), but
+didn't call of_node_put() on a device_node whose ref-count was incremented
+in the call to of_parse_phandle() preceding the early exit.
 
-Resolve this by allocating the memory for a message off of the heap
-instead of the stack.  kmalloc() always will give us a proper memory
-location that DMA will work correctly from.
-
-Link: https://lore.kernel.org/r/20191001165611.GA3542072@kroah.com
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Tested-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: d698a388146c ("of: reserved-memory: ignore disabled memory-region nodes")
+Signed-off-by: Chris Goldsworthy <cgoldswo@codeaurora.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/cxgb4/mem.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/of/of_reserved_mem.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -275,13 +275,17 @@ static int write_tpt_entry(struct c4iw_r
- 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
- {
- 	int err;
--	struct fw_ri_tpte tpt;
-+	struct fw_ri_tpte *tpt;
- 	u32 stag_idx;
- 	static atomic_t key;
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -324,8 +324,10 @@ int of_reserved_mem_device_init_by_idx(s
+ 	if (!target)
+ 		return -ENODEV;
  
- 	if (c4iw_fatal_error(rdev))
- 		return -EIO;
+-	if (!of_device_is_available(target))
++	if (!of_device_is_available(target)) {
++		of_node_put(target);
+ 		return 0;
++	}
  
-+	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
-+	if (!tpt)
-+		return -ENOMEM;
-+
- 	stag_state = stag_state > 0;
- 	stag_idx = (*stag) >> 8;
- 
-@@ -291,6 +295,7 @@ static int write_tpt_entry(struct c4iw_r
- 			mutex_lock(&rdev->stats.lock);
- 			rdev->stats.stag.fail++;
- 			mutex_unlock(&rdev->stats.lock);
-+			kfree(tpt);
- 			return -ENOMEM;
- 		}
- 		mutex_lock(&rdev->stats.lock);
-@@ -305,28 +310,28 @@ static int write_tpt_entry(struct c4iw_r
- 
- 	/* write TPT entry */
- 	if (reset_tpt_entry)
--		memset(&tpt, 0, sizeof(tpt));
-+		memset(tpt, 0, sizeof(*tpt));
- 	else {
--		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
-+		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
- 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
- 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
- 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
--		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
-+		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
- 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
- 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
- 						      FW_RI_VA_BASED_TO))|
- 			FW_RI_TPTE_PS_V(page_size));
--		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
-+		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
- 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
--		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
--		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
--		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
--		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
--		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
-+		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
-+		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
-+		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
-+		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
-+		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
- 	}
- 	err = write_adapter_mem(rdev, stag_idx +
- 				(rdev->lldi.vr->stag.start >> 5),
--				sizeof(tpt), &tpt, skb, wr_waitp);
-+				sizeof(*tpt), tpt, skb, wr_waitp);
- 
- 	if (reset_tpt_entry) {
- 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
-@@ -334,6 +339,7 @@ static int write_tpt_entry(struct c4iw_r
- 		rdev->stats.stag.cur -= 32;
- 		mutex_unlock(&rdev->stats.lock);
- 	}
-+	kfree(tpt);
- 	return err;
- }
- 
+ 	rmem = __find_rmem(target);
+ 	of_node_put(target);
 
 
