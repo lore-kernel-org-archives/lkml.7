@@ -4,60 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E006CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB487CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED9620873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD77214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210707;
-	bh=+/yjROhR3xSWgVkmwv8FNvOENYzLi1Z49EMeWd4IlQk=;
+	s=default; t=1572210711;
+	bh=1tKYSiWTqoHWtVLkEPs/umdJ6PaYxhphNZuujMFXNV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZE91w8dEcEIhsIGcShzPGI4ibFbc/0xcpBplmqlBf6khJnT8eoLY8gtQttlMVC8Mz
-	 piX4HrIdGEsQNL0ZJOgITSr+wpl8T2Rnx9R5Rgh4f88M2wd+cgVDtBRZkeI5gBr5+t
-	 RtTsWHH9aZ1LNeqJtnY/fdnIINalPxrhnXgP0dpU=
+	b=1G8nKx2L0WHDpsPQQCu1FgaWdfss5OpTrWkDvSbf+HUdzm1isgX2I36kPdE56ogSs
+	 X1NZfJDBOjuPvVdGe0bWg7EAjHiK7w5YIJ0J3B/Qy9gGJcGMYVSHVSf54gyhdNnpql
+	 VfOCjviuIuNfFSxBNgdFsO/1rJPhpof4uHp7ABnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbfJ0VLp (ORCPT
+        id S1729963AbfJ0VLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58248 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:11:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729935AbfJ0VLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:40 -0400
+        id S1729949AbfJ0VLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:43 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69A132064A;
-        Sun, 27 Oct 2019 21:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A66E20873;
+        Sun, 27 Oct 2019 21:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210700;
-        bh=+/yjROhR3xSWgVkmwv8FNvOENYzLi1Z49EMeWd4IlQk=;
+        s=default; t=1572210702;
+        bh=1tKYSiWTqoHWtVLkEPs/umdJ6PaYxhphNZuujMFXNV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3eFAxbVLb3XQHWkux27iNybRqRD4tfFqV61Y/Gz/p72CEqdKI9TSBsWLdZhvYh2a
-         EW0pF4TxmlvrXkeu78dC/j+YmUhTWA9m7IN57Rhd1NXrXUlZmFRPYbmy0RR0pPDFq1
-         Mkkgnln/8xr90eiqX8A+IAwSsJ1gu5R2BOh4Zuu0=
+        b=tXkuTnlhRiSfaEFidQhouUhQCLhlb5pw4oKr4B1zOvTHwDeLy9n4Lf90AuSP6JM4i
+         zEyEEdwNAX6KmYClb1JoTnTDSKgB0BoHDW2wQ69H70YpZ9/oqal3GpA5JMGn6Lb0L5
+         Cm1mHl8ntThH9U2zrhY9knKpwRQlDl+zxprF86Xo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Baoquan He <bhe@redhat.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        dimitri.sivanich@hpe.com, Feng Tang <feng.tang@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Juergen Gross <jgross@suse.com>, mike.travis@hpe.com,
-        russ.anderson@hpe.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86-ml <x86@kernel.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH 4.14 107/119] x86/boot/64: Make level2_kernel_pgt pages invalid outside kernel area
-Date:   Sun, 27 Oct 2019 22:01:24 +0100
-Message-Id: <20191027203349.352290481@linuxfoundation.org>
+        stable@vger.kernel.org, Patrick Williams <alpawi@amazon.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.14 108/119] pinctrl: armada-37xx: fix control of pins 32 and up
+Date:   Sun, 27 Oct 2019 22:01:25 +0100
+Message-Id: <20191027203349.410358325@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -70,107 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wahl <steve.wahl@hpe.com>
+From: Patrick Williams <alpawi@amazon.com>
 
-commit 2aa85f246c181b1fa89f27e8e20c5636426be624 upstream.
+commit 20504fa1d2ffd5d03cdd9dc9c9dd4ed4579b97ef upstream.
 
-Our hardware (UV aka Superdome Flex) has address ranges marked
-reserved by the BIOS. Access to these ranges is caught as an error,
-causing the BIOS to halt the system.
+The 37xx configuration registers are only 32 bits long, so
+pins 32-35 spill over into the next register.  The calculation
+for the register address was done, but the bitmask was not, so
+any configuration to pin 32 or above resulted in a bitmask that
+overflowed and performed no action.
 
-Initial page tables mapped a large range of physical addresses that
-were not checked against the list of BIOS reserved addresses, and
-sometimes included reserved addresses in part of the mapped range.
-Including the reserved range in the map allowed processor speculative
-accesses to the reserved range, triggering a BIOS halt.
+Fix the register / offset calculation to also adjust the offset.
 
-Used early in booting, the page table level2_kernel_pgt addresses 1
-GiB divided into 2 MiB pages, and it was set up to linearly map a full
- 1 GiB of physical addresses that included the physical address range
-of the kernel image, as chosen by KASLR.  But this also included a
-large range of unused addresses on either side of the kernel image.
-And unlike the kernel image's physical address range, this extra
-mapped space was not checked against the BIOS tables of usable RAM
-addresses.  So there were times when the addresses chosen by KASLR
-would result in processor accessible mappings of BIOS reserved
-physical addresses.
-
-The kernel code did not directly access any of this extra mapped
-space, but having it mapped allowed the processor to issue speculative
-accesses into reserved memory, causing system halts.
-
-This was encountered somewhat rarely on a normal system boot, and much
-more often when starting the crash kernel if "crashkernel=512M,high"
-was specified on the command line (this heavily restricts the physical
-address of the crash kernel, in our case usually within 1 GiB of
-reserved space).
-
-The solution is to invalidate the pages of this table outside the kernel
-image's space before the page table is activated. It fixes this problem
-on our hardware.
-
- [ bp: Touchups. ]
-
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: dimitri.sivanich@hpe.com
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jordan Borgner <mail@jordan-borgner.de>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: mike.travis@hpe.com
-Cc: russ.anderson@hpe.com
-Cc: stable@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Link: https://lkml.kernel.org/r/9c011ee51b081534a7a15065b1681d200298b530.1569358539.git.steve.wahl@hpe.com
+Fixes: 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
+Signed-off-by: Patrick Williams <alpawi@amazon.com>
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191001154634.96165-1-alpawi@amazon.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/head64.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -145,13 +145,31 @@ unsigned long __head __startup_64(unsign
- 	 * we might write invalid pmds, when the kernel is relocated
- 	 * cleanup_highmap() fixes this up along with the mappings
- 	 * beyond _end.
-+	 *
-+	 * Only the region occupied by the kernel image has so far
-+	 * been checked against the table of usable memory regions
-+	 * provided by the firmware, so invalidate pages outside that
-+	 * region. A page table entry that maps to a reserved area of
-+	 * memory would allow processor speculation into that area,
-+	 * and on some hardware (particularly the UV platform) even
-+	 * speculative access to some reserved areas is caught as an
-+	 * error, causing the BIOS to halt the system.
- 	 */
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -205,11 +205,11 @@ static const struct armada_37xx_pin_data
+ };
  
- 	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
--	for (i = 0; i < PTRS_PER_PMD; i++) {
-+
-+	/* invalidate pages before the kernel image */
-+	for (i = 0; i < pmd_index((unsigned long)_text); i++)
-+		pmd[i] &= ~_PAGE_PRESENT;
-+
-+	/* fixup pages that are part of the kernel image */
-+	for (; i <= pmd_index((unsigned long)_end); i++)
- 		if (pmd[i] & _PAGE_PRESENT)
- 			pmd[i] += load_delta;
--	}
-+
-+	/* invalidate pages after the kernel image */
-+	for (; i < PTRS_PER_PMD; i++)
-+		pmd[i] &= ~_PAGE_PRESENT;
+ static inline void armada_37xx_update_reg(unsigned int *reg,
+-					  unsigned int offset)
++					  unsigned int *offset)
+ {
+ 	/* We never have more than 2 registers */
+-	if (offset >= GPIO_PER_REG) {
+-		offset -= GPIO_PER_REG;
++	if (*offset >= GPIO_PER_REG) {
++		*offset -= GPIO_PER_REG;
+ 		*reg += sizeof(u32);
+ 	}
+ }
+@@ -373,7 +373,7 @@ static inline void armada_37xx_irq_updat
+ {
+ 	int offset = irqd_to_hwirq(d);
  
- 	/*
- 	 * Fixup phys_base - remove the memory encryption mask to obtain
+-	armada_37xx_update_reg(reg, offset);
++	armada_37xx_update_reg(reg, &offset);
+ }
+ 
+ static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
+@@ -383,7 +383,7 @@ static int armada_37xx_gpio_direction_in
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	return regmap_update_bits(info->regmap, reg, mask, 0);
+@@ -396,7 +396,7 @@ static int armada_37xx_gpio_get_directio
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int val, mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 	regmap_read(info->regmap, reg, &val);
+ 
+@@ -410,7 +410,7 @@ static int armada_37xx_gpio_direction_ou
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int mask, val, ret;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	ret = regmap_update_bits(info->regmap, reg, mask, mask);
+@@ -431,7 +431,7 @@ static int armada_37xx_gpio_get(struct g
+ 	unsigned int reg = INPUT_VAL;
+ 	unsigned int val, mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	regmap_read(info->regmap, reg, &val);
+@@ -446,7 +446,7 @@ static void armada_37xx_gpio_set(struct
+ 	unsigned int reg = OUTPUT_VAL;
+ 	unsigned int mask, val;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 	val = value ? mask : 0;
+ 
 
 
