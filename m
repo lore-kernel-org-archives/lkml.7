@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78DECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4740CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DA520B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A593205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212263;
-	bh=rJpc/GW8OOqRXsrjaiIX1kdq+qgdelKGmq0A41L9ncI=;
+	s=default; t=1572212269;
+	bh=hnSeWz2y9ujbvz5ZUve2LuVtHb1iD/dO/B3j/VOPyys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFmrYUU/py3GrxpLxwsjhyYb3138FFaaBZy6AukTeiVY5VHdrlNQbX1knLa2XT1wi
-	 OUqEooF6fwikyZMSc8ydBmdlgprlbcxIZNYRsEbhvtagu2G7+7Ew2DB71NnyeRAEGI
-	 jaEzf88UuTi3il23qkeDcmDeMXkFvT7k5ZGliEhE=
+	b=X9vwtvw3ZiRJDM8DmInaMlTt2aTbOUEmw5n09H+6wSKIlep2r5ZtHlcU0nL1rOV0m
+	 /H4WO1y4+O6EMfRlBXRBeLTDThjIXsWUVqA4tMAhxREFBGK6autO9tgrUBBAG16/OQ
+	 2CdsE0K+cv7N1UKePhJTj1HlyyC1fLjbAwRnknfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfJ0VEn (ORCPT
+        id S1731726AbfJ0Vhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:37:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfJ0VEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:04:38 -0400
+        id S1728687AbfJ0VEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:04:43 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1061D2064A;
-        Sun, 27 Oct 2019 21:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D4D208C0;
+        Sun, 27 Oct 2019 21:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210277;
-        bh=rJpc/GW8OOqRXsrjaiIX1kdq+qgdelKGmq0A41L9ncI=;
+        s=default; t=1572210283;
+        bh=hnSeWz2y9ujbvz5ZUve2LuVtHb1iD/dO/B3j/VOPyys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ly+4XTGVyITKHZPWxmZWxpzgTIAYf+DjkujnfprKGD0QRfeDqgndmziStFBI8mNnk
-         5LocGScrfPKq+ZsB+Qe7ElC8avvj93ZUC6v+xEIfPDZZ3RKxnOyIyI5MwEM3uw/+UC
-         F4toCUjgFbsHl5ZAycpJ85kPiIDHqgGkkVUV2Uo8=
+        b=v4maqkoW2SNdxomJcfMTQ3nF3hP1a8JDJ+h7utd6023vEEcTNTwjjLxZnkYrk8BnC
+         0x39I2UPCVYTxSK4JbbZ4qryQfYkFb84ScnfHIH0WlM2Bn0BbMO2oEHIL1twar95yv
+         0nP7jTOx1Yy9sXDNfXQ8pn/hyEW/NDCJATz7UFIs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 10/49] net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
-Date:   Sun, 27 Oct 2019 22:00:48 +0100
-Message-Id: <20191027203125.717521692@linuxfoundation.org>
+Subject: [PATCH 4.9 12/49] Revert "drm/radeon: Fix EEH during kexec"
+Date:   Sun, 27 Oct 2019 22:00:50 +0100
+Message-Id: <20191027203126.453946813@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -60,43 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 53de429f4e88f538f7a8ec2b18be8c0cd9b2c8e1 ]
+[ Upstream commit 8d13c187c42e110625d60094668a8f778c092879 ]
 
-In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
-uninitialized if regmap_read() fails. However, "reg_value" is used
-to decide the control flow later in the if statement, which is
-potentially unsafe.
+This reverts commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This breaks some boards.  Maybe just enable this on PPC for
+now?
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=205147
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index de23a0ead5d76..d06efcd5f13b1 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -166,11 +166,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 3ccf5b28b326e..30bd4a6a9d466 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -366,19 +366,11 @@ radeon_pci_remove(struct pci_dev *pdev)
+ static void
+ radeon_pci_shutdown(struct pci_dev *pdev)
  {
- 	u32 time_cnt;
- 	u32 reg_value;
-+	int ret;
+-	struct drm_device *ddev = pci_get_drvdata(pdev);
+-
+ 	/* if we are running in a VM, make sure the device
+ 	 * torn down properly on reboot/shutdown
+ 	 */
+ 	if (radeon_device_is_virtual())
+ 		radeon_pci_remove(pdev);
+-
+-	/* Some adapters need to be suspended before a
+-	* shutdown occurs in order to prevent an error
+-	* during kexec.
+-	*/
+-	radeon_suspend_kms(ddev, true, true, false);
+ }
  
- 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
- 
- 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
--		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
-+		if (ret)
-+			return ret;
-+
- 		reg_value &= st_msk;
- 		if ((!!check_st) == (!!reg_value))
- 			break;
+ static int radeon_pmops_suspend(struct device *dev)
 -- 
 2.20.1
 
