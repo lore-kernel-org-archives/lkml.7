@@ -2,55 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C1DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B71ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3237E2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D290B205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211770;
-	bh=3+6xcR6HMWluZuqTM5picN4Lb40T3NdoJmOQ1JBR3UE=;
+	s=default; t=1572211777;
+	bh=wGJG6dgJHfROtZnh12vuDuPwFT13RVooPwWmCpFfzXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=esrNyVByhFmsHszwKEW0WKKZUFnwlOIeCV7ym3CIwbx98Pg4eOhanQohTNZNKssz4
-	 HmZwBCg1g/u/XF7+fX2cOEf1RHV1o7T9RKlDl+ppNTxiHvULfMO1XPjYeeK0yfIJ00
-	 u0EvGGclK2hqC8px7ptPDvkcouT9H4IZzPG2wb+E=
+	b=SYa9PukYb4cuJ4+FTG1r86t23tsgXZ1jQgAF1LiWco9eaPr8g2eLOKQD3ey/rWSbQ
+	 SWtwiKS68f5n9jXcLXA9O9CUzZqcanIroBmSVwpduh0pTJmIHSxSOLWjb1xYeM/jOE
+	 9LJLwEXpsN6HlpOwowelStyQgElfyLQKIuDUksug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbfJ0V33 (ORCPT
+        id S1731626AbfJ0VUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:29:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41060 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731710AbfJ0VU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:20:29 -0400
+        id S1731100AbfJ0VUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:20:04 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54F0D2070B;
-        Sun, 27 Oct 2019 21:20:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB2F2070B;
+        Sun, 27 Oct 2019 21:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211228;
-        bh=3+6xcR6HMWluZuqTM5picN4Lb40T3NdoJmOQ1JBR3UE=;
+        s=default; t=1572211203;
+        bh=wGJG6dgJHfROtZnh12vuDuPwFT13RVooPwWmCpFfzXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AO9tYzUaEifkQcSuUc98AmhV91KbzKfuL6Cw8QN3o1Tv3Qz2lLpjea8UU6OyHvdHK
-         qMGOJhzDIzgO6XQSKxnH8ljMTlcmQ+I6pnaKhfiaGsShB2khdcY3cNGGAwrNOosAgZ
-         LNvqN8F7N8OuifKZDrqciyV3vdMSM9U0hBCX+apI=
+        b=2Dt6Xx1U93mAqk5UF44ekQUj7OIWWbVWLlOf+1/9TuGieFqqfba10Mo2tjR328pwc
+         YsectiRdp6+BkxNGvlbxu+1Lf7OxCxOK3rUwJXkOyDUwan0YXrwltiGpHwh6rn0LO5
+         2Hzb0I+MgEtcm7TQa33XxkCGYMCzn8MPgAfmUnpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com,
-        syzbot+4a0643a653ac375612d1@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 076/197] net: ipv6: fix listify ip6_rcv_finish in case of forwarding
-Date:   Sun, 27 Oct 2019 21:59:54 +0100
-Message-Id: <20191027203355.753727115@linuxfoundation.org>
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 041/197] net: stmmac: Do not stop PHY if WoL is enabled
+Date:   Sun, 27 Oct 2019 21:59:19 +0100
+Message-Id: <20191027203353.934280779@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -63,73 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit c7a42eb49212f93a800560662d17d5293960d3c3 ]
+[ Upstream commit 3e2bf04fb0447aa4b967b8000125178f55ae7800 ]
 
-We need a similar fix for ipv6 as Commit 0761680d5215 ("net: ipv4: fix
-listify ip_rcv_finish in case of forwarding") does for ipv4.
+If WoL is enabled we can't really stop the PHY, otherwise we will not
+receive the WoL packet. Fix this by telling phylink that only the MAC is
+down and only stop the PHY if WoL is not enabled.
 
-This issue can be reprocuded by syzbot since Commit 323ebb61e32b ("net:
-use listified RX for handling GRO_NORMAL skbs") on net-next. The call
-trace was:
-
-  kernel BUG at include/linux/skbuff.h:2225!
-  RIP: 0010:__skb_pull include/linux/skbuff.h:2225 [inline]
-  RIP: 0010:skb_pull+0xea/0x110 net/core/skbuff.c:1902
-  Call Trace:
-    sctp_inq_pop+0x2f1/0xd80 net/sctp/inqueue.c:202
-    sctp_endpoint_bh_rcv+0x184/0x8d0 net/sctp/endpointola.c:385
-    sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
-    sctp_rcv+0x2807/0x3590 net/sctp/input.c:256
-    sctp6_rcv+0x17/0x30 net/sctp/ipv6.c:1049
-    ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
-    ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
-    NF_HOOK include/linux/netfilter.h:305 [inline]
-    NF_HOOK include/linux/netfilter.h:299 [inline]
-    ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
-    dst_input include/net/dst.h:442 [inline]
-    ip6_sublist_rcv_finish+0x98/0x1e0 net/ipv6/ip6_input.c:84
-    ip6_list_rcv_finish net/ipv6/ip6_input.c:118 [inline]
-    ip6_sublist_rcv+0x80c/0xcf0 net/ipv6/ip6_input.c:282
-    ipv6_list_rcv+0x373/0x4b0 net/ipv6/ip6_input.c:316
-    __netif_receive_skb_list_ptype net/core/dev.c:5049 [inline]
-    __netif_receive_skb_list_core+0x5fc/0x9d0 net/core/dev.c:5097
-    __netif_receive_skb_list net/core/dev.c:5149 [inline]
-    netif_receive_skb_list_internal+0x7eb/0xe60 net/core/dev.c:5244
-    gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5757
-    gro_normal_list net/core/dev.c:5755 [inline]
-    gro_normal_one net/core/dev.c:5769 [inline]
-    napi_frags_finish net/core/dev.c:5782 [inline]
-    napi_gro_frags+0xa6a/0xea0 net/core/dev.c:5855
-    tun_get_user+0x2e98/0x3fa0 drivers/net/tun.c:1974
-    tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2020
-
-Fixes: d8269e2cbf90 ("net: ipv6: listify ipv6_rcv() and ip6_rcv_finish()")
-Fixes: 323ebb61e32b ("net: use listified RX for handling GRO_NORMAL skbs")
-Reported-by: syzbot+eb349eeee854e389c36d@syzkaller.appspotmail.com
-Reported-by: syzbot+4a0643a653ac375612d1@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Edward Cree <ecree@solarflare.com>
+Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_input.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c  | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/net/ipv6/ip6_input.c
-+++ b/net/ipv6/ip6_input.c
-@@ -80,8 +80,10 @@ static void ip6_sublist_rcv_finish(struc
- {
- 	struct sk_buff *skb, *next;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index ade85ca9d8c7f..69cc9133336fc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4456,9 +4456,7 @@ int stmmac_suspend(struct device *dev)
  
--	list_for_each_entry_safe(skb, next, head, list)
-+	list_for_each_entry_safe(skb, next, head, list) {
-+		skb_list_del_init(skb);
- 		dst_input(skb);
+ 	mutex_lock(&priv->lock);
+ 
+-	rtnl_lock();
+-	phylink_stop(priv->phylink);
+-	rtnl_unlock();
++	phylink_mac_change(priv->phylink, false);
+ 
+ 	netif_device_detach(ndev);
+ 	stmmac_stop_all_queues(priv);
+@@ -4473,6 +4471,10 @@ int stmmac_suspend(struct device *dev)
+ 		stmmac_pmt(priv, priv->hw, priv->wolopts);
+ 		priv->irq_wake = 1;
+ 	} else {
++		rtnl_lock();
++		phylink_stop(priv->phylink);
++		rtnl_unlock();
++
+ 		stmmac_mac_set(priv, priv->ioaddr, false);
+ 		pinctrl_pm_select_sleep_state(priv->device);
+ 		/* Disable clock in case of PWM is off */
+@@ -4563,9 +4565,13 @@ int stmmac_resume(struct device *dev)
+ 
+ 	stmmac_start_all_queues(priv);
+ 
+-	rtnl_lock();
+-	phylink_start(priv->phylink);
+-	rtnl_unlock();
++	if (!device_may_wakeup(priv->device)) {
++		rtnl_lock();
++		phylink_start(priv->phylink);
++		rtnl_unlock();
 +	}
- }
++
++	phylink_mac_change(priv->phylink, true);
  
- static void ip6_list_rcv_finish(struct net *net, struct sock *sk,
+ 	mutex_unlock(&priv->lock);
+ 
+-- 
+2.20.1
+
 
 
