@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C38CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E66CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA66721848
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0851F21848
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211072;
-	bh=R3+/hJX/2rD8flEe2XZwxCvvYNQNQxgQCV+Xkg2vBdw=;
+	s=default; t=1572211078;
+	bh=8bnMYcLJcKc4ZU8HhKpFN1Z0TuerJPwW6b+l8HVm9/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ly9S+zYu10M9SPgnwTj00Wk3BXdg7+MRgCfBsOCg4Z/5MD9LSvPgfb1TucxK/vFKy
-	 iScQsVrZYuyqkufP/6havYZWxgDYJL868kA2/sRpyEEFOjywkuVzTOX5Oh9oMRNboF
-	 sTTt1AVBJvwSo2Bt47iIaZ08ODhiY/VBYNc9GxFQ=
+	b=V+WJIwpZFHS9eHRisgkMF1Q3cQcSFZUvC52q4UNCk+DkRa9xNoXWpw50w6nHZjpBl
+	 EFLEx1IjWcNFp30w4shNSQUAbiIaG7zw8kXSYtcFCiA1yv43LYZ2XbIHXZdLsACVpQ
+	 eeN0j1+gsvvxxkKoNdzpbY33IFBZq+wfqZVBik/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbfJ0VRv (ORCPT
+        id S1731173AbfJ0VR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731091AbfJ0VRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:38 -0400
+        id S1730567AbfJ0VRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:53 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57E4C2070B;
-        Sun, 27 Oct 2019 21:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF37208C0;
+        Sun, 27 Oct 2019 21:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211057;
-        bh=R3+/hJX/2rD8flEe2XZwxCvvYNQNQxgQCV+Xkg2vBdw=;
+        s=default; t=1572211072;
+        bh=8bnMYcLJcKc4ZU8HhKpFN1Z0TuerJPwW6b+l8HVm9/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jG/b8fSjQNXNzbVgQggGu2pt3V0hZQ0zUCOy0ZJpzhxeX/Lzz0VIQpLmaFdyPcaHO
-         jFT+JajxhS8NJiNqCRUgTf9+oiVSG9BA8T3Rne2AlxXVQixTr7/TxbCCFw4vhfWHRL
-         rG3RmyddbZ3EwYONSh+L9lHbIgcWwoTHonq2CeS4=
+        b=nLGpIX5slYnzwTK6qHpqQJgTLt4qHhvzMZHxWoRiBH9frbJkRcQNMUljD3oIgy/jX
+         tFz2ZQWgJQ4bmbPeNDZBBUZaPdRVkEv13n2vib6qY6pUsFUv/8/fbehABBAWsyWL3z
+         6WJKuZvqCDad3s6qlRRr+k6kWidxAY5VCWPfEWaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
         Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 018/197] nvme-pci: Save PCI state before putting drive into deepest state
-Date:   Sun, 27 Oct 2019 21:58:56 +0100
-Message-Id: <20191027203352.659130294@linuxfoundation.org>
+Subject: [PATCH 5.3 022/197] nvme: Add quirk for Kingston NVME SSD running FW E8FK11.T
+Date:   Sun, 27 Oct 2019 21:59:00 +0100
+Message-Id: <20191027203352.880651177@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -62,72 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mario Limonciello <mario.limonciello@dell.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit 7cbb5c6f9aa7cfda7175d82a9cf77a92965b0c5e ]
+[ Upstream commit 19ea025e1d28c629b369c3532a85b3df478cc5c6 ]
 
-The action of saving the PCI state will cause numerous PCI configuration
-space reads which depending upon the vendor implementation may cause
-the drive to exit the deepest NVMe state.
+Kingston NVME SSD with firmware version E8FK11.T has no interrupt after
+resume with actions related to suspend to idle. This patch applied
+NVME_QUIRK_SIMPLE_SUSPEND quirk to fix this issue.
 
-In these cases ASPM will typically resolve the PCIe link state and APST
-may resolve the NVMe power state.  However it has also been observed
-that this register access after quiesced will cause PC10 failure
-on some device combinations.
-
-To resolve this, move the PCI state saving to before SetFeatures has been
-called.  This has been proven to resolve the issue across a 5000 sample
-test on previously failing disk/system combinations.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204887
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
 Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/nvme/host/core.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 732d5b63ec054..19458e85dab34 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2894,11 +2894,21 @@ static int nvme_suspend(struct device *dev)
- 	if (ret < 0)
- 		goto unfreeze;
- 
-+	/*
-+	 * A saved state prevents pci pm from generically controlling the
-+	 * device's power. If we're using protocol specific settings, we don't
-+	 * want pci interfering.
-+	 */
-+	pci_save_state(pdev);
-+
- 	ret = nvme_set_power_state(ctrl, ctrl->npss);
- 	if (ret < 0)
- 		goto unfreeze;
- 
- 	if (ret) {
-+		/* discard the saved state */
-+		pci_load_saved_state(pdev, NULL);
-+
- 		/*
- 		 * Clearing npss forces a controller reset on resume. The
- 		 * correct value will be resdicovered then.
-@@ -2906,14 +2916,7 @@ static int nvme_suspend(struct device *dev)
- 		nvme_dev_disable(ndev, true);
- 		ctrl->npss = 0;
- 		ret = 0;
--		goto unfreeze;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index ac2ac06d870b5..3304e2c8a448a 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2270,6 +2270,16 @@ static const struct nvme_core_quirk_entry core_quirks[] = {
+ 		.vid = 0x14a4,
+ 		.fr = "22301111",
+ 		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
++	},
++	{
++		/*
++		 * This Kingston E8FK11.T firmware version has no interrupt
++		 * after resume with actions related to suspend to idle
++		 * https://bugzilla.kernel.org/show_bug.cgi?id=204887
++		 */
++		.vid = 0x2646,
++		.fr = "E8FK11.T",
++		.quirks = NVME_QUIRK_SIMPLE_SUSPEND,
  	}
--	/*
--	 * A saved state prevents pci pm from generically controlling the
--	 * device's power. If we're using protocol specific settings, we don't
--	 * want pci interfering.
--	 */
--	pci_save_state(pdev);
- unfreeze:
- 	nvme_unfreeze(ctrl);
- 	return ret;
+ };
+ 
 -- 
 2.20.1
 
