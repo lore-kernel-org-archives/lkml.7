@@ -2,81 +2,152 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A33CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0289CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF86020873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E2621D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfJ0PJk (ORCPT
+        id S1727144AbfJ0PTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 11:09:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:58424 "EHLO verein.lst.de"
+        Sun, 27 Oct 2019 11:19:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34970 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbfJ0PJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 11:09:40 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D8ED668B05; Sun, 27 Oct 2019 16:09:37 +0100 (CET)
-Date:   Sun, 27 Oct 2019 16:09:37 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 3/3] nvme: Introduce
- nvme_execute_passthru_rq_nowait()
-Message-ID: <20191027150937.GC5843@lst.de>
-References: <20191025202535.12036-1-logang@deltatee.com> <20191025202535.12036-4-logang@deltatee.com>
+        id S1726996AbfJ0PTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 11:19:44 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 450EAC049E12
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 15:19:44 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id q22so2396405wmc.1
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 08:19:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JvVHDWrg8kpWgm0TThMdqhOJom1+KkBM1yfK666tdK4=;
+        b=tfeLk+25zZfbxmCPHOCpDCqL6wnAyT8SgcD0p4zyz8Jyy37tuibkltHP5o/rZIjAsP
+         M+44LGm/9+5OgyQjAFSYhXyzr603us6KQOJ+wrXtV4NfC+MdDrwvC0cdoq1jWWukj8+k
+         eU0cgj69tDmlf9Rm3238AoBKsqeGBVMN2t3gCeIEJwtPEJEoCeOjmjkO22xW4gSqdzuS
+         8F9ZmfZnJjVBAJMHETVdUIK+dtZX2570SbBeA+m2VwyOL4783FoewT4JxdRSfIMBtrFX
+         2gJPAX5TrtjcIxWiarGhABniZ3bE8B0BnlWnyHN3T2cc6Ij2BQuLVcnNA0AgwlAgOa8A
+         fYxg==
+X-Gm-Message-State: APjAAAXmvwJjjS4R1eykk72QQ8JTj+bshcRBkwajRGSPipE5L56a/Qkm
+        X36sENxtLIp6WAWd3643znxyd8VbdcHTX4ABJCwo8dUt5RGi55q6oBw4B0QwbAsYfpdgd77de+J
+        S6DRf9RWVIb6fortdaoKi/ZaG
+X-Received: by 2002:adf:94e2:: with SMTP id 89mr10328947wrr.259.1572189583020;
+        Sun, 27 Oct 2019 08:19:43 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzvdVn0aiYq7FrT5RVLqx0MXimGTzauHTpKqpbORHqbfFJoV/X9338sWHQK9x3m/KY2jVMJ9Q==
+X-Received: by 2002:adf:94e2:: with SMTP id 89mr10328926wrr.259.1572189582760;
+        Sun, 27 Oct 2019 08:19:42 -0700 (PDT)
+Received: from vitty.brq.redhat.com ([193.43.158.229])
+        by smtp.gmail.com with ESMTPSA id l15sm3649473wmh.18.2019.10.27.08.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 08:19:41 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Joe Perches <joe@perches.com>
+Subject: [PATCH v3] x86/hyper-v: micro-optimize send_ipi_one case
+Date:   Sun, 27 Oct 2019 16:19:38 +0100
+Message-Id: <20191027151938.7296-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025202535.12036-4-logang@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 02:25:35PM -0600, Logan Gunthorpe wrote:
-> This function is similar to nvme_execute_passthru_rq() but does
-> not wait and will call a callback when the request is complete.
-> 
-> The new function can also be called in interrupt context, so if there
-> are side effects, the request will be executed in a work queue to
-> avoid sleeping.
+When sending an IPI to a single CPU there is no need to deal with cpumasks.
+With 2 CPU guest on WS2019 I'm seeing a minor (like 3%, 8043 -> 7761 CPU
+cycles) improvement with smp_call_function_single() loop benchmark. The
+optimization, however, is tiny and straitforward. Also, send_ipi_one() is
+important for PV spinlock kick.
 
-Why would you ever call it from interrupt context?  All the target
-submission handlers should run in process context.
+I was also wondering if it would make sense to switch to using regular
+APIC IPI send for CPU > 64 case but no, it is twice as expesive (12650 CPU
+cycles for __send_ipi_mask_ex() call, 26000 for orig_apic.send_IPI(cpu,
+vector)).
 
-> +void nvme_execute_passthru_rq_nowait(struct request *rq, rq_end_io_fn *done)
-> +{
-> +	struct nvme_command *cmd = nvme_req(rq)->cmd;
-> +	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
-> +	struct nvme_ns *ns = rq->q->queuedata;
-> +	struct gendisk *disk = ns ? ns->disk : NULL;
-> +	u32 effects;
-> +
-> +	/*
-> +	 * This function may be called in interrupt context, so we cannot sleep
-> +	 * but nvme_passthru_[start|end]() may sleep so we need to execute
-> +	 * the command in a work queue.
-> +	 */
-> +	effects = nvme_command_effects(ctrl, ns, cmd->common.opcode);
-> +	if (effects) {
-> +		rq->end_io = done;
-> +		INIT_WORK(&nvme_req(rq)->work, nvme_execute_passthru_rq_work);
-> +		queue_work(nvme_wq, &nvme_req(rq)->work);
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+Changes since v2:
+ - Check VP number instead of CPU number against >= 64 [Michael]
+ - Check for VP_INVAL
+---
+ arch/x86/hyperv/hv_apic.c           | 16 +++++++++++++---
+ arch/x86/include/asm/trace/hyperv.h | 15 +++++++++++++++
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-But independent of the target code - I'd much rather leave this to the
-caller.  Just call nvme_command_effects in the target code, then if
-there are not side effects use blk_execute_rq_nowait directly, else
-schedule a workqueue in the target code and call
-nvme_execute_passthru_rq from it.
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index e01078e93dd3..40e0e322161d 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -194,10 +194,20 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
+ 
+ static bool __send_ipi_one(int cpu, int vector)
+ {
+-	struct cpumask mask = CPU_MASK_NONE;
++	int vp = hv_cpu_number_to_vp_number(cpu);
+ 
+-	cpumask_set_cpu(cpu, &mask);
+-	return __send_ipi_mask(&mask, vector);
++	trace_hyperv_send_ipi_one(cpu, vector);
++
++	if (!hv_hypercall_pg || (vp == VP_INVAL))
++		return false;
++
++	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
++		return false;
++
++	if (vp >= 64)
++		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
++
++	return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
+ }
+ 
+ static void hv_send_ipi(int cpu, int vector)
+diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/trace/hyperv.h
+index ace464f09681..4d705cb4d63b 100644
+--- a/arch/x86/include/asm/trace/hyperv.h
++++ b/arch/x86/include/asm/trace/hyperv.h
+@@ -71,6 +71,21 @@ TRACE_EVENT(hyperv_send_ipi_mask,
+ 		      __entry->ncpus, __entry->vector)
+ 	);
+ 
++TRACE_EVENT(hyperv_send_ipi_one,
++	    TP_PROTO(int cpu,
++		     int vector),
++	    TP_ARGS(cpu, vector),
++	    TP_STRUCT__entry(
++		    __field(int, cpu)
++		    __field(int, vector)
++		    ),
++	    TP_fast_assign(__entry->cpu = cpu;
++			   __entry->vector = vector;
++		    ),
++	    TP_printk("cpu %d vector %x",
++		      __entry->cpu, __entry->vector)
++	);
++
+ #endif /* CONFIG_HYPERV */
+ 
+ #undef TRACE_INCLUDE_PATH
+-- 
+2.20.1
+
