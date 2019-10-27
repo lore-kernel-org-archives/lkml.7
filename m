@@ -2,90 +2,68 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DC3C47E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1367CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1C62067B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F804222BE
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572175807;
+	bh=C7auwD1WXWbMnFdBuCDr/ykryLHxN64hBFI3GfcQY7E=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=q72hKc3tjFQFdOP5RohVdTipM8Xtsi8BZ1cTGOtzD1QVSbaz2kc1qeCzbbQky+ouL
+	 EP6YFDyf9tsggp/sHDR55EuE0zXDzRIxSs98nlgMQmH1Ay/2C6ekEulu8qjhkXlwAV
+	 wdOEFN4GwffrFBpO9igU1zyIIN+62itCifM9dOvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfJ0LXW (ORCPT
+        id S1726874AbfJ0LaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 07:23:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45067 "EHLO mga05.intel.com"
+        Sun, 27 Oct 2019 07:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726469AbfJ0LXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 07:23:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:23:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,236,1569308400"; 
-   d="scan'208";a="399196419"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Oct 2019 04:23:18 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iOgdh-0001B1-Po; Sun, 27 Oct 2019 19:23:17 +0800
-Date:   Sun, 27 Oct 2019 19:22:56 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     kbuild-all@lists.01.org, netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v5 net-next 07/12] net: ethernet: ti: introduce cpsw
- switchdev based driver part 2 - switch
-Message-ID: <201910271911.gUJglaTl%lkp@intel.com>
-References: <20191024100914.16840-8-grygorii.strashko@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191024100914.16840-8-grygorii.strashko@ti.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1726687AbfJ0LaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 07:30:05 -0400
+Subject: Re: [GIT PULL] RISC-V updates for v5.4-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572175804;
+        bh=C7auwD1WXWbMnFdBuCDr/ykryLHxN64hBFI3GfcQY7E=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=E9rIU8KwjAmwtRcMrwUc9kHyeOyKFUwkAoctz8MOAdDkw2EAYlRc5vkH1LXlzyq4a
+         2fcr0n1r9ueu9RJcxDVKujrVgJOc5uYTaHWpjWbLXkCFiUXgqW9Yj4ZwACwwobr7vh
+         vCfodc7/t3c5rO6OWqy4p8dUcvwQg27wBxwRDCC0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <alpine.DEB.2.21.9999.1910261701250.12828@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1910261701250.12828@viisi.sifive.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <alpine.DEB.2.21.9999.1910261701250.12828@viisi.sifive.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
+ tags/riscv/for-v5.4-rc5-b
+X-PR-Tracked-Commit-Id: e8f44c50dfe75315d1ff6efc837d62cbe7368c9b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6995a6a5a538dae047ff16ec267394e5258e84b7
+Message-Id: <157217580489.15608.4260623730121864685.pr-tracker-bot@kernel.org>
+Date:   Sun, 27 Oct 2019 11:30:04 +0000
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     torvalds@linux-foundation.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Grygorii,
+The pull request you sent on Sat, 26 Oct 2019 17:02:43 -0700 (PDT):
 
-I love your patch! Perhaps something to improve:
+> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc5-b
 
-[auto build test WARNING on net-next/master]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6995a6a5a538dae047ff16ec267394e5258e84b7
 
-url:    https://github.com/0day-ci/linux/commits/Grygorii-Strashko/net-ethernet-ti-introduce-new-cpsw-switchdev-based-driver/20191027-143414
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git 503a64635d5ef7351657c78ad77f8b5ff658d5fc
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Thank you!
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/net/ethernet/ti/cpsw_new.c:1444:6: sparse: sparse: symbol 'cpsw_port_offload_fwd_mark_update' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
