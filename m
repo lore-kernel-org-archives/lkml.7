@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68994CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3B3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD0A214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C291214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210918;
-	bh=a6NWeb/cvRKPTVMgErLPrNuC4T2h0kGuFR/Mxng+wDA=;
+	s=default; t=1572210923;
+	bh=Wu7KER+EOC8wlor1NMLBzXU7JISnGQq7b8zwi1Rbg1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXXZ8SWnP3ca1DPqiMYElMMF7u+H5hilN6EKifMjn9SlOnGHgE3YEfflXAFhJOnyH
-	 g7LBmBSCbGG2nLwBU5aqMgwWHHjKv9QClUIRHUs4+TYYz+4TM55Ld/r2TksR4DX8Am
-	 2lbYd8KzURu54I8TAAEyGYBqyOEV2JeZE3geOf/0=
+	b=xx2/z6wrPGSHVIOuTB2/xrKTXOfZDayiHFhrL7ObfoIy4+zv86Qd5cdrrPT65vr8b
+	 c7JLzb0q2r9OLm8aD49A0x3fGaGbCMb3rQlb2QHwxgV9xdurmlBYSWgSTBypZYB+rx
+	 o1ARxcx46ssfL+8ZxeCqNTn+4cv7S8MCXzeCtlM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbfJ0VPR (ORCPT
+        id S1730637AbfJ0VPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34452 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730609AbfJ0VPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:15:12 -0400
+        id S1730616AbfJ0VPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:15:15 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4036208C0;
-        Sun, 27 Oct 2019 21:15:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64445208C0;
+        Sun, 27 Oct 2019 21:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210912;
-        bh=a6NWeb/cvRKPTVMgErLPrNuC4T2h0kGuFR/Mxng+wDA=;
+        s=default; t=1572210914;
+        bh=Wu7KER+EOC8wlor1NMLBzXU7JISnGQq7b8zwi1Rbg1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2WFYLTrOUaC5BJh4QDHT4yz3TbOtPBTdnLr5NOh1EHxGTno7Sw6p37T4HtaCchMAK
-         mRbR974n/Vr9pc9G2Ep/PbbsBUDuuQIUZ/PnoNpXrSoCkC13Gqx07IY10pZEcIqXPj
-         EpFiMHdjqE+TvCx8gL81L0wpDz9/cFrX48SuT8uY=
+        b=C0mnDiyLXjXbIQY7ZEjSFqWz+bsVT0Ez++XqKSQ4cU/KDcLD8pDBmljzCXZ7yzKlv
+         nxtxcXAfWivOrX+ex1cSbwBSsxJe4EhOuZn13+gI2StU7lRjAcpgND+z4/jmZ3aWVu
+         Da+QUgLwZm+I3SVLXit+6iE7s/tTtHP59pFO2R90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 4.19 59/93] drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
-Date:   Sun, 27 Oct 2019 22:01:11 +0100
-Message-Id: <20191027203303.729200921@linuxfoundation.org>
+        stable@vger.kernel.org, Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 4.19 60/93] drm/ttm: Restore ttm prefaulting
+Date:   Sun, 27 Oct 2019 22:01:12 +0100
+Message-Id: <20191027203304.610117369@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -59,35 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-commit 11bcf5f78905b90baae8fb01e16650664ed0cb00 upstream.
+commit 941f2f72dbbe0cf8c2d6e0b180a8021a0ec477fa upstream.
 
-Another panel that needs 6BPC quirk.
+Commit 4daa4fba3a38 ("gpu: drm: ttm: Adding new return type vm_fault_t")
+broke TTM prefaulting. Since vmf_insert_mixed() typically always returns
+VM_FAULT_NOPAGE, prefaulting stops after the second PTE.
 
-BugLink: https://bugs.launchpad.net/bugs/1819968
-Cc: <stable@vger.kernel.org> # v4.8+
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190402033037.21877-1-kai.heng.feng@canonical.com
+Restore (almost) the original behaviour. Unfortunately we can no longer
+with the new vm_fault_t return type determine whether a prefaulting
+PTE insertion hit an already populated PTE, and terminate the insertion
+loop. Instead we continue with the pre-determined number of prefaults.
+
+Fixes: 4daa4fba3a38 ("gpu: drm: ttm: Adding new return type vm_fault_t")
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: Christian König <christian.koenig@amd.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/330387/
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/ttm/ttm_bo_vm.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -166,6 +166,9 @@ static const struct edid_quirk {
- 	/* Medion MD 30217 PG */
- 	{ "MED", 0x7b8, EDID_QUIRK_PREFER_LARGE_75 },
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -273,15 +273,13 @@ static vm_fault_t ttm_bo_vm_fault(struct
+ 		else
+ 			ret = vmf_insert_pfn(&cvma, address, pfn);
  
-+	/* Lenovo G50 */
-+	{ "SDC", 18514, EDID_QUIRK_FORCE_6BPC },
-+
- 	/* Panel in Samsung NP700G7A-S01PL notebook reports 6bpc */
- 	{ "SEC", 0xd033, EDID_QUIRK_FORCE_8BPC },
+-		/*
+-		 * Somebody beat us to this PTE or prefaulting to
+-		 * an already populated PTE, or prefaulting error.
+-		 */
+-
+-		if (unlikely((ret == VM_FAULT_NOPAGE && i > 0)))
+-			break;
+-		else if (unlikely(ret & VM_FAULT_ERROR))
+-			goto out_io_unlock;
++		/* Never error on prefaulted PTEs */
++		if (unlikely((ret & VM_FAULT_ERROR))) {
++			if (i == 0)
++				goto out_io_unlock;
++			else
++				break;
++		}
  
+ 		address += PAGE_SIZE;
+ 		if (unlikely(++page_offset >= page_last))
 
 
