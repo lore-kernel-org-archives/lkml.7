@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60A5CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA81DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A54205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D44620717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211952;
-	bh=gv1Y2SUXRrBy9F58HbHm7Oba8NO36ODdouYrlrZSFJM=;
+	s=default; t=1572211955;
+	bh=xd57e78IOUAHKpYpwT2IGQZpvJCvLZa8IEjkNyMJC4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9fEmK27xecvDJq2gEdryECrKRT+gQN8q5STrIVpX+8UzYzxlTkTb8zdqvT4pImRy
-	 kSzBcZLAfdHrJuwaNb064iR5yYX1sXdIsUXWcn5Ud/y5W8SSarLO8iI8yri0J8wfx2
-	 j3Uqk2WJanBLXDVLCKvzK/JT2Uj4YTSGHB5keHb0=
+	b=hSZzKedXMA+xKHtseCBeqRyn+npF/ChJJPQRac3aeJregK9Oyasi0zLnSpdwoTK5L
+	 XZJEkTkGiFyumYu6d8Ud2A8/v4L0FUkzJhe2UlxMtw6TLZwLfkJydmYdYtzQchX62u
+	 sxDRkg5AztFgBX6/DR/YZ+/5IfYBr+AIHBDcTYZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfJ0VOn (ORCPT
+        id S1732304AbfJ0Vce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:14:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33592 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:32:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730477AbfJ0VOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:14:36 -0400
+        id S1730496AbfJ0VOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:14:42 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B56F8208C0;
-        Sun, 27 Oct 2019 21:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41D6C214AF;
+        Sun, 27 Oct 2019 21:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210875;
-        bh=gv1Y2SUXRrBy9F58HbHm7Oba8NO36ODdouYrlrZSFJM=;
+        s=default; t=1572210880;
+        bh=xd57e78IOUAHKpYpwT2IGQZpvJCvLZa8IEjkNyMJC4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PC8aQz6hfaZG4fwt3c9mbZ4chCTZMZeO+XdcUGf8LPUpiyMW9ccWhRgkp63YJySBW
-         OoKZgLYKvaTOdWFpCn4j4fkleDECbFTvvTvuZrYSK7dOv9HnK+xyiwv7xtp+5I02hs
-         WY9hdvqeRNp4r0QkdHtokXRXUxYprbAwWw5+9jrQ=
+        b=HAoVomn1oDb6n7cHen5nD0AyxtuMlplAGbzHU7CbiTQQ52sO9PbICaq+Zogww/G5T
+         oQeL7QZSa/3ClERVES9jrQ9H9ZJzHcl1Me58XQalQI+UI9uoJvALULJbywDK/03ZpP
+         QOVSGBeKWmalFnynKR0gteObZzAjtKn9q8dIQaIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 30/93] net: i82596: fix dma_alloc_attr for sni_82596
-Date:   Sun, 27 Oct 2019 22:00:42 +0100
-Message-Id: <20191027203257.153353933@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 49/93] scsi: sd: Ignore a failure to sync cache due to lack of authorization
+Date:   Sun, 27 Oct 2019 22:01:01 +0100
+Message-Id: <20191027203300.557463261@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,85 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 61c1d33daf7b5146f44d4363b3322f8cda6a6c43 ]
+commit 21e3d6c81179bbdfa279efc8de456c34b814cfd2 upstream.
 
-Commit 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
-switched dma allocation over to dma_alloc_attr, but didn't convert
-the SNI part to request consistent DMA memory. This broke sni_82596
-since driver doesn't do dma_cache_sync for performance reasons.
-Fix this by using different DMA_ATTRs for lasi_82596 and sni_82596.
+I've got a report about a UAS drive enclosure reporting back Sense: Logical
+unit access not authorized if the drive it holds is password protected.
+While the drive is obviously unusable in that state as a mass storage
+device, it still exists as a sd device and when the system is asked to
+perform a suspend of the drive, it will be sent a SYNCHRONIZE CACHE. If
+that fails due to password protection, the error must be ignored.
 
-Fixes: 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190903101840.16483-1-oneukum@suse.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/i825xx/lasi_82596.c |    4 +++-
- drivers/net/ethernet/i825xx/lib82596.c   |    4 ++--
- drivers/net/ethernet/i825xx/sni_82596.c  |    4 +++-
- 3 files changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/i825xx/lasi_82596.c
-+++ b/drivers/net/ethernet/i825xx/lasi_82596.c
-@@ -96,6 +96,8 @@
+---
+ drivers/scsi/sd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1646,7 +1646,8 @@ static int sd_sync_cache(struct scsi_dis
+ 		/* we need to evaluate the error return  */
+ 		if (scsi_sense_valid(sshdr) &&
+ 			(sshdr->asc == 0x3a ||	/* medium not present */
+-			 sshdr->asc == 0x20))	/* invalid command */
++			 sshdr->asc == 0x20 ||	/* invalid command */
++			 (sshdr->asc == 0x74 && sshdr->ascq == 0x71)))	/* drive is password locked */
+ 				/* this is no error here */
+ 				return 0;
  
- #define OPT_SWAP_PORT	0x0001	/* Need to wordswp on the MPU port */
- 
-+#define LIB82596_DMA_ATTR	DMA_ATTR_NON_CONSISTENT
-+
- #define DMA_WBACK(ndev, addr, len) \
- 	do { dma_cache_sync((ndev)->dev.parent, (void *)addr, len, DMA_TO_DEVICE); } while (0)
- 
-@@ -199,7 +201,7 @@ static int __exit lan_remove_chip(struct
- 
- 	unregister_netdev (dev);
- 	dma_free_attrs(&pdev->dev, sizeof(struct i596_private), lp->dma,
--		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+		       lp->dma_addr, LIB82596_DMA_ATTR);
- 	free_netdev (dev);
- 	return 0;
- }
---- a/drivers/net/ethernet/i825xx/lib82596.c
-+++ b/drivers/net/ethernet/i825xx/lib82596.c
-@@ -1065,7 +1065,7 @@ static int i82596_probe(struct net_devic
- 
- 	dma = dma_alloc_attrs(dev->dev.parent, sizeof(struct i596_dma),
- 			      &lp->dma_addr, GFP_KERNEL,
--			      DMA_ATTR_NON_CONSISTENT);
-+			      LIB82596_DMA_ATTR);
- 	if (!dma) {
- 		printk(KERN_ERR "%s: Couldn't get shared memory\n", __FILE__);
- 		return -ENOMEM;
-@@ -1087,7 +1087,7 @@ static int i82596_probe(struct net_devic
- 	i = register_netdev(dev);
- 	if (i) {
- 		dma_free_attrs(dev->dev.parent, sizeof(struct i596_dma),
--			       dma, lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+			       dma, lp->dma_addr, LIB82596_DMA_ATTR);
- 		return i;
- 	}
- 
---- a/drivers/net/ethernet/i825xx/sni_82596.c
-+++ b/drivers/net/ethernet/i825xx/sni_82596.c
-@@ -23,6 +23,8 @@
- 
- static const char sni_82596_string[] = "snirm_82596";
- 
-+#define LIB82596_DMA_ATTR	0
-+
- #define DMA_WBACK(priv, addr, len)     do { } while (0)
- #define DMA_INV(priv, addr, len)       do { } while (0)
- #define DMA_WBACK_INV(priv, addr, len) do { } while (0)
-@@ -151,7 +153,7 @@ static int sni_82596_driver_remove(struc
- 
- 	unregister_netdev(dev);
- 	dma_free_attrs(dev->dev.parent, sizeof(struct i596_private), lp->dma,
--		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
-+		       lp->dma_addr, LIB82596_DMA_ATTR);
- 	iounmap(lp->ca);
- 	iounmap(lp->mpu_port);
- 	free_netdev (dev);
 
 
