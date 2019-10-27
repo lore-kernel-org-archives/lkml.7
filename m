@@ -2,53 +2,51 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73F2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04766CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8529421783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94EB21D81
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211538;
-	bh=Y2PGDeGpqDF5Aq1B/bYZdGBz4DvQrgjH7TQuNiejeWc=;
+	s=default; t=1572211540;
+	bh=C/mSX7vY8N1eOip8zq49LLoWltaTLCDefQ7EnzLpoiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pfXFbUWYrMPSh7eJWHrBpCrL6FKuTEd5QzMXrcNMeb3C8MXhbBvMxxPcG2TIFwBf6
-	 z6Yyax5v6Ehe64MTpC0FUAyXCMOgIm02Z49bYY8RUxrhTpsV3MTGmLJkYEOQ78cfVI
-	 H135d6YcJTyIWIaBmkGtyrPcWe18cnL231IcPW54=
+	b=Rm4K607z6UzPk5qSLvyHT5w7NgCIjdND2vND/gjA+fWqfeeyDl13InC0yQMP7JSOo
+	 G7Jtru6Gv2P6ykCEyjW4Lu6fkfI7O/ExnGsDtU15RJP7aXfpe7J/rutbtN9wJKRbU4
+	 z40qM3X80zeIwMbYgYg7nJ2+MYWgsXXYUWwzCXBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732781AbfJ0VZh (ORCPT
+        id S1732772AbfJ0VZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732770AbfJ0VZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 27 Oct 2019 17:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732136AbfJ0VZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:32 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0651B21783;
-        Sun, 27 Oct 2019 21:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F47C21783;
+        Sun, 27 Oct 2019 21:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211534;
-        bh=Y2PGDeGpqDF5Aq1B/bYZdGBz4DvQrgjH7TQuNiejeWc=;
+        s=default; t=1572211531;
+        bh=C/mSX7vY8N1eOip8zq49LLoWltaTLCDefQ7EnzLpoiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNfTg1j2vaPklHnlY1ZtqEdBUG8BDX0l2+2NuLm3sof2SSvI9FVCCcEBDgkUtvMA6
-         G00cL6Qt+/6WWIXz8IEU1Qoi+iI+xkc8BpU5BuwI7zyaw7OjhtRA3YxusDvOwrgpxp
-         pVUXe4sZY8+Bt0jVY9ZEU7Aug18zCeMV8cUW4a9M=
+        b=fqKZ2UTjobWImgtTrpSGXxdcqwkjd+0daEl36Fivifi4AVQbplwdy5GrOvsvXMn5p
+         XWNi9I40X5kPIqIwZALtePv9RIKXLScfJaxpDkp2rKlzHSN/8CzDB+r+ggc9T5dMku
+         jLE+6rhzEivh986/oSsvWDuqxZVzC4Z2sxiV0u3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.3 141/197] mmc: mxs: fix flags passed to dmaengine_prep_slave_sg
-Date:   Sun, 27 Oct 2019 22:00:59 +0100
-Message-Id: <20191027203359.315800560@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 140/197] io_uring: used cached copies of sq->dropped and cq->overflow
+Date:   Sun, 27 Oct 2019 22:00:58 +0100
+Message-Id: <20191027203359.264971269@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,64 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 2bb9f7566ba7ab3c2154964461e37b52cdc6b91b upstream.
+[ Upstream commit 498ccd9eda49117c34e0041563d0da6ac40e52b8 ]
 
-Since ceeeb99cd821 we no longer abuse the DMA_CTRL_ACK flag for custom
-driver use and introduced the MXS_DMA_CTRL_WAIT4END instead. We have not
-changed all users to this flag though. This patch fixes it for the
-mxs-mmc driver.
+We currently use the ring values directly, but that can lead to issues
+if the application is malicious and changes these values on our behalf.
+Created in-kernel cached versions of them, and just overwrite the user
+side when we update them. This is similar to how we treat the sq/cq
+ring tail/head updates.
 
-Fixes: ceeeb99cd821 ("dmaengine: mxs: rename custom flag")
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Tested-by: Fabio Estevam <festevam@gmail.com>
-Reported-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-Tested-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Pavel Begunkov <asml.silence@gmail.com>
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mxs-mmc.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/io_uring.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/mmc/host/mxs-mmc.c
-+++ b/drivers/mmc/host/mxs-mmc.c
-@@ -17,6 +17,7 @@
- #include <linux/interrupt.h>
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
-+#include <linux/dma/mxs-dma.h>
- #include <linux/highmem.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-@@ -266,7 +267,7 @@ static void mxs_mmc_bc(struct mxs_mmc_ho
- 	ssp->ssp_pio_words[2] = cmd1;
- 	ssp->dma_dir = DMA_NONE;
- 	ssp->slave_dirn = DMA_TRANS_NONE;
--	desc = mxs_mmc_prep_dma(host, DMA_CTRL_ACK);
-+	desc = mxs_mmc_prep_dma(host, MXS_DMA_CTRL_WAIT4END);
- 	if (!desc)
- 		goto out;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index d447f43d64a24..3c8906494a8e1 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -221,6 +221,7 @@ struct io_ring_ctx {
+ 		unsigned		sq_entries;
+ 		unsigned		sq_mask;
+ 		unsigned		sq_thread_idle;
++		unsigned		cached_sq_dropped;
+ 		struct io_uring_sqe	*sq_sqes;
  
-@@ -311,7 +312,7 @@ static void mxs_mmc_ac(struct mxs_mmc_ho
- 	ssp->ssp_pio_words[2] = cmd1;
- 	ssp->dma_dir = DMA_NONE;
- 	ssp->slave_dirn = DMA_TRANS_NONE;
--	desc = mxs_mmc_prep_dma(host, DMA_CTRL_ACK);
-+	desc = mxs_mmc_prep_dma(host, MXS_DMA_CTRL_WAIT4END);
- 	if (!desc)
- 		goto out;
+ 		struct list_head	defer_list;
+@@ -237,6 +238,7 @@ struct io_ring_ctx {
+ 		/* CQ ring */
+ 		struct io_cq_ring	*cq_ring;
+ 		unsigned		cached_cq_tail;
++		atomic_t		cached_cq_overflow;
+ 		unsigned		cq_entries;
+ 		unsigned		cq_mask;
+ 		struct wait_queue_head	cq_wait;
+@@ -431,7 +433,8 @@ static inline bool io_sequence_defer(struct io_ring_ctx *ctx,
+ 	if ((req->flags & (REQ_F_IO_DRAIN|REQ_F_IO_DRAINED)) != REQ_F_IO_DRAIN)
+ 		return false;
  
-@@ -441,7 +442,7 @@ static void mxs_mmc_adtc(struct mxs_mmc_
- 	host->data = data;
- 	ssp->dma_dir = dma_data_dir;
- 	ssp->slave_dirn = slave_dirn;
--	desc = mxs_mmc_prep_dma(host, DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	desc = mxs_mmc_prep_dma(host, DMA_PREP_INTERRUPT | MXS_DMA_CTRL_WAIT4END);
- 	if (!desc)
- 		goto out;
+-	return req->sequence != ctx->cached_cq_tail + ctx->sq_ring->dropped;
++	return req->sequence != ctx->cached_cq_tail + ctx->sq_ring->dropped
++					+ atomic_read(&ctx->cached_cq_overflow);
+ }
  
+ static struct io_kiocb *io_get_deferred_req(struct io_ring_ctx *ctx)
+@@ -511,9 +514,8 @@ static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
+ 		WRITE_ONCE(cqe->res, res);
+ 		WRITE_ONCE(cqe->flags, 0);
+ 	} else {
+-		unsigned overflow = READ_ONCE(ctx->cq_ring->overflow);
+-
+-		WRITE_ONCE(ctx->cq_ring->overflow, overflow + 1);
++		WRITE_ONCE(ctx->cq_ring->overflow,
++				atomic_inc_return(&ctx->cached_cq_overflow));
+ 	}
+ }
+ 
+@@ -2272,7 +2274,8 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+ 
+ 	/* drop invalid entries */
+ 	ctx->cached_sq_head++;
+-	ring->dropped++;
++	ctx->cached_sq_dropped++;
++	WRITE_ONCE(ring->dropped, ctx->cached_sq_dropped);
+ 	return false;
+ }
+ 
+-- 
+2.20.1
+
 
 
