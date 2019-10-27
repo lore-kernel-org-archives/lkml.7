@@ -2,61 +2,54 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B98CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D710ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526A72064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B4A208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210746;
-	bh=JvAnhld2/UIVHlwrPccu9ojXlJ1tQlqUdBZ/mMGzbPc=;
+	s=default; t=1572210748;
+	bh=FFe3//Qy2F0+mSlN1E0EEyRZtFBrgtah5RH2MQAWTAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O5mydcYY+Qop+S5cNxgeAvVEoitW06lbaRkzsQhTupMpABUuTU1m3xB8Ljlv5CSzs
-	 B/dvYzGJqSXYWNWxPaVdZ1AO09JTxafJAo0Q4D2PmoNz5RnQ1mebEColRHjBQnebbW
-	 nk6sM6n5x9kBCsnwR01LqzQvggqqstnA/YMWFWUU=
+	b=mBPvtly/HLEiVElWxp/MDyjF54x2z5eiz0ooNN3HH/uKNoQ7v22XG7rv8YcwstwFt
+	 CSkZcqtu25n52YrRcDyRm/U+hnHeJcjQJQyNjpVrYP257E/XSpTsRQ8Mfv47y6z6kI
+	 J79EZQ+AYWwmoAG7WgCc/MyqD8jzicjnwFYHhiPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbfJ0VMZ (ORCPT
+        id S1730070AbfJ0VM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728673AbfJ0VMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:22 -0400
+        id S1730056AbfJ0VMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:25 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ECE7205C9;
-        Sun, 27 Oct 2019 21:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47CE208C0;
+        Sun, 27 Oct 2019 21:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210741;
-        bh=JvAnhld2/UIVHlwrPccu9ojXlJ1tQlqUdBZ/mMGzbPc=;
+        s=default; t=1572210744;
+        bh=FFe3//Qy2F0+mSlN1E0EEyRZtFBrgtah5RH2MQAWTAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Pfj1ntypNiWjFPv05IYaGMruETMhVB2VpzA5loDSYxbQPo5hdfaSNEKx8qpfZTqT
-         8iMJf9a1S8VIPJaCMf0XBZOu50NwOf8qFVW3GR6gSgd0YpBLB4gfkE5HbO+xXv2wVY
-         XTE6cn1OZXKhRJ83E47HM7uF0ajQImS53L5U4dHw=
+        b=2Q6959RdOOqJMhkJ4UKCzU83izouzvKBRCYgPgnffrF0WPlrWZHCLHHijZMEA1Yv5
+         h8EZklpv+JlwMDxvle9dQjjfFrE/2ZASAZe03IeL2RBGmBQDyiyVOtwjAEhALgOnz5
+         IQ7ri6t3M35xrM7gmm0evgzvYrgpg09KSUHBLLdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        Pankaj gupta <pagupta@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 099/119] fs/proc/page.c: dont access uninitialized memmaps in fs/proc/page.c
-Date:   Sun, 27 Oct 2019 22:01:16 +0100
-Message-Id: <20191027203348.887339430@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 100/119] scsi: zfcp: fix reaction on bit error threshold notification
+Date:   Sun, 27 Oct 2019 22:01:17 +0100
+Message-Id: <20191027203348.947962475@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -69,147 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit aad5f69bc161af489dbb5934868bd347282f0764 upstream.
+[ Upstream commit 2190168aaea42c31bff7b9a967e7b045f07df095 ]
 
-There are three places where we access uninitialized memmaps, namely:
-- /proc/kpagecount
-- /proc/kpageflags
-- /proc/kpagecgroup
+On excessive bit errors for the FCP channel ingress fibre path, the channel
+notifies us.  Previously, we only emitted a kernel message and a trace
+record.  Since performance can become suboptimal with I/O timeouts due to
+bit errors, we now stop using an FCP device by default on channel
+notification so multipath on top can timely failover to other paths.  A new
+module parameter zfcp.ber_stop can be used to get zfcp old behavior.
 
-We have initialized memmaps either when the section is online or when the
-page was initialized to the ZONE_DEVICE.  Uninitialized memmaps contain
-garbage and in the worst case trigger kernel BUGs, especially with
-CONFIG_PAGE_POISONING.
+User explanation of new kernel message:
 
-For example, not onlining a DIMM during boot and calling /proc/kpagecount
-with CONFIG_PAGE_POISONING:
+ * Description:
+ * The FCP channel reported that its bit error threshold has been exceeded.
+ * These errors might result from a problem with the physical components
+ * of the local fibre link into the FCP channel.
+ * The problem might be damage or malfunction of the cable or
+ * cable connection between the FCP channel and
+ * the adjacent fabric switch port or the point-to-point peer.
+ * Find details about the errors in the HBA trace for the FCP device.
+ * The zfcp device driver closed down the FCP device
+ * to limit the performance impact from possible I/O command timeouts.
+ * User action:
+ * Check for problems on the local fibre link, ensure that fibre optics are
+ * clean and functional, and all cables are properly plugged.
+ * After the repair action, you can manually recover the FCP device by
+ * writing "0" into its "failed" sysfs attribute.
+ * If recovery through sysfs is not possible, set the CHPID of the device
+ * offline and back online on the service element.
 
-  :/# cat /proc/kpagecount > tmp.test
-  BUG: unable to handle page fault for address: fffffffffffffffe
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 114616067 P4D 114616067 PUD 114618067 PMD 0
-  Oops: 0000 [#1] SMP NOPTI
-  CPU: 0 PID: 469 Comm: cat Not tainted 5.4.0-rc1-next-20191004+ #11
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.4
-  RIP: 0010:kpagecount_read+0xce/0x1e0
-  Code: e8 09 83 e0 3f 48 0f a3 02 73 2d 4c 89 e7 48 c1 e7 06 48 03 3d ab 51 01 01 74 1d 48 8b 57 08 480
-  RSP: 0018:ffffa14e409b7e78 EFLAGS: 00010202
-  RAX: fffffffffffffffe RBX: 0000000000020000 RCX: 0000000000000000
-  RDX: 0000000000000001 RSI: 00007f76b5595000 RDI: fffff35645000000
-  RBP: 00007f76b5595000 R08: 0000000000000001 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000140000
-  R13: 0000000000020000 R14: 00007f76b5595000 R15: ffffa14e409b7f08
-  FS:  00007f76b577d580(0000) GS:ffff8f41bd400000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: fffffffffffffffe CR3: 0000000078960000 CR4: 00000000000006f0
-  Call Trace:
-   proc_reg_read+0x3c/0x60
-   vfs_read+0xc5/0x180
-   ksys_read+0x68/0xe0
-   do_syscall_64+0x5c/0xa0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-For now, let's drop support for ZONE_DEVICE from the three pseudo files
-in order to fix this.  To distinguish offline memory (with garbage
-memmap) from ZONE_DEVICE memory with properly initialized memmaps, we
-would have to check get_dev_pagemap() and pfn_zone_device_reserved()
-right now.  The usage of both (especially, special casing devmem) is
-frowned upon and needs to be reworked.
-
-The fundamental issue we have is:
-
-	if (pfn_to_online_page(pfn)) {
-		/* memmap initialized */
-	} else if (pfn_valid(pfn)) {
-		/*
-		 * ???
-		 * a) offline memory. memmap garbage.
-		 * b) devmem: memmap initialized to ZONE_DEVICE.
-		 * c) devmem: reserved for driver. memmap garbage.
-		 * (d) devmem: memmap currently initializing - garbage)
-		 */
-	}
-
-We'll leave the pfn_zone_device_reserved() check in stable_page_flags()
-in place as that function is also used from memory failure.  We now no
-longer dump information about pages that are not in use anymore -
-offline.
-
-Link: http://lkml.kernel.org/r/20191009142435.3975-2-david@redhat.com
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Cc: Pankaj gupta <pagupta@redhat.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Anthony Yznaga <anthony.yznaga@oracle.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: <stable@vger.kernel.org>	[4.13+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: <stable@vger.kernel.org> #2.6.30+
+Link: https://lore.kernel.org/r/20191001104949.42810-1-maier@linux.ibm.com
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/page.c |   28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/s390/scsi/zfcp_fsf.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -42,10 +42,12 @@ static ssize_t kpagecount_read(struct fi
- 		return -EINVAL;
+diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
+index 00fb98f7b2cd0..94d1bcc83fa2e 100644
+--- a/drivers/s390/scsi/zfcp_fsf.c
++++ b/drivers/s390/scsi/zfcp_fsf.c
+@@ -21,6 +21,11 @@
  
- 	while (count > 0) {
--		if (pfn_valid(pfn))
--			ppage = pfn_to_page(pfn);
--		else
--			ppage = NULL;
-+		/*
-+		 * TODO: ZONE_DEVICE support requires to identify
-+		 * memmaps that were actually initialized.
-+		 */
-+		ppage = pfn_to_online_page(pfn);
+ struct kmem_cache *zfcp_fsf_qtcb_cache;
+ 
++static bool ber_stop = true;
++module_param(ber_stop, bool, 0600);
++MODULE_PARM_DESC(ber_stop,
++		 "Shuts down FCP devices for FCP channels that report a bit-error count in excess of its threshold (default on)");
 +
- 		if (!ppage || PageSlab(ppage))
- 			pcount = 0;
- 		else
-@@ -214,10 +216,11 @@ static ssize_t kpageflags_read(struct fi
- 		return -EINVAL;
- 
- 	while (count > 0) {
--		if (pfn_valid(pfn))
--			ppage = pfn_to_page(pfn);
--		else
--			ppage = NULL;
-+		/*
-+		 * TODO: ZONE_DEVICE support requires to identify
-+		 * memmaps that were actually initialized.
-+		 */
-+		ppage = pfn_to_online_page(pfn);
- 
- 		if (put_user(stable_page_flags(ppage), out)) {
- 			ret = -EFAULT;
-@@ -259,10 +262,11 @@ static ssize_t kpagecgroup_read(struct f
- 		return -EINVAL;
- 
- 	while (count > 0) {
--		if (pfn_valid(pfn))
--			ppage = pfn_to_page(pfn);
--		else
--			ppage = NULL;
-+		/*
-+		 * TODO: ZONE_DEVICE support requires to identify
-+		 * memmaps that were actually initialized.
-+		 */
-+		ppage = pfn_to_online_page(pfn);
- 
- 		if (ppage)
- 			ino = page_cgroup_ino(ppage);
+ static void zfcp_fsf_request_timeout_handler(unsigned long data)
+ {
+ 	struct zfcp_adapter *adapter = (struct zfcp_adapter *) data;
+@@ -230,10 +235,15 @@ static void zfcp_fsf_status_read_handler(struct zfcp_fsf_req *req)
+ 	case FSF_STATUS_READ_SENSE_DATA_AVAIL:
+ 		break;
+ 	case FSF_STATUS_READ_BIT_ERROR_THRESHOLD:
+-		dev_warn(&adapter->ccw_device->dev,
+-			 "The error threshold for checksum statistics "
+-			 "has been exceeded\n");
+ 		zfcp_dbf_hba_bit_err("fssrh_3", req);
++		if (ber_stop) {
++			dev_warn(&adapter->ccw_device->dev,
++				 "All paths over this FCP device are disused because of excessive bit errors\n");
++			zfcp_erp_adapter_shutdown(adapter, 0, "fssrh_b");
++		} else {
++			dev_warn(&adapter->ccw_device->dev,
++				 "The error threshold for checksum statistics has been exceeded\n");
++		}
+ 		break;
+ 	case FSF_STATUS_READ_LINK_DOWN:
+ 		zfcp_fsf_status_read_link_down(req);
+-- 
+2.20.1
+
 
 
