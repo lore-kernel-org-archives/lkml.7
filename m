@@ -2,51 +2,53 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04766CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D30ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94EB21D81
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DBF21D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211540;
-	bh=C/mSX7vY8N1eOip8zq49LLoWltaTLCDefQ7EnzLpoiU=;
+	s=default; t=1572211543;
+	bh=eRXpJNeQCyyCD23nmN3XQx5ovGSGyho2lmGLOeVxShs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rm4K607z6UzPk5qSLvyHT5w7NgCIjdND2vND/gjA+fWqfeeyDl13InC0yQMP7JSOo
-	 G7Jtru6Gv2P6ykCEyjW4Lu6fkfI7O/ExnGsDtU15RJP7aXfpe7J/rutbtN9wJKRbU4
-	 z40qM3X80zeIwMbYgYg7nJ2+MYWgsXXYUWwzCXBk=
+	b=eFbmmQgGBb8ncL4gcnBPzyN2+r1M4LTqY+x1o0iLb/oSsl8IMGOjjks9ZvtzI/EuZ
+	 618Wb9+w5LYNwzo7AvuJSRxzhb0lhm1KnieAnOTF1x768RgyzuVXE7NgFLCUMtFaP9
+	 CH327Qfb6BbkUWZtCShTztm+wkMKmYpzGD8vHAlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732772AbfJ0VZf (ORCPT
+        id S1728049AbfJ0VZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732136AbfJ0VZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:32 -0400
+        id S1732779AbfJ0VZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:38 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F47C21783;
-        Sun, 27 Oct 2019 21:25:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B347421850;
+        Sun, 27 Oct 2019 21:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211531;
-        bh=C/mSX7vY8N1eOip8zq49LLoWltaTLCDefQ7EnzLpoiU=;
+        s=default; t=1572211537;
+        bh=eRXpJNeQCyyCD23nmN3XQx5ovGSGyho2lmGLOeVxShs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fqKZ2UTjobWImgtTrpSGXxdcqwkjd+0daEl36Fivifi4AVQbplwdy5GrOvsvXMn5p
-         XWNi9I40X5kPIqIwZALtePv9RIKXLScfJaxpDkp2rKlzHSN/8CzDB+r+ggc9T5dMku
-         jLE+6rhzEivh986/oSsvWDuqxZVzC4Z2sxiV0u3U=
+        b=0T7+Cz2DlLAg90wg2cdVIprHqVdSRtTOjubwZlP5ObUqcjMmJftgEzCSlVeZJBCFI
+         6y5c1PIdLOkKu/QxGOnq+oo/Z3/TWJ+2TR4vy2//47C0ovnQzSkg3PGMg+3u9QW2Sc
+         ju9sUNpwFIarZZkU+t3o5X5QQgoEHM+dgqg8s3H0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 140/197] io_uring: used cached copies of sq->dropped and cq->overflow
-Date:   Sun, 27 Oct 2019 22:00:58 +0100
-Message-Id: <20191027203359.264971269@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        James Zhu <James.Zhu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.3 132/197] drm/amdgpu/vcn: fix allocation size in enc ring test
+Date:   Sun, 27 Oct 2019 22:00:50 +0100
+Message-Id: <20191027203358.845695967@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,78 +61,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 498ccd9eda49117c34e0041563d0da6ac40e52b8 ]
+commit c81fffc2c9450750dd7a54a36a788a860ab0425d upstream.
 
-We currently use the ring values directly, but that can lead to issues
-if the application is malicious and changes these values on our behalf.
-Created in-kernel cached versions of them, and just overwrite the user
-side when we update them. This is similar to how we treat the sq/cq
-ring tail/head updates.
+We need to allocate a large enough buffer for the
+session info, otherwise the IB test can overwrite
+other memory.
 
-Reported-by: Pavel Begunkov <asml.silence@gmail.com>
-Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+- Session info is 128K according to mesa
+- Use the same session info for create and destroy
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=204241
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: James Zhu <James.Zhu@amd.com>
+Tested-by: James Zhu <James.Zhu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/io_uring.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c |   35 +++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index d447f43d64a24..3c8906494a8e1 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -221,6 +221,7 @@ struct io_ring_ctx {
- 		unsigned		sq_entries;
- 		unsigned		sq_mask;
- 		unsigned		sq_thread_idle;
-+		unsigned		cached_sq_dropped;
- 		struct io_uring_sqe	*sq_sqes;
- 
- 		struct list_head	defer_list;
-@@ -237,6 +238,7 @@ struct io_ring_ctx {
- 		/* CQ ring */
- 		struct io_cq_ring	*cq_ring;
- 		unsigned		cached_cq_tail;
-+		atomic_t		cached_cq_overflow;
- 		unsigned		cq_entries;
- 		unsigned		cq_mask;
- 		struct wait_queue_head	cq_wait;
-@@ -431,7 +433,8 @@ static inline bool io_sequence_defer(struct io_ring_ctx *ctx,
- 	if ((req->flags & (REQ_F_IO_DRAIN|REQ_F_IO_DRAINED)) != REQ_F_IO_DRAIN)
- 		return false;
- 
--	return req->sequence != ctx->cached_cq_tail + ctx->sq_ring->dropped;
-+	return req->sequence != ctx->cached_cq_tail + ctx->sq_ring->dropped
-+					+ atomic_read(&ctx->cached_cq_overflow);
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
+@@ -517,13 +517,14 @@ int amdgpu_vcn_enc_ring_test_ring(struct
  }
  
- static struct io_kiocb *io_get_deferred_req(struct io_ring_ctx *ctx)
-@@ -511,9 +514,8 @@ static void io_cqring_fill_event(struct io_ring_ctx *ctx, u64 ki_user_data,
- 		WRITE_ONCE(cqe->res, res);
- 		WRITE_ONCE(cqe->flags, 0);
- 	} else {
--		unsigned overflow = READ_ONCE(ctx->cq_ring->overflow);
--
--		WRITE_ONCE(ctx->cq_ring->overflow, overflow + 1);
-+		WRITE_ONCE(ctx->cq_ring->overflow,
-+				atomic_inc_return(&ctx->cached_cq_overflow));
- 	}
+ static int amdgpu_vcn_enc_get_create_msg(struct amdgpu_ring *ring, uint32_t handle,
+-			      struct dma_fence **fence)
++					 struct amdgpu_bo *bo,
++					 struct dma_fence **fence)
+ {
+ 	const unsigned ib_size_dw = 16;
+ 	struct amdgpu_job *job;
+ 	struct amdgpu_ib *ib;
+ 	struct dma_fence *f = NULL;
+-	uint64_t dummy;
++	uint64_t addr;
+ 	int i, r;
+ 
+ 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
+@@ -531,14 +532,14 @@ static int amdgpu_vcn_enc_get_create_msg
+ 		return r;
+ 
+ 	ib = &job->ibs[0];
+-	dummy = ib->gpu_addr + 1024;
++	addr = amdgpu_bo_gpu_offset(bo);
+ 
+ 	ib->length_dw = 0;
+ 	ib->ptr[ib->length_dw++] = 0x00000018;
+ 	ib->ptr[ib->length_dw++] = 0x00000001; /* session info */
+ 	ib->ptr[ib->length_dw++] = handle;
+-	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
+-	ib->ptr[ib->length_dw++] = dummy;
++	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
++	ib->ptr[ib->length_dw++] = addr;
+ 	ib->ptr[ib->length_dw++] = 0x0000000b;
+ 
+ 	ib->ptr[ib->length_dw++] = 0x00000014;
+@@ -569,13 +570,14 @@ err:
  }
  
-@@ -2272,7 +2274,8 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+ static int amdgpu_vcn_enc_get_destroy_msg(struct amdgpu_ring *ring, uint32_t handle,
+-				struct dma_fence **fence)
++					  struct amdgpu_bo *bo,
++					  struct dma_fence **fence)
+ {
+ 	const unsigned ib_size_dw = 16;
+ 	struct amdgpu_job *job;
+ 	struct amdgpu_ib *ib;
+ 	struct dma_fence *f = NULL;
+-	uint64_t dummy;
++	uint64_t addr;
+ 	int i, r;
  
- 	/* drop invalid entries */
- 	ctx->cached_sq_head++;
--	ring->dropped++;
-+	ctx->cached_sq_dropped++;
-+	WRITE_ONCE(ring->dropped, ctx->cached_sq_dropped);
- 	return false;
+ 	r = amdgpu_job_alloc_with_ib(ring->adev, ib_size_dw * 4, &job);
+@@ -583,14 +585,14 @@ static int amdgpu_vcn_enc_get_destroy_ms
+ 		return r;
+ 
+ 	ib = &job->ibs[0];
+-	dummy = ib->gpu_addr + 1024;
++	addr = amdgpu_bo_gpu_offset(bo);
+ 
+ 	ib->length_dw = 0;
+ 	ib->ptr[ib->length_dw++] = 0x00000018;
+ 	ib->ptr[ib->length_dw++] = 0x00000001;
+ 	ib->ptr[ib->length_dw++] = handle;
+-	ib->ptr[ib->length_dw++] = upper_32_bits(dummy);
+-	ib->ptr[ib->length_dw++] = dummy;
++	ib->ptr[ib->length_dw++] = upper_32_bits(addr);
++	ib->ptr[ib->length_dw++] = addr;
+ 	ib->ptr[ib->length_dw++] = 0x0000000b;
+ 
+ 	ib->ptr[ib->length_dw++] = 0x00000014;
+@@ -623,13 +625,20 @@ err:
+ int amdgpu_vcn_enc_ring_test_ib(struct amdgpu_ring *ring, long timeout)
+ {
+ 	struct dma_fence *fence = NULL;
++	struct amdgpu_bo *bo = NULL;
+ 	long r;
+ 
+-	r = amdgpu_vcn_enc_get_create_msg(ring, 1, NULL);
++	r = amdgpu_bo_create_reserved(ring->adev, 128 * 1024, PAGE_SIZE,
++				      AMDGPU_GEM_DOMAIN_VRAM,
++				      &bo, NULL, NULL);
++	if (r)
++		return r;
++
++	r = amdgpu_vcn_enc_get_create_msg(ring, 1, bo, NULL);
+ 	if (r)
+ 		goto error;
+ 
+-	r = amdgpu_vcn_enc_get_destroy_msg(ring, 1, &fence);
++	r = amdgpu_vcn_enc_get_destroy_msg(ring, 1, bo, &fence);
+ 	if (r)
+ 		goto error;
+ 
+@@ -641,6 +650,8 @@ int amdgpu_vcn_enc_ring_test_ib(struct a
+ 
+ error:
+ 	dma_fence_put(fence);
++	amdgpu_bo_unreserve(bo);
++	amdgpu_bo_unref(&bo);
+ 	return r;
  }
  
--- 
-2.20.1
-
 
 
