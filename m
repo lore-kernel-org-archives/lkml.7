@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FC4CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEADBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C898D21783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B169A21D80
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211476;
-	bh=+9jZZGeI7w6970cSzL2GnY+5H/WDdvxEd0GZbvc3oaQ=;
+	s=default; t=1572211479;
+	bh=Xq9KU1AaD3YXp8m1yI2+LyCjoRIwmgbYZasbLkrCLEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g2LvEi3307+ZkLKNciVxeNIjhdvPwGQgTkFYEaak8i15b4nCo24hVLe/gx7l95p+p
-	 4FlccE95WBDvNC0EXi/YnhA6aXv+TF/VGpnRXHGmU6YX1NsVvPYRTk27MTaBz7MH0L
-	 O8Eg9C2OvTW43L03gKvzW5QvM4ulpGoOeHU44fBU=
+	b=KtgDCBT2jo5lbrwEXJrRtKob+To83mhc+Fv9bu70WhwilrNUu/YSK58lHe6eB21uT
+	 zca1OKmjx8HHw/FTkxsmlscib4qZeY9p1WevTm76VySlkIsWVHg6bGzU4TIibtRgNN
+	 3Viqfxsnpluxw+nxZI1Hol+/k9DsiDGMzqskKpb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbfJ0VYf (ORCPT
+        id S1732559AbfJ0VYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46158 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732534AbfJ0VYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:24:32 -0400
+        id S1732543AbfJ0VYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:24:35 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8BCC21783;
-        Sun, 27 Oct 2019 21:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E9F421848;
+        Sun, 27 Oct 2019 21:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211471;
-        bh=+9jZZGeI7w6970cSzL2GnY+5H/WDdvxEd0GZbvc3oaQ=;
+        s=default; t=1572211474;
+        bh=Xq9KU1AaD3YXp8m1yI2+LyCjoRIwmgbYZasbLkrCLEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ChvKMzfBeWdcS63/aRH0G2THLmFDINW5sFUObdsrITpuxpvTpA6GizIBeVnUN3ltU
-         SUf9Y1JNrWKzctjxyVrDC8E5NxVwbd6xmp/tWvcoKZlfyTSXpX3eYws8qko41HiBU7
-         i6h0hQKyPsEy5WLe2H8cKraWAuKIN/1XJClLSS8c=
+        b=MGNeh7UXgA2MAWBbZBOU22/ctSdXWyf8hUQV9NA3iSjFaCLJ0loNHzg8Vfpki6S2D
+         +AxKKRNppDmR/jZ8RpdPAKTCfn8/zPNEQKKm8/zFWremFbQ+4jetwvawFuEIpEKe92
+         OMdPJLQ3/yv/rSkn/TzZubTISeYB836GKFiUfU/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 5.3 162/197] EDAC/ghes: Fix Use after free in ghes_edac remove path
-Date:   Sun, 27 Oct 2019 22:01:20 +0100
-Message-Id: <20191027203402.547589321@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.3 163/197] arm64: KVM: Trap VM ops when ARM64_WORKAROUND_CAVIUM_TX2_219_TVM is set
+Date:   Sun, 27 Oct 2019 22:01:21 +0100
+Message-Id: <20191027203402.719521287@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -64,76 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-commit 1e72e673b9d102ff2e8333e74b3308d012ddf75b upstream.
+commit d3ec3a08fa700c8b46abb137dce4e2514a6f9668 upstream.
 
-ghes_edac models a single logical memory controller, and uses a global
-ghes_init variable to ensure only the first ghes_edac_register() will
-do anything.
+In order to workaround the TX2-219 erratum, it is necessary to trap
+TTBRx_EL1 accesses to EL2. This is done by setting HCR_EL2.TVM on
+guest entry, which has the side effect of trapping all the other
+VM-related sysregs as well.
 
-ghes_edac is registered the first time a GHES entry in the HEST is
-probed. There may be multiple entries, so subsequent attempts to
-register ghes_edac are silently ignored as the work has already been
-done.
+To minimize the overhead, a fast path is used so that we don't
+have to go all the way back to the main sysreg handling code,
+unless the rest of the hypervisor expects to see these accesses.
 
-When a GHES entry is unregistered, it calls ghes_edac_unregister(),
-which free()s the memory behind the global variables in ghes_edac.
-
-But there may be multiple GHES entries, the next call to
-ghes_edac_unregister() will dereference the free()d memory, and attempt
-to free it a second time.
-
-This may also be triggered on a platform with one GHES entry, if the
-driver is unbound/re-bound and unbound. The re-bind step will do
-nothing because of ghes_init, the second unbind will then do the same
-work as the first.
-
-Doing the unregister work on the first call is unsafe, as another
-CPU may be processing a notification in ghes_edac_report_mem_error(),
-using the memory we are about to free.
-
-ghes_init is already half of the reference counting. We only need
-to do the register work for the first call, and the unregister work
-for the last. Add the unregister check.
-
-This means we no longer free ghes_edac's memory while there are
-GHES entries that may receive a notification.
-
-This was detected by KASAN and DEBUG_TEST_DRIVER_REMOVE.
-
- [ bp: merge into a single patch. ]
-
-Fixes: 0fe5f281f749 ("EDAC, ghes: Model a single, logical memory controller")
-Reported-by: John Garry <john.garry@huawei.com>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Tony Luck <tony.luck@intel.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20191014171919.85044-2-james.morse@arm.com
-Link: https://lkml.kernel.org/r/304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/ghes_edac.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/include/asm/cpucaps.h |    3 +
+ arch/arm64/kvm/hyp/switch.c      |   69 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 69 insertions(+), 3 deletions(-)
 
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -553,7 +553,11 @@ void ghes_edac_unregister(struct ghes *g
- 	if (!ghes_pvt)
- 		return;
+--- a/arch/arm64/include/asm/cpucaps.h
++++ b/arch/arm64/include/asm/cpucaps.h
+@@ -52,7 +52,8 @@
+ #define ARM64_HAS_IRQ_PRIO_MASKING		42
+ #define ARM64_HAS_DCPODP			43
+ #define ARM64_WORKAROUND_1463225		44
++#define ARM64_WORKAROUND_CAVIUM_TX2_219_TVM	45
  
-+	if (atomic_dec_return(&ghes_init))
-+		return;
+-#define ARM64_NCAPS				45
++#define ARM64_NCAPS				46
+ 
+ #endif /* __ASM_CPUCAPS_H */
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -124,6 +124,9 @@ static void __hyp_text __activate_traps(
+ {
+ 	u64 hcr = vcpu->arch.hcr_el2;
+ 
++	if (cpus_have_const_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM))
++		hcr |= HCR_TVM;
 +
- 	mci = ghes_pvt->mci;
-+	ghes_pvt = NULL;
- 	edac_mc_del_mc(mci->pdev);
- 	edac_mc_free(mci);
+ 	write_sysreg(hcr, hcr_el2);
+ 
+ 	if (cpus_have_const_cap(ARM64_HAS_RAS_EXTN) && (hcr & HCR_VSE))
+@@ -174,8 +177,10 @@ static void __hyp_text __deactivate_trap
+ 	 * the crucial bit is "On taking a vSError interrupt,
+ 	 * HCR_EL2.VSE is cleared to 0."
+ 	 */
+-	if (vcpu->arch.hcr_el2 & HCR_VSE)
+-		vcpu->arch.hcr_el2 = read_sysreg(hcr_el2);
++	if (vcpu->arch.hcr_el2 & HCR_VSE) {
++		vcpu->arch.hcr_el2 &= ~HCR_VSE;
++		vcpu->arch.hcr_el2 |= read_sysreg(hcr_el2) & HCR_VSE;
++	}
+ 
+ 	if (has_vhe())
+ 		deactivate_traps_vhe();
+@@ -393,6 +398,61 @@ static bool __hyp_text __hyp_handle_fpsi
+ 	return true;
  }
+ 
++static bool __hyp_text handle_tx2_tvm(struct kvm_vcpu *vcpu)
++{
++	u32 sysreg = esr_sys64_to_sysreg(kvm_vcpu_get_hsr(vcpu));
++	int rt = kvm_vcpu_sys_get_rt(vcpu);
++	u64 val = vcpu_get_reg(vcpu, rt);
++
++	/*
++	 * The normal sysreg handling code expects to see the traps,
++	 * let's not do anything here.
++	 */
++	if (vcpu->arch.hcr_el2 & HCR_TVM)
++		return false;
++
++	switch (sysreg) {
++	case SYS_SCTLR_EL1:
++		write_sysreg_el1(val, SYS_SCTLR);
++		break;
++	case SYS_TTBR0_EL1:
++		write_sysreg_el1(val, SYS_TTBR0);
++		break;
++	case SYS_TTBR1_EL1:
++		write_sysreg_el1(val, SYS_TTBR1);
++		break;
++	case SYS_TCR_EL1:
++		write_sysreg_el1(val, SYS_TCR);
++		break;
++	case SYS_ESR_EL1:
++		write_sysreg_el1(val, SYS_ESR);
++		break;
++	case SYS_FAR_EL1:
++		write_sysreg_el1(val, SYS_FAR);
++		break;
++	case SYS_AFSR0_EL1:
++		write_sysreg_el1(val, SYS_AFSR0);
++		break;
++	case SYS_AFSR1_EL1:
++		write_sysreg_el1(val, SYS_AFSR1);
++		break;
++	case SYS_MAIR_EL1:
++		write_sysreg_el1(val, SYS_MAIR);
++		break;
++	case SYS_AMAIR_EL1:
++		write_sysreg_el1(val, SYS_AMAIR);
++		break;
++	case SYS_CONTEXTIDR_EL1:
++		write_sysreg_el1(val, SYS_CONTEXTIDR);
++		break;
++	default:
++		return false;
++	}
++
++	__kvm_skip_instr(vcpu);
++	return true;
++}
++
+ /*
+  * Return true when we were able to fixup the guest exit and should return to
+  * the guest, false when we should restore the host state and return to the
+@@ -412,6 +472,11 @@ static bool __hyp_text fixup_guest_exit(
+ 	if (*exit_code != ARM_EXCEPTION_TRAP)
+ 		goto exit;
+ 
++	if (cpus_have_const_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM) &&
++	    kvm_vcpu_trap_get_class(vcpu) == ESR_ELx_EC_SYS64 &&
++	    handle_tx2_tvm(vcpu))
++		return true;
++
+ 	/*
+ 	 * We trap the first access to the FP/SIMD to save the host context
+ 	 * and restore the guest context lazily.
 
 
