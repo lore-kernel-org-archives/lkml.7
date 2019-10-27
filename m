@@ -2,129 +2,154 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C205CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996BACA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACE52064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693542064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211835;
-	bh=8izSZAbx6fQBwUzEgqL17sTkPb8Aj2f809bsHzCJRec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bZkFNpOFgZShxQVBX/jTBwwA/COkQMHhl6c2ipztE270ZhKD2dY4wWyAu1/jPFYMH
-	 1LcgcEGGbylgHme5RXolCt4uISUeICnwW37lmn/686ZYZZpW1nzK4qtg81dxeF0JYu
-	 wYYKYXcUBiGgjOmjlTEQoSpo3gCuNXtBz6dntFoU=
+	s=default; t=1572211840;
+	bh=pE0yT9Ol68fBMk/rzKDUq3s4Y8QKqjuEq7VMxFMPklc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e4zLLwiwPlJMI4n5+3NKsM9MjSoraJCcjheWR/Oy7ZwGQ+c+qpDZBgDus5BXsRB2B
+	 4Ubc017cvBrEuvcMe2fnr+cSOLf5njfJNuL8I2kY0Jm2+K2EVrJY7IPiyWjqjVgowr
+	 ZICqegKJG8DYWzrAwtiKk82UTWCfoSao327mSlaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732138AbfJ0Vad (ORCPT
+        id S1732809AbfJ0Vai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:30:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfJ0Va2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:30:28 -0400
-Received: from earth.universe (unknown [46.218.74.72])
+        id S1731310AbfJ0VSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:18:38 -0400
+Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A912070B;
-        Sun, 27 Oct 2019 21:30:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA16520717;
+        Sun, 27 Oct 2019 21:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211827;
-        bh=8izSZAbx6fQBwUzEgqL17sTkPb8Aj2f809bsHzCJRec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A3CHmcenkVz7kS733vuH0673jNWz9Zx/lWgZ/CbFxj8unHvz7OjccwI2DkDKF85rM
-         LMtg1WkSbZ/5lwFO6+laJwBckY9C34S0Tiaj75y783XYBu77cNxeyaJU+niPkYu1Hq
-         GEI1BTRX36Cku/6aZyi2uzXhFMvIyxyPSeUCidzo=
-Received: by earth.universe (Postfix, from userid 1000)
-        id B31FF3C09B2; Sun, 27 Oct 2019 22:30:24 +0100 (CET)
-Date:   Sun, 27 Oct 2019 22:30:24 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
+        s=default; t=1572211117;
+        bh=pE0yT9Ol68fBMk/rzKDUq3s4Y8QKqjuEq7VMxFMPklc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iiOiojoZAv6DR+EihEm9o5W/zql8Fq6LvGeEOsrxK9yCLI4Ay7umTWsOz5e5mPdfc
+         W3u/y8hCktsDHRbQRaF+knFCAyJ5D/4zvONjRzkH2SFKPfMwkWq+2H4WvVTfsLPhzF
+         b6P6f/lBu+5pjkmhNtUnLqY4ykEsC1u6gShByNNo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: supply: ab8500_charger: Fix inconsistent IS_ERR
- and PTR_ERR
-Message-ID: <20191027213024.x3lvdefs67wcb37j@earth.universe>
-References: <20191021174937.GA17424@embeddedor>
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 037/197] net: dsa: rtl8366rb: add missing of_node_put after calling of_get_child_by_name
+Date:   Sun, 27 Oct 2019 21:59:15 +0100
+Message-Id: <20191027203353.725873412@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
+References: <20191027203351.684916567@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ci4bos7uztzfqtgo"
-Content-Disposition: inline
-In-Reply-To: <20191021174937.GA17424@embeddedor>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wen Yang <wenyang@linux.alibaba.com>
 
---ci4bos7uztzfqtgo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit f32eb9d80470dab05df26b6efd02d653c72e6a11 ]
 
-Hi,
+of_node_put needs to be called when the device node which is got
+from of_get_child_by_name finished using.
+irq_domain_add_linear() also calls of_node_get() to increase refcount,
+so irq_domain will not be affected when it is released.
 
-On Mon, Oct 21, 2019 at 12:49:37PM -0500, Gustavo A. R. Silva wrote:
-> Fix inconsistent IS_ERR and PTR_ERR in ab8500_charger_probe().
->=20
-> The proper pointer to be passed as argument is di->adc_main_charger_c
->=20
-> This bug was detected with the help of Coccinelle.
->=20
-> Fixes: 97ab78bac5d0 ("power: supply: ab8500_charger: Convert to IIO ADC")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
+Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Vivien Didelot <vivien.didelot@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/dsa/rtl8366rb.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-Thanks, queued.
+diff --git a/drivers/net/dsa/rtl8366rb.c b/drivers/net/dsa/rtl8366rb.c
+index a268085ffad28..f5cc8b0a7c74c 100644
+--- a/drivers/net/dsa/rtl8366rb.c
++++ b/drivers/net/dsa/rtl8366rb.c
+@@ -507,7 +507,8 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
+ 	irq = of_irq_get(intc, 0);
+ 	if (irq <= 0) {
+ 		dev_err(smi->dev, "failed to get parent IRQ\n");
+-		return irq ? irq : -EINVAL;
++		ret = irq ? irq : -EINVAL;
++		goto out_put_node;
+ 	}
+ 
+ 	/* This clears the IRQ status register */
+@@ -515,7 +516,7 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
+ 			  &val);
+ 	if (ret) {
+ 		dev_err(smi->dev, "can't read interrupt status\n");
+-		return ret;
++		goto out_put_node;
+ 	}
+ 
+ 	/* Fetch IRQ edge information from the descriptor */
+@@ -537,7 +538,7 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
+ 				 val);
+ 	if (ret) {
+ 		dev_err(smi->dev, "could not configure IRQ polarity\n");
+-		return ret;
++		goto out_put_node;
+ 	}
+ 
+ 	ret = devm_request_threaded_irq(smi->dev, irq, NULL,
+@@ -545,7 +546,7 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
+ 					"RTL8366RB", smi);
+ 	if (ret) {
+ 		dev_err(smi->dev, "unable to request irq: %d\n", ret);
+-		return ret;
++		goto out_put_node;
+ 	}
+ 	smi->irqdomain = irq_domain_add_linear(intc,
+ 					       RTL8366RB_NUM_INTERRUPT,
+@@ -553,12 +554,15 @@ static int rtl8366rb_setup_cascaded_irq(struct realtek_smi *smi)
+ 					       smi);
+ 	if (!smi->irqdomain) {
+ 		dev_err(smi->dev, "failed to create IRQ domain\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto out_put_node;
+ 	}
+ 	for (i = 0; i < smi->num_ports; i++)
+ 		irq_set_parent(irq_create_mapping(smi->irqdomain, i), irq);
+ 
+-	return 0;
++out_put_node:
++	of_node_put(intc);
++	return ret;
+ }
+ 
+ static int rtl8366rb_set_addr(struct realtek_smi *smi)
+-- 
+2.20.1
 
--- Sebastian
 
->  drivers/power/supply/ab8500_charger.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply=
-/ab8500_charger.c
-> index ff2bb4411a22..8a0f9d769690 100644
-> --- a/drivers/power/supply/ab8500_charger.c
-> +++ b/drivers/power/supply/ab8500_charger.c
-> @@ -3393,7 +3393,7 @@ static int ab8500_charger_probe(struct platform_dev=
-ice *pdev)
->  		if (PTR_ERR(di->adc_main_charger_c) =3D=3D -ENODEV)
->  			return -EPROBE_DEFER;
->  		dev_err(&pdev->dev, "failed to get ADC main charger current\n");
-> -		return PTR_ERR(di->adc_main_charger_v);
-> +		return PTR_ERR(di->adc_main_charger_c);
->  	}
->  	di->adc_vbus_v =3D devm_iio_channel_get(&pdev->dev, "vbus_v");
->  	if (IS_ERR(di->adc_vbus_v)) {
-> --=20
-> 2.23.0
->=20
 
---ci4bos7uztzfqtgo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl22DG0ACgkQ2O7X88g7
-+pqcLQ/+JkR/ANfCqah3p0yYMbAWJ6Rs3SI2YzhwyIFJBWzOIEWwWgcsUzq+ahlf
-2t8Um/Db2BC68q/GT+304JNaumpr5XfH/mWt4DrKcZgCGFePPwh5EscqAbUCHfu+
-IqNQbtoHrnofZu4hThBZDqDvgZL+LGtikMRwBL2asytquPBveDJ/URKNdec+ue23
-k7GzGGrvXp/IakLcWcFEfb66ibqgue8k4RL7YzKvySE74RQX/6ePQNVwGP4vGCSP
-Zin9CH+uFAgg7/Dg6dBpxjE6L2DWFv+ftrg0pQO9rn6bLdWWjZvOXjo/RNk+GTpF
-YMSfI1unLWHUf8/S/aGZjox/bH6KsqkY/W/TJ10C3OF5w19xj11hgWTQ1Y5oNB5c
-VRJCEcWwrBfT42IjQKLvzjqP4GAduwqqYc5dyyXp5lKVU7qKNl0G51EPomkyPw4z
-zNuS7KscPQeZQaZ6XB+70jQ2yUGvYN5IR4/H6ATgcG4zPUAQ286YobarRldJAeO2
-y1RkZF52MtIvLozfMR+hd3ppNXO/nb5v4xsAvJu0QhuAiMfCzwz6v8/dU3KMF5dW
-6zUxuX95sX3rW7zj0G35+O1r+olXHDqTJQmR1l+LLIOIA5F043DXTogsX9T8DzR9
-qpLj0bikHEnmnZKjl2mV7E44zrAvE6jDaPfTaiP1au8BiiGLuqo=
-=1lwG
------END PGP SIGNATURE-----
-
---ci4bos7uztzfqtgo--
