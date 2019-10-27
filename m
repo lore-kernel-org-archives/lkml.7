@@ -2,51 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A368CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28188CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8FE205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4BDA205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212309;
-	bh=Pzc40gy2TSMKNQNDKKZmqku+u+iXqpnNmsAgWEeokFs=;
+	s=default; t=1572212314;
+	bh=DNogohxJudpJgaAhRb6Da2/JiIzdCiOlJWxWHOT7MTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GPfBNT+6LIvKZ60QB3TNyw6ROUThhdHdBVOo4/hgtVr+L/XyDGUy1jz9uF5xb7A03
-	 upegKg+ov1nDUyZEsU2jVcJnxXmXNjE5Jt0jWqJT3YDnAH7XaiHIvODrxDE7h8NqtL
-	 OhFUPZpCgZAU2Bp+Yl1PaWHdtxHt/et8OhWh9Y6c=
+	b=lM6OnXsBlNsm5IPw7tT7TvkBnR4r0S5rejCwvJmwdLD47kGNbhofU8uEEQwwiLaRl
+	 GFyWyNkoLEivJ9vtyNjHT5rVio096OroMtGyYYlJ4Dge6RJNG4kuRIx+Nt2n8NFLD/
+	 TUBonkxqbnLxgw+g0cq85vOUJ/zvR74pek6W8Icc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfJ0VDe (ORCPT
+        id S1728305AbfJ0VDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48766 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:03:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbfJ0VD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:03:29 -0400
+        id S1728267AbfJ0VDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:03:16 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 087732064A;
-        Sun, 27 Oct 2019 21:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06BF2064A;
+        Sun, 27 Oct 2019 21:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210208;
-        bh=Pzc40gy2TSMKNQNDKKZmqku+u+iXqpnNmsAgWEeokFs=;
+        s=default; t=1572210196;
+        bh=DNogohxJudpJgaAhRb6Da2/JiIzdCiOlJWxWHOT7MTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PLR5fh60H8iwlx4hIpLh1z2e0OzlA/0aHGw/4EFiJcqWN5n8IrJI3BtmtraHMTSWF
-         6Iw66Dm7UICB/2SFGySua/Cd4Sc3E9lCsfw652CFpzY0u7MHyQJ8WMn+YRXRuH9u3o
-         fZoyKUSKKzpq2lf3od48UZqkXrNWDJBNRiqdzGaU=
+        b=gYgVtlVHFp6BGJJRKOJZI79hNqZdHepnQAZy/lc6WqY4K6emuYyGm6FEOOwe1xOpS
+         0Af3FEqBDgGHwejDLEVhdEFvi0I9I6Rrn09EAq7Y+Bp6kRTiCWD3SjRVVVvHUV4dfW
+         7hnZ/NRpTUb2XVfKdqS9cFXLFoNsrIcPZlNRTnk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 04/41] ARM: OMAP2+: Fix missing reset done flag for am3 and am43
-Date:   Sun, 27 Oct 2019 22:00:42 +0100
-Message-Id: <20191027203102.576561911@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cd24df4d075c319ebfc5@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 23/41] USB: usblp: fix use-after-free on disconnect
+Date:   Sun, 27 Oct 2019 22:01:01 +0100
+Message-Id: <20191027203119.192858701@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
 References: <20191027203056.220821342@linuxfoundation.org>
@@ -59,53 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 8ad8041b98c665b6147e607b749586d6e20ba73a ]
+commit 7a759197974894213621aa65f0571b51904733d6 upstream.
 
-For ti,sysc-omap4 compatible devices with no sysstatus register, we do have
-reset done status available in the SOFTRESET bit that clears when the reset
-is done. This is documented for example in am437x TRM for DMTIMER_TIOCP_CFG
-register. The am335x TRM just says that SOFTRESET bit value 1 means reset is
-ongoing, but it behaves the same way clearing after reset is done.
+A recent commit addressing a runtime PM use-count regression, introduced
+a use-after-free by not making sure we held a reference to the struct
+usb_interface for the lifetime of the driver data.
 
-With the ti-sysc driver handling this automatically based on no sysstatus
-register defined, we see warnings if SYSC_HAS_RESET_STATUS is missing in the
-legacy platform data:
+Fixes: 9a31535859bf ("USB: usblp: fix runtime PM after driver unbind")
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+cd24df4d075c319ebfc5@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191015175522.18490-1-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-ti-sysc 48042000.target-module: sysc_flags 00000222 != 00000022
-ti-sysc 48044000.target-module: sysc_flags 00000222 != 00000022
-ti-sysc 48046000.target-module: sysc_flags 00000222 != 00000022
-...
-
-Let's fix these warnings by adding SYSC_HAS_RESET_STATUS. Let's also
-remove the useless parentheses while at it.
-
-If it turns out we do have ti,sysc-omap4 compatible devices without a
-working SOFTRESET bit we can set up additional quirk handling for it.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/class/usblp.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-index b31ad596be795..6b09debcf4840 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
-@@ -1020,7 +1020,8 @@ static struct omap_hwmod_class_sysconfig am33xx_timer_sysc = {
- 	.rev_offs	= 0x0000,
- 	.sysc_offs	= 0x0010,
- 	.syss_offs	= 0x0014,
--	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
-+			  SYSC_HAS_RESET_STATUS,
- 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
- 			  SIDLE_SMART_WKUP),
- 	.sysc_fields	= &omap_hwmod_sysc_type2,
--- 
-2.20.1
-
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -458,6 +458,7 @@ static void usblp_cleanup(struct usblp *
+ 	kfree(usblp->readbuf);
+ 	kfree(usblp->device_id_string);
+ 	kfree(usblp->statusbuf);
++	usb_put_intf(usblp->intf);
+ 	kfree(usblp);
+ }
+ 
+@@ -1120,7 +1121,7 @@ static int usblp_probe(struct usb_interf
+ 	init_waitqueue_head(&usblp->wwait);
+ 	init_usb_anchor(&usblp->urbs);
+ 	usblp->ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
+-	usblp->intf = intf;
++	usblp->intf = usb_get_intf(intf);
+ 
+ 	/* Malloc device ID string buffer to the largest expected length,
+ 	 * since we can re-query it on an ioctl and a dynamic string
+@@ -1209,6 +1210,7 @@ abort:
+ 	kfree(usblp->readbuf);
+ 	kfree(usblp->statusbuf);
+ 	kfree(usblp->device_id_string);
++	usb_put_intf(usblp->intf);
+ 	kfree(usblp);
+ abort_ret:
+ 	return retval;
 
 
