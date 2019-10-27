@@ -2,64 +2,57 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C7ECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3CFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41D5205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD18205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212185;
-	bh=8mRT+C+hFvKGKxCsT5Hp2605/2AVGW/zOQ7u9u9RtQM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zytPt9a5c6BqXilKNZBDSnbuiExsIGSRVo3muLu5F9SPUdF+JRzaKs0Y7CtoE4CtS
-	 X2ggs7l8juUh9ImzIiUH3lHh2ZLHjh5Q4GL8+8bNTR2JYKKTmHwZod/1nf6Kgwvkpx
-	 A0vB7JmQt5t3LwFhJCseT+qhf3MpkDv8FWWm3xTA=
+	s=default; t=1572212189;
+	bh=17AWcmYonpyQlJK6C/F3FDfSGnuEWoHpKsk1wkWHmQE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O7sY0YLEdD4D/Az9srSpWHGTkN8jY/v+Vy7hxwWdCm7p3pHVtIDwN6mWbAkyw0PQT
+	 iRawjMYpJFYxKNpoN/Ddi0p8jFBCAAEzG8dCalQ+B7fWhyqmR0GGjSRuqKnfw6jkxR
+	 DF0VVhiKulx1kDIP2gtEQVZE8IznmUrk4DA8jYws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbfJ0VgY (ORCPT
+        id S1728042AbfJ0VHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbfJ0VHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:07:06 -0400
+        id S1729070AbfJ0VG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:06:57 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EB2208C0;
-        Sun, 27 Oct 2019 21:07:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BFDD208C0;
+        Sun, 27 Oct 2019 21:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210425;
-        bh=8mRT+C+hFvKGKxCsT5Hp2605/2AVGW/zOQ7u9u9RtQM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Hs2tPDYLBQlxW61dfbAOrIf2ofehYCt15MB2f5vQT/gcVpvRvo6M+MODXT+pKSXBe
-         SekCEzbO+QqUXgorn9n2FiS76y/jU4buVgFZDGryDLjmMfIbR+/pzbTvIM3F2lWcLH
-         qQ4zQu4LtE1l5+n0LF0WK147K1k+0+FZtZL1cEMI=
+        s=default; t=1572210416;
+        bh=17AWcmYonpyQlJK6C/F3FDfSGnuEWoHpKsk1wkWHmQE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JD73qAUEKaEOJwo2XvKq1eswcligtGyqqBpTWho97Y1gk/x37AQjkynNm8C1irDDD
+         Ws2G7x5Nzuidp2MkUOvYlEaO2aqc1HG3BuEfxhUzqt0m8wShUMRfoVXseyXqNRsj1j
+         C9OuJ7scwdgndcY1s8KA6lX06gEZCasAHpXmauZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 000/119] 4.14.151-stable review
-Date:   Sun, 27 Oct 2019 21:59:37 +0100
-Message-Id: <20191027203259.948006506@linuxfoundation.org>
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 32/49] scsi: core: try to get module before removing device
+Date:   Sun, 27 Oct 2019 22:01:10 +0100
+Message-Id: <20191027203146.424279648@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
+References: <20191027203119.468466356@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.151-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.151-rc1
-X-KernelTest-Deadline: 2019-10-29T20:33+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,504 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.151 release.
-There are 119 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.151-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.151-rc1
-
-Greg KH <gregkh@linuxfoundation.org>
-    RDMA/cxgb4: Do not dma memory off of the stack
-
-Jim Mattson <jmattson@google.com>
-    kvm: vmx: Basic APIC virtualization controls have three settings
-
-Junaid Shahid <junaids@google.com>
-    kvm: apic: Flush TLB after APIC mode/address change if VPIDs are in use
-
-Jim Mattson <jmattson@google.com>
-    kvm: vmx: Introduce lapic_mode enumeration
-
-Wanpeng Li <wanpeng.li@hotmail.com>
-    KVM: X86: introduce invalidate_gpa argument to tlb flush
-
-Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-    PCI: PM: Fix pci_power_up()
-
-Juergen Gross <jgross@suse.com>
-    xen/netback: fix error path of xenvif_connect_data()
-
-Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-    cpufreq: Avoid cpufreq_suspend() deadlock on system shutdown
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    memstick: jmb38x_ms: Fix an error handling path in 'jmb38x_ms_probe()'
-
-Qu Wenruo <wqu@suse.com>
-    btrfs: block-group: Fix a memory leak due to missing btrfs_put_block_group()
-
-Patrick Williams <alpawi@amazon.com>
-    pinctrl: armada-37xx: swap polarity on LED group
-
-Patrick Williams <alpawi@amazon.com>
-    pinctrl: armada-37xx: fix control of pins 32 and up
-
-Steve Wahl <steve.wahl@hpe.com>
-    x86/boot/64: Make level2_kernel_pgt pages invalid outside kernel area
-
-Roberto Bergantinos Corpas <rbergant@redhat.com>
-    CIFS: avoid using MID 0xFFFF
-
-Helge Deller <deller@gmx.de>
-    parisc: Fix vmap memory leak in ioremap()/iounmap()
-
-Max Filippov <jcmvbkbc@gmail.com>
-    xtensa: drop EXPORT_SYMBOL for outs*/ins*
-
-David Hildenbrand <david@redhat.com>
-    hugetlbfs: don't access uninitialized memmaps in pfn_range_valid_gigantic()
-
-Qian Cai <cai@lca.pw>
-    mm/page_owner: don't access uninitialized memmaps when reading /proc/pagetypeinfo
-
-Qian Cai <cai@lca.pw>
-    mm/slub: fix a deadlock in show_slab_objects()
-
-Steffen Maier <maier@linux.ibm.com>
-    scsi: zfcp: fix reaction on bit error threshold notification
-
-David Hildenbrand <david@redhat.com>
-    fs/proc/page.c: don't access uninitialized memmaps in fs/proc/page.c
-
-David Hildenbrand <david@redhat.com>
-    drivers/base/memory.c: don't access uninitialized memmaps in soft_offline_page_store()
-
-Hans de Goede <hdegoede@redhat.com>
-    drm/amdgpu: Bail earlier when amdgpu.cik_/si_support is not set to 1
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
-
-Will Deacon <will@kernel.org>
-    mac80211: Reject malformed SSID elements
-
-Will Deacon <will@kernel.org>
-    cfg80211: wext: avoid copying malformed SSIDs
-
-Junya Monden <jmonden@jp.adit-jv.com>
-    ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
-
-Evan Green <evgreen@chromium.org>
-    Input: synaptics-rmi4 - avoid processing unknown IRQs
-
-Marco Felsch <m.felsch@pengutronix.de>
-    Input: da9063 - fix capability and drop KEY_SLEEP
-
-Bart Van Assche <bvanassche@acm.org>
-    scsi: ch: Make it possible to open a ch device multiple times again
-
-Yufen Yu <yuyufen@huawei.com>
-    scsi: core: try to get module before removing device
-
-Damien Le Moal <damien.lemoal@wdc.com>
-    scsi: core: save/restore command resid for error handling
-
-Oliver Neukum <oneukum@suse.com>
-    scsi: sd: Ignore a failure to sync cache due to lack of authorization
-
-Colin Ian King <colin.king@canonical.com>
-    staging: wlan-ng: fix exit return when sme->key_idx >= NUM_WEPKEYS
-
-Paul Burton <paulburton@kernel.org>
-    MIPS: tlbex: Fix build_restore_pagemask KScratch restore
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    arm64/speculation: Support 'mitigations=' cmdline option
-
-Marc Zyngier <marc.zyngier@arm.com>
-    arm64: Use firmware to detect CPUs that are not affected by Spectre-v2
-
-Marc Zyngier <marc.zyngier@arm.com>
-    arm64: Force SSBS on context switch
-
-Will Deacon <will.deacon@arm.com>
-    arm64: ssbs: Don't treat CPUs with SSBS as unaffected by SSB
-
-Jeremy Linton <jeremy.linton@arm.com>
-    arm64: add sysfs vulnerability show for speculative store bypass
-
-Jeremy Linton <jeremy.linton@arm.com>
-    arm64: add sysfs vulnerability show for spectre-v2
-
-Jeremy Linton <jeremy.linton@arm.com>
-    arm64: Always enable spectre-v2 vulnerability detection
-
-Marc Zyngier <marc.zyngier@arm.com>
-    arm64: Advertise mitigation of Spectre-v2, or lack thereof
-
-Jeremy Linton <jeremy.linton@arm.com>
-    arm64: Provide a command line to disable spectre_v2 mitigation
-
-Jeremy Linton <jeremy.linton@arm.com>
-    arm64: Always enable ssb vulnerability detection
-
-Mian Yousaf Kaukab <ykaukab@suse.de>
-    arm64: enable generic CPU vulnerabilites support
-
-Jeremy Linton <jeremy.linton@arm.com>
-    arm64: add sysfs vulnerability show for meltdown
-
-Mian Yousaf Kaukab <ykaukab@suse.de>
-    arm64: Add sysfs vulnerability show for spectre-v1
-
-Mark Rutland <mark.rutland@arm.com>
-    arm64: fix SSBS sanitization
-
-Will Deacon <will.deacon@arm.com>
-    KVM: arm64: Set SCTLR_EL2.DSSBS if SSBD is forcefully disabled and !vhe
-
-Will Deacon <will.deacon@arm.com>
-    arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3
-
-Will Deacon <will.deacon@arm.com>
-    arm64: cpufeature: Detect SSBS and advertise to userspace
-
-Marc Zyngier <marc.zyngier@arm.com>
-    arm64: Get rid of __smccc_workaround_1_hvc_*
-
-Mark Rutland <mark.rutland@arm.com>
-    arm64: don't zero DIT on signal return
-
-Shanker Donthineni <shankerd@codeaurora.org>
-    arm64: KVM: Use SMCCC_ARCH_WORKAROUND_1 for Falkor BP hardening
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Add support for checks based on a list of MIDRs
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: Add MIDR encoding for Arm Cortex-A55 and Cortex-A35
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: Add helpers for checking CPU MIDR against a range
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Clean up midr range helpers
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Change scope of VHE to Boot CPU feature
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Add support for features enabled early
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Restrict KPTI detection to boot-time CPUs
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Introduce weak features based on local CPU
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Group handling of features and errata workarounds
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Allow features based on local CPU scope
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Split the processing of errata work arounds
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Prepare for grouping features and errata work arounds
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Filter the entries based on a given mask
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Unify the verification
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Add flags to handle the conflicts on late CPU
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Prepare for fine grained capabilities
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Move errata processing code
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: capabilities: Move errata work around check on boot CPU
-
-Dave Martin <dave.martin@arm.com>
-    arm64: capabilities: Update prototype for enable call back
-
-Mark Rutland <mark.rutland@arm.com>
-    arm64: Introduce sysreg_clear_set()
-
-Mark Rutland <mark.rutland@arm.com>
-    arm64: add PSR_AA32_* definitions
-
-Mark Rutland <mark.rutland@arm.com>
-    arm64: move SCTLR_EL{1,2} assertions to <asm/sysreg.h>
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: Expose Arm v8.4 features
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: Documentation: cpu-feature-registers: Remove RES0 fields
-
-Dongjiu Geng <gengdongjiu@huawei.com>
-    arm64: v8.4: Support for new floating point multiplication instructions
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: Fix the feature type for ID register fields
-
-Suzuki K Poulose <suzuki.poulose@arm.com>
-    arm64: Expose support for optional ARMv8-A features
-
-James Morse <james.morse@arm.com>
-    arm64: sysreg: Move to use definitions for all the SCTLR bits
-
-Johan Hovold <johan@kernel.org>
-    USB: ldusb: fix read info leaks
-
-Johan Hovold <johan@kernel.org>
-    USB: usblp: fix use-after-free on disconnect
-
-Johan Hovold <johan@kernel.org>
-    USB: ldusb: fix memleak on disconnect
-
-Johan Hovold <johan@kernel.org>
-    USB: serial: ti_usb_3410_5052: fix port-close races
-
-Gustavo A. R. Silva <gustavo@embeddedor.com>
-    usb: udc: lpc32xx: fix bad bit shift operation
-
-Kailang Yang <kailang@realtek.com>
-    ALSA: hda/realtek - Add support for ALC711
-
-Johan Hovold <johan@kernel.org>
-    USB: legousbtower: fix memleak on disconnect
-
-Matthew Wilcox (Oracle) <willy@infradead.org>
-    memfd: Fix locking when tagging pins
-
-Alessio Balsini <balsini@android.com>
-    loop: Add LOOP_SET_DIRECT_IO to compat ioctl
-
-Jiaxun Yang <jiaxun.yang@flygoat.com>
-    MIPS: elf_hwcap: Export userspace ASEs
-
-Jiaxun Yang <jiaxun.yang@flygoat.com>
-    MIPS: Treat Loongson Extensions as ASEs
-
-Eric Dumazet <edumazet@google.com>
-    net: avoid potential infinite loop in tc_ctl_action()
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: change sctp_prot .no_autobind with true
-
-Biao Huang <biao.huang@mediatek.com>
-    net: stmmac: disable/enable ptp_ref_clk in suspend/resume flow
-
-Thomas Bogendoerfer <tbogendoerfer@suse.de>
-    net: i82596: fix dma_alloc_attr for sni_82596
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: bcmgenet: Set phydev->dev_flags only for internal PHYs
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
-
-Stefano Brivio <sbrivio@redhat.com>
-    ipv4: Return -ENETUNREACH if we can't create route but saddr is valid
-
-Yi Li <yilikernel@gmail.com>
-    ocfs2: fix panic due to ocfs2_wq is null
-
-Alex Deucher <alexander.deucher@amd.com>
-    Revert "drm/radeon: Fix EEH during kexec"
-
-Song Liu <songliubraving@fb.com>
-    md/raid0: fix warning message for parameter default_layout
-
-Jacob Keller <jacob.e.keller@intel.com>
-    namespace: fix namespace.pl script to support relative paths
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    r8152: Set macpassthru in reset_resume callback
-
-Yizhuo <yzhai003@ucr.edu>
-    net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    mips: Loongson: Fix the link time qualifier of 'serial_exit()'
-
-Miaoqing Pan <miaoqing@codeaurora.org>
-    mac80211: fix txq null pointer dereference
-
-Miaoqing Pan <miaoqing@codeaurora.org>
-    nl80211: fix null pointer dereference
-
-Ross Lagerwall <ross.lagerwall@citrix.com>
-    xen/efi: Set nonblocking callbacks
-
-Oleksij Rempel <o.rempel@pengutronix.de>
-    MIPS: dts: ar9331: fix interrupt-controller size
-
-Michal Vokáč <michal.vokac@ysoft.com>
-    net: dsa: qca8k: Use up to 7 ports for all operations
-
-Peter Ujfalusi <peter.ujfalusi@ti.com>
-    ARM: dts: am4372: Set memory bandwidth limit for DISPC
-
-Navid Emamdoost <navid.emamdoost@gmail.com>
-    ieee802154: ca8210: prevent memory leak
-
-Tony Lindgren <tony@atomide.com>
-    ARM: OMAP2+: Fix missing reset done flag for am3 and am43
-
-Quinn Tran <qutran@marvell.com>
-    scsi: qla2xxx: Fix unbound sleep in fcport delete path.
-
-Xiang Chen <chenxiang66@hisilicon.com>
-    scsi: megaraid: disable device when probe failed after enabled device
-
-Stanley Chu <stanley.chu@mediatek.com>
-    scsi: ufs: skip shutdown if hba is not powered
-
-
--------------
-
-Diffstat:
-
- Documentation/admin-guide/kernel-parameters.txt    |  16 +-
- Documentation/arm64/cpu-feature-registers.txt      |  26 +-
- Makefile                                           |   4 +-
- arch/arm/boot/dts/am4372.dtsi                      |   2 +
- .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c |   3 +-
- arch/arm/xen/efi.c                                 |   2 +
- arch/arm64/Kconfig                                 |   1 +
- arch/arm64/include/asm/cpucaps.h                   |   6 +-
- arch/arm64/include/asm/cpufeature.h                | 250 +++++++++-
- arch/arm64/include/asm/cputype.h                   |  43 ++
- arch/arm64/include/asm/kvm_asm.h                   |   2 -
- arch/arm64/include/asm/kvm_host.h                  |  11 +
- arch/arm64/include/asm/processor.h                 |  22 +-
- arch/arm64/include/asm/ptrace.h                    |  58 ++-
- arch/arm64/include/asm/sysreg.h                    |  95 +++-
- arch/arm64/include/asm/virt.h                      |   6 -
- arch/arm64/include/uapi/asm/hwcap.h                |  12 +
- arch/arm64/include/uapi/asm/ptrace.h               |   1 +
- arch/arm64/kernel/bpi.S                            |  19 +-
- arch/arm64/kernel/cpu_errata.c                     | 495 ++++++++++++--------
- arch/arm64/kernel/cpufeature.c                     | 517 +++++++++++++++------
- arch/arm64/kernel/cpuinfo.c                        |  12 +
- arch/arm64/kernel/fpsimd.c                         |   1 +
- arch/arm64/kernel/head.S                           |  13 +-
- arch/arm64/kernel/process.c                        |  31 ++
- arch/arm64/kernel/ptrace.c                         |  13 +-
- arch/arm64/kernel/smp.c                            |  44 --
- arch/arm64/kernel/ssbd.c                           |  22 +
- arch/arm64/kernel/traps.c                          |   4 +-
- arch/arm64/kvm/hyp/entry.S                         |  12 -
- arch/arm64/kvm/hyp/switch.c                        |  10 -
- arch/arm64/kvm/hyp/sysreg-sr.c                     |  11 +
- arch/arm64/mm/fault.c                              |   3 +-
- arch/arm64/mm/proc.S                               |  24 +-
- arch/mips/boot/dts/qca/ar9331.dtsi                 |   2 +-
- arch/mips/include/asm/cpu-features.h               |  16 +
- arch/mips/include/asm/cpu.h                        |   4 +
- arch/mips/include/uapi/asm/hwcap.h                 |  11 +
- arch/mips/kernel/cpu-probe.c                       |  37 ++
- arch/mips/kernel/proc.c                            |   4 +
- arch/mips/loongson64/common/serial.c               |   2 +-
- arch/mips/mm/tlbex.c                               |  23 +-
- arch/parisc/mm/ioremap.c                           |  12 +-
- arch/x86/include/asm/kvm_host.h                    |   4 +-
- arch/x86/kernel/head64.c                           |  22 +-
- arch/x86/kvm/lapic.c                               |  12 +-
- arch/x86/kvm/lapic.h                               |  14 +
- arch/x86/kvm/svm.c                                 |  18 +-
- arch/x86/kvm/vmx.c                                 |  79 ++--
- arch/x86/kvm/x86.c                                 |  32 +-
- arch/x86/xen/efi.c                                 |   2 +
- arch/xtensa/kernel/xtensa_ksyms.c                  |   7 -
- drivers/base/core.c                                |   3 +
- drivers/base/memory.c                              |   3 +
- drivers/block/loop.c                               |   1 +
- drivers/cpufreq/cpufreq.c                          |  10 -
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |  35 ++
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c            |  35 --
- drivers/gpu/drm/drm_edid.c                         |   3 +
- drivers/gpu/drm/radeon/radeon_drv.c                |   8 -
- drivers/infiniband/hw/cxgb4/mem.c                  |  28 +-
- drivers/input/misc/da9063_onkey.c                  |   5 +-
- drivers/input/rmi4/rmi_driver.c                    |   6 +-
- drivers/md/raid0.c                                 |   2 +-
- drivers/memstick/host/jmb38x_ms.c                  |   2 +-
- drivers/net/dsa/qca8k.c                            |   4 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet.h     |   1 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c       |  11 +-
- drivers/net/ethernet/hisilicon/hns_mdio.c          |   6 +-
- drivers/net/ethernet/i825xx/lasi_82596.c           |   4 +-
- drivers/net/ethernet/i825xx/lib82596.c             |   4 +-
- drivers/net/ethernet/i825xx/sni_82596.c            |   4 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  12 +-
- drivers/net/ieee802154/ca8210.c                    |   2 +-
- drivers/net/usb/r8152.c                            |   3 +-
- drivers/net/xen-netback/interface.c                |   1 -
- drivers/pci/pci.c                                  |  24 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |  26 +-
- drivers/s390/scsi/zfcp_fsf.c                       |  16 +-
- drivers/scsi/ch.c                                  |   1 -
- drivers/scsi/megaraid.c                            |   4 +-
- drivers/scsi/qla2xxx/qla_target.c                  |   4 +
- drivers/scsi/scsi_error.c                          |   3 +
- drivers/scsi/scsi_sysfs.c                          |  11 +-
- drivers/scsi/sd.c                                  |   3 +-
- drivers/scsi/ufs/ufshcd.c                          |   3 +
- drivers/staging/wlan-ng/cfg80211.c                 |   6 +-
- drivers/usb/class/usblp.c                          |   4 +-
- drivers/usb/gadget/udc/lpc32xx_udc.c               |   6 +-
- drivers/usb/misc/ldusb.c                           |  20 +-
- drivers/usb/misc/legousbtower.c                    |   5 +-
- drivers/usb/serial/ti_usb_3410_5052.c              |  10 +-
- fs/btrfs/extent-tree.c                             |   1 +
- fs/cifs/smb1ops.c                                  |   3 +
- fs/ocfs2/journal.c                                 |   3 +-
- fs/ocfs2/localalloc.c                              |   3 +-
- fs/proc/page.c                                     |  28 +-
- include/scsi/scsi_eh.h                             |   1 +
- mm/hugetlb.c                                       |   5 +-
- mm/page_owner.c                                    |   5 +-
- mm/shmem.c                                         |  18 +-
- mm/slub.c                                          |  13 +-
- net/ipv4/route.c                                   |   9 +-
- net/mac80211/debugfs_netdev.c                      |  11 +-
- net/mac80211/mlme.c                                |   5 +-
- net/sched/act_api.c                                |  13 +-
- net/sctp/socket.c                                  |   4 +-
- net/wireless/nl80211.c                             |   3 +
- net/wireless/wext-sme.c                            |   8 +-
- scripts/namespace.pl                               |  13 +-
- sound/pci/hda/patch_realtek.c                      |   3 +
- sound/soc/sh/rcar/core.c                           |   1 +
- 112 files changed, 1773 insertions(+), 808 deletions(-)
+From: Yufen Yu <yuyufen@huawei.com>
+
+commit 77c301287ebae86cc71d03eb3806f271cb14da79 upstream.
+
+We have a test case like block/001 in blktests, which will create a scsi
+device by loading scsi_debug module and then try to delete the device by
+sysfs interface. At the same time, it may remove the scsi_debug module.
+
+And getting a invalid paging request BUG_ON as following:
+
+[   34.625854] BUG: unable to handle page fault for address: ffffffffa0016bb8
+[   34.629189] Oops: 0000 [#1] SMP PTI
+[   34.629618] CPU: 1 PID: 450 Comm: bash Tainted: G        W         5.4.0-rc3+ #473
+[   34.632524] RIP: 0010:scsi_proc_hostdir_rm+0x5/0xa0
+[   34.643555] CR2: ffffffffa0016bb8 CR3: 000000012cd88000 CR4: 00000000000006e0
+[   34.644545] Call Trace:
+[   34.644907]  scsi_host_dev_release+0x6b/0x1f0
+[   34.645511]  device_release+0x74/0x110
+[   34.646046]  kobject_put+0x116/0x390
+[   34.646559]  put_device+0x17/0x30
+[   34.647041]  scsi_target_dev_release+0x2b/0x40
+[   34.647652]  device_release+0x74/0x110
+[   34.648186]  kobject_put+0x116/0x390
+[   34.648691]  put_device+0x17/0x30
+[   34.649157]  scsi_device_dev_release_usercontext+0x2e8/0x360
+[   34.649953]  execute_in_process_context+0x29/0x80
+[   34.650603]  scsi_device_dev_release+0x20/0x30
+[   34.651221]  device_release+0x74/0x110
+[   34.651732]  kobject_put+0x116/0x390
+[   34.652230]  sysfs_unbreak_active_protection+0x3f/0x50
+[   34.652935]  sdev_store_delete.cold.4+0x71/0x8f
+[   34.653579]  dev_attr_store+0x1b/0x40
+[   34.654103]  sysfs_kf_write+0x3d/0x60
+[   34.654603]  kernfs_fop_write+0x174/0x250
+[   34.655165]  __vfs_write+0x1f/0x60
+[   34.655639]  vfs_write+0xc7/0x280
+[   34.656117]  ksys_write+0x6d/0x140
+[   34.656591]  __x64_sys_write+0x1e/0x30
+[   34.657114]  do_syscall_64+0xb1/0x400
+[   34.657627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   34.658335] RIP: 0033:0x7f156f337130
+
+During deleting scsi target, the scsi_debug module have been removed. Then,
+sdebug_driver_template belonged to the module cannot be accessd, resulting
+in scsi_proc_hostdir_rm() BUG_ON.
+
+To fix the bug, we add scsi_device_get() in sdev_store_delete() to try to
+increase refcount of module, avoiding the module been removed.
+
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191015130556.18061-1-yuyufen@huawei.com
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/scsi_sysfs.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -710,6 +710,14 @@ sdev_store_delete(struct device *dev, st
+ 		  const char *buf, size_t count)
+ {
+ 	struct kernfs_node *kn;
++	struct scsi_device *sdev = to_scsi_device(dev);
++
++	/*
++	 * We need to try to get module, avoiding the module been removed
++	 * during delete.
++	 */
++	if (scsi_device_get(sdev))
++		return -ENODEV;
+ 
+ 	kn = sysfs_break_active_protection(&dev->kobj, &attr->attr);
+ 	WARN_ON_ONCE(!kn);
+@@ -724,9 +732,10 @@ sdev_store_delete(struct device *dev, st
+ 	 * state into SDEV_DEL.
+ 	 */
+ 	device_remove_file(dev, attr);
+-	scsi_remove_device(to_scsi_device(dev));
++	scsi_remove_device(sdev);
+ 	if (kn)
+ 		sysfs_unbreak_active_protection(kn);
++	scsi_device_put(sdev);
+ 	return count;
+ };
+ static DEVICE_ATTR(delete, S_IWUSR, NULL, sdev_store_delete);
 
 
