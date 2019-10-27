@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ACCCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB957CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAA120873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F5F20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210399;
-	bh=l/WXLIXBxK9ewrr0gNrLX93jPViXHepG5+D0tblXfOc=;
+	s=default; t=1572210402;
+	bh=K/Hv0ZNiEvNWDdGPSx+8l53LUVoMSq0p84Lvr/p26sQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmDHhTe5U77yEb6Nex+vFCutQJrqgt2oJr6DFI8VQM+R9yU3zCk/tXor9koGacUaK
-	 b6ok3zTSe6fgBJHSAJSxU9irTUnFCphMvdL9yRbv65/Q2K3kUUFSYKjMFQTXBjeUqN
-	 X/HEgu0gp9NF6bk8olMX+2n0yC6BLBox9HJBDk4g=
+	b=M7Kv9PNuDRf4m5W6pBdesznZW9RbF4uKtO8Dw9SlvcN2FXgJ2z2WYS+w8xllA1l9u
+	 bVpRjixDLkh7xowb7dkkvZDzFkQdxbgWKWIgqvhgRVoKsWYogBNIRu+D7B4EblPkT3
+	 2kgmke05bHNBN+j8Ab5y4n0wsPqQpd3/6jYDPb0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfJ0VGi (ORCPT
+        id S1727878AbfJ0VGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52488 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729015AbfJ0VGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:06:34 -0400
+        id S1727243AbfJ0VGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:06:36 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D6FD21726;
-        Sun, 27 Oct 2019 21:06:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C252184C;
+        Sun, 27 Oct 2019 21:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210393;
-        bh=l/WXLIXBxK9ewrr0gNrLX93jPViXHepG5+D0tblXfOc=;
+        s=default; t=1572210396;
+        bh=K/Hv0ZNiEvNWDdGPSx+8l53LUVoMSq0p84Lvr/p26sQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FlU04/V34M/oKW5Ypl3O4pxtriY0oegW7stBoabGWgribBErTqyNl71KB2xS61msc
-         bHe0xioBADqdHoZai0BUJ0llWRGyjkhsKl0DZcET26pCI7n9T5dTskuee/EjiEhr0J
-         ssto9Aq8vQzpgvm2ePnF5/V2s4RrqpTqATHcIjNw=
+        b=tOEQbl8U0AfxlHlvcAUX5iNuQPEWUuRqzRS6BRshkRSUa9jlxD/zxkeF9583WWiet
+         RGAOIvALn5fcXCxKU4uYT4q3LUXf8/CDXWlmkylk682uEYqs/9Cs3mZrjyf5MytFjL
+         CZWH4H/c41EDw4dM7b44CHUZq3GTKku+HM7C4frA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Junya Monden <jmonden@jp.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 34/49] ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
-Date:   Sun, 27 Oct 2019 22:01:12 +0100
-Message-Id: <20191027203148.024594991@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Nicolas Waisman <nico@semmle.com>,
+        Will Deacon <will@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 35/49] cfg80211: wext: avoid copying malformed SSIDs
+Date:   Sun, 27 Oct 2019 22:01:13 +0100
+Message-Id: <20191027203150.939060995@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -65,42 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junya Monden <jmonden@jp.adit-jv.com>
+From: Will Deacon <will@kernel.org>
 
-commit 22e58665a01006d05f0239621f7d41cacca96cc4 upstream.
+commit 4ac2813cc867ae563a1ba5a9414bfb554e5796fa upstream.
 
-Unlike other format-related DAI parameters, rdai->bit_clk_inv flag
-is not properly re-initialized when setting format for new stream
-processing. The inversion, if requested, is then applied not to default,
-but to a previous value, which leads to SCKP bit in SSICR register being
-set incorrectly.
-Fix this by re-setting the flag to its initial value, determined by format.
+Ensure the SSID element is bounds-checked prior to invoking memcpy()
+with its length field, when copying to userspace.
 
-Fixes: 1a7889ca8aba3 ("ASoC: rsnd: fixup SND_SOC_DAIFMT_xB_xF behavior")
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Timo Wischer <twischer@de.adit-jv.com>
-Cc: stable@vger.kernel.org # v3.17+
-Signed-off-by: Junya Monden <jmonden@jp.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20191016124255.7442-1-erosca@de.adit-jv.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20191004095132.15777-2-will@kernel.org
+[adjust commit log a bit]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/sh/rcar/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/wireless/wext-sme.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/sound/soc/sh/rcar/core.c
-+++ b/sound/soc/sh/rcar/core.c
-@@ -629,6 +629,7 @@ static int rsnd_soc_dai_set_fmt(struct s
- 	}
+--- a/net/wireless/wext-sme.c
++++ b/net/wireless/wext-sme.c
+@@ -224,6 +224,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 			       struct iw_point *data, char *ssid)
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
++	int ret = 0;
  
- 	/* set format */
-+	rdai->bit_clk_inv = 0;
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
- 		rdai->sys_delay = 0;
+ 	/* call only for station! */
+ 	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
+@@ -241,7 +242,10 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 		if (ie) {
+ 			data->flags = 1;
+ 			data->length = ie[1];
+-			memcpy(ssid, ie + 2, data->length);
++			if (data->length > IW_ESSID_MAX_SIZE)
++				ret = -EINVAL;
++			else
++				memcpy(ssid, ie + 2, data->length);
+ 		}
+ 		rcu_read_unlock();
+ 	} else if (wdev->wext.connect.ssid && wdev->wext.connect.ssid_len) {
+@@ -251,7 +255,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 	}
+ 	wdev_unlock(wdev);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ int cfg80211_mgd_wext_siwap(struct net_device *dev,
 
 
