@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76EEC47E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7264CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE452184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC8521850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211437;
-	bh=QTc0j71iag6ZSm7a9ZVdtJ4mG3TfhcPEhYId6nEPt3Q=;
+	s=default; t=1572211440;
+	bh=lYS99/PgYPV24YMX4pde23jxpICiG+eXBVwlzD1pm6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sua1F7WaA+4goJYQU85uA4qNaHrrnfCEZILrGi3a/i08tqV0k+r9SEExrguJnxmm7
-	 zFTuszllYz2nROA3DsxqFUTNvROi+nh4hf4hr9VWyw9eCzyka6yGBVwICBsLG3RVkD
-	 AgPxP/B62m+S0zPav2cIgkWb1LWwkAI9T67nwIGo=
+	b=eeMUXNeuiJeK3cRiUSvkEERBabFAtX8bd8Y21eV7K5H+Sorsmfmk1mu0QtrGQxQ4N
+	 GaNCoJYQPV9VP1t4FHxvhBEK/AY/qlZ7ArQ6Upzo68mrbDooqNF5888RWxVenOUCPA
+	 soKJE86oUxLcPLobP22C5eh2YvOXBnDaFDixyuRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732408AbfJ0VX4 (ORCPT
+        id S1732415AbfJ0VX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732371AbfJ0VXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:23:52 -0400
+        id S1730777AbfJ0VXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:23:55 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEA9921726;
-        Sun, 27 Oct 2019 21:23:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4B2A214E0;
+        Sun, 27 Oct 2019 21:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211431;
-        bh=QTc0j71iag6ZSm7a9ZVdtJ4mG3TfhcPEhYId6nEPt3Q=;
+        s=default; t=1572211434;
+        bh=lYS99/PgYPV24YMX4pde23jxpICiG+eXBVwlzD1pm6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQaZCiOrrmJ4AwsJuHXz7rox4v6yBr/HHdokBobEApuBATseh7nc3Jf1X8CigerAq
-         JibgEYyUjZFmZVtkBmY4zX185b3KGfSX2VJUpvaql/vyHQaAf+jdKSoEY4OD3lnoxS
-         ZmwYUcV8/IgRTraaeUqO/TcZDBoPWNmXJBhTubE0=
+        b=SKIww8CRAU5vB+WhJ7W3NqoFg0qhO8QKI7AHhEMtRWeqSRowqjMxOaqqWuzZ66bG6
+         LXJhwOeghGM8kUZlXW7TJG9REW8PVlKwOUN5z9cBxRhDC5bdxBgyRf2oR2UmrYb1KF
+         tavF5+brFHn5hrHU6PDIxp3LBwiMTW8wzFELAhio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Florian Weimer <fw@deneb.enyo.de>,
-        Dave Chinner <david@fromorbit.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
+        stable@vger.kernel.org, Honglei Wang <honglei.wang@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 150/197] mm, compaction: fix wrong pfn handling in __reset_isolation_pfn()
-Date:   Sun, 27 Oct 2019 22:01:08 +0100
-Message-Id: <20191027203359.790853283@linuxfoundation.org>
+Subject: [PATCH 5.3 151/197] mm: memcg: get number of pages on the LRU list in memcgroup base on lru_zone_size
+Date:   Sun, 27 Oct 2019 22:01:09 +0100
+Message-Id: <20191027203359.841584643@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -63,70 +66,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: Honglei Wang <honglei.wang@oracle.com>
 
-commit a2e9a5afce080226edbf1882d63d99bf32070e9e upstream.
+commit b11edebbc967ebf5c55b8f9e1d5bb6d68ec3a7fd upstream.
 
-Florian and Dave reported [1] a NULL pointer dereference in
-__reset_isolation_pfn().  While the exact cause is unclear, staring at
-the code revealed two bugs, which might be related.
+Commit 1a61ab8038e72 ("mm: memcontrol: replace zone summing with
+lruvec_page_state()") has made lruvec_page_state to use per-cpu counters
+instead of calculating it directly from lru_zone_size with an idea that
+this would be more effective.
 
-One bug is that if zone starts in the middle of pageblock, block_page
-might correspond to different pfn than block_pfn, and then the
-pfn_valid_within() checks will check different pfn's than those accessed
-via struct page.  This might result in acessing an unitialized page in
-CONFIG_HOLES_IN_ZONE configs.
+Tim has reported that this is not really the case for their database
+benchmark which is showing an opposite results where lruvec_page_state
+is taking up a huge chunk of CPU cycles (about 25% of the system time
+which is roughly 7% of total cpu cycles) on 5.3 kernels.  The workload
+is running on a larger machine (96cpus), it has many cgroups (500) and
+it is heavily direct reclaim bound.
 
-The other bug is that end_page refers to the first page of next
-pageblock and not last page of current pageblock.  The online and valid
-check is then wrong and with sections, the while (page < end_page) loop
-might wander off actual struct page arrays.
+Tim Chen said:
 
-[1] https://lore.kernel.org/linux-xfs/87o8z1fvqu.fsf@mid.deneb.enyo.de/
+: The problem can also be reproduced by running simple multi-threaded
+: pmbench benchmark with a fast Optane SSD swap (see profile below).
+:
+:
+: 6.15%     3.08%  pmbench          [kernel.vmlinux]            [k] lruvec_lru_size
+:             |
+:             |--3.07%--lruvec_lru_size
+:             |          |
+:             |          |--2.11%--cpumask_next
+:             |          |          |
+:             |          |           --1.66%--find_next_bit
+:             |          |
+:             |           --0.57%--call_function_interrupt
+:             |                     |
+:             |                      --0.55%--smp_call_function_interrupt
+:             |
+:             |--1.59%--0x441f0fc3d009
+:             |          _ops_rdtsc_init_base_freq
+:             |          access_histogram
+:             |          page_fault
+:             |          __do_page_fault
+:             |          handle_mm_fault
+:             |          __handle_mm_fault
+:             |          |
+:             |           --1.54%--do_swap_page
+:             |                     swapin_readahead
+:             |                     swap_cluster_readahead
+:             |                     |
+:             |                      --1.53%--read_swap_cache_async
+:             |                                __read_swap_cache_async
+:             |                                alloc_pages_vma
+:             |                                __alloc_pages_nodemask
+:             |                                __alloc_pages_slowpath
+:             |                                try_to_free_pages
+:             |                                do_try_to_free_pages
+:             |                                shrink_node
+:             |                                shrink_node_memcg
+:             |                                |
+:             |                                |--0.77%--lruvec_lru_size
+:             |                                |
+:             |                                 --0.76%--inactive_list_is_low
+:             |                                           |
+:             |                                            --0.76%--lruvec_lru_size
+:             |
+:              --1.50%--measure_read
+:                        page_fault
+:                        __do_page_fault
+:                        handle_mm_fault
+:                        __handle_mm_fault
+:                        do_swap_page
+:                        swapin_readahead
+:                        swap_cluster_readahead
+:                        |
+:                         --1.48%--read_swap_cache_async
+:                                   __read_swap_cache_async
+:                                   alloc_pages_vma
+:                                   __alloc_pages_nodemask
+:                                   __alloc_pages_slowpath
+:                                   try_to_free_pages
+:                                   do_try_to_free_pages
+:                                   shrink_node
+:                                   shrink_node_memcg
+:                                   |
+:                                   |--0.75%--inactive_list_is_low
+:                                   |          |
+:                                   |           --0.75%--lruvec_lru_size
+:                                   |
+:                                    --0.73%--lruvec_lru_size
 
-Link: http://lkml.kernel.org/r/20191008152915.24704-1-vbabka@suse.cz
-Fixes: 6b0868c820ff ("mm/compaction.c: correct zone boundary handling when resetting pageblock skip hints")
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reported-by: Florian Weimer <fw@deneb.enyo.de>
-Reported-by: Dave Chinner <david@fromorbit.com>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>
+The likely culprit is the cache traffic the lruvec_page_state_local
+generates.  Dave Hansen says:
+
+: I was thinking purely of the cache footprint.  If it's reading
+: pn->lruvec_stat_local->count[idx] is three separate cachelines, so 192
+: bytes of cache *96 CPUs = 18k of data, mostly read-only.  1 cgroup would
+: be 18k of data for the whole system and the caching would be pretty
+: efficient and all 18k would probably survive a tight page fault loop in
+: the L1.  500 cgroups would be ~90k of data per CPU thread which doesn't
+: fit in the L1 and probably wouldn't survive a tight page fault loop if
+: both logical threads were banging on different cgroups.
+:
+: It's just a theory, but it's why I noted the number of cgroups when I
+: initially saw this show up in profiles
+
+Fix the regression by partially reverting the said commit and calculate
+the lru size explicitly.
+
+Link: http://lkml.kernel.org/r/20190905071034.16822-1-honglei.wang@oracle.com
+Fixes: 1a61ab8038e72 ("mm: memcontrol: replace zone summing with lruvec_page_state()")
+Signed-off-by: Honglei Wang <honglei.wang@oracle.com>
+Reported-by: Tim Chen <tim.c.chen@linux.intel.com>
+Acked-by: Tim Chen <tim.c.chen@linux.intel.com>
+Tested-by: Tim Chen <tim.c.chen@linux.intel.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: <stable@vger.kernel.org>	[5.2+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/compaction.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ mm/vmscan.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -270,14 +270,15 @@ __reset_isolation_pfn(struct zone *zone,
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -354,12 +354,13 @@ unsigned long zone_reclaimable_pages(str
+  */
+ unsigned long lruvec_lru_size(struct lruvec *lruvec, enum lru_list lru, int zone_idx)
+ {
+-	unsigned long lru_size;
++	unsigned long lru_size = 0;
+ 	int zid;
  
- 	/* Ensure the start of the pageblock or zone is online and valid */
- 	block_pfn = pageblock_start_pfn(pfn);
--	block_page = pfn_to_online_page(max(block_pfn, zone->zone_start_pfn));
-+	block_pfn = max(block_pfn, zone->zone_start_pfn);
-+	block_page = pfn_to_online_page(block_pfn);
- 	if (block_page) {
- 		page = block_page;
- 		pfn = block_pfn;
- 	}
+-	if (!mem_cgroup_disabled())
+-		lru_size = lruvec_page_state_local(lruvec, NR_LRU_BASE + lru);
+-	else
++	if (!mem_cgroup_disabled()) {
++		for (zid = 0; zid < MAX_NR_ZONES; zid++)
++			lru_size += mem_cgroup_get_zone_lru_size(lruvec, lru, zid);
++	} else
+ 		lru_size = node_page_state(lruvec_pgdat(lruvec), NR_LRU_BASE + lru);
  
- 	/* Ensure the end of the pageblock or zone is online and valid */
--	block_pfn += pageblock_nr_pages;
-+	block_pfn = pageblock_end_pfn(pfn) - 1;
- 	block_pfn = min(block_pfn, zone_end_pfn(zone) - 1);
- 	end_page = pfn_to_online_page(block_pfn);
- 	if (!end_page)
-@@ -303,7 +304,7 @@ __reset_isolation_pfn(struct zone *zone,
- 
- 		page += (1 << PAGE_ALLOC_COSTLY_ORDER);
- 		pfn += (1 << PAGE_ALLOC_COSTLY_ORDER);
--	} while (page < end_page);
-+	} while (page <= end_page);
- 
- 	return false;
- }
+ 	for (zid = zone_idx + 1; zid < MAX_NR_ZONES; zid++) {
 
 
