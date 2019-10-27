@@ -2,120 +2,168 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3911CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85045CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7072420679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56143205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212223;
-	bh=z4INOP111tBsJ/9QuYmz9FD3MZuDnAxeQBSL5+DcvPc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UenrznoJMEjHClyxEHaobGTmMkVKysjezkEN/j7W10x8yONL3KYDqSr3LXGLD6iyv
-	 y1MoyQXd9sDRaixRDeWzQ/uVurWHmHGbnFvo0H+c8aDnIU6/InUk3j/wEBwdT0nNor
-	 KBlYQxK0mOXNMITJ4ZeKKQarCj35Nt+JYiit3sTc=
+	s=default; t=1572212226;
+	bh=hoHHFCmI1sTcDN1WhsE34aOMhIQogs57D2phXWIk6lg=;
+	h=In-Reply-To:References:To:From:Cc:Subject:Date:List-ID:From;
+	b=NqDDp4a1iCT24xCSf4LCvnQ92y82hT11+QFsnISf/PC9pQ1pf5HqCRwqBxiS1zr5s
+	 +tRFkusZMH0uvrsXdZT/chUDA4PQSrb/Ib6vaHpx+m98pmyGEvwmqnmD1ZGnhArnPx
+	 SB9C8OB+KmeBa5/aRvNLqgPP8qAldqmv9Eu/iy5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfJ0VhB (ORCPT
+        id S1730118AbfJ0VhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51784 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727917AbfJ0VFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:55 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
+        id S1727225AbfJ0VhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:37:00 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 546C620873;
-        Sun, 27 Oct 2019 21:05:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23423205F4;
+        Sun, 27 Oct 2019 21:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210354;
-        bh=z4INOP111tBsJ/9QuYmz9FD3MZuDnAxeQBSL5+DcvPc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kbhq1dNJ+qAqIrCPfm+ZpKC6m53pf+22j3i5/a8JfTqZKY3wE28Vaw4/ZmrCX9sQh
-         bLdILsO5MWxtXQ6NOVbpsCAcSoYDSnC13AMnOi9hz+avcJWRjeImZ8L+0SH/kqgnxg
-         KAOIUtsYFC3lKRhD8GzKetFP7vBr1QER80lwGUjE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/49] nl80211: fix null pointer dereference
-Date:   Sun, 27 Oct 2019 22:00:45 +0100
-Message-Id: <20191027203123.899927239@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
-References: <20191027203119.468466356@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1572212219;
+        bh=hoHHFCmI1sTcDN1WhsE34aOMhIQogs57D2phXWIk6lg=;
+        h=In-Reply-To:References:To:From:Cc:Subject:Date:From;
+        b=vQxIgU4W7DhbFHJFd4ZCQ0tfTgbMTw7qLk2qox2eRZ7Unuv+fjtTfeqPyaGbJsjo1
+         8PRIcXP7UeSOfiBGR4dB0r3Vr/l1gmwiiP6hvMGVyOw2g4ebXMvuDEAipK+QX0ReUz
+         Mha3Q1F6VzFQJJjf4aA+dDUKcsoCY8omTq37Abso=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAOCk7Np_Wn9JZ8JQCiDg1w+xcTVW9fhvtCA-k5ysc2juHZuvUw@mail.gmail.com>
+References: <20191002011555.36571-1-jeffrey.l.hugo@gmail.com> <20191002011640.36624-1-jeffrey.l.hugo@gmail.com> <20191017215023.2BFEC20872@mail.kernel.org> <CAOCk7NqgWkt6BwY75eGS2dbJ7GGk3DqH5NC0VLHUq4fc6WuYog@mail.gmail.com> <CAOCk7Np_Wn9JZ8JQCiDg1w+xcTVW9fhvtCA-k5ysc2juHZuvUw@mail.gmail.com>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-clk@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] clk: qcom: Add MSM8998 GPU Clock Controller (GPUCC) driver
+User-Agent: alot/0.8.1
+Date:   Sun, 27 Oct 2019 14:36:58 -0700
+Message-Id: <20191027213659.23423205F4@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+Quoting Jeffrey Hugo (2019-10-18 14:11:09)
+> On Thu, Oct 17, 2019 at 5:16 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> w=
+rote:
+> >
+> > On Thu, Oct 17, 2019 at 3:50 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Jeffrey Hugo (2019-10-01 18:16:40)
+> > > > +static const struct freq_tbl ftbl_gfx3d_clk_src[] =3D {
+> > > > +       F(180000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       F(257000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       F(342000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       F(414000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       F(515000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       F(596000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       F(670000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       F(710000000, P_GPUPLL0_OUT_EVEN, 2, 0, 0),
+> > > > +       { }
+> > >
+> > > I guess this one doesn't do PLL ping pong? Instead we just reprogram =
+the
+> > > PLL all the time? Can we have rcg2 clk ops that set the rate on the
+> > > parent to be exactly twice as much as the incoming frequency? I thoug=
+ht
+> > > we already had this support in the code. Indeed, it is part of
+> > > _freq_tbl_determine_rate() in clk-rcg.c, but not yet implemented in t=
+he
+> > > same function name in clk-rcg2.c! Can you implement it? That way we
+> > > don't need this long frequency table, just this weird one where it lo=
+oks
+> > > like:
+> > >
+> > >         { .src =3D P_GPUPLL0_OUT_EVEN, .pre_div =3D 3 }
+> > >         { }
+> > >
+> > > And then some more logic in the rcg2 ops to allow this possibility fo=
+r a
+> > > frequency table when CLK_SET_RATE_PARENT is set.
+> >
+> > Does not do PLL ping pong.  I'll look at extending the rcg2 ops like
+> > you describe.
+>=20
+> Am I missing something?  From what I can tell, what you describe is
+> not implemented.
+>=20
+> The only in-tree example of a freq_tbl with only a src and a pre_div
+> defined for rcg ops is for the tv_src clk in mmcc-msm8960 [1]
+> However, that uses a variant of rcg ops, clk_rcg_bypass_ops, not clk_rcg_=
+ops.
+>=20
+> clk_rcg_bypass_ops has its own determine_rate implementation which
+> does not utilize _freq_tbl_determine_rate(), and can only do a 1:1
+> input rate to output ratio (we want a 1:2).
+>=20
+> _freq_tbl_determine_rate() in either rcg_ops or rcg2_ops won't work,
+> because they both use qcom_find_freq() which doesn't work when your
+> table doesn't specify any frequencies (f->freq is 0).
 
-[ Upstream commit b501426cf86e70649c983c52f4c823b3c40d72a3 ]
+Yes. You have to have some sort of frequency table to tell us what the
+source and predivider to use.
 
-If the interface is not in MESH mode, the command 'iw wlanx mpath del'
-will cause kernel panic.
+> qcom_find_freq() won't iterate through the table, therefore f in
+> qcom_find_freq() won't be pointing at the end of the table (the null
+> entry), so when qcom_find_freq decrements f in the return, it actually
+> goes off the beginning of the array in an array out of bounds
+> violation.
 
-The root cause is null pointer access in mpp_flush_by_proxy(), as the
-pointer 'sdata->u.mesh.mpp_paths' is NULL for non MESH interface.
+Ouch!
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000068
-[...]
-PC is at _raw_spin_lock_bh+0x20/0x5c
-LR is at mesh_path_del+0x1c/0x17c [mac80211]
-[...]
-Process iw (pid: 4537, stack limit = 0xd83e0238)
-[...]
-[<c021211c>] (_raw_spin_lock_bh) from [<bf8c7648>] (mesh_path_del+0x1c/0x17c [mac80211])
-[<bf8c7648>] (mesh_path_del [mac80211]) from [<bf6cdb7c>] (extack_doit+0x20/0x68 [compat])
-[<bf6cdb7c>] (extack_doit [compat]) from [<c05c309c>] (genl_rcv_msg+0x274/0x30c)
-[<c05c309c>] (genl_rcv_msg) from [<c05c25d8>] (netlink_rcv_skb+0x58/0xac)
-[<c05c25d8>] (netlink_rcv_skb) from [<c05c2e14>] (genl_rcv+0x20/0x34)
-[<c05c2e14>] (genl_rcv) from [<c05c1f90>] (netlink_unicast+0x11c/0x204)
-[<c05c1f90>] (netlink_unicast) from [<c05c2420>] (netlink_sendmsg+0x30c/0x370)
-[<c05c2420>] (netlink_sendmsg) from [<c05886d0>] (sock_sendmsg+0x70/0x84)
-[<c05886d0>] (sock_sendmsg) from [<c0589f4c>] (___sys_sendmsg.part.3+0x188/0x228)
-[<c0589f4c>] (___sys_sendmsg.part.3) from [<c058add4>] (__sys_sendmsg+0x4c/0x70)
-[<c058add4>] (__sys_sendmsg) from [<c0208c80>] (ret_fast_syscall+0x0/0x44)
-Code: e2822c02 e2822001 e5832004 f590f000 (e1902f9f)
----[ end trace bbd717600f8f884d ]---
+>=20
+> Please advise how you would like to proceed.
 
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Link: https://lore.kernel.org/r/1569485810-761-1-git-send-email-miaoqing@codeaurora.org
-[trim useless data from commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/wireless/nl80211.c | 3 +++
- 1 file changed, 3 insertions(+)
+Please have a frequency table like
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 7aa1ca7ec638a..ac75e6d4eb82a 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -5358,6 +5358,9 @@ static int nl80211_del_mpath(struct sk_buff *skb, struct genl_info *info)
- 	if (!rdev->ops->del_mpath)
- 		return -EOPNOTSUPP;
- 
-+	if (dev->ieee80211_ptr->iftype != NL80211_IFTYPE_MESH_POINT)
-+		return -EOPNOTSUPP;
-+
- 	return rdev_del_mpath(rdev, dev, dst);
- }
- 
--- 
-2.20.1
+ { .src =3D SOME_PLL, .div =3D 4 }
 
 
+>=20
+> I can still extend rcg2_ops to do what you want, but it won't be based
+> on what rcg_ops is doing.
+
+Why isn't rcg_ops doing it? The idea is to copy whatever is happening
+with this snippet in the _freq_tbl_determine_rate() in rcg.c to rcg2.c
+
+	clk_flags =3D clk_hw_get_flags(hw);
+	p =3D clk_hw_get_parent_by_index(hw, index);
+	if (clk_flags & CLK_SET_RATE_PARENT) {
+		rate =3D rate * f->pre_div;
+
+We have checked for CLK_SET_RATE_PARENT from the beginning. Maybe it was
+always broken! If the frequency table pointer can return us the pre div
+and source then we can do math to ask the parent PLL for something.
+
+>=20
+> I can spin a rcg2_ops variant to do what you want, with a custom
+> determine_rate, but it doesn't seem like I'll really be saving any
+> lines of code.  Whatever I eliminate by minimizing the gfx3d
+> freq_table I will surely be putting into clk-rcg2.c
+>=20
+> Or, I can just drop this idea and keep the freq_tbl as it is.  Seems
+> like just a one off scenario.
+
+Please make rcg2 clk ops "do the right thing" when the flag
+CLK_SET_RATE_PARENT is set and the frequency table is just a
+source/divider sort of thing. That way we don't have to have different
+clk ops or even put anything in the frequency table besides the source
+PLL we want to use and the predivider we want to configure.
 
