@@ -2,56 +2,60 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1BACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F65CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398D12070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858CC20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211034;
-	bh=/Xw7BhYA+kwXh7NFcln0984td5k3Pk8C3Zla/ek6nGc=;
+	s=default; t=1572211037;
+	bh=zhckgUep76OpebvAf3fwYTU9iJOmCzEJqsA0iackRgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RCkxuzrS+FZ84TdXaecBQxLTxotumH0uYlqUSnv8aC47K+u+3lEtGhwt0Cj15ZEkN
-	 OBT+c1uhCPzOkQzIovDrqJhTYCsMcQM0gtVChC7ii8i7yZ6UvTvqLMhI/CwSW35Rrn
-	 Kp8lS9zPbvrN0Lo2RakxQdBKBsd5w0a2MQjj5THs=
+	b=qt22FNoGWfB5gig1wAjTqE4KqezrO4yPVsjiqJh3lRPur6p+IZ9MfY5epPcUoZ17J
+	 M+Lurw2tXDKEVYEwkwoQdtuJfT373h7QqTxenazJatjIp1TngflKJrw3kPO2XyauwX
+	 kiJHObg67+eZC5SpSAxQ9n9fC7BzpCbLNA/ZY64Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbfJ0VRN (ORCPT
+        id S1731018AbfJ0VRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730990AbfJ0VRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:17:10 -0400
+        id S1731006AbfJ0VRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:17:13 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8BCF2070B;
-        Sun, 27 Oct 2019 21:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCA5E205C9;
+        Sun, 27 Oct 2019 21:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211029;
-        bh=/Xw7BhYA+kwXh7NFcln0984td5k3Pk8C3Zla/ek6nGc=;
+        s=default; t=1572211032;
+        bh=zhckgUep76OpebvAf3fwYTU9iJOmCzEJqsA0iackRgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o7w4klHQIWPEkdl19ZJ2T+NlgGk7Oa3z0Vg4L1bV1Kf0ms5ZYYK7vydOxZFkDiob6
-         eAoOy5ds7+nx39h0Fqv/Z9IJZiIhTh1/k12tHQwa9fGChnSxCyghPXB5ifHihEJKvR
-         VumveiPwG1XbVA8owD+St+dZ/zB/PVj1VgVcWMeU=
+        b=unUB8uX4v2LFKoICK2hUi4156wl7KIs2YKjggtVcWKl5Vg70+OToA0mCYbHjiNj/y
+         6ZIBshJBDZXEXga3g0jrecZyYKE7SEDp26IUQVoa3yHtNM7osnN3lq1YrMldFphihF
+         iRYBAsWI0YHIWZtiaoALNwTyscslqrzTOOpT+rVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 75/93] CIFS: Fix use after free of file info structures
-Date:   Sun, 27 Oct 2019 22:01:27 +0100
-Message-Id: <20191027203310.813651313@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Lowry Li (Arm Technology China)" <lowry.li@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 001/197] drm: Free the writeback_job when it with an empty fb
+Date:   Sun, 27 Oct 2019 21:58:39 +0100
+Message-Id: <20191027203351.770938071@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
-References: <20191027203251.029297948@linuxfoundation.org>
+In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
+References: <20191027203351.684916567@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,65 +64,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
 
-commit 1a67c415965752879e2e9fad407bc44fc7f25f23 upstream.
+[ Upstream commit 8581d51055a08cc6eb061c8856062290e8582ce4 ]
 
-Currently the code assumes that if a file info entry belongs
-to lists of open file handles of an inode and a tcon then
-it has non-zero reference. The recent changes broke that
-assumption when putting the last reference of the file info.
-There may be a situation when a file is being deleted but
-nothing prevents another thread to reference it again
-and start using it. This happens because we do not hold
-the inode list lock while checking the number of references
-of the file info structure. Fix this by doing the proper
-locking when doing the check.
+Adds the check if the writeback_job with an empty fb, then it should
+be freed in atomic_check phase.
 
-Fixes: 487317c99477d ("cifs: add spinlock for the openFileList to cifsInodeInfo")
-Fixes: cb248819d209d ("cifs: use cifsInodeInfo->open_file_lock while iterating to avoid a panic")
-Cc: Stable <stable@vger.kernel.org>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With this change, the driver users will not check empty fb case any more.
+So refined accordingly.
 
+Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
+Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/1564571048-15029-2-git-send-email-lowry.li@arm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/file.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../drm/arm/display/komeda/komeda_wb_connector.c    |  3 +--
+ drivers/gpu/drm/arm/malidp_mw.c                     |  4 ++--
+ drivers/gpu/drm/drm_atomic.c                        | 13 +++++++++----
+ drivers/gpu/drm/rcar-du/rcar_du_writeback.c         |  4 ++--
+ drivers/gpu/drm/vc4/vc4_txp.c                       |  5 ++---
+ 5 files changed, 16 insertions(+), 13 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -403,10 +403,11 @@ void _cifsFileInfo_put(struct cifsFileIn
- 	bool oplock_break_cancelled;
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+index 2851cac94d869..23fbee268119f 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+@@ -43,9 +43,8 @@ komeda_wb_encoder_atomic_check(struct drm_encoder *encoder,
+ 	struct komeda_data_flow_cfg dflow;
+ 	int err;
  
- 	spin_lock(&tcon->open_file_lock);
--
-+	spin_lock(&cifsi->open_file_lock);
- 	spin_lock(&cifs_file->file_info_lock);
- 	if (--cifs_file->count > 0) {
- 		spin_unlock(&cifs_file->file_info_lock);
-+		spin_unlock(&cifsi->open_file_lock);
- 		spin_unlock(&tcon->open_file_lock);
+-	if (!writeback_job || !writeback_job->fb) {
++	if (!writeback_job)
+ 		return 0;
+-	}
+ 
+ 	if (!crtc_st->active) {
+ 		DRM_DEBUG_ATOMIC("Cannot write the composition result out on a inactive CRTC.\n");
+diff --git a/drivers/gpu/drm/arm/malidp_mw.c b/drivers/gpu/drm/arm/malidp_mw.c
+index 2e812525025dd..a59227b2cdb55 100644
+--- a/drivers/gpu/drm/arm/malidp_mw.c
++++ b/drivers/gpu/drm/arm/malidp_mw.c
+@@ -130,7 +130,7 @@ malidp_mw_encoder_atomic_check(struct drm_encoder *encoder,
+ 	struct drm_framebuffer *fb;
+ 	int i, n_planes;
+ 
+-	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
++	if (!conn_state->writeback_job)
+ 		return 0;
+ 
+ 	fb = conn_state->writeback_job->fb;
+@@ -247,7 +247,7 @@ void malidp_mw_atomic_commit(struct drm_device *drm,
+ 
+ 	mw_state = to_mw_state(conn_state);
+ 
+-	if (conn_state->writeback_job && conn_state->writeback_job->fb) {
++	if (conn_state->writeback_job) {
+ 		struct drm_framebuffer *fb = conn_state->writeback_job->fb;
+ 
+ 		DRM_DEV_DEBUG_DRIVER(drm->dev,
+diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
+index 419381abbdd16..14aeaf7363210 100644
+--- a/drivers/gpu/drm/drm_atomic.c
++++ b/drivers/gpu/drm/drm_atomic.c
+@@ -430,10 +430,15 @@ static int drm_atomic_connector_check(struct drm_connector *connector,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (writeback_job->out_fence && !writeback_job->fb) {
+-		DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] requesting out-fence without framebuffer\n",
+-				 connector->base.id, connector->name);
+-		return -EINVAL;
++	if (!writeback_job->fb) {
++		if (writeback_job->out_fence) {
++			DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] requesting out-fence without framebuffer\n",
++					 connector->base.id, connector->name);
++			return -EINVAL;
++		}
++
++		drm_writeback_cleanup_job(writeback_job);
++		state->writeback_job = NULL;
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_writeback.c b/drivers/gpu/drm/rcar-du/rcar_du_writeback.c
+index ae07290bba6a4..04efa78d70b6e 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_writeback.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_writeback.c
+@@ -147,7 +147,7 @@ static int rcar_du_wb_enc_atomic_check(struct drm_encoder *encoder,
+ 	struct drm_device *dev = encoder->dev;
+ 	struct drm_framebuffer *fb;
+ 
+-	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
++	if (!conn_state->writeback_job)
+ 		return 0;
+ 
+ 	fb = conn_state->writeback_job->fb;
+@@ -221,7 +221,7 @@ void rcar_du_writeback_setup(struct rcar_du_crtc *rcrtc,
+ 	unsigned int i;
+ 
+ 	state = rcrtc->writeback.base.state;
+-	if (!state || !state->writeback_job || !state->writeback_job->fb)
++	if (!state || !state->writeback_job)
  		return;
- 	}
-@@ -419,9 +420,7 @@ void _cifsFileInfo_put(struct cifsFileIn
- 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
  
- 	/* remove it from the lists */
--	spin_lock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->flist);
--	spin_unlock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->tlist);
+ 	fb = state->writeback_job->fb;
+diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
+index 96f91c1b4b6e6..e92fa12750343 100644
+--- a/drivers/gpu/drm/vc4/vc4_txp.c
++++ b/drivers/gpu/drm/vc4/vc4_txp.c
+@@ -229,7 +229,7 @@ static int vc4_txp_connector_atomic_check(struct drm_connector *conn,
+ 	int i;
  
- 	if (list_empty(&cifsi->openFileList)) {
-@@ -437,6 +436,7 @@ void _cifsFileInfo_put(struct cifsFileIn
- 		cifs_set_oplock_level(cifsi, 0);
- 	}
+ 	conn_state = drm_atomic_get_new_connector_state(state, conn);
+-	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
++	if (!conn_state->writeback_job)
+ 		return 0;
  
-+	spin_unlock(&cifsi->open_file_lock);
- 	spin_unlock(&tcon->open_file_lock);
+ 	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
+@@ -269,8 +269,7 @@ static void vc4_txp_connector_atomic_commit(struct drm_connector *conn,
+ 	u32 ctrl;
+ 	int i;
  
- 	oplock_break_cancelled = wait_oplock_handler ?
+-	if (WARN_ON(!conn_state->writeback_job ||
+-		    !conn_state->writeback_job->fb))
++	if (WARN_ON(!conn_state->writeback_job))
+ 		return;
+ 
+ 	mode = &conn_state->crtc->state->adjusted_mode;
+-- 
+2.20.1
+
 
 
