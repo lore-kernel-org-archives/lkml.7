@@ -2,121 +2,144 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DDFCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 02:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB96CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 02:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACAB2084C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 02:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B23720650
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 02:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbU7oAzv"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sWH28wU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfJ0CkQ (ORCPT
+        id S1726656AbfJ0CrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 22:40:16 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:41129 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfJ0CkQ (ORCPT
+        Sat, 26 Oct 2019 22:47:18 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36728 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfJ0CrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 22:40:16 -0400
-Received: by mail-io1-f54.google.com with SMTP id r144so6697622iod.8;
-        Sat, 26 Oct 2019 19:40:15 -0700 (PDT)
+        Sat, 26 Oct 2019 22:47:18 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 23so4198854pgk.3
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 19:47:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=k/SkguEWaR/BIMPX1syQDkkBF8ZHQnrk1Gdqi+rYaB4=;
-        b=VbU7oAzvjZwyxmW163U/fWdn0Y6JI/NlubyNMrwpu+SN6bd2fQ9gbVvUN1fPq0Xa9E
-         lwEHqG9C3ST19ksAKAM8Rs45ggi+/TXADWb1rRz9vNeq6ckFYEJJhNio5URbKAij+OdA
-         Uv5T2Q7BZL+NdLp30Yy8ktiukMc/fpCF7yq9a6S0dTNYR8zpXt7q0Eva0u4OGiOpBKtG
-         fVZX14edBYQFL9M887QmQSE27EApJY/bCBVM0AzwOwHb8p1nsS0NKt2j3dQZyeCoUEIz
-         0CghMftsZb0+ux7q7417ghjZGa1AfUhjcSjZ8UNnlEA5t6ag/T/OOl7cFtHFL8zQlXey
-         kmAw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=FsMqXu/u9dkMIjXHwGZZfEqLuIY5gaLE4qYJLCQg3t0=;
+        b=sWH28wU2sv9+P1Tos5xqMk0WwwsfPN144++GWdfaLw1QCCWlBBZtUKThOFZUWOHln1
+         76JWSayp2YH8JL0nhqDt8+XCDC/zloF2V+0jeIn2AJuw9jUnxTjAK9SphQtkGQ5kWEQS
+         GRWkif7vUBkomXUb2N7YwTDu3a7vMi5O4uxc1OlUI0u6PStICvVZ3DHGPPuqJS4jx5eP
+         Pk1dJAfXINkVWh1MuTpkPoMfzGpYKqZbSyp5BdFYgvXajW159S3Rttfr/aTezyajwIfD
+         Ivb0GJTnoWAfYu7Htf7wuNQq3vBqPL/BlpWYYtT7l6cAEgc3A8icI0Ho3Rli/iy/kl6M
+         Ym6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=k/SkguEWaR/BIMPX1syQDkkBF8ZHQnrk1Gdqi+rYaB4=;
-        b=qmEeenYHhFO5KyguldcYPMPj7TYfwdv99IhB0pKPFP8RF0iO3oZBtP8MnJxV3Xqcp6
-         BpmDjI5jYrqVs6YbHa4pSXJA+AFtoi8UX9FeDw6H9YJ3f7yNrT5ssM7n14uyvaS7X2d3
-         JkcXOfCG6LB4obl3gvYqjNSAzqx6rp3+L33SCgcIKCkqVhCHoKnqoQDLv8JwQX1gcund
-         pemQYh6cgJ0inoFYd4ze1fyryu/Pl9KPJXyDmlxZbEjdVKIJXXOHoalXLhd9+gngt6vd
-         rYKN637Olcrx3JyAKNz4+xpl3arTUoF3nZza5p3kBitM7hEXVHToYZpPnC+n8fyffAJc
-         E0Wg==
-X-Gm-Message-State: APjAAAXyDwF7ds2/9eQllsriNuyPnKG2lrUnfWU/NUQSNYOuy+pGuIq7
-        DaOta4HTz7Q0IMgQKxSklFyRcd4JEwjgOZwDmLN3AUyN9cY=
-X-Google-Smtp-Source: APXvYqzzEzmyB7bzYEy6JjOC4LLFcsbk84Iz2RfJ63ncpDyQZ8Vel0i4F7P8NTHDLaIdix2o4K2i12xuMOZfz4w0tNM=
-X-Received: by 2002:a6b:fa12:: with SMTP id p18mr2747637ioh.272.1572144015245;
- Sat, 26 Oct 2019 19:40:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FsMqXu/u9dkMIjXHwGZZfEqLuIY5gaLE4qYJLCQg3t0=;
+        b=aKt7nOqjHOp8Ld94gEHvoYzGJd/sPlBKHfExlSYcLj+Ai9DvobCWaSJPSm0Q9X39w7
+         TULtM5t/bRNQ7gHn1k7VNF6HqiABBSgm1lYOlZeN79Nbj5Wvijhbn10fSgP8Ir8tTidK
+         5ZbkVRcWgnPIvl6CDvGl8Fjssbd9KPHsnd7pGuO8K0GeIw0PtW6B/yhARFvsk6vqQR1H
+         +F1JaC8Sf34SegxTRhvAbupdTg4TB9DDZVemSEA/iV7GOrrG1jKkVRVI3D8JlzoLYR/5
+         +uVG3Hr603xcBNiq6T6kO6UYSrOp+TupCPYV+yy/WkrpUin4cTYQcpsaj/mRX5olYcCq
+         oIuQ==
+X-Gm-Message-State: APjAAAWAvrf38eWZJfxTmBqcdHe1w5EJxk3zu+otjr8/NyUpsnFqkXcE
+        FNMrIYF7N0bhQp3IFIk9xc5ZoQ==
+X-Google-Smtp-Source: APXvYqwaMdgH9j+XaH/X4PVTM2kkbdUXIQ+FHnkGopn5Y+s1EGJ1tAZbv5uEf2UJFfXBZ/DT/uF/Gg==
+X-Received: by 2002:aa7:8249:: with SMTP id e9mr13512844pfn.19.1572144435795;
+        Sat, 26 Oct 2019 19:47:15 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id h28sm8942646pgn.14.2019.10.26.19.47.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 26 Oct 2019 19:47:14 -0700 (PDT)
+Subject: Re: KASAN: null-ptr-deref Write in io_wq_cancel_all
+To:     syzbot <syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com>,
+        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <000000000000e83aa20595db3e33@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <45f9f365-5d0b-dbf9-a9ce-a77db7476864@kernel.dk>
+Date:   Sat, 26 Oct 2019 20:47:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 26 Oct 2019 21:40:04 -0500
-Message-ID: <CAH2r5muwqB-D9=2ZxBkT-T77PkjAHh4TPpsr9vsDZD5nmu9jyw@mail.gmail.com>
-Subject: [GIT PULL] CIFS/SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <000000000000e83aa20595db3e33@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-7d194c2100ad2a6dded545887d02754948ca5241:
+On 10/26/19 8:36 PM, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    139c2d13 Add linux-next specific files for 20191025
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12888a00e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=28fd7a693df38d29
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d958a65633ea70280b23
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160573c0e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: null-ptr-deref in set_bit
+> include/asm-generic/bitops-instrumented.h:28 [inline]
+> BUG: KASAN: null-ptr-deref in io_wq_cancel_all+0x28/0x2a0 fs/io-wq.c:574
+> Write of size 8 at addr 0000000000000004 by task syz-executor.2/9365
+> 
+> CPU: 1 PID: 9365 Comm: syz-executor.2 Not tainted 5.4.0-rc4-next-20191025 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>    __dump_stack lib/dump_stack.c:77 [inline]
+>    dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>    __kasan_report.cold+0x5/0x41 mm/kasan/report.c:510
+>    kasan_report+0x12/0x20 mm/kasan/common.c:634
+>    check_memory_region_inline mm/kasan/generic.c:185 [inline]
+>    check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+>    __kasan_check_write+0x14/0x20 mm/kasan/common.c:98
+>    set_bit include/asm-generic/bitops-instrumented.h:28 [inline]
+>    io_wq_cancel_all+0x28/0x2a0 fs/io-wq.c:574
+>    io_ring_ctx_wait_and_kill+0x1e2/0x710 fs/io_uring.c:3679
+>    io_uring_release+0x42/0x50 fs/io_uring.c:3691
+>    __fput+0x2ff/0x890 fs/file_table.c:280
+>    ____fput+0x16/0x20 fs/file_table.c:313
+>    task_work_run+0x145/0x1c0 kernel/task_work.c:113
+>    exit_task_work include/linux/task_work.h:22 [inline]
+>    do_exit+0x904/0x2e60 kernel/exit.c:817
+>    do_group_exit+0x135/0x360 kernel/exit.c:921
+>    get_signal+0x47c/0x24f0 kernel/signal.c:2734
+>    do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+>    exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
+>    prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+>    syscall_return_slowpath+0x47a/0x530 arch/x86/entry/common.c:274
+>    ret_from_fork+0x15/0x30 arch/x86/entry/entry_64.S:344
+> RIP: 0033:0x45c909
+> Code: ff 48 85 f6 0f 84 d7 8c fb ff 48 83 ee 10 48 89 4e 08 48 89 3e 48 89
+> d7 4c 89 c2 4d 89 c8 4c 8b 54 24 08 b8 38 00 00 00 0f 05 <48> 85 c0 0f 8c
+> ae 8c fb ff 74 01 c3 31 ed 48 f7 c7 00 00 01 00 75
+> RSP: 002b:00007fe3de137db0 EFLAGS: 00000202 ORIG_RAX: 0000000000000038
+> RAX: 0000000000000000 RBX: 00007fe3de138700 RCX: 000000000045c909
+> RDX: 00007fe3de1389d0 RSI: 00007fe3de137db0 RDI: 00000000003d0f00
+> RBP: 00007ffff688f6a0 R08: 00007fe3de138700 R09: 00007fe3de138700
+> R10: 00007fe3de1389d0 R11: 0000000000000202 R12: 0000000000000000
+> R13: 00007ffff688f53f R14: 00007fe3de1389c0 R15: 000000000075bfd4
+> ==================================================================
 
-  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
-
-are available in the Git repository at:
-
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.4-rc5-smb3-fixes
-
-for you to fetch changes up to d46b0da7a33dd8c99d969834f682267a45444ab3:
-
-  cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
-(2019-10-24 21:35:04 -0500)
-
-----------------------------------------------------------------
-Seven small cifs/smb3 fixes, including three for stable
-
-Buildbot regression test run:
-http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/272
-----------------------------------------------------------------
-Chuhong Yuan (1):
-      cifs: Fix missed free operations
-
-Dave Wysochanski (1):
-      cifs: Fix cifsInodeInfo lock_sem deadlock when reconnect occurs
-
-Paulo Alcantara (SUSE) (1):
-      cifs: Handle -EINPROGRESS only when noblockcnt is set
-
-Pavel Shilovsky (2):
-      CIFS: Fix retry mid list corruption on reconnects
-      CIFS: Fix use after free of file info structures
-
-Roberto Bergantinos Corpas (1):
-      CIFS: avoid using MID 0xFFFF
-
-Steve French (1):
-      cifs: clarify comment about timestamp granularity for old servers
-
- fs/cifs/cifsfs.c    |  8 +++++++-
- fs/cifs/cifsglob.h  |  5 +++++
- fs/cifs/cifsproto.h |  1 +
- fs/cifs/connect.c   | 18 +++++++++++++++---
- fs/cifs/file.c      | 29 ++++++++++++++++++-----------
- fs/cifs/inode.c     |  4 ++--
- fs/cifs/smb1ops.c   |  3 +++
- fs/cifs/smb2file.c  |  2 +-
- fs/cifs/transport.c | 42 +++++++++++++++++++++++-------------------
- 9 files changed, 75 insertions(+), 37 deletions(-)
-
+This one should be fixed in the current tree, and the version posted
+yesterday. I don't know if linux-next has been updated since. I'll
+check the reproducer and verify when I get the chance.
 
 -- 
-Thanks,
+Jens Axboe
 
-Steve
