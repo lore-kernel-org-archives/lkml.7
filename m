@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0721CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D925CA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E0E2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C0A214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210446;
-	bh=3p+USwtJUTtC3toj8T7Yn7zw6NH0GsG2ccFhvAY7IXI=;
+	s=default; t=1572210449;
+	bh=WbnXvxpwEoGnorjSiLoymXvZ3F79jV+5PNgIiuu3PTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWbhHgHbDGJRb7IrS7zQtZZyEAw6uygFZqdBuHocTvZVr514ApI4AjF0/5M426EEa
-	 8sgjsrqFaqh0By7FRFBe3lPWFyUKdwV/J04EB6t/C7EDa7P9OriVfZ/uwrEZxjEAby
-	 vspoIthktMEHdL+B82xkRzPiWR5BLbc+0C31sSx0=
+	b=c+czSVWgbeCG6rUObKPKrL9tsxTZVTMn4L2ahRrNyiQ3jOftQPMqHWCCEx+S7cX//
+	 LTSymnNIgaCWzReBR0vC4L/AYqWXl4NBEDYIxOtv+Kt59KGSxcroRy1Fohm4HNk0en
+	 AuJfFFmDVNQ7TYiWz+j9vZeQAralTqUSll2YdaSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfJ0VHZ (ORCPT
+        id S1729175AbfJ0VH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:07:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:07:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbfJ0VHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:07:20 -0400
+        id S1728238AbfJ0VHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:07:23 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214A9214AF;
-        Sun, 27 Oct 2019 21:07:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783932064A;
+        Sun, 27 Oct 2019 21:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210439;
-        bh=3p+USwtJUTtC3toj8T7Yn7zw6NH0GsG2ccFhvAY7IXI=;
+        s=default; t=1572210443;
+        bh=WbnXvxpwEoGnorjSiLoymXvZ3F79jV+5PNgIiuu3PTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MPP5thdod2y3opZO/jGJD2D4I0/gEcqVgWveKO/HhgpZX/hlSjdAeGmrmlhCJMVkJ
-         Fa2kROfHOatN+CSRUo3NRq0Tcvg3+ilchHCs8GvkLEmvvOaVqc3Rh1JAg28mEekpPw
-         +HyjyV7mn9RbQaZtMXGejoH+sgilHBCvUSJRzGKc=
+        b=RXWyOkrdUWCarX94e8XY9osv6UXv4A21KFq7VOSlDs03aOPjxvyloid7TAF5oVjhe
+         FDP0mqbCLfGeU8UMVDlvD37r5GkDW46kVLieYZ7uwWGG3vBFHypNDQQ/88d83jhfg7
+         8S5POXdG+HYDd+qD8ajczoYAYOdSx5DwRFFvnT+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        Ivan Topolsky <doktor.yak@gmail.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 016/119] md/raid0: fix warning message for parameter default_layout
-Date:   Sun, 27 Oct 2019 21:59:53 +0100
-Message-Id: <20191027203304.506871460@linuxfoundation.org>
+Subject: [PATCH 4.14 017/119] Revert "drm/radeon: Fix EEH during kexec"
+Date:   Sun, 27 Oct 2019 21:59:54 +0100
+Message-Id: <20191027203304.817080909@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,34 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 3874d73e06c9b9dc15de0b7382fc223986d75571 ]
+[ Upstream commit 8d13c187c42e110625d60094668a8f778c092879 ]
 
-The message should match the parameter, i.e. raid0.default_layout.
+This reverts commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6.
 
-Fixes: c84a1372df92 ("md/raid0: avoid RAID0 data corruption due to layout confusion.")
-Cc: NeilBrown <neilb@suse.de>
-Reported-by: Ivan Topolsky <doktor.yak@gmail.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+This breaks some boards.  Maybe just enable this on PPC for
+now?
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=205147
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/raid0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_drv.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
-index 28fb717217706..449c4dd060fcd 100644
---- a/drivers/md/raid0.c
-+++ b/drivers/md/raid0.c
-@@ -158,7 +158,7 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
- 	} else {
- 		pr_err("md/raid0:%s: cannot assemble multi-zone RAID0 with default_layout setting\n",
- 		       mdname(mddev));
--		pr_err("md/raid0: please set raid.default_layout to 1 or 2\n");
-+		pr_err("md/raid0: please set raid0.default_layout to 1 or 2\n");
- 		err = -ENOTSUPP;
- 		goto abort;
- 	}
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 54d97dd5780a1..f4becad0a78c0 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -368,19 +368,11 @@ radeon_pci_remove(struct pci_dev *pdev)
+ static void
+ radeon_pci_shutdown(struct pci_dev *pdev)
+ {
+-	struct drm_device *ddev = pci_get_drvdata(pdev);
+-
+ 	/* if we are running in a VM, make sure the device
+ 	 * torn down properly on reboot/shutdown
+ 	 */
+ 	if (radeon_device_is_virtual())
+ 		radeon_pci_remove(pdev);
+-
+-	/* Some adapters need to be suspended before a
+-	* shutdown occurs in order to prevent an error
+-	* during kexec.
+-	*/
+-	radeon_suspend_kms(ddev, true, true, false);
+ }
+ 
+ static int radeon_pmops_suspend(struct device *dev)
 -- 
 2.20.1
 
