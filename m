@@ -2,129 +2,182 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8792CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F000CCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC9D20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572185036;
-	bh=SF8ID9dlHeFbRYwBzozNy7Dlal4q4YlkPN2xgNlo7gQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fRMUpyb07xnbVmx4vcIa547dRzuSgfwMsiOlGz99jIzLzHC9E8xfQiJK86BbCZ8bP
-	 VWu71xxbXPzmUNAlO8a94RadrVG/dRZw1nR62qM43K7i15xuzjkIawdy7GY+dtk7l/
-	 qWEOuRvmdYFvC4HIxQyrGbHfYr9MzKMCyNSswg90=
+	by mail.kernel.org (Postfix) with ESMTP id C3EFA20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfJ0ODz (ORCPT
+        id S1726892AbfJ0O1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:03:55 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38162 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfJ0ODz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:03:55 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q78so8568984lje.5
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 07:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aUtxqBrTqUG2JQM67qlbeu/gWrmsCKLHs/nf3HjwR6o=;
-        b=UBVoDLidxhGRZnO3t3s9odW+975NWscpsgyn72pMoIFtMXrLI8gYCDX8RoEk4dUGpu
-         XShVkulYmvYa4f4vPiGJkAOAAjj/NBHXSLZISLlhGaOzl5SAbZ6BhT9CpKJEgEzb8LhN
-         G2c7dQQvyPPapIvGT5FeHB9zbcHI3CN4A0Ff0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aUtxqBrTqUG2JQM67qlbeu/gWrmsCKLHs/nf3HjwR6o=;
-        b=pjJtU5xk+M2Xxhbtap4iD52OqsfKYRqwDY+bUWIpmDTlUgNyHKdzVh5Fgsv6ZRbtRf
-         dLPnpPCtpzSUC9ECfhSNqgz5//JOBpOvTfneglPWByMxJzhKa1BFKa48ZajiKuLYlt4S
-         ro1tXLDrfHgp9Wh11n3ft0Iyj63fhwF3UgyASXI0G4/fBx1SxXwvl8od97iGyY6aq6tD
-         m+9xec1Ilft38zLBqXVUlzaYZdt3bsRzZvrIaShDJMOgw3qYP39EnWuqjxmyYeFOrmMr
-         5BCQkrd6eZO21KiYSWfRPCo9S9d19jpmlExEwhERyr/nuypxpMIKZUZe9xteEMJTZI2z
-         yGfg==
-X-Gm-Message-State: APjAAAUlBxj4xIuSSNhVGwhG8udQb3CdcmdJulnnTu3zyNbwti8Tvoux
-        lH24O/KXTBTsz/PlgTfT4lWaoIV2EUCW5w==
-X-Google-Smtp-Source: APXvYqzHz0lHMKtGgtV/S9KiPBJL3wUGA+rPXOcwm9SWf3XNCkwSJQmMmDU12a9eLWCNqsKAfPRiig==
-X-Received: by 2002:a2e:7405:: with SMTP id p5mr8715432ljc.191.1572185033137;
-        Sun, 27 Oct 2019 07:03:53 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id w20sm5301877lff.46.2019.10.27.07.03.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id l21so8566941lje.4
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
-X-Received: by 2002:a05:651c:331:: with SMTP id b17mr8760744ljp.133.1572185032112;
- Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
+        Sun, 27 Oct 2019 10:27:05 -0400
+Received: from mout.perfora.net ([74.208.4.194]:34373 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfJ0O1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 10:27:05 -0400
+Received: from marcel-nb-toradex-int.toradex.int ([31.10.206.124]) by
+ mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0LfzPZ-1heeJU0fs3-00pfdc; Sun, 27 Oct 2019 15:26:27 +0100
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     devicetree@vger.kernel.org, info@logictechno.com,
+        j.bauer@endrich.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v2 2/3] drm/panel: simple: add display timings for logic technologies displays
+Date:   Sun, 27 Oct 2019 15:26:08 +0100
+Message-Id: <20191027142609.12754-2-marcel@ziswiler.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191027142609.12754-1-marcel@ziswiler.com>
+References: <20191027142609.12754-1-marcel@ziswiler.com>
 MIME-Version: 1.0
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 27 Oct 2019 10:03:35 -0400
-X-Gmail-Original-Message-ID: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
-Message-ID: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
- not cursor and length [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:3DquW+3hHT9LpViOmCrHnA2GnPQhQ1Qr+998CD0WzszqQ+evuJ6
+ 8N18jw92t9xhoo34PzGX0BmZoviWeITsGgQ+RXCqUtZtB1peCwX97YNdDLlzOrW/bNoIz/o
+ YkLjROo1BdthaURJHNK1J4keiLBfOR5rl9ZZEuLdgN+SNHF4n8HnBivo4FWxMlDyAZAgm6c
+ RimNBiJgr9Fw1olCTIA+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6vpPbtUJFrc=:XCDyEzNp5FoYZtJZG8B5Bq
+ T5B9vJX4yEfQNCfXNECPQg79lspGRfbQ/XRdFQ46VUsUPneoJ9/6zyrZ7pzhkzgWGe8UvTlyn
+ U9dLgX6ZrY+8W9k8tU7vlbQwpARC12jEFC/NA4vMnrksJxgcx6IvzXJgkQ3fKzkkXoOGnqQEA
+ wx369B8ytI93dmkbC4uzIXjglOSJsBjYoLcOnHTvyKgNtSVc+KnKn1iwauoC1ftJTSSniTJpo
+ 77D/QWXqWEt9XkMF5BrRSFrp6C+IjOOR5AP+avWf9ddtzOCL2fFwdJ4bq3eBR2ujuzot4CUxE
+ q/p2n2OQKA3TwVILXIY3QljtYvXUg6IEQW7riZJi1AusOplD9hgjQ6zQOFZJ9KIe9fB8h2FnL
+ 1jjL0IN7/ML3WKIrMxR8VS2cotG1gP8bUbtljkUY1ZV8SIbME4lC89oQuKJkd6gkZGN3IVE+T
+ wsidPovGZbPkrXLoln1/OxP6K6gXvp+dERX8fPJA1R360gzr6AtKmh+MkAVR5QFrtWwF0MbPH
+ hpGaS/6TDNdIobh0R87c4fMmGOuIvb/OE70YUvaDbkaj/ifkemcsGp4nu+bv45xDcYreMngPS
+ Jba6uKjxQxvgv13DCzcDk6Xt+YcDy5omXl8xuY6m5m4zLeBdq6zeiarZEfSDPY0LnQnJPk/Ie
+ S34I9tnmdJCclSuz9eKmQYbIbbi1a+yifTb88DP6BGZ+s61cwQHwMtfGRlMgwOh6rWS/fCalL
+ J6/Gs9hjAj81t2SxuKSJwSZxYog9HLpns/k2z3cR+2x1DJvi0bU+tjvxGauEf8x9CjlgdyUAy
+ 1d2WzvZNo3jywpflHHg8EPCj99D2ncCJXVpVN0WkBtwSy72fQ985e8u/amVWOrHLr+2prNDQR
+ Tmo5qgPmTDWHcuQR8dHcU1CbeNpMpncY/yxKptrOg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This still has signs of that earlier series:
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-On Wed, Oct 23, 2019 at 4:17 PM David Howells <dhowells@redhat.com> wrote:
->
->                 if (rem >= ibuf->len) {
->                         *obuf = *ibuf;
->                         ibuf->ops = NULL;
-> -                       pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
-> -                       pipe->nrbufs--;
-> +                       tail++;
-> +                       pipe_commit_read(pipe, tail);
->                 } else {
->                         if (!pipe_buf_get(pipe, ibuf))
->                                 goto out_free;
+Add display timings for the following 3 display panels manufactured by
+Logic Technologies Limited:
 
-with those odd "pipe_commit_read/write()" helpers.
+- LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
+  7" Parallel [1]
+- LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
+  Parallel [2]
+- LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
+  10.1" LVDS [3]
 
-They make no sense, and they don't make things more legible.
+Those panels may also be distributed by Endrich Bauelemente Vertriebs
+GmbH [4].
 
-It's shorter and more obvious to just write
+[1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
+[2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
+[3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
+[4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
 
-   pipe->head = head;
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Reviewed-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-than it is to write
+---
 
-   pipe_commit_write(pipe, head);
+Changes in v2:
+- Added Philippe's reviewed-by.
 
-Even when the addition of the notifications,  it's all under the
-pipe->wait.lock, so it's all just regular assignments.
+ drivers/gpu/drm/panel/panel-simple.c | 65 ++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-Now, if at some point it starts doing fancy lockless things, at _that_
-point the updates might become more complex, but that's a potential
-future thing that wouldn't be relevant for a while, and isn't a reason
-to make the code more obscure now.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5d487686d25c..546770116096 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2047,6 +2047,62 @@ static const struct panel_desc lg_lp129qe = {
+ 	},
+ };
+ 
++static const struct display_timing logictechno_lt161010_2nh_timing = {
++	.pixelclock = { 26400000, 33300000, 46800000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 16, 210, 354 },
++	.hback_porch = { 46, 46, 46 },
++	.hsync_len = { 1, 20, 40 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 7, 22, 147 },
++	.vback_porch = { 23, 23, 23 },
++	.vsync_len = { 1, 10, 20 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
++};
++
++static const struct panel_desc logictechno_lt161010_2nh = {
++	.timings = &logictechno_lt161010_2nh_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 154,
++		.height = 86,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++};
++
++static const struct display_timing logictechno_lt170410_2whc_timing = {
++	.pixelclock = { 68900000, 71100000, 7340000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 23, 60, 71 },
++	.hback_porch = { 23, 60, 71 },
++	.hsync_len = { 15, 40, 47 },
++	.vactive = { 800, 800, 800 },
++	.vfront_porch = { 5, 7, 10 },
++	.vback_porch = { 5, 7, 10 },
++	.vsync_len = { 6, 9, 12 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE |
++		 DISPLAY_FLAGS_SYNC_POSEDGE,
++};
++
++static const struct panel_desc logictechno_lt170410_2whc = {
++	.timings = &logictechno_lt170410_2whc_timing,
++	.num_timings = 1,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++};
++
+ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.clock = 30400,
+ 	.hdisplay = 800,
+@@ -3287,6 +3343,15 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logictechno,lt161010-2nhc",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt161010-2nhr",
++		.data = &logictechno_lt161010_2nh,
++	}, {
++		.compatible = "logictechno,lt170410-2whc",
++		.data = &logictechno_lt170410_2whc,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
+-- 
+2.21.0
 
-Hmm?
-
-             Linus
