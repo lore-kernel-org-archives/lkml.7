@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F396ECA9EBF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF143CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA74B222BE
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09C921783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211519;
-	bh=+fUGPU/cUvr4r1VruQzw+nmYANorNrfj6Z+QY1jRk18=;
+	s=default; t=1572211522;
+	bh=sBK3e/HJ72aJFPRCV7NuKK2fRBkXmMl86jjjjgNUYbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwOS8SYiNf/vQYpFG5/Nr2takY6rJRIhysfXXN/nyEuODhhjo8e3M9ZH7TdM07pXj
-	 WyLpNdjdvQSXEPtuEQl22aJSHJ1IunPxNSJneaqc/fyJ5RmUMQHpDn0u071mBPL39n
-	 4zu1uHpi93azxg599q3J0TkETJHya61x+QyTGiEc=
+	b=oPGXSjSl0z23VXMitm6t+yf3OYW8bKpIZKiy9EouJWIJiSyi5x8CtpTEMnMU86SJt
+	 vVThAu4lsqL45JdjMjcD7OE7E9SqAEpErOIIqPGd3ocwFbxK/iu7v5254Ns32iQsuT
+	 OUfvS8rZi1evcK2nsYMyKyK6QABiDaTof6gec0Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732706AbfJ0VZS (ORCPT
+        id S1732716AbfJ0VZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47026 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732692AbfJ0VZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:15 -0400
+        id S1732099AbfJ0VZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:17 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D043F21783;
-        Sun, 27 Oct 2019 21:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D9AE222BD;
+        Sun, 27 Oct 2019 21:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211514;
-        bh=+fUGPU/cUvr4r1VruQzw+nmYANorNrfj6Z+QY1jRk18=;
+        s=default; t=1572211517;
+        bh=sBK3e/HJ72aJFPRCV7NuKK2fRBkXmMl86jjjjgNUYbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ydku8zuFdPxfihrZijqqSwBgqGKIddNuyWhQ4VFIipf9qF7mq6DF7rXOKx5P7NOOn
-         pFs3UBH69XHH8FFEqmIpf10XAVWHJ3tP5lUAtB6HPdvPJfpmZ83A7xIt2t954XKdqx
-         OB2/BQenm69RqUl8z1mFoSrmAcbDPikv46nqm4U0=
+        b=x1l7DicE5Xt5jH5lncunI3pi2KhV55GeXOA7WSWnggczXocKGl/eD+A1mkTvvruVK
+         iBIiE/5B2YMlxmFxsGjlfEif+23o+iJ5xRBYYC0hAYWe/y3sGq2BKD2+5cpwhvHgJq
+         fluc4j11RYLZCrr6xpOZvpB1tzsKgE5YuBTPts0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.3 176/197] x86/apic/x2apic: Fix a NULL pointer deref when handling a dying cpu
-Date:   Sun, 27 Oct 2019 22:01:34 +0100
-Message-Id: <20191027203404.857732611@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH 5.3 177/197] x86/hyperv: Make vapic support x2apic mode
+Date:   Sun, 27 Oct 2019 22:01:35 +0100
+Message-Id: <20191027203405.081835714@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,53 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Roman Kagan <rkagan@virtuozzo.com>
 
-commit 7a22e03b0c02988e91003c505b34d752a51de344 upstream.
+commit e211288b72f15259da86eed6eca680758dbe9e74 upstream.
 
-Check that the per-cpu cluster mask pointer has been set prior to
-clearing a dying cpu's bit.  The per-cpu pointer is not set until the
-target cpu reaches smp_callin() during CPUHP_BRINGUP_CPU, whereas the
-teardown function, x2apic_dead_cpu(), is associated with the earlier
-CPUHP_X2APIC_PREPARE.  If an error occurs before the cpu is awakened,
-e.g. if do_boot_cpu() itself fails, x2apic_dead_cpu() will dereference
-the NULL pointer and cause a panic.
+Now that there's Hyper-V IOMMU driver, Linux can switch to x2apic mode
+when supported by the vcpus.
 
-  smpboot: do_boot_cpu failed(-22) to wakeup CPU#1
-  BUG: kernel NULL pointer dereference, address: 0000000000000008
-  RIP: 0010:x2apic_dead_cpu+0x1a/0x30
-  Call Trace:
-   cpuhp_invoke_callback+0x9a/0x580
-   _cpu_up+0x10d/0x140
-   do_cpu_up+0x69/0xb0
-   smp_init+0x63/0xa9
-   kernel_init_freeable+0xd7/0x229
-   ? rest_init+0xa0/0xa0
-   kernel_init+0xa/0x100
-   ret_from_fork+0x35/0x40
+However, the apic access functions for Hyper-V enlightened apic assume
+xapic mode only.
 
-Fixes: 023a611748fd5 ("x86/apic/x2apic: Simplify cluster management")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+As a result, Linux fails to bring up secondary cpus when run as a guest
+in QEMU/KVM with both hv_apic and x2apic enabled.
+
+According to Michael Kelley, when in x2apic mode, the Hyper-V synthetic
+apic MSRs behave exactly the same as the corresponding architectural
+x2apic MSRs, so there's no need to override the apic accessors.  The
+only exception is hv_apic_eoi_write, which benefits from lazy EOI when
+available; however, its implementation works for both xapic and x2apic
+modes.
+
+Fixes: 29217a474683 ("iommu/hyper-v: Add Hyper-V stub IOMMU driver")
+Fixes: 6b48cb5f8347 ("X86/Hyper-V: Enlighten APIC access")
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Roman Kagan <rkagan@virtuozzo.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191001205019.5789-1-sean.j.christopherson@intel.com
+Link: https://lkml.kernel.org/r/20191010123258.16919-1-rkagan@virtuozzo.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/x2apic_cluster.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/hyperv/hv_apic.c |   20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kernel/apic/x2apic_cluster.c
-+++ b/arch/x86/kernel/apic/x2apic_cluster.c
-@@ -158,7 +158,8 @@ static int x2apic_dead_cpu(unsigned int
- {
- 	struct cluster_mask *cmsk = per_cpu(cluster_masks, dead_cpu);
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -260,11 +260,21 @@ void __init hv_apic_init(void)
+ 	}
  
--	cpumask_clear_cpu(dead_cpu, &cmsk->mask);
-+	if (cmsk)
-+		cpumask_clear_cpu(dead_cpu, &cmsk->mask);
- 	free_cpumask_var(per_cpu(ipi_mask, dead_cpu));
- 	return 0;
+ 	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
+-		pr_info("Hyper-V: Using MSR based APIC access\n");
++		pr_info("Hyper-V: Using enlightened APIC (%s mode)",
++			x2apic_enabled() ? "x2apic" : "xapic");
++		/*
++		 * With x2apic, architectural x2apic MSRs are equivalent to the
++		 * respective synthetic MSRs, so there's no need to override
++		 * the apic accessors.  The only exception is
++		 * hv_apic_eoi_write, because it benefits from lazy EOI when
++		 * available, but it works for both xapic and x2apic modes.
++		 */
+ 		apic_set_eoi_write(hv_apic_eoi_write);
+-		apic->read      = hv_apic_read;
+-		apic->write     = hv_apic_write;
+-		apic->icr_write = hv_apic_icr_write;
+-		apic->icr_read  = hv_apic_icr_read;
++		if (!x2apic_enabled()) {
++			apic->read      = hv_apic_read;
++			apic->write     = hv_apic_write;
++			apic->icr_write = hv_apic_icr_write;
++			apic->icr_read  = hv_apic_icr_read;
++		}
+ 	}
  }
 
 
