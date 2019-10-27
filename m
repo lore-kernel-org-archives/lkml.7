@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4B0CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70436CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F7621726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3381F205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211151;
-	bh=OUrNLCHzvRhAG4hsbQCod1QXhYariPy0m16QKFxoLtM=;
+	s=default; t=1572211158;
+	bh=i/nbO+IeJ7byN/CBGOV0SB0HEpwsO/Q0GS3OHglr0v4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2wBgI0csN6EAsjXd9M+N3Cf9ZmeDJZvUZ4y2Me2ROmBuaHzeSBJula4ys+TMZtkiN
-	 HuPML7VFFIhWAakf2VskObtga13oBXqxFXqHe/Nl8YGA/9TBGjpPNo1sm1P1nVVqY7
-	 9VDi8MM18Ve0A1TsmHNP8bTp/KDHl9GJ0SDIhT8w=
+	b=N8bcoqXCnl6xtLPS/uxs0wdDFVioaxh/oiHKzjA1G5mNGMBxEj7RjkqcU0RcekSLw
+	 EA/t9LdygUAKQ7m7CgNOdFbcXfbhWl6zpUoOsOVPtSx6x09YVONoEJL0rEhIvnrfgR
+	 tTnHCdr3zbjeIlcL+9hXc3q8rU8xblxROECI5NcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbfJ0VTK (ORCPT
+        id S1731444AbfJ0VTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:19:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39332 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:19:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731380AbfJ0VTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:19:01 -0400
+        id S1731418AbfJ0VTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:12 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50E9F214E0;
-        Sun, 27 Oct 2019 21:19:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92F06214E0;
+        Sun, 27 Oct 2019 21:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211140;
-        bh=OUrNLCHzvRhAG4hsbQCod1QXhYariPy0m16QKFxoLtM=;
+        s=default; t=1572211152;
+        bh=i/nbO+IeJ7byN/CBGOV0SB0HEpwsO/Q0GS3OHglr0v4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ENJRIUFiXX+4Uf+v5QoCk/RTev81E3ohazvbx3gxZtN/TUbSjfs1Uh8NquICjV4r
-         QDDgNELMTOhpEPsuRhMwtyVs47Efns9nDl+CrkGEQNxXZ/mp//Bq9Ks30z/g34WHBc
-         /sTxBKuQEKbE8R0IHxTJzEptmwBqUiWqCiLF/IQY=
+        b=wvsHd5R96bq1bdEXY1MML8YF+5RS2jhp2em7kC05Ipn9v/WOaIN619QrBwGblddth
+         bySuVgp4iLknUK8Pco7DnjrxcTn6s5GoNu1lPlA/dJtIOkKmu+Yj/HgJ4QZSyMsnz4
+         HI1g03+yrJm0TQWZia5/VO8+wVSQbc4uln35/Tss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 039/197] net: stmmac: dwmac4: Always update the MAC Hash Filter
-Date:   Sun, 27 Oct 2019 21:59:17 +0100
-Message-Id: <20191027203353.828444927@linuxfoundation.org>
+Subject: [PATCH 5.3 051/197] lib: textsearch: fix escapes in example code
+Date:   Sun, 27 Oct 2019 21:59:29 +0100
+Message-Id: <20191027203354.442061112@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,71 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit f79bfda3756c50a86c0ee65091935c42c5bbe0cb ]
+[ Upstream commit 2105b52e30debe7f19f3218598d8ae777dcc6776 ]
 
-We need to always update the MAC Hash Filter so that previous entries
-are invalidated.
+This textsearch code example does not need the '\' escapes and they can
+be misleading to someone reading the example. Also, gcc and sparse warn
+that the "\%d" is an unknown escape sequence.
 
-Found out while running stmmac selftests.
-
-Fixes: b8ef7020d6e5 ("net: stmmac: add support for hash table size 128/256 in dwmac4")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Fixes: 5968a70d7af5 ("textsearch: fix kernel-doc warnings and add kernel-api section")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ lib/textsearch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index fc9954e4a7729..9c73fb759b575 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -407,8 +407,11 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 	int numhashregs = (hw->multicast_filter_bins >> 5);
- 	int mcbitslog2 = hw->mcast_bits_log2;
- 	unsigned int value;
-+	u32 mc_filter[8];
- 	int i;
- 
-+	memset(mc_filter, 0, sizeof(mc_filter));
-+
- 	value = readl(ioaddr + GMAC_PACKET_FILTER);
- 	value &= ~GMAC_PACKET_FILTER_HMC;
- 	value &= ~GMAC_PACKET_FILTER_HPF;
-@@ -422,16 +425,13 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		/* Pass all multi */
- 		value |= GMAC_PACKET_FILTER_PM;
- 		/* Set all the bits of the HASH tab */
--		for (i = 0; i < numhashregs; i++)
--			writel(0xffffffff, ioaddr + GMAC_HASH_TAB(i));
-+		memset(mc_filter, 0xff, sizeof(mc_filter));
- 	} else if (!netdev_mc_empty(dev)) {
- 		struct netdev_hw_addr *ha;
--		u32 mc_filter[8];
- 
- 		/* Hash filter for multicast */
- 		value |= GMAC_PACKET_FILTER_HMC;
- 
--		memset(mc_filter, 0, sizeof(mc_filter));
- 		netdev_for_each_mc_addr(ha, dev) {
- 			/* The upper n bits of the calculated CRC are used to
- 			 * index the contents of the hash table. The number of
-@@ -446,10 +446,11 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 			 */
- 			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1f));
- 		}
--		for (i = 0; i < numhashregs; i++)
--			writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
- 	}
- 
-+	for (i = 0; i < numhashregs; i++)
-+		writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
-+
- 	value |= GMAC_PACKET_FILTER_HPF;
- 
- 	/* Handle multiple unicast addresses */
+diff --git a/lib/textsearch.c b/lib/textsearch.c
+index 4f16eec5d5544..f68dea8806be2 100644
+--- a/lib/textsearch.c
++++ b/lib/textsearch.c
+@@ -89,9 +89,9 @@
+  *       goto errout;
+  *   }
+  *
+- *   pos = textsearch_find_continuous(conf, \&state, example, strlen(example));
++ *   pos = textsearch_find_continuous(conf, &state, example, strlen(example));
+  *   if (pos != UINT_MAX)
+- *       panic("Oh my god, dancing chickens at \%d\n", pos);
++ *       panic("Oh my god, dancing chickens at %d\n", pos);
+  *
+  *   textsearch_destroy(conf);
+  */
 -- 
 2.20.1
 
