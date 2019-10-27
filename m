@@ -2,56 +2,59 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3A3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF89CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E54C20717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC95205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211997;
-	bh=7thJGh8wgTLrA4H1iy8iuAhzw2uXgJIQcuahMt884cM=;
+	s=default; t=1572212023;
+	bh=gCYHcusNhWzJXqGWOeeOgWXiRT/up6syZSICKsJePtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pjZvMdynjmuq0hl0gWekpxJAM2qU/oetU7aAuwbXsS8d9y5RuLMgCZqIimvXRP7n7
-	 w78qXpB1/MXg2FIqlImA1twglICcfCBwuJiTY4iDhRRTAKUG8tEw6Pf2JUVk3zjl74
-	 fsY+sJZvrpVwSW5vQDvOVqcR1N8wkImqOSMRx9xo=
+	b=L+Oy3bZSdcDE/3Vb70zO7iQvYX8oy0pWrI3cNG5jsan27z7+wij0dPbvM8aGpnncb
+	 LVKjfC9ashNSTEH9pRiXc/4y0caW8aHr8k2vMadjI/JbrDliZcoJZ7k63eEgqm5x2p
+	 CjTfpyLYCtJNW/JoUepdjR3WTvlBeCxUDxVjNgUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732330AbfJ0VdP (ORCPT
+        id S1731762AbfJ0Vdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:33:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfJ0VNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:13:15 -0400
+        id S1727306AbfJ0VMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:33 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB34A20B7C;
-        Sun, 27 Oct 2019 21:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE453205C9;
+        Sun, 27 Oct 2019 21:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210794;
-        bh=7thJGh8wgTLrA4H1iy8iuAhzw2uXgJIQcuahMt884cM=;
+        s=default; t=1572210752;
+        bh=gCYHcusNhWzJXqGWOeeOgWXiRT/up6syZSICKsJePtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlgcYliODXKs5S56KuVjxJvdzS1BVlme6zAkeN5k9fRU5NL/ssBNiGZV218ZXqT43
-         rswB46HtwesdoamnTaCkC1Q4BrHOC5p5tqB8R9K3IOgfMOvC+pEuTL7HfsVJhcaNE4
-         vTIkU7i9ZD9WGP+GIKE5xdFWmAj/LNIy//OcVtLA=
+        b=2ffc1NjRzQSldFTzav48Nhc2gDNm/vWr1Lb02WCpMvTvJCCH5S56F/FPqMJQbmpbm
+         stx13ilW1o/NTYUCVw8UWG1wF48Y3/Vgl5hirZdBciyFw4WcI6prhA6A7YayxOcv6F
+         HDe/57+jRaWmBO+2rJIva9hqFZ9qVuA1quv8b2Ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/93] scsi: ufs: skip shutdown if hba is not powered
-Date:   Sun, 27 Oct 2019 22:00:14 +0100
-Message-Id: <20191027203251.840999987@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 103/119] hugetlbfs: dont access uninitialized memmaps in pfn_range_valid_gigantic()
+Date:   Sun, 27 Oct 2019 22:01:20 +0100
+Message-Id: <20191027203349.118289051@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
-References: <20191027203251.029297948@linuxfoundation.org>
+In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
+References: <20191027203259.948006506@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,46 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit f51913eef23f74c3bd07899dc7f1ed6df9e521d8 ]
+commit f231fe4235e22e18d847e05cbe705deaca56580a upstream.
 
-In some cases, hba may go through shutdown flow without successful
-initialization and then make system hang.
+Uninitialized memmaps contain garbage and in the worst case trigger
+kernel BUGs, especially with CONFIG_PAGE_POISONING.  They should not get
+touched.
 
-For example, if ufshcd_change_power_mode() gets error and leads to
-ufshcd_hba_exit() to release resources of the host, future shutdown flow
-may hang the system since the host register will be accessed in unpowered
-state.
+Let's make sure that we only consider online memory (managed by the
+buddy) that has initialized memmaps.  ZONE_DEVICE is not applicable.
 
-To solve this issue, simply add checking to skip shutdown for above kind of
-situation.
+page_zone() will call page_to_nid(), which will trigger
+VM_BUG_ON_PGFLAGS(PagePoisoned(page), page) with CONFIG_PAGE_POISONING
+and CONFIG_DEBUG_VM_PGFLAGS when called on uninitialized memmaps.  This
+can be the case when an offline memory block (e.g., never onlined) is
+spanned by a zone.
 
-Link: https://lore.kernel.org/r/1568780438-28753-1-git-send-email-stanley.chu@mediatek.com
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Acked-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Note: As explained by Michal in [1], alloc_contig_range() will verify
+the range.  So it boils down to the wrong access in this function.
+
+[1] http://lkml.kernel.org/r/20180423000943.GO17484@dhcp22.suse.cz
+
+Link: http://lkml.kernel.org/r/20191015120717.4858-1-david@redhat.com
+Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Reported-by: Michal Hocko <mhocko@kernel.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: <stable@vger.kernel.org>	[4.13+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/ufs/ufshcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/hugetlb.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index b8b59cfeacd1f..4aaba3e030554 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -7874,6 +7874,9 @@ int ufshcd_shutdown(struct ufs_hba *hba)
- {
- 	int ret = 0;
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1081,11 +1081,10 @@ static bool pfn_range_valid_gigantic(str
+ 	struct page *page;
  
-+	if (!hba->is_powered)
-+		goto out;
-+
- 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
- 		goto out;
+ 	for (i = start_pfn; i < end_pfn; i++) {
+-		if (!pfn_valid(i))
++		page = pfn_to_online_page(i);
++		if (!page)
+ 			return false;
  
--- 
-2.20.1
-
+-		page = pfn_to_page(i);
+-
+ 		if (page_zone(page) != z)
+ 			return false;
+ 
 
 
