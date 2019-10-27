@@ -2,138 +2,118 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97A5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 12:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085F6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E0C20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 12:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572179542;
-	bh=EuTIDHl6bQl/3rTLwZ8VASMvn82jC2/UGPnCBd61cbI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=Hls6kINhfthZh9ESi2C7B31uZpdla6wMPs/iSHMGpwh429++cSGJIOj54kEX3nx7D
-	 GbtY+ARk7+/9p8BMmUEcKksPsxsp2sy1gbmfPo6eOHt1+vZBcX9lpQQHAI9MR67tTU
-	 bZlVG9kHNsF8MbeBZcn7yV5Ic/PxBP6kyQYIjNzk=
+	by mail.kernel.org (Postfix) with ESMTP id CE6CB214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCyAY8ks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfJ0Mbw (ORCPT
+        id S1726812AbfJ0NG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 08:31:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbfJ0Mbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 08:31:52 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9160620679;
-        Sun, 27 Oct 2019 12:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572179511;
-        bh=EuTIDHl6bQl/3rTLwZ8VASMvn82jC2/UGPnCBd61cbI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gg7E7f+x2+FgboRqkW3txPE+c8F0VbcY6hZSAI/UGQ0LcB22fKTBqiJNiXIcDofUG
-         EB/VdB1z//xNmIntXhf/LgQSlp4CpRaP2ya+V84Ys2Ik7PnQrNUC6FCDqb9w4DKX5g
-         vb1qzsKMSx0G+Z647D0OByxbUBsOG/ABxlkyAgRc=
-Message-ID: <1a9ac7d3097efe53ad6f2fda4dd584204dd7eba2.camel@kernel.org>
-Subject: Re: [PATCH v2] ceph: Fix use-after-free in __ceph_remove_cap
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <ukernel@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 27 Oct 2019 08:31:49 -0400
-In-Reply-To: <20191025130524.31755-1-lhenriques@suse.com>
-References: <9c1fe73500ca7dece15c73d7534b9e0ec417c83a.camel@kernel.org>
-         <20191025130524.31755-1-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Sun, 27 Oct 2019 09:06:29 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55724 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfJ0NG3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 09:06:29 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g24so6675554wmh.5
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 06:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E48jVCfAGOKBFgNTIr5FbZLg41IvwUd7cL0m7x4ZdGI=;
+        b=UCyAY8kshvJ/xio2kzAtDjo1XBcDV6Ptj+pV2Qj5GO+Dt1q0l9sVd0TQfFwbhzJDXF
+         5EyS/10um7GapAjwCbynnklu2gX0d8zETV10IJb9S0FItZZm8zjFu6RJb0NcRz/lDLf3
+         HHInOXTNWOwAel0DdKeAzzC3uXO6qzM9hsxZWvIpEGf21/Ne5hxrRlJwZar3N5ankgnj
+         UsuTAmZheuce6GSEPUYeShirjZtSiKBctUHaGjS2xPIfJZNYcuzI0bl4+BxMaQGjbj8e
+         GNUM+iH7+Fs4Kx42iY3hr/DiiAKKTOfMIePSg0KXNiQ/Ar6GF7PZlKb9TgCLVFvqnOMz
+         3SXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E48jVCfAGOKBFgNTIr5FbZLg41IvwUd7cL0m7x4ZdGI=;
+        b=BoymUUV8tC8uX1fGQE38fRyfZMPA5oEUlUX1JkIfZpqcbaIfGAULbAywMaxczHly72
+         8fmdxl7hYL8CnZLDGrzw5+emnuCcySFeFJ4VzQrTVQfb6pFv+j3NNryjmj9rwAWOQMQw
+         GUwHH1FTcUDgr5s99eeTLfVGlCa+b/hkFEY6/C0VgEqCrkBfOeAPNq4eL7+yLtUgCVd4
+         KwnrjlVW60Dek4mOGOlk2+j0mdK/zbwbIrk15f1ebl9Hpeh+eqefRoB6DJiCYz062KvI
+         K1gXDdeJcYIBLYBDGoRLpThdygog6Q17Loe6pe/Xtp6h/k8FZ0fuFxs9xq4mWfqaD6se
+         VMAw==
+X-Gm-Message-State: APjAAAWEepMAWCSJa/micnIPkdxaEDy1Gz1fZgQulg8XQqUqrbCvafPN
+        fmGVAjRwyDHGkYsKD8hV5u7hzgsS
+X-Google-Smtp-Source: APXvYqzK3CGe68HpHPiGJCa/XaQHHGLYs3nQW1zlv+QMKy7bFZY43rXprGrWHoxwVdwMV9YeSPRagQ==
+X-Received: by 2002:a7b:cc88:: with SMTP id p8mr6132704wma.80.1572181587759;
+        Sun, 27 Oct 2019 06:06:27 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8108:96bf:e0ab:2b68:5d76:a12a:e6ba])
+        by smtp.gmail.com with ESMTPSA id 126sm8127371wma.48.2019.10.27.06.06.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 06:06:26 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>,
+        Joe Perches <joe@perches.com>
+Subject: [PATCH 1/4] staging: rtl8188eu: remove exit label from rtw_alloc_stainfo
+Date:   Sun, 27 Oct 2019 14:06:01 +0100
+Message-Id: <20191027130604.68379-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-10-25 at 14:05 +0100, Luis Henriques wrote:
-> KASAN reports a use-after-free when running xfstest generic/531, with the
-> following trace:
-> 
-> [  293.903362]  kasan_report+0xe/0x20
-> [  293.903365]  rb_erase+0x1f/0x790
-> [  293.903370]  __ceph_remove_cap+0x201/0x370
-> [  293.903375]  __ceph_remove_caps+0x4b/0x70
-> [  293.903380]  ceph_evict_inode+0x4e/0x360
-> [  293.903386]  evict+0x169/0x290
-> [  293.903390]  __dentry_kill+0x16f/0x250
-> [  293.903394]  dput+0x1c6/0x440
-> [  293.903398]  __fput+0x184/0x330
-> [  293.903404]  task_work_run+0xb9/0xe0
-> [  293.903410]  exit_to_usermode_loop+0xd3/0xe0
-> [  293.903413]  do_syscall_64+0x1a0/0x1c0
-> [  293.903417]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> This happens because __ceph_remove_cap() may queue a cap release
-> (__ceph_queue_cap_release) which can be scheduled before that cap is
-> removed from the inode list with
-> 
-> 	rb_erase(&cap->ci_node, &ci->i_caps);
-> 
-> And, when this finally happens, the use-after-free will occur.
-> 
-> This can be fixed by removing the cap from the inode list before being
-> removed from the session list, and thus eliminating the risk of an UAF.
-> 
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
-> Hi!
-> 
-> So, after spending some time trying to find possible races throught code
-> review and testing, I modified the fix according to Jeff's suggestion.
-> 
-> Cheers,
-> Luis
-> 
-> fs/ceph/caps.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> index d3b9c9d5c1bd..a9ce858c37d0 100644
-> --- a/fs/ceph/caps.c
-> +++ b/fs/ceph/caps.c
-> @@ -1058,6 +1058,11 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
->  
->  	dout("__ceph_remove_cap %p from %p\n", cap, &ci->vfs_inode);
->  
-> +	/* remove from inode list */
-> +	rb_erase(&cap->ci_node, &ci->i_caps);
-> +	if (ci->i_auth_cap == cap)
-> +		ci->i_auth_cap = NULL;
-> +
->  	/* remove from session list */
->  	spin_lock(&session->s_cap_lock);
->  	if (session->s_cap_iterator == cap) {
-> @@ -1091,11 +1096,6 @@ void __ceph_remove_cap(struct ceph_cap *cap, bool queue_release)
->  
->  	spin_unlock(&session->s_cap_lock);
->  
-> -	/* remove from inode list */
-> -	rb_erase(&cap->ci_node, &ci->i_caps);
-> -	if (ci->i_auth_cap == cap)
-> -		ci->i_auth_cap = NULL;
-> -
->  	if (removed)
->  		ceph_put_cap(mdsc, cap);
->  
+Remove exit label from rtw_alloc_stainfo and simply return NULL
+instead of goto exit.
 
-Looks good. Merged with a slight modification to the comment:
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_sta_mgt.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-+       /* remove from inode's cap rbtree, and clear auth cap */
-
-Thanks!
+diff --git a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
+index 776931b8bf72..65a824b4dfe0 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
++++ b/drivers/staging/rtl8188eu/core/rtw_sta_mgt.c
+@@ -181,7 +181,7 @@ struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
+ 					struct sta_info, list);
+ 	if (!psta) {
+ 		spin_unlock_bh(&pfree_sta_queue->lock);
+-		goto exit;
++		return NULL;
+ 	}
+ 
+ 	list_del_init(&psta->list);
+@@ -194,8 +194,7 @@ struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
+ 	if (index >= NUM_STA) {
+ 		RT_TRACE(_module_rtl871x_sta_mgt_c_, _drv_err_,
+ 			 ("ERROR => %s: index >= NUM_STA", __func__));
+-		psta = NULL;
+-		goto exit;
++		return NULL;
+ 	}
+ 	phash_list = &pstapriv->sta_hash[index];
+ 
+@@ -246,7 +245,6 @@ struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr)
+ 	/* init for the sequence number of received management frame */
+ 	psta->RxMgmtFrameSeqNum = 0xffff;
+ 
+-exit:
+ 	return psta;
+ }
+ 
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.23.0
 
