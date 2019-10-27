@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980D7CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A1DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6143A205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58536208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211283;
-	bh=xHR9OMdzYSwoecyvK/JKv1Hak2Yx3n4gMedLK0dao54=;
+	s=default; t=1572211286;
+	bh=Q8vUDBGLJFLxIk07CFtJ+L5M4yWGiFa+eMw6EKM12Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GdIz8Oo/Zz6dNF8Zdk++e2faMr/CwpPB66ec62ME4Ja0lIcaZvIXiUAQYQT8SQovL
-	 N5h/IDra9F5cs0lKv0avlsk+pv/apeEWWI/ctSN5YptI1jmpDuIUQNvo1LcgezsXO8
-	 Ss6rbeoF9yvKo8Y+95qdkN1zi/ufGY0QyIAjVDLE=
+	b=ylJh+RGd5q5mUqd5I5WWVOIQ2bW63Ty4seTg0J0riI1chQ0B9Ob2dmwFhZjeueBlb
+	 KmC1Ho6Xtq0nCO3JCbYL3RGXVQELoxtBiY6AOXT+mA02Clr/mAwh5GU5UlL2UhRA+D
+	 3p60qDH1j++p3Ag0odeYLNjSgExVP5ZuuUKpRfGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbfJ0VVV (ORCPT
+        id S1731895AbfJ0VVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42090 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731895AbfJ0VVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:16 -0400
+        id S1731915AbfJ0VVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:22 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6314121848;
-        Sun, 27 Oct 2019 21:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 278F9208C0;
+        Sun, 27 Oct 2019 21:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211275;
-        bh=xHR9OMdzYSwoecyvK/JKv1Hak2Yx3n4gMedLK0dao54=;
+        s=default; t=1572211281;
+        bh=Q8vUDBGLJFLxIk07CFtJ+L5M4yWGiFa+eMw6EKM12Qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qW6gfRntlQ7BDX+xaroiPjATgW7Vartf5WwK8llpihySJS0xE4ELZtXLs3TXfyCZl
-         g/pI2A5sJVYwu+kCDWoiOwJ54oEK9rRj4zBGN7CA9XxD3ekZSHvgX4UGOR/2jvAhzt
-         FGcKL+QCMEzpOphXvrFEElkLUCCBMZ06e9fBsdrk=
+        b=0xAzLuSfqz2nnIKm5+THlE+gBiuZJwYGiSbgcvIsKJa7tFiUQUG8tHq+H0VASXHGN
+         iInG+1GmD3ftwv4k4paS4Q+RTvyGijOQi+PLyv0JmwSjE7RN45+TngVEjtMaYbQFES
+         xGTWfMZ3ebseTupNA/5uL/NHOG6L76PNlwENloTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.3 095/197] io_uring: Fix corrupted user_data
-Date:   Sun, 27 Oct 2019 22:00:13 +0100
-Message-Id: <20191027203356.899292969@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 097/197] ALSA: hda/realtek - Add support for ALC711
+Date:   Sun, 27 Oct 2019 22:00:15 +0100
+Message-Id: <20191027203357.003358388@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,34 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit 84d55dc5b9e57b513a702fbc358e1b5489651590 upstream.
+commit 83629532ce45ef9df1f297b419b9ea112045685d upstream.
 
-There is a bug, where failed linked requests are returned not with
-specified @user_data, but with garbage from a kernel stack.
+Support new codec ALC711.
 
-The reason is that io_fail_links() uses req->user_data, which is
-uninitialised when called from io_queue_sqe() on fail path.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2157,6 +2157,8 @@ err:
- 		return;
- 	}
- 
-+	req->user_data = s->sqe->user_data;
-+
- 	/*
- 	 * If we already have a head request, queue this one for async
- 	 * submittal once the head completes. If we don't have a head but
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -393,6 +393,7 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0700:
+ 	case 0x10ec0701:
+ 	case 0x10ec0703:
++	case 0x10ec0711:
+ 		alc_update_coef_idx(codec, 0x10, 1<<15, 0);
+ 		break;
+ 	case 0x10ec0662:
+@@ -7965,6 +7966,7 @@ static int patch_alc269(struct hda_codec
+ 	case 0x10ec0700:
+ 	case 0x10ec0701:
+ 	case 0x10ec0703:
++	case 0x10ec0711:
+ 		spec->codec_variant = ALC269_TYPE_ALC700;
+ 		spec->gen.mixer_nid = 0; /* ALC700 does not have any loopback mixer path */
+ 		alc_update_coef_idx(codec, 0x4a, 1 << 15, 0); /* Combo jack auto trigger control */
+@@ -9105,6 +9107,7 @@ static const struct hda_device_id snd_hd
+ 	HDA_CODEC_ENTRY(0x10ec0700, "ALC700", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0701, "ALC701", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0703, "ALC703", patch_alc269),
++	HDA_CODEC_ENTRY(0x10ec0711, "ALC711", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0867, "ALC891", patch_alc662),
+ 	HDA_CODEC_ENTRY(0x10ec0880, "ALC880", patch_alc880),
+ 	HDA_CODEC_ENTRY(0x10ec0882, "ALC882", patch_alc882),
 
 
