@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2199DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B0DCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AB6208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8893A208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210558;
-	bh=DBMaSU6DKS4TAqhmNY3mmHiGPosqmVwGEwfGAIWsNPk=;
+	s=default; t=1572210561;
+	bh=ItEhc048PXZwT136OTNM/zwLx86InmHB7Ps6M9y1Pi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jOJDXDGMNC1Cc1v6+ZCC95KyepX2Q/G2IAOANcIW9BHcwQ5zCpQktRE73KzX4N2Q2
-	 InqAS6SK+xoevxocjCDNO4+9bxPtoBDYBMUyouUQVkWJ9+T+Go2uHOimo/nLgNgLBY
-	 zT/FE/kSOjgpYUOcQppOORO8+ZePh9vjjxnorKkQ=
+	b=TKPrUuAg9TxlZUs6SlB27oYnj7tYjxgWVq4bhxgGEB5S+SP4RBCCNdAIAqfNcRkhx
+	 ynIui0EC7ZajhW/LKh0IH00nyZZ1eqQOxU3pDWbUzha/JG3iy535Mw4ER7ASzY9koY
+	 EdYF69Gz/Pg3IrWEo990JETv6Cc3otLQiPEulVzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbfJ0VJQ (ORCPT
+        id S1729491AbfJ0VJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:09:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55572 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727718AbfJ0VJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:09:11 -0400
+        id S1727718AbfJ0VJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:09:17 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F33208C0;
-        Sun, 27 Oct 2019 21:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFBB720873;
+        Sun, 27 Oct 2019 21:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210550;
-        bh=DBMaSU6DKS4TAqhmNY3mmHiGPosqmVwGEwfGAIWsNPk=;
+        s=default; t=1572210556;
+        bh=ItEhc048PXZwT136OTNM/zwLx86InmHB7Ps6M9y1Pi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJXznGo0LnCkTLQWIA42+Xu/ArsnSh6LjSXdiDVWASuePgPzazNlARN7nqFJ2LBBd
-         sT3TleHUBxSwEpNJ5EvafBHrJ40mPwXFtwwyyNZQMYus2QOTJFmdd6BOdSk3oeFVrF
-         BpJk9WHakVUmcgmRo8Mon0V4QVv2faBkT0cvFt0w=
+        b=KEZX7esmTP49YrH/EP/v5ENndDebDQalq2bdbzD1nYjLXBf61ggQ2F+fg1woS5lnU
+         G7/ZpjkfiKyVDG3UatkSG31noJ8Hinwk4tb69SzZFlxTwhq4N51aFTSZskHB1MLJ6m
+         ZgDXUQZzKB88GZ5fIcfj4DTcYPkPXlXAAQAV5yP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 011/119] mac80211: fix txq null pointer dereference
-Date:   Sun, 27 Oct 2019 21:59:48 +0100
-Message-Id: <20191027203302.379044861@linuxfoundation.org>
+Subject: [PATCH 4.14 003/119] scsi: qla2xxx: Fix unbound sleep in fcport delete path.
+Date:   Sun, 27 Oct 2019 21:59:40 +0100
+Message-Id: <20191027203300.527997539@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,72 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 8ed31a264065ae92058ce54aa3cc8da8d81dc6d7 ]
+[ Upstream commit c3b6a1d397420a0fdd97af2f06abfb78adc370df ]
 
-If the interface type is P2P_DEVICE or NAN, read the file of
-'/sys/kernel/debug/ieee80211/phyx/netdev:wlanx/aqm' will get a
-NULL pointer dereference. As for those interface type, the
-pointer sdata->vif.txq is NULL.
+There are instances, though rare, where a LOGO request cannot be sent out
+and the thread in free session done can wait indefinitely. Fix this by
+putting an upper bound to sleep.
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000011
-CPU: 1 PID: 30936 Comm: cat Not tainted 4.14.104 #1
-task: ffffffc0337e4880 task.stack: ffffff800cd20000
-PC is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-LR is at ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-[...]
-Process cat (pid: 30936, stack limit = 0xffffff800cd20000)
-[...]
-[<ffffff8000b7cd00>] ieee80211_if_fmt_aqm+0x34/0xa0 [mac80211]
-[<ffffff8000b7c414>] ieee80211_if_read+0x60/0xbc [mac80211]
-[<ffffff8000b7ccc4>] ieee80211_if_read_aqm+0x28/0x30 [mac80211]
-[<ffffff80082eff94>] full_proxy_read+0x2c/0x48
-[<ffffff80081eef00>] __vfs_read+0x2c/0xd4
-[<ffffff80081ef084>] vfs_read+0x8c/0x108
-[<ffffff80081ef494>] SyS_read+0x40/0x7c
-
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/r/1569549796-8223-1-git-send-email-miaoqing@codeaurora.org
-[trim useless data from commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20190912180918.6436-3-hmadhani@marvell.com
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/debugfs_netdev.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_target.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/mac80211/debugfs_netdev.c b/net/mac80211/debugfs_netdev.c
-index c813207bb1236..928b6b0464b82 100644
---- a/net/mac80211/debugfs_netdev.c
-+++ b/net/mac80211/debugfs_netdev.c
-@@ -490,9 +490,14 @@ static ssize_t ieee80211_if_fmt_aqm(
- 	const struct ieee80211_sub_if_data *sdata, char *buf, int buflen)
- {
- 	struct ieee80211_local *local = sdata->local;
--	struct txq_info *txqi = to_txq_info(sdata->vif.txq);
-+	struct txq_info *txqi;
- 	int len;
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 87e04c4a49821..11753ed3433ca 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -996,6 +996,7 @@ static void qlt_free_session_done(struct work_struct *work)
  
-+	if (!sdata->vif.txq)
-+		return 0;
-+
-+	txqi = to_txq_info(sdata->vif.txq);
-+
- 	spin_lock_bh(&local->fq.lock);
- 	rcu_read_lock();
+ 	if (logout_started) {
+ 		bool traced = false;
++		u16 cnt = 0;
  
-@@ -659,7 +664,9 @@ static void add_common_files(struct ieee80211_sub_if_data *sdata)
- 	DEBUGFS_ADD(rc_rateidx_vht_mcs_mask_5ghz);
- 	DEBUGFS_ADD(hw_queues);
+ 		while (!ACCESS_ONCE(sess->logout_completed)) {
+ 			if (!traced) {
+@@ -1005,6 +1006,9 @@ static void qlt_free_session_done(struct work_struct *work)
+ 				traced = true;
+ 			}
+ 			msleep(100);
++			cnt++;
++			if (cnt > 200)
++				break;
+ 		}
  
--	if (sdata->local->ops->wake_tx_queue)
-+	if (sdata->local->ops->wake_tx_queue &&
-+	    sdata->vif.type != NL80211_IFTYPE_P2P_DEVICE &&
-+	    sdata->vif.type != NL80211_IFTYPE_NAN)
- 		DEBUGFS_ADD(aqm);
- }
- 
+ 		ql_dbg(ql_dbg_disc, vha, 0xf087,
 -- 
 2.20.1
 
