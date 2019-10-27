@@ -2,64 +2,96 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A45CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244D4CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E5320679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6BB20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPwzPvB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfJ0RqF (ORCPT
+        id S1727815AbfJ0RqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 13:46:05 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:57948 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbfJ0RqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 13:46:04 -0400
-Received: from [46.218.74.72] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iOmc4-00089Z-Uy; Sun, 27 Oct 2019 18:46:01 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Andy Yan <andy.yan@rock-chips.com>
-Cc:     kever.yang@rock-chips.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 2/4] arm64: dts: rockchip: Add core dts for RK3308 SOC
-Date:   Sun, 27 Oct 2019 18:45:59 +0100
-Message-ID: <12893370.vt1eeOlM6n@phil>
-In-Reply-To: <20191021084616.28431-1-andy.yan@rock-chips.com>
-References: <20191021084437.28279-1-andy.yan@rock-chips.com> <20191021084616.28431-1-andy.yan@rock-chips.com>
+        Sun, 27 Oct 2019 13:46:13 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36998 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfJ0RqM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 13:46:12 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 53so5284730otv.4;
+        Sun, 27 Oct 2019 10:46:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xEy3TN5x5/gYla+irAZsZ6AR5hkYO/R9cAnyhZadJDg=;
+        b=LPwzPvB9k8mqey+YGpTQ6S36Qx0exXD+8AzvsgLrNAkE4olYCyufUYCuIJzgVuVhV/
+         HwvmGYLs9LY5M2G/gFdj3Ici4IwwyGLxZSPTJLThK6vlOC4srQV6f1HdOzdwgSYXrmxK
+         xoDuJjPCO26ElWRtrNIB2OOyDdn5hXgyG20ajGWQY0qjWSmTOs2BtQU3DNPa3t+sfHgO
+         fqckWg+s7Wr/8flPny/8e6OUka30bRmd5+IqpN3iayYU0RwvkklXseFo0HPG2j2FXKlL
+         96GAsYeKNPnJKXjKgtnm1r5/SkAxGMeq9aF57APXdkuhAId5wFuIxcG9aFl0zaeIiZbb
+         80mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xEy3TN5x5/gYla+irAZsZ6AR5hkYO/R9cAnyhZadJDg=;
+        b=e/abgiP6qBAxrRgCSt7Vh+FmjlKQ4cfxGpVTcpkLb8qHCCO/elGYKtZ6MPglVKwtwN
+         rnn6ynudI2t9aUn4OXwnDC396xKjOVtB1V+VpO1VKxzTXrzenso/6GGO/jQBPPS/Y0ow
+         QeXp16UrYdOkPj4GSuJQKZ98VcX/6R80IZudyKmhDXLk33c7KE7FlZGWo1ACnUHyeJV/
+         4v4xqNfLnQyMpZkYdOPjIezJvANOxajn+fp8dxO7t/TREtzd2LxcKyIDkKq6PouhG+cL
+         NdbzJQ6/yDhozaCBUjHjdWkOJC5M4Lv59cXitCaktuPP3MhYnghEWMSz0LZQ4KhZwipM
+         +Z3Q==
+X-Gm-Message-State: APjAAAWlWmpANi79urkI3gWnEIbnZLcYQkwyLse1MH+WwrTeAGsZ93ET
+        ryBMsBvn0MFyVBQ1lbOgCxA=
+X-Google-Smtp-Source: APXvYqzoaHRM3IGVKcPhpxaHhfefPQI2rna6kX88/tP6OsaCMilIEWouzS52etJYBw5VZ+iYnNbTMQ==
+X-Received: by 2002:a9d:7d09:: with SMTP id v9mr10685593otn.292.1572198371402;
+        Sun, 27 Oct 2019 10:46:11 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id y18sm2793129oto.2.2019.10.27.10.46.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Oct 2019 10:46:10 -0700 (PDT)
+Subject: Re: [PATCH] net: wireless: realtek: rtlwifi: rtl8192c:Drop condition
+ with no effect
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>, pkshih@realtek.com,
+        kvalo@codeaurora.org, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     saurav.girepunje@hotmail.com
+References: <20191027062255.GA9362@saurav>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <4d2b5e56-48ba-4af5-e7c6-b6171210cb32@lwfinger.net>
+Date:   Sun, 27 Oct 2019 12:46:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191027062255.GA9362@saurav>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 21. Oktober 2019, 10:46:16 CET schrieb Andy Yan:
-> RK3308 is a quad Cortex A35 based SOC with rich audio
-> interfaces(I2S/PCM/TDM/PDM/SPDIF/VAD/HDMI ARC), which
-> designed for intelligent voice interaction and audio
-> input/output processing.
+On 10/27/19 1:23 AM, Saurav Girepunje wrote:
+> As the "else if" and "else" branch body are identical the condition
+> has no effect. So drop the "else if" condition.
 > 
-> This patch add basic core dtsi file for it.
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+> ---
 
-applied for 5.5 with changes:
+The patch is OK; however, the subject should be: rtlwifi: rtl8192c-common: Drop ...
 
-- dropped spi high_speed pinctrl, as it's not part of the spi binding
-- dropped peripherals-req-type-burst as it's not part of the dma binding
-- dropped sdmmc_gpio pinctrl
-- removed a number of unneeded empty lines
-- reordered things to better match our alphabetical sorting
+We do not use the directory tree in the subject. By convention, it is the driver 
+directory and the driver name. It is common for the driver name to match that of 
+the top-level directory, but not in this case.
 
-Heiko
+Thanks,
 
-
+Larry
