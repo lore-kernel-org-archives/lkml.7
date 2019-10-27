@@ -2,43 +2,43 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9087DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC77BCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569EC20717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB02020679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212134;
-	bh=XAtUwWtLhsBaYmpiDMWm4JPHxyarlQg8VLV/zLpyYp8=;
+	s=default; t=1572212142;
+	bh=MbJJGwCPobPXC73iVz1NPLAWQ5aGkr8Eo6NSbR550Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDO6zwok6cQptEbJxpoDSy6hJceUi3VtO/BFgG2VoylxtFeK8KSM/RIp1oPl0o39m
-	 s5E6S/xUrJxuoHjy0Eue3m5KreXWNa2Ec9OUyKnr7/ZtplwtFW9VsGY5E+ZIcb5jMg
-	 TQan/SzXnKoLt49/12UgDiXi2MZt5mNkg18mn2T0=
+	b=Os4jSwlRuB+3fW1lOdvLX7yRjnSXj/cMITjot90TITEdYRnPHcbpxNqheUmwA2lqM
+	 4PkK2SQngi90+/DA65PUeBgzxCUBIWWy2S9WA4UCPxvR5Z4cYNA2odHpCMug2bp62V
+	 C9YQtdwGh/btp5YbeDvPe/WOz0LgMIjx4qBDqKAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfJ0VIo (ORCPT
+        id S1732222AbfJ0Vfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbfJ0VIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:08:41 -0400
+        id S1728766AbfJ0VIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:08:38 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47EF42064A;
-        Sun, 27 Oct 2019 21:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F75020B7C;
+        Sun, 27 Oct 2019 21:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210519;
-        bh=XAtUwWtLhsBaYmpiDMWm4JPHxyarlQg8VLV/zLpyYp8=;
+        s=default; t=1572210517;
+        bh=MbJJGwCPobPXC73iVz1NPLAWQ5aGkr8Eo6NSbR550Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVrJ0O5rRoBLaxavw50cCblyj5iaYOGe7Oh9WY6f3/nIFLgaqxaS5Ca0w6a8xDkjt
-         byL1avQRT5IyXQoQ+PPT521yrXLfhgyOS3y7wV91FJwxgHb9701Jm9koKGhbQSDuJe
-         boXVPgIa2nK3emIpv3QduGKx47ElMTl1ugEVd22E=
+        b=swR2oESTSRZaWjW4oWfksFEOXt90FldNxoMnAeS1FxDV7wWrYdIwULPBzGNjfn5bB
+         dobBu674tS9zrsOxg3Vt+7DLcEpr2C1Vk0QyQVLVKGPDO4K8i0YjtUvQswUvm1jMmE
+         9P9l+T3VgTMG7TEiMx2RMmHKbxxxRxQmdJuCXAIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dave Martin <dave.martin@arm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 042/119] arm64: Expose Arm v8.4 features
-Date:   Sun, 27 Oct 2019 22:00:19 +0100
-Message-Id: <20191027203315.902578426@linuxfoundation.org>
+Subject: [PATCH 4.14 041/119] arm64: Documentation: cpu-feature-registers: Remove RES0 fields
+Date:   Sun, 27 Oct 2019 22:00:18 +0100
+Message-Id: <20191027203315.175774322@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -65,165 +65,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 7206dc93a58fb76421c4411eefa3c003337bcb2d ]
+[ Upstream commit 847ecd3fa311cde0f10a1b66c572abb136742b1d ]
 
-Expose the new features introduced by Arm v8.4 extensions to
-Arm v8-A profile.
-
-These include :
-
- 1) Data indpendent timing of instructions. (DIT, exposed as HWCAP_DIT)
- 2) Unaligned atomic instructions and Single-copy atomicity of loads
-    and stores. (AT, expose as HWCAP_USCAT)
- 3) LDAPR and STLR instructions with immediate offsets (extension to
-    LRCPC, exposed as HWCAP_ILRCPC)
- 4) Flag manipulation instructions (TS, exposed as HWCAP_FLAGM).
+Remove the invisible RES0 field entries from the table, listing
+fields in CPU ID feature registers, as :
+ 1) We are only interested in the user visible fields.
+ 2) The field description may not be up-to-date, as the
+    field could be assigned a new meaning.
+ 3) We already explain the rules of the fields which are not
+    visible.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Reviewed-by: Dave Martin <dave.martin@arm.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
-[ardb: fix up context for missing SVE]
+[ardb: fix up for missing SVE in context]
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/arm64/cpu-feature-registers.txt |   10 ++++++++++
- arch/arm64/include/asm/sysreg.h               |    3 +++
- arch/arm64/include/uapi/asm/hwcap.h           |    4 ++++
- arch/arm64/kernel/cpufeature.c                |    7 +++++++
- arch/arm64/kernel/cpuinfo.c                   |    4 ++++
- 5 files changed, 28 insertions(+)
+ Documentation/arm64/cpu-feature-registers.txt |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 --- a/Documentation/arm64/cpu-feature-registers.txt
 +++ b/Documentation/arm64/cpu-feature-registers.txt
-@@ -110,6 +110,7 @@ infrastructure:
+@@ -110,7 +110,6 @@ infrastructure:
       x--------------------------------------------------x
       | Name                         |  bits   | visible |
       |--------------------------------------------------|
-+     | TS                           | [55-52] |    y    |
+-     | RES0                         | [63-52] |    n    |
       |--------------------------------------------------|
       | FHM                          | [51-48] |    y    |
       |--------------------------------------------------|
-@@ -139,6 +140,7 @@ infrastructure:
+@@ -124,8 +123,6 @@ infrastructure:
+      |--------------------------------------------------|
+      | RDM                          | [31-28] |    y    |
+      |--------------------------------------------------|
+-     | RES0                         | [27-24] |    n    |
+-     |--------------------------------------------------|
+      | ATOMICS                      | [23-20] |    y    |
+      |--------------------------------------------------|
+      | CRC32                        | [19-16] |    y    |
+@@ -135,8 +132,6 @@ infrastructure:
+      | SHA1                         | [11-8]  |    y    |
+      |--------------------------------------------------|
+      | AES                          | [7-4]   |    y    |
+-     |--------------------------------------------------|
+-     | RES0                         | [3-0]   |    n    |
+      x--------------------------------------------------x
+ 
+ 
+@@ -144,7 +139,8 @@ infrastructure:
       x--------------------------------------------------x
       | Name                         |  bits   | visible |
       |--------------------------------------------------|
-+     | DIT                          | [51-48] |    y    |
-      |--------------------------------------------------|
-      | SVE                          | [35-32] |    y    |
-      |--------------------------------------------------|
-@@ -191,6 +193,14 @@ infrastructure:
-      | DPB                          | [3-0]   |    y    |
-      x--------------------------------------------------x
- 
-+  5) ID_AA64MMFR2_EL1 - Memory model feature register 2
-+
-+     x--------------------------------------------------x
-+     | Name                         |  bits   | visible |
+-     | RES0                         | [63-28] |    n    |
 +     |--------------------------------------------------|
-+     | AT                           | [35-32] |    y    |
-+     x--------------------------------------------------x
-+
- Appendix I: Example
- ---------------------------
- 
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -375,6 +375,7 @@
- #define SCTLR_EL1_BUILD_BUG_ON_MISSING_BITS	BUILD_BUG_ON((SCTLR_EL1_SET ^ SCTLR_EL1_CLEAR) != ~0)
- 
- /* id_aa64isar0 */
-+#define ID_AA64ISAR0_TS_SHIFT		52
- #define ID_AA64ISAR0_FHM_SHIFT		48
- #define ID_AA64ISAR0_DP_SHIFT		44
- #define ID_AA64ISAR0_SM4_SHIFT		40
-@@ -396,6 +397,7 @@
- /* id_aa64pfr0 */
- #define ID_AA64PFR0_CSV3_SHIFT		60
- #define ID_AA64PFR0_CSV2_SHIFT		56
-+#define ID_AA64PFR0_DIT_SHIFT		48
- #define ID_AA64PFR0_GIC_SHIFT		24
- #define ID_AA64PFR0_ASIMD_SHIFT		20
- #define ID_AA64PFR0_FP_SHIFT		16
-@@ -441,6 +443,7 @@
- #define ID_AA64MMFR1_VMIDBITS_16	2
- 
- /* id_aa64mmfr2 */
-+#define ID_AA64MMFR2_AT_SHIFT		32
- #define ID_AA64MMFR2_LVA_SHIFT		16
- #define ID_AA64MMFR2_IESB_SHIFT		12
- #define ID_AA64MMFR2_LSM_SHIFT		8
---- a/arch/arm64/include/uapi/asm/hwcap.h
-+++ b/arch/arm64/include/uapi/asm/hwcap.h
-@@ -44,5 +44,9 @@
- #define HWCAP_SHA512		(1 << 21)
- #define HWCAP_SVE		(1 << 22)
- #define HWCAP_ASIMDFHM		(1 << 23)
-+#define HWCAP_DIT		(1 << 24)
-+#define HWCAP_USCAT		(1 << 25)
-+#define HWCAP_ILRCPC		(1 << 26)
-+#define HWCAP_FLAGM		(1 << 27)
- 
- #endif /* _UAPI__ASM_HWCAP_H */
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -107,6 +107,7 @@ cpufeature_pan_not_uao(const struct arm6
-  * sync with the documentation of the CPU feature register ABI.
-  */
- static const struct arm64_ftr_bits ftr_id_aa64isar0[] = {
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_TS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_FHM_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_DP_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR0_SM4_SHIFT, 4, 0),
-@@ -132,6 +133,7 @@ static const struct arm64_ftr_bits ftr_i
- static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV3_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR0_CSV2_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_DIT_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_GIC_SHIFT, 4, 0),
- 	S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_ASIMD_SHIFT, 4, ID_AA64PFR0_ASIMD_NI),
- 	S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR0_FP_SHIFT, 4, ID_AA64PFR0_FP_NI),
-@@ -171,6 +173,7 @@ static const struct arm64_ftr_bits ftr_i
- };
- 
- static const struct arm64_ftr_bits ftr_id_aa64mmfr2[] = {
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_AT_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LVA_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_IESB_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LSM_SHIFT, 4, 0),
-@@ -1054,14 +1057,18 @@ static const struct arm64_cpu_capabiliti
- 	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_SM4_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_SM4),
- 	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_DP_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_ASIMDDP),
- 	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_FHM_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_ASIMDFHM),
-+	HWCAP_CAP(SYS_ID_AA64ISAR0_EL1, ID_AA64ISAR0_TS_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_FLAGM),
- 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_FP),
- 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_FP_SHIFT, FTR_SIGNED, 1, CAP_HWCAP, HWCAP_FPHP),
- 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_ASIMD_SHIFT, FTR_SIGNED, 0, CAP_HWCAP, HWCAP_ASIMD),
- 	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_ASIMD_SHIFT, FTR_SIGNED, 1, CAP_HWCAP, HWCAP_ASIMDHP),
-+	HWCAP_CAP(SYS_ID_AA64PFR0_EL1, ID_AA64PFR0_DIT_SHIFT, FTR_SIGNED, 1, CAP_HWCAP, HWCAP_DIT),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_DPB_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_DCPOP),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_JSCVT_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_JSCVT),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_FCMA_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_FCMA),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_LRCPC_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_LRCPC),
-+	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_LRCPC_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, HWCAP_ILRCPC),
-+	HWCAP_CAP(SYS_ID_AA64MMFR2_EL1, ID_AA64MMFR2_AT_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, HWCAP_USCAT),
- 	{},
- };
- 
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -76,6 +76,10 @@ static const char *const hwcap_str[] = {
- 	"sha512",
- 	"sve",
- 	"asimdfhm",
-+	"dit",
-+	"uscat",
-+	"ilrcpc",
-+	"flagm",
- 	NULL
- };
- 
++     | SVE                          | [35-32] |    y    |
+      |--------------------------------------------------|
+      | GIC                          | [27-24] |    n    |
+      |--------------------------------------------------|
 
 
