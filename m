@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A95CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DD5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B68208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA0F20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212055;
-	bh=Dtp35a4Nu/vEQ4v7SvCS3q/U0bReA8dUOwAIgbfA+Uc=;
+	s=default; t=1572212061;
+	bh=G8fdBiczYjP1dj+XAo4W0fgeejN6M3is5d/XqM9NW8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fYjlY91maT4PnC/8avTlC+Rf6bim86u8hgMOoxtEfPSknNjJ5ZhBfuK7b53OcwIK0
-	 Q/GDzC0QP9O1cdUqOqo4vkyuA23DFu7jQ5sErNXxIK4z/lGohGEmnl0iY9VX1VPhWK
-	 dOBQfxb/kE2OaI5m1NdLAKRAvt5XvFHq4JII7cFQ=
+	b=PUbwQ0mw9hGQZJMfzxXycaic8IEEQoyl2we9mK7EZJcVzPMA5OdaJkUOGWTvcQMHL
+	 tT3B2GDPKyc03jhB2XXOWKBer6n/kMAH8fH/jNjqkBb5hibjxO1H4OD8txfk/JXtOf
+	 VGyWW2MiHNBly/6pQgzDrm2UD9eoOEa8dvj5cDhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731977AbfJ0VeO (ORCPT
+        id S1732588AbfJ0VeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:34:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729866AbfJ0VLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:17 -0400
+        id S1729848AbfJ0VLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:11 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FDE120B7C;
-        Sun, 27 Oct 2019 21:11:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3AF21848;
+        Sun, 27 Oct 2019 21:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210676;
-        bh=Dtp35a4Nu/vEQ4v7SvCS3q/U0bReA8dUOwAIgbfA+Uc=;
+        s=default; t=1572210671;
+        bh=G8fdBiczYjP1dj+XAo4W0fgeejN6M3is5d/XqM9NW8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLjiSV8YH0xuHjbZFofkFVj/zu20iK9NQ5/gjSwTLDufHzlF3ChhRwZ+qmFhp7vv5
-         N0i4LAj+dVDj/vh8xXcUUAdex/IVeB4Hg/Jsq0kmmcWvkjSSwm+PvX7odyaU55/wlN
-         cLJmSvbzIz8plpW2AHZBwKXPHeuhM06VvgS0Tgrw=
+        b=rkg8Ctn/yfpSanX5+0UrZ6qI6KmSFCqSW5FpmootWeb03+dq1KS8GCjHfgOLG3UhT
+         V0xYWs+F5URIUVmuYLKL7EITIF6r4aGv0oqjJyLUbx726wxtlwM4XbsvB3c0XofpH/
+         P40rx7qeyuaH4Nh9mYctPy7wsa1svt2bqaOHjY7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Martin <dave.martin@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 054/119] arm64: capabilities: Split the processing of errata work arounds
-Date:   Sun, 27 Oct 2019 22:00:31 +0100
-Message-Id: <20191027203323.540318577@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Nicolas Waisman <nico@semmle.com>,
+        Will Deacon <will@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 094/119] cfg80211: wext: avoid copying malformed SSIDs
+Date:   Sun, 27 Oct 2019 22:01:11 +0100
+Message-Id: <20191027203348.587555174@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,56 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit d69fe9a7e7214d49fe157ec20889892388d0fe23 ]
+commit 4ac2813cc867ae563a1ba5a9414bfb554e5796fa upstream.
 
-Right now we run through the errata workarounds check on all boot
-active CPUs, with SCOPE_ALL. This wouldn't help for detecting erratum
-workarounds with a SYSTEM_SCOPE. There are none yet, but we plan to
-introduce some: let us clean this up so that such workarounds can be
-detected and enabled correctly.
+Ensure the SSID element is bounds-checked prior to invoking memcpy()
+with its length field, when copying to userspace.
 
-So, we run the checks with SCOPE_LOCAL_CPU on all CPUs and SCOPE_SYSTEM
-checks are run only once after all the boot time CPUs are active.
-
-Reviewed-by: Dave Martin <dave.martin@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: <stable@vger.kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20191004095132.15777-2-will@kernel.org
+[adjust commit log a bit]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/kernel/cpufeature.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -529,7 +529,7 @@ void __init init_cpu_features(struct cpu
- 	 * Run the errata work around checks on the boot CPU, once we have
- 	 * initialised the cpu feature infrastructure.
- 	 */
--	update_cpu_capabilities(arm64_errata, SCOPE_ALL,
-+	update_cpu_capabilities(arm64_errata, SCOPE_LOCAL_CPU,
- 				"enabling workaround for");
+---
+ net/wireless/wext-sme.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/net/wireless/wext-sme.c
++++ b/net/wireless/wext-sme.c
+@@ -202,6 +202,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 			       struct iw_point *data, char *ssid)
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
++	int ret = 0;
+ 
+ 	/* call only for station! */
+ 	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
+@@ -219,7 +220,10 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 		if (ie) {
+ 			data->flags = 1;
+ 			data->length = ie[1];
+-			memcpy(ssid, ie + 2, data->length);
++			if (data->length > IW_ESSID_MAX_SIZE)
++				ret = -EINVAL;
++			else
++				memcpy(ssid, ie + 2, data->length);
+ 		}
+ 		rcu_read_unlock();
+ 	} else if (wdev->wext.connect.ssid && wdev->wext.connect.ssid_len) {
+@@ -229,7 +233,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 	}
+ 	wdev_unlock(wdev);
+ 
+-	return 0;
++	return ret;
  }
  
-@@ -1354,7 +1354,7 @@ void check_local_cpu_capabilities(void)
- 	 * advertised capabilities.
- 	 */
- 	if (!sys_caps_initialised)
--		update_cpu_capabilities(arm64_errata, SCOPE_ALL,
-+		update_cpu_capabilities(arm64_errata, SCOPE_LOCAL_CPU,
- 					"enabling workaround for");
- 	else
- 		verify_local_cpu_capabilities();
-@@ -1383,6 +1383,8 @@ void __init setup_cpu_features(void)
- 
- 	/* Set the CPU feature capabilies */
- 	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
-+	update_cpu_capabilities(arm64_errata, SCOPE_SYSTEM,
-+				"enabling workaround for");
- 	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
- 	enable_cpu_capabilities(arm64_errata, SCOPE_ALL);
- 	mark_const_caps_ready();
+ int cfg80211_mgd_wext_siwap(struct net_device *dev,
 
 
