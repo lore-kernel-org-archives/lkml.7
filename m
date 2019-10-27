@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7814CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A95CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA20A20717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B68208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212044;
-	bh=gQSgm9615ylTqStbQ+zmWn2KzgDQK2vHXBXyg1Y7cJk=;
+	s=default; t=1572212055;
+	bh=Dtp35a4Nu/vEQ4v7SvCS3q/U0bReA8dUOwAIgbfA+Uc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sD+QTrko4P6lzmx7iOJDfuU5Iz1pUpSV0CumhXMq8g6vx5FtrBy52uiYZfJEapkuR
-	 nXqGzo1MCVoHlmo1PKDK7ZuwogqLYIvQKG3sIxZ1oqpZ7ZaPo0eNg2UJ2w1bpv9ap6
-	 DeclNtw1kkmExcUtXAtU9EJxvbGwZHkhku962Y94=
+	b=fYjlY91maT4PnC/8avTlC+Rf6bim86u8hgMOoxtEfPSknNjJ5ZhBfuK7b53OcwIK0
+	 Q/GDzC0QP9O1cdUqOqo4vkyuA23DFu7jQ5sErNXxIK4z/lGohGEmnl0iY9VX1VPhWK
+	 dOBQfxb/kE2OaI5m1NdLAKRAvt5XvFHq4JII7cFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbfJ0VeD (ORCPT
+        id S1731977AbfJ0VeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:34:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbfJ0VLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:11:46 -0400
+        id S1729866AbfJ0VLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:17 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1359D205C9;
-        Sun, 27 Oct 2019 21:11:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FDE120B7C;
+        Sun, 27 Oct 2019 21:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210705;
-        bh=gQSgm9615ylTqStbQ+zmWn2KzgDQK2vHXBXyg1Y7cJk=;
+        s=default; t=1572210676;
+        bh=Dtp35a4Nu/vEQ4v7SvCS3q/U0bReA8dUOwAIgbfA+Uc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z78QIg3HMWqrpMDF/QI9pHg2HqJSnmRL4TzUbHYkIv7pYte6A5z/Azftb6kixua2F
-         z21Fqp0oWNvtsSXbC+No59/3Ev/21JsGdqfiB9Fdmp8c1Xf9JiGUq9ZZwtDFFDXGIy
-         BBaT9zx4YdRTMJWM9UvQuHB5da9g84kIzmmPgGA8=
+        b=TLjiSV8YH0xuHjbZFofkFVj/zu20iK9NQ5/gjSwTLDufHzlF3ChhRwZ+qmFhp7vv5
+         N0i4LAj+dVDj/vh8xXcUUAdex/IVeB4Hg/Jsq0kmmcWvkjSSwm+PvX7odyaU55/wlN
+         cLJmSvbzIz8plpW2AHZBwKXPHeuhM06VvgS0Tgrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick Williams <alpawi@amazon.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.14 109/119] pinctrl: armada-37xx: swap polarity on LED group
-Date:   Sun, 27 Oct 2019 22:01:26 +0100
-Message-Id: <20191027203349.467637020@linuxfoundation.org>
+        Dave Martin <dave.martin@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH 4.14 054/119] arm64: capabilities: Split the processing of errata work arounds
+Date:   Sun, 27 Oct 2019 22:00:31 +0100
+Message-Id: <20191027203323.540318577@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -59,41 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Williams <alpawi@amazon.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit b835d6953009dc350d61402a854b5a7178d8c615 upstream.
+[ Upstream commit d69fe9a7e7214d49fe157ec20889892388d0fe23 ]
 
-The configuration registers for the LED group have inverted
-polarity, which puts the GPIO into open-drain state when used in
-GPIO mode.  Switch to '0' for GPIO and '1' for LED modes.
+Right now we run through the errata workarounds check on all boot
+active CPUs, with SCOPE_ALL. This wouldn't help for detecting erratum
+workarounds with a SYSTEM_SCOPE. There are none yet, but we plan to
+introduce some: let us clean this up so that such workarounds can be
+detected and enabled correctly.
 
-Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
-Signed-off-by: Patrick Williams <alpawi@amazon.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191001155154.99710-1-alpawi@amazon.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+So, we run the checks with SCOPE_LOCAL_CPU on all CPUs and SCOPE_SYSTEM
+checks are run only once after all the boot time CPUs are active.
+
+Reviewed-by: Dave Martin <dave.martin@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/cpufeature.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -170,10 +170,10 @@ static struct armada_37xx_pin_group arma
- 	PIN_GRP_EXTRA("uart2", 9, 2, BIT(1) | BIT(13) | BIT(14) | BIT(19),
- 		      BIT(1) | BIT(13) | BIT(14), BIT(1) | BIT(19),
- 		      18, 2, "gpio", "uart"),
--	PIN_GRP_GPIO("led0_od", 11, 1, BIT(20), "led"),
--	PIN_GRP_GPIO("led1_od", 12, 1, BIT(21), "led"),
--	PIN_GRP_GPIO("led2_od", 13, 1, BIT(22), "led"),
--	PIN_GRP_GPIO("led3_od", 14, 1, BIT(23), "led"),
-+	PIN_GRP_GPIO_2("led0_od", 11, 1, BIT(20), BIT(20), 0, "led"),
-+	PIN_GRP_GPIO_2("led1_od", 12, 1, BIT(21), BIT(21), 0, "led"),
-+	PIN_GRP_GPIO_2("led2_od", 13, 1, BIT(22), BIT(22), 0, "led"),
-+	PIN_GRP_GPIO_2("led3_od", 14, 1, BIT(23), BIT(23), 0, "led"),
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -529,7 +529,7 @@ void __init init_cpu_features(struct cpu
+ 	 * Run the errata work around checks on the boot CPU, once we have
+ 	 * initialised the cpu feature infrastructure.
+ 	 */
+-	update_cpu_capabilities(arm64_errata, SCOPE_ALL,
++	update_cpu_capabilities(arm64_errata, SCOPE_LOCAL_CPU,
+ 				"enabling workaround for");
+ }
  
- };
+@@ -1354,7 +1354,7 @@ void check_local_cpu_capabilities(void)
+ 	 * advertised capabilities.
+ 	 */
+ 	if (!sys_caps_initialised)
+-		update_cpu_capabilities(arm64_errata, SCOPE_ALL,
++		update_cpu_capabilities(arm64_errata, SCOPE_LOCAL_CPU,
+ 					"enabling workaround for");
+ 	else
+ 		verify_local_cpu_capabilities();
+@@ -1383,6 +1383,8 @@ void __init setup_cpu_features(void)
  
+ 	/* Set the CPU feature capabilies */
+ 	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
++	update_cpu_capabilities(arm64_errata, SCOPE_SYSTEM,
++				"enabling workaround for");
+ 	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
+ 	enable_cpu_capabilities(arm64_errata, SCOPE_ALL);
+ 	mark_const_caps_ready();
 
 
