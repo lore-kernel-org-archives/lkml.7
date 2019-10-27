@@ -2,54 +2,55 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E414ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26B3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5924214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2081214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210527;
-	bh=8aKOuuqY5V4XqPQXlPH6ZYhPGkDDwBA5ONjdJGBW6rw=;
+	s=default; t=1572210529;
+	bh=L6AtQUXHVMZgVJXZeNDPYuPpnqtOyjV6wz29rG6+lDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oy8XT01QdUcYR4ATttxKInSXzTliBmSBumGb63IyjPAYRlLh2EaTZzBUnt3xxT4Ii
-	 CHk6NSmk6hmHRxaYhZ2eRoJJUK+OZIj2puFlWNTMx6bQTZ6s1PnPOktK9wBhg/f/EP
-	 vXGZoFE+hlR/H+x6r3UTPILT7U9Nq/G9s9uPf7f8=
+	b=BJnR8CQ9KXjfqX3z2nYR2yDOL6emXstTiA6NOT1nn3hNMroOeZD/1MY5QFOVZYq8K
+	 L4TU1eds/gXONWJQzdNThquRFg5cHSn7HdRqJYlTgN1Y+NxdWA7BAg3t18zcQZty8N
+	 9tCwzIE2+0BRiTlF/g0ER6jLVvhO3HShqGR1cob0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfJ0VIq (ORCPT
+        id S1729408AbfJ0VIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:08:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54996 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:08:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbfJ0VIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:08:43 -0400
+        id S1729391AbfJ0VIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:08:46 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F27A20B7C;
-        Sun, 27 Oct 2019 21:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B39252064A;
+        Sun, 27 Oct 2019 21:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210522;
-        bh=8aKOuuqY5V4XqPQXlPH6ZYhPGkDDwBA5ONjdJGBW6rw=;
+        s=default; t=1572210525;
+        bh=L6AtQUXHVMZgVJXZeNDPYuPpnqtOyjV6wz29rG6+lDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKtDbg1a6Qz0/4PZBzMPg36VoHjXw4PzKFLtAhz+dxD95Su7CDuk/9Ccr+dih0FG/
-         g/UmVCQD7RtY1BgLBK2ZWRjwoqReSujxIYNSrSbDJLRJoko6xB4+u4/HadpWgDFdu8
-         O+IMjlnrWJqa+9H8WW3tsqWuY2o7FwRoe3ST4BDw=
+        b=N0A3QkJ+jhk1zIn5fKljbDyfL/bgDkyHGgrtoolo+TLrMlrcxA7dFXd5kF+yRaowb
+         UqGCuA+9iYYfDv2/tcz0z+7odb+pkgcnZJsFcQQbH1fAd/I+XwXg35mPTMVMofjIYs
+         e9FjwGwYQRbPnE/nEZSTXA5g6GkNNz/n5bH3yfcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 007/119] net: dsa: qca8k: Use up to 7 ports for all operations
-Date:   Sun, 27 Oct 2019 21:59:44 +0100
-Message-Id: <20191027203301.305547161@linuxfoundation.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH 4.14 043/119] arm64: move SCTLR_EL{1,2} assertions to <asm/sysreg.h>
+Date:   Sun, 27 Oct 2019 22:00:20 +0100
+Message-Id: <20191027203316.888729272@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -62,54 +63,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Vokáč <michal.vokac@ysoft.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 7ae6d93c8f052b7a77ba56ed0f654e22a2876739 ]
+[ Upstream commit 1c312e84c2d71da4101754fa6118f703f7473e01 ]
 
-The QCA8K family supports up to 7 ports. So use the existing
-QCA8K_NUM_PORTS define to allocate the switch structure and limit all
-operations with the switch ports.
+Currently we assert that the SCTLR_EL{1,2}_{SET,CLEAR} bits are
+self-consistent with an assertion in config_sctlr_el1(). This is a bit
+unusual, since config_sctlr_el1() doesn't make use of these definitions,
+and is far away from the definitions themselves.
 
-This was not an issue until commit 0394a63acfe2 ("net: dsa: enable and
-disable all ports") disabled all unused ports. Since the unused ports 7-11
-are outside of the correct register range on this switch some registers
-were rewritten with invalid content.
+We can use the CPP #error directive to have equivalent assertions in
+<asm/sysreg.h>, next to the definitions of the set/clear bits, which is
+a bit clearer and simpler.
 
-Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
-Fixes: a0c02161ecfc ("net: dsa: variable number of ports")
-Fixes: 0394a63acfe2 ("net: dsa: enable and disable all ports")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+At the same time, lets fill in the upper 32 bits for both registers in
+their respective RES0 definitions. This could be a little nicer with
+GENMASK_ULL(63, 32), but this currently lives in <linux/bitops.h>, which
+cannot safely be included from assembly, as <asm/sysreg.h> can.
+
+Note the when the preprocessor evaluates an expression for an #if
+directive, all signed or unsigned values are treated as intmax_t or
+uintmax_t respectively. To avoid ambiguity, we define explicitly define
+the mask of all 64 bits.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Martin <dave.martin@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/qca8k.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/sysreg.h |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index c3c9d7e33bd6c..8e49974ffa0ed 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -551,7 +551,7 @@ qca8k_setup(struct dsa_switch *ds)
- 		    BIT(0) << QCA8K_GLOBAL_FW_CTRL1_UC_DP_S);
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -315,7 +315,8 @@
+ #define SCTLR_EL2_RES0	((1 << 6)  | (1 << 7)  | (1 << 8)  | (1 << 9)  | \
+ 			 (1 << 10) | (1 << 13) | (1 << 14) | (1 << 15) | \
+ 			 (1 << 17) | (1 << 20) | (1 << 21) | (1 << 24) | \
+-			 (1 << 26) | (1 << 27) | (1 << 30) | (1 << 31))
++			 (1 << 26) | (1 << 27) | (1 << 30) | (1 << 31) | \
++			 (0xffffffffUL << 32))
  
- 	/* Setup connection between CPU port & user ports */
--	for (i = 0; i < DSA_MAX_PORTS; i++) {
-+	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
- 		/* CPU port gets connected to all user ports of the switch */
- 		if (dsa_is_cpu_port(ds, i)) {
- 			qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(QCA8K_CPU_PORT),
-@@ -900,7 +900,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
- 	if (id != QCA8K_ID_QCA8337)
- 		return -ENODEV;
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+ #define ENDIAN_SET_EL2		SCTLR_ELx_EE
+@@ -331,9 +332,9 @@
+ 			 SCTLR_ELx_SA     | SCTLR_ELx_I    | SCTLR_ELx_WXN | \
+ 			 ENDIAN_CLEAR_EL2 | SCTLR_EL2_RES0)
  
--	priv->ds = dsa_switch_alloc(&mdiodev->dev, DSA_MAX_PORTS);
-+	priv->ds = dsa_switch_alloc(&mdiodev->dev, QCA8K_NUM_PORTS);
- 	if (!priv->ds)
- 		return -ENOMEM;
+-/* Check all the bits are accounted for */
+-#define SCTLR_EL2_BUILD_BUG_ON_MISSING_BITS	BUILD_BUG_ON((SCTLR_EL2_SET ^ SCTLR_EL2_CLEAR) != ~0)
+-
++#if (SCTLR_EL2_SET ^ SCTLR_EL2_CLEAR) != 0xffffffffffffffff
++#error "Inconsistent SCTLR_EL2 set/clear bits"
++#endif
  
--- 
-2.20.1
-
+ /* SCTLR_EL1 specific flags. */
+ #define SCTLR_EL1_UCI		(1 << 26)
+@@ -352,7 +353,8 @@
+ #define SCTLR_EL1_RES1	((1 << 11) | (1 << 20) | (1 << 22) | (1 << 28) | \
+ 			 (1 << 29))
+ #define SCTLR_EL1_RES0  ((1 << 6)  | (1 << 10) | (1 << 13) | (1 << 17) | \
+-			 (1 << 21) | (1 << 27) | (1 << 30) | (1 << 31))
++			 (1 << 21) | (1 << 27) | (1 << 30) | (1 << 31) | \
++			 (0xffffffffUL << 32))
+ 
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+ #define ENDIAN_SET_EL1		(SCTLR_EL1_E0E | SCTLR_ELx_EE)
+@@ -371,8 +373,9 @@
+ 			 SCTLR_EL1_UMA | SCTLR_ELx_WXN     | ENDIAN_CLEAR_EL1 |\
+ 			 SCTLR_EL1_RES0)
+ 
+-/* Check all the bits are accounted for */
+-#define SCTLR_EL1_BUILD_BUG_ON_MISSING_BITS	BUILD_BUG_ON((SCTLR_EL1_SET ^ SCTLR_EL1_CLEAR) != ~0)
++#if (SCTLR_EL1_SET ^ SCTLR_EL1_CLEAR) != 0xffffffffffffffff
++#error "Inconsistent SCTLR_EL1 set/clear bits"
++#endif
+ 
+ /* id_aa64isar0 */
+ #define ID_AA64ISAR0_TS_SHIFT		52
+@@ -585,9 +588,6 @@ static inline void config_sctlr_el1(u32
+ {
+ 	u32 val;
+ 
+-	SCTLR_EL2_BUILD_BUG_ON_MISSING_BITS;
+-	SCTLR_EL1_BUILD_BUG_ON_MISSING_BITS;
+-
+ 	val = read_sysreg(sctlr_el1);
+ 	val &= ~clear;
+ 	val |= set;
 
 
