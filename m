@@ -7,42 +7,40 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCFBCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA84CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF37B2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612E32070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725942AbfJ0FCm (ORCPT
+        id S1726046AbfJ0FEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 01:02:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18228 "EHLO mga09.intel.com"
+        Sun, 27 Oct 2019 01:04:38 -0400
+Received: from mga17.intel.com ([192.55.52.151]:34618 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfJ0FCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 01:02:42 -0400
+        id S1725440AbfJ0FEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:04:37 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Oct 2019 22:02:32 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Oct 2019 22:04:35 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,234,1569308400"; 
-   d="xz'?scan'208";a="198361447"
+   d="xz'?log'?scan'208";a="204908546"
 Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.6])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Oct 2019 22:02:29 -0700
-Date:   Sun, 27 Oct 2019 13:02:16 +0800
+  by FMSMGA003.fm.intel.com with ESMTP; 26 Oct 2019 22:04:32 -0700
+Date:   Sun, 27 Oct 2019 13:04:19 +0800
 From:   kernel test robot <rong.a.chen@intel.com>
-To:     Andrii Nakryiko <andriin@fb.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Song Liu <songliubraving@fb.com>,
+To:     Yufen Yu <yuyufen@huawei.com>
+Cc:     Song Liu <songliubraving@fb.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org
-Subject: [selftests/bpf]  694731e8ea:
- stderr.progs/test_core_reloc_ints.c:#:#:note:expanded_from_macro'CORE_READ'
-Message-ID: <20191027050216.GF29418@shao2-debian>
+Subject: [md]  6a5cb53aaa:
+ mdadm-selftests.enchmarks/mdadm-selftests/tests/00multipath.fail
+Message-ID: <20191027050419.GG29418@shao2-debian>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="Zi0sgQQBxRFxMTsj"
+Content-Type: multipart/mixed; boundary="Zrag5V6pnZGjLKiw"
 Content-Disposition: inline
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,17 +49,21 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Zi0sgQQBxRFxMTsj
+--Zrag5V6pnZGjLKiw
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 
 FYI, we noticed the following commit (built with gcc-7):
 
-commit: 694731e8ea7f6bbcf0c57763ed4f24faa14bf056 ("selftests/bpf: Adjust CO-RE reloc tests for new bpf_core_read() macro")
+commit: 6a5cb53aaa4ef515ddeffa04ce18b771121127b4 ("md: no longer compare spare disk superblock events in super_load")
 https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 
-in testcase: bpf_offload
+in testcase: mdadm-selftests
 with following parameters:
+
+	disk: 1HDD
+	test_prefix: 00
+
 
 
 on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
@@ -75,240 +77,75 @@ If you fix the issue, kindly add following tag
 Reported-by: kernel test robot <rong.a.chen@intel.com>
 
 
-[   67.448792] make -C ../../../lib/bpf OUTPUT=/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/
-[   67.448797] 
-[   67.463459] make[1]: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
-[   67.463464] 
-[   67.471973] 
-[   67.476035] Auto-detecting system features:
-[   67.476038] 
-[   67.483470] 
-[   67.491351] 
-[   67.497070] 
-[   67.506199]   HOSTCC   /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/fixdep.o
-[   67.506204] 
-[   67.521185]   HOSTLD   /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/fixdep-in.o
-[   67.521189] 
-[   67.536974]   LINK     /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/fixdep
-[   67.536979] 
-[   67.551358]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.o
-[   67.551363] 
-[   67.565995]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/bpf.o
-[   67.566001] 
-[   67.580663]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/nlattr.o
-[   67.580667] 
-[   67.595085]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/btf.o
-[   67.595089] 
-[   67.608038]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf_errno.o
-[   67.608043] 
-[   67.623205]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/str_error.o
-[   67.623209] 
-[   67.637249]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/netlink.o
-[   67.637254] 
-[   67.652189]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/bpf_prog_linfo.o
-[   67.652194] 
-[   67.667901]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf_probes.o
-[   67.667906] 
-[   67.682606]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/xsk.o
-[   67.682610] 
-[   67.697350]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/hashmap.o
-[   67.697355] 
-[   67.712629]   CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/btf_dump.o
-[   67.712634] 
-[   67.728221]   LD       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf-in.o
-[   67.728225] 
-[   67.743689]   LINK     /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.a
-[   67.743693] 
-[   67.759243]   LINK     /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.so.0.0.6
-[   67.759248] 
-[   67.774673]   GEN      /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.pc
-[   67.774678] 
-[   67.790446] make[1]: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
-[   67.790450] 
-[   82.243805] gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf -I../../../../include/generated  -I../../../include -Dbpf_prog_load=bpf_prog_test_load -Dbpf_load_program=bpf_test_load_program -I. -I/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf -Iverifier    test_verifier.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_verifier
-[   82.243811] 
-[  105.633262] gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf -I../../../../include/generated  -I../../../include -Dbpf_prog_load=bpf_prog_test_load -Dbpf_load_program=bpf_test_load_program    test_tag.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_tag
-[  105.633269] 
-[  117.666606] progs/test_core_reloc_ints.c:34:6: error: use of unknown builtin '__builtin_preserve_access_index' [-Wimplicit-function-declaration]
-[  117.666611] 
-[  117.682466]         if (CORE_READ(&out->u8_field, &in->u8_field) ||
-[  117.682470] 
-[  117.691483]             ^
-[  117.691487] 
-[  117.702036] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  117.702041] 
-[  117.714239] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  117.714244] 
-[  117.723313]                             ^
-[  117.723317] 
-[  117.733896] ./bpf_helpers.h:243:24: note: expanded from macro 'bpf_core_read'
-[  117.733901] 
-[  117.746256]                        (const void *)__builtin_preserve_access_index(src))
-[  117.746261] 
-[  117.757313]                                      ^
-[  117.757317] 
-[  117.771338] progs/test_core_reloc_ints.c:34:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  117.771344] 
-[  117.787642] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  117.787648] 
-[  117.799907] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  117.799912] 
-[  117.810141]                             ^
-[  117.810145] 
-[  117.820566] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  117.820570] 
-[  117.832673]                        (const void *)__builtin_preserve_access_index(src))
-[  117.832678] 
-[  117.842880]                        ^
-[  117.842884] 
-[  117.855934] progs/test_core_reloc_ints.c:35:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  117.855939] 
-[  117.870335]             CORE_READ(&out->s8_field, &in->s8_field) ||
-[  117.870339] 
-[  117.878518]             ^
-[  117.878522] 
-[  117.888039] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  117.888044] 
-[  117.899103] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  117.899108] 
-[  117.908059]                             ^
-[  117.908063] 
-[  117.917471] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  117.917476] 
-[  117.928239]                        (const void *)__builtin_preserve_access_index(src))
-[  117.928243] 
-[  117.939224]                        ^
-[  117.939227] 
-[  117.951306] progs/test_core_reloc_ints.c:36:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  117.951311] 
-[  117.964240]             CORE_READ(&out->u16_field, &in->u16_field) ||
-[  117.964244] 
-[  117.971759]             ^
-[  117.971763] 
-[  117.979391] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  117.979396] 
-[  117.988116] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  117.988120] 
-[  117.994922]                             ^
-[  117.994926] 
-[  118.002818] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  118.002822] 
-[  118.011712]                        (const void *)__builtin_preserve_access_index(src))
-[  118.011716] 
-[  118.018233]                        ^
-[  118.018237] 
-[  118.028781] progs/test_core_reloc_ints.c:37:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  118.028787] 
-[  118.039137]             CORE_READ(&out->s16_field, &in->s16_field) ||
-[  118.039142] 
-[  118.044901]             ^
-[  118.044905] 
-[  118.056866] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  118.056870] 
-[  118.065590] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  118.065594] 
-[  118.072238]                             ^
-[  118.072242] 
-[  118.081104] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  118.081108] 
-[  118.090205]                        (const void *)__builtin_preserve_access_index(src))
-[  118.090210] 
-[  118.096922]                        ^
-[  118.096926] 
-[  118.107843] progs/test_core_reloc_ints.c:38:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  118.107849] 
-[  118.118208]             CORE_READ(&out->u32_field, &in->u32_field) ||
-[  118.118212] 
-[  118.123995]             ^
-[  118.123999] 
-[  118.132805] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  118.132810] 
-[  118.141650] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  118.141654] 
-[  118.148373]                             ^
-[  118.148377] 
-[  118.156332] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  118.156338] 
-[  118.165100]                        (const void *)__builtin_preserve_access_index(src))
-[  118.165104] 
-[  118.171809]                        ^
-[  118.171813] 
-[  118.183640] progs/test_core_reloc_ints.c:39:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  118.183646] 
-[  118.194170]             CORE_READ(&out->s32_field, &in->s32_field) ||
-[  118.194175] 
-[  118.200068]             ^
-[  118.200072] 
-[  118.208967] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  118.208972] 
-[  118.217565] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  118.217569] 
-[  118.223887]                             ^
-[  118.223891] 
-[  118.230716] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  118.230719] 
-[  118.238696]                        (const void *)__builtin_preserve_access_index(src))
-[  118.238709] 
-[  118.244546]                        ^
-[  118.244549] 
-[  118.254482] progs/test_core_reloc_ints.c:40:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  118.254487] 
-[  118.263901]             CORE_READ(&out->u64_field, &in->u64_field) ||
-[  118.263904] 
-[  118.268177]             ^
-[  118.268181] 
-[  118.276019] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  118.276024] 
-[  118.282918] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  118.282922] 
-[  118.288547]                             ^
-[  118.288550] 
-[  118.296281] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  118.296285] 
-[  118.304349]                        (const void *)__builtin_preserve_access_index(src))
-[  118.304352] 
-[  118.309122]                        ^
-[  118.309125] 
-[  118.315724] progs/test_core_reloc_ints.c:41:6: warning: cast to 'const void *' from smaller integer type 'int' [-Wint-to-void-pointer-cast]
-[  118.315728] 
-[  118.326106]             CORE_READ(&out->s64_field, &in->s64_field))
-[  118.326110] 
-[  118.331787]             ^
-[  118.331790] 
-[  118.339530] progs/test_core_reloc_ints.c:26:29: note: expanded from macro 'CORE_READ'
-[  118.339535] 
-[  118.347278] #define CORE_READ(dst, src) bpf_core_read(dst, sizeof(*(dst)), src)
-[  118.347281] 
-[  118.353597]                             ^
-[  118.353600] 
-[  118.360269] ./bpf_helpers.h:243:10: note: expanded from macro 'bpf_core_read'
-[  118.360274] 
-[  118.368665]                        (const void *)__builtin_preserve_access_index(src))
-[  118.368668] 
-[  118.375195]                        ^
-[  118.375199] 
-[  118.381323] 8 warnings and 1 error generated.
-[  118.381327] 
-[  118.387627] llc: <stdin>:1:1: error: expected top-level entity
-[  118.387631] 
-[  118.392955] clang failed
-[  118.392959] 
-[  118.397801] ^
-[  118.397804] 
-[  119.542331] make: *** [/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_core_reloc_ints.o] Error 1
-[  119.542336] 
+Welcome to fdisk (util-linux 2.29.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0x95f46372.
+
+Command (m for help): Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): Partition number (1-4, default 1): First sector (2048-536870911, default 2048): Last sector, +sectors or +size{K,M,G,T,P} (2048-536870911, default 536870911): 
+Created a new partition 1 of type 'Linux' and of size 5 GiB.
+
+Command (m for help): The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+2019-10-26 15:22:28 mkdir -p /var/tmp
+2019-10-26 15:22:28 mke2fs -t ext3 -b 1024 -J size=1 -q /dev/vda1
+2019-10-26 15:22:29 mount -t ext3 /dev/vda1 /var/tmp
+sed -e 's/{DEFAULT_METADATA}/1.2/g' \
+-e 's,{MAP_PATH},/run/mdadm/map,g'  mdadm.8.in > mdadm.8
+/usr/bin/install -D -m 644 mdadm.8 /usr/share/man/man8/mdadm.8
+/usr/bin/install -D -m 644 mdmon.8 /usr/share/man/man8/mdmon.8
+/usr/bin/install -D -m 644 md.4 /usr/share/man/man4/md.4
+/usr/bin/install -D -m 644 mdadm.conf.5 /usr/share/man/man5/mdadm.conf.5
+/usr/bin/install -D -m 644 udev-md-raid-creating.rules /lib/udev/rules.d/01-md-raid-creating.rules
+/usr/bin/install -D -m 644 udev-md-raid-arrays.rules /lib/udev/rules.d/63-md-raid-arrays.rules
+/usr/bin/install -D -m 644 udev-md-raid-assembly.rules /lib/udev/rules.d/64-md-raid-assembly.rules
+/usr/bin/install -D -m 644 udev-md-clustered-confirm-device.rules /lib/udev/rules.d/69-md-clustered-confirm-device.rules
+/usr/bin/install -D  -m 755 mdadm /sbin/mdadm
+/usr/bin/install -D  -m 755 mdmon /sbin/mdmon
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00linear... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00multipath... FAILED - see /var/tmp/00multipath.log and /var/tmp/fail00multipath.log for details
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00names... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid0... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid1... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid10... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid4... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid5... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid6... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00readonly... succeeded
+
 
 
 To reproduce:
 
         # build kernel
 	cd linux
-	cp config-5.3.0-13226-g694731e8ea7f6 .config
-	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage
+	cp config-5.4.0-rc2-00007-g6a5cb53aaa4ef .config
+	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage modules
+	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 INSTALL_MOD_PATH=<mod-install-dir> modules_install
+	cd <mod-install-dir>
+	find lib/ | cpio -o -H newc --quiet | gzip > modules.cgz
+
 
         git clone https://github.com/intel/lkp-tests.git
         cd lkp-tests
-        bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+        bin/lkp qemu -k <bzImage> -m modules.cgz job-script # job-script is attached in this email
 
 
 
@@ -316,13 +153,13 @@ Thanks,
 Rong Chen
 
 
---Zi0sgQQBxRFxMTsj
+--Zrag5V6pnZGjLKiw
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="config-5.3.0-13226-g694731e8ea7f6"
+Content-Disposition: attachment; filename="config-5.4.0-rc2-00007-g6a5cb53aaa4ef"
 
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86_64 5.3.0 Kernel Configuration
+# Linux/x86_64 5.4.0-rc2 Kernel Configuration
 #
 
 #
@@ -2692,7 +2529,7 @@ CONFIG_SCSI_DH_EMC=y
 CONFIG_SCSI_DH_ALUA=y
 # end of SCSI device support
 
-CONFIG_ATA=m
+CONFIG_ATA=y
 CONFIG_ATA_VERBOSE_ERROR=y
 CONFIG_ATA_ACPI=y
 # CONFIG_SATA_ZPODD is not set
@@ -2701,9 +2538,9 @@ CONFIG_SATA_PMP=y
 #
 # Controllers with non-SFF native interface
 #
-CONFIG_SATA_AHCI=m
+CONFIG_SATA_AHCI=y
 CONFIG_SATA_MOBILE_LPM_POLICY=0
-CONFIG_SATA_AHCI_PLATFORM=m
+CONFIG_SATA_AHCI_PLATFORM=y
 # CONFIG_SATA_INIC162X is not set
 CONFIG_SATA_ACARD_AHCI=m
 CONFIG_SATA_SIL24=m
@@ -6241,6 +6078,7 @@ CONFIG_SDIO_UART=m
 #
 # CONFIG_MMC_DEBUG is not set
 CONFIG_MMC_SDHCI=m
+CONFIG_MMC_SDHCI_IO_ACCESSORS=y
 CONFIG_MMC_SDHCI_PCI=m
 CONFIG_MMC_RICOH_MMC=y
 CONFIG_MMC_SDHCI_ACPI=m
@@ -8517,7 +8355,7 @@ CONFIG_UNWINDER_ORC=y
 # CONFIG_UNWINDER_GUESS is not set
 # end of Kernel hacking
 
---Zi0sgQQBxRFxMTsj
+--Zrag5V6pnZGjLKiw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=job-script
 
@@ -8525,21 +8363,22 @@ Content-Disposition: attachment; filename=job-script
 
 export_top_env()
 {
-	export suite='bpf_offload'
-	export testcase='bpf_offload'
+	export suite='mdadm-selftests'
+	export testcase='mdadm-selftests'
 	export category='functional'
 	export need_memory='1G'
-	export job_origin='/lkp/lkp/.src-20191025-144941/allot/cyclic:vm-p1:linux-devel:devel-hourly/vm-snb/bpf_offload.yaml'
+	export need_modules=true
+	export job_origin='/lkp/lkp/.src-20191025-221333/allot/cyclic:vm-p2:linux-devel:devel-hourly/vm-snb/mdadm-selftests.yaml'
 	export queue_cmdline_keys='branch
 commit
 queue_at_least_once'
 	export queue='validate'
-	export testbox='vm-snb-1cee672bced2'
+	export testbox='vm-snb-5fefea7b1462'
 	export tbox_group='vm-snb'
 	export nr_vm=64
-	export submit_id='5db3a82227cc5319730c4359'
-	export job_file='/lkp/jobs/scheduled/vm-snb-1cee672bced2/bpf_offload-defaults-debian-x86_64-2019-05-14.cgz-694731e8ea7f6bbcf0c57-20191026-6515-13rz5bx-8.yaml'
-	export id='8db2252cfa04a330bffa136ab340af8328b8e42d'
+	export submit_id='5db3f410db3e1d4416820d17'
+	export job_file='/lkp/jobs/scheduled/vm-snb-5fefea7b1462/mdadm-selftests-1HDD-00-debian-x86_64-2019-05-14.cgz-6a5cb53aaa4ef515d-20191026-17430-2m428q-3.yaml'
+	export id='c27f29ab0dfdab2ff3da16d4b6edab237410eba4'
 	export queuer_version='/lkp-src'
 	export arch='x86_64'
 	export model='qemu-system-x86_64 -enable-kvm -cpu SandyBridge'
@@ -8547,37 +8386,50 @@ queue_at_least_once'
 	export memory='8G'
 	export hdd_partitions='/dev/vda /dev/vdb /dev/vdc /dev/vdd /dev/vde /dev/vdf'
 	export swap_partitions='/dev/vdg'
-	export need_kernel_headers=true
-	export need_kernel_selftests=true
-	export need_kconfig='CONFIG_NETDEVSIM
+	export need_kconfig='CONFIG_BLK_DEV_SD
+CONFIG_SCSI
+CONFIG_BLOCK=y
+CONFIG_SATA_AHCI
+CONFIG_SATA_AHCI_PLATFORM
+CONFIG_ATA
+CONFIG_PCI=y
+CONFIG_MD=y
+CONFIG_BLK_DEV_MD
+CONFIG_MD_LINEAR
+CONFIG_MD_RAID0
+CONFIG_MD_RAID1
+CONFIG_MD_RAID10
+CONFIG_MD_RAID456
+CONFIG_MD_MULTIPATH
+CONFIG_BLK_DEV_LOOP
 CONFIG_KVM_GUEST=y'
-	export commit='694731e8ea7f6bbcf0c57763ed4f24faa14bf056'
+	export commit='6a5cb53aaa4ef515ddeffa04ce18b771121127b4'
 	export ssh_base_port=23032
 	export kconfig='x86_64-rhel-7.6'
 	export compiler='gcc-7'
 	export rootfs='debian-x86_64-2019-05-14.cgz'
-	export enqueue_time='2019-10-26 09:59:18 +0800'
-	export _id='5db3a82227cc5319730c4359'
-	export _rt='/result/bpf_offload/defaults/vm-snb/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056'
+	export enqueue_time='2019-10-26 15:21:55 +0800'
+	export _id='5db3f414db3e1d4416820d18'
+	export _rt='/result/mdadm-selftests/1HDD-00/vm-snb/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/6a5cb53aaa4ef515ddeffa04ce18b771121127b4'
 	export user='lkp'
-	export head_commit='be32abbd400e2b098224cb5ab9e4e584b36541b2'
+	export head_commit='5a2b7985e47c37fe1394edeee553c92e0d894c03'
 	export base_commit='7d194c2100ad2a6dded545887d02754948ca5241'
-	export branch='linux-devel/devel-hourly-2019102518'
-	export result_root='/result/bpf_offload/defaults/vm-snb/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056/8'
+	export branch='linux-devel/devel-hourly-2019102605'
+	export result_root='/result/mdadm-selftests/1HDD-00/vm-snb/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/6a5cb53aaa4ef515ddeffa04ce18b771121127b4/3'
 	export scheduler_version='/lkp/lkp/.src-20191025-221333'
 	export LKP_SERVER='inn'
 	export max_uptime=3600
 	export initrd='/osimage/debian/debian-x86_64-2019-05-14.cgz'
 	export bootloader_append='root=/dev/ram0
 user=lkp
-job=/lkp/jobs/scheduled/vm-snb-1cee672bced2/bpf_offload-defaults-debian-x86_64-2019-05-14.cgz-694731e8ea7f6bbcf0c57-20191026-6515-13rz5bx-8.yaml
+job=/lkp/jobs/scheduled/vm-snb-5fefea7b1462/mdadm-selftests-1HDD-00-debian-x86_64-2019-05-14.cgz-6a5cb53aaa4ef515d-20191026-17430-2m428q-3.yaml
 ARCH=x86_64
 kconfig=x86_64-rhel-7.6
-branch=linux-devel/devel-hourly-2019102518
-commit=694731e8ea7f6bbcf0c57763ed4f24faa14bf056
-BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056/vmlinuz-5.3.0-13226-g694731e8ea7f6
+branch=linux-devel/devel-hourly-2019102605
+commit=6a5cb53aaa4ef515ddeffa04ce18b771121127b4
+BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-7/6a5cb53aaa4ef515ddeffa04ce18b771121127b4/vmlinuz-5.4.0-rc2-00007-g6a5cb53aaa4ef
 max_uptime=3600
-RESULT_ROOT=/result/bpf_offload/defaults/vm-snb/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056/8
+RESULT_ROOT=/result/mdadm-selftests/1HDD-00/vm-snb/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/6a5cb53aaa4ef515ddeffa04ce18b771121127b4/3
 LKP_SERVER=inn
 debug
 apic=debug
@@ -8599,20 +8451,18 @@ earlyprintk=ttyS0,115200
 console=ttyS0,115200
 vga=normal
 rw'
-	export modules_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056/modules.cgz'
-	export bm_initrd='/osimage/deps/debian-x86_64-2018-04-03.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/kernel_selftests_2019-10-20.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/bpf_offload-x86_64-47a4c153-1_2019-10-09.cgz'
-	export linux_headers_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056/linux-headers.cgz'
-	export linux_selftests_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056/linux-selftests.cgz'
+	export modules_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-7/6a5cb53aaa4ef515ddeffa04ce18b771121127b4/modules.cgz'
+	export bm_initrd='/osimage/deps/debian-x86_64-2018-04-03.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/mdadm-selftests_2019-08-23.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/mdadm-selftests-x86_64-5d518de-1_2019-10-09.cgz'
 	export lkp_initrd='/osimage/user/lkp/lkp-x86_64.cgz'
 	export site='inn'
 	export LKP_CGI_PORT=80
 	export LKP_CIFS_PORT=139
-	export repeat_to=11
+	export repeat_to=4
 	export schedule_notify_address=
 	export queue_at_least_once=1
-	export kernel='/pkg/linux/x86_64-rhel-7.6/gcc-7/694731e8ea7f6bbcf0c57763ed4f24faa14bf056/vmlinuz-5.3.0-13226-g694731e8ea7f6'
-	export dequeue_time='2019-10-26 09:59:20 +0800'
-	export job_initrd='/lkp/jobs/scheduled/vm-snb-1cee672bced2/bpf_offload-defaults-debian-x86_64-2019-05-14.cgz-694731e8ea7f6bbcf0c57-20191026-6515-13rz5bx-8.cgz'
+	export kernel='/pkg/linux/x86_64-rhel-7.6/gcc-7/6a5cb53aaa4ef515ddeffa04ce18b771121127b4/vmlinuz-5.4.0-rc2-00007-g6a5cb53aaa4ef'
+	export dequeue_time='2019-10-26 15:22:04 +0800'
+	export job_initrd='/lkp/jobs/scheduled/vm-snb-5fefea7b1462/mdadm-selftests-1HDD-00-debian-x86_64-2019-05-14.cgz-6a5cb53aaa4ef515d-20191026-17430-2m428q-3.cgz'
 
 	[ -n "$LKP_SRC" ] ||
 	export LKP_SRC=/lkp/${user:-lkp}/src
@@ -8628,13 +8478,15 @@ run_job()
 
 	export_top_env
 
+	run_setup nr_hdd=1 $LKP_SRC/setup/disk
+
 	run_monitor $LKP_SRC/monitors/wrapper kmsg
 	run_monitor $LKP_SRC/monitors/wrapper heartbeat
 	run_monitor $LKP_SRC/monitors/wrapper meminfo
 	run_monitor $LKP_SRC/monitors/wrapper oom-killer
 	run_monitor $LKP_SRC/monitors/plain/watchdog
 
-	run_test $LKP_SRC/tests/wrapper bpf_offload
+	run_test test_prefix='00' $LKP_SRC/tests/wrapper mdadm-selftests
 }
 
 extract_stats()
@@ -8642,11 +8494,11 @@ extract_stats()
 	export stats_part_begin=
 	export stats_part_end=
 
-	$LKP_SRC/stats/wrapper bpf_offload
+	$LKP_SRC/stats/wrapper mdadm-selftests
 	$LKP_SRC/stats/wrapper kmsg
 	$LKP_SRC/stats/wrapper meminfo
 
-	$LKP_SRC/stats/wrapper time bpf_offload.time
+	$LKP_SRC/stats/wrapper time mdadm-selftests.time
 	$LKP_SRC/stats/wrapper dmesg
 	$LKP_SRC/stats/wrapper kmsg
 	$LKP_SRC/stats/wrapper last_state
@@ -8656,1226 +8508,514 @@ extract_stats()
 
 "$@"
 
---Zi0sgQQBxRFxMTsj
+--Zrag5V6pnZGjLKiw
 Content-Type: application/x-xz
 Content-Disposition: attachment; filename="dmesg.xz"
 Content-Transfer-Encoding: base64
 
-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
+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
-/LVJ3DTG+b3WBVv4UOrCMeZ4fnRs1FjHB3J1kLMaTwlPnZUJsQUBFz3kFW7c4eMg6rLdnmxo
-5SDyKGLeRBxXw9AR5bZxpgDoARrW/2s6hfpuk/iVhnWJeJ6r9tzb26LyclLaDC3EoFSgCH5H
-ksg5UIwufyg6qS+5Nl6VIva3U/R2KAuboMfOWRCBvmzuNpY6quqo28V5a+wCLbF6pldWjCZQ
-bkYRogtW6LhMMAjKRED9a2w2moWrJKoEmES5xN3Bzm4b8TTYfATvgE3u9mMfJxcnoD80bLwS
-NOpu6gCvIsc1CoyayiSVqvbB7Kt/sHaZfbuPoZhaYiFqxqWfcMUs+5oWjqRYjvorak4fvVI7
-QRwl36N3OYEGF6Q2fVFb7B1HScz23ouWidf/9SoGoE1vSmJzUhnOE4bqAMFmyzs/ASpUKbz5
-Pc9UUPjRLnj89w0pKkJf7Tz0ZQXnP1tEjIso6Gk1k+zzB25OyzvZKQpZ6ZzeuraYPnbBFe3n
-KuE+dCSw/wdQdLXMF/5EwiEmds10BorIOndasYH684OVfUCq0HEAteaKwzFtLa2I+DGlmf6G
-MQhwmcVyFgEKfmwN/GgmUtcPOa7VsqvsFE0ZS7KeFpEP36QE+68TESPeVYGuKL5V3cWOsMWf
-wM3/YitQ7b21tddTsHX1tFr+H1H9rBujaJv4tXtaVIWFk9m85qnBPsffobvXSroNkvODouPt
-mdpDPGjaZmX1ThOBhNqWF8ikk19dxkVa5zUXX1SV+51AIdJfeQSZ+L6H1/Mz579TfqrmUOdR
-4wTk1GTk84DaL1ABWLaN1K38l3VPX9XkpVV8uXPQ2vYHDhAoVUU1v2BEIHZAWBHBYM3/8RLt
-LLdNPVnLEnkQnoqM3B5nBgLNFTOjJRCXSrem1cJwLRYBRaYNbfYkBNKZoka9TYiJZegYdE8y
-71XQ3md5OMjpnHHWz/DIWmkBigWwdUr0Pwvtf9oSYerxUOCv+ZHgdPXGNHWTYaKM+3FJq3ag
-mDbL/q/7GuCc5FDCHMXhcuy13Ux2A+fsn5WcoiuKRhzYP58zxNFxwuk1eaJIQfDacC0sCIxs
-OXoEXNEnsDk9XFzAD8YGwbooLBn+vOfuoLMxDd9m9cQ7bwY+/5E/kAah7vd9C27sBsJal5zi
-DdNxjk4LDR+RpNVdn9pQF5HAgqSiosTPpnZZASH/psdscQrIx/wwY7rRtdzIxYIOl1NeulyY
-BDseKypDJT0zXoo/ggLn9dRTAgOGuOAGwvKzeaokbffskb/t/cq6q3sxK/jbSgLIac+2bfvA
-v0IY03H/Ri8xs7lf0VukdxWyF64ac2qCwuDaezZAW2jR0jxm8TL7Ngaj3Tuql2CPTq3/2sSR
-nM7duNZmJKdUFessG/WsPvaOuG+KC7xqvN1sl6wufAiiOPSWuTvvdZxUrF4b8t/fhpfyM25i
-yhf8Z91XZM/QsIfK6MC/AkzjMx263OaNnCajpelc1EkK0vDDjq5jGrKe3Bk2AWpCy7LBePjw
-Wk+iNQEFutzjzhC7zt9p64lCt/l3z0yC6T98bDKf7niG7owl0HScplDBO7l67xFulc78HfqC
-xlKjsxJntasm1fL0mL9H8qXmYhJmE8zx71BZ3Xu/IJVQ2GY8a8Luco1e2sG1vRye7DTp8r69
-tLB6/85NBOJuGaqA0AFkeQDz6gOKC2jjvOilWCEAgznlxgA9JlfS+MXyNJPbokbW9iBpPJfJ
-q/3uSBFbduuhRs0ylRGDWpV0w/5mo211g3HFffnQrBIn03we6o/t5P3dm2OzB0Fsr0pk4fQ4
-RmW6lzHtE5APgK5UzC4G/2HdU5L4Z9L0aab4BEETdA5oCRRc7VNMpMVyLEEynQNDIptdhbeh
-BwTzJIb/d4txG/BXrU6ee8l6d/mrxHn/LLvR/yr1wvHBBmUSEdbt2alQB7tTyhfYZfp8+yu7
-w7lweam1LT5xW9RF7SVVYH3+9dY7/Aw4yCKKIXUKOmDpINJTRAiG5JN93YS7XIbGZbEk00SN
-T8cmkGxEMIMnTA58F1KAs84Uq59YwtNK9tcl5d0cnodORE/pQWn1DVckuX8Z2bXLg8lPHupv
-VM7llBZl/6Xkv9v86VYJJuQfWPRK5EW3dCb4+YeERZJMMuMFHmcObOcFeL0z3w/K5vU4YCRS
-kk2yBTpzhIU8hUNH5gkvGwsawUoiHw3uAqOUCtZPfeJTElBZu9CbTcNzNYxH4nuB36iuWKRE
-0wdDQximFwAYbp1M019G94VA1vXI84I/7NqCxYdyYWmHUdRY3nciZyLCW2pzXo+003h5yzda
-v6L4+VGUeDa38S+82N3eEhu8eANGNb0mGUxf39CfCDLPdsxx3xyojbbSUhxk+NojqQhra8/g
-KoHbMkE5nPYliv+08KAU/V3FpC5qAOFmtT7YF3xJ5w+iVKiQ8fokEfJE7VxtWTBhYMDdUyb6
-J5tPkoAFZHtpZ5Izmc6JOTdW5UBEVK/W2xVt9J+lyQ5MH8vvGzmzl8/ei0ZgljEMa4ltT01n
-HXaD5zzPiG/b/oOdrfLHCYJxLZixoi/ym9uiX8rxmKaSJ8hNC3GjzEzKA2dYRsiGI5eZ+xxN
-kXeBY6d6vC7srBiu3vmBFlgrY/zE2bGlzRnD1be9zd/yYq1DiLZhj8SHvdWtc6uLGuhAw5oj
-IOg5tDPGrxH6KEgeBn16Yw8h0bOpHtLGf4WQBM9vIMUSBudhBJ7kdijaxDILy/W59iILk+PP
-n5F3pJ8iXT1PpBWa7w6+tk3P7vL7C1xJyXuKH3256tFO/M632Urgug/bxcHAmHc4ejqvt02q
-auF6jtwTIHnVcf+ube138hWTNd427jPdFhSRsa+3Vv1HwKlLCy3qrjhSMB/rKAdCnPfTmQjt
-IWRNC7oV3poyTpLZhAY4WsT2SVBYtdX7kNlY7gN8nE9dmcKQeKRZ7NBRJ6zo08x4CsBHURp+
-529lOqx7MNGSo6B7/FGckjAM/xyOPlJjqxiF2oSA+D5REU1jMPLxvtLWRN/MEFziZb8S5tKn
-lURcbgjHZ4HrizisY8BwaCg3RB8V+TlUv6/muK2L16ZlZSsHD7IxgPKdqHptBTiHm8yDIQSY
-C5jgbqaUNHfBQc8uAJOUUUuHq0ZiBnzWCnAAQDcaOSovTPuJ9U7KT0RVd0rYJUwu6ZkF4sR4
-zDb213k+OYNdNSBNVgRDsyLtpBkziq+ZPYA8z5TlgYC/E5xcU5JkVPspZ00jYLSRuCm6JrdV
-XG9cuoHgZKzlDcyKNmSrWfdLj1U/oag4J4G62tVvVRF0nC8FZv957lcqf9cXi6fhJo+Dymx+
-P2W3oT6CxFNWPcRj0gW4+tIzBW1eali+TshpRVkeH79GUmnyJPmaHWMkEDEKkqQO3Kq7neML
-r3qLzHKfKssf4pJhz3SVkg4Bxv7or2OpNcg3HGosy4U1/AUvdfZMnNPMR4W8sGhHvQneWWBl
-nufbG8O9efof1bStmaQv79Oa5nc1c2lepmz9QweymwdtHpnzd+RhpP9uSzA+olE8XAQ/5SM8
-yPABAUX+9kNhmpCF8/hQEKEVqjnoePNyNjhGZvGdy5v4NhJneWPH91QZ2f+UyHlP9M+/Pfr4
-k65xMk498kOFqyjTsuq9VerULpsVceeLbqh6fnkkrPKv+rtIUua8/0bvX51N8F/L0Dx/mvQV
-s8uQJpBFKhCYnNUnhWLXR7SHdY+nfTfnZp+0Zu2hvIKT7F/U7cF1S/dgK7iCLdkxbcCnMR6K
-h5BfdEmpAgX4oi0WQrjtDP/pXfqSbOx0gGTbtmBA85MpkvATxzWVU8Z9uGbf9dld8qucIoiF
-zwQRqjqYZsf1ivdjcdufzfRb2mvVPRVBcbP579j38uwDgeBy7gs6Qn/xIIWFnQal2Kgb0SJZ
-oLB+/Xxn5Dj23FI5wDWc6BI1jw+s9pZh70jzgs6t5gJRg+L6tGhczKA6qYJSSUtbnUNRHveL
-zikL7wA3JI5dNtvcL/C4dFf2qgyHr0KGbt7PQTPnVZ5kH3TcPySsbJe4nI3NQCn+ip/6FwLf
-kShAO5pvrnFfF/QZZfonCoLWBLMGBm/F7up3OGaGkvRkdmWFZeorcgj7HpEriL5nlkzeBqx5
-0wEN2TMVIly80jyLS8FxhpZiqWKMKL6xwNKw516/LvJ5DHvR9USqHEeAq1+W8xEae+aCsLs4
-Qd71UNgncCLQtpJ8JId2KaYIfmc43+YVn/VibiQE8dnsCFuOrPHRSlP6SezwX2vsUFfi+Qpg
-TTndlddFGIF6CLXZoJH2GwzZqDVTu1pU8/6gPoWPCfTBnRZNUXmGcpy9StDq1fXBKskpAHi1
-7Ofw5t90l4yPNTn/Ccb9VT7Hzhq6n6/LtC9h4V1XUmgsvZ71cFz4iXtBtfHz5fiX9UGaggG6
-v4bOiRpPDEgRfFMgk9ih3RLNuhZWAeZRstKx5oYt9NBVsLimiBirhxcThZnjCMZa3xjmfE9l
-Zefs5pqVbbFjKdulWuAH2EA3yDNiEWAAGgNpIxNZrlFbw8jafRdQWgWhZwhHFdCiFwfxPsAH
-bCfv9YrDSX47Ne7D58E8QI3UK/XZz/jsm0VWGhQTHYyrwsM5SA99MjChvwrmRlADZFxPxWbe
-cyXNi4z8Xb24IzgtP1Qoc3GVW4QAPJTqFyllcvC+hpKIfFylu5MhFc3JgBmW0rwVp7v0GsQn
-Ix+2+MhYITrvFArAnofNnbagrUc0Kog8EkkDyZhatOB1GelD/j54PFQTgqloQQturgaFC38E
-USM9HgznWsElDsKb6xgkeEliUpeZ6JtYdX4nkBk77Gm7IIQiydQEoDNBuW5g38MrRHblULfZ
-MfSiDsv9qWO3Km5a1Bf6hz4Mh5bTRhHmr9cJkgauofTCskgbhMg09IFQLo7qeGTBQo3WlRSO
-wfJPNn+H+gwcFPf0nbbDwSc8IwWn1z2DDQO9J9GUslv6TKl4DYvSy9tAXvphwIP2iMbPPc6o
-Q+C1M5OtU6KGxCOUglRRwst7PRaQIL/lRZmQJ87C4OFiEM67YyGnxyV982GsFRFRAyhxX8FA
-RCXw8NSIV1mcwjcQpCXx1UzGJf57nzFKI1fNn1Ys38/uK6kgsfKyQFcebc/LFWI7F6JmE0bv
-XlbDCN5yM/JEGqPSC3Czq8bLvQMTHwzbHYfVuxkvz8xSNyAUNybT/0LQKVCyhgnlTKkQI/uZ
-jcAxcYtYWoyKC0mW57BA6+MJP9Mbx8m0+0ZwGOYCjqR3XOdowepnwDUzFmvTiBqsW0oLyvAs
-ra5IaJm+Fp8MseU7TcsK65pdY8MpzR0Pzgjt6d0Q3BqpToqF+Dil1QsZZpVlu+1v6xiPPvYy
-x4FDTjDfpPug2DV4Qu3lWknZ10C7e0f+o501l/klvL1ZOL36hrmlZhdwj8iT7eXI7uqb5XlM
-vOYL6fbwA2h3qZMPoirNbVWpd4E0fqzXa0qYO9eFqg0+sw/9Jf46++S7yiv0UAAarYDjdcap
-ATWIu65NLZgmZRwz/ywv++hb4V0AgSrciOd5PQ5ON9hW7jmdmYFvQO/YvSMt2OsEEYY26yGy
-RDk3fNqv8b/CaGX7ZgiQn1PEWvk9O1nHhIr8FgxyymA2YvgV6b5Exk1O3Kjs/cE3oT47imp4
-mLRL794Ynbs/l1axGuth2GyUtNe1yt/hlyb5ibA6gTiRJj8BLREAMWi7ZSBRl7+VJGz7rff/
-6Vn4dtx9efb6cHRAXF3DopGQAip4Rh24CnaSe4GTKJkiTUCvddMbCzTAd6fyiKzxUGNA896N
-oNpl5CIu8s/xJSmYHUBEKrcUW9hg7vvBY6Bqg4UUw83cxMpHtZQFAlvMo+3buiGhqibMWvGm
-+kq0X15FhF9ZY2iN/GtLO0IG5/E2dFfZrfD6UYlPfBmZnEA0bogWF2yZO5cftAGt6tybv4oT
-XDkdAkXw+IFlDPLAqWDqxVHx1ZfKjfYOzSXg79AnHnBXu27RUMqXRmpYPiyOy00r5PmaxmVD
-xVG5wJCO4WmgUZU9adGfkjHT9986CAekXrnulV4l3qjeUu1oPJ1c3M6uO25wB+WWkbyyr3Zn
-YV2GYZo7UUey+2cPGnAyiiEzfFWnqXei2dMIvaOjd7ghjLWiSYS4j6CajB5OdkP5p6sOGv86
-nukXNTGJi7Qs09pjdeHe+3BtQwGJawC/nML9FA8iqGRF01dx1dBm1BsGP4nVOvNRWRjL4M62
-Wl///x6tMp+bgUnUlPykVWKyC4BmHUFKDI8Hny7DBJHGjAnwqdgiQhtZOhkNmJvwHPWh6r12
-XY0B6sBy3G7Z31UB/pYaIEwq8fi/4hhGEE/ObX5Ln61AvuSrakjb6zK6QPGNHIpEw/4G9YNo
-trvWwlhLhAf0bD0wfXk6OSBzdXh6XvNOpzQz1hvggngdnlbVLTTllm0VhA+MafRToukYo+vC
-b8SoAuPznUpBSL7LiiDB27b5oIC7FMuOGCjoaZHl3+XKV+u6s7jHCmO9VEym9dMyam9RqGST
-QtwOGluJHPx+KdgYxD//gRN2gFMGehAnbTCLnJIKDRV7MBe3pzGOysHrF0P7w4K3xwLWvhZE
-4Blyuo7wbkheyxBNcNxDmJNFb87/dUjKrhMPygzxJxB5EqS1+7a1Lv9k++9Jqtd0rz2IYMJ4
-uKAlPkZqCGN+GN0Z/iK/t5yno7WT8gT94LXrXs8EexIdhSULkbxzTe6keTevqDEVe0J54J1z
-qBz0r8fPaJTAFeD65w/MKhca/AReTv+rPd5e/Vs5eDw/jwChwMLHQpxPu7hzgTvPvRFrHhdh
-PeFplgyfVyyYf8qSkxDa4Z7V/scyOm+HO0JJeg8+AQPw4aKpuv1qEc/uxI6UgrDl/FuZPNiz
-BVanRMBCROxGnR6UpacQldxyX21vIXDmB7XZnnMYtwxxAH1MgQuiIHct9oV/QCe2K1yU3qD3
-GJ0bD85lyUqoOGHZ3XGHHrUZhNqh7z9OnlSGIR+e3P6PQziN0oCLxH8mPuaDG1ib3u4gT6Ym
-cbJffrXpGQkWYdCEaE76A1BfthdFfWbYBFLp1XEqS3khGRA+n8HbztmKwvR7551BQtr2rYBZ
-9WJUgATrFtKtqWh0Gt2SEJ6bM7Zji2q5sAD51YvdJ7H4SgIJshp28mXf0vmqb8CtSz3TkSpX
-12ksP9ebt+dZPbmZJIUsxlaD7UCtcst2zn6a/yvpsHB+JZPbIeeaizJjkRtDLvAxaG9esGzN
-cAFFNtdnPJnPuL3Bu1fz8+7Gkt43kH0lR6M3NPX270Qtsg/RRfS2qzFsQw2rVJc3iZrTd2xx
-LIaT2uH8JEKnnLfcPwRLMQ2wP+wGTsNjN9jsYbzDuUbaaGj71JYNt14LbRRSjSjMkynQPvGF
-8JI+YAOHlYbkEPHyWq0LGGwL2xEq+Xh8ouxqkYXl7ia+gsDlR9rqRQyBj5EJ1ecPBSsh5rgj
-OKCqzuk3JE+lpHmdkrC82nM0gjBMafG3uHczoiG9ivQuqtQf5WgJec9nOTQV7GllHiavuX93
-m2oE33jV3gE7MXCEaPBUmMgxMwH6348vaGVxZm8kn+6YG35EQfFp9twS7QBIj2jWuZem1U2M
-rWI9NUspTx90Rodnq8Yw0ffwCfM2kHXkreKrLmWNB5PI10P/xQf0qbbU8s74UcWfsa0jn/DT
-okmvQn6HcUgAQK7oZ1/MYWPiky7+Qm87sBQNXSQDdCC+iqMVdnn9B+ySaLnNny6soPa4bl/3
-EH5gHQ3RrfZKf4oBWiU5IJhiPvvnk/tJszoCsCh/10TdcuC/hCQzc3m4gIzKoOvvbIF6wiKD
-qKrTX2KB+r9C/VPHxp4nzUJYAZgtwermOJlndS+PYMomYSwsYJNbOIobgR935TFmHJyVsEcs
-CixqkvYjro88d9x/PxLmz4/Myq4AufaxL2Mn6emFD6clDNPt63QOi77M25h04dCImfyHtPIC
-Ed8uBU/S8ZXk3rD/SoxQ947BcB3lb81QBF+W6VMDwk/vQkAF99M69YLy7QkP78S1gwvwL7xU
-9beM0KtjEIwxKAzgAGe+CewG0mbN8Ofx1CKb3Vf3DHf7X8aDrlvOhZkfKT1PLnWXEUbt67e7
-Tkxg2J0hFW2CZYm/N7BlVPKhAD1uAOCZDxexhxyMtm3/7cbrXcnRLyCQoUluPp1ag0Kgt5us
-1ZDpoFQm+9YBDlJEV4KBhJYhKHEb8FjCwihT5Q1Z0QGhZxTFCZVUG8iJiaq5gEm/CxrXxVa8
-NimbH1GcRcWPqwu/VIp9QTEaGhH/t+/RGuQ395AszsuvqWknR4Na8TFoJ8XDITG8RMjWYudM
-gMZherqXtmGFjr3NWpNZXKOti06/XINdHzdhJzX1cnWMKTEjFIgt/AaNgzD24QrPXNwib+Qs
-Gu/kkXdQk7YbeEB/EAejgfQyc4mC6QtTH7gws7JAGeA0gM9OlMN9qKx8YY5WqOnScQP1m+vG
-AyMntaN8RfYjjfV/q3S88QM2UJgOQAQhncE1yeaRuQqRMzzE9ln+4k6y/3ohTABo/brDnfq5
-gicDK7J/iCvSJ2pddX8v3Omt8GPP2JJED5VjsLDf2GGBoPJCsyqeZXn21+Dqss6zbH+XE1V+
-VQjFrp/iMgTEVAXErGlJdR171A/d4GW3JrImLDzZJovD4cUs2y0GGQDUxiruj61ch38phlte
-ZRFVDj+RVT/dsXxvC4tytaRPN0or+DmG2uHfQknGntNErIdLgSgNKB+ZApP1ZflV8hilhg2R
-pnlh+4fO5+n/xUQUGi+bASsEKp/fh+KgI1hj8BBu3Y3dqBNg2BGAzay0YlNE5bSi1muD+GR4
-a8spSb+KnjoBq1O0xPkJ/9GsBp/wWs3Lh7wLnWpj99oYFprE5Vimf0Cj/3dNW0y1tk/CKORg
-PJb+DVY7c40QmHgLu0Wz0vTNNkkIQ5DDdByvEKurU/1vbYnDOSkFNScptP3e1c5S5isWxxod
-qi445lovJNTv+HWL5vp2VZ2ZOmwpVp0gLIYihZ389/0etNJgbKyYEg+Mntvi/BYK4l21CQU7
-LAbv8+ejJDkSmL5P3sTikqVq3zS65ywUrvoCnZoeYP6wzH/7u3ev4IC24KxUF7yqTZOYy5ZK
-b8173XJHW5rjaNLdGqGk00aSxafpBY/6kEvFR3CEKjRWIUXZ80TIGoQPdCuer7M+mniQaeoM
-wnOdbnkpDynO8FDfT4vMOdQVdTyDcTvetKdhHxHKHpQaIXKmCuDxtUVV72KKWn8qgPXDm/NV
-itYunVaCJXPZtr9C4K2TzAwRIpgoz6C9UXL9wuEb3HAMqrCkx6PnKH6D9Mzcfnvv3KPG/hnp
-XpqDI4gvUN4Co/Hl3XX8bHD2qGlW8Oe1NTOOUQ9zWMZaxlTufwi3E/os6wx968fFAdR2O20r
-ynVEyxz6KPrzKixuPOR8PoUcQjIvs+ubZNSmam3XqJVN59XXvzNn44nJ9B504TDOQjueA/XF
-qV8A7+VL8yoOQNPZJR6oXmJKaz1F70zEoWK5dJ1BrYfd5jdbNR5fuI6xlE4NbLwKd9aYGlcS
-uXWRV5pRTMHMPwqWexaUfH2T+sfGlvYTO6TdUPulfzNjLNbgQGZiuKxCDuqVxm0udFwxq2/X
-n34YEGGRANTXVqBo3rrFc3a4OoMN67TPjcowYCHHFuBth70ikhMis3MSHT3JTALiGebLs5oq
-tmuaAqZEkCZ2gBGeXZWP8dbYCO9crv2Hrd8BRlLEd81Y1k+1Ntq5Xls7I/jpeh2AqUFGVh/Z
-Nu/zVfpBoVPeVcreVF0CEagwHw5cVR8j4uI5+igQbozGDDL9XrWZmqUOzbJtACKBZB/JJ57H
-HhLAY08dYuIe+cWWY+QG1TdKNE/lvjtXdrvu3Ci4WBfAFDvF3ASOTXKNZMgB5xAxARsCejmC
-sAFUObF4JbM5b0vN3ICsWrKZWHfVfyb19HjuTgGiCAMWO+T83jj4VnTA882Zb/puYPfHO7Fy
-CsIqsU9kMhSW71kQShCT7qL2UgR0wGsANaEJ51d6YvMg4LiAnq+pmSBuM6k8anZWytxcSduK
-rfI2ryB74ZQAVnQkbaTh+myQ3R9vMme7B5BCr8iNPApX5/v93iwJlIkQyBJIpGneKYA4zgKd
-jHMnyGZLpf2Y15KQmW598X/kA/QBgFJxerO2zqQQEIZwXHtkADoTeuopYwfZYoJttvjt9WCX
-KLAejEKCgInjNMx5tmdOtUOU3tScVVS6u/GfqDFxpXlXDdBoJKEQng+EycS6cb+sX62pfxu5
-iLAg2YZ9Ijm8uvl9wOOlmqMARNlku5IhD5Ngf6zxwMMuXa3mnTmg475WGqKds+k/P0Xz0hwf
-UyHFiq+n2Sz652AqDg67tYqG5YmBIOSzdA9/smDUZmI7sgmHncptXRkinkLzJAphvXQlCkNq
-DoIULzNuH3oV45dDUWEKZXUfFexhRPUIMqnT1F8BRL1HYxqcMcI5ha7PtckQTuU8U8LJu0XK
-ULecZDlBFZXB/UthMopfkVes/UHi4BXRmHk4hKd7Wc3mzh1pmvOM/OB1jqFmbXLdppVI9K5f
-2lM9wo437SJq5Q4gDCgUt3AaxtdWDmUz63LDzP68lkHH0/Czzp8d0/RbLcdluXLsRsNoi7rj
-jcm3efCz0Kgn0jNHqnjAq5we35aupcsmGA5m9ltbQJwVonvkjLZqNC5KcaI/yHYv7HMz0fDU
-TzjFfGs/yvWevCrVoiUo8ktLuY1rEdI186hxfXksYY19HbPFmnzw1NPd+0xpHcnYd+WfiogQ
-jWCsCUDf9fHUazLFzfczVBWuzbReYUYiesUqpfOXW7WBL7mtWOBkyVHKpFo0ZyWXeyS/hpPQ
-mdcNq0Iw4W83j3NEgAMxA9Wytfk5zMmA69cOVfft8Q/1CeMZgXbkGkZ9HT74nhKDb2UhcPJK
-IvwZU4QIvgSTK4OUMSUejgbcIhXG5HxNElmfrur0zzSMY+gLDToO/6C3VmjhRjDAQt4lADl8
-JkSTdHO9SxUFkHEm+QzDisuVie2YMDyMxZSaLB9UTPGinB4DLDpSLDtRd8kMRULFnJLQGKow
-U4iUr2PDRoUnsrqagz8KcRaL0H8vNFgcWmMu8I0vwJBXCAR9hKBI6aftP4y/bItZ208uLQVM
-nshy3EGEgbdGaRSJJ0dz0IcoNbKrb3+VaGNurowY+SBmcYFAPZ4Fso5u4BnUo0t07QKWFChf
-AuclM0+XHiJpE3gEK8ZgO6j0m1eKeYuIhH28Xjm5XNPGDVc5RD8NMebmLCMxhfh/u+KqYzRf
-aloMCcW1WQ49qD1gVSX2/ad+u4yCiGrNQ7uPXMU2cMpXMJVkqKzK5hshicRMxpP6P4TQyxSd
-RAtUgz/tVQw2oJWCjCNk42HwT+xvNfWz0O0kfjk72bS4ugpiz7bp736whCeMYhLsthZyPI8X
-CND/AqTXjek1mqtY7Jb9xXZRRlvO9kKrsJ0qLTgIszV+AiGeWGEpV1SkZ+tr+hgD6KiDiFMJ
-501z84E+M0Qk1saFHx6Q7e7uzkJTpFYeqpwnFY6RrJiYzg/ewL6+E0GwqZTSQf11vUANdZeW
-jG8knIm3IfHhBjvvbau0ckOwqYMDnoreIUiurmeiTHcBTjM2YuB7KREPOF1ulz8aROiCQ9aq
-5XnacX7Q9OpSqg1NfZvConvUzaQ4Ax96evAGJVDq1+QFJPe/nNSccmmkoHia1SBOLfyrKnpY
-QMZ/Bkt9dkxemdnSfpYcE+fZvFdfRcWpSISyU+iHpJzUfcfIKN+pzgT1fIKN3C4h20/GPTQ3
-yKCNzYcdAWuZ3MVstxo2NQht1mhWJTHuylS3pD7j2XHRA4qYIUA2OFDkM0pWBIJw/b32selK
-RyQODw34OeceInb1XcqeqQUGbJhFTTjg7ucnOGY/8AEbSxocYQEX6lgff4JB9OF516lT6Yxc
-RLPgY3orNOXaf4ENpzVOnLXf+NBhaw0HapUwE7i32NQBz5m3n/RyGd4jMmBy0eQpcajDS20k
-I0PrtsMflWOnaq3wvYxu5h4Hq5wApvwVqkScJwu80/LvrhaR5LURKTUKGPjvPoaAbhNxcHky
-bM94YeSDRpGKoZxJNB4IspDJV9kCScmtdrmXLSVojZ/YXxIGyseHsZ35jw3qirUyVH2jxb2d
-5Zf/7ztrqY7j579k0uLV0fG1Bpag0vcRtdxevw+0UcKVGvSNOgyoqVhVAlLsjlRP2EJ7fCBA
-fntCAAKJysoHSZ3zkLi2e1hR5nqN6lFU49WuSKgt0cI0u3a6Lhn6hCX1vMmfdbrAOw23OMkB
-uYln9pBwb0exhtz0lOqS60nEezdBBIP6CPQl2aA/OsmQtTEV7lYPrVXQJAZo/g8PN5T7ZxK6
-Dw1QclCkFcddaO6HqpEMK8iDktMvpuX1gyDX17eNb/W4bTiRWshUsQIow90s55EQDtcEfY93
-4FPfN1RlOnVYI6Gy3NvA1bPfSV2k0VHxEXO9imW5lDmmy6TmlUW5OGavJO0ig5rQGeiSzhkU
-FqtQsHHHePCOJK2ZUTU+pRW/oQ9JIMOfrQVlG0AMQnIWi88IKckTMJDcvduQNQupKnsnPERh
-tvrhaqy3ZmUyRbKdXHJxDN/bkJiQGzIw/uXj5fJ8je7Ytv//qZJFfeHLeJ9c9XANyc8nEFUa
-fcjqX6q2uaDDWOB8VipqW2xRTsk44m4J5ffMDfnrRCi2FqbC6autcMyqMGEtRUc275VuKES/
-77BWZWSrjSNTCzgj96R/jxT/IJAxItoynYSkijghakfSp8mvURuiC0PY5fokt26PUAk2XYra
-jgzka//T1P4d8XNk/eIiBz+b8jz/xqCxjARVnAkD+zQPrFgONRW3LBbgjoFLhBchIC+3LVND
-sUaQGiVRi7yeqQmwGysbQzdpLxLwV2PKeSGh/TcdQBPOEQzHkKUwWgYW9O05dDrpgK54ST5i
-HaCHfpeTjvg3+BZsy5+GrlfmLnzk7Tlxkbm91jyFCI5RlSlJd/oc6HQI0DjlqranOfpIYITd
-DJYHDN4T5FT8TaJn6A4qVEXUKZGHta5uwwnc2q/fFuBfdWr62THPZPZzOo1tZqjJR+Du5od7
-/gVPrmwLY0VQ7+FH6QTQ5kDmPMHpnLBI1Aaqp8prndZxp7ArHofDT4UEha8aHD/+TPb6P/iw
-SbmbdGYB/ykXGf0IGJ5fGBxq/+mU+EagsYiMN1FgJWI7KbdgIxwL2AwHQpF1xBpxnrMFQqcH
-zr62jrowaoUCuMuSJlw6/Vny6e9Bq/aPR5x3LrGJK1cYPvL66pjPBW+zXYi+hd6QQLDz5IJA
-DupLX6vrZvh1Fx1poN2IeD530VFYyz665VE24ZGp/YOVzOSXYi8wdvSNk8TO61UjNynD26kg
-Y9lcAyeHn4QwVjnpNJ5QBGK5GiKCAmSej0kaCr5ZNUapMDlY76tOv7DniFgg9TBMVM/HHtCL
-6vjf+16MTfwu+8pTlakiXY4B8biuoLSzFWcDxf+MAzPspNW9sDIO8S6nrqKFRVQGUw+e2LSN
-3DX2pBFZmYjZP6Pv5+US/oAz3c+6OOPiRf3CcZ9Ue2Zk2onjV0QQoe50UwmUJt4Vdke3XnbM
-mpYeoJ9DQQgilwVb7hdgJwXWMS3L4MINF56rDVK+fay46Ma+J6EZGh4xogL5phrQJjtDRdme
-lXXsBJw9zdKVPeFpx4H5YAEV1mBdHgHQdvVjNWrU+C8ebD83AN2I1vYdINJK1T+L5HaNc+O3
-5HCbD90DQbm09r7rocKtVup+DVsQklkqW2KJgxZ9wpPySJUdU4Mecr7NWHsshWQAaVff+t6T
-fcINF+u39YWd4VOU+h9mEsLvpn6Yu4gM9sFFthGkI+QK2NeLfJ4gR9owtGD5oON/WtmTqLPP
-DL/mSVOEkqi/GDV3nIs5py5ejFsCQMSTznzhtPzg4UTKY13Jr1TY/Wmr2SFRhaCnBHGsKT5O
-TyLgvlfIJK2utkWd0fvifm8fiq7sfRuGvPBYWPfz27DfBLjlmCWf5bLjHX/xp2npyG/R5hxI
-0+AkpazOOWc4VXOEIu/hlWg5fbXx3GXmXhaZ9XYJqTlEI70mIjO3osh21zXHS8tXfVVWiWGr
-6QDCZAEurW3xKuUd3zLonUANGQvHOs9IpO0w5wzDChB3uRvXYh0HW19g26zmMtTX8UoL2Jom
-IadCTjxMWv3+b4v9AHyrHE6hqAU+3RABnh3y+QQQFiWCMUDUSXsuoerEfiTyM/BrN3p/GWeJ
-kUG0yREqsRwKfHooDRdAFQSKiL46XILWxv7M9vCe5/wYYjo0lMePYu3F5F0aGcVqCONnvPYP
-AslnlehRLmAE/cDpTpTPZ9Hh4p82lMJVA5PVCrDip6cPnVMTzjaAi0qLtE8a4ezD751LfvIv
-H4/R0v76G5o6d2x9/5LiFCQHCGNzZ/FKKc7Q5bBrFITPYQNv2qkT/HyzlCgMiYG84wlYRkx1
-YkQMdF50rhlIAqBzszzw6Y4poWtogkWOE9MO/RPSIX9BCux9rjBo2U50IVv0e9QvsukzJfdq
-j+x1zjX1I7IOFrw0SMHtZ0AumLkkZWiDsAkdKE+wfgYJ28HOusByp8GgYeCq5M/A/X5ilO2l
-CukeLyxwYEu2u5tyWEQTDYEK60cc8I6GXy9/KlyXYy3epbhDMOMlQXGCErEtf3wmQIdssRBI
-WQQy4q52q54FEGh7p/kTiPkiUM6XhAsX9Zwa8SU1mGjfYZOOV3ObOhM9+8OBUPFYHi2W1eQu
-Wvg0/Lm3itT7FhKKBwUvh8gjZb83/tRVir0oAe5vIBZ3NayfcmbecxrxWGe5hre/r/BFqdI4
-u6VYdIzRbJPpC2ARJmohVh4YzcMbCULbUQnvjdOYgRRbBgEnriv9yzUOh57KVTzqT6t2h6NG
-+yCQBSQcl3UeWf/Vvsit6pRVuw2Kgn8Vt98adyMK59hM8dPftzle2vMgXquZIHXxvhLYigRM
-0Mqve3HLC7N3XjypMB3zKncMDYVDkF0YV+t4ZAZzODQaRwpPWCMgSBLP1VEpq3DwC71wTB9I
-4BLZ2huT5EXK/HBT0MLAql8dFzVgDY8wAOaE33dg2NNf0qwl1wkQAZwVk4+HUOf/7qI64sVG
-ugbPWe0BGCVpYSnR9/3hq70hCPysYPLVGfoN6Hbhv1HYcwiuoJLXkXA0QBJvxvNj3iuksyo/
-1C5Ce0mpddhlFtxInojgB9aKl+OqOLAIzrVbVWLb7lS0z2m5K15YnZ2MC6e+xl3q7Z0yJcAj
-V1OgocHctjzv9LqfcNStUw84v2p2CXHBOui8ojQPFMyiRhO0aXzLwdwb5DVobI4/CsStywTq
-siVaydzr0UFuMOe1OtHR7kNPOKc1BmBF7IErUXOjVYGohO3TjCwmrXIQwjyByqExFg/tbuL3
-zRbkT24fkujDG/tQcFFBBBs8+8N2hhQYCF15aJd4INzSGEByW4+rZiSBwprOhQydiTL6tRT1
-ZR1rdvNyk4v+AYqycG93mwpD4mOkEe8MSBG/FlfROVfdow5dcc7Upt/cSJa8Ip8kIHVnLgyb
-UBbqvYw5BVRuNEYjvcuQ/9/e+QTJm9BZ8U3+2ZyoVNkgqn68Fi5hfoxa+GU/TugklV2EV2ts
-NMDB9Gdt7N/Fe/88r1tioo3qWBi7+LGqNls52Il+dbiC8lM6lZ/iHtObDeoXRnB7zqk/q9Ls
-5u784E/btE2X3VZsFcUn8gh8SSjcguxuzsWd8EWf4xgaLtX1VKW1UBXsA2+RsOsXS6QrY1fV
-gZT/lZg8RQNhE6ePCKqLJqGP5Sa/1BhlGF7g/tj+8Fg2FrpI7iZQPvuJTJbmTBnxKizZLPHG
-oLHIIDEGmLT1Sxh+339aWXo4BKkdidlU1vqiSzhxvWVRyFoMR6RgJKSn5TkYVis8VeEJAeD7
-pwF3HnG6lWJz+yfHdjoUB8YF7mBFAj9+9hNeFgVjR5SdBrKLV4O2bksZxPPQE6YHrO66Npj1
-ORBqJpykm/QAtMvnRVjQWCeHUSCz6lmattJX1De+OJ/gLgKygb/eiK0QZlUzIr0TyHwhF7dU
-s7eUxmrs4O/XMT7499SPIarhTlbONepBn/3JFvrvHAdlgnITltFvhFoGVtAcfKjzCMP/JL5n
-rmvNh+krF7SD8qDRofrx8TyiRk4u10d+DQn+kQmP2Ga4G+gwBRpEmFQuAHxY5g3yfKqHZHim
-kxx35y6Z+F8EUuuvd7+PHD2pN9V06TZDin2hdBSTe81HjVL4wmz9tCicU1eBwHM8YkmabGMP
-Gsm3RSF933z7iAg74S0MTEcvhEKtSWHt6JkGq3P2tqHOxMNcHTOjat5eqx3sfKYtVplA3hU+
-7TKH5zNnHBcgu/Boik/8HLl4PROWMkV4rqEhM1kLl7jb6xGR2VDOVYXUa3kDrmONJE846ZG2
-L1dFRsPvz1Ro0OS67rnFHXcaDmTIL/WYMSA2aPAXhFb6K6hXmYIM3lQt08B7zYpIuGTi9ewk
-qLBiqqXh623NkVu87oes+8Wu7bOqR+/7lLo0JlvtCFQ7V7VCeExJDGMvtDdou7yp0RRHW26r
-c7b0a6ByRxaCuiJF79WUoDRpfSuwDVCFRvbK0LMf2LrVSbVbudpIU2+5J0ztyDUSJCfqCHNl
-rmFt/fmPMPMo3DmIfs+VbMreNswm9ofFczFCxnctqDtuOMezrEGSEobNAptrSbgHr5eavWt4
-nDY9jjWKnpQd5WS+WDfxkf8OPM8YVuvjJCUjrQD1y5iDWbkKxCwAdUaykMaPajfJhUsCGIdI
-Luoh5HbxflOsvxXmeqTzJikMAvq3Xm3Uzg+OFiinkqT9onLgP1WCW0JiFVPRfBW3C+B+alJh
-YWJ7TaO8sewYyDWS1nOYlZi64DzKmDP/tLR85P8Mu8OiohEHZhO7bo3JqVNsL+DCgVSl8q+9
-qtl/IqbAeH6PC1hFFrJjAgPP1fCSirDeEzbxVGSGB6A1ect+5oCbO+9T2l4L5viGQX9T6oj+
-VEdgKqqQNMF3HQm3euxldLBqUJPxrHAQSi9/TJKeSAejXXGYCSJWOVkeKPDP3XUZtdD+ZWMj
-IEIYRWv/1PsXbNQoEEv6StWB/BmSORVjiWeIj5HDtHBvqA6QuuxAGJPG+ej8r3cETtJUMdON
-HqU3xDuoR3i1Navh4IlxzNKGlrt84wwEJDcwAvo3egHAndln8cjIwkyisLN4xo5/YeSGiXZ6
-tPWndadmOn3W08iqltZA8GR4+PWv4JacExu7oQhorzW3jKFcjlJXg7AARcu5bXNlVEJSP2zu
-8beRuNXlW+qFwiSoIXMU18Pm+TNhoShHR4vaACrXS2LuQLg41N3uvyXS1wgszjL72XOjkYyh
-+g2/GocMtrbzVHyR+ltQGscTkYgpbDXc0HD0qwqn7QSFs9GODhm0rOfWKAwO6Od1N1sVCZy4
-ietj5u1gHW/aNFeCP89WUprIOttEIsXCVmfATGrtHb5ijQswzw25QMw+vMmIlgtQIM7zYh6r
-8Cb+mj8lr2g5yUYW3P5+FaIpaH3gpz2zRaKnS/QmE0gpTpZb1rg3sXSTyqeQk3hjmZK0j/IN
-PT+5DDlfgjp0RNbEeRqv3PhkUz4BAp6ZHpqEBDl6QP8MWNTJWuh7h0Bu5LYqGSwMKrRJRBii
-CGbCF77Co9Mjz/rtQMpdtQnTa1NDdQRYdnkmkXD2wZBisUV1vzjH4XH6XP5FSWgbkQDEEgEr
-BjRwCTvmlPJ9HC/f96iOYZgy4xxbkVIqhJWoigSeg3mvKSX7JF7GV+YnklhN0vD/pHmMIFBo
-DE3wcQe1DhCcCJ1e1iYJ3OrP4LCthv2sbxA3YUtv3eR5heyVpuR3XyImGEN/MZv3O8oSe7ZJ
-sPP0PQpdF7nhv5s0MOvVqUE9v/0SI0PsW70/EurCLiEy5IMq/6e5C4JLwgi6ChwtauNSI7rE
-lX4ixq0Tig3ZoCN1zumi4NgWYMq6NsW6YIA0qS5gaBehGCzvS9y3uNYbh/81nIaB0idghThL
-qH3wQswXa8zrj7mMgbq56EeZSCmW3aAW/cUVfiK3QVd087dzs2+zzy4N8XXstvS46V22lQtK
-ngDFwUwLinjMFu2DdQdmX+7ewIgHbz2D5MknISutBVkrtneXJq/wpGGHy+5PMkYpZCyi/rvI
-63bSZW83T5HnuZhFRsYgoymwWgZ74BDKnfVk8gccTTzzYTkrwaW6EB7bMY2fKFtbLqwbfFQi
-1I7WwOkXG+3kYOo1HmUshL1bz02Bo+scFRXS6U+Ft73EHX2NPVOVxvgI8DQnSeIRCOlxUWeW
-FvpIogkp8Th6EFyJVSRXtMTAzNewqcYadmmg8RlWRrFFPM40tTBhKqStdG3YrLNNBqF8NwyH
-bKN8tHiEAdzCwFn5+hS/nP8f59XiRMyUoCtovw29IU2yVGIELKoT7PYRHl1u/dA38fllxzDB
-lck/NO2MIcIQrBJSIFgprZhOShTqh6HNeI1G0yg7Xi98G/WaNPXzJ9f1OPiE3hwOmqmHVxxW
-q4G0+fGwTcWRlkxApWKExwci/c8ey2YThFsgT7xdruRj04Dpy95ytT4A26yQkmb5gcOJ2D0r
-qXdaceuOb93BnCUbXh8EHH3nI7YSiu3L5D5DFKT4IQMck/AxUGJUOGu75e9PMx4rs/fZ73FB
-ElYftl9viqQNIAwtItfyb2k8A1/v5JgSJl8iO+JkKWHcv+/UGNTIXHoy7rBt2K9U1CB6UIJa
-Ikje5noevn8FOiEowRZyQdZ6YEhBzUsEBvfesIk0LOV1P3NgqHNN7SMY40HgM4b7U1cU2Kn8
-/pjne7lj2XTCOggg3bQtMxgnaxMN9FqYn0848HrvGI9t5+rPdlK1jCygnq7pGbjiU9cs2dpC
-lyqqtf9++eWWt5ru2cBUhOy5XISq/R5AbBrquaAnpqrsyu4rJFsT+TajIGYzgjqOW85+fLpO
-wa7mltQEY9owh8DZVYSFIdC26/MWnAEEa/HiOZnVyu1ubFKt4e4ytQwthrqoNfIXqQdns/bl
-clufOn0wFF5w1gm+TGdfG8yE3g32oIpBpWhZ+d0HKc5796GhpL6eVkjtixfq5RHF5Ll3eFtp
-36RMYkrRt2dTKhBjMQ1ktPx2tole/fzuq10TWEnaMVG1gWB2VY8tHidTjcP9/Aey1T3MFmwq
-c3nziiMepoTVAvmjl4KXpfMVYd2kQc+/qEN3H50sh4DqGyIGrJDE7CzpoxV3GW0+ATXXiKsS
-ltv/AUXIDa+t58wAbeElU1mtskW4AG1o3x7K9FxnyCsVdxiW01p//zxdntKZMH02hMOPNrAF
-cioqm2EKNFP0ZlG2BekVVdMUPd9lJzUc0TtX8g2AYJgJCQ3SGRh/DxdIzQxtPGu/JXkFQZna
-10kzbqguDrF866hk8ijqfAV6YZpA1GNX8q/DIlVlKS1iyJeMhJ5dy9+7Kn1JI3EWF8AtSEI4
-njQx2QlVgp9A8qxslrsUXm/1nEh3jmcFVZ4jB+wL0d4qmWHgCxEzkgGyqimpaJUQm2PSYnsM
-En+LsghPsoASvYap/kHrSjBgc1vzM47d9/wMd6FIhqraHlbbOvkoBpjgsWNSeVZjY78HlrCi
-2REpAfEzxNtpuMe7cW8T+Wk5NfL+YbX74qJZrMsTteUTGT8ejng0pL1xv+975LbwfOyLTGyd
-zgN8X/T0lEmDm56kgGufEhaWkEq+mgsYajAcxz2ks9xhIBmEWPhVdRkSEMBjhjZlra8znrz+
-GI+w5erQjRGLQUXe9Aa07IqBG5qWqFlQHK7Lu0Ktc+o8kiK7GBOhqQB4dqXaBsbIrWEuQQsy
-7kXEu66Ah9PwQ8u5J9CrhQNmpfZyv/m2wiP621iyROCnr2BLfcbcWwklNxsRJJCORmkfa+G4
-TPRGv2uBwYq/FvXRPjUz2XtHtkqLBoEeZsX/NwzPBmypK8dIFuXhnu95VM5CeA4TpGDb4Epm
-Tpac3J0xsIBG4TUuab269ivpPeCP6avZqqrdOxgNA+oCm2O2VMW4VvznfXDDogOy7QeaHKHv
-YS56feD5wV6F+BXhpklBuGC2CuxQOkrHRqD7f6WXCF8Dxq3Q11NahEwmQ8e85dgLKGCm9uSq
-wVUlEGvsvrpCZZQ+z7r2y2BgiDUR+m209dQXcxQZJ0xNuF6PVIRsP3DsG7vPWEI70VklbuKR
-/E882HxzMdL6XXxCNSV/PMC7dZ9FzZBluLUrC3w9h+rB2qUHzaPeyuWO3GtyepBpVLKwhhs1
-N7LVArNawqG9HbJUhY6TP91Lk4GtdwmN+VpUQwTGnzNhcQhJ+y2bYAuxFyrCmToeQqsMHulq
-d5mfDBbt6Mv50z3pIobIuxKnM6oHKpug0Ma/3AuGqUwurfVEnUhiyBbKAgqh8PWGAOKl3wO2
-lRcNXP4ECI6u7k7m2uVxCX0hf1BPOiXRE64YWaYpSzjgdlgDEV10TB184DSRWgb2gecfaGBu
-Fawuz+nJvnp/21lYsPgiy4ucN5SQdFLZSDej45D8T+UIR0KKaftLvY8VljnO1mNo012a7BL2
-+qoBrbgya7BIkne8akhZ23G01AO71mxK45bhTNS31RV6sg7CU8QRfI8gLGVXbvAVZU/0kiBi
-QjY6JsMPdr8NEAP+S3thsQ0pKwHHZqy2ph5Nw3si9tthM7JS/TDcsARUmQMLXX6EBsRFacW6
-d/RJYSG4mSXfUJmosi7UA7tk/lDwFz1ZTtqS19Cuzh/7s75sEtZ9y78is94YW79T1MdHfIdc
-4wZSe+LRnWFoIEJV2vAzV502yGdggdVVT2//tQcCi2Y6BlGjBvyAP5Vcah+1ZPqvcxSOC16+
-wrOEZVgX+plymGpA/BoiuUVFjkUbMUTRQiBbB/Z8gkZ3FA2RE8q/wYY/504AF6UBHublzYaa
-U0F53yDsrGh6eqSbgQck4cTOOPHDIlPfltGcoilsunSwrpNOhKHF9WZKxcJFFfJVLlrBpaji
-FaWQ1n2sbp/SKD6smWhvGF4/Y7wimZSh1RzyR+ZNz/2L1dqbBSmLU1YLifw+GWtZlmzxMRnS
-0mhgwqusvNl/gzDCRnE3N3CqS//kdejHEsi/5hbO/cYEnQqv/S3RcMrhE84HzYou8eXMRQl8
-iwvCmVSza2javLBK0l49tBXEiEAS8SDmhG12LgjTCQRY9wOA8NAbtwy5NbqvdIAO61h6eXVH
-yreO3Ex4vG2pU7Hquj+JmREylsOXFHnvCzQ99SHX8Vc78YOB0Mt5yU840+mljfUp1r7SzVuD
-+y8CtrFydy13xBz8+/Wc3FeVfJe27dhi2IvTPbyRkUwlIAZLhz51c8dWHMNuYgukYLu4xQiK
-1Id4URlqbgJqlLP0BGKws/rip70TGG0tA3ZPUQGCIldT41Kwxpc1mSS7FhvBbU9+C0eZLrlq
-lF1FgpTAyJEftzUxBj9bByOYMWJvl+7jdx7UOGNo3Sv8UUW0ht8Bc5CsVBXSyGRGNf9rMprS
-M2j4tptQ6P1DIh+/62EEDfGJ4c26pZWX9eB/mw8/NUUaSnWCrTCchMLjZEih4l7+X+vQh5uM
-oWRmpiV3uzEx3SyA+FL/gI70yJ0lqQquMG0q+QG0DWui9NyrREeNxWHOIj5cMBrIw9bUnaey
-BRE2op+QasNFxFcoi2qgWHGu8DPAFtp30o1vRhPeB0Y5rXoExxrfTR3NPAB9CGXN7vk3bjRH
-b4gTsU47Dc2zVR6pdjHGXtrM+npuwIfiinew5H1KnmYCzsxZeqzME+hOirkt8CIfKfRG3spL
-ShILoPYy0WVlPAP3lu9KUXZySWdrU/t5VmqC32MsSbZ9v4JOMypaFGa80JYyvZXPbPE1Dk+L
-5ROF/uYVOq5C+ykQwUzP07xgtOsehjI6ZU+zoOtO7YRSvMVXIX8Ju7edkGAWnVX7CRPAKPeV
-QdPUS6LEKRDzj/2qZyVmyJwLf94JUIyo10ClADA/6mxu6U0ewm2aIOc3OCk3YwnGepfDZlpB
-bBiCrw44bPcZrY2Em/hRfg9AIRSJzTueWqurmbOvqhr3G9yXvG6M40WkTxtz2JXRfGptmeyw
-T1MYXcBfxxEMb+yXEcf53imywtF7NXS3L1fvFBI56y3i8IEg8vfUanSjz1tP5SPCgqMP19md
-J5WkQ2LusWgNqWs3YX2cORVjOVZx7d51xaigVbT0plGthm36k5Qe1zkYMbhBEU/f10qg/ocv
-ZFvBW5297m7/R2i/FsDrqvrA9h/H9AvOAzC8Csd9Wm3jL06g082fHtMygOqUXcIjl34UBueK
-5ZD2buMyaEvANg6u+tRPcYYkfLXAij+vHdrX0V3eIdioep7ESUMfU4gYb+462QR0fKjLbnDf
-dcMCVkTtvBFqTQ8PI522sQK6wCsaCKTThRigLuC9jKr5OqddN4FjPBGC5uOmDvnPwyghnKT7
-lyfEghACw2ENaoYf/7+fCIxZrCHeFHySdJtmYWWWFyKYw0N6jSuky2AfajtfydvW20MxZaoi
-lGrskBvfK49w4bho/jBrLX101v7MbAUuHbzkpkoFmYbV+1mj5jhOZpm5CikSQ8V+Mo/Xm/9E
-m39qxsjd+Pt6K0was6VsWTz+NVB6NoAdUIilLP4FuE2rn7ampUlLgakPqNOs34UjMoVTM6wp
-4E+d+N1NDI7y7Xy1e3uuctqRPPpr1J8arsyjAjDDOYroMlQwLXIurP4adhJ2vu7q+Y8dFMpF
-TD3V1AyBTZ5u/U39NnKsS/zvzktL++YHEwYRxSk8jKMddHSn7+tXttQf+GK+toGORoInqiVn
-GW7xHW178RKN4NJIpfIcQOomEI8WOHvGFhVYaDHa4UpJXcpHFJ52mZ35ztUzpS8UUCSFPZ26
-rnwF7iTLkNkOJZZTUvZ74164ULqhEATuybsHtIW4cof4HZ4bWjGbIEfce0Bm64IvwvvALEMv
-5J2iXycWwvqqabhhctWqfISjYhzwnKdk4WHCFQY5MIe5GHZylNR2Zs4dA8afCrQI3rvY/F1E
-bVhQ5mDsn8V1zUVkFR+rkkExpOMGI45Kq7GhlIisZj8r2aBx3ubFmEJyF3buNmLEeLKGEKBy
-VyZuEn5DJNlBxVJ9t24zKdZh10usNhVks3C+ZSFv+dsHEDtbgDDhig55XxBWIz+/vfsoOWM6
-deum6LfO8yiH+KpsgPnY9r3L/0pyqPnDre284lXvN6iq+biX68xCjf3M8mRvp+RhCs9N11Ts
-tRcQotg4YQeDUvqEngKMrX59aoTUacTSeoORpgNGNTg1gw7hl82bib38ouPKhfUjsFKmgyzb
-PqJhL9EKdIvqOaexQ1JVgGtVlW+sU7k3ccqoOC68iKbNrwdGBy0VMY1by/YhtUe2OrzUyB+o
-NWkE9U82X9vS4IPFvpYONzgkN/c2iIiH1tBsXKMgqLZFWC3hsmf0BoYmgfcL+yI9JjrVKbes
-PkqyNqtlwnepN6ue1KRvXy30a1NuRMC8YcBgZixn4aUmnD1xCALvALh3RhTcAQNXDLmTuWX4
-CKWioecRm1nWQ8Tfj/tEPWVCNLxLcfU/V9U4OkCJefpS8U8RMRlt2hnYMPgBRjuj8u8WHP7C
-B/2XIo8FEEsOzhs5Siznk7AMxUHg3lW/XT48bXzNBY9k3yZlS8VaLBQh/4yuLN40UNYQlutx
-DdhS4LWZrJ6G0qF5Oa0ICeq+119HaO2rkGw+7IotpypKhf4YgGQ8aOIGSHAlRgewBv1Ilxrz
-dNJZ3lsa4xYNeprzhzdJjPiy7NhP+F6jGTLiDsPOXymwr+EiNL13WE1G359ExT5t5PofiISq
-C5aaRlu0uHXahfZESRNHCNjH5sK8qdG+J4hNSPCoLi2OPKJwNXpUiZ0mTBduJLZV4U7OYNuB
-DX7kxXvw167wCXk4blRN3PyxXbeSAvj6Vxt3evA7WmSea8p640f9jps1MA9RCvqyOEWWP9hb
-BTdvv9Kwo3Lc7pxu3dJDRbDiu1Rg2d+gCxfxBHZC2+KuOh1h2NHuOiKg5tgkjSCw6aOJEhYH
-eGxhlaPPO5i405bjfcP6hBhcZE2G2euxdxju6ui8ew4xSvT2vp3+Govgy9fT9rlkaMx+3yzW
-7yoNdntJQ/F872k2sdt24cbDoUGQno9zPO/3TrNhqQ3J8Gpnwt0RgGlzcsVuib4CuDFAPmqP
-hCZwC9zhRdYo3eoAGngzqOWwaKkDorW90RQQglRERwc+6K8124AdaIssudPTze0MTAAhv8Bf
-w5fvS6gw/Ex2GZSGD2M+p/X83P0jkvVzjBwVQDdqCenr94lHO2uVVr5ehUvyf7FqNbCysiRi
-eU6xpDCC8iAfVcmYIGhqxkxcv+gdz2S/u6w9dNCv4jJl7HybNCtjm2Has6RpkIf1fmPgOeHr
-4jnTaqzwS7ZXRW2kFo/mEIRm4FSpJqRNeECWIEscRATIJcwirvgeAEIcdECIV/O+VktZx872
-JpzhaH+EjkEOJTKKLnFBBYh5TTSgP7C/tYtGoIfwa7GPGjC9TBvOlmCvm2OyhLeM6TZupfcd
-1JaoUtOYcusLZn9N4dbUReSlCKqYpZvoqxdgSi06pOxfqg8vAptL+pVi81ZuTMYv4yFO+a9a
-moni6iqui6gJ6DtmDtqiyYJt+UMwUIoVSOwfiOQaPoqIv5DDMAMiB4kRzZJ5LWhDw3IknFuy
-NB0mr1X8k6QsJw7PCNLcacbBkQE3kpR6ZbO14gdkua1JOJKZ0FJ36tDzqZs/Aw74Uo/kyCJd
-vXHRoLfmYhi1kjA2ZBcsrL0dbNTca92OU0EeZq871Kr/0Gb6awUstHCBz7dNE3bPtCIOLMYB
-+B7udVBsETW8ZxS9bHXho0GFw4jv2QgCvn9ebS+chgzcLkdHlOGAiVRB/2lkdmQyb7NMW+7a
-tr97VbGlTVe5+QSyUr1A5wMCwSqjhcreV76mfhyEFA8cmzyjbXKl9r6bsuO/neqqM9Cru+rZ
-wVdFfl1fLGahdWdv+PF9OFbx+qnCpmEqgZzItUHBRm1OSycvIVdKOSEpCY+075ZCpAlnmAt8
-G3jEshfmMfDzu6RUixuE+GmVE9i7T3Sw4PvHRIsWzvne67S7YXxOIr+pk192+YiqtlMgphJM
-wQnK7Vgn7i5u6p5n7nWbErhzsjkuJ2cfaRmSsYA80wM/9syeTD3I8gHS6SjDUHpu1i+nf5b3
-+0WRSh2uC91++40M/EZeZLfC2mWxo7oahIfQyBzgyoau5NbPEePH9ARlQ0DjVacs4g5/PJkv
-x3g3e3Tt3qNpIbIzp/VU1Tn/aDYv0YIZ0V2h0lYgHd0Xt0JvHyTYq9untDOypJJp0HiiE2hd
-cG6FxRxVp9Z69YUymgvMVHfH2kRk9KpT0h1u7N8UlqqeS9Dgtm7LmzcgAADBwoxx2KB0kwAB
-55QB8P0F/QGSMLHEZ/sCAAAAAARZWg==
+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
+SQ2RXbHEZ/sCAAAAAARZWg==
 
---Zi0sgQQBxRFxMTsj
+--Zrag5V6pnZGjLKiw
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=bpf_offload
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename=mdadm-selftests
 
-KERNEL SELFTESTS: linux_headers_dir is /usr/src/linux-headers-x86_64-rhel-7=
-=2E6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056
-2019-10-26 09:59:59 cd /usr/src/linux-selftests-x86_64-rhel-7.6-694731e8ea7=
-f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests
-2019-10-26 09:59:59 ln -sf /usr/bin/clang-6.0 /usr/bin/clang
-2019-10-26 09:59:59 ln -sf /usr/bin/llc-6.0 /usr/bin/llc
-make: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8e=
-a7f6bbcf0c57763ed4f24faa14bf056/tools/bpf'
 
-Auto-detecting system features:
-=2E..                        libbfd: [ =1B[32mon=1B[m  ]
-=2E..        disassembler-four-args: [ =1B[31mOFF=1B[m ]
+Welcome to fdisk (util-linux 2.29.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
 
-  CC       bpf_jit_disasm.o
-  LINK     bpf_jit_disasm
-  CC       bpf_dbg.o
-  LINK     bpf_dbg
-  CC       bpf_asm.o
-  BISON    bpf_exp.yacc.c
-  CC       bpf_exp.yacc.o
-  FLEX     bpf_exp.lex.c
-  CC       bpf_exp.lex.o
-  LINK     bpf_asm
-  DESCEND  bpftool
-make[1]: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731=
-e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/bpf/bpftool'
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0x95f46372.
 
-Auto-detecting system features:
-=2E..                        libbfd: [ =1B[32mon=1B[m  ]
-=2E..        disassembler-four-args: [ =1B[31mOFF=1B[m ]
-=2E..                          zlib: [ =1B[32mon=1B[m  ]
+Command (m for help): Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): Partition number (1-4, default 1): First sector (2048-536870911, default 2048): Last sector, +sectors or +size{K,M,G,T,P} (2048-536870911, default 536870911): 
+Created a new partition 1 of type 'Linux' and of size 5 GiB.
 
-  CC       map_perf_ring.o
-  CC       xlated_dumper.o
-  CC       btf.o
-  CC       tracelog.o
-  CC       perf.o
-  CC       prog.o
-  CC       btf_dumper.o
-  CC       net.o
-  CC       netlink_dumper.o
-  CC       common.o
-  CC       cgroup.o
-  CC       main.o
-  CC       json_writer.o
-  CC       cfg.o
-  CC       map.o
-  CC       feature.o
-  CC       jit_disasm.o
-  CC       disasm.o
-make[2]: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731=
-e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
+Command (m for help): The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
 
-Auto-detecting system features:
-=2E..                        libelf: [ =1B[32mon=1B[m  ]
-=2E..                           bpf: [ =1B[32mon=1B[m  ]
+2019-10-26 15:22:28 mkdir -p /var/tmp
+2019-10-26 15:22:28 mke2fs -t ext3 -b 1024 -J size=1 -q /dev/vda1
+2019-10-26 15:22:29 mount -t ext3 /dev/vda1 /var/tmp
+sed -e 's/{DEFAULT_METADATA}/1.2/g' \
+-e 's,{MAP_PATH},/run/mdadm/map,g'  mdadm.8.in > mdadm.8
+/usr/bin/install -D -m 644 mdadm.8 /usr/share/man/man8/mdadm.8
+/usr/bin/install -D -m 644 mdmon.8 /usr/share/man/man8/mdmon.8
+/usr/bin/install -D -m 644 md.4 /usr/share/man/man4/md.4
+/usr/bin/install -D -m 644 mdadm.conf.5 /usr/share/man/man5/mdadm.conf.5
+/usr/bin/install -D -m 644 udev-md-raid-creating.rules /lib/udev/rules.d/01-md-raid-creating.rules
+/usr/bin/install -D -m 644 udev-md-raid-arrays.rules /lib/udev/rules.d/63-md-raid-arrays.rules
+/usr/bin/install -D -m 644 udev-md-raid-assembly.rules /lib/udev/rules.d/64-md-raid-assembly.rules
+/usr/bin/install -D -m 644 udev-md-clustered-confirm-device.rules /lib/udev/rules.d/69-md-clustered-confirm-device.rules
+/usr/bin/install -D  -m 755 mdadm /sbin/mdadm
+/usr/bin/install -D  -m 755 mdmon /sbin/mdmon
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00linear... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00multipath... FAILED - see /var/tmp/00multipath.log and /var/tmp/fail00multipath.log for details
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00names... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid0... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid1... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid10... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid4... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid5... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00raid6... succeeded
+Testing on linux-5.4.0-rc2-00007-g6a5cb53aaa4ef kernel
+/lkp/benchmarks/mdadm-selftests/tests/00readonly... succeeded
 
-  CC       libbpf.o
-  CC       bpf.o
-  CC       nlattr.o
-  CC       btf.o
-  CC       libbpf_errno.o
-  CC       str_error.o
-  CC       netlink.o
-  CC       bpf_prog_linfo.o
-  CC       libbpf_probes.o
-  CC       xsk.o
-  CC       hashmap.o
-  CC       btf_dump.o
-  LD       libbpf-in.o
-  LINK     libbpf.a
-make[2]: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e=
-8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
-  LINK     bpftool
-make[1]: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e=
-8ea7f6bbcf0c57763ed4f24faa14bf056/tools/bpf/bpftool'
-make: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea=
-7f6bbcf0c57763ed4f24faa14bf056/tools/bpf'
-make: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8e=
-a7f6bbcf0c57763ed4f24faa14bf056/tools/bpf'
+--Zrag5V6pnZGjLKiw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment; filename="00multipath.log"
 
-Auto-detecting system features:
-=2E..                        libbfd: [ =1B[32mon=1B[m  ]
-=2E..        disassembler-four-args: [ =1B[31mOFF=1B[m ]
++ . /lkp/benchmarks/mdadm-selftests/tests/00multipath
+++ '[' yes '!=' yes ']'
+++ mdadm -CR /dev/md1 -l multipath -n2 /dev/loop6 /dev/loop7
+++ rm -f /var/tmp/stderr
+++ case $* in
+++ case $* in
+++ for args in $*
+++ [[ -CR =~ /dev/ ]]
+++ for args in $*
+++ [[ /dev/md1 =~ /dev/ ]]
+++ [[ /dev/md1 =~ md ]]
+++ for args in $*
+++ [[ -l =~ /dev/ ]]
+++ for args in $*
+++ [[ multipath =~ /dev/ ]]
+++ for args in $*
+++ [[ -n2 =~ /dev/ ]]
+++ for args in $*
+++ [[ /dev/loop6 =~ /dev/ ]]
+++ [[ /dev/loop6 =~ md ]]
+++ /lkp/benchmarks/mdadm-selftests/mdadm --zero /dev/loop6
+mdadm: Unrecognised md component device - /dev/loop6
+++ for args in $*
+++ [[ /dev/loop7 =~ /dev/ ]]
+++ [[ /dev/loop7 =~ md ]]
+++ /lkp/benchmarks/mdadm-selftests/mdadm --zero /dev/loop7
+mdadm: Unrecognised md component device - /dev/loop7
+++ /lkp/benchmarks/mdadm-selftests/mdadm --quiet -CR /dev/md1 -l multipath -n2 /dev/loop6 /dev/loop7 --auto=yes
+++ rv=1
+++ case $* in
+++ cat /var/tmp/stderr
+mdadm: RUN_ARRAY failed: Invalid argument
+++ return 1
+++ testdev /dev/md1 1 19988 1
+++ '[' -b /dev/md1 ']'
+++ '[' loop == disk ']'
+++ udevadm settle
+++ dev=/dev/md1
+++ cnt=1
+++ dvsize=19988
+++ chunk=1
+++ '[' -z '' ']'
+++ mkfs.ext3 -F -j /dev/md1
+++ dsize=19988
+++ dsize=19988
+++ rasize=39976
+++ '[' -n '' ']'
++++ /sbin/blockdev --getsize /dev/md1
+++ '[' 0 -eq 0 ']'
+++ sleep 2
++++ /sbin/blockdev --getsize /dev/md1
+++ _sz=0
+++ '[' 39976 -lt 0 -o 31980 -gt 0 ']'
+++ die 'size is wrong for /dev/md1: 1 * 19988 (chunk=1) = 39976, not 0'
+++ echo -e '\n\tERROR: size is wrong for /dev/md1: 1 * 19988 (chunk=1) = 39976, not 0 \n'
 
-  DESCEND  bpftool
-make[1]: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731=
-e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/bpf/bpftool'
+	ERROR: size is wrong for /dev/md1: 1 * 19988 (chunk=1) = 39976, not 0 
 
-Auto-detecting system features:
-=2E..                        libbfd: [ =1B[32mon=1B[m  ]
-=2E..        disassembler-four-args: [ =1B[31mOFF=1B[m ]
-=2E..                          zlib: [ =1B[32mon=1B[m  ]
+++ save_log fail
+++ status=fail
+++ logfile=fail00multipath.log
+++ cat /var/tmp/stderr
+++ cp /var/tmp/log /var/tmp/00multipath.log
+++ echo '## vm-snb-88e316af6ba6: saving dmesg.'
+++ dmesg -c
+++ echo '## vm-snb-88e316af6ba6: saving proc mdstat.'
+++ cat /proc/mdstat
+++ array=($(mdadm -Ds | cut -d' ' -f2))
++++ cut '-d ' -f2
++++ mdadm -Ds
++++ rm -f /var/tmp/stderr
++++ case $* in
++++ case $* in
++++ /lkp/benchmarks/mdadm-selftests/mdadm --quiet -Ds
++++ rv=0
++++ case $* in
++++ cat /var/tmp/stderr
++++ return 0
+++ '[' fail == fail ']'
+++ echo 'FAILED - see /var/tmp/00multipath.log and /var/tmp/fail00multipath.log for details'
+FAILED - see /var/tmp/00multipath.log and /var/tmp/fail00multipath.log for details
+++ '[' loop == lvm ']'
+++ '[' loop == loop -o loop == disk ']'
+++ '[' '!' -z /dev/md1 -a 1 -ge 1 ']'
+++ echo '## vm-snb-88e316af6ba6: mdadm -D /dev/md1'
+++ /lkp/benchmarks/mdadm-selftests/mdadm -D /dev/md1
+++ cat /proc/mdstat
+++ grep -q 'linear\|external'
+++ return 0
+++ exit 2
 
-make[2]: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731=
-e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
-make[2]: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e=
-8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
-  INSTALL  bpftool
-make[1]: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e=
-8ea7f6bbcf0c57763ed4f24faa14bf056/tools/bpf/bpftool'
-  INSTALL  bpf_jit_disasm
-  INSTALL  bpf_dbg
-  INSTALL  bpf_asm
-make: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea=
-7f6bbcf0c57763ed4f24faa14bf056/tools/bpf'
-2019-10-26 10:00:09 cd bpf
-2019-10-26 10:00:09 make
-gcc -I. -I/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763e=
-d4f24faa14bf056/tools/testing/selftests/bpf -g -Wall -O2 -I../../../include=
-/uapi -I../../../lib -I../../../lib/bpf -I../../../../include/generated  -I=
-=2E./../../include -Dbpf_prog_load=3Dbpf_prog_test_load -Dbpf_load_program=
-=3Dbpf_test_load_program -I. -I/usr/src/perf_selftests-x86_64-rhel-7.6-6947=
-31e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf -Iverifier=
- -c -o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f=
-24faa14bf056/tools/testing/selftests/bpf/test_stub.o test_stub.c
-=2E./../../lib/bpf/../../../scripts/bpf_helpers_doc.py --header 		\
-	--file ../../../include/uapi/linux/bpf.h > bpf_helper_defs.h
-make -C ../../../lib/bpf OUTPUT=3D/usr/src/perf_selftests-x86_64-rhel-7.6-6=
-94731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/
-make[1]: Entering directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731=
-e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
-
-Auto-detecting system features:
-=2E..                        libelf: [ =1B[32mon=1B[m  ]
-=2E..                           bpf: [ =1B[32mon=1B[m  ]
-
-  HOSTCC   /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/fixdep.o
-  HOSTLD   /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/fixdep-in.o
-  LINK     /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/fixdep
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/bpf.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/nlattr.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/btf.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf_errno.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/str_error.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/netlink.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/bpf_prog_linfo.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf_probes.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/xsk.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/hashmap.o
-  CC       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/btf_dump.o
-  LD       /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf-in.o
-  LINK     /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.a
-  LINK     /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.so.0.0.6
-  GEN      /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.pc
-make[1]: Leaving directory '/usr/src/perf_selftests-x86_64-rhel-7.6-694731e=
-8ea7f6bbcf0c57763ed4f24faa14bf056/tools/lib/bpf'
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program -I. -I/usr/src/per=
-f_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/=
-testing/selftests/bpf -Iverifier    test_verifier.c /usr/src/perf_selftests=
--x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/sel=
-ftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f=
-6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.a -lcap -le=
-lf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6b=
-bcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_verifier
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_tag.c /usr=
-/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf05=
-6/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-rh=
-el-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf=
-/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rhel=
--7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/t=
-est_tag
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program -I. -I/usr/src/per=
-f_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/=
-testing/selftests/bpf    test_maps.c /usr/src/perf_selftests-x86_64-rhel-7.=
-6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test=
-_stub.o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4=
-f24faa14bf056/tools/testing/selftests/bpf/libbpf.a map_tests/sk_storage_map=
-=2Ec -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rhel-7.6-=
-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_m=
-aps
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_lru_map.c =
-/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14=
-bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_6=
-4-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests=
-/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-=
-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/b=
-pf/test_lru_map
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_lpm_map.c =
-/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14=
-bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_6=
-4-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests=
-/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-=
-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/b=
-pf/test_lpm_map
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_attach_probe.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_attach_probe.o
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program -I. -I/usr/src/per=
-f_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/=
-testing/selftests/bpf    test_progs.c /usr/src/perf_selftests-x86_64-rhel-7=
-=2E6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/t=
-est_stub.o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/libbpf.a cgroup_helpers.c trac=
-e_helpers.c prog_tests/attach_probe.c prog_tests/stacktrace_map.c prog_test=
-s/raw_tp_writable_test_run.c prog_tests/stacktrace_map_raw_tp.c prog_tests/=
-bpf_verif_scale.c prog_tests/signal_pending.c prog_tests/send_signal.c prog=
-_tests/tcp_rtt.c prog_tests/reference_tracking.c prog_tests/prog_run_xattr.=
-c prog_tests/sockopt_inherit.c prog_tests/task_fd_query_tp.c prog_tests/tp_=
-attach_query.c prog_tests/get_stack_raw_tp.c prog_tests/pkt_md_access.c pro=
-g_tests/xdp_adjust_tail.c prog_tests/stacktrace_build_id.c prog_tests/pkt_a=
-ccess.c prog_tests/spinlock.c prog_tests/sockopt.c prog_tests/flow_dissecto=
-r_load_bytes.c prog_tests/perf_buffer.c prog_tests/sockopt_sk.c prog_tests/=
-skb_ctx.c prog_tests/queue_stack_map.c prog_tests/xdp.c prog_tests/task_fd_=
-query_rawtp.c prog_tests/raw_tp_writable_reject_nbd_invalid.c prog_tests/so=
-ckopt_multi.c prog_tests/flow_dissector.c prog_tests/core_reloc.c prog_test=
-s/l4lb_all.c prog_tests/tcp_estats.c prog_tests/obj_name.c prog_tests/map_l=
-ock.c prog_tests/xdp_noinline.c prog_tests/global_data.c prog_tests/bpf_obj=
-_id.c prog_tests/stacktrace_build_id_nmi.c -lcap -lelf -lrt -lpthread -o /u=
-sr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf=
-056/tools/testing/selftests/bpf/test_progs
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_align.c /u=
-sr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf=
-056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-=
-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/b=
-pf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rh=
-el-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf=
-/test_align
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_verifier_l=
-og.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24=
-faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x8=
-6_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selfte=
-sts/bpf/test_verifier_log
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_dev_cgroup=
-=2Ec /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24=
-faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/=
-perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/too=
-ls/testing/selftests/bpf/test_dev_cgroup
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_tcpbpf_use=
-r.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24f=
-aa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x=
-86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selft=
-ests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/p=
-erf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tool=
-s/testing/selftests/bpf/test_tcpbpf_user
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_sock.c /us=
-r/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf0=
-56/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-r=
-hel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bp=
-f/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/perf_sel=
-ftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testi=
-ng/selftests/bpf/test_sock
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_btf.c /usr=
-/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf05=
-6/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-rh=
-el-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf=
-/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rhel=
--7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/t=
-est_btf
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_sockmap.c =
-/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14=
-bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_6=
-4-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests=
-/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/perf_=
-selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/te=
-sting/selftests/bpf/test_sockmap
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    get_cgroup_id_u=
-ser.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f2=
-4faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests=
--x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/sel=
-ftests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src=
-/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/to=
-ols/testing/selftests/bpf/get_cgroup_id_user
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_socket_coo=
-kie.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f2=
-4faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests=
--x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/sel=
-ftests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src=
-/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/to=
-ols/testing/selftests/bpf/test_socket_cookie
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_cgroup_sto=
-rage.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f=
-24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftest=
-s-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/se=
-lftests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/sr=
-c/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/t=
-ools/testing/selftests/bpf/test_cgroup_storage
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_select_reu=
-seport.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed=
-4f24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selfte=
-sts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/=
-selftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftest=
-s-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/se=
-lftests/bpf/test_select_reuseport
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_section_na=
-mes.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f2=
-4faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests=
--x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/sel=
-ftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x=
-86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selft=
-ests/bpf/test_section_names
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_netcnt.c /=
-usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14b=
-f056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64=
--rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/=
-bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/perf_s=
-elftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/tes=
-ting/selftests/bpf/test_netcnt
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_tcpnotify_=
-user.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f=
-24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftest=
-s-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/se=
-lftests/bpf/libbpf.a cgroup_helpers.c trace_helpers.c -lcap -lelf -lrt -lpt=
-hread -o /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed=
-4f24faa14bf056/tools/testing/selftests/bpf/test_tcpnotify_user
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_sock_field=
-s.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24f=
-aa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x=
-86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selft=
-ests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/p=
-erf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tool=
-s/testing/selftests/bpf/test_sock_fields
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_sysctl.c /=
-usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14b=
-f056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64=
--rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/=
-bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/perf_s=
-elftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/tes=
-ting/selftests/bpf/test_sysctl
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_hashmap.c =
-/usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14=
-bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_6=
-4-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests=
-/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-=
-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/b=
-pf/test_hashmap
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_btf_dump.c=
- /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa1=
-4bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_=
-64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftest=
-s/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64=
--rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/=
-bpf/test_btf_dump
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_cgroup_att=
-ach.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f2=
-4faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests=
--x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/sel=
-ftests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src=
-/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/to=
-ols/testing/selftests/bpf/test_cgroup_attach
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    xdping.c /usr/s=
-rc/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/=
-tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86_64-rhel=
--7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/l=
-ibbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86_64-rhel-7=
-=2E6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/x=
-dping
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_libbpf_ope=
-n.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24f=
-aa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x=
-86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selft=
-ests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-x86=
-_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftes=
-ts/bpf/test_libbpf_open
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_sock_addr.=
-c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa=
-14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftests-x86=
-_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftes=
-ts/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /usr/src/per=
-f_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/=
-testing/selftests/bpf/test_sock_addr
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_skb_cgroup=
-_id_user.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763=
-ed4f24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_self=
-tests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testin=
-g/selftests/bpf/libbpf.a cgroup_helpers.c -lcap -lelf -lrt -lpthread -o /us=
-r/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf0=
-56/tools/testing/selftests/bpf/test_skb_cgroup_id_user
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    flow_dissector_=
-load.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f=
-24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftest=
-s-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/se=
-lftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/flow_dissector_load
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_flow_disse=
-ctor.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f=
-24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftest=
-s-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/se=
-lftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_flow_dissector
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_tcp_check_=
-syncookie_user.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0=
-c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/per=
-f_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/=
-testing/selftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_=
-selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/te=
-sting/selftests/bpf/test_tcp_check_syncookie_user
-gcc -g -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf =
--I../../../../include/generated  -I../../../include -Dbpf_prog_load=3Dbpf_p=
-rog_test_load -Dbpf_load_program=3Dbpf_test_load_program    test_lirc_mode2=
-_user.c /usr/src/perf_selftests-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4=
-f24faa14bf056/tools/testing/selftests/bpf/test_stub.o /usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread -o /usr/src/perf_selftests=
--x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/sel=
-ftests/bpf/test_lirc_mode2_user
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_xdp_meta.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_xdp_meta.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/tcp_rtt.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/tcp_rtt.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/pyperf180.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/pyperf180.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_nesting___err_missing_container.c -o - || echo "c=
-lang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_nesting___err_missing_container.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_sysctl_loop2.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_sysctl_loop2.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_nesting___err_too_deep.c -o - || echo "clang fail=
-ed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_nesting___err_too_deep.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_arrays___err_too_small.c -o - || echo "clang fail=
-ed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_arrays___err_too_small.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_nesting___extra_nesting.c -o - || echo "clang fai=
-led") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_nesting___extra_nesting.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_map_lock.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_map_lock.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_primitives___err_non_ptr.c -o - || echo "clang fa=
-iled") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_primitives___err_non_ptr.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_global_data.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_global_data.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/sendmsg6_prog.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/sendmsg6_prog.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/pyperf50.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/pyperf50.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_ints___reverse_sign.c -o - || echo "clang failed"=
-) | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_ints___reverse_sign.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/loop5.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/loop5.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -fno-inline -idirafter /usr=
-/local/include -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idiraf=
-ter /usr/include/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-dist=
-inct-pointer-types -O2 -target bpf -emit-llvm \
-	-c progs/test_xdp_noinline.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_xdp_noinline.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_lirc_mode2_kern.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_lirc_mode2_kern.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf_dump_test_case_padding.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf_dump_test_case_padding.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_ints___err_wrong_sz_64.c -o - || echo "clang fail=
-ed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_ints___err_wrong_sz_64.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_sockmap_kern.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_sockmap_kern.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_arrays___err_wrong_val_type1.c -o - || echo "clan=
-g failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_arrays___err_wrong_val_type1.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_btf_newkv.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_btf_newkv.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/pyperf600.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/pyperf600.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_arrays___err_too_shallow.c -o - || echo "clang fa=
-iled") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_arrays___err_too_shallow.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_send_signal_kern.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_send_signal_kern.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/loop4.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/loop4.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf_dump_test_case_namespacing.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf_dump_test_case_namespacing.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_flavors.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_flavors.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/sockopt_sk.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/sockopt_sk.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_skb_cgroup_id_kern.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_skb_cgroup_id_kern.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/xdp_redirect_map.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/xdp_redirect_map.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_get_stack_rawtp.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_get_stack_rawtp.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_sk_lookup_kern.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_sk_lookup_kern.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/btf__core_reloc_nesting___err_missing_field.c -o - || echo "clang=
- failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/btf__core_reloc_nesting___err_missing_field.o
-(clang -I. -I./include/uapi -I../../../include/uapi -I/usr/src/perf_selftes=
-ts-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/s=
-elftests/bpf/../usr/include -D__TARGET_ARCH_x86 -idirafter /usr/local/inclu=
-de -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.1/include -idirafter /usr/inc=
-lude/x86_64-linux-gnu -idirafter /usr/include -Wno-compare-distinct-pointer=
--types -O2 -target bpf -emit-llvm \
-	-c progs/test_core_reloc_ints.c -o - || echo "clang failed") | \
-llc -march=3Dbpf -mcpu=3Dprobe  -filetype=3Dobj -o /usr/src/perf_selftests-=
-x86_64-rhel-7.6-694731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/self=
-tests/bpf/test_core_reloc_ints.o
-Makefile:264: recipe for target '/usr/src/perf_selftests-x86_64-rhel-7.6-69=
-4731e8ea7f6bbcf0c57763ed4f24faa14bf056/tools/testing/selftests/bpf/test_cor=
-e_reloc_ints.o' failed
-
---Zi0sgQQBxRFxMTsj--
+--Zrag5V6pnZGjLKiw--
