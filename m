@@ -2,44 +2,44 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FDDC47E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E09ACA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172CF2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6F521726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572153030;
-	bh=ckapfA5pGiCRvio3aT2WserRrjd8jyiBBw5Y1kMknwI=;
+	s=default; t=1572153049;
+	bh=fR3J0Yiuur5GlWgRzW26kRTaeBLOZs7wD1pSjsB7uYY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pbESJekbXxtS/KvzoppMqsi6YjGsRimyrIZXauDN7s3nBEZMhddUcodvjIBDoA3Wp
-	 utnFteFyVa2ws6+lvMYlJdgor6yud/bA+8jzD3h6dtRXhODiThERWy2Td0FiYVpxI+
-	 i3C1vSbkrLIb1njpQNz085IofQ5lozj/tFjzRRR4=
+	b=PMLd6+D+Q1PF9Js1082FOPZl8qJjQhRZXvMEQuM2YC2NfYbpOVTJURS6GvBx2J6pq
+	 FbjuOsQD+znkoV5hWpSiW3PhX/wjTp1TM21f2tpT7oUKfZ81pPOiokXe2UHA1TB0t1
+	 QllaFSEAMQl5gmkUxirPvtzygJv1Y3z+HSNthk1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfJ0FK3 (ORCPT
+        id S1726640AbfJ0FKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 01:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42024 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 01:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfJ0FK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 01:10:28 -0400
+        id S1725440AbfJ0FKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:10:47 -0400
 Received: from localhost (mobile-166-176-122-39.mycingular.net [166.176.122.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 955982070B;
-        Sun, 27 Oct 2019 05:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81E52070B;
+        Sun, 27 Oct 2019 05:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572153027;
-        bh=ckapfA5pGiCRvio3aT2WserRrjd8jyiBBw5Y1kMknwI=;
+        s=default; t=1572153047;
+        bh=fR3J0Yiuur5GlWgRzW26kRTaeBLOZs7wD1pSjsB7uYY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d8yDpQ5F962y61zyRyS5VOypEGEVvJ+LOBQBP+JZSmzAnDpEkN/ZSNpDcVE9Bb7me
-         hL647jQpGvTBgbYPzCcZZ9a5Ow0QLpTbaw52EhcMgtD0llrqzX5yzSTeTJvr3Tl/pP
-         n67KB+/nBOEjfcJBZzyBfhwv09NQ8hSXZ8UHA/Qk=
-Date:   Sun, 27 Oct 2019 00:10:26 -0500
+        b=vfLx9opK11r0NGXZ13CGtf3mSq9wZB8WMwBkchZdIismbfgLauZLCqlrQGzJze/LT
+         Vpr4aZEXSlmDGrNZtkw6yPn8/BV2PqQx+XY6Fc6Qvt/s9kVcn4oasgP5IY5toHyZwF
+         eBMtlgoaxFnS7SHA64I4EtspXm2F0DJpQARzVRbo=
+Date:   Sun, 27 Oct 2019 00:10:45 -0500
 From:   Andy Gross <agross@kernel.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 09/15] arm64: dts: msm8996: thermal: Add interrupt
+Subject: Re: [PATCH v6 08/15] arm64: dts: sdm845: thermal: Add interrupt
  support
-Message-ID: <20191027051026.GE5514@hector.lan>
+Message-ID: <20191027051045.GF5514@hector.lan>
 Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,30 +63,24 @@ Mail-Followup-To: Amit Kucheria <amit.kucheria@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
         devicetree@vger.kernel.org
 References: <cover.1571652874.git.amit.kucheria@linaro.org>
- <b42e18096b81abaaabe1822e75f1882781467c71.1571652874.git.amit.kucheria@linaro.org>
+ <5a96df48e546576f90081bbde218e7cff88ae8ce.1571652874.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b42e18096b81abaaabe1822e75f1882781467c71.1571652874.git.amit.kucheria@linaro.org>
+In-Reply-To: <5a96df48e546576f90081bbde218e7cff88ae8ce.1571652874.git.amit.kucheria@linaro.org>
 User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:05:28PM +0530, Amit Kucheria wrote:
+On Mon, Oct 21, 2019 at 04:05:27PM +0530, Amit Kucheria wrote:
 > Register upper-lower interrupts for each of the two tsens controllers.
 > 
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 87f4d9c1b0d4c..4ca2e7b44559c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
 
-Applied for 5.5.
+Applied for 5.5
 
 Andy
