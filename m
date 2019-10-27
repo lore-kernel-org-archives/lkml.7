@@ -2,124 +2,108 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD4ECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D05CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1EBC21850
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:57:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="DYiuVW5e"
+	by mail.kernel.org (Postfix) with ESMTP id 5A25421850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572191925;
+	bh=66tHgdFuZFgwvfMgb7+hbPciCMsrO5SrqRnt9hjmZ1k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uoWfdH05z2LoI4I8mslLfW00h7LqpayP2bA7r5jdlylS62H1W7g6kr+zAvfR5A5Mu
+	 rFMSXJdcT3Q+f1GDW/nq4kkyGTrNrKQgdBqNK0wZSA/1eGomEiifIsuONrgAUyhA7i
+	 YAZE3nDQHmF8xMW0CMf0X2+2HzclDGQcJDbzzMEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfJ0P5q (ORCPT
+        id S1727652AbfJ0P6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 11:57:46 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:35088 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727111AbfJ0P5p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 11:57:45 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id A05BE2E14B0;
-        Sun, 27 Oct 2019 18:57:37 +0300 (MSK)
-Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id jFZ2U9DQrz-valO9vDm;
-        Sun, 27 Oct 2019 18:57:37 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1572191857; bh=Rslfl7ijgIi+FGL5+iRdcB0DOAl315/Jt883QYZO0SY=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=DYiuVW5ebbAfRNtlxJ2oHjbE5seAbUn105pej0Rq7+mthX/FkxsnMX/mSUR5Adjvc
-         ji5Dfa/VV0Rtoo8n2z9MFxcqXGVV4q1Vqo6C8sXqDD19poeLJbfpqZcQDHmGN/K5rh
-         1TL61Q53FkqWYgaLVcYHVGNk1jNdZo4x0l6ZEjmc=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:7710::1:0])
-        by vla5-2bf13a090f43.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id 2orbSKLdUT-vaV0HXU7;
-        Sun, 27 Oct 2019 18:57:36 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [RFC PATCH 07/10] pipe: Conditionalise wakeup in pipe_read() [ver
- #2]
-To:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
- <157186189069.3995.10292601951655075484.stgit@warthog.procyon.org.uk>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <fe167a90-1503-7ca2-4150-eeffd5cb1378@yandex-team.ru>
-Date:   Sun, 27 Oct 2019 18:57:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 27 Oct 2019 11:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbfJ0P6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 11:58:42 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FDA620873;
+        Sun, 27 Oct 2019 15:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572191921;
+        bh=66tHgdFuZFgwvfMgb7+hbPciCMsrO5SrqRnt9hjmZ1k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wf+tMYqVxXsb/cfDFmgvgPoKwpWL1D6/od446FGICrGRm0LTENlOwSfb+bZP39CaC
+         L+YBLArt/NSlK1PMzP08+dVPdbKM/wQGsNZDiPtLZdzh9ekovGl9V7uOS2AHNiLiTw
+         ngMYY9lTMV0XSL+UNnmJgDb9uQH75z1845RCRLyA=
+Date:   Sun, 27 Oct 2019 15:58:36 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH] iio: adc: stm32-adc: fix stopping dma
+Message-ID: <20191027155836.2e3d8ebf@archlinux>
+In-Reply-To: <1572015860-8931-1-git-send-email-fabrice.gasnier@st.com>
+References: <1572015860-8931-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <157186189069.3995.10292601951655075484.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/10/2019 23.18, David Howells wrote:
-> Only do a wakeup in pipe_read() if we made space in a completely full
-> buffer.  The producer shouldn't be waiting on pipe->wait otherwise.
+On Fri, 25 Oct 2019 17:04:20 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-We could go further and wakeup writer only when at least half of buffer is empty.
-This gives better batching and reduces rate of context switches.
-
-https://lore.kernel.org/lkml/157219118016.7078.16223055699799396042.stgit@buzz/T/#u
-
+> There maybe a race when using dmaengine_terminate_all(). The predisable
+> routine may call iio_triggered_buffer_predisable() prior to a pending DMA
+> callback.
+> Adopt dmaengine_terminate_sync() to ensure there's no pending DMA request
+> before calling iio_triggered_buffer_predisable().
 > 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+> Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Applied to the fixes-togreg branch of iio.git and marked for stable.
+I'm guessing this is not something that has been observed in practice, but
+seems like a safe fix anyway to backport.
+
+Thanks,
+
+Jonathan
+
 > ---
+>  drivers/iio/adc/stm32-adc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->   fs/pipe.c |   15 ++++++---------
->   1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index 1274305772fb..e3a8f10750c9 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -327,11 +327,13 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
->   				spin_lock_irq(&pipe->wait.lock);
->   				tail++;
->   				pipe_commit_read(pipe, tail);
-> -				do_wakeup = 0;
-> -				wake_up_interruptible_sync_poll_locked(
-> -					&pipe->wait, EPOLLOUT | EPOLLWRNORM);
-> +				do_wakeup = 1;
-> +				if (head - (tail - 1) == pipe->max_usage)
-> +					wake_up_interruptible_sync_poll_locked(
-> +						&pipe->wait, EPOLLOUT | EPOLLWRNORM);
->   				spin_unlock_irq(&pipe->wait.lock);
-> -				kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
-> +				if (head - (tail - 1) == pipe->max_usage)
-> +					kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
->   			}
->   			total_len -= chars;
->   			if (!total_len)
-> @@ -360,11 +362,6 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
->   				ret = -ERESTARTSYS;
->   			break;
->   		}
-> -		if (do_wakeup) {
-> -			wake_up_interruptible_sync_poll(&pipe->wait, EPOLLOUT | EPOLLWRNORM);
-> - 			kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
-> -			do_wakeup = 0;
-> -		}
->   		pipe_wait(pipe);
->   	}
->   	__pipe_unlock(pipe);
-> 
-> 
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index 663f8a5..73aee59 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -1399,7 +1399,7 @@ static int stm32_adc_dma_start(struct iio_dev *indio_dev)
+>  	cookie = dmaengine_submit(desc);
+>  	ret = dma_submit_error(cookie);
+>  	if (ret) {
+> -		dmaengine_terminate_all(adc->dma_chan);
+> +		dmaengine_terminate_sync(adc->dma_chan);
+>  		return ret;
+>  	}
+>  
+> @@ -1477,7 +1477,7 @@ static void __stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
+>  		stm32_adc_conv_irq_disable(adc);
+>  
+>  	if (adc->dma_chan)
+> -		dmaengine_terminate_all(adc->dma_chan);
+> +		dmaengine_terminate_sync(adc->dma_chan);
+>  
+>  	if (stm32_adc_set_trig(indio_dev, NULL))
+>  		dev_err(&indio_dev->dev, "Can't clear trigger\n");
 
