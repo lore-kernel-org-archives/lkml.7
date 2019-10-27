@@ -2,144 +2,144 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB96CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 02:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3109BCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 03:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B23720650
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 02:47:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sWH28wU2"
+	by mail.kernel.org (Postfix) with ESMTP id 106052070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 03:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfJ0CrS (ORCPT
+        id S1726643AbfJ0DbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 26 Oct 2019 22:47:18 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36728 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfJ0CrS (ORCPT
+        Sat, 26 Oct 2019 23:31:11 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:52871 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfJ0DbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 26 Oct 2019 22:47:18 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so4198854pgk.3
-        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 19:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=FsMqXu/u9dkMIjXHwGZZfEqLuIY5gaLE4qYJLCQg3t0=;
-        b=sWH28wU2sv9+P1Tos5xqMk0WwwsfPN144++GWdfaLw1QCCWlBBZtUKThOFZUWOHln1
-         76JWSayp2YH8JL0nhqDt8+XCDC/zloF2V+0jeIn2AJuw9jUnxTjAK9SphQtkGQ5kWEQS
-         GRWkif7vUBkomXUb2N7YwTDu3a7vMi5O4uxc1OlUI0u6PStICvVZ3DHGPPuqJS4jx5eP
-         Pk1dJAfXINkVWh1MuTpkPoMfzGpYKqZbSyp5BdFYgvXajW159S3Rttfr/aTezyajwIfD
-         Ivb0GJTnoWAfYu7Htf7wuNQq3vBqPL/BlpWYYtT7l6cAEgc3A8icI0Ho3Rli/iy/kl6M
-         Ym6w==
+        Sat, 26 Oct 2019 23:31:10 -0400
+Received: by mail-io1-f72.google.com with SMTP id b2so5452571iod.19
+        for <linux-kernel@vger.kernel.org>; Sat, 26 Oct 2019 20:31:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FsMqXu/u9dkMIjXHwGZZfEqLuIY5gaLE4qYJLCQg3t0=;
-        b=aKt7nOqjHOp8Ld94gEHvoYzGJd/sPlBKHfExlSYcLj+Ai9DvobCWaSJPSm0Q9X39w7
-         TULtM5t/bRNQ7gHn1k7VNF6HqiABBSgm1lYOlZeN79Nbj5Wvijhbn10fSgP8Ir8tTidK
-         5ZbkVRcWgnPIvl6CDvGl8Fjssbd9KPHsnd7pGuO8K0GeIw0PtW6B/yhARFvsk6vqQR1H
-         +F1JaC8Sf34SegxTRhvAbupdTg4TB9DDZVemSEA/iV7GOrrG1jKkVRVI3D8JlzoLYR/5
-         +uVG3Hr603xcBNiq6T6kO6UYSrOp+TupCPYV+yy/WkrpUin4cTYQcpsaj/mRX5olYcCq
-         oIuQ==
-X-Gm-Message-State: APjAAAWAvrf38eWZJfxTmBqcdHe1w5EJxk3zu+otjr8/NyUpsnFqkXcE
-        FNMrIYF7N0bhQp3IFIk9xc5ZoQ==
-X-Google-Smtp-Source: APXvYqwaMdgH9j+XaH/X4PVTM2kkbdUXIQ+FHnkGopn5Y+s1EGJ1tAZbv5uEf2UJFfXBZ/DT/uF/Gg==
-X-Received: by 2002:aa7:8249:: with SMTP id e9mr13512844pfn.19.1572144435795;
-        Sat, 26 Oct 2019 19:47:15 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id h28sm8942646pgn.14.2019.10.26.19.47.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 26 Oct 2019 19:47:14 -0700 (PDT)
-Subject: Re: KASAN: null-ptr-deref Write in io_wq_cancel_all
-To:     syzbot <syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com>,
-        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <000000000000e83aa20595db3e33@google.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <45f9f365-5d0b-dbf9-a9ce-a77db7476864@kernel.dk>
-Date:   Sat, 26 Oct 2019 20:47:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=hu4TfQmN8Tb4gozti5q3Q0gEU0IJWkqG41T9vim5giU=;
+        b=JmwO2DCAJQHuu7E2SGy9lkyX6wDPXrl75hFs568ZeCekRuARAQx1rjvViGtvEOwwPu
+         loHpZlNIpnqqsV0qw5vwnEv2CNpOYtoKe5iqZgk6Zladky/vk8Z+cwPIiQrFC+C+aL6u
+         y/PAzAO7ZsTVb+VyvoT9kVYU7+56AuKNAnonJQD7CsgSVBWt0sBE2guX7QCeGuTmr1/5
+         0CgTHklyMphY0ycpKjpNdfrRT92IOOHBybbXfJhdMjIvbmW9TK/VLSE+tzjdVB9JctrD
+         jl+goDOyvaWYPsw8Der8/cDP3VYWchMlexe/Z7lUZ9i9+kjss7zG4wqTmdQQXFfU4fFQ
+         64jQ==
+X-Gm-Message-State: APjAAAViB0keqaSQ7gnlpTS8ArgK8sZBprg3pt05xdzKVCVRYDpklz2B
+        NMyyLxmEp/xR/WIqNE1wgDeXm1sH8dLT7CVJpP8wrmwcY9L9
+X-Google-Smtp-Source: APXvYqw1weHRFzzsTz/h9oygXB3gAoFde26Ac/TNxinHGktUcVjAVNPl8OhwLH2u6iHEnaoeWnbuFZijXkH4wLX7AFe9NO/YervD
 MIME-Version: 1.0
-In-Reply-To: <000000000000e83aa20595db3e33@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a6b:e615:: with SMTP id g21mr11624512ioh.56.1572147069622;
+ Sat, 26 Oct 2019 20:31:09 -0700 (PDT)
+Date:   Sat, 26 Oct 2019 20:31:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009ea5720595dc03a3@google.com>
+Subject: BUG: MAX_LOCKDEP_KEYS too low!
+From:   syzbot <syzbot+692f39f040c1f415567b@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, ap420073@gmail.com, davem@davemloft.net,
+        idosch@mellanox.com, ivan.khoronzhuk@linaro.org, jiri@mellanox.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        petrm@mellanox.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/26/19 8:36 PM, syzbot wrote:
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    139c2d13 Add linux-next specific files for 20191025
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12888a00e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=28fd7a693df38d29
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d958a65633ea70280b23
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160573c0e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+d958a65633ea70280b23@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: null-ptr-deref in set_bit
-> include/asm-generic/bitops-instrumented.h:28 [inline]
-> BUG: KASAN: null-ptr-deref in io_wq_cancel_all+0x28/0x2a0 fs/io-wq.c:574
-> Write of size 8 at addr 0000000000000004 by task syz-executor.2/9365
-> 
-> CPU: 1 PID: 9365 Comm: syz-executor.2 Not tainted 5.4.0-rc4-next-20191025 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->    __dump_stack lib/dump_stack.c:77 [inline]
->    dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->    __kasan_report.cold+0x5/0x41 mm/kasan/report.c:510
->    kasan_report+0x12/0x20 mm/kasan/common.c:634
->    check_memory_region_inline mm/kasan/generic.c:185 [inline]
->    check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
->    __kasan_check_write+0x14/0x20 mm/kasan/common.c:98
->    set_bit include/asm-generic/bitops-instrumented.h:28 [inline]
->    io_wq_cancel_all+0x28/0x2a0 fs/io-wq.c:574
->    io_ring_ctx_wait_and_kill+0x1e2/0x710 fs/io_uring.c:3679
->    io_uring_release+0x42/0x50 fs/io_uring.c:3691
->    __fput+0x2ff/0x890 fs/file_table.c:280
->    ____fput+0x16/0x20 fs/file_table.c:313
->    task_work_run+0x145/0x1c0 kernel/task_work.c:113
->    exit_task_work include/linux/task_work.h:22 [inline]
->    do_exit+0x904/0x2e60 kernel/exit.c:817
->    do_group_exit+0x135/0x360 kernel/exit.c:921
->    get_signal+0x47c/0x24f0 kernel/signal.c:2734
->    do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
->    exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
->    prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->    syscall_return_slowpath+0x47a/0x530 arch/x86/entry/common.c:274
->    ret_from_fork+0x15/0x30 arch/x86/entry/entry_64.S:344
-> RIP: 0033:0x45c909
-> Code: ff 48 85 f6 0f 84 d7 8c fb ff 48 83 ee 10 48 89 4e 08 48 89 3e 48 89
-> d7 4c 89 c2 4d 89 c8 4c 8b 54 24 08 b8 38 00 00 00 0f 05 <48> 85 c0 0f 8c
-> ae 8c fb ff 74 01 c3 31 ed 48 f7 c7 00 00 01 00 75
-> RSP: 002b:00007fe3de137db0 EFLAGS: 00000202 ORIG_RAX: 0000000000000038
-> RAX: 0000000000000000 RBX: 00007fe3de138700 RCX: 000000000045c909
-> RDX: 00007fe3de1389d0 RSI: 00007fe3de137db0 RDI: 00000000003d0f00
-> RBP: 00007ffff688f6a0 R08: 00007fe3de138700 R09: 00007fe3de138700
-> R10: 00007fe3de1389d0 R11: 0000000000000202 R12: 0000000000000000
-> R13: 00007ffff688f53f R14: 00007fe3de1389c0 R15: 000000000075bfd4
-> ==================================================================
+Hello,
 
-This one should be fixed in the current tree, and the version posted
-yesterday. I don't know if linux-next has been updated since. I'll
-check the reproducer and verify when I get the chance.
+syzbot found the following crash on:
 
--- 
-Jens Axboe
+HEAD commit:    65921376 Merge branch 'net-fix-nested-device-bugs'
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1637fdc0e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e0ac4d9b35046343
+dashboard link: https://syzkaller.appspot.com/bug?extid=692f39f040c1f415567b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+692f39f040c1f415567b@syzkaller.appspotmail.com
+
+BUG: MAX_LOCKDEP_KEYS too low!
+turning off the locking correctness validator.
+CPU: 0 PID: 15175 Comm: syz-executor.5 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  register_lock_class.cold+0x1b/0x27 kernel/locking/lockdep.c:1222
+  __lock_acquire+0xf4/0x4a00 kernel/locking/lockdep.c:3837
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  netif_addr_lock_bh include/linux/netdevice.h:4055 [inline]
+  __dev_mc_add+0x2e/0xd0 net/core/dev_addr_lists.c:765
+  dev_mc_add+0x20/0x30 net/core/dev_addr_lists.c:783
+  igmp6_group_added+0x3b5/0x460 net/ipv6/mcast.c:672
+  __ipv6_dev_mc_inc+0x727/0xa60 net/ipv6/mcast.c:931
+  ipv6_dev_mc_inc+0x20/0x30 net/ipv6/mcast.c:938
+  ipv6_add_dev net/ipv6/addrconf.c:456 [inline]
+  ipv6_add_dev+0xa3d/0x10b0 net/ipv6/addrconf.c:363
+  addrconf_notify+0x97d/0x23b0 net/ipv6/addrconf.c:3491
+  notifier_call_chain+0xc2/0x230 kernel/notifier.c:95
+  __raw_notifier_call_chain kernel/notifier.c:396 [inline]
+  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:403
+  call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1668
+  call_netdevice_notifiers_extack net/core/dev.c:1680 [inline]
+  call_netdevice_notifiers net/core/dev.c:1694 [inline]
+  register_netdevice+0x950/0xeb0 net/core/dev.c:9114
+  ieee80211_if_add+0xf51/0x1730 net/mac80211/iface.c:1881
+  ieee80211_register_hw+0x36e6/0x3ac0 net/mac80211/main.c:1256
+  mac80211_hwsim_new_radio+0x20d9/0x4360  
+drivers/net/wireless/mac80211_hwsim.c:3031
+  hwsim_new_radio_nl+0x9e3/0x1070 drivers/net/wireless/mac80211_hwsim.c:3586
+  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
+  genl_rcv_msg+0xca/0x170 net/netlink/genetlink.c:654
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg net/socket.c:2363 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459f39
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd0af43ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459f39
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd0af43b6d4
+R13: 00000000004c82f8 R14: 00000000004de3f0 R15: 00000000ffffffff
+kobject: 'batman_adv' (000000009392522f): kobject_add_internal:  
+parent: 'wlan1810', set: '<NULL>'
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
