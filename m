@@ -2,53 +2,50 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CB0CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531DFCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C47F20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B002064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210494;
-	bh=5GkXiogEjh0gXaUB168ghFLY0SN5YJns/jSqnDuxvFc=;
+	s=default; t=1572210500;
+	bh=R75jvK/rAUJFvG4NdWNYu+VzJ33Hjcib2wLKMgrtC/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IiMLHbSW8gy5N7U9hSW2XWxVvJ0wfTtelgQlecmXF11TogM6FL/4m8bJ4XPLcI6ao
-	 3O4vu/ufFBCvCQB63X/xSkArQgGaRHuUbez1fa1G/ANgneB3LzT4Cx3iv7u2VwDhSf
-	 3qCPQ5LCh5m5DnttwCscv3g3u8ePkDqsuUjFsf9w=
+	b=11XgPU3bR15U2ZxClJcvGFhrvcgYmJ0xjVIE2P9WOfowCLLGfHCiLWKpcBzqmX1db
+	 n/xzttgAcTgkfD96x5D9LCq5TVWZl3Dj0JctAQ8J+0V2vDedRdaToCR2vobcn3iqhN
+	 3MDXrxPmugzi25ebigKCQH1LTRzLOpTQJ3+mQau4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfJ0VIN (ORCPT
+        id S1728493AbfJ0VIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:08:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729335AbfJ0VIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:08:11 -0400
+        id S1728276AbfJ0VIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:08:14 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6B91208C0;
-        Sun, 27 Oct 2019 21:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74475208C0;
+        Sun, 27 Oct 2019 21:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210491;
-        bh=5GkXiogEjh0gXaUB168ghFLY0SN5YJns/jSqnDuxvFc=;
+        s=default; t=1572210494;
+        bh=R75jvK/rAUJFvG4NdWNYu+VzJ33Hjcib2wLKMgrtC/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhrmqyexcJTLbNix83xO6lvcESzU/Gl4CrwiHtsUNk/Ki/tF/scQp1T8+SK/U46nc
-         EdtIEMFEqD/OuuK/SMcruBdAlYuzHIAk17QQoJM1w9maicL4bd1yWxhAogWwr4gc0g
-         ErrripzxRLgLamaoCJPJjb56ceXq0eB7tm5JZLgo=
+        b=gcV3FyTWkyYcL6XJmIyhIxCpKQIUMA+CmKnDj44LfzRY9ikDl8lZyD6HmuvrB5rWw
+         j7yoEiKjz4OAz/PFB/67y26d4cVY2SvjGwu3zzimF3XwaAP+yTNUNm1CfOYoDFLyp5
+         /Uc4QZyGU/oEjG7sZlZSYKoDD4fB9MXOvrMGYej4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 006/119] ARM: dts: am4372: Set memory bandwidth limit for DISPC
-Date:   Sun, 27 Oct 2019 21:59:43 +0100
-Message-Id: <20191027203301.111830911@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 033/119] USB: serial: ti_usb_3410_5052: fix port-close races
+Date:   Sun, 27 Oct 2019 22:00:10 +0100
+Message-Id: <20191027203310.533510467@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,39 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit f90ec6cdf674248dcad85bf9af6e064bf472b841 ]
+commit 6f1d1dc8d540a9aa6e39b9cb86d3a67bbc1c8d8d upstream.
 
-Set memory bandwidth limit to filter out resolutions above 720p@60Hz to
-avoid underflow errors due to the bandwidth needs of higher resolutions.
+Fix races between closing a port and opening or closing another port on
+the same device which could lead to a failure to start or stop the
+shared interrupt URB. The latter could potentially cause a
+use-after-free or worse in the completion handler on driver unbind.
 
-am43xx can not provide enough bandwidth to DISPC to correctly handle
-'high' resolutions.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am4372.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/serial/ti_usb_3410_5052.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 4714a59fd86df..345c117bd5ef5 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -1118,6 +1118,8 @@
- 				ti,hwmods = "dss_dispc";
- 				clocks = <&disp_clk>;
- 				clock-names = "fck";
-+
-+				max-memory-bandwidth = <230000000>;
- 			};
+--- a/drivers/usb/serial/ti_usb_3410_5052.c
++++ b/drivers/usb/serial/ti_usb_3410_5052.c
+@@ -780,7 +780,6 @@ static void ti_close(struct usb_serial_p
+ 	struct ti_port *tport;
+ 	int port_number;
+ 	int status;
+-	int do_unlock;
+ 	unsigned long flags;
  
- 			rfbi: rfbi@4832a800 {
--- 
-2.20.1
-
+ 	tdev = usb_get_serial_data(port->serial);
+@@ -804,16 +803,13 @@ static void ti_close(struct usb_serial_p
+ 			"%s - cannot send close port command, %d\n"
+ 							, __func__, status);
+ 
+-	/* if mutex_lock is interrupted, continue anyway */
+-	do_unlock = !mutex_lock_interruptible(&tdev->td_open_close_lock);
++	mutex_lock(&tdev->td_open_close_lock);
+ 	--tport->tp_tdev->td_open_port_count;
+-	if (tport->tp_tdev->td_open_port_count <= 0) {
++	if (tport->tp_tdev->td_open_port_count == 0) {
+ 		/* last port is closed, shut down interrupt urb */
+ 		usb_kill_urb(port->serial->port[0]->interrupt_in_urb);
+-		tport->tp_tdev->td_open_port_count = 0;
+ 	}
+-	if (do_unlock)
+-		mutex_unlock(&tdev->td_open_close_lock);
++	mutex_unlock(&tdev->td_open_close_lock);
+ }
+ 
+ 
 
 
