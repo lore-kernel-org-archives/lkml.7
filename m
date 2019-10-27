@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04367CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D11ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C640A214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F534214E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211005;
-	bh=ErKEsRv1h3UfSN4mtR+TcNlFCFKAYck6UOOahrbSuWs=;
+	s=default; t=1572211008;
+	bh=LI1+dhirixYEYs7FYCxZTa41ybRrG0gdklv7SZqhNTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2gFUKo+QNcX8XKFPpFDRZW3O+/xelAUF+0pfzph2BoNmBNc24EwQw+gsorQVBy2h
-	 WN7Z6tNbeBgu2iEGrdYtdADeYa51chr3N7uSVgKiPSIZ46IXu+67Q1Anl4w96wbUg3
-	 YNbm/Zz1LVGYyA9BjbAisFgfQxXxFPMIhdpwOR2w=
+	b=vKxyVjMEtfYtzOHwJiu/WYmj5+Nvtmz5sbu55khglLCCFNJFM6YLYh4n6K663FqCm
+	 d0iHL+eKdofwL1BFLN+AwCO2juCKYr9eMIMFsuEwyrsW9/0+0DAzWk0tRmHgwoRAJe
+	 Jljwkb5U/iYpEn28+MNyC08Fktcsg8tt7+UasDAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbfJ0VQo (ORCPT
+        id S1730900AbfJ0VQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36286 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730868AbfJ0VQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:16:39 -0400
+        id S1730886AbfJ0VQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:16:44 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 872C921726;
-        Sun, 27 Oct 2019 21:16:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05AD821726;
+        Sun, 27 Oct 2019 21:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210998;
-        bh=ErKEsRv1h3UfSN4mtR+TcNlFCFKAYck6UOOahrbSuWs=;
+        s=default; t=1572211003;
+        bh=LI1+dhirixYEYs7FYCxZTa41ybRrG0gdklv7SZqhNTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRgsACJexsp6VOKrNnpJSGM7hdEbskqLX+aohUn6qQY1f3KZ+RmxdcSJ8I7oKHu8g
-         5LjWcEwh00p/2Y1jlI6kDGr9rkUOPh8/rDyYTAsrSB0Q/UGVknc6m1SsVUPs343gDj
-         flK3sfG0Mz2QfHwszwYAZnXfpnu1LPOu766dqAHo=
+        b=l0b+692S2iGNTNfdQy/sQi/jggwGUNE82U/MUtGpaYbfjG/Ogn9JYgwG8Wu9IJywZ
+         LlUokTIfHQcRI+kLJXz4W9vXofiO1zzSmJPvkNAUM5zUCHrYzP6efL5owWqx8GdPQS
+         5Iyo3oKL/JNE3eBAXkhQKgO65xA+A7MWkVxKqfDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 91/93] PCI: PM: Fix pci_power_up()
-Date:   Sun, 27 Oct 2019 22:01:43 +0100
-Message-Id: <20191027203317.816432489@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Waisman <nico@semmle.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 93/93] RDMA/cxgb4: Do not dma memory off of the stack
+Date:   Sun, 27 Oct 2019 22:01:45 +0100
+Message-Id: <20191027203318.790103764@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,81 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Greg KH <gregkh@linuxfoundation.org>
 
-commit 45144d42f299455911cc29366656c7324a3a7c97 upstream.
+commit 3840c5b78803b2b6cc1ff820100a74a092c40cbb upstream.
 
-There is an arbitrary difference between the system resume and
-runtime resume code paths for PCI devices regarding the delay to
-apply when switching the devices from D3cold to D0.
+Nicolas pointed out that the cxgb4 driver is doing dma off of the stack,
+which is generally considered a very bad thing.  On some architectures it
+could be a security problem, but odds are none of them actually run this
+driver, so it's just a "normal" bug.
 
-Namely, pci_restore_standard_config() used in the runtime resume
-code path calls pci_set_power_state() which in turn invokes
-__pci_start_power_transition() to power up the device through the
-platform firmware and that function applies the transition delay
-(as per PCI Express Base Specification Revision 2.0, Section 6.6.1).
-However, pci_pm_default_resume_early() used in the system resume
-code path calls pci_power_up() which doesn't apply the delay at
-all and that causes issues to occur during resume from
-suspend-to-idle on some systems where the delay is required.
+Resolve this by allocating the memory for a message off of the heap
+instead of the stack.  kmalloc() always will give us a proper memory
+location that DMA will work correctly from.
 
-Since there is no reason for that difference to exist, modify
-pci_power_up() to follow pci_set_power_state() more closely and
-invoke __pci_start_power_transition() from there to call the
-platform firmware to power up the device (in case that's necessary).
-
-Fixes: db288c9c5f9d ("PCI / PM: restore the original behavior of pci_set_power_state()")
-Reported-by: Daniel Drake <drake@endlessm.com>
-Tested-by: Daniel Drake <drake@endlessm.com>
-Link: https://lore.kernel.org/linux-pm/CAD8Lp44TYxrMgPLkHCqF9hv6smEurMXvmmvmtyFhZ6Q4SE+dig@mail.gmail.com/T/#m21be74af263c6a34f36e0fc5c77c5449d9406925
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Link: https://lore.kernel.org/r/20191001165611.GA3542072@kroah.com
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Tested-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci.c |   24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/infiniband/hw/cxgb4/mem.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -926,19 +926,6 @@ void pci_update_current_state(struct pci
+--- a/drivers/infiniband/hw/cxgb4/mem.c
++++ b/drivers/infiniband/hw/cxgb4/mem.c
+@@ -274,13 +274,17 @@ static int write_tpt_entry(struct c4iw_r
+ 			   struct sk_buff *skb, struct c4iw_wr_wait *wr_waitp)
+ {
+ 	int err;
+-	struct fw_ri_tpte tpt;
++	struct fw_ri_tpte *tpt;
+ 	u32 stag_idx;
+ 	static atomic_t key;
+ 
+ 	if (c4iw_fatal_error(rdev))
+ 		return -EIO;
+ 
++	tpt = kmalloc(sizeof(*tpt), GFP_KERNEL);
++	if (!tpt)
++		return -ENOMEM;
++
+ 	stag_state = stag_state > 0;
+ 	stag_idx = (*stag) >> 8;
+ 
+@@ -290,6 +294,7 @@ static int write_tpt_entry(struct c4iw_r
+ 			mutex_lock(&rdev->stats.lock);
+ 			rdev->stats.stag.fail++;
+ 			mutex_unlock(&rdev->stats.lock);
++			kfree(tpt);
+ 			return -ENOMEM;
+ 		}
+ 		mutex_lock(&rdev->stats.lock);
+@@ -304,28 +309,28 @@ static int write_tpt_entry(struct c4iw_r
+ 
+ 	/* write TPT entry */
+ 	if (reset_tpt_entry)
+-		memset(&tpt, 0, sizeof(tpt));
++		memset(tpt, 0, sizeof(*tpt));
+ 	else {
+-		tpt.valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
++		tpt->valid_to_pdid = cpu_to_be32(FW_RI_TPTE_VALID_F |
+ 			FW_RI_TPTE_STAGKEY_V((*stag & FW_RI_TPTE_STAGKEY_M)) |
+ 			FW_RI_TPTE_STAGSTATE_V(stag_state) |
+ 			FW_RI_TPTE_STAGTYPE_V(type) | FW_RI_TPTE_PDID_V(pdid));
+-		tpt.locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
++		tpt->locread_to_qpid = cpu_to_be32(FW_RI_TPTE_PERM_V(perm) |
+ 			(bind_enabled ? FW_RI_TPTE_MWBINDEN_F : 0) |
+ 			FW_RI_TPTE_ADDRTYPE_V((zbva ? FW_RI_ZERO_BASED_TO :
+ 						      FW_RI_VA_BASED_TO))|
+ 			FW_RI_TPTE_PS_V(page_size));
+-		tpt.nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
++		tpt->nosnoop_pbladdr = !pbl_size ? 0 : cpu_to_be32(
+ 			FW_RI_TPTE_PBLADDR_V(PBL_OFF(rdev, pbl_addr)>>3));
+-		tpt.len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
+-		tpt.va_hi = cpu_to_be32((u32)(to >> 32));
+-		tpt.va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
+-		tpt.dca_mwbcnt_pstag = cpu_to_be32(0);
+-		tpt.len_hi = cpu_to_be32((u32)(len >> 32));
++		tpt->len_lo = cpu_to_be32((u32)(len & 0xffffffffUL));
++		tpt->va_hi = cpu_to_be32((u32)(to >> 32));
++		tpt->va_lo_fbo = cpu_to_be32((u32)(to & 0xffffffffUL));
++		tpt->dca_mwbcnt_pstag = cpu_to_be32(0);
++		tpt->len_hi = cpu_to_be32((u32)(len >> 32));
+ 	}
+ 	err = write_adapter_mem(rdev, stag_idx +
+ 				(rdev->lldi.vr->stag.start >> 5),
+-				sizeof(tpt), &tpt, skb, wr_waitp);
++				sizeof(*tpt), tpt, skb, wr_waitp);
+ 
+ 	if (reset_tpt_entry) {
+ 		c4iw_put_resource(&rdev->resource.tpt_table, stag_idx);
+@@ -333,6 +338,7 @@ static int write_tpt_entry(struct c4iw_r
+ 		rdev->stats.stag.cur -= 32;
+ 		mutex_unlock(&rdev->stats.lock);
+ 	}
++	kfree(tpt);
+ 	return err;
  }
  
- /**
-- * pci_power_up - Put the given device into D0 forcibly
-- * @dev: PCI device to power up
-- */
--void pci_power_up(struct pci_dev *dev)
--{
--	if (platform_pci_power_manageable(dev))
--		platform_pci_set_power_state(dev, PCI_D0);
--
--	pci_raw_set_power_state(dev, PCI_D0);
--	pci_update_current_state(dev, PCI_D0);
--}
--
--/**
-  * pci_platform_power_transition - Use platform to change device power state
-  * @dev: PCI device to handle.
-  * @state: State to put the device into.
-@@ -1117,6 +1104,17 @@ int pci_set_power_state(struct pci_dev *
- EXPORT_SYMBOL(pci_set_power_state);
- 
- /**
-+ * pci_power_up - Put the given device into D0 forcibly
-+ * @dev: PCI device to power up
-+ */
-+void pci_power_up(struct pci_dev *dev)
-+{
-+	__pci_start_power_transition(dev, PCI_D0);
-+	pci_raw_set_power_state(dev, PCI_D0);
-+	pci_update_current_state(dev, PCI_D0);
-+}
-+
-+/**
-  * pci_choose_state - Choose the power state of a PCI device
-  * @dev: PCI device to be suspended
-  * @state: target sleep state for the whole system. This is the value
 
 
