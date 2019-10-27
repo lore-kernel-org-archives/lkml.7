@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E73CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784CDCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8695921D80
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E509222BD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572187491;
-	bh=OvqA2+Qm/Jp/XJTuxqpzYBqEAklKjunLQcAiKcV82iA=;
+	s=default; t=1572187497;
+	bh=eJ5elfNt9kSk/t4uztnAcka0aHLuBmFWPvPCbMpqtMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bi8wntSF7+5kmLQU2NxGcYmw0Z/xor3GOCTt21B9qE7SbpB86VdNugUuX8XuPUXho
-	 zoeU1vhFQvlMxw1qGTjYYXmuPBjhWi7vw93aytXe2UEt8uaoBqAwBqcK2OMX5/ea7r
-	 +kNWh/L3jwZ7EGGfafMsLQS2MrwQwicFst2OVAtY=
+	b=boMfUIwJtfA0nL92aLOzEUeIoOlSheSq3LsH7HP0bRPd392SN/A1Dlo4AJQvB+Ds/
+	 70/Z+r+juHOIgeA3OnKDxEYXpVDDtWFa35mvZ47i4BOTAFE/yJ2BGumFt2dHaaL6uV
+	 mxtLV16DzKp8bvnrFMXPtb34nRR3Ir0qapRAHuLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfJ0Oou (ORCPT
+        id S1727348AbfJ0Oo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 10:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbfJ0Oot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:44:49 -0400
+        id S1727216AbfJ0Ooz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 10:44:55 -0400
 Received: from localhost.localdomain (82-132-239-15.dab.02.net [82.132.239.15])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C97B21850;
-        Sun, 27 Oct 2019 14:44:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98D7521D7F;
+        Sun, 27 Oct 2019 14:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572187488;
-        bh=OvqA2+Qm/Jp/XJTuxqpzYBqEAklKjunLQcAiKcV82iA=;
+        s=default; t=1572187494;
+        bh=eJ5elfNt9kSk/t4uztnAcka0aHLuBmFWPvPCbMpqtMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iwe06Yy8h5nIeS0Kgy2BTdz2+WzuLmgDQnQq8rOE90H5Wif5tVwz3d1gzkneKOV4P
-         jJl9K2ef1H+Z1Mjmzq1ZNlWaG4B5KXbQhUR8l8nplZ+7Mr/DIAGlqAULvyH1TuK/m3
-         UtYtyCCSYb4ofxt5uXzdDCzNZfjhQMIOelbxVon4=
+        b=pXov28peb4WjkjuX67J7eAIECXPKuSWa6p2Z4T8X+xiNtBc8FTdkoIIUu7cOJ+YLH
+         4sThy+poCnLrhEkF9wVuN3odojl6p9P6MXRt5jwTpn8BlrJ25v6DwVbzS8uiVJRqnp
+         MFuw9MMp1DQpE5RnnnBndCNnhNoSV1W8OgIf4IEw=
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -52,9 +52,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Jayachandran C <jnair@marvell.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v2 16/36] irqchip/gic-v4.1: Add mask/unmask doorbell callbacks
-Date:   Sun, 27 Oct 2019 14:42:14 +0000
-Message-Id: <20191027144234.8395-17-maz@kernel.org>
+Subject: [PATCH v2 17/36] irqchip/gic-v4.1: Add VPE residency callback
+Date:   Sun, 27 Oct 2019 14:42:15 +0000
+Message-Id: <20191027144234.8395-18-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191027144234.8395-1-maz@kernel.org>
 References: <20191027144234.8395-1-maz@kernel.org>
@@ -65,132 +65,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-masking/unmasking doorbells on GICv4.1 relies on a new INVDB command,
-which broadcasts the invalidation to all RDs.
-
-Implement the new command as well as the masking callbacks, and plug
-the whole thing into the v4.1 VPE irqchip.
+Making a VPE resident on GICv4.1 is pretty simple, as it is just a
+single write to the local redistributor. We just need extra information
+about which groups to enable, which the KVM code will have to provide.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c   | 60 ++++++++++++++++++++++++++++++
- include/linux/irqchip/arm-gic-v3.h |  3 +-
- 2 files changed, 62 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 17 +++++++++++++++++
+ include/linux/irqchip/arm-gic-v3.h |  9 +++++++++
+ include/linux/irqchip/arm-gic-v4.h |  5 +++++
+ 3 files changed, 31 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index dcc7227af5f1..3c34bef70bdd 100644
+index 3c34bef70bdd..d45e9b4e5622 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -309,6 +309,10 @@ struct its_cmd_desc {
- 			u16 seq_num;
- 			u16 its_list;
- 		} its_vmovp_cmd;
-+
-+		struct {
-+			struct its_vpe *vpe;
-+		} its_invdb_cmd;
- 	};
- };
- 
-@@ -750,6 +754,21 @@ static struct its_vpe *its_build_vmovp_cmd(struct its_node *its,
- 	return valid_vpe(its, desc->its_vmovp_cmd.vpe);
+@@ -3466,12 +3466,29 @@ static void its_vpe_4_1_unmask_irq(struct irq_data *d)
+ 	its_vpe_4_1_send_inv(d);
  }
  
-+static struct its_vpe *its_build_invdb_cmd(struct its_node *its,
-+					   struct its_cmd_block *cmd,
-+					   struct its_cmd_desc *desc)
++static void its_vpe_4_1_schedule(struct its_vpe *vpe,
++				 struct its_cmd_info *info)
 +{
-+	if (WARN_ON(!is_v4_1(its)))
-+		return NULL;
++	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
++	u64 val = 0;
 +
-+	its_encode_cmd(cmd, GITS_CMD_INVDB);
-+	its_encode_vpeid(cmd, desc->its_invdb_cmd.vpe->vpe_id);
++	/* Schedule the VPE */
++	val |= GICR_VPENDBASER_Valid;
++	val |= info->g0en ? GICR_VPENDBASER_4_1_VGRP0EN : 0;
++	val |= info->g1en ? GICR_VPENDBASER_4_1_VGRP1EN : 0;
++	val |= FIELD_PREP(GICR_VPENDBASER_4_1_VPEID, vpe->vpe_id);
 +
-+	its_fixup_cmd(cmd);
-+
-+	return valid_vpe(its, desc->its_invdb_cmd.vpe);
-+}
-+
- static u64 its_cmd_ptr_to_offset(struct its_node *its,
- 				 struct its_cmd_block *ptr)
- {
-@@ -1117,6 +1136,14 @@ static void its_send_vinvall(struct its_node *its, struct its_vpe *vpe)
- 	its_send_single_vcommand(its, its_build_vinvall_cmd, &desc);
- }
- 
-+static void its_send_invdb(struct its_node *its, struct its_vpe *vpe)
-+{
-+	struct its_cmd_desc desc;
-+
-+	desc.its_invdb_cmd.vpe = vpe;
-+	its_send_single_vcommand(its, its_build_invdb_cmd, &desc);
-+}
-+
- /*
-  * irqchip functions - assumes MSI, mostly.
-  */
-@@ -3408,6 +3435,37 @@ static struct irq_chip its_vpe_irq_chip = {
- 	.irq_set_vcpu_affinity	= its_vpe_set_vcpu_affinity,
- };
- 
-+static void its_vpe_4_1_send_inv(struct irq_data *d)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+	struct its_node *its;
-+
-+	/*
-+	 * GICv4.1 wants doorbells to be invalidated using the
-+	 * INVDB command in order to be broadcast to all RDs. Send
-+	 * it to the first valid ITS, and let the HW do its magic.
-+	 */
-+	list_for_each_entry(its, &its_nodes, entry) {
-+		if (!is_v4_1(its))
-+			continue;
-+
-+		its_send_invdb(its, vpe);
-+		break;
-+	}
-+}
-+
-+static void its_vpe_4_1_mask_irq(struct irq_data *d)
-+{
-+	lpi_write_config(d->parent_data, LPI_PROP_ENABLED, 0);
-+	its_vpe_4_1_send_inv(d);
-+}
-+
-+static void its_vpe_4_1_unmask_irq(struct irq_data *d)
-+{
-+	lpi_write_config(d->parent_data, 0, LPI_PROP_ENABLED);
-+	its_vpe_4_1_send_inv(d);
++	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
 +}
 +
  static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
  {
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
  	struct its_cmd_info *info = vcpu_info;
-@@ -3429,6 +3487,8 @@ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
  
- static struct irq_chip its_vpe_4_1_irq_chip = {
- 	.name			= "GICv4.1-vpe",
-+	.irq_mask		= its_vpe_4_1_mask_irq,
-+	.irq_unmask		= its_vpe_4_1_unmask_irq,
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_set_affinity	= its_vpe_set_affinity,
- 	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
+ 	switch (info->cmd_type) {
+ 	case SCHEDULE_VPE:
++		its_vpe_4_1_schedule(vpe, info);
+ 		return 0;
+ 
+ 	case DESCHEDULE_VPE:
 diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index f1d6de53e09b..8157737053e4 100644
+index 8157737053e4..6fd89d77b2b2 100644
 --- a/include/linux/irqchip/arm-gic-v3.h
 +++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -484,8 +484,9 @@
- #define GITS_CMD_VMAPTI			GITS_CMD_GICv4(GITS_CMD_MAPTI)
- #define GITS_CMD_VMOVI			GITS_CMD_GICv4(GITS_CMD_MOVI)
- #define GITS_CMD_VSYNC			GITS_CMD_GICv4(GITS_CMD_SYNC)
--/* VMOVP is the odd one, as it doesn't have a physical counterpart */
-+/* VMOVP and INVDB are the odd ones, as they dont have a physical counterpart */
- #define GITS_CMD_VMOVP			GITS_CMD_GICv4(2)
-+#define GITS_CMD_INVDB			GITS_CMD_GICv4(0xe)
+@@ -327,6 +327,15 @@
+ #define GICR_VPENDBASER_IDAI		(1ULL << 62)
+ #define GICR_VPENDBASER_Valid		(1ULL << 63)
  
++/*
++ * GICv4.1 VPENDBASER, used for VPE residency. On top of these fields,
++ * also use the above Valid, PendingLast and Dirty.
++ */
++#define GICR_VPENDBASER_4_1_DB		(1ULL << 62)
++#define GICR_VPENDBASER_4_1_VGRP0EN	(1ULL << 59)
++#define GICR_VPENDBASER_4_1_VGRP1EN	(1ULL << 58)
++#define GICR_VPENDBASER_4_1_VPEID	GENMASK_ULL(15, 0)
++
  /*
-  * ITS error numbers
+  * ITS registers, offsets from ITS_base
+  */
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 6213ced6f199..edbaa37fd3f1 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -98,6 +98,11 @@ struct its_cmd_info {
+ 	union {
+ 		struct its_vlpi_map	*map;
+ 		u8			config;
++		bool			req_db;
++		struct {
++			bool		g0en;
++			bool		g1en;
++		};
+ 	};
+ };
+ 
 -- 
 2.20.1
 
