@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F367DCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3957C47E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C893220679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C889620679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572195417;
-	bh=gHohMleIoFYwg0z0pHAPsLAHFJMdlj1UdYdL+y5+OcM=;
+	s=default; t=1572195498;
+	bh=pll53aE69hNh/m9+0yjyt0oK8R/ifUVvZeFh6O6x0ZU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Rnk++TH5Pe1mOy6ogUgbMW+N1+NqEdiUYtSpkd05DBW8RqqF5Sp6UuDlDb3BQq/5a
-	 f6hRp2QBAn8u0CLETmgozsgJIIFxD2D0dCebv0F3dxXoYTTUOxstDilVcmZB1AMOPh
-	 6jpd6ksvbqCVUIOZe5efTiPqgd26GtwAsKEp2BHc=
+	b=MUDnqoru+J7cHGo7fnI5fuLvwxm2/e/gJa4Ep92yGGRqIgHvBEGdt6tsS85mB24ty
+	 al7wLm1+LLl5Ugu0aZK/mEvwKPn9K57aoO2Yr47kvSQ7+frjUiX9QOHMqrrLz0tuaW
+	 Y+sNmo0251ff2TOkUawZWYaV6nvK1006PARIqomY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfJ0Q44 (ORCPT
+        id S1727788AbfJ0Q6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 12:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 12:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727237AbfJ0Q44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 12:56:56 -0400
+        id S1727077AbfJ0Q6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 12:58:17 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368592064A;
-        Sun, 27 Oct 2019 16:56:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D6EB20679;
+        Sun, 27 Oct 2019 16:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572195415;
-        bh=gHohMleIoFYwg0z0pHAPsLAHFJMdlj1UdYdL+y5+OcM=;
+        s=default; t=1572195496;
+        bh=pll53aE69hNh/m9+0yjyt0oK8R/ifUVvZeFh6O6x0ZU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EYmFXaVC00BvSUJ4Fj1jDi8uRsGQEEGj62V6NGeMLkZDBHymGY5n/e+8H1jRhMw5d
-         aewHHfadBGFlzmNph+CSfHyulH5oriLcGkjFPnBhVdxWB7i5fupaPULvlvy2UVzHTD
-         jPD0UK1cOa3JeqaKk7MdYbRxz/aKD0t1GH6iKZpw=
-Date:   Sun, 27 Oct 2019 16:56:51 +0000
+        b=CoJhD2lx+d2js2/l6XApHESbsgX4LN5CwSVt831hukm+28D3BUBwVmoY15WJh3DpI
+         5suwFYnGxih1+pV0XT7UNiHbgB8SJ5/1+ERw6ggd0UVH86QZ7MqXk2zV6+mfkTTvPy
+         o51pcTVLJHQbePIQDUomgD4SjhkhSvUzH8BzB/qs=
+Date:   Sun, 27 Oct 2019 16:58:13 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jack Andersen <jackoalan@gmail.com>
-Subject: Re: [PATCH] iio: dln2-adc: fix iio_triggered_buffer_postenable()
- position
-Message-ID: <20191027165651.1da18263@archlinux>
-In-Reply-To: <20191023082634.18195-1-alexandru.ardelean@analog.com>
-References: <20191023082634.18195-1-alexandru.ardelean@analog.com>
+        Matt Ranostay <matt.ranostay@konsulko.com>
+Subject: Re: [PATCH] iio: hdc100x: fix
+ iio_triggered_buffer_{predisable,postenable} positions
+Message-ID: <20191027165813.5a5b0519@archlinux>
+In-Reply-To: <20191023082714.18681-1-alexandru.ardelean@analog.com>
+References: <20191023082714.18681-1-alexandru.ardelean@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,97 +58,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2019 11:26:34 +0300
+On Wed, 23 Oct 2019 11:27:14 +0300
 Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
 > The iio_triggered_buffer_postenable() hook should be called first to
-> attach the poll function. The iio_triggered_buffer_predisable() hook is
-> called last (as is it should).
+> attach the poll function and the iio_triggered_buffer_predisable() hook
+> should be called last in the predisable hook.
 > 
-> This change moves iio_triggered_buffer_postenable() to be called first. It
-> adds iio_triggered_buffer_predisable() on the error paths of the postenable
-> hook.
-> For the predisable hook, some code-paths have been changed to make sure
-> that the iio_triggered_buffer_predisable() hook gets called in case there
-> is an error before it.
+> This change updates the driver to attach/detach the poll func in the
+> correct order.
 > 
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-+CC Jack who wrote the driver.
+Seems fine, but should have cc'd Matt and I'd like to give him time
+to take a quick look.
 
-Looks fine to me, but I always like these to sit for a while and ideally get
-review from the authors / maintainers of the drivers.
++CC Matt.
 
 Thanks,
 
 Jonathan
 
 > ---
->  drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
+>  drivers/iio/humidity/hdc100x.c | 19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
-> index 5fa78c273a25..65c7c9329b1c 100644
-> --- a/drivers/iio/adc/dln2-adc.c
-> +++ b/drivers/iio/adc/dln2-adc.c
-> @@ -524,6 +524,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  	u16 conflict;
->  	unsigned int trigger_chan;
+> diff --git a/drivers/iio/humidity/hdc100x.c b/drivers/iio/humidity/hdc100x.c
+> index bfe1cdb16846..963ff043eecf 100644
+> --- a/drivers/iio/humidity/hdc100x.c
+> +++ b/drivers/iio/humidity/hdc100x.c
+> @@ -278,31 +278,34 @@ static int hdc100x_buffer_postenable(struct iio_dev *indio_dev)
+>  	struct hdc100x_data *data = iio_priv(indio_dev);
+>  	int ret;
 >  
 > +	ret = iio_triggered_buffer_postenable(indio_dev);
 > +	if (ret)
 > +		return ret;
 > +
->  	mutex_lock(&dln2->mutex);
->  
->  	/* Enable ADC */
-> @@ -537,6 +541,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  				(int)conflict);
->  			ret = -EBUSY;
->  		}
+>  	/* Buffer is enabled. First set ACQ Mode, then attach poll func */
+>  	mutex_lock(&data->lock);
+>  	ret = hdc100x_update_config(data, HDC100X_REG_CONFIG_ACQ_MODE,
+>  				    HDC100X_REG_CONFIG_ACQ_MODE);
+>  	mutex_unlock(&data->lock);
+>  	if (ret)
+> -		return ret;
 > +		iio_triggered_buffer_predisable(indio_dev);
->  		return ret;
->  	}
->  
-> @@ -550,6 +555,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  		mutex_unlock(&dln2->mutex);
->  		if (ret < 0) {
->  			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-> +			iio_triggered_buffer_predisable(indio_dev);
->  			return ret;
->  		}
->  	} else {
-> @@ -557,12 +563,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
->  		mutex_unlock(&dln2->mutex);
->  	}
 >  
 > -	return iio_triggered_buffer_postenable(indio_dev);
-> +	return 0;
+> +	return ret;
 >  }
 >  
->  static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+>  static int hdc100x_buffer_predisable(struct iio_dev *indio_dev)
 >  {
+>  	struct hdc100x_data *data = iio_priv(indio_dev);
 > -	int ret;
-> +	int ret, ret2;
->  	struct dln2_adc *dln2 = iio_priv(indio_dev);
->  
->  	mutex_lock(&dln2->mutex);
-> @@ -577,12 +583,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
->  	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
->  
->  	mutex_unlock(&dln2->mutex);
-> -	if (ret < 0) {
-> +	if (ret < 0)
->  		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
+> -
+> -	/* First detach poll func, then reset ACQ mode. OK to disable buffer */
+> -	ret = iio_triggered_buffer_predisable(indio_dev);
+> -	if (ret)
 > -		return ret;
-> -	}
+> +	int ret, ret2;
 >  
-> -	return iio_triggered_buffer_predisable(indio_dev);
+>  	mutex_lock(&data->lock);
+>  	ret = hdc100x_update_config(data, HDC100X_REG_CONFIG_ACQ_MODE, 0);
+>  	mutex_unlock(&data->lock);
+>  
 > +	ret2 = iio_triggered_buffer_predisable(indio_dev);
 > +	if (ret == 0)
 > +		ret = ret2;
 > +
-> +	return ret;
+>  	return ret;
 >  }
 >  
->  static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
 
