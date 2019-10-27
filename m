@@ -2,55 +2,59 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7A9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F95CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9B5205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CA5205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210765;
-	bh=0d5MsTI66IF7v3sAx2BAR91jhVTzfEEYisC3gIb81Do=;
+	s=default; t=1572210767;
+	bh=HqvXM5KNaKG/zgmqzl+/ZTz93tY+4j8tnfWyNVjau/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ur6Jv7yRpHHmbVoK8iOW5Sy6I9UAqtZRzjam+FioD2COzNgrh0wF/h7yXf+hKPZdE
-	 xxDSH9R8sK5rm9/QcKdL6vdg/Or5x18XiGcgXDoPmdPrOtFlSHvY3vaKRbfrzM5zra
-	 e4HBH9+zmKMi1e1jtuVvy6R+Plskn/jBa0qRtfiw=
+	b=CS+AWcsh/90zfJnygmNAzyQbO8s8iJSaWzTYEmEAv96GElf2o3se3wCBchq7qLQ0V
+	 4o0iwBYqMp82brd2uw/7j/lItuntRYwY1Eg1x3TaRbjwLiV79iKGCJSsq5Qr0cC6TT
+	 DD22BS1mDEXRQxvLYs2LlZ0TMbG0iDJKu7jbSHHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbfJ0VMo (ORCPT
+        id S1730105AbfJ0VMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59556 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729052AbfJ0VMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:41 -0400
+        id S1730096AbfJ0VMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:44 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F75B2064A;
-        Sun, 27 Oct 2019 21:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14F9F2064A;
+        Sun, 27 Oct 2019 21:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210760;
-        bh=0d5MsTI66IF7v3sAx2BAR91jhVTzfEEYisC3gIb81Do=;
+        s=default; t=1572210763;
+        bh=HqvXM5KNaKG/zgmqzl+/ZTz93tY+4j8tnfWyNVjau/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oTYVDAEYpw0gy6QQ+hGUzN+AM5srqnakgKjIUyHaUuv14UtKj3Ay5vCTszlAxCcbR
-         EuHznTTBYvU2M5OSGpwbbAFMZao9EVHSWE3/vxMOnw/VWDQTG1fGR58pP+L+9HENXy
-         E33JPpTU32VkV+Llt3FzuGCMlB+5RrbpvASSMXG8=
+        b=FXQyzCvjkCR4r066xEKjLxF9qOW0jo5uNgkwfipGGauzuJUy9fsb3gGHV8kx9f1D7
+         i2sFMN8MSfydDGIwX0/JabbFTcqjiPIEDa3euONrBAk/vzKPgF1RAN6SRHhIxVmNwb
+         IKdeResspnYoNq+ZXVEW2ln7WqPhlOOxAvWCjvIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 4.14 096/119] drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
-Date:   Sun, 27 Oct 2019 22:01:13 +0100
-Message-Id: <20191027203348.712894177@linuxfoundation.org>
+        stable@vger.kernel.org, Balbir Singh <sblbir@amzn.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/93] nvme-pci: Fix a race in controller removal
+Date:   Sun, 27 Oct 2019 22:00:13 +0100
+Message-Id: <20191027203251.779816158@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
-References: <20191027203259.948006506@linuxfoundation.org>
+In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
+References: <20191027203251.029297948@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,35 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Balbir Singh <sblbir@amzn.com>
 
-commit 11bcf5f78905b90baae8fb01e16650664ed0cb00 upstream.
+[ Upstream commit b224726de5e496dbf78147a66755c3d81e28bdd2 ]
 
-Another panel that needs 6BPC quirk.
+User space programs like udevd may try to read to partitions at the
+same time the driver detects a namespace is unusable, and may deadlock
+if revalidate_disk() is called while such a process is waiting to
+enter the frozen queue. On detecting a dead namespace, move the disk
+revalidate after unblocking dispatchers that may be holding bd_butex.
 
-BugLink: https://bugs.launchpad.net/bugs/1819968
-Cc: <stable@vger.kernel.org> # v4.8+
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190402033037.21877-1-kai.heng.feng@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+changelog Suggested-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Balbir Singh <sblbir@amzn.com>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nvme/host/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -164,6 +164,9 @@ static const struct edid_quirk {
- 	/* Medion MD 30217 PG */
- 	{ "MED", 0x7b8, EDID_QUIRK_PREFER_LARGE_75 },
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index ae0b01059fc6d..5d0f99bcc987f 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -111,10 +111,13 @@ static void nvme_set_queue_dying(struct nvme_ns *ns)
+ 	 */
+ 	if (!ns->disk || test_and_set_bit(NVME_NS_DEAD, &ns->flags))
+ 		return;
+-	revalidate_disk(ns->disk);
+ 	blk_set_queue_dying(ns->queue);
+ 	/* Forcibly unquiesce queues to avoid blocking dispatch */
+ 	blk_mq_unquiesce_queue(ns->queue);
++	/*
++	 * Revalidate after unblocking dispatchers that may be holding bd_butex
++	 */
++	revalidate_disk(ns->disk);
+ }
  
-+	/* Lenovo G50 */
-+	{ "SDC", 18514, EDID_QUIRK_FORCE_6BPC },
-+
- 	/* Panel in Samsung NP700G7A-S01PL notebook reports 6bpc */
- 	{ "SEC", 0xd033, EDID_QUIRK_FORCE_8BPC },
- 
+ static void nvme_queue_scan(struct nvme_ctrl *ctrl)
+-- 
+2.20.1
+
 
 
