@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D09CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA42CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497F42070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F5D205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211256;
-	bh=MlG/nRE6rDHiPOrTuZonlQNH0xqLGTMOppwMOOhlxfg=;
+	s=default; t=1572211260;
+	bh=PoIO/1DhDvLFSiduFsiNLvyY8C1ess2wQO00EFowzMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rh0OZWpZMgIebBooJ2ws23qRGAbek9c8Igwd/wKONvHCcW3q8MkZZMrC+NR8RfBYZ
-	 Y0Gp8cX72oXmUSg1nbkdrT68/kOLYtufPh9TZQHEMMsqsdVs9HXuzARkcANfIjODNs
-	 D6G7URC5QVB/yLM351iMTjArlHQ2zRtXXoni8vWc=
+	b=iIJ6YwF/z1zfjtRU44PrhCScqxsE6boSKvOBaHpAolQfzu7EDdEj30SO8cfX5pj//
+	 CYX8mwY5nRi+ToryZt5CzXflR5smtanGsCv1NBDb6uRek73EPNaeH0+znJN2bRLF2v
+	 6wvdxMeu7kIZrpUBQchUtlDSIrRunuy1UjWscieo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbfJ0VUz (ORCPT
+        id S1731822AbfJ0VVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731789AbfJ0VUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:20:51 -0400
+        id S1731806AbfJ0VUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:20:55 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72126205C9;
-        Sun, 27 Oct 2019 21:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B88C2070B;
+        Sun, 27 Oct 2019 21:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211251;
-        bh=MlG/nRE6rDHiPOrTuZonlQNH0xqLGTMOppwMOOhlxfg=;
+        s=default; t=1572211254;
+        bh=PoIO/1DhDvLFSiduFsiNLvyY8C1ess2wQO00EFowzMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r8H+DouQm4Zae8ydsBRfEYg1CzAOgxLUda8I2wagYE75I+Wkm5fFsXG5wlU7hQZWI
-         5vVy2FgMR5nTHWTYA+lruCjFUC94nad5Pr8IeNVStwnrgKk7OOAkYnIBBfc92ScQBV
-         4FzuWSQvV8NiW8cd5wj6GVINlo2HI87pPi/1k1aM=
+        b=SpLR7r+3nw7ePkN+RPRJJ33ohna6e76QiCjLrCCMtQfOdrm75JfDXhoflFYB/GCF6
+         CKQvYPi8Ioj3PoXjFsbGk0RkQ2wZG9Yzl40EIL0Wdi0oC++GToVXTXdIvyY2gUVZ4M
+         nYdnovPhdAEcYzTBSkcOy2HiJ2uQsTDW9fPovFQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
         Igor Russkikh <igor.russkikh@aquantia.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 083/197] net: aquantia: do not pass lro session with invalid tcp checksum
-Date:   Sun, 27 Oct 2019 22:00:01 +0100
-Message-Id: <20191027203356.188185690@linuxfoundation.org>
+Subject: [PATCH 5.3 084/197] net: aquantia: correctly handle macvlan and multicast coexistence
+Date:   Sun, 27 Oct 2019 22:00:02 +0100
+Message-Id: <20191027203356.250906373@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -63,44 +63,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 
-[ Upstream commit d08b9a0a3ebdf71b0aabe576c7dd48e57e80e0f0 ]
+[ Upstream commit 9f051db566da1e8110659ab4ab188af1c2510bb4 ]
 
-Individual descriptors on LRO TCP session should be checked
-for CRC errors. It was discovered that HW recalculates
-L4 checksums on LRO session and does not break it up on bad L4
-csum.
+macvlan and multicast handling is now mixed up.
+The explicit issue is that macvlan interface gets broken (no traffic)
+after clearing MULTICAST flag on the real interface.
 
-Thus, driver should aggregate HW LRO L4 statuses from all individual
-buffers of LRO session and drop packet if one of the buffers has bad
-L4 checksum.
+We now do separate logic and consider both ALLMULTI and MULTICAST
+flags on the device.
 
-Fixes: f38f1ee8aeb2 ("net: aquantia: check rx csum for all packets in LRO session")
+Fixes: 11ba961c9161 ("net: aquantia: Fix IFF_ALLMULTI flag functionality")
 Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_main.c          |    4 -
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c           |   32 +++++++-------
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c |    7 +--
+ 3 files changed, 21 insertions(+), 22 deletions(-)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-@@ -313,6 +313,7 @@ int aq_ring_rx_clean(struct aq_ring_s *s
- 					break;
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_main.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
+@@ -194,9 +194,7 @@ static void aq_ndev_set_multicast_settin
+ {
+ 	struct aq_nic_s *aq_nic = netdev_priv(ndev);
  
- 				buff->is_error |= buff_->is_error;
-+				buff->is_cso_err |= buff_->is_cso_err;
+-	aq_nic_set_packet_filter(aq_nic, ndev->flags);
+-
+-	aq_nic_set_multicast_list(aq_nic, ndev);
++	(void)aq_nic_set_multicast_list(aq_nic, ndev);
+ }
  
- 			} while (!buff_->is_eop);
+ static int aq_ndo_vlan_rx_add_vid(struct net_device *ndev, __be16 proto,
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -631,9 +631,12 @@ err_exit:
  
-@@ -320,7 +321,7 @@ int aq_ring_rx_clean(struct aq_ring_s *s
- 				err = 0;
- 				goto err_exit;
- 			}
--			if (buff->is_error) {
-+			if (buff->is_error || buff->is_cso_err) {
- 				buff_ = buff;
- 				do {
- 					next_ = buff_->next,
+ int aq_nic_set_multicast_list(struct aq_nic_s *self, struct net_device *ndev)
+ {
+-	unsigned int packet_filter = self->packet_filter;
++	const struct aq_hw_ops *hw_ops = self->aq_hw_ops;
++	struct aq_nic_cfg_s *cfg = &self->aq_nic_cfg;
++	unsigned int packet_filter = ndev->flags;
+ 	struct netdev_hw_addr *ha = NULL;
+ 	unsigned int i = 0U;
++	int err = 0;
+ 
+ 	self->mc_list.count = 0;
+ 	if (netdev_uc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
+@@ -641,29 +644,26 @@ int aq_nic_set_multicast_list(struct aq_
+ 	} else {
+ 		netdev_for_each_uc_addr(ha, ndev) {
+ 			ether_addr_copy(self->mc_list.ar[i++], ha->addr);
+-
+-			if (i >= AQ_HW_MULTICAST_ADDRESS_MAX)
+-				break;
+ 		}
+ 	}
+ 
+-	if (i + netdev_mc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
+-		packet_filter |= IFF_ALLMULTI;
+-	} else {
+-		netdev_for_each_mc_addr(ha, ndev) {
+-			ether_addr_copy(self->mc_list.ar[i++], ha->addr);
+-
+-			if (i >= AQ_HW_MULTICAST_ADDRESS_MAX)
+-				break;
++	cfg->is_mc_list_enabled = !!(packet_filter & IFF_MULTICAST);
++	if (cfg->is_mc_list_enabled) {
++		if (i + netdev_mc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
++			packet_filter |= IFF_ALLMULTI;
++		} else {
++			netdev_for_each_mc_addr(ha, ndev) {
++				ether_addr_copy(self->mc_list.ar[i++],
++						ha->addr);
++			}
+ 		}
+ 	}
+ 
+ 	if (i > 0 && i <= AQ_HW_MULTICAST_ADDRESS_MAX) {
+-		packet_filter |= IFF_MULTICAST;
+ 		self->mc_list.count = i;
+-		self->aq_hw_ops->hw_multicast_list_set(self->aq_hw,
+-						       self->mc_list.ar,
+-						       self->mc_list.count);
++		err = hw_ops->hw_multicast_list_set(self->aq_hw,
++						    self->mc_list.ar,
++						    self->mc_list.count);
+ 	}
+ 	return aq_nic_set_packet_filter(self, packet_filter);
+ }
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -818,14 +818,15 @@ static int hw_atl_b0_hw_packet_filter_se
+ 				     cfg->is_vlan_force_promisc);
+ 
+ 	hw_atl_rpfl2multicast_flr_en_set(self,
+-					 IS_FILTER_ENABLED(IFF_ALLMULTI), 0);
++					 IS_FILTER_ENABLED(IFF_ALLMULTI) &&
++					 IS_FILTER_ENABLED(IFF_MULTICAST), 0);
+ 
+ 	hw_atl_rpfl2_accept_all_mc_packets_set(self,
+-					       IS_FILTER_ENABLED(IFF_ALLMULTI));
++					      IS_FILTER_ENABLED(IFF_ALLMULTI) &&
++					      IS_FILTER_ENABLED(IFF_MULTICAST));
+ 
+ 	hw_atl_rpfl2broadcast_en_set(self, IS_FILTER_ENABLED(IFF_BROADCAST));
+ 
+-	cfg->is_mc_list_enabled = IS_FILTER_ENABLED(IFF_MULTICAST);
+ 
+ 	for (i = HW_ATL_B0_MAC_MIN; i < HW_ATL_B0_MAC_MAX; ++i)
+ 		hw_atl_rpfl2_uc_flr_en_set(self,
 
 
