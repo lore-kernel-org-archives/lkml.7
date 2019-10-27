@@ -2,191 +2,98 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7153FCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 10:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B37CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 10:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B0B21E6F
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 10:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXSrnSic"
+	by mail.kernel.org (Postfix) with ESMTP id 8492E20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 10:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572171463;
+	bh=1/GtICbB1QJ08IPcfmlm4myAOcU2vLpne1WtR9Iw6ts=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MG4w9ijf0fnKzrJGjOIidcYNSfGhca4nZbegxKfY/17YPxuPoWWlAEaX/COqqt3ds
+	 +eAnT+MKS7i5xexKyHMyR0Ol5Rhlfta+MFZO3XvY6Hiobk55D+DCVFlYAjNLqvgqOm
+	 t8DVgtQ489/fMJ/ADlDIyA5QOAcvFPaIfoSGq05k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfJ0KNi (ORCPT
+        id S1726780AbfJ0KRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 06:13:38 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40739 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbfJ0KNi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 06:13:38 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o28so6847314wro.7;
-        Sun, 27 Oct 2019 03:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3IpxudYqh0cSrXHsSd20R7gPXReXwAlu/vXTGneJYeA=;
-        b=hXSrnSicmffaawvfQsBwMScW37guK9vJsdCcRiACwyis734sAiZI/nTCvDoOIDsET7
-         TxtFjanFZ02nUA7cHDwWPIFp3Wx9wPk9pHfz4krCdEpKEoPX88wY3FMAVOWGpc/OX7B7
-         Bh1E0NNOMzTeVp4Ue0NCazljr31u3LzQ5gMLo8SsI4wQzZaKYBiglONEya/fahW+Ur24
-         LYh1aPSCIPEnF5yPeMBKq7cfSMD04Tn75BpyUpRxCuL7HuhYqTCa0qEi32R38iOoOK4r
-         CEYbDUa53uUuTladP7ghiETvoYMGUus48sJzOtcbbKyTm+HJp9KLFhdzkdxw26oeLZoq
-         lZSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3IpxudYqh0cSrXHsSd20R7gPXReXwAlu/vXTGneJYeA=;
-        b=ox4chG7pKQBHEolvO+W9gW2Uq3l8sqTxRto1eYv1NAIgCPj8pESX8BhgFpEsRcovKt
-         5WjB98wI6UClcj3YhhqhjPFHB/f64zAIKBWliuX6roVCjnOHyD181q+TagAZ3xkVF5zM
-         Q6Izx/olCsfwyLpCMuB03O9CQE6PnaqlhQjhmps3/GmMzotnenLPWEGOFuDAZYII6IcA
-         BmTwbyYeez2wV5PI68JzGHzQg1vs15gpibhXE6ICHOz/P5gfNrDdp6PfE/b5TNP6asmU
-         0B6qSobEDYBXnUdCcWQWgg3eoBat2fla2AutOO63OwPN6kyGyDC4sxb7qDPZrGprwrho
-         O7Ww==
-X-Gm-Message-State: APjAAAVbHT3B1pvGatdDSVNX8cEzvcdWA34zebHFoA89/FC5Xd18XF/p
-        jZhtTy4PAUxtL4YPcifgTxA=
-X-Google-Smtp-Source: APXvYqw1cxLvV4/3XED3x2mClTOpoL5pylt99SzhNdORtAzzBZRNtAnqcjg/6X+pCOpQ4725HtypWQ==
-X-Received: by 2002:a5d:4589:: with SMTP id p9mr10044913wrq.397.1572171214637;
-        Sun, 27 Oct 2019 03:13:34 -0700 (PDT)
-Received: from gmail.com (host159-41-dynamic.116-80-r.retail.telecomitalia.it. [80.116.41.159])
-        by smtp.gmail.com with ESMTPSA id d199sm8235130wmd.35.2019.10.27.03.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 03:13:33 -0700 (PDT)
-Date:   Sun, 27 Oct 2019 11:12:45 +0100
-From:   Beniamino Galvani <b.galvani@gmail.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: i2c: meson: convert to yaml
-Message-ID: <20191027101245.GA2194@gmail.com>
-References: <20191021140053.9525-1-narmstrong@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191021140053.9525-1-narmstrong@baylibre.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Sun, 27 Oct 2019 06:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbfJ0KRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 06:17:41 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55B66205C9;
+        Sun, 27 Oct 2019 10:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572171460;
+        bh=1/GtICbB1QJ08IPcfmlm4myAOcU2vLpne1WtR9Iw6ts=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FMnlGwZWVBSvgfAhsWpuI8j3qxhrKgdjEWUTs1k5EeL2bX14jcHRCvErRcZ4gOE2T
+         JKokAHe/xHMocxAfjtJhRmfXAQ4wAAAZY3Y94aR8kXojAUt2RLgCJn8DVf7lNwBOKq
+         EfXLKG6WtLcMz1d40S+JguVm/LO4yAu3xTsJ0raU=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
+Date:   Sun, 27 Oct 2019 12:17:31 +0200
+Message-Id: <1572171452-7958-1-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 04:00:53PM +0200, Neil Armstrong wrote:
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Amlogic I2C Controller over to YAML schemas.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Acked-by: Beniamino Galvani <b.galvani@gmail.com>
+Hi,
 
+The patch below aims to allow applications to create mappins that have
+pages visible only to the owning process. Such mappings could be used to
+store secrets so that these secrets are not visible neither to other
+processes nor to the kernel.
 
-> Cc: Beniamino Galvani <b.galvani@gmail.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/i2c/amlogic,meson6-i2c.yaml      | 53 +++++++++++++++++++
->  .../devicetree/bindings/i2c/i2c-meson.txt     | 30 -----------
->  2 files changed, 53 insertions(+), 30 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-meson.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml b/Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml
-> new file mode 100644
-> index 000000000000..49cad273c8e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/amlogic,meson6-i2c.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/i2c/amlogic,meson6-i2c.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson I2C Controller
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +  - Beniamino Galvani <b.galvani@gmail.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson6-i2c # Meson6, Meson8 and compatible SoCs
-> +      - amlogic,meson-gxbb-i2c # GXBB and compatible SoCs
-> +      - amlogic,meson-axg-i2c # AXG and compatible SoCs
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +examples:
-> +  - |
-> +    i2c@c8100500 {
-> +        compatible = "amlogic,meson6-i2c";
-> +        reg = <0xc8100500 0x20>;
-> +        interrupts = <92>;
-> +        clocks = <&clk81>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        eeprom@52 {
-> +            compatible = "atmel,24c32";
-> +            reg = <0x52>;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-meson.txt b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
-> deleted file mode 100644
-> index 13d410de077c..000000000000
-> --- a/Documentation/devicetree/bindings/i2c/i2c-meson.txt
-> +++ /dev/null
-> @@ -1,30 +0,0 @@
-> -Amlogic Meson I2C controller
-> -
-> -Required properties:
-> - - compatible: must be:
-> -	"amlogic,meson6-i2c" for Meson8 and compatible SoCs
-> -	"amlogic,meson-gxbb-i2c" for GXBB and compatible SoCs
-> -	"amlogic,meson-axg-i2c"for AXG and compatible SoCs
-> -
-> - - reg: physical address and length of the device registers
-> - - interrupts: a single interrupt specifier
-> - - clocks: clock for the device
-> - - #address-cells: should be <1>
-> - - #size-cells: should be <0>
-> -
-> -For details regarding the following core I2C bindings see also i2c.txt.
-> -
-> -Optional properties:
-> -- clock-frequency: the desired I2C bus clock frequency in Hz; in
-> -  absence of this property the default value is used (100 kHz).
-> -
-> -Examples:
-> -
-> -	i2c@c8100500 {
-> -		compatible = "amlogic,meson6-i2c";
-> -		reg = <0xc8100500 0x20>;
-> -		interrupts = <0 92 1>;
-> -		clocks = <&clk81>;
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -	};
-> -- 
-> 2.22.0
-> 
+I've only tested the basic functionality, the changes should be verified
+against THP/migration/compaction. Yet, I'd appreciate early feedback.
+
+Mike Rapoport (1):
+  mm: add MAP_EXCLUSIVE to create exclusive user mappings
+
+ arch/x86/mm/fault.c                    | 14 ++++++++++
+ fs/proc/task_mmu.c                     |  1 +
+ include/linux/mm.h                     |  9 +++++++
+ include/linux/page-flags.h             |  7 +++++
+ include/linux/page_excl.h              | 49 ++++++++++++++++++++++++++++++++++
+ include/trace/events/mmflags.h         |  9 ++++++-
+ include/uapi/asm-generic/mman-common.h |  1 +
+ kernel/fork.c                          |  3 ++-
+ mm/Kconfig                             |  3 +++
+ mm/gup.c                               |  8 ++++++
+ mm/memory.c                            |  3 +++
+ mm/mmap.c                              | 16 +++++++++++
+ mm/page_alloc.c                        |  5 ++++
+ 13 files changed, 126 insertions(+), 2 deletions(-)
+ create mode 100644 include/linux/page_excl.h
+
+-- 
+2.7.4
+
