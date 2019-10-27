@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E468CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1490CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D39E222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F45D222CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211589;
-	bh=hbpNcqxQDK0OWpfQVYW4AhZUFNc95v1G8MDdnovzsCQ=;
+	s=default; t=1572211592;
+	bh=2dkV0I/ttTsDq2uK0syJ7uNnKrFVDYIZq51ZA9hvSWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hhVDtX6hi8Z8m6Ml5e5sLdpeGhBk67Z2M6s2BCF2c/iggGNgsLYdjrwKBM+2x+HSX
-	 3Obo+pTAMUUsvX+rx7S2MPiKjVQOTyob5kDAUJ40GltANeVMGpu+w+8XaoUEXhKzAH
-	 ib502T3UMagcI+EfpEO883nL51CmfKBL+UBy/UmI=
+	b=BMU3MLhEF3nLEBOlYXj9PnkRTVb2NPOxAxANomkc0qmATY4fTqsOrxfiNYlEaC9eY
+	 BtqeWEgSkLHGedDTAqUGjWPPUa0MHdqdN2wvYb26vGVLEsPw8LPk4Mhu5jlwt5Nj4u
+	 sBnzVvtJgBI1b1MYOvYYwvoJh+GiMU/yQMIILFLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732941AbfJ0V01 (ORCPT
+        id S1732950AbfJ0V0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48256 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732303AbfJ0V0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:26:20 -0400
+        id S1732928AbfJ0V00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:26:26 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBAAF21783;
-        Sun, 27 Oct 2019 21:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FDAD21E6F;
+        Sun, 27 Oct 2019 21:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211579;
-        bh=hbpNcqxQDK0OWpfQVYW4AhZUFNc95v1G8MDdnovzsCQ=;
+        s=default; t=1572211585;
+        bh=2dkV0I/ttTsDq2uK0syJ7uNnKrFVDYIZq51ZA9hvSWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SaRpvUvc3Lya9YQE0mh8XKsdviPhAFyCX5L4u3cXX4EpYoh3McPaGfWb3e8XvuN/0
-         InWCoG9rEJt+KVKLdMxjVibjRoJwmy7CI4MsW08kEhXn/36jT1EhKfm4EyDnRbQOVl
-         No1tjY93f+1C6QWtTPQP4/9uq7LMsm7viFkD58nQ=
+        b=w/ORJfyfLyq+8SLsKV8YB8wl6lbiE9uC5Q8awLZN/RgRqr9XP/Xao9ZrpRAlZS4k8
+         AifGPNo166YOzSWAV8UxAXKXIDlelCQQS4YU+tcOh7eVRRTVb9c6ZK/AX43tfMuQpN
+         6voQTXHuAFP6uvJRBYyciJsalRcW35NsDpz57oEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.3 185/197] Btrfs: check for the full sync flag while holding the inode lock during fsync
-Date:   Sun, 27 Oct 2019 22:01:43 +0100
-Message-Id: <20191027203406.473024332@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.3 187/197] btrfs: tracepoints: Fix bad entry members of qgroup events
+Date:   Sun, 27 Oct 2019 22:01:45 +0100
+Message-Id: <20191027203406.582477867@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,97 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit ba0b084ac309283db6e329785c1dc4f45fdbd379 upstream.
+commit 1b2442b4ae0f234daeadd90e153b466332c466d8 upstream.
 
-We were checking for the full fsync flag in the inode before locking the
-inode, which is racy, since at that that time it might not be set but
-after we acquire the inode lock some other task set it. One case where
-this can happen is on a system low on memory and some concurrent task
-failed to allocate an extent map and therefore set the full sync flag on
-the inode, to force the next fsync to work in full mode.
+[BUG]
+For btrfs:qgroup_meta_reserve event, the trace event can output garbage:
 
-A consequence of missing the full fsync flag set is hitting the problems
-fixed by commit 0c713cbab620 ("Btrfs: fix race between ranged fsync and
-writeback of adjacent ranges"), BUG_ON() when dropping extents from a log
-tree, hitting assertion failures at tree-log.c:copy_items() or all sorts
-of weird inconsistencies after replaying a log due to file extents items
-representing ranges that overlap.
+  qgroup_meta_reserve: 9c7f6acc-b342-4037-bc47-7f6e4d2232d7: refroot=5(FS_TREE) type=DATA diff=2
+  qgroup_meta_reserve: 9c7f6acc-b342-4037-bc47-7f6e4d2232d7: refroot=5(FS_TREE) type=0x258792 diff=2
 
-So just move the check such that it's done after locking the inode and
-before starting writeback again.
+The @type can be completely garbage, as DATA type is not possible for
+trace_qgroup_meta_reserve() trace event.
 
-Fixes: 0c713cbab620 ("Btrfs: fix race between ranged fsync and writeback of adjacent ranges")
-CC: stable@vger.kernel.org # 5.2+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+[CAUSE]
+Ther are several problems related to qgroup trace events:
+- Unassigned entry member
+  Member entry::type of trace_qgroup_update_reserve() and
+  trace_qgourp_meta_reserve() is not assigned
+
+- Redundant entry member
+  Member entry::type is completely useless in
+  trace_qgroup_meta_convert()
+
+Fixes: 4ee0d8832c2e ("btrfs: qgroup: Update trace events for metadata reservation")
+CC: stable@vger.kernel.org # 4.10+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/file.c |   36 +++++++++++++++++-------------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+ include/trace/events/btrfs.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2067,25 +2067,7 @@ int btrfs_sync_file(struct file *file, l
- 	struct btrfs_trans_handle *trans;
- 	struct btrfs_log_ctx ctx;
- 	int ret = 0, err;
--	u64 len;
+--- a/include/trace/events/btrfs.h
++++ b/include/trace/events/btrfs.h
+@@ -1687,6 +1687,7 @@ TRACE_EVENT(qgroup_update_reserve,
+ 		__entry->qgid		= qgroup->qgroupid;
+ 		__entry->cur_reserved	= qgroup->rsv.values[type];
+ 		__entry->diff		= diff;
++		__entry->type		= type;
+ 	),
  
--	/*
--	 * If the inode needs a full sync, make sure we use a full range to
--	 * avoid log tree corruption, due to hole detection racing with ordered
--	 * extent completion for adjacent ranges, and assertion failures during
--	 * hole detection.
--	 */
--	if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
--		     &BTRFS_I(inode)->runtime_flags)) {
--		start = 0;
--		end = LLONG_MAX;
--	}
--
--	/*
--	 * The range length can be represented by u64, we have to do the typecasts
--	 * to avoid signed overflow if it's [0, LLONG_MAX] eg. from fsync()
--	 */
--	len = (u64)end - (u64)start + 1;
- 	trace_btrfs_sync_file(file, datasync);
+ 	TP_printk_btrfs("qgid=%llu type=%s cur_reserved=%llu diff=%lld",
+@@ -1709,6 +1710,7 @@ TRACE_EVENT(qgroup_meta_reserve,
+ 	TP_fast_assign_btrfs(root->fs_info,
+ 		__entry->refroot	= root->root_key.objectid;
+ 		__entry->diff		= diff;
++		__entry->type		= type;
+ 	),
  
- 	btrfs_init_log_ctx(&ctx, inode);
-@@ -2112,6 +2094,19 @@ int btrfs_sync_file(struct file *file, l
- 	atomic_inc(&root->log_batch);
+ 	TP_printk_btrfs("refroot=%llu(%s) type=%s diff=%lld",
+@@ -1725,7 +1727,6 @@ TRACE_EVENT(qgroup_meta_convert,
+ 	TP_STRUCT__entry_btrfs(
+ 		__field(	u64,	refroot			)
+ 		__field(	s64,	diff			)
+-		__field(	int,	type			)
+ 	),
  
- 	/*
-+	 * If the inode needs a full sync, make sure we use a full range to
-+	 * avoid log tree corruption, due to hole detection racing with ordered
-+	 * extent completion for adjacent ranges, and assertion failures during
-+	 * hole detection. Do this while holding the inode lock, to avoid races
-+	 * with other tasks.
-+	 */
-+	if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
-+		     &BTRFS_I(inode)->runtime_flags)) {
-+		start = 0;
-+		end = LLONG_MAX;
-+	}
-+
-+	/*
- 	 * Before we acquired the inode's lock, someone may have dirtied more
- 	 * pages in the target range. We need to make sure that writeback for
- 	 * any such pages does not start while we are logging the inode, because
-@@ -2138,8 +2133,11 @@ int btrfs_sync_file(struct file *file, l
- 	/*
- 	 * We have to do this here to avoid the priority inversion of waiting on
- 	 * IO of a lower priority task while holding a transaction open.
-+	 *
-+	 * Also, the range length can be represented by u64, we have to do the
-+	 * typecasts to avoid signed overflow if it's [0, LLONG_MAX].
- 	 */
--	ret = btrfs_wait_ordered_range(inode, start, len);
-+	ret = btrfs_wait_ordered_range(inode, start, (u64)end - (u64)start + 1);
- 	if (ret) {
- 		up_write(&BTRFS_I(inode)->dio_sem);
- 		inode_unlock(inode);
+ 	TP_fast_assign_btrfs(root->fs_info,
 
 
