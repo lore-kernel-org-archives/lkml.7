@@ -2,83 +2,100 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FD8CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E67DCA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67D32070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AE321850
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 05:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572155732;
+	bh=jtBjayTTb5ZpeqPXv+78jPZ2NRE4DZyshLqrtUTXw6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=COLIfDRukrZi2zjcdNf8iqv3vAzbbln6N9YUUo1MPbIEFAseDckw7tYXsLPG468E1
+	 3mIIS40uLF4nexSmyZBonQSaCSh13+ZQlGnGdAszhWTmvHDWIzSqb5NtyA+tRXDmym
+	 acxNVt8U82t+UL+wKZfXoV3vimVElPphpnm9Tatw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbfJ0FsR (ORCPT
+        id S1726128AbfJ0Fzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 01:48:17 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:13490 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725935AbfJ0FsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 01:48:17 -0400
-X-IronPort-AV: E=Sophos;i="5.68,235,1569276000"; 
-   d="scan'208";a="408548235"
-Received: from ip-121.net-89-2-166.rev.numericable.fr (HELO hadrien) ([89.2.166.121])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 06:47:55 +0100
-Date:   Sun, 27 Oct 2019 06:47:55 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <error27@gmail.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] kernel: sys.c: Avoid copying possible padding bytes in
- copy_to_user
-In-Reply-To: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.1910270644590.3186@hadrien>
-References: <dfa331c00881d61c8ee51577a082d8bebd61805c.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 27 Oct 2019 01:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbfJ0Fzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 01:55:31 -0400
+Received: from localhost (mobile-166-176-122-39.mycingular.net [166.176.122.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 145872070B;
+        Sun, 27 Oct 2019 05:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572155730;
+        bh=jtBjayTTb5ZpeqPXv+78jPZ2NRE4DZyshLqrtUTXw6g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qli9x4PUhclzEsZxZRV3YpBo1LT67a+K6My4btjyn4ZpDsyzafbW7SPcGpF93DWXc
+         VRp/Ere+1aWRDln+T3pGKOg6M6eZK9GVsB8LA2A3tL1yzmhwF51XkAsXzkJDTdbb1x
+         z34qUacypGwLiReOHTtwogPB6UkGxNN6nbDvpqlU=
+Date:   Sun, 27 Oct 2019 00:55:28 -0500
+From:   Andy Gross <agross@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tty: serial: msm_serial: Fix flow control
+Message-ID: <20191027055528.GJ5514@hector.lan>
+Mail-Followup-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191021154616.25457-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191021154616.25457-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Oct 21, 2019 at 08:46:16AM -0700, Jeffrey Hugo wrote:
+> hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
+> Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
+> disables flow, configures the uart baudrate, and then reenables flow - at
+> which point an event is expected to be received over the uart from the
+> wcn3990.  It is observed that this event comes after the baudrate change
+> but before hci_qca re-enables flow. This is unexpected, and is a result of
+> msm_reset() being broken.
+> 
+> According to the uart_dm hardware documentation, it is recommended that
+> automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
+> hw flow control will manage RFR based on the configured watermark.  When
+> there is space to receive data, the hw will assert RFR.  When the watermark
+> is hit, the hw will de-assert RFR.
+> 
+> The hardware documentation indicates that RFR can me manually managed via
+> CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
+> de-asserts RFR.
+> 
+> msm_reset() is broken because after resetting the hardware, it
+> unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
+> the current configuration, and would undo a previous flow disable
+> operation.  It should instead de-assert RFR via RESET_RFR to block flow
+> until the hardware is reconfigured.  msm_serial should rely on the client
+> to specify that flow should be enabled, either via mctrl() or the termios
+> structure, and only assert RFR in response to those triggers.
+> 
+> Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
 
+Reviewed-by: Andy Gross <agross@kernel.org>
 
-On Sat, 26 Oct 2019, Joe Perches wrote:
+Greg, can you pick this one up?
 
-> Initialization is not guaranteed to zero padding bytes so
-> use an explicit memset instead to avoid leaking any kernel
-> content in any possible padding bytes.
-
-Here is an extract of an email that I sent to Kees at one point that left
-me unsure about what should be done about these situations:
-
-From Kees:
-
-    The only way to correctly handle this is:
-
-    memset(&instance, 0, sizeof(instance));
-    instance.one = 1;
-
-From me:
-
-Actually, this document:
-
-https://wiki.sei.cmu.edu/confluence/display/c/DCL39-C.+Avoid+information+leakage+when+passing+a+structure+across+a+trust+boundary
-
-says that memset is a "noncompliant solution".  They suggest declaring the
-structure as packed, as well as some other more unpleasant solutions.
-Their point is that 1 will be sitting in a register, and the assignment at
-least might copy the upper bytes of the register into the padding space.
-
--------------------------
-
-Is the memset solution nevertheless what is always wanted in the kernel
-when there is padding?
-
-thanks,
-julia
+Thanks,
+Andy
