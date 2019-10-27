@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A36CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6F9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277852184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F2B20717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211167;
-	bh=Htv05VN3kJsdeDZwi8YBPXw24VJr2khxFpXcM28opdU=;
+	s=default; t=1572211171;
+	bh=YgTgS2O0USdRK7NbxME+XJnlDwM7ESi57XlogKtzr1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uISCd+jZJiHV6Fn2nQaQLAVXYtoNMXO1vET75sfaiMjzCeNDTcKmtbokxIrnbFj0v
-	 9sYgrZh6Re6IY65xLek3FrZiQXejblAjsjWjc8T2t3n/ch1Jirj+hADJhgUwMApajI
-	 DXxeNBl4W6eaVTSZeivw9p4n4qCF/2dqKAlciyvA=
+	b=lZ/2XrSRN0T9RsKUVHDg1ljV3yqRZvzIxiVLIM0RuAATu40njnyqoXzQTx7/voRD0
+	 N8r8QFCfaW5MUmU2okJ+buWd8knTpcYR8lOo+NzXFBOZqeNkEarTCiDg4Rv4eAWj/E
+	 sokwvausEDMWgiTIRQpkYqSloacdO/X1d7+4iti0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731478AbfJ0VTZ (ORCPT
+        id S1731492AbfJ0VTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:19:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39666 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731452AbfJ0VTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:19:21 -0400
+        id S1731471AbfJ0VTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:24 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA2E205C9;
-        Sun, 27 Oct 2019 21:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E0A5205C9;
+        Sun, 27 Oct 2019 21:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211160;
-        bh=Htv05VN3kJsdeDZwi8YBPXw24VJr2khxFpXcM28opdU=;
+        s=default; t=1572211163;
+        bh=YgTgS2O0USdRK7NbxME+XJnlDwM7ESi57XlogKtzr1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HSMQrnDfvIVV+VVxfR6QUW2YwgsQ1+LOimr7p/a/J+u+86+rA2YRtj1vvalvr8seT
-         YhGflVISzcsoG1sZcsIadUNjXk1Orao8fi9/nAMq5CsZsaQQpOqlusvRWyIQGF1Le7
-         ZiMOgl5IlCHpXi44Lq7/fq/8vYbjUyNofNLsoT1w=
+        b=bEjg/kY6T5qkepto4+aHfBbIDSr7CTk0S7NhKaVd6r36DdBgjLtF+bletEiCJg2ZC
+         qGCCcG62toB+VOfeBlWpwl1htceDN8NA5+Zn6ZVBg2t4B6/F/zPHFBnhWGpPjHSN8N
+         9a/69fFIKORS0hwy2OClnPZbHYAAxwoHmlqbvGKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 054/197] net: phy: allow for reset line to be tied to a sleepy GPIO controller
-Date:   Sun, 27 Oct 2019 21:59:32 +0100
-Message-Id: <20191027203354.593849810@linuxfoundation.org>
+Subject: [PATCH 5.3 055/197] net: phy: fix write to mii-ctrl1000 register
+Date:   Sun, 27 Oct 2019 21:59:33 +0100
+Message-Id: <20191027203354.646387606@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,45 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Merello <andrea.merello@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit ea977d19d918324ad5b66953f051a6ed07d0a3c5 ]
+[ Upstream commit 4cf6c57e61fee954f7b7685de31b80ec26843d27 ]
 
-mdio_device_reset() makes use of the atomic-pretending API flavor for
-handling the PHY reset GPIO line.
+When userspace writes to the MII_ADVERTISE register, we update phylib's
+advertising mask and trigger a renegotiation.  However, writing to the
+MII_CTRL1000 register, which contains the gigabit advertisement, does
+neither.  This can lead to phylib's copy of the advertisement becoming
+de-synced with the values in the PHY register set, which can result in
+incorrect negotiation resolution.
 
-I found no hint that mdio_device_reset() is called from atomic context
-and indeed it uses usleep_range() since long time, so I would assume that
-it is OK to sleep there.
-
-This patch switch to gpiod_set_value_cansleep() in mdio_device_reset().
-This is relevant if e.g. the PHY reset line is tied to a I2C GPIO
-controller.
-
-This has been tested on a ZynqMP board running an upstream 4.19 kernel and
-then hand-ported on current kernel tree.
-
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Fixes: 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in genphy_read_status")
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy.c | 5 +++++
+ include/linux/mii.h   | 9 +++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
-index e282600bd83e2..c1d345c3cab35 100644
---- a/drivers/net/phy/mdio_device.c
-+++ b/drivers/net/phy/mdio_device.c
-@@ -121,7 +121,7 @@ void mdio_device_reset(struct mdio_device *mdiodev, int value)
- 		return;
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index 6b0f89369b460..0a314cf454080 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -457,6 +457,11 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
+ 							   val);
+ 				change_autoneg = true;
+ 				break;
++			case MII_CTRL1000:
++				mii_ctrl1000_mod_linkmode_adv_t(phydev->advertising,
++							        val);
++				change_autoneg = true;
++				break;
+ 			default:
+ 				/* do nothing */
+ 				break;
+diff --git a/include/linux/mii.h b/include/linux/mii.h
+index 5cd824c1c0caa..4ce8901a1af65 100644
+--- a/include/linux/mii.h
++++ b/include/linux/mii.h
+@@ -455,6 +455,15 @@ static inline void mii_lpa_mod_linkmode_lpa_t(unsigned long *lp_advertising,
+ 			 lp_advertising, lpa & LPA_LPACK);
+ }
  
- 	if (mdiodev->reset_gpio)
--		gpiod_set_value(mdiodev->reset_gpio, value);
-+		gpiod_set_value_cansleep(mdiodev->reset_gpio, value);
- 
- 	if (mdiodev->reset_ctrl) {
- 		if (value)
++static inline void mii_ctrl1000_mod_linkmode_adv_t(unsigned long *advertising,
++						   u32 ctrl1000)
++{
++	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, advertising,
++			 ctrl1000 & ADVERTISE_1000HALF);
++	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, advertising,
++			 ctrl1000 & ADVERTISE_1000FULL);
++}
++
+ /**
+  * linkmode_adv_to_lcl_adv_t
+  * @advertising:pointer to linkmode advertising
 -- 
 2.20.1
 
