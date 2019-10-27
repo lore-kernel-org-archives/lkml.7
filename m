@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1013CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C7ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF00420717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9842920717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfJ0LMn (ORCPT
+        id S1726910AbfJ0LMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 07:12:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12491 "EHLO mga02.intel.com"
+        Sun, 27 Oct 2019 07:12:46 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12497 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfJ0LMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 07:12:40 -0400
+        id S1726869AbfJ0LMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 07:12:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:39 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:42 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,236,1569308400"; 
-   d="scan'208";a="282690165"
+   d="scan'208";a="282690172"
 Received: from unknown (HELO snr.jf.intel.com) ([10.54.39.141])
-  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:37 -0700
+  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:40 -0700
 From:   Luwei Kang <luwei.kang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
@@ -39,9 +39,9 @@ Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
         peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
         namhyung@kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v1 4/8] KVM: x86: Aviod clear the PEBS counter when PEBS enabled in guest
-Date:   Sun, 27 Oct 2019 19:11:13 -0400
-Message-Id: <1572217877-26484-5-git-send-email-luwei.kang@intel.com>
+Subject: [PATCH v1 6/8] KVM: X86: MSR_IA32_PERF_CAPABILITIES MSR emulation
+Date:   Sun, 27 Oct 2019 19:11:15 -0400
+Message-Id: <1572217877-26484-7-git-send-email-luwei.kang@intel.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
 References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
@@ -50,117 +50,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduce a parameter that avoid clear the PEBS event
-counter while running in the guest. The performance counter which
-use for PEBS event can be enabled through VM-entry when PEBS is
-enabled in guest by PEBS output to Intel PT.
+Expose some bits of definition which relate with enable
+PEBS to KVM guest especially PEBS via PT feature.
 
 Signed-off-by: Luwei Kang <luwei.kang@intel.com>
 ---
- arch/x86/events/intel/core.c      | 19 +++++++++++--------
- arch/x86/events/perf_event.h      |  2 +-
- arch/x86/include/asm/perf_event.h |  5 +++--
- arch/x86/kvm/vmx/vmx.c            |  3 ++-
- 4 files changed, 17 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/kvm_host.h  |  1 +
+ arch/x86/include/asm/msr-index.h |  3 +++
+ arch/x86/kvm/vmx/vmx.c           | 14 ++++++++++++++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index fcef678..1fcc9fc 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3323,16 +3323,16 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 	return 0;
- }
- 
--struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
-+struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, bool pebs)
- {
- 	if (x86_pmu.guest_get_msrs)
--		return x86_pmu.guest_get_msrs(nr);
-+		return x86_pmu.guest_get_msrs(nr, pebs);
- 	*nr = 0;
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
- 
--static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr)
-+static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, bool pebs)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
-@@ -3340,10 +3340,13 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr)
- 	arr[0].msr = MSR_CORE_PERF_GLOBAL_CTRL;
- 	arr[0].host = x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_guest_mask;
- 	arr[0].guest = x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_host_mask;
--	if (x86_pmu.flags & PMU_FL_PEBS_ALL)
--		arr[0].guest &= ~cpuc->pebs_enabled;
--	else
--		arr[0].guest &= ~(cpuc->pebs_enabled & PEBS_COUNTER_MASK);
-+	if (!pebs) {
-+		if (x86_pmu.flags & PMU_FL_PEBS_ALL)
-+			arr[0].guest &= ~cpuc->pebs_enabled;
-+		else
-+			arr[0].guest &=
-+				~(cpuc->pebs_enabled & PEBS_COUNTER_MASK);
-+	}
- 	*nr = 1;
- 
- 	if (x86_pmu.pebs && x86_pmu.pebs_no_isolation) {
-@@ -3364,7 +3367,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr)
- 	return arr;
- }
- 
--static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr)
-+static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr, bool pebs)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_guest_switch_msr *arr = cpuc->guest_switch_msrs;
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index ecacfbf..57058fe 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -696,7 +696,7 @@ struct x86_pmu {
- 	/*
- 	 * Intel host/guest support (KVM)
- 	 */
--	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr);
-+	struct perf_guest_switch_msr *(*guest_get_msrs)(int *nr, bool pebs);
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index a987ae1..24a0ab9 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -569,6 +569,7 @@ struct kvm_vcpu_arch {
+ 	u64 ia32_xss;
+ 	u64 microcode_version;
+ 	u64 arch_capabilities;
++	u64 ia32_perf_capabilities;
  
  	/*
- 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index ee26e92..e29075a 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -322,12 +322,13 @@ struct perf_guest_switch_msr {
- 	u64 host, guest;
- };
- 
--extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr);
-+extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, bool pebs);
- extern void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap);
- extern void perf_check_microcode(void);
- extern int x86_perf_rdpmc_index(struct perf_event *event);
- #else
--static inline struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
-+static inline struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr,
-+								bool pebs)
- {
- 	*nr = 0;
- 	return NULL;
+ 	 * Paging state of the vcpu
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index d22f8d9..75c09e4 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -137,6 +137,9 @@
+ #define MSR_IA32_PEBS_ENABLE		0x000003f1
+ #define MSR_PEBS_DATA_CFG		0x000003f2
+ #define MSR_IA32_DS_AREA		0x00000600
++#define MSR_IA32_PERF_CAP_PEBS_TRAP		BIT_ULL(6)
++#define MSR_IA32_PERF_CAP_PEBS_ARCH_REG		BIT_ULL(7)
++#define MSR_IA32_PERF_CAP_PEBS_REC_FMT		(0xfULL << 8)
+ #define MSR_IA32_PERF_CAP_PEBS_OUTPUT_PT	BIT_ULL(16)
+ #define MSR_IA32_PERF_CAPABILITIES	0x00000345
+ #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e7970a2..170afde 100644
+index 6c29a57..5c4dd05 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6428,7 +6428,8 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 	int i, nr_msrs;
- 	struct perf_guest_switch_msr *msrs;
- 
--	msrs = perf_guest_get_msrs(&nr_msrs);
-+	msrs = perf_guest_get_msrs(&nr_msrs,
-+			vcpu_to_pmu(&vmx->vcpu)->pebs_enable);
- 
- 	if (!msrs)
- 		return;
+@@ -1828,6 +1828,16 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			return 1;
+ 		msr_info->data = vcpu->arch.ia32_xss;
+ 		break;
++	case MSR_IA32_PERF_CAPABILITIES:
++		if (!vmx_pdcm_supported() || !vmx_pebs_supported())
++			return 1;
++		rdmsrl(MSR_IA32_PERF_CAPABILITIES, msr_info->data);
++		msr_info->data = msr_info->data &
++			(MSR_IA32_PERF_CAP_PEBS_TRAP |
++			 MSR_IA32_PERF_CAP_PEBS_ARCH_REG |
++			 MSR_IA32_PERF_CAP_PEBS_REC_FMT |
++			 MSR_IA32_PERF_CAP_PEBS_OUTPUT_PT);
++		break;
+ 	case MSR_IA32_RTIT_CTL:
+ 		if (pt_mode != PT_MODE_HOST_GUEST)
+ 			return 1;
+@@ -2082,6 +2092,10 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		else
+ 			clear_atomic_switch_msr(vmx, MSR_IA32_XSS);
+ 		break;
++	case MSR_IA32_PERF_CAPABILITIES:
++		if (!vmx_pdcm_supported() || !vmx_pebs_supported())
++			return 1;
++		break;
+ 	case MSR_IA32_RTIT_CTL:
+ 		if ((pt_mode != PT_MODE_HOST_GUEST) ||
+ 			vmx_rtit_ctl_check(vcpu, data) ||
 -- 
 1.8.3.1
 
