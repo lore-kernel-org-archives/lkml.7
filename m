@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6B9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAF8CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89927214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FC1214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 16:18:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="efsrM2L5"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bdPbhc4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfJ0QS0 (ORCPT
+        id S1727737AbfJ0QSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 12:18:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35607 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727693AbfJ0QSV (ORCPT
+        Sun, 27 Oct 2019 12:18:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37257 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfJ0QSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 12:18:21 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v6so6706831wmj.0;
-        Sun, 27 Oct 2019 09:18:18 -0700 (PDT)
+        Sun, 27 Oct 2019 12:18:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q130so6693357wme.2;
+        Sun, 27 Oct 2019 09:18:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FLfO/KxjQrMiblT1/Pl6tSGizwnToQmABBG15vNjp4k=;
-        b=efsrM2L5u58xFefwyRkML00CgeJKs665otWTyjbA2/ddI+1FTIC5bCoiYJ3dLqCbk5
-         9Jj+1rgdcQjZvwk0HpeVxT97hjQ7QTUoH43jqmlSQt/YSq5nuymzxS3XWU8bWpvUvsU3
-         bUlNzLbT9ZGAjvdUr8mLjT7/59ebbwMRaEzIZmd+22YNY8dyhQ8OYdzvSTadFdlipOz1
-         I+jMzks8pkqYHLa28CwBBowmr68LB1OUP3W8fWAqjU636SO0ryrIdpJhwpeAYTFdCFRS
-         VQuPoAKs3/7846wSlaBTTpUcDnJGnGRqMwWKvUFqOO/I6INNbYFGwEjzMLHTG+2Mpvvn
-         /rZQ==
+        bh=+ELKKDirjp0oZPBJ44VpnYEwyvsV3MSi9kYfRjT4vis=;
+        b=bdPbhc4OqjdEq4Y+pgsjRiDeliZB157wJfKIzj+AJrpxZ6o4UT9EOSAFZVR63LQkB6
+         t4pdEo8HWxpZ43uX4pDzgpHoRw9Dq9KTQyHowOPRhNvU3/WByYQYWpCKKakGz0KQzDMd
+         661DcknhVvnOX7Q5jiY4bFIBeGjCzCC4MNkUQW4AF2VwPyZmFwqksRXVgViTztlyRpTM
+         t6UOKoq56CiYlEE4tUKLH0DPG0ptvUcs+rC+LVJyLItruxLiTFPnTsZb4evV/QaDhKAT
+         7NIVSHGZElnuTptOHZkmP6rRXb/35cnlwpwQ/q+3LwNfEC/4x4IALzM7OeJysMuHE4WD
+         MlyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FLfO/KxjQrMiblT1/Pl6tSGizwnToQmABBG15vNjp4k=;
-        b=FvII2T3J9qLMN4nifJ8Slj8GNuyPfIOXlZnxEf2KrxN472b4N91A5st4YKppBG34mI
-         Usu+e+vh7njAd0rndReEnBD6qqIRA6AGG01xZtbchyzf0E3WW8elTzOlpiuREvpYJg7b
-         IavoiUJzkwk+WE2jQvS++dk6MjzMtIntj02WpUvqCOD2FDxOgWNUR1ANk4SyhlqQcZpu
-         +1YsIHrB/ATpkEcn/Zs6hCcjVCurQOs7dhcbXktO7R5RoGxwXda+PEhTSgwDKAHtyi08
-         wWkkucKXV6bxPu3pDu09tZ9cggXcwsaOBqWXR2iC5k0e9f1nVEtf5brfV6br2pBgf3fU
-         6kjQ==
-X-Gm-Message-State: APjAAAUY+eZsp+jCGCIDeAIGKW7xg7mCcnrB8dpP7bn1jKHfaNIHcbOW
-        wHVwBfc1EXbAu/W0Qi8wKTk=
-X-Google-Smtp-Source: APXvYqxcOwu2+Gf57BhS5TKGfe523w4Dkovl72D5JIuM/RKVfzS8lFfJXOVG73aoyklxUxyiYLJVyg==
-X-Received: by 2002:a1c:4907:: with SMTP id w7mr11688747wma.62.1572193098092;
-        Sun, 27 Oct 2019 09:18:18 -0700 (PDT)
+        bh=+ELKKDirjp0oZPBJ44VpnYEwyvsV3MSi9kYfRjT4vis=;
+        b=YIbNGH8juH4uaFHRX7if3bltVmsWSeonXoDLEhkCX0DCPZ8TGAwELqswwHuPYs4VGs
+         pVgVwrY0Q+uS4hvfnZXIQJYjOUu14fuX578Sn5v5sh6apZIq7Whh3ZaOiLFP8IbkOhwt
+         dWyhqYVU60iId9be2+DDKcSSDHNNOrZlOhMGsDAlMCtnKwVptgTTzOWP1QxiY2kNMWyI
+         8odLe4eLaNVK+3YKWoSgMbpXB60mqHMDBLAh4v1J7uwbFjLQI1cQcZJ8jowZnEfxmZ01
+         s8TX9CAd70zqCr1zkeecvRY7SBmD9oZbbWkSGCBDKLhEjkEYm46pJyoqLlmBrzpYOgrG
+         mrcw==
+X-Gm-Message-State: APjAAAXOpe/DNb6vinINdZSB8KZr3LSCCrHkV25GliOyEon2DG2ylTE/
+        wwu4WxznCayUCMC+QnMGcFk=
+X-Google-Smtp-Source: APXvYqzYzg6sKc3cDWdXql+bGhHA9n8UawIXHVxcqwjHlZ0xvQiwjrziZqNi1JNlyIGoX4qHoiK1xA==
+X-Received: by 2002:a1c:1901:: with SMTP id 1mr11970983wmz.28.1572193095906;
+        Sun, 27 Oct 2019 09:18:15 -0700 (PDT)
 Received: from localhost.localdomain (p200300F133D01300428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33d0:1300:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id j14sm9585014wrj.35.2019.10.27.09.18.17
+        by smtp.googlemail.com with ESMTPSA id j14sm9585014wrj.35.2019.10.27.09.18.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 09:18:17 -0700 (PDT)
+        Sun, 27 Oct 2019 09:18:15 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     narmstrong@baylibre.com, jbrunet@baylibre.com,
         linux-amlogic@lists.infradead.org, khilman@baylibre.com
@@ -64,9 +64,9 @@ Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 5/5] ARM: dts: meson: provide the XTAL clock using a fixed-clock
-Date:   Sun, 27 Oct 2019 17:18:05 +0100
-Message-Id: <20191027161805.1176321-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 3/5] clk: meson: meson8b: change references to the XTAL clock to use the name
+Date:   Sun, 27 Oct 2019 17:18:03 +0100
+Message-Id: <20191027161805.1176321-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027161805.1176321-1-martin.blumenstingl@googlemail.com>
 References: <20191027161805.1176321-1-martin.blumenstingl@googlemail.com>
@@ -77,217 +77,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clock controller driver has provided the XTAL clock so far. This
-does not match how the hardware actually works because the XTAL clock is
-an actual crystal which is mounted on the PCB.
+The XTAL clock is an actual crystal which is mounted on the PCB. Thus
+the meson8b clock controller driver should not provide the XTAL clock.
 
-Add the "xtal" clock to meson.dtsi and replace all references to the
-clock controller's CLKID_XTAL with the new xtal clock node.
+The meson8b clock controller driver must not use references to
+the meson8b_xtal clock anymore before we can provide the XTAL clock
+via OF. Replace the references to the meson8b_xtal.hw by using
+clk_parent_data.name = "xtal" (along with index = -1) because this works
+regardless how the XTAL clock is registered (either as fixed-clock in
+the .dtb or - if missing - when registered in the meson8b clock
+controller driver).
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/meson.dtsi           |  7 +++++++
- arch/arm/boot/dts/meson6.dtsi          |  7 -------
- arch/arm/boot/dts/meson8.dtsi          | 15 ++++++++-------
- arch/arm/boot/dts/meson8b-ec100.dts    |  2 +-
- arch/arm/boot/dts/meson8b-mxq.dts      |  2 +-
- arch/arm/boot/dts/meson8b-odroidc1.dts |  2 +-
- arch/arm/boot/dts/meson8b.dtsi         | 15 ++++++++-------
- 7 files changed, 26 insertions(+), 24 deletions(-)
+ drivers/clk/meson/meson8b.c | 73 ++++++++++++++++++++-----------------
+ 1 file changed, 39 insertions(+), 34 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index c4447f6c8b2c..5d198309058a 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -282,4 +282,11 @@
- 			};
- 		};
- 	};
-+
-+	xtal: xtal-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xtal";
-+		#clock-cells = <0>;
-+	};
- }; /* end of / */
-diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6.dtsi
-index 2d31b7ce3f8c..4716030a48d0 100644
---- a/arch/arm/boot/dts/meson6.dtsi
-+++ b/arch/arm/boot/dts/meson6.dtsi
-@@ -36,13 +36,6 @@
- 		ranges = <0x0 0xd0000000 0x40000>;
- 	};
- 
--	xtal: xtal-clk {
--		compatible = "fixed-clock";
--		clock-frequency = <24000000>;
--		clock-output-names = "xtal";
--		#clock-cells = <0>;
--	};
--
- 	clk81: clk@0 {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 5a7e3e5caebe..4f59a4c8f036 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -455,6 +455,8 @@
- &hhi {
- 	clkc: clock-controller {
- 		compatible = "amlogic,meson8-clkc";
-+		clocks = <&xtal>;
-+		clock-names = "xtal";
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 	};
-@@ -529,8 +531,7 @@
- 
- &saradc {
- 	compatible = "amlogic,meson8-saradc", "amlogic,meson-saradc";
--	clocks = <&clkc CLKID_XTAL>,
--		<&clkc CLKID_SAR_ADC>;
-+	clocks = <&xtal>, <&clkc CLKID_SAR_ADC>;
- 	clock-names = "clkin", "core";
- 	amlogic,hhi-sysctrl = <&hhi>;
- 	nvmem-cells = <&temperature_calib>;
-@@ -548,31 +549,31 @@
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index d376f80e806d..b785b67baf2b 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -97,8 +97,9 @@ static struct clk_regmap meson8b_fixed_pll_dco = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "fixed_pll_dco",
+ 		.ops = &meson_clk_pll_ro_ops,
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_xtal.hw
++		.parent_data = &(const struct clk_parent_data) {
++			.name = "xtal",
++			.index = -1,
+ 		},
+ 		.num_parents = 1,
+ 	},
+@@ -162,8 +163,9 @@ static struct clk_regmap meson8b_hdmi_pll_dco = {
+ 		/* sometimes also called "HPLL" or "HPLL PLL" */
+ 		.name = "hdmi_pll_dco",
+ 		.ops = &meson_clk_pll_ro_ops,
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_xtal.hw
++		.parent_data = &(const struct clk_parent_data) {
++			.name = "xtal",
++			.index = -1,
+ 		},
+ 		.num_parents = 1,
+ 	},
+@@ -237,8 +239,9 @@ static struct clk_regmap meson8b_sys_pll_dco = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "sys_pll_dco",
+ 		.ops = &meson_clk_pll_ops,
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_xtal.hw
++		.parent_data = &(const struct clk_parent_data) {
++			.name = "xtal",
++			.index = -1,
+ 		},
+ 		.num_parents = 1,
+ 	},
+@@ -631,9 +634,9 @@ static struct clk_regmap meson8b_cpu_in_sel = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "cpu_in_sel",
+ 		.ops = &clk_regmap_mux_ops,
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_xtal.hw,
+-			&meson8b_sys_pll.hw,
++		.parent_data = (const struct clk_parent_data[]) {
++			{ .name = "xtal", .index = -1, },
++			{ .hw = &meson8b_sys_pll.hw, },
+ 		},
+ 		.num_parents = 2,
+ 		.flags = (CLK_SET_RATE_PARENT |
+@@ -736,9 +739,9 @@ static struct clk_regmap meson8b_cpu_clk = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "cpu_clk",
+ 		.ops = &clk_regmap_mux_ops,
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_xtal.hw,
+-			&meson8b_cpu_scale_out_sel.hw,
++		.parent_data = (const struct clk_parent_data[]) {
++			{ .name = "xtal", .index = -1, },
++			{ .hw = &meson8b_cpu_scale_out_sel.hw, },
+ 		},
+ 		.num_parents = 2,
+ 		.flags = (CLK_SET_RATE_PARENT |
+@@ -758,12 +761,12 @@ static struct clk_regmap meson8b_nand_clk_sel = {
+ 		.name = "nand_clk_sel",
+ 		.ops = &clk_regmap_mux_ops,
+ 		/* FIXME all other parents are unknown: */
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_fclk_div4.hw,
+-			&meson8b_fclk_div3.hw,
+-			&meson8b_fclk_div5.hw,
+-			&meson8b_fclk_div7.hw,
+-			&meson8b_xtal.hw,
++		.parent_data = (const struct clk_parent_data[]) {
++			{ .hw = &meson8b_fclk_div4.hw, },
++			{ .hw = &meson8b_fclk_div3.hw, },
++			{ .hw = &meson8b_fclk_div5.hw, },
++			{ .hw = &meson8b_fclk_div7.hw, },
++			{ .name = "xtal", .index = -1, },
+ 		},
+ 		.num_parents = 5,
+ 		.flags = CLK_SET_RATE_PARENT,
+@@ -1721,8 +1724,9 @@ static struct clk_regmap meson8b_hdmi_sys_sel = {
+ 		.name = "hdmi_sys_sel",
+ 		.ops = &clk_regmap_mux_ro_ops,
+ 		/* FIXME: all other parents are unknown */
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_xtal.hw
++		.parent_data = &(const struct clk_parent_data) {
++			.name = "xtal",
++			.index = -1,
+ 		},
+ 		.num_parents = 1,
+ 		.flags = CLK_SET_RATE_NO_REPARENT,
+@@ -1767,14 +1771,14 @@ static struct clk_regmap meson8b_hdmi_sys = {
+  * muxed by a glitch-free switch on Meson8b and Meson8m2. Meson8 only
+  * has mali_0 and no glitch-free mux.
+  */
+-static const struct clk_hw *meson8b_mali_0_1_parent_hws[] = {
+-	&meson8b_xtal.hw,
+-	&meson8b_mpll2.hw,
+-	&meson8b_mpll1.hw,
+-	&meson8b_fclk_div7.hw,
+-	&meson8b_fclk_div4.hw,
+-	&meson8b_fclk_div3.hw,
+-	&meson8b_fclk_div5.hw,
++static const struct clk_parent_data meson8b_mali_0_1_parent_data[] = {
++	{ .name = "xtal", .index = -1, },
++	{ .hw = &meson8b_mpll2.hw, },
++	{ .hw = &meson8b_mpll1.hw, },
++	{ .hw = &meson8b_fclk_div7.hw, },
++	{ .hw = &meson8b_fclk_div4.hw, },
++	{ .hw = &meson8b_fclk_div3.hw, },
++	{ .hw = &meson8b_fclk_div5.hw, },
  };
  
- &timer_abcde {
--	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>;
- 	clock-names = "xtal", "pclk";
- };
- 
- &uart_AO {
- 	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_CLK81>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
- &uart_A {
- 	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART0>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_UART0>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
- &uart_B {
- 	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART1>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_UART1>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
- &uart_C {
- 	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART2>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_UART2>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
-diff --git a/arch/arm/boot/dts/meson8b-ec100.dts b/arch/arm/boot/dts/meson8b-ec100.dts
-index bed1dfef1985..163a200d5a7b 100644
---- a/arch/arm/boot/dts/meson8b-ec100.dts
-+++ b/arch/arm/boot/dts/meson8b-ec100.dts
-@@ -377,7 +377,7 @@
- 	status = "okay";
- 	pinctrl-0 = <&pwm_c1_pins>, <&pwm_d_pins>;
- 	pinctrl-names = "default";
--	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_XTAL>;
-+	clocks = <&xtal>, <&xtal>;
- 	clock-names = "clkin0", "clkin1";
- };
- 
-diff --git a/arch/arm/boot/dts/meson8b-mxq.dts b/arch/arm/boot/dts/meson8b-mxq.dts
-index 6e39ad52e42d..33037ef62d0a 100644
---- a/arch/arm/boot/dts/meson8b-mxq.dts
-+++ b/arch/arm/boot/dts/meson8b-mxq.dts
-@@ -165,7 +165,7 @@
- 	status = "okay";
- 	pinctrl-0 = <&pwm_c1_pins>, <&pwm_d_pins>;
- 	pinctrl-names = "default";
--	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_XTAL>;
-+	clocks = <&xtal>, <&xtal>;
- 	clock-names = "clkin0", "clkin1";
- };
- 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index a24eccc354b9..a2a47804fc4a 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -340,7 +340,7 @@
- 	status = "okay";
- 	pinctrl-0 = <&pwm_c1_pins>, <&pwm_d_pins>;
- 	pinctrl-names = "default";
--	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_XTAL>;
-+	clocks = <&xtal>, <&xtal>;
- 	clock-names = "clkin0", "clkin1";
- };
- 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 099bf8e711c9..1934666ff60f 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -434,6 +434,8 @@
- &hhi {
- 	clkc: clock-controller {
- 		compatible = "amlogic,meson8-clkc";
-+		clocks = <&xtal>;
-+		clock-names = "xtal";
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 	};
-@@ -508,8 +510,7 @@
- 
- &saradc {
- 	compatible = "amlogic,meson8b-saradc", "amlogic,meson-saradc";
--	clocks = <&clkc CLKID_XTAL>,
--		<&clkc CLKID_SAR_ADC>;
-+	clocks = <&xtal>, <&clkc CLKID_SAR_ADC>;
- 	clock-names = "clkin", "core";
- 	amlogic,hhi-sysctrl = <&hhi>;
- 	nvmem-cells = <&temperature_calib>;
-@@ -523,31 +524,31 @@
- };
- 
- &timer_abcde {
--	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>;
- 	clock-names = "xtal", "pclk";
- };
- 
- &uart_AO {
- 	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_CLK81>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
- &uart_A {
- 	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART0>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_UART0>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
- &uart_B {
- 	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART1>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_UART1>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
- &uart_C {
- 	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
--	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART2>;
-+	clocks = <&clkc CLKID_CLK81>, <&xtal>, <&clkc CLKID_UART2>;
- 	clock-names = "baud", "xtal", "pclk";
- };
- 
+ static u32 meson8b_mali_0_1_mux_table[] = { 0, 2, 3, 4, 5, 6, 7 };
+@@ -1789,8 +1793,8 @@ static struct clk_regmap meson8b_mali_0_sel = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "mali_0_sel",
+ 		.ops = &clk_regmap_mux_ops,
+-		.parent_hws = meson8b_mali_0_1_parent_hws,
+-		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_hws),
++		.parent_data = meson8b_mali_0_1_parent_data,
++		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_data),
+ 		/*
+ 		 * Don't propagate rate changes up because the only changeable
+ 		 * parents are mpll1 and mpll2 but we need those for audio and
+@@ -1844,8 +1848,8 @@ static struct clk_regmap meson8b_mali_1_sel = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "mali_1_sel",
+ 		.ops = &clk_regmap_mux_ops,
+-		.parent_hws = meson8b_mali_0_1_parent_hws,
+-		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_hws),
++		.parent_data = meson8b_mali_0_1_parent_data,
++		.num_parents = ARRAY_SIZE(meson8b_mali_0_1_parent_data),
+ 		/*
+ 		 * Don't propagate rate changes up because the only changeable
+ 		 * parents are mpll1 and mpll2 but we need those for audio and
+@@ -1944,8 +1948,9 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "gp_pll_dco",
+ 		.ops = &meson_clk_pll_ops,
+-		.parent_hws = (const struct clk_hw *[]) {
+-			&meson8b_xtal.hw
++		.parent_data = &(const struct clk_parent_data) {
++			.name = "xtal",
++			.index = -1,
+ 		},
+ 		.num_parents = 1,
+ 	},
 -- 
 2.23.0
 
