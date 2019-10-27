@@ -2,50 +2,54 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F94CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4601CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427C120717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F6E205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212190;
-	bh=GQCxfnCFNNCNX5PCNOhkenmDHt9pXVPSq4JZ8mAOQXI=;
+	s=default; t=1572212193;
+	bh=EOMqGP89HMO72EZHVQn2nCw3b52ThsOy/IPuIyp2Pug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RprcIpVpl8lQwnbytFG59seGEWgRHLhnItr+7rmQKZHkxfTDktNg0xSUch6f6OLZH
-	 tn7+9gdlSTrGSwtPEzfebzTr7GfJuxy+pfooV8kXYU62fyLJ3HIMLi5qlDDHR43Mnh
-	 LGRRk6sGKgBqwBcpIiPgE9+MXS4y+fO/q49bF5mA=
+	b=YEd718M9AmrAH1MZeQbTgu6FsmlWOQ7tkqbYfGgS9gC05z10WlS2kVbhg+LXD4XKB
+	 RHa21Q6GNvpwxCDPcUkCLeWFihFgSflsFEnYO5A1xVdg4pIRg49aLzSqZwyDnDSuo5
+	 nFwCcZZxPa4cZ34TtKPZJsZSOAz+1UCOgG22+LW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbfJ0VGz (ORCPT
+        id S1729035AbfJ0VGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:06:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:06:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbfJ0VGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:06:51 -0400
+        id S1727944AbfJ0VGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:06:46 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4AA720873;
-        Sun, 27 Oct 2019 21:06:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 324012064A;
+        Sun, 27 Oct 2019 21:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210410;
-        bh=GQCxfnCFNNCNX5PCNOhkenmDHt9pXVPSq4JZ8mAOQXI=;
+        s=default; t=1572210404;
+        bh=EOMqGP89HMO72EZHVQn2nCw3b52ThsOy/IPuIyp2Pug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W0lZ4c9yjIcbpji1eT+2zB3g65UrilvwGjSgssRtWRcRQw8kQQsSAKbvUhZFhO5Iw
-         E1zKzrk+ExZEfJrzfi/JPLxcMAdEImaXbwt2T/VnfwBy94AmqinSOEUH3rekvFzk3O
-         YKBU/MlC/s4idTk+Gfo9GOFGYGcpR5VPoGK3Ysks=
+        b=RoVkm8lzoos9hZCvCw3PLieOZBeTa03+AuS0HWSIimtH4J1GFiaZ4PcrZ3xG4E+35
+         KC/1QdPPs0YqdKjbv6JpV82I6s0MKIJsfxJWOPWpD+oFi4NSH1iB+2R72kWtNTFr8/
+         n++904Ob7kHRECUYB+rkV8fG5wol843csrn/8czE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.9 40/49] xtensa: drop EXPORT_SYMBOL for outs*/ins*
-Date:   Sun, 27 Oct 2019 22:01:18 +0100
-Message-Id: <20191027203157.584046258@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Remus <jremus@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 38/49] scsi: zfcp: fix reaction on bit error threshold notification
+Date:   Sun, 27 Oct 2019 22:01:16 +0100
+Message-Id: <20191027203155.923204292@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -58,46 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 8b39da985194aac2998dd9e3a22d00b596cebf1e upstream.
+[ Upstream commit 2190168aaea42c31bff7b9a967e7b045f07df095 ]
 
-Custom outs*/ins* implementations are long gone from the xtensa port,
-remove matching EXPORT_SYMBOLs.
-This fixes the following build warnings issued by modpost since commit
-15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions"):
+On excessive bit errors for the FCP channel ingress fibre path, the channel
+notifies us.  Previously, we only emitted a kernel message and a trace
+record.  Since performance can become suboptimal with I/O timeouts due to
+bit errors, we now stop using an FCP device by default on channel
+notification so multipath on top can timely failover to other paths.  A new
+module parameter zfcp.ber_stop can be used to get zfcp old behavior.
 
-  WARNING: "insb" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "insw" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "insl" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "outsb" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "outsw" [vmlinux] is a static EXPORT_SYMBOL
-  WARNING: "outsl" [vmlinux] is a static EXPORT_SYMBOL
+User explanation of new kernel message:
 
-Cc: stable@vger.kernel.org
-Fixes: d38efc1f150f ("xtensa: adopt generic io routines")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ * Description:
+ * The FCP channel reported that its bit error threshold has been exceeded.
+ * These errors might result from a problem with the physical components
+ * of the local fibre link into the FCP channel.
+ * The problem might be damage or malfunction of the cable or
+ * cable connection between the FCP channel and
+ * the adjacent fabric switch port or the point-to-point peer.
+ * Find details about the errors in the HBA trace for the FCP device.
+ * The zfcp device driver closed down the FCP device
+ * to limit the performance impact from possible I/O command timeouts.
+ * User action:
+ * Check for problems on the local fibre link, ensure that fibre optics are
+ * clean and functional, and all cables are properly plugged.
+ * After the repair action, you can manually recover the FCP device by
+ * writing "0" into its "failed" sysfs attribute.
+ * If recovery through sysfs is not possible, set the CHPID of the device
+ * offline and back online on the service element.
 
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: <stable@vger.kernel.org> #2.6.30+
+Link: https://lore.kernel.org/r/20191001104949.42810-1-maier@linux.ibm.com
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/xtensa_ksyms.c |    7 -------
- 1 file changed, 7 deletions(-)
+ drivers/s390/scsi/zfcp_fsf.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/arch/xtensa/kernel/xtensa_ksyms.c
-+++ b/arch/xtensa/kernel/xtensa_ksyms.c
-@@ -114,13 +114,6 @@ EXPORT_SYMBOL(__invalidate_icache_range)
- // FIXME EXPORT_SYMBOL(screen_info);
- #endif
+diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
+index 1964391db9047..a3aaef4c53a3c 100644
+--- a/drivers/s390/scsi/zfcp_fsf.c
++++ b/drivers/s390/scsi/zfcp_fsf.c
+@@ -20,6 +20,11 @@
  
--EXPORT_SYMBOL(outsb);
--EXPORT_SYMBOL(outsw);
--EXPORT_SYMBOL(outsl);
--EXPORT_SYMBOL(insb);
--EXPORT_SYMBOL(insw);
--EXPORT_SYMBOL(insl);
--
- extern long common_exception_return;
- EXPORT_SYMBOL(common_exception_return);
+ struct kmem_cache *zfcp_fsf_qtcb_cache;
  
++static bool ber_stop = true;
++module_param(ber_stop, bool, 0600);
++MODULE_PARM_DESC(ber_stop,
++		 "Shuts down FCP devices for FCP channels that report a bit-error count in excess of its threshold (default on)");
++
+ static void zfcp_fsf_request_timeout_handler(unsigned long data)
+ {
+ 	struct zfcp_adapter *adapter = (struct zfcp_adapter *) data;
+@@ -231,10 +236,15 @@ static void zfcp_fsf_status_read_handler(struct zfcp_fsf_req *req)
+ 	case FSF_STATUS_READ_SENSE_DATA_AVAIL:
+ 		break;
+ 	case FSF_STATUS_READ_BIT_ERROR_THRESHOLD:
+-		dev_warn(&adapter->ccw_device->dev,
+-			 "The error threshold for checksum statistics "
+-			 "has been exceeded\n");
+ 		zfcp_dbf_hba_bit_err("fssrh_3", req);
++		if (ber_stop) {
++			dev_warn(&adapter->ccw_device->dev,
++				 "All paths over this FCP device are disused because of excessive bit errors\n");
++			zfcp_erp_adapter_shutdown(adapter, 0, "fssrh_b");
++		} else {
++			dev_warn(&adapter->ccw_device->dev,
++				 "The error threshold for checksum statistics has been exceeded\n");
++		}
+ 		break;
+ 	case FSF_STATUS_READ_LINK_DOWN:
+ 		zfcp_fsf_status_read_link_down(req);
+-- 
+2.20.1
+
 
 
