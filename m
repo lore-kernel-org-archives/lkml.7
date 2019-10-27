@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60EFCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9B2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F832184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F7A21726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210659;
-	bh=Eplurz0Sr4O86edDYblfv3yLCH43g66Otz7gO3cbtnQ=;
+	s=default; t=1572210662;
+	bh=eYt9bNR4hsgMMTimXo/ASnjAaT0LBoTAxZWzmk/h4+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jCeB7eWQsKmmncUqJOGTAWww62VhMdOIw3M8Epi2QhO/J3gBoQlztK9XRxf6P2NeX
-	 nX8U67ssL8QAAb4WX+rT01G0gB954dYMeYDJ/1mRysVsTHrWLczQiQg+vm5FlyS0Ka
-	 tfwzAOYojFAnaNnCod/ZwwyU2TsbFHf3YJbdXotc=
+	b=TJj5Pkg5hPUS+z+gUbTtt7MtSrljbDz2ddSCDmSR7EU4JaG8NaZ7tbQBEneyeo445
+	 +kj7kxrSTtr7TWHc50+0WergKCT0gATorbE5bun03BLpk5mXdXf0li/gIhhA3kj3FB
+	 ikDZyCLJwoTY2xoF6fU6n2GByrw+bu05i4NCTXD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbfJ0VK6 (ORCPT
+        id S1729816AbfJ0VLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57412 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729792AbfJ0VKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:10:55 -0400
+        id S1729803AbfJ0VK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:10:58 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70739214E0;
-        Sun, 27 Oct 2019 21:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68369214AF;
+        Sun, 27 Oct 2019 21:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210654;
-        bh=Eplurz0Sr4O86edDYblfv3yLCH43g66Otz7gO3cbtnQ=;
+        s=default; t=1572210657;
+        bh=eYt9bNR4hsgMMTimXo/ASnjAaT0LBoTAxZWzmk/h4+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqCmFwhVjW+X5/qjuqdyUbopVSqbMblYSF3dyy5UUEFGqfwOQbkO6m8cwChI9pajy
-         W6V9D2nHg70v9/IOwxZIT9irQE0qxYCkJ0JYrMBgBScIGcQp3DvDSTSfShzzWZKkX5
-         WYqfxinlSi0vCW/BkGbaCH8Zw8/ZcQboFOT9G21o=
+        b=HBvQq9VRw7ENbDcb7QmNgUi1DFIPBHB6AfbZpmtWC+lIR8kFT+qJTSXS9JyX63sl4
+         8Y/opHd9LVkHw7Et8vP7VZOkB1hscCF763HbMknIDGxsutPUGFxae0ZOL9I1JtrbkW
+         CrBM85bSJ6idx+xhi7tw8CK3klddo/IXCAnTmbnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Martin <dave.martin@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 053/119] arm64: capabilities: Prepare for grouping features and errata work arounds
-Date:   Sun, 27 Oct 2019 22:00:30 +0100
-Message-Id: <20191027203323.136720420@linuxfoundation.org>
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 089/119] scsi: core: try to get module before removing device
+Date:   Sun, 27 Oct 2019 22:01:06 +0100
+Message-Id: <20191027203348.088831528@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,128 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 600b9c919c2f4d07a7bf67864086aa3432224674 ]
+commit 77c301287ebae86cc71d03eb3806f271cb14da79 upstream.
 
-We are about to group the handling of all capabilities (features
-and errata workarounds). This patch open codes the wrapper routines
-to make it easier to merge the handling.
+We have a test case like block/001 in blktests, which will create a scsi
+device by loading scsi_debug module and then try to delete the device by
+sysfs interface. At the same time, it may remove the scsi_debug module.
 
-Reviewed-by: Dave Martin <dave.martin@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+And getting a invalid paging request BUG_ON as following:
+
+[   34.625854] BUG: unable to handle page fault for address: ffffffffa0016bb8
+[   34.629189] Oops: 0000 [#1] SMP PTI
+[   34.629618] CPU: 1 PID: 450 Comm: bash Tainted: G        W         5.4.0-rc3+ #473
+[   34.632524] RIP: 0010:scsi_proc_hostdir_rm+0x5/0xa0
+[   34.643555] CR2: ffffffffa0016bb8 CR3: 000000012cd88000 CR4: 00000000000006e0
+[   34.644545] Call Trace:
+[   34.644907]  scsi_host_dev_release+0x6b/0x1f0
+[   34.645511]  device_release+0x74/0x110
+[   34.646046]  kobject_put+0x116/0x390
+[   34.646559]  put_device+0x17/0x30
+[   34.647041]  scsi_target_dev_release+0x2b/0x40
+[   34.647652]  device_release+0x74/0x110
+[   34.648186]  kobject_put+0x116/0x390
+[   34.648691]  put_device+0x17/0x30
+[   34.649157]  scsi_device_dev_release_usercontext+0x2e8/0x360
+[   34.649953]  execute_in_process_context+0x29/0x80
+[   34.650603]  scsi_device_dev_release+0x20/0x30
+[   34.651221]  device_release+0x74/0x110
+[   34.651732]  kobject_put+0x116/0x390
+[   34.652230]  sysfs_unbreak_active_protection+0x3f/0x50
+[   34.652935]  sdev_store_delete.cold.4+0x71/0x8f
+[   34.653579]  dev_attr_store+0x1b/0x40
+[   34.654103]  sysfs_kf_write+0x3d/0x60
+[   34.654603]  kernfs_fop_write+0x174/0x250
+[   34.655165]  __vfs_write+0x1f/0x60
+[   34.655639]  vfs_write+0xc7/0x280
+[   34.656117]  ksys_write+0x6d/0x140
+[   34.656591]  __x64_sys_write+0x1e/0x30
+[   34.657114]  do_syscall_64+0xb1/0x400
+[   34.657627]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   34.658335] RIP: 0033:0x7f156f337130
+
+During deleting scsi target, the scsi_debug module have been removed. Then,
+sdebug_driver_template belonged to the module cannot be accessd, resulting
+in scsi_proc_hostdir_rm() BUG_ON.
+
+To fix the bug, we add scsi_device_get() in sdev_store_delete() to try to
+increase refcount of module, avoiding the module been removed.
+
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191015130556.18061-1-yuyufen@huawei.com
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/kernel/cpufeature.c |   58 ++++++++++++-----------------------------
- 1 file changed, 18 insertions(+), 40 deletions(-)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -485,7 +485,8 @@ static void __init init_cpu_ftr_reg(u32
- }
- 
- extern const struct arm64_cpu_capabilities arm64_errata[];
--static void update_cpu_errata_workarounds(void);
-+static void update_cpu_capabilities(const struct arm64_cpu_capabilities *caps,
-+				    u16 scope_mask, const char *info);
- 
- void __init init_cpu_features(struct cpuinfo_arm64 *info)
+---
+ drivers/scsi/scsi_sysfs.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -722,6 +722,14 @@ sdev_store_delete(struct device *dev, st
+ 		  const char *buf, size_t count)
  {
-@@ -528,7 +529,8 @@ void __init init_cpu_features(struct cpu
- 	 * Run the errata work around checks on the boot CPU, once we have
- 	 * initialised the cpu feature infrastructure.
- 	 */
--	update_cpu_errata_workarounds();
-+	update_cpu_capabilities(arm64_errata, SCOPE_ALL,
-+				"enabling workaround for");
- }
- 
- static void update_cpu_ftr_reg(struct arm64_ftr_reg *reg, u64 new)
-@@ -1312,33 +1314,6 @@ verify_local_elf_hwcaps(const struct arm
- 		}
- }
- 
--static void verify_local_cpu_features(void)
--{
--	if (!__verify_local_cpu_caps(arm64_features, SCOPE_ALL))
--		cpu_die_early();
--}
--
--/*
-- * The CPU Errata work arounds are detected and applied at boot time
-- * and the related information is freed soon after. If the new CPU requires
-- * an errata not detected at boot, fail this CPU.
-- */
--static void verify_local_cpu_errata_workarounds(void)
--{
--	if (!__verify_local_cpu_caps(arm64_errata, SCOPE_ALL))
--		cpu_die_early();
--}
--
--static void update_cpu_errata_workarounds(void)
--{
--	update_cpu_capabilities(arm64_errata, SCOPE_ALL,
--				"enabling workaround for");
--}
--
--static void __init enable_errata_workarounds(void)
--{
--	enable_cpu_capabilities(arm64_errata, SCOPE_ALL);
--}
- 
- /*
-  * Run through the enabled system capabilities and enable() it on this CPU.
-@@ -1350,8 +1325,15 @@ static void __init enable_errata_workaro
-  */
- static void verify_local_cpu_capabilities(void)
- {
--	verify_local_cpu_errata_workarounds();
--	verify_local_cpu_features();
+ 	struct kernfs_node *kn;
++	struct scsi_device *sdev = to_scsi_device(dev);
++
 +	/*
-+	 * The CPU Errata work arounds are detected and applied at boot time
-+	 * and the related information is freed soon after. If the new CPU
-+	 * requires an errata not detected at boot, fail this CPU.
++	 * We need to try to get module, avoiding the module been removed
++	 * during delete.
 +	 */
-+	if (!__verify_local_cpu_caps(arm64_errata, SCOPE_ALL))
-+		cpu_die_early();
-+	if (!__verify_local_cpu_caps(arm64_features, SCOPE_ALL))
-+		cpu_die_early();
- 	verify_local_elf_hwcaps(arm64_elf_hwcaps);
- 	if (system_supports_32bit_el0())
- 		verify_local_elf_hwcaps(compat_elf_hwcaps);
-@@ -1372,17 +1354,12 @@ void check_local_cpu_capabilities(void)
- 	 * advertised capabilities.
++	if (scsi_device_get(sdev))
++		return -ENODEV;
+ 
+ 	kn = sysfs_break_active_protection(&dev->kobj, &attr->attr);
+ 	WARN_ON_ONCE(!kn);
+@@ -736,9 +744,10 @@ sdev_store_delete(struct device *dev, st
+ 	 * state into SDEV_DEL.
  	 */
- 	if (!sys_caps_initialised)
--		update_cpu_errata_workarounds();
-+		update_cpu_capabilities(arm64_errata, SCOPE_ALL,
-+					"enabling workaround for");
- 	else
- 		verify_local_cpu_capabilities();
- }
- 
--static void __init setup_feature_capabilities(void)
--{
--	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
--	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
--}
--
- DEFINE_STATIC_KEY_FALSE(arm64_const_caps_ready);
- EXPORT_SYMBOL(arm64_const_caps_ready);
- 
-@@ -1405,8 +1382,9 @@ void __init setup_cpu_features(void)
- 	int cls;
- 
- 	/* Set the CPU feature capabilies */
--	setup_feature_capabilities();
--	enable_errata_workarounds();
-+	update_cpu_capabilities(arm64_features, SCOPE_ALL, "detected:");
-+	enable_cpu_capabilities(arm64_features, SCOPE_ALL);
-+	enable_cpu_capabilities(arm64_errata, SCOPE_ALL);
- 	mark_const_caps_ready();
- 	setup_elf_hwcaps(arm64_elf_hwcaps);
- 
+ 	device_remove_file(dev, attr);
+-	scsi_remove_device(to_scsi_device(dev));
++	scsi_remove_device(sdev);
+ 	if (kn)
+ 		sysfs_unbreak_active_protection(kn);
++	scsi_device_put(sdev);
+ 	return count;
+ };
+ static DEVICE_ATTR(delete, S_IWUSR, NULL, sdev_store_delete);
 
 
