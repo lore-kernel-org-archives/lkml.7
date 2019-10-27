@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF9FCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A437CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81DB7214E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB84214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210885;
-	bh=1xnmcLQJuvAucRr4+JBzuh6E6nUsMI+yUdoL4DunbeA=;
+	s=default; t=1572210889;
+	bh=bbvKfmQiBiYhnCpebJUu9fNk1IlOgQ8bUXjT4n+ai4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/SCgSufhlfBhKTL+ne2drK1Sb8pT+z+LKpG8jB9kz1VDJms8AEYse0oPQBPye31P
-	 xvcubWTxcbbBoj+HWYvB4Mx6WjkQdcE9+SppzFWfXCiaOwuTetb0iloYLfzCZF3UhF
-	 Ybse6kn0pZbeE/4XMBqgtxWHvvbRmKJiE4olpKnU=
+	b=AwN16k9jzR+q3b6HQF4XmyFpDmMPAojAxFdsOm3gRtx3BqRzzbvUdrs2CC2Huwzlu
+	 onurLVv8A5RK0Iv6bJadaleEuVaL9m3KL9/Nr85BfB6AEkLqtbfVsPakL756Mvxqhc
+	 iDb/HdSVHqkXAoJtVY0U5/Icqa5CvdFI95pvR5z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbfJ0VOn (ORCPT
+        id S1730525AbfJ0VOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:14:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730483AbfJ0VOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:14:38 -0400
+        id S1730514AbfJ0VOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:14:45 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A7A1205C9;
-        Sun, 27 Oct 2019 21:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 405FC205C9;
+        Sun, 27 Oct 2019 21:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210878;
-        bh=1xnmcLQJuvAucRr4+JBzuh6E6nUsMI+yUdoL4DunbeA=;
+        s=default; t=1572210883;
+        bh=bbvKfmQiBiYhnCpebJUu9fNk1IlOgQ8bUXjT4n+ai4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5xpmbaG/nVloVKKL/IkGXqyo6OVXXH4p5wJHmYPU62dGKTE6q9eakOFkh9gDpb+b
-         sduYhRGs4e5/uUS1h0q15gDb0Sc9fbys7Xm8iDwZO1ldSX5TwYDC8Fh/dDlV/EnR1u
-         mivOIqKK44FckSw+Tvv9btJ6ViJOSai2Skwsz9CU=
+        b=AgzEe5JcUYP8GJLqZC5S+U/JSvSbOQ6cYsyDv9QrLKFgz3CiVeb8u2tQkFWiBdvrS
+         zylHY5YsubQDNUbhq0OjyG2psQVImwyu0uWsSbofwkHChVoePNlZMowp3pY4sVBbil
+         kM5LZaks3fILI6Y1AJka8DX+P+8kcepvSjIyCsxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Remus <jremus@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 48/93] scsi: zfcp: fix reaction on bit error threshold notification
-Date:   Sun, 27 Oct 2019 22:01:00 +0100
-Message-Id: <20191027203300.360392635@linuxfoundation.org>
+Subject: [PATCH 4.19 50/93] scsi: core: save/restore command resid for error handling
+Date:   Sun, 27 Oct 2019 22:01:02 +0100
+Message-Id: <20191027203300.858365936@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -61,82 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit 2190168aaea42c31bff7b9a967e7b045f07df095 upstream.
+commit 8f8fed0cdbbd6cdbf28d9ebe662f45765d2f7d39 upstream.
 
-On excessive bit errors for the FCP channel ingress fibre path, the channel
-notifies us.  Previously, we only emitted a kernel message and a trace
-record.  Since performance can become suboptimal with I/O timeouts due to
-bit errors, we now stop using an FCP device by default on channel
-notification so multipath on top can timely failover to other paths.  A new
-module parameter zfcp.ber_stop can be used to get zfcp old behavior.
+When a non-passthrough command is terminated with CHECK CONDITION, request
+sense is executed by hijacking the command descriptor. Since
+scsi_eh_prep_cmnd() and scsi_eh_restore_cmnd() do not save/restore the
+original command resid, the value returned on failure of the original
+command is lost and replaced with the value set by the execution of the
+request sense command. This value may in many instances be unaligned to the
+device sector size, causing sd_done() to print a warning message about the
+incorrect unaligned resid before the command is retried.
 
-User explanation of new kernel message:
+Fix this problem by saving the original command residual in struct
+scsi_eh_save using scsi_eh_prep_cmnd() and restoring it in
+scsi_eh_restore_cmnd(). In addition, to make sure that the request sense
+command is executed with a correctly initialized command structure, also
+reset the residual to 0 in scsi_eh_prep_cmnd() after saving the original
+command value in struct scsi_eh_save.
 
- * Description:
- * The FCP channel reported that its bit error threshold has been exceeded.
- * These errors might result from a problem with the physical components
- * of the local fibre link into the FCP channel.
- * The problem might be damage or malfunction of the cable or
- * cable connection between the FCP channel and
- * the adjacent fabric switch port or the point-to-point peer.
- * Find details about the errors in the HBA trace for the FCP device.
- * The zfcp device driver closed down the FCP device
- * to limit the performance impact from possible I/O command timeouts.
- * User action:
- * Check for problems on the local fibre link, ensure that fibre optics are
- * clean and functional, and all cables are properly plugged.
- * After the repair action, you can manually recover the FCP device by
- * writing "0" into its "failed" sysfs attribute.
- * If recovery through sysfs is not possible, set the CHPID of the device
- * offline and back online on the service element.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: <stable@vger.kernel.org> #2.6.30+
-Link: https://lore.kernel.org/r/20191001104949.42810-1-maier@linux.ibm.com
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191001074839.1994-1-damien.lemoal@wdc.com
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_fsf.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/scsi/scsi_error.c |    3 +++
+ include/scsi/scsi_eh.h    |    1 +
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -21,6 +21,11 @@
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -970,6 +970,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd
+ 	ses->sdb = scmd->sdb;
+ 	ses->next_rq = scmd->request->next_rq;
+ 	ses->result = scmd->result;
++	ses->resid_len = scmd->req.resid_len;
+ 	ses->underflow = scmd->underflow;
+ 	ses->prot_op = scmd->prot_op;
+ 	ses->eh_eflags = scmd->eh_eflags;
+@@ -981,6 +982,7 @@ void scsi_eh_prep_cmnd(struct scsi_cmnd
+ 	memset(&scmd->sdb, 0, sizeof(scmd->sdb));
+ 	scmd->request->next_rq = NULL;
+ 	scmd->result = 0;
++	scmd->req.resid_len = 0;
  
- struct kmem_cache *zfcp_fsf_qtcb_cache;
- 
-+static bool ber_stop = true;
-+module_param(ber_stop, bool, 0600);
-+MODULE_PARM_DESC(ber_stop,
-+		 "Shuts down FCP devices for FCP channels that report a bit-error count in excess of its threshold (default on)");
-+
- static void zfcp_fsf_request_timeout_handler(struct timer_list *t)
- {
- 	struct zfcp_fsf_req *fsf_req = from_timer(fsf_req, t, timer);
-@@ -230,10 +235,15 @@ static void zfcp_fsf_status_read_handler
- 	case FSF_STATUS_READ_SENSE_DATA_AVAIL:
- 		break;
- 	case FSF_STATUS_READ_BIT_ERROR_THRESHOLD:
--		dev_warn(&adapter->ccw_device->dev,
--			 "The error threshold for checksum statistics "
--			 "has been exceeded\n");
- 		zfcp_dbf_hba_bit_err("fssrh_3", req);
-+		if (ber_stop) {
-+			dev_warn(&adapter->ccw_device->dev,
-+				 "All paths over this FCP device are disused because of excessive bit errors\n");
-+			zfcp_erp_adapter_shutdown(adapter, 0, "fssrh_b");
-+		} else {
-+			dev_warn(&adapter->ccw_device->dev,
-+				 "The error threshold for checksum statistics has been exceeded\n");
-+		}
- 		break;
- 	case FSF_STATUS_READ_LINK_DOWN:
- 		zfcp_fsf_status_read_link_down(req);
+ 	if (sense_bytes) {
+ 		scmd->sdb.length = min_t(unsigned, SCSI_SENSE_BUFFERSIZE,
+@@ -1034,6 +1036,7 @@ void scsi_eh_restore_cmnd(struct scsi_cm
+ 	scmd->sdb = ses->sdb;
+ 	scmd->request->next_rq = ses->next_rq;
+ 	scmd->result = ses->result;
++	scmd->req.resid_len = ses->resid_len;
+ 	scmd->underflow = ses->underflow;
+ 	scmd->prot_op = ses->prot_op;
+ 	scmd->eh_eflags = ses->eh_eflags;
+--- a/include/scsi/scsi_eh.h
++++ b/include/scsi/scsi_eh.h
+@@ -32,6 +32,7 @@ extern int scsi_ioctl_reset(struct scsi_
+ struct scsi_eh_save {
+ 	/* saved state */
+ 	int result;
++	unsigned int resid_len;
+ 	int eh_eflags;
+ 	enum dma_data_direction data_direction;
+ 	unsigned underflow;
 
 
