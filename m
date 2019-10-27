@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75228CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D04CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2CC2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC232070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211798;
-	bh=fVWoBwwgNEWgoLCEhrftmkxkEqC7gx7en4NeMZ6wa74=;
+	s=default; t=1572211803;
+	bh=9acb4oAkh0WGN71y8Jm334a0rqrCESm234EOcS+Qo1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZywwklBDGRpP6fV4ee0vtZ7Vgk8jm2RL8aW5SXwxP62ZuB2jjQ+dD/XqSEL+vRXo6
-	 ZOgiq8h1PalmrBmu38vw9Asuy8EeojsWB+VQKgYHbi7TXGgTUPecd9lZhdke8sY185
-	 UqrhNB9ypR1xMhjHvLVVOlRoLoqQmYhES3KGFXIA=
+	b=SjJJaKzahzSsfET8LKyjjZWWm3oyAyHQzK4z5XfM84Hsy5vmmVzrYDUQZTH9PJv+J
+	 jpGAEalc94/RhwvaPfwvPAky/l/O6Qva2swyU2kkIJjaTUiAXb1CRwozXitn7i0BVC
+	 O50etm77r6MzaJ8r7fmCcjgYcq0C3NjBQgqlxxMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbfJ0VTr (ORCPT
+        id S1731741AbfJ0VaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40120 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731509AbfJ0VTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:19:44 -0400
+        id S1729627AbfJ0VTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:19:31 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4B0C21850;
-        Sun, 27 Oct 2019 21:19:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 230862184C;
+        Sun, 27 Oct 2019 21:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211183;
-        bh=fVWoBwwgNEWgoLCEhrftmkxkEqC7gx7en4NeMZ6wa74=;
+        s=default; t=1572211169;
+        bh=9acb4oAkh0WGN71y8Jm334a0rqrCESm234EOcS+Qo1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMqa/DrpC7tr8BwLFu7bRuVwIHZvZBIaiISlIRbrPiqd1FjIFu+BuRhJOvuLwn757
-         HBWikz+ih9zK2DJvDQmrKWczydljI+dcIlH/wpNGHiHjY0W5WBLe1gxQ9LigaxIlnM
-         9U47vkn/awMoiqF5//sIug6re8fzlYxhd7Oi04UA=
+        b=W21DVycSipEeP8ca/mAdjXNlL62oJwRPYKcX/aR3S2WgA2emmnOj651eSr7j04xUf
+         2JipFssTTJoEIkPp2BF31YTO0CFqYKldPB9+piXehjhbnYP57tTL2xzqjnjxY3YjTx
+         qjP6PYEfsGWK5F0wfLFxijXjx+t2Rc/GdeObp+Do=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 061/197] filldir[64]: remove WARN_ON_ONCE() for bad directory entries
-Date:   Sun, 27 Oct 2019 21:59:39 +0100
-Message-Id: <20191027203354.961446977@linuxfoundation.org>
+Subject: [PATCH 5.3 057/197] Convert filldir[64]() from __put_user() to unsafe_put_user()
+Date:   Sun, 27 Oct 2019 21:59:35 +0100
+Message-Id: <20191027203354.749614096@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -63,40 +62,203 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit b9959c7a347d6adbb558fba7e36e9fef3cba3b07 ]
+[ Upstream commit 9f79b78ef74436c7507bac6bfb7b8b989263bccb ]
 
-This was always meant to be a temporary thing, just for testing and to
-see if it actually ever triggered.
+We really should avoid the "__{get,put}_user()" functions entirely,
+because they can easily be mis-used and the original intent of being
+used for simple direct user accesses no longer holds in a post-SMAP/PAN
+world.
 
-The only thing that reported it was syzbot doing disk image fuzzing, and
-then that warning is expected.  So let's just remove it before -rc4,
-because the extra sanity testing should probably go to -stable, but we
-don't want the warning to do so.
+Manually optimizing away the user access range check makes no sense any
+more, when the range check is generally much cheaper than the "enable
+user accesses" code that the __{get,put}_user() functions still need.
 
-Reported-by: syzbot+3031f712c7ad5dd4d926@syzkaller.appspotmail.com
-Fixes: 8a23eb804ca4 ("Make filldir[64]() verify the directory entry filename is valid")
+So instead of __put_user(), use the unsafe_put_user() interface with
+user_access_{begin,end}() that really does generate better code these
+days, and which is generally a nicer interface.  Under some loads, the
+multiple user writes that filldir() does are actually quite noticeable.
+
+This also makes the dirent name copy use unsafe_put_user() with a couple
+of macros.  We do not want to make function calls with SMAP/PAN
+disabled, and the code this generates is quite good when the
+architecture uses "asm goto" for unsafe_put_user() like x86 does.
+
+Note that this doesn't bother with the legacy cases.  Nobody should use
+them anyway, so performance doesn't really matter there.
+
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/readdir.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/readdir.c | 128 +++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 93 insertions(+), 35 deletions(-)
 
 diff --git a/fs/readdir.c b/fs/readdir.c
-index 6e2623e57b2e8..d26d5ea4de7b8 100644
+index 2f6a4534e0dfe..579c8ea894ae3 100644
 --- a/fs/readdir.c
 +++ b/fs/readdir.c
-@@ -105,9 +105,9 @@ EXPORT_SYMBOL(iterate_dir);
-  */
- static int verify_dirent_name(const char *name, int len)
+@@ -20,9 +20,63 @@
+ #include <linux/syscalls.h>
+ #include <linux/unistd.h>
+ #include <linux/compat.h>
+-
+ #include <linux/uaccess.h>
+ 
++#include <asm/unaligned.h>
++
++/*
++ * Note the "unsafe_put_user() semantics: we goto a
++ * label for errors.
++ *
++ * Also note how we use a "while()" loop here, even though
++ * only the biggest size needs to loop. The compiler (well,
++ * at least gcc) is smart enough to turn the smaller sizes
++ * into just if-statements, and this way we don't need to
++ * care whether 'u64' or 'u32' is the biggest size.
++ */
++#define unsafe_copy_loop(dst, src, len, type, label) 		\
++	while (len >= sizeof(type)) {				\
++		unsafe_put_user(get_unaligned((type *)src),	\
++			(type __user *)dst, label);		\
++		dst += sizeof(type);				\
++		src += sizeof(type);				\
++		len -= sizeof(type);				\
++	}
++
++/*
++ * We avoid doing 64-bit copies on 32-bit architectures. They
++ * might be better, but the component names are mostly small,
++ * and the 64-bit cases can end up being much more complex and
++ * put much more register pressure on the code, so it's likely
++ * not worth the pain of unaligned accesses etc.
++ *
++ * So limit the copies to "unsigned long" size. I did verify
++ * that at least the x86-32 case is ok without this limiting,
++ * but I worry about random other legacy 32-bit cases that
++ * might not do as well.
++ */
++#define unsafe_copy_type(dst, src, len, type, label) do {	\
++	if (sizeof(type) <= sizeof(unsigned long))		\
++		unsafe_copy_loop(dst, src, len, type, label);	\
++} while (0)
++
++/*
++ * Copy the dirent name to user space, and NUL-terminate
++ * it. This should not be a function call, since we're doing
++ * the copy inside a "user_access_begin/end()" section.
++ */
++#define unsafe_copy_dirent_name(_dst, _src, _len, label) do {	\
++	char __user *dst = (_dst);				\
++	const char *src = (_src);				\
++	size_t len = (_len);					\
++	unsafe_copy_type(dst, src, len, u64, label);	 	\
++	unsafe_copy_type(dst, src, len, u32, label);		\
++	unsafe_copy_type(dst, src, len, u16, label);		\
++	unsafe_copy_type(dst, src, len, u8,  label);		\
++	unsafe_put_user(0, dst, label);				\
++} while (0)
++
++
+ int iterate_dir(struct file *file, struct dir_context *ctx)
  {
--	if (WARN_ON_ONCE(!len))
-+	if (!len)
- 		return -EIO;
--	if (WARN_ON_ONCE(memchr(name, '/', len)))
-+	if (memchr(name, '/', len))
- 		return -EIO;
+ 	struct inode *inode = file_inode(file);
+@@ -182,28 +236,31 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
+ 		return -EOVERFLOW;
+ 	}
+ 	dirent = buf->previous;
+-	if (dirent) {
+-		if (signal_pending(current))
+-			return -EINTR;
+-		if (__put_user(offset, &dirent->d_off))
+-			goto efault;
+-	}
+-	dirent = buf->current_dir;
+-	if (__put_user(d_ino, &dirent->d_ino))
+-		goto efault;
+-	if (__put_user(reclen, &dirent->d_reclen))
+-		goto efault;
+-	if (copy_to_user(dirent->d_name, name, namlen))
+-		goto efault;
+-	if (__put_user(0, dirent->d_name + namlen))
+-		goto efault;
+-	if (__put_user(d_type, (char __user *) dirent + reclen - 1))
++	if (dirent && signal_pending(current))
++		return -EINTR;
++
++	/*
++	 * Note! This range-checks 'previous' (which may be NULL).
++	 * The real range was checked in getdents
++	 */
++	if (!user_access_begin(dirent, sizeof(*dirent)))
+ 		goto efault;
++	if (dirent)
++		unsafe_put_user(offset, &dirent->d_off, efault_end);
++	dirent = buf->current_dir;
++	unsafe_put_user(d_ino, &dirent->d_ino, efault_end);
++	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
++	unsafe_put_user(d_type, (char __user *) dirent + reclen - 1, efault_end);
++	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
++	user_access_end();
++
+ 	buf->previous = dirent;
+ 	dirent = (void __user *)dirent + reclen;
+ 	buf->current_dir = dirent;
+ 	buf->count -= reclen;
  	return 0;
- }
++efault_end:
++	user_access_end();
+ efault:
+ 	buf->error = -EFAULT;
+ 	return -EFAULT;
+@@ -263,30 +320,31 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
+ 	if (reclen > buf->count)
+ 		return -EINVAL;
+ 	dirent = buf->previous;
+-	if (dirent) {
+-		if (signal_pending(current))
+-			return -EINTR;
+-		if (__put_user(offset, &dirent->d_off))
+-			goto efault;
+-	}
+-	dirent = buf->current_dir;
+-	if (__put_user(ino, &dirent->d_ino))
+-		goto efault;
+-	if (__put_user(0, &dirent->d_off))
+-		goto efault;
+-	if (__put_user(reclen, &dirent->d_reclen))
+-		goto efault;
+-	if (__put_user(d_type, &dirent->d_type))
+-		goto efault;
+-	if (copy_to_user(dirent->d_name, name, namlen))
+-		goto efault;
+-	if (__put_user(0, dirent->d_name + namlen))
++	if (dirent && signal_pending(current))
++		return -EINTR;
++
++	/*
++	 * Note! This range-checks 'previous' (which may be NULL).
++	 * The real range was checked in getdents
++	 */
++	if (!user_access_begin(dirent, sizeof(*dirent)))
+ 		goto efault;
++	if (dirent)
++		unsafe_put_user(offset, &dirent->d_off, efault_end);
++	dirent = buf->current_dir;
++	unsafe_put_user(ino, &dirent->d_ino, efault_end);
++	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
++	unsafe_put_user(d_type, &dirent->d_type, efault_end);
++	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
++	user_access_end();
++
+ 	buf->previous = dirent;
+ 	dirent = (void __user *)dirent + reclen;
+ 	buf->current_dir = dirent;
+ 	buf->count -= reclen;
+ 	return 0;
++efault_end:
++	user_access_end();
+ efault:
+ 	buf->error = -EFAULT;
+ 	return -EFAULT;
 -- 
 2.20.1
 
