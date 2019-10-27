@@ -2,138 +2,142 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B7ECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FF1CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B844C20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7432F205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212167;
-	bh=8gXctTboVSnMqMtZlXRkBfoUYNqf/4y3OKkcNN3kbPY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UJWgcj4unl4PaYyzjYe4+81W6i622wWpbUZnEJSgOOdvw56DjR3g4daDq8Ul3/+9X
-	 PNkoPjttPZkHp3p3cKHU66n8E15JS8XmBLI2ufsk+VQUbcXungLcQ6aYW57THeVK50
-	 +NCgKoTJQKjT7VxXNoWveFLpjWrZK0E825Z3Hyps=
+	s=default; t=1572212176;
+	bh=GHu3kxfw3EEQhhSdbxenzvZRkwjxrDM1IARAor+TjfQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2bdQxz0RMtQstqXkVyMR/BRcM8MFTz74VKWJPWNBAVUnmCLlhl9qbWpE8+hxrapiR
+	 F1LQ01pW4jN1HfIGIhB47NoF1nwZAJIcSwyftFpJxGNuSHM/kmoBEg6HsvkKrAF5Tg
+	 hY+CKQDjqI9VZjI0LqUek1XKs2eZoHwrUNpyw8Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbfJ0VgG (ORCPT
+        id S1729164AbfJ0VH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:07:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728076AbfJ0VgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:36:04 -0400
-Received: from earth.universe (unknown [46.218.74.72])
+        id S1728192AbfJ0VH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:07:27 -0400
+Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32427205C9;
-        Sun, 27 Oct 2019 21:36:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3F9214AF;
+        Sun, 27 Oct 2019 21:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572212163;
-        bh=8gXctTboVSnMqMtZlXRkBfoUYNqf/4y3OKkcNN3kbPY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xVYez2nM3fw/fNROG2R4WqCelxumB7QxQmwPCBFVI4P5heyusrH7lCquSpgcm5MZN
-         WYcuDWCzBn77Trxgj6Dno/3k9un918Rq8O1I7brUJ/G96k3xBMCMIlxPqQqrDp56EO
-         iAjUhxmOYsv+UrziHsUcbQkWT7iQQKfOoFhx+2cw=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 18F8F3C09B2; Sun, 27 Oct 2019 22:36:01 +0100 (CET)
-Date:   Sun, 27 Oct 2019 22:36:01 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: supply: bd70528: Add MODULE_ALIAS to allow module
- auto loading
-Message-ID: <20191027213601.tcnw4cyqoaq3ps64@earth.universe>
-References: <20191023123453.GA2918@localhost.localdomain>
+        s=default; t=1572210446;
+        bh=GHu3kxfw3EEQhhSdbxenzvZRkwjxrDM1IARAor+TjfQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jdHqg3EfKyFr54FP75JSmgXtl4XKVMzOsKIhTVeatsNOcRQjeluzfPH6vKsMBJMPL
+         FO9Vaad/9Pu+hyMAE4hcPpCeF+s3fQ/tjXJgOZGb7Uts9ZmCQ9NS3ikt1JedgRqmAn
+         RwSQGsYf1kgmFJ89hNoKCBokEM0i/roFeaY96guc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yi Li <yilikernel@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 018/119] ocfs2: fix panic due to ocfs2_wq is null
+Date:   Sun, 27 Oct 2019 21:59:55 +0100
+Message-Id: <20191027203305.287771867@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
+References: <20191027203259.948006506@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u7ek4ubl4x4mue4i"
-Content-Disposition: inline
-In-Reply-To: <20191023123453.GA2918@localhost.localdomain>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Yi Li <yilikernel@gmail.com>
 
---u7ek4ubl4x4mue4i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit b918c43021baaa3648de09e19a4a3dd555a45f40 upstream.
 
-Hi,
+mount.ocfs2 failed when reading ocfs2 filesystem superblock encounters
+an error.  ocfs2_initialize_super() returns before allocating ocfs2_wq.
+ocfs2_dismount_volume() triggers the following panic.
 
-On Wed, Oct 23, 2019 at 03:35:24PM +0300, Matti Vaittinen wrote:
-> The bd70528 charger driver is probed by MFD driver. Add MODULE_ALIAS
-> in order to allow udev to load the module when MFD sub-device cell for
-> charger is added.
->=20
-> Fixes: f8c7f7ddd8ef0 ("power: supply: Initial support for ROHM BD70528 PM=
-IC charger block")
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
+  Oct 15 16:09:27 cnwarekv-205120 kernel: On-disk corruption discovered.Please run fsck.ocfs2 once the filesystem is unmounted.
+  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_read_locked_inode:537 ERROR: status = -30
+  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:458 ERROR: status = -30
+  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:491 ERROR: status = -30
+  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_initialize_super:2313 ERROR: status = -30
+  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_fill_super:1033 ERROR: status = -30
+  ------------[ cut here ]------------
+  Oops: 0002 [#1] SMP NOPTI
+  CPU: 1 PID: 11753 Comm: mount.ocfs2 Tainted: G  E
+        4.14.148-200.ckv.x86_64 #1
+  Hardware name: Sugon H320-G30/35N16-US, BIOS 0SSDX017 12/21/2018
+  task: ffff967af0520000 task.stack: ffffa5f05484000
+  RIP: 0010:mutex_lock+0x19/0x20
+  Call Trace:
+    flush_workqueue+0x81/0x460
+    ocfs2_shutdown_local_alloc+0x47/0x440 [ocfs2]
+    ocfs2_dismount_volume+0x84/0x400 [ocfs2]
+    ocfs2_fill_super+0xa4/0x1270 [ocfs2]
+    ? ocfs2_initialize_super.isa.211+0xf20/0xf20 [ocfs2]
+    mount_bdev+0x17f/0x1c0
+    mount_fs+0x3a/0x160
 
-Thanks, queued.
+Link: http://lkml.kernel.org/r/1571139611-24107-1-git-send-email-yili@winhong.com
+Signed-off-by: Yi Li <yilikernel@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--- Sebastian
+---
+ fs/ocfs2/journal.c    |    3 ++-
+ fs/ocfs2/localalloc.c |    3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
->=20
-> Not sure if this should be bugfix or new feature. I don't think Fixes
-> tag is a problem though.
->=20
->  drivers/power/supply/bd70528-charger.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/suppl=
-y/bd70528-charger.c
-> index 1bb32b7226d7..b8e1ec106627 100644
-> --- a/drivers/power/supply/bd70528-charger.c
-> +++ b/drivers/power/supply/bd70528-charger.c
-> @@ -741,3 +741,4 @@ module_platform_driver(bd70528_power);
->  MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
->  MODULE_DESCRIPTION("BD70528 power-supply driver");
->  MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:bd70528-power");
-> --=20
-> 2.21.0
->=20
->=20
-> --=20
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
->=20
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =3D]=20
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -231,7 +231,8 @@ void ocfs2_recovery_exit(struct ocfs2_su
+ 	/* At this point, we know that no more recovery threads can be
+ 	 * launched, so wait for any recovery completion work to
+ 	 * complete. */
+-	flush_workqueue(osb->ocfs2_wq);
++	if (osb->ocfs2_wq)
++		flush_workqueue(osb->ocfs2_wq);
+ 
+ 	/*
+ 	 * Now that recovery is shut down, and the osb is about to be
+--- a/fs/ocfs2/localalloc.c
++++ b/fs/ocfs2/localalloc.c
+@@ -391,7 +391,8 @@ void ocfs2_shutdown_local_alloc(struct o
+ 	struct ocfs2_dinode *alloc = NULL;
+ 
+ 	cancel_delayed_work(&osb->la_enable_wq);
+-	flush_workqueue(osb->ocfs2_wq);
++	if (osb->ocfs2_wq)
++		flush_workqueue(osb->ocfs2_wq);
+ 
+ 	if (osb->local_alloc_state == OCFS2_LA_UNUSED)
+ 		goto out;
 
---u7ek4ubl4x4mue4i
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl22DcAACgkQ2O7X88g7
-+pryuA/9G3U2slYrkWhOdE4sZk/YK82oNLgoHStSfBw/wzQWhDojXcVvqrKLcH4J
-G4I4P/+q6FQFDVez2cG0GZLDYdvsDg+ivTk/cpgmGiMNag9eeesD6TtBoi5yvxhD
-8MhSoWdJ6NCRWUq5Q7MvJaIOd/d3heGmRR0WZ6ih6Go+R2SJAu0OLX54ZqwbcysN
-4TZL5CnnWxKQLQxgbcFrjI5XAI0TpxpPsaZ9FJ2d9hYaMMzl7XjySQF+Wxlwi5Gp
-iCY4MV7QR7IsFZ2oh3t+ZW1QncRub/30EwBMSR7+rOSdJ3M32jRZErXqAnt4F5Lf
-CJRksQSB+CVmNEbOziDg6yHecPqDiMzADiWQKzg8Tw/UadGWaTfAlpFx0TfOy4Bv
-KFeDi1OIJ/kopx5FhOzlddGcUE7b302xqTKZoW3TleBGf4noBZBo0CwmPyHHlpWx
-mfpTCYbN/MiijecaCAUdkzBOL6hZ9hQAjtdT/BOcPgWLxGzjYL4nVL2ZrA7gsF+N
-t0O5pMxFkenTwMioj05qNu3zbROLmYq/YnBqu7Zq7RTF5vK4x/SKvGcR+ZI8R6Xr
-LlXk6LtHejc8nw2lpIX332fz6x6lPiaY1HaZdtnJBjzcW9lGnfLckzr4teJGxEm0
-e8C8c7eRSGJeHpV6LDXzHB4jm+uyu+9ZoxV8j7hosOcv+/X3+28=
-=TPBa
------END PGP SIGNATURE-----
-
---u7ek4ubl4x4mue4i--
