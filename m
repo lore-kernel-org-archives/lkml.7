@@ -2,105 +2,138 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCA5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B7ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D560120679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B844C20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212153;
-	bh=wgCt+YZ5RNpB3TdtQz/yGRs20B5SCGe3XuJHby44QTA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlCJqm8bCuUls+B+5WvyX7w6DJ3FXPPOjFZBIATROp6q6Esad+WxBfOkgHEVxrlv0
-	 JrguMuq1CViRi9EHXA8PJ3ncQTKUF6ki+wKiyyhtxg21QZBm4cythYNf1XIZ7srfRA
-	 8XdfIYLzL6K+1pUJM7CpPW7NhMN8Ct9KGCoW0ReQ=
+	s=default; t=1572212167;
+	bh=8gXctTboVSnMqMtZlXRkBfoUYNqf/4y3OKkcNN3kbPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UJWgcj4unl4PaYyzjYe4+81W6i622wWpbUZnEJSgOOdvw56DjR3g4daDq8Ul3/+9X
+	 PNkoPjttPZkHp3p3cKHU66n8E15JS8XmBLI2ufsk+VQUbcXungLcQ6aYW57THeVK50
+	 +NCgKoTJQKjT7VxXNoWveFLpjWrZK0E825Z3Hyps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732970AbfJ0Vfw (ORCPT
+        id S1731857AbfJ0VgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:35:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54336 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:36:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728076AbfJ0VIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:08:09 -0400
-Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
+        id S1728076AbfJ0VgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:36:04 -0400
+Received: from earth.universe (unknown [46.218.74.72])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CC602064A;
-        Sun, 27 Oct 2019 21:08:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32427205C9;
+        Sun, 27 Oct 2019 21:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210488;
-        bh=wgCt+YZ5RNpB3TdtQz/yGRs20B5SCGe3XuJHby44QTA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mt8W1y+gfTu/qZpRGWN2KwhVDulGpR6E0xVYwy2hey3/4z8NZjTHtS7fquyRfkMJA
-         AJQsXMt9Hn2FAq2J5J6EQpHQsHsjBMelBhXHzE5HfZQAMQZ2qQDW9RgdjwaGPDAMmd
-         SkfDZZ9KQQ4uOMl7z5vtk1oZPZ5nnpuqq+17EJPo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH 4.14 032/119] usb: udc: lpc32xx: fix bad bit shift operation
-Date:   Sun, 27 Oct 2019 22:00:09 +0100
-Message-Id: <20191027203310.316790937@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
-References: <20191027203259.948006506@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1572212163;
+        bh=8gXctTboVSnMqMtZlXRkBfoUYNqf/4y3OKkcNN3kbPY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xVYez2nM3fw/fNROG2R4WqCelxumB7QxQmwPCBFVI4P5heyusrH7lCquSpgcm5MZN
+         WYcuDWCzBn77Trxgj6Dno/3k9un918Rq8O1I7brUJ/G96k3xBMCMIlxPqQqrDp56EO
+         iAjUhxmOYsv+UrziHsUcbQkWT7iQQKfOoFhx+2cw=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 18F8F3C09B2; Sun, 27 Oct 2019 22:36:01 +0100 (CET)
+Date:   Sun, 27 Oct 2019 22:36:01 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] power: supply: bd70528: Add MODULE_ALIAS to allow module
+ auto loading
+Message-ID: <20191027213601.tcnw4cyqoaq3ps64@earth.universe>
+References: <20191023123453.GA2918@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="u7ek4ubl4x4mue4i"
+Content-Disposition: inline
+In-Reply-To: <20191023123453.GA2918@localhost.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit b987b66ac3a2bc2f7b03a0ba48a07dc553100c07 upstream.
+--u7ek4ubl4x4mue4i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It seems that the right variable to use in this case is *i*, instead of
-*n*, otherwise there is an undefined behavior when right shifiting by more
-than 31 bits when multiplying n by 8; notice that *n* can take values
-equal or greater than 4 (4, 8, 16, ...).
+Hi,
 
-Also, notice that under the current conditions (bl = 3), we are skiping
-the handling of bytes 3, 7, 31... So, fix this by updating this logic
-and limit *bl* up to 4 instead of up to 3.
+On Wed, Oct 23, 2019 at 03:35:24PM +0300, Matti Vaittinen wrote:
+> The bd70528 charger driver is probed by MFD driver. Add MODULE_ALIAS
+> in order to allow udev to load the module when MFD sub-device cell for
+> charger is added.
+>=20
+> Fixes: f8c7f7ddd8ef0 ("power: supply: Initial support for ROHM BD70528 PM=
+IC charger block")
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
 
-This fix is based on function udc_stuff_fifo().
+Thanks, queued.
 
-Addresses-Coverity-ID: 1454834 ("Bad bit shift operation")
-Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20191014191830.GA10721@embeddedor
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-- Sebastian
 
----
- drivers/usb/gadget/udc/lpc32xx_udc.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> Not sure if this should be bugfix or new feature. I don't think Fixes
+> tag is a problem though.
+>=20
+>  drivers/power/supply/bd70528-charger.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/suppl=
+y/bd70528-charger.c
+> index 1bb32b7226d7..b8e1ec106627 100644
+> --- a/drivers/power/supply/bd70528-charger.c
+> +++ b/drivers/power/supply/bd70528-charger.c
+> @@ -741,3 +741,4 @@ module_platform_driver(bd70528_power);
+>  MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+>  MODULE_DESCRIPTION("BD70528 power-supply driver");
+>  MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:bd70528-power");
+> --=20
+> 2.21.0
+>=20
+>=20
+> --=20
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+>=20
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =3D]=20
 
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -1178,11 +1178,11 @@ static void udc_pop_fifo(struct lpc32xx_
- 			tmp = readl(USBD_RXDATA(udc->udp_baseaddr));
- 
- 			bl = bytes - n;
--			if (bl > 3)
--				bl = 3;
-+			if (bl > 4)
-+				bl = 4;
- 
- 			for (i = 0; i < bl; i++)
--				data[n + i] = (u8) ((tmp >> (n * 8)) & 0xFF);
-+				data[n + i] = (u8) ((tmp >> (i * 8)) & 0xFF);
- 		}
- 		break;
- 
+--u7ek4ubl4x4mue4i
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl22DcAACgkQ2O7X88g7
++pryuA/9G3U2slYrkWhOdE4sZk/YK82oNLgoHStSfBw/wzQWhDojXcVvqrKLcH4J
+G4I4P/+q6FQFDVez2cG0GZLDYdvsDg+ivTk/cpgmGiMNag9eeesD6TtBoi5yvxhD
+8MhSoWdJ6NCRWUq5Q7MvJaIOd/d3heGmRR0WZ6ih6Go+R2SJAu0OLX54ZqwbcysN
+4TZL5CnnWxKQLQxgbcFrjI5XAI0TpxpPsaZ9FJ2d9hYaMMzl7XjySQF+Wxlwi5Gp
+iCY4MV7QR7IsFZ2oh3t+ZW1QncRub/30EwBMSR7+rOSdJ3M32jRZErXqAnt4F5Lf
+CJRksQSB+CVmNEbOziDg6yHecPqDiMzADiWQKzg8Tw/UadGWaTfAlpFx0TfOy4Bv
+KFeDi1OIJ/kopx5FhOzlddGcUE7b302xqTKZoW3TleBGf4noBZBo0CwmPyHHlpWx
+mfpTCYbN/MiijecaCAUdkzBOL6hZ9hQAjtdT/BOcPgWLxGzjYL4nVL2ZrA7gsF+N
+t0O5pMxFkenTwMioj05qNu3zbROLmYq/YnBqu7Zq7RTF5vK4x/SKvGcR+ZI8R6Xr
+LlXk6LtHejc8nw2lpIX332fz6x6lPiaY1HaZdtnJBjzcW9lGnfLckzr4teJGxEm0
+e8C8c7eRSGJeHpV6LDXzHB4jm+uyu+9ZoxV8j7hosOcv+/X3+28=
+=TPBa
+-----END PGP SIGNATURE-----
+
+--u7ek4ubl4x4mue4i--
