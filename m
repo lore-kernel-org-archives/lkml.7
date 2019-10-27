@@ -2,55 +2,102 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422DECA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A26C47E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 18:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EEB20717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 17:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77AAE21D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 18:05:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZAKZIsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfJ0Rzp (ORCPT
+        id S1727728AbfJ0SE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 13:55:45 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58038 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfJ0Rzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 13:55:44 -0400
-Received: from [46.218.74.72] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iOmlR-0008C3-MT; Sun, 27 Oct 2019 18:55:41 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Andy Yan <andy.yan@rock-chips.com>
-Cc:     kever.yang@rock-chips.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm64: dts: rockchip: Add basic dts for RK3308 EVB
-Date:   Sun, 27 Oct 2019 18:55:40 +0100
-Message-ID: <2097189.7Le80tXmf3@phil>
-In-Reply-To: <20191021084657.28629-1-andy.yan@rock-chips.com>
-References: <20191021084437.28279-1-andy.yan@rock-chips.com> <20191021084657.28629-1-andy.yan@rock-chips.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Sun, 27 Oct 2019 14:04:58 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36887 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfJ0SE5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 14:04:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id 1so7933043iou.4;
+        Sun, 27 Oct 2019 11:04:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZgPLmfyNIkVaXxK74nO6qdkfwCHUd5zoiXZjg6l83+w=;
+        b=cZAKZIsWbPh32OM0h6otiUzaq72/BpOhPBLluF28+cMo4kAoZ0z8/+Mjdg/uuWOj5e
+         2qX4JZe9Y6xRgc2JfjnpDVV5/YYhf+5brcklcgWkbQz40YrbKj46zlZ9sJo2mReA2DwQ
+         TwfQRLizNviq9N/DYTuydwBHdwNQH2N7SNg0ONE6lBUZUrenLf/8Mnhk2a5kJ+i8MJIk
+         2gfrC6q++ctKDAzjF1KCvPUymM+k/4bDv9XXXCi/ZyKrfadfiqF11Vh4iao0zI5WNq58
+         pQveJs1YM2AINg4PvPJGgeuvBSpayepA0YHTzOJp27mdTqr6lVaqrkFaB4k4qmJGQ81r
+         oQwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZgPLmfyNIkVaXxK74nO6qdkfwCHUd5zoiXZjg6l83+w=;
+        b=qbx4cYwcaZ9aVCTB9C49Pq5WnGS8qbIYZz+9NVZKNZ+KMrtpCjfYTOx5CBUzpY8/nk
+         lOH9oLk829AfbhfM4sKCjB/PcK7EvS4esvYTtcg0mS+mi+gkpRJZA0T54P58tFeAZqNX
+         0g5vHJvtm6k8PGTTpXlV/mKucUgMI6bBcWluL3SCBP58ojhhryLx6T3ULfqiHAdQNpWV
+         6LO9y4yaAPzv3Xdpq1LAgV48vmDu2Jo2GxTnYCx+K089Vd0S5Ku2Luocw3sY83gbY6TN
+         l8iYEs9tQMoFc1FOCW8bpKbt10BsB3u2SZIiOx+I4Srf2z5DbNk40yXmRh9FQbYUq3Wg
+         OkCQ==
+X-Gm-Message-State: APjAAAVZw1hwpCVqfCMRZgSV4SPbP/bk8dX0OXBlURiDbyn1d+BlPLg6
+        ULkZ5lvcOfy70PNL+vU7mkE=
+X-Google-Smtp-Source: APXvYqyB9tqMh+WJwV5Yh+pGw2kkndK5g88beOl9fn2P4jM+tU/iweK2BeOp3oboTaiy/jUfTbpnQQ==
+X-Received: by 2002:a6b:d104:: with SMTP id l4mr14218413iob.50.1572199496693;
+        Sun, 27 Oct 2019 11:04:56 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id 9sm1187754ilt.16.2019.10.27.11.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2019 11:04:56 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] cfg80211: Fix memory leak in cfg80211_inform_single_bss_data
+Date:   Sun, 27 Oct 2019 13:04:46 -0500
+Message-Id: <20191027180447.8998-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 21. Oktober 2019, 10:46:57 CET schrieb Andy Yan:
-> This board use uart4 as debug port and arm core voltage
-> is modulated by pwm, logic voltage is fixed to 1.05V.
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+In the implementation of cfg80211_inform_single_bss_data() the allocated
+memory for ies is leaked in case of an error. Release ies if
+cfg80211_bss_update() fails.
 
-applied for 5.5
+Fixes: 06aa7afaaa21 ("cfg80211: add cfg80211_inform_bss")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ net/wireless/scan.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks
-Heiko
-
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index aef240fdf8df..686eb227bcc3 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -1437,8 +1437,10 @@ cfg80211_inform_single_bss_data(struct wiphy *wiphy,
+ 	signal_valid = abs(data->chan->center_freq - channel->center_freq) <=
+ 		wiphy->max_adj_channel_rssi_comp;
+ 	res = cfg80211_bss_update(wiphy_to_rdev(wiphy), &tmp, signal_valid, ts);
+-	if (!res)
++	if (!res) {
++		kfree(ies);
+ 		return NULL;
++	}
+ 
+ 	if (channel->band == NL80211_BAND_60GHZ) {
+ 		bss_type = res->pub.capability & WLAN_CAPABILITY_DMG_TYPE_MASK;
+-- 
+2.17.1
 
