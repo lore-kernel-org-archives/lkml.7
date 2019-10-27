@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E06CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78DECA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79BF20679
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DA520B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212262;
-	bh=hOfR+rEBOsJ0m1U0SLsPKNZcvvGpmMSP6RiTjbY8qp8=;
+	s=default; t=1572212263;
+	bh=rJpc/GW8OOqRXsrjaiIX1kdq+qgdelKGmq0A41L9ncI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jUoHlLPscCH7vi2xw6yR7QnTM49vWXRgu/nsNyVDqxR/9S7h6LtMDx0SYuhlHmB9o
-	 i+1W4pfe8X7IxujcVI8q+YY89I44lyWD1XBUHOzLPMDXlMmPtNF/inK2BKvjmVWy9W
-	 cA2dayQrzyVNNPeTnZWczwWj9JGZKJt9WnbGCsYI=
+	b=BFmrYUU/py3GrxpLxwsjhyYb3138FFaaBZy6AukTeiVY5VHdrlNQbX1knLa2XT1wi
+	 OUqEooF6fwikyZMSc8ydBmdlgprlbcxIZNYRsEbhvtagu2G7+7Ew2DB71NnyeRAEGI
+	 jaEzf88UuTi3il23qkeDcmDeMXkFvT7k5ZGliEhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731111AbfJ0Vhl (ORCPT
+        id S1728689AbfJ0VEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbfJ0VEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:04:55 -0400
+        id S1727416AbfJ0VEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:04:38 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B594020B7C;
-        Sun, 27 Oct 2019 21:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1061D2064A;
+        Sun, 27 Oct 2019 21:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210295;
-        bh=hOfR+rEBOsJ0m1U0SLsPKNZcvvGpmMSP6RiTjbY8qp8=;
+        s=default; t=1572210277;
+        bh=rJpc/GW8OOqRXsrjaiIX1kdq+qgdelKGmq0A41L9ncI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Slk8ooWb1Tnd186AR8kFUKhlcDi963qaPjqdZ+wzSrk4497hfddcWP9WwTuXcN+ZW
-         oUds5waQ5ZQwJ7fQUgSbTU/MZDbs3JznBkLzWTWr448xzTI28RvKEOMuZpDaofMtgn
-         SdtZMuM9YcEyF7YjoIK5z1wFrbXPccpoT+VoYbso=
+        b=Ly+4XTGVyITKHZPWxmZWxpzgTIAYf+DjkujnfprKGD0QRfeDqgndmziStFBI8mNnk
+         5LocGScrfPKq+ZsB+Qe7ElC8avvj93ZUC6v+xEIfPDZZ3RKxnOyIyI5MwEM3uw/+UC
+         F4toCUjgFbsHl5ZAycpJ85kPiIDHqgGkkVUV2Uo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Alessio Balsini <balsini@android.com>,
+        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 16/49] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
-Date:   Sun, 27 Oct 2019 22:00:54 +0100
-Message-Id: <20191027203131.256664465@linuxfoundation.org>
+Subject: [PATCH 4.9 10/49] net: hisilicon: Fix usage of uninitialized variable in function mdio_sc_cfg_reg_write()
+Date:   Sun, 27 Oct 2019 22:00:48 +0100
+Message-Id: <20191027203125.717521692@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -60,40 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alessio Balsini <balsini@android.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit fdbe4eeeb1aac219b14f10c0ed31ae5d1123e9b8 ]
+[ Upstream commit 53de429f4e88f538f7a8ec2b18be8c0cd9b2c8e1 ]
 
-Enabling Direct I/O with loop devices helps reducing memory usage by
-avoiding double caching.  32 bit applications running on 64 bits systems
-are currently not able to request direct I/O because is missing from the
-lo_compat_ioctl.
+In function mdio_sc_cfg_reg_write(), variable "reg_value" could be
+uninitialized if regmap_read() fails. However, "reg_value" is used
+to decide the control flow later in the if statement, which is
+potentially unsafe.
 
-This patch fixes the compatibility issue mentioned above by exporting
-LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
-The input argument for this ioctl is a single long converted to a 1-bit
-boolean, so compatibility is preserved.
-
-Cc: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Alessio Balsini <balsini@android.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/hisilicon/hns_mdio.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 9f840d9fdfcb5..f236b7984b946 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1546,6 +1546,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
- 		arg = (unsigned long) compat_ptr(arg);
- 	case LOOP_SET_FD:
- 	case LOOP_CHANGE_FD:
-+	case LOOP_SET_DIRECT_IO:
- 		err = lo_ioctl(bdev, mode, cmd, arg);
- 		break;
- 	default:
+diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+index de23a0ead5d76..d06efcd5f13b1 100644
+--- a/drivers/net/ethernet/hisilicon/hns_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+@@ -166,11 +166,15 @@ static int mdio_sc_cfg_reg_write(struct hns_mdio_device *mdio_dev,
+ {
+ 	u32 time_cnt;
+ 	u32 reg_value;
++	int ret;
+ 
+ 	regmap_write(mdio_dev->subctrl_vbase, cfg_reg, set_val);
+ 
+ 	for (time_cnt = MDIO_TIMEOUT; time_cnt; time_cnt--) {
+-		regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
++		ret = regmap_read(mdio_dev->subctrl_vbase, st_reg, &reg_value);
++		if (ret)
++			return ret;
++
+ 		reg_value &= st_msk;
+ 		if ((!!check_st) == (!!reg_value))
+ 			break;
 -- 
 2.20.1
 
