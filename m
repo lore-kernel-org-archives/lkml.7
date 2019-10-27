@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C765FCA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945BBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C9321D7F
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A5420B7C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210849;
-	bh=z8GcRZ6nSiym5ndWhZ57ueF4ag98Yr2/cWaiFap1wnc=;
+	s=default; t=1572210853;
+	bh=BQkvAnAqGQMKSBoNnU79DGm9X/VGdKDSVN3+IwOkyJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uzuek9Z9yNfHGWhcNGCmrJ/TDcPbpTeLbEK4a60tYMa61x2cky4x673eyzDc5WB93
-	 xkbcaI6G3siBE6/xPSImWMbtDDH8+Z4C3FBiEPkP70M9PS6lpRQNb3N2aNdXl/YnNt
-	 rD2P1qFrwiEimvhS31+Ok4ysxaX2UuP9PPTvTeoc=
+	b=pYLhBFWc9hPOJVM894i8FhtMkTIBmpIYl+62bWLKZYaJGvrgY2PXV466jnfGqgXrU
+	 UEGm+4U5VQwmYmLxrwBiR3yFtytSVN3GzCQY2oTzDZcjoF2DGi42ctId0cIgP6p50u
+	 TYKy2m/2v41MFV9eaR9xHbNsIRzq78lu4WGfNHqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbfJ0VOI (ORCPT
+        id S1730408AbfJ0VOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:14:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730381AbfJ0VOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:14:04 -0400
+        id S1729402AbfJ0VOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:14:09 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 109172064A;
-        Sun, 27 Oct 2019 21:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9432320B7C;
+        Sun, 27 Oct 2019 21:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210843;
-        bh=z8GcRZ6nSiym5ndWhZ57ueF4ag98Yr2/cWaiFap1wnc=;
+        s=default; t=1572210849;
+        bh=BQkvAnAqGQMKSBoNnU79DGm9X/VGdKDSVN3+IwOkyJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQRfZxqmnJMwMOELrPNQPcBaiYQPYkcDvprC09beoiBv6C777l4IL62+Ehbedxce2
-         z8yp36BwdPRmP7nJxwY5ZSUlFpKQ/AB4S81JIa3IDP4CRTTBBEmKrEvtGOHRVzIb9d
-         1fQe4nZ5yHVst1qZe+jnxI+WJTEoPDvLj8CLUanI=
+        b=XWq29y/L6+UlM9tvcA3A7F17mXqfYICepwpS/V0fVj6pHxrR/oWJggn1/21i4nyPU
+         3R9kyhAVVCcyAXlnkN4db7hEhPUo5/KJ7KoFsFY+87+BgzkAPtDuEHD0tyk0o+Hw2x
+         6BV+sOdGMEEIHWZ2yuakIW3a9wzPlgPaTCV7XY7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 29/93] net: bcmgenet: Set phydev->dev_flags only for internal PHYs
-Date:   Sun, 27 Oct 2019 22:00:41 +0100
-Message-Id: <20191027203257.011039549@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Szabolcs=20Sz=C5=91ke?= <szszoke.code@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 39/93] ALSA: usb-audio: Disable quirks for BOSS Katana amplifiers
+Date:   Sun, 27 Oct 2019 22:00:51 +0100
+Message-Id: <20191027203258.297714007@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -60,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Szabolcs Szőke <szszoke.code@gmail.com>
 
-[ Upstream commit 92696286f3bb37ba50e4bd8d1beb24afb759a799 ]
+commit 7571b6a17fcc5e4f6903f065a82d0e38011346ed upstream.
 
-phydev->dev_flags is entirely dependent on the PHY device driver which
-is going to be used, setting the internal GENET PHY revision in those
-bits only makes sense when drivers/net/phy/bcm7xxx.c is the PHY driver
-being used.
+BOSS Katana amplifiers cannot be used for recording or playback if quirks
+are applied
 
-Fixes: 487320c54143 ("net: bcmgenet: communicate integrated PHY revision to PHY driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=195223
+Signed-off-by: Szabolcs Szőke <szszoke.code@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191011171937.8013-1-szszoke.code@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/genet/bcmmii.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -280,11 +280,12 @@ int bcmgenet_mii_probe(struct net_device
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
- 	struct device_node *dn = priv->pdev->dev.of_node;
- 	struct phy_device *phydev;
--	u32 phy_flags;
-+	u32 phy_flags = 0;
- 	int ret;
+---
+ sound/usb/pcm.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -355,6 +355,9 @@ static int set_sync_ep_implicit_fb_quirk
+ 		ep = 0x81;
+ 		ifnum = 1;
+ 		goto add_sync_ep_from_ifnum;
++	case USB_ID(0x0582, 0x01d8): /* BOSS Katana */
++		/* BOSS Katana amplifiers do not need quirks */
++		return 0;
+ 	}
  
- 	/* Communicate the integrated PHY revision */
--	phy_flags = priv->gphy_rev;
-+	if (priv->internal_phy)
-+		phy_flags = priv->gphy_rev;
- 
- 	/* Initialize link state variables that bcmgenet_mii_setup() uses */
- 	priv->old_link = -1;
+ 	if (attr == USB_ENDPOINT_SYNC_ASYNC &&
 
 
