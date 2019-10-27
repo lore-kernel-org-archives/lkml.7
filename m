@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C026CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A1ECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B23A20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10B6208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210535;
-	bh=0P04B2adEBHzzhOJCXQeGs0nSkHAwogVAekqy2RDdKE=;
+	s=default; t=1572210541;
+	bh=nFXKwce1i2BiC5oc42Bk3p8PO8k77yfLZ0nJhiJfJYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mqAeU6W89vJNdyAnPwdh8doFLFTzMoLFCptdIRbSri+kcr4VQ1imHtY/v4bEIVzb9
-	 Ei21eNyu0xUcpjBJU61ywVFQ5/nTOUbQRpFnQL3nwHkFoYwNjm/3MvaNqJUErr/0N0
-	 lWX1UsWNQMRIXQkjzCe0zXEx5LWMM8Mg8Sb+QWG4=
+	b=nRa8l0hErIgrbbSdiKWZtgj5qpSdE8QyhbKgPDaVKTbaN7cxMFIFUYlr4zGRND7q3
+	 WzUoKxLQxqAGKxSWOzWfW2EcDEgrblVUq4ZJayRAphovpG3voJJuH6B53zT2I2d+aH
+	 nh7B591uadxnERmyhL7eQS83tnwBWYAE19Muia+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbfJ0VIx (ORCPT
+        id S1729456AbfJ0VJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55188 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:09:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729407AbfJ0VIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:08:51 -0400
+        id S1729436AbfJ0VI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:08:57 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7730A20B7C;
-        Sun, 27 Oct 2019 21:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B506D2064A;
+        Sun, 27 Oct 2019 21:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210531;
-        bh=0P04B2adEBHzzhOJCXQeGs0nSkHAwogVAekqy2RDdKE=;
+        s=default; t=1572210537;
+        bh=nFXKwce1i2BiC5oc42Bk3p8PO8k77yfLZ0nJhiJfJYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFyovkcd9jlh1mPjpZUS4MOLgiuGUoAwUxGOcEfUimIxTLbWxzQI8FNX/0qNXprxl
-         L0CXmbCQinaQcO1fLOj/xqIU/M1RzLI81e2gRbKl0T+pZpCzjMbuV42sW1yZRrV67e
-         361GUbW/9HhtOXb4+TgHs+o4uIde0oeL6cf03JHQ=
+        b=TsaPJxHPnUu7fekHghbh04WtOHtl5eC2frzHP7FLvLxqf4fYACzH6wUVY5i1eAJ0o
+         nHoXkgVrfdQetvfmTErzNUBDB1KdfwmQHU/pL8TSX1gwZC/aIjHe9TmYSf5WRSlUwX
+         2o6ztKsfS0wBNOgRHI5lqBcnYsGOlFSetucxYcxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Dave Martin <dave.martin@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 045/119] arm64: Introduce sysreg_clear_set()
-Date:   Sun, 27 Oct 2019 22:00:22 +0100
-Message-Id: <20191027203317.852806511@linuxfoundation.org>
+Subject: [PATCH 4.14 047/119] arm64: capabilities: Move errata work around check on boot CPU
+Date:   Sun, 27 Oct 2019 22:00:24 +0100
+Message-Id: <20191027203318.941105623@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -62,57 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 6ebdf4db8fa564a150f46d32178af0873eb5abbb ]
+[ Upstream commit 5e91107b06811f0ca147cebbedce53626c9c4443 ]
 
-Currently we have a couple of helpers to manipulate bits in particular
-sysregs:
+We trigger CPU errata work around check on the boot CPU from
+smp_prepare_boot_cpu() to make sure that we run the checks only
+after the CPU feature infrastructure is initialised. While this
+is correct, we can also do this from init_cpu_features() which
+initilises the infrastructure, and is called only on the
+Boot CPU. This helps to consolidate the CPU capability handling
+to cpufeature.c. No functional changes.
 
- * config_sctlr_el1(u32 clear, u32 set)
-
- * change_cpacr(u64 val, u64 mask)
-
-The parameters of these differ in naming convention, order, and size,
-which is unfortunate. They also differ slightly in behaviour, as
-change_cpacr() skips the sysreg write if the bits are unchanged, which
-is a useful optimization when sysreg writes are expensive.
-
-Before we gain yet another sysreg manipulation function, let's
-unify these with a common helper, providing a consistent order for
-clear/set operands, and the write skipping behaviour from
-change_cpacr(). Code will be migrated to the new helper in subsequent
-patches.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Reviewed-by: Dave Martin <dave.martin@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/include/asm/sysreg.h |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/kernel/cpufeature.c |    5 +++++
+ arch/arm64/kernel/smp.c        |    6 ------
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -584,6 +584,17 @@ asm(
- 	asm volatile("msr_s " __stringify(r) ", %x0" : : "rZ" (__val));	\
- } while (0)
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -521,6 +521,11 @@ void __init init_cpu_features(struct cpu
+ 		init_cpu_ftr_reg(SYS_MVFR2_EL1, info->reg_mvfr2);
+ 	}
  
-+/*
-+ * Modify bits in a sysreg. Bits in the clear mask are zeroed, then bits in the
-+ * set mask are set. Other bits are left as-is.
-+ */
-+#define sysreg_clear_set(sysreg, clear, set) do {			\
-+	u64 __scs_val = read_sysreg(sysreg);				\
-+	u64 __scs_new = (__scs_val & ~(u64)(clear)) | (set);		\
-+	if (__scs_new != __scs_val)					\
-+		write_sysreg(__scs_new, sysreg);			\
-+} while (0)
-+
- static inline void config_sctlr_el1(u32 clear, u32 set)
- {
- 	u32 val;
++	/*
++	 * Run the errata work around checks on the boot CPU, once we have
++	 * initialised the cpu feature infrastructure.
++	 */
++	update_cpu_errata_workarounds();
+ }
+ 
+ static void update_cpu_ftr_reg(struct arm64_ftr_reg *reg, u64 new)
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -449,12 +449,6 @@ void __init smp_prepare_boot_cpu(void)
+ 	jump_label_init();
+ 	cpuinfo_store_boot_cpu();
+ 	save_boot_cpu_run_el();
+-	/*
+-	 * Run the errata work around checks on the boot CPU, once we have
+-	 * initialised the cpu feature infrastructure from
+-	 * cpuinfo_store_boot_cpu() above.
+-	 */
+-	update_cpu_errata_workarounds();
+ }
+ 
+ static u64 __init of_get_cpu_mpidr(struct device_node *dn)
 
 
