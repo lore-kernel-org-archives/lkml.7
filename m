@@ -2,52 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FF5CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3911CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687ED205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7072420679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212207;
-	bh=P5TbDHn4L8lp7SJMwGX8ysHqwlmcFsq8WwQEoWNuwV0=;
+	s=default; t=1572212223;
+	bh=z4INOP111tBsJ/9QuYmz9FD3MZuDnAxeQBSL5+DcvPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dE9ZyjvNn/TUBiZqWdiiIAJASdbDZT9EKgWjA7HCk9OfkHsS+L7nioNAqVXHllaIw
-	 RF/7/2/jL8lYxo3+1955GYhG8NQu2vVa2v6gznRER6VGo9HEmVWiMzGmJrvCDT/K9Z
-	 djE/q93YIHoCHxXvdUPkPdOT9abc9tkhH2x7B86M=
+	b=UenrznoJMEjHClyxEHaobGTmMkVKysjezkEN/j7W10x8yONL3KYDqSr3LXGLD6iyv
+	 y1MoyQXd9sDRaixRDeWzQ/uVurWHmHGbnFvo0H+c8aDnIU6/InUk3j/wEBwdT0nNor
+	 KBlYQxK0mOXNMITJ4ZeKKQarCj35Nt+JYiit3sTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfJ0VGZ (ORCPT
+        id S1729041AbfJ0VhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52318 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbfJ0VGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:06:20 -0400
+        id S1727917AbfJ0VFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:55 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B94E9214AF;
-        Sun, 27 Oct 2019 21:06:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 546C620873;
+        Sun, 27 Oct 2019 21:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210380;
-        bh=P5TbDHn4L8lp7SJMwGX8ysHqwlmcFsq8WwQEoWNuwV0=;
+        s=default; t=1572210354;
+        bh=z4INOP111tBsJ/9QuYmz9FD3MZuDnAxeQBSL5+DcvPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQEp1udP1XmstkZoazwqCEE8cFJJgNCUUyfEnOY7uw0QvATCe8fw44ro+nfz49qD6
-         6FHP/E+sJkO1w65t/4jDywNggZrdDAMIiSDUsH+Att9IdOalhGprPvGcV2/mIotMCS
-         dJUnyUWvrc1EpnXqY7nMT0PUT2cQQ8udjSejYqI0=
+        b=Kbhq1dNJ+qAqIrCPfm+ZpKC6m53pf+22j3i5/a8JfTqZKY3wE28Vaw4/ZmrCX9sQh
+         bLdILsO5MWxtXQ6NOVbpsCAcSoYDSnC13AMnOi9hz+avcJWRjeImZ8L+0SH/kqgnxg
+         KAOIUtsYFC3lKRhD8GzKetFP7vBr1QER80lwGUjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Paul Durrant <paul@xen.org>, Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 46/49] xen/netback: fix error path of xenvif_connect_data()
-Date:   Sun, 27 Oct 2019 22:01:24 +0100
-Message-Id: <20191027203203.808402034@linuxfoundation.org>
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 07/49] nl80211: fix null pointer dereference
+Date:   Sun, 27 Oct 2019 22:00:45 +0100
+Message-Id: <20191027203123.899927239@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -60,36 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-commit 3d5c1a037d37392a6859afbde49be5ba6a70a6b3 upstream.
+[ Upstream commit b501426cf86e70649c983c52f4c823b3c40d72a3 ]
 
-xenvif_connect_data() calls module_put() in case of error. This is
-wrong as there is no related module_get().
+If the interface is not in MESH mode, the command 'iw wlanx mpath del'
+will cause kernel panic.
 
-Remove the superfluous module_put().
+The root cause is null pointer access in mpp_flush_by_proxy(), as the
+pointer 'sdata->u.mesh.mpp_paths' is NULL for non MESH interface.
 
-Fixes: 279f438e36c0a7 ("xen-netback: Don't destroy the netdev until the vif is shut down")
-Cc: <stable@vger.kernel.org> # 3.12
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Paul Durrant <paul@xen.org>
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Unable to handle kernel NULL pointer dereference at virtual address 00000068
+[...]
+PC is at _raw_spin_lock_bh+0x20/0x5c
+LR is at mesh_path_del+0x1c/0x17c [mac80211]
+[...]
+Process iw (pid: 4537, stack limit = 0xd83e0238)
+[...]
+[<c021211c>] (_raw_spin_lock_bh) from [<bf8c7648>] (mesh_path_del+0x1c/0x17c [mac80211])
+[<bf8c7648>] (mesh_path_del [mac80211]) from [<bf6cdb7c>] (extack_doit+0x20/0x68 [compat])
+[<bf6cdb7c>] (extack_doit [compat]) from [<c05c309c>] (genl_rcv_msg+0x274/0x30c)
+[<c05c309c>] (genl_rcv_msg) from [<c05c25d8>] (netlink_rcv_skb+0x58/0xac)
+[<c05c25d8>] (netlink_rcv_skb) from [<c05c2e14>] (genl_rcv+0x20/0x34)
+[<c05c2e14>] (genl_rcv) from [<c05c1f90>] (netlink_unicast+0x11c/0x204)
+[<c05c1f90>] (netlink_unicast) from [<c05c2420>] (netlink_sendmsg+0x30c/0x370)
+[<c05c2420>] (netlink_sendmsg) from [<c05886d0>] (sock_sendmsg+0x70/0x84)
+[<c05886d0>] (sock_sendmsg) from [<c0589f4c>] (___sys_sendmsg.part.3+0x188/0x228)
+[<c0589f4c>] (___sys_sendmsg.part.3) from [<c058add4>] (__sys_sendmsg+0x4c/0x70)
+[<c058add4>] (__sys_sendmsg) from [<c0208c80>] (ret_fast_syscall+0x0/0x44)
+Code: e2822c02 e2822001 e5832004 f590f000 (e1902f9f)
+---[ end trace bbd717600f8f884d ]---
 
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Link: https://lore.kernel.org/r/1569485810-761-1-git-send-email-miaoqing@codeaurora.org
+[trim useless data from commit message]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/xen-netback/interface.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/wireless/nl80211.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -706,7 +706,6 @@ err_unmap:
- 	xenvif_unmap_frontend_data_rings(queue);
- 	netif_napi_del(&queue->napi);
- err:
--	module_put(THIS_MODULE);
- 	return err;
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 7aa1ca7ec638a..ac75e6d4eb82a 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -5358,6 +5358,9 @@ static int nl80211_del_mpath(struct sk_buff *skb, struct genl_info *info)
+ 	if (!rdev->ops->del_mpath)
+ 		return -EOPNOTSUPP;
+ 
++	if (dev->ieee80211_ptr->iftype != NL80211_IFTYPE_MESH_POINT)
++		return -EOPNOTSUPP;
++
+ 	return rdev_del_mpath(rdev, dev, dst);
  }
  
+-- 
+2.20.1
+
 
 
