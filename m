@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1491CCA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AD2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB60F208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7B52070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211205;
-	bh=yELjqYsgYWWkUaUp6mTbKnm+UbdtTXKVaFyRJcZEp9I=;
+	s=default; t=1572211210;
+	bh=uEigrDSO+Ag3UVASUP0pmv4uqt7zouB0tEdl/zaUl3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fjdOp7NWXc6BlRt2qIuP4E8fxXrCOFcgPcDLwTlwuKPmQb3KTm6mpCg0oikJyb7YE
-	 0bihnNPVuysNk9vEHDbcc2OJ+NY11rWaa5w1X+uX3baSusysYWvT2/4L8HpU1xTH28
-	 emzLjcSyVj2gCIcwYEw8u5cKkaChpTiLUEfHgW/0=
+	b=YM7wA3NbS8fzWeI4Usrj0CZnmBRb4UfqU4JrSxM5nUw4YWb78VIY1gPoXetdEk173
+	 pv8TzDin7sJb8F8IjcglDkFhFnPI6uA2LUaT38vAwKDXmVUqv+QAob9+NwiT5Vfyr4
+	 Mrjq7ZeyzIWYCg/+UsV14WN23UE8xA7EM7kv7zuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731614AbfJ0VUE (ORCPT
+        id S1730598AbfJ0VUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40414 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731589AbfJ0VUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:20:01 -0400
+        id S1731622AbfJ0VUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:20:06 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EA62205C9;
-        Sun, 27 Oct 2019 21:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3A462070B;
+        Sun, 27 Oct 2019 21:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211200;
-        bh=yELjqYsgYWWkUaUp6mTbKnm+UbdtTXKVaFyRJcZEp9I=;
+        s=default; t=1572211206;
+        bh=uEigrDSO+Ag3UVASUP0pmv4uqt7zouB0tEdl/zaUl3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6/dG9dsgcdB/O6Q4NVaakbnIWUq5LxdnewbjJhn7TFR9PX/pXw1SvlLNwXVE1Yof
-         Mc/V1DHNgNzF9RYqdtscR0UFga2qwOiYfWwKGhYUVR6+XBwuyGoZaf1h1a4OA1Pe8r
-         83v2os6lOPa0tH9w777kD+jN3oi5qsCa12sIn/c0=
+        b=RX799BkTP8NyaH18CgxZqQiX5vEF9LvWieD+Ep7VEuCwzp7+4KSgM5RlmcZYlIIRK
+         2x7hzs9B43VnTg9g+tTiHlWKI2hKkeSZQqriq+hfcC3y+xP3vQfcOyCZR8t8BVJ6cF
+         iKabs5m1GDdhuLiQoVICcN9T3xcTX+plHyqJnAko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Li <yilikernel@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 067/197] ocfs2: fix panic due to ocfs2_wq is null
-Date:   Sun, 27 Oct 2019 21:59:45 +0100
-Message-Id: <20191027203355.275799659@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Kevin Hao <haokexin@gmail.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 5.3 068/197] nvme-pci: Set the prp2 correctly when using more than 4k page
+Date:   Sun, 27 Oct 2019 21:59:46 +0100
+Message-Id: <20191027203355.327536227@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -66,78 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Li <yilikernel@gmail.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit b918c43021baaa3648de09e19a4a3dd555a45f40 upstream.
+commit a4f40484e7f1dff56bb9f286cc59ffa36e0259eb upstream.
 
-mount.ocfs2 failed when reading ocfs2 filesystem superblock encounters
-an error.  ocfs2_initialize_super() returns before allocating ocfs2_wq.
-ocfs2_dismount_volume() triggers the following panic.
+In the current code, the nvme is using a fixed 4k PRP entry size,
+but if the kernel use a page size which is more than 4k, we should
+consider the situation that the bv_offset may be larger than the
+dev->ctrl.page_size. Otherwise we may miss setting the prp2 and then
+cause the command can't be executed correctly.
 
-  Oct 15 16:09:27 cnwarekv-205120 kernel: On-disk corruption discovered.Please run fsck.ocfs2 once the filesystem is unmounted.
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_read_locked_inode:537 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:458 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_init_global_system_inodes:491 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_initialize_super:2313 ERROR: status = -30
-  Oct 15 16:09:27 cnwarekv-205120 kernel: (mount.ocfs2,22804,44): ocfs2_fill_super:1033 ERROR: status = -30
-  ------------[ cut here ]------------
-  Oops: 0002 [#1] SMP NOPTI
-  CPU: 1 PID: 11753 Comm: mount.ocfs2 Tainted: G  E
-        4.14.148-200.ckv.x86_64 #1
-  Hardware name: Sugon H320-G30/35N16-US, BIOS 0SSDX017 12/21/2018
-  task: ffff967af0520000 task.stack: ffffa5f05484000
-  RIP: 0010:mutex_lock+0x19/0x20
-  Call Trace:
-    flush_workqueue+0x81/0x460
-    ocfs2_shutdown_local_alloc+0x47/0x440 [ocfs2]
-    ocfs2_dismount_volume+0x84/0x400 [ocfs2]
-    ocfs2_fill_super+0xa4/0x1270 [ocfs2]
-    ? ocfs2_initialize_super.isa.211+0xf20/0xf20 [ocfs2]
-    mount_bdev+0x17f/0x1c0
-    mount_fs+0x3a/0x160
-
-Link: http://lkml.kernel.org/r/1571139611-24107-1-git-send-email-yili@winhong.com
-Signed-off-by: Yi Li <yilikernel@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: dff824b2aadb ("nvme-pci: optimize mapping of small single segment requests")
+Cc: stable@vger.kernel.org
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/journal.c    |    3 ++-
- fs/ocfs2/localalloc.c |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/nvme/host/pci.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -217,7 +217,8 @@ void ocfs2_recovery_exit(struct ocfs2_su
- 	/* At this point, we know that no more recovery threads can be
- 	 * launched, so wait for any recovery completion work to
- 	 * complete. */
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -769,7 +769,8 @@ static blk_status_t nvme_setup_prp_simpl
+ 		struct bio_vec *bv)
+ {
+ 	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+-	unsigned int first_prp_len = dev->ctrl.page_size - bv->bv_offset;
++	unsigned int offset = bv->bv_offset & (dev->ctrl.page_size - 1);
++	unsigned int first_prp_len = dev->ctrl.page_size - offset;
  
- 	/*
- 	 * Now that recovery is shut down, and the osb is about to be
---- a/fs/ocfs2/localalloc.c
-+++ b/fs/ocfs2/localalloc.c
-@@ -377,7 +377,8 @@ void ocfs2_shutdown_local_alloc(struct o
- 	struct ocfs2_dinode *alloc = NULL;
- 
- 	cancel_delayed_work(&osb->la_enable_wq);
--	flush_workqueue(osb->ocfs2_wq);
-+	if (osb->ocfs2_wq)
-+		flush_workqueue(osb->ocfs2_wq);
- 
- 	if (osb->local_alloc_state == OCFS2_LA_UNUSED)
- 		goto out;
+ 	iod->first_dma = dma_map_bvec(dev->dev, bv, rq_dma_dir(req), 0);
+ 	if (dma_mapping_error(dev->dev, iod->first_dma))
 
 
