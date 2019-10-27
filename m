@@ -2,52 +2,51 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016C1CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2438BCA9EBC
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77F921783
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF88721783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210327;
-	bh=e8q2fJU5INpq5s5LPoJnI797ee9zQRET5r6ihIlgYLU=;
+	s=default; t=1572210330;
+	bh=P2vJ9ibDgioB1J3v/QHFvsCZHo25Rm2Voqe4Ut1VUjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3iMxC4Srm8LOrdXRDSLzmVWKN22FLKhB3ApH9eEIErRHRsp81d9kAjyOtIJhuI0q
-	 KvyaL8VwGAFi9ywI2yNAjJsV67R4Xj7cybrqoXJTuEinOhjtNygU3NBDf6hR5nDjiB
-	 r93oF+6K0JW4/w4kdjFcxKfnJEJfNyWcvRh8riOE=
+	b=azR0z0GcgX7Ih0Z9hSg7YqyO82qsXBc+C6sHVjZiEVfOznIp98jW5N7tNYYTFT+IO
+	 pYHe5l3jOuB2vTvx2v/bBvIyCy6TnLdBh2uvv4NrBd4CvFWU2PMg/pwKe80O2zNmD/
+	 CM1lZskaTLCBpWGiZqP2DxadveFRHUTha9guXGv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfJ0VF0 (ORCPT
+        id S1728828AbfJ0VF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728059AbfJ0VFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:15 -0400
+        id S1728816AbfJ0VFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:21 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31C4B20873;
-        Sun, 27 Oct 2019 21:05:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D16A820873;
+        Sun, 27 Oct 2019 21:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210314;
-        bh=e8q2fJU5INpq5s5LPoJnI797ee9zQRET5r6ihIlgYLU=;
+        s=default; t=1572210320;
+        bh=P2vJ9ibDgioB1J3v/QHFvsCZHo25Rm2Voqe4Ut1VUjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkOMyAxKHzuQpgX/UXAIWElqcB32kOV7jwyqbmEiPpN34Xheg5WOUehCYqBTXI+CJ
-         7gvLYoLxw26A3EK72sbhdUkJOjc9ahFSA1i9qP0ZLIGOYjQXlgC4qPoDrHWr/lv12t
-         pMIgrwmsBoGDXSQ+sWZDaCgJUS6JuOqO1kpCvxvA=
+        b=sZmU5BUUoOTbtRSFBKnx1qKwwAoe4h9UF3OvDbToYGkJwDitTk3FX7ixSgMrP1LVD
+         YLickZaxPIMNw7g6TbK4attal8wWf8QWQE7yu9x2/9ImqlVWmFfwByJBtPRWq/FOd8
+         sLzEiaDxjqcn9SL2t5saEkyQNNU8oOoOkfIbpLD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 22/49] memfd: Fix locking when tagging pins
-Date:   Sun, 27 Oct 2019 22:01:00 +0100
-Message-Id: <20191027203136.648201012@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 24/49] ALSA: hda/realtek - Add support for ALC711
+Date:   Sun, 27 Oct 2019 22:01:02 +0100
+Message-Id: <20191027203137.952164100@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -60,99 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox (Oracle) <willy@infradead.org>
+From: Kailang Yang <kailang@realtek.com>
 
-The RCU lock is insufficient to protect the radix tree iteration as
-a deletion from the tree can occur before we take the spinlock to
-tag the entry.  In 4.19, this has manifested as a bug with the following
-trace:
+commit 83629532ce45ef9df1f297b419b9ea112045685d upstream.
 
-kernel BUG at lib/radix-tree.c:1429!
-invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 7 PID: 6935 Comm: syz-executor.2 Not tainted 4.19.36 #25
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:radix_tree_tag_set+0x200/0x2f0 lib/radix-tree.c:1429
-Code: 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 48 89 44 24 10 e8 a3 29 7e fe 48 8b 44 24 10 48 0f ab 03 e9 d2 fe ff ff e8 90 29 7e fe <0f> 0b 48 c7 c7 e0 5a 87 84 e8 f0 e7 08 ff 4c 89 ef e8 4a ff ac fe
-RSP: 0018:ffff88837b13fb60 EFLAGS: 00010016
-RAX: 0000000000040000 RBX: ffff8883c5515d58 RCX: ffffffff82cb2ef0
-RDX: 0000000000000b72 RSI: ffffc90004cf2000 RDI: ffff8883c5515d98
-RBP: ffff88837b13fb98 R08: ffffed106f627f7e R09: ffffed106f627f7e
-R10: 0000000000000001 R11: ffffed106f627f7d R12: 0000000000000004
-R13: ffffea000d7fea80 R14: 1ffff1106f627f6f R15: 0000000000000002
-FS:  00007fa1b8df2700(0000) GS:ffff8883e2fc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa1b8df1db8 CR3: 000000037d4d2001 CR4: 0000000000160ee0
-Call Trace:
- memfd_tag_pins mm/memfd.c:51 [inline]
- memfd_wait_for_pins+0x2c5/0x12d0 mm/memfd.c:81
- memfd_add_seals mm/memfd.c:215 [inline]
- memfd_fcntl+0x33d/0x4a0 mm/memfd.c:247
- do_fcntl+0x589/0xeb0 fs/fcntl.c:421
- __do_sys_fcntl fs/fcntl.c:463 [inline]
- __se_sys_fcntl fs/fcntl.c:448 [inline]
- __x64_sys_fcntl+0x12d/0x180 fs/fcntl.c:448
- do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:293
+Support new codec ALC711.
 
-The problem does not occur in mainline due to the XArray rewrite which
-changed the locking to exclude modification of the tree during iteration.
-At the time, nobody realised this was a bugfix.  Backport the locking
-changes to stable.
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: stable@vger.kernel.org
-Reported-by: zhong jiang <zhongjiang@huawei.com>
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/shmem.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ sound/pci/hda/patch_realtek.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 944242491059d..ac8a5fedc2454 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2457,11 +2457,12 @@ static void shmem_tag_pins(struct address_space *mapping)
- 	void **slot;
- 	pgoff_t start;
- 	struct page *page;
-+	unsigned int tagged = 0;
- 
- 	lru_add_drain();
- 	start = 0;
--	rcu_read_lock();
- 
-+	spin_lock_irq(&mapping->tree_lock);
- 	radix_tree_for_each_slot(slot, &mapping->page_tree, &iter, start) {
- 		page = radix_tree_deref_slot(slot);
- 		if (!page || radix_tree_exception(page)) {
-@@ -2470,18 +2471,19 @@ static void shmem_tag_pins(struct address_space *mapping)
- 				continue;
- 			}
- 		} else if (page_count(page) - page_mapcount(page) > 1) {
--			spin_lock_irq(&mapping->tree_lock);
- 			radix_tree_tag_set(&mapping->page_tree, iter.index,
- 					   SHMEM_TAG_PINNED);
--			spin_unlock_irq(&mapping->tree_lock);
- 		}
- 
--		if (need_resched()) {
--			cond_resched_rcu();
--			slot = radix_tree_iter_next(&iter);
--		}
-+		if (++tagged % 1024)
-+			continue;
-+
-+		slot = radix_tree_iter_next(&iter);
-+		spin_unlock_irq(&mapping->tree_lock);
-+		cond_resched();
-+		spin_lock_irq(&mapping->tree_lock);
- 	}
--	rcu_read_unlock();
-+	spin_unlock_irq(&mapping->tree_lock);
- }
- 
- /*
--- 
-2.20.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -353,6 +353,7 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0700:
+ 	case 0x10ec0701:
+ 	case 0x10ec0703:
++	case 0x10ec0711:
+ 		alc_update_coef_idx(codec, 0x10, 1<<15, 0);
+ 		break;
+ 	case 0x10ec0662:
+@@ -6424,6 +6425,7 @@ static int patch_alc269(struct hda_codec
+ 	case 0x10ec0700:
+ 	case 0x10ec0701:
+ 	case 0x10ec0703:
++	case 0x10ec0711:
+ 		spec->codec_variant = ALC269_TYPE_ALC700;
+ 		spec->gen.mixer_nid = 0; /* ALC700 does not have any loopback mixer path */
+ 		alc_update_coef_idx(codec, 0x4a, 1 << 15, 0); /* Combo jack auto trigger control */
+@@ -7464,6 +7466,7 @@ static const struct hda_device_id snd_hd
+ 	HDA_CODEC_ENTRY(0x10ec0700, "ALC700", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0701, "ALC701", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0703, "ALC703", patch_alc269),
++	HDA_CODEC_ENTRY(0x10ec0711, "ALC711", patch_alc269),
+ 	HDA_CODEC_ENTRY(0x10ec0867, "ALC891", patch_alc662),
+ 	HDA_CODEC_ENTRY(0x10ec0880, "ALC880", patch_alc880),
+ 	HDA_CODEC_ENTRY(0x10ec0882, "ALC882", patch_alc882),
 
 
