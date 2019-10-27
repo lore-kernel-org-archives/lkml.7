@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1454ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E159CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D092E2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38AF720873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210638;
-	bh=ew1OM2lWtU0jh8CRwqRLdZAY2iaRlj+H0EYC7ErADg0=;
+	s=default; t=1572210642;
+	bh=yy9iRurEiMd6hM0tViCdcWOujPSbCP1i+PLRyE2P5Ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKsqVYm0s5hwHkApVylqkgDzjV1iriQN5UMOZFwfd0ve5pASzZ6soA3bsgY3IOGXf
-	 u9jPq3aKB09GfJ+ZMPhJ+0rlkhTNdGYTAPzCIwXSKbwYsTlz4ZPtuRTmUEaOtTO6b/
-	 Kn/Ks5V1IY/fDH/Zw0LnUUhFkoQAjCeeCjZsLwrM=
+	b=llpivgbezrPDNgUw/gB2aCOfv875Otj1ihPzxTnMk9TiyQZHXyqLZK6grTaHRbVKk
+	 gwW+065QcSJWOJWQBMKy4Zf3ZFOO2I7sA/SOLDPFResIaKviVGwgmVkdcgH+VFMZle
+	 cutQUU7hK8kbHfzqj9EDhc1U+TZyMucCrqnEVmqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfJ0VKh (ORCPT
+        id S1729739AbfJ0VKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:10:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56960 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:10:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728709AbfJ0VKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:10:31 -0400
+        id S1728797AbfJ0VKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:10:37 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900442064A;
-        Sun, 27 Oct 2019 21:10:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 819A520873;
+        Sun, 27 Oct 2019 21:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210631;
-        bh=ew1OM2lWtU0jh8CRwqRLdZAY2iaRlj+H0EYC7ErADg0=;
+        s=default; t=1572210637;
+        bh=yy9iRurEiMd6hM0tViCdcWOujPSbCP1i+PLRyE2P5Ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rk0iv7B5oJIYndKDeZQ4SUXQDWcvCQkf59iWrV7uxeQjXD2g6/tzA2TganCacpIAK
-         5oHanakzaGt4+tFd4At6v8YDv/uW/vEWI6p7vXYqUxcmgZbdEZJlJbSOIK9vZy1rmL
-         67xkat06Pcc4gytzCqM/C+beG0yhSI2O3Rx8L7fc=
+        b=y1yjB3Oh61SDImSDfYD9gtE2VDXf62Ee9M5nCgwQeBvj32ErgYLftmU3Ao2p+FDhr
+         8l+c+G/1iTFu5AdjPrppR60oM7UMslaRzuavE+uKjnUeo0/G/aCxklC4g7emDOWx9v
+         LLJlblYA7nsB79B0IucSK70y95YbwA8HNgORibrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
         Will Deacon <will.deacon@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 081/119] arm64: ssbs: Dont treat CPUs with SSBS as unaffected by SSB
-Date:   Sun, 27 Oct 2019 22:00:58 +0100
-Message-Id: <20191027203345.482722429@linuxfoundation.org>
+Subject: [PATCH 4.14 083/119] arm64: Use firmware to detect CPUs that are not affected by Spectre-v2
+Date:   Sun, 27 Oct 2019 22:01:00 +0100
+Message-Id: <20191027203345.935698895@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -59,46 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit eb337cdfcd5dd3b10522c2f34140a73a4c285c30 ]
+[ Upstream commit 517953c2c47f9c00a002f588ac856a5bc70cede3 ]
 
-SSBS provides a relatively cheap mitigation for SSB, but it is still a
-mitigation and its presence does not indicate that the CPU is unaffected
-by the vulnerability.
+The SMCCC ARCH_WORKAROUND_1 service can indicate that although the
+firmware knows about the Spectre-v2 mitigation, this particular
+CPU is not vulnerable, and it is thus not necessary to call
+the firmware on this CPU.
 
-Tweak the mitigation logic so that we report the correct string in sysfs.
+Let's use this information to our benefit.
 
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/cpu_errata.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/cpu_errata.c |   32 +++++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
 --- a/arch/arm64/kernel/cpu_errata.c
 +++ b/arch/arm64/kernel/cpu_errata.c
-@@ -333,15 +333,17 @@ static bool has_ssbd_mitigation(const st
+@@ -190,22 +190,36 @@ static int detect_harden_bp_fw(void)
+ 	case PSCI_CONDUIT_HVC:
+ 		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+ 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
+-		if ((int)res.a0 < 0)
++		switch ((int)res.a0) {
++		case 1:
++			/* Firmware says we're just fine */
++			return 0;
++		case 0:
++			cb = call_hvc_arch_workaround_1;
++			/* This is a guest, no need to patch KVM vectors */
++			smccc_start = NULL;
++			smccc_end = NULL;
++			break;
++		default:
+ 			return -1;
+-		cb = call_hvc_arch_workaround_1;
+-		/* This is a guest, no need to patch KVM vectors */
+-		smccc_start = NULL;
+-		smccc_end = NULL;
++		}
+ 		break;
  
- 	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
+ 	case PSCI_CONDUIT_SMC:
+ 		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+ 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
+-		if ((int)res.a0 < 0)
++		switch ((int)res.a0) {
++		case 1:
++			/* Firmware says we're just fine */
++			return 0;
++		case 0:
++			cb = call_smc_arch_workaround_1;
++			smccc_start = __smccc_workaround_1_smc_start;
++			smccc_end = __smccc_workaround_1_smc_end;
++			break;
++		default:
+ 			return -1;
+-		cb = call_smc_arch_workaround_1;
+-		smccc_start = __smccc_workaround_1_smc_start;
+-		smccc_end = __smccc_workaround_1_smc_end;
++		}
+ 		break;
  
-+	/* delay setting __ssb_safe until we get a firmware response */
-+	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
-+		this_cpu_safe = true;
-+
- 	if (this_cpu_has_cap(ARM64_SSBS)) {
-+		if (!this_cpu_safe)
-+			__ssb_safe = false;
- 		required = false;
- 		goto out_printmsg;
- 	}
- 
--	/* delay setting __ssb_safe until we get a firmware response */
--	if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
--		this_cpu_safe = true;
--
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0) {
- 		ssbd_state = ARM64_SSBD_UNKNOWN;
- 		if (!this_cpu_safe)
+ 	default:
 
 
