@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E466CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FA1CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31A92064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351EA20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210589;
-	bh=uoJolbFr7OvIbu2blQ9jg1khCWXqzO03hk38WiCuQxQ=;
+	s=default; t=1572210596;
+	bh=t74p8N9ci9kwCGvfHTXx7zxJ4/yXagwEI90cMiviUfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=am2yFxvjY5eozySOwyKHAvKWN+Sz0VIjwkQRT4j4UqiWJD68bGQfWy9KFjy8HGxdp
-	 VOOPJ605IhJc1ZVfx8cmjFp8Uoio57dfG7zwDCKKFzPZZzkweES3nBC5wKCWzjDaIj
-	 BgSnbavE0OdAaSGc0RY6GEY5tIVc4RvS0NJM9ALg=
+	b=i1/DC7wuXQklo7ikmN/ihIS55YILVOqxKSyAke7Dhp8x9L10rDMyt6Vvo0zaM4K6z
+	 yiu7CwGmW05/VDj8QmNc016T2cH/hvBLnmAiLbjq17O/9mo2OOBAgzR7Dg7LGiahBF
+	 fpE56fA6g0n/LYDvBwKd4x147dVd42E+dDe5UDsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbfJ0VJs (ORCPT
+        id S1728788AbfJ0VJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:09:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:09:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbfJ0VJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:09:45 -0400
+        id S1728832AbfJ0VJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:09:51 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E151F2064A;
-        Sun, 27 Oct 2019 21:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DD7520873;
+        Sun, 27 Oct 2019 21:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210584;
-        bh=uoJolbFr7OvIbu2blQ9jg1khCWXqzO03hk38WiCuQxQ=;
+        s=default; t=1572210590;
+        bh=t74p8N9ci9kwCGvfHTXx7zxJ4/yXagwEI90cMiviUfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvygN+YW3rF832jJj2MHTR56ErBxPAQfHUsuBrPcbKpUhZz5uXSrH4Si1hcr4Fs2Y
-         LD6p8Nen5BOTPZ0jB82voES6imX/CSzj1MBvIgy9Sje5DtcKA4xZ7xPLMk0XIZS0O4
-         lmMwoyz4rqdeFMC7tSWSJ9lYVlGFIhXybjuGxywo=
+        b=tIJvHdDMTP2HtXc1tmorRaLQ0EoTuszHEuXxL+VX2sDppia0JeoDLEZYp0WYAjYrg
+         WDHks0pN57dQYt83EwkxNz1rc2qfCjdULbXO5KpaWz76gfJpJl8WcuCmDcU28sSIMr
+         Z5DMyi2nXg39xCJjKfFoYQSnIZlzQtts+QPmtpUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        Dave Martin <dave.martin@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 4.14 067/119] arm64: Get rid of __smccc_workaround_1_hvc_*
-Date:   Sun, 27 Oct 2019 22:00:44 +0100
-Message-Id: <20191027203333.787221281@linuxfoundation.org>
+Subject: [PATCH 4.14 051/119] arm64: capabilities: Unify the verification
+Date:   Sun, 27 Oct 2019 22:00:28 +0100
+Message-Id: <20191027203321.576169722@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -60,83 +61,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 22765f30dbaf1118c6ff0fcb8b99c9f2b4d396d5 ]
+[ Upstream commit eaac4d83daa50fc1b9b7850346e9a62adfd4647e ]
 
-The very existence of __smccc_workaround_1_hvc_* is a thinko, as
-KVM will never use a HVC call to perform the branch prediction
-invalidation. Even as a nested hypervisor, it would use an SMC
-instruction.
+Now that each capability describes how to treat the conflicts
+of CPU cap state vs System wide cap state, we can unify the
+verification logic to a single place.
 
-Let's get rid of it.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Dave Martin <dave.martin@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/bpi.S        |   12 ++----------
- arch/arm64/kernel/cpu_errata.c |    9 +++------
- 2 files changed, 5 insertions(+), 16 deletions(-)
+ arch/arm64/kernel/cpufeature.c |   91 ++++++++++++++++++++++++++---------------
+ 1 file changed, 58 insertions(+), 33 deletions(-)
 
---- a/arch/arm64/kernel/bpi.S
-+++ b/arch/arm64/kernel/bpi.S
-@@ -56,21 +56,13 @@ ENTRY(__bp_harden_hyp_vecs_start)
- ENTRY(__bp_harden_hyp_vecs_end)
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1229,6 +1229,58 @@ static inline void set_sys_caps_initiali
+ }
  
+ /*
++ * Run through the list of capabilities to check for conflicts.
++ * If the system has already detected a capability, take necessary
++ * action on this CPU.
++ *
++ * Returns "false" on conflicts.
++ */
++static bool
++__verify_local_cpu_caps(const struct arm64_cpu_capabilities *caps_list)
++{
++	bool cpu_has_cap, system_has_cap;
++	const struct arm64_cpu_capabilities *caps;
++
++	for (caps = caps_list; caps->matches; caps++) {
++		cpu_has_cap = __this_cpu_has_cap(caps_list, caps->capability);
++		system_has_cap = cpus_have_cap(caps->capability);
++
++		if (system_has_cap) {
++			/*
++			 * Check if the new CPU misses an advertised feature,
++			 * which is not safe to miss.
++			 */
++			if (!cpu_has_cap && !cpucap_late_cpu_optional(caps))
++				break;
++			/*
++			 * We have to issue cpu_enable() irrespective of
++			 * whether the CPU has it or not, as it is enabeld
++			 * system wide. It is upto the call back to take
++			 * appropriate action on this CPU.
++			 */
++			if (caps->cpu_enable)
++				caps->cpu_enable(caps);
++		} else {
++			/*
++			 * Check if the CPU has this capability if it isn't
++			 * safe to have when the system doesn't.
++			 */
++			if (cpu_has_cap && !cpucap_late_cpu_permitted(caps))
++				break;
++		}
++	}
++
++	if (caps->matches) {
++		pr_crit("CPU%d: Detected conflict for capability %d (%s), System: %d, CPU: %d\n",
++			smp_processor_id(), caps->capability,
++			caps->desc, system_has_cap, cpu_has_cap);
++		return false;
++	}
++
++	return true;
++}
++
++/*
+  * Check for CPU features that are used in early boot
+  * based on the Boot CPU value.
+  */
+@@ -1250,25 +1302,10 @@ verify_local_elf_hwcaps(const struct arm
+ 		}
+ }
  
--.macro smccc_workaround_1 inst
-+ENTRY(__smccc_workaround_1_smc_start)
- 	sub	sp, sp, #(8 * 4)
- 	stp	x2, x3, [sp, #(8 * 0)]
- 	stp	x0, x1, [sp, #(8 * 2)]
- 	mov	w0, #ARM_SMCCC_ARCH_WORKAROUND_1
--	\inst	#0
-+	smc	#0
- 	ldp	x2, x3, [sp, #(8 * 0)]
- 	ldp	x0, x1, [sp, #(8 * 2)]
- 	add	sp, sp, #(8 * 4)
--.endm
+-static void
+-verify_local_cpu_features(const struct arm64_cpu_capabilities *caps_list)
++static void verify_local_cpu_features(void)
+ {
+-	const struct arm64_cpu_capabilities *caps = caps_list;
+-	for (; caps->matches; caps++) {
+-		if (!cpus_have_cap(caps->capability))
+-			continue;
+-		/*
+-		 * If the new CPU misses an advertised feature, we cannot proceed
+-		 * further, park the cpu.
+-		 */
+-		if (!__this_cpu_has_cap(caps_list, caps->capability)) {
+-			pr_crit("CPU%d: missing feature: %s\n",
+-					smp_processor_id(), caps->desc);
+-			cpu_die_early();
+-		}
+-		if (caps->cpu_enable)
+-			caps->cpu_enable(caps);
+-	}
++	if (!__verify_local_cpu_caps(arm64_features))
++		cpu_die_early();
+ }
+ 
+ /*
+@@ -1278,20 +1315,8 @@ verify_local_cpu_features(const struct a
+  */
+ static void verify_local_cpu_errata_workarounds(void)
+ {
+-	const struct arm64_cpu_capabilities *caps = arm64_errata;
 -
--ENTRY(__smccc_workaround_1_smc_start)
--	smccc_workaround_1	smc
- ENTRY(__smccc_workaround_1_smc_end)
--
--ENTRY(__smccc_workaround_1_hvc_start)
--	smccc_workaround_1	hvc
--ENTRY(__smccc_workaround_1_hvc_end)
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -85,8 +85,6 @@ DEFINE_PER_CPU_READ_MOSTLY(struct bp_har
- #ifdef CONFIG_KVM
- extern char __smccc_workaround_1_smc_start[];
- extern char __smccc_workaround_1_smc_end[];
--extern char __smccc_workaround_1_hvc_start[];
--extern char __smccc_workaround_1_hvc_end[];
+-	for (; caps->matches; caps++) {
+-		if (cpus_have_cap(caps->capability)) {
+-			if (caps->cpu_enable)
+-				caps->cpu_enable(caps);
+-		} else if (caps->matches(caps, SCOPE_LOCAL_CPU)) {
+-			pr_crit("CPU%d: Requires work around for %s, not detected"
+-					" at boot time\n",
+-				smp_processor_id(),
+-				caps->desc ? : "an erratum");
+-			cpu_die_early();
+-		}
+-	}
++	if (!__verify_local_cpu_caps(arm64_errata))
++		cpu_die_early();
+ }
  
- static void __copy_hyp_vect_bpi(int slot, const char *hyp_vecs_start,
- 				const char *hyp_vecs_end)
-@@ -131,8 +129,6 @@ static void __install_bp_hardening_cb(bp
- #else
- #define __smccc_workaround_1_smc_start		NULL
- #define __smccc_workaround_1_smc_end		NULL
--#define __smccc_workaround_1_hvc_start		NULL
--#define __smccc_workaround_1_hvc_end		NULL
- 
- static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
- 				      const char *hyp_vecs_start,
-@@ -206,8 +202,9 @@ enable_smccc_arch_workaround_1(const str
- 		if ((int)res.a0 < 0)
- 			return;
- 		cb = call_hvc_arch_workaround_1;
--		smccc_start = __smccc_workaround_1_hvc_start;
--		smccc_end = __smccc_workaround_1_hvc_end;
-+		/* This is a guest, no need to patch KVM vectors */
-+		smccc_start = NULL;
-+		smccc_end = NULL;
- 		break;
- 
- 	case PSCI_CONDUIT_SMC:
+ static void update_cpu_errata_workarounds(void)
+@@ -1315,7 +1340,7 @@ static void __init enable_errata_workaro
+ static void verify_local_cpu_capabilities(void)
+ {
+ 	verify_local_cpu_errata_workarounds();
+-	verify_local_cpu_features(arm64_features);
++	verify_local_cpu_features();
+ 	verify_local_elf_hwcaps(arm64_elf_hwcaps);
+ 	if (system_supports_32bit_el0())
+ 		verify_local_elf_hwcaps(compat_elf_hwcaps);
 
 
