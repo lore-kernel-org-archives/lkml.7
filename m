@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D60CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7A9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9D9205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9B5205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210762;
-	bh=8jmxZ2IQvza0hiJBvlidENn+RvnEXJ8eFPMGst97j9c=;
+	s=default; t=1572210765;
+	bh=0d5MsTI66IF7v3sAx2BAR91jhVTzfEEYisC3gIb81Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wxSpxFbjYcpFsjMwqFx+CdkrAVy+M4hOKAvhB6ZJPVV2LDu2VHpkHKIIeGuMbjP8F
-	 P+xwfN0yBHKjgmgd1ZUZE4UQ9UTAUJwQzfL+2z1nPIYXqZHpBSJFIu9Ox3XI7o6a0Q
-	 RtGjMNVnp4LQMTti0/HxMEVpi2c9bGrO3DSD6S+4=
+	b=ur6Jv7yRpHHmbVoK8iOW5Sy6I9UAqtZRzjam+FioD2COzNgrh0wF/h7yXf+hKPZdE
+	 xxDSH9R8sK5rm9/QcKdL6vdg/Or5x18XiGcgXDoPmdPrOtFlSHvY3vaKRbfrzM5zra
+	 e4HBH9+zmKMi1e1jtuVvy6R+Plskn/jBa0qRtfiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbfJ0VMl (ORCPT
+        id S1730097AbfJ0VMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59486 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729488AbfJ0VMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:38 -0400
+        id S1729052AbfJ0VMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:41 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8867B205C9;
-        Sun, 27 Oct 2019 21:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F75B2064A;
+        Sun, 27 Oct 2019 21:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210758;
-        bh=8jmxZ2IQvza0hiJBvlidENn+RvnEXJ8eFPMGst97j9c=;
+        s=default; t=1572210760;
+        bh=0d5MsTI66IF7v3sAx2BAR91jhVTzfEEYisC3gIb81Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9sPiWtuOnemBRZEXUDCtH+dO8a4iuJ+9pqnx0PR+qKgUP/Gz4HlUI/uqFpBjXlAP
-         Uese+2VKXkhzrvlXVqZqTc1GBSo9tmZ2gBIFwpie8n4rKNVQehxLf271ygWGwBHitg
-         d8S2+NNKcE2TGzAvNyt3gAHb7TwrgEWLADZxGMic=
+        b=oTYVDAEYpw0gy6QQ+hGUzN+AM5srqnakgKjIUyHaUuv14UtKj3Ay5vCTszlAxCcbR
+         EuHznTTBYvU2M5OSGpwbbAFMZao9EVHSWE3/vxMOnw/VWDQTG1fGR58pP+L+9HENXy
+         E33JPpTU32VkV+Llt3FzuGCMlB+5RrbpvASSMXG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        Sven Schnelle <svens@stackframe.org>
-Subject: [PATCH 4.14 105/119] parisc: Fix vmap memory leak in ioremap()/iounmap()
-Date:   Sun, 27 Oct 2019 22:01:22 +0100
-Message-Id: <20191027203349.232344853@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 4.14 096/119] drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
+Date:   Sun, 27 Oct 2019 22:01:13 +0100
+Message-Id: <20191027203348.712894177@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -59,60 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 513f7f747e1cba81f28a436911fba0b485878ebd upstream.
+commit 11bcf5f78905b90baae8fb01e16650664ed0cb00 upstream.
 
-Sven noticed that calling ioremap() and iounmap() multiple times leads
-to a vmap memory leak:
-	vmap allocation for size 4198400 failed:
-	use vmalloc=<size> to increase size
+Another panel that needs 6BPC quirk.
 
-It seems we missed calling vunmap() in iounmap().
-
-Signed-off-by: Helge Deller <deller@gmx.de>
-Noticed-by: Sven Schnelle <svens@stackframe.org>
-Cc: <stable@vger.kernel.org> # v3.16+
+BugLink: https://bugs.launchpad.net/bugs/1819968
+Cc: <stable@vger.kernel.org> # v4.8+
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190402033037.21877-1-kai.heng.feng@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/mm/ioremap.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_edid.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/parisc/mm/ioremap.c
-+++ b/arch/parisc/mm/ioremap.c
-@@ -3,7 +3,7 @@
-  * arch/parisc/mm/ioremap.c
-  *
-  * (C) Copyright 1995 1996 Linus Torvalds
-- * (C) Copyright 2001-2006 Helge Deller <deller@gmx.de>
-+ * (C) Copyright 2001-2019 Helge Deller <deller@gmx.de>
-  * (C) Copyright 2005 Kyle McMartin <kyle@parisc-linux.org>
-  */
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -164,6 +164,9 @@ static const struct edid_quirk {
+ 	/* Medion MD 30217 PG */
+ 	{ "MED", 0x7b8, EDID_QUIRK_PREFER_LARGE_75 },
  
-@@ -84,7 +84,7 @@ void __iomem * __ioremap(unsigned long p
- 	addr = (void __iomem *) area->addr;
- 	if (ioremap_page_range((unsigned long)addr, (unsigned long)addr + size,
- 			       phys_addr, pgprot)) {
--		vfree(addr);
-+		vunmap(addr);
- 		return NULL;
- 	}
- 
-@@ -92,9 +92,11 @@ void __iomem * __ioremap(unsigned long p
- }
- EXPORT_SYMBOL(__ioremap);
- 
--void iounmap(const volatile void __iomem *addr)
-+void iounmap(const volatile void __iomem *io_addr)
- {
--	if (addr > high_memory)
--		return vfree((void *) (PAGE_MASK & (unsigned long __force) addr));
-+	unsigned long addr = (unsigned long)io_addr & PAGE_MASK;
++	/* Lenovo G50 */
++	{ "SDC", 18514, EDID_QUIRK_FORCE_6BPC },
 +
-+	if (is_vmalloc_addr((void *)addr))
-+		vunmap((void *)addr);
- }
- EXPORT_SYMBOL(iounmap);
+ 	/* Panel in Samsung NP700G7A-S01PL notebook reports 6bpc */
+ 	{ "SEC", 0xd033, EDID_QUIRK_FORCE_8BPC },
+ 
 
 
