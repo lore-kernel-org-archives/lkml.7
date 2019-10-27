@@ -2,54 +2,60 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4740CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867A5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A593205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5782920679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212269;
-	bh=hnSeWz2y9ujbvz5ZUve2LuVtHb1iD/dO/B3j/VOPyys=;
+	s=default; t=1572212272;
+	bh=fMC2KVqM3DIfY3q5vtjxo4yXJnY7/FVmoBRpuqNzRi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9vwtvw3ZiRJDM8DmInaMlTt2aTbOUEmw5n09H+6wSKIlep2r5ZtHlcU0nL1rOV0m
-	 /H4WO1y4+O6EMfRlBXRBeLTDThjIXsWUVqA4tMAhxREFBGK6autO9tgrUBBAG16/OQ
-	 2CdsE0K+cv7N1UKePhJTj1HlyyC1fLjbAwRnknfI=
+	b=OULaCGp65mULVtx2lVAqxDZCjTSrlU2sEwa5JMHM8BmCKjlNn34DLzm6FuHs9jQyq
+	 0K7fxUJIQ2LIMi6KjqSa/jaApIrn5iufVWIldaffjCJhLNzIxhwrkb1AW7FE+6l2Ga
+	 UsZuNSkIjoJ4+Alwhe5iOj5glUSV2ugfjebTxTeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbfJ0Vhs (ORCPT
+        id S1728674AbfJ0VEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728687AbfJ0VEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:04:43 -0400
+        id S1728651AbfJ0VEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:04:32 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91D4D208C0;
-        Sun, 27 Oct 2019 21:04:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8CA2064A;
+        Sun, 27 Oct 2019 21:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210283;
-        bh=hnSeWz2y9ujbvz5ZUve2LuVtHb1iD/dO/B3j/VOPyys=;
+        s=default; t=1572210271;
+        bh=fMC2KVqM3DIfY3q5vtjxo4yXJnY7/FVmoBRpuqNzRi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4maqkoW2SNdxomJcfMTQ3nF3hP1a8JDJ+h7utd6023vEEcTNTwjjLxZnkYrk8BnC
-         0x39I2UPCVYTxSK4JbbZ4qryQfYkFb84ScnfHIH0WlM2Bn0BbMO2oEHIL1twar95yv
-         0nP7jTOx1Yy9sXDNfXQ8pn/hyEW/NDCJATz7UFIs=
+        b=xpt+YiKr5PJWB/BbaIo82SliHbaqWQ7OGp54LegIOuKZVzBnuSNf9gzkLgjZuIk72
+         +qa8EgoDDbkqBSQNn0tb0Ca4pR6ZE7lt6H0NAi8sGVUhP2L4AK83b7UFMWRkvJ9b0v
+         gfl9zEoYNp5mak1nSh4XpS34YE4f7IUXr+WmDFZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/49] Revert "drm/radeon: Fix EEH during kexec"
-Date:   Sun, 27 Oct 2019 22:00:50 +0100
-Message-Id: <20191027203126.453946813@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Timo Wischer <twischer@de.adit-jv.com>,
+        Junya Monden <jmonden@jp.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 26/41] ASoC: rsnd: Reinitialize bit clock inversion flag for every format setting
+Date:   Sun, 27 Oct 2019 22:01:04 +0100
+Message-Id: <20191027203121.969779760@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
-References: <20191027203119.468466356@linuxfoundation.org>
+In-Reply-To: <20191027203056.220821342@linuxfoundation.org>
+References: <20191027203056.220821342@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,49 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Junya Monden <jmonden@jp.adit-jv.com>
 
-[ Upstream commit 8d13c187c42e110625d60094668a8f778c092879 ]
+commit 22e58665a01006d05f0239621f7d41cacca96cc4 upstream.
 
-This reverts commit 6f7fe9a93e6c09bf988c5059403f5f88e17e21e6.
+Unlike other format-related DAI parameters, rdai->bit_clk_inv flag
+is not properly re-initialized when setting format for new stream
+processing. The inversion, if requested, is then applied not to default,
+but to a previous value, which leads to SCKP bit in SSICR register being
+set incorrectly.
+Fix this by re-setting the flag to its initial value, determined by format.
 
-This breaks some boards.  Maybe just enable this on PPC for
-now?
+Fixes: 1a7889ca8aba3 ("ASoC: rsnd: fixup SND_SOC_DAIFMT_xB_xF behavior")
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc: Jiada Wang <jiada_wang@mentor.com>
+Cc: Timo Wischer <twischer@de.adit-jv.com>
+Cc: stable@vger.kernel.org # v3.17+
+Signed-off-by: Junya Monden <jmonden@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20191016124255.7442-1-erosca@de.adit-jv.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=205147
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 8 --------
- 1 file changed, 8 deletions(-)
+ sound/soc/sh/rcar/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 3ccf5b28b326e..30bd4a6a9d466 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -366,19 +366,11 @@ radeon_pci_remove(struct pci_dev *pdev)
- static void
- radeon_pci_shutdown(struct pci_dev *pdev)
- {
--	struct drm_device *ddev = pci_get_drvdata(pdev);
--
- 	/* if we are running in a VM, make sure the device
- 	 * torn down properly on reboot/shutdown
- 	 */
- 	if (radeon_device_is_virtual())
- 		radeon_pci_remove(pdev);
--
--	/* Some adapters need to be suspended before a
--	* shutdown occurs in order to prevent an error
--	* during kexec.
--	*/
--	radeon_suspend_kms(ddev, true, true, false);
- }
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -524,6 +524,7 @@ static int rsnd_soc_dai_set_fmt(struct s
+ 	}
  
- static int radeon_pmops_suspend(struct device *dev)
--- 
-2.20.1
-
+ 	/* set format */
++	rdai->bit_clk_inv = 0;
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+ 		rdai->sys_delay = 0;
 
 
