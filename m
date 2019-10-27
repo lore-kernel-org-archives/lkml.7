@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5431CCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756BE2064A
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F04A205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211708;
-	bh=G8fdBiczYjP1dj+XAo4W0fgeejN6M3is5d/XqM9NW8A=;
+	s=default; t=1572211719;
+	bh=JdEx2XorxiF5emEMUubrlBRegU0owdRivo+wfot7gtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSOFOVRShgjih6eMBb+zTl7Q3OWE6PPgEH6VlcAVoIcEy1G/nDk1Ybr+DiqB6dtEb
-	 2KEHFxIIxawTR0ATRERLWFp2khb/noXEVJRXrtdu13+bO6hFYGQaQI/E6os4vRoTQY
-	 k/4W2u03DbnrZqWSIVkJqrMX6811PPvTke06jYtQ=
+	b=1kuAPHrSeOdPLhVyySRjGfw57P5ZOhtrfxPKk3pnoljdL63EfVuKBPJ7TwiF3Zoeo
+	 9FwRHoZPDs7QmC12aniGG2n9/VOkBkdazbWXeAORHwcm/QIVRedGS0mTTU+Lo3urp6
+	 ZXIyfEnhIU8zs6NsvPFnAx6+3Hnk9+VfC/JLPGj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732211AbfJ0VWm (ORCPT
+        id S1732144AbfJ0VW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43690 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732193AbfJ0VWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:22:38 -0400
+        id S1732124AbfJ0VWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:22:22 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCDE205C9;
-        Sun, 27 Oct 2019 21:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A708208C0;
+        Sun, 27 Oct 2019 21:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211357;
-        bh=G8fdBiczYjP1dj+XAo4W0fgeejN6M3is5d/XqM9NW8A=;
+        s=default; t=1572211340;
+        bh=JdEx2XorxiF5emEMUubrlBRegU0owdRivo+wfot7gtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CeHKb/OsBAzZwnGM8B9m2eYMcMVVSlxlkPJ7PJhfntqiAPjwv7ag65XlvNmC0oxCW
-         A7knKxx+GRFFarPIQzmjkuwXDnsKcvcc93W3M8VlNK+mHhuIifZQNpSjZuCl2QM0yC
-         Itt9SRnxMGmAmEsNF4Q95BTAgx8BscnnMSNFiatA=
+        b=SREKlXSR8ei/2ayHuEl93qCcXIAdS9018bh/ucM9VQBgpdv+QRcTczQReTwQjtrpM
+         QFYfpP4h/ACUHfylWsfiOgQP6mDkANfRJV0Eg2lSX+9/EQ/1AZe1c94HrW4KCvaGTj
+         7xqp4D57QUo5HnFt0fAqebtKGbumlXHTV0Tdxcr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nicolas Waisman <nico@semmle.com>,
-        Will Deacon <will@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.3 122/197] cfg80211: wext: avoid copying malformed SSIDs
-Date:   Sun, 27 Oct 2019 22:00:40 +0100
-Message-Id: <20191027203358.324038638@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Andrew Duggan <aduggan@synaptics.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.3 116/197] Input: synaptics-rmi4 - avoid processing unknown IRQs
+Date:   Sun, 27 Oct 2019 22:00:34 +0100
+Message-Id: <20191027203358.000247480@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,56 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Evan Green <evgreen@chromium.org>
 
-commit 4ac2813cc867ae563a1ba5a9414bfb554e5796fa upstream.
+commit 363c53875aef8fce69d4a2d0873919ccc7d9e2ad upstream.
 
-Ensure the SSID element is bounds-checked prior to invoking memcpy()
-with its length field, when copying to userspace.
+rmi_process_interrupt_requests() calls handle_nested_irq() for
+each interrupt status bit it finds. If the irq domain mapping for
+this bit had not yet been set up, then it ends up calling
+handle_nested_irq(0), which causes a NULL pointer dereference.
 
-Cc: <stable@vger.kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Reported-by: Nicolas Waisman <nico@semmle.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20191004095132.15777-2-will@kernel.org
-[adjust commit log a bit]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+There's already code that masks the irq_status bits coming out of the
+hardware with current_irq_mask, presumably to avoid this situation.
+However current_irq_mask seems to more reflect the actual mask set
+in the hardware rather than the IRQs software has set up and registered
+for. For example, in rmi_driver_reset_handler(), the current_irq_mask
+is initialized based on what is read from the hardware. If the reset
+value of this mask enables IRQs that Linux has not set up yet, then
+we end up in this situation.
+
+There appears to be a third unused bitmask that used to serve this
+purpose, fn_irq_bits. Use that bitmask instead of current_irq_mask
+to avoid calling handle_nested_irq() on IRQs that have not yet been
+set up.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Andrew Duggan <aduggan@synaptics.com>
+Link: https://lore.kernel.org/r/20191008223657.163366-1-evgreen@chromium.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/wext-sme.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/input/rmi4/rmi_driver.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/wireless/wext-sme.c
-+++ b/net/wireless/wext-sme.c
-@@ -202,6 +202,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
- 			       struct iw_point *data, char *ssid)
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
-+	int ret = 0;
- 
- 	/* call only for station! */
- 	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
-@@ -219,7 +220,10 @@ int cfg80211_mgd_wext_giwessid(struct ne
- 		if (ie) {
- 			data->flags = 1;
- 			data->length = ie[1];
--			memcpy(ssid, ie + 2, data->length);
-+			if (data->length > IW_ESSID_MAX_SIZE)
-+				ret = -EINVAL;
-+			else
-+				memcpy(ssid, ie + 2, data->length);
- 		}
- 		rcu_read_unlock();
- 	} else if (wdev->wext.connect.ssid && wdev->wext.connect.ssid_len) {
-@@ -229,7 +233,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -146,7 +146,7 @@ static int rmi_process_interrupt_request
  	}
- 	wdev_unlock(wdev);
  
--	return 0;
-+	return ret;
- }
+ 	mutex_lock(&data->irq_mutex);
+-	bitmap_and(data->irq_status, data->irq_status, data->current_irq_mask,
++	bitmap_and(data->irq_status, data->irq_status, data->fn_irq_bits,
+ 	       data->irq_count);
+ 	/*
+ 	 * At this point, irq_status has all bits that are set in the
+@@ -385,6 +385,8 @@ static int rmi_driver_set_irq_bits(struc
+ 	bitmap_copy(data->current_irq_mask, data->new_irq_mask,
+ 		    data->num_of_irq_regs);
  
- int cfg80211_mgd_wext_siwap(struct net_device *dev,
++	bitmap_or(data->fn_irq_bits, data->fn_irq_bits, mask, data->irq_count);
++
+ error_unlock:
+ 	mutex_unlock(&data->irq_mutex);
+ 	return error;
+@@ -398,6 +400,8 @@ static int rmi_driver_clear_irq_bits(str
+ 	struct device *dev = &rmi_dev->dev;
+ 
+ 	mutex_lock(&data->irq_mutex);
++	bitmap_andnot(data->fn_irq_bits,
++		      data->fn_irq_bits, mask, data->irq_count);
+ 	bitmap_andnot(data->new_irq_mask,
+ 		  data->current_irq_mask, mask, data->irq_count);
+ 
 
 
