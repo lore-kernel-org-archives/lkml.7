@@ -2,53 +2,52 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0A6CA9EBE
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E965C47E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E718205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34434205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212031;
-	bh=JAreu9up1yVNJdhyI5/epM/cklFUlC5i0JLQzb4RhBc=;
+	s=default; t=1572212040;
+	bh=ssO/fgfxNpvpT7q/HqGLGpAcTTDrtqgKuanlAZwDpQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+V0JDiJ0c0HgFPMGbc6qoo6bt9LYk3CuSGps+m3FVEJlVssmmkCNkmXHvQ/XHg4E
-	 94W5QabnC2qhr/fr/9RLNaw+kvxa++1pAFu8t8q/QlVTs7WIU+Sw8czd6Me081fJUx
-	 r7M9tk4Vaw5n3Z5L5rNQQtU3nxBfLJJ5xw6Ej4uM=
+	b=FsYGZTVa1PFfj23OEtACV5FybgQXKhOUVQsAA5kvtMsv0YOT+hiuXG5n/ElERnWQK
+	 rUI9JelGVs8lKgLsy/WObataTLNSG8mc1msCxilriT+DTy9jdIVPf2f/6qPBTt4xu1
+	 KOJ/AZBqpEkYmuQjv+PAmF+cB5br1gjegcMwlRD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbfJ0VMO (ORCPT
+        id S1729973AbfJ0VLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58876 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:11:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbfJ0VMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:10 -0400
+        id S1729949AbfJ0VLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:11:52 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C1E205C9;
-        Sun, 27 Oct 2019 21:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DFCE205C9;
+        Sun, 27 Oct 2019 21:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210729;
-        bh=JAreu9up1yVNJdhyI5/epM/cklFUlC5i0JLQzb4RhBc=;
+        s=default; t=1572210711;
+        bh=ssO/fgfxNpvpT7q/HqGLGpAcTTDrtqgKuanlAZwDpQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kfKxn7JV8S+nlDlnQjK7Hv6dfKaaLvvNG0smo8oWx3QpvCsVoI6z0cXVrmn1djOO
-         aSUeXzQFpB9qgfoFxP9CFErtCzxO8s9QwuRo/Geivcbdow0LQVH5akpnvTmLviLQON
-         +LPr44S3pcl08RvwL53xsQahRrvXY2StspumKUE8=
+        b=zzdLe2tVhiYtHWixGUmNcH0ZjtGjnL/xJt0SaHhdDHePhhSLw8Wq1nhNEbHmKzAl5
+         DI6KC0mg++L8i0BiDjmHT+XJpKQAjYkLsNmuYYXx2/5tx6YozSIQtqcU3ZME1dJY/a
+         5LsWqxwgcCnPkC2Wrxc0Bk8m0/xHepOZn8Lnvgpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Jitindar SIngh, Suraj" <surajjs@amazon.com>
-Subject: [PATCH 4.14 116/119] kvm: vmx: Introduce lapic_mode enumeration
-Date:   Sun, 27 Oct 2019 22:01:33 +0100
-Message-Id: <20191027203349.890737687@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 111/119] memstick: jmb38x_ms: Fix an error handling path in jmb38x_ms_probe()
+Date:   Sun, 27 Oct 2019 22:01:28 +0100
+Message-Id: <20191027203349.582152782@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -61,106 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 588716494258899389206fa50426e78cc9df89b9 upstream.
+commit 28c9fac09ab0147158db0baeec630407a5e9b892 upstream.
 
-The local APIC can be in one of three modes: disabled, xAPIC or
-x2APIC. (A fourth mode, "invalid," is included for completeness.)
+If 'jmb38x_ms_count_slots()' returns 0, we must undo the previous
+'pci_request_regions()' call.
 
-Using the new enumeration can make some of the APIC mode logic easier
-to read. In kvm_set_apic_base, for instance, it is clear that one
-cannot transition directly from x2APIC mode to xAPIC mode or directly
-from APIC disabled to x2APIC mode.
+Goto 'err_out_int' to fix it.
 
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-[Check invalid bits even if msr_info->host_initiated.  Reported by
- Wanpeng Li. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Jitindar SIngh, Suraj" <surajjs@amazon.com>
+Fixes: 60fdd931d577 ("memstick: add support for JMicron jmb38x MemoryStick host controller")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.h |   14 ++++++++++++++
- arch/x86/kvm/x86.c   |   26 +++++++++++++++-----------
- 2 files changed, 29 insertions(+), 11 deletions(-)
+ drivers/memstick/host/jmb38x_ms.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -16,6 +16,13 @@
- #define APIC_BUS_CYCLE_NS       1
- #define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
+--- a/drivers/memstick/host/jmb38x_ms.c
++++ b/drivers/memstick/host/jmb38x_ms.c
+@@ -947,7 +947,7 @@ static int jmb38x_ms_probe(struct pci_de
+ 	if (!cnt) {
+ 		rc = -ENODEV;
+ 		pci_dev_busy = 1;
+-		goto err_out;
++		goto err_out_int;
+ 	}
  
-+enum lapic_mode {
-+	LAPIC_MODE_DISABLED = 0,
-+	LAPIC_MODE_INVALID = X2APIC_ENABLE,
-+	LAPIC_MODE_XAPIC = MSR_IA32_APICBASE_ENABLE,
-+	LAPIC_MODE_X2APIC = MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE,
-+};
-+
- struct kvm_timer {
- 	struct hrtimer timer;
- 	s64 period; 				/* unit: ns */
-@@ -89,6 +96,7 @@ u64 kvm_get_apic_base(struct kvm_vcpu *v
- int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
- int kvm_apic_get_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s);
- int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s);
-+enum lapic_mode kvm_get_apic_mode(struct kvm_vcpu *vcpu);
- int kvm_lapic_find_highest_irr(struct kvm_vcpu *vcpu);
- 
- u64 kvm_get_lapic_tscdeadline_msr(struct kvm_vcpu *vcpu);
-@@ -220,4 +228,10 @@ void kvm_lapic_switch_to_hv_timer(struct
- void kvm_lapic_expired_hv_timer(struct kvm_vcpu *vcpu);
- bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu);
- void kvm_lapic_restart_hv_timer(struct kvm_vcpu *vcpu);
-+
-+static inline enum lapic_mode kvm_apic_mode(u64 apic_base)
-+{
-+	return apic_base & (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE);
-+}
-+
- #endif
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -306,23 +306,27 @@ u64 kvm_get_apic_base(struct kvm_vcpu *v
- }
- EXPORT_SYMBOL_GPL(kvm_get_apic_base);
- 
-+enum lapic_mode kvm_get_apic_mode(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_apic_mode(kvm_get_apic_base(vcpu));
-+}
-+EXPORT_SYMBOL_GPL(kvm_get_apic_mode);
-+
- int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- {
--	u64 old_state = vcpu->arch.apic_base &
--		(MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE);
--	u64 new_state = msr_info->data &
--		(MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE);
-+	enum lapic_mode old_mode = kvm_get_apic_mode(vcpu);
-+	enum lapic_mode new_mode = kvm_apic_mode(msr_info->data);
- 	u64 reserved_bits = ((~0ULL) << cpuid_maxphyaddr(vcpu)) | 0x2ff |
- 		(guest_cpuid_has(vcpu, X86_FEATURE_X2APIC) ? 0 : X2APIC_ENABLE);
- 
--	if ((msr_info->data & reserved_bits) || new_state == X2APIC_ENABLE)
--		return 1;
--	if (!msr_info->host_initiated &&
--	    ((new_state == MSR_IA32_APICBASE_ENABLE &&
--	      old_state == (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE)) ||
--	     (new_state == (MSR_IA32_APICBASE_ENABLE | X2APIC_ENABLE) &&
--	      old_state == 0)))
-+	if ((msr_info->data & reserved_bits) != 0 || new_mode == LAPIC_MODE_INVALID)
- 		return 1;
-+	if (!msr_info->host_initiated) {
-+		if (old_mode == LAPIC_MODE_X2APIC && new_mode == LAPIC_MODE_XAPIC)
-+			return 1;
-+		if (old_mode == LAPIC_MODE_DISABLED && new_mode == LAPIC_MODE_X2APIC)
-+			return 1;
-+	}
- 
- 	kvm_lapic_set_base(vcpu, msr_info->data);
- 	return 0;
+ 	jm = kzalloc(sizeof(struct jmb38x_ms)
 
 
