@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D91CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BCCCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7977320717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7561120717
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211922;
-	bh=DBvde18xu0b7T6PFX7Da40x3Js9/MlrRtGfYxpnYZJ8=;
+	s=default; t=1572211925;
+	bh=vQADRlEHKZojB9aIFHoplWCEzeRkENFkqS77WUullxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=03l5VcCC2VfQ7nzx6SeqwZeDxRC9NES+bQJyKEcIoy1hRbWm3nuXV7ZbJs6QQOI2/
-	 Mzk7dgxjFsp6mPtSDh2zlECa7BZ+w/pVz73bHLXEMHNUc5za68Gsa08WrNRyO+2Zxl
-	 7qhmyOqPWkgJ4AYz9ySMLmb11CGWgjSO/UTJP7EQ=
+	b=yZvDMv14Ft8USnhqTqcZkHDwAyhlFcu5WABDWXT1NjpsDvltRkM2E6BJHt/6cy3hx
+	 IrpR6UKYyWUyygzSbIp43q8HwFUm7Hs4/lAXjqlZsvDTVlyVZVykjaPMDp+19PLafP
+	 CAihsn7GZ4ELNj0PZS2UiEpdUGNQnNJDuuHsAbEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfJ0VPr (ORCPT
+        id S1731539AbfJ0VcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35098 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:32:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730673AbfJ0VPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:15:41 -0400
+        id S1730682AbfJ0VPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:15:44 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D901E20B7C;
-        Sun, 27 Oct 2019 21:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC91214AF;
+        Sun, 27 Oct 2019 21:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210940;
-        bh=DBvde18xu0b7T6PFX7Da40x3Js9/MlrRtGfYxpnYZJ8=;
+        s=default; t=1572210943;
+        bh=vQADRlEHKZojB9aIFHoplWCEzeRkENFkqS77WUullxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z0vYvpff2W3tkGZG8JkemsCvzo45K5c7IOFG8mzQnh59JptbFBtJdFpm4sA9iI8qo
-         NX5NQhWDWoOHKh0nLoz55Hxkt4dvMNy+GuEJmAuzFJq9ug1AHcxmLDkySaE3IXdz0/
-         0145v/QoE6RQYrFVaIlOOTW4S24UIrrju2ZtJub4=
+        b=KkhS3pNX7wyqizcQYgNeYAnaS2uu1SjEmn2fDPbcPax/2oVNDm7j0xJfsuxmHu9Yu
+         jyG16MEW9C7/B+xvGUOG5/QNdZCbMAJ7zq7IWMDePAk6XvOmLRdQVXbV4kpUM8D58h
+         tXHgIV+5yArJA6hKH/8UKN6jMIPg9G1kafZ6d8MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        stable@vger.kernel.org, Jane Chu <jane.chu@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 68/93] hugetlbfs: dont access uninitialized memmaps in pfn_range_valid_gigantic()
-Date:   Sun, 27 Oct 2019 22:01:20 +0100
-Message-Id: <20191027203308.085426069@linuxfoundation.org>
+Subject: [PATCH 4.19 69/93] mm/memory-failure: poison read receives SIGKILL instead of SIGBUS if mmaped more than once
+Date:   Sun, 27 Oct 2019 22:01:21 +0100
+Message-Id: <20191027203308.498399326@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -64,59 +63,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Jane Chu <jane.chu@oracle.com>
 
-commit f231fe4235e22e18d847e05cbe705deaca56580a upstream.
+commit 3d7fed4ad8ccb691d217efbb0f934e6a4df5ef91 upstream.
 
-Uninitialized memmaps contain garbage and in the worst case trigger
-kernel BUGs, especially with CONFIG_PAGE_POISONING.  They should not get
-touched.
+Mmap /dev/dax more than once, then read the poison location using
+address from one of the mappings.  The other mappings due to not having
+the page mapped in will cause SIGKILLs delivered to the process.
+SIGKILL succeeds over SIGBUS, so user process loses the opportunity to
+handle the UE.
 
-Let's make sure that we only consider online memory (managed by the
-buddy) that has initialized memmaps.  ZONE_DEVICE is not applicable.
+Although one may add MAP_POPULATE to mmap(2) to work around the issue,
+MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
+isn't always an option.
 
-page_zone() will call page_to_nid(), which will trigger
-VM_BUG_ON_PGFLAGS(PagePoisoned(page), page) with CONFIG_PAGE_POISONING
-and CONFIG_DEBUG_VM_PGFLAGS when called on uninitialized memmaps.  This
-can be the case when an offline memory block (e.g., never onlined) is
-spanned by a zone.
+Details -
 
-Note: As explained by Michal in [1], alloc_contig_range() will verify
-the range.  So it boils down to the wrong access in this function.
+  ndctl inject-error --block=10 --count=1 namespace6.0
 
-[1] http://lkml.kernel.org/r/20180423000943.GO17484@dhcp22.suse.cz
+  ./read_poison -x dax6.0 -o 5120 -m 2
+  mmaped address 0x7f5bb6600000
+  mmaped address 0x7f3cf3600000
+  doing local read at address 0x7f3cf3601400
+  Killed
 
-Link: http://lkml.kernel.org/r/20191015120717.4858-1-david@redhat.com
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reported-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: <stable@vger.kernel.org>	[4.13+]
+Console messages in instrumented kernel -
+
+  mce: Uncorrected hardware memory error in user-access at edbe201400
+  Memory failure: tk->addr = 7f5bb6601000
+  Memory failure: address edbe201: call dev_pagemap_mapping_shift
+  dev_pagemap_mapping_shift: page edbe201: no PUD
+  Memory failure: tk->size_shift == 0
+  Memory failure: Unable to find user space address edbe201 in read_poison
+  Memory failure: tk->addr = 7f3cf3601000
+  Memory failure: address edbe201: call dev_pagemap_mapping_shift
+  Memory failure: tk->size_shift = 21
+  Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
+    => to deliver SIGKILL
+  Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
+    => to deliver SIGBUS
+
+Link: http://lkml.kernel.org/r/1565112345-28754-3-git-send-email-jane.chu@oracle.com
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+Suggested-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/hugetlb.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ mm/memory-failure.c |   22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1073,11 +1073,10 @@ static bool pfn_range_valid_gigantic(str
- 	struct page *page;
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -202,7 +202,6 @@ struct to_kill {
+ 	struct task_struct *tsk;
+ 	unsigned long addr;
+ 	short size_shift;
+-	char addr_valid;
+ };
  
- 	for (i = start_pfn; i < end_pfn; i++) {
--		if (!pfn_valid(i))
-+		page = pfn_to_online_page(i);
-+		if (!page)
- 			return false;
+ /*
+@@ -327,22 +326,27 @@ static void add_to_kill(struct task_stru
+ 		}
+ 	}
+ 	tk->addr = page_address_in_vma(p, vma);
+-	tk->addr_valid = 1;
+ 	if (is_zone_device_page(p))
+ 		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+ 	else
+ 		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
  
--		page = pfn_to_page(i);
--
- 		if (page_zone(page) != z)
- 			return false;
- 
+ 	/*
+-	 * In theory we don't have to kill when the page was
+-	 * munmaped. But it could be also a mremap. Since that's
+-	 * likely very rare kill anyways just out of paranoia, but use
+-	 * a SIGKILL because the error is not contained anymore.
++	 * Send SIGKILL if "tk->addr == -EFAULT". Also, as
++	 * "tk->size_shift" is always non-zero for !is_zone_device_page(),
++	 * so "tk->size_shift == 0" effectively checks no mapping on
++	 * ZONE_DEVICE. Indeed, when a devdax page is mmapped N times
++	 * to a process' address space, it's possible not all N VMAs
++	 * contain mappings for the page, but at least one VMA does.
++	 * Only deliver SIGBUS with payload derived from the VMA that
++	 * has a mapping for the page.
+ 	 */
+-	if (tk->addr == -EFAULT || tk->size_shift == 0) {
++	if (tk->addr == -EFAULT) {
+ 		pr_info("Memory failure: Unable to find user space address %lx in %s\n",
+ 			page_to_pfn(p), tsk->comm);
+-		tk->addr_valid = 0;
++	} else if (tk->size_shift == 0) {
++		kfree(tk);
++		return;
+ 	}
+ 	get_task_struct(tsk);
+ 	tk->tsk = tsk;
+@@ -369,7 +373,7 @@ static void kill_procs(struct list_head
+ 			 * make sure the process doesn't catch the
+ 			 * signal and then access the memory. Just kill it.
+ 			 */
+-			if (fail || tk->addr_valid == 0) {
++			if (fail || tk->addr == -EFAULT) {
+ 				pr_err("Memory failure: %#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
+ 				       pfn, tk->tsk->comm, tk->tsk->pid);
+ 				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
 
 
