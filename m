@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B29DCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57C3CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022C520717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F7E2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211335;
-	bh=qSmlTE+QgmSY9E9tC6knfwegASSxSRMMw6TO5CL9/D8=;
+	s=default; t=1572211339;
+	bh=1DqdVSCGOeEaLk2suDyeDQnHxAo6s39gquWznHsssWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=feUX/4ZmL38AW/990w+ECvqq8SP8/YwcxLbm1p0nHN1Cbd9jmRoIWrWDxOsqN8kbt
-	 sSfQ37i/jlx/TIoxrbHQcYqmrf8+sEqDk1RvzXOMLJUHGBeGOlsfvrH2vmTruOK/FI
-	 h+jLDYOi9ADsf3LAlicxIkxXRp08W78yQR1bjGzU=
+	b=xIH0JpI4DQwOOG/aYv5Eeo3Pzcyw3n03s6nbr3LAZO6a1xojj1GH+a1QfEoKEWEA9
+	 7DTX6KlvQi3g4O79iwC61k5/GGM0Fy5Tr4EHMrkLRBA62dMJuqf7v6tMzGVYUyeyjE
+	 Ts+r//n8xtPL/Vo06U+xnThFTV1FaHDqrkGEzmb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732100AbfJ0VWN (ORCPT
+        id S1732110AbfJ0VWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43148 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732084AbfJ0VWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:22:10 -0400
+        id S1732094AbfJ0VWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:22:13 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05A722070B;
-        Sun, 27 Oct 2019 21:22:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEFF620717;
+        Sun, 27 Oct 2019 21:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211329;
-        bh=qSmlTE+QgmSY9E9tC6knfwegASSxSRMMw6TO5CL9/D8=;
+        s=default; t=1572211332;
+        bh=1DqdVSCGOeEaLk2suDyeDQnHxAo6s39gquWznHsssWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDLrfVOdUXHauLiQ4cvnPQY9sIkE1W4kmWxWLwxobS2k/UrLrTJwsSXVAvtTQU3Br
-         u1oRefYbt4VeOTpXRL3F9Bc68sRqTB1xA+y2palmlw1Y5/PcRORAxQKoG3nnd+lM2e
-         i0tRhKA66JXCaYkRZokFb/ZIUza/yuRlApgAXEow=
+        b=nhOl0lKtVjZEEy7ENtsvkTj/bs0mWGmmpcp0gAGLn4X9mmVKoDVcMFrhFGJiIhzIv
+         nb5oOhYsz1ypc/yIpgAxsmDDROpvwo5SLHQACCETaRYGdrC3FqkXq6+mp7O40Rfrk7
+         qDSKX7OO3xZOEs42vAreS+HcIOirfzA6uyMd6K7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        Rob Turk <robtu@rtist.nl>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.3 113/197] scsi: ch: Make it possible to open a ch device multiple times again
-Date:   Sun, 27 Oct 2019 22:00:31 +0100
-Message-Id: <20191027203357.843173402@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.3 114/197] Revert "Input: elantech - enable SMBus on new (2018+) systems"
+Date:   Sun, 27 Oct 2019 22:00:32 +0100
+Message-Id: <20191027203357.897770970@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,49 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 6a0990eaa768dfb7064f06777743acc6d392084b upstream.
+commit c324345ce89c3cc50226372960619c7ee940f616 upstream.
 
-Clearing ch->device in ch_release() is wrong because that pointer must
-remain valid until ch_remove() is called. This patch fixes the following
-crash the second time a ch device is opened:
+This reverts commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000790
-RIP: 0010:scsi_device_get+0x5/0x60
-Call Trace:
- ch_open+0x4c/0xa0 [ch]
- chrdev_open+0xa2/0x1c0
- do_dentry_open+0x13a/0x380
- path_openat+0x591/0x1470
- do_filp_open+0x91/0x100
- do_sys_open+0x184/0x220
- do_syscall_64+0x5f/0x1a0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Apparently use dmi_get_bios_year() as manufacturing date isn't accurate
+and this breaks older laptops with new BIOS update.
 
-Fixes: 085e56766f74 ("scsi: ch: add refcounting")
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191009173536.247889-1-bvanassche@acm.org
-Reported-by: Rob Turk <robtu@rtist.nl>
-Suggested-by: Rob Turk <robtu@rtist.nl>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So let's revert this patch.
+
+There are still new HP laptops still need to use SMBus to support all
+features, but it'll be enabled via a whitelist.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191001070845.9720-1-kai.heng.feng@canonical.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ch.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/input/mouse/elantech.c |   55 +++++++++++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 26 deletions(-)
 
---- a/drivers/scsi/ch.c
-+++ b/drivers/scsi/ch.c
-@@ -579,7 +579,6 @@ ch_release(struct inode *inode, struct f
- 	scsi_changer *ch = file->private_data;
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1827,31 +1827,6 @@ static int elantech_create_smbus(struct
+ 				  leave_breadcrumbs);
+ }
  
- 	scsi_device_put(ch->device);
--	ch->device = NULL;
- 	file->private_data = NULL;
- 	kref_put(&ch->ref, ch_destroy);
+-static bool elantech_use_host_notify(struct psmouse *psmouse,
+-				     struct elantech_device_info *info)
+-{
+-	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
+-		return true;
+-
+-	switch (info->bus) {
+-	case ETP_BUS_PS2_ONLY:
+-		/* expected case */
+-		break;
+-	case ETP_BUS_SMB_HST_NTFY_ONLY:
+-	case ETP_BUS_PS2_SMB_HST_NTFY:
+-		/* SMbus implementation is stable since 2018 */
+-		if (dmi_get_bios_year() >= 2018)
+-			return true;
+-		/* fall through */
+-	default:
+-		psmouse_dbg(psmouse,
+-			    "Ignoring SMBus bus provider %d\n", info->bus);
+-		break;
+-	}
+-
+-	return false;
+-}
+-
+ /**
+  * elantech_setup_smbus - called once the PS/2 devices are enumerated
+  * and decides to instantiate a SMBus InterTouch device.
+@@ -1871,7 +1846,7 @@ static int elantech_setup_smbus(struct p
+ 		 * i2c_blacklist_pnp_ids.
+ 		 * Old ICs are up to the user to decide.
+ 		 */
+-		if (!elantech_use_host_notify(psmouse, info) ||
++		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
+ 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
+ 			return -ENXIO;
+ 	}
+@@ -1891,6 +1866,34 @@ static int elantech_setup_smbus(struct p
  	return 0;
+ }
+ 
++static bool elantech_use_host_notify(struct psmouse *psmouse,
++				     struct elantech_device_info *info)
++{
++	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
++		return true;
++
++	switch (info->bus) {
++	case ETP_BUS_PS2_ONLY:
++		/* expected case */
++		break;
++	case ETP_BUS_SMB_ALERT_ONLY:
++		/* fall-through  */
++	case ETP_BUS_PS2_SMB_ALERT:
++		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
++		break;
++	case ETP_BUS_SMB_HST_NTFY_ONLY:
++		/* fall-through  */
++	case ETP_BUS_PS2_SMB_HST_NTFY:
++		return true;
++	default:
++		psmouse_dbg(psmouse,
++			    "Ignoring SMBus bus provider %d.\n",
++			    info->bus);
++	}
++
++	return false;
++}
++
+ int elantech_init_smbus(struct psmouse *psmouse)
+ {
+ 	struct elantech_device_info info;
 
 
