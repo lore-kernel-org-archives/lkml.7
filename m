@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FE4CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C00205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756BE2064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211704;
-	bh=TehNVrPPI8BaQbjQWUcOjjHCCMU5xCjlUHpyEyyqFzM=;
+	s=default; t=1572211708;
+	bh=G8fdBiczYjP1dj+XAo4W0fgeejN6M3is5d/XqM9NW8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vl2C0+uwZ9kI0g2Nxe5Ibk/k+13PfSyNTbOe3Ql5+43KAVMm6/qHHNpoSaLpBXwPf
-	 XWQiddt2YMAzzrLzAvS2QpQgRAz8o52zwPT8mWMqhLVeLhY7zTMx7lX1gR8ut2NQFV
-	 bAkjrzRSkXj2doUvu2CrIj9s6CGtJP2tUZ1f6AYo=
+	b=cSOFOVRShgjih6eMBb+zTl7Q3OWE6PPgEH6VlcAVoIcEy1G/nDk1Ybr+DiqB6dtEb
+	 2KEHFxIIxawTR0ATRERLWFp2khb/noXEVJRXrtdu13+bO6hFYGQaQI/E6os4vRoTQY
+	 k/4W2u03DbnrZqWSIVkJqrMX6811PPvTke06jYtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732229AbfJ0VWr (ORCPT
+        id S1732211AbfJ0VWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43818 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:22:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732215AbfJ0VWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:22:43 -0400
+        id S1732193AbfJ0VWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:22:38 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4478205C9;
-        Sun, 27 Oct 2019 21:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DCDE205C9;
+        Sun, 27 Oct 2019 21:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211363;
-        bh=TehNVrPPI8BaQbjQWUcOjjHCCMU5xCjlUHpyEyyqFzM=;
+        s=default; t=1572211357;
+        bh=G8fdBiczYjP1dj+XAo4W0fgeejN6M3is5d/XqM9NW8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cGLwKx4aYc3YyI6KCNfNMFiudodox6LOMEzcrK5520hO97dNkMg1sWt/rY/kI9WUF
-         2AmJVfOHZcCww2405Quz+6rNHbIoYlHIgm4zV+9Qv8zU5hUqgaUMB29aVcCLF70eSh
-         /HWrzQmQyifkAi32kXdSYW/mL34RQhRnmOV6pGJo=
+        b=CeHKb/OsBAzZwnGM8B9m2eYMcMVVSlxlkPJ7PJhfntqiAPjwv7ag65XlvNmC0oxCW
+         A7knKxx+GRFFarPIQzmjkuwXDnsKcvcc93W3M8VlNK+mHhuIifZQNpSjZuCl2QM0yC
+         Itt9SRnxMGmAmEsNF4Q95BTAgx8BscnnMSNFiatA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 5.3 124/197] drm/edid: Add 6 bpc quirk for SDC panel in Lenovo G50
-Date:   Sun, 27 Oct 2019 22:00:42 +0100
-Message-Id: <20191027203358.428719899@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Nicolas Waisman <nico@semmle.com>,
+        Will Deacon <will@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.3 122/197] cfg80211: wext: avoid copying malformed SSIDs
+Date:   Sun, 27 Oct 2019 22:00:40 +0100
+Message-Id: <20191027203358.324038638@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,35 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Will Deacon <will@kernel.org>
 
-commit 11bcf5f78905b90baae8fb01e16650664ed0cb00 upstream.
+commit 4ac2813cc867ae563a1ba5a9414bfb554e5796fa upstream.
 
-Another panel that needs 6BPC quirk.
+Ensure the SSID element is bounds-checked prior to invoking memcpy()
+with its length field, when copying to userspace.
 
-BugLink: https://bugs.launchpad.net/bugs/1819968
-Cc: <stable@vger.kernel.org> # v4.8+
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190402033037.21877-1-kai.heng.feng@canonical.com
+Cc: <stable@vger.kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20191004095132.15777-2-will@kernel.org
+[adjust commit log a bit]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/wireless/wext-sme.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -159,6 +159,9 @@ static const struct edid_quirk {
- 	/* Medion MD 30217 PG */
- 	{ "MED", 0x7b8, EDID_QUIRK_PREFER_LARGE_75 },
+--- a/net/wireless/wext-sme.c
++++ b/net/wireless/wext-sme.c
+@@ -202,6 +202,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 			       struct iw_point *data, char *ssid)
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
++	int ret = 0;
  
-+	/* Lenovo G50 */
-+	{ "SDC", 18514, EDID_QUIRK_FORCE_6BPC },
-+
- 	/* Panel in Samsung NP700G7A-S01PL notebook reports 6bpc */
- 	{ "SEC", 0xd033, EDID_QUIRK_FORCE_8BPC },
+ 	/* call only for station! */
+ 	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
+@@ -219,7 +220,10 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 		if (ie) {
+ 			data->flags = 1;
+ 			data->length = ie[1];
+-			memcpy(ssid, ie + 2, data->length);
++			if (data->length > IW_ESSID_MAX_SIZE)
++				ret = -EINVAL;
++			else
++				memcpy(ssid, ie + 2, data->length);
+ 		}
+ 		rcu_read_unlock();
+ 	} else if (wdev->wext.connect.ssid && wdev->wext.connect.ssid_len) {
+@@ -229,7 +233,7 @@ int cfg80211_mgd_wext_giwessid(struct ne
+ 	}
+ 	wdev_unlock(wdev);
  
+-	return 0;
++	return ret;
+ }
+ 
+ int cfg80211_mgd_wext_siwap(struct net_device *dev,
 
 
