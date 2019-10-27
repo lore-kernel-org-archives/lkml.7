@@ -2,254 +2,208 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC367CA9EBC
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABFCCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A70F21D7F
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B000C214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfJ0O1J (ORCPT
+        id S1726866AbfJ0Odm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 10:27:09 -0400
-Received: from mout.perfora.net ([74.208.4.197]:43423 "EHLO mout.perfora.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfJ0O1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 10:27:08 -0400
-Received: from marcel-nb-toradex-int.toradex.int ([31.10.206.124]) by
- mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 0Mhk8L-1icIIn38YF-00Mp4u; Sun, 27 Oct 2019 15:26:31 +0100
-From:   Marcel Ziswiler <marcel@ziswiler.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, info@logictechno.com,
-        j.bauer@endrich.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 3/3] dt-bindings: display: panel: add bindings for logic technologies displays
-Date:   Sun, 27 Oct 2019 15:26:09 +0100
-Message-Id: <20191027142609.12754-3-marcel@ziswiler.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191027142609.12754-1-marcel@ziswiler.com>
-References: <20191027142609.12754-1-marcel@ziswiler.com>
-MIME-Version: 1.0
+        Sun, 27 Oct 2019 10:33:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1720 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726541AbfJ0Odm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 10:33:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9REVVcZ011047
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 10:33:40 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vw37y60jk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 10:33:39 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 27 Oct 2019 14:33:37 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 27 Oct 2019 14:33:34 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9REXXtn49217670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 27 Oct 2019 14:33:33 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6767252050;
+        Sun, 27 Oct 2019 14:33:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.187.251])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3E95F52054;
+        Sun, 27 Oct 2019 14:33:32 +0000 (GMT)
+Subject: Re: [PATCH v2 3/4] KEYS: Added BUILTIN_TRUSTED_KEYS enum to measure
+ keys added to builtin_trusted_keys keyring
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        dhowells@redhat.com, casey@schaufler-ca.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Sun, 27 Oct 2019 10:33:30 -0400
+In-Reply-To: <20191023233950.22072-4-nramas@linux.microsoft.com>
+References: <20191023233950.22072-1-nramas@linux.microsoft.com>
+         <20191023233950.22072-4-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:rn2nbHYbKGFtT1kFHLXc+1zL6fferQ0Tgc21oMBgzjMmLxqX4/8
- Jke+6Oj29/ZuQty+9XlPen4JV6zUjbPkz2AClYMOF+B6LIY+vJVEloclw/Mlw8rMvxYAQDt
- r2ZHTi0pFhsckhLRQ/h6ihYC8P4hwL/tu3ABoKv6dkivqhDMw+9iN5BlOWZMl2xVmPr9X3q
- bqzfm1ZOxKmEUAIVQ3g3w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1j+F5+geFuU=:u8hBdz9UBSpD9di/H07AHI
- 5naIstvX6RNzubf4cSF+27fBnOlD40WkwskXSWgJ7t7XE6nBZlUppPqY6IuqQoU830LjdKfaK
- dWEO/t1NlwP4WZ38v6Hg8U0g8XgBqFroZO8c6la265478CL5Lju9efiSdvl0+WpzHsl4uhLsE
- Dhffq8PkPo5Ify9HF/3wmutBtxUwGNVKr8JCtZNlbi3NWE76s0gWbc6cfYNXVjfGvF/0q1bPq
- ArM3MLPLobEg8LEed1E3OGbFqT7Bncn0axPi1SdhKlb7Qqh7l6n5j8pUyNa+hpXyr7oBz0StF
- G8u65dK2xjJ/LOIM7S4b/ykda4akIXfBCsjyZ+PwEo3b88qXNyEp4SrBdPQdDx9Hlianybn6u
- lJ6/i8cVOscX3iXn8dP4JBzi1T8WJuH9AsAhnPKb5mtHvjSi3YKBnulGe6EStUreQAc2DK5D2
- JllcU6Tb52LgJn2Isk0bHfygBOHRka3HFT3oC/YHu52RjE3txODhtsPeg125tFk4gsRL2bZWF
- KQ6f4YvbF3/ew8BwtBZqif0heMYay9l3hcEb/N5Hx95M19epaLQVXmYBf6CHY2SlSQpdYboTf
- tq74AjuWKq9QUHSJ+HinSCQu7fmZ8eNVcrwx59ejTlDzVNQSJTiIjW0S/bch0/94Qzs2k62aj
- Rfq4COdDRjjG9sH0ZJYen5JqePmTvWHFAEpwFLIdLpGIJnMRcInDY4X5SkK/qkoB9fLdZLxRf
- kDWEEnebBvHfEW+NMKff54GDN9FgpBF3/fyiqfXWryA610OQ4YGlqmdd+KTiYgPz/KBJaoNlY
- fPNhiY/b/J/LoYmFsIL3P1F7zQ3FPAL7o6dcDXxMJeh6suiP0n4HCRnzB/fTR1mWCs7lp56rj
- FVzQn7xqKgfcVyOFKWbKJiVNf8AyMajet2p7sg31Q=
+X-TM-AS-GCONF: 00
+x-cbid: 19102714-0028-0000-0000-000003B00E4A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102714-0029-0000-0000-000024724822
+Message-Id: <1572186810.4532.206.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-27_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910270152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Wed, 2019-10-23 at 16:39 -0700, Lakshmi Ramasubramanian wrote:
+> Added an ima policy hook BUILTIN_TRUSTED_KEYS to measure keys added
+> to builtin_trusted_keys keyring.
+> 
+> Added a helper function to check if the given keyring is
+> the builtin_trusted_keys keyring.
+> 
+> Defined a function to map the keyring to ima policy hook function
+> and use it when measuring the key.
+ 
+.builtin_trusted_keys is a trusted keyring, which is created by the
+kernel.  It cannot be deleted or replaced by userspace, so it should
+be possible to correlate a keyring name with a keyring number on
+policy load.
 
-Add bindings for the following 3 previously added display panels
-manufactured by Logic Technologies Limited:
+Other examples of trusted keyrings are: .ima, .evm, .platform,
+.blacklist, .builtin_regdb_keys.  Instead of defining a keyring
+specific method of getting the keyring number, define a generic
+method.  For example, the userspace command "keyctl describe
+%keyring:.builtin_trusted_keys" searches /proc/keys, but the kernel
+shouldn't need to access /proc/keys.
 
-- LT161010-2NHC e.g. as found in the Toradex Capacitive Touch Display
-7" Parallel [1]
-- LT161010-2NHR e.g. as found in the Toradex Resistive Touch Display 7"
-Parallel [2]
-- LT170410-2WHC e.g. as found in the Toradex Capacitive Touch Display
-10.1" LVDS [3]
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> ---
+>  Documentation/ABI/testing/ima_policy |  1 +
+>  certs/system_keyring.c               |  5 +++++
+>  include/keys/system_keyring.h        |  2 ++
+>  security/integrity/ima/ima.h         |  2 ++
+>  security/integrity/ima/ima_api.c     |  1 +
+>  security/integrity/ima/ima_main.c    | 25 +++++++++++++++++++++++--
+>  security/integrity/ima/ima_queue.c   |  2 +-
+>  7 files changed, 35 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+> index fc376a323908..25566c74e679 100644
+> --- a/Documentation/ABI/testing/ima_policy
+> +++ b/Documentation/ABI/testing/ima_policy
+> @@ -29,6 +29,7 @@ Description:
+>  				[FIRMWARE_CHECK]
+>  				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+>  				[KEXEC_CMDLINE]
+> +				[BUILTIN_TRUSTED_KEYS]
 
-Those panels may also be distributed by Endrich Bauelemente Vertriebs
-GmbH [4].
+The .builtin_trusted_keys is the name of a keyring, not of an IMA
+hook.  Define a new IMA policy "keyring=" option, where keyring is
+optional.  Some IMA policy rules might look like:
 
-[1] https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
-[2] https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
-[3] https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
-[4] https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
+# measure all keys
+measure func=KEYRING_CHECK
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+# measure keys on the IMA keyring
+measure func=KEYRING_CHECK keyring=".ima"
 
----
+# measure keys on the BUILTIN and IMA keyrings into a different PCR
+measure func=KEYRING_CHECK keyring=".builtin_trusted_keys|.ima" pcr=11
 
-Changes in v2:
-- New patch adding display panel bindings as well as suggested by Rob.
 
- .../panel/logictechno,lt161010-2nhc.yaml      | 44 +++++++++++++++++++
- .../panel/logictechno,lt161010-2nhr.yaml      | 44 +++++++++++++++++++
- .../panel/logictechno,lt170410-2whc.yaml      | 44 +++++++++++++++++++
- 3 files changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml
- create mode 100644 Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhr.yaml
- create mode 100644 Documentation/devicetree/bindings/display/panel/logictechno,lt170410-2whc.yaml
+>  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+>  			       [[^]MAY_EXEC]
+>  			fsmagic:= hex value
+> 
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index bce430b3386e..986f80eead4d 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -605,6 +605,24 @@ int ima_load_data(enum kernel_load_data_id id)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Maps the given keyring to a IMA Hook.
+> + * @keyring: A keyring to which a key maybe linked to.
+> + *
+> + * This function currently handles only builtin_trusted_keys.
+> + * To handle more keyrings, this function, ima hook and
+> + * ima policy handler need to be updated.
+> + */
+> +static enum ima_hooks keyring_policy_map(struct key *keyring)
+> +{
+> +	enum ima_hooks func = NONE;
+> +
+> +	if (is_builtin_trusted_keyring(keyring))
+> +		func = BUILTIN_TRUSTED_KEYS;
+> +
+> +	return func;
+> +}
+> +
+>  /*
+>   * process_buffer_measurement - Measure the buffer to ima log.
+>   * @buf: pointer to the buffer that needs to be added to the log.
+> @@ -706,19 +724,22 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+>  				   unsigned long flags, bool create)
+>  {
+>  	const struct public_key *pk;
+> +	enum ima_hooks func;
+>  
+>  	if (key->type != &key_type_asymmetric)
+>  		return;
+>  
+> +	func = keyring_policy_map(keyring);
+> +
 
-diff --git a/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml b/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml
-new file mode 100644
-index 000000000000..0dfe94d38a47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhc.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/logictechno,lt161010-2nhc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Logic Technologies LT161010-2NHC 7" WVGA TFT Cap Touch Module
-+
-+maintainers:
-+  - Marcel Ziswiler <marcel.ziswiler@toradex.com>
-+  - Thierry Reding <treding@nvidia.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: logictechno,lt161010-2nhc
-+
-+  power-supply: true
-+  enable-gpios: true
-+  backlight: true
-+  port: true
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    panel_rgb: panel {
-+      compatible = "logictechno,lt161010-2nhc";
-+      backlight = <&backlight>;
-+      power-supply = <&reg_3v3>;
-+
-+      port {
-+        panel_in_rgb: endpoint {
-+          remote-endpoint = <&controller_out_rgb>;
-+        };
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhr.yaml b/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhr.yaml
-new file mode 100644
-index 000000000000..ffc97529b068
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/logictechno,lt161010-2nhr.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/logictechno,lt161010-2nhr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Logic Technologies LT161010-2NHR 7" WVGA TFT Resistive Touch Module
-+
-+maintainers:
-+  - Marcel Ziswiler <marcel.ziswiler@toradex.com>
-+  - Thierry Reding <treding@nvidia.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: logictechno,lt161010-2nhr
-+
-+  power-supply: true
-+  enable-gpios: true
-+  backlight: true
-+  port: true
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    panel_rgb: panel {
-+      compatible = "logictechno,lt161010-2nhr";
-+      backlight = <&backlight>;
-+      power-supply = <&reg_3v3>;
-+
-+      port {
-+        panel_in_rgb: endpoint {
-+          remote-endpoint = <&controller_out_rgb>;
-+        };
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/panel/logictechno,lt170410-2whc.yaml b/Documentation/devicetree/bindings/display/panel/logictechno,lt170410-2whc.yaml
-new file mode 100644
-index 000000000000..3606f7fe0dd0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/logictechno,lt170410-2whc.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/logictechno,lt170410-2whc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Logic Technologies LT170410-2WHC 10.1" 1280x800 IPS TFT Cap Touch Module
-+
-+maintainers:
-+  - Marcel Ziswiler <marcel.ziswiler@toradex.com>
-+  - Thierry Reding <treding@nvidia.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: logictechno,lt170410-2whc
-+
-+  power-supply: true
-+  enable-gpios: true
-+  backlight: true
-+  port: true
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    lvds_panel: panel {
-+      compatible = "logictechno,lt170410-2whc";
-+      backlight = <&backlight>;
-+      power-supply = <&reg_3v3>;
-+
-+      port {
-+        panel_in_lvds: endpoint {
-+          remote-endpoint = <&controller_out_lvds>;
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.21.0
+"func", in this case, should be something like "KEYRING_CHECK".  No
+mapping is necessary.
+
+>  	if (!ima_initialized) {
+> -		ima_queue_key_for_measurement(key, NONE);
+> +		ima_queue_key_for_measurement(key, func);
+>  		return;
+>  	}
+>  
+>  	pk = key->payload.data[asym_crypto];
+>  	process_buffer_measurement(pk->key, pk->keylen,
+>  				   key->description,
+> -				   NONE, 0);
+> +				   func, 0);
+
+Pass the "keyring" to process_buffer_measurement() and on to
+ima_get_action(), so that ima_get_action() determines whether the
+keyring is in policy.
+
+Mimi
+
+>  }
+>  
 
