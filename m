@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90FACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3F9CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9A6205F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F55B205F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572212237;
-	bh=72AteEuiA3s92RiBZZQiHOAbe8EZUTdP1wCu560U1tM=;
+	s=default; t=1572212245;
+	bh=jaFWRWvDjERps60GVLlTLwEplN6HE8jKwC+u84gwQCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UTLC58L7pn33Iv8099spfkILWEoYicNOfAIH29VnEGeHDRlcdoZ037dQJgo3Qma+8
-	 oV9rULV+57tXV6cZDiFWl5XKEnTBn4kV6cs4Zk924CkAdZIL+PxM1FMXy6Y3QyB5lH
-	 tqGKo/Xtl4iEeklGxuOloCMP5lV/hXAo4DBRZ9Sw=
+	b=jecj2A8xs45z4r6mrQBppBn2QzLxsNVckpxejINnR8a63Lle3P88W9j/YjzYokAiS
+	 dLAKa9ogAGnh1kWXUSrugapSsia/LjaivhjtdzLCoLn8UW7LNCYESS7Oyhkt/q410W
+	 +aY1DXM2YgZXbCB9tgHM/CaJq+umpOAHzHmocFpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbfJ0VhQ (ORCPT
+        id S1730991AbfJ0VhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51522 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:37:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbfJ0VFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:05:41 -0400
+        id S1728826AbfJ0VF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:05:27 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62E42064A;
-        Sun, 27 Oct 2019 21:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C256208C0;
+        Sun, 27 Oct 2019 21:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210340;
-        bh=72AteEuiA3s92RiBZZQiHOAbe8EZUTdP1wCu560U1tM=;
+        s=default; t=1572210326;
+        bh=jaFWRWvDjERps60GVLlTLwEplN6HE8jKwC+u84gwQCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCMR/Uule7XIdBleX1O3YBJMvKG8rFEr14YW8eNM7xDLGi66gdCNH1mYGkzguI4YM
-         l+iNJyaO8qv7mjgZxo+Jo3f8ZLV2eY2lAKByvBh/IzeGLVH8eLpYIspA4Wwgda1uw0
-         db6OGP06Tm+oZQTLI4Av44NGUIwp0gYNZqOlZ00s=
+        b=S5Q5hBXDSPdrK9yZGmDqNVuHZdlzLUIeLh3Ggp1HXWqtH0FHipObs4B43N2f08FXp
+         2+4LuvGRShhNlWrklpXUUZDf3c6w8XhchvyXnBtCSyCutGqQCiaCi3iAv2wuiXt2Mm
+         ZEsgov/8DNIE5TwMTLRoEMU8x5Dnlq+Qn58kLt5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 4.9 30/49] MIPS: tlbex: Fix build_restore_pagemask KScratch restore
-Date:   Sun, 27 Oct 2019 22:01:08 +0100
-Message-Id: <20191027203143.757870099@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 26/49] USB: serial: ti_usb_3410_5052: fix port-close races
+Date:   Sun, 27 Oct 2019 22:01:04 +0100
+Message-Id: <20191027203139.262412564@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203119.468466356@linuxfoundation.org>
 References: <20191027203119.468466356@linuxfoundation.org>
@@ -60,105 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paulburton@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit b42aa3fd5957e4daf4b69129e5ce752a2a53e7d6 upstream.
+commit 6f1d1dc8d540a9aa6e39b9cb86d3a67bbc1c8d8d upstream.
 
-build_restore_pagemask() will restore the value of register $1/$at when
-its restore_scratch argument is non-zero, and aims to do so by filling a
-branch delay slot. Commit 0b24cae4d535 ("MIPS: Add missing EHB in mtc0
--> mfc0 sequence.") added an EHB instruction (Execution Hazard Barrier)
-prior to restoring $1 from a KScratch register, in order to resolve a
-hazard that can result in stale values of the KScratch register being
-observed. In particular, P-class CPUs from MIPS with out of order
-execution pipelines such as the P5600 & P6600 are affected.
+Fix races between closing a port and opening or closing another port on
+the same device which could lead to a failure to start or stop the
+shared interrupt URB. The latter could potentially cause a
+use-after-free or worse in the completion handler on driver unbind.
 
-Unfortunately this EHB instruction was inserted in the branch delay slot
-causing the MFC0 instruction which performs the restoration to no longer
-execute along with the branch. The result is that the $1 register isn't
-actually restored, ie. the TLB refill exception handler clobbers it -
-which is exactly the problem the EHB is meant to avoid for the P-class
-CPUs.
-
-Similarly build_get_pgd_vmalloc() will restore the value of $1/$at when
-its mode argument equals refill_scratch, and suffers from the same
-problem.
-
-Fix this by in both cases moving the EHB earlier in the emitted code.
-There's no reason it needs to immediately precede the MFC0 - it simply
-needs to be between the MTC0 & MFC0.
-
-This bug only affects Cavium Octeon systems which use
-build_fast_tlb_refill_handler().
-
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Fixes: 0b24cae4d535 ("MIPS: Add missing EHB in mtc0 -> mfc0 sequence.")
-Cc: Dmitry Korotin <dkorotin@wavecomp.com>
-Cc: stable@vger.kernel.org # v3.15+
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/mm/tlbex.c |   23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/usb/serial/ti_usb_3410_5052.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -661,6 +661,13 @@ static void build_restore_pagemask(u32 *
- 				   int restore_scratch)
- {
- 	if (restore_scratch) {
-+		/*
-+		 * Ensure the MFC0 below observes the value written to the
-+		 * KScratch register by the prior MTC0.
-+		 */
-+		if (scratch_reg >= 0)
-+			uasm_i_ehb(p);
-+
- 		/* Reset default page size */
- 		if (PM_DEFAULT_MASK >> 16) {
- 			uasm_i_lui(p, tmp, PM_DEFAULT_MASK >> 16);
-@@ -675,12 +682,10 @@ static void build_restore_pagemask(u32 *
- 			uasm_i_mtc0(p, 0, C0_PAGEMASK);
- 			uasm_il_b(p, r, lid);
- 		}
--		if (scratch_reg >= 0) {
--			uasm_i_ehb(p);
-+		if (scratch_reg >= 0)
- 			UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
--		} else {
-+		else
- 			UASM_i_LW(p, 1, scratchpad_offset(0), 0);
--		}
- 	} else {
- 		/* Reset default page size */
- 		if (PM_DEFAULT_MASK >> 16) {
-@@ -922,6 +927,10 @@ build_get_pgd_vmalloc64(u32 **p, struct
- 	}
- 	if (mode != not_refill && check_for_high_segbits) {
- 		uasm_l_large_segbits_fault(l, *p);
-+
-+		if (mode == refill_scratch && scratch_reg >= 0)
-+			uasm_i_ehb(p);
-+
- 		/*
- 		 * We get here if we are an xsseg address, or if we are
- 		 * an xuseg address above (PGDIR_SHIFT+PGDIR_BITS) boundary.
-@@ -938,12 +947,10 @@ build_get_pgd_vmalloc64(u32 **p, struct
- 		uasm_i_jr(p, ptr);
+--- a/drivers/usb/serial/ti_usb_3410_5052.c
++++ b/drivers/usb/serial/ti_usb_3410_5052.c
+@@ -778,7 +778,6 @@ static void ti_close(struct usb_serial_p
+ 	struct ti_port *tport;
+ 	int port_number;
+ 	int status;
+-	int do_unlock;
+ 	unsigned long flags;
  
- 		if (mode == refill_scratch) {
--			if (scratch_reg >= 0) {
--				uasm_i_ehb(p);
-+			if (scratch_reg >= 0)
- 				UASM_i_MFC0(p, 1, c0_kscratch(), scratch_reg);
--			} else {
-+			else
- 				UASM_i_LW(p, 1, scratchpad_offset(0), 0);
--			}
- 		} else {
- 			uasm_i_nop(p);
- 		}
+ 	tdev = usb_get_serial_data(port->serial);
+@@ -802,16 +801,13 @@ static void ti_close(struct usb_serial_p
+ 			"%s - cannot send close port command, %d\n"
+ 							, __func__, status);
+ 
+-	/* if mutex_lock is interrupted, continue anyway */
+-	do_unlock = !mutex_lock_interruptible(&tdev->td_open_close_lock);
++	mutex_lock(&tdev->td_open_close_lock);
+ 	--tport->tp_tdev->td_open_port_count;
+-	if (tport->tp_tdev->td_open_port_count <= 0) {
++	if (tport->tp_tdev->td_open_port_count == 0) {
+ 		/* last port is closed, shut down interrupt urb */
+ 		usb_kill_urb(port->serial->port[0]->interrupt_in_urb);
+-		tport->tp_tdev->td_open_port_count = 0;
+ 	}
+-	if (do_unlock)
+-		mutex_unlock(&tdev->td_open_close_lock);
++	mutex_unlock(&tdev->td_open_close_lock);
+ }
+ 
+ 
 
 
