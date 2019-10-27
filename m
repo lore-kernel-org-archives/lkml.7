@@ -2,101 +2,98 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC8ACA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6683CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969D121726
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572174024;
-	bh=Jmt2B0VEl/FUjM+MgzpTzTtF3WYLk8v8TfnsbPH95BE=;
-	h=Date:In-Reply-To:References:Subject:To:CC:From:List-ID:From;
-	b=0ZuUHeOs4uZ6y3znAxCCrZklIT4twHSYDeyS6wvHsz/yebG4+TsFIsulqgTek4ZjF
-	 J8t8McZpQHzI6Nx7gqPxELtOY3+4al1j0MI2Xe+I9GhwN0IChfmUlbMRc5pNSqcNSO
-	 /7p0t9gYb5iKXg8AKehKDMt59CY2hxTj6FILPa04=
+	by mail.kernel.org (Postfix) with ESMTP id BB99A20663
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 11:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfJ0LAX (ORCPT
+        id S1726783AbfJ0LMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 07:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 07:12:31 -0400
+Received: from mga02.intel.com ([134.134.136.20]:12491 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfJ0LAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 07:00:23 -0400
-Received: from [10.173.153.26] (unknown [2.55.42.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F46D214AF;
-        Sun, 27 Oct 2019 11:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572174022;
-        bh=Jmt2B0VEl/FUjM+MgzpTzTtF3WYLk8v8TfnsbPH95BE=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=nWmDdz95jS72TenFW6vwu5hnpkWGaIk+42GN2FxxDR78HF8zBHoIhwHWcd2Rwlzhz
-         BPaAzQljyMUopkP2ab89nUBAsWWGu6p1Oluy9j+CscUuN7lszAK4lXsB7HKKXgQ3LN
-         biHkcQoaYhqZmf4mRHOemJcXCiJq/wuyvnKN1xoY=
-Date:   Sun, 27 Oct 2019 13:00:13 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <87d0eieb0i.fsf@mid.deneb.enyo.de>
-References: <1572171452-7958-1-git-send-email-rppt@kernel.org> <87d0eieb0i.fsf@mid.deneb.enyo.de>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RFC] mm: add MAP_EXCLUSIVE to create exclusive user mappings
-To:     Florian Weimer <fw@deneb.enyo.de>
-CC:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-From:   Mike Rapoport <rppt@kernel.org>
-Message-ID: <385EB6D4-A1B0-4617-B256-181AA1C3BDE3@kernel.org>
+        id S1726469AbfJ0LMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 07:12:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Oct 2019 04:12:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,236,1569308400"; 
+   d="scan'208";a="282690135"
+Received: from unknown (HELO snr.jf.intel.com) ([10.54.39.141])
+  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2019 04:12:28 -0700
+From:   Luwei Kang <luwei.kang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, ak@linux.intel.com, thomas.lendacky@amd.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, Luwei Kang <luwei.kang@intel.com>
+Subject: [PATCH v1 0/8] PEBS enabling in KVM guest
+Date:   Sun, 27 Oct 2019 19:11:09 -0400
+Message-Id: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On October 27, 2019 12:30:21 PM GMT+02:00, Florian Weimer <fw@deneb=2Eenyo=
-=2Ede> wrote:
->* Mike Rapoport:
->
->> The patch below aims to allow applications to create mappins that
->have
->> pages visible only to the owning process=2E Such mappings could be used
->to
->> store secrets so that these secrets are not visible neither to other
->> processes nor to the kernel=2E
->
->How is this expected to interact with CRIU?
+Intel new hardware introduces some Precise Event-Based Sampling(PEBS)
+extensions that output the PEBS record to Intel PT stream instead of
+DS area. The PEBS record will be packaged in a specific format when
+outputting to Intel PT. This patch set will enable PEBS functionality
+in KVM Guest by PEBS output to Intel PT.
 
-CRIU dumps the memory contents using a parasite code from inside the dumpe=
-e address space, so it would work the same way as for the other mappings=2E=
- Of course, at the restore time the exclusive mapping should be recreated w=
-ith the appropriate flags=2E
+The patch 1 introduce a MSRs "base" parameter that use for get the
+kvm_pmc structure by New MSR_RELOAD_FIXED_CTRx like get_gp_pmc()
+function. The patch 2 implement the PEBS MSRs read/write emulation.
+Patch 5/6/7 expose some capabilities(CPUID, MSRs) to KVM guest which
+relate with PEBS feature. Patch 3 introduces "pebs" parameter to
+allocate a perf event counter from host perf event framework.
+The counter using for PEBS event should be disabled before VM-entry
+in the previous platform, patch 4 skip this operation when PEBS is
+enabled in KVM guest. Patch 8 has some code changes in native that to
+make the aux_event only be needed for a non-kernel event(the couner
+allocate by KVM is kernel event).
 
->> I've only tested the basic functionality, the changes should be
->verified
->> against THP/migration/compaction=2E Yet, I'd appreciate early feedback=
-=2E
->
->What are the expected semantics for VM migration?  Should it fail?
+Luwei Kang (8):
+  KVM: x86: Add base address parameter for get_fixed_pmc function
+  KVM: x86: PEBS output to Intel PT MSRs emulation
+  KVM: x86: Allocate performance counter for PEBS event
+  KVM: x86: Aviod clear the PEBS counter when PEBS enabled in guest
+  KVM: X86: Expose PDCM cpuid to guest
+  KVM: X86: MSR_IA32_PERF_CAPABILITIES MSR emulation
+  KVM: x86: Expose PEBS feature to guest
+  perf/x86: Add event owner check when PEBS output to Intel PT
 
-I don't quite follow=2E If qemu would use such mappings it would be able t=
-o transfer them during live migration=2E
+ arch/x86/events/core.c            |  3 +-
+ arch/x86/events/intel/core.c      | 19 ++++++----
+ arch/x86/events/perf_event.h      |  2 +-
+ arch/x86/include/asm/kvm_host.h   |  7 ++++
+ arch/x86/include/asm/msr-index.h  |  9 +++++
+ arch/x86/include/asm/perf_event.h |  5 ++-
+ arch/x86/kvm/cpuid.c              |  3 +-
+ arch/x86/kvm/pmu.c                | 23 ++++++++----
+ arch/x86/kvm/pmu.h                | 10 ++---
+ arch/x86/kvm/pmu_amd.c            |  2 +-
+ arch/x86/kvm/svm.c                | 12 ++++++
+ arch/x86/kvm/vmx/capabilities.h   | 25 +++++++++++++
+ arch/x86/kvm/vmx/pmu_intel.c      | 79 +++++++++++++++++++++++++++++++++++----
+ arch/x86/kvm/vmx/vmx.c            | 19 +++++++++-
+ arch/x86/kvm/x86.c                | 22 ++++++++---
+ include/linux/perf_event.h        |  1 +
+ kernel/events/core.c              |  2 +-
+ 17 files changed, 201 insertions(+), 42 deletions(-)
 
---=20
-Sincerely yours,
-Mike
+-- 
+1.8.3.1
+
