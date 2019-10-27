@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AD2CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101FBCA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D4A20873
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36662064A
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572210732;
-	bh=CgIvwC7qTH85RQI6kmwZ38ooNUQA/hoQ21zTCtaVeX0=;
+	s=default; t=1572210736;
+	bh=a5sdZr3g7A4P952zrAxsxcFA2hqawcCrTqhspGU8zyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h69IBgy1vuCzZx5N14uhxNB2vtGwY55lhdDWcDry1qleZIG1a/pcztjcXFL2dGtTi
-	 Ho3tkSxNIYVkGzxIUEE4dCeN+TCVQqQN4sW36uWkBuFQliJCqJSq4/oyAVyA+UhZG5
-	 CJivebaTdqG7HB8aPeZIb2IAlYcHAqVKZ5wb6lCs=
+	b=qfUyQEAh+GIowXKdmwo/+7qASO3a2K+ycL54toAh5cFK67mCdCnqHn7E/0dCPZUDw
+	 AO2hIg5jdFKWh88CkvWVZUwYyBWNor8F6QPzy/tDWufBIRJWp53rklhR4n6s/1cmlo
+	 uNBmwB7UeN80a9WbLUlT0+9Phvp/M0NMpcX6b7B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbfJ0VMK (ORCPT
+        id S1730032AbfJ0VMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58802 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730013AbfJ0VMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:12:07 -0400
+        id S1730013AbfJ0VMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:12:13 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A3520873;
-        Sun, 27 Oct 2019 21:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ACCD2064A;
+        Sun, 27 Oct 2019 21:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210726;
-        bh=CgIvwC7qTH85RQI6kmwZ38ooNUQA/hoQ21zTCtaVeX0=;
+        s=default; t=1572210732;
+        bh=a5sdZr3g7A4P952zrAxsxcFA2hqawcCrTqhspGU8zyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsDZHRFHUm73x1S691R497Ah0r97gqiZ/B/ZxR/1dTptbhuAtOpS8ok1Tsgz4pPP8
-         /guJmSJA3kF32ocr8JGo7LudpSeGAxmoyDxemFokeDj03083w1ifvknaFcr5iX8rnh
-         ezB3HKMWBj7gGndrsVqm5txwIR1SEkSDb417Ub7Y=
+        b=iqreZQLJQJpk4qS3k+ckYlq2mUpwDK6IG98pPKStMqi4sVMqynC0xEoycE5unmHMz
+         WCsL9cvoIUQK9DbKRK7oMPHglnc6XWw+jzVFkTeGDrC4sJazVTm6OPtmACrN6hkEEa
+         ywHdblBHC+8hEZacXs+Omh7wVZEXvA2h42zodvjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 098/119] drivers/base/memory.c: dont access uninitialized memmaps in soft_offline_page_store()
-Date:   Sun, 27 Oct 2019 22:01:15 +0100
-Message-Id: <20191027203348.834120266@linuxfoundation.org>
+        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        "Jitindar SIngh, Suraj" <surajjs@amazon.com>
+Subject: [PATCH 4.14 117/119] kvm: apic: Flush TLB after APIC mode/address change if VPIDs are in use
+Date:   Sun, 27 Oct 2019 22:01:34 +0100
+Message-Id: <20191027203349.948578924@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203259.948006506@linuxfoundation.org>
 References: <20191027203259.948006506@linuxfoundation.org>
@@ -63,55 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Junaid Shahid <junaids@google.com>
 
-commit 641fe2e9387a36f9ee01d7c69382d1fe147a5e98 upstream.
+commit a468f2dbf921d02f5107378501693137a812999b upstream.
 
-Uninitialized memmaps contain garbage and in the worst case trigger kernel
-BUGs, especially with CONFIG_PAGE_POISONING.  They should not get touched.
+Currently, KVM flushes the TLB after a change to the APIC access page
+address or the APIC mode when EPT mode is enabled. However, even in
+shadow paging mode, a TLB flush is needed if VPIDs are being used, as
+specified in the Intel SDM Section 29.4.5.
 
-Right now, when trying to soft-offline a PFN that resides on a memory
-block that was never onlined, one gets a misleading error with
-CONFIG_PAGE_POISONING:
+So replace vmx_flush_tlb_ept_only() with vmx_flush_tlb(), which will
+flush if either EPT or VPIDs are in use.
 
-  :/# echo 5637144576 > /sys/devices/system/memory/soft_offline_page
-  [   23.097167] soft offline: 0x150000 page already poisoned
-
-But the actual result depends on the garbage in the memmap.
-
-soft_offline_page() can only work with online pages, it returns -EIO in
-case of ZONE_DEVICE.  Make sure to only forward pages that are online
-(iow, managed by the buddy) and, therefore, have an initialized memmap.
-
-Add a check against pfn_to_online_page() and similarly return -EIO.
-
-Link: http://lkml.kernel.org/r/20191010141200.8985-1-david@redhat.com
-Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded memory to zones until online")	[visible after d0dc12e86b319]
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: <stable@vger.kernel.org>	[4.13+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Junaid Shahid <junaids@google.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+Cc: "Jitindar SIngh, Suraj" <surajjs@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/memory.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/vmx.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -552,6 +552,9 @@ store_soft_offline_page(struct device *d
- 	pfn >>= PAGE_SHIFT;
- 	if (!pfn_valid(pfn))
- 		return -ENXIO;
-+	/* Only online pages can be soft-offlined (esp., not ZONE_DEVICE). */
-+	if (!pfn_to_online_page(pfn))
-+		return -EIO;
- 	ret = soft_offline_page(pfn_to_page(pfn), 0);
- 	return ret == 0 ? count : ret;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -4444,12 +4444,6 @@ static void vmx_flush_tlb(struct kvm_vcp
+ 	__vmx_flush_tlb(vcpu, to_vmx(vcpu)->vpid, invalidate_gpa);
  }
+ 
+-static void vmx_flush_tlb_ept_only(struct kvm_vcpu *vcpu)
+-{
+-	if (enable_ept)
+-		vmx_flush_tlb(vcpu, true);
+-}
+-
+ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
+ {
+ 	ulong cr0_guest_owned_bits = vcpu->arch.cr0_guest_owned_bits;
+@@ -9320,7 +9314,7 @@ static void vmx_set_virtual_x2apic_mode(
+ 	} else {
+ 		sec_exec_control &= ~SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE;
+ 		sec_exec_control |= SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES;
+-		vmx_flush_tlb_ept_only(vcpu);
++		vmx_flush_tlb(vcpu, true);
+ 	}
+ 	vmcs_write32(SECONDARY_VM_EXEC_CONTROL, sec_exec_control);
+ 
+@@ -9348,7 +9342,7 @@ static void vmx_set_apic_access_page_add
+ 	    !nested_cpu_has2(get_vmcs12(&vmx->vcpu),
+ 			     SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
+ 		vmcs_write64(APIC_ACCESS_ADDR, hpa);
+-		vmx_flush_tlb_ept_only(vcpu);
++		vmx_flush_tlb(vcpu, true);
+ 	}
+ }
+ 
+@@ -11243,7 +11237,7 @@ static int prepare_vmcs02(struct kvm_vcp
+ 		}
+ 	} else if (nested_cpu_has2(vmcs12,
+ 				   SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
+-		vmx_flush_tlb_ept_only(vcpu);
++		vmx_flush_tlb(vcpu, true);
+ 	}
+ 
+ 	/*
+@@ -12198,7 +12192,7 @@ static void nested_vmx_vmexit(struct kvm
+ 	} else if (!nested_cpu_has_ept(vmcs12) &&
+ 		   nested_cpu_has2(vmcs12,
+ 				   SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
+-		vmx_flush_tlb_ept_only(vcpu);
++		vmx_flush_tlb(vcpu, true);
+ 	}
+ 
+ 	/* This is needed for same reason as it was needed in prepare_vmcs02 */
 
 
