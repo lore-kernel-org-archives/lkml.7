@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2212CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFCECA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95AAA222BD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1A4222BD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211511;
-	bh=geCA7WKbHfFDzbjT2Ap1pwSwpmUYXwdqOX48VBY2FyI=;
+	s=default; t=1572211514;
+	bh=LuuwH0M7TTpEcNcdrSsa6DTSBCMS53WFKp+CioUPCnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T/p2nGRC5KQpEu2g6l5a82Pp3Zwzk6NE/s2YWE3jTPyt/jbrevPZS0xNTvos9BYRI
-	 3yJz7kJv0jgWCDh6IN/y2lEaqOoopKVuyF7mFhWI6Tk4nMBahXssTiwQS6mBQmfdyb
-	 ePsSQyfOY62wwlci8CFmvoN7NtYZV6Zu+Axyn8wo=
+	b=jPkfrc6O3Y1X9h6Ku7zpiDOFsYKgT8FETv6s7JCjDsT5tVMkH1aaUuZs620HTH3Wy
+	 e6pioS2OmqzSgUiIfLf5F8Xaqh3DB5HeUdyyH03B1YUf4Kzz3jWMxi0uhAoq3GKve/
+	 Y7CFIr9gRqZsOhURRYHIh8mb5MwnZc/VtOBddPl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732672AbfJ0VZK (ORCPT
+        id S1732683AbfJ0VZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46852 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732654AbfJ0VZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:07 -0400
+        id S1732668AbfJ0VZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:10 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F10F2064A;
-        Sun, 27 Oct 2019 21:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 478252064A;
+        Sun, 27 Oct 2019 21:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211506;
-        bh=geCA7WKbHfFDzbjT2Ap1pwSwpmUYXwdqOX48VBY2FyI=;
+        s=default; t=1572211508;
+        bh=LuuwH0M7TTpEcNcdrSsa6DTSBCMS53WFKp+CioUPCnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCz0NW3wq/xfKv5GsGGPzk/p3uqjFeEbwxHrPnR9G7Hykx0kSIFFn8dL9cuQr8R8S
-         1dcDrUuDDIlZNJbMfmNon7tqk58s0QzjqbgJ/7eRxqNeTKOhtHbPdeBv+EEA7M/QbM
-         IHJ5L+ztlI37gESWpOKkbu5V7zkdjzQuybCky584=
+        b=X7U35bJyxwDDRTdf25X95q7r+xhsW4fq5XV/kIHQhvvq8auu4Athbusgp7TTuxZ7l
+         cWsAwNgT9rKC39DR7MDqU7xeDx/3WGVLaCXb0/QlEUmCbPjy9Luv5zmatoVrO5qLMF
+         aTJ5HO6aOqw1SNgClSa010wK4CL6a0qqKhwAbzaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.3 173/197] dm cache: fix bugs when a GFP_NOWAIT allocation fails
-Date:   Sun, 27 Oct 2019 22:01:31 +0100
-Message-Id: <20191027203404.309364288@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Darius Rad <darius@bluespec.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH 5.3 174/197] irqchip/sifive-plic: Switch to fasteoi flow
+Date:   Sun, 27 Oct 2019 22:01:32 +0100
+Message-Id: <20191027203404.473976831@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -59,118 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 13bd677a472d534bf100bab2713efc3f9e3f5978 upstream.
+commit bb0fed1c60cccbe4063b455a7228818395dac86e upstream.
 
-GFP_NOWAIT allocation can fail anytime - it doesn't wait for memory being
-available and it fails if the mempool is exhausted and there is not enough
-memory.
+The SiFive PLIC interrupt controller seems to have all the HW
+features to support the fasteoi flow, but the driver seems to be
+stuck in a distant past. Bring it into the 21st century.
 
-If we go down this path:
-  map_bio -> mg_start -> alloc_migration -> mempool_alloc(GFP_NOWAIT)
-we can see that map_bio() doesn't check the return value of mg_start(),
-and the bio is leaked.
-
-If we go down this path:
-  map_bio -> mg_start -> mg_lock_writes -> alloc_prison_cell ->
-  dm_bio_prison_alloc_cell_v2 -> mempool_alloc(GFP_NOWAIT) ->
-  mg_lock_writes -> mg_complete
-the bio is ended with an error - it is unacceptable because it could
-cause filesystem corruption if the machine ran out of memory
-temporarily.
-
-Change GFP_NOWAIT to GFP_NOIO, so that the mempool code will properly
-wait until memory becomes available. mempool_alloc with GFP_NOIO can't
-fail, so remove the code paths that deal with allocation failure.
-
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
+Tested-by: Darius Rad <darius@bluespec.com> (on 2 HW PLIC implementations)
+Tested-by: Paul Walmsley <paul.walmsley@sifive.com> (HiFive Unleashed)
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: https://lore.kernel.org/r/8636gxskmj.wl-maz@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-cache-target.c |   28 ++--------------------------
- 1 file changed, 2 insertions(+), 26 deletions(-)
+ drivers/irqchip/irq-sifive-plic.c |   29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
---- a/drivers/md/dm-cache-target.c
-+++ b/drivers/md/dm-cache-target.c
-@@ -542,7 +542,7 @@ static void wake_migration_worker(struct
- 
- static struct dm_bio_prison_cell_v2 *alloc_prison_cell(struct cache *cache)
- {
--	return dm_bio_prison_alloc_cell_v2(cache->prison, GFP_NOWAIT);
-+	return dm_bio_prison_alloc_cell_v2(cache->prison, GFP_NOIO);
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const
+ 	}
  }
  
- static void free_prison_cell(struct cache *cache, struct dm_bio_prison_cell_v2 *cell)
-@@ -554,9 +554,7 @@ static struct dm_cache_migration *alloc_
+-static void plic_irq_enable(struct irq_data *d)
++static void plic_irq_unmask(struct irq_data *d)
  {
- 	struct dm_cache_migration *mg;
+ 	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+ 					   cpu_online_mask);
+@@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_d
+ 	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+ }
  
--	mg = mempool_alloc(&cache->migration_pool, GFP_NOWAIT);
--	if (!mg)
--		return NULL;
-+	mg = mempool_alloc(&cache->migration_pool, GFP_NOIO);
+-static void plic_irq_disable(struct irq_data *d)
++static void plic_irq_mask(struct irq_data *d)
+ {
+ 	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+ }
+@@ -125,10 +125,8 @@ static int plic_set_affinity(struct irq_
+ 	if (cpu >= nr_cpu_ids)
+ 		return -EINVAL;
  
- 	memset(mg, 0, sizeof(*mg));
- 
-@@ -664,10 +662,6 @@ static bool bio_detain_shared(struct cac
- 	struct dm_bio_prison_cell_v2 *cell_prealloc, *cell;
- 
- 	cell_prealloc = alloc_prison_cell(cache); /* FIXME: allow wait if calling from worker */
--	if (!cell_prealloc) {
--		defer_bio(cache, bio);
--		return false;
+-	if (!irqd_irq_disabled(d)) {
+-		plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+-		plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
 -	}
++	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
++	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
  
- 	build_key(oblock, end, &key);
- 	r = dm_cell_get_v2(cache->prison, &key, lock_level(bio), bio, cell_prealloc, &cell);
-@@ -1493,11 +1487,6 @@ static int mg_lock_writes(struct dm_cach
- 	struct dm_bio_prison_cell_v2 *prealloc;
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
  
- 	prealloc = alloc_prison_cell(cache);
--	if (!prealloc) {
--		DMERR_LIMIT("%s: alloc_prison_cell failed", cache_device_name(cache));
--		mg_complete(mg, false);
--		return -ENOMEM;
--	}
+@@ -136,14 +134,18 @@ static int plic_set_affinity(struct irq_
+ }
+ #endif
  
- 	/*
- 	 * Prevent writes to the block, but allow reads to continue.
-@@ -1535,11 +1524,6 @@ static int mg_start(struct cache *cache,
++static void plic_irq_eoi(struct irq_data *d)
++{
++	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
++
++	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
++}
++
+ static struct irq_chip plic_chip = {
+ 	.name		= "SiFive PLIC",
+-	/*
+-	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+-	 * by reading claim and "unmasked" when writing it back.
+-	 */
+-	.irq_enable	= plic_irq_enable,
+-	.irq_disable	= plic_irq_disable,
++	.irq_mask	= plic_irq_mask,
++	.irq_unmask	= plic_irq_unmask,
++	.irq_eoi	= plic_irq_eoi,
+ #ifdef CONFIG_SMP
+ 	.irq_set_affinity = plic_set_affinity,
+ #endif
+@@ -152,7 +154,7 @@ static struct irq_chip plic_chip = {
+ static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
+ 			      irq_hw_number_t hwirq)
+ {
+-	irq_set_chip_and_handler(irq, &plic_chip, handle_simple_irq);
++	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
+ 	irq_set_chip_data(irq, NULL);
+ 	irq_set_noprobe(irq);
+ 	return 0;
+@@ -188,7 +190,6 @@ static void plic_handle_irq(struct pt_re
+ 					hwirq);
+ 		else
+ 			generic_handle_irq(irq);
+-		writel(hwirq, claim);
  	}
- 
- 	mg = alloc_migration(cache);
--	if (!mg) {
--		policy_complete_background_work(cache->policy, op, false);
--		background_work_end(cache);
--		return -ENOMEM;
--	}
- 
- 	mg->op = op;
- 	mg->overwrite_bio = bio;
-@@ -1628,10 +1612,6 @@ static int invalidate_lock(struct dm_cac
- 	struct dm_bio_prison_cell_v2 *prealloc;
- 
- 	prealloc = alloc_prison_cell(cache);
--	if (!prealloc) {
--		invalidate_complete(mg, false);
--		return -ENOMEM;
--	}
- 
- 	build_key(mg->invalidate_oblock, oblock_succ(mg->invalidate_oblock), &key);
- 	r = dm_cell_lock_v2(cache->prison, &key,
-@@ -1669,10 +1649,6 @@ static int invalidate_start(struct cache
- 		return -EPERM;
- 
- 	mg = alloc_migration(cache);
--	if (!mg) {
--		background_work_end(cache);
--		return -ENOMEM;
--	}
- 
- 	mg->overwrite_bio = bio;
- 	mg->invalidate_cblock = cblock;
+ 	csr_set(sie, SIE_SEIE);
+ }
 
 
