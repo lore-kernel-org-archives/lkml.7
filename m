@@ -2,53 +2,53 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA42CCA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022EACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F5D205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A1C2070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211260;
-	bh=PoIO/1DhDvLFSiduFsiNLvyY8C1ess2wQO00EFowzMk=;
+	s=default; t=1572211263;
+	bh=aYvmwZ8K19xAuz/J4n8ZHtP9meBds7d74/RjbcmdqF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIJ6YwF/z1zfjtRU44PrhCScqxsE6boSKvOBaHpAolQfzu7EDdEj30SO8cfX5pj//
-	 CYX8mwY5nRi+ToryZt5CzXflR5smtanGsCv1NBDb6uRek73EPNaeH0+znJN2bRLF2v
-	 6wvdxMeu7kIZrpUBQchUtlDSIrRunuy1UjWscieo=
+	b=RuPCMgfsBP2l1+qCDv9a6UfcmovVtoK07TDsXwt7mCIQgcropCtp9BOSAmhe5thmz
+	 hlmuGVraWY7VLdLT/QllekoamWghQZkRAjSZHva5xuAlNWBUE7qf+TGR8oP+nTamdI
+	 tZ/6eU8vx30CyUvMuZCOMGSLNoCBhYNxeCX7y1Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbfJ0VVA (ORCPT
+        id S1731833AbfJ0VVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41588 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731806AbfJ0VUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:20:55 -0400
+        id S1731813AbfJ0VU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:20:57 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B88C2070B;
-        Sun, 27 Oct 2019 21:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925B3205C9;
+        Sun, 27 Oct 2019 21:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211254;
-        bh=PoIO/1DhDvLFSiduFsiNLvyY8C1ess2wQO00EFowzMk=;
+        s=default; t=1572211257;
+        bh=aYvmwZ8K19xAuz/J4n8ZHtP9meBds7d74/RjbcmdqF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SpLR7r+3nw7ePkN+RPRJJ33ohna6e76QiCjLrCCMtQfOdrm75JfDXhoflFYB/GCF6
-         CKQvYPi8Ioj3PoXjFsbGk0RkQ2wZG9Yzl40EIL0Wdi0oC++GToVXTXdIvyY2gUVZ4M
-         nYdnovPhdAEcYzTBSkcOy2HiJ2uQsTDW9fPovFQw=
+        b=h6Q4Q+Y8uPtUTaBRRQ+bVlrukV1wntEmlvvYLlidSzRCFqP0oZURAnQOMY9bjGQBx
+         mBtexYDxO3gKycbGRC7MR4jftH3R+dATFsGd7PPvGnGNy5Ci9Go13HEHMZtBolIRnl
+         GIO6HcH38A0+QVgcGu02WLhXjdAHBRfcY4B1fRrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 084/197] net: aquantia: correctly handle macvlan and multicast coexistence
-Date:   Sun, 27 Oct 2019 22:00:02 +0100
-Message-Id: <20191027203356.250906373@linuxfoundation.org>
+        stable@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 043/197] RISC-V: Clear load reservations while restoring hart contexts
+Date:   Sun, 27 Oct 2019 21:59:21 +0100
+Message-Id: <20191027203354.035458609@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,119 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+From: Palmer Dabbelt <palmer@sifive.com>
 
-[ Upstream commit 9f051db566da1e8110659ab4ab188af1c2510bb4 ]
+[ Upstream commit 18856604b3e7090ce42d533995173ee70c24b1c9 ]
 
-macvlan and multicast handling is now mixed up.
-The explicit issue is that macvlan interface gets broken (no traffic)
-after clearing MULTICAST flag on the real interface.
+This is almost entirely a comment.  The bug is unlikely to manifest on
+existing hardware because there is a timeout on load reservations, but
+manifests on QEMU because there is no timeout.
 
-We now do separate logic and consider both ALLMULTI and MULTICAST
-flags on the device.
-
-Fixes: 11ba961c9161 ("net: aquantia: Fix IFF_ALLMULTI flag functionality")
-Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_main.c          |    4 -
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c           |   32 +++++++-------
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c |    7 +--
- 3 files changed, 21 insertions(+), 22 deletions(-)
+ arch/riscv/include/asm/asm.h |  1 +
+ arch/riscv/kernel/entry.S    | 21 ++++++++++++++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-@@ -194,9 +194,7 @@ static void aq_ndev_set_multicast_settin
- {
- 	struct aq_nic_s *aq_nic = netdev_priv(ndev);
+diff --git a/arch/riscv/include/asm/asm.h b/arch/riscv/include/asm/asm.h
+index 5a02b7d509408..9c992a88d858f 100644
+--- a/arch/riscv/include/asm/asm.h
++++ b/arch/riscv/include/asm/asm.h
+@@ -22,6 +22,7 @@
  
--	aq_nic_set_packet_filter(aq_nic, ndev->flags);
--
--	aq_nic_set_multicast_list(aq_nic, ndev);
-+	(void)aq_nic_set_multicast_list(aq_nic, ndev);
- }
+ #define REG_L		__REG_SEL(ld, lw)
+ #define REG_S		__REG_SEL(sd, sw)
++#define REG_SC		__REG_SEL(sc.d, sc.w)
+ #define SZREG		__REG_SEL(8, 4)
+ #define LGREG		__REG_SEL(3, 2)
  
- static int aq_ndo_vlan_rx_add_vid(struct net_device *ndev, __be16 proto,
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -631,9 +631,12 @@ err_exit:
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 9b60878a4469c..2a82e0a5af46e 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -98,7 +98,26 @@ _save_context:
+  */
+ 	.macro RESTORE_ALL
+ 	REG_L a0, PT_SSTATUS(sp)
+-	REG_L a2, PT_SEPC(sp)
++	/*
++	 * The current load reservation is effectively part of the processor's
++	 * state, in the sense that load reservations cannot be shared between
++	 * different hart contexts.  We can't actually save and restore a load
++	 * reservation, so instead here we clear any existing reservation --
++	 * it's always legal for implementations to clear load reservations at
++	 * any point (as long as the forward progress guarantee is kept, but
++	 * we'll ignore that here).
++	 *
++	 * Dangling load reservations can be the result of taking a trap in the
++	 * middle of an LR/SC sequence, but can also be the result of a taken
++	 * forward branch around an SC -- which is how we implement CAS.  As a
++	 * result we need to clear reservations between the last CAS and the
++	 * jump back to the new context.  While it is unlikely the store
++	 * completes, implementations are allowed to expand reservations to be
++	 * arbitrarily large.
++	 */
++	REG_L  a2, PT_SEPC(sp)
++	REG_SC x0, a2, PT_SEPC(sp)
++
+ 	csrw CSR_SSTATUS, a0
+ 	csrw CSR_SEPC, a2
  
- int aq_nic_set_multicast_list(struct aq_nic_s *self, struct net_device *ndev)
- {
--	unsigned int packet_filter = self->packet_filter;
-+	const struct aq_hw_ops *hw_ops = self->aq_hw_ops;
-+	struct aq_nic_cfg_s *cfg = &self->aq_nic_cfg;
-+	unsigned int packet_filter = ndev->flags;
- 	struct netdev_hw_addr *ha = NULL;
- 	unsigned int i = 0U;
-+	int err = 0;
- 
- 	self->mc_list.count = 0;
- 	if (netdev_uc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
-@@ -641,29 +644,26 @@ int aq_nic_set_multicast_list(struct aq_
- 	} else {
- 		netdev_for_each_uc_addr(ha, ndev) {
- 			ether_addr_copy(self->mc_list.ar[i++], ha->addr);
--
--			if (i >= AQ_HW_MULTICAST_ADDRESS_MAX)
--				break;
- 		}
- 	}
- 
--	if (i + netdev_mc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
--		packet_filter |= IFF_ALLMULTI;
--	} else {
--		netdev_for_each_mc_addr(ha, ndev) {
--			ether_addr_copy(self->mc_list.ar[i++], ha->addr);
--
--			if (i >= AQ_HW_MULTICAST_ADDRESS_MAX)
--				break;
-+	cfg->is_mc_list_enabled = !!(packet_filter & IFF_MULTICAST);
-+	if (cfg->is_mc_list_enabled) {
-+		if (i + netdev_mc_count(ndev) > AQ_HW_MULTICAST_ADDRESS_MAX) {
-+			packet_filter |= IFF_ALLMULTI;
-+		} else {
-+			netdev_for_each_mc_addr(ha, ndev) {
-+				ether_addr_copy(self->mc_list.ar[i++],
-+						ha->addr);
-+			}
- 		}
- 	}
- 
- 	if (i > 0 && i <= AQ_HW_MULTICAST_ADDRESS_MAX) {
--		packet_filter |= IFF_MULTICAST;
- 		self->mc_list.count = i;
--		self->aq_hw_ops->hw_multicast_list_set(self->aq_hw,
--						       self->mc_list.ar,
--						       self->mc_list.count);
-+		err = hw_ops->hw_multicast_list_set(self->aq_hw,
-+						    self->mc_list.ar,
-+						    self->mc_list.count);
- 	}
- 	return aq_nic_set_packet_filter(self, packet_filter);
- }
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -818,14 +818,15 @@ static int hw_atl_b0_hw_packet_filter_se
- 				     cfg->is_vlan_force_promisc);
- 
- 	hw_atl_rpfl2multicast_flr_en_set(self,
--					 IS_FILTER_ENABLED(IFF_ALLMULTI), 0);
-+					 IS_FILTER_ENABLED(IFF_ALLMULTI) &&
-+					 IS_FILTER_ENABLED(IFF_MULTICAST), 0);
- 
- 	hw_atl_rpfl2_accept_all_mc_packets_set(self,
--					       IS_FILTER_ENABLED(IFF_ALLMULTI));
-+					      IS_FILTER_ENABLED(IFF_ALLMULTI) &&
-+					      IS_FILTER_ENABLED(IFF_MULTICAST));
- 
- 	hw_atl_rpfl2broadcast_en_set(self, IS_FILTER_ENABLED(IFF_BROADCAST));
- 
--	cfg->is_mc_list_enabled = IS_FILTER_ENABLED(IFF_MULTICAST);
- 
- 	for (i = HW_ATL_B0_MAC_MIN; i < HW_ATL_B0_MAC_MAX; ++i)
- 		hw_atl_rpfl2_uc_flr_en_set(self,
+-- 
+2.20.1
+
 
 
