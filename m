@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BD0CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759F5CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E770C205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5B5205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211733;
-	bh=ZsDH3NgIiIv8WoNggeN0CAZhb5agtvBUOhbYhrM+c1E=;
+	s=default; t=1572211738;
+	bh=Cgywksyt4H2wmbf4RTwC80HR3uuAZ4hEsERpXkzJm8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CUZhWff3vg+i9Q2z2a9y/MVze2F4+xXZNP8hf+VoSIWqv1p68eSwSUNar1aShrO/I
-	 gnMtvPrxiRgL/6+jnBiz4ju0d/yL0/t41qwGIbIvlcp8avbwWbrsKq6qwMrs1gnNxn
-	 9gUESPI0Y56gJohJYuQJ2N1QT8/DeTKHxTuHK0bg=
+	b=XAmxV4SSs7rsjkdasQ1lFcb2EJK52b6hKUtS6lOkkaVPSzYr/rNh49jUXTF9d2fTE
+	 Gu0/27X7f6T7FoSv+/Cd0dAwZhonYh5KeP0CNKSJ41a2vB83Y8S6wrxsadGJIDdlOC
+	 OMeZS3Yv5RD9KxI/b+9QbOChas4HNBvtFKlBG6kU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbfJ0VVz (ORCPT
+        id S1731017AbfJ0V25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42748 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732003AbfJ0VVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:21:51 -0400
+        id S1730729AbfJ0VVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:21:44 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5CF4205C9;
-        Sun, 27 Oct 2019 21:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76D64214E0;
+        Sun, 27 Oct 2019 21:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211309;
-        bh=ZsDH3NgIiIv8WoNggeN0CAZhb5agtvBUOhbYhrM+c1E=;
+        s=default; t=1572211303;
+        bh=Cgywksyt4H2wmbf4RTwC80HR3uuAZ4hEsERpXkzJm8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQQw8YS+gWtCevP7F/nMAxmweZB3VENKiJIcuwPvV5XGwHyajPvVKA26PQqHcMHNC
-         dr7tRrrNzIHEalXHaisOTysASE+aiuYJlxcwObVLJn+0r7F+fqX+kj8pZwka1L8YwO
-         RSkM0OdYW6yTnk9XeRyuqTu/9FmSUZ0pCrUJaXQM=
+        b=g6ybWOshaY1tuL92SH+TPyO49bfASwNjhrnd/1gVLXKBdJpFTOr6pHwxuHLBrJ0ho
+         yVK6VtSUEAHZGvw25skkuT4rvGOYa9NPS/JZDsyR1hVk3i0+9Ho44UVKLFotJTFf3U
+         uZ3Tg8kRX87a5lwS08vmq4EySpEX3jwSy+K9Kydk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.3 106/197] binder: Dont modify VMA bounds in ->mmap handler
-Date:   Sun, 27 Oct 2019 22:00:24 +0100
-Message-Id: <20191027203357.480111405@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Horman <simon.horman@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
+        Davide Caratti <dcaratti@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 087/197] net: avoid errors when trying to pop MLPS header on non-MPLS packets
+Date:   Sun, 27 Oct 2019 22:00:05 +0100
+Message-Id: <20191027203356.427262492@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,96 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-commit 45d02f79b539073b76077836871de6b674e36eb4 upstream.
+[ Upstream commit dedc5a08da07874c6e0d411e7f39c5c2cf137014 ]
 
-binder_mmap() tries to prevent the creation of overly big binder mappings
-by silently truncating the size of the VMA to 4MiB. However, this violates
-the API contract of mmap(). If userspace attempts to create a large binder
-VMA, and later attempts to unmap that VMA, it will call munmap() on a range
-beyond the end of the VMA, which may have been allocated to another VMA in
-the meantime. This can lead to userspace memory corruption.
+the following script:
 
-The following sequence of calls leads to a segfault without this commit:
+ # tc qdisc add dev eth0 clsact
+ # tc filter add dev eth0 egress matchall action mpls pop
 
-int main(void) {
-  int binder_fd = open("/dev/binder", O_RDWR);
-  if (binder_fd == -1) err(1, "open binder");
-  void *binder_mapping = mmap(NULL, 0x800000UL, PROT_READ, MAP_SHARED,
-                              binder_fd, 0);
-  if (binder_mapping == MAP_FAILED) err(1, "mmap binder");
-  void *data_mapping = mmap(NULL, 0x400000UL, PROT_READ|PROT_WRITE,
-                            MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-  if (data_mapping == MAP_FAILED) err(1, "mmap data");
-  munmap(binder_mapping, 0x800000UL);
-  *(char*)data_mapping = 1;
-  return 0;
-}
+implicitly makes the kernel drop all packets transmitted by eth0, if they
+don't have a MPLS header. This behavior is uncommon: other encapsulations
+(like VLAN) just let the packet pass unmodified. Since the result of MPLS
+'pop' operation would be the same regardless of the presence / absence of
+MPLS header(s) in the original packet, we can let skb_mpls_pop() return 0
+when dealing with non-MPLS packets.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
-Acked-by: Todd Kjos <tkjos@google.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/r/20191016150119.154756-1-jannh@google.com
+For the OVS use-case, this is acceptable because __ovs_nla_copy_actions()
+already ensures that MPLS 'pop' operation only occurs with packets having
+an MPLS Ethernet type (and there are no other callers in current code, so
+the semantic change should be ok).
+
+v2: better documentation of use-cases for skb_mpls_pop(), thanks to Simon
+    Horman
+
+Fixes: 2a2ea50870ba ("net: sched: add mpls manipulation actions to TC")
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Acked-by: John Hurley <john.hurley@netronome.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/android/binder.c       |    7 -------
- drivers/android/binder_alloc.c |    6 ++++--
- 2 files changed, 4 insertions(+), 9 deletions(-)
+ net/core/skbuff.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -95,10 +95,6 @@ DEFINE_SHOW_ATTRIBUTE(proc);
- #define SZ_1K                               0x400
- #endif
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5524,7 +5524,7 @@ int skb_mpls_pop(struct sk_buff *skb, __
+ 	int err;
  
--#ifndef SZ_4M
--#define SZ_4M                               0x400000
--#endif
--
- #define FORBIDDEN_MMAP_FLAGS                (VM_WRITE)
+ 	if (unlikely(!eth_p_mpls(skb->protocol)))
+-		return -EINVAL;
++		return 0;
  
- enum {
-@@ -5195,9 +5191,6 @@ static int binder_mmap(struct file *filp
- 	if (proc->tsk != current->group_leader)
- 		return -EINVAL;
- 
--	if ((vma->vm_end - vma->vm_start) > SZ_4M)
--		vma->vm_end = vma->vm_start + SZ_4M;
--
- 	binder_debug(BINDER_DEBUG_OPEN_CLOSE,
- 		     "%s: %d %lx-%lx (%ld K) vma %lx pagep %lx\n",
- 		     __func__, proc->pid, vma->vm_start, vma->vm_end,
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -22,6 +22,7 @@
- #include <asm/cacheflush.h>
- #include <linux/uaccess.h>
- #include <linux/highmem.h>
-+#include <linux/sizes.h>
- #include "binder_alloc.h"
- #include "binder_trace.h"
- 
-@@ -689,7 +690,9 @@ int binder_alloc_mmap_handler(struct bin
- 	alloc->buffer = (void __user *)vma->vm_start;
- 	mutex_unlock(&binder_alloc_mmap_lock);
- 
--	alloc->pages = kcalloc((vma->vm_end - vma->vm_start) / PAGE_SIZE,
-+	alloc->buffer_size = min_t(unsigned long, vma->vm_end - vma->vm_start,
-+				   SZ_4M);
-+	alloc->pages = kcalloc(alloc->buffer_size / PAGE_SIZE,
- 			       sizeof(alloc->pages[0]),
- 			       GFP_KERNEL);
- 	if (alloc->pages == NULL) {
-@@ -697,7 +700,6 @@ int binder_alloc_mmap_handler(struct bin
- 		failure_string = "alloc page array";
- 		goto err_alloc_pages_failed;
- 	}
--	alloc->buffer_size = vma->vm_end - vma->vm_start;
- 
- 	buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
- 	if (!buffer) {
+ 	err = skb_ensure_writable(skb, skb->mac_len + MPLS_HLEN);
+ 	if (unlikely(err))
 
 
