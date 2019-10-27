@@ -2,103 +2,129 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5AECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8792CA9EBD
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5101E21D7F
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 13:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC9D20679
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 14:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572184222;
-	bh=v1tTEbU8VyN9fz+96r4Gc6HAeYNRODRPhxochdoNREE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rxI89ikGLYlJQdcWcTLshwrTOtFPdjbPF6Ozq3bRFhfossvoh/WwXk7fgw59Upzww
-	 bQmi6p508m4p68fL9s85tARmpf80FcvJvvUVoX/q17+fsVIZwsiyGJQhRorjdpMmB6
-	 xWKLmQMAqpzed+NsDPOelC3ux56pVhc73F0rUWWo=
+	s=default; t=1572185036;
+	bh=SF8ID9dlHeFbRYwBzozNy7Dlal4q4YlkPN2xgNlo7gQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fRMUpyb07xnbVmx4vcIa547dRzuSgfwMsiOlGz99jIzLzHC9E8xfQiJK86BbCZ8bP
+	 VWu71xxbXPzmUNAlO8a94RadrVG/dRZw1nR62qM43K7i15xuzjkIawdy7GY+dtk7l/
+	 qWEOuRvmdYFvC4HIxQyrGbHfYr9MzKMCyNSswg90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfJ0NuS (ORCPT
+        id S1726823AbfJ0ODz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 09:50:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbfJ0NuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 09:50:18 -0400
-Received: from localhost (unknown [77.241.229.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 993F4222BD;
-        Sun, 27 Oct 2019 13:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572184218;
-        bh=v1tTEbU8VyN9fz+96r4Gc6HAeYNRODRPhxochdoNREE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fyr60KSwpaHWwxbSfU4WElBe+XHerKpi4vgaMZSIshmSo5Sd4fCs1s7CaBNKWjpDB
-         wjtG6ev5DR5yL9whA94eLglSlBNwfuObhM6SYyAOB4fJ/a7jJb9dPSFUJ2t9DAHKwm
-         c8VrPp7shN5DIleuTJ0N5+83W5f9zD6OPYovKZbY=
-Date:   Sun, 27 Oct 2019 14:50:13 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 4.4 1/2] x86/vdso: Remove direct HPET mapping into
- userspace
-Message-ID: <20191027135013.GA2232759@kroah.com>
-References: <157183247628.2324.16440279839073827980.stgit@buzz>
- <00665546-4ad7-758c-d205-02f2fdca7e6e@yandex-team.ru>
+        Sun, 27 Oct 2019 10:03:55 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38162 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfJ0ODz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 10:03:55 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q78so8568984lje.5
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 07:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aUtxqBrTqUG2JQM67qlbeu/gWrmsCKLHs/nf3HjwR6o=;
+        b=UBVoDLidxhGRZnO3t3s9odW+975NWscpsgyn72pMoIFtMXrLI8gYCDX8RoEk4dUGpu
+         XShVkulYmvYa4f4vPiGJkAOAAjj/NBHXSLZISLlhGaOzl5SAbZ6BhT9CpKJEgEzb8LhN
+         G2c7dQQvyPPapIvGT5FeHB9zbcHI3CN4A0Ff0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aUtxqBrTqUG2JQM67qlbeu/gWrmsCKLHs/nf3HjwR6o=;
+        b=pjJtU5xk+M2Xxhbtap4iD52OqsfKYRqwDY+bUWIpmDTlUgNyHKdzVh5Fgsv6ZRbtRf
+         dLPnpPCtpzSUC9ECfhSNqgz5//JOBpOvTfneglPWByMxJzhKa1BFKa48ZajiKuLYlt4S
+         ro1tXLDrfHgp9Wh11n3ft0Iyj63fhwF3UgyASXI0G4/fBx1SxXwvl8od97iGyY6aq6tD
+         m+9xec1Ilft38zLBqXVUlzaYZdt3bsRzZvrIaShDJMOgw3qYP39EnWuqjxmyYeFOrmMr
+         5BCQkrd6eZO21KiYSWfRPCo9S9d19jpmlExEwhERyr/nuypxpMIKZUZe9xteEMJTZI2z
+         yGfg==
+X-Gm-Message-State: APjAAAUlBxj4xIuSSNhVGwhG8udQb3CdcmdJulnnTu3zyNbwti8Tvoux
+        lH24O/KXTBTsz/PlgTfT4lWaoIV2EUCW5w==
+X-Google-Smtp-Source: APXvYqzHz0lHMKtGgtV/S9KiPBJL3wUGA+rPXOcwm9SWf3XNCkwSJQmMmDU12a9eLWCNqsKAfPRiig==
+X-Received: by 2002:a2e:7405:: with SMTP id p5mr8715432ljc.191.1572185033137;
+        Sun, 27 Oct 2019 07:03:53 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id w20sm5301877lff.46.2019.10.27.07.03.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id l21so8566941lje.4
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
+X-Received: by 2002:a05:651c:331:: with SMTP id b17mr8760744ljp.133.1572185032112;
+ Sun, 27 Oct 2019 07:03:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00665546-4ad7-758c-d205-02f2fdca7e6e@yandex-team.ru>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <157186182463.3995.13922458878706311997.stgit@warthog.procyon.org.uk>
+ <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+In-Reply-To: <157186186167.3995.7568100174393739543.stgit@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 27 Oct 2019 10:03:35 -0400
+X-Gmail-Original-Message-ID: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
+Message-ID: <CAHk-=wh7cf3ANq-G9MmwSQiUK2d-=083C0HV_8hTGe2Mb4X7JA@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] pipe: Use head and tail pointers for the ring,
+ not cursor and length [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 23, 2019 at 04:05:47PM +0300, Konstantin Khlebnikov wrote:
-> On 23/10/2019 15.07, Konstantin Khlebnikov wrote:
-> > commit 1ed95e52d902035e39a715ff3a314a893a96e5b7 upstream.
-> > 
-> > Commit d96d87834d5b870402a4a5b565706a4869ebc020 in v4.4.190 which is
-> > backport of upstream commit 1ed95e52d902035e39a715ff3a314a893a96e5b7
-> > removed only HPET access from vdso but leaved HPET mapped in "vvar".
-> > So userspace still could read HPET directly and confuse hardware.
-> > 
-> > This patch removes mapping HPET page into userspace.
-> > 
-> > Fixes: d96d87834d5b ("x86/vdso: Remove direct HPET access through the vDSO") # v4.4.190
-> > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> > Link: https://lore.kernel.org/lkml/6fd42b2b-e29a-1fd6-03d1-e9da9192e6c5@yandex-team.ru/
-> > ---
-> >   arch/x86/entry/vdso/vma.c |   14 --------------
-> >   1 file changed, 14 deletions(-)
-> > 
-> > diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-> > index 6b46648588d8..cc0a3c16a95d 100644
-> > --- a/arch/x86/entry/vdso/vma.c
-> > +++ b/arch/x86/entry/vdso/vma.c
-> > @@ -18,7 +18,6 @@
-> >   #include <asm/vdso.h>
-> >   #include <asm/vvar.h>
-> >   #include <asm/page.h>
-> > -#include <asm/hpet.h>
-> >   #include <asm/desc.h>
-> >   #include <asm/cpufeature.h>
-> > @@ -159,19 +158,6 @@ static int map_vdso(const struct vdso_image *image, bool calculate_addr)
-> >   	if (ret)
-> >   		goto up_fail;
-> > -#ifdef CONFIG_HPET_TIMER
-> > -	if (hpet_address && image->sym_hpet_page) {
-> 
-> Probably this patch is not required.
-> It seems after removing symbol "hpet_page" from vdso code
-> image->sym_hpet_page always is NULL and this branch never executed.
+This still has signs of that earlier series:
 
-Ok, so these two patches are not needed?  I'll drop them from my
-todo-queue, thanks.
+On Wed, Oct 23, 2019 at 4:17 PM David Howells <dhowells@redhat.com> wrote:
+>
+>                 if (rem >= ibuf->len) {
+>                         *obuf = *ibuf;
+>                         ibuf->ops = NULL;
+> -                       pipe->curbuf = (pipe->curbuf + 1) & (pipe->buffers - 1);
+> -                       pipe->nrbufs--;
+> +                       tail++;
+> +                       pipe_commit_read(pipe, tail);
+>                 } else {
+>                         if (!pipe_buf_get(pipe, ibuf))
+>                                 goto out_free;
 
-greg k-h
+with those odd "pipe_commit_read/write()" helpers.
+
+They make no sense, and they don't make things more legible.
+
+It's shorter and more obvious to just write
+
+   pipe->head = head;
+
+than it is to write
+
+   pipe_commit_write(pipe, head);
+
+Even when the addition of the notifications,  it's all under the
+pipe->wait.lock, so it's all just regular assignments.
+
+Now, if at some point it starts doing fancy lockless things, at _that_
+point the updates might become more complex, but that's a potential
+future thing that wouldn't be relevant for a while, and isn't a reason
+to make the code more obscure now.
+
+Hmm?
+
+             Linus
