@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31D9CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42789CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90442184C
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E8A2184C
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211430;
-	bh=DmYqqLwWAQOY9fKmJuHqIKjq1AvOXwPMA3SrV2NgqCA=;
+	s=default; t=1572211434;
+	bh=uj/nMk69kdoKs9zEnM+inUkUZGttcH1k8me6Ogxz2RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xuNs+fhe+r2r/g/77uCYo4zKmkO4jUvt8nv30oXnReh1JDdlQX0v/EDcq8sb+VISp
-	 R60bc04s5mALvRkBUN6weX1zwIC+SaQfl1/9AAeKHqQyDwYtK1hmTnjNV9GqOIA3uo
-	 vHve0YvL1mFXq75Znv0tWaJuWyzQX3NbMJuPEd2U=
+	b=KHG8fOXUeCPWtjADXsPASTKAC9GTFz3d2Mq2RWXb/lOYcpq8527kDu8VMx3xK1NRZ
+	 Pou19IfDuVeutWsLGEtIu86VagUMxtz2bNyfZmv6N0qM8hGH5o52d7R303zqkrj8UX
+	 KAWmUAXbk+VGr9UKHL5PYEefn06BJLyun82gO/Ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732395AbfJ0VXt (ORCPT
+        id S1730087AbfJ0VXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44840 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732371AbfJ0VXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:23:38 -0400
+        id S1732392AbfJ0VXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:23:49 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A3C2205C9;
-        Sun, 27 Oct 2019 21:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D64BF214E0;
+        Sun, 27 Oct 2019 21:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211416;
-        bh=DmYqqLwWAQOY9fKmJuHqIKjq1AvOXwPMA3SrV2NgqCA=;
+        s=default; t=1572211428;
+        bh=uj/nMk69kdoKs9zEnM+inUkUZGttcH1k8me6Ogxz2RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QsQhY8q68Ex2XeI59nszc26Y2OTIj2AHClpLV7V1hKrlIwJFrokLTyFC9r4IMJ9G6
-         0O2enGSzAMyl+xeKuI3LmhONkp61nQi/pXcD5bYAjbjfctXidOQsI+NanhsBtfaqzM
-         jMgrEpAtDi/NlWVWBTiVHDndVV9HKXIPTxAKi8cw=
+        b=kti/SFb3U7WAW/aQeu9pRgqA32mUvJtqnYnOK8neTBHc2I+BVSCjMMfUh1nFv3RmD
+         hZvSIUvWnikfzMOPB88yeP/wHmkuNC1Eqp2sBW0ZOspZdcviupIXOv6n0tZUoRZwJc
+         YgoaDiUb2NE4RTWhY8WOdEmD3QPKxawW9aBLrHRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Michal Hocko <mhocko@suse.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Tejun Heo <tj@kernel.org>,
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Shakeel Butt <shakeelb@google.com>,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
+        David Rientjes <rientjes@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 145/197] mm/slub: fix a deadlock in show_slab_objects()
-Date:   Sun, 27 Oct 2019 22:01:03 +0100
-Message-Id: <20191027203359.520600345@linuxfoundation.org>
+Subject: [PATCH 5.3 149/197] mm: memcg/slab: fix panic in __free_slab() caused by premature memcg pointer release
+Date:   Sun, 27 Oct 2019 22:01:07 +0100
+Message-Id: <20191027203359.737613185@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -68,186 +65,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Roman Gushchin <guro@fb.com>
 
-commit e4f8e513c3d353c134ad4eef9fd0bba12406c7c8 upstream.
+commit b749ecfaf6c53ce79d6ab66afd2fc34189a073b1 upstream.
 
-A long time ago we fixed a similar deadlock in show_slab_objects() [1].
-However, it is apparently due to the commits like 01fb58bcba63 ("slab:
-remove synchronous synchronize_sched() from memcg cache deactivation
-path") and 03afc0e25f7f ("slab: get_online_mems for
-kmem_cache_{create,destroy,shrink}"), this kind of deadlock is back by
-just reading files in /sys/kernel/slab which will generate a lockdep
-splat below.
+Karsten reported the following panic in __free_slab() happening on a s390x
+machine:
 
-Since the "mem_hotplug_lock" here is only to obtain a stable online node
-mask while racing with NUMA node hotplug, in the worst case, the results
-may me miscalculated while doing NUMA node hotplug, but they shall be
-corrected by later reads of the same files.
+  Unable to handle kernel pointer dereference in virtual kernel address space
+  Failing address: 0000000000000000 TEID: 0000000000000483
+  Fault in home space mode while using kernel ASCE.
+  AS:00000000017d4007 R3:000000007fbd0007 S:000000007fbff000 P:000000000000003d
+  Oops: 0004 ilc:3 Ý#1¨ PREEMPT SMP
+  Modules linked in: tcp_diag inet_diag xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_at nf_nat
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-05872-g6133e3e4bada-dirty #14
+  Hardware name: IBM 2964 NC9 702 (z/VM 6.4.0)
+  Krnl PSW : 0704d00180000000 00000000003cadb6 (__free_slab+0x686/0x6b0)
+             R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1 PM:0 RI:0 EA:3
+  Krnl GPRS: 00000000f3a32928 0000000000000000 000000007fbf5d00 000000000117c4b8
+             0000000000000000 000000009e3291c1 0000000000000000 0000000000000000
+             0000000000000003 0000000000000008 000000002b478b00 000003d080a97600
+             0000000000000003 0000000000000008 000000002b478b00 000003d080a97600
+             000000000117ba00 000003e000057db0 00000000003cabcc 000003e000057c78
+  Krnl Code: 00000000003cada6: e310a1400004        lg      %r1,320(%r10)
+             00000000003cadac: c0e50046c286        brasl   %r14,ca32b8
+            #00000000003cadb2: a7f4fe36            brc     15,3caa1e
+            >00000000003cadb6: e32060800024        stg     %r2,128(%r6)
+             00000000003cadbc: a7f4fd9e            brc     15,3ca8f8
+             00000000003cadc0: c0e50046790c        brasl   %r14,c99fd8
+             00000000003cadc6: a7f4fe2c            brc     15,3caa
+             00000000003cadc6: a7f4fe2c            brc     15,3caa1e
+             00000000003cadca: ecb1ffff00d9        aghik   %r11,%r1,-1
+  Call Trace:
+  (<00000000003cabcc> __free_slab+0x49c/0x6b0)
+   <00000000001f5886> rcu_core+0x5a6/0x7e0
+   <0000000000ca2dea> __do_softirq+0xf2/0x5c0
+   <0000000000152644> irq_exit+0x104/0x130
+   <000000000010d222> do_IRQ+0x9a/0xf0
+   <0000000000ca2344> ext_int_handler+0x130/0x134
+   <0000000000103648> enabled_wait+0x58/0x128
+  (<0000000000103634> enabled_wait+0x44/0x128)
+   <0000000000103b00> arch_cpu_idle+0x40/0x58
+   <0000000000ca0544> default_idle_call+0x3c/0x68
+   <000000000018eaa4> do_idle+0xec/0x1c0
+   <000000000018ee0e> cpu_startup_entry+0x36/0x40
+   <000000000122df34> arch_call_rest_init+0x5c/0x88
+   <0000000000000000> 0x0
+  INFO: lockdep is turned off.
+  Last Breaking-Event-Address:
+   <00000000003ca8f4> __free_slab+0x1c4/0x6b0
+  Kernel panic - not syncing: Fatal exception in interrupt
 
-  WARNING: possible circular locking dependency detected
-  ------------------------------------------------------
-  cat/5224 is trying to acquire lock:
-  ffff900012ac3120 (mem_hotplug_lock.rw_sem){++++}, at:
-  show_slab_objects+0x94/0x3a8
+The kernel panics on an attempt to dereference the NULL memcg pointer.
+When shutdown_cache() is called from the kmem_cache_destroy() context, a
+memcg kmem_cache might have empty slab pages in a partial list, which are
+still charged to the memory cgroup.
 
-  but task is already holding lock:
-  b8ff009693eee398 (kn->count#45){++++}, at: kernfs_seq_start+0x44/0xf0
+These pages are released by free_partial() at the beginning of
+shutdown_cache(): either directly or by scheduling a RCU-delayed work
+(if the kmem_cache has the SLAB_TYPESAFE_BY_RCU flag).  The latter case
+is when the reported panic can happen: memcg_unlink_cache() is called
+immediately after shrinking partial lists, without waiting for scheduled
+RCU works.  It sets the kmem_cache->memcg_params.memcg pointer to NULL,
+and the following attempt to dereference it by __free_slab() from the
+RCU work context causes the panic.
 
-  which lock already depends on the new lock.
+To fix the issue, let's postpone the release of the memcg pointer to
+destroy_memcg_params().  It's called from a separate work context by
+slab_caches_to_rcu_destroy_workfn(), which contains a full RCU barrier.
+This guarantees that all scheduled page release RCU works will complete
+before the memcg pointer will be zeroed.
 
-  the existing dependency chain (in reverse order) is:
+Big thanks for Karsten for the perfect report containing all necessary
+information, his help with the analysis of the problem and testing of the
+fix.
 
-  -> #2 (kn->count#45){++++}:
-         lock_acquire+0x31c/0x360
-         __kernfs_remove+0x290/0x490
-         kernfs_remove+0x30/0x44
-         sysfs_remove_dir+0x70/0x88
-         kobject_del+0x50/0xb0
-         sysfs_slab_unlink+0x2c/0x38
-         shutdown_cache+0xa0/0xf0
-         kmemcg_cache_shutdown_fn+0x1c/0x34
-         kmemcg_workfn+0x44/0x64
-         process_one_work+0x4f4/0x950
-         worker_thread+0x390/0x4bc
-         kthread+0x1cc/0x1e8
-         ret_from_fork+0x10/0x18
-
-  -> #1 (slab_mutex){+.+.}:
-         lock_acquire+0x31c/0x360
-         __mutex_lock_common+0x16c/0xf78
-         mutex_lock_nested+0x40/0x50
-         memcg_create_kmem_cache+0x38/0x16c
-         memcg_kmem_cache_create_func+0x3c/0x70
-         process_one_work+0x4f4/0x950
-         worker_thread+0x390/0x4bc
-         kthread+0x1cc/0x1e8
-         ret_from_fork+0x10/0x18
-
-  -> #0 (mem_hotplug_lock.rw_sem){++++}:
-         validate_chain+0xd10/0x2bcc
-         __lock_acquire+0x7f4/0xb8c
-         lock_acquire+0x31c/0x360
-         get_online_mems+0x54/0x150
-         show_slab_objects+0x94/0x3a8
-         total_objects_show+0x28/0x34
-         slab_attr_show+0x38/0x54
-         sysfs_kf_seq_show+0x198/0x2d4
-         kernfs_seq_show+0xa4/0xcc
-         seq_read+0x30c/0x8a8
-         kernfs_fop_read+0xa8/0x314
-         __vfs_read+0x88/0x20c
-         vfs_read+0xd8/0x10c
-         ksys_read+0xb0/0x120
-         __arm64_sys_read+0x54/0x88
-         el0_svc_handler+0x170/0x240
-         el0_svc+0x8/0xc
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    mem_hotplug_lock.rw_sem --> slab_mutex --> kn->count#45
-
-   Possible unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(kn->count#45);
-                                 lock(slab_mutex);
-                                 lock(kn->count#45);
-    lock(mem_hotplug_lock.rw_sem);
-
-   *** DEADLOCK ***
-
-  3 locks held by cat/5224:
-   #0: 9eff00095b14b2a0 (&p->lock){+.+.}, at: seq_read+0x4c/0x8a8
-   #1: 0eff008997041480 (&of->mutex){+.+.}, at: kernfs_seq_start+0x34/0xf0
-   #2: b8ff009693eee398 (kn->count#45){++++}, at:
-  kernfs_seq_start+0x44/0xf0
-
-  stack backtrace:
-  Call trace:
-   dump_backtrace+0x0/0x248
-   show_stack+0x20/0x2c
-   dump_stack+0xd0/0x140
-   print_circular_bug+0x368/0x380
-   check_noncircular+0x248/0x250
-   validate_chain+0xd10/0x2bcc
-   __lock_acquire+0x7f4/0xb8c
-   lock_acquire+0x31c/0x360
-   get_online_mems+0x54/0x150
-   show_slab_objects+0x94/0x3a8
-   total_objects_show+0x28/0x34
-   slab_attr_show+0x38/0x54
-   sysfs_kf_seq_show+0x198/0x2d4
-   kernfs_seq_show+0xa4/0xcc
-   seq_read+0x30c/0x8a8
-   kernfs_fop_read+0xa8/0x314
-   __vfs_read+0x88/0x20c
-   vfs_read+0xd8/0x10c
-   ksys_read+0xb0/0x120
-   __arm64_sys_read+0x54/0x88
-   el0_svc_handler+0x170/0x240
-   el0_svc+0x8/0xc
-
-I think it is important to mention that this doesn't expose the
-show_slab_objects to use-after-free.  There is only a single path that
-might really race here and that is the slab hotplug notifier callback
-__kmem_cache_shrink (via slab_mem_going_offline_callback) but that path
-doesn't really destroy kmem_cache_node data structures.
-
-[1] http://lkml.iu.edu/hypermail/linux/kernel/1101.0/02850.html
-
-[akpm@linux-foundation.org: add comment explaining why we don't need mem_hotplug_lock]
-Link: http://lkml.kernel.org/r/1570192309-10132-1-git-send-email-cai@lca.pw
-Fixes: 01fb58bcba63 ("slab: remove synchronous synchronize_sched() from memcg cache deactivation path")
-Fixes: 03afc0e25f7f ("slab: get_online_mems for kmem_cache_{create,destroy,shrink}")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Tejun Heo <tj@kernel.org>
+Link: http://lkml.kernel.org/r/20191010160549.1584316-1-guro@fb.com
+Fixes: fb2f2b0adb98 ("mm: memcg/slab: reparent memcg kmem_caches on cgroup removal")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reported-by: Karsten Graul <kgraul@linux.ibm.com>
+Tested-by: Karsten Graul <kgraul@linux.ibm.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Cc: Karsten Graul <kgraul@linux.ibm.com>
 Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Roman Gushchin <guro@fb.com>
+Cc: David Rientjes <rientjes@google.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/slub.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ mm/slab_common.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4836,7 +4836,17 @@ static ssize_t show_slab_objects(struct
- 		}
- 	}
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -178,10 +178,13 @@ static int init_memcg_params(struct kmem
  
--	get_online_mems();
-+	/*
-+	 * It is impossible to take "mem_hotplug_lock" here with "kernfs_mutex"
-+	 * already held which will conflict with an existing lock order:
-+	 *
-+	 * mem_hotplug_lock->slab_mutex->kernfs_mutex
-+	 *
-+	 * We don't really need mem_hotplug_lock (to hold off
-+	 * slab_mem_going_offline_callback) here because slab's memory hot
-+	 * unplug code doesn't destroy the kmem_cache->node[] data.
-+	 */
-+
- #ifdef CONFIG_SLUB_DEBUG
- 	if (flags & SO_ALL) {
- 		struct kmem_cache_node *n;
-@@ -4877,7 +4887,6 @@ static ssize_t show_slab_objects(struct
- 			x += sprintf(buf + x, " N%d=%lu",
- 					node, nodes[node]);
- #endif
--	put_online_mems();
- 	kfree(nodes);
- 	return x + sprintf(buf + x, "\n");
+ static void destroy_memcg_params(struct kmem_cache *s)
+ {
+-	if (is_root_cache(s))
++	if (is_root_cache(s)) {
+ 		kvfree(rcu_access_pointer(s->memcg_params.memcg_caches));
+-	else
++	} else {
++		mem_cgroup_put(s->memcg_params.memcg);
++		WRITE_ONCE(s->memcg_params.memcg, NULL);
+ 		percpu_ref_exit(&s->memcg_params.refcnt);
++	}
  }
+ 
+ static void free_memcg_params(struct rcu_head *rcu)
+@@ -253,8 +256,6 @@ static void memcg_unlink_cache(struct km
+ 	} else {
+ 		list_del(&s->memcg_params.children_node);
+ 		list_del(&s->memcg_params.kmem_caches_node);
+-		mem_cgroup_put(s->memcg_params.memcg);
+-		WRITE_ONCE(s->memcg_params.memcg, NULL);
+ 	}
+ }
+ #else
 
 
