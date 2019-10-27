@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEA3CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73F2CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBEA21850
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8529421783
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211526;
-	bh=fpFNoSccBHLbv0vrydrZEkMT1fnZ0IAWrJKSOGe1NeU=;
+	s=default; t=1572211538;
+	bh=Y2PGDeGpqDF5Aq1B/bYZdGBz4DvQrgjH7TQuNiejeWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJKtOHsZqU5gOa3MiF4trAOs1xxAx3w38VlahQZyuK8SwBuwWWnKfJytzyQTOOm9M
-	 NpR6Ua3C9NhKZEWUXyGdUn5D8Bzh5Zo7t4vpAVFhWaTf/rssmOmIMc5x2vamvapu82
-	 sKle1C83sRFafH68bNPYPwYxlbyPv/xrW4j3QtAI=
+	b=pfXFbUWYrMPSh7eJWHrBpCrL6FKuTEd5QzMXrcNMeb3C8MXhbBvMxxPcG2TIFwBf6
+	 z6Yyax5v6Ehe64MTpC0FUAyXCMOgIm02Z49bYY8RUxrhTpsV3MTGmLJkYEOQ78cfVI
+	 H135d6YcJTyIWIaBmkGtyrPcWe18cnL231IcPW54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732727AbfJ0VZY (ORCPT
+        id S1732781AbfJ0VZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47218 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:25:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732715AbfJ0VZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:25:21 -0400
+        id S1732770AbfJ0VZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:25:35 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BE9621D80;
-        Sun, 27 Oct 2019 21:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0651B21783;
+        Sun, 27 Oct 2019 21:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211520;
-        bh=fpFNoSccBHLbv0vrydrZEkMT1fnZ0IAWrJKSOGe1NeU=;
+        s=default; t=1572211534;
+        bh=Y2PGDeGpqDF5Aq1B/bYZdGBz4DvQrgjH7TQuNiejeWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bTcNy0aTJ6qWElLUdfVZdO5xx84gCjyln9hmAaAjB/qeGDRFiSJWD+5ayMsW/Lgzu
-         zr2cEr0milKgJfmqOozuaZG/toW5SfxErV5heOJY3S8rXKkXXpUC6e9tu0Zu+BUYxH
-         AJ14Ev2NLXr/F3UJG53oUecWjkL43PfLKfh7tqBM=
+        b=ZNfTg1j2vaPklHnlY1ZtqEdBUG8BDX0l2+2NuLm3sof2SSvI9FVCCcEBDgkUtvMA6
+         G00cL6Qt+/6WWIXz8IEU1Qoi+iI+xkc8BpU5BuwI7zyaw7OjhtRA3YxusDvOwrgpxp
+         pVUXe4sZY8+Bt0jVY9ZEU7Aug18zCeMV8cUW4a9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Levin <levinale@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 5.3 178/197] pinctrl: cherryview: restore Strago DMI workaround for all versions
-Date:   Sun, 27 Oct 2019 22:01:36 +0100
-Message-Id: <20191027203405.334728832@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.3 141/197] mmc: mxs: fix flags passed to dmaengine_prep_slave_sg
+Date:   Sun, 27 Oct 2019 22:00:59 +0100
+Message-Id: <20191027203359.315800560@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -61,69 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-commit 260996c30f4f3a732f45045e3e0efe27017615e4 upstream.
+commit 2bb9f7566ba7ab3c2154964461e37b52cdc6b91b upstream.
 
-This is essentially a revert of:
+Since ceeeb99cd821 we no longer abuse the DMA_CTRL_ACK flag for custom
+driver use and introduced the MXS_DMA_CTRL_WAIT4END instead. We have not
+changed all users to this flag though. This patch fixes it for the
+mxs-mmc driver.
 
-e3f72b749da2 pinctrl: cherryview: fix Strago DMI workaround
-86c5dd6860a6 pinctrl: cherryview: limit Strago DMI workarounds to version 1.0
-
-because even with 1.1 versions of BIOS there are some pins that are
-configured as interrupts but not claimed by any driver, and they
-sometimes fire up and result in interrupt storms that cause touchpad
-stop functioning and other issues.
-
-Given that we are unlikely to qualify another firmware version for a
-while it is better to keep the workaround active on all Strago boards.
-
-Reported-by: Alex Levin <levinale@chromium.org>
-Fixes: 86c5dd6860a6 ("pinctrl: cherryview: limit Strago DMI workarounds to version 1.0")
+Fixes: ceeeb99cd821 ("dmaengine: mxs: rename custom flag")
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Tested-by: Fabio Estevam <festevam@gmail.com>
+Reported-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+Tested-by: Bruno Thomsen <bruno.thomsen@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Alex Levin <levinale@chromium.org>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/intel/pinctrl-cherryview.c |    4 ----
- 1 file changed, 4 deletions(-)
+ drivers/mmc/host/mxs-mmc.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1513,7 +1513,6 @@ static const struct dmi_system_id chv_no
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
- 			DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
- 		},
- 	},
- 	{
-@@ -1521,7 +1520,6 @@ static const struct dmi_system_id chv_no
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Setzer"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
- 		},
- 	},
- 	{
-@@ -1529,7 +1527,6 @@ static const struct dmi_system_id chv_no
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
- 		},
- 	},
- 	{
-@@ -1537,7 +1534,6 @@ static const struct dmi_system_id chv_no
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Celes"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
- 		},
- 	},
- 	{}
+--- a/drivers/mmc/host/mxs-mmc.c
++++ b/drivers/mmc/host/mxs-mmc.c
+@@ -17,6 +17,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
++#include <linux/dma/mxs-dma.h>
+ #include <linux/highmem.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+@@ -266,7 +267,7 @@ static void mxs_mmc_bc(struct mxs_mmc_ho
+ 	ssp->ssp_pio_words[2] = cmd1;
+ 	ssp->dma_dir = DMA_NONE;
+ 	ssp->slave_dirn = DMA_TRANS_NONE;
+-	desc = mxs_mmc_prep_dma(host, DMA_CTRL_ACK);
++	desc = mxs_mmc_prep_dma(host, MXS_DMA_CTRL_WAIT4END);
+ 	if (!desc)
+ 		goto out;
+ 
+@@ -311,7 +312,7 @@ static void mxs_mmc_ac(struct mxs_mmc_ho
+ 	ssp->ssp_pio_words[2] = cmd1;
+ 	ssp->dma_dir = DMA_NONE;
+ 	ssp->slave_dirn = DMA_TRANS_NONE;
+-	desc = mxs_mmc_prep_dma(host, DMA_CTRL_ACK);
++	desc = mxs_mmc_prep_dma(host, MXS_DMA_CTRL_WAIT4END);
+ 	if (!desc)
+ 		goto out;
+ 
+@@ -441,7 +442,7 @@ static void mxs_mmc_adtc(struct mxs_mmc_
+ 	host->data = data;
+ 	ssp->dma_dir = dma_data_dir;
+ 	ssp->slave_dirn = slave_dirn;
+-	desc = mxs_mmc_prep_dma(host, DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
++	desc = mxs_mmc_prep_dma(host, DMA_PREP_INTERRUPT | MXS_DMA_CTRL_WAIT4END);
+ 	if (!desc)
+ 		goto out;
+ 
 
 
