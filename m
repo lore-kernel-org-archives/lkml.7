@@ -2,154 +2,101 @@ Return-Path: <SRS0=Ymnc=YU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B20CA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C79ACA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B8E20650
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB71020873
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 15:46:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="d+drrxti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfJ0Pl4 (ORCPT
+        id S1727595AbfJ0Pq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 11:41:56 -0400
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:27440 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfJ0Plz (ORCPT
+        Sun, 27 Oct 2019 11:46:29 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:43748 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727301AbfJ0Pq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 11:41:55 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 471MXZ3cz5zQl8s;
-        Sun, 27 Oct 2019 16:41:50 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id HKUBceS7i6hF; Sun, 27 Oct 2019 16:41:40 +0100 (CET)
-Date:   Mon, 28 Oct 2019 02:41:15 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sun, 27 Oct 2019 11:46:29 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 24DB52E0985;
+        Sun, 27 Oct 2019 18:46:21 +0300 (MSK)
+Received: from sas2-62907d92d1d8.qloud-c.yandex.net (sas2-62907d92d1d8.qloud-c.yandex.net [2a02:6b8:c08:b895:0:640:6290:7d92])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id VfJizSzZVs-kKlqE0Dk;
+        Sun, 27 Oct 2019 18:46:21 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1572191181; bh=1vRFlA2ZVXXgq2L2DDGrOfUqAJRPHMdjSGUR/FoiYWc=;
+        h=Message-ID:Date:To:From:Subject;
+        b=d+drrxtiJ2dcUCB61GPKZEmN7IJNJTslyzaI4Vc2EvaUQg8qo+zKvneLLnrQFEWoB
+         rBsIzKO52O/NSV4tiTOf36y0NxpYmnyL8+TMStqUrgd4cpRXlNyYuKNIHC+mCYDMge
+         mwmZ/U23iouHCKHRGpqsXmZoqVXfZAznMGBX8W5o=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:7710::1:0])
+        by sas2-62907d92d1d8.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id 7hBFG86ADV-kKV40bI4;
+        Sun, 27 Oct 2019 18:46:20 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] pipe: wakeup writer only if pipe buffer is at least half
+ empty
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     David Howells <dhowells@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH RESEND v14 2/6] namei: LOOKUP_IN_ROOT: chroot-like path
- resolution
-Message-ID: <20191027154115.ex55njkysey4m6pu@yavin.dot.cyphar.com>
-References: <20191026185700.10708-1-cyphar@cyphar.com>
- <20191026185700.10708-3-cyphar@cyphar.com>
- <CAHk-=wjPPWvm5_eR4uaHJaU1isTUk-4iXQV3Z2Px9A+w6j2nHg@mail.gmail.com>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Date:   Sun, 27 Oct 2019 18:46:20 +0300
+Message-ID: <157219118016.7078.16223055699799396042.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x254sstnuxqz6cbi"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjPPWvm5_eR4uaHJaU1isTUk-4iXQV3Z2Px9A+w6j2nHg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is no reason to wakeup writer if pipe has only one empty page.
+This means reader consumes data slower then writer produces it.
 
---x254sstnuxqz6cbi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch waits until buffer is at least half empty before waking writer.
+This lets him produce more data at once. In general, this change should
+increase data batching and decrease rate of context switches.
 
-On 2019-10-27, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Sat, Oct 26, 2019 at 2:58 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> >
-> > +       /* LOOKUP_IN_ROOT treats absolute paths as being relative-to-di=
-rfd. */
-> > +       if (flags & LOOKUP_IN_ROOT)
-> > +               while (*s =3D=3D '/')
-> > +                       s++;
-> > +
-> >         /* Figure out the starting path and root (if needed). */
-> >         if (*s =3D=3D '/') {
-> >                 error =3D nd_jump_root(nd);
->=20
-> So I'm still hung up on this.
->=20
-> I guess I can't help it, but I look at the above, and it makes me go
-> "whoever wrote those tests wasn't thinking".
->=20
-> It just annoys me how it tests for '/' completely unnecessarily.
->=20
-> If LOOKUP_IN_ROOT is true, we know the subsequent test for '/' is not
-> going to match, because we just removed it. So I look at that code and
-> go "that code is doing stupid things".
+perf stat bash -c 'seq 50000000 | wc' shows decreasing count of context
+switches from 26k to 13k. Execution time stays the same.
 
-Okay, fair enough.
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ fs/pipe.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-> That's why I suggested moving the LOOKUP_IN_ROOT check inside the '/' tes=
-t.
->=20
-> Alternatively, just make the logic be
->=20
->         if (flags & LOOKUP_IN_ROOT) {
->                .. remove '/'s ...
->         } else if (*s =3D=3D '/') {
->                 .. handl;e root ..
->=20
-> and remove the next "else" clause
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 8a2ab2f974bd..14754c9095ce 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -324,7 +324,8 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+ 				curbuf = (curbuf + 1) & (pipe->buffers - 1);
+ 				pipe->curbuf = curbuf;
+ 				pipe->nrbufs = --bufs;
+-				do_wakeup = 1;
++				/* Wakeup writer if buffer is half empty */
++				do_wakeup = bufs <= pipe->buffers / 2;
+ 			}
+ 			total_len -= chars;
+ 			if (!total_len)
+@@ -555,7 +556,9 @@ pipe_poll(struct file *filp, poll_table *wait)
+ 	}
+ 
+ 	if (filp->f_mode & FMODE_WRITE) {
+-		mask |= (nrbufs < pipe->buffers) ? EPOLLOUT | EPOLLWRNORM : 0;
++		/* Wakeup writer if buffer is half empty */
++		if (nrbufs <= pipe->buffers / 2)
++			mask |= EPOLLOUT | EPOLLWRNORM;
+ 		/*
+ 		 * Most Unices do not set EPOLLERR for FIFOs but on Linux they
+ 		 * behave exactly like pipes for poll().
 
-I've gone with the latter since I think it reads better.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---x254sstnuxqz6cbi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXbW6lwAKCRCdlLljIbnQ
-EoPNAP0TH7raCw5NCLFnqJEAJ2bl+pDz8oGtxQKGtoXC7HohOQEAqFv71cuFJjle
-mvHPyKwhvNv8coIv55o8qUxny+XxIAg=
-=0iVb
------END PGP SIGNATURE-----
-
---x254sstnuxqz6cbi--
