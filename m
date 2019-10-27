@@ -8,66 +8,68 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E291CA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0842CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B4520717
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA09620650
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 19:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faXS+qqe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+PBpQRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfJ0TYe (ORCPT
+        id S1727192AbfJ0TtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 15:24:34 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36881 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbfJ0TYd (ORCPT
+        Sun, 27 Oct 2019 15:49:14 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37443 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfJ0TtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 15:24:33 -0400
-Received: by mail-io1-f65.google.com with SMTP id 1so8082328iou.4
-        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 12:24:31 -0700 (PDT)
+        Sun, 27 Oct 2019 15:49:14 -0400
+Received: by mail-il1-f193.google.com with SMTP id v2so6171991ilq.4
+        for <linux-kernel@vger.kernel.org>; Sun, 27 Oct 2019 12:49:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=4ofksQ7AcOmTu9H2NgEjkUZ7Z46uH3mw4srj1dXfSSs=;
-        b=faXS+qqeDe638CZeqsshIVZhWuSZTrK2yiAsn9fDoQ0Q/sibPkrm78pc6vUC6HQgAU
-         LNDbTOCIpw4BdC3vKaP3/3iwt55G0iAge2g2TFSSpPTdZqxe3y4XSPSjcsupx3teh+XV
-         Do0nMYDHXPXh2NXH3JMUEatk0KuRo7RHCs7sQZJDBss7aNFDB1FGMbeOP9+TR5GWwOlA
-         O4FnvjHrc3mmAkeKVCZWjQ1m0roQQ4kAT4MSSFWGKo6GPKbFVR0szViTvNDzpbBf63ll
-         Ey6VYZg8t+/MI7WNUerX2acpc6tx6yI7EFhECU788PS4Ajed+2OIY/TW/8U2jpo8AZmb
-         6hJw==
+        bh=Fp8qbpwsPU5t44meEzV5unnuVBGj/STbs393t2jsMas=;
+        b=G+PBpQRQbVt6Enherj5lZsb71SRxc4snjY5IQwTWS+e+Ft/hoAXpwjeKfYEGo83gVW
+         Rsuu0XwD/5Chxlu65jRX13j0lZf0BThZnk8m/rz3A8ka4rE6A8NywUSzV6t8iNq4pjAC
+         eUrMQnGFuVwgvHogudXxzbfoBnRc+9HEeU1VqO/Kxg0q33LSUt/8yMwBbcVr+gB8dlc7
+         J2pWjuk/CYsBthAyl4QJjvOsccUypq3YMiu4amifZK1hmTHjhBfkw5mw9Aq8pnJ+kfOw
+         3hlPyueJG17CIIdcV0gXqt0mCOiGJWtBxIZXQZkYStIO/Q2PTDNNCVUnFeL+cEv8oBvz
+         R6ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4ofksQ7AcOmTu9H2NgEjkUZ7Z46uH3mw4srj1dXfSSs=;
-        b=AVhujOqHnXaB0mz5JRzwJf4gBDpyDiTWnD0lquNWdOuT6e5W+DiqdXiTkp+umZdSIu
-         NKRAm6CRSXxUSjk38FvyafK++KNtcDHVg4URhWolklRT3weFwXaWf+++FIDMc/VTsz/R
-         CCNrZ1UsnN+BzBfAPtf8PAP26+iNfKXyFFRqo3kP82NdcsHclqmXm6dBzEQc55wbwBVS
-         iTmrQ5MAwBsw+G8uEI4jY3KUJc0QDDN71PfDFQLSDk9X2XE0OTitKGgOmDY9IzkIOoK0
-         nUeKnTarO0n5BksX7F/6sIXI/BvW9sghWetazsdEpHy1prmGvE/U1V7IC/uMvk07aa84
-         jfDw==
-X-Gm-Message-State: APjAAAXKuN9LEWaw1JWTsq/5DAqONJWeKotyTFijipKFYlKcNIE6mD3b
-        7qQJ5UOEH5qwXZgeHpr72g0=
-X-Google-Smtp-Source: APXvYqzzOQqltc5n2sD1ambBu/V7rbpCeqXdQqBw8B8OavUNbezXePdT4X4kwQUm7qT5h6NQbGglHw==
-X-Received: by 2002:a6b:7942:: with SMTP id j2mr14638510iop.161.1572204271276;
-        Sun, 27 Oct 2019 12:24:31 -0700 (PDT)
+        bh=Fp8qbpwsPU5t44meEzV5unnuVBGj/STbs393t2jsMas=;
+        b=pgDhNQeM+9UHIa2k/yZKOr9jfeG/OpR5+qkasTbXkznZSOhkXMFItz5SMG50RSeq7U
+         lBYbYHQMW6hAU6HGeEBBaVJDkEUpRpRANc0pjom08IepLJKYmlY7vncpfqz2RXsApnXg
+         vdxSvF00j0A7/1QJbhd4XHos/AnwqOd/P1iqPIdFkkD4b9iKTHWEReCp71fiJKjxWYII
+         e7cGnPSVuhycW1esWbmyAjFC6LCCC8eRqvQpmv8ffOpsvsoApZxa2f2Zqa6XBx6Cgl01
+         CWGGpK4KC4klgSRK1wG3MvdB+iRohwctEOMhl9DrZ2OAsd+zALwyLZOyN2uvQt1Tf48O
+         A5iw==
+X-Gm-Message-State: APjAAAUA1wi9csEksSqJibf13iTI6ajB21VcbOAfANh0q7W82Z3qq+MO
+        JOHJ++RaGCGjSYmsdYeDtQE=
+X-Google-Smtp-Source: APXvYqxB3deYkss+3cgHUIMyjARd3DX6Lwwi0mH+0eSz3n+olqnlOUOFQUkSUqZ+8nvlyYXil2QLLw==
+X-Received: by 2002:a92:46c2:: with SMTP id d63mr16888139ilk.43.1572205753618;
+        Sun, 27 Oct 2019 12:49:13 -0700 (PDT)
 Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id a6sm1212642ill.87.2019.10.27.12.24.30
+        by smtp.googlemail.com with ESMTPSA id k4sm634726iof.61.2019.10.27.12.49.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2019 12:24:30 -0700 (PDT)
+        Sun, 27 Oct 2019 12:49:12 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
 Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Tim Blechmann <tim@klingt.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: lx6464es: Fix memory leaks in snd_lx6464es_create
-Date:   Sun, 27 Oct 2019 14:24:13 -0500
-Message-Id: <20191027192415.32743-1-navid.emamdoost@gmail.com>
+Subject: [PATCH] ASoC: SOF: Fix memory leak in sof_dfsentry_write
+Date:   Sun, 27 Oct 2019 14:48:47 -0500
+Message-Id: <20191027194856.4056-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,51 +77,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the implementation of snd_lx6464es_create() it there are memory leaks
-when error happens. Go to error path if any of these calls fail:
-lx_init_dsp(), lx_pcm_create(), lx_proc_create(), snd_ctl_add().
+In the implementation of sof_dfsentry_write() memory allocated for
+string is leaked in case of an error. Go to error handling path if the
+d_name.name is not valid.
 
-Fixes: 02bec4904508 ("ALSA: lx6464es - driver for the digigram lx6464es interface")
+Fixes: 091c12e1f50c ("ASoC: SOF: debug: add new debugfs entries for IPC flood test")
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- sound/pci/lx6464es/lx6464es.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ sound/soc/sof/debug.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/lx6464es/lx6464es.c b/sound/pci/lx6464es/lx6464es.c
-index fe10714380f2..7c6e8f4ef826 100644
---- a/sound/pci/lx6464es/lx6464es.c
-+++ b/sound/pci/lx6464es/lx6464es.c
-@@ -1020,25 +1020,26 @@ static int snd_lx6464es_create(struct snd_card *card,
- 	err = lx_init_dsp(chip);
- 	if (err < 0) {
- 		dev_err(card->dev, "error during DSP initialization\n");
--		return err;
-+		goto cleanup;
- 	}
+diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
+index 54cd431faab7..5529e8eeca46 100644
+--- a/sound/soc/sof/debug.c
++++ b/sound/soc/sof/debug.c
+@@ -152,8 +152,10 @@ static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
+ 	 */
+ 	dentry = file->f_path.dentry;
+ 	if (strcmp(dentry->d_name.name, "ipc_flood_count") &&
+-	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
+-		return -EINVAL;
++	    strcmp(dentry->d_name.name, "ipc_flood_duration_ms")) {
++		ret = -EINVAL;
++		goto out;
++	}
  
- 	err = lx_pcm_create(chip);
- 	if (err < 0)
--		return err;
-+		goto cleanup;
- 
- 	err = lx_proc_create(card, chip);
- 	if (err < 0)
--		return err;
-+		goto cleanup;
- 
- 	err = snd_ctl_add(card, snd_ctl_new1(&lx_control_playback_switch,
- 					     chip));
- 	if (err < 0)
--		return err;
-+		goto cleanup;
- 
- 	*rchip = chip;
- 	return 0;
- 
-+cleanup:
- device_new_failed:
- 	free_irq(pci->irq, chip);
- 
+ 	if (!strcmp(dentry->d_name.name, "ipc_flood_duration_ms"))
+ 		flood_duration_test = true;
 -- 
 2.17.1
 
