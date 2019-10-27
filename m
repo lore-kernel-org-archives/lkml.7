@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECCECA9EAF
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECE7CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0371E205C9
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD0C205C9
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211976;
-	bh=a6QrCgvPtkiusi9ilJt4Zom9bVBDTpq53Np9aJQXGDw=;
+	s=default; t=1572211978;
+	bh=KZRpUOb3mPBcUo8o24araf8SxsKewq/8Rl1F83Gkluk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X4RXya0pqZr5AJ+jOqj2PXAPf8Q/XmfPDUA7wwSUnGtJJRf8VTOUGFQgMDv9FMCBR
-	 GvBMEnviinNKXMIrx+XeBzE1j2Cx1ZB+cUhZyWLIRFpClIg9pknVzuiB7IlH/n1oCv
-	 40Fe7H5qcFFCdf0m4ZVwlDFvfAE+uaB+RW65ATsw=
+	b=egGn3qn5lpjxm57bQyihxxMwOG2EgHJ2JjGry2EZ1h/5L6SQ/XZ7JQ9R3dRafr2Bm
+	 j/2nV4TGWR4LV/r3+DjROlKCjsY1p0HrlOjL4tRVBIDNVHtwp+58Q5GPkvrG5J3RtW
+	 AZF1n6WUuB+4QgmW1lJdUUqRGEDvhAyicEAI2Wjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732455AbfJ0Vcx (ORCPT
+        id S1730336AbfJ0VNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60978 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730349AbfJ0VNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:13:52 -0400
+        id S1730319AbfJ0VNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:13:43 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B5A2064A;
-        Sun, 27 Oct 2019 21:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACDC72064A;
+        Sun, 27 Oct 2019 21:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572210832;
-        bh=a6QrCgvPtkiusi9ilJt4Zom9bVBDTpq53Np9aJQXGDw=;
+        s=default; t=1572210823;
+        bh=KZRpUOb3mPBcUo8o24araf8SxsKewq/8Rl1F83Gkluk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Djzpvc4l3tpjE18T1z/LjdsXrqkHYYv3HEJSxjapaa4agfzS7GXKiwocJmk5zQJM0
-         0uybJW3/zLf9+YgMGjetTphSzCU9cicy3sVDRVdjKvr9Imd5eAy6SFJ9c8B+qWMrgI
-         F9OQCA++Z3Ey43LEclVTWGu9ZhIana1mjhRZLUZU=
+        b=Tncne9isyzMA62+KHmJn7ogYo9DC+Ssj2AlGl1MqIyjnvZqomLeMpLEyk3YRP/TU2
+         A6Fq2QDmX6pL2ZCwaxhqudq7XUVd+rDug22XUlNxigl/eU1AAF5KREV96bDEri7QTG
+         9i3Ory58X+KM4gjSdbet2QhwAe+q7M79bERgg4Lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 07/93] ieee802154: ca8210: prevent memory leak
-Date:   Sun, 27 Oct 2019 22:00:19 +0100
-Message-Id: <20191027203253.569848272@linuxfoundation.org>
+Subject: [PATCH 4.19 04/93] scsi: qla2xxx: Fix unbound sleep in fcport delete path.
+Date:   Sun, 27 Oct 2019 22:00:16 +0100
+Message-Id: <20191027203252.814477126@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203251.029297948@linuxfoundation.org>
 References: <20191027203251.029297948@linuxfoundation.org>
@@ -61,40 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 6402939ec86eaf226c8b8ae00ed983936b164908 ]
+[ Upstream commit c3b6a1d397420a0fdd97af2f06abfb78adc370df ]
 
-In ca8210_probe the allocated pdata needs to be assigned to
-spi_device->dev.platform_data before calling ca8210_get_platform_data.
-Othrwise when ca8210_get_platform_data fails pdata cannot be released.
+There are instances, though rare, where a LOGO request cannot be sent out
+and the thread in free session done can wait indefinitely. Fix this by
+putting an upper bound to sleep.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Link: https://lore.kernel.org/r/20190917224713.26371-1-navid.emamdoost@gmail.com
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Link: https://lore.kernel.org/r/20190912180918.6436-3-hmadhani@marvell.com
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ieee802154/ca8210.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_target.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
-index b2ff903a9cb6e..38a41651e451c 100644
---- a/drivers/net/ieee802154/ca8210.c
-+++ b/drivers/net/ieee802154/ca8210.c
-@@ -3151,12 +3151,12 @@ static int ca8210_probe(struct spi_device *spi_device)
- 		goto error;
- 	}
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index 7a1cc0b25e594..d6dc320f81a7a 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -1023,6 +1023,7 @@ void qlt_free_session_done(struct work_struct *work)
  
-+	priv->spi->dev.platform_data = pdata;
- 	ret = ca8210_get_platform_data(priv->spi, pdata);
- 	if (ret) {
- 		dev_crit(&spi_device->dev, "ca8210_get_platform_data failed\n");
- 		goto error;
- 	}
--	priv->spi->dev.platform_data = pdata;
+ 	if (logout_started) {
+ 		bool traced = false;
++		u16 cnt = 0;
  
- 	ret = ca8210_dev_com_init(priv);
- 	if (ret) {
+ 		while (!READ_ONCE(sess->logout_completed)) {
+ 			if (!traced) {
+@@ -1032,6 +1033,9 @@ void qlt_free_session_done(struct work_struct *work)
+ 				traced = true;
+ 			}
+ 			msleep(100);
++			cnt++;
++			if (cnt > 200)
++				break;
+ 		}
+ 
+ 		ql_dbg(ql_dbg_disc, vha, 0xf087,
 -- 
 2.20.1
 
