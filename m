@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85DACA9EBD
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8B6CA9EAF
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E7A2070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0090521726
+	for <linux-kernel@archiver.kernel.org>; Sun, 27 Oct 2019 21:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572211227;
-	bh=gRsaA9BFRtMmHUz3JFgDHmKdlFZXSf5015JSexpU7Kg=;
+	s=default; t=1572211231;
+	bh=nahxoAL8GSTQXCaHGCOgcFoMFe3/BO1NoNXYaF9k5EM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PYG2jCZTTvs7RhbAMoNVmo+0DX2YxnmkpEjk3FXIb6R8SZstgGkwZUrL5IiQD5Pa0
-	 3Iku1Dk7SBXEYVvDaQRcjyiLac5cxqnd+TlFEqYN+7GXy/hdUITHqkTYd22fv4lMyc
-	 8TIEPigurM4FnbSUHi01tDIsFOXwi5mw75/cOUvo=
+	b=KvjcvsSfhSNoAFdX//7aBxrwHlP4WTKNcbmCLNQJPvHynCXtVYJu5il4+9ATj0352
+	 3l7aalAPoe1LrysKcOIazwyfMIE6aJvy0etNvO0XOY6xbrUiXazxOqTQeK7I0mJ3IH
+	 06Vm8WAHieIUUuDLvCBV6W3lnLXDuqhSaeOLeT/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731697AbfJ0VUZ (ORCPT
+        id S1731711AbfJ0VU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 27 Oct 2019 17:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40792 "EHLO mail.kernel.org"
+        Sun, 27 Oct 2019 17:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731667AbfJ0VUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 27 Oct 2019 17:20:17 -0400
+        id S1731686AbfJ0VUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 27 Oct 2019 17:20:24 -0400
 Received: from localhost (100.50.158.77.rev.sfr.net [77.158.50.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86FD42070B;
-        Sun, 27 Oct 2019 21:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 919F8205C9;
+        Sun, 27 Oct 2019 21:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572211217;
-        bh=gRsaA9BFRtMmHUz3JFgDHmKdlFZXSf5015JSexpU7Kg=;
+        s=default; t=1572211223;
+        bh=nahxoAL8GSTQXCaHGCOgcFoMFe3/BO1NoNXYaF9k5EM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CW7O87PSw85i+Rcq15GZHEMq9xq8YiJCqygV1wbdfajjiwRTbO/gUYT8mSAaXvE+2
-         HaDJJJnu+SpwH5Hr8GdTIp03Cxnn7hwi3YceSGpiX6OqdtWJLVcFnCimsNFmaJ7GsX
-         4fSd/MiVx3VmlNM3JRdayxri6jLDJDaukM+1VJCw=
+        b=jwA00tE1W45wN95xrDMDDqCYgapaaeXnG81E4xPQBnroRmrtSBzAZ9HConZ2IFIRa
+         eESQW3adg0dRyLsRF/UqhfE/xvAtOmpaSvMd32Y5XzL7TNOqt5Mszp3lcsQyV+ThCL
+         Xw0uJzHZ4dcBWwrErHygbnnojUOZYh725g0YFUT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 072/197] net: bcmgenet: Fix RGMII_MODE_EN value for GENET v1/2/3
-Date:   Sun, 27 Oct 2019 21:59:50 +0100
-Message-Id: <20191027203355.534586578@linuxfoundation.org>
+Subject: [PATCH 5.3 074/197] net: i82596: fix dma_alloc_attr for sni_82596
+Date:   Sun, 27 Oct 2019 21:59:52 +0100
+Message-Id: <20191027203355.636246319@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191027203351.684916567@linuxfoundation.org>
 References: <20191027203351.684916567@linuxfoundation.org>
@@ -60,47 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit efb86fede98cdc70b674692ff617b1162f642c49 ]
+[ Upstream commit 61c1d33daf7b5146f44d4363b3322f8cda6a6c43 ]
 
-The RGMII_MODE_EN bit value was 0 for GENET versions 1 through 3, and
-became 6 for GENET v4 and above, account for that difference.
+Commit 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
+switched dma allocation over to dma_alloc_attr, but didn't convert
+the SNI part to request consistent DMA memory. This broke sni_82596
+since driver doesn't do dma_cache_sync for performance reasons.
+Fix this by using different DMA_ATTRs for lasi_82596 and sni_82596.
 
-Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Doug Berger <opendmb@gmail.com>
+Fixes: 7f683b920479 ("i825xx: switch to switch to dma_alloc_attrs")
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.h |    1 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c   |    6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/i825xx/lasi_82596.c |    4 +++-
+ drivers/net/ethernet/i825xx/lib82596.c   |    4 ++--
+ drivers/net/ethernet/i825xx/sni_82596.c  |    4 +++-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -366,6 +366,7 @@ struct bcmgenet_mib_counters {
- #define  EXT_PWR_DOWN_PHY_EN		(1 << 20)
+--- a/drivers/net/ethernet/i825xx/lasi_82596.c
++++ b/drivers/net/ethernet/i825xx/lasi_82596.c
+@@ -96,6 +96,8 @@
  
- #define EXT_RGMII_OOB_CTRL		0x0C
-+#define  RGMII_MODE_EN_V123		(1 << 0)
- #define  RGMII_LINK			(1 << 4)
- #define  OOB_DISABLE			(1 << 5)
- #define  RGMII_MODE_EN			(1 << 6)
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -258,7 +258,11 @@ int bcmgenet_mii_config(struct net_devic
- 	 */
- 	if (priv->ext_phy) {
- 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
--		reg |= RGMII_MODE_EN | id_mode_dis;
-+		reg |= id_mode_dis;
-+		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
-+			reg |= RGMII_MODE_EN_V123;
-+		else
-+			reg |= RGMII_MODE_EN;
- 		bcmgenet_ext_writel(priv, reg, EXT_RGMII_OOB_CTRL);
+ #define OPT_SWAP_PORT	0x0001	/* Need to wordswp on the MPU port */
+ 
++#define LIB82596_DMA_ATTR	DMA_ATTR_NON_CONSISTENT
++
+ #define DMA_WBACK(ndev, addr, len) \
+ 	do { dma_cache_sync((ndev)->dev.parent, (void *)addr, len, DMA_TO_DEVICE); } while (0)
+ 
+@@ -200,7 +202,7 @@ static int __exit lan_remove_chip(struct
+ 
+ 	unregister_netdev (dev);
+ 	dma_free_attrs(&pdev->dev, sizeof(struct i596_private), lp->dma,
+-		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
++		       lp->dma_addr, LIB82596_DMA_ATTR);
+ 	free_netdev (dev);
+ 	return 0;
+ }
+--- a/drivers/net/ethernet/i825xx/lib82596.c
++++ b/drivers/net/ethernet/i825xx/lib82596.c
+@@ -1065,7 +1065,7 @@ static int i82596_probe(struct net_devic
+ 
+ 	dma = dma_alloc_attrs(dev->dev.parent, sizeof(struct i596_dma),
+ 			      &lp->dma_addr, GFP_KERNEL,
+-			      DMA_ATTR_NON_CONSISTENT);
++			      LIB82596_DMA_ATTR);
+ 	if (!dma) {
+ 		printk(KERN_ERR "%s: Couldn't get shared memory\n", __FILE__);
+ 		return -ENOMEM;
+@@ -1087,7 +1087,7 @@ static int i82596_probe(struct net_devic
+ 	i = register_netdev(dev);
+ 	if (i) {
+ 		dma_free_attrs(dev->dev.parent, sizeof(struct i596_dma),
+-			       dma, lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
++			       dma, lp->dma_addr, LIB82596_DMA_ATTR);
+ 		return i;
  	}
  
+--- a/drivers/net/ethernet/i825xx/sni_82596.c
++++ b/drivers/net/ethernet/i825xx/sni_82596.c
+@@ -24,6 +24,8 @@
+ 
+ static const char sni_82596_string[] = "snirm_82596";
+ 
++#define LIB82596_DMA_ATTR	0
++
+ #define DMA_WBACK(priv, addr, len)     do { } while (0)
+ #define DMA_INV(priv, addr, len)       do { } while (0)
+ #define DMA_WBACK_INV(priv, addr, len) do { } while (0)
+@@ -152,7 +154,7 @@ static int sni_82596_driver_remove(struc
+ 
+ 	unregister_netdev(dev);
+ 	dma_free_attrs(dev->dev.parent, sizeof(struct i596_private), lp->dma,
+-		       lp->dma_addr, DMA_ATTR_NON_CONSISTENT);
++		       lp->dma_addr, LIB82596_DMA_ATTR);
+ 	iounmap(lp->ca);
+ 	iounmap(lp->mpu_port);
+ 	free_netdev (dev);
 
 
